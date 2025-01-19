@@ -35,7 +35,7 @@ const AssetCapture = () => {
   const saveAssetToDatabase = async (data) => {
     try {
       // const apiurl = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch('https://asset-manager-backend-v2no.onrender.com/api/assets', {
+      const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
