@@ -1,0 +1,36 @@
+th{
+    font-size: 13px;
+    text-align: center;
+    padding: 10px;
+}
+tr{
+    padding: 10px;
+}
+td{
+    font-size: 13px;
+    font-family: "Montserrat",sans-serif;
+    padding: 10px;
+    text-align: center;
+}
+.table-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+table{
+    padding: 10px;
+    width: 95%;
+    /* background: transparent; */
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+.table-container h4{
+    width: 95%;
+    height: 8%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #565656;
+}

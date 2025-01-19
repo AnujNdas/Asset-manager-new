@@ -1,0 +1,14 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.dashboard-section{
+    height:100%;
+    width: 100%;
+}
+.section_1{
+    height:28%;
+}
+.section_2{
+    height:72%;
+}

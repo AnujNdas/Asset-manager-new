@@ -1,0 +1,114 @@
+
+/* Apply blur when login page is visible */
+.third-container.blur {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+.first-container.blur {
+    filter:blur(5px);
+    transition: filter 0.3s ease;
+}
+.second-container.blur {
+    filter:blur(5px);
+    transition: filter 0.3s ease;
+}
+
+/* Fullscreen overlay for the login page */
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Ensure it's above all other components */
+}
+
+.login-content {
+  background-color: white;
+  /* padding: 20px; */
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  height: 550px;
+  width: 900px;
+}
+.change-panel{
+  width: 35%;
+  background: #636363;
+  /* background: url(../Images/Blue.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; */
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  border-top-left-radius: 11px;
+  border-bottom-left-radius: 11px;
+  border: none;
+}
+.auth-pages{
+  background: #ffffff;
+  width: 65%;
+  border-top-right-radius: 11px;
+  border-bottom-right-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url(../Images/login.jpg);
+  background-size: cover;
+  background-position: center;
+  
+}
+.menus{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 30%;
+  width:30%;
+  justify-content: center;
+  /* padding-right: 15px; */
+}
+
+ .back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+.menu-btn{
+  height: 30%;
+  border: none;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  font-weight: 700;
+}
+/* .login-content input {
+  margin: 10px 0;
+  padding: 10px;
+  width: 200px;
+}
+
+.login-content button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+form{
+    display: flex;
+    flex-direction: column;
+} */ 

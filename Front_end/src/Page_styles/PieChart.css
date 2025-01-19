@@ -1,0 +1,39 @@
+.Piechart-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+}
+.Piechart-container h5{
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    font-family: "Roboto",sans-serif;
+    font-size: 18px;
+    height: 20%;
+    align-items: center;
+    border-bottom: 2px solid #565656;
+    color: #565656;
+    margin: 0;
+}
+.chart-container{
+    height: 80%;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.chart-data{
+    font-size: 14px;
+    font-family: "Lato",sans-serif;
+    color: #565656;
+    width: 50%;
+    margin: 10px;
+}
+.pie-box{
+    /* height: 100%; */
+    width: 50%;
+    margin: 10px;
+}

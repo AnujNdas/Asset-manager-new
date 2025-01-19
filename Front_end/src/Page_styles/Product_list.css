@@ -1,0 +1,70 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+.nav {
+    width: 40%;
+    height: 100%;
+    background-color: #1e1720;
+}
+.button {
+    padding: 12px 28px;
+    border-radius: 5px;
+    background-color: #ec4c3e;
+    cursor: pointer;
+}
+.button:hover {
+    box-shadow: 12px 12px 12px rgba(0, 0, 0, 0.1) , -10px -10px 10px white ;
+}
+
+.content {
+    width: 80%;
+}
+/*********************** nav part *********************/
+.form_container{
+    width: 100%;
+    /* background-color: #66ff00; */
+}
+.from_area{
+    position: relative;
+    height: 40px;
+    line-height: 40px;
+    margin: 15px 0;
+}
+.input_box{
+    position: absolute;
+    width: 90%;
+    outline: none;
+    font-size: 0.9rem;
+    padding: 0 10px;
+    line-height: 50px;
+    border-radius: 10px;
+    border: 2px solid #f0ffff;
+    background: transparent;
+    transition:0.1s ease ;
+    z-index: 1;
+}
+.label_name{
+    position: absolute;
+    left: -20px;
+    font-size: 0.8rem;
+    color: #f0ffff;
+    padding: 0 25px;
+    margin: 0 20px;
+    background-color: #1e1720;
+    transition: 0.2s ease;
+}
+input:focus,
+input:valid{
+    color: #66ff00;
+    border: 2px solid #66ff00;
+}
+input:focus + .label_name,
+input:valid + .label_name{
+    color: #66ff00;
+    height: 40px;
+    line-height: 40px;
+    transform: translate(-15px,-16px)scale(0.80);
+    z-index: 1;
+}

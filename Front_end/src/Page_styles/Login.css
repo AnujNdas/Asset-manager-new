@@ -1,0 +1,93 @@
+.login-container{
+    height: 80%;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    border-radius: 10px;
+    background-color: rgba(60, 64, 67, 0.1);
+    backdrop-filter: blur(1px);
+}
+.Login-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    /* justify-content: center; */
+    height: 100%;
+    width: 100%;
+    /* padding: 10px; */
+}
+.button-panel{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.auth-logo{
+    width: 90%;
+    height: 15%;
+    background-size: cover;
+    overflow: hidden;
+}
+.social{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    font-size: 18px;
+}
+h2{
+    color: rgb(0, 0, 0);
+    margin: 0;
+    font-family: "Montserrat" , sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+}
+.input-box{
+    height: 8%;
+    width: 60%;
+    position: relative;
+}
+.input-box input{
+    /* height: 100%; */
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+}
+.input-label{
+    position: absolute;
+    pointer-events: none;
+    top: 5px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Lato", sans-serif;
+    font-weight: 500;
+}
+.input-box:focus + .input-label,
+.input-box:not(:placeholder-shown) + .input-label {
+  display: none;
+}
+.submit-btn{
+    padding: 8px 5px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+.foet{
+    text-decoration: none;
+    background: transparent;
+    color: blue;
+    font-family: "Lato",sans-serif;
+    font-weight: 600;
+}
+.foet:hover{
+    color: red;
+    background: transparent;
+}

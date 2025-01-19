@@ -1,0 +1,69 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+@font-face{
+  font-family:h1;
+  src:url('Poppins/Poppins-BoldItalic.ttf');
+}
+@font-face{
+  font-family:h2;
+  src:url('Poppins/Poppins-SemiBoldItalic.ttf');
+}
+@font-face{
+  font-family:h3;
+  src:url('Poppins/Poppins-MediumItalic.ttf');
+}
+@font-face{
+  font-family:h4;
+  src:url('Poppins/Poppins-LightItalic.ttf');
+}
+@font-face{
+  font-family:p;
+  src:url('Poppins/Poppins-Italic.ttf');
+}
+@font-face{
+  font-family:li;
+  src:url('Poppins/Poppins-ExtraLightItalic.ttf');
+}
+.first-container{
+  height: 100%;
+  width: 18%;
+}
+.second-container{
+  position: absolute;
+  top: 0%;
+  left: 18%;
+  width: 82%;
+  height: 8%;
+  /* background: #f33456; */
+}
+.third-container{
+  position: absolute;
+  top: 8%;
+  left:18%;
+  height: 92%;
+  width:82%;
+  background:#f6f6f6;
+  border-radius: 10px;
+}
+/* App.css */
+
+.first-container,
+.second-container,
+.third-container {
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.blurred {
+  filter: blur(5px);
+  pointer-events: none; /* Optional: disable interaction with blurred content */
+}
+
+/* Optionally, you can also fade the blur in/out */
+.first-container,
+.second-container,
+.third-container {
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
