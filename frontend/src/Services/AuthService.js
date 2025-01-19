@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = "https://asset-manager-backend-v2no.onrender.com/api/auth";
+const API_URL = "https://asset-manager-new.onrender.com/api/auth";
 // Base url for backend API
 
 //Sign up function
