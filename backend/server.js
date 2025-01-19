@@ -16,7 +16,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'https://asset-manager-sigma.vercel.app', // Frontend domain (Vercel)
+    origin: 'https://asset-manager-new-frontend.onrender.com', // Frontend domain (Vercel)
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
     allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
   }));
