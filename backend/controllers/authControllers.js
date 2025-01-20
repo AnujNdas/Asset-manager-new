@@ -45,4 +45,21 @@ const login = async (req,res) => {
     }
 };
 
-module.exports = { signup, login};
+const getUserData = async (req, res) => {
+    try {
+      const user = await User.findOne({ username: req.user.username }); // Get the user by the username from the decoded token
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found!" });
+      }
+  
+      // Exclude password from the response for security reasons
+      const { password, ...userData } = user.toObject();
+  
+      res.json(userData);  // Send the user data back to the client
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching user data" });
+    }
+  };
+
+module.exports = { signup, login , getUserData};
