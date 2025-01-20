@@ -60,9 +60,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url(../Images/login.jpg);
-  background-size: cover;
-  background-position: center;
+/*   background: url(../Images/login.jpg); */
+/*   background-size: cover; */
+/*   background-position: center; */ */
   
 }
 .menus{
