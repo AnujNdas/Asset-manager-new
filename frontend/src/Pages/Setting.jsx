@@ -18,7 +18,7 @@ const Setting = () => {
                 <Link to="/Setting/General">General</Link>
                 <Link to="/Setting/TeamMember">Team Member</Link>
                 <Link to="/Setting/Notification">Notification</Link>
-                <Link to="/Setting/Logout" className='logout'>Logout</Link>
+{/*                 <Link to="/Setting/Logout" className='logout'>Logout</Link> */}
             </div>
         </div>
         <div className="settings">
