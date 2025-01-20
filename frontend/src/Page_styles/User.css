@@ -94,6 +94,18 @@
   border-bottom-left-radius: 25px;
   font-weight: 700;
 }
+.description{
+  height: 20%;
+  width: 100%;
+  font-family: "Lato", sans-serif;
+  font-size: 27px;
+  color: #ffffff;
+  font-weight: 600;
+  position: relative;
+  bottom: 120px;
+  left: 40px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
 /* .login-content input {
   margin: 10px 0;
   padding: 10px;
