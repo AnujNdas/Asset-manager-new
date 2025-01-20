@@ -31,6 +31,9 @@ const User = ({ removeUser }) => {
         <div className="login-content">
           <button onClick={goBackToHomepage} className="back-btn">Back to Homepage</button>
           <div className="change-panel">
+            <div className="description">
+              Welcome To Asset Manager
+            </div>
             <div className="menus">
               <button
                onClick={navigateToLogin} 
