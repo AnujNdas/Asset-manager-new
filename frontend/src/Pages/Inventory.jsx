@@ -1,82 +1,136 @@
 import React, { useState, useEffect } from 'react';
-import Barcode from 'react-barcode';
-import '../Page_styles/Inventory.css'
+import EditButton from '../Components/EditButton';
+import '../Page_styles/MyProfile.css';
+import { useNavigate } from 'react-router-dom';
 
-const Inventory = () => {
-  const [assets, setAssets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const MyProfile = () => {
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    // Reset the userData state as well
+    setUserData(null);
+    // Redirect to the login page
+    navigate("/User/Login");
+  };
 
   useEffect(() => {
-    const fetchAssets = async () => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("Please log in.");
+        navigate("/User/Login"); // Redirect to login if no token is found
+        return;
+      }
+
       try {
-        const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
+        const response = await fetch("https://asset-manager-new-frontend.onrender.com/api/auth/user", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`, // Send token in the Authorization header
+          },
+        });
+
         if (!response.ok) {
-          throw new Error('Failed to fetch assets');
+          throw new Error("Failed to fetch user data");
         }
+
         const data = await response.json();
-        setAssets(data); // Store fetched assets in the state
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        setUserData(data); // Set user data to state
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        alert("Error fetching user data. Please try again.");
       }
     };
 
-    fetchAssets();
-  }, []);
-
-  if (loading) return <p>Loading assets...</p>;
-  if (error) return <p>Error: {error}</p>;
+    fetchUserData();
+  }, [navigate]);
 
   return (
-    <div className='table-container'>
-      <h4>Asset Details</h4>
-
-      {assets.length === 0 ? (
-        <p>No assets available.</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Asset Name</th>
-              <th>Asset Code</th>
-              <th>Asset Category</th>
-              <th>Location</th>
-              <th>Asset Status</th>
-              <th>Remarks</th>
-              <th>Date of Purchase</th>
-              <th>Expected Date of Expiry</th>
-              <th>Asset Lifetime</th>
-              <th>Purchased From</th>
-              <th>Preventive Maintenance Date</th>
-              <th>Barcode</th>
-            </tr>
-          </thead>
-          <tbody>
-            {assets.map((asset) => (
-              <tr key={asset._id}>
-                <td>{asset.assetName}</td>
-                <td>{asset.assetCode}</td>
-                <td>{asset.assetCategory}</td>
-                <td>{asset.locationName}</td>
-                <td>{asset.assetStatus}</td>
-                <td>{asset.remarks}</td>
-                <td>{asset.DOP}</td>
-                <td>{asset.DOE}</td>
-                <td>{asset.assetLifetime}</td>
-                <td>{asset.purchaseFrom}</td>
-                <td>{asset.PMD}</td>
-                <td>
-                  <Barcode value={asset.barcodeNumber} height={30} width={1.5}/>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div className="Profile-container">
+      <div className="Profile-heading">
+        <p>My Profile</p>
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+      <div className="personal-Profile">
+        <div className="boxes-1">
+          <div className="profile-img"></div>
+          <div className="data-info">
+            {/* Conditionally render username only if userData is not null */}
+            <div className="p-name" style={{ fontWeight: '600', color: '#565656', fontFamily: 'Montserrat,san-serif' }}>
+              {userData ? userData.username : 'Loading...'}
+            </div>
+            <div className="role" style={{ fontSize: '13px', fontWeight: '500', color: '#565656' }}>
+              Architect
+            </div>
+            <div className="location" style={{ fontSize: '13px', fontWeight: '500', color: '#565656' }}>
+              India
+            </div>
+          </div>
+        </div>
+        <div className="button-ed">
+          <EditButton />
+        </div>
+      </div>
+      <div className="personal-data">
+        <div className="head-box">
+          <div className="title-p">Personal Information</div>
+          <div className="button-ed">
+            <EditButton />
+          </div>
+        </div>
+        <div className="boxes">
+          <div className="one">
+            <p>First Name</p>
+            <h5>{userData ? userData.name : 'Loading...'}</h5>
+          </div>
+          <div className="two">
+            <p>Bio</p>
+            <h5>Team Member</h5>
+          </div>
+          <div className="three">
+            <p>E mail</p>
+            <h5>Anonymous@gmail.com</h5>
+          </div>
+          <div className="four">
+            <p>Ph no</p>
+            <h5>1234565789</h5>
+          </div>
+        </div>
+      </div>
+      <div className="address">
+        <div className="head-box">
+          <div className="title-p">Address</div>
+          <div className="button-ed">
+            <EditButton />
+          </div>
+        </div>
+        <div className="boxes">
+          <div className="one">
+            <p>Country</p>
+            <h5>India</h5>
+          </div>
+          <div className="two">
+            <p>City/State</p>
+            <h5>JSR/India</h5>
+          </div>
+          <div className="three">
+            <p>Postal-Code</p>
+            <h5>831001</h5>
+          </div>
+          <div className="four">
+            <p>Tax-Id</p>
+            <h5>sh78d78e</h5>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Inventory;
+export default MyProfile;
