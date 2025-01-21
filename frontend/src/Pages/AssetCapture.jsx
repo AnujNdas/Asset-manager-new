@@ -241,7 +241,7 @@ const AssetCapture = () => {
                 value={formData.assetLifetime}
                 onChange={handleChange}
                 placeholder='Lifetime (in days)'
-                readOnly
+                disabled
               />
             </div>
             <div className="form-entry">
