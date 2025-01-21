@@ -219,14 +219,16 @@ const AssetCapture = () => {
               />
             </div>
             <div className="form-entry">
-              <p> Purchased From :-</p>
+              <p> Asset Lifetime :-</p>
               <input
-                name='purchaseFrom'
+                name='assetLifetime'
                 type="text"
-                value={formData.purchaseFrom}
+                value={formData.assetLifetime}
                 onChange={handleChange}
-                placeholder='Purchased From'
+                placeholder='Lifetime (in days)'
+                readOnly
               />
+            </div>
             </div>
             <div className="form-entry">
               <p> Preventive Maintenance Date :-</p>
