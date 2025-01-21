@@ -37,7 +37,7 @@
     align-items: center;
     flex-direction: row;
     gap:20px;
-/*     justify-content: space-between; */
+    justify-content: flex-end;
     word-spacing: 5px;
 }
 .form-heading p{
