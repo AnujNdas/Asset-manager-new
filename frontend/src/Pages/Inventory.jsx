@@ -44,13 +44,13 @@ const Inventory = () => {
               <th>Asset Category</th>
               <th>Location</th>
               <th>Asset Status</th>
-              <th>Remarks</th>
               <th>Date of Purchase</th>
+{/*               <th>Remarks</th>
               <th>Expected Date of Expiry</th>
               <th>Asset Lifetime</th>
               <th>Purchased From</th>
               <th>Preventive Maintenance Date</th>
-              <th>Barcode</th>
+              <th>Barcode</th> */}
             </tr>
           </thead>
           <tbody>
@@ -61,12 +61,12 @@ const Inventory = () => {
                 <td>{asset.assetCategory}</td>
                 <td>{asset.locationName}</td>
                 <td>{asset.assetStatus}</td>
-                <td>{asset.remarks}</td>
                 <td>{asset.DOP}</td>
+{/*                 <td>{asset.remarks}</td>
                 <td>{asset.DOE}</td>
                 <td>{asset.assetLifetime}</td>
                 <td>{asset.purchaseFrom}</td>
-                <td>{asset.PMD}</td>
+                <td>{asset.PMD}</td> */}
                 <td>
                   <Barcode value={asset.barcodeNumber} height={30} width={1.5}/>
                 </td>
