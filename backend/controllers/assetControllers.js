@@ -1,4 +1,6 @@
 const Asset = require("../models/Asset")
+const LastAssetCode = require('../models/LastAssetCode');
+const crypto = require('crypto');
 
 // Add a new Asset
 const addAsset = async (req,res) => {
@@ -36,8 +38,51 @@ const getAllAssets = async (req,res)=>{
     }
 };
 
+const generateAssetCode = async (req, res) => {
+    try {
+      const lastCodeData = await LastAssetCode.findOne();
+  
+      let newCodeNumber;
+      if (!lastCodeData) {
+        newCodeNumber = 1;
+        await LastAssetCode.create({ lastCode: newCodeNumber });
+      } else {
+        newCodeNumber = lastCodeData.lastCode + 1;
+        await LastAssetCode.updateOne({}, { lastCode: newCodeNumber });
+      }
+  
+      const assetCode = `ASSET-${newCodeNumber.toString().padStart(3, '0')}`;
+      res.json({ assetCode });
+    } catch (error) {
+      console.error('Error generating asset code:', error);
+      res.status(500).json({ message: 'Internal server error while generating asset code' });
+    }
+  };
+  
+  // Function to generate unique barcode
+  const generateBarcode = async (req, res) => {
+    try {
+      const generateBarcode = () => crypto.randomBytes(6).toString('hex').toUpperCase(); // Random 12-character barcode
+  
+      let barcode = generateBarcode();
+  
+      // Ensure the barcode is unique
+      while (await Asset.findOne({ barcodeNumber: barcode })) {
+        barcode = generateBarcode();
+      }
+  
+      res.json({ barcodeNumber: barcode });
+    } catch (error) {
+      console.error('Error generating barcode:', error);
+      res.status(500).json({ message: 'Internal server error while generating barcode' });
+    }
+  };
+  
+
 module.exports = {
     addAsset,
     deleteAsset,
-    getAllAssets
+    getAllAssets,
+    generateAssetCode,
+    generateBarcode
 };
