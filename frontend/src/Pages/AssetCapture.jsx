@@ -6,6 +6,16 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 
 const AssetCapture = () => {
+  const generateAssetCode = async () => {
+    const response = await fetch('http://localhost:5001/api/assets/asset-code'); // Your backend URL
+    const data = await response.json();
+    return data.assetCode;
+  };
+  const generateUniqueBarcode = async () => {
+    const response = await fetch('http://localhost:5001/api/assets/generate-barcode'); // Your backend URL
+    const data = await response.json();
+    return data.barcodeNumber;
+  };
   const defaultFormData = {
     assetCode: '',
     assetCategory: '',
@@ -69,7 +79,7 @@ const AssetCapture = () => {
   // Save asset to database
   const saveAssetToDatabase = async (data) => {
     try {
-      const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
+      const response = await fetch('http://localhost:5001/api/assets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,16 +106,24 @@ const AssetCapture = () => {
   // Handle form submission for "Add Asset"
   const handleAddAsset = async (e) => {
     e.preventDefault();
+    const newAssetCode = await generateAssetCode();
+    const newBarcode = await generateUniqueBarcode();
 
+    const updatedFormData = {
+      ...formData,
+      assetCode: newAssetCode,
+      barcodeNumber: newBarcode,
+  };
     // Validation check (optional)
-    if (!formData.assetCode || !formData.assetName || !formData.locationName) {
+    if (!formData.assetName || !formData.locationName) {
       alert('Please fill in all required fields.');
       return;
     }
 
-    const isSuccess = await saveAssetToDatabase(formData);
+    const isSuccess = await saveAssetToDatabase(updatedFormData);
     if (isSuccess) {
-      navigate('/Inventory'); // Navigate to inventory page
+      console.log(isSuccess)
+      // navigate('/Inventory'); // Navigate to inventory page
     }
   };
 
@@ -113,15 +131,24 @@ const AssetCapture = () => {
   const handleAddAnother = async (e) => {
     e.preventDefault();
 
+    const newAssetCode = await generateAssetCode();
+    const newBarcode = await generateUniqueBarcode();
+
+    const updatedFormData = {
+      ...formData,
+      assetCode: newAssetCode,
+      barcodeNumber: newBarcode,
+  };
     // Validation check (optional)
-    if (!formData.assetCode || !formData.assetName || !formData.locationName) {
+    if (!formData.assetName || !formData.locationName) {
       alert('Please fill in all required fields.');
       return;
     }
 
-    const isSuccess = await saveAssetToDatabase(formData);
+    const isSuccess = await saveAssetToDatabase(updatedFormData);
     if (isSuccess) {
       setFormData(defaultFormData); // Clear the form for adding another asset
+      
     }
   };
 
@@ -133,7 +160,7 @@ const AssetCapture = () => {
         </div>
         <form className='capture-form'>
           <div className="input-area">
-            <div className="form-entry">
+            {/* <div className="form-entry">
               <p> Asset Code :-</p>
               <input
                 name='assetCode'
@@ -141,8 +168,9 @@ const AssetCapture = () => {
                 value={formData.assetCode}
                 onChange={handleChange}
                 placeholder='Code'
+                disabled
               />
-            </div>
+            </div> */}
             <div className="form-entry">
               <p> Asset Category :-</p>
               <input
@@ -153,7 +181,7 @@ const AssetCapture = () => {
                 placeholder='Category'
               />
             </div>
-            <div className="form-entry">
+            {/* <div className="form-entry">
               <p> Barcode Number :-</p>
               <input
                 name='barcodeNumber'
@@ -161,8 +189,9 @@ const AssetCapture = () => {
                 value={formData.barcodeNumber}
                 onChange={handleChange}
                 placeholder='Barcode'
+                disabled
               />
-            </div>
+            </div> */}
             <div className="form-entry">
               <p> Asset Name :-</p>
               <input
