@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Page_styles/AssetCapture.css';
-
+import DatePicker from 'react-date-picker';
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 const AssetCapture = () => {
   const defaultFormData = {
     assetCode: '',
@@ -12,8 +14,8 @@ const AssetCapture = () => {
     locationName: '',
     assetSpecification: '',
     assetStatus: '',
-    DOP: '',
-    DOE: '',
+    DOP: null, // Initialize as null, can be changed to a default date like new Date()
+    DOE: null, // Initialize as null, same as above
     assetLifetime: '',
     purchaseFrom: '',
     PMD: '',
@@ -31,10 +33,17 @@ const AssetCapture = () => {
     }));
   };
 
+  // Handle Date Change
+  const handleDateChange = (date, name) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: date, // Update the specific date field (DOP or DOE)
+    }));
+  };
+
   // Save asset to database
   const saveAssetToDatabase = async (data) => {
     try {
-      // const apiurl = process.env.NEXT_PUBLIC_API_URL;
       const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
         method: 'POST',
         headers: {
@@ -181,22 +190,22 @@ const AssetCapture = () => {
             </div>
             <div className="form-entry">
               <p> Date of Purchase :-</p>
-              <input
-                name='DOP'
-                type="text"
+              <DatePicker
+                name="DOP"
                 value={formData.DOP}
-                onChange={handleChange}
-                placeholder='D-O-P'
+                onChange={(date) => handleDateChange(date, 'DOP')}
+                dateFormat="MMMM d, yyyy"
+                className='custom-DatePicker'
               />
             </div>
             <div className="form-entry">
               <p> Date of Expiry :-</p>
-              <input
-                name='DOE'
-                type="text"
+              <DatePicker
+                name="DOE"
                 value={formData.DOE}
-                onChange={handleChange}
-                placeholder='D-O-E'
+                onChange={(date) => handleDateChange(date, 'DOE')}
+                dateFormat="MMMM d, yyyy"
+                className='custom-DatePicker'
               />
             </div>
             <div className="form-entry">
