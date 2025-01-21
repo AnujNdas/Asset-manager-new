@@ -4,6 +4,7 @@ import '../Page_styles/AssetCapture.css';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
+
 const AssetCapture = () => {
   const defaultFormData = {
     assetCode: '',
@@ -35,10 +36,34 @@ const AssetCapture = () => {
 
   // Handle Date Change
   const handleDateChange = (date, name) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: date, // Update the specific date field (DOP or DOE)
-    }));
+    setFormData((prevData) => {
+      const updatedData = { ...prevData, [name]: date };
+
+      // If both DOP and DOE are present, calculate lifetime
+      if (updatedData.DOP && updatedData.DOE) {
+        const lifetime = calculateLifetime(updatedData.DOP, updatedData.DOE);
+        updatedData.assetLifetime = lifetime;
+      }
+
+      return updatedData;
+    });
+  };
+
+  // Function to calculate asset lifetime in days
+  const calculateLifetime = (DOP, DOE) => {
+    if (!DOP || !DOE) return '';
+
+    // Ensure DOP and DOE are Date objects
+    const startDate = new Date(DOP);
+    const endDate = new Date(DOE);
+
+    // Calculate difference in milliseconds
+    const diffTime = endDate - startDate;
+
+    // Convert milliseconds to days
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+    return `${diffDays} days`; // Return the lifetime in days with " days" appended
   };
 
   // Save asset to database
@@ -215,20 +240,19 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.assetLifetime}
                 onChange={handleChange}
-                placeholder='Lifetime'
-              />
-            </div>
-            <div className="form-entry">
-              <p> Asset Lifetime :-</p>
-              <input
-                name='assetLifetime'
-                type="text"
-                value={formData.assetLifetime}
-                onChange={handleChange}
                 placeholder='Lifetime (in days)'
                 readOnly
               />
             </div>
+            <div className="form-entry">
+              <p> Purchased From :-</p>
+              <input
+                name='purchaseFrom'
+                type="text"
+                value={formData.purchaseFrom}
+                onChange={handleChange}
+                placeholder='Purchased From'
+              />
             </div>
             <div className="form-entry">
               <p> Preventive Maintenance Date :-</p>
