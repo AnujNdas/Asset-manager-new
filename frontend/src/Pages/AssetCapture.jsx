@@ -7,12 +7,12 @@ import 'react-calendar/dist/Calendar.css';
 
 const AssetCapture = () => {
   const generateAssetCode = async () => {
-    const response = await fetch('http://localhost:5001/api/assets/asset-code'); // Your backend URL
+    const response = await fetch('https://asset-manager-new.onrender.com/api/assets/asset-code'); // Your backend URL
     const data = await response.json();
     return data.assetCode;
   };
   const generateUniqueBarcode = async () => {
-    const response = await fetch('http://localhost:5001/api/assets/generate-barcode'); // Your backend URL
+    const response = await fetch('https://asset-manager-new.onrender.com/api/assets/generate-barcode'); // Your backend URL
     const data = await response.json();
     return data.barcodeNumber;
   };
@@ -79,7 +79,7 @@ const AssetCapture = () => {
   // Save asset to database
   const saveAssetToDatabase = async (data) => {
     try {
-      const response = await fetch('http://localhost:5001/api/assets', {
+      const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
