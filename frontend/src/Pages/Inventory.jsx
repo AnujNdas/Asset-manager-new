@@ -6,6 +6,8 @@ const Inventory = () => {
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
     const fetchAssets = async () => {
@@ -26,11 +28,21 @@ const Inventory = () => {
     fetchAssets();
   }, []);
 
+  const handleAssetClick = (asset) => {
+    setSelectedAsset(asset);
+    setShowOverlay(true);
+  };
+
+  const closeOverlay = () => {
+    setShowOverlay(false);
+    setSelectedAsset(null);
+  };
+
   if (loading) return <p>Loading assets...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className='table-container'>
+    <div className="table-container">
       <h4>Asset Details</h4>
 
       {assets.length === 0 ? (
@@ -45,12 +57,7 @@ const Inventory = () => {
               <th>Location</th>
               <th>Asset Status</th>
               <th>Date of Purchase</th>
-{/*               <th>Remarks</th>
-              <th>Expected Date of Expiry</th>
-              <th>Asset Lifetime</th>
-              <th>Purchased From</th>
-              <th>Preventive Maintenance Date</th>
-              <th>Barcode</th> */}
+              <th>Details</th> {/* New column for the button */}
             </tr>
           </thead>
           <tbody>
@@ -62,19 +69,40 @@ const Inventory = () => {
                 <td>{asset.locationName}</td>
                 <td>{asset.assetStatus}</td>
                 <td>{asset.DOP}</td>
-{/*                 <td>{asset.remarks}</td>
-                <td>{asset.DOE}</td>
-                <td>{asset.assetLifetime}</td>
-                <td>{asset.purchaseFrom}</td>
-                <td>{asset.PMD}</td> */}
-{/*                 <td>
-                  <Barcode value={asset.barcodeNumber} height={30} width={1.5}/>
-                </td> */}
+                <td>
+                  <button onClick={() => handleAssetClick(asset)}>View Details</button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+
+      {/* Overlay Card */}
+      {showOverlay && (
+        <div className="overlay">
+          <div className="overlay-content">
+            <h3>Asset Details</h3>
+            {selectedAsset && (
+              <>
+                <p><strong>Remarks:</strong> {selectedAsset.remarks}</p>
+                <p><strong>Expected Date of Expiry:</strong> {selectedAsset.DOE}</p>
+                <p><strong>Asset Lifetime:</strong> {selectedAsset.assetLifetime}</p>
+                <p><strong>Purchased From:</strong> {selectedAsset.purchaseFrom}</p>
+                <p><strong>Preventive Maintenance Date:</strong> {selectedAsset.PMD}</p>
+                <p>
+                  <strong>Barcode:</strong> 
+                  <Barcode value={selectedAsset.barcodeNumber} height={30} width={1.5} />
+                </p>
+              </>
+            )}
+            <button onClick={closeOverlay}>Close</button> {/* Close Button */}
+          </div>
+        </div>
+      )}
+
+      {/* Apply blur to the background when overlay is visible */}
+      {showOverlay && <div className="overlay-background"></div>}
     </div>
   );
 };
