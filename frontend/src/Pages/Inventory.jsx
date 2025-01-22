@@ -67,9 +67,9 @@ const Inventory = () => {
                 <td>{asset.assetLifetime}</td>
                 <td>{asset.purchaseFrom}</td>
                 <td>{asset.PMD}</td> */}
-                <td>
+{/*                 <td>
                   <Barcode value={asset.barcodeNumber} height={30} width={1.5}/>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
