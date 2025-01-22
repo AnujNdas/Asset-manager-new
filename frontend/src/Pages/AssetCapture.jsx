@@ -123,7 +123,7 @@ const AssetCapture = () => {
     const isSuccess = await saveAssetToDatabase(updatedFormData);
     if (isSuccess) {
       console.log(isSuccess)
-      // navigate('/Inventory'); // Navigate to inventory page
+      navigate('/Inventory'); // Navigate to inventory page
     }
   };
 
