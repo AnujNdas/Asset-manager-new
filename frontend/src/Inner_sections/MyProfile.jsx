@@ -7,15 +7,6 @@ const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    // Reset the userData state as well
-    setUserData(null);
-    // Redirect to the login page
-    navigate("/User/Login");
-  };
-
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
@@ -53,9 +44,6 @@ const MyProfile = () => {
     <div className="Profile-container">
       <div className="Profile-heading">
         <p>My Profile</p>
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
       </div>
       <div className="personal-Profile">
         <div className="boxes-1">
