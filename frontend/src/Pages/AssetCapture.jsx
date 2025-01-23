@@ -178,7 +178,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.assetCategory}
                 onChange={handleChange}
-                placeholder='Category'
               />
             </div>
             {/* <div className="form-entry">
@@ -199,7 +198,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.assetName}
                 onChange={handleChange}
-                placeholder='Asset Name'
               />
             </div>
             <div className="form-entry">
@@ -209,7 +207,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.associateUnit}
                 onChange={handleChange}
-                placeholder='Unit'
               />
             </div>
             <div className="form-entry">
@@ -219,7 +216,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.locationName}
                 onChange={handleChange}
-                placeholder='Location'
               />
             </div>
             <div className="form-entry">
@@ -229,7 +225,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.assetSpecification}
                 onChange={handleChange}
-                placeholder='Specifications'
               />
             </div>
             <div className="form-entry">
@@ -239,7 +234,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.assetStatus}
                 onChange={handleChange}
-                placeholder='Status'
               />
             </div>
             <div className="form-entry">
@@ -280,7 +274,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.purchaseFrom}
                 onChange={handleChange}
-                placeholder='Purchased From'
               />
             </div>
             <div className="form-entry">
@@ -290,7 +283,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.PMD}
                 onChange={handleChange}
-                placeholder='P-M-D'
               />
             </div>
             <div className="form-entry">
@@ -300,7 +292,6 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.remarks}
                 onChange={handleChange}
-                placeholder='Remarks'
               />
             </div>
           </div>
