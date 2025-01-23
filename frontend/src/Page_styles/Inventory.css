@@ -73,7 +73,7 @@ table{
     z-index: -1;
   }
   
-  button {
+  .view-btn {
     padding: 10px 15px;
     background-color: #007BFF;
     color: white;
@@ -82,7 +82,7 @@ table{
     cursor: pointer;
   }
   
-  button:hover {
+  .view-btn:hover {
     background-color: #0056b3;
   }
   
