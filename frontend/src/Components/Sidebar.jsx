@@ -18,13 +18,13 @@ const Sidebar = ()=> {
         </div>
         <div className='sidebar-menu'>
           <ul>
-            <li><Link to="/"><FontAwesomeIcon icon={faGauge} />Dashboard</Link></li>
-            <li><Link to="/AssetCapture"><FontAwesomeIcon icon={faCartShopping} />Asset Capture</Link></li>
+            <li><Link to="/"><FontAwesomeIcon icon={faGauge} style={{ width : "25%"}}/>Dashboard</Link></li>
+            <li><Link to="/AssetCapture"><FontAwesomeIcon icon={faCartShopping} style={{ width : "25%"}}/>Asset Capture</Link></li>
             {/* <li><Link to="/Product_list"><FontAwesomeIcon icon={faList} />Product List</Link></li> */}
-            <li><Link to="/Inventory"><FontAwesomeIcon icon={faLayerGroup} />Inventory</Link></li>
-            <li><Link to="/MISReport"><FontAwesomeIcon icon={faReceipt} />MIS Report</Link></li>
-            <li><Link to="/Setting"><FontAwesomeIcon icon={faGear} />Settings</Link></li>
-            <li><Link to="/Classification"><FontAwesomeIcon icon={faRecycle} />Classification</Link></li>
+            <li><Link to="/Inventory"><FontAwesomeIcon icon={faLayerGroup} style={{ width : "25%"}}/>Inventory</Link></li>
+            <li><Link to="/MISReport"><FontAwesomeIcon icon={faReceipt} style={{ width : "25%"}}/>MIS Report</Link></li>
+            <li><Link to="/Setting"><FontAwesomeIcon icon={faGear} style={{ width : "25%"}}/>Settings</Link></li>
+            <li><Link to="/Classification"><FontAwesomeIcon icon={faRecycle} style={{ width : "25%"}}/>Classification</Link></li>
           </ul>
         </div>
       </div>
