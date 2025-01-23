@@ -1,10 +1,57 @@
 import React from 'react'
 import "../Page_styles/Setting.css"
-import { Link, Route, Routes , Navigate} from 'react-router-dom'
+import { Link, Route, Routes , Navigate , useNavigate} from 'react-router-dom'
 import MyProfile from '../Inner_sections/MyProfile'
 import Security from '../Inner_sections/Security'
+import {useState , useEffect } from 'react'
 
 const Setting = () => {
+  const [userData, setUserData] = useState(null);
+
+  const navigate = useNavigate();
+  
+    const handleLogout = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      // Reset the userData state as well
+      setUserData(null);
+      // Redirect to the login page
+      navigate("/User/Login");
+    };
+
+    useEffect(() => {
+      const fetchUserData = async () => {
+        const token = localStorage.getItem("token");
+  
+        if (!token) {
+          alert("Please log in.");
+          navigate("/User/Login"); // Redirect to login if no token is found
+          return;
+        }
+  
+        try {
+          const response = await fetch("https://asset-manager-new.onrender.com/api/auth/user", {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`, // Send token in the Authorization header
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+  
+          const data = await response.json();
+          setUserData(data); // Set user data to state
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          alert("Error fetching user data. Please try again.");
+        }
+      };
+  
+      fetchUserData();
+    }, [navigate]);
+  
   return (
     <div className='setting-container'>
       <div className="heading">
@@ -18,7 +65,7 @@ const Setting = () => {
                 <Link to="/Setting/General">General</Link>
                 <Link to="/Setting/TeamMember">Team Member</Link>
                 <Link to="/Setting/Notification">Notification</Link>
-{/*                 <Link to="/Setting/Logout" className='logout'>Logout</Link> */}
+                <button className='log-btn' onClick={handleLogout}>Logout</button>
             </div>
         </div>
         <div className="settings">
