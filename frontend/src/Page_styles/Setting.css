@@ -60,6 +60,15 @@
     /* display: flex;
     justify-content: center; */
 }
-.logout{
+.log-btn{
     color: #ff0000;
+    border: none;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 10px;
+    background: transparent;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    height: 15%;
+    align-items: center;
 }
