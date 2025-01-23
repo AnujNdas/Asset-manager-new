@@ -70,7 +70,7 @@ const Inventory = () => {
                 <td>{asset.assetStatus}</td>
                 <td>{asset.DOP}</td>
                 <td>
-                  <button onClick={() => handleAssetClick(asset)}>View Details</button>
+                  <button onClick={() => handleAssetClick(asset)} className='view-btn'>View Details</button>
                 </td>
               </tr>
             ))}
