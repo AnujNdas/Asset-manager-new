@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Barcode from 'react-barcode';
 import '../Page_styles/Inventory.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faPenToSquare , faTrash} from '@fortawesome/free-solid-svg-icons'
 
 const Inventory = () => {
   const [assets, setAssets] = useState([]);
@@ -57,7 +59,9 @@ const Inventory = () => {
               <th>Location</th>
               <th>Asset Status</th>
               <th>Date of Purchase</th>
-              <th>Details</th> {/* New column for the button */}
+              <th>Details</th>
+              <th>Edit</th> {/* New column for the button */}
+              <th>Delete</th> {/* New column for the button */}
             </tr>
           </thead>
           <tbody>
@@ -71,6 +75,12 @@ const Inventory = () => {
                 <td>{asset.DOP}</td>
                 <td>
                   <button onClick={() => handleAssetClick(asset)} className='view-btn'>View Details</button>
+                </td>
+                <td>
+                  <button className='edit-btn'> <FontAwesomeIcon icon={faPenToSquare} /></button>
+                </td>
+                <td>
+                  <button className='delete-btn'> <FontAwesomeIcon icon={faTrash} /></button>
                 </td>
               </tr>
             ))}
