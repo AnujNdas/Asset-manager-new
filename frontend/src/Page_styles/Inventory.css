@@ -81,6 +81,18 @@ table{
     border-radius: 5px;
     cursor: pointer;
   }
+  .edit-btn{
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    color: blue;
+  }
+  .delete-btn{
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    color: red;
+  }
   
   .view-btn:hover {
     background-color: #0056b3;
