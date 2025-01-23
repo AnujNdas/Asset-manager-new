@@ -27,7 +27,7 @@ const Menubar = ({ username}) => {
           </div>
         </div> */}
         <div className='search-box'>
-          <input type='text' placeholder='Search' />
+          <input type='text' placeholder='Search' className='search-input'/>
           <button className='search-btn'>
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
