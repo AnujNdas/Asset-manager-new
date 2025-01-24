@@ -161,7 +161,19 @@ const AssetCapture = () => {
       return;
     }
 
-    const isSuccess = await saveAssetToDatabase(updatedFormData);
+    // Instead of sending the _id, we send the name of the selected unit, category, and location
+    const unit = units.find(unit => unit._id === formData.associateUnit);
+    const location = locations.find(location => location._id === formData.locationName);
+    const category = categories.find(category => category._id === formData.assetCategory);
+
+    const assetData = {
+      ...updatedFormData,
+      associateUnit: unit ? unit.name : '',
+      locationName: location ? location.name : '',
+      assetCategory: category ? category.name : '',
+    };
+
+    const isSuccess = await saveAssetToDatabase(assetData);
     if (isSuccess) {
       navigate('/Inventory');
     }
@@ -184,7 +196,18 @@ const AssetCapture = () => {
       return;
     }
 
-    const isSuccess = await saveAssetToDatabase(updatedFormData);
+    const unit = units.find(unit => unit._id === formData.associateUnit);
+    const location = locations.find(location => location._id === formData.locationName);
+    const category = categories.find(category => category._id === formData.assetCategory);
+
+    const assetData = {
+      ...updatedFormData,
+      associateUnit: unit ? unit.name : '',
+      locationName: location ? location.name : '',
+      assetCategory: category ? category.name : '',
+    };
+
+    const isSuccess = await saveAssetToDatabase(assetData);
     if (isSuccess) {
       setFormData(defaultFormData);
       setImagePreview(null);
@@ -203,6 +226,7 @@ const AssetCapture = () => {
                 name="assetCategory"
                 value={formData.assetCategory}
                 onChange={handleChange}
+                className='option-box'
               >
                 <option value="">Select Category</option>
                 {categories.map((category) => (
@@ -229,6 +253,7 @@ const AssetCapture = () => {
                 name="associateUnit"
                 value={formData.associateUnit}
                 onChange={handleChange}
+                className='option-box'
               >
                 <option value="">Select Unit</option>
                 {units.map((unit) => (
@@ -245,6 +270,7 @@ const AssetCapture = () => {
                 name="locationName"
                 value={formData.locationName}
                 onChange={handleChange}
+                className='option-box'
               >
                 <option value="">Select Location</option>
                 {locations.map((location) => (
