@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUnits, getLocations, getCategories } from '../Services/ApiServices';  // Import your API services
 import '../Page_styles/AssetCapture.css';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
@@ -7,15 +8,17 @@ import 'react-calendar/dist/Calendar.css';
 
 const AssetCapture = () => {
   const generateAssetCode = async () => {
-    const response = await fetch('https://asset-manager-new.onrender.com/api/assets/asset-code'); // Your backend URL
+    const response = await fetch('http://localhost:5001/api/assets/asset-code');
     const data = await response.json();
     return data.assetCode;
   };
+
   const generateUniqueBarcode = async () => {
-    const response = await fetch('https://asset-manager-new.onrender.com/api/assets/generate-barcode'); // Your backend URL
+    const response = await fetch('http://localhost:5001/api/assets/generate-barcode');
     const data = await response.json();
     return data.barcodeNumber;
   };
+
   const defaultFormData = {
     assetCode: '',
     assetCategory: '',
@@ -25,31 +28,69 @@ const AssetCapture = () => {
     locationName: '',
     assetSpecification: '',
     assetStatus: '',
-    DOP: null, // Initialize as null, can be changed to a default date like new Date()
-    DOE: null, // Initialize as null, same as above
+    DOP: null,
+    DOE: null,
     assetLifetime: '',
     purchaseFrom: '',
     PMD: '',
-    remarks: '',
+    image: '',
   };
 
   const [formData, setFormData] = useState(defaultFormData);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [units, setUnits] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
+  // Fetch data for units, locations, and categories
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [unitsData, locationsData, categoriesData] = await Promise.all([
+          getUnits(),
+          getLocations(),
+          getCategories(),
+        ]);
+        setUnits(unitsData);
+        setLocations(locationsData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, type, files } = e.target;
+
+    if (type === "file") {
+      const selectedFile = files[0];
+      setFormData((prevData) => ({
+        ...prevData,
+        image: selectedFile,
+      }));
+
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        setImagePreview(fileReader.result);
+      };
+      if (selectedFile) {
+        fileReader.readAsDataURL(selectedFile);
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
-  // Handle Date Change
   const handleDateChange = (date, name) => {
     setFormData((prevData) => {
       const updatedData = { ...prevData, [name]: date };
 
-      // If both DOP and DOE are present, calculate lifetime
       if (updatedData.DOP && updatedData.DOE) {
         const lifetime = calculateLifetime(updatedData.DOP, updatedData.DOE);
         updatedData.assetLifetime = lifetime;
@@ -59,39 +100,40 @@ const AssetCapture = () => {
     });
   };
 
-  // Function to calculate asset lifetime in days
   const calculateLifetime = (DOP, DOE) => {
     if (!DOP || !DOE) return '';
-
-    // Ensure DOP and DOE are Date objects
     const startDate = new Date(DOP);
     const endDate = new Date(DOE);
-
-    // Calculate difference in milliseconds
     const diffTime = endDate - startDate;
-
-    // Convert milliseconds to days
     const diffDays = diffTime / (1000 * 60 * 60 * 24);
-
-    return `${diffDays} days`; // Return the lifetime in days with " days" appended
+    return `${diffDays} days`;
   };
 
-  // Save asset to database
   const saveAssetToDatabase = async (data) => {
+    const formData = new FormData();
+    for (let key in data) {
+      if (key !== 'image') {
+        formData.append(key, data[key]);
+      }
+    }
+
+    if (data.image) {
+      formData.append('image', data.image);
+    }
+
     try {
-      const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
+      const response = await fetch('http://localhost:5001/api/assets', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        alert(`Error: ${error.message || 'Failed to add asset'}`);
+        const error = await response.text();
+        console.error("Error response:", error);
+        alert(`Error: ${error}`);
         return false;
       }
+
       const dataResponse = await response.json();
       console.log('Asset added:', dataResponse);
       alert('Asset added successfully!');
@@ -103,7 +145,6 @@ const AssetCapture = () => {
     }
   };
 
-  // Handle form submission for "Add Asset"
   const handleAddAsset = async (e) => {
     e.preventDefault();
     const newAssetCode = await generateAssetCode();
@@ -113,8 +154,8 @@ const AssetCapture = () => {
       ...formData,
       assetCode: newAssetCode,
       barcodeNumber: newBarcode,
-  };
-    // Validation check (optional)
+    };
+
     if (!formData.assetName || !formData.locationName) {
       alert('Please fill in all required fields.');
       return;
@@ -122,12 +163,10 @@ const AssetCapture = () => {
 
     const isSuccess = await saveAssetToDatabase(updatedFormData);
     if (isSuccess) {
-      console.log(isSuccess)
-      navigate('/Inventory'); // Navigate to inventory page
+      navigate('/Inventory');
     }
   };
 
-  // Handle form submission for "Add Another"
   const handleAddAnother = async (e) => {
     e.preventDefault();
 
@@ -138,8 +177,8 @@ const AssetCapture = () => {
       ...formData,
       assetCode: newAssetCode,
       barcodeNumber: newBarcode,
-  };
-    // Validation check (optional)
+    };
+
     if (!formData.assetName || !formData.locationName) {
       alert('Please fill in all required fields.');
       return;
@@ -147,159 +186,165 @@ const AssetCapture = () => {
 
     const isSuccess = await saveAssetToDatabase(updatedFormData);
     if (isSuccess) {
-      setFormData(defaultFormData); // Clear the form for adding another asset
-      
+      setFormData(defaultFormData);
+      setImagePreview(null);
     }
   };
 
   return (
-    <div className='asset-container'>
+    <div className="asset-container">
       <div className="asset-form">
-        <div className="asset-heading">
-          New Asset
-        </div>
-        <form className='capture-form'>
+        <div className="asset-heading">New Asset</div>
+        <form className="capture-form">
           <div className="input-area">
-            {/* <div className="form-entry">
-              <p> Asset Code :-</p>
-              <input
-                name='assetCode'
-                type="text"
-                value={formData.assetCode}
-                onChange={handleChange}
-                placeholder='Code'
-                disabled
-              />
-            </div> */}
             <div className="form-entry">
-              <p> Asset Category :-</p>
-              <input
-                name='assetCategory'
-                type="text"
+              <p>Asset Category:</p>
+              <select
+                name="assetCategory"
                 value={formData.assetCategory}
                 onChange={handleChange}
-              />
+              >
+                <option value="">Select Category</option>
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             </div>
-            {/* <div className="form-entry">
-              <p> Barcode Number :-</p>
-              <input
-                name='barcodeNumber'
-                type="text"
-                value={formData.barcodeNumber}
-                onChange={handleChange}
-                placeholder='Barcode'
-                disabled
-              />
-            </div> */}
+
             <div className="form-entry">
-              <p> Asset Name :-</p>
+              <p>Asset Name:</p>
               <input
-                name='assetName'
+                name="assetName"
                 type="text"
                 value={formData.assetName}
                 onChange={handleChange}
               />
             </div>
+
             <div className="form-entry">
-              <p> Associate Unit :-</p>
-              <input
-                name='associateUnit'
-                type="text"
+              <p>Associate Unit:</p>
+              <select
+                name="associateUnit"
                 value={formData.associateUnit}
                 onChange={handleChange}
-              />
+              >
+                <option value="">Select Unit</option>
+                {units.map((unit) => (
+                  <option key={unit._id} value={unit._id}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
             </div>
+
             <div className="form-entry">
-              <p> Location Name :-</p>
-              <input
-                name='locationName'
-                type="text"
+              <p>Location Name:</p>
+              <select
+                name="locationName"
                 value={formData.locationName}
                 onChange={handleChange}
-              />
+              >
+                <option value="">Select Location</option>
+                {locations.map((location) => (
+                  <option key={location._id} value={location._id}>
+                    {location.name}
+                  </option>
+                ))}
+              </select>
             </div>
+
             <div className="form-entry">
-              <p> Asset Specifications :-</p>
+              <p>Asset Specifications:</p>
               <input
-                name='assetSpecification'
+                name="assetSpecification"
                 type="text"
                 value={formData.assetSpecification}
                 onChange={handleChange}
               />
             </div>
+
             <div className="form-entry">
-              <p> Asset Status :-</p>
+              <p>Asset Status:</p>
               <input
-                name='assetStatus'
+                name="assetStatus"
                 type="text"
                 value={formData.assetStatus}
                 onChange={handleChange}
               />
             </div>
+
             <div className="form-entry">
-              <p> Date of Purchase :-</p>
+              <p>Date of Purchase:</p>
               <DatePicker
                 name="DOP"
                 value={formData.DOP}
                 onChange={(date) => handleDateChange(date, 'DOP')}
                 dateFormat="MMMM d, yyyy"
-                className='custom-DatePicker'
+                className="custom-DatePicker"
               />
             </div>
+
             <div className="form-entry">
-              <p> Date of Expiry :-</p>
+              <p>Date of Expiry:</p>
               <DatePicker
                 name="DOE"
                 value={formData.DOE}
                 onChange={(date) => handleDateChange(date, 'DOE')}
                 dateFormat="MMMM d, yyyy"
-                className='custom-DatePicker'
+                className="custom-DatePicker"
               />
             </div>
+
             <div className="form-entry">
-              <p> Asset Lifetime :-</p>
+              <p>Asset Lifetime:</p>
               <input
-                name='assetLifetime'
+                name="assetLifetime"
                 type="text"
                 value={formData.assetLifetime}
                 onChange={handleChange}
-                placeholder='Lifetime (in days)'
+                placeholder="Lifetime (in days)"
                 disabled
               />
             </div>
+
             <div className="form-entry">
-              <p> Purchased From :-</p>
+              <p>Purchased From:</p>
               <input
-                name='purchaseFrom'
+                name="purchaseFrom"
                 type="text"
                 value={formData.purchaseFrom}
                 onChange={handleChange}
               />
             </div>
+
             <div className="form-entry">
-              <p> Preventive Maintenance Date :-</p>
+              <p>Preventive Maintenance Date:</p>
               <input
-                name='PMD'
+                name="PMD"
                 type="text"
                 value={formData.PMD}
                 onChange={handleChange}
               />
             </div>
+
             <div className="form-entry">
-              <p> Remarks :-</p>
-              <input
-                name='remarks'
-                type="text"
-                value={formData.remarks}
-                onChange={handleChange}
-              />
+              <p>Upload Image:</p>
+              <input name="image" type="file" onChange={handleChange} />
+              {imagePreview && (
+                <div className="image-preview">
+                  <img src={imagePreview} alt="Preview" width="100" height="100" />
+                </div>
+              )}
             </div>
           </div>
+
           <div className="form-heading">
-            <button type='button' className='asset-btn' onClick={handleAddAsset}>
+            <button type="button" className="asset-btn" onClick={handleAddAsset}>
               Add Asset
             </button>
-            <button type='button' className='asset-btn' onClick={handleAddAnother}>
+            <button type="button" className="asset-btn" onClick={handleAddAnother}>
               Add Another
             </button>
           </div>
