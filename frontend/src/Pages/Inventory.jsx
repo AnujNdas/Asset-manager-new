@@ -106,7 +106,7 @@ const Inventory = () => {
                 </p>
               </>
             )}
-            <button onClick={closeOverlay}>Close</button> {/* Close Button */}
+            <button onClick={closeOverlay} className="close-btn">Close</button> {/* Close Button */}
           </div>
         </div>
       )}
