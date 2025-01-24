@@ -95,7 +95,7 @@
 }
 .head-box{
     height: 40%;
-    width: 95%;
+    width: 100%;
     /* background: #eb6666; */
     display: flex;
     flex-direction: row;
