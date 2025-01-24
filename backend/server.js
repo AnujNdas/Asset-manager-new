@@ -8,7 +8,7 @@ const authRoutes = require('./routes/authRoutes')
 const unitRoutes = require('./routes/unitRoutes')
 const locationRoutes = require('./routes/locationRoutes')
 const categoryRoutes = require('./routes/categoryRoutes')
-
+const path = require("path");
 // Initialize environment variables
 dotenv.config();
 
@@ -27,7 +27,7 @@ app.use(cors({
 app.use(bodyParser.json());
 // app.use(express.json());  // Instead of bodyParser.json()
 
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use("/api/assets",assetsRoutes);
 app.use("/api/auth",authRoutes);
