@@ -10,6 +10,7 @@ import Login from "./Inner_sections/Login";
 import Signup from "./Inner_sections/Signup";
 import Setting from "./Pages/Setting";
 import AssetCapture from "./Pages/AssetCapture";
+import Classification from "./Pages/Classification";
 import Inventory from "./Pages/Inventory";
 
 const App = () => {
@@ -51,6 +52,7 @@ const App = () => {
           <Route path="/AssetCapture" element={<AssetCapture/>} />
           <Route path="/Inventory" element={<Inventory/>} />
           <Route path="/Setting/*" element={<Setting/>}/>
+          <Route path="/Classification/*" element={<Classification/>}/>
         </Routes>
       </section>
 
