@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes , Navigate} from 'react-router-dom'
 import '../Page_styles/Classification.css'
 import Unit from '../Inner_sections/Unit'
 import Category from '../Inner_sections/Category'
@@ -22,6 +22,7 @@ const Classification = () => {
             <div className="classify_items">
                 <div className="classify_content">
                     <Routes>
+                        <Route path="/" element={<Navigate to="Location" />} />
                         <Route exact path='/unit' element={<Unit/>} />
                         <Route exact path='/category' element={<Category/>} />
                         <Route exact path='/location' element={<Location/>} />
