@@ -36,7 +36,7 @@
     display: flex;
     align-items: center;
     flex-direction: row;
-    gap:20px;
+    gap: 20px;
     justify-content: flex-end;
     word-spacing: 5px;
 }
@@ -55,7 +55,7 @@
 .form-entry{
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-evenly;
     height: 100%;
     width: 100%;
     align-items: center;
@@ -66,7 +66,7 @@
     height: 50%;
     border: none;
     box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-    border-radius: 10px;
+    border-radius: 5px;
     padding-left: 10px;
     color: black;
     font-family: "Montserrat" ,sans-serif;
@@ -110,5 +110,12 @@
     border: none !important;
     outline: none;
     box-shadow: none;
+}
+.option-box{
+    width: 50%;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    height: 50%;
+    border: none;
+    border-radius: 5px;
 }
 
