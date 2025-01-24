@@ -3,15 +3,30 @@ const LastAssetCode = require('../models/LastAssetCode');
 const crypto = require('crypto');
 
 // Add a new Asset
-const addAsset = async (req,res) => {
-    try {
-        console.log("Incoming data:", req.body); // Log the incoming request
-        const newAsset = new Asset(req.body);
-        const savedAsset = await newAsset.save();
-        res.status(201).json(savedAsset);
-    } catch (error) {
-        res.status(500).json({ message : "Error adding asset",error: error.message});
-    }
+const addAsset = async (req, res) => {
+  try {
+      console.log("Incoming data:", req.body); // Log the incoming request body
+      console.log("Uploaded file:", req.file);  // Log the uploaded file
+
+      if (!req.file) {
+          return res.status(400).json({ message: "Image is required" });
+      }
+
+      // Create the asset object with the data from req.body and image path
+      const newAsset = new Asset({
+          ...req.body,
+          image: `/uploads/${req.file.filename}`,  // Save the image path
+      });
+
+      // Save the asset to the database
+      const savedAsset = await newAsset.save();
+
+      // Return the saved asset
+      res.status(201).json(savedAsset);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error adding asset", error: error.message });
+  }
 };
 
 // Delete an asset by ID
