@@ -5,6 +5,9 @@ const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 const assetsRoutes = require("./routes/assetRoutes");
 const authRoutes = require('./routes/authRoutes')
+const unitRoutes = require('./routes/unitRoutes')
+const locationRoutes = require('./routes/locationRoutes')
+const categoryRoutes = require('./routes/categoryRoutes')
 
 // Initialize environment variables
 dotenv.config();
@@ -28,6 +31,9 @@ app.use(bodyParser.json());
 // Routes
 app.use("/api/assets",assetsRoutes);
 app.use("/api/auth",authRoutes);
+app.use("/api/unit",unitRoutes);
+app.use("/api/location",locationRoutes);
+app.use("/api/category",categoryRoutes);
 // Default route
 app.get("/",(req,res)=>{
     res.send("Asset management api is running...");
