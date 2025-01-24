@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Barcode from 'react-barcode';
-import '../Page_styles/Inventory.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faPenToSquare , faTrash} from '@fortawesome/free-solid-svg-icons'
+import '../Page_styles/Inventory.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Inventory = () => {
   const [assets, setAssets] = useState([]);
@@ -40,6 +40,30 @@ const Inventory = () => {
     setSelectedAsset(null);
   };
 
+  const handleDelete = async (assetId) => {
+    try {
+      // Confirm the deletion with the user
+      const confirmDelete = window.confirm('Are you sure you want to delete this asset?');
+      if (!confirmDelete) return;
+
+      // Make the DELETE request to the backend API
+      const response = await fetch(`https://asset-manager-new.onrender.com/api/assets/${assetId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // If the deletion is successful, update the state to remove the asset from the list
+        setAssets(assets.filter(asset => asset._id !== assetId));
+        alert('Asset deleted successfully!');
+      } else {
+        throw new Error('Failed to delete asset');
+      }
+    } catch (err) {
+      setError(err.message);
+      alert('Error deleting asset');
+    }
+  };
+
   if (loading) return <p>Loading assets...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -59,9 +83,9 @@ const Inventory = () => {
               <th>Location</th>
               <th>Asset Status</th>
               <th>Date of Purchase</th>
-              <th>Details</th> {/* New column for the button */}
-              <th>Edit</th> {/* New column for the button */}
-              <th>Delete</th> {/* New column for the button */}
+              <th>Details</th>
+              <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -74,13 +98,22 @@ const Inventory = () => {
                 <td>{asset.assetStatus}</td>
                 <td>{asset.DOP}</td>
                 <td>
-                  <button onClick={() => handleAssetClick(asset)} className='view-btn'>View Details</button>
+                  <button onClick={() => handleAssetClick(asset)} className="view-btn">
+                    View Details
+                  </button>
                 </td>
                 <td>
-                  <button className='edit-btn'> <FontAwesomeIcon icon={faPenToSquare} /></button>
+                  <button className="edit-btn">
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </button>
                 </td>
                 <td>
-                  <button className='delete-btn'> <FontAwesomeIcon icon={faTrash} /></button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(asset._id)} // Pass assetId to delete
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
                 </td>
               </tr>
             ))}
