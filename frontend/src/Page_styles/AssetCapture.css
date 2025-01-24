@@ -55,7 +55,7 @@
 .form-entry{
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     height: 100%;
     width: 100%;
     align-items: center;
