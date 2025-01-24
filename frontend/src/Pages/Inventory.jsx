@@ -59,7 +59,7 @@ const Inventory = () => {
               <th>Location</th>
               <th>Asset Status</th>
               <th>Date of Purchase</th>
-              <th>Details</th>
+              <th>Details</th> {/* New column for the button */}
               <th>Edit</th> {/* New column for the button */}
               <th>Delete</th> {/* New column for the button */}
             </tr>
@@ -95,7 +95,7 @@ const Inventory = () => {
             <h3>Asset Details</h3>
             {selectedAsset && (
               <>
-                <p><strong>Remarks:</strong> {selectedAsset.remarks}</p>
+                <img src={`https://asset-manager-new.onrender.com${selectedAsset.image}`} alt={selectedAsset.assetName} width="100" />
                 <p><strong>Expected Date of Expiry:</strong> {selectedAsset.DOE}</p>
                 <p><strong>Asset Lifetime:</strong> {selectedAsset.assetLifetime}</p>
                 <p><strong>Purchased From:</strong> {selectedAsset.purchaseFrom}</p>
@@ -106,7 +106,7 @@ const Inventory = () => {
                 </p>
               </>
             )}
-            <button onClick={closeOverlay} className="close-btn">Close</button> {/* Close Button */}
+            <button onClick={closeOverlay}>Close</button> {/* Close Button */}
           </div>
         </div>
       )}
