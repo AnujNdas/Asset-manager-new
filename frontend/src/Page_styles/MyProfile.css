@@ -123,10 +123,3 @@
     font-weight: 600;
     color: #565656;
 }
-.button-ed{
-    display: flex;
-    align-items: start;
-    padding-top: 10px;
-    padding-right: 30px;
-    cursor: pointer;
-}
