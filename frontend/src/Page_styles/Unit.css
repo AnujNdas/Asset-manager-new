@@ -1,1 +1,28 @@
-
+.classify_content_box{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.input{
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.input p{
+    margin: 0;
+    font-family: "Lato", sans-serif;
+    color: #565656;
+    font-weight: 600;
+}
+.input input{
+    width: 40%;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+.input_content{
+    height:70%;
+}
