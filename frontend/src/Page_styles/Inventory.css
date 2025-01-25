@@ -104,7 +104,7 @@ table{
 
 
 
-  /* Edit Form Overlay Styles */
+  /* Edit .edit-form Overlay Styles */
 .edit-overlay {
   position: fixed;
   top: 0;
@@ -118,7 +118,7 @@ table{
   z-index: 1000; /* Make sure it appears on top */
 }
 
-/* Edit Form Container */
+/* Edit .edit-form Container */
 .edit-overlay-content {
   background-color: white;
   padding: 20px;
@@ -127,22 +127,22 @@ table{
   max-width: 700px;
   /* height: 70%; */
 
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the form */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the .edit-form */
 }
-.edit-form{
+.edit-.edit-form{
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 40px;
 }
-/* Form Inputs and Labels */
-form label {
+/* .edit-form Inputs and Labels */
+.edit-form label {
   font-size: 14px;
   font-weight: bold;
   margin-top: 10px;
   display: block;
 }
 
-form input {
+.edit-form input {
   width: 100%;
   padding: 8px;
   margin: 5px 0 15px;
@@ -151,12 +151,12 @@ form input {
   box-sizing: border-box;
 }
 
-form input[type="date"] {
+.edit-form input[type="date"] {
   cursor: pointer;
 }
 
-form button[type="submit"],
-form button[type="button"] {
+.edit-form button[type="submit"],
+.edit-form button[type="button"] {
   background-color: #007bff; /* Blue color for buttons */
   color: white;
   padding: 8px 16px;
@@ -167,16 +167,16 @@ form button[type="button"] {
   margin-top: 10px;
 }
 
-form button[type="submit"]:hover,
-form button[type="button"]:hover {
+.edit-form button[type="submit"]:hover,
+.edit-form button[type="button"]:hover {
   background-color: #0056b3; /* Darker blue for hover effect */
 }
 
-form button[type="button"] {
+.edit-form button[type="button"] {
   background-color: #6c757d; /* Grey color for Cancel button */
 }
 
-form button[type="button"]:hover {
+.edit-form button[type="button"]:hover {
   background-color: #5a6268; /* Darker grey for Cancel button hover */
 }
 
