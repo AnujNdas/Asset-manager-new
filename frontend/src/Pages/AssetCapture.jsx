@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUnits, getLocations, getCategories } from '../Services/ApiServices';  // Import your API services
+import { getUnits, getLocations, getCategories, getStatuses } from '../Services/ApiServices';  // Import your API services
 import '../Page_styles/AssetCapture.css';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
@@ -41,20 +41,23 @@ const AssetCapture = () => {
   const [units, setUnits] = useState([]);
   const [locations, setLocations] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [statuses, setStatuses] = useState([]);  // State to store asset statuses
   const navigate = useNavigate();
 
-  // Fetch data for units, locations, and categories
+  // Fetch data for units, locations, categories, and statuses
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [unitsData, locationsData, categoriesData] = await Promise.all([
+        const [unitsData, locationsData, categoriesData, statusesData] = await Promise.all([
           getUnits(),
           getLocations(),
           getCategories(),
+          getStatuses(),  // Fetch the asset statuses
         ]);
         setUnits(unitsData);
         setLocations(locationsData);
         setCategories(categoriesData);
+        setStatuses(statusesData);  // Set the statuses
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -122,7 +125,7 @@ const AssetCapture = () => {
     }
 
     try {
-      const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
+      const response = await fetch('https://asset-manager-new.onrender.com//api/assets', {
         method: 'POST',
         body: formData,
       });
@@ -161,16 +164,17 @@ const AssetCapture = () => {
       return;
     }
 
-    // Instead of sending the _id, we send the name of the selected unit, category, and location
     const unit = units.find(unit => unit._id === formData.associateUnit);
     const location = locations.find(location => location._id === formData.locationName);
     const category = categories.find(category => category._id === formData.assetCategory);
+    const status = statuses.find(status => status._id === formData.assetStatus);  // Get selected status
 
     const assetData = {
       ...updatedFormData,
       associateUnit: unit ? unit.name : '',
       locationName: location ? location.name : '',
       assetCategory: category ? category.name : '',
+      assetStatus: status ? status.name : '',  // Send the name of the selected status
     };
 
     const isSuccess = await saveAssetToDatabase(assetData);
@@ -199,12 +203,14 @@ const AssetCapture = () => {
     const unit = units.find(unit => unit._id === formData.associateUnit);
     const location = locations.find(location => location._id === formData.locationName);
     const category = categories.find(category => category._id === formData.assetCategory);
+    const status = statuses.find(status => status._id === formData.assetStatus);  // Get selected status
 
     const assetData = {
       ...updatedFormData,
       associateUnit: unit ? unit.name : '',
       locationName: location ? location.name : '',
       assetCategory: category ? category.name : '',
+      assetStatus: status ? status.name : '',  // Send the name of the selected status
     };
 
     const isSuccess = await saveAssetToDatabase(assetData);
@@ -220,13 +226,14 @@ const AssetCapture = () => {
         <div className="asset-heading">New Asset</div>
         <form className="capture-form">
           <div className="input-area">
+            {/* Asset Category */}
             <div className="form-entry">
               <p>Asset Category:</p>
               <select
                 name="assetCategory"
                 value={formData.assetCategory}
                 onChange={handleChange}
-                className='option-box'
+                className="option-box"
               >
                 <option value="">Select Category</option>
                 {categories.map((category) => (
@@ -237,6 +244,7 @@ const AssetCapture = () => {
               </select>
             </div>
 
+            {/* Asset Name */}
             <div className="form-entry">
               <p>Asset Name:</p>
               <input
@@ -247,13 +255,14 @@ const AssetCapture = () => {
               />
             </div>
 
+            {/* Associate Unit */}
             <div className="form-entry">
               <p>Associate Unit:</p>
               <select
                 name="associateUnit"
                 value={formData.associateUnit}
                 onChange={handleChange}
-                className='option-box'
+                className="option-box"
               >
                 <option value="">Select Unit</option>
                 {units.map((unit) => (
@@ -264,13 +273,14 @@ const AssetCapture = () => {
               </select>
             </div>
 
+            {/* Location Name */}
             <div className="form-entry">
               <p>Location Name:</p>
               <select
                 name="locationName"
                 value={formData.locationName}
                 onChange={handleChange}
-                className='option-box'
+                className="option-box"
               >
                 <option value="">Select Location</option>
                 {locations.map((location) => (
@@ -281,6 +291,25 @@ const AssetCapture = () => {
               </select>
             </div>
 
+            {/* Asset Status */}
+            <div className="form-entry">
+              <p>Asset Status:</p>
+              <select
+                name="assetStatus"
+                value={formData.assetStatus}
+                onChange={handleChange}
+                className="option-box"
+              >
+                <option value="">Select Status</option>
+                {statuses.map((status) => (
+                  <option key={status._id} value={status._id}>
+                    {status.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Asset Specifications */}
             <div className="form-entry">
               <p>Asset Specifications:</p>
               <input
@@ -291,16 +320,7 @@ const AssetCapture = () => {
               />
             </div>
 
-            <div className="form-entry">
-              <p>Asset Status:</p>
-              <input
-                name="assetStatus"
-                type="text"
-                value={formData.assetStatus}
-                onChange={handleChange}
-              />
-            </div>
-
+            {/* Date of Purchase */}
             <div className="form-entry">
               <p>Date of Purchase:</p>
               <DatePicker
@@ -312,6 +332,7 @@ const AssetCapture = () => {
               />
             </div>
 
+            {/* Date of Expiry */}
             <div className="form-entry">
               <p>Date of Expiry:</p>
               <DatePicker
@@ -323,6 +344,7 @@ const AssetCapture = () => {
               />
             </div>
 
+            {/* Asset Lifetime */}
             <div className="form-entry">
               <p>Asset Lifetime:</p>
               <input
@@ -335,6 +357,7 @@ const AssetCapture = () => {
               />
             </div>
 
+            {/* Purchased From */}
             <div className="form-entry">
               <p>Purchased From:</p>
               <input
@@ -345,6 +368,7 @@ const AssetCapture = () => {
               />
             </div>
 
+            {/* Preventive Maintenance Date */}
             <div className="form-entry">
               <p>Preventive Maintenance Date:</p>
               <input
@@ -355,6 +379,7 @@ const AssetCapture = () => {
               />
             </div>
 
+            {/* Upload Image */}
             <div className="form-entry">
               <p>Upload Image:</p>
               <input name="image" type="file" onChange={handleChange} />
@@ -366,6 +391,7 @@ const AssetCapture = () => {
             </div>
           </div>
 
+          {/* Buttons */}
           <div className="form-heading">
             <button type="button" className="asset-btn" onClick={handleAddAsset}>
               Add Asset
