@@ -32,7 +32,7 @@ const Inventory = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('https://asset-manager-new.onrender.com//api/assets');
+        const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
         if (!response.ok) {
           throw new Error('Failed to fetch assets');
         }
