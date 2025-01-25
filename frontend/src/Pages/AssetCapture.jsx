@@ -226,6 +226,17 @@ const AssetCapture = () => {
         <div className="asset-heading">New Asset</div>
         <form className="capture-form">
           <div className="input-area">
+                        {/* Asset Name */}
+            <div className="form-entry">
+              <p>Asset Name:</p>
+              <input
+                name="assetName"
+                type="text"
+                value={formData.assetName}
+                onChange={handleChange}
+              />
+            </div>
+            
             {/* Asset Category */}
             <div className="form-entry">
               <p>Asset Category:</p>
@@ -242,17 +253,6 @@ const AssetCapture = () => {
                   </option>
                 ))}
               </select>
-            </div>
-
-            {/* Asset Name */}
-            <div className="form-entry">
-              <p>Asset Name:</p>
-              <input
-                name="assetName"
-                type="text"
-                value={formData.assetName}
-                onChange={handleChange}
-              />
             </div>
 
             {/* Associate Unit */}
