@@ -125,7 +125,7 @@ const AssetCapture = () => {
     }
 
     try {
-      const response = await fetch('https://asset-manager-new.onrender.com//api/assets', {
+      const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
         method: 'POST',
         body: formData,
       });
