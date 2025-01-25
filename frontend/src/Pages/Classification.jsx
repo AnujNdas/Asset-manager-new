@@ -17,7 +17,7 @@ const Classification = () => {
                     <Link to="/classification/location">Location</Link>
                     <Link to="/classification/unit">Unit</Link>
                     <Link to="/classification/category">Category</Link>
-                    <Link to="/status">Status</Link>
+                    <Link to="/classification/status">Status</Link>
                 </div>
             </div>
             <div className="classify_items">
