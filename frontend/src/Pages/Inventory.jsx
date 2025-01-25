@@ -194,7 +194,11 @@ const Inventory = () => {
             <h3>Asset Details</h3>
             {selectedAsset && (
               <>
-                <img src={`https://asset-manager-new.onrender.com${selectedAsset.image}`} alt={selectedAsset.assetName} width="100" />
+                <img 
+                  src={selectedAsset.image ? `https://asset-manager-new.onrender.com${selectedAsset.image}` : 'not loaded'} 
+                  alt={selectedAsset.assetName} 
+                  width="100" 
+                />
                 <p><strong>Expected Date of Expiry:</strong> {selectedAsset.DOE}</p>
                 <p><strong>Asset Lifetime:</strong> {selectedAsset.assetLifetime}</p>
                 <p><strong>Purchased From:</strong> {selectedAsset.purchaseFrom}</p>
