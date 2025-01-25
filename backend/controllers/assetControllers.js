@@ -29,6 +29,42 @@ const addAsset = async (req, res) => {
   }
 };
 
+
+// Update an asset by ID
+const updateAsset = async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Check if the asset exists
+    const existingAsset = await Asset.findById(id);
+    if (!existingAsset) {
+      return res.status(404).json({ message: "Asset not found" });
+    }
+
+    // Create a copy of the request body (excluding the assetCode and barcode)
+    let updatedAssetData = { ...req.body };
+
+    // Make sure the asset code and barcode remain unchanged
+    updatedAssetData.assetCode = existingAsset.assetCode;
+    updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
+
+    // Handle the image update if a new image is provided
+    if (req.file) {
+      updatedAssetData.image = `/uploads/${req.file.filename}`; // Save the image path if a new image is uploaded
+    }
+
+    // Update the asset in the database
+    const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
+
+    // Return the updated asset
+    res.status(200).json(updatedAsset);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating asset", error: error.message });
+  }
+};
+
+
+
 // Delete an asset by ID
 const deleteAsset = async (req,res) => {
     try {
@@ -99,5 +135,6 @@ module.exports = {
     deleteAsset,
     getAllAssets,
     generateAssetCode,
-    generateBarcode
+    generateBarcode,
+    updateAsset
 };
