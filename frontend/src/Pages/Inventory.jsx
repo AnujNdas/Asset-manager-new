@@ -32,7 +32,7 @@ const Inventory = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/assets');
+        const response = await fetch('https://asset-manager-new.onrender.com//api/assets');
         if (!response.ok) {
           throw new Error('Failed to fetch assets');
         }
@@ -47,10 +47,10 @@ const Inventory = () => {
 
     const fetchCategoriesAndStatuses = async () => {
       try {
-        const categoriesResponse = await fetch('http://localhost:5001/api/category');
-        const statusesResponse = await fetch('http://localhost:5001/api/status');
-        const locationsResponse = await fetch('http://localhost:5001/api/location');
-        const unitsResponse = await fetch('http://localhost:5001/api/unit');
+        const categoriesResponse = await fetch('https://asset-manager-new.onrender.com//api/category');
+        const statusesResponse = await fetch('https://asset-manager-new.onrender.com//api/status');
+        const locationsResponse = await fetch('https://asset-manager-new.onrender.com//api/location');
+        const unitsResponse = await fetch('https://asset-manager-new.onrender.com//api/unit');
         
         if (
           !categoriesResponse.ok ||
@@ -123,7 +123,7 @@ const Inventory = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/assets/${selectedAsset._id}`, {
+      const response = await fetch(`https://asset-manager-new.onrender.com//api/assets/${selectedAsset._id}`, {
         method: 'PUT',
         body: formData,
       });
@@ -147,7 +147,7 @@ const Inventory = () => {
       const confirmDelete = window.confirm('Are you sure you want to delete this asset?');
       if (!confirmDelete) return;
 
-      const response = await fetch(`http://localhost:5001/api/assets/${assetId}`, {
+      const response = await fetch(`https://asset-manager-new.onrender.com//api/assets/${assetId}`, {
         method: 'DELETE',
       });
 
@@ -224,7 +224,7 @@ const Inventory = () => {
             <h3>Asset Details</h3>
             {selectedAsset && (
               <>
-                <img src={`http://localhost:5001${selectedAsset.image}`} alt={selectedAsset.assetName} width="100" />
+                <img src={`https://asset-manager-new.onrender.com/${selectedAsset.image}`} alt={selectedAsset.assetName} width="100" />
                 <p><strong>Expected Date of Expiry:</strong> {selectedAsset.DOE}</p>
                 <p><strong>Asset Lifetime:</strong> {selectedAsset.assetLifetime}</p>
                 <p><strong>Purchased From:</strong> {selectedAsset.purchaseFrom}</p>
