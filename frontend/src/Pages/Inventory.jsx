@@ -268,6 +268,7 @@ const Inventory = () => {
               <div className="edit-entry">
                 <label>Asset Category:</label>
                 <select
+                  className="edit-dropdown"
                   value={editFormData.assetCategory || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, assetCategory: e.target.value })}
                 >
@@ -284,6 +285,7 @@ const Inventory = () => {
               <div className="edit-entry">
                 <label>Location:</label>
                 <select
+                  className="edit-dropdown"
                   value={editFormData.locationName || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, locationName: e.target.value })}
                 >
@@ -300,6 +302,7 @@ const Inventory = () => {
               <div className="edit-entry">
                 <label>Unit:</label>
                 <select
+                  className="edit-dropdown"
                   value={editFormData.unit || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, unit: e.target.value })}
                 >
@@ -315,6 +318,7 @@ const Inventory = () => {
               <div className="edit-entry">
                 <label>Asset Status:</label>
                 <select
+                  className="edit-dropdown"
                   value={editFormData.assetStatus || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, assetStatus: e.target.value })}
                 >
