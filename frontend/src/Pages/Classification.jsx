@@ -4,6 +4,7 @@ import '../Page_styles/Classification.css'
 import Unit from '../Inner_sections/Unit'
 import Category from '../Inner_sections/Category'
 import Location from '../Inner_sections/Location'
+import Status from '../Inner_sections/Status'
 const Classification = () => {
   return (
     <div className='classification_container'>
@@ -26,6 +27,7 @@ const Classification = () => {
                         <Route exact path='/unit' element={<Unit/>} />
                         <Route exact path='/category' element={<Category/>} />
                         <Route exact path='/location' element={<Location/>} />
+                        <Route exact path='/status' element={<Status/>} />
                     </Routes>
                 </div>
             </div>
