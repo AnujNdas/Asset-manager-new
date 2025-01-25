@@ -129,7 +129,7 @@ table{
 
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the .edit-form */
 }
-.edit-.edit-form{
+.edit-form{
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 40px;
