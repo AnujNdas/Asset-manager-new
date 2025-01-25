@@ -343,14 +343,14 @@ const Inventory = () => {
                   onChange={(e) => setEditFormData({ ...editFormData, DOE: e.target.value })}
                 />
               </div>
-              <div className="edit-entry">
+{/*               <div className="edit-entry">
                 <label>Asset Lifetime:</label>
                 <input
                   type="date"
                   value={editFormData.assetLifetime || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, assetLifetime: e.target.value })}
                 />
-              </div>
+              </div> */}
               <div className="edit-entry">
                 <label>Purchase From:</label>
                 <input
