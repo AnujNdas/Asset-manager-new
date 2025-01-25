@@ -71,4 +71,25 @@ export const createCategory = async (categoryData) => {
   }
 };
 
+// Services/ApiServices.js
 
+export const getStatuses = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/status`);  // Make sure your backend has the correct endpoint
+    return response.data;  // Return the list of statuses
+  } catch (error) {
+    console.error('Error fetching statuses:', error);
+    throw error;  // Throw error so we can catch it in the component
+  }
+};
+
+// Create a new status
+export const createStatus = async (statusData) => {
+  try {
+    const response = await axios.post(`${API_URL}/status`, statusData);  // Adjust endpoint for creating status
+    return response.data;  // Return the newly created status
+  } catch (error) {
+    console.error('Error creating status:', error);
+    throw error;  // Throw error so we can catch it in the component
+  }
+};
