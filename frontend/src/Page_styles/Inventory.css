@@ -158,6 +158,14 @@ table{
   border-radius: 4px;
   box-sizing: border-box;
 }
+.edit-dropdown {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
 
 .edit-form input[type="date"] {
   cursor: pointer;
