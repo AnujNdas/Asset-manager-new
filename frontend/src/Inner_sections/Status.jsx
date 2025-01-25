@@ -43,7 +43,7 @@ const Status = () => {
   }, []);
 
   return (
-    <div className='status_content_box'>
+    <div className='classify_content_box'>
       <form className="input" onSubmit={handleFormSubmit}>
         <p> Enter Status: </p>
         <input
