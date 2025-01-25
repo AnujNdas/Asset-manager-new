@@ -6,6 +6,10 @@ import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Inventory = () => {
   const [assets, setAssets] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+  const [locations, setLocations] = useState([]); // State for locations
+  const [units, setUnits] = useState([]); // State for units
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
@@ -15,24 +19,25 @@ const Inventory = () => {
     assetSpecification: '',
     assetCategory: '',
     locationName: '',
+    unit: '',
     assetStatus: '',
     DOP: '',
-    DOE:'',
-    assetLifetime:'',
-    purchaseFrom:'',
-    image:'',
+    DOE: '',
+    assetLifetime: '',
+    purchaseFrom: '',
+    image: '',
   });
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
+        const response = await fetch('http://localhost:5001/api/assets');
         if (!response.ok) {
           throw new Error('Failed to fetch assets');
         }
         const data = await response.json();
-        setAssets(data); // Store fetched assets in the state
+        setAssets(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -40,7 +45,38 @@ const Inventory = () => {
       }
     };
 
+    const fetchCategoriesAndStatuses = async () => {
+      try {
+        const categoriesResponse = await fetch('http://localhost:5001/api/category');
+        const statusesResponse = await fetch('http://localhost:5001/api/status');
+        const locationsResponse = await fetch('http://localhost:5001/api/location');
+        const unitsResponse = await fetch('http://localhost:5001/api/unit');
+        
+        if (
+          !categoriesResponse.ok ||
+          !statusesResponse.ok ||
+          !locationsResponse.ok ||
+          !unitsResponse.ok
+        ) {
+          throw new Error('Failed to fetch required data');
+        }
+
+        const categoriesData = await categoriesResponse.json();
+        const statusesData = await statusesResponse.json();
+        const locationsData = await locationsResponse.json();
+        const unitsData = await unitsResponse.json();
+
+        setCategories(categoriesData);
+        setStatuses(statusesData);
+        setLocations(locationsData);
+        setUnits(unitsData);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
     fetchAssets();
+    fetchCategoriesAndStatuses();
   }, []);
 
   const handleAssetClick = (asset) => {
@@ -52,76 +88,70 @@ const Inventory = () => {
     setShowOverlay(false);
     setSelectedAsset(null);
   };
+
   const handleEditClick = (asset) => {
-    // Ensure all values in `asset` have a fallback to avoid `undefined` or `null` values
     setSelectedAsset(asset);
     setEditFormData({
-      assetName: asset.assetName || '', // Fallback to empty string if undefined or null
-      assetSpecification: asset.assetSpecification || '', // Ensure no undefined or null values
+      assetName: asset.assetName || '',
+      assetSpecification: asset.assetSpecification || '',
       assetCategory: asset.assetCategory || '',
       locationName: asset.locationName || '',
+      unit: asset.unit || '', // Ensure we handle unit as well
       assetStatus: asset.assetStatus || '',
-      DOP: asset.DOP || '', // Date of Purchase (ensure it's a string or default)
-      DOE: asset.DOE || '', // Date of Expiry (ensure it's a string or default)
+      DOP: asset.DOP || '',
+      DOE: asset.DOE || '',
       purchaseFrom: asset.purchaseFrom || '',
-      image: asset.image || '', // Ensure there's a fallback for image
-      assetLifetime: asset.assetLifetime || '', // Ensure assetLifetime is defined
+      image: asset.image || '',
+      assetLifetime: asset.assetLifetime || '',
     });
     setIsEditing(true);
   };
-  
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-  
-    const formData = new FormData();  // Use FormData for file uploads
-  
-    // Append regular form fields (don't send the image field as string or object, send it separately)
+
+    const formData = new FormData();
+
     Object.keys(editFormData).forEach((key) => {
-      if (key !== 'image') {  // Don't append the image directly to the form data
+      if (key !== 'image') {
         formData.append(key, editFormData[key]);
       }
     });
-  
-    // If there's an image, append the file object
+
     if (editFormData.image) {
       formData.append('image', editFormData.image);
     }
-  
+
     try {
-      const response = await fetch(`https://asset-manager-new.onrender.com/api/assets/${selectedAsset._id}`, {
+      const response = await fetch(`http://localhost:5001/api/assets/${selectedAsset._id}`, {
         method: 'PUT',
-        body: formData,  // Send the form data with the image
+        body: formData,
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to update asset');
       }
-  
+
       const updatedAsset = await response.json();
       setAssets(assets.map((asset) => (asset._id === updatedAsset._id ? updatedAsset : asset)));
       alert('Asset updated successfully!');
-      setIsEditing(false);  // Close the edit form
+      setIsEditing(false);
     } catch (err) {
       setError(err.message);
       alert('Error updating asset');
     }
   };
-  
 
   const handleDelete = async (assetId) => {
     try {
-      // Confirm the deletion with the user
       const confirmDelete = window.confirm('Are you sure you want to delete this asset?');
       if (!confirmDelete) return;
 
-      // Make the DELETE request to the backend API
-      const response = await fetch(`https://asset-manager-new.onrender.com/api/assets/${assetId}`, {
+      const response = await fetch(`http://localhost:5001/api/assets/${assetId}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        // If the deletion is successful, update the state to remove the asset from the list
         setAssets(assets.filter((asset) => asset._id !== assetId));
         alert('Asset deleted successfully!');
       } else {
@@ -194,11 +224,7 @@ const Inventory = () => {
             <h3>Asset Details</h3>
             {selectedAsset && (
               <>
-                <img 
-                  src={selectedAsset.image ? `https://asset-manager-new.onrender.com${selectedAsset.image}` : 'not loaded'} 
-                  alt={selectedAsset.assetName} 
-                  width="100" 
-                />
+                <img src={`http://localhost:5001${selectedAsset.image}`} alt={selectedAsset.assetName} width="100" />
                 <p><strong>Expected Date of Expiry:</strong> {selectedAsset.DOE}</p>
                 <p><strong>Asset Lifetime:</strong> {selectedAsset.assetLifetime}</p>
                 <p><strong>Purchased From:</strong> {selectedAsset.purchaseFrom}</p>
@@ -209,7 +235,7 @@ const Inventory = () => {
                 </p>
               </>
             )}
-            <button onClick={closeOverlay} className="close-btn">Close</button>
+            <button onClick={closeOverlay}>Close</button>
           </div>
         </div>
       )}
@@ -222,8 +248,8 @@ const Inventory = () => {
         <div className="edit-overlay">
           <div className="edit-overlay-content">
             <h3>Edit Asset</h3>
-            <form onSubmit={handleEditSubmit} className='edit-form'>
-              <div className='edit-entry'>
+            <form onSubmit={handleEditSubmit} className="edit-form">
+              <div className="edit-entry">
                 <label>Asset Name:</label>
                 <input
                   type="text"
@@ -231,37 +257,74 @@ const Inventory = () => {
                   onChange={(e) => setEditFormData({ ...editFormData, assetName: e.target.value })}
                 />
               </div>
-              <div className='edit-entry'>
+              <div className="edit-entry">
                 <label>Asset Specification:</label>
                 <input
-                    type="text"
-                    value={editFormData.assetSpecification || ''}
-                    onChange={(e) => setEditFormData({ ...editFormData, assetSpecification: e.target.value })}
-                  />
+                  type="text"
+                  value={editFormData.assetSpecification || ''}
+                  onChange={(e) => setEditFormData({ ...editFormData, assetSpecification: e.target.value })}
+                />
               </div>
               <div className="edit-entry">
                 <label>Asset Category:</label>
-                <input
-                  type="text"
+                <select
                   value={editFormData.assetCategory || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, assetCategory: e.target.value })}
-                />
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
               </div>
+
+              {/* Location Dropdown */}
               <div className="edit-entry">
                 <label>Location:</label>
-                <input
-                  type="text"
+                <select
                   value={editFormData.locationName || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, locationName: e.target.value })}
-                />
+                >
+                  <option value="">Select Location</option>
+                  {locations.map((location) => (
+                    <option key={location._id} value={location._id}>
+                      {location.name}
+                    </option>
+                  ))}
+                </select>
               </div>
+
+              {/* Unit Dropdown */}
               <div className="edit-entry">
-                <label>Status:</label>
-                <input
-                  type="text"
+                <label>Unit:</label>
+                <select
+                  value={editFormData.unit || ''}
+                  onChange={(e) => setEditFormData({ ...editFormData, unit: e.target.value })}
+                >
+                  <option value="">Select Unit</option>
+                  {units.map((unit) => (
+                    <option key={unit._id} value={unit._id}>
+                      {unit.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="edit-entry">
+                <label>Asset Status:</label>
+                <select
                   value={editFormData.assetStatus || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, assetStatus: e.target.value })}
-                />
+                >
+                  <option value="">Select Status</option>
+                  {statuses.map((status) => (
+                    <option key={status._id} value={status._id}>
+                      {status.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="edit-entry">
@@ -281,7 +344,7 @@ const Inventory = () => {
                 />
               </div>
               <div className="edit-entry">
-                <label>Asset Lifetime :</label>
+                <label>Asset Lifetime:</label>
                 <input
                   type="date"
                   value={editFormData.assetLifetime || ''}
@@ -289,7 +352,7 @@ const Inventory = () => {
                 />
               </div>
               <div className="edit-entry">
-                <label>Purchase From :</label>
+                <label>Purchase From:</label>
                 <input
                   type="text"
                   value={editFormData.purchaseFrom || ''}
@@ -300,14 +363,16 @@ const Inventory = () => {
                 <label>Image:</label>
                 <input
                   type="file"
-                  onChange={(e) => setEditFormData({ ...editFormData, image: e.target.files[0] })}  // Store the file object
+                  onChange={(e) => setEditFormData({ ...editFormData, image: e.target.files[0] })}
                 />
               </div>
 
-             
-              {/* Add other fields as needed */}
-              <button type="submit" className='submit-btn'>Save Changes</button>
-              <button type="button" onClick={() => setIsEditing(false)} className='close-btn'>Cancel</button>
+              <button type="submit" className="submit-btn">
+                Save Changes
+              </button>
+              <button type="button" onClick={() => setIsEditing(false)} className="close-btn">
+                Cancel
+              </button>
             </form>
           </div>
         </div>
