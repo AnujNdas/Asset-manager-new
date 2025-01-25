@@ -84,6 +84,14 @@ table{
     border-radius: 10px;
     cursor: pointer;
   }
+  .close-btn {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
   
   .view-btn:hover {
     background-color: #0056b3;
