@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const { addAsset, deleteAsset, getAllAssets, generateAssetCode, generateBarcode } = require("../controllers/assetControllers");
+const { addAsset, deleteAsset, getAllAssets, generateAssetCode, generateBarcode, updateAsset } = require("../controllers/assetControllers");
 
 const router = express.Router();
 
@@ -28,5 +28,7 @@ router.get('/asset-code', generateAssetCode);
 
 // Route to generate barcode
 router.get('/generate-barcode', generateBarcode);
+
+router.put("/:id", upload.single("image"), updateAsset);  // Update asset with ID and image upload
 
 module.exports = router;
