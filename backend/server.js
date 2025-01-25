@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes')
 const unitRoutes = require('./routes/unitRoutes')
 const locationRoutes = require('./routes/locationRoutes')
 const categoryRoutes = require('./routes/categoryRoutes')
+const statusRoutes = require('./routes/statusRoutes')
 const path = require("path");
 // Initialize environment variables
 dotenv.config();
@@ -34,6 +35,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/unit",unitRoutes);
 app.use("/api/location",locationRoutes);
 app.use("/api/category",categoryRoutes);
+app.use("/api/status",statusRoutes);
 // Default route
 app.get("/",(req,res)=>{
     res.send("Asset management api is running...");
