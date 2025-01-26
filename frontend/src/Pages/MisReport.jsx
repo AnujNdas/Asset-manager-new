@@ -1,56 +1,72 @@
-import React from 'react'
-import { useState, useEffect } from 'react';
-import "../Page_styles/MisReport.css"
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import React, { useState, useEffect } from 'react';
+import "../Page_styles/MisReport.css";
 
 const MisReport = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [assetType, setAssetType] = useState('all');
-    const [performance, setPerformance] = useState('all');
+    const [statuses, setStatuses] = useState([]);
+    const [units, setUnits] = useState([]);
     const [assets, setAssets] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const data = {
-        labels: ['January', 'February', 'March', 'April', 'May'],
-        datasets: [
-            {
-                label: 'Asset Value Over Time',
-                data: [400000, 450000, 470000, 480000, 510000],
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-            },
-        ],
-    };
-
-    const kpis = [
-        { label: 'Total Asset Value', value: '$10,000,000' },
-        { label: 'Growth/Decline', value: '+5.2%' },
-        { label: 'Total Revenue', value: '$500,000' },
-    ];
-
+    // Fetch assets and populate categories, statuses, locations, and units
     useEffect(() => {
         const fetchAssets = async () => {
             try {
-              const response = await fetch('http://localhost:5001/api/assets');
-              if (!response.ok) {
-                throw new Error('Failed to fetch assets');
-              }
-              const data = await response.json();
-              setAssets(data);
-              console.log(data)
+                const response = await fetch('http://localhost:5001/api/assets');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch assets');
+                }
+                const data = await response.json();
+                console.log('Assets:', data);
+                setAssets(data);
             } catch (err) {
-              setError(err.message);
+                setError(err.message);
             } finally {
-              setLoading(false);
+                setLoading(false);
             }
-          };
-          fetchAssets();
-    }, [])
+        };
+    
+        const fetchCategoriesAndStatuses = async () => {
+            try {
+                const categoriesResponse = await fetch('http://localhost:5001/api/category');
+                const statusesResponse = await fetch('http://localhost:5001/api/status');
+                const locationsResponse = await fetch('http://localhost:5001/api/location');
+                const unitsResponse = await fetch('http://localhost:5001/api/unit');
+    
+                if (
+                    !categoriesResponse.ok ||
+                    !statusesResponse.ok ||
+                    !locationsResponse.ok ||
+                    !unitsResponse.ok
+                ) {
+                    throw new Error('Failed to fetch required data');
+                }
+    
+                const categoriesData = await categoriesResponse.json();
+                const statusesData = await statusesResponse.json();
+                const locationsData = await locationsResponse.json();
+                const unitsData = await unitsResponse.json();
+                
+                console.log('Units:', unitsData);  // Add this log to check if units are fetched
+    
+                setCategories(categoriesData);
+                setStatuses(statusesData);
+                setLocations(locationsData);
+                setUnits(unitsData);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+    
+        fetchAssets();
+        fetchCategoriesAndStatuses();
+        {console.log('Asset Unit ID:', assets.associateUnit)}
+
+    }, []);
     
 
     const handleDateChange = (e) => {
@@ -61,114 +77,118 @@ const MisReport = () => {
         }
     };
 
-    const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'asset-type') {
-            setAssetType(value);
-        } else if (name === 'performance') {
-            setPerformance(value);
-        }
-    };
-
     return (
         <div className="App">
             <div className="mis-content">
+                <header className="header">
+                    <h1>Asset Management Report</h1>
+                    <div className="date-range">
+                        <label>Date Range:</label>
+                    </div>
+                    <div className="mis-button">
+                        <button className="download-csv">CSV</button>
+                        <button className="download-excel">EXCEL</button>
+                        <button className="download-pdf">PDF</button>
+                    </div>
+                </header>
 
-            <header className="header">
-                <h1>Asset Management Report</h1>
-                <div className="date-range">
-                    <label>Date Range:</label>
-                    
-                </div>
-                <div className="mis-button">
-                    <button className="download-csv">Download CSV</button>
-                    <button className="download-excel">Download EXCEL</button>
-                    <button className="download-pdf">Download PDF</button>
-                </div>
-            </header>
+                {/* Filters Section */}
+                <aside className="filters">
+                    <div className="mis-form">
+                        <h3>Filters</h3>
+                        <form className="mis-form-menu">
+                            <label>Asset Category:</label>
+                            <select name="assetCategory">
+                                <option value="">All</option>
+                                {categories.map((category) => (
+                                    <option key={category._id} value={category.name}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select>
 
-            {/* Filters Section */}
-            <aside className="filters">
-                <div className="mis-form">
-                <h3>Filters</h3>
-                    <form className='mis-form-menu'>
-                        <label>Asset Category:</label>
-                        <select name="asset-type" value={assetType} onChange={handleFilterChange}>
-                            <option value="all">All</option>
-                            <option value="real-estate">Real Estate</option>
-                            <option value="stocks">Stocks</option>
-                            <option value="bonds">Bonds</option>
-                        </select>
-                        <label>Location:</label>
-                        <select name="performance" value={performance} onChange={handleFilterChange}>
-                            <option value="all">All</option>
-                            <option value="top">Top Performing</option>
-                            <option value="underperforming">Underperforming</option>
-                        </select>
-                        <label>Date of Purchase:</label>
-                        <input type="date" name="start-date" value={startDate} onChange={handleDateChange} />
-                        <label>Date of Expiry:</label>
-                        <input type="date" name="end-date" value={endDate} onChange={handleDateChange} />
-                    </form>
-                </div>
-                <section className="asset-list">
-                    <div className='heading'>Asset List</div>
-                    <table className='mis-table'>
-                        <thead>
-                            <tr>
-                                <th>Asset Name</th>
-                                <th>Asset Type</th>
-                                <th>Value</th>
-                                <th>Performance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {assets.map((asset) => (
-                                <tr key={asset.name}>
-                                    <td>{asset.name}</td>
-                                    <td>{asset.type}</td>
-                                    <td>{asset.value}</td>
-                                    <td>{asset.performance}</td>
+                            <label>Location:</label>
+                            <select name="performance">
+                                <option value="">All</option>
+                                {locations.map((location) => (
+                                    <option key={location._id} value={location.name}>
+                                        {location.name}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <label>Date of Purchase:</label>
+                            <input type="date" name="start-date" value={startDate} onChange={handleDateChange} />
+                            <label>Date of Expiry:</label>
+                            <input type="date" name="end-date" value={endDate} onChange={handleDateChange} />
+                        </form>
+                    </div>
+
+                    <section className="asset-list">
+                        <div className="heading">Asset List</div>
+                        <table className="mis-table">
+                            <thead>
+                                <tr>
+                                    <th>Asset Name</th>
+                                    <th>Asset Specification</th>
+                                    <th>Units</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </section>
-                
-            </aside>
-            
+                            </thead>
+                            <tbody>
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan="4">Loading...</td>
+                                    </tr>
+                                ) : (
+                                    assets.map((asset) => (
+                                        <tr key={asset._id}>
+                                            <td>{asset.assetName}</td>
+                                            <td>{asset.assetSpecification}</td>
+                                            <td>
+                                            {units && asset.associateUnit ? (
+                                                units.find(unit => unit._id === asset.associateUnit)
+                                                ? units.find(unit => unit._id === asset.associateUnit).name
+                                                : 'No unit'
+                                            ) : (
+                                                'Loading...'
+                                            )}
+                                            </td>
+                                            <td>
+                                                {statuses && asset.assetStatus ? (
+                                                    statuses.find(status => status._id === asset.assetStatus)
+                                                    ? statuses.find(status => status._id === asset.assetStatus).name
+                                                    : 'No status'
+                                                ) : (
+                                                    'Loading...'
+                                                )}
+                                                </td>
+                                                <td>
+                                                {locations && asset.locationName ? (
+                                                    locations.find(location => location._id === asset.locationName)
+                                                    ? locations.find(location => location._id === asset.locationName).name
+                                                    : 'No location'
+                                                ) : (
+                                                    'Loading...'
+                                                )}
+                                                </td>
 
-            {/* Main Content Section */}
-            {/* <main className="main-content">
-                {/* Key Performance Indicators */}
-                {/* <section className="kpis">
-                    <h2>Key Performance Indicators (KPIs)</h2>
-                    {kpis.map((kpi) => (
-                        <div className="kpi-item" key={kpi.label}>
-                            <span>{kpi.label}:</span>
-                            <span>{kpi.value}</span>
-                        </div>
-                    ))}
-                </section>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </section>
+                </aside>
 
-                {/* Charts Section */}
-                {/* <section className="charts">
-                    <h2>Asset Performance</h2>
-                    <Line data={data} options={{ responsive: true }} />
-                </section>
-
-                {/* Asset List Section */}
-                
-            {/* </main> */} 
-
-            {/* Footer Section */}
-            <footer className="footer">
-                <p>&copy; 2025 AssetManager. All Rights Reserved.</p>
-            </footer>    
+                {/* Main Content Section */}
+                <footer className="footer">
+                    <p>&copy; 2025 AssetManager. All Rights Reserved.</p>
+                </footer>
             </div>
         </div>
     );
-}
+};
 
-export default MisReport
-
+export default MisReport;
