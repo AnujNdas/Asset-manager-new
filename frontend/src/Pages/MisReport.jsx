@@ -16,7 +16,7 @@ const MisReport = () => {
     useEffect(() => {
         const fetchAssets = async () => {
             try {
-                const response = await fetch('http://localhost:5001/api/assets');
+                const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
                 if (!response.ok) {
                     throw new Error('Failed to fetch assets');
                 }
@@ -32,10 +32,10 @@ const MisReport = () => {
     
         const fetchCategoriesAndStatuses = async () => {
             try {
-                const categoriesResponse = await fetch('http://localhost:5001/api/category');
-                const statusesResponse = await fetch('http://localhost:5001/api/status');
-                const locationsResponse = await fetch('http://localhost:5001/api/location');
-                const unitsResponse = await fetch('http://localhost:5001/api/unit');
+                const categoriesResponse = await fetch('https://asset-manager-new.onrender.com/api/category');
+                const statusesResponse = await fetch('https://asset-manager-new.onrender.com/api/status');
+                const locationsResponse = await fetch('https://asset-manager-new.onrender.com/api/location');
+                const unitsResponse = await fetch('https://asset-manager-new.onrender.com/api/unit');
     
                 if (
                     !categoriesResponse.ok ||
