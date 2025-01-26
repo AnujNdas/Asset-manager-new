@@ -32,7 +32,7 @@ const Inventory = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/assets');
+        const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
         if (!response.ok) {
           throw new Error('Failed to fetch assets');
         }
@@ -47,10 +47,10 @@ const Inventory = () => {
 
     const fetchCategoriesAndStatuses = async () => {
       try {
-        const categoriesResponse = await fetch('http://localhost:5001/api/category');
-        const statusesResponse = await fetch('http://localhost:5001/api/status');
-        const locationsResponse = await fetch('http://localhost:5001/api/location');
-        const unitsResponse = await fetch('http://localhost:5001/api/unit');
+        const categoriesResponse = await fetch('https://asset-manager-new.onrender.com/api/category');
+        const statusesResponse = await fetch('https://asset-manager-new.onrender.com/api/status');
+        const locationsResponse = await fetch('https://asset-manager-new.onrender.com/api/location');
+        const unitsResponse = await fetch('https://asset-manager-new.onrender.com/api/unit');
         
         if (
           !categoriesResponse.ok ||
@@ -144,7 +144,7 @@ const Inventory = () => {
     }
   
     try {
-      const response = await fetch(`http://localhost:5001/api/assets/${selectedAsset._id}`, {
+      const response = await fetch(`https://asset-manager-new.onrender.com/api/assets/${selectedAsset._id}`, {
         method: 'PUT',
         body: formData,
       });
@@ -176,7 +176,7 @@ const Inventory = () => {
       );
       const fetchAssets = async () => {
         try {
-          const response = await fetch('http://localhost:5001/api/assets');
+          const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
           if (!response.ok) {
             throw new Error('Failed to fetch assets');
           }
@@ -206,7 +206,7 @@ const Inventory = () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this asset?');
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://localhost:5001/api/assets/${id}`, {
+        const response = await fetch(`https://asset-manager-new.onrender.com/api/assets/${id}`, {
           method: 'DELETE',
         });
 
