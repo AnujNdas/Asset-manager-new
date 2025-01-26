@@ -7,18 +7,21 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 
 const AssetCapture = () => {
+  // Function to generate asset code
   const generateAssetCode = async () => {
-    const response = await fetch('https://asset-manager-new.onrender.com/api/assets/asset-code');
+    const response = await fetch('http://localhost:5001/api/assets/asset-code');
     const data = await response.json();
     return data.assetCode;
   };
 
+  // Function to generate unique barcode
   const generateUniqueBarcode = async () => {
-    const response = await fetch('https://asset-manager-new.onrender.com/api/assets/generate-barcode');
+    const response = await fetch('http://localhost:5001/api/assets/generate-barcode');
     const data = await response.json();
     return data.barcodeNumber;
   };
 
+  // Default form data state
   const defaultFormData = {
     assetCode: '',
     assetCategory: '',
@@ -65,6 +68,7 @@ const AssetCapture = () => {
     fetchData();
   }, []);
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
@@ -90,6 +94,7 @@ const AssetCapture = () => {
     }
   };
 
+  // Handle date change for DOP and DOE
   const handleDateChange = (date, name) => {
     setFormData((prevData) => {
       const updatedData = { ...prevData, [name]: date };
@@ -103,6 +108,7 @@ const AssetCapture = () => {
     });
   };
 
+  // Calculate lifetime based on DOP and DOE
   const calculateLifetime = (DOP, DOE) => {
     if (!DOP || !DOE) return '';
     const startDate = new Date(DOP);
@@ -112,6 +118,7 @@ const AssetCapture = () => {
     return `${diffDays} days`;
   };
 
+  // Save asset to the database
   const saveAssetToDatabase = async (data) => {
     const formData = new FormData();
     for (let key in data) {
@@ -125,7 +132,7 @@ const AssetCapture = () => {
     }
 
     try {
-      const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
+      const response = await fetch('http://localhost:5001/api/assets', {
         method: 'POST',
         body: formData,
       });
@@ -148,6 +155,7 @@ const AssetCapture = () => {
     }
   };
 
+  // Handle adding asset
   const handleAddAsset = async (e) => {
     e.preventDefault();
     const newAssetCode = await generateAssetCode();
@@ -159,7 +167,7 @@ const AssetCapture = () => {
       barcodeNumber: newBarcode,
     };
 
-    if (!formData.assetName || !formData.locationName) {
+    if (!formData.assetName || !formData.locationName || !formData.assetCategory || !formData.associateUnit || !formData.assetStatus) {
       alert('Please fill in all required fields.');
       return;
     }
@@ -171,10 +179,10 @@ const AssetCapture = () => {
 
     const assetData = {
       ...updatedFormData,
-      associateUnit: unit ? unit.name : '',
-      locationName: location ? location.name : '',
-      assetCategory: category ? category.name : '',
-      assetStatus: status ? status.name : '',  // Send the name of the selected status
+      associateUnit: unit ? unit._id : '',  // Save the ID
+      locationName: location ? location._id : '',  // Save the ID
+      assetCategory: category ? category._id : '',  // Save the ID
+      assetStatus: status ? status._id : '',  // Save the ID
     };
 
     const isSuccess = await saveAssetToDatabase(assetData);
@@ -183,6 +191,7 @@ const AssetCapture = () => {
     }
   };
 
+  // Handle adding another asset
   const handleAddAnother = async (e) => {
     e.preventDefault();
 
@@ -195,7 +204,7 @@ const AssetCapture = () => {
       barcodeNumber: newBarcode,
     };
 
-    if (!formData.assetName || !formData.locationName) {
+    if (!formData.assetName || !formData.locationName || !formData.assetCategory || !formData.associateUnit || !formData.assetStatus) {
       alert('Please fill in all required fields.');
       return;
     }
@@ -207,15 +216,15 @@ const AssetCapture = () => {
 
     const assetData = {
       ...updatedFormData,
-      associateUnit: unit ? unit.name : '',
-      locationName: location ? location.name : '',
-      assetCategory: category ? category.name : '',
-      assetStatus: status ? status.name : '',  // Send the name of the selected status
+      associateUnit: unit ? unit._id : '',  // Save the ID
+      locationName: location ? location._id : '',  // Save the ID
+      assetCategory: category ? category._id : '',  // Save the ID
+      assetStatus: status ? status._id : '',  // Save the ID
     };
 
     const isSuccess = await saveAssetToDatabase(assetData);
     if (isSuccess) {
-      setFormData(defaultFormData);
+      setFormData(defaultFormData);  // Reset the form for adding another asset
       setImagePreview(null);
     }
   };
@@ -226,7 +235,7 @@ const AssetCapture = () => {
         <div className="asset-heading">New Asset</div>
         <form className="capture-form">
           <div className="input-area">
-                        {/* Asset Name */}
+            {/* Asset Name */}
             <div className="form-entry">
               <p>Asset Name:</p>
               <input
@@ -234,9 +243,8 @@ const AssetCapture = () => {
                 type="text"
                 value={formData.assetName}
                 onChange={handleChange}
-              />
+                />
             </div>
-            
             {/* Asset Category */}
             <div className="form-entry">
               <p>Asset Category:</p>
@@ -249,10 +257,23 @@ const AssetCapture = () => {
                 <option value="">Select Category</option>
                 {categories.map((category) => (
                   <option key={category._id} value={category._id}>
-                    {category.name}
+                    {category.name}  {/* Show the name, store the _id */}
                   </option>
                 ))}
               </select>
+            </div>
+
+
+
+            {/* Asset Specification */}
+            <div className="form-entry">
+              <p>Asset Specifications:</p>
+              <input
+                name="assetSpecification"
+                type="text"
+                value={formData.assetSpecification}
+                onChange={handleChange}
+              />
             </div>
 
             {/* Associate Unit */}
@@ -267,7 +288,7 @@ const AssetCapture = () => {
                 <option value="">Select Unit</option>
                 {units.map((unit) => (
                   <option key={unit._id} value={unit._id}>
-                    {unit.name}
+                    {unit.name}  {/* Show the name, store the _id */}
                   </option>
                 ))}
               </select>
@@ -285,7 +306,7 @@ const AssetCapture = () => {
                 <option value="">Select Location</option>
                 {locations.map((location) => (
                   <option key={location._id} value={location._id}>
-                    {location.name}
+                    {location.name}  {/* Show the name, store the _id */}
                   </option>
                 ))}
               </select>
@@ -303,57 +324,27 @@ const AssetCapture = () => {
                 <option value="">Select Status</option>
                 {statuses.map((status) => (
                   <option key={status._id} value={status._id}>
-                    {status.name}
+                    {status.name}  {/* Show the name, store the _id */}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Asset Specifications */}
-            <div className="form-entry">
-              <p>Asset Specifications:</p>
-              <input
-                name="assetSpecification"
-                type="text"
-                value={formData.assetSpecification}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Date of Purchase */}
+            {/* Date of Purchase (DOP) */}
             <div className="form-entry">
               <p>Date of Purchase:</p>
               <DatePicker
-                name="DOP"
-                value={formData.DOP}
                 onChange={(date) => handleDateChange(date, 'DOP')}
-                dateFormat="MMMM d, yyyy"
-                className="custom-DatePicker"
+                value={formData.DOP}
               />
             </div>
 
-            {/* Date of Expiry */}
+            {/* Date of Expiry (DOE) */}
             <div className="form-entry">
               <p>Date of Expiry:</p>
               <DatePicker
-                name="DOE"
-                value={formData.DOE}
                 onChange={(date) => handleDateChange(date, 'DOE')}
-                dateFormat="MMMM d, yyyy"
-                className="custom-DatePicker"
-              />
-            </div>
-
-            {/* Asset Lifetime */}
-            <div className="form-entry">
-              <p>Asset Lifetime:</p>
-              <input
-                name="assetLifetime"
-                type="text"
-                value={formData.assetLifetime}
-                onChange={handleChange}
-                placeholder="Lifetime (in days)"
-                disabled
+                value={formData.DOE}
               />
             </div>
 
@@ -367,8 +358,22 @@ const AssetCapture = () => {
                 onChange={handleChange}
               />
             </div>
+            
+            {/* Asset Lifetime */}
+            <div className="form-entry">
+              <p>Asset Lifetime:</p>
+              <input
+                name="assetLifetime"
+                type="text"
+                value={formData.assetLifetime}
+                onChange={handleChange}
+                placeholder="Lifetime (in days)"
+                disabled
+              />
+            </div>
 
-            {/* Preventive Maintenance Date */}
+
+            {/* Preventive Maintenance Date (PMD) */}
             <div className="form-entry">
               <p>Preventive Maintenance Date:</p>
               <input
@@ -379,24 +384,29 @@ const AssetCapture = () => {
               />
             </div>
 
-            {/* Upload Image */}
+            {/* Image Upload */}
             <div className="form-entry">
               <p>Upload Image:</p>
-              <input name="image" type="file" onChange={handleChange} />
+              <input
+                type="file"
+                name="image"
+                onChange={handleChange}
+                accept="image/*"
+              />
               {imagePreview && (
                 <div className="image-preview">
-                  <img src={imagePreview} alt="Preview" width="100" height="100" />
+                  <img src={imagePreview} alt="Asset Preview" height={100}/>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Buttons */}
+          {/* Submit Button */}
           <div className="form-heading">
-            <button type="button" className="asset-btn" onClick={handleAddAsset}>
+            <button className="asset-btn" onClick={handleAddAsset}>
               Add Asset
             </button>
-            <button type="button" className="asset-btn" onClick={handleAddAnother}>
+            <button className="asset-btn" onClick={handleAddAnother}>
               Add Another
             </button>
           </div>
