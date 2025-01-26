@@ -12,7 +12,7 @@ import Setting from "./Pages/Setting";
 import AssetCapture from "./Pages/AssetCapture";
 import Classification from "./Pages/Classification";
 import Inventory from "./Pages/Inventory";
-
+import MisReport from "./Pages/MisReport";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
   const location = useLocation(); // Use location to track the current route
@@ -53,6 +53,7 @@ const App = () => {
           <Route path="/Inventory" element={<Inventory/>} />
           <Route path="/Setting/*" element={<Setting/>}/>
           <Route path="/Classification/*" element={<Classification/>}/>
+          <Route path="/Misreport" element={<MisReport/>}/>
         </Routes>
       </section>
 
