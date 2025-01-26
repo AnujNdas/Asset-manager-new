@@ -254,9 +254,9 @@ const Inventory = () => {
               <tr key={asset._id}>
                 <td>{asset.assetName}</td>
                 <td>{asset.assetCode}</td>
-                <td>{categories.find(category => category._id === asset.assetCategory)?.name}</td>
-                <td>{locations.find(location => location._id === asset.locationName)?.name}</td>
-                <td>{statuses.find(status => status._id === asset.assetStatus)?.name}</td>
+                <td>{asset.assetCategory}</td>
+                <td>{asset.locationName}</td>
+                <td>{asset.assetStatus}</td>
                 <td>{asset.DOP}</td>
                 <td>
                   <button onClick={() => handleAssetClick(asset)} className="view-btn">
