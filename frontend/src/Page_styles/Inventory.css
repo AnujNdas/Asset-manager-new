@@ -20,15 +20,13 @@ td{
     flex-direction: column;
     align-items: center;
 }
-table{
+.inventory-table{
     padding: 10px;
     width: 95%;
     /* background: transparent; */
     background-color: #ffffff;
     border-radius: 10px;
 }
-
-
 .table-container h4{
     width: 95%;
     height: 8%;
@@ -84,14 +82,6 @@ table{
     border-radius: 10px;
     cursor: pointer;
   }
-  .close-btn {
-    padding: 5px 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-  }
   
   .view-btn:hover {
     background-color: #0056b3;
@@ -112,7 +102,7 @@ table{
 
 
 
-  /* Edit .edit-form Overlay Styles */
+  /* Edit edit-entry Overlay Styles */
 .edit-overlay {
   position: fixed;
   top: 0;
@@ -126,39 +116,46 @@ table{
   z-index: 1000; /* Make sure it appears on top */
 }
 
-/* Edit .edit-form Container */
+/* Edit edit-entry Container */
 .edit-overlay-content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  width: 80%;
+  width: 90%;
   max-width: 700px;
-  /* height: 70%; */
+  height: 85%;
 
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the .edit-form */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the edit-entry */
 }
 .edit-form{
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 40px;
 }
-/* .edit-form Inputs and Labels */
-.edit-form label {
+.edit-entry{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+}
+.option-select{
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* edit-entry Inputs and Labels */
+.edit-entry label {
   font-size: 14px;
   font-weight: bold;
   margin-top: 10px;
   display: block;
 }
 
-.edit-form input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.edit-dropdown {
+.edit-entry input {
   width: 100%;
   padding: 8px;
   margin: 5px 0 15px;
@@ -167,12 +164,12 @@ table{
   box-sizing: border-box;
 }
 
-.edit-form input[type="date"] {
+.edit-entry input[type="date"] {
   cursor: pointer;
 }
 
-.edit-form button[type="submit"],
-.edit-form button[type="button"] {
+.edit-entry button[type="submit"],
+.edit-entry button[type="button"] {
   background-color: #007bff; /* Blue color for buttons */
   color: white;
   padding: 8px 16px;
@@ -183,17 +180,17 @@ table{
   margin-top: 10px;
 }
 
-.edit-form button[type="submit"]:hover,
-.edit-form button[type="button"]:hover {
+.edit-entry button[type="submit"]:hover,
+.edit-entry button[type="button"]:hover {
   background-color: #0056b3; /* Darker blue for hover effect */
 }
 
-.edit-form button[type="button"] {
-  background-color: #6c757d; /* Grey color for Cancel button */
+.edit-entry button[type="button"] {
+  background-color: #ff0000; /* Grey color for Cancel button */
 }
 
-.edit-form button[type="button"]:hover {
-  background-color: #5a6268; /* Darker grey for Cancel button hover */
+.edit-entry button[type="button"]:hover {
+  background-color: #ff5555; /* Darker grey for Cancel button hover */
 }
 
 /* Close Button */
@@ -208,4 +205,9 @@ table{
 
 .edit-overlay-content button.close-btn:hover {
   background-color: #c82333;
+}
+.buttons-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
