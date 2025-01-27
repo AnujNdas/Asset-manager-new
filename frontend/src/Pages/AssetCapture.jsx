@@ -334,6 +334,7 @@ const AssetCapture = () => {
             <div className="form-entry">
               <p>Date of Purchase:</p>
               <DatePicker
+                className="option-box"
                 onChange={(date) => handleDateChange(date, 'DOP')}
                 value={formData.DOP}
               />
@@ -343,6 +344,7 @@ const AssetCapture = () => {
             <div className="form-entry">
               <p>Date of Expiry:</p>
               <DatePicker
+                className="option-box"
                 onChange={(date) => handleDateChange(date, 'DOE')}
                 value={formData.DOE}
               />
