@@ -11,6 +11,8 @@ const MisReport = () => {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(''); // Track selected location ID
+    const [selectedUnit, setSelectedUnit] = useState(''); // Track selected unit ID
 
     // Fetch assets and populate categories, statuses, locations, and units
     useEffect(() => {
@@ -21,7 +23,6 @@ const MisReport = () => {
                     throw new Error('Failed to fetch assets');
                 }
                 const data = await response.json();
-                console.log('Assets:', data);
                 setAssets(data);
             } catch (err) {
                 setError(err.message);
@@ -29,14 +30,14 @@ const MisReport = () => {
                 setLoading(false);
             }
         };
-    
+
         const fetchCategoriesAndStatuses = async () => {
             try {
                 const categoriesResponse = await fetch('https://asset-manager-new.onrender.com/api/category');
                 const statusesResponse = await fetch('https://asset-manager-new.onrender.com/api/status');
                 const locationsResponse = await fetch('https://asset-manager-new.onrender.com/api/location');
                 const unitsResponse = await fetch('https://asset-manager-new.onrender.com/api/unit');
-    
+
                 if (
                     !categoriesResponse.ok ||
                     !statusesResponse.ok ||
@@ -45,14 +46,12 @@ const MisReport = () => {
                 ) {
                     throw new Error('Failed to fetch required data');
                 }
-    
+
                 const categoriesData = await categoriesResponse.json();
                 const statusesData = await statusesResponse.json();
                 const locationsData = await locationsResponse.json();
                 const unitsData = await unitsResponse.json();
                 
-                console.log('Units:', unitsData);  // Add this log to check if units are fetched
-    
                 setCategories(categoriesData);
                 setStatuses(statusesData);
                 setLocations(locationsData);
@@ -61,13 +60,10 @@ const MisReport = () => {
                 setError(err.message);
             }
         };
-    
+
         fetchAssets();
         fetchCategoriesAndStatuses();
-        {console.log('Asset Unit ID:', assets.associateUnit)}
-
     }, []);
-    
 
     const handleDateChange = (e) => {
         if (e.target.name === 'start-date') {
@@ -75,6 +71,25 @@ const MisReport = () => {
         } else {
             setEndDate(e.target.value);
         }
+    };
+
+    // Filter assets based on the selected location and unit ID
+    const filteredAssets = () => {
+        return assets.filter(asset => {
+            const matchesLocation = selectedLocation ? asset.locationName === selectedLocation : true;
+            const matchesUnit = selectedUnit ? asset.associateUnit === selectedUnit : true;
+            return matchesLocation && matchesUnit;
+        });
+    };
+
+    // Handle location dropdown change
+    const handleLocationChange = (e) => {
+        setSelectedLocation(e.target.value); // Save the selected location ID
+    };
+
+    // Handle unit dropdown change
+    const handleUnitChange = (e) => {
+        setSelectedUnit(e.target.value); // Save the selected unit ID
     };
 
     return (
@@ -97,7 +112,7 @@ const MisReport = () => {
                     <div className="mis-form">
                         <h3>Filters</h3>
                         <form className="mis-form-menu">
-                            <label>Asset Category:</label>
+                            {/* <label>Asset Category:</label>
                             <select name="assetCategory">
                                 <option value="">All</option>
                                 {categories.map((category) => (
@@ -105,22 +120,34 @@ const MisReport = () => {
                                         {category.name}
                                     </option>
                                 ))}
-                            </select>
+                            </select> */}
 
                             <label>Location:</label>
-                            <select name="performance">
-                                <option value="">All</option>
+                            {/* Location Dropdown for Filtering */}
+                            <select name="location" onChange={handleLocationChange}>
+                                <option value="">All Locations</option>
                                 {locations.map((location) => (
-                                    <option key={location._id} value={location.name}>
+                                    <option key={location._id} value={location._id}>
                                         {location.name}
                                     </option>
                                 ))}
                             </select>
 
-                            <label>Date of Purchase:</label>
+                            <label>Unit:</label>
+                            {/* Unit Dropdown for Filtering */}
+                            <select name="unit" onChange={handleUnitChange}>
+                                <option value="">All Units</option>
+                                {units.map((unit) => (
+                                    <option key={unit._id} value={unit._id}>
+                                        {unit.name}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {/* <label>Date of Purchase:</label>
                             <input type="date" name="start-date" value={startDate} onChange={handleDateChange} />
                             <label>Date of Expiry:</label>
-                            <input type="date" name="end-date" value={endDate} onChange={handleDateChange} />
+                            <input type="date" name="end-date" value={endDate} onChange={handleDateChange} /> */}
                         </form>
                     </div>
 
@@ -139,21 +166,21 @@ const MisReport = () => {
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan="4">Loading...</td>
+                                        <td colSpan="5">Loading...</td>
                                     </tr>
                                 ) : (
-                                    assets.map((asset) => (
+                                    filteredAssets().map((asset) => (
                                         <tr key={asset._id}>
                                             <td>{asset.assetName}</td>
                                             <td>{asset.assetSpecification}</td>
                                             <td>
-                                            {units && asset.associateUnit ? (
-                                                units.find(unit => unit._id === asset.associateUnit)
-                                                ? units.find(unit => unit._id === asset.associateUnit).name
-                                                : 'No unit'
-                                            ) : (
-                                                'Loading...'
-                                            )}
+                                                {units && asset.associateUnit ? (
+                                                    units.find(unit => unit._id === asset.associateUnit)
+                                                    ? units.find(unit => unit._id === asset.associateUnit).name
+                                                    : 'No unit'
+                                                ) : (
+                                                    'Loading...'
+                                                )}
                                             </td>
                                             <td>
                                                 {statuses && asset.assetStatus ? (
@@ -163,8 +190,8 @@ const MisReport = () => {
                                                 ) : (
                                                     'Loading...'
                                                 )}
-                                                </td>
-                                                <td>
+                                            </td>
+                                            <td>
                                                 {locations && asset.locationName ? (
                                                     locations.find(location => location._id === asset.locationName)
                                                     ? locations.find(location => location._id === asset.locationName).name
@@ -172,8 +199,7 @@ const MisReport = () => {
                                                 ) : (
                                                     'Loading...'
                                                 )}
-                                                </td>
-
+                                            </td>
                                         </tr>
                                     ))
                                 )}
