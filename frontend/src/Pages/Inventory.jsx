@@ -305,29 +305,39 @@ const Inventory = () => {
       )}
       {/* Edit Form */}
       {isEditing && selectedAsset && (
-        <div className="overlay">
-          <div className="overlay-content">
+        <div className="edit-overlay">
+          <div className="edit-overlay-content">
             <h3>Edit Asset</h3>
-            <form onSubmit={handleEditSubmit}>
-              <label>
-                Asset Name:
-                <input
-                  type="text"
-                  value={editFormData.assetName}
-                  onChange={(e) => setEditFormData({ ...editFormData, assetName: e.target.value })}
-                />
-              </label>
-              <label>
-                Asset Specification:
-                <input
-                  type="text"
-                  value={editFormData.assetSpecification}
-                  onChange={(e) => setEditFormData({ ...editFormData, assetSpecification: e.target.value })}
-                />
-              </label>
+            <form onSubmit={handleEditSubmit} className='edit-form'>
+              <div className="edit-entry">
+                  <label>
+                    Asset Name:
+                    </label>
+                    <input
+                      type="text"
+                      value={editFormData.assetName}
+                      onChange={(e) => setEditFormData({ ...editFormData, assetName: e.target.value })}
+                    />
+                 
+              </div>
+              <div className="edit-entry">
+                <label>
+                  Asset Specification:
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.assetSpecification}
+                    onChange={(e) => setEditFormData({ ...editFormData, assetSpecification: e.target.value })}
+                  />
+                
+              </div>
+              <div className="edit-entry">
+
               <label>
                 Asset Category:
+                </label>
                 <select
+                className='option-select'
                   value={editFormData.assetCategory}
                   onChange={(e) => setEditFormData({ ...editFormData, assetCategory: e.target.value })}
                 >
@@ -337,77 +347,107 @@ const Inventory = () => {
                     </option>
                   ))}
                 </select>
-              </label>
-              <label>
-                Location Name:
-                <select
-                  value={editFormData.locationName}
-                  onChange={(e) => setEditFormData({ ...editFormData, locationName: e.target.value })}
-                >
-                  {locations.map((location) => (
-                    <option key={location._id} value={location.name}>
-                      {location.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Unit:
-                <select
-                  value={editFormData.associateUnit}
-                  onChange={(e) => setEditFormData({ ...editFormData, associateUnit: e.target.value })}
-                >
-                  {units.map((unit) => (
-                    <option key={unit._id} value={unit.name}>
-                      {unit.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Asset Status:
-                <select
-                  value={editFormData.assetStatus}
-                  onChange={(e) => setEditFormData({ ...editFormData, assetStatus: e.target.value })}
-                >
-                  {statuses.map((status) => (
-                    <option key={status._id} value={status.name}>
-                      {status.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Date of Purchase:
-                <input
-                  type="date"
-                  value={editFormData.DOP}
-                  onChange={(e) => setEditFormData({ ...editFormData, DOP: e.target.value })}
-                />
-              </label>
+              
+              </div>
+              <div className="edit-entry">
+                <label>
+                  Location Name:
+                  </label>
+                  <select
+                  className='option-select'
+                    value={editFormData.locationName}
+                    onChange={(e) => setEditFormData({ ...editFormData, locationName: e.target.value })}
+                  >
+                    {locations.map((location) => (
+                      <option key={location._id} value={location.name}>
+                        {location.name}
+                      </option>
+                    ))}
+                  </select>
+              
+              </div>
+              <div className="edit-entry">
+                <label>
+                  Unit:
+                  </label>
+                  <select
+                  className='option-select'
+                    value={editFormData.associateUnit}
+                    onChange={(e) => setEditFormData({ ...editFormData, associateUnit: e.target.value })}
+                  >
+                    {units.map((unit) => (
+                      <option key={unit._id} value={unit.name}>
+                        {unit.name}
+                      </option>
+                    ))}
+                  </select>
+                
+              </div>
+              <div className="edit-entry">
+                <label>
+                  Asset Status:
+                  </label>
+                  <select
+                  className='option-select'
+                    value={editFormData.assetStatus}
+                    onChange={(e) => setEditFormData({ ...editFormData, assetStatus: e.target.value })}
+                  >
+                    {statuses.map((status) => (
+                      <option key={status._id} value={status.name}>
+                        {status.name}
+                      </option>
+                    ))}
+                  </select>
+                
+              </div>
+              <div className="edit-entry">
+                <label>
+                  Date of Purchase:
+                  </label>
+                  <input
+                    type="date"
+                    value={editFormData.DOP}
+                    onChange={(e) => setEditFormData({ ...editFormData, DOP: e.target.value })}
+                  />
+                
+              </div>
+              <div className="edit-entry">
+
               <label>
                 Date of Expiry:
+                </label>
                 <input
                   type="date"
                   value={editFormData.DOE}
                   onChange={(e) => setEditFormData({ ...editFormData, DOE: e.target.value })}
                 />
-              </label>
+              
+              </div>
+              <div className="edit-entry">
+
               <label>
                 Purchase From:
+                </label>
                 <input
                   type="text"
                   value={editFormData.purchaseFrom}
                   onChange={(e) => setEditFormData({ ...editFormData, purchaseFrom: e.target.value })}
                 />
-              </label>
+              
+              </div>
+              <div className="edit-entry">
+
               <label>
                 Image:
+                </label>
                 <input
                   type="file"
                   onChange={(e) => setEditFormData({ ...editFormData, image: e.target.files[0] })}
                 />
-              </label>
+              
+              </div>
+              {/* <div className="edit-entry">
+
               <label>
                 Lifetime:
                 <input
@@ -416,12 +456,17 @@ const Inventory = () => {
                   onChange={(e) => setEditFormData({ ...editFormData, assetLifetime: e.target.value })}
                 />
               </label>
-              <div className="buttons">
-                <button type="submit">Save Changes</button>
-                <button type="button" onClick={() => setIsEditing(false)}>
-                  Cancel
-                </button>
+              </div> */}
+              <div className="edit-entry">
+                  <button type="submit">Save Changes</button>
               </div>
+              <div className="edit-entry">
+                <button type="button" onClick={() => setIsEditing(false)}>
+                    Cancel
+                  </button>
+              </div>
+                
+                
             </form>
           </div>
         </div>
