@@ -278,30 +278,40 @@ const Inventory = () => {
         <div className="overlay">
           <div className="overlay-content">
             <h3>Asset Details</h3>
-            {/* <p><strong>Asset Name:</strong> {selectedAsset.assetName}</p>
-            <p><strong>Asset Code:</strong> {selectedAsset.assetCode}</p>
-            <p><strong>Category:</strong> {categories.find(category => category._id === selectedAsset.assetCategory)?.name}</p>
-            <p><strong>Location:</strong> {locations.find(location => location._id === selectedAsset.locationName)?.name}</p>
-            <p><strong>Status:</strong> {statuses.find(status => status._id === selectedAsset.assetStatus)?.name}</p>
-            <p><strong>Unit:</strong> {units.find(unit => unit._id === selectedAsset.associateUnit)?.name}</p> */}
-            <p><strong>Date of Purchase:</strong> {formatDateForInput(selectedAsset.DOP)}</p>
-            <p><strong>Date of Expiry:</strong> {formatDateForInput(selectedAsset.DOE)}</p>
-            <p><strong>Purchase From:</strong> {selectedAsset.purchaseFrom}</p>
-            <p><strong>Lifetime:</strong> {selectedAsset.assetLifetime}</p>
             {selectedAsset.image && (
         <div className="asset-image">
           <img
-            src={selectedAsset.image}
+            src={`https://asset-manager-new.onrender.com.com${selectedAsset.image}`}
             alt={`Asset Image: ${selectedAsset.assetName}`}
             style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' }}
           />
         </div>
       )}
+            {/* <p><strong>Asset Code:</strong> {selectedAsset.assetCode}</p>
+            <p><strong>Category:</strong> {categories.find(category => category._id === selectedAsset.assetCategory)?.name}</p>
+            <p><strong>Location:</strong> {locations.find(location => location._id === selectedAsset.locationName)?.name}</p>
+            <p><strong>Status:</strong> {statuses.find(status => status._id === selectedAsset.assetStatus)?.name}</p>
+            <p><strong>Unit:</strong> {units.find(unit => unit._id === selectedAsset.associateUnit)?.name}</p> */}
+            <div className="view">
+            <div className="view-container"><p><strong>Asset Name:</strong> {selectedAsset.assetName}</p></div>
+            <div className="view-container"><p><strong>Asset Specification:</strong> {selectedAsset.assetSpecification}</p></div>
+            <div className="view-container"><strong>Date of Purchase:</strong><p> {formatDateForInput(selectedAsset.DOP)}</p></div>
+            
+            <div className="view-container"><strong>Date of Expiry:</strong><p> {formatDateForInput(selectedAsset.DOE)}</p></div>
+            <div className="view-container"><strong>Purchase From:</strong><p> {selectedAsset.purchaseFrom}</p></div>
+            <div className="view-container"><strong>Lifetime:</strong><p> {selectedAsset.assetLifetime}</p></div>
+            <div className="view-container">
+              <strong>Barcode:</strong>
+              <Barcode value={selectedAsset.barcodeNumber} className='barcode'/>
+            </div>
+       
             <div className="buttons">
-              <button onClick={closeOverlay}>Close</button>
+              <button onClick={closeOverlay} className='close-btn'>Close</button>
             </div>
           </div>
         </div>
+            </div>
+           
       )}
       {/* Edit Form */}
       {isEditing && selectedAsset && (
