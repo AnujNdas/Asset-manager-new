@@ -61,7 +61,8 @@ header h1 {
     padding: 6px 8px;
     border-radius: 8px;
     cursor: pointer;
-    font-family:"Lato",san-serif;
+    font-family:"Roboto",san-serif;
+    font-weight:600;
 }
 
 .download-btn:hover {
@@ -74,7 +75,8 @@ header h1 {
     padding: 6px 8px;
     border-radius: 8px;
     cursor: pointer;
-    font-family:"Lato",san-serif;
+    font-family:"Roboto",san-serif;
+    font-weight:600;
 }
 
 .download-btn:hover {
@@ -87,8 +89,8 @@ header h1 {
     padding: 6px 8px;
     border-radius: 8px;
     cursor: pointer;
-    font-family:"Lato",sans-serif;
-    font-weight: 500;
+    font-family:"Roboto",sans-serif;
+    font-weight: 600;
 
 }
 
