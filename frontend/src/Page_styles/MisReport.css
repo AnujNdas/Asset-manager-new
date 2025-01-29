@@ -50,6 +50,8 @@ header h1 {
     font-size: 1.2em;
     font-family: "Roboto" , sans-serif;
     font-weight:600;
+    font-size:25px;
+    color:#565656;
 }
 
 .date-range input {
