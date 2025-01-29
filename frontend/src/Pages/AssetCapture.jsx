@@ -7,6 +7,18 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 
 const AssetCapture = () => {
+  const gotostatus = ()=>{
+    navigate("/classification/status")
+  }
+  const gotocategory = ()=>{
+    navigate("/classification/category")
+  }
+  const gotolocation = ()=>{
+    navigate("/classification/location")
+  }
+  const gotounit = ()=>{
+    navigate("/classification/unit")
+  }
   // Function to generate asset code
   const generateAssetCode = async () => {
     const response = await fetch('https://asset-manager-new.onrender.com/api/assets/asset-code');
@@ -261,6 +273,7 @@ const AssetCapture = () => {
                   </option>
                 ))}
               </select>
+              <button onClick={gotocategory} className="navigate-btn">+</button>
             </div>
 
 
@@ -292,6 +305,7 @@ const AssetCapture = () => {
                   </option>
                 ))}
               </select>
+              <button onClick={gotounit} className="navigate-btn">+</button>
             </div>
 
             {/* Location Name */}
@@ -310,6 +324,7 @@ const AssetCapture = () => {
                   </option>
                 ))}
               </select>
+              <button onClick={gotolocation} className="navigate-btn">+</button>
             </div>
 
             {/* Asset Status */}
@@ -328,13 +343,14 @@ const AssetCapture = () => {
                   </option>
                 ))}
               </select>
+              <button onClick={gotostatus} className="navigate-btn">+</button>
             </div>
 
             {/* Date of Purchase (DOP) */}
             <div className="form-entry">
               <p>Date of Purchase:</p>
               <DatePicker
-                className="option-box"
+              className={"option-box"}
                 onChange={(date) => handleDateChange(date, 'DOP')}
                 value={formData.DOP}
               />
@@ -344,7 +360,7 @@ const AssetCapture = () => {
             <div className="form-entry">
               <p>Date of Expiry:</p>
               <DatePicker
-                className="option-box"
+              className={"option-box"}
                 onChange={(date) => handleDateChange(date, 'DOE')}
                 value={formData.DOE}
               />
