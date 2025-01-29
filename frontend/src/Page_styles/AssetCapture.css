@@ -118,4 +118,18 @@
     border: none;
     border-radius: 5px;
 }
+.navigate-btn{
+    height: 35%;
+    width: 6%;
+    border-radius: 50%;
+    border: none;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: #0048ff;
+    /* background: green; */
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    justify-content: center;
+}
 
