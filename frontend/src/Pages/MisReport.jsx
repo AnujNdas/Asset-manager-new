@@ -97,9 +97,9 @@ const MisReport = () => {
             <div className="mis-content">
                 <header className="header">
                     <h1>Asset Management Report</h1>
-                    <div className="date-range">
+{/*                     <div className="date-range">
                         <label>Date Range:</label>
-                    </div>
+                    </div> */}
                     <div className="mis-button">
                         <button className="download-csv">CSV</button>
                         <button className="download-excel">EXCEL</button>
