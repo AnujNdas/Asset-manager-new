@@ -155,7 +155,7 @@ th {
     gap: 10px;
 }
 .mis-form{
-    width: 25%;
+    width: 15%;
 }
 .mis-form-menu{
     display: flex;
@@ -164,7 +164,7 @@ th {
     margin-top: 30px;
 }
 .asset-list{
-    width: 70%;
+    width: 80%;
     padding: 0;
     margin: 0;
     display: flex;
