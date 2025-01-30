@@ -7,13 +7,14 @@ const MisReport = () => {
     const [units, setUnits] = useState([]);
     const [assets, setAssets] = useState([]);
     const [locations, setLocations] = useState([]);
+    const [categories, setCategories] = useState([]);  // New state for categories
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [selectedUnit, setSelectedUnit] = useState('');
-    const [selectedStatus, setSelectedStatus] = useState('');  // Status filter state
+    const [selectedStatus, setSelectedStatus] = useState('');
 
-    // Fetch assets and populate categories, statuses, locations, and units
+    // Fetch assets and categories, and populate filters (status, location, units)
     useEffect(() => {
         const fetchAssets = async () => {
             try {
@@ -35,18 +36,21 @@ const MisReport = () => {
                 const statusesResponse = await fetch('https://asset-manager-new.onrender.com/api/status');
                 const locationsResponse = await fetch('https://asset-manager-new.onrender.com/api/location');
                 const unitsResponse = await fetch('https://asset-manager-new.onrender.com/api/unit');
+                const categoriesResponse = await fetch('https://asset-manager-new.onrender.com/api/category');  // Fetch categories
 
-                if (!statusesResponse.ok || !locationsResponse.ok || !unitsResponse.ok) {
+                if (!statusesResponse.ok || !locationsResponse.ok || !unitsResponse.ok || !categoriesResponse.ok) {
                     throw new Error('Failed to fetch required data');
                 }
 
                 const statusesData = await statusesResponse.json();
                 const locationsData = await locationsResponse.json();
                 const unitsData = await unitsResponse.json();
+                const categoriesData = await categoriesResponse.json();  // Parse categories data
 
                 setStatuses(statusesData);
                 setLocations(locationsData);
                 setUnits(unitsData);
+                setCategories(categoriesData);  // Set categories data
             } catch (err) {
                 setError(err.message);
             }
@@ -55,6 +59,18 @@ const MisReport = () => {
         fetchAssets();
         fetchCategoriesAndStatuses();
     }, []);
+
+    const handleLocationChange = (e) => {
+        setSelectedLocation(e.target.value);
+    };
+
+    const handleUnitChange = (e) => {
+        setSelectedUnit(e.target.value);
+    };
+
+    const handleStatusChange = (e) => {
+        setSelectedStatus(e.target.value);
+    };
 
     const handleDateChange = (e) => {
         setStartDate(e.target.value); // Update the start date state
@@ -73,11 +89,8 @@ const MisReport = () => {
         return d.toISOString().split('T')[0]; // Only returns the date part (yyyy-mm-dd)
     };
 
-    // Filter assets based on the selected location, unit, status, and purchase date
+    // Filter assets based on the selected filters
     const filteredAssets = () => {
-        console.log('Filtering with Start Date:', startDate); // Debugging log
-        console.log('Assets available:', assets.length); // Log how many assets are available for filtering
-
         return assets.filter(asset => {
             const matchesLocation = selectedLocation ? asset.locationName === selectedLocation : true;
             const matchesUnit = selectedUnit ? asset.associateUnit === selectedUnit : true;
@@ -85,35 +98,13 @@ const MisReport = () => {
 
             // Format the asset purchaseDate to only match the date part (yyyy-mm-dd)
             const purchaseDateFormatted = formatDate(asset.DOP);
-            console.log('Asset Purchase Date:', purchaseDateFormatted); // Debugging log
-
-            // Format the startDate to yyyy-mm-dd (if selected)
             const startDateFormatted = startDate ? formatDate(startDate) : '';
-            console.log('Start Date:', startDateFormatted); // Debugging log
 
             // If startDate is provided, check if the asset's purchaseDate is greater than or equal to startDate
             const matchesStartDate = startDateFormatted ? purchaseDateFormatted >= startDateFormatted : true;
 
-            // Log the comparison result to debug
-            console.log(`Checking ${purchaseDateFormatted} >= ${startDateFormatted}: ${matchesStartDate}`);
-
             return matchesLocation && matchesUnit && matchesStatus && matchesStartDate;
         });
-    };
-
-    // Handle location dropdown change
-    const handleLocationChange = (e) => {
-        setSelectedLocation(e.target.value);
-    };
-
-    // Handle unit dropdown change
-    const handleUnitChange = (e) => {
-        setSelectedUnit(e.target.value);
-    };
-
-    // Handle status dropdown change
-    const handleStatusChange = (e) => {
-        setSelectedStatus(e.target.value);
     };
 
     return (
@@ -133,6 +124,7 @@ const MisReport = () => {
                     <div className="mis-form">
                         <h3>Filters</h3>
                         <form className="mis-form-menu">
+
                             {/* Location Dropdown for Filtering */}
                             <label>Location:</label>
                             <select name="location" onChange={handleLocationChange}>
@@ -179,26 +171,29 @@ const MisReport = () => {
                                 <tr>
                                     <th>Asset Name</th>
                                     <th>Asset Specification</th>
+                                    <th>Lifetime</th>
                                     <th>Units</th>
                                     <th>Status</th>
                                     <th>Location</th>
+                                    <th>Category</th> {/* Added Category Column */}
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan="5">Loading...</td>
+                                        <td colSpan="6">Loading...</td>
                                     </tr>
                                 ) : (
                                     filteredAssets().length === 0 ? (
                                         <tr>
-                                            <td colSpan="5">No assets found for the selected date or filters</td>
+                                            <td colSpan="6">No assets found for the selected date or filters</td>
                                         </tr>
                                     ) : (
                                         filteredAssets().map((asset) => (
                                             <tr key={asset._id}>
                                                 <td>{asset.assetName}</td>
                                                 <td>{asset.assetSpecification}</td>
+                                                <td>{asset.assetLifetime}</td>
                                                 <td>
                                                     {units && asset.associateUnit ? (
                                                         units.find(unit => unit._id === asset.associateUnit)
@@ -226,6 +221,15 @@ const MisReport = () => {
                                                         'Loading...'
                                                     )}
                                                 </td>
+                                                <td>
+                                                    {categories && asset.assetCategory ? (
+                                                        categories.find(category => category._id === asset.assetCategory)
+                                                        ? categories.find(category => category._id === asset.assetCategory).name
+                                                        : 'No category'
+                                                    ) : (
+                                                        'Loading...'
+                                                    )}
+                                                </td>
                                             </tr>
                                         ))
                                     )
@@ -235,7 +239,6 @@ const MisReport = () => {
                     </section>
                 </aside>
 
-                {/* Footer */}
                 <footer className="footer">
                     <p>&copy; 2025 AssetManager. All Rights Reserved.</p>
                 </footer>
