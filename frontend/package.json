@@ -27,7 +27,8 @@
     "recharts": "^2.15.0",
     "rimraf": "^6.0.1",
     "svgo": "^3.3.2",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
