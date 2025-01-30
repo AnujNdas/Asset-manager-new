@@ -143,9 +143,8 @@ const MisReport = () => {
                 <header className="header">
                     <h1>Asset Management Report</h1>
                     <div className="mis-button">
-                        <button className="download-csv" onClick={downloadCSV}>Download CSV</button>
-                        <button className="download-excel" onClick={downloadExcel}>Download Excel</button>
-                        <button className="download-pdf">PDF</button>
+                        <button className="download-csv" onClick={downloadCSV}>CSV</button>
+                        <button className="download-excel" onClick={downloadExcel}>Excel</button>
                     </div>
                 </header>
 
