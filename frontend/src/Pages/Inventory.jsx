@@ -35,6 +35,8 @@ const Inventory = () => {
     return `${year}-${month}-${day}`; // yyyy-mm-dd format
   };
 
+  const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [assetsPerPage] = useState(9); // Number of assets per page
   const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
@@ -243,6 +245,14 @@ const Inventory = () => {
   if (loading) return <p>Loading assets...</p>;
   if (error) return <p>Error: {error}</p>;
 
+    // Pagination Logic
+    const indexOfLastAsset = currentPage * assetsPerPage;
+    const indexOfFirstAsset = indexOfLastAsset - assetsPerPage;
+    const currentAssets = assets.slice(indexOfFirstAsset, indexOfLastAsset);
+  
+    // Change page
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
   return (
     <div className="table-container">
       <h4>Asset Details</h4>
@@ -266,7 +276,7 @@ const Inventory = () => {
             </tr>
           </thead>
           <tbody>
-            {assets.map((asset) => (
+            {currentAssets.map((asset) => (
               <tr key={asset._id}>
                 <td>{asset.assetName}</td>
                 <td>{asset.assetCode}</td>
@@ -295,6 +305,36 @@ const Inventory = () => {
           </tbody>
         </table>
       )}
+
+       {/* Pagination Controls */}
+      <div className="pages">
+        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className='pagination'>
+          Previous
+        </button>
+
+        {/* Page Number Buttons */}
+        {Array.from({ length: Math.ceil(assets.length / assetsPerPage) }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => paginate(index + 1)}
+            className={currentPage === index + 1 ? 'active' : ''}
+            style={{
+              padding : "5px",
+              border: "1px solid #565656"
+            }}
+          >
+            {index + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === Math.ceil(assets.length / assetsPerPage)}
+          className='pagination'
+        >
+          Next
+        </button>
+      </div>
        {showOverlay && selectedAsset && (
         <div className="overlay">
           <div className="overlay-content">
@@ -302,9 +342,9 @@ const Inventory = () => {
             {selectedAsset.image && (
         <div className="asset-image">
           <img
-            src={`https://asset-manager-new.onrender.com.com${selectedAsset.image}`}
+            src={`https://asset-manager-new.onrender.com${selectedAsset.image}`}
             alt={`Asset Image: ${selectedAsset.assetName}`}
-            style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' }}
+            style={{ width: '100%', maxHeight: '100px', objectFit: 'contain' }}
           />
         </div>
       )}
