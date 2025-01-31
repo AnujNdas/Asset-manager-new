@@ -76,15 +76,17 @@ td{
   
   .view-btn,.close-btn {
     padding: 5px 10px;
-    background-color: #007BFF;
-    color: white;
+    background-color: #ebebeb;
+    color: blue;
+    font-weight: 700;
     border: none;
     border-radius: 10px;
     cursor: pointer;
   }
   
   .view-btn:hover {
-    background-color: #0056b3;
+    background-color: blue;
+    color: white;
   }
   .edit-btn{
     border: none;
@@ -225,4 +227,18 @@ td{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.pagination{
+  background: #d7d7d7;
+  border: none;
+  padding: 5px;
+  font-weight: 700;
+  color: blue;
+  font-size: 14px;
+}
+.pages{
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-top: 10px;
 }
