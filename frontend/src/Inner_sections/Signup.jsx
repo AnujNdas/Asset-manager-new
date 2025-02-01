@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
-import image from '../Images/rb_1365.png'
+import image from '../Images/logo.png'
 import { faFacebook ,faTwitter,faLinkedin, faGithub} from '@fortawesome/free-brands-svg-icons';
 import AuthService from '../Services/AuthService'
 
