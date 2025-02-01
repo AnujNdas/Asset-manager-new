@@ -19,6 +19,8 @@
     /* background: #000000; */
     display: flex;
     align-items: center;
+    position: relative;
+    left: 300px;
 }
 .search-input{
     height: 55%;
