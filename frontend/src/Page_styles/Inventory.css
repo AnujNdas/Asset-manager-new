@@ -76,18 +76,18 @@ td{
   
   .view-btn,.close-btn {
     padding: 5px 10px;
-    background-color: #ebebeb;
-    color: blue;
+    background-color: blue;
+    color: white;
     font-weight: 700;
     border: none;
     border-radius: 10px;
     cursor: pointer;
   }
   
-  .view-btn:hover {
+/*   .view-btn:hover {
     background-color: blue;
     color: white;
-  }
+  } */
   .edit-btn{
     border: none;
     background: transparent;
@@ -229,11 +229,11 @@ td{
   justify-content: space-between;
 }
 .pagination{
-  background: #d7d7d7;
+  background: blue;
   border: none;
   padding: 5px;
   font-weight: 700;
-  color: blue;
+  color: white;
   font-size: 14px;
 }
 .pages{
