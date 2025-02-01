@@ -96,7 +96,7 @@ const MisReport = () => {
             const unit = units.find(u => u._id === asset.associateUnit)?.name || 'No unit';
             const status = statuses.find(s => s._id === asset.assetStatus)?.name || 'No status';
             const location = locations.find(l => l._id === asset.locationName)?.name || 'No location';
-            const category = categories.find(c => c._id === asset.category)?.name || 'No category';
+            const category = categories.find(c => c._id === asset.assetCategory)?.name || 'No category';
 
             const row = [
                 asset.assetName,
@@ -127,7 +127,10 @@ const MisReport = () => {
                 'Unit': units.find(u => u._id === asset.associateUnit)?.name || 'No unit',
                 'Status': statuses.find(s => s._id === asset.assetStatus)?.name || 'No status',
                 'Location': locations.find(l => l._id === asset.locationName)?.name || 'No location',
-                'Category': categories.find(c => c._id === asset.assetCategory)?.name || 'No category'  // Ensure category is included here
+                'Category': categories.find(c => c._id === asset.assetCategory)?.name || 'No category' , // Ensure category is included here
+                'Lifetime': asset.assetLifetime,
+                'D_O_P': formatDate(asset.DOP),
+                'Purchased From': asset.purchaseFrom,
             };
         });
 
@@ -143,8 +146,8 @@ const MisReport = () => {
                 <header className="header">
                     <h1>Asset Management Report</h1>
                     <div className="mis-button">
-                        <button className="download-csv" onClick={downloadCSV}>CSV</button>
-                        <button className="download-excel" onClick={downloadExcel}>Excel</button>
+                        <button className="download-csv" onClick={downloadCSV}>Download CSV</button>
+                        <button className="download-excel" onClick={downloadExcel}>Download Excel</button>
                     </div>
                 </header>
 
@@ -197,6 +200,7 @@ const MisReport = () => {
                                     <th>Status</th>
                                     <th>Location</th>
                                     <th>Category</th>
+                                    <th>D_O_P</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -218,6 +222,7 @@ const MisReport = () => {
                                                 <td>{statuses.find(s => s._id === asset.assetStatus)?.name || 'No status'}</td>
                                                 <td>{locations.find(l => l._id === asset.locationName)?.name || 'No location'}</td>
                                                 <td>{categories.find(c => c._id === asset.assetCategory)?.name || 'No category'}</td>
+                                                <td>{formatDate(asset.DOP)}</td>
                                             </tr>
                                         ))
                                     )
