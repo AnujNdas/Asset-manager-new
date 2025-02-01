@@ -2,6 +2,7 @@ import React from 'react'
 import '../Component_styles/Sidebar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
+import image from "../Images/logo.png"
 import { faGauge ,faLayerGroup ,faCartShopping , faWarehouse, faGear, faReceipt, faRecycle} from '@fortawesome/free-solid-svg-icons'
 
 const Sidebar = ()=> {
@@ -10,7 +11,10 @@ const Sidebar = ()=> {
       <div className='sidebar'>
         <div className='sidebar-heading'>
           <div className="logo">
-            <FontAwesomeIcon icon={faWarehouse} fade />
+            <img src={image} style={{
+              height : "100%",
+              width: "100%"
+            }}/>
           </div>
           <div className="title">
             <h1>Asset manager</h1>
