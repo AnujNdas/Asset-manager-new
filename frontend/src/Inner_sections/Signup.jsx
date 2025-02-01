@@ -104,7 +104,6 @@ const Signup = () => {
             </div>
             
             <div className="button-panel">
-                <Link to={'/forget'} className='foet'>Forget Password</Link>
                 <button type='submit' className='submit-btn'>SignUp</button>
             </div>
           </form>
