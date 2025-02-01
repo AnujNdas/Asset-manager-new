@@ -41,7 +41,10 @@ const Signup = () => {
     <div className='login-container'>
           <form action="" className='Login-form' onSubmit={handlesignup}>
             <div className="auth-logo">
-              <img src={image} alt="" height={120}/>
+              <img src={image} alt="" style={{
+                height : "100%",
+                width : "50%"
+              }}/>
             </div>
             <h2>SignUp</h2>
             <div className="social">
