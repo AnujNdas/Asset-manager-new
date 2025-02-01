@@ -1,7 +1,7 @@
 import React ,{ useState } from 'react'
 import '../Page_styles/Login.css'
 import { Link , useNavigate } from 'react-router-dom'
-import image from '../Images/rb_1365.png'
+import image from '../Images/logo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook ,faTwitter,faLinkedin, faGithub} from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
