@@ -17,7 +17,7 @@ const Sidebar = ()=> {
             }}/>
           </div>
           <div className="title">
-            <h1>Asset manager</h1>
+            <h1>Asset Manager</h1>
           </div>
         </div>
         <div className='sidebar-menu'>
