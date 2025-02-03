@@ -249,7 +249,7 @@ const AssetCapture = () => {
           <div className="input-area">
             {/* Asset Name */}
             <div className="form-entry">
-              <p>Asset Name:</p>
+              <p>Asset Name</p>
               <input
                 name="assetName"
                 type="text"
@@ -259,7 +259,7 @@ const AssetCapture = () => {
             </div>
             {/* Asset Category */}
             <div className="form-entry">
-              <p>Asset Category:</p>
+              <p>Asset Category</p>
               <select
                 name="assetCategory"
                 value={formData.assetCategory}
@@ -280,7 +280,7 @@ const AssetCapture = () => {
 
             {/* Asset Specification */}
             <div className="form-entry">
-              <p>Asset Specifications:</p>
+              <p>Asset Specifications</p>
               <input
                 name="assetSpecification"
                 type="text"
@@ -291,7 +291,7 @@ const AssetCapture = () => {
 
             {/* Associate Unit */}
             <div className="form-entry">
-              <p>Associate Unit:</p>
+              <p>Associate Unit</p>
               <select
                 name="associateUnit"
                 value={formData.associateUnit}
@@ -310,7 +310,7 @@ const AssetCapture = () => {
 
             {/* Location Name */}
             <div className="form-entry">
-              <p>Location Name:</p>
+              <p>Location Name</p>
               <select
                 name="locationName"
                 value={formData.locationName}
@@ -329,7 +329,7 @@ const AssetCapture = () => {
 
             {/* Asset Status */}
             <div className="form-entry">
-              <p>Asset Status:</p>
+              <p>Asset Status</p>
               <select
                 name="assetStatus"
                 value={formData.assetStatus}
@@ -348,7 +348,7 @@ const AssetCapture = () => {
 
             {/* Date of Purchase (DOP) */}
             <div className="form-entry">
-              <p>Date of Purchase:</p>
+              <p>Date of Purchase</p>
               <DatePicker
               className={"option-box"}
                 onChange={(date) => handleDateChange(date, 'DOP')}
@@ -358,7 +358,7 @@ const AssetCapture = () => {
 
             {/* Date of Expiry (DOE) */}
             <div className="form-entry">
-              <p>Date of Expiry:</p>
+              <p>Date of Expiry</p>
               <DatePicker
               className={"option-box"}
                 onChange={(date) => handleDateChange(date, 'DOE')}
@@ -368,7 +368,7 @@ const AssetCapture = () => {
 
             {/* Purchased From */}
             <div className="form-entry">
-              <p>Purchased From:</p>
+              <p>Purchased From</p>
               <input
                 name="purchaseFrom"
                 type="text"
@@ -379,7 +379,7 @@ const AssetCapture = () => {
             
             {/* Asset Lifetime */}
             <div className="form-entry">
-              <p>Asset Lifetime:</p>
+              <p>Asset Lifetime</p>
               <input
                 name="assetLifetime"
                 type="text"
@@ -393,7 +393,7 @@ const AssetCapture = () => {
 
             {/* Preventive Maintenance Date (PMD) */}
             <div className="form-entry">
-              <p>Preventive Maintenance Date:</p>
+              <p>Preventive Maintenance Date</p>
               <input
                 name="PMD"
                 type="text"
@@ -404,7 +404,7 @@ const AssetCapture = () => {
 
             {/* Image Upload */}
             <div className="form-entry">
-              <p>Upload Image:</p>
+              <p>Upload Image</p>
               <input
                 type="file"
                 name="image"
