@@ -82,6 +82,15 @@ h2{
     background-color: blue;
     color:#ffffff;
 }
+.sign-btn{
+    width: 30%;
+    padding: 5px;
+    border-radius: 15px;
+    background: #d27946;
+    color: #ffffff;
+    border: none;
+    font-weight: 600;
+}
 .foet{
     text-decoration: none;
     background: transparent;
