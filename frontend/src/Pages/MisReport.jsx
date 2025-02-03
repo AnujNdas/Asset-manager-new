@@ -222,10 +222,10 @@ const MisReport = () => {
                                             <tr key={asset._id}>
                                                 <td>{asset.assetName}</td>
                                                 <td>{asset.assetSpecification}</td>
-                                                <td>{units.find(u => u._id === asset.associateUnit)?.name || 'No unit'}</td>
-                                                <td>{statuses.find(s => s._id === asset.assetStatus)?.name || 'No status'}</td>
-                                                <td>{locations.find(l => l._id === asset.locationName)?.name || 'No location'}</td>
-                                                <td>{categories.find(c => c._id === asset.assetCategory)?.name || 'No category'}</td>
+                                                <td>{units.find(u => u._id === asset.associateUnit)?.name || 'Loading'}</td>
+                                                <td>{statuses.find(s => s._id === asset.assetStatus)?.name || 'Loading'}</td>
+                                                <td>{locations.find(l => l._id === asset.locationName)?.name || 'Loading'}</td>
+                                                <td>{categories.find(c => c._id === asset.assetCategory)?.name || 'Loading'}</td>
                                                 <td>{formatDate(asset.DOP)}</td>
                                             </tr>
                                         ))
