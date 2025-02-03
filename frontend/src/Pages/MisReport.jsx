@@ -236,9 +236,9 @@ const MisReport = () => {
                     </section>
                 </aside>
 
-                <footer className="footer">
+{/*                 <footer className="footer">
                     <p>&copy; 2025 AssetManager. All Rights Reserved.</p>
-                </footer>
+                </footer> */}
             </div>
         </div>
     );
