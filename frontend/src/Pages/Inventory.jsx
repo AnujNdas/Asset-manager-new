@@ -280,10 +280,10 @@ const Inventory = () => {
               <tr key={asset._id}>
                 <td>{asset.assetName}</td>
                 <td>{asset.assetCode}</td>
-                <td>{categories.find(category => category._id === asset.assetCategory)?.name || 'N/A'}</td>
-                <td>{locations.find(location => location._id === asset.locationName)?.name || 'N/A'}</td>
-                <td>{statuses.find(status => status._id === asset.assetStatus)?.name || 'N/A'}</td>
-                <td>{units.find(unit => unit._id === asset.associateUnit)?.name || 'N/A'}</td>
+                <td>{categories.find(category => category._id === asset.assetCategory)?.name || 'Loading'}</td>
+                <td>{locations.find(location => location._id === asset.locationName)?.name || 'Loading'}</td>
+                <td>{statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}</td>
+                <td>{units.find(unit => unit._id === asset.associateUnit)?.name || 'Loading'}</td>
                 <td>{formatDateForInput(asset.DOP)}</td>
                 <td>
                   <button onClick={() => handleAssetClick(asset)} className="view-btn">
