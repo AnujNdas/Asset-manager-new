@@ -107,7 +107,7 @@ const Signup = () => {
             </div>
             
             <div className="button-panel">
-                <button type='submit' className='submit-btn'>SignUp</button>
+                <button type='submit' className='signup-btn'>SignUp</button>
             </div>
           </form>
           {message && <p>{message}</p>}
