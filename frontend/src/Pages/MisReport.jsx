@@ -134,6 +134,7 @@ const MisReport = () => {
                 'D_O_E': formatDate(asset.DOE),
                 'Purchased From': asset.purchaseFrom,
                 'P-M-D': asset.PMD,
+                'Barcode-number': asset.barcodeNumber,
             };
         });
 
