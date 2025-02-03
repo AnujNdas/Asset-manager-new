@@ -36,7 +36,7 @@ const Inventory = () => {
   };
 
   const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const [assetsPerPage] = useState(9); // Number of assets per page
+  const [assetsPerPage] = useState(10); // Number of assets per page
   const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
