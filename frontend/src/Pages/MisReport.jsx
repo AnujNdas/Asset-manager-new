@@ -123,6 +123,7 @@ const MisReport = () => {
         const filteredData = filteredAssets().map(asset => {
             return {
                 'Asset Name': asset.assetName,
+                'Asset-Code': asset.assetCode,
                 'Asset Specification': asset.assetSpecification,
                 'Unit': units.find(u => u._id === asset.associateUnit)?.name || 'No unit',
                 'Status': statuses.find(s => s._id === asset.assetStatus)?.name || 'No status',
@@ -130,7 +131,9 @@ const MisReport = () => {
                 'Category': categories.find(c => c._id === asset.assetCategory)?.name || 'No category' , // Ensure category is included here
                 'Lifetime': asset.assetLifetime,
                 'D_O_P': formatDate(asset.DOP),
+                'D_O_E': formatDate(asset.DOE),
                 'Purchased From': asset.purchaseFrom,
+                'P-M-D': asset.PMD,
             };
         });
 
