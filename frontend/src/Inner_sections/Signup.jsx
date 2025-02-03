@@ -105,10 +105,7 @@ const Signup = () => {
                   </label>
                 )}
             </div>
-            
-            <div className="button-panel">
                 <button type='submit' className='sign-btn'>SignUp</button>
-            </div>
           </form>
           {message && <p>{message}</p>}
         </div>
