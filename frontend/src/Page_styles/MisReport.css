@@ -203,4 +203,13 @@ th {
     text-align: center;
     padding: 10px;
 }
+.mis-table tbody tr.even-row {
+    background-color: #f2f2f2;
+}
+
+.mis-table tbody tr.odd-row {
+    background-color: #ffffff;
+}
+
+
 
