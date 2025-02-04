@@ -261,7 +261,7 @@ const Inventory = () => {
         <p>No assets available.</p>
       ) : (
         <table className='inventory-table'>
-          <thead>
+          <thead className='table-header'>
             <tr>
               <th>Asset Name</th>
               <th>Asset Code</th>
@@ -275,9 +275,9 @@ const Inventory = () => {
               <th>Delete</th>
             </tr>
           </thead>
-          <tbody>
-            {currentAssets.map((asset) => (
-              <tr key={asset._id}>
+          <body className="table-body">
+            {currentAssets.map((asset,index) => (
+              <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
                 <td>{asset.assetName}</td>
                 <td>{asset.assetCode}</td>
                 <td>{categories.find(category => category._id === asset.assetCategory)?.name || 'Loading'}</td>
