@@ -132,14 +132,21 @@ header h1 {
     /* height: 80%; */
 }
 
-th, td {
-    padding: 8px;
+td {
+    font-size: 13px;
+    font-weight: 550;
+    color: #767676;
+    padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border: 2px solid #ffffff;
+    /* border-bottom: 1px solid #ddd; */
 }
 
 th {
-    background-color: #f1f1f1;
+    padding: 8px;
+    text-align: left;
+    background-color: #ffffff;
+    color: #565656;
 }
 
 /* Sidebar Filters */
