@@ -210,6 +210,12 @@ th {
 .mis-table tbody tr.odd-row {
     background-color: #ffffff;
 }
+.paging{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+}
 
 
 
