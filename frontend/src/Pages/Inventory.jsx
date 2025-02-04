@@ -275,7 +275,7 @@ const Inventory = () => {
               <th>Delete</th>
             </tr>
           </thead>
-          <body className="table-body">
+          <tbody className="table-body">
             {currentAssets.map((asset,index) => (
               <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
                 <td>{asset.assetName}</td>
