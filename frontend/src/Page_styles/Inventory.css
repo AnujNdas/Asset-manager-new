@@ -1,18 +1,4 @@
-th{
-    font-size: 13px;
-    text-align: center;
-    padding: 10px;
-}
-tr{
-    /* padding: 10px; */
-}
-td{
-    font-size: 13px;
-    font-family: "Montserrat",sans-serif;
-    padding: 10px;
-    text-align: center;
-    word-wrap: break-word;
-}
+
 .table-container{
     height: 100%;
     width: 100%;
@@ -21,12 +7,43 @@ td{
     align-items: center;
 }
 .inventory-table{
-    padding: 10px;
+    padding: 15px;
     width: 95%;
-    /* background: transparent; */
-    background-color: #ffffff;
-    border-radius: 10px;
+    /* border-radius: 10px; */
 }
+.table-header{
+  background-color: #ffffff;
+  width: 98%;
+}
+.table-body tr{
+    font-size: 13px;
+    font-family: "Montserrat",sans-serif;
+    padding: 10px;
+    word-wrap: break-word;
+    border: 2px solid #000000;
+}
+.table-body td{
+  border: 2px solid #ffffff;
+}
+.inventory-table tbody tr.even-row {
+  background-color: #f2f2f2; /* Light grey for even rows */
+  margin-top: 2px;
+}
+
+.inventory-table tbody tr.odd-row {
+  background-color: #ffffff; /* White for odd rows */
+  margin-top: 2px;
+}
+.table-header th{
+    font-size: 13px;
+    text-align: center;
+    padding: 15px 10px;
+    text-align: left;
+    background: #ffffff;
+    color: #565656;
+    border: 1px solid #f2f2f2;
+}
+
 .table-container h4{
     width: 95%;
     height: 8%;
@@ -76,18 +93,18 @@ td{
   
   .view-btn,.close-btn {
     padding: 5px 10px;
-    background-color: blue;
-    color: white;
-    font-weight: 500;
+    background-color: #ebebeb;
+    color: blue;
+    font-weight: 700;
     border: none;
     border-radius: 10px;
     cursor: pointer;
   }
   
-/*   .view-btn:hover {
+  .view-btn:hover {
     background-color: blue;
     color: white;
-  } */
+  }
   .edit-btn{
     border: none;
     background: transparent;
@@ -195,14 +212,21 @@ td{
   background-color: #ff5555; /* Darker grey for Cancel button hover */
 }
 .view{
-  height: 90%;
+  height: 70%;
+  gap: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  margin-top: 10px;
+  /* justify-content: center; */
 }
 .barcode{
   width: 100%;
   height: 100%;
+
+}
+.barcode rect{
+  font-size: 20px !important;
+  color: red;
 }
 .view-container{
   height: 10%;
@@ -229,11 +253,11 @@ td{
   justify-content: space-between;
 }
 .pagination{
-  background: blue;
+  background: #d7d7d7;
   border: none;
   padding: 5px;
   font-weight: 700;
-  color: white;
+  color: blue;
   font-size: 14px;
 }
 .pages{
