@@ -21,7 +21,7 @@
     font-family: "Montserrat",sans-serif;
     padding: 10px;
     word-wrap: break-word;
-    border: 2px solid #000000;
+/*     border: 2px solid #000000; */
 }
 .table-body td{
   border: 2px solid #ffffff;
