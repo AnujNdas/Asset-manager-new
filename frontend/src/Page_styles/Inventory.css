@@ -24,6 +24,9 @@
 }
 .table-body td{
   border: 2px solid #ffffff;
+  font-size: 13px;
+  color: #767676;
+  font-weight: 600;
 }
 .inventory-table tbody tr.even-row {
   background-color: #f2f2f2; /* Light grey for even rows */
