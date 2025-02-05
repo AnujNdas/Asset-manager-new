@@ -99,9 +99,18 @@
     z-index: -1;
   }
   
-  .view-btn,.close-btn {
+  .view-btn{
     padding: 5px 10px;
     background-color: blue;
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+.close-btn{
+    padding: 5px 10px;
+    background-color: red;
     color: white;
     font-weight: 700;
     border: none;
