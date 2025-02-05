@@ -312,32 +312,37 @@ const Inventory = () => {
 
        {/* Pagination Controls */}
       <div className="pages">
-        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className='pagination'>
-          Previous
-        </button>
-
-        {/* Page Number Buttons */}
-        {Array.from({ length: Math.ceil(assets.length / assetsPerPage) }, (_, index) => (
           <button
-            key={index + 1}
-            onClick={() => paginate(index + 1)}
-            className={currentPage === index + 1 ? 'active' : ''}
-            style={{
-              padding : "5px",
-              border: "1px solid #565656"
-            }}
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`pagination ${currentPage === 1 ? 'disabled' : ''}`}
           >
-            {index + 1}
+            Previous
           </button>
-        ))}
 
-        <button
-          onClick={() => paginate(currentPage + 1)}
-          disabled={currentPage === Math.ceil(assets.length / assetsPerPage)}
-          className='pagination'
-        >
-          Next
-        </button>
+          {/* Page Number Buttons */}
+          {Array.from({ length: Math.ceil(assets.length / assetsPerPage) }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => paginate(index + 1)}
+              className={`pagination ${currentPage === index + 1 ? 'active' : ''}`}
+              style={{
+                padding: "5px",
+                // border: "1px solid #565656"
+              }}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === Math.ceil(assets.length / assetsPerPage)}
+            className={`pagination ${currentPage === Math.ceil(assets.length / assetsPerPage) ? 'disabled' : ''}`}
+          >
+            Next
+          </button>
+        </div>
       </div>
        {showOverlay && selectedAsset && (
         <div className="overlay">
