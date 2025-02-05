@@ -10,20 +10,19 @@
     padding: 15px;
     width: 95%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border:none;
     /* border-radius: 10px; */
 }
 .table-header{
   background-color: #ffffff;
   width: 98%;
-  border:none;
+  border: none;
 }
 .table-body tr{
     font-size: 13px;
     font-family: "Montserrat",sans-serif;
     padding: 10px;
     word-wrap: break-word;
-/*     border: 2px solid #000000; */
+    /* border: 2px solid #000000;  */
 }
 .table-body td{
   border: 2px solid #ffffff;
@@ -32,12 +31,12 @@
   font-weight: 600;
 }
 .inventory-table tbody tr.even-row {
-  background-color: #f2f2f2; /* Light grey for even rows */
+  background-color: #f3f3f3; /* Light grey for even rows */
   margin-top: 2px;
 }
 
 .inventory-table tbody tr.odd-row {
-  background-color: #ffffff; /* White for odd rows */
+  background-color: #fff; /* White for odd rows */
   margin-top: 2px;
 }
 .table-header th{
@@ -47,8 +46,8 @@
     text-align: left;
     background: #ffffff;
     color: #565656;
-    border:none;
-/*     border: 1px solid #f2f2f2; */
+    border: none;
+    /* border: 1px solid #f2f2f2; */
 }
 
 .table-container h4{
@@ -107,11 +106,7 @@
     border-radius: 10px;
     cursor: pointer;
   }
-  
-  .view-btn:hover {
-    background-color: blue;
-    color: white;
-  }
+
   .edit-btn{
     border: none;
     background: transparent;
@@ -243,7 +238,7 @@
 }
 /* Close Button */
 .edit-overlay-content button.close-btn {
-  background-color: #c82333;
+  background-color: #dc3545;
   color: white;
   border-radius: 5px;
   padding: 5px 10px;
@@ -260,11 +255,11 @@
   justify-content: space-between;
 }
 .pagination{
-  background: blue;
+  background: #d7d7d7;
   border: none;
   padding: 5px;
   font-weight: 700;
-  color: white;
+  color: blue;
   font-size: 14px;
 }
 .pages{
