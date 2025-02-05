@@ -279,3 +279,16 @@
   gap: 5px;
   margin-top: 10px;
 }
+.checked-in {
+  color: rgb(255, 187, 0);
+  font-weight: 700;
+  font-size: 14px; /* Green font color for Checked In */
+  font-family: "Roboto", sans-serif;
+}
+
+.checked-out {
+  font-weight: 700;
+  font-size: 14px; /* Green font color for Checked In */
+  font-family: "Roboto", sans-serif;
+  color: rgb(2, 171, 2); /* Red font color for Checked Out */
+}
