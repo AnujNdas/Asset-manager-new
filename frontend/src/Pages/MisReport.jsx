@@ -116,7 +116,7 @@ const MisReport = () => {
         csvRows.push(headers.join(',')); // Add header row
 
         filteredData.forEach(asset => {
-            const unit = units.find(u => u._id === asset.associateUnit)?.name || 'No unit';
+            const unit = units.find(u => u._id === asset.associateUnit)?.name || 'Loading';
             const status = statuses.find(s => s._id === asset.assetStatus)?.name || 'No status';
             const location = locations.find(l => l._id === asset.locationName)?.name || 'No location';
             const category = categories.find(c => c._id === asset.assetCategory)?.name || 'No category';
@@ -148,10 +148,10 @@ const MisReport = () => {
                 'Asset Name': asset.assetName,
                 'Asset-Code': asset.assetCode,
                 'Asset Specification': asset.assetSpecification,
-                'Unit': units.find(u => u._id === asset.associateUnit)?.name || 'No unit',
-                'Status': statuses.find(s => s._id === asset.assetStatus)?.name || 'No status',
-                'Location': locations.find(l => l._id === asset.locationName)?.name || 'No location',
-                'Category': categories.find(c => c._id === asset.assetCategory)?.name || 'No category',
+                'Unit': units.find(u => u._id === asset.associateUnit)?.name || 'Loading',
+                'Status': statuses.find(s => s._id === asset.assetStatus)?.name || 'Loading',
+                'Location': locations.find(l => l._id === asset.locationName)?.name || 'Loading',
+                'Category': categories.find(c => c._id === asset.assetCategory)?.name || 'Loading',
                 'Lifetime': asset.assetLifetime,
                 'D_O_P': formatDate(asset.DOP),
                 'D_O_E': formatDate(asset.DOE),
@@ -244,10 +244,14 @@ const MisReport = () => {
                                         <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
                                             <td>{asset.assetName}</td>
                                             <td>{asset.assetSpecification}</td>
-                                            <td>{units.find(u => u._id === asset.associateUnit)?.name || 'No unit'}</td>
-                                            <td>{statuses.find(s => s._id === asset.assetStatus)?.name || 'No status'}</td>
-                                            <td>{locations.find(l => l._id === asset.locationName)?.name || 'No location'}</td>
-                                            <td>{categories.find(c => c._id === asset.assetCategory)?.name || 'No category'}</td>
+                                            <td>{units.find(u => u._id === asset.associateUnit)?.name || 'Loading'}</td>
+                                            <td>
+                                                <span className={statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In' ? 'checked-in' : 'checked-out'}>
+                                                  {statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}
+                                                </span>
+                                              </td>
+                                            <td>{locations.find(l => l._id === asset.locationName)?.name || 'Loading'}</td>
+                                            <td>{categories.find(c => c._id === asset.assetCategory)?.name || 'Loading'}</td>
                                             <td>{formatDate(asset.DOP)}</td>
                                         </tr>
                                     ))
