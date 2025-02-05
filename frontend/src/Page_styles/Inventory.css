@@ -265,14 +265,32 @@
   flex-direction: row;
   justify-content: space-between;
 }
-.pagination{
-  background: blue;
-  border: none;
+/* General pagination button styles */
+.pagination {
   padding: 5px;
-  font-weight: 700;
-  color: white;
-  font-size: 14px;
+  border: 1px solid #dedede;
+  background-color: #fff;  /* White background by default */
+  color: #7870f7; /* Blue text */
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for color changes */
 }
+
+/* Active state button styles */
+.pagination.active {
+  color: #fff; /* White text for active state */
+  background-color: #7870f7; /* Blue background for active state */
+  /* border-color: #007bff; Blue border for active state */
+}
+
+/* Disabled state button styles */
+.pagination.disabled,
+.pagination:disabled {
+  color: #6c757d; /* Gray text for disabled state */
+  background-color: #f8f9fa; /* Light gray background */
+  border-color: #ddd; /* Light gray border */
+  cursor: not-allowed; /* Disable cursor */
+}
+
 .pages{
   display: flex;
   flex-direction: row;
