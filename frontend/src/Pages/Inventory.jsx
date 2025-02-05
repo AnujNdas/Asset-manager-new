@@ -344,6 +344,7 @@ const Inventory = () => {
           </button>
         </div>
       </div>
+    
        {showOverlay && selectedAsset && (
         <div className="overlay">
           <div className="overlay-content">
