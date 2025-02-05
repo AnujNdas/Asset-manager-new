@@ -15,6 +15,7 @@
 .table-header{
   background-color: #ffffff;
   width: 98%;
+  border:none;
 }
 .table-body tr{
     font-size: 13px;
