@@ -31,6 +31,7 @@
   font-size: 13px;
   color: #767676;
   font-weight: 600;
+  text-align:center;
 }
 .inventory-table tbody tr.even-row {
   background-color: #f3f3f3; /* Light grey for even rows */
@@ -45,7 +46,6 @@
     font-size: 13px;
     text-align: center;
     padding: 15px 10px;
-    text-align: left;
     background: #ffffff;
     color: #565656;
     border: none;
