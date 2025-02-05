@@ -282,7 +282,11 @@ const Inventory = () => {
                 <td>{asset.assetCode}</td>
                 <td>{categories.find(category => category._id === asset.assetCategory)?.name || 'Loading'}</td>
                 <td>{locations.find(location => location._id === asset.locationName)?.name || 'Loading'}</td>
-                <td>{statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}</td>
+                <td>
+                    <span className={statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In' ? 'checked-in' : 'checked-out'}>
+                      {statuses.find(status => status._id === asset.assetStatus)?.name || 'N/A'}
+                    </span>
+                  </td>
                 <td>{units.find(unit => unit._id === asset.associateUnit)?.name || 'Loading'}</td>
                 <td>{formatDateForInput(asset.DOP)}</td>
                 <td>
