@@ -95,6 +95,18 @@ const MisReport = () => {
         return filteredData.slice(startIndex, startIndex + itemsPerPage);
     };
 
+    // Handle page change
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages()) {
+            setCurrentPage(newPage);
+        }
+    };
+
+    // Calculate total number of pages
+    const totalPages = () => {
+        return Math.ceil(filteredAssets().length / itemsPerPage);
+    };
+
     // CSV Download Function
     const downloadCSV = () => {
         const filteredData = filteredAssets();
@@ -153,18 +165,6 @@ const MisReport = () => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Assets');
         XLSX.writeFile(wb, 'assets.xlsx');
-    };
-
-    // Handle page change
-    const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= totalPages()) {
-            setCurrentPage(newPage);
-        }
-    };
-
-    // Calculate total number of pages
-    const totalPages = () => {
-        return Math.ceil(filteredAssets().length / itemsPerPage);
     };
 
     return (
@@ -245,11 +245,7 @@ const MisReport = () => {
                                             <td>{asset.assetName}</td>
                                             <td>{asset.assetSpecification}</td>
                                             <td>{units.find(u => u._id === asset.associateUnit)?.name || 'No unit'}</td>
-                                            <td>
-                                                <span className={statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In' ? 'checked-in' : 'checked-out'}>
-                                                  {statuses.find(status => status._id === asset.assetStatus)?.name || 'N/A'}
-                                                </span>
-                                              </td>
+                                            <td>{statuses.find(s => s._id === asset.assetStatus)?.name || 'No status'}</td>
                                             <td>{locations.find(l => l._id === asset.locationName)?.name || 'No location'}</td>
                                             <td>{categories.find(c => c._id === asset.assetCategory)?.name || 'No category'}</td>
                                             <td>{formatDate(asset.DOP)}</td>
@@ -262,10 +258,33 @@ const MisReport = () => {
                 </aside>
 
                 {/* Pagination Controls */}
-                <div className="paging">
-                    <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className='pagination'>Previous</button>
-                    <span>{currentPage} / {totalPages()}</span>
-                    <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages()} className='pagination'>Next</button>
+                <div className="pages">
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`pagination ${currentPage === 1 ? 'disabled' : ''}`}
+                    >
+                        Previous
+                    </button>
+
+                    {/* Page Number Buttons */}
+                    {Array.from({ length: Math.ceil(assets.length / itemsPerPage) }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => handlePageChange(index + 1)}
+                            className={`pagination ${currentPage === index + 1 ? 'active' : ''}`}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === Math.ceil(assets.length / itemsPerPage)}
+                        className={`pagination ${currentPage === Math.ceil(assets.length / itemsPerPage) ? 'disabled' : ''}`}
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
         </div>
