@@ -4,6 +4,7 @@ import { getUnits, getLocations, getCategories, getStatuses } from '../Services/
 import '../Page_styles/AssetCapture.css';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
+import Swal from 'sweetalert2';
 import 'react-calendar/dist/Calendar.css';
 
 const AssetCapture = () => {
@@ -152,7 +153,13 @@ const AssetCapture = () => {
       if (!response.ok) {
         const error = await response.text();
         console.error("Error response:", error);
-        alert(`Error: ${error}`);
+        Swal.fire({
+          title: "Oops!",
+          text: "Something went Wrong",
+          icon: "error",
+          draggable: true
+        });
+
         return false;
       }
 
@@ -180,7 +187,13 @@ const AssetCapture = () => {
     };
 
     if (!formData.assetName || !formData.locationName || !formData.assetCategory || !formData.associateUnit || !formData.assetStatus) {
-      alert('Please fill in all required fields.');
+      Swal.fire({
+        title: "Error",
+        text: "Please fill in all required fields.",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+
       return;
     }
 
@@ -217,7 +230,13 @@ const AssetCapture = () => {
     };
 
     if (!formData.assetName || !formData.locationName || !formData.assetCategory || !formData.associateUnit || !formData.assetStatus) {
-      alert('Please fill in all required fields.');
+      Swal.fire({
+        title: "Error",
+        text: "Please fill in all required fields.",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+
       return;
     }
 
