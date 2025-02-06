@@ -34,7 +34,7 @@ const Signup = () => {
       Swal.fire({
         title: "Notification",
         text: response.message,
-        icon: "info", // You can change the icon depending on the context (e.g., "info", "success", "warning")
+        icon: "success", // You can change the icon depending on the context (e.g., "info", "success", "warning")
         confirmButtonText: "OK"
       });
 
