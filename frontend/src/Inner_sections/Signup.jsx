@@ -5,7 +5,7 @@ import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 import image from '../Images/logo.png'
 import { faFacebook ,faTwitter,faLinkedin, faGithub} from '@fortawesome/free-brands-svg-icons';
 import AuthService from '../Services/AuthService'
-
+import Swal from 'sweetalert2';
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,10 +31,22 @@ const Signup = () => {
     e.preventDefault();
     try { 
       const response = await AuthService.signup ( name ,username,password);
-      setMessage(response.message);
+      Swal.fire({
+        title: "Notification",
+        text: response.message,
+        icon: "info", // You can change the icon depending on the context (e.g., "info", "success", "warning")
+        confirmButtonText: "OK"
+      });
+
     }
     catch (error) {
-      setMessage(error.response.data.error || "sign up failed");
+      Swal.fire({
+        title: "Error",
+        text: error.response?.data?.error || "Sign up failed",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+
     }
   };
   return (
