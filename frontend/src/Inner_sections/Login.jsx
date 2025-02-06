@@ -45,7 +45,6 @@ const Login = ({ setProfileUser}) => {
           confirmButtonText: "OK"
         });
         // setProfileUser(username);  // Update the profile user state
-        alert("Login Successful!"); // Show success message
         navigate("/");  // Redirect to the homepage or desired page
       } else {
         // If there's an unexpected structure of response (i.e., no token)
