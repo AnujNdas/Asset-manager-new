@@ -197,7 +197,13 @@ const Inventory = () => {
         )
       );
 
-      alert('Asset updated successfully!');
+      Swal.fire({
+        title: "Success",
+        text: "Asset Updated successfully!",
+        icon: "success",
+        confirmButtonText: "OK"
+      });
+
       setIsEditing(false);
       setSelectedAsset(null); // Close the modal after successful update
     } catch (err) {
