@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook ,faTwitter,faLinkedin, faGithub} from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 import AuthService from '../Services/AuthService'
+import Swal from 'sweetalert2';
 
 const Login = ({ setProfileUser}) => {
   const [username, setUsername] = useState("")
@@ -36,13 +37,26 @@ const Login = ({ setProfileUser}) => {
       if (response && response.token) {
         localStorage.setItem("token", response.token); // Store token in local storage
         localStorage.setItem("username", username);   // Store username in local storage
+
+        Swal.fire({
+          title: "Success",
+          text: "Login Successful!",
+          icon: "success",
+          confirmButtonText: "OK"
+        });
         // setProfileUser(username);  // Update the profile user state
         alert("Login Successful!"); // Show success message
         navigate("/");  // Redirect to the homepage or desired page
       } else {
         // If there's an unexpected structure of response (i.e., no token)
         console.error("Unexpected response format:", response);
-        alert("Unexpected response format. Please try again.");
+        Swal.fire({
+          title: "Unexpected Error",
+          text: "Unexpected response format. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+
       }
   
       setLoading(false);
@@ -55,15 +69,33 @@ const Login = ({ setProfileUser}) => {
       if (error.response) {
         // Handle the case where the server responded with an error
         console.error("Error Response:", error.response);
-        alert(error.response.data.error || "Login failed due to server error.");
+        Swal.fire({
+          title: "Error",
+          text: error.response?.data?.error || "Login failed due to server error.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+
       } else if (error.request) {
         // Handle the case where the request was made but no response was received
         console.error("Error Request:", error.request);
-        alert("No response from the server. Please check your internet connection.");
+        Swal.fire({
+          title: "Network Error",
+          text: "No response from the server. Please check your internet connection.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+
       } else {
         // Handle any other error
         console.error("Error Message:", error.message);
-        alert("An error occurred. Please try again.");
+       Swal.fire({
+          title: "Error",
+          text: "An error occurred. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+
       }
     }
   };
