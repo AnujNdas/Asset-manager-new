@@ -233,40 +233,44 @@ const Inventory = () => {
     fetchAssets()
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this asset?');
-    if (confirmDelete) {
-      try {
-        const response = await fetch(`https://asset-manager-new.onrender.com/api/assets/${id}`, {
-          method: 'DELETE',
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to delete asset');
+   const handleDelete = async (id) => {
+      const confirmDelete = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to delete this asset?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+      });
+    
+      if (confirmDelete.isConfirmed) {
+        try {
+          const response = await fetch(`https://asset-manager-new.onrender.com/api/assets/${id}`, {
+            method: 'DELETE',
+          });
+    
+          if (!response.ok) {
+            throw new Error('Failed to delete asset');
+          }
+    
+          setAssets(assets.filter((asset) => asset._id !== id));
+    
+          Swal.fire({
+            title: "Asset deleted.",
+            icon: "success",
+            draggable: true
+          });
+        } catch (err) {
+          setError(err.message);
+          Swal.fire({
+            title: "Error deleting Asset.",
+            icon: "error",
+            draggable: true
+          });
         }
-
-        setAssets(assets.filter((asset) => asset._id !== id));
-
-        Swal.fire({
-          title: "Success",
-          text: "Asset deleted successfully!",
-          icon: "success",
-          confirmButtonText: "OK"
-        });
-
-      } catch (err) {
-        setError(err.message);
-        Swal.fire({
-          title: "Error",
-          text: "Error deleting asset.",
-          icon: "error",
-          confirmButtonText: "OK"
-        });
-
       }
-    }
-  };
-
+    };
   if (loading) return <p>Loading assets...</p>;
   if (error) return <p>Error: {error}</p>;
 
