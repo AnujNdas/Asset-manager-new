@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Barcode from 'react-barcode';
 import '../Page_styles/Inventory.css';
+import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
@@ -201,7 +202,13 @@ const Inventory = () => {
       setSelectedAsset(null); // Close the modal after successful update
     } catch (err) {
       setError(err.message);
-      alert('Error updating asset');
+      Swal.fire({
+        title: "Error",
+        text: "Error updating asset.",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+
     }
     const fetchAssets = async () => {
       try {
@@ -234,10 +241,22 @@ const Inventory = () => {
 
         setAssets(assets.filter((asset) => asset._id !== id));
 
-        alert('Asset deleted successfully!');
+        Swal.fire({
+          title: "Success",
+          text: "Asset deleted successfully!",
+          icon: "success",
+          confirmButtonText: "OK"
+        });
+
       } catch (err) {
         setError(err.message);
-        alert('Error deleting asset');
+        Swal.fire({
+          title: "Error",
+          text: "Error deleting asset.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+
       }
     }
   };
