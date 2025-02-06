@@ -165,11 +165,21 @@ const AssetCapture = () => {
 
       const dataResponse = await response.json();
       console.log('Asset added:', dataResponse);
-      alert('Asset added successfully!');
+      Swal.fire({
+        title: "Success",
+        text: "Asset Added successfully!",
+        icon: "success",
+        confirmButtonText: "OK"
+      });
       return true;
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while adding the asset.');
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while adding the asset.",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
       return false;
     }
   };
