@@ -24,9 +24,15 @@ const Setting = () => {
         const token = localStorage.getItem("token");
   
         if (!token) {
-          alert("Please log in.");
-          navigate("/User/Login"); // Redirect to login if no token is found
-          return;
+          Swal.fire({
+            title: "Login Required",
+            text: "Please log in.",
+            icon: "warning",
+            confirmButtonText: "OK"
+          }).then(() => {
+            navigate("/User/Login"); // Redirect to login page after user clicks "OK"
+          });
+          return; // Exit early if no token is found
         }
   
         try {
