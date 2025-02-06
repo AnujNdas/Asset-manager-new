@@ -28,6 +28,7 @@
     "rimraf": "^6.0.1",
     "svgo": "^3.3.2",
     "web-vitals": "^4.2.4",
+    "sweetalert2": "^11.15.10",
     "xlsx": "^0.18.5"
   },
   "scripts": {
