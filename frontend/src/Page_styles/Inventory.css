@@ -32,6 +32,7 @@
   color: #767676;
   font-weight: 600;
   text-align:center;
+  padding:9px;
 }
 .inventory-table tbody tr.even-row {
   background-color: #f3f3f3; /* Light grey for even rows */
@@ -298,7 +299,7 @@
   margin-top: 10px;
   position:absolute;
   left:2.5%;
-  bottom:2%;
+  bottom:5%;
 }
 .checked-in {
   color: rgb(255, 187, 0);
