@@ -4,7 +4,7 @@ import { Link, Route, Routes , Navigate , useNavigate} from 'react-router-dom'
 import MyProfile from '../Inner_sections/MyProfile'
 import Security from '../Inner_sections/Security'
 import {useState , useEffect } from 'react'
-
+import Swal from 'sweetalert2';
 const Setting = () => {
   const [userData, setUserData] = useState(null);
 
