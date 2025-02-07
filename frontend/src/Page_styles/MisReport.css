@@ -141,6 +141,9 @@ th {
     background-color: #ffffff;
     color: #565656;
 }
+thead tr{
+    border:none;
+}
 
 /* Sidebar Filters */
 .filters {
