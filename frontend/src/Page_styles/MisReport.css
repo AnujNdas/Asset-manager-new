@@ -9,7 +9,6 @@ body {
     width: 40%;
     display: flex;
     flex-direction: row;
-    justify-content : flex-end;
     gap: 5px;
 }
 /* h1, h2 {
@@ -48,10 +47,6 @@ header .logo {
 
 header h1 {
     font-size: 1.2em;
-    font-family: "Roboto" , sans-serif;
-    font-weight:600;
-    font-size:25px;
-    color:#565656;
 }
 
 .date-range input {
@@ -65,8 +60,7 @@ header h1 {
     padding: 6px 8px;
     border-radius: 8px;
     cursor: pointer;
-    font-family:"Roboto",san-serif;
-    font-weight:600;
+    font-family:"Lato",san-serif;
 }
 
 .download-btn:hover {
@@ -79,8 +73,7 @@ header h1 {
     padding: 6px 8px;
     border-radius: 8px;
     cursor: pointer;
-    font-family:"Roboto",san-serif;
-    font-weight:600;
+    font-family:"Lato",san-serif;
 }
 
 .download-btn:hover {
@@ -93,8 +86,8 @@ header h1 {
     padding: 6px 8px;
     border-radius: 8px;
     cursor: pointer;
-    font-family:"Roboto",sans-serif;
-    font-weight: 600;
+    font-family:"Lato",sans-serif;
+    font-weight: 500;
 
 }
 
@@ -203,6 +196,12 @@ th {
     text-align: center;
     padding: 10px;
 }
+.paging{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+}
 .mis-table tbody tr.even-row {
     background-color: #f2f2f2;
 }
@@ -210,12 +209,4 @@ th {
 .mis-table tbody tr.odd-row {
     background-color: #ffffff;
 }
-.paging{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 10px;
-}
-
-
 
