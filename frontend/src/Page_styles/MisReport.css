@@ -141,7 +141,7 @@ th {
     background-color: #ffffff;
     color: #565656;
 }
-thead tr{
+.mis-table thead tr{
     border:none;
 }
 
