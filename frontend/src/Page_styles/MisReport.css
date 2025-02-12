@@ -208,9 +208,11 @@ th {
 }
 .mis-table tbody tr.even-row {
     background-color: #f2f2f2;
+    border:none;
 }
 
 .mis-table tbody tr.odd-row {
+    border:none;
     background-color: #ffffff;
 }
 
