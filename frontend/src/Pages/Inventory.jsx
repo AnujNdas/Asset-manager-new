@@ -313,7 +313,7 @@ const Inventory = () => {
                 <td>{locations.find(location => location._id === asset.locationName)?.name || 'Loading'}</td>
                 <td>
                     <span className={statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In' ? 'checked-in' : 'checked-out'}>
-                      {statuses.find(status => status._id === asset.assetStatus)?.name || 'N/A'}
+                      {statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}
                     </span>
                   </td>
                 <td>{units.find(unit => unit._id === asset.associateUnit)?.name || 'Loading'}</td>
