@@ -92,12 +92,18 @@
   }
   .asset-info{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     position: relative;
     top: 40px;
     height: 60%;
     width: 100%;
+    gap: 10px;
   }
   .asset-info p {
     margin: 0;
+  }
+  .edge-box{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
