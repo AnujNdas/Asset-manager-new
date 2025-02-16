@@ -7,6 +7,7 @@ import { Pie } from 'react-chartjs-2';
 import { ProgressBar } from 'react-bootstrap'; // Using Bootstrap for ProgressBar
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Spinner } from 'react-bootstrap'; // Importing Spinner for loading state
 
 // Register Chart.js components
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -16,6 +17,7 @@ const Dashboard = () => {
   const [category, setCategory] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(true); // State to manage loading
 
   const adjustHue = (hue, adjustment) => (hue + adjustment + 360) % 360;
 
@@ -108,6 +110,7 @@ const Dashboard = () => {
         setCategory(categoriesData);
         setStatuses(statusesData);
         setLocations(locationsData);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (err) {
         console.log(err.message);
       }
@@ -268,12 +271,14 @@ const Dashboard = () => {
           </div>
           <div className="asset-info">
             <p>Total Locations</p>
+            {loading ? <Spinner animation="border" variant="light" /> : 
               <Pie data={locationData} options={{
                 plugins: {
                   legend: { display: false },
                   tooltip: { enabled: true },
                 },
               }} />
+            }
           </div>
         </div>
 
@@ -293,12 +298,14 @@ const Dashboard = () => {
           </div>
           <div className="asset-info">
             <p>Total Categories</p>
-            <Pie data={categoryData} options={{
-              plugins: {
-                legend: { display: false },
-                tooltip: { enabled: true },
-              },
-            }} />
+            {loading ? <Spinner animation="border" variant="light" /> : 
+              <Pie data={categoryData} options={{
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { enabled: true },
+                },
+              }} />
+            }
           </div>
         </div>
 
@@ -318,12 +325,14 @@ const Dashboard = () => {
           </div>
           <div className="asset-info">
             <p>Checked In & Checked Out</p>
-            <Pie data={statusData} options={{
-              plugins: {
-                legend: { display: false },
-                tooltip: { enabled: true },
-              },
-            }} />
+            {loading ? <Spinner animation="border" variant="light" /> : 
+              <Pie data={statusData} options={{
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { enabled: true },
+                },
+              }} />
+            }
           </div>
         </div>
       </div>
@@ -333,21 +342,27 @@ const Dashboard = () => {
         {/* Bar Graph for Locations */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            <Bar data={locationData} options={barChartOptions} />
+            {loading ? <Spinner animation="border" variant="light" /> : 
+              <Bar data={locationData} options={barChartOptions} />
+            }
           </div>
         </div>
 
         {/* Bar Graph for Categories */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            <Bar data={categoryData} options={barChartOptions} />
+            {loading ? <Spinner animation="border" variant="light" /> : 
+              <Bar data={categoryData} options={barChartOptions} />
+            }
           </div>
         </div>
 
         {/* Bar Chart for Status */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            <Bar data={statusData} options={barChartOptions} />
+            {loading ? <Spinner animation="border" variant="light" /> : 
+              <Bar data={statusData} options={barChartOptions} />
+            }
           </div>
         </div>
       </div>
