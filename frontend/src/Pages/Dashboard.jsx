@@ -249,9 +249,23 @@ const Dashboard = () => {
               }}
             />
           </div>
-          <div className="asset-info">
-            <p>Total Assets</p>
-            <ProgressBar now={(totalAssets / 100) * 100} label={`${totalAssets}`} />
+          <div className="asset-info" style={{
+            display : "flex",
+            flexDirection : "column",
+          }}>
+            <p style={{
+              fontSize : "14px",
+              fontWeight : "600",
+              color : "#565656",
+              fontFamily : "Montserrat"
+            }}>Total Assets</p>
+            <ProgressBar now={(totalAssets / 50) * 100} variant='dark' style={{ height: '30px', backgroundColor: 'lightgrey', borderRadius: '10px' }}/>
+            <p style={{
+              fontSize : "25px",
+              fontFamily : "Lato",
+              fontWeight : "600",
+              color : '#565656'
+            }}>{totalAssets}</p>
           </div>
         </div>
 
@@ -270,7 +284,22 @@ const Dashboard = () => {
             />
           </div>
           <div className="asset-info">
-            <p>Total Locations</p>
+            <div className="edge-box">
+            <p style={{
+              fontSize : "14px",
+              fontWeight : "600",
+              color : "#565656",
+              fontFamily : "Montserrat"
+            }}>Total Locations</p>
+            <p style={{
+              fontSize : "25px",
+              fontFamily : "Lato",
+              fontWeight : "800",
+              textAlign : "center",
+              color : '#565656'
+            }}>{locationCounts.length}</p>
+            </div>
+            
             {loading ? <Spinner animation="border" variant="dark" /> : 
               <Pie data={locationData} options={{
                 plugins: {
@@ -297,8 +326,22 @@ const Dashboard = () => {
             />
           </div>
           <div className="asset-info">
-            <p>Total Categories</p>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
+            <div className="edge-box">
+            <p style={{
+              fontSize : "14px",
+              fontWeight : "600",
+              color : "#565656",
+              fontFamily : "Montserrat"
+            }}>Total Categories</p>
+            <p style={{
+              fontSize : "25px",
+              fontFamily : "Lato",
+              fontWeight : "600",
+              textAlign : "center",color : '#565656'
+            }}>{categoryCounts.length}</p>
+            </div>
+            
+            {loading ? <Spinner animation="border" variant="light" /> : 
               <Pie data={categoryData} options={{
                 plugins: {
                   legend: { display: false },
@@ -324,8 +367,30 @@ const Dashboard = () => {
             />
           </div>
           <div className="asset-info">
-            <p>Checked In & Checked Out</p>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
+            <div className="edge-box">
+            <p style={{
+              fontSize : "14px",
+              fontWeight : "600",
+              color : "#565656",
+              fontFamily : "Montserrat",
+              textAlign : "center"
+            }}>Total Status</p>
+            <p style={{
+              fontSize : "25px",
+              fontFamily : "Lato",
+              fontWeight : "600",
+              textAlign : "center",
+              color : '#565656'
+            }}>{checkedInAssets}</p>
+            <p style={{
+              fontSize : "25px",
+              fontFamily : "Lato",
+              fontWeight : "600",
+              textAlign : "center",
+              color : '#565656'
+            }}>{checkedOutAssets}</p>
+            </div>
+            {loading ? <Spinner animation="border" variant="light" /> : 
               <Pie data={statusData} options={{
                 plugins: {
                   legend: { display: false },
@@ -342,7 +407,7 @@ const Dashboard = () => {
         {/* Bar Graph for Locations */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
+            {loading ? <Spinner animation="border" variant="light" /> : 
               <Bar data={locationData} options={barChartOptions} />
             }
           </div>
@@ -351,7 +416,7 @@ const Dashboard = () => {
         {/* Bar Graph for Categories */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
+            {loading ? <Spinner animation="border" variant="light" /> : 
               <Bar data={categoryData} options={barChartOptions} />
             }
           </div>
@@ -360,7 +425,7 @@ const Dashboard = () => {
         {/* Bar Chart for Status */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
+            {loading ? <Spinner animation="border" variant="light" /> : 
               <Bar data={statusData} options={barChartOptions} />
             }
           </div>
