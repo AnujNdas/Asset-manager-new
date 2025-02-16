@@ -271,7 +271,7 @@ const Dashboard = () => {
           </div>
           <div className="asset-info">
             <p>Total Locations</p>
-            {loading ? <Spinner animation="border" variant="light" /> : 
+            {loading ? <Spinner animation="border" variant="dark" /> : 
               <Pie data={locationData} options={{
                 plugins: {
                   legend: { display: false },
@@ -298,7 +298,7 @@ const Dashboard = () => {
           </div>
           <div className="asset-info">
             <p>Total Categories</p>
-            {loading ? <Spinner animation="border" variant="light" /> : 
+            {loading ? <Spinner animation="border" variant="dark" /> : 
               <Pie data={categoryData} options={{
                 plugins: {
                   legend: { display: false },
@@ -325,7 +325,7 @@ const Dashboard = () => {
           </div>
           <div className="asset-info">
             <p>Checked In & Checked Out</p>
-            {loading ? <Spinner animation="border" variant="light" /> : 
+            {loading ? <Spinner animation="border" variant="dark" /> : 
               <Pie data={statusData} options={{
                 plugins: {
                   legend: { display: false },
@@ -342,7 +342,7 @@ const Dashboard = () => {
         {/* Bar Graph for Locations */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="light" /> : 
+            {loading ? <Spinner animation="border" variant="dark" /> : 
               <Bar data={locationData} options={barChartOptions} />
             }
           </div>
@@ -351,7 +351,7 @@ const Dashboard = () => {
         {/* Bar Graph for Categories */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="light" /> : 
+            {loading ? <Spinner animation="border" variant="dark" /> : 
               <Bar data={categoryData} options={barChartOptions} />
             }
           </div>
@@ -360,7 +360,7 @@ const Dashboard = () => {
         {/* Bar Chart for Status */}
         <div className="graph">
           <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="light" /> : 
+            {loading ? <Spinner animation="border" variant="dark" /> : 
               <Bar data={statusData} options={barChartOptions} />
             }
           </div>
