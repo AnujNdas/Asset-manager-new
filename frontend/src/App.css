@@ -1,54 +1,68 @@
-*{
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
-@font-face{
-  font-family:h1;
-  src:url('Poppins/Poppins-BoldItalic.ttf');
+
+/* Font faces */
+@font-face {
+  font-family: h1;
+  src: url('Poppins/Poppins-BoldItalic.ttf');
 }
-@font-face{
-  font-family:h2;
-  src:url('Poppins/Poppins-SemiBoldItalic.ttf');
+@font-face {
+  font-family: h2;
+  src: url('Poppins/Poppins-SemiBoldItalic.ttf');
 }
-@font-face{
-  font-family:h3;
-  src:url('Poppins/Poppins-MediumItalic.ttf');
+@font-face {
+  font-family: h3;
+  src: url('Poppins/Poppins-MediumItalic.ttf');
 }
-@font-face{
-  font-family:h4;
-  src:url('Poppins/Poppins-LightItalic.ttf');
+@font-face {
+  font-family: h4;
+  src: url('Poppins/Poppins-LightItalic.ttf');
 }
-@font-face{
-  font-family:p;
-  src:url('Poppins/Poppins-Italic.ttf');
+@font-face {
+  font-family: p;
+  src: url('Poppins/Poppins-Italic.ttf');
 }
-@font-face{
-  font-family:li;
-  src:url('Poppins/Poppins-ExtraLightItalic.ttf');
+@font-face {
+  font-family: li;
+  src: url('Poppins/Poppins-ExtraLightItalic.ttf');
 }
-.first-container{
-  height: 100%;
+
+/* Layout Containers */
+.first-container {
+  height: 100vh;
   width: 18%;
+  background-color: #fff;
+  transition: width 0.3s ease;
 }
-.second-container{
-  position: absolute;
-  top: 0%;
+
+.second-container {
+  position: fixed;
+  top: 0;
   left: 18%;
   width: 82%;
-  height: 8%;
-  /* background: #f33456; */
+  height: 60px;
+  background-color: #fff;
+  z-index: 10;
+  transition: left 0.3s ease, width 0.3s ease;
 }
-.third-container{
-  position: absolute;
-  top: 8%;
-  left:18%;
-  height: 92%;
-  width:82%;
-  background:#f6f6f6;
-  border-radius: 10px;
-}
-/* App.css */
 
+.third-container {
+  position: absolute;
+  top: 60px;
+  left: 18%;
+  height: calc(100% - 60px);
+  width: 82%;
+  background: #f6f6f6;
+  border-radius: 10px;
+  overflow-y: auto;
+  transition: left 0.3s ease, width 0.3s ease;
+  padding: 10px;
+}
+
+/* Blur when overlay/modal is active */
 .first-container,
 .second-container,
 .third-container {
@@ -57,13 +71,54 @@
 
 .blurred {
   filter: blur(5px);
-  pointer-events: none; /* Optional: disable interaction with blurred content */
+  pointer-events: none;
 }
 
-/* Optionally, you can also fade the blur in/out */
-.first-container,
-.second-container,
-.third-container {
-  transition: filter 0.3s ease, opacity 0.3s ease;
+/* ========== RESPONSIVE ========== */
+
+/* Tablet & below */
+@media screen and (max-width: 1024px) {
+  .first-container {
+    width: 60px;
+  }
+
+  .second-container {
+    left: 60px;
+    width: calc(100% - 60px);
+  }
+
+  .third-container {
+    left: 60px;
+    width: calc(100% - 60px);
+  }
+}
+
+/* Mobile View */
+@media screen and (max-width: 768px) {
+  .first-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    height: calc(100% - 60px);
+    width: 200px;
+    transform: translateX(-100%);
+    z-index: 9;
+    background: #fff;
+    transition: transform 0.3s ease;
+  }
+
+  .first-container.open {
+    transform: translateX(0);
+  }
+
+  .second-container {
+    left: 0;
+    width: 100%;
+  }
+
+  .third-container {
+    left: 0;
+    width: 100%;
+  }
 }
 
