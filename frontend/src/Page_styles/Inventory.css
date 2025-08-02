@@ -1,186 +1,148 @@
-.table-header tr{
-    border:none;
+/* Inventory Table Styling */
+.table-header tr {
+  border: none;
 }
-.table-container{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+.table-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 }
-.inventory-table{
-    padding: 15px;
-    width: 95%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* border-radius: 10px; */
+
+.inventory-table {
+  padding: 15px;
+  width: 95%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: auto;
+  margin-top: 20px;
 }
-.table-header{
+
+.table-header {
   background-color: #ffffff;
   width: 98%;
   border: none;
 }
-.table-body tr{
-    font-size: 13px;
-    font-family: "Montserrat",sans-serif;
-    padding: 10px;
-    word-wrap: break-word;
-    /* border: 2px solid #000000;  */
+
+.table-header th {
+  font-size: 13px;
+  text-align: center;
+  padding: 15px 10px;
+  background: #ffffff;
+  color: #565656;
+  border: none;
 }
-.table-body td{
+
+.table-body tr {
+  font-size: 13px;
+  font-family: "Montserrat", sans-serif;
+  padding: 10px;
+  word-wrap: break-word;
+}
+
+.table-body td {
   border: 2px solid #ffffff;
   font-size: 13px;
   color: #767676;
   font-weight: 600;
-  text-align:center;
-  padding:9px;
+  text-align: center;
+  padding: 9px;
 }
+
 .inventory-table tbody tr.even-row {
-  background-color: #f3f3f3; /* Light grey for even rows */
-  margin-top: 2px;
+  background-color: #f3f3f3;
 }
 
 .inventory-table tbody tr.odd-row {
-  background-color: #fff; /* White for odd rows */
-  margin-top: 2px;
-}
-.table-header th{
-    font-size: 13px;
-    text-align: center;
-    padding: 15px 10px;
-    background: #ffffff;
-    color: #565656;
-    border: none;
-    /* border: 1px solid #f2f2f2; */
+  background-color: #fff;
 }
 
-.table-container h4{
-    width: 95%;
-    height: 8%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    color: #565656;
+.table-container h4 {
+  width: 95%;
+  height: 8%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #565656;
 }
-/* Overlay and background blur styles */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .overlay-content {
-    /* display: flex;
-    flex-direction: column;
-     */
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 30%;
-    height: 80%;
-    /* max-width: 600px; */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-  }
-  
-  .overlay-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* background: rgba(255, 255, 255, 0.8); */
-    backdrop-filter: blur(5px);
-    z-index: -1;
-  }
-  
-  .view-btn{
-    padding: 5px 10px;
-    background-color: #7870f7;
-    color: white;
-    font-weight: 700;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-.close-btn{
-    padding: 5px 10px;
-    background-color: red;
-    color: white;
-    font-weight: 700;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-  }
 
-  .edit-btn{
-    border: none;
-    background: transparent;
-    font-size: 18px;
-    color: orange;
-  }
-  .delete-btn{
-    border: none;
-    background: transparent;
-    font-size: 18px;
-    color: red;
-  }
-  
-
-
-
-  /* Edit edit-entry Overlay Styles */
+/* Overlay and Modals */
+.overlay,
 .edit-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Make sure it appears on top */
+  z-index: 1000;
 }
 
-/* Edit edit-entry Container */
+.overlay-content,
 .edit-overlay-content {
   background-color: white;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 700px;
   height: 85%;
-
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the edit-entry */
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
-.edit-form{
+
+.overlay-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(5px);
+  z-index: -1;
+}
+
+.edit-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 40px;
+  gap: 10px;
 }
-.edit-entry{
-  height: 100%;
+
+.edit-entry,
+.view {
   display: flex;
   flex-direction: column;
-
+  gap: 10px;
+  margin-top: 10px;
+  height: 100%;
 }
-.option-select{
+
+.view-container {
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.barcode {
   width: 100%;
-  padding: 8px;
-  margin: 5px 0 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
+  height: 100%;
 }
 
-/* edit-entry Inputs and Labels */
+.barcode rect {
+  font-size: 20px !important;
+  color: red;
+}
+
 .edit-entry label {
   font-size: 14px;
   font-weight: bold;
@@ -188,7 +150,8 @@
   display: block;
 }
 
-.edit-entry input {
+.edit-entry input,
+.option-select {
   width: 100%;
   padding: 8px;
   margin: 5px 0 15px;
@@ -203,7 +166,7 @@
 
 .edit-entry button[type="submit"],
 .edit-entry button[type="button"] {
-  background-color: #007bff; /* Blue color for buttons */
+  background-color: #007bff;
   color: white;
   padding: 8px 16px;
   border: none;
@@ -213,104 +176,191 @@
   margin-top: 10px;
 }
 
-.edit-entry button[type="submit"]:hover,
-.edit-entry button[type="button"]:hover {
-  background-color: #0056b3; /* Darker blue for hover effect */
+.edit-entry button[type="submit"]:hover {
+  background-color: #0056b3;
 }
 
 .edit-entry button[type="button"] {
-  background-color: #ff0000; /* Grey color for Cancel button */
+  background-color: #ff0000;
 }
 
 .edit-entry button[type="button"]:hover {
-  background-color: #ff5555; /* Darker grey for Cancel button hover */
-}
-.view{
-  height: 70%;
-  gap: 10px;
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
-  /* justify-content: center; */
-}
-.barcode{
-  width: 100%;
-  height: 100%;
-
-}
-.barcode rect{
-  font-size: 20px !important;
-  color: red;
-}
-.view-container{
-  height: 10%;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-/* Close Button */
-.edit-overlay-content button.close-btn {
-  background-color: #dc3545;
-  color: white;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 10px;
+  background-color: #ff5555;
 }
 
-.edit-overlay-content button.close-btn:hover {
-  background-color: #c82333;
-}
-.buttons-container{
+.buttons-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
-/* General pagination button styles */
+
+.close-btn {
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.view-btn {
+  padding: 5px 10px;
+  background-color: #7870f7;
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.view-btn:hover {
+  background-color: #5e58e9;
+}
+
+.edit-btn {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  color: orange;
+  cursor: pointer;
+}
+
+.delete-btn {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  color: red;
+  cursor: pointer;
+}
+
+/* Pagination */
 .pagination {
   padding: 5px;
   border: 1px solid #dedede;
-  background-color: #fff;  /* White background by default */
-  color: #7870f7; /* Blue text */
+  background-color: #fff;
+  color: #7870f7;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for color changes */
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Active state button styles */
 .pagination.active {
-  color: #fff; /* White text for active state */
-  background-color: #7870f7; /* Blue background for active state */
-  /* border-color: #007bff; Blue border for active state */
+  color: #fff;
+  background-color: #7870f7;
 }
 
-/* Disabled state button styles */
 .pagination.disabled,
 .pagination:disabled {
-  color: #6c757d; /* Gray text for disabled state */
-  background-color: #f8f9fa; /* Light gray background */
-  border-color: #ddd; /* Light gray border */
-  cursor: not-allowed; /* Disable cursor */
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border-color: #ddd;
+  cursor: not-allowed;
 }
 
-.pages{
+.pages {
   display: flex;
   flex-direction: row;
   gap: 5px;
   margin-top: 10px;
-  position:absolute;
-  left:2.5%;
-  bottom:4%;
+  position: absolute;
+  left: 2.5%;
+  bottom: 4%;
 }
+
 .checked-in {
   color: rgb(255, 187, 0);
   font-weight: 700;
-  font-size: 14px; /* Green font color for Checked In */
+  font-size: 14px;
   font-family: "Roboto", sans-serif;
 }
 
 .checked-out {
+  color: rgb(2, 171, 2);
   font-weight: 700;
-  font-size: 14px; /* Green font color for Checked In */
+  font-size: 14px;
   font-family: "Roboto", sans-serif;
-  color: rgb(2, 171, 2); /* Red font color for Checked Out */
 }
+
+/* Responsive Enhancements */
+@media (min-width : 200px) and (max-width: 768px) {
+  table thead {
+    display: none;
+  }
+  .inventory-table{
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    background-color: #e7e7e7;
+  }
+  .table-body{
+    width: 60%;
+    
+  }
+  table, table tbody, table tr{
+    display: block;
+    width: 100%;
+  }
+
+
+  table tr {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    position: relative;
+    text-align: left;
+    border-bottom: 1px solid #727272;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    flex: 0 0 40%;           /* header label takes 40% of width */
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+    margin-right: 10px;
+    font-family: h2;
+  }
+
+  table td:last-child {
+    border-bottom: none;
+  }
+  
+  .even-row {
+    background-color: #ffffff !important;
+  }
+
+  .odd-row {
+    background-color: #ffffff !important;
+  }
+  .view-btn {
+    margin-top: 8px;
+  }
+
+  .pages {
+    position: static;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .edit-form {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-overlay-content {
+    width: 95%;
+    height: auto;
+    max-height: 90%;
+    overflow-y: auto;
+  }
+}
+
+
