@@ -34,41 +34,38 @@ const App = () => {
   };
 
   return (
-    <>
-      {/* Main layout containers */}
-      <section className={`first-container ${isUserPage ? 'blurred' : ''}`}>
-        <Sidebar />
-      </section>
+  <div className="app-wrapper">
+    <section className={`first-container ${isUserPage ? 'blurred' : ''}`}>
+      <Sidebar />
+    </section>
 
-      <section className={`second-container ${isUserPage ? 'blurred' : ''}`}>
-        <Menubar username={profileUser}/>
-      </section>
+    <section className={`second-container ${isUserPage ? 'blurred' : ''}`}>
+      <Menubar username={profileUser} />
+    </section>
 
-      <section className={`third-container ${isUserPage ? 'blurred' : ''}`}>
-        {/* Keep content visible in third-container even when User page is shown */}
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/Product_List" element={<ProductList />} />
-          <Route path="/AssetCapture" element={<AssetCapture/>} />
-          <Route path="/Inventory" element={<Inventory/>} />
-          <Route path="/Setting/*" element={<Setting/>}/>
-          <Route path="/Classification/*" element={<Classification/>}/>
-          <Route path="/Misreport" element={<MisReport/>}/>
-        </Routes>
-      </section>
+    <section className={`third-container ${isUserPage ? 'blurred' : ''}`}>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/Product_List" element={<ProductList />} />
+        <Route path="/AssetCapture" element={<AssetCapture />} />
+        <Route path="/Inventory" element={<Inventory />} />
+        <Route path="/Setting/*" element={<Setting />} />
+        <Route path="/Classification/*" element={<Classification />} />
+        <Route path="/Misreport" element={<MisReport />} />
+      </Routes>
+    </section>
 
-      {/* The User section, when isUserVisible is true, will appear separately from the main content */}
-      
-        <section className="user-container">
-          <Routes>
-            <Route path="/User" element={<User removeUser={removeUser} />}>
-              <Route path="Login" element={<Login setProfileUser={setProfileUser}/>}/>
-              <Route path="Signup" element={<Signup />} />
-            </Route>
-          </Routes>
-        </section>
-    </>
-  );
+    <section className="user-container">
+      <Routes>
+        <Route path="/User" element={<User removeUser={removeUser} />}>
+          <Route path="Login" element={<Login setProfileUser={setProfileUser} />} />
+          <Route path="Signup" element={<Signup />} />
+        </Route>
+      </Routes>
+    </section>
+  </div>
+);
+
 };
 
 export default App;
