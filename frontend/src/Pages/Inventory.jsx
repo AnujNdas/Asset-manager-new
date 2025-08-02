@@ -37,7 +37,7 @@ const Inventory = () => {
   };
 
   const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const [assetsPerPage] = useState(10); // Number of assets per page
+  const [assetsPerPage] = useState(8); // Number of assets per page
   const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
@@ -292,6 +292,7 @@ const Inventory = () => {
         <table className='inventory-table'>
           <thead className='table-header'>
             <tr>
+              <th>S.No.</th>
               <th>Asset Name</th>
               <th>Asset Code</th>
               <th>Asset Category</th>
@@ -305,37 +306,48 @@ const Inventory = () => {
             </tr>
           </thead>
           <tbody className="table-body">
-            {currentAssets.map((asset,index) => (
-              <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                <td>{asset.assetName}</td>
-                <td>{asset.assetCode}</td>
-                <td>{categories.find(category => category._id === asset.assetCategory)?.name || 'Loading'}</td>
-                <td>{locations.find(location => location._id === asset.locationName)?.name || 'Loading'}</td>
-                <td>
-                    <span className={statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In' ? 'checked-in' : 'checked-out'}>
-                      {statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}
-                    </span>
-                  </td>
-                <td>{units.find(unit => unit._id === asset.associateUnit)?.name || 'Loading'}</td>
-                <td>{formatDateForInput(asset.DOP)}</td>
-                <td>
-                  <button onClick={() => handleAssetClick(asset)} className="view-btn">
-                    View Details
-                  </button>
-                </td>
-                <td>
-                  <button className="edit-btn" onClick={() => handleEditClick(asset)}>
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                  </button>
-                </td>
-                <td>
-                  <button className="delete-btn" onClick={() => handleDelete(asset._id)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {currentAssets.map((asset, index) => (
+    <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+      <td data-label="S.No.">{index + 1}</td>
+      <td data-label="Asset Name">{asset.assetName}</td>
+      <td data-label="Asset Code">{asset.assetCode}</td>
+      <td data-label="Asset Category">
+        {categories.find(category => category._id === asset.assetCategory)?.name || 'Loading'}
+      </td>
+      <td data-label="Location">
+        {locations.find(location => location._id === asset.locationName)?.name || 'Loading'}
+      </td>
+      <td data-label="Asset Status">
+        <span className={
+          statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In'
+            ? 'checked-in'
+            : 'checked-out'
+        }>
+          {statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}
+        </span>
+      </td>
+      <td data-label="Unit">
+        {units.find(unit => unit._id === asset.associateUnit)?.name || 'Loading'}
+      </td>
+      <td data-label="Date of Purchase">{formatDateForInput(asset.DOP)}</td>
+      <td data-label="Details">
+        <button onClick={() => handleAssetClick(asset)} className="view-btn">
+          View
+        </button>
+      </td>
+      <td data-label="Edit">
+        <button className="edit-btn" onClick={() => handleEditClick(asset)}>
+          <FontAwesomeIcon icon={faPenToSquare} />
+        </button>
+      </td>
+      <td data-label="Delete">
+        <button className="delete-btn" onClick={() => handleDelete(asset._id)}>
+          <FontAwesomeIcon icon={faTrash} />
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       )}
 
