@@ -16,7 +16,7 @@ ul{
     align-items:center;
     gap: 20px;
     padding: 0;
-    background: #ffffff;
+    /* background: #ffffff; */
 }
 li{
     height: 8.33%;
@@ -27,7 +27,7 @@ li{
     font-weight: 600;
     font-size: 1.1rem;
     transition: 0.2s;
-    background: #ffffff;
+    /* background: #ffffff; */
 }
 a{
     width: 100%;
@@ -85,3 +85,78 @@ a:hover{
     height: 70%; /* Take up remaining of sidebar */
     /* background: rgb(97, 97, 97); */
 }
+
+/* Default styles (for screens > 768px) are already defined above */
+
+/* Responsive adjustments for screens between 200px and 768px */
+@media screen and (max-width: 768px) {
+
+  .sidebar-container {
+    width: 200px; /* Fixed width sidebar on small screens */
+    position: fixed;
+    left: 200px;
+    /* top: 10px;    */
+    background-color: #e7e7e7;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  .sidebar-container.open {
+    transform: translateX(0); /* Slide-in effect when opened */
+  }
+
+  .sidebar {
+    flex-direction: column;
+    padding: 10px;
+    background : #e7e7e7;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  .sidebar-menu{
+    background: #e7e7e7;
+  }
+
+  .sidebar-heading {
+    justify-content: flex-end;
+    padding: 0 15px;
+  }
+
+  .logo {
+    font-size: 28px;
+    width: 90%;
+  }
+
+  .title{
+    display: none;
+    /* font-size: 19px;
+    width: auto;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+  }
+
+  ul {
+    gap: 10px;
+    padding-left: 0;
+  }
+
+  li {
+    font-size: 1rem;
+    height: auto;
+    padding: 10px 0;
+  }
+
+  a {
+    padding: 8px 10px;
+    font-size: 14px;
+    gap: 12px;
+    background: #e7e7e7;
+  }
+
+  a:hover {
+    background: #f6f6f6;
+    color: #0013c2;
+  }
+}
+
