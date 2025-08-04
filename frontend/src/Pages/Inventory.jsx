@@ -358,7 +358,7 @@ const Inventory = () => {
         disabled={currentPage === 1}
         className={`pagination ${currentPage === 1 ? 'disabled' : ''}`}
       >
-        Previous
+        Prev
       </button>
     
       {/* Page Number Buttons */}
