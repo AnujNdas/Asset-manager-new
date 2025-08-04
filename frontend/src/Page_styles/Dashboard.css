@@ -107,3 +107,70 @@
     flex-direction: column;
     gap: 10px;
   }
+
+@media screen and (max-width: 768px) {
+  .classify_heading{
+    height: 5%;
+  }
+  .dashboard-section{
+    overflow: auto;
+    justify-content: space-between;
+  }
+  .card-section {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    padding: 5px;
+    height: 30%;
+  }
+
+  .card {
+    width: 90%;
+    height: 80px; /* Set smaller height */
+    padding: 8px;
+  }
+
+  .card-section .card:nth-child(n+5) {
+    grid-column: 1 / -1; /* Span full width for cards 5, 6, 7 */
+  }
+
+  .card-info {
+    font-size: 0.55rem;
+    padding: 6px;
+  }
+  .asset-info{
+    height: 50%;
+    top: 5px;
+  }
+  .edge-box p , .asset-info p{
+    font-size: 10px;
+  }
+    .graph-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+    height: 65%;
+  }
+
+  .graph {
+    width: 90%;
+    padding: 0;
+    height: 38%;
+    border-radius: 12px;
+    background: linear-gradient(to right, #ffffff, #f8f8f8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: static;
+    top: 0;
+  }
+
+  .graph-info {
+    height: 100%;
+    background: #1e1e1e;
+    border-radius: 10px;
+    position: static;
+    top: 0;
+  }
+}
+
