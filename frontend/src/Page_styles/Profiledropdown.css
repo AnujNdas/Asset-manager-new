@@ -57,3 +57,20 @@
     margin-right: 10px;
   }
   
+@media screen and (max-width: 768px) {
+  .profile-dropdown-container {
+    right: 10px; /* shift closer to edge on smaller screens */
+  }
+
+  .profile-dropdown-container .dropdown-menu {
+    width: 140px; /* Slightly wider for touch-friendliness */
+    top: 10px; /* push lower if icon is at top */
+    right: 0; /* Align dropdown to right edge of container */
+    left: auto; /* cancel any 'left' override if you had one */
+  }
+
+  .dropdown-menu li a {
+    padding: 10px 15px; /* Larger touch area */
+    font-size: 14px; /* More readable text */
+  }
+}
