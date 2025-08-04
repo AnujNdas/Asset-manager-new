@@ -34,7 +34,7 @@
 .first-container {
   height: 100vh;
   width: 18%;
-  background-color: #fff;
+  background-color: #e7e7e7;
   transition: width 0.3s ease;
 }
 
@@ -73,7 +73,9 @@
   filter: blur(5px);
   pointer-events: none;
 }
-
+.toggle-btn{
+  display: none;
+}
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
@@ -95,16 +97,34 @@
 
 /* Mobile View */
 @media screen and (max-width: 768px) {
+.toggle-btn {
+  position: fixed;
+  top: 5px;
+  left: 10px;
+  z-index: 2000; /* Make sure it's above the sidebar and other sections */
+  background-color: #ffffff;
+  padding: 8px 12px;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  display: block;
+}
+
+
   .first-container {
     position: fixed;
-    top: 60px;
+    /* top: 60px; */
     left: 0;
     height: calc(100% - 60px);
     width: 200px;
     transform: translateX(-100%);
-    z-index: 9;
-    background: #fff;
+    z-index: 100;
+    background: #e7e7e7;
     transition: transform 0.3s ease;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
   }
 
   .first-container.open {
