@@ -15,7 +15,200 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}* {
+    margin: 0;
+    padding: 0;
 }
+
+.menubar-container {
+    height: 100%;
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px; */
+}
+
+.menubar {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.search-box {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    left: 400px;
+}
+
+.search-input {
+    height: 55%;
+    width: 60%;
+    border-radius: 15px;
+    padding-left: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.18);
+    font-weight: 500;
+}
+
+.control-panel {
+    width: 15%;
+    display: flex;
+    flex-direction: row;
+    padding-right: 10px;
+    justify-content: flex-start; /* Aligning items to the right */
+}
+
+.controls {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    background: #ffffff;
+}
+
+.search-btn {
+    background: transparent;
+    position: relative;
+    right: 40px;
+    height: 50%;
+    padding: 0;
+    width: 8%;
+    border: none;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: rgba(0, 0, 0, 0.18);
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.additional-button {
+    width: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.buttons {
+    width: 30%;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 50%;
+    color: #7870f7;
+}
+
+.buttons-1 {
+    width: 25%;
+    height: 45%;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 50%;
+    background-color: rgb(246, 246, 246);
+    box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+}
+
+/* Profile dropdown styles */
+.profile-dropdown-container {
+    position: relative;
+}
+
+.profile-dropdown-container .profile-icon {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 35px; /* Adjust this based on the profile icon position */
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    border-radius: 5px;
+    z-index: 1000; /* Ensure the dropdown is above other elements */
+    visibility: hidden; /* Initially hidden */
+    opacity: 0;
+    transition: opacity 0.6s ease, visibility 0s linear 0.3s;
+}
+
+.dropdown-menu.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.dropdown-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu li {
+    padding: 10px 15px;
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #f1f1f1;
+    color: #007bff;
+}
+
+.menu-icon {
+    margin-right: 10px;
+}
+.profile-button{
+    border: none;
+    background: transparent;
+    color: #7870f7;
+    /* width: 25%;
+    height: 100%; */
+    font-size: 20px;
+    cursor: pointer;
+    /* text-align: center; */
+    display: flex;
+    align-items: center;
+}
+.sidebar-toggle-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  margin-left: 10px;
+  z-index: 200;
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar-toggle-btn {
+    display: block;
+  }
+  .menubar{
+    justify-content: space-around;
+  }
+  .control-panel{
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .controls {
+    font-size: 16px;
+  }
+  .profile-button{
+    font-size: 10px;
+  }
+}
+
+
 
 .search-box {
     width: 40%;
