@@ -15,6 +15,7 @@ import Inventory from "./Pages/Inventory";
 import MisReport from "./Pages/MisReport";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
   const location = useLocation(); // Use location to track the current route
 
   // Read from localStorage when the app loads
@@ -33,14 +34,18 @@ const App = () => {
     // setIsUserVisible(false);
   };
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen); // toggle function
+
+
   return (
   <div className="app-wrapper">
-    <section className={`first-container ${isUserPage ? 'blurred' : ''}`}>
-      <Sidebar />
+    <button className="toggle-btn" onClick={toggleSidebar}>☰</button>
+    <section className={`first-container ${isSidebarOpen ? "open" : ""} ${isUserPage ? 'blurred' : ''}`}>
+      <Sidebar toggleSidebar={toggleSidebar}/>
     </section>
 
     <section className={`second-container ${isUserPage ? 'blurred' : ''}`}>
-      <Menubar username={profileUser} />
+      <Menubar username={profileUser}/>
     </section>
 
     <section className={`third-container ${isUserPage ? 'blurred' : ''}`}>
