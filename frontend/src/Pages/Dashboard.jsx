@@ -254,14 +254,12 @@ const Dashboard = () => {
             flexDirection : "column",
           }}>
             <p style={{
-              fontSize : "14px",
               fontWeight : "600",
               color : "#565656",
               fontFamily : "Montserrat"
             }}>Total Assets</p>
             <ProgressBar now={(totalAssets / 50) * 100} variant='dark' style={{ height: '30px', backgroundColor: 'lightgrey', borderRadius: '10px' }}/>
             <p style={{
-              fontSize : "25px",
               fontFamily : "Lato",
               fontWeight : "600",
               color : '#565656'
@@ -286,13 +284,11 @@ const Dashboard = () => {
           <div className="asset-info">
             <div className="edge-box">
             <p style={{
-              fontSize : "14px",
               fontWeight : "600",
               color : "#565656",
               fontFamily : "Montserrat"
             }}>Total Locations</p>
             <p style={{
-              fontSize : "25px",
               fontFamily : "Lato",
               fontWeight : "800",
               textAlign : "center",
@@ -328,13 +324,11 @@ const Dashboard = () => {
           <div className="asset-info">
             <div className="edge-box">
             <p style={{
-              fontSize : "14px",
               fontWeight : "600",
               color : "#565656",
               fontFamily : "Montserrat"
             }}>Total Categories</p>
             <p style={{
-              fontSize : "25px",
               fontFamily : "Lato",
               fontWeight : "600",
               textAlign : "center",color : '#565656'
@@ -369,21 +363,18 @@ const Dashboard = () => {
           <div className="asset-info">
             <div className="edge-box">
             <p style={{
-              fontSize : "14px",
               fontWeight : "600",
               color : "#565656",
               fontFamily : "Montserrat",
               textAlign : "center"
             }}>Total Status</p>
             <p style={{
-              fontSize : "25px",
               fontFamily : "Lato",
               fontWeight : "600",
               textAlign : "center",
               color : '#565656'
             }}>{checkedInAssets}</p>
             <p style={{
-              fontSize : "25px",
               fontFamily : "Lato",
               fontWeight : "600",
               textAlign : "center",
