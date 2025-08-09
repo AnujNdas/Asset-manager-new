@@ -13,7 +13,8 @@ const MisReport = () => {
     const [error, setError] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [selectedUnit, setSelectedUnit] = useState('');
-    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState('');a
+    const [filtersOpen, setFiltersOpen] = useState(false);
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -179,8 +180,9 @@ const MisReport = () => {
                 </header>
 
                 {/* Filters Section */}
+                <button class="filter-toggle" onClick={() => setFiltersOpen((prev) => !prev)}>{filtersOpen ? "Hide Filters" : "Show Filters"}</button>
                 <aside className="filters">
-                    <div className="mis-form">
+                    <div className={`mis-form ${filtersOpen ? "active" : ""}`}>
                         <h3>Filters</h3>
                         <form className="mis-form-menu">
                             {/* Location Dropdown for Filtering */}
@@ -242,17 +244,17 @@ const MisReport = () => {
                                 ) : (
                                     paginatedAssets().map((asset, index) => (
                                         <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                                            <td>{asset.assetName}</td>
-                                            <td>{asset.assetSpecification}</td>
-                                            <td>{units.find(u => u._id === asset.associateUnit)?.name || 'Loading'}</td>
-                                            <td>
+                                            <td data-label="S.No">{asset.assetName}</td>
+                                            <td data-label="Specification">{asset.assetSpecification}</td>
+                                            <td data-label="Unit">{units.find(u => u._id === asset.associateUnit)?.name || 'Loading'}</td>
+                                            <td data-label="Status">
                                                 <span className={statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In' ? 'checked-in' : 'checked-out'}>
                                                   {statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}
                                                 </span>
                                               </td>
-                                            <td>{locations.find(l => l._id === asset.locationName)?.name || 'Loading'}</td>
-                                            <td>{categories.find(c => c._id === asset.assetCategory)?.name || 'Loading'}</td>
-                                            <td>{formatDate(asset.DOP)}</td>
+                                            <td data-label="Location">{locations.find(l => l._id === asset.locationName)?.name || 'Loading'}</td>
+                                            <td data-label="Category">{categories.find(c => c._id === asset.assetCategory)?.name || 'Loading'}</td>
+                                            <td data-label="D-O-P">{formatDate(asset.DOP)}</td>
                                         </tr>
                                     ))
                                 )}
