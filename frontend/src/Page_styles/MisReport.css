@@ -215,4 +215,123 @@ th {
     border:none;
     background-color: #ffffff;
 }
+.filter-toggle {
+  display: none;
+}
+/* Responsive Design for Mobile */
+@media screen and (max-width: 768px) {
+    .filter-toggle {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #0088ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
 
+  /* Hide the mis-form by default */
+  .filters .mis-form {
+    display: none;
+  }
+
+  /* Show when active */
+  .filters .mis-form.active {
+    display: block;
+  }
+  /* Overall layout adjustments */
+  .filters {
+    flex-direction: column;
+    height: auto;
+    gap: 5px;
+  }
+
+  /* Make form and asset list full-width */
+  .mis-form,
+  .asset-list {
+    width: 100%;
+  }
+
+  /* Buttons take full width on small screens */
+  .mis-button {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .download-csv,
+  .download-pdf,
+  .download-excel {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  /* Table responsiveness */
+  .mis-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .mis-table th,
+  .mis-table td {
+    padding: 8px;
+    font-size: 12px;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+
+  /* Main content stacking */
+  .main-content {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .kpis, .charts, .asset-list {
+    width: 100%;
+  }
+  .heading{
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Smaller footer */
+  .footer {
+    padding: 5px;
+    font-size: 12px;
+  }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 480px) {
+  header {
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+  .mis-form-menu{
+    margin: 0;
+    gap: 5px;
+  }
+  .date-range {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .mis-button {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .download-csv,
+  .download-pdf,
+  .download-excel {
+    width: 100%;
+  }
+}
