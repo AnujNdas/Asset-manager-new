@@ -13,7 +13,7 @@ const MisReport = () => {
     const [error, setError] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [selectedUnit, setSelectedUnit] = useState('');
-    const [selectedStatus, setSelectedStatus] = useState('');a
+    const [selectedStatus, setSelectedStatus] = useState('');
     const [filtersOpen, setFiltersOpen] = useState(false);
 
     // Pagination state
