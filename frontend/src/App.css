@@ -76,6 +76,9 @@
 .toggle-btn{
   display: none;
 }
+.user-container.hidden{
+  display: none;
+}
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
