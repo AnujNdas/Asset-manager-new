@@ -18,7 +18,7 @@
     gap: 50px;
     justify-content: center;
 }
-.card{
+/* .card{
     border-radius: 15px;
     padding: 10px;
     width: 20%;
@@ -27,7 +27,6 @@
 }
 .card-info{
     padding: 12px 7px;
-    /* background: #000; */
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     width: 20%;
     text-align: center;
@@ -35,7 +34,7 @@
     position: absolute;
     top: -15px;
     left: 15px;
-}
+} */
 .graph-section{
     height: 55%;
     width: 100%;
@@ -107,70 +106,74 @@
     flex-direction: column;
     gap: 10px;
   }
+.card {
+  display: flex;
+  border-radius: 15px;
+  padding: 10px;
+  width: 20%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border: none;
+  background: linear-gradient(135deg, #ffffff, #f5f7fa);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-info {
+  padding: 12px 7px;
+  box-shadow: rgba(60, 64, 67, 0.15) 0px 2px 4px;
+  width: 20%;
+  text-align: center;
+  border-radius: 10px;
+  position: absolute;
+  top: -15px;
+  left: 15px;
+  background: #fff;
+}
 
 @media screen and (max-width: 768px) {
-  .classify_heading{
-    height: 5%;
-  }
-  .dashboard-section{
+  .dashboard-section {
     overflow: auto;
-    justify-content: space-between;
   }
+
+  /* 1x4 column card layout */
   .card-section {
     display: grid;
-    place-items: center;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
-    padding: 5px;
-    height: 30%;
+    grid-template-columns: 1fr; /* 1 column */
+    gap: 12px;
+    padding: 10px;
+    height: auto;
   }
 
   .card {
-    width: 90%;
-    height: 80px; /* Set smaller height */
-    padding: 8px;
-  }
-
-  .card-section .card:nth-child(n+5) {
-    grid-column: 1 / -1; /* Span full width for cards 5, 6, 7 */
-  }
-
-  .card-info {
-    font-size: 0.55rem;
-    padding: 6px;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    height: auto;
+    padding: 16px;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, #ffffff, #f0f4f8);
   }
   .asset-info{
-    height: 50%;
-    top: 5px;
+    top: 0;
+    justify-content: space-around;
   }
-  .edge-box p , .asset-info p{
-    font-size: 10px;
-  }
-    .graph-section {
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 10px;
-    height: 65%;
+  .card-info {
+    font-size: 0.65rem;
+    padding: 8px;
+    position: relative;
+    width: auto;
+    top: 0;
+    left: 0;
   }
 
-  .graph {
-    width: 90%;
-    padding: 0;
-    height: 38%;
-    border-radius: 12px;
-    background: linear-gradient(to right, #ffffff, #f8f8f8);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: static;
-    top: 0;
-  }
-
-  .graph-info {
-    height: 100%;
-    background: #1e1e1e;
-    border-radius: 10px;
-    position: static;
-    top: 0;
+  /* Hide graph section on mobile */
+  .graph-section {
+    display: none;
   }
 }
+
 
