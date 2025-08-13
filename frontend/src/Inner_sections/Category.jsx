@@ -9,6 +9,28 @@ const Category = () => {
   const [categories, setCategories] = useState([]);  // State to store fetched categories
   const [loading, setLoading] = useState(false);  // State for loading indicator
   const [error, setError] = useState(null);  // State for error handling
+// Example state for classification pagination
+const [classifyCurrentPage, setClassifyCurrentPage] = useState(1);
+const classifyPerPage = 10;
+
+// Your classification data array
+const classificationData = categories; // Replace with your actual array
+
+// Calculate number of pages
+const totalClassifyPages = Math.ceil(classificationData.length / classifyPerPage);
+
+// Paginate function for classification
+const paginateClassify = (pageNumber) => {
+  if (pageNumber >= 1 && pageNumber <= totalClassifyPages) {
+    setClassifyCurrentPage(pageNumber);
+  }
+};
+
+// Get current items for this page
+const indexOfLastItem = classifyCurrentPage * classifyPerPage;
+const indexOfFirstItem = indexOfLastItem - classifyPerPage;
+const currentClassifyItems = classificationData.slice(indexOfFirstItem, indexOfLastItem);
+
 
   // Fetch all categories from the backend
   const fetchCategories = async () => {
@@ -62,7 +84,7 @@ const Category = () => {
 
       <div className="input_content">
         <h3>Categories List</h3>
-        {categories.length === 0 ? (
+        {currentClassifyItems.length === 0 ? (
           <p>No categories available</p>  // Show a message if no categories are available
         ) : (
           <table className="unit-table">
@@ -73,15 +95,45 @@ const Category = () => {
               </tr>
             </thead>
             <tbody>
-              {categories.map((category, index) => (
+              {currentClassifyItems.map((category, index) => (
                 <tr key={category._id}>
-                  <td>{index + 1}</td>
-                  <td>{category.name}</td>  {/* Display the category name */}
+                  <td data-label="S.no">{index + 1}</td>
+                  <td data-label="Name">{category.name}</td>  {/* Display the category name */}
                 </tr>
               ))}
             </tbody>
           </table>
         )}
+
+<div className="pages">
+  <button
+    onClick={() => paginateClassify(classifyCurrentPage - 1)}
+    disabled={classifyCurrentPage === 1}
+    className={`pagination ${classifyCurrentPage === 1 ? 'disabled' : ''}`}
+  >
+    Previous
+  </button>
+
+  {Array.from({ length: totalClassifyPages }, (_, index) => (
+    <button
+      key={index + 1}
+      onClick={() => paginateClassify(index + 1)}
+      className={`pagination ${classifyCurrentPage === index + 1 ? 'active' : ''}`}
+      style={{ padding: "5px" }}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  <button
+    onClick={() => paginateClassify(classifyCurrentPage + 1)}
+    disabled={classifyCurrentPage === totalClassifyPages}
+    className={`pagination ${classifyCurrentPage === totalClassifyPages ? 'disabled' : ''}`}
+  >
+    Next
+  </button>
+</div>
+
       </div>
     </div>
   );
