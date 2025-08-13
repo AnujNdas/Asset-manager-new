@@ -62,7 +62,7 @@ const App = () => {
       </Routes>
     </section>
 
-    <section className="user-container">
+    <section className={`user-container ${isUserPage ? "visible" : "hidden"}`}>
       <Routes>
         <Route path="/User" element={<User removeUser={removeUser} />}>
           <Route path="Login" element={<Login setProfileUser={setProfileUser} />} />
