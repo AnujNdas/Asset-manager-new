@@ -35,13 +35,15 @@ const App = () => {
   };
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen); // toggle function
-
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
 
   return (
   <div className="app-wrapper">
     <button className="toggle-btn" onClick={toggleSidebar}>☰</button>
     <section className={`first-container ${isSidebarOpen ? "open" : ""} ${isUserPage ? 'blurred' : ''}`}>
-      <Sidebar toggleSidebar={toggleSidebar}/>
+      <Sidebar toggleSidebar={toggleSidebar} closeSidebar={closeSidebar}/>
     </section>
 
     <section className={`second-container ${isUserPage ? 'blurred' : ''}`}>
