@@ -9,7 +9,27 @@ const Unit = () => {
   const [units, setUnits] = useState([]);  // State to store all fetched units
   const [loading, setLoading] = useState(false);  // State for loading indicator
   const [error, setError] = useState(null);  // State for error handling
-
+  const [classifyCurrentPage, setClassifyCurrentPage] = useState(1);
+  const classifyPerPage = 10;
+  
+  // Your classification data array
+  const classificationData = units; // Replace with your actual array
+  
+  // Calculate number of pages
+  const totalClassifyPages = Math.ceil(classificationData.length / classifyPerPage);
+  
+  // Paginate function for classification
+  const paginateClassify = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalClassifyPages) {
+      setClassifyCurrentPage(pageNumber);
+    }
+  };
+  
+  // Get current items for this page
+  const indexOfLastItem = classifyCurrentPage * classifyPerPage;
+  const indexOfFirstItem = indexOfLastItem - classifyPerPage;
+  const currentClassifyItems = classificationData.slice(indexOfFirstItem, indexOfLastItem);
+  
   // Fetch all units from the backend
   const fetchUnits = async () => {
     setLoading(true);
@@ -60,7 +80,7 @@ const Unit = () => {
 
     <div className="input_content">
       <h3>Units List</h3>
-      {units.length === 0 ? (
+      {currentClassifyItems.length === 0 ? (
         <p>No units available</p>  // Show a message if no units are available
       ) : (
         <table className="unit-table">
@@ -71,15 +91,43 @@ const Unit = () => {
             </tr>
           </thead>
           <tbody>
-            {units.map((unit, index) => (
+            {currentClassifyItems.map((unit, index) => (
               <tr key={unit._id}>
-                <td>{index + 1}</td>
-                <td>{unit.name}</td>  {/* Display the unit name */}
+                <td data-label="S.No">{index + 1}</td>
+                <td data-label="Name">{unit.name}</td>  {/* Display the unit name */}
               </tr>
             ))}
           </tbody>
         </table>
       )}
+      <div className="pages">
+  <button
+    onClick={() => paginateClassify(classifyCurrentPage - 1)}
+    disabled={classifyCurrentPage === 1}
+    className={`pagination ${classifyCurrentPage === 1 ? 'disabled' : ''}`}
+  >
+    Previous
+  </button>
+
+  {Array.from({ length: totalClassifyPages }, (_, index) => (
+    <button
+      key={index + 1}
+      onClick={() => paginateClassify(index + 1)}
+      className={`pagination ${classifyCurrentPage === index + 1 ? 'active' : ''}`}
+      style={{ padding: "5px" }}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  <button
+    onClick={() => paginateClassify(classifyCurrentPage + 1)}
+    disabled={classifyCurrentPage === totalClassifyPages}
+    className={`pagination ${classifyCurrentPage === totalClassifyPages ? 'disabled' : ''}`}
+  >
+    Next
+  </button>
+</div>
     </div>
   </div>
 );
