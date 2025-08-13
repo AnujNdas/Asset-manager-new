@@ -1,126 +1,115 @@
-
-/* Apply blur when login page is visible */
-.third-container.blur {
-    filter: blur(5px);
-    transition: filter 0.3s ease;
-}
-.first-container.blur {
-    filter:blur(5px);
-    transition: filter 0.3s ease;
-}
-.second-container.blur {
-    filter:blur(5px);
-    transition: filter 0.3s ease;
-}
-
-/* Fullscreen overlay for the login page */
-.login-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999; /* Ensure it's above all other components */
-}
-
-.login-content {
-  background-color: white;
-  /* padding: 20px; */
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  height: 550px;
-  width: 900px;
-}
-.change-panel{
-  width: 35%;
-  background: blue;
-  /* background: url(../Images/Blue.jpg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat; */
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  border-top-left-radius: 11px;
-  border-bottom-left-radius: 11px;
-  border: none;
-}
-.auth-pages{
-  background: #ffffff;
-  width: 65%;
-  border-top-right-radius: 11px;
-  border-bottom-right-radius: 11px;
+/* Background Overlay */
+.user-overlay {
   display: flex;
   align-items: center;
-  justify-content: center;
-/*   background: url(../Images/login.jpg); */
-/*   background-size: cover; */
-/*   background-position: center; */ 
-  
-}
-.menus{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 30%;
-  width:30%;
-  justify-content: center;
-  /* padding-right: 15px; */
+  justify-content: center;height: 100%;
+  width: 70%;
+  /* padding: 20px;  */
 }
 
- .back-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 4px;
-}
-.menu-btn{
-  height: 30%;
-  border: none;
-  border-top-left-radius: 25px;
-  border-bottom-left-radius: 25px;
-  font-weight: 700;
-}
-.description{
-  height: 20%;
+/* Main Card */
+.user-card {
+  /* background: white; */
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(79,70,229,.25), transparent 60%),
+    radial-gradient(1000px 500px at 100% 0%, rgba(34,211,238,.18), transparent 55%),
+    var(--bg);
+  border-radius: 16px;
+  padding: 15px;
+  max-width: 80%;
   width: 100%;
-  font-family: "Lato", sans-serif;
-  font-size: 27px;
-  color: #ffffff;
-  font-weight: 600;
-  position: relative;
-  bottom: 120px;
-  left: 40px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-/* .login-content input {
-  margin: 10px 0;
-  padding: 10px;
-  width: 200px;
+  height: 98%;
+  box-shadow: 0px 8px 24px rgba(0,0,0,0.15);
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-.login-content button {
-  padding: 10px 20px;
-  background-color: #333;
-  color: white;
+/* Back Button */
+.back-btn {
+  background: transparent;
   border: none;
-  border-radius: 4px;
+  font-size: 14px;
+  color: #ff0000;
+  cursor: pointer;
+  /* margin-bottom: 15px; */
+  transition: color 0.3s;
+}
+.back-btn:hover {
+  color: #d91d5f;
+}
+
+/* Heading */
+.welcome-text {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  color: #e7e7e7;
+  margin-bottom: 10px;
+}
+
+/* Tab Buttons */
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  color: #555;
+  font-weight: bold;
+  transition: all 0.3s ease;
   cursor: pointer;
 }
-form{
-    display: flex;
-    flex-direction: column;
-} */ 
+.tab-btn:hover {
+  background: #ffe3ec;
+}
+.tab-btn.active {
+  background: #2a67ff;
+  color: white;
+  border-color: #4891ff;
+}
+
+/* Auth Form Area */
+.auth-section {
+  margin-top: 10px;
+  overflow: hidden;
+  height: 85%;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .user-overlay{
+    width: 90%;
+  }
+  .auth-section{
+    overflow: auto;
+  }
+  .user-card {
+    padding: 20px;
+    max-width: 360px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) { 
+  .user-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  .welcome-text {
+    font-size: 18px;
+  }
+  .tab-btn {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
