@@ -1,57 +1,95 @@
-.classify_content_box{
+.classify_content_box {
     height: 100%;
     display: flex;
     flex-direction: column;
 }
-.input{
+
+/* Input section styling */
+.input {
     height: 30%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
+    flex-wrap: wrap; /* Wrap on smaller screens */
+    padding: 10px;
+    box-sizing: border-box;
 }
-.input p{
+
+.input p {
     margin: 0;
     font-family: "Lato", sans-serif;
     color: #565656;
     font-weight: 600;
 }
-.input input{
-    margin:0;
+
+.input input {
+    margin: 0;
     width: 40%;
     padding: 5px;
     border: none;
     border-radius: 4px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+                rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
-.input_content{
-    height:70%;
+
+/* Content section styling */
+.input_content {
+    height: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: auto; /* Table scroll horizontally if needed */
 }
-.input_content h3{
-    font-family: "Roboto" , sans-serif;
+
+.input_content h3 {
+    font-family: "Roboto", sans-serif;
     color: #565656;
 }
-.unit-table{
-    border: 2px solid rgba(60, 64, 67, 0.15);
-}
-tr{
-    border: 2px solid rgba(60, 64, 67, 0.15);
 
+.unit-table {
+    border: 2px solid rgba(60, 64, 67, 0.15);
+    border-collapse: collapse;
+    width: 100%;
 }
-.add-btn{
-    width: 5%;
-    height: 25%;
-    border-radius: 50%;
+
+tr {
+    border: 2px solid rgba(60, 64, 67, 0.15);
+}
+
+.add-btn {
+    height: 40px;
+    padding: 5px 16px;
+    border-radius: 6px;
     border: none;
-    margin:0;
-    background: green;
-    color: white;
-    font-weight: 700;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #ffffff;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .input {
+        height: auto;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .input input {
+        width: 80%;
+    }
+
+    .input_content {
+        height: auto;
+    }
+    .input p{
+        display: none;
+    }
+}
+
+
