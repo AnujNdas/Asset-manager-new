@@ -9,7 +9,26 @@ const Location = () => {
   const [locations, setLocations] = useState([]);  // State to store fetched locations
   const [loading, setLoading] = useState(false);  // State for loading indicator
   const [error, setError] = useState(null);  // State for error handling
-
+  const [classifyCurrentPage, setClassifyCurrentPage] = useState(1);
+  const classifyPerPage = 5;
+  
+  // Your classification data array
+  const classificationData = locations; // Replace with your actual array
+  
+  // Calculate number of pages
+  const totalClassifyPages = Math.ceil(classificationData.length / classifyPerPage);
+  
+  // Paginate function for classification
+  const paginateClassify = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalClassifyPages) {
+      setClassifyCurrentPage(pageNumber);
+    }
+  };
+  
+  // Get current items for this page
+  const indexOfLastItem = classifyCurrentPage * classifyPerPage;
+  const indexOfFirstItem = indexOfLastItem - classifyPerPage;
+  const currentClassifyItems = classificationData.slice(indexOfFirstItem, indexOfLastItem);
   // Fetch all locations from the backend
   const fetchLocations = async () => {
     setLoading(true);
@@ -62,7 +81,7 @@ const Location = () => {
 
       <div className="input_content">
         <h3>Locations List</h3>
-        {locations.length === 0 ? (
+        {currentClassifyItems.length === 0 ? (
           <p>No locations available</p>  // Show a message if no locations are available
         ) : (
           <table className="unit-table">
@@ -73,15 +92,42 @@ const Location = () => {
               </tr>
             </thead>
             <tbody>
-              {locations.map((location, index) => (
+              {currentClassifyItems.map((location, index) => (
                 <tr key={location._id}>
-                  <td>{index + 1}</td>
-                  <td>{location.name}</td>  {/* Display the location name */}
+                  <td data-label="S.No">{index + 1}</td>
+                  <td data-label="Name">{location.name}</td>  {/* Display the location name */}
                 </tr>
               ))}
             </tbody>
           </table>
-        )}
+        )}<div className="pages">
+  <button
+    onClick={() => paginateClassify(classifyCurrentPage - 1)}
+    disabled={classifyCurrentPage === 1}
+    className={`pagination ${classifyCurrentPage === 1 ? 'disabled' : ''}`}
+  >
+    Previous
+  </button>
+
+  {Array.from({ length: totalClassifyPages }, (_, index) => (
+    <button
+      key={index + 1}
+      onClick={() => paginateClassify(index + 1)}
+      className={`pagination ${classifyCurrentPage === index + 1 ? 'active' : ''}`}
+      style={{ padding: "5px" }}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  <button
+    onClick={() => paginateClassify(classifyCurrentPage + 1)}
+    disabled={classifyCurrentPage === totalClassifyPages}
+    className={`pagination ${classifyCurrentPage === totalClassifyPages ? 'disabled' : ''}`}
+  >
+    Next
+  </button>
+</div>
       </div>
     </div>
   );
