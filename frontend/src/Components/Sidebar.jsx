@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import image from "../Images/logo.png"
 import { faGauge ,faLayerGroup ,faCartShopping , faWarehouse, faGear, faReceipt, faRecycle} from '@fortawesome/free-solid-svg-icons'
 
-const Sidebar = ()=> {
+const Sidebar = ({closeSidebar})=> {
   return (
     <div className='sidebar-container'>
       <div className='sidebar'>
@@ -22,13 +22,13 @@ const Sidebar = ()=> {
         </div>
         <div className='sidebar-menu'>
           <ul>
-            <li><Link to="/"><FontAwesomeIcon icon={faGauge} style={{ width : "25%"}}/>Dashboard</Link></li>
-            <li><Link to="/AssetCapture"><FontAwesomeIcon icon={faCartShopping} style={{ width : "25%"}}/>Asset Capture</Link></li>
+            <li><Link to="/" onClick={closeSidebar}><FontAwesomeIcon icon={faGauge} style={{ width : "25%"}}/>Dashboard</Link></li>
+            <li><Link to="/AssetCapture" onClick={closeSidebar}><FontAwesomeIcon icon={faCartShopping} style={{ width : "25%"}}/>Asset Capture</Link></li>
             {/* <li><Link to="/Product_list"><FontAwesomeIcon icon={faList} />Product List</Link></li> */}
-            <li><Link to="/Inventory"><FontAwesomeIcon icon={faLayerGroup} style={{ width : "25%"}}/>Inventory</Link></li>
-            <li><Link to="/MISReport"><FontAwesomeIcon icon={faReceipt} style={{ width : "25%"}}/>MIS Report</Link></li>
-            <li><Link to="/Setting"><FontAwesomeIcon icon={faGear} style={{ width : "25%"}}/>Settings</Link></li>
-            <li><Link to="/Classification"><FontAwesomeIcon icon={faRecycle} style={{ width : "25%"}}/>Classification</Link></li>
+            <li><Link to="/Inventory" onClick={closeSidebar}><FontAwesomeIcon icon={faLayerGroup} style={{ width : "25%"}}/>Inventory</Link></li>
+            <li><Link to="/MISReport" onClick={closeSidebar}><FontAwesomeIcon icon={faReceipt} style={{ width : "25%"}}/>MIS Report</Link></li>
+            <li><Link to="/Setting" onClick={closeSidebar}><FontAwesomeIcon icon={faGear} style={{ width : "25%"}}/>Settings</Link></li>
+            <li><Link to="/Classification" onClick={closeSidebar}><FontAwesomeIcon icon={faRecycle} style={{ width : "25%"}}/>Classification</Link></li>
           </ul>
         </div>
       </div>
