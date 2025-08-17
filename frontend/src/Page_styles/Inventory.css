@@ -133,6 +133,7 @@
   flex-direction: row;
   gap: 10px;
   justify-content: center;
+  align-items: center;
 }
 
 .barcode {
