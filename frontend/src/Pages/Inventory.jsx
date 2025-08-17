@@ -308,7 +308,7 @@ const Inventory = () => {
           <tbody className="table-body">
   {currentAssets.map((asset, index) => (
     <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-      <td data-label="S.No.">{index + 1}</td>
+      <td data-label="S.No.">{(currentPage - 1) * assetsPerPage + index + 1}</td>
       <td data-label="Asset Name">{asset.assetName}</td>
       <td data-label="Asset Code">{asset.assetCode}</td>
       <td data-label="Asset Category">
