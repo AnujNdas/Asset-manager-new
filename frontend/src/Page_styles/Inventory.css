@@ -342,6 +342,53 @@
   overflow-y: auto;
   padding-right: 5px;
 }
+/* Responsive for smaller desktops (1024px and below) */
+@media screen and (max-width: 1024px) {
+  .inventory-table {
+    width: 90%;   /* reduce table width */
+    font-size: 12px; /* slightly smaller text */
+    padding: 10px;
+  }
+
+  .table-header th,
+  .table-body td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .pages {
+    position: static; /* prevent overlap */
+    margin-top: 15px;
+    justify-content: center;
+  }
+
+  .overlay-content,
+  .edit-overlay-content {
+    max-width: 700px; /* shrink modal for smaller desktops */
+    padding: 15px;
+  }
+
+  .edit-form {
+    grid-template-columns: 1fr; /* stack form inputs vertically */
+  }
+}
+
+/* Extra tweak for ultra-small laptops (900px and below) */
+@media screen and (max-width: 900px) {
+  .inventory-table {
+    width: 95%;
+  }
+  
+  .table-header th,
+  .table-body td {
+    font-size: 11px;
+    padding: 6px;
+  }
+  
+  .pages {
+    gap: 3px;
+  }
+}
 
 /* Responsive for laptops (1280px and below) */
 @media screen and (max-width: 1280px) {
