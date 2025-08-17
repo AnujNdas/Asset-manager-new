@@ -408,11 +408,11 @@ const Inventory = () => {
             <div className="view">
             <div className="view-container"><p><strong>Asset Name:</strong> {selectedAsset.assetName}</p></div>
             <div className="view-container"><p><strong>Asset Specification:</strong> {selectedAsset.assetSpecification}</p></div>
-            <div className="view-container"><strong>Date of Purchase:</strong><p> {formatDateForInput(selectedAsset.DOP)}</p></div>
+            <div className="view-container"><p><strong>Date of Purchase:</strong> {formatDateForInput(selectedAsset.DOP)}</p></div>
             
-            <div className="view-container"><strong>Date of Expiry:</strong><p> {formatDateForInput(selectedAsset.DOE)}</p></div>
-            <div className="view-container"><strong>Purchase From:</strong><p> {selectedAsset.purchaseFrom}</p></div>
-            <div className="view-container"><strong>Lifetime:</strong><p> {selectedAsset.assetLifetime}</p></div>
+            <div className="view-container"><p><strong>Date of Expiry:</strong> {formatDateForInput(selectedAsset.DOE)}</p></div>
+            <div className="view-container"><p><strong>Purchase From:</strong> {selectedAsset.purchaseFrom}</p></div>
+            <div className="view-container"><p><strong>Lifetime:</strong> {selectedAsset.assetLifetime}</p></div>
             <div className="view-container">
               <strong>Barcode:</strong>
               <Barcode value={selectedAsset.barcodeNumber} {...barcodeconfig}/>
