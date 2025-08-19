@@ -354,4 +354,11 @@ th {
   .pages{
     margin-top: 20px;
   }
+  td {
+    padding: 6px;
+    font-size: 12px;
+  }th{
+    padding: 10px;
+    font-size: 12px;
+  }
 }
