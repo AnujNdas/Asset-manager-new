@@ -53,10 +53,10 @@
     width: 100%;
 }
 
-tr {
+/* tr {
     border: 2px solid rgba(60, 64, 67, 0.15);
 }
-
+ */
 .add-btn {
     height: 40px;
     padding: 5px 16px;
