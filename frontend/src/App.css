@@ -94,19 +94,19 @@
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
-@media screen and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) {
   .first-container {
-    width: 60px;
+    width: 70px;
   }
 
   .second-container {
-    left: 60px;
-    width: calc(100% - 60px);
+    left: 70px;
+    width: calc(100% - 70px);
   }
 
   .third-container {
-    left: 60px;
-    width: calc(100% - 60px);
+    left: 70px;
+    width: calc(100% - 70px);
   }
 }
 
