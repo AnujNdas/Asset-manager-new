@@ -160,3 +160,18 @@ a:hover{
   }
 }
 
+@media (min-width: 769px) and (max-width: 1024px) { 
+  .tab-text{
+    display: none;
+  }
+  li a{
+    justify-content: center;
+  }
+  .title{
+    display: none;
+  }
+  .logo{
+    width: 100%;
+  }
+}
+
