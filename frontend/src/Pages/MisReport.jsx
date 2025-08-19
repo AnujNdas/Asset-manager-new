@@ -18,7 +18,7 @@ const MisReport = () => {
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10); // You can adjust this value based on preference
+    const [itemsPerPage] = useState(8); // You can adjust this value based on preference
 
     // Fetch data (assets, categories, statuses, etc.)
     useEffect(() => {
