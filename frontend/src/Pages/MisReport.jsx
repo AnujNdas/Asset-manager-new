@@ -219,7 +219,7 @@ const MisReport = () => {
                     </div>
 
                     <section className="asset-list">
-                        <div className="heading">Asset List</div>
+{/*                         <div className="heading">Asset List</div> */}
                         <table className="mis-table">
                             <thead>
                                 <tr>
