@@ -48,11 +48,10 @@
 }
 
 .unit-table {
-    border: 2px solid rgba(60, 64, 67, 0.15);
-    border-collapse: collapse;
     width: 100%;
+    border: none;
 }
-
+thead{border: none;}
 /* tr {
     border: 2px solid rgba(60, 64, 67, 0.15);
 }
