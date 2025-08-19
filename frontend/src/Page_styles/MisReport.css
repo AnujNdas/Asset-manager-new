@@ -27,6 +27,10 @@ body {
 .mis-content{
     width: 95%;
     height:100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0;
 }
 header, footer {
     /* background-color: #2f3d4c; */
@@ -151,7 +155,7 @@ th {
     background-color: white;
     padding: 20px;
     width: 100%;
-    height: 82%;
+    height: 75%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: row;
@@ -200,11 +204,12 @@ th {
     text-align: center;
     padding: 10px;
 }
-.paging{
+.pages{
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin-top: 10px;
+    width: 90%;
 }
 .mis-table tbody tr.even-row {
     background-color: #f2f2f2;
@@ -345,5 +350,8 @@ th {
   }
   .mis-form{
     overflow: auto;
+  }
+  .pages{
+    margin-top: 20px;
   }
 }
