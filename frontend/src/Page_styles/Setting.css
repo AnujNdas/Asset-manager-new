@@ -1,74 +1,87 @@
-.setting-container{
-    height: 100%;
-    width: 100%;
-    /* background: #ff0000; */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.setting-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 40px;
 }
-.heading{
-    height: 10%;
-    width: 95%;
-    font-size: 18px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 600;
-    color: #565656;
-    word-spacing: 5px;
-    display: flex;
-    align-items: center;
+
+/* Tabs Navigation */
+.settings-tabs {
+  display: flex;
+  /* flex-wrap: wrap; */
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
 }
-.setting-box{
-    height: 85%;
-    width: 95%;
-    display: flex;
-    flex-direction: row;
-    border-radius: 10px;
+
+.settings-tabs a,
+.settings-tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: none;
+  background: white;
+  padding: 7px 7px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease-in-out;
+  min-width: 80px;
 }
-.setting-menu{
-    width: 25%;
-    height: 100%;
-    background: #ffffff;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-right: 1px solid #cdcdcd;
-    display: flex;
-    justify-content: center;
+
+.settings-tabs a.active,
+.settings-tabs button:hover {
+  background: #007bff;
+  color: white;
 }
-.settings{
-    width: 75%;
-    height: 100%;
-    background: #ffffff;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+
+.settings-tabs .tab-icon {
+  font-size: 18px;
+  margin-bottom: 4px;
 }
-.setting-pages{
-    height: 60%;
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    justify-content: center;
+
+.settings-tabs .tab-text {
+  font-size: 12px;
+  display: block;
 }
-.setting-pages a{
-    /* text-align: center; */
-    height: 15%;
-    width: 50%;
-    font-size: 14px;
-    font-family: "Montserrat",sans-serif;
-    font-weight: 600;
-    padding-left: 10px;
-    /* display: flex;
-    justify-content: center; */
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .setting-container{
+        gap: 20px;
+    }
+  .settings-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .settings-tabs a,
+  .settings-tabs button {
+    min-width: auto;
+    padding: 10px;
+    font-size: 10px;
+  }
+
+  .settings-tabs .tab-icon {
+    font-size: 16px;
+  }
+
+  .settings-tabs .tab-text {
+    font-size: 10px;
+  }
 }
-.log-btn{
-    color: #ff0000;
-    border: none;
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 10px;
-    background: transparent;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 500;
-    height: 15%;
-    align-items: center;
+
+@media (max-width: 480px) {
+  .settings-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .settings-tabs .tab-text {
+    display: none; /* Only show icons on very small screens */
+  }
 }
