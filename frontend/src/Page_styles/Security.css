@@ -1,188 +1,187 @@
-.Security-container{
-    height: 100%;
+.Security-container {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
+    padding: 15px;
+}
+
+/* Section Cards */
+.change-password, .two-factor-auth, .login-activity {
+    width: 90%;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+                rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    display: flex;
+    flex-direction: column;
     gap: 15px;
-    /* background: #000; */
-}
-.change-password{
-    height: 30%;
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    width: 90%;
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-
-}
-.two-factor-auth{
-    height: 35%;
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    width: 90%;
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-    gap: 8px;
-
 }
 
-.login-activity{
-    height: 17%;
-    width: 90%;
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-.box-head{
-    height: 20%;
-    width: 90%;
+/* Section Headers */
+.box-head, .title-login {
+    width: 100%;
     display: flex;
     align-items: center;
-    padding-left: 10px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    color: #565656;
 }
-.input-container{
+
+/* Input Rows */
+.input-container, .input-container2 {
     display: flex;
-    flex-direction: row;
-    height: 30%;
-    width: 90%;
-    padding-left: 20px;
-    gap: 35px;
+    flex-wrap: wrap;
+    gap: 15px;
     align-items: center;
+    width: 100%;
 }
-.input-container2{
-    display: flex;
-    flex-direction: row;
-    height: 30%;
-    width: 90%;
-    padding-left: 20px;
-    gap: 30px;
-    align-items: center;
-}
-.input-container p{
+
+.input-container p, .input-container2 p {
     font-size: 14px;
     font-family: "Lato", sans-serif;
     font-weight: 600;
     color: #848484;
-    word-spacing: 5px;
     margin: 0;
+    flex: 1;
 }
-.input-container input{
-    height: 60%;
-    width: 40%;
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+
+.input-container input, .input-container2 input {
+    flex: 2;
+    min-width: 180px;
+    padding: 8px 10px;
     border: none;
     border-radius: 10px;
-    padding-left: 10px;
     color: black;
     font-weight: 500;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+                rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
-.input-container2 p{
-    margin: 0;
-    font-size: 14px;
-    font-family: "Lato", sans-serif;
-    font-weight: 600;
-    color: #848484;
-    word-spacing: 5px;
+
+/* Change Password Button */
+.change-button {
+    display: flex;
+    justify-content: flex-start;
 }
-.input-container2 input{
-    height: 60%;
-    width: 40%;
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-    border: none;
-    border-radius: 10px;
-    padding-left: 10px;
-    color: black;
-    font-weight: 500;
-}
-.change-button{
-    height: 20%;
-    width: 90%;
-    padding-left: 20px;
-}
-.change-button button{
-    height: 90%;
-    width: 15%;
+
+.change-button button {
+    padding: 8px 16px;
     border-radius: 20px;
-    display: flex;
-    align-items: center;
     border: none;
     background: blue;
-    padding: 5px;
     color: white;
-    justify-content: center;
     font-weight: 600;
-    box-shadow: 2px 2px 5px solid rgba(90, 125, 188, 0.05);
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(90, 125, 188, 0.25);
+    transition: 0.2s;
 }
-.switch{
-    height: 70%;
-    width: 30%;
+
+.change-button button:hover {
+    background: #003fba;
+}
+
+/* Two Factor Auth Switch */
+.switch-container {
     display: flex;
-    padding-left: 20px;
+    align-items: center;
+    gap: 15px;
 }
-.info-switch{
-    height: 70%;
-    width: 70%;
-    font-size: 11px;
+
+.switch {
+    flex: 0 0 auto;
+}
+
+.info-switch {
+    font-size: 12px;
     font-weight: 500;
     font-family: "Roboto", sans-serif;
     color: #848484;
-    padding-left: 20px;
 }
-.switch-container{
-    height: 20%;
+
+/* Login Activity */
+.login-device {
     display: flex;
-    flex-direction: row;
     align-items: center;
-}
-.title-login{
-    width: 95%;
-    height: 35%;
-    font-family: "Roboto",sans-serif;
-    font-weight: 600;
-    color: #565656;
-    /* padding-left: 15px;*/
-    display: flex;
-    align-items: center; 
-}
-.login-device{
-    height: 50%;
-    width: 95%;
-    display: flex;
-    flex-direction: row;
     gap: 15px;
-    /* background: #000; */
+    width: 100%;
 }
-.device-data p{
-    font-size: 11px;
-    font-family: "Montserrat" , sans-serif;
-    font-weight: 600;
-    color: #565656;
-    margin: 0;
-}
-.device-data h4{
-    font-size: 15px;
-    font-family: "Lato" , sans-serif;
-    font-weight: 600;
-    color: #565656;
-    margin: 0;
-}
-.device-data{
-    height: 100%;
-    width: 60%;
-    
-}
-.device-logo{
-    height: 100%;
-    width: 7%;
-    background: #00c271;
+
+.device-logo {
+    flex: 0 0 40px;
+    height: 40px;
     border-radius: 50%;
+    background: #00c271;
+}
+
+.device-data {
+    flex: 1;
+}
+
+.device-data h4 {
+    font-size: 15px;
+    font-family: "Lato", sans-serif;
+    font-weight: 600;
+    margin: 0;
+    color: #565656;
+}
+
+.device-data p {
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    margin: 0;
+    color: #565656;
+}
+
+/* =============== RESPONSIVE BREAKPOINTS =============== */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .input-container, .input-container2 {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .change-button {
+        justify-content: center;
+    }
+
+    .switch-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .login-device {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .Security-container {
+        gap: 15px;
+    }
+
+    .input-container p, .input-container2 p {
+        font-size: 13px;
+    }
+
+    .input-container input, .input-container2 input {
+        width: 100%;
+    }
+
+    .change-button button {
+        width: 100%;
+    }
+
+    .device-data h4 {
+        font-size: 14px;
+    }
+
+    .device-data p {
+        font-size: 11px;
+    }
 }
