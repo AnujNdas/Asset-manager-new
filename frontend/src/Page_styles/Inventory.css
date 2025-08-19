@@ -9,12 +9,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* justify-content: center; */
   overflow: hidden;
+  gap: 5px;
 }
 
 .inventory-table {
   padding: 15px;
   width: 95%;
+  height: 70%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-collapse: collapse;
   background-color: #fff;
@@ -392,8 +395,8 @@
 }
 
 /* Responsive for laptops (1280px and below) */
-@media screen and (max-width: 1280px) {
-  .overlay-content,
+@media (min-width: 1024px) and (max-width: 1440px) {
+    .overlay-content,
   .edit-overlay-content {
     max-width: 750px;
     padding: 15px;
@@ -401,6 +404,17 @@
 
   .edit-form {
     grid-template-columns: 1fr;
+  }
+  .inventory-table{
+    margin-top: 0;
+    overflow: auto;
+    height: 60%;
+  }
+  .table-body tr ,.table-header th{
+    padding: 0px 8px;
+  }.table-body td{
+    padding: 5px;
+    font-size: 12px;
   }
 }
 
