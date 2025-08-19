@@ -306,7 +306,11 @@ th {
     font-size: 12px;
   }
 }
-
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mis-form,.asset-list{
+    overflow: auto;
+  }
+}
 /* Extra small screens */
 @media screen and (max-width: 480px) {
   header {
