@@ -111,7 +111,7 @@ const currentClassifyItems = classificationData.slice(indexOfFirstItem, indexOfL
     disabled={classifyCurrentPage === 1}
     className={`pagination ${classifyCurrentPage === 1 ? 'disabled' : ''}`}
   >
-    Previous
+    Prev
   </button>
 
   {Array.from({ length: totalClassifyPages }, (_, index) => (
