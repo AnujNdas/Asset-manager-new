@@ -42,7 +42,6 @@ const Signup = () => {
       <div className="auth-card">
         {/* Brand panel */}
         <aside className="brand-panel">
-          <div className="brand-glow" aria-hidden="true" />
           <img src={image} alt="Logo" className="brand-logo" />
           <h1>Join Us</h1>
           <p className="brand-sub">
