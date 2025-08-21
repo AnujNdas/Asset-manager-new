@@ -17,12 +17,12 @@ const Menubar = ({ username }) => {
   return (
     <div className='menubar-container'>
       <div className='menubar'>
-        <div className='search-box'>
+{/*         <div className='search-box'>
           <input type='text' placeholder='Search' className='search-input' />
           <button className='search-btn'>
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
-        </div>
+        </div> */}
         
         <div className='control-panel'>
           <button className='controls'>
