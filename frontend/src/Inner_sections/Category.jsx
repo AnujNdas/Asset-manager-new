@@ -11,7 +11,7 @@ const Category = () => {
   const [error, setError] = useState(null);  // State for error handling
 // Example state for classification pagination
 const [classifyCurrentPage, setClassifyCurrentPage] = useState(1);
-const classifyPerPage = 10;
+const classifyPerPage = 5;
 
 // Your classification data array
 const classificationData = categories; // Replace with your actual array
@@ -87,7 +87,7 @@ const currentClassifyItems = classificationData.slice(indexOfFirstItem, indexOfL
         {currentClassifyItems.length === 0 ? (
           <p>No categories available</p>  // Show a message if no categories are available
         ) : (
-          <table className="unit-table">
+          <table className="status-table">
             <thead>
               <tr>
                 <th>#</th>
@@ -97,7 +97,7 @@ const currentClassifyItems = classificationData.slice(indexOfFirstItem, indexOfL
             <tbody>
               {currentClassifyItems.map((category, index) => (
                 <tr key={category._id}>
-                  <td data-label="S.no">{index + 1}</td>
+                  <td data-label="S.No">{indexOfFirstItem + index + 1}</td>
                   <td data-label="Name">{category.name}</td>  {/* Display the category name */}
                 </tr>
               ))}
