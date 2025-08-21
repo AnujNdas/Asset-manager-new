@@ -47,7 +47,7 @@ const Signup = () => {
         {/* Form panel */}
         <form className="form-panel" onSubmit={handleSignup}>
           <div className="form-header">
-            <img src={image} alt="Logo" className="form-logo" />
+{/*             <img src={image} alt="Logo" className="form-logo" /> */}
             <h2>Create Account</h2>
             <p className="form-sub">Fill in your details to get started</p>
           </div>
