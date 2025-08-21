@@ -8,9 +8,9 @@ import { faEnvelope, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 
 const Signup = () => {
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,8 +72,8 @@ const Signup = () => {
           </label> */}
 
           <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> Email</span>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
+            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> Name</span>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Your Name" required />
           </label>
 
           <label className="field">
