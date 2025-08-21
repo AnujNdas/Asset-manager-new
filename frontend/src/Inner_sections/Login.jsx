@@ -22,8 +22,8 @@ const Login = ({ setProfileUser }) => {
     try {
       const response = await AuthService.login(username, password);
       if (response && response.token) {
-        localStorage.setItem("token", response.token);
-        localStorage.setItem("username", username);
+        sessionStorage.setItem("token", response.token);
+        sessionStorage.setItem("username", username);
 
         Swal.fire({
           title: "Success",
@@ -82,7 +82,7 @@ const Login = ({ setProfileUser }) => {
         {/* Form panel */}
         <form className="form-panel" onSubmit={handlelogin}>
           <div className="form-header">
-{/*             <img src={image} alt="Logo" className="form-logo" /> */}
+            {/* <img src={image} alt="Logo" className="form-logo" /> */}
             <h2>Sign in</h2>
             <p className="form-sub">Use your account credentials</p>
           </div>
