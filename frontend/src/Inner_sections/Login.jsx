@@ -72,7 +72,6 @@ const Login = ({ setProfileUser }) => {
       <div className="auth-card">
         {/* Brand / Welcome panel (left on desktop, stacked on mobile) */}
         <aside className="brand-panel">
-          <div className="brand-glow" aria-hidden="true" />
           <img src={image} alt="Logo" className="brand-logo" />
           <h1>Welcome back</h1>
           <p className="brand-sub">
