@@ -244,7 +244,8 @@ const MisReport = () => {
                                 ) : (
                                     paginatedAssets().map((asset, index) => (
                                         <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                                            <td data-label="S.No">{asset.assetName}</td>
+                                            <td data-label="S.No.">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                                            <td data-label="Name">{asset.assetName}</td>
                                             <td data-label="Specification">{asset.assetSpecification}</td>
                                             <td data-label="Unit">{units.find(u => u._id === asset.associateUnit)?.name || 'Loading'}</td>
                                             <td data-label="Status">
