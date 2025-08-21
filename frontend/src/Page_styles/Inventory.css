@@ -408,7 +408,7 @@
   .inventory-table{
     margin-top: 0;
     overflow: auto;
-    height: 60%;
+/*     height: 60%; */
   }
   .table-body tr ,.table-header th{
     padding: 0px 8px;
