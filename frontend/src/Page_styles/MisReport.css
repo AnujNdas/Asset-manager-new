@@ -237,7 +237,10 @@ th {
     cursor: pointer;
     margin-bottom: 8px;
   }
-
+  .mis-table tbody{
+    background: #dfdfdf;
+    border-radius: 10px;
+  }
   /* Hide the mis-form by default */
   .filters .mis-form {
     display: none;
@@ -320,6 +323,10 @@ th {
 @media screen and (max-width: 480px) {
     .filters{
     gap: 40px;
+  }
+      .mis-table tbody{
+    background: #dfdfdf;
+    border-radius: 10px;
   }
   header {
     flex-direction: column;
