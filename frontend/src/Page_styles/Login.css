@@ -2,11 +2,11 @@
 :root{
   --bg: #0b1220;                 /* page background */
   --card: #0f172a;               /* card background */
-  --muted: #c3cbd7;              /* secondary text */
-  --text: #e6edf6;               /* primary text */
+  --muted: #555;              /* secondary text */
+  --text: #171717;               /* primary text */
   --brand: #4f46e5;              /* indigo */
   --brand-2: #22d3ee;            /* cyan accent */
-  --line: rgba(255,255,255,.08); /* subtle borders */
+  --line: rgba(0, 0, 0, 0.2); /* subtle borders */
   --ring: rgba(79,70,229,.45);   /* focus ring */
 }
 
@@ -19,37 +19,32 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   padding: 0 24px;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(1200px 600px at 20% -10%, rgba(79,70,229,.25), transparent 60%),
-    radial-gradient(1000px 500px at 100% 0%, rgba(34,211,238,.18), transparent 55%),
-    var(--bg);
+  background: #c2c2c2;
 }
 
 .auth-card{
   width: 100%;
   height: 95%;
   max-width: 1000px;
-  background: var(--card);
-  border: 1px solid var(--line);
+  /* background: var(--card); */
+  /* border: 1px solid var(--line);  */
   border-radius: 20px;
   overflow: hidden;
   display: grid;
   grid-template-columns: 1.1fr 1fr; /* brand | form (desktop) */
-  box-shadow:
+  /* box-shadow:
     0 20px 60px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.03);
+    inset 0 1px 0 rgba(255,255,255,.03); */
 }
 
 /* ========== Brand Panel ========== */
 .brand-panel{
   position: relative;
-  height: 95%;
+  height: 100%;
   padding: 0 40px;
   color: var(--text);
   isolation: isolate;
-  background:
-    radial-gradient(800px 300px at -10% 0%, rgba(79,70,229,.25), transparent 60%),
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0) 80%);
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,9 +55,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
 .brand-glow{
   position: absolute;
   inset: -20%;
-  background:
-    radial-gradient(500px 500px at 20% 30%, rgba(79,70,229,.35), transparent 60%),
-    radial-gradient(400px 400px at 90% 70%, rgba(34,211,238,.25), transparent 60%);
+  background:#ffffff;
   filter: blur(40px);
   z-index: -1;
   pointer-events: none;
@@ -72,7 +65,6 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   width: 140px;
   height: auto;
   margin-bottom: 8px;
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,.3));
 }
 
 .brand-panel h1{
@@ -80,7 +72,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   line-height: 1.15;
   letter-spacing: .2px;
   margin: 6px 0 2px;
-  color: #6b8cff;
+  color: #cc794a;
 }
 
 .brand-sub{
@@ -92,7 +84,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
 
 /* ========== Form Panel ========== */
 .form-panel{
-  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.0));
+  background: #ffffff;
   padding: 0 36px;
   display: grid;
   align-content: center;
@@ -138,14 +130,14 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   border-radius: 10px;
   border: 1px solid var(--line);
   background: rgba(255,255,255,.02);
-  color: var(--muted);
+  color: #cc794a;
   transition: .18s ease;
   cursor: pointer;
 }
 .social-btn:hover{
   transform: translateY(-2px);
   color: var(--text);
-  border-color: rgba(255,255,255,.18);
+  border-color: rgba(36, 36, 36, 0.18);
   background: rgba(255,255,255,.04);
 }
 
@@ -187,10 +179,10 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   outline: none;
   transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
-.field input::placeholder{ color: #9fb0c9; opacity: .75; }
+.field input::placeholder{ color: #cc794a; opacity: .75; }
 .field input:focus{
-  border-color: rgba(255,255,255,.25);
-  box-shadow: 0 0 0 4px var(--ring);
+  border-color: #cc794a;
+  box-shadow: 0 0 0 1px #cc794a;
   background: rgba(255,255,255,.035);
 }
 
