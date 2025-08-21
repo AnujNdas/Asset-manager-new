@@ -2,8 +2,7 @@
 .user-overlay {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  justify-content: center;height: 100%;
   width: 70%;
   /* padding: 20px;  */
 }
@@ -11,10 +10,7 @@
 /* Main Card */
 .user-card {
   /* background: white; */
-  background:
-    radial-gradient(1200px 600px at 20% -10%, rgba(79,70,229,.25), transparent 60%),
-    radial-gradient(1000px 500px at 100% 0%, rgba(34,211,238,.18), transparent 55%),
-    var(--bg);
+  background: #c2c2c2;
   border-radius: 16px;
   padding: 15px;
   max-width: 80%;
@@ -43,7 +39,7 @@
   font-size: 22px;
   font-weight: bold;
   text-align: center;
-  color: #e7e7e7;
+  color: #cc794a;
   margin-bottom: 10px;
 }
 
@@ -65,7 +61,7 @@
   cursor: pointer;
 }
 .tab-btn:hover {
-  background: #ffe3ec;
+  background: #ffffff;
 }
 .tab-btn.active {
   background: #2a67ff;
