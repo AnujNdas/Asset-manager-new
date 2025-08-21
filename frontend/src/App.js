@@ -13,6 +13,7 @@ import AssetCapture from "./Pages/AssetCapture";
 import Classification from "./Pages/Classification";
 import Inventory from "./Pages/Inventory";
 import MisReport from "./Pages/MisReport";
+import ProtectedRoute from "./Components/ProtectedRoute";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
@@ -52,13 +53,12 @@ const App = () => {
 
     <section className={`third-container ${isUserPage ? 'blurred' : ''}`}>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/Product_List" element={<ProductList />} />
+        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/AssetCapture" element={<AssetCapture />} />
-        <Route path="/Inventory" element={<Inventory />} />
+        <Route path="/Inventory" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
         <Route path="/Setting/*" element={<Setting />} />
         <Route path="/Classification/*" element={<Classification />} />
-        <Route path="/Misreport" element={<MisReport />} />
+        <Route path="/Misreport" element={<ProtectedRoute><MisReport /></ProtectedRoute>} />
       </Routes>
     </section>
 
