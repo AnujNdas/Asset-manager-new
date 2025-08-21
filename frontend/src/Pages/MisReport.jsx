@@ -223,6 +223,7 @@ const MisReport = () => {
                         <table className="mis-table">
                             <thead>
                                 <tr>
+                                    <th>S.No</th>
                                     <th>Asset Name</th>
                                     <th>Asset Specification</th>
                                     <th>Units</th>
