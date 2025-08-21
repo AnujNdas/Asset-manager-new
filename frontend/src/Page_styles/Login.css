@@ -289,7 +289,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
 }
 @media (max-width : 768px){
     .auth-card{
-        overflow: auto;
+        overflow-y: auto;
         height: 100%;
     }
 }
