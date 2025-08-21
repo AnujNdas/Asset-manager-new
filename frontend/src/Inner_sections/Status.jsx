@@ -10,7 +10,7 @@ const Status = () => {
   const [loading, setLoading] = useState(false);  // State for loading indicator
   const [error, setError] = useState(null);  // State for error handling
   const [classifyCurrentPage, setClassifyCurrentPage] = useState(1);
-  const classifyPerPage = 10;
+  const classifyPerPage = 5;
   
   // Your classification data array
   const classificationData = statuses; // Replace with your actual array
@@ -95,7 +95,7 @@ const Status = () => {
             <tbody>
               {currentClassifyItems.map((status, index) => (
                 <tr key={status._id}>
-                  <td data-label="S.No">{index + 1}</td>
+                  <td data-label="S.No">{indexOfFirstItem + index + 1}</td>
                   <td data-label="Name">{status.name}</td>  {/* Display the status name */}
                 </tr>
               ))}
