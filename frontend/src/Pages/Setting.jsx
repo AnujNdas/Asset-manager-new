@@ -46,7 +46,7 @@ const Setting = () => {
         setUserData(data);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        alert("Error fetching user data. Please try again.");
+        // alert("Error fetching user data. Please try again.");
       }
     };
     fetchUserData();
