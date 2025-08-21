@@ -82,7 +82,7 @@ const Setting = () => {
 
         const data = await response.json();
         setUserData(data);
-        localStorage.setItem("user", JSON.stringify(data));
+        sessionStorage.setItem("user", JSON.stringify(data));
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -91,7 +91,7 @@ const Setting = () => {
   }, [navigate]);
 
   // Route guard (if not logged in, redirect immediately)
-  if (!localStorage.getItem("token")) {
+  if (!sessionStorage.getItem("token")) {
     return <Navigate to="/User/Login" replace />;
   }
 
