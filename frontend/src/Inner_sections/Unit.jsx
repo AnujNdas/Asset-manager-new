@@ -10,7 +10,7 @@ const Unit = () => {
   const [loading, setLoading] = useState(false);  // State for loading indicator
   const [error, setError] = useState(null);  // State for error handling
   const [classifyCurrentPage, setClassifyCurrentPage] = useState(1);
-  const classifyPerPage = 10;
+  const classifyPerPage = 5;
   
   // Your classification data array
   const classificationData = units; // Replace with your actual array
@@ -83,7 +83,7 @@ const Unit = () => {
       {currentClassifyItems.length === 0 ? (
         <p>No units available</p>  // Show a message if no units are available
       ) : (
-        <table className="unit-table">
+        <table className="status-table">
           <thead>
             <tr>
               <th>#</th>
@@ -93,7 +93,7 @@ const Unit = () => {
           <tbody>
             {currentClassifyItems.map((unit, index) => (
               <tr key={unit._id}>
-                <td data-label="S.No">{index + 1}</td>
+                <td data-label="S.No">{indexOfFirstItem + index + 1}</td>
                 <td data-label="Name">{unit.name}</td>  {/* Display the unit name */}
               </tr>
             ))}
