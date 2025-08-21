@@ -18,11 +18,6 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      Swal.fire("Error", "Passwords do not match", "error");
-      return;
-    }
-    setLoading(true);
 
     try {
       // Replace with your actual signup API call
