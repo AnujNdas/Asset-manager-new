@@ -84,7 +84,7 @@ const Location = () => {
         {currentClassifyItems.length === 0 ? (
           <p>No locations available</p>  // Show a message if no locations are available
         ) : (
-          <table className="unit-table">
+          <table className="status-table">
             <thead>
               <tr>
                 <th>#</th>
@@ -94,7 +94,7 @@ const Location = () => {
             <tbody>
               {currentClassifyItems.map((location, index) => (
                 <tr key={location._id}>
-                  <td data-label="S.No">{index + 1}</td>
+                  <td data-label="S.No">{indexOfFirstItem + index + 1}</td>
                   <td data-label="Name">{location.name}</td>  {/* Display the location name */}
                 </tr>
               ))}
