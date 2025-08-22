@@ -21,6 +21,7 @@ import {
 // Lazy load inner sections
 const MyProfile = lazy(() => import("../Inner_sections/MyProfile"));
 const Security = lazy(() => import("../Inner_sections/Security"));
+const Notification = lazy(() => import("../Inner_sections/Notification"));
 // Add more when needed
 
 const Setting = () => {
@@ -122,6 +123,7 @@ const Setting = () => {
             <Route path="/" element={<Navigate to="Profile" />} />
             <Route path="Profile" element={<MyProfile />} />
             <Route path="Security" element={<Security />} />
+            <Route path="Notification" element={<Notification />} />
             {/* Add other routes here when components are ready */}
           </Routes>
         </Suspense>
