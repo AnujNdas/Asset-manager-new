@@ -9,6 +9,7 @@ const unitRoutes = require('./routes/unitRoutes')
 const locationRoutes = require('./routes/locationRoutes')
 const categoryRoutes = require('./routes/categoryRoutes')
 const statusRoutes = require('./routes/statusRoutes')
+const updateRoutes = require("./routes/updateRoutes");
 const path = require("path");
 // Initialize environment variables
 dotenv.config();
@@ -32,6 +33,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use("/api/assets",assetsRoutes);
 app.use("/api/auth",authRoutes);
+app.use("/api/user", updateRoutes);
 app.use("/api/unit",unitRoutes);
 app.use("/api/location",locationRoutes);
 app.use("/api/category",categoryRoutes);
