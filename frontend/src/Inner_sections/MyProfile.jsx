@@ -158,29 +158,7 @@ useEffect(() => {
       <div className="personal-data">
         <div className="head-box">
           <div className="title-p">Personal Information</div>
-          <div className="button-ed">
-            {!infoEdit ? (
-              <EditButton onClick={() => setInfoEdit(true)} />
-            ) : (
-              <div className="edit-actions">
-                <button
-                  className="save-btn"
-                  disabled={saving}
-                  onClick={() =>
-                    saveProfile({
-                      name: formData.name,
-                      bio: formData.bio,
-                      email: formData.email,
-                      phone: formData.phone,
-                    })
-                  }
-                >
-                  {saving ? "Saving…" : "Save"}
-                </button>
-                <button className="cancel-btn" onClick={cancelInfo}>Cancel</button>
-              </div>
-            )}
-          </div>
+          
         </div>
 
         <div className="boxes">
@@ -237,16 +215,9 @@ useEffect(() => {
               <h5>{formData.phone || '1234565789'}</h5>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Address */}
-      <div className="address">
-        <div className="head-box">
-          <div className="title-p">Address</div>
           <div className="button-ed">
-            {!addrEdit ? (
-              <EditButton onClick={() => setAddrEdit(true)} />
+            {!infoEdit ? (
+              <EditButton onClick={() => setInfoEdit(true)} />
             ) : (
               <div className="edit-actions">
                 <button
@@ -254,19 +225,27 @@ useEffect(() => {
                   disabled={saving}
                   onClick={() =>
                     saveProfile({
-                      country: formData.country,
-                      city: formData.city,
-                      postalCode: formData.postalCode,
-                      taxId: formData.taxId,
+                      name: formData.name,
+                      bio: formData.bio,
+                      email: formData.email,
+                      phone: formData.phone,
                     })
                   }
                 >
                   {saving ? "Saving…" : "Save"}
                 </button>
-                <button className="cancel-btn" onClick={cancelAddr}>Cancel</button>
+                <button className="cancel-btn" onClick={cancelInfo}>Cancel</button>
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Address */}
+      <div className="address">
+        <div className="head-box">
+          <div className="title-p">Address</div>
+         
         </div>
 
         <div className="boxes">
@@ -320,6 +299,29 @@ useEffect(() => {
               />
             ) : (
               <h5>{formData.taxId || 'sh78d78e'}</h5>
+            )}
+          </div>
+           <div className="button-ed">
+            {!addrEdit ? (
+              <EditButton onClick={() => setAddrEdit(true)} />
+            ) : (
+              <div className="edit-actions">
+                <button
+                  className="save-btn"
+                  disabled={saving}
+                  onClick={() =>
+                    saveProfile({
+                      country: formData.country,
+                      city: formData.city,
+                      postalCode: formData.postalCode,
+                      taxId: formData.taxId,
+                    })
+                  }
+                >
+                  {saving ? "Saving…" : "Save"}
+                </button>
+                <button className="cancel-btn" onClick={cancelAddr}>Cancel</button>
+              </div>
             )}
           </div>
         </div>
