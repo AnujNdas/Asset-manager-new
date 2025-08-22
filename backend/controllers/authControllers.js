@@ -37,8 +37,8 @@ const login = async (req,res) => {
         if (!validPassword) return res.status(401).json({error : "Invalid Password!"});
 
         // Generate a Token 
-        const token = jwt.sign({ username : user.username },
-            "jwt_secret", { expiresIn : "1hr"});
+        const token = jwt.sign({ username : user.username,id: user._id },
+            "jwt_secret", { expiresIn : "1h"});
             res.json({ message : "Logged in!", token});
     } catch (error) {
         res.status(500).json({ error : "Error logging in!"});
@@ -47,7 +47,7 @@ const login = async (req,res) => {
 
 const getUserData = async (req, res) => {
     try {
-      const user = await User.findOne({ username: req.user.username }); // Get the user by the username from the decoded token
+      const user = await User.findById(req.user.id); // using ID from token // Get the user by the username from the decoded token
       
       if (!user) {
         return res.status(404).json({ error: "User not found!" });
