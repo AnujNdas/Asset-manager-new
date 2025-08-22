@@ -7,14 +7,18 @@ const authenticateToken = (req, res, next) => {
     return res.status(401).json({ error: "Authentication required" });
   }
 
+  console.log("Received Token:", token); // Debug token
+
   try {
-    // Verify token and decode user information
     const decoded = jwt.verify(token, "jwt_secret");
-    req.user = decoded;  // Attach the decoded user info to the request object
-    next();  // Proceed to the next middleware or route handler
+    console.log("Decoded Token:", decoded); // Check payload
+    req.user = decoded;
+    next();
   } catch (error) {
+    console.log("JWT Error:", error.message); // Will show 'jwt expired' or 'invalid signature'
     return res.status(403).json({ error: "Invalid or expired token" });
   }
 };
 
 module.exports = authenticateToken;
+
