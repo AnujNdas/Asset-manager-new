@@ -67,6 +67,9 @@
 
 /* Info Boxes */
 .personal-data, .address {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     width: 90%;
     border-radius: 15px;
     padding: 15px;
@@ -78,14 +81,14 @@
 .boxes {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
+    gap: 20px;
     width: 100%;
 }
 
 .boxes-1 {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 25px;
 }
 
 /* Headings */
@@ -101,21 +104,66 @@
     font-weight: 600;
     color: #565656;
 }
-
+.one ,.two , .three , .four {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}
 .one p, .two p, .three p, .four p {
     font-family: "Lato", sans-serif;
     font-weight: 600;
     color: #b3adad;
     font-size: 13px;
     margin: 0;
+    text-align: center;
 }
-
+.one input, .two input, .three input, .four input {
+    font-family: "Lato", sans-serif;
+    font-weight: 600;
+    color: #020202;
+    font-size: 13px;
+    margin: 0;
+    /* text-align: center; */
+    width: 100%;
+    border-radius: 5px;
+    padding: 3px;
+    border: 2px solid #acacac;
+}
+.one input, .two input, .three input, .four input::placeholder{ color: #282828; opacity: .75; }
+.one input, .two input, .three input, .four input:focus{
+  border-color: #8e8e8e;
+  box-shadow: 0 0 0 1px #8a8a8a;
+  background: rgba(255,255,255,.035);
+}
 .one h5, .two h5, .three h5, .four h5 {
     font-family: "Lato", sans-serif;
     margin: 0;
     font-size: 14px;
     font-weight: 600;
     color: #565656;
+    text-align: center;
+}
+.save-btn {
+    background: #0033ff;
+    color: #fff;
+    padding: 2px 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    margin-right: 10px;
+}
+.cancel-btn{
+    background: #ff0000;
+    color: #fff;
+    padding: 2px 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+}
+.button-ed{
+    display: flex;
+    justify-content: center;
 }
 
 /* RESPONSIVENESS */
