@@ -105,7 +105,7 @@ useEffect(() => {
     setSaving(true);
     try {
       const body = JSON.stringify(fields);
-      const res = await fetch("http://localhost:5000/api/user/update", {
+      const res = await fetch("https://asset-manager-new.onrender.com/api/user/update", {
         method: "PUT",
         headers: authHeaders,
         body
