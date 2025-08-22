@@ -14,6 +14,10 @@ const Menubar = ({ username }) => {
     setDropdownVisible(!isDropdownVisible);
   };
 
+   const handlenotification = () => {
+    navigate("/Setting/Notification")
+  }
+
   return (
     <div className='menubar-container'>
       <div className='menubar'>
@@ -25,7 +29,7 @@ const Menubar = ({ username }) => {
         </div> */}
         
         <div className='control-panel'>
-          <button className='controls'>
+          <button className='controls' onClick={handlenotification}>
             <FontAwesomeIcon icon={faBell} style={{ color: "#7870f7" }} />
           </button>
           <button className='controls'>
