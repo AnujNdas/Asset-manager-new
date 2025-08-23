@@ -34,11 +34,12 @@ right: 200px;
 }
 
 .dropdown-menu li a {
-  display: block;
-  padding: 12px 20px;
+  display: flex;
+  padding: 2px 20px;
   text-decoration: none;
   color: #202020;
   font-weight: 500;
+  font-size: 15px;
   transition: background 0.3s ease;
 }
 
