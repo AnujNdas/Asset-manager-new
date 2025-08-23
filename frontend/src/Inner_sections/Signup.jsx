@@ -20,11 +20,15 @@ const Signup = () => {
     e.preventDefault();
 
     try {
-      // Replace with your actual signup API call
-      await new Promise(res => setTimeout(res, 1000));
-
-      Swal.fire("Success", "Account created successfully!", "success");
-      navigate("/User/Login");
+      await Swal.fire({
+  title: "Success",
+  text: res.message || "Account created successfully!",
+  icon: "success",
+  timer: 2000,
+  showConfirmButton: false
+}).then(() => {
+  navigate("/User/Login");
+});
     } catch (err) {
       Swal.fire("Error", "Signup failed. Please try again.", "error");
     } finally {
