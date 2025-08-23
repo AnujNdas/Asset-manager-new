@@ -1,76 +1,48 @@
 .profile-dropdown-container {
-    position: absolute;
-    right: 17%;
-  }
-  
-  .profile-dropdown-container .dropdown-menu {
-    position: absolute;
-    top: 5px; /* Adjust this depending on the icon's position */
-    /* left: 50%; */
-    background-color: white;
-    width: 100px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    visibility: hidden; /* Initially hidden */
-    opacity: 0;
-    transition: opacity 0.3s ease, visibility 0s linear 0.6s;
-    z-index: 1000; /* Ensure it appears on top of other elements */
-  }
-  
-  .profile-dropdown-container .dropdown-menu.show {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 0.5s ease;
-  }
-  
-  .dropdown-menu ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap:0px;
-    /* margin: 10px; */
-  }
-  
-  .dropdown-menu li {
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .dropdown-menu li a {
-    text-decoration: none;
-    color: #565656;
-    display: flex;
-    align-items: center;
-    padding: 5px 20px;
-  }
-  
-  .dropdown-menu li a:hover {
-    background-color: #f1f1f1;
-    color: #7870f7;
-  }
-  
-  .menu-icon {
-    margin-right: 10px;
-  }
-  
-@media screen and (max-width: 768px) {
-  .profile-dropdown-container {
-    right: 10px; /* shift closer to edge on smaller screens */
-  }
+  position: absolute;
+right: 200px;
+  /* top: 50px; */
+}
 
-  .profile-dropdown-container .dropdown-menu {
-    width: 140px; /* Slightly wider for touch-friendliness */
-    top: 10px; /* push lower if icon is at top */
-    right: 0; /* Align dropdown to right edge of container */
-    left: auto; /* cancel any 'left' override if you had one */
-  }
+.profile-dropdown-container .dropdown-menu {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  width: 160px;
+  padding: 8px 0;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
 
-  .dropdown-menu li a {
-    padding: 10px 15px; /* Larger touch area */
-    font-size: 14px; /* More readable text */
-  }
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drop-box {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 1px;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #202020;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
 }
