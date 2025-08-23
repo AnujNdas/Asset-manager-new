@@ -4,20 +4,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import image from '../Images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLock, faPerson, faUser } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
+import AuthService from '../Services/AuthService';
 
 const Signup = () => {
-  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  // const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await AuthService.signup(name, username, password); // <-- call API
@@ -30,8 +30,9 @@ const Signup = () => {
 }).then(() => {
   navigate("/User/Login");
 });
+
     } catch (err) {
-      Swal.fire("Error", "Signup failed. Please try again.", "error");
+      Swal.fire("Error", err.response?.data?.message || "Signup failed. Please try again.", "error");
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ const Signup = () => {
         {/* Form panel */}
         <form className="form-panel" onSubmit={handleSignup}>
           <div className="form-header">
-{/*             <img src={image} alt="Logo" className="form-logo" /> */}
+            {/* <img src={image} alt="Logo" className="form-logo" /> */}
             <h2>Create Account</h2>
             <p className="form-sub">Fill in your details to get started</p>
           </div>
@@ -72,8 +73,8 @@ const Signup = () => {
           </label> */}
 
           <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> Name</span>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Your Name" required />
+            <span className="field-label"><FontAwesomeIcon icon={faPerson} /> Name</span>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required />
           </label>
 
           <label className="field">
