@@ -22,14 +22,16 @@ const Signup = () => {
     try {
       const res = await AuthService.signup(name, username, password); // <-- call API
       await Swal.fire({
-  title: "Success",
-  text: res.message || "Account created successfully!",
-  icon: "success",
-  timer: 2000,
-  showConfirmButton: false
-}).then(() => {
-  navigate("/User/Login");
-});
+        title: "Success!",
+        text: res.message || "Account created successfully!",
+        icon: "success",
+        customClass: {
+          container: 'custom-swal-container'
+        },
+        confirmButtonText: "OK",
+        allowOutsideClick: false
+      })
+      navigate("/User/Login");
 
     } catch (err) {
       Swal.fire("Error", err.response?.data?.message || "Signup failed. Please try again.", "error");
