@@ -20,6 +20,7 @@ const Signup = () => {
     e.preventDefault();
 
     try {
+      const res = await AuthService.signup(name, username, password); // <-- call API
       await Swal.fire({
   title: "Success",
   text: res.message || "Account created successfully!",
