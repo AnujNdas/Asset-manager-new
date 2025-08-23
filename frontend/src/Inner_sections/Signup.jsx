@@ -24,7 +24,7 @@ const Signup = () => {
       await new Promise(res => setTimeout(res, 1000));
 
       Swal.fire("Success", "Account created successfully!", "success");
-      navigate("/Login");
+      navigate("/User/Login");
     } catch (err) {
       Swal.fire("Error", "Signup failed. Please try again.", "error");
     } finally {
