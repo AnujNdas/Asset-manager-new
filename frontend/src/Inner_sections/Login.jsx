@@ -9,7 +9,7 @@ import AuthService from '../Services/AuthService';
 import Swal from 'sweetalert2';
 
 const Login = ({ setProfileUser }) => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,10 +20,11 @@ const Login = ({ setProfileUser }) => {
     setLoading(true);
 
     try {
-      const response = await AuthService.login(username, password);
+      const response = await AuthService.login(email, password);
       if (response && response.token) {
+        console.log(response.token)
         sessionStorage.setItem("token", response.token);
-        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("email", email);
 
         Swal.fire({
           title: "Success",
@@ -97,12 +98,12 @@ const Login = ({ setProfileUser }) => {
           <div className="divider"><span>or</span></div>
 
           <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> Username</span>
+            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> E mail</span>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your Email"
               required
             />
           </label>
