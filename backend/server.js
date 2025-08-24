@@ -24,7 +24,6 @@ const corsOptions = {
   origin: 'https://asset-manager-new-frontend.onrender.com', // Your frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
 };
 
 app.use(cors(corsOptions));
