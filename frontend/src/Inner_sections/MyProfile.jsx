@@ -50,7 +50,7 @@ useEffect(() => {
 
     if (!token) {
       alert("Please log in.");
-      navigate("/User/Login");
+      navigate("/user/login");
       return;
     }
 
@@ -99,7 +99,7 @@ useEffect(() => {
 
   const saveProfile = async (fields) => {
     if (!token) {
-      navigate("/User/Login");
+      navigate("/user/login");
       return;
     }
     setSaving(true);
