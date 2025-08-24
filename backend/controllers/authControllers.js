@@ -5,7 +5,7 @@ const User = require("../models/User");
 // Signup controller
 
 const signup = async (req,res) => {
-    const {username , email , password } = req.body;
+    const {email ,username ,  password } = req.body;
     try {
       console.log("Incoming Signup Data:", req.body);
         // Check if the user already exist
@@ -16,7 +16,7 @@ const signup = async (req,res) => {
         }
         // Hash the password and save the user
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username , email , password : hashedPassword});
+        const newUser = new User({ email , username , password : hashedPassword});
         await newUser.save();
         console.log("User Saved:", newUser);
 
