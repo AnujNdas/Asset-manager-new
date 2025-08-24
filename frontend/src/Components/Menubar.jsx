@@ -22,7 +22,7 @@ const Menubar = ({ username  , toggleSidebar}) => {
   };
 
   const handlenotification = () => {
-    navigate("/Setting/Notification")
+    navigate("/setting/notification")
   }
 
   return (
