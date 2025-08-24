@@ -4,14 +4,14 @@ const API_URL = "https://asset-manager-new.onrender.com/api/auth";
 // Base url for backend API
 
 //Sign up function
-const signup = async (name , username,password) => {
-    const response = await axios.post(`${API_URL}/signup`,{ name , username , password });
+const signup = async (email ,username , password) => {
+    const response = await axios.post(`${API_URL}/signup`,{  email ,username , password });
     return response.data;
 };
 
 //Login function
-const login = async (username , password) => {
-    const response = await axios.post(`${API_URL}/login`, { username , password});
+const login = async (email , password) => {
+    const response = await axios.post(`${API_URL}/login`, { email , password});
     return response.data;
 }
 
