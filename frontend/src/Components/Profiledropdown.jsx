@@ -34,8 +34,8 @@ const ProfileDropdown = ({ isVisible, onClose ,toggleButtonRef }) => {
     <div ref={dropdownRef} className={`profile-dropdown-container ${isVisible ? 'show' : ''}`}>
       <div className={`dropdown-menu ${isVisible ? 'show' : ''}`}>
         <ul className='drop-box'>
-          <li><Link to="/User/Login"><FontAwesomeIcon icon={faUser} /> User</Link></li>
-          <li><Link to="/Setting/Notification"><FontAwesomeIcon icon={faInbox} /> Inbox</Link></li>
+          <li><Link to="/user/login"><FontAwesomeIcon icon={faUser} /> User</Link></li>
+          <li><Link to="/setting/notification"><FontAwesomeIcon icon={faInbox} /> Inbox</Link></li>
           <li><Link to="/mode"><FontAwesomeIcon icon={faMoon} /> Mode</Link></li>
         </ul>
       </div>
