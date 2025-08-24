@@ -1,22 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import "../Page_styles/User.css";
-import Login from "../Inner_sections/Login";
-import Signup from "../Inner_sections/Signup";
 
 const User = ({ removeUser }) => {
-  const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
-
-  const navigateToLogin = () => {
-    setIsLogin(true);
-    navigate("/user/login");
-  };
-
-  const navigateToSignup = () => {
-    setIsLogin(false);
-    navigate("/user/signup");
-  };
+  const location = useLocation();
 
   const goBackToHomepage = () => {
     navigate("/", { replace: true });
@@ -34,21 +21,21 @@ const User = ({ removeUser }) => {
 
         <div className="tab-buttons">
           <button
-            onClick={navigateToLogin}
-            className={`tab-btn ${isLogin ? "active" : ""}`}
+            onClick={() => navigate("/user/login")}
+            className={`tab-btn ${location.pathname.includes("login") ? "active" : ""}`}
           >
             Login
           </button>
           <button
-            onClick={navigateToSignup}
-            className={`tab-btn ${!isLogin ? "active" : ""}`}
+            onClick={() => navigate("/user/signup")}
+            className={`tab-btn ${location.pathname.includes("signup") ? "active" : ""}`}
           >
             Signup
           </button>
         </div>
 
         <div className="auth-section">
-          {isLogin ? <Login /> : <Signup />}
+          <Outlet /> {/* Login or Signup will render here */}
         </div>
       </div>
     </div>
