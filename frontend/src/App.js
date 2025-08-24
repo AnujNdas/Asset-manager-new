@@ -4,7 +4,6 @@ import { useState , useEffect} from "react";
 import "./App.css";
 import Dashboard from "./Pages/Dashboard";
 import { Routes, Route, useLocation } from "react-router-dom";
-import ProductList from "./Pages/Product_list";
 import User from "./Pages/User"; 
 import Login from "./Inner_sections/Login";
 import Signup from "./Inner_sections/Signup";
@@ -12,8 +11,8 @@ import Setting from "./Pages/Setting";
 import AssetCapture from "./Pages/AssetCapture";
 import Classification from "./Pages/Classification";
 import Inventory from "./Pages/Inventory";
-import MisReport from "./Pages/MisReport";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import MisReport from "./Pages/MisReport";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
@@ -28,7 +27,7 @@ const App = () => {
   }, []);
 
     // Check if the current route is part of the user section
-  const isUserPage = location.pathname.startsWith("/User");
+  const isUserPage = location.pathname.startsWith("/user");
   // Go back to homepage and hide User section
 
   const removeUser = () => {
@@ -36,6 +35,7 @@ const App = () => {
   };
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen); // toggle function
+
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
@@ -54,19 +54,19 @@ const App = () => {
     <section className={`third-container ${isUserPage ? 'blurred' : ''}`}>
       <Routes>
         <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/AssetCapture" element={<AssetCapture />} />
-        <Route path="/Inventory" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
-        <Route path="/Setting/*" element={<Setting />} />
-        <Route path="/Classification/*" element={<Classification />} />
-        <Route path="/Misreport" element={<ProtectedRoute><MisReport /></ProtectedRoute>} />
+        <Route path="/assetCapture" element={<AssetCapture />} />
+        <Route path="/inventory" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
+        <Route path="/setting/*" element={<Setting />} />
+        <Route path="/classification/*" element={<Classification />} />
+        <Route path="/misreport" element={<ProtectedRoute><MisReport /></ProtectedRoute>} />
       </Routes>
     </section>
 
     <section className={`user-container ${isUserPage ? "visible" : "hidden"}`}>
       <Routes>
-        <Route path="/User" element={<User removeUser={removeUser} />}>
-          <Route path="Login" element={<Login setProfileUser={setProfileUser} />} />
-          <Route path="Signup" element={<Signup />} />
+        <Route path="/user" element={<User removeUser={removeUser} />}>
+          <Route path="login" element={<Login setProfileUser={setProfileUser} />} />
+          <Route path="signup" element={<Signup />} />
         </Route>
       </Routes>
     </section>
