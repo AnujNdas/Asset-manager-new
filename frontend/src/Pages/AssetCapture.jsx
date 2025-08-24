@@ -222,7 +222,7 @@ const AssetCapture = () => {
 
     const isSuccess = await saveAssetToDatabase(assetData);
     if (isSuccess) {
-      navigate('/Inventory');
+      navigate('/inventory');
     }
   };
 
