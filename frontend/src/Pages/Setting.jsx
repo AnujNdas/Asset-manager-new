@@ -120,7 +120,7 @@ const Setting = () => {
       <main className="settings">
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="/" element={<Navigate to="Profile" />} />
+            <Route path="/" element={<Navigate to="profile" />} />
             <Route path="profile" element={<MyProfile />} />
             <Route path="security" element={<Security />} />
             <Route path="notification" element={<Notification />} />
