@@ -52,7 +52,7 @@ const Setting = () => {
         sessionStorage.removeItem("username");
         sessionStorage.removeItem("user");
         setUserData(null);
-        navigate("/User/Login");
+        navigate("/user/login");
       }
     });
   };
