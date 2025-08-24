@@ -20,13 +20,17 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors({
-    origin: 'https://asset-manager-new-frontend.onrender.com', // Frontend domain (Vercel)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
-  }));
+const corsOptions = {
+  origin: 'https://asset-manager-new-frontend.onrender.com', // Your frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
 
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // ✅ Handle preflight
 app.use(bodyParser.json());
+
 // app.use(express.json());  // Instead of bodyParser.json()
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
