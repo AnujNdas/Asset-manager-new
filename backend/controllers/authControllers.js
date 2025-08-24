@@ -5,20 +5,24 @@ const User = require("../models/User");
 // Signup controller
 
 const signup = async (req,res) => {
-    const {name , username , password } = req.body;
+    const {username , email , password } = req.body;
     try {
+      console.log("Incoming Signup Data:", req.body);
         // Check if the user already exist
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ email });
         if (existingUser){
+          console.log("User already exists");
             return res.status(400).json({ error : "User already Exist!"});
         }
         // Hash the password and save the user
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ name , username , password : hashedPassword});
+        const newUser = new User({ username , email , password : hashedPassword});
         await newUser.save();
+        console.log("User Saved:", newUser);
 
-        res.status(201).json({ message : "User Created!"});
+        res.status(201).json({ message : "User Created!" , user : newUser});
     } catch (error) {
+      console.error("Signup Error:", error);
         res.status(500).json({ error : "Error creating user!"})
     }
 };
@@ -26,10 +30,10 @@ const signup = async (req,res) => {
 // Login controller
 
 const login = async (req,res) => {
-    const { username , password} = req.body;
+    const { email , password} = req.body;
     try {
         // Find the user in the database
-        const user = await User.findOne({ username});
+        const user = await User.findOne({ email});
         if (!user) return res.status(404).json({ error : "User not found!"});
 
         // Verify the password
@@ -37,7 +41,7 @@ const login = async (req,res) => {
         if (!validPassword) return res.status(401).json({error : "Invalid Password!"});
 
         // Generate a Token 
-        const token = jwt.sign({ username : user.username,id: user._id },
+        const token = jwt.sign({ email : user.email,id: user._id },
             "jwt_secret", { expiresIn : "1h"});
             res.json({ message : "Logged in!", token});
     } catch (error) {
