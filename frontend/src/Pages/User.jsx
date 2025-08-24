@@ -10,12 +10,12 @@ const User = ({ removeUser }) => {
 
   const navigateToLogin = () => {
     setIsLogin(true);
-    navigate("/User/Login");
+    navigate("/user/login");
   };
 
   const navigateToSignup = () => {
     setIsLogin(false);
-    navigate("/User/Signup");
+    navigate("/user/signup");
   };
 
   const goBackToHomepage = () => {
