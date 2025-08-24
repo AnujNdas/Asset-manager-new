@@ -4,13 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import image from '../Images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faLock, faPerson, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faLock, faPerson } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import AuthService from '../Services/AuthService';
 
 const Signup = () => {
   const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const res = await AuthService.signup(name, username, password); // <-- call API
+      const res = await AuthService.signup(email, username, password); // <-- call API
       await Swal.fire({
         title: "Success!",
         text: res.message || "Account created successfully!",
@@ -32,6 +32,7 @@ const Signup = () => {
         allowOutsideClick: false
       })
       navigate("/User/Login");
+      // Navigate only AFTER SweetAlert closes
 
     } catch (err) {
       Swal.fire("Error", err.response?.data?.message || "Signup failed. Please try again.", "error");
@@ -75,13 +76,13 @@ const Signup = () => {
           </label> */}
 
           <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faPerson} /> Name</span>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required />
+            <span className="field-label"><FontAwesomeIcon icon={faPerson} /> username</span>
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Your username" required />
           </label>
 
           <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faUser} /> Username</span>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Choose a username" required />
+            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> Email</span>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
           </label>
 
           <label className="field">
