@@ -2,30 +2,58 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-// Signup controller
+const signup = async (req, res) => {
+  const { email, username, password } = req.body;
 
-const signup = async (req,res) => {
-    const {username , email , password } = req.body;
-    try {
-      console.log("Incoming Signup Data:", req.body);
-        // Check if the user already exist
-        const existingUser = await User.findOne({ email });
-        if (existingUser){
-          console.log("User already exists");
-            return res.status(400).json({ error : "User already Exist!"});
-        }
-        // Hash the password and save the user
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({  username , email , password : hashedPassword});
-        await newUser.save();
-        console.log("User Saved:", newUser);
+  try {
+    console.log("Incoming Signup Data:", req.body);
 
-        res.status(201).json({ message : "User Created!" , user : newUser});
-    } catch (error) {
-      console.error("Signup Error:", error);
-        res.status(500).json({ error : "Error creating user!"})
+    // Validate fields
+    if (!email || !username || !password) {
+      return res.status(400).json({ error: "All fields are required" });
     }
+
+    // Check if email exists
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      console.log("Email already exists");
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
+    // Check if username exists
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      console.log("Username already exists");
+      return res.status(400).json({ error: "Username already exists" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const newUser = new User({
+      email,
+      username,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+    console.log("User Saved:", newUser);
+
+    res.status(201).json({
+      message: "User Created!",
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        username: newUser.username,
+      },
+    });
+  } catch (error) {
+    console.error("Signup Error:", error);
+    res.status(500).json({ error: "Server error", details: error.message });
+  }
 };
+
 
 // Login controller
 
