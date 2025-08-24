@@ -31,11 +31,11 @@ const Setting = () => {
 
   // Tabs config
   const tabs = [
-    { path: "Profile", label: "Profile", icon: FaUser },
-    { path: "Security", label: "Security", icon: FaLock },
-    { path: "General", label: "General", icon: FaCogs },
-    { path: "TeamMember", label: "Team", icon: FaUsers },
-    { path: "Notification", label: "Notifications", icon: FaBell },
+    { path: "profile", label: "Profile", icon: FaUser },
+    { path: "security", label: "Security", icon: FaLock },
+    { path: "general", label: "General", icon: FaCogs },
+    { path: "teamMember", label: "Team", icon: FaUsers },
+    { path: "notification", label: "Notifications", icon: FaBell },
   ];
 
   // Logout
@@ -67,7 +67,7 @@ const Setting = () => {
           text: "Please log in.",
           icon: "warning",
           confirmButtonText: "OK",
-        }).then(() => navigate("/User/Login"));
+        }).then(() => navigate("/user/login"));
         return;
       }
 
@@ -93,7 +93,7 @@ const Setting = () => {
 
   // Route guard (if not logged in, redirect immediately)
   if (!sessionStorage.getItem("token")) {
-    return <Navigate to="/User/Login" replace />;
+    return <Navigate to="/user/login" replace />;
   }
 
   return (
@@ -103,7 +103,7 @@ const Setting = () => {
         {tabs.map(({ path, label, icon: Icon }) => (
           <Link
             key={path}
-            to={`/Setting/${path}`}
+            to={`/setting/${path}`}
             className={location.pathname.includes(path) ? "active" : ""}
           >
             <Icon className="tab-icon" />
@@ -121,9 +121,9 @@ const Setting = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<Navigate to="Profile" />} />
-            <Route path="Profile" element={<MyProfile />} />
-            <Route path="Security" element={<Security />} />
-            <Route path="Notification" element={<Notification />} />
+            <Route path="profile" element={<MyProfile />} />
+            <Route path="security" element={<Security />} />
+            <Route path="notification" element={<Notification />} />
             {/* Add other routes here when components are ready */}
           </Routes>
         </Suspense>
