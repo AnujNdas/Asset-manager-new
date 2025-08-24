@@ -31,7 +31,7 @@ const Signup = () => {
         confirmButtonText: "OK",
         allowOutsideClick: false
       })
-      navigate("/User/Login");
+      navigate("/user/login");
       // Navigate only AFTER SweetAlert closes
 
     } catch (err) {
@@ -96,7 +96,7 @@ const Signup = () => {
           </label> */}
 
           <div className="form-actions">
-            <Link to="/login" className="link">Already have an account?</Link>
+            <Link to="/user/login" className="link">Already have an account?</Link>
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? "Signing up…" : "Sign Up"}
             </button>
