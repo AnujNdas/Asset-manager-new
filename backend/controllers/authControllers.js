@@ -5,7 +5,7 @@ const User = require("../models/User");
 // Signup controller
 
 const signup = async (req,res) => {
-    const {email ,username ,  password } = req.body;
+    const {username , email , password } = req.body;
     try {
       console.log("Incoming Signup Data:", req.body);
         // Check if the user already exist
