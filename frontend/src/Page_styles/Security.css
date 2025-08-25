@@ -1,187 +1,153 @@
 .Security-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 15px;
+  /* width:; */
+  /* margin: 30px auto;          */
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
 }
 
-/* Section Cards */
-.change-password, .two-factor-auth, .login-activity {
-    width: 90%;
-    background: #ffffff;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-                rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Heading */
+.Profile-heading {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #222;
 }
 
-/* Section Headers */
-.box-head, .title-login {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    font-family: "Roboto", sans-serif;
-    font-weight: 600;
-    color: #565656;
+/* Card style for each section */
+.change-password,
+.two-factor-auth,
+.login-activity {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* Input Rows */
-.input-container, .input-container2 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-    width: 100%;
+/* Section title */
+.box-head .title-p,
+.title-login {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #444;
 }
 
-.input-container p, .input-container2 p {
-    font-size: 14px;
-    font-family: "Lato", sans-serif;
-    font-weight: 600;
-    color: #848484;
-    margin: 0;
-    flex: 1;
+/* Input container */
+.input-container,
+.input-container2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 
-.input-container input, .input-container2 input {
-    flex: 2;
-    min-width: 180px;
-    padding: 8px 10px;
-    border: none;
-    border-radius: 10px;
-    color: black;
-    font-weight: 500;
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-                rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+.input-container p,
+.input-container2 p {
+  flex: 1;
+  font-size: 14px;
 }
 
-/* Change Password Button */
+.input-container input,
+.input-container2 input {
+  flex: 2;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-container input:focus,
+.input-container2 input:focus {
+  border-color: #4a90e2;
+}
+
+/* Buttons */
 .change-button {
-    display: flex;
-    justify-content: flex-start;
+  text-align: right;
+  margin-top: 10px;
 }
 
 .change-button button {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: none;
-    background: blue;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(90, 125, 188, 0.25);
-    transition: 0.2s;
+  background-color: #4a90e2;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s ease;
 }
 
 .change-button button:hover {
-    background: #003fba;
+  background-color: #357abd;
 }
 
-/* Two Factor Auth Switch */
+/* Two-factor section */
 .switch-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 
-.switch {
-    flex: 0 0 auto;
+.info-switch p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
 }
 
-.info-switch {
-    font-size: 12px;
-    font-weight: 500;
-    font-family: "Roboto", sans-serif;
-    color: #848484;
+.switch .form-switch {
+  transform: scale(1.2);
 }
 
-/* Login Activity */
-.login-device {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
+/* Login activity */
+.login-activity .login-device {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 6px;
 }
 
 .device-logo {
-    flex: 0 0 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #00c271;
-}
-
-.device-data {
-    flex: 1;
+  width: 40px;
+  height: 40px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin-right: 15px;
 }
 
 .device-data h4 {
-    font-size: 15px;
-    font-family: "Lato", sans-serif;
-    font-weight: 600;
-    margin: 0;
-    color: #565656;
+  font-size: 16px;
+  margin: 0;
 }
 
 .device-data p {
-    font-size: 12px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 600;
-    margin: 0;
-    color: #565656;
+  font-size: 13px;
+  color: #666;
+  margin: 4px 0 0;
 }
 
-/* =============== RESPONSIVE BREAKPOINTS =============== */
+/* Responsive */
+@media (max-width: 768px) {
+  .input-container,
+  .input-container2 {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-/* Tablet */
-@media (max-width: 992px) {
-    .input-container, .input-container2 {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .input-container p,
+  .input-container2 p {
+    margin-bottom: 6px;
+  }
 
-    .change-button {
-        justify-content: center;
-    }
-
-    .switch-container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .login-device {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-    .Security-container {
-        gap: 15px;
-    }
-
-    .input-container p, .input-container2 p {
-        font-size: 13px;
-    }
-
-    .input-container input, .input-container2 input {
-        width: 100%;
-    }
-
-    .change-button button {
-        width: 100%;
-    }
-
-    .device-data h4 {
-        font-size: 14px;
-    }
-
-    .device-data p {
-        font-size: 11px;
-    }
+  .switch-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
