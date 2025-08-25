@@ -288,7 +288,7 @@ const AssetCapture = () => {
             </div>
             {/* Asset Category */}
             <div className="form-entry">
-              <p>Asset Category</p>
+              <p>Category</p>
               <select
                 name="assetCategory"
                 value={formData.assetCategory}
@@ -309,7 +309,7 @@ const AssetCapture = () => {
 
             {/* Asset Specification */}
             <div className="form-entry">
-              <p>Asset Specifications</p>
+              <p>Specifications</p>
               <input
                 name="assetSpecification"
                 type="text"
@@ -320,7 +320,7 @@ const AssetCapture = () => {
 
             {/* Associate Unit */}
             <div className="form-entry">
-              <p>Associate Unit</p>
+              <p>Unit</p>
               <select
                 name="associateUnit"
                 value={formData.associateUnit}
@@ -339,7 +339,7 @@ const AssetCapture = () => {
 
             {/* Location Name */}
             <div className="form-entry">
-              <p>Location Name</p>
+              <p>Location</p>
               <select
                 name="locationName"
                 value={formData.locationName}
@@ -358,7 +358,7 @@ const AssetCapture = () => {
 
             {/* Asset Status */}
             <div className="form-entry">
-              <p>Asset Status</p>
+              <p>Status</p>
               <select
                 name="assetStatus"
                 value={formData.assetStatus}
@@ -422,7 +422,7 @@ const AssetCapture = () => {
 
             {/* Preventive Maintenance Date (PMD) */}
             <div className="form-entry">
-              <p>Preventive Maintenance Date</p>
+              <p>Maintenance Date</p>
               <input
                 name="PMD"
                 type="text"
