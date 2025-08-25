@@ -78,34 +78,7 @@ const Security = () => {
           </div>
           {message && <p className="response-message">{message}</p>}
       </div>
-      <div className="two-factor-auth">
-        <div className="box-head">
-            <div className="title-p">
-              Two Factor Authentication``
-            </div>
-          </div>
-          <div className="switch-container">
-              <div className="info-switch">
-                <p> Two-Factor Authentication enhances security with an extra verification.</p>
-              </div>
-              <div className="switch">
-                <div class="form-check form-switch">
-                    <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-                  </div>
-              </div>
-          </div>
-    
-          <div className="input-container">
-            <p> Enter Verification Code (Via Gmail) :-</p>
-            <input
-             type="text"
-             placeholder='Verification Code' />
-          </div>
-          <div className="change-button">
-            <button type="submit">Confirm</button>
-          </div>
-      </div>
+      
       <div className="login-activity">
         <div className="title-login">
           Login Activity
