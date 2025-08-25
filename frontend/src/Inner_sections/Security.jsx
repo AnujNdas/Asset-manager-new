@@ -14,7 +14,7 @@ const Security = () => {
     try {
       const token = sessionStorage.getItem("token"); // Assuming token is stored in localStorage
       const res = await axios.put(
-        "http://localhost:5000/api/auth/change-password",
+        "https://asset-manager-new.onrender.com/api/auth/change-password",
         { currentPassword, newPassword },
         {
           headers: {
