@@ -143,11 +143,14 @@ const AssetCapture = () => {
     if (data.image) {
       formData.append('image', data.image);
     }
-
+    const token = sessionStorage.getItem('token')
     try {
       const response = await fetch('https://asset-manager-new.onrender.com/api/assets', {
         method: 'POST',
         body: formData,
+        headers: {
+          Authorization : `Bearer ${token}`
+        }
       });
 
       if (!response.ok) {
@@ -288,7 +291,7 @@ const AssetCapture = () => {
             </div>
             {/* Asset Category */}
             <div className="form-entry">
-              <p>Category</p>
+              <p>Asset Category</p>
               <select
                 name="assetCategory"
                 value={formData.assetCategory}
@@ -309,7 +312,7 @@ const AssetCapture = () => {
 
             {/* Asset Specification */}
             <div className="form-entry">
-              <p>Specifications</p>
+              <p>Asset Specifications</p>
               <input
                 name="assetSpecification"
                 type="text"
@@ -320,7 +323,7 @@ const AssetCapture = () => {
 
             {/* Associate Unit */}
             <div className="form-entry">
-              <p>Unit</p>
+              <p>Associate Unit</p>
               <select
                 name="associateUnit"
                 value={formData.associateUnit}
@@ -339,7 +342,7 @@ const AssetCapture = () => {
 
             {/* Location Name */}
             <div className="form-entry">
-              <p>Location</p>
+              <p>Location Name</p>
               <select
                 name="locationName"
                 value={formData.locationName}
@@ -358,7 +361,7 @@ const AssetCapture = () => {
 
             {/* Asset Status */}
             <div className="form-entry">
-              <p>Status</p>
+              <p>Asset Status</p>
               <select
                 name="assetStatus"
                 value={formData.assetStatus}
@@ -422,7 +425,7 @@ const AssetCapture = () => {
 
             {/* Preventive Maintenance Date (PMD) */}
             <div className="form-entry">
-              <p>Maintenance Date</p>
+              <p>Preventive Maintenance Date</p>
               <input
                 name="PMD"
                 type="text"
