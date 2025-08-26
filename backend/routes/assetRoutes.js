@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+const authenticateToken = require("../Middleware/Authentication-token");
 const { addAsset, deleteAsset, getAllAssets, generateAssetCode, generateBarcode, updateAsset } = require("../controllers/assetControllers");
 
 const router = express.Router();
@@ -19,9 +20,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Routes for asset operations
-router.post("/", upload.single("image"), addAsset);  // Add an asset with image upload
+router.post("/",authenticateToken, upload.single("image"), addAsset);  // Add an asset with image upload
 router.get("/", getAllAssets); // Fetch all assets
-router.delete("/:id", deleteAsset); // Delete an asset using its ID
+router.delete("/:id", authenticateToken, deleteAsset); // Delete an asset using its ID
 
 // Route to generate asset code
 router.get('/asset-code', generateAssetCode);
@@ -29,6 +30,6 @@ router.get('/asset-code', generateAssetCode);
 // Route to generate barcode
 router.get('/generate-barcode', generateBarcode);
 
-router.put("/:id", upload.single("image"), updateAsset);  // Update asset with ID and image upload
+router.put("/:id",authenticateToken, upload.single("image"), updateAsset);  // Update asset with ID and image upload
 
 module.exports = router;
