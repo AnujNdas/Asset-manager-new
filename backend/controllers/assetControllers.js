@@ -2,9 +2,11 @@ const Asset = require("../models/Asset")
 const LastAssetCode = require('../models/LastAssetCode');
 const crypto = require('crypto');
 
+const Notification = require("../models/Notification");
 // Add a new Asset
 const addAsset = async (req, res) => {
   try {
+    const userId = req.user.id;
       console.log("Incoming data:", req.body); // Log the incoming request body
       console.log("Uploaded file:", req.file);  // Log the uploaded file
 
@@ -21,6 +23,21 @@ const addAsset = async (req, res) => {
       // Save the asset to the database
       const savedAsset = await newAsset.save();
 
+      
+ // Create notification
+    const newNotification = await Notification.create({
+      title: "Asset Added",
+      message: "Asset added successfully.",
+      userId,
+    });
+
+    // Emit via Socket.IO
+    const io = req.app.get("io");
+    const userSocketMap = req.app.get("userSocketMap");
+    const socketId = userSocketMap[userId];
+    if (socketId) {
+      io.to(socketId).emit("newNotification", newNotification);
+    }
       // Return the saved asset
       res.status(201).json(savedAsset);
   } catch (error) {
@@ -32,7 +49,9 @@ const addAsset = async (req, res) => {
 
 // Update an asset by ID
 const updateAsset = async (req, res) => {
-  const { id } = req.params;
+      const { id } = req.params;
+      const userId = req.user.id;
+
   try {
     // Check if the asset exists
     const existingAsset = await Asset.findById(id);
@@ -57,6 +76,21 @@ const updateAsset = async (req, res) => {
 
     // Return the updated asset
     res.status(200).json(updatedAsset);
+
+     // Create notification
+    const newNotification = await Notification.create({
+      title: "Asset updated",
+      message: "Asset updated successfully.",
+      userId,
+    });
+
+    // Emit via Socket.IO
+    const io = req.app.get("io");
+    const userSocketMap = req.app.get("userSocketMap");
+    const socketId = userSocketMap[userId];
+    if (socketId) {
+      io.to(socketId).emit("newNotification", newNotification);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error updating asset", error: error.message });
@@ -69,11 +103,28 @@ const updateAsset = async (req, res) => {
 const deleteAsset = async (req,res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+
         const deletedAsset = await Asset.findByIdAndDelete(id);
         if (!deletedAsset) {
             return res.status(404).json({ message : "Asset not found"});
         }
         res.status(200).json({ message : "Asset succesfully deleted", deletedAsset});
+
+             // Create notification
+    const newNotification = await Notification.create({
+      title: "Asset Deleted",
+      message: "Asset Deleted  successfully.",
+      userId,
+    });
+
+    // Emit via Socket.IO
+    const io = req.app.get("io");
+    const userSocketMap = req.app.get("userSocketMap");
+    const socketId = userSocketMap[userId];
+    if (socketId) {
+      io.to(socketId).emit("newNotification", newNotification);
+    }
     } catch (error) {
         res.status(500).json({ message : "Error deleting asset", error : error.message});
     }
