@@ -1,47 +1,59 @@
+
+
+/* Notification Container */
 .notification-container {
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 20px;
+  /* max-width: 700px; */
+  overflow: auto;
+  height: 80dvh;
+  /* margin: 30px auto; */
+  padding: 25px;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease-in-out;
 }
 
+/* Header */
 .notification-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .notification-header h1 {
   font-size: 24px;
-  color: #333;
+  font-weight: 600;
+  color: #222;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
+/* Mark All Read Button */
 .mark-read-btn {
   background: #007bff;
   color: #fff;
   border: none;
-  padding: 8px 15px;
+  padding: 10px 18px;
   font-size: 14px;
-  border-radius: 5px;
+  font-weight: 500;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  transition: all 0.3s ease;
 }
 
 .mark-read-btn:hover {
   background: #0056b3;
+  transform: translateY(-2px);
 }
 
+/* Notification List */
 .notification-list ul {
   list-style: none;
   padding: 0;
@@ -49,47 +61,99 @@
 }
 
 .notification-list li {
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 12px;
+  border-radius: 10px;
   border: 1px solid #ddd;
-  transition: background 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notification-list li:hover {
+  background: #f1f7ff;
+  box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
 }
 
 .notification-list li.unread {
-  background: #f9f9ff;
+  background: #f9faff;
   border-left: 5px solid #007bff;
 }
 
 .notification-list li.read {
-  background: #fdfdfd;
+  background: #ffffff;
   color: #666;
 }
 
+/* Notification Item Content */
 .notification-item h3 {
   margin: 0;
   font-size: 18px;
+  font-weight: 600;
   color: #222;
 }
 
 .notification-item p {
-  margin: 5px 0 10px;
+  margin: 5px 0;
   font-size: 14px;
   color: #555;
+  line-height: 1.5;
 }
 
+/* Footer (Time & Badge) */
 .notification-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  font-size: 13px;
   color: #888;
 }
 
 .badge {
   background: #007bff;
   color: white;
-  font-size: 10px;
-  padding: 3px 6px;
-  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 14px;
+  text-transform: uppercase;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .notification-container {
+    margin: 15px;
+    padding: 18px;
+  }
+
+  .notification-header h1 {
+    font-size: 20px;
+  }
+
+  .mark-read-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .notification-item h3 {
+    font-size: 16px;
+  }
+
+  .notification-item p {
+    font-size: 13px;
+  }
 }
