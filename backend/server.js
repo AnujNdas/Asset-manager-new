@@ -3,50 +3,89 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
-const assetsRoutes = require("./routes/assetRoutes");
-const authRoutes = require('./routes/authRoutes')
-const unitRoutes = require('./routes/unitRoutes')
-const locationRoutes = require('./routes/locationRoutes')
-const categoryRoutes = require('./routes/categoryRoutes')
-const statusRoutes = require('./routes/statusRoutes')
-const updateRoutes = require("./routes/updateRoutes");
 const path = require("path");
-// Initialize environment variables
-dotenv.config();
+const http = require("http");
+const { Server } = require("socket.io");
 
-// Connect to mongodb
+const assetsRoutes = require("./routes/assetRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+const authRoutes = require("./routes/authRoutes");
+const unitRoutes = require("./routes/unitRoutes");
+const locationRoutes = require("./routes/locationRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const statusRoutes = require("./routes/statusRoutes");
+const updateRoutes = require("./routes/updateRoutes");
+
+dotenv.config();
 connectDB();
 
 const app = express();
 
-// Middleware
-const corsOptions = {
-  origin: 'https://asset-manager-new-frontend.onrender.com', // Your frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
+// ✅ Middleware
+app.use(cors({
+    origin: "https://asset-manager-new-frontend.onrender.com",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // ✅ Handle preflight
 app.use(bodyParser.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// app.use(express.json());  // Instead of bodyParser.json()
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// Routes
-app.use("/api/assets",assetsRoutes);
-app.use("/api/auth",authRoutes);
+// ✅ Routes
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/assets", assetsRoutes);
 app.use("/api/user", updateRoutes);
-app.use("/api/unit",unitRoutes);
-app.use("/api/location",locationRoutes);
-app.use("/api/category",categoryRoutes);
-app.use("/api/status",statusRoutes);
-// Default route
-app.get("/",(req,res)=>{
-    res.send("Asset management api is running...");
+app.use("/api/auth", authRoutes);
+app.use("/api/unit", unitRoutes);
+app.use("/api/location", locationRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/status", statusRoutes);
+
+app.get("/", (req, res) => {
+    res.send("Asset management API is running...");
 });
 
-// Start the server
+// ✅ Create HTTP server & attach Socket.IO
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "https://asset-manager-new-frontend.onrender.com",
+        methods: ["GET", "POST"]
+    }
+});
+
+// ✅ Map userId -> socketId for private notifications
+const userSocketMap = {};
+
+// ✅ Handle socket connection
+io.on("connection", (socket) => {
+    console.log("✅ New client connected:", socket.id);
+
+    // Listen for user registration (after login)
+    socket.on("register", (userId) => {
+        if (userId) {
+            userSocketMap[userId] = socket.id;
+            console.log(`✅ User ${userId} registered with socket ID ${socket.id}`);
+        }
+    });
+
+    // Handle disconnection
+    socket.on("disconnect", () => {
+        console.log("❌ Client disconnected:", socket.id);
+        for (let userId in userSocketMap) {
+            if (userSocketMap[userId] === socket.id) {
+                delete userSocketMap[userId];
+                console.log(`❌ Removed mapping for user ${userId}`);
+                break;
+            }
+        }
+    });
+});
+
+// ✅ Make io and userSocketMap accessible in routes
+app.set("io", io);
+app.set("userSocketMap", userSocketMap);
+
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-    console.log(`Server is running on PORT : ${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Server running on PORT: ${PORT}`));
