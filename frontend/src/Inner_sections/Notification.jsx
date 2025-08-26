@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaBell, FaCheck } from "react-icons/fa";
 import axios from "axios";
 import { io } from "socket.io-client";
+import '../Page_styles/Notification.css'
 
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState([]);
