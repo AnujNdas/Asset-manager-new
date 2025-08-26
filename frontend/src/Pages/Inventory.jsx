@@ -18,26 +18,6 @@ const Inventory = () => {
       // textMargin: 2,
       fontSize: 18,
       background: "transparent",
-      lineColor: "#000000import React, { useState, useEffect } from 'react';
-import Barcode from 'react-barcode';
-import '../Page_styles/Inventory.css';
-import Swal from 'sweetalert2';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
-
-const Inventory = () => {
-  const barcodeconfig = {
-      width: 1.5,
-      height: 20,
-      format: "CODE128",
-      displayValue: true,
-      fontOptions: "",
-      font: "monospace",
-      textAlign: "center",
-      // textPosition: "bottom",
-      // textMargin: 2,
-      fontSize: 18,
-      background: "transparent",
       lineColor: "#000000",
       // margin: 10,
       marginTop: undefined,
