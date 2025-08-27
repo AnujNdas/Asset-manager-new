@@ -1,12 +1,13 @@
 const express = require("express");
-const { signup , login , getUserData , changePassword} = require('../controllers/authControllers');
+const { sendOtp , verifyOtpAndSignup , login , getUserData , changePassword} = require('../controllers/authControllers');
 const authenticateToken = require("../Middleware/Authentication-token")
 
 const router = express.Router();
 
-// Sign up routes
-router.post("/signup", signup);
 
+router.post("/send-otp", sendOtp);
+
+router.post("/verify-otp-signup", verifyOtpAndSignup);
 // Login route 
 router.post("/login", login);
 
