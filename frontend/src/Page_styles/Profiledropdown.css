@@ -35,15 +35,56 @@ right: 200px;
 
 .dropdown-menu li a {
   display: flex;
-  padding: 2px 20px;
+  padding: 4px 20px;
   text-decoration: none;
-  color: #202020;
+  color: #ffffff;
+  border-radius: 5px;
   font-weight: 500;
   font-size: 15px;
   transition: background 0.3s ease;
+  background-color: #7870f7;
 }
 
 .dropdown-menu li a:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  background: #7870f7;
+  border-radius: 4px;
+  color: #ffffff;
+    transform: scale(1.1);
+  transition: 0.4s ease-in-out;
 }
+/* Logout Button Styling */
+.dropdown-menu ul li button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: none;
+  gap: 8px;
+  text-decoration: none;
+  background: #ff0000;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  padding: 4px 16px;
+}
+
+.dropdown-menu ul li button:hover {
+  /* background-color: #f0f0f0; */
+  border-radius: 4px;
+  transform: scale(1.1);
+  transition: 0.2s ease-in-out;
+}
+
+/* ✅ Responsive Styling for Logout Button */
+@media screen and (max-width: 480px) {
+  .dropdown-menu ul li button {
+    font-size: 14px;
+    padding: 10px 12px;
+    gap: 6px;
+  }
+}
+
