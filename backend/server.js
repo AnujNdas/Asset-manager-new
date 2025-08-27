@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
@@ -16,7 +17,6 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const statusRoutes = require("./routes/statusRoutes");
 const updateRoutes = require("./routes/updateRoutes");
 
-dotenv.config();
 connectDB();
 
 const app = express();
