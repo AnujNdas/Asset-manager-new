@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Page_styles/Login.css'; // Reuse same styles
+import '../Page_styles/Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import image from '../Images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,29 +17,73 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (!username || !email || !password) {
+      Swal.fire("Error", "All fields are required", "error");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const res = await AuthService.signup( username, email, password); // <-- call API
-      await Swal.fire({
-        title: "Success!",
-        text: res.message || "Account created successfully!",
-        icon: "success",
-        customClass: {
-          container: 'custom-swal-container'
-        },
-        confirmButtonText: "OK",
-        allowOutsideClick: false
-      })
-      navigate("/user/login");
-      // Navigate only AFTER SweetAlert closes
+      // Step 1: Send OTP
+      const res = await AuthService.sendOtp(email);
 
-    } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Signup failed. Please try again.", "error");
-    } finally {
-      setLoading(false);
+      if (res.success) {
+        // Step 2: Ask for OTP via SweetAlert
+        const { value: otp } = await Swal.fire({
+          title: "Email Verification",
+          text: `Enter the 6-digit OTP sent to ${email}`,
+          input: "text",
+          inputPlaceholder: "Enter 6-digit OTP",
+          showCancelButton: true,
+          confirmButtonText: "Verify OTP",
+          inputValidator: (value) => {
+            if (!value || value.length !== 6) {
+              return "Please enter a valid 6-digit OTP";
+            }
+          }
+        });
+
+ if (otp) {
+        try {
+          // ✅ Step 3: Verify OTP & Signup in one step
+          const verifyRes = await AuthService.verifyOtpAndSignup(
+            email,
+            username,
+            password,
+            otp
+          );
+
+          if (verifyRes.message) {
+            await Swal.fire({
+              title: "Success!",
+              text: verifyRes.message || "Account created successfully!",
+              icon: "success",
+              confirmButtonText: "OK",
+              allowOutsideClick: false
+            });
+            navigate("/user/login");
+          } else {
+            Swal.fire("Error", verifyRes.error || "Verification failed", "error");
+          }
+        } catch (err) {
+          Swal.fire(
+            "Error",
+            err.response?.data?.error || "Something went wrong while verifying OTP",
+            "error"
+          );
+        }
+      }
+    } else {
+      Swal.fire("Error", res.error || "Failed to send OTP", "error");
     }
-  };
+  } catch (err) {
+    Swal.fire("Error", err.response?.data?.error || "Something went wrong", "error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="auth-page">
@@ -56,7 +100,6 @@ const Signup = () => {
         {/* Form panel */}
         <form className="form-panel" onSubmit={handleSignup}>
           <div className="form-header">
-            {/* <img src={image} alt="Logo" className="form-logo" /> */}
             <h2>Create Account</h2>
             <p className="form-sub">Fill in your details to get started</p>
           </div>
@@ -70,13 +113,8 @@ const Signup = () => {
 
           <div className="divider"><span>or</span></div>
 
-          {/* <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faUser} /> Full Name</span>
-            <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Doe" required />
-          </label> */}
-
           <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faPerson} /> username</span>
+            <span className="field-label"><FontAwesomeIcon icon={faPerson} /> Username</span>
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Your username" required />
           </label>
 
@@ -90,15 +128,10 @@ const Signup = () => {
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Create a password" required />
           </label>
 
-          {/* <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faLock} /> Confirm Password</span>
-            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm your password" required />
-          </label> */}
-
           <div className="form-actions">
             <Link to="/user/login" className="link">Already have an account?</Link>
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? "Signing up…" : "Sign Up"}
+              {loading ? "Processing..." : "Sign Up"}
             </button>
           </div>
         </form>
