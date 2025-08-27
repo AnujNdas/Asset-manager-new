@@ -1,70 +1,144 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const Otp = require("../models/Otp");
 const User = require("../models/User");
 const Notification = require("../models/Notification");
 
-// Signup controller
+// In-memory OTP store (better: Redis or DB)
+const otpStore = {};
+console.log("Email User:", process.env.EMAIL_USER);
+console.log("Email Pass:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
 
-const signup = async (req, res) => {
-  const { email, username, password } = req.body;
+// Email transporter (Use your Gmail or SMTP service)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS  // Your email password or app password
+  }
+});
+
+// Send OTP API
+const sendOtp = async (req, res) => {
+  const { email } = req.body;
+  
   try {
-    console.log("Incoming Signup Data:", req.body);
-    // Check if the user already exist
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("User already exists");
-      return res.status(400).json({ error: "User already Exist!" });
+      return res.status(400).json({ error: "Email already registered!" });
     }
-    // Hash the password and save the user
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ email, username, password: hashedPassword });
-    await newUser.save();
-    console.log("User Saved:", newUser);
-
-    res.status(201).json({ message: "User Created!", user: newUser });
-    await Notification.create({
-      title: "Welcome!",
-      message: `Account created successfully.`,
-      userId: newUser._id,
+    
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Delete old OTP for this email (optional)
+    await Otp.deleteMany({ email });
+    
+    // Save new OTP in DB
+    await Otp.create({ email, otp });
+    
+    // Send email
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Your OTP for Signup",
+      text: `Your OTP code is ${otp}. It will expire in 5 minutes.`
     });
-      // Emit notification via Socket.IO
-    if (req.io) {
-      req.io.to(newUser._id.toString()).emit("notification", Notification);
-    }
+    
+    return res.status(200).json({success : true ,  message: "OTP sent successfully" });
   } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).json({ error: "Error creating user!" });
+    console.error("Error sending OTP:", error);
+    return res.status(500).json({ error: "Failed to send OTP" });
   }
 };
 
-// Login controller
+const verifyOtpAndSignup = async (req, res) => {
+  const { email, otp, username, password } = req.body;
+  
+  try {
+    // Check if OTP exists
+    const otpRecord = await Otp.findOne({ email }).sort({ createdAt: -1 });
+    if (!otpRecord) {
+      return res.status(400).json({ error: "OTP expired or not found" });
+    }
+    
+    // Validate OTP
+    if (otpRecord.otp !== otp) {
+      return res.status(400).json({ error: "Invalid OTP" });
+    }
+    
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create user
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword
+    });
+    await newUser.save();
+    
+    // Create notification
+    await Notification.create({
+      title: "Welcome!",
+      message: `Account created successfully.`,
+      userId: newUser._id
+    });
+    
+    // Emit via socket if needed
+    if (req.io) {
+      req.io.to(newUser._id.toString()).emit("notification", {
+        title: "Welcome!",
+        message: `Account created successfully.`
+      });
+    }
+    // Delete OTP after successful signup
+    await Otp.deleteMany({ email });
 
+    return res.status(201).json({
+      message: "User created successfully!",
+      user: {
+        username: newUser.username,
+        email: newUser.email
+      }
+    });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return res.status(500).json({ error: "Failed to verify OTP" });
+  }
+};
+
+
+// ✅ Login controller (keep same as before)
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Find the user in the database
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found!" });
-
-    // Verify the password
+    
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword)
       return res.status(401).json({ error: "Invalid Password!" });
-
-    // Generate a Token
+    
     const token = jwt.sign({ email: user.email, id: user._id }, "jwt_secret", {
       expiresIn: "1h",
     });
-    // Create Notification
+    
     await Notification.create({
       title: "Login Successful",
       message: "You have successfully logged in.",
       userId: user._id,
     });
-     // Emit via socket
+    
     if (req.io) {
-      req.io.to(user._id.toString()).emit("notification", notification);
+      req.io.to(user._id.toString()).emit("notification", {
+        title: "Login Successful",
+        message: "You have successfully logged in."
+      });
     }
+    
     res.json({ message: "Logged in!", token });
   } catch (error) {
     res.status(500).json({ error: "Error logging in!" });
@@ -73,61 +147,50 @@ const login = async (req, res) => {
 
 const getUserData = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id); // using ID from token // Get the user by the username from the decoded token
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found!" });
-    }
-
-    // Exclude password from the response for security reasons
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: "User not found!" });
+    
     const { password, ...userData } = user.toObject();
-
-    res.json(userData); // Send the user data back to the client
+    res.json(userData);
   } catch (error) {
     res.status(500).json({ error: "Error fetching user data" });
   }
 };
 
-// Change Password
 const changePassword = async (req, res) => {
   try {
-    const userId = req.user.id; // Coming from authenticateToken middleware
+    const userId = req.user.id;
     const { currentPassword, newPassword } = req.body;
-
-    // Validate input
+    
     if (!currentPassword || !newPassword) {
-      return res
-        .status(400)
-        .json({ error: "Both current and new passwords are required." });
+      return res.status(400).json({ error: "Both current and new passwords are required." });
     }
-
-    // Find the user
+    
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
-    }
-
-    // Check if current password matches
+    if (!user) return res.status(404).json({ error: "User not found." });
+    
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Current password is incorrect." });
     }
-
-    // Hash new password
+    
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
-
-    // Create Notification
+    
     await Notification.create({
       title: "Password Changed",
       message: "Your password has been updated successfully.",
       userId: user._id,
     });
-     // Emit via socket
+    
     if (req.io) {
-      req.io.to(user._id.toString()).emit("notification", notification);
+      req.io.to(user._id.toString()).emit("notification", {
+        title: "Password Changed",
+        message: "Your password has been updated successfully."
+      });
     }
+    
     res.status(200).json({ message: "Password changed successfully." });
   } catch (error) {
     console.error("Change Password Error:", error);
@@ -135,4 +198,4 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, getUserData, changePassword };
+module.exports = { sendOtp, verifyOtpAndSignup, login, getUserData, changePassword };
