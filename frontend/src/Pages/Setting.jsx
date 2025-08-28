@@ -39,23 +39,23 @@ const Setting = () => {
   ];
 
   // Logout
-  const handleLogout = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You will be logged out.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Logout",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("username");
-        sessionStorage.removeItem("user");
-        setUserData(null);
-        navigate("/user/login");
-      }
-    });
-  };
+  // const handleLogout = () => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You will be logged out.",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Logout",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       sessionStorage.removeItem("token");
+  //       sessionStorage.removeItem("username");
+  //       sessionStorage.removeItem("user");
+  //       setUserData(null);
+  //       navigate("/user/login");
+  //     }
+  //   });
+  // };
 
   // Fetch user data (with cache)
   useEffect(() => {
@@ -110,10 +110,10 @@ const Setting = () => {
             <span className="tab-text">{label}</span>
           </Link>
         ))}
-        <button onClick={handleLogout} className="logout-tab">
+{/*         <button onClick={handleLogout} className="logout-tab">
           <FaSignOutAlt className="tab-icon" />
           <span className="tab-text">Logout</span>
-        </button>
+        </button> */}
       </nav>
 
       {/* Content */}
