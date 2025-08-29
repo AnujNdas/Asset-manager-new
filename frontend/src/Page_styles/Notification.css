@@ -7,9 +7,9 @@
   height: 80dvh;
   /* margin: 30px auto; */
   padding: 25px;
-  background: #fff;
+  /* background: #fff; */
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);? */
   animation: fadeIn 0.4s ease-in-out;
 }
 
@@ -24,12 +24,13 @@
 }
 
 .notification-header h1 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #222;
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: "Lato" , sans-serif;
 }
 
 /* Mark All Read Button */
@@ -61,7 +62,7 @@
 }
 
 .notification-list li {
-  padding: 18px;
+  padding: 15px;
   margin-bottom: 12px;
   border-radius: 10px;
   border: 1px solid #ddd;
