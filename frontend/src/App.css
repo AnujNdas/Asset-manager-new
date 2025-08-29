@@ -29,13 +29,49 @@
   font-family: li;
   src: url('Poppins/Poppins-ExtraLightItalic.ttf');
 }
+/* Light Theme */
+body.light {
+  background: #f4f7fa;
+  color: #333;
+}
 
+/* Dark Theme */
+body.dark {
+  background: #121212;
+  color: #ffffff;
+}
+
+.sidebar-toggle {
+  margin-top: auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.sidebar-toggle button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #444;
+  color: white;
+  transition: 0.3s ease;
+}
+
+body.light .sidebar-toggle button {
+  background: #ddd;
+  color: #333;
+}
+
+.sidebar-toggle button:hover {
+  opacity: 0.8;
+}
 /* Layout Containers */
 .first-container {
   height: 100vh;
   width: 18%;
-  background-color: #e7e7e7;
+  /* background-color: #e7e7e7; */
   transition: width 0.3s ease;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
 
 .second-container {
@@ -44,9 +80,10 @@
   left: 18%;
   width: 82%;
   height: 60px;
-  background-color: #fff;
+  /* background-color: #fff; */
   z-index: 10;
   transition: left 0.3s ease, width 0.3s ease;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
 
 .third-container {
@@ -55,9 +92,9 @@
   left: 18%;
   height: calc(100% - 60px);
   width: 82%;
-  background: #f6f6f6;
+  /* background: #f6f6f6; */
   border-radius: 10px;
-  overflow-y: hidden;
+  overflow-y: auto;
   transition: left 0.3s ease, width 0.3s ease;
   padding: 10px;
 }
@@ -95,6 +132,7 @@
 .swal2-container {
   z-index: 9999 !important;
 }
+
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
