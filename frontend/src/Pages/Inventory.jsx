@@ -292,7 +292,7 @@ const Inventory = () => {
   
   return (
     <div className="table-container">
-      <h4>Asset Details</h4>
+      <h4 className="classify_heading">Asset Details</h4>
 
       {assets.length === 0 ? (
         <p>No assets available.</p>
