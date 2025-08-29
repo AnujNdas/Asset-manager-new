@@ -46,7 +46,7 @@ const Security = () => {
   };
   return (
     <div className='Security-container'>
-      <div className="Profile-heading">Security</div>
+      <div className="classify_heading">Security</div>
       <div className="change-password">
         <div className="box-head">
           <div className="title-p">
