@@ -6,16 +6,17 @@ const EditButton = ({
   text = "Edit",
   icon = faPenToSquare,
   onClick,
-  backgroundColor = "#f6f6f6",
-  color = "#333",
+  backgroundColor = "#4a90e2",
+  color = "#ffffffff",
 }) => {
   return (
     <button
       onClick={onClick}
       style={{
         height: "35px",
+        fontWeight : 500,
         width: "80px",
-        borderRadius: "20px",
+        borderRadius: "5px",
         backgroundColor,
         color,
         fontSize: "14px",
@@ -27,7 +28,7 @@ const EditButton = ({
         cursor: "pointer",
         transition: "background 0.3s ease",
       }}
-      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#eaeaea")}
+      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#3668a4ff")}
       onMouseOut={(e) => (e.currentTarget.style.backgroundColor = backgroundColor)}
     >
       {text} <FontAwesomeIcon icon={icon} />
