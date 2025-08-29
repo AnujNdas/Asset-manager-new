@@ -132,8 +132,8 @@ useEffect(() => {
 
   return (
     <div className="Profile-container">
-      <div className="Profile-heading">
-        <p>My Profile</p>
+      <div className="classify_heading">
+        My Profile
       </div>
 
       {/* Top profile card */}
