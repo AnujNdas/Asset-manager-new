@@ -65,14 +65,14 @@
   background-color: #fff;
 }
 
-.table-container h4 {
+/* .table-container h4 {
   width: 95%;
   height: 8%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   color: #565656;
-}
+} */
 
 /* Overlay and Modals */
 /* .overlay,
