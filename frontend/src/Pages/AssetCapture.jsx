@@ -276,7 +276,7 @@ const AssetCapture = () => {
   return (
     <div className="asset-container">
       <div className="asset-form">
-        <div className="asset-heading">New Asset</div>
+        <div className="classify_heading">New Asset</div>
         <form className="capture-form">
           <div className="input-area">
             {/* Asset Name */}
