@@ -174,7 +174,7 @@ body.light .sidebar-toggle button {
     position: fixed;
     /* top: 60px; */
     left: 0;
-    height: calc(100% - 60px);
+/*     height: calc(100% - 60px); */
     width: 200px;
     transform: translateX(-100%);
     z-index: 100;
