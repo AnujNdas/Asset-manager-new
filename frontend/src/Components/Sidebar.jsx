@@ -3,7 +3,7 @@ import '../Component_styles/Sidebar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import image from "../Images/logo.png"
-import { ThemeContext } from '../Context/ThemeContext'
+import  ThemeContext  from '../Context/ThemeContext'
 import { faGauge ,faLayerGroup ,faCartShopping , faMoon ,faSun, faGear, faReceipt, faRecycle} from '@fortawesome/free-solid-svg-icons'
 // import { useContext } from 'react'
 
