@@ -82,7 +82,7 @@ body.light .sidebar-toggle button {
   top: 60px;
   left: 18%;
   height: calc(100% - 60px);
-  width: 82%;
+  width: 81%;
   /* background: #f6f6f6; */
   border-radius: 10px;
   overflow-y: auto;
