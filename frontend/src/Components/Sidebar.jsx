@@ -6,6 +6,7 @@ import image from "../Images/logo.png"
 import  ThemeContext  from '../Context/ThemeContext'
 import { faGauge ,faLayerGroup ,faCartShopping , faMoon ,faSun, faGear, faReceipt, faRecycle} from '@fortawesome/free-solid-svg-icons'
 // import { useContext } from 'react'
+import Switch from "./Switch";
 
 const Sidebar = ({closeSidebar})=> {
     const { theme, toggleTheme } = useContext(ThemeContext);
@@ -36,10 +37,7 @@ const Sidebar = ({closeSidebar})=> {
         </div>
         {/* ✅ Dark/Light Toggle at Bottom */}
         <div className="sidebar-toggle">
-          <button onClick={toggleTheme}>
-            <FontAwesomeIcon icon={theme === "light" ? faMoon : faSun} /> 
-            <span>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
-          </button>
+          <Switch isOn={theme === "dark"} handleToggle={toggleTheme} />
         </div>
       </div>
     </div>
