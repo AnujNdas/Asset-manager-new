@@ -88,6 +88,7 @@ body.light .sidebar-toggle button {
   overflow-y: auto;
   transition: left 0.3s ease, width 0.3s ease;
   padding: 10px;
+  margin:  0px 0px 0px 5px;
 }
 
 /* Blur when overlay/modal is active */
