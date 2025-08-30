@@ -32,30 +32,21 @@
 /* Light Theme */
 body.light {
   background: #f4f7fa;
-  color: #333;
+  color: #7870f7;
 }
 
 /* Dark Theme */
 body.dark {
-  background: #121212;
+  background: #2B2B2B;
   color: #ffffff;
 }
-
-.sidebar-toggle {
-  margin-top: auto;
-  padding: 1rem;
-  text-align: center;
+.third-container.light{
+  background: #f4f7fa;
+}
+.third-container.dark{
+  background: #383838;
 }
 
-.sidebar-toggle button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #444;
-  color: white;
-  transition: 0.3s ease;
-}
 
 body.light .sidebar-toggle button {
   background: #ddd;
@@ -132,6 +123,19 @@ body.light .sidebar-toggle button {
 .swal2-container {
   z-index: 9999 !important;
 }
+/* Light theme + open */
+.first-container.open.light {
+  transform: translateX(0);
+  background-color: #fff;   /* light bg */
+  color: #333;              /* dark text */
+}
+
+/* Dark theme + open */
+.first-container.open.dark {
+  transform: translateX(0);
+  background-color: #3f4045;   /* dark bg */
+  color: #eee;              /* light text */
+}
 
 /* ========== RESPONSIVE ========== */
 
@@ -174,11 +178,12 @@ body.light .sidebar-toggle button {
     position: fixed;
     /* top: 60px; */
     left: 0;
-/*     height: calc(100% - 60px); */
+    /* height: calc(100% - 60px); */
     width: 200px;
     transform: translateX(-100%);
     z-index: 100;
-    background: #e7e7e7;
+    /* background: #121212; */
+    /* background: #e7e7e7; */
     transition: transform 0.3s ease;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
