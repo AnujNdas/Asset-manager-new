@@ -33,7 +33,7 @@
     "sweetalert2": "^11.15.10",
     "xlsx": "^0.18.5",
     "socket.io-client": "^4.8.1",
-    "styled-components": "^6.1.19",
+    "styled-components": "^6.1.19"
   },
   "scripts": {
     "start": "react-scripts start",
