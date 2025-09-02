@@ -187,7 +187,7 @@ const AssetCapture = () => {
 
       <form className="capture-form">
         <div>
-          <input name="assetName" value={formData.assetName} onChange={handleChange} required />
+          <input name="assetName" value={formData.assetName} onChange={handleChange} placeholder='Asset Name' required />
         </div>
 
         <div>
@@ -200,7 +200,7 @@ const AssetCapture = () => {
         </div>
 
         <div>
-          <input name="assetSpecification" value={formData.assetSpecification} onChange={handleChange} />
+          <input name="assetSpecification" value={formData.assetSpecification} onChange={handleChange} placeholder='Specification' />
         </div>
 
         <div>
@@ -239,11 +239,11 @@ const AssetCapture = () => {
         </div>
 
         <div>
-          <input name="purchaseFrom" value={formData.purchaseFrom} onChange={handleChange} />
+          <input name="purchaseFrom" value={formData.purchaseFrom} onChange={handleChange} placeholder='Purcahsed From' />
         </div>
 
         <div>
-          <input name="assetLifetime" value={formData.assetLifetime} disabled />
+          <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
         </div>
 
         <div>
