@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { createCoreLicense } from "../Services/ApiServices";
 import Swal from "sweetalert2";
-import "../Page_styles/CaptureForm.css"; // reuse styles
+import "../Page_styles/CaptureForm.css";
 
 const CoreCompanyLicenseCapture = () => {
-  const [formData, setFormData] = useState({
+  const defaultFormData = {
     documentType: "",
     licenseNumber: "",
     issuingAuthority: "",
@@ -12,22 +12,27 @@ const CoreCompanyLicenseCapture = () => {
     businessActivity: "",
     issueDate: "",
     expiryDate: "",
-    renewalCycle: "",
-    reminderStatus: "",
-  });
+    renewalCycle: "Annual",
+    reminderDaysBefore: 30,
+    status: "Active",
+  };
+
+  const [formData, setFormData] = useState(defaultFormData);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createCoreLicense(formData);
-      Swal.fire("Success", "Core Company License captured successfully!", "success");
-      setFormData({});
+      Swal.fire("✅ Success", "Core Company License captured successfully!", "success");
+      setFormData(defaultFormData); // reset properly
     } catch (error) {
-      Swal.fire("Error", "Failed to capture license", "error");
+      console.error("Error creating core license:", error);
+      Swal.fire("❌ Error", "Failed to capture license", "error");
     }
   };
 
@@ -35,15 +40,28 @@ const CoreCompanyLicenseCapture = () => {
     <div className="capture-container">
       <h2>Core Company License Capture</h2>
       <form className="capture-form" onSubmit={handleSubmit}>
-        <input type="text" name="documentType" placeholder="Document Type" onChange={handleChange} required />
-        <input type="text" name="licenseNumber" placeholder="License Number" onChange={handleChange} required />
-        <input type="text" name="issuingAuthority" placeholder="Issuing Authority" onChange={handleChange} />
-        <input type="text" name="licenseHolder" placeholder="License Holder / Company Name" onChange={handleChange} />
-        <input type="text" name="businessActivity" placeholder="Business Activity" onChange={handleChange} />
-        <input type="date" name="issueDate" placeholder="Issue Date" onChange={handleChange} />
-        <input type="date" name="expiryDate" placeholder="Expiry Date" onChange={handleChange} />
-        <input type="text" name="renewalCycle" placeholder="Renewal Cycle" onChange={handleChange} />
-        <input type="text" name="reminderStatus" placeholder="Reminder Status" onChange={handleChange} />
+        <input type="text" name="documentType" placeholder="Document Type" value={formData.documentType} onChange={handleChange} required />
+        <input type="text" name="licenseNumber" placeholder="License Number" value={formData.licenseNumber} onChange={handleChange} required />
+        <input type="text" name="issuingAuthority" placeholder="Issuing Authority" value={formData.issuingAuthority} onChange={handleChange} required />
+        <input type="text" name="licenseHolder" placeholder="License Holder / Company Name" value={formData.licenseHolder} onChange={handleChange} required />
+        <input type="text" name="businessActivity" placeholder="Business Activity" value={formData.businessActivity} onChange={handleChange} required />
+
+        <input type="date" name="issueDate" value={formData.issueDate} onChange={handleChange} required />
+
+        <input type="date" name="expiryDate" value={formData.expiryDate} onChange={handleChange} required />
+
+        <select name="renewalCycle" value={formData.renewalCycle} onChange={handleChange}>
+          <option value="Annual">Annual</option>
+          <option value="Biennial">Biennial</option>
+          <option value="Custom">Custom</option>
+        </select>
+        <input type="number" name="reminderDaysBefore" value={formData.reminderDaysBefore} onChange={handleChange} />
+
+        <select name="status" value={formData.status} onChange={handleChange}>
+          <option value="Active">Active</option>
+          <option value="Expired">Expired</option>
+          <option value="Pending Renewal">Pending Renewal</option>
+        </select>
 
         <button type="submit" className="btn-primary">Save Company License</button>
       </form>
