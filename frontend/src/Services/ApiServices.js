@@ -156,7 +156,7 @@ export const deleteSoftwareAsset = async (id) => {
 // Get all licenses
 export const getCoreLicenses = async () => {
   try {
-    const response = await axios.get(`${API_URL}/core-licenses`);
+    const response = await axios.get(`${API_URL}/company-licenses`);
     return response.data;
   } catch (error) {
     console.error("Error fetching core licenses:", error);
@@ -167,7 +167,7 @@ export const getCoreLicenses = async () => {
 // Create a new license
 export const createCoreLicense = async (licenseData) => {
   try {
-    const response = await axios.post(`${API_URL}/core-licenses`, licenseData);
+    const response = await axios.post(`${API_URL}/company-licenses`, licenseData);
     return response.data;
   } catch (error) {
     console.error("Error creating core license:", error);
@@ -178,7 +178,7 @@ export const createCoreLicense = async (licenseData) => {
 // Get single license by ID
 export const getCoreLicenseById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/core-licenses/${id}`);
+    const response = await axios.get(`${API_URL}/company-licenses/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching core license:", error);
@@ -189,7 +189,7 @@ export const getCoreLicenseById = async (id) => {
 // Update license
 export const updateCoreLicense = async (id, updatedData) => {
   try {
-    const response = await axios.put(`${API_URL}/core-licenses/${id}`, updatedData);
+    const response = await axios.put(`${API_URL}/company-licenses/${id}`, updatedData);
     return response.data;
   } catch (error) {
     console.error("Error updating core license:", error);
@@ -200,7 +200,7 @@ export const updateCoreLicense = async (id, updatedData) => {
 // Delete license
 export const deleteCoreLicense = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/core-licenses/${id}`);
+    const response = await axios.delete(`${API_URL}/company-licenses/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error deleting core license:", error);
