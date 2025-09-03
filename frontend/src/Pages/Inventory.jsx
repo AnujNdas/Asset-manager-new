@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import HardwareAssetList from "../Inner_sections/HardwareInventory";
+import HardwareAssetList from "../Inner_sections/HardwareAssetInventory";
 import SoftwareAssetList from "../Inner_sections/SoftwareAssetInventory";
 import CoreCompanyLicenseList from "../Inner_sections/CoreCompanyLicenseInventory";
 import "../Page_styles/Inventory.css";
