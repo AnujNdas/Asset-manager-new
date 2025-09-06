@@ -1,10 +1,10 @@
-
+// src/Pages/SoftwareAssetList.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   getSoftwareAssets,
   deleteSoftwareAsset,
+  updateSoftwareAsset,
 } from "../Services/ApiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -14,25 +14,27 @@ const SoftwareAssetList = () => {
   const [softwareAssets, setSoftwareAssets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const navigate = useNavigate();
+  const [editingAsset, setEditingAsset] = useState(null);
+  const [editForm, setEditForm] = useState({});
 
   // Fetch assets
-useEffect(() => {
-  const fetchAssets = async () => {
-    try {
-      const res = await getSoftwareAssets();
-      if (res.success && Array.isArray(res.data)) {
-        setSoftwareAssets(res.data); // ✅ save only the array
-      } else {
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const res = await getSoftwareAssets();
+        if (res.success && Array.isArray(res.data)) {
+          setSoftwareAssets(res.data);
+        } else {
+          setSoftwareAssets([]);
+        }
+      } catch (err) {
+        console.error("Error fetching software assets:", err);
         setSoftwareAssets([]);
       }
-    } catch (err) {
-      console.error("Error fetching software assets:", err);
-      setSoftwareAssets([]);
-    }
-  };
-  fetchAssets();
-}, []);
+    };
+    fetchAssets();
+  }, []);
+
   // Delete asset
   const handleDelete = async (id) => {
     Swal.fire({
@@ -40,15 +42,12 @@ useEffect(() => {
       text: "This will permanently delete the software asset!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await deleteSoftwareAsset(id);
-          setSoftwareAssets(softwareAssets.filter((asset) => asset._id !== id));
-          Swal.fire("Deleted!", "Software asset has been deleted.", "success");
+          setSoftwareAssets(softwareAssets.filter((a) => a._id !== id));
+          Swal.fire("Deleted!", "Software asset deleted.", "success");
         } catch {
           Swal.fire("Error", "Failed to delete software asset.", "error");
         }
@@ -56,12 +55,30 @@ useEffect(() => {
     });
   };
 
+  // Edit overlay
+  const handleEdit = (asset) => {
+    setEditingAsset(asset);
+    setEditForm({ ...asset });
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const updated = await updateSoftwareAsset(editingAsset._id, editForm);
+      setSoftwareAssets((prev) =>
+        prev.map((a) => (a._id === updated._id ? updated : a))
+      );
+      Swal.fire("Updated!", "Software asset updated successfully.", "success");
+      setEditingAsset(null);
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
+    }
+  };
+
   // Pagination
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = Array.isArray(softwareAssets)
-  ? softwareAssets.slice(indexOfFirst, indexOfLast)
-  : [];
+  const currentItems = softwareAssets.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(softwareAssets.length / itemsPerPage);
 
   return (
@@ -72,37 +89,17 @@ useEffect(() => {
         {currentItems.map((asset) => (
           <div key={asset._id} className="asset-card">
             <h3>{asset.name}</h3>
-            <p>
-              <strong>Version:</strong> {asset.version || "N/A"}
-            </p>
-            <p>
-              <strong>Publisher:</strong> {asset.publisher || "N/A"}
-            </p>
-            <p>
-              <strong>Category:</strong> {asset.category || "N/A"}
-            </p>
-            <p>
-              <strong>Licenses:</strong>{" "}
-              {asset.licensesAssigned}/{asset.totalLicenses}
-            </p>
+            <p><strong>Version:</strong> {asset.version || "N/A"}</p>
+            <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
+            <p><strong>Category:</strong> {asset.category || "N/A"}</p>
+            <p><strong>Licenses:</strong> {asset.licensesAssigned}/{asset.totalLicenses}</p>
 
             <div className="card-actions">
-              <button
-                className="view-btn"
-                onClick={() => navigate(`/software-assets/${asset._id}`)}
-              >
-                <FontAwesomeIcon icon={faEye} /> View
-              </button>
-              <button
-                className="edit-btn"
-                onClick={() => navigate(`/software-assets/edit/${asset._id}`)}
-              >
+              <button className="view-btn"><FontAwesomeIcon icon={faEye} /> View</button>
+              <button className="edit-btn" onClick={() => handleEdit(asset)}>
                 <FontAwesomeIcon icon={faEdit} /> Edit
               </button>
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(asset._id)}
-              >
+              <button className="delete-btn" onClick={() => handleDelete(asset._id)}>
                 <FontAwesomeIcon icon={faTrash} /> Delete
               </button>
             </div>
@@ -122,6 +119,46 @@ useEffect(() => {
           </button>
         ))}
       </div>
+
+      {/* Edit Overlay */}
+      {editingAsset && (
+        <div className="overlay">
+          <div className="overlay-card">
+            <h2 className="overlay-title">Edit Software - {editingAsset.name}</h2>
+            <form onSubmit={handleEditSubmit} className="overlay-form">
+              <div className="form-group">
+                <label>Name</label>
+                <input value={editForm.name || ""} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Version</label>
+                <input value={editForm.version || ""} onChange={(e) => setEditForm({ ...editForm, version: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Publisher</label>
+                <input value={editForm.publisher || ""} onChange={(e) => setEditForm({ ...editForm, publisher: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Category</label>
+                <input value={editForm.category || ""} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Total Licenses</label>
+                <input type="number" value={editForm.totalLicenses || ""} onChange={(e) => setEditForm({ ...editForm, totalLicenses: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label>Assigned Licenses</label>
+                <input type="number" value={editForm.licensesAssigned || ""} onChange={(e) => setEditForm({ ...editForm, licensesAssigned: e.target.value })} />
+              </div>
+
+              <div className="modal-actions">
+                <button type="submit" className="save-btn">Save</button>
+                <button type="button" className="close-btn" onClick={() => setEditingAsset(null)}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
