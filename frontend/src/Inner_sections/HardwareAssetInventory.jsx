@@ -4,7 +4,14 @@ import Barcode from "react-barcode";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import "../Page_styles/ListPage.css"; // same CSS as software/core license pages
+import "../Page_styles/ListPage.css";
+import { 
+  getCategories, 
+  getLocations, 
+  getUnits, 
+  getStatuses 
+} from "../Services/ApiServices";
+
 
 const HardwareAssetList = () => {
   const [assets, setAssets] = useState([]);
@@ -12,24 +19,50 @@ const HardwareAssetList = () => {
   const itemsPerPage = 6;
   const [loading, setLoading] = useState(true);
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [editingAsset, setEditingAsset] = useState(null);
+  const [editForm, setEditForm] = useState({});
+    const [categories, setCategories] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [statuses, setStatuses] = useState([]);
 
   // Fetch hardware assets
-  useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const res = await fetch("https://asset-manager-new.onrender.com/api/assets");
-        if (!res.ok) throw new Error("Failed to fetch hardware assets");
-        const data = await res.json();
-        setAssets(data);
-      } catch (err) {
-        console.error(err);
-        Swal.fire("Error", err.message, "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAssets();
-  }, []);
+useEffect(() => {
+  const fetchMetaData = async () => {
+    try {
+      const [cats, locs, unitsList, statusesList] = await Promise.all([
+        getCategories(),
+        getLocations(),
+        getUnits(),
+        getStatuses()
+      ]);
+      setCategories(cats);
+      setLocations(locs);
+      setUnits(unitsList);
+      setStatuses(statusesList);
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
+    }
+  };
+
+  const fetchAssets = async () => {
+    try {
+      const res = await fetch("https://asset-manager-new.onrender.com/api/assets");
+      if (!res.ok) throw new Error("Failed to fetch hardware assets");
+      const data = await res.json();
+      setAssets(data);
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAssets();
+  fetchMetaData();
+  console.log(statuses)
+}, []);
+
 
   // Delete asset
   const handleDelete = async (id) => {
@@ -55,6 +88,44 @@ const HardwareAssetList = () => {
       } catch (err) {
         Swal.fire("Error", err.message, "error");
       }
+    }
+  };
+//edit overlay function 
+ const handleEdit = (asset) => {
+  console.log("Opening edit overlay for:", asset); // debug log
+  setEditingAsset(asset);
+  setEditForm({ ...asset });
+};
+
+
+  // Save Edit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = sessionStorage.getItem("token");
+      const formData = new FormData();
+      Object.entries(editForm).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) formData.append(k, v);
+      });
+
+      const res = await fetch(
+        `https://asset-manager-new.onrender.com/api/assets/${editingAsset._id}`,
+        {
+          method: "PUT",
+          body: formData,
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error("Failed to update asset");
+      const updated = await res.json();
+
+      setAssets((prev) =>
+        prev.map((a) => (a._id === updated._id ? updated : a))
+      );
+      Swal.fire("Updated!", "Asset updated successfully.", "success");
+      setEditingAsset(null);
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
     }
   };
 
@@ -99,9 +170,6 @@ const HardwareAssetList = () => {
                 {asset.DOE ? new Date(asset.DOE).toLocaleDateString() : "N/A"}
               </p>
               <p>
-                <strong>From:</strong> {asset.purchaseFrom}
-              </p>
-              <p>
                 <strong>Status:</strong> {asset.assetStatus}
               </p>
               <div className="barcode-box">
@@ -115,12 +183,7 @@ const HardwareAssetList = () => {
                 >
                   <FontAwesomeIcon icon={faEye} /> View
                 </button>
-                <button
-                  className="edit-btn"
-                  onClick={() =>
-                    Swal.fire("Edit Coming Soon", "Edit modal will open here", "info")
-                  }
-                >
+                <button className="edit-btn" onClick={() => handleEdit(asset)}>
                   <FontAwesomeIcon icon={faPenToSquare} /> Edit
                 </button>
                 <button
@@ -175,6 +238,186 @@ const HardwareAssetList = () => {
           </div>
         </div>
       )}
+
+{/* Edit Overlay */}
+{editingAsset && (
+  <div className="overlay">
+    <div className="overlay-card">
+      <h2 className="overlay-title">Edit Asset - {editingAsset.assetName}</h2>
+      <form onSubmit={handleEditSubmit} className="overlay-form">
+
+        {/* Asset Name */}
+        <div className="form-group">
+          <label>Asset Name</label>
+          <input
+            type="text"
+            value={editForm.assetName || ""}
+            onChange={(e) =>
+              setEditForm({ ...editForm, assetName: e.target.value })
+            }
+          />
+        </div>
+
+        {/* Specification */}
+        <div className="form-group">
+          <label>Specification</label>
+          <input
+            type="text"
+            value={editForm.assetSpecification || ""}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                assetSpecification: e.target.value,
+              })
+            }
+          />
+        </div>
+
+        {/* Category */}
+        <div className="form-group">
+          <label>Category</label>
+          <select
+            value={editForm.assetCategory || ""}
+            onChange={(e) =>
+              setEditForm({ ...editForm, assetCategory: e.target.value })
+            }
+          >
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Location */}
+        <div className="form-group">
+          <label>Location</label>
+          <select
+            value={editForm.locationName || ""}
+            onChange={(e) =>
+              setEditForm({ ...editForm, locationName: e.target.value })
+            }
+          >
+            <option value="">Select Location</option>
+            {locations.map((l) => (
+              <option key={l._id} value={l._id}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Unit */}
+        <div className="form-group">
+          <label>Unit</label>
+          <select
+            value={editForm.associateUnit || ""}
+            onChange={(e) =>
+              setEditForm({ ...editForm, associateUnit: e.target.value })
+            }
+          >
+            <option value="">Select Unit</option>
+            {units.map((u) => (
+              <option key={u._id} value={u._id}>
+                {u.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Status */}
+        <div className="form-group">
+          <label>Status</label>
+          <select
+            value={editForm.assetStatus || ""}
+            onChange={(e) =>
+              setEditForm({ ...editForm, assetStatus: e.target.value })
+            }
+          >
+            <option value="">Select Status</option>
+            {statuses.map((s) => (
+              <option key={s._id} value={s._id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Date of Purchase */}
+        <div className="form-group">
+          <label>Date of Purchase</label>
+          <input
+            type="date"
+            value={
+              editForm.DOP
+                ? new Date(editForm.DOP).toISOString().split("T")[0]
+                : ""
+            }
+            onChange={(e) =>
+              setEditForm({ ...editForm, DOP: e.target.value })
+            }
+          />
+        </div>
+
+        {/* Date of Expiry */}
+        <div className="form-group">
+          <label>Date of Expiry</label>
+          <input
+            type="date"
+            value={
+              editForm.DOE
+                ? new Date(editForm.DOE).toISOString().split("T")[0]
+                : ""
+            }
+            onChange={(e) =>
+              setEditForm({ ...editForm, DOE: e.target.value })
+            }
+          />
+        </div>
+
+        {/* Purchase From */}
+        <div className="form-group">
+          <label>Purchase From</label>
+          <input
+            type="text"
+            value={editForm.purchaseFrom || ""}
+            onChange={(e) =>
+              setEditForm({ ...editForm, purchaseFrom: e.target.value })
+            }
+          />
+        </div>
+
+        {/* Image Upload */}
+        <div className="form-group">
+          <label>Upload Image</label>
+          <input
+            type="file"
+            onChange={(e) =>
+              setEditForm({ ...editForm, image: e.target.files[0] })
+            }
+          />
+        </div>
+
+        {/* Actions */}
+        <div className="modal-actions">
+          <button type="submit" className="save-btn">
+            Save
+          </button>
+          <button
+            type="button"
+            className="close-btn"
+            onClick={() => setEditingAsset(null)}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
