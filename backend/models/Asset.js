@@ -55,7 +55,6 @@ const assetSchema = new mongoose.Schema({
     },
     PMD : {
         type : String,
-        required: true,
     },
 })
 
