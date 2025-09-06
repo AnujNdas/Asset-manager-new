@@ -169,9 +169,9 @@ useEffect(() => {
                 <strong>Expiry:</strong>{" "}
                 {asset.DOE ? new Date(asset.DOE).toLocaleDateString() : "N/A"}
               </p>
-              <p>
-                <strong>Status:</strong> {asset.assetStatus}
-              </p>
+             <p>
+  <strong>Status:</strong> {statuses.find(s => s._id === asset.assetStatus)?.name || "N/A"}
+</p>
               <div className="barcode-box">
                 <Barcode value={asset.barcodeNumber} width={1.5} height={40} />
               </div>
