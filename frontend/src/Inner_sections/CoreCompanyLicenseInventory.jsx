@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import {
   getCoreLicenses,
   deleteCoreLicense,
+  updateCoreLicense, // ✅ add update API
 } from "../Services/ApiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -15,23 +16,27 @@ const CoreCompanyLicenseList = () => {
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
+  // State for edit modal
+  const [editingLicense, setEditingLicense] = useState(null);
+  const [editForm, setEditForm] = useState({});
+
   // Fetch licenses
-useEffect(() => {
-  const fetchLicenses = async () => {
-    try {
-      const res = await getCoreLicenses();
-      if (res.success && Array.isArray(res.data)) {
-        setLicenses(res.data); // ✅ only save the array
-      } else {
+  useEffect(() => {
+    const fetchLicenses = async () => {
+      try {
+        const res = await getCoreLicenses();
+        if (res.success && Array.isArray(res.data)) {
+          setLicenses(res.data); // ✅ only save the array
+        } else {
+          setLicenses([]);
+        }
+      } catch (err) {
+        console.error("Error fetching core licenses:", err);
         setLicenses([]);
       }
-    } catch (err) {
-      console.error("Error fetching core licenses:", err);
-      setLicenses([]);
-    }
-  };
-  fetchLicenses();
-}, []);
+    };
+    fetchLicenses();
+  }, []);
 
   // Delete license
   const handleDelete = async (id) => {
@@ -56,13 +61,35 @@ useEffect(() => {
     });
   };
 
+  // ✅ Handle Edit (open modal)
+  const handleEdit = (license) => {
+    setEditingLicense(license);
+    setEditForm({ ...license }); // pre-fill form
+  };
+
+  // ✅ Save Edit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const updated = await updateCoreLicense(editingLicense._id, editForm);
+
+      setLicenses((prev) =>
+        prev.map((l) => (l._id === updated._id ? updated : l))
+      );
+
+      Swal.fire("Updated!", "Company license updated successfully.", "success");
+      setEditingLicense(null); // close modal
+    } catch (err) {
+      Swal.fire("Error", "Failed to update company license.", "error");
+    }
+  };
+
   // Pagination
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  console.log(licenses)
   const currentItems = Array.isArray(licenses)
-  ? licenses.slice(indexOfFirst, indexOfLast)
-  : [];
+    ? licenses.slice(indexOfFirst, indexOfLast)
+    : [];
   const totalPages = Math.ceil(licenses.length / itemsPerPage);
 
   return (
@@ -99,7 +126,7 @@ useEffect(() => {
               </button>
               <button
                 className="edit-btn"
-                onClick={() => navigate(`/core-licenses/edit/${license._id}`)}
+                onClick={() => handleEdit(license)} // ✅ open modal
               >
                 <FontAwesomeIcon icon={faEdit} /> Edit
               </button>
@@ -126,6 +153,110 @@ useEffect(() => {
           </button>
         ))}
       </div>
+
+      {/* ✅ Edit Modal Overlay */}
+      {editingLicense && (
+        <div className="overlay">
+          <div className="overlay-card">
+            <h2 className="overlay-title">
+              Edit License – {editingLicense.licenseHolder}
+            </h2>
+
+            <form onSubmit={handleEditSubmit} className="overlay-form">
+              <div className="form-group">
+                <label>Document Type</label>
+                <input
+                  type="text"
+                  value={editForm.documentType || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, documentType: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>License Number</label>
+                <input
+                  type="text"
+                  value={editForm.licenseNumber || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, licenseNumber: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Issuing Authority</label>
+                <input
+                  type="text"
+                  value={editForm.issuingAuthority || ""}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      issuingAuthority: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>License Holder</label>
+                <input
+                  type="text"
+                  value={editForm.licenseHolder || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, licenseHolder: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Expiry Date</label>
+                <input
+                  type="date"
+                  value={
+                    editForm.expiryDate
+                      ? new Date(editForm.expiryDate)
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, expiryDate: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Status</label>
+                <select
+                  value={editForm.status || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, status: e.target.value })
+                  }
+                >
+                  <option value="Active">Active</option>
+                  <option value="Expired">Expired</option>
+                  <option value="Pending Renewal">Pending Renewal</option>
+                </select>
+              </div>
+
+              <div className="modal-actions">
+                <button type="submit" className="save-btn">
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="close-btn"
+                  onClick={() => setEditingLicense(null)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
