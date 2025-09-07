@@ -15,6 +15,7 @@ const CoreCompanyLicenseList = () => {
   const [licenses, setLicenses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [statuses, setStatuses] = useState([]);
+  const [selectedAsset, setSelectedAsset] = useState(null);
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
@@ -22,25 +23,23 @@ const CoreCompanyLicenseList = () => {
   const [editingLicense, setEditingLicense] = useState(null);
   const [editForm, setEditForm] = useState({});
   useEffect(() => {
-  console.log("Statuses in CoreCompanyLicense:", statuses);
-}, [statuses]);
+    console.log("Statuses in CoreCompanyLicense:", statuses);
+  }, [statuses]);
 
   // Fetch licenses
   useEffect(() => {
     const fetchMetaData = async () => {
       try {
-        const [statusesList] = await Promise.all([
-          getStatuses()
-        ]);
+        const [statusesList] = await Promise.all([getStatuses()]);
         setStatuses(statusesList);
       } catch (err) {
         Swal.fire("Error", err.message, "error");
       }
-    }
+    };
     const fetchLicenses = async () => {
       try {
         const res = await getCoreLicenses();
-        console.log(res)
+        console.log(res);
         if (res.success && Array.isArray(res.data)) {
           setLicenses(res.data); // ✅ only save the array
         } else {
@@ -52,7 +51,8 @@ const CoreCompanyLicenseList = () => {
       }
     };
     fetchLicenses();
-    
+
+
     fetchMetaData();
   }, []);
 
@@ -128,8 +128,9 @@ const CoreCompanyLicenseList = () => {
               <strong>Issuing Authority:</strong> {license.issuingAuthority}
             </p>
             <p>
-  <strong>Status:</strong> {statuses.find(s => s._id === license.status)?.name || "N/A"}
-</p>
+              <strong>Status:</strong>{" "}
+              {statuses.find((s) => s._id === license.status)?.name || "N/A"}
+            </p>
             <p>
               <strong>Expiry:</strong>{" "}
               {new Date(license.expiryDate).toLocaleDateString()}
@@ -138,7 +139,7 @@ const CoreCompanyLicenseList = () => {
             <div className="card-actions">
               <button
                 className="view-btn"
-                onClick={() => navigate(`/core-licenses/${license._id}`)}
+                onClick={() => setSelectedAsset(license)}
               >
                 <FontAwesomeIcon icon={faEye} /> View
               </button>
@@ -171,6 +172,38 @@ const CoreCompanyLicenseList = () => {
           </button>
         ))}
       </div>
+
+      {/* View Overlay */}
+      {selectedAsset && (
+        <div className="overlay">
+          <div className="overlay-content">
+            <h3>{selectedAsset.licenseHolder} - Details</h3>
+            <p>
+              <strong>License No :</strong> {selectedAsset.licenseNumber}
+            </p>
+            <p>
+              <strong>Document Type:</strong> {selectedAsset.documentType}
+            </p>
+            <p>
+              <strong>Date of Issue:</strong>{" "}
+              {new Date(selectedAsset.issueDate).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Business Activity:</strong> {selectedAsset.businessActivity}
+            </p>
+            <p>
+              <strong>Renewal Cycle:</strong> {selectedAsset.renewalCycle}
+            </p>
+
+            <button
+              className="close-btn"
+              onClick={() => setSelectedAsset(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ✅ Edit Modal Overlay */}
       {editingLicense && (
