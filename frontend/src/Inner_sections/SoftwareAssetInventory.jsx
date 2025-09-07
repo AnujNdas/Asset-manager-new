@@ -16,12 +16,16 @@ const SoftwareAssetList = () => {
   const itemsPerPage = 6;
   const [editingAsset, setEditingAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
+  
+    const [selectedAsset, setSelectedAsset] = useState(null);
 
   // Fetch assets
   useEffect(() => {
     const fetchAssets = async () => {
       try {
         const res = await getSoftwareAssets();
+        
+    console.log(res)
         if (res.success && Array.isArray(res.data)) {
           setSoftwareAssets(res.data);
         } else {
@@ -93,9 +97,17 @@ const SoftwareAssetList = () => {
             <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
             <p><strong>Category:</strong> {asset.category || "N/A"}</p>
             <p><strong>Licenses:</strong> {asset.licensesAssigned}/{asset.totalLicenses}</p>
+            <p><strong>complianceStatus:</strong></p>
+            <p><strong>Model:</strong> {asset.licenseModel}</p>
+            <p><strong>Location:</strong> {asset.installLocation}</p>
 
             <div className="card-actions">
-              <button className="view-btn"><FontAwesomeIcon icon={faEye} /> View</button>
+              <button
+                              className="view-btn"
+                              onClick={() => setSelectedAsset(asset)}
+                            >
+                              <FontAwesomeIcon icon={faEye} /> View
+                            </button>
               <button className="edit-btn" onClick={() => handleEdit(asset)}>
                 <FontAwesomeIcon icon={faEdit} /> Edit
               </button>
@@ -119,6 +131,41 @@ const SoftwareAssetList = () => {
           </button>
         ))}
       </div>
+
+
+        {/* View Overlay */}
+      {selectedAsset && (
+        <div className="overlay">
+          <div className="overlay-content">
+            <h3>{selectedAsset.name} - Details</h3>
+            <p>
+              <strong>Assigned To :</strong> {selectedAsset.assignedTo}
+            </p>
+            <p>
+              <strong>License Type:</strong> {selectedAsset.licenseType}
+            </p>
+            <p>
+              <strong>Date of Issue:</strong>{" "}
+              {new Date(selectedAsset.purchaseDate).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Date of Expiry:</strong>{" "}
+              {new Date(selectedAsset.licenseExpiry).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>License Use:</strong> {selectedAsset.licenseUse}
+            </p>
+
+            <button
+              className="close-btn"
+              onClick={() => setSelectedAsset(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
 
       {/* Edit Overlay */}
       {editingAsset && (
