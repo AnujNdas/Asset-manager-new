@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   getCoreLicenses,
+  getStatuses,
   deleteCoreLicense,
   updateCoreLicense, // ✅ add update API
 } from "../Services/ApiServices";
@@ -13,18 +14,33 @@ import "../Page_styles/ListPage.css";
 const CoreCompanyLicenseList = () => {
   const [licenses, setLicenses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [statuses, setStatuses] = useState([]);
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
   // State for edit modal
   const [editingLicense, setEditingLicense] = useState(null);
   const [editForm, setEditForm] = useState({});
+  useEffect(() => {
+  console.log("Statuses in CoreCompanyLicense:", statuses);
+}, [statuses]);
 
   // Fetch licenses
   useEffect(() => {
+    const fetchMetaData = async () => {
+      try {
+        const [statusesList] = await Promise.all([
+          getStatuses()
+        ]);
+        setStatuses(statusesList);
+      } catch (err) {
+        Swal.fire("Error", err.message, "error");
+      }
+    }
     const fetchLicenses = async () => {
       try {
         const res = await getCoreLicenses();
+        console.log(res)
         if (res.success && Array.isArray(res.data)) {
           setLicenses(res.data); // ✅ only save the array
         } else {
@@ -36,6 +52,8 @@ const CoreCompanyLicenseList = () => {
       }
     };
     fetchLicenses();
+    
+    fetchMetaData();
   }, []);
 
   // Delete license
@@ -110,8 +128,8 @@ const CoreCompanyLicenseList = () => {
               <strong>Issuing Authority:</strong> {license.issuingAuthority}
             </p>
             <p>
-              <strong>Status:</strong> {license.status}
-            </p>
+  <strong>Status:</strong> {statuses.find(s => s._id === license.status)?.name || "N/A"}
+</p>
             <p>
               <strong>Expiry:</strong>{" "}
               {new Date(license.expiryDate).toLocaleDateString()}
