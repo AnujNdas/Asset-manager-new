@@ -12,6 +12,7 @@ const SoftwareAssetSchema = new mongoose.Schema({
   totalLicenses: Number,
   licensesAssigned: Number,
   licensesAvailable: Number,
+  licenseUse: String, // ✅ Added field
   licenseExpiry: Date,
   purchaseDate: Date,
   contractTerm: String,
@@ -20,7 +21,7 @@ const SoftwareAssetSchema = new mongoose.Schema({
   totalCost: Number,
   assignedTo: [{ type: String }], // users, departments
   linkedDevices: [{ type: mongoose.Schema.Types.ObjectId, ref: "HardwareAsset" }],
-  complianceStatus: { type: String, enum: ["Compliant", "Over-Used", "Expired", "Under-Utilized"] },
+  complianceStatus: { type: String},
   supportContract: {
     startDate: Date,
     endDate: Date,
