@@ -8,10 +8,10 @@ const CoreCompanyLicenseSchema = new mongoose.Schema({
   businessActivity: { type: String, required: true },
   issueDate: { type: Date, required: true },
   expiryDate: { type: Date, required: true },
-  renewalCycle: { type: String, enum: ["Annual", "Biennial", "Custom"], default: "Annual" },
+  renewalCycle: { type: String},
   reminderDaysBefore: { type: Number, default: 30 }, // e.g., send alert 30 days before expiry
-  status: { type: String, enum: ["Active", "Expired", "Pending Renewal"], default: "Active" },
+  status: { type: String},
 }, { timestamps: true });
 
-const CoreCoreCompanyLicense =  mongoose.model("CoreCompanyLicense", CoreCompanyLicenseSchema);
-module.exports = CoreCoreCompanyLicense;
+const CoreCompanyLicense =  mongoose.model("CoreCompanyLicense", CoreCompanyLicenseSchema);
+module.exports = CoreCompanyLicense;
