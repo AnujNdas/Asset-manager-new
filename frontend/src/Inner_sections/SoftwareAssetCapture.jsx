@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { createSoftwareAsset } from "../Services/ApiServices";
 import Swal from "sweetalert2";
 import "../Page_styles/CaptureForm.css";
+import { getStatuses } from '../Services/ApiServices';
+
 
 const SoftwareAssetCapture = () => {
+  
+  const [statuses, setStatuses] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     version: "",
@@ -21,9 +25,21 @@ const SoftwareAssetCapture = () => {
     purchaseOrder: "",
     cost: "",
     assignedTo: "",
-    complianceStatus: "Compliant",
+    complianceStatus: "",
   });
-
+    useEffect(() => {
+      (async () => {
+        try {
+          const [s] = await Promise.all([
+            getStatuses(),
+          ]);
+          setStatuses(s || []);
+        } catch (e) {
+          console.error(e);
+          Swal.fire('Error', 'Failed to load classifications', 'error');
+        }
+      })();
+    }, []);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -62,7 +78,7 @@ const SoftwareAssetCapture = () => {
         purchaseOrder: "",
         cost: "",
         assignedTo: "",
-        complianceStatus: "Compliant",
+        complianceStatus: "",
       });
     } catch (error) {
       console.error("Error creating software asset:", error);
@@ -95,10 +111,10 @@ const SoftwareAssetCapture = () => {
         <input type="text" name="assignedTo" placeholder="Assigned To (single)" value={formData.assignedTo} onChange={handleChange} />
 
         <select name="complianceStatus" value={formData.complianceStatus} onChange={handleChange}>
-          <option value="Compliant">Compliant</option>
-          <option value="Over-used">Over-used</option>
-          <option value="Under-utilized">Under-utilized</option>
-          <option value="Expired">Expired</option>
+          <option value="">Select Status</option>
+            {statuses.map((s) => (
+              <option key={s._id} value={s._id}>{s.name}</option>
+            ))}
         </select>
 
         <button type="submit" className="btn-primary">Save Software Asset</button>
