@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { createCoreLicense } from "../Services/ApiServices";
 import Swal from "sweetalert2";
 import "../Page_styles/CaptureForm.css";
+import { getStatuses } from '../Services/ApiServices';
 
 const CoreCompanyLicenseCapture = () => {
   const defaultFormData = {
@@ -14,11 +15,25 @@ const CoreCompanyLicenseCapture = () => {
     expiryDate: "",
     renewalCycle: "Annual",
     reminderDaysBefore: 30,
-    status: "Active",
+    status: "",
   };
-
+  
+  const [statuses, setStatuses] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
 
+  useEffect(() => {
+        (async () => {
+          try {
+            const [s] = await Promise.all([
+              getStatuses(),
+            ]);
+            setStatuses(s || []);
+          } catch (e) {
+            console.error(e);
+            Swal.fire('Error', 'Failed to load classifications', 'error');
+          }
+        })();
+      }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -58,9 +73,10 @@ const CoreCompanyLicenseCapture = () => {
         <input type="number" name="reminderDaysBefore" value={formData.reminderDaysBefore} onChange={handleChange} />
 
         <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="Active">Active</option>
-          <option value="Expired">Expired</option>
-          <option value="Pending Renewal">Pending Renewal</option>
+          <option value="">Select Status</option>
+            {statuses.map((s) => (
+              <option key={s._id} value={s._id}>{s.name}</option>
+            ))}
         </select>
 
         <button type="submit" className="btn-primary">Save Company License</button>
