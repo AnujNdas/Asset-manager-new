@@ -210,8 +210,20 @@ const SoftwareAssetList = () => {
                 <input value={editForm.publisher || ""} onChange={(e) => setEditForm({ ...editForm, publisher: e.target.value })} />
               </div>
               <div className="form-group">
-                <label>Category</label>
-                <input value={editForm.category || ""} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })} />
+                 <label>Category</label>
+          <select
+            value={editForm.category || ""}
+            onChange={(e) =>
+              setEditForm({ ...editForm, category: e.target.value })
+            }
+          >
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
               </div>
               <div className="form-group">
                 <label>Total Licenses</label>
