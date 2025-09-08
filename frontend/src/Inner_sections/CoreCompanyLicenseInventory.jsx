@@ -285,10 +285,10 @@ const CoreCompanyLicenseList = () => {
                   onChange={(e) =>
                     setEditForm({ ...editForm, status: e.target.value })
                   }
-                >
-                  <option value="Active">Active</option>
-                  <option value="Expired">Expired</option>
-                  <option value="Pending Renewal">Pending Renewal</option>
+                ><option value="">Select Status</option>
+            {statuses.map((s) => (
+              <option key={s._id} value={s._id}>{s.name}</option>
+            ))}
                 </select>
               </div>
 
