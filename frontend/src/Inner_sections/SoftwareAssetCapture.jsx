@@ -2,12 +2,13 @@ import React, { useState , useEffect } from "react";
 import { createSoftwareAsset } from "../Services/ApiServices";
 import Swal from "sweetalert2";
 import "../Page_styles/CaptureForm.css";
-import { getStatuses } from '../Services/ApiServices';
+import { getStatuses , getCategories } from '../Services/ApiServices';
 
 
 const SoftwareAssetCapture = () => {
   
   const [statuses, setStatuses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     version: "",
@@ -30,10 +31,12 @@ const SoftwareAssetCapture = () => {
     useEffect(() => {
       (async () => {
         try {
-          const [s] = await Promise.all([
+          const [s , c] = await Promise.all([
             getStatuses(),
+            getCategories(),
           ]);
           setStatuses(s || []);
+          setCategories(c || []);
         } catch (e) {
           console.error(e);
           Swal.fire('Error', 'Failed to load classifications', 'error');
@@ -93,8 +96,13 @@ const SoftwareAssetCapture = () => {
         <input type="text" name="name" placeholder="Software Name" value={formData.name} onChange={handleChange} required />
         <input type="text" name="version" placeholder="Version" value={formData.version} onChange={handleChange} />
         <input type="text" name="publisher" placeholder="Publisher" value={formData.publisher} onChange={handleChange} />
-        <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} />
-        <input type="text" name="licenseKey" placeholder="License Key" value={formData.licenseKey} onChange={handleChange} />
+<select name="category" value={formData.category} onChange={handleChange} required>
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
+          </select>
+                  <input type="text" name="licenseKey" placeholder="License Key" value={formData.licenseKey} onChange={handleChange} />
         <input type="text" name="licenseType" placeholder="License Type" value={formData.licenseType} onChange={handleChange} />
         <input type="text" name="licenseModel" placeholder="License Model" value={formData.licenseModel} onChange={handleChange} />
 
