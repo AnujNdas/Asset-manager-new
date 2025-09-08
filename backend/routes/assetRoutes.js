@@ -32,4 +32,14 @@ router.get('/generate-barcode', generateBarcode);
 
 router.put("/:id",authenticateToken, upload.single("image"), updateAsset);  // Update asset with ID and image upload
 
+
+router.post("/bulk-upload", async (req, res) => {
+  try {
+    const { assets } = req.body;
+    const inserted = await HardwareAsset.insertMany(assets);
+    res.status(201).json({ success: true, insertedCount: inserted.length });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 module.exports = router;
