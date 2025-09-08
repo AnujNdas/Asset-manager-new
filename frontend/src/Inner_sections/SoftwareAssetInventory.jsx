@@ -9,9 +9,17 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../Page_styles/ListPage.css";
+import { 
+  getCategories, 
+  getLocations, 
+  getStatuses 
+} from "../Services/ApiServices";
 
 const SoftwareAssetList = () => {
   const [softwareAssets, setSoftwareAssets] = useState([]);
+    const [statuses, setStatuses] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [locations, setLocations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const [editingAsset, setEditingAsset] = useState(null);
@@ -21,6 +29,20 @@ const SoftwareAssetList = () => {
 
   // Fetch assets
   useEffect(() => {
+    const fetchMetaData = async () => {
+        try {
+          const [cats, locs, statusesList] = await Promise.all([
+            getCategories(),
+            getLocations(),
+            getStatuses()
+          ]);
+          setCategories(cats);
+          setLocations(locs);
+          setStatuses(statusesList);
+        } catch (err) {
+          Swal.fire("Error", err.message, "error");
+        }
+      };
     const fetchAssets = async () => {
       try {
         const res = await getSoftwareAssets();
@@ -37,6 +59,8 @@ const SoftwareAssetList = () => {
       }
     };
     fetchAssets();
+    fetchMetaData();
+    console.log(statuses)
   }, []);
 
   // Delete asset
@@ -95,9 +119,9 @@ const SoftwareAssetList = () => {
             <h3>{asset.name}</h3>
             <p><strong>Version:</strong> {asset.version || "N/A"}</p>
             <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
-            <p><strong>Category:</strong> {asset.category || "N/A"}</p>
+            <p><strong>Category:</strong> {categories.find(c => c._id === asset.category)?.name || "N/A"}</p>
             <p><strong>Licenses:</strong> {asset.licensesAssigned}/{asset.totalLicenses}</p>
-            <p><strong>complianceStatus:</strong></p>
+            <p><strong>complianceStatus:</strong>{statuses.find(s => s._id === asset.complianceStatus)?.name || "N/A"}</p>
             <p><strong>Model:</strong> {asset.licenseModel}</p>
             <p><strong>Location:</strong> {asset.installLocation}</p>
 
