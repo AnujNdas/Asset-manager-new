@@ -1,302 +1,260 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import * as XLSX from "xlsx";
+import Swal from "sweetalert2";
 import "../Page_styles/MisReport.css";
-import * as XLSX from 'xlsx';  // Import XLSX for Excel export
+import {
+  getStatuses,
+  getUnits,
+  getLocations,
+  getCategories,
+  getSoftwareAssets,
+  getCoreLicenses,
+} from "../Services/ApiServices";
 
 const MisReport = () => {
-    const [startDate, setStartDate] = useState('');
-    const [statuses, setStatuses] = useState([]);
-    const [units, setUnits] = useState([]);
-    const [assets, setAssets] = useState([]);
-    const [locations, setLocations] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [selectedLocation, setSelectedLocation] = useState('');
-    const [selectedUnit, setSelectedUnit] = useState('');
-    const [selectedStatus, setSelectedStatus] = useState('');
-    const [filtersOpen, setFiltersOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("hardware");
 
-    // Pagination state
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(8); // You can adjust this value based on preference
+  // Shared filters
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [startDate, setStartDate] = useState("");
 
-    // Fetch data (assets, categories, statuses, etc.)
-    useEffect(() => {
-        const fetchAssets = async () => {
-            try {
-                const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch assets');
-                }
-                const data = await response.json();
-                setAssets(data);
-            } catch (err) {
-                setError(err.message);
-            }
-        };
+  // Data
+  const [hardware, setHardware] = useState([]);
+  const [software, setSoftware] = useState([]);
+  const [licenses, setLicenses] = useState([]);
 
-        const fetchCategoriesAndStatuses = async () => {
-            try {
-                const statusesResponse = await fetch('https://asset-manager-new.onrender.com/api/status');
-                const locationsResponse = await fetch('https://asset-manager-new.onrender.com/api/location');
-                const unitsResponse = await fetch('https://asset-manager-new.onrender.com/api/unit');
-                const categoriesResponse = await fetch('https://asset-manager-new.onrender.com/api/category');
+  // Lookup Data
+  const [statuses, setStatuses] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-                if (!statusesResponse.ok || !locationsResponse.ok || !unitsResponse.ok || !categoriesResponse.ok) {
-                    throw new Error('Failed to fetch required data');
-                }
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
-                const statusesData = await statusesResponse.json();
-                const locationsData = await locationsResponse.json();
-                const unitsData = await unitsResponse.json();
-                const categoriesData = await categoriesResponse.json();
+  useEffect(() => {
+    (async () => {
+      try {
+        const [s, u, l, c, sw, lic] = await Promise.all([
+          getStatuses(),
+          getUnits(),
+          getLocations(),
+          getCategories(),
+          getSoftwareAssets(),
+          getCoreLicenses()
+        ]);
 
-                setStatuses(statusesData);
-                setLocations(locationsData);
-                setUnits(unitsData);
-                setCategories(categoriesData);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAssets();
-        fetchCategoriesAndStatuses();
-    }, []);
-
-    // Filter assets based on the selected filters
-    const filteredAssets = () => {
-        return assets.filter(asset => {
-            const matchesLocation = selectedLocation ? asset.locationName === selectedLocation : true;
-            const matchesUnit = selectedUnit ? asset.associateUnit === selectedUnit : true;
-            const matchesStatus = selectedStatus ? asset.assetStatus === selectedStatus : true;
-
-            const purchaseDateFormatted = formatDate(asset.DOP);
-            const startDateFormatted = startDate ? formatDate(startDate) : '';
-
-            const matchesStartDate = startDateFormatted ? purchaseDateFormatted >= startDateFormatted : true;
-
-            return matchesLocation && matchesUnit && matchesStatus && matchesStartDate;
-        });
-    };
-
-    const formatDate = (date) => {
-        const d = new Date(date);
-        if (isNaN(d.getTime())) return ''; // Return empty string for invalid date
-        d.setHours(0, 0, 0, 0);
-        return d.toISOString().split('T')[0]; // yyyy-mm-dd
-    };
-
-    // Pagination logic to slice the filtered assets based on the current page
-    const paginatedAssets = () => {
-        const filteredData = filteredAssets();
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        return filteredData.slice(startIndex, startIndex + itemsPerPage);
-    };
-
-    // Handle page change
-    const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= totalPages()) {
-            setCurrentPage(newPage);
+        setStatuses(s);
+        setUnits(u);
+        setLocations(l);
+        setCategories(c);
+        setSoftware(sw?.data || sw);   // depending on your API response
+        setLicenses(lic?.data || lic);
+      } catch (err) {
+        console.error("Error fetching filters/data:", err);
+      }
+    })();
+    const fetchAssets = async () => {
+        try {
+          const res = await fetch("https://asset-manager-new.onrender.com/api/assets");
+          console.log(res)
+          if (!res.ok) throw new Error("Failed to fetch hardware assets");
+          const data = await res.json();
+          setHardware(data);
+        } catch (err) {
+          Swal.fire("Error", err.message, "error");
         }
-    };
+    }
+    fetchAssets();
+  }, []);
 
-    // Calculate total number of pages
-    const totalPages = () => {
-        return Math.ceil(filteredAssets().length / itemsPerPage);
-    };
+  const formatDate = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    return d.toISOString().split("T")[0];
+  };
 
-    // CSV Download Function
-    const downloadCSV = () => {
-        const filteredData = filteredAssets();
+  // Filter logic for each tab
+  const filteredHardware = hardware.filter(a =>
+    (selectedLocation ? a.locationName === selectedLocation : true) &&
+    (selectedUnit ? a.associateUnit === selectedUnit : true) &&
+    (selectedStatus ? a.assetStatus === selectedStatus : true) &&
+    (startDate ? formatDate(a.DOP) >= startDate : true)
+  );
 
-        const csvRows = [];
-        const headers = ['Asset Name', 'Asset Specification', 'Unit', 'Status', 'Location', 'Category'];
-        csvRows.push(headers.join(',')); // Add header row
+  const filteredSoftware = software.filter(a =>
+    (selectedLocation ? a.locationName === selectedLocation : true) &&
+    (selectedCategory ? a.category === selectedCategory : true) &&
+    (selectedStatus ? a.complianceStatus === selectedStatus : true) &&
+    (startDate ? formatDate(a.purchaseDate) >= startDate : true)
+  );
 
-        filteredData.forEach(asset => {
-            const unit = units.find(u => u._id === asset.associateUnit)?.name || 'Loading';
-            const status = statuses.find(s => s._id === asset.assetStatus)?.name || 'No status';
-            const location = locations.find(l => l._id === asset.locationName)?.name || 'No location';
-            const category = categories.find(c => c._id === asset.assetCategory)?.name || 'No category';
+  const filteredLicenses = licenses.filter(a =>
+    (selectedStatus ? a.status === selectedStatus : true) &&
+    (startDate ? formatDate(a.issueDate) >= startDate : true)
+  );
 
-            const row = [
-                asset.assetName,
-                asset.assetSpecification,
-                unit,
-                status,
-                location,
-                category
-            ];
+  // Pagination slice
+  const paginate = (data) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return data.slice(startIndex, startIndex + itemsPerPage);
+  };
 
-            csvRows.push(row.join(','));
-        });
+  const currentData =
+    activeTab === "hardware"
+      ? filteredHardware
+      : activeTab === "software"
+      ? filteredSoftware
+      : filteredLicenses;
 
-        const csvString = csvRows.join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'assets.csv';
-        link.click();
-    };
+  const totalPages = Math.ceil(currentData.length / itemsPerPage);
 
-    // Excel Download Function
-    const downloadExcel = () => {
-        const filteredData = filteredAssets().map(asset => {
-            return {
-                'Asset Name': asset.assetName,
-                'Asset-Code': asset.assetCode,
-                'Asset Specification': asset.assetSpecification,
-                'Unit': units.find(u => u._id === asset.associateUnit)?.name || 'Loading',
-                'Status': statuses.find(s => s._id === asset.assetStatus)?.name || 'Loading',
-                'Location': locations.find(l => l._id === asset.locationName)?.name || 'Loading',
-                'Category': categories.find(c => c._id === asset.assetCategory)?.name || 'Loading',
-                'Lifetime': asset.assetLifetime,
-                'D_O_P': formatDate(asset.DOP),
-                'D_O_E': formatDate(asset.DOE),
-                'Purchased From': asset.purchaseFrom,
-                'P-M-D': asset.PMD,
-                'Barcode': asset.barcodeNumber,
-            };
-        });
+  // Export CSV/Excel
+  const exportData = () => {
+    const ws = XLSX.utils.json_to_sheet(currentData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, activeTab);
+    XLSX.writeFile(wb, `${activeTab}.xlsx`);
+  };
 
-        const ws = XLSX.utils.json_to_sheet(filteredData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Assets');
-        XLSX.writeFile(wb, 'assets.xlsx');
-    };
-
-    return (
-        <div className="App">
-            <div className="mis-content">
-                <header className="header">
-                    <h1>Asset Management Report</h1>
-                    <div className="mis-button">
-                        <button className="download-csv" onClick={downloadCSV}>Download CSV</button>
-                        <button className="download-excel" onClick={downloadExcel}>Download Excel</button>
-                    </div>
-                </header>
-
-                {/* Filters Section */}
-                <button class="filter-toggle" onClick={() => setFiltersOpen((prev) => !prev)}>{filtersOpen ? "Hide Filters" : "Show Filters"}</button>
-                <aside className="filters">
-                    <div className={`mis-form ${filtersOpen ? "active" : ""}`}>
-                        <h3>Filters</h3>
-                        <form className="mis-form-menu">
-                            {/* Location Dropdown for Filtering */}
-                            <label>Location:</label>
-                            <select name="location" onChange={e => setSelectedLocation(e.target.value)}>
-                                <option value="">All Locations</option>
-                                {locations.map(location => (
-                                    <option key={location._id} value={location._id}>{location.name}</option>
-                                ))}
-                            </select>
-
-                            {/* Unit Dropdown for Filtering */}
-                            <label>Unit:</label>
-                            <select name="unit" onChange={e => setSelectedUnit(e.target.value)}>
-                                <option value="">All Units</option>
-                                {units.map(unit => (
-                                    <option key={unit._id} value={unit._id}>{unit.name}</option>
-                                ))}
-                            </select>
-
-                            {/* Status Dropdown for Filtering */}
-                            <label>Status:</label>
-                            <select name="status" onChange={e => setSelectedStatus(e.target.value)}>
-                                <option value="">All Statuses</option>
-                                {statuses.map(status => (
-                                    <option key={status._id} value={status._id}>{status.name}</option>
-                                ))}
-                            </select>
-
-                            {/* Date of Purchase Filter */}
-                            <label>Start Date:</label>
-                            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
-                        </form>
-                    </div>
-
-                    <section className="asset-list">
-{/*                         <div className="heading">Asset List</div> */}
-                        <table className="mis-table">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>Asset Name</th>
-                                    <th>Asset Specification</th>
-                                    <th>Units</th>
-                                    <th>Status</th>
-                                    <th>Location</th>
-                                    <th>Category</th>
-                                    <th>D_O_P</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan="6">Loading...</td>
-                                    </tr>
-                                ) : error ? (
-                                    <tr>
-                                        <td colSpan="6">{`Error: ${error}`}</td>
-                                    </tr>
-                                ) : (
-                                    paginatedAssets().map((asset, index) => (
-                                        <tr key={asset._id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                                            <td data-label="S.No.">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                                            <td data-label="Name">{asset.assetName}</td>
-                                            <td data-label="Specification">{asset.assetSpecification}</td>
-                                            <td data-label="Unit">{units.find(u => u._id === asset.associateUnit)?.name || 'Loading'}</td>
-                                            <td data-label="Status">
-                                                <span className={statuses.find(status => status._id === asset.assetStatus)?.name === 'Check In' ? 'checked-in' : 'checked-out'}>
-                                                  {statuses.find(status => status._id === asset.assetStatus)?.name || 'Loading'}
-                                                </span>
-                                              </td>
-                                            <td data-label="Location">{locations.find(l => l._id === asset.locationName)?.name || 'Loading'}</td>
-                                            <td data-label="Category">{categories.find(c => c._id === asset.assetCategory)?.name || 'Loading'}</td>
-                                            <td data-label="D-O-P">{formatDate(asset.DOP)}</td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </section>
-                </aside>
-
-                {/* Pagination Controls */}
-                <div className="pages">
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className={`pagination ${currentPage === 1 ? 'disabled' : ''}`}
-                    >
-                        Prev
-                    </button>
-
-                    {/* Page Number Buttons */}
-                    {Array.from({ length: Math.ceil(assets.length / itemsPerPage) }, (_, index) => (
-                        <button
-                            key={index + 1}
-                            onClick={() => handlePageChange(index + 1)}
-                            className={`pagination ${currentPage === index + 1 ? 'active' : ''}`}
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
-
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === Math.ceil(assets.length / itemsPerPage)}
-                        className={`pagination ${currentPage === Math.ceil(assets.length / itemsPerPage) ? 'disabled' : ''}`}
-                    >
-                        Next
-                    </button>
-                </div>
-            </div>
+  return (
+    <div className="mis-content">
+      <header>
+        <h1>Asset Management Report</h1>
+        <div className="tabs">
+          <button onClick={() => setActiveTab("hardware")}>Hardware</button>
+          <button onClick={() => setActiveTab("software")}>Software</button>
+          <button onClick={() => setActiveTab("licenses")}>Core Licenses</button>
         </div>
-    );
+      </header>
+
+      {/* Filters */}
+      <div className="filters">
+        {activeTab === "hardware" && (
+          <>
+            <select onChange={e => setSelectedLocation(e.target.value)}>
+              <option value="">All Locations</option>
+              {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
+            </select>
+            <select onChange={e => setSelectedUnit(e.target.value)}>
+              <option value="">All Units</option>
+              {units.map(u => <option key={u._id} value={u._id}>{u.name}</option>)}
+            </select>
+            <select onChange={e => setSelectedStatus(e.target.value)}>
+              <option value="">All Statuses</option>
+              {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+            </select>
+            <input type="date" onChange={e => setStartDate(e.target.value)} />
+          </>
+        )}
+
+        {activeTab === "software" && (
+          <>
+            <select onChange={e => setSelectedCategory(e.target.value)}>
+              <option value="">All Categories</option>
+              {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+            </select>
+            <select onChange={e => setSelectedLocation(e.target.value)}>
+              <option value="">All Locations</option>
+              {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
+            </select>
+            <select onChange={e => setSelectedStatus(e.target.value)}>
+              <option value="">All Statuses</option>
+              {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+            </select>
+            <input type="date" onChange={e => setStartDate(e.target.value)} />
+          </>
+        )}
+
+        {activeTab === "licenses" && (
+          <>
+            <select onChange={e => setSelectedStatus(e.target.value)}>
+              <option value="">All Statuses</option>
+              {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+            </select>
+            <input type="date" onChange={e => setStartDate(e.target.value)} />
+          </>
+        )}
+      </div>
+
+      {/* Table */}
+      <table className="mis-table">
+        <thead>
+          <tr>
+            {activeTab === "hardware" && (
+              <>
+                <th>Name</th><th>Spec</th><th>Unit</th><th>Status</th><th>Location</th>
+              </>
+            )}
+            {activeTab === "software" && (
+              <>
+                <th>Name</th><th>Version</th><th>Publisher</th><th>Status</th><th>Category</th>
+              </>
+            )}
+            {activeTab === "licenses" && (
+              <>
+                <th>Document</th><th>License No</th><th>Holder</th><th>Status</th><th>Expiry</th>
+              </>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {paginate(currentData).map((row, i) => (
+            <tr key={i}>
+              {activeTab === "hardware" && (
+                <>
+                  <td>{row.assetName}</td>
+                  <td>{row.assetSpecification}</td>
+                  <td>{units.find(u => u._id === row.associateUnit)?.name}</td>
+                  <td>{statuses.find(s => s._id === row.assetStatus)?.name}</td>
+                  <td>{locations.find(l => l._id === row.locationName)?.name}</td>
+                </>
+              )}
+              {activeTab === "software" && (
+                <>
+                  <td>{row.name}</td>
+                  <td>{row.version}</td>
+                  <td>{row.publisher}</td>
+                  <td>{statuses.find(s => s._id === row.complianceStatus)?.name}</td>
+                  <td>{categories.find(c => c._id === row.category)?.name}</td>
+                </>
+              )}
+              {activeTab === "licenses" && (
+                <>
+                  <td>{row.documentType}</td>
+                  <td>{row.licenseNumber}</td>
+                  <td>{row.licenseHolder}</td>
+                  <td>{statuses.find(s => s._id === row.status)?.name}</td>
+                  <td>{formatDate(row.expiryDate)}</td>
+                </>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Pagination */}
+      <div className="pagination">
+        <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}>Prev</button>
+        {[...Array(totalPages).keys()].map(n => (
+          <button
+            key={n}
+            className={currentPage === n + 1 ? "active" : ""}
+            onClick={() => setCurrentPage(n + 1)}
+          >
+            {n + 1}
+          </button>
+        ))}
+        <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}>Next</button>
+      </div>
+
+      <button onClick={exportData}>Export {activeTab} Excel</button>
+    </div>
+  );
 };
 
 export default MisReport;
