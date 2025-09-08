@@ -7,25 +7,70 @@ import {
   bulkUploadSoftwareAssets,
   bulkUploadCoreLicenses,
 } from "../Services/ApiServices";
+import "../Component_styles/BulkUpload.css";
 
 const BulkUpload = ({ type }) => {
   const [file, setFile] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
 
   // Define templates for each type
   const templates = {
     hardware: [
-      { "Asset Name": "", "Asset Specification": "", "Asset Code": "", "Category": "", "Unit": "", "Status": "", "Location": "", "DOP": "", "DOE": "", "Purchase From": "" }
+      {
+        "Asset Name": "",
+        "Asset Specification": "",
+        "Asset Code": "",
+        "Category": "",
+        "Unit": "",
+        "Status": "",
+        "Location": "",
+        "DOP": "",
+        "DOE": "",
+        "Purchase From": "",
+      },
     ],
     software: [
-      { "Software Name": "", "Version": "", "Publisher": "", "Category": "", "License Key": "", "License Type": "", "License Model": "", "Total Licenses": "", "Licenses Assigned": "", "License Expiry": "", "Purchase Date": "", "Compliance Status": "" }
+      {
+        "Software Name": "",
+        Version: "",
+        Publisher: "",
+        Category: "",
+        "License Key": "",
+        "License Type": "",
+        "License Model": "",
+        "Total Licenses": "",
+        "Licenses Assigned": "",
+        "License Expiry": "",
+        "Purchase Date": "",
+        "Compliance Status": "",
+      },
     ],
     "core-license": [
-      { "Document Type": "", "License Number": "", "Issuing Authority": "", "License Holder": "", "Business Activity": "", "Issue Date": "", "Expiry Date": "", "Renewal Cycle": "", "Reminder Days": "", "Status": "" }
-    ]
+      {
+        "Document Type": "",
+        "License Number": "",
+        "Issuing Authority": "",
+        "License Holder": "",
+        "Business Activity": "",
+        "Issue Date": "",
+        "Expiry Date": "",
+        "Renewal Cycle": "",
+        "Reminder Days": "",
+        Status: "",
+      },
+    ],
   };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    if (e.dataTransfer.files.length > 0) {
+      setFile(e.dataTransfer.files[0]);
+    }
   };
 
   const handleUpload = () => {
@@ -69,10 +114,35 @@ const BulkUpload = ({ type }) => {
 
   return (
     <div className="bulk-upload">
-      <h2>📥 Bulk Upload {type === "hardware" ? "Hardware Assets" : type === "software" ? "Software Assets" : "Core Licenses"}</h2>
-      <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+      <h2>
+        📥 Bulk Upload{" "}
+        {type === "hardware"
+          ? "Hardware Assets"
+          : type === "software"
+          ? "Software Assets"
+          : "Core Licenses"}
+      </h2>
+
+      {/* Drag & Drop Zone */}
+      <div
+        className={`file-dropzone ${dragOver ? "dragover" : ""}`}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+      >
+        <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+        <p>
+          {file
+            ? `📄 ${file.name}`
+            : "📂 Drag & drop Excel file here or click to browse"}
+        </p>
+      </div>
+
       <div className="bulk-actions">
-        <button onClick={handleUpload}>Upload</button>
+        <button onClick={handleUpload}>⬆️ Upload</button>
         <button onClick={handleDownloadTemplate}>⬇️ Download Template</button>
       </div>
     </div>
