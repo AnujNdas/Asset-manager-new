@@ -208,3 +208,20 @@ export const deleteCoreLicense = async (id) => {
   }
 };
 
+// BULK UPLOAD API CALLS
+export const bulkUploadHardwareAssets = async (data) => {
+  const res = await axios.post(`${API_URL}/hardware-assets/bulk-upload`, { assets: data });
+  return res.data;
+};
+
+export const bulkUploadSoftwareAssets = async (data) => {
+  const res = await axios.post(`${API_URL}/software-assets/bulk-upload`, { assets: data });
+  return res.data;
+};
+
+export const bulkUploadCoreLicenses = async (data) => {
+  const res = await axios.post(`${API_URL}/company-licenses/bulk-upload`, { assets: data });
+  return res.data;
+};
+
+
