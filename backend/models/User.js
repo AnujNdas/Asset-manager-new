@@ -13,6 +13,12 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    unique: true,
+  },
+  role: {
+    type : String,
+    enum : ["admin" , "user"],
+    default : "user",
   },
   bio: { type: String, default: "" },
   name: { type: String, default: "" },
@@ -21,6 +27,11 @@ const UserSchema = new mongoose.Schema({
   city: { type: String, default: "" },
   postalCode: { type: String, default: "" },
   taxId: { type: String, default: "" },
+
+  // Two-Factor Authentication fields
+  tfaEnabled: { type: Boolean, default: false },
+  tfaOTP: { type: String },              // Store the current OTP
+  tfaOTPExpiry: { type: Date },          // OTP expiration time
 });
 
 const User = mongoose.model("user", UserSchema);
