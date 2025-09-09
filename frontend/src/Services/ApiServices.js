@@ -224,4 +224,10 @@ export const bulkUploadCoreLicenses = async (data) => {
   return res.data;
 };
 
+// admin route for admin dashboard 
+export const getAdminStats = async () => {
+  const res = await axios.get(`${API_URL}/admin/stats`);
+  return res.data;
+}
+
 
