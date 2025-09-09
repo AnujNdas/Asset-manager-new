@@ -1,20 +1,13 @@
 const express = require("express");
-const { sendOtp , verifyOtpAndSignup , login , getUserData , changePassword} = require('../controllers/authControllers');
-const authenticateToken = require("../Middleware/Authentication-token")
+const { sendOtp, verifyOtpAndSignup, login, getUserData, changePassword } = require("../controllers/authControllers");
+const authenticateToken = require("../Middleware/Authentication-token");
 
 const router = express.Router();
 
-
 router.post("/send-otp", sendOtp);
-
 router.post("/verify-otp-signup", verifyOtpAndSignup);
-// Login route 
 router.post("/login", login);
+router.get("/user", authenticateToken(["admin", "user"]), getUserData);
+router.put("/change-password", authenticateToken(["admin" , "user"]), changePassword);
 
-// Get user route
-router.get("/user", authenticateToken, getUserData);
-
-// change password route 
-router.put("/change-password", authenticateToken, changePassword);
-
-module.exports = router
+module.exports = router;
