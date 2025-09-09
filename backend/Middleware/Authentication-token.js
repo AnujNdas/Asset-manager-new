@@ -1,24 +1,27 @@
 const jwt = require("jsonwebtoken");
 
-const authenticateToken = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
+const authenticateToken = (roles = []) => {
+  return (req, res, next) => {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
 
-  if (!token) {
-    return res.status(401).json({ error: "Authentication required" });
-  }
+    if (!token) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
-  console.log("Received Token:", token); // Debug token
+    try {
+      const decoded = jwt.verify(token, "jwt_secret");
+      req.user = decoded; // contains { id, email, role }
 
-  try {
-    const decoded = jwt.verify(token, "jwt_secret");
-    console.log("Decoded Token:", decoded); // Check payload
-    req.user = decoded;
-    next();
-  } catch (error) {
-    console.log("JWT Error:", error.message); // Will show 'jwt expired' or 'invalid signature'
-    return res.status(403).json({ error: "Invalid or expired token" });
-  }
+      // ✅ Role check
+      if (roles.length && !roles.includes(req.user.role)) {
+        return res.status(403).json({ error: "Forbidden: Access denied" });
+      }
+
+      next();
+    } catch (error) {
+      return res.status(403).json({ error: "Invalid or expired token" });
+    }
+  };
 };
 
 module.exports = authenticateToken;
-
