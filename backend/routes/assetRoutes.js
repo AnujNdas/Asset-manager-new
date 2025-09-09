@@ -20,9 +20,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Routes for asset operations
-router.post("/",authenticateToken, upload.single("image"), addAsset);  // Add an asset with image upload
+router.post("/",authenticateToken(["admin"]), upload.single("image"), addAsset);  // Add an asset with image upload
 router.get("/", getAllAssets); // Fetch all assets
-router.delete("/:id", authenticateToken, deleteAsset); // Delete an asset using its ID
+router.delete("/:id", authenticateToken(["admin"]), deleteAsset); // Delete an asset using its ID
 
 // Route to generate asset code
 router.get('/asset-code', generateAssetCode);
@@ -30,7 +30,7 @@ router.get('/asset-code', generateAssetCode);
 // Route to generate barcode
 router.get('/generate-barcode', generateBarcode);
 
-router.put("/:id",authenticateToken, upload.single("image"), updateAsset);  // Update asset with ID and image upload
+router.put("/:id",authenticateToken(["admin"]), upload.single("image"), updateAsset);  // Update asset with ID and image upload
 
 
 router.post("/bulk-upload", async (req, res) => {
