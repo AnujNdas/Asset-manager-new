@@ -2,7 +2,6 @@ import Menubar from "./Components/Menubar";
 import Sidebar from "./Components/Sidebar";
 import { useState , useEffect, useContext} from "react";
 import "./App.css";
-import Dashboard from "./Pages/Dashboard";
 import { Routes, Route, useLocation } from "react-router-dom";
 import User from "./Pages/User"; 
 import Login from "./Inner_sections/Login";
@@ -14,6 +13,7 @@ import Inventory from "./Pages/Inventory";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import MisReport from "./Pages/MisReport";
 import { ThemeContext } from "./Context/ThemeContext";
+import DashboardWrapper from "./Pages/DashboardWrapper";
 const App = () => {
   const {theme} = useContext(ThemeContext)
   const [profileUser, setProfileUser] = useState(null);
@@ -55,12 +55,12 @@ const App = () => {
 
     <section className={`third-container ${isUserPage ? 'blurred' : ''} ${theme}`}>
       <Routes>
-        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/assetCapture" element={<AssetCapture />} />
-        <Route path="/inventory" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
-        <Route path="/setting/*" element={<Setting />} />
-        <Route path="/classification/*" element={<Classification />} />
-        <Route path="/misreport" element={<ProtectedRoute><MisReport /></ProtectedRoute>} />
+        <Route path="/" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><DashboardWrapper /></ProtectedRoute>} />
+        <Route path="/assetCapture" element={<ProtectedRoute allowedRoles={["admin"]}><AssetCapture /></ProtectedRoute>} />
+        <Route path="/inventory" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><Inventory /></ProtectedRoute>} />
+        <Route path="/setting/*" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><Setting /></ProtectedRoute>} />
+        <Route path="/classification/*" element={<ProtectedRoute allowedRoles={["admin"]}><Classification /></ProtectedRoute>} />
+        <Route path="/misreport" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><MisReport /></ProtectedRoute>} />
       </Routes>
     </section>
 
