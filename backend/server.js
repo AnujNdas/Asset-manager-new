@@ -18,6 +18,7 @@ const statusRoutes = require("./routes/statusRoutes");
 const updateRoutes = require("./routes/updateRoutes");
 const softwareAssetRoutes = require("./routes/softwareAssets");
 const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
+const adminRoutes = require("./routes/adminRoutes");
 
 
 connectDB();
@@ -45,6 +46,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/status", statusRoutes);
 app.use("/api/software-assets", softwareAssetRoutes);
 app.use("/api/company-licenses", companyLicenseRoutes);
+app.use("/api/admin" , adminRoutes)
 
 app.get("/", (req, res) => {
     res.send("Asset management API is running...");
