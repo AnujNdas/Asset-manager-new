@@ -76,7 +76,8 @@ const verifyOtpAndSignup = async (req, res) => {
     const newUser = new User({
       username,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      role : "user"
     });
     await newUser.save();
     
@@ -122,7 +123,7 @@ const login = async (req, res) => {
     if (!validPassword)
       return res.status(401).json({ error: "Invalid Password!" });
     
-    const token = jwt.sign({ email: user.email, id: user._id }, "jwt_secret", {
+    const token = jwt.sign({ email: user.email, id: user._id , role : user.role }, "jwt_secret", {
       expiresIn: "1h",
     });
     
@@ -139,7 +140,7 @@ const login = async (req, res) => {
       });
     }
     
-    res.json({ message: "Logged in!", token });
+    res.json({ message: "Logged in!", token  , role : user.role});
   } catch (error) {
     res.status(500).json({ error: "Error logging in!" });
   }
