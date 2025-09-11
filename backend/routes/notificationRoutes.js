@@ -9,19 +9,11 @@ const {
 } = require("../controllers/notificationController");
 const authenticateToken = require("../Middleware/Authentication-token")
 
-// Create new notification
-router.post("/", authenticateToken, createNotification);
+router.post("/", authenticateToken(), createNotification);
+router.get("/", authenticateToken(), getUserNotifications);
+router.put("/:notificationId/read", authenticateToken(), markAsRead);
+router.put("/markAllRead", authenticateToken(), markAllAsRead);
+router.delete("/:notificationId", authenticateToken(), deleteNotification);
 
-// Get all notifications for logged-in user
-router.get("/", authenticateToken, getUserNotifications);
-
-// Mark a specific notification as read
-router.put("/:notificationId/read", authenticateToken, markAsRead);
-
-// Mark all notifications as read
-router.put("/markAllRead", authenticateToken, markAllAsRead);
-
-// Delete a specific notification
-router.delete("/:notificationId", authenticateToken, deleteNotification);
 
 module.exports = router;
