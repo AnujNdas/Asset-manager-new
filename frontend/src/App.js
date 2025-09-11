@@ -14,6 +14,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import MisReport from "./Pages/MisReport";
 import { ThemeContext } from "./Context/ThemeContext";
 import DashboardWrapper from "./Pages/DashboardWrapper";
+import AssetScanner from "./Pages/Scanner";
 const App = () => {
   const {theme} = useContext(ThemeContext)
   const [profileUser, setProfileUser] = useState(null);
@@ -61,6 +62,7 @@ const App = () => {
         <Route path="/setting/*" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><Setting /></ProtectedRoute>} />
         <Route path="/classification/*" element={<ProtectedRoute allowedRoles={["admin"]}><Classification /></ProtectedRoute>} />
         <Route path="/misreport" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><MisReport /></ProtectedRoute>} />
+        <Route path="/scanner" element={<ProtectedRoute allowedRoles={["admin"]}><AssetScanner /></ProtectedRoute>} />
       </Routes>
     </section>
 
