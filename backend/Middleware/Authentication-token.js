@@ -10,7 +10,11 @@ const authenticateToken = (roles = []) => {
 
     try {
       const decoded = jwt.verify(token, "jwt_secret");
-      req.user = decoded; // contains { id, email, role }
+      req.user = {
+  id: decoded.id || decoded._id,
+  email: decoded.email,
+  role: decoded.role
+};
 
       // ✅ Role check
       if (roles.length && !roles.includes(req.user.role)) {
