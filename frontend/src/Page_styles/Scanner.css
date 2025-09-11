@@ -1,0 +1,82 @@
+.scanner-container {
+  padding: 20px;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.qr-scanner-box {
+  width: 100%;
+  height: 300px;
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.confirmation-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.confirmation-card dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+}
+
+.confirmation-card dt {
+  font-weight: bold;
+  color: #555;
+}
+
+.confirmation-card dd {
+  margin: 0;
+  color: #333;
+}
+
+.actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.actions button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.actions button:first-child {
+  background: #28a745;
+  color: #fff;
+}
+.actions button:first-child:hover {
+  background: #218838;
+}
+
+.actions button:last-child {
+  background: #dc3545;
+  color: #fff;
+}
+.actions button:last-child:hover {
+  background: #c82333;
+}
+
+.scanner-fallback {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
+  color: #777;
+}
