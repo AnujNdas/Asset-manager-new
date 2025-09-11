@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useRef } from "react";
 import { FaBell, FaCheck } from "react-icons/fa";
 import axios from "axios";
 import { io } from "socket.io-client";
-import '../Page_styles/Notification.css'
+import "../Page_styles/Notification.css"
 
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -10,35 +10,40 @@ const NotificationPage = () => {
   const token = sessionStorage.getItem("token");
   const userId = sessionStorage.getItem("userId"); // ✅ Store this during login
 
-  const socket = io("https://asset-manager-new.onrender.com"); // Backend URL
+  const socketRef = useRef()
+
+useEffect(() => {
+  if (!userId) return;
+
+  socketRef.current = io("https://asset-manager-new.onrender.com");
+  socketRef.current.on("connect", () => {
+  socketRef.current.emit("joinRoom", userId);
+});
+
+
+  socketRef.current.on("newNotification", (notification) => {
+    setNotifications((prev) => [notification, ...prev]);
+  });
+
+  axios
+    .get(`https://asset-manager-new.onrender.com/api/notifications`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => setNotifications(res.data))
+    .catch(console.error);
+
+  return () => socketRef.current.disconnect();
+}, [userId]);
+
 
   useEffect(() => {
-    if (!userId) return;
+  console.log("Notifications updated:", notifications);
+}, [notifications]);
 
-    // ✅ Fetch initial notifications
-    axios
-      .get(`https://asset-manager-new.onrender.com/api/notifications`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setNotifications(res.data))
-      .catch((err) => console.error("Error fetching notifications", err));
-
-    // ✅ Join user-specific socket room
-    socket.emit("joinRoom", userId);
-
-    // ✅ Listen for new notifications
-    socket.on("newNotification", (notification) => {
-      setNotifications((prev) => [notification, ...prev]);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [userId]);
 
   const markAllAsRead = async () => {
     await axios.put(
-      `https://asset-manager-new.onrender.com/api/notifications/markAllRead/${userId}`,
+      `https://asset-manager-new.onrender.com/api/notifications/markAllRead/`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -61,14 +66,14 @@ const NotificationPage = () => {
         ) : (
           <ul>
             {notifications.map((n) => (
-              <li key={n._id} className={n.read ? "read" : "unread"}>
+              <li key={n._id} className={n.isRead ? "read" : "unread"}>
                 <div className="notification-item">
                   <h3>{n.title}</h3>
                   <p>{n.message}</p>
                   <div className="notification-footer">
                    <span>{new Date(n.time || n.createdAt).toLocaleString()}</span>
 
-                    {!n.read && <span className="badge">New</span>}
+                    {!n.isRead && <span className="badge">New</span>}
                   </div>
                 </div>
               </li>
