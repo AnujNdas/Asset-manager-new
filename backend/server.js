@@ -19,15 +19,13 @@ const updateRoutes = require("./routes/updateRoutes");
 const softwareAssetRoutes = require("./routes/softwareAssets");
 const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
 const adminRoutes = require("./routes/adminRoutes");
-
-
 connectDB();
 
 const app = express();
 
 // ✅ Middleware
 app.use(cors({
-    origin: "https://asset-manager-new-frontend.onrender.com",
+    origin: "https://asset-manager-new.onrender.com",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -47,7 +45,6 @@ app.use("/api/status", statusRoutes);
 app.use("/api/software-assets", softwareAssetRoutes);
 app.use("/api/company-licenses", companyLicenseRoutes);
 app.use("/api/admin" , adminRoutes)
-
 app.get("/", (req, res) => {
     res.send("Asset management API is running...");
 });
@@ -56,42 +53,30 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://asset-manager-new-frontend.onrender.com",
+        origin: "https://asset-manager-new.onrender.com",
         methods: ["GET", "POST"]
     }
 });
-
-// ✅ Map userId -> socketId for private notifications
-const userSocketMap = {};
 
 // ✅ Handle socket connection
 io.on("connection", (socket) => {
     console.log("✅ New client connected:", socket.id);
 
     // Listen for user registration (after login)
-    socket.on("register", (userId) => {
-        if (userId) {
-            userSocketMap[userId] = socket.id;
-            console.log(`✅ User ${userId} registered with socket ID ${socket.id}`);
-        }
-    });
+socket.on("joinRoom", (userId) => {
+  socket.join(userId);
+  console.log(`✅ User ${userId} joined room`);
+});
+
 
     // Handle disconnection
     socket.on("disconnect", () => {
         console.log("❌ Client disconnected:", socket.id);
-        for (let userId in userSocketMap) {
-            if (userSocketMap[userId] === socket.id) {
-                delete userSocketMap[userId];
-                console.log(`❌ Removed mapping for user ${userId}`);
-                break;
-            }
-        }
     });
 });
 
 // ✅ Make io and userSocketMap accessible in routes
 app.set("io", io);
-app.set("userSocketMap", userSocketMap);
 
 // ✅ Start server
 const PORT = process.env.PORT || 5000;
