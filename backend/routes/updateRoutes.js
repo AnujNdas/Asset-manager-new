@@ -4,7 +4,9 @@ const User = require("../models/User");
 const router = express.Router();
 
 // Update user profile
-router.put("/update", authenticateToken, async (req, res) => {
+router.put("/update", authenticateToken(), async (req, res) => {
+  
+  console.log("Authenticated user:", req.user);
   try {
     const allowedFields = [
       "name",
