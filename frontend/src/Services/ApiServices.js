@@ -108,6 +108,16 @@ export const getSoftwareAssets = async () => {
 };
 
 // Create new software asset
+export const createHardwareAsset = async (assetData) => {
+  try {
+    const response = await axios.post(`${API_URL}/assets/`, assetData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating hardware asset:", error);
+    throw error;
+  }
+};
+// Create new software asset
 export const createSoftwareAsset = async (assetData) => {
   try {
     const response = await axios.post(`${API_URL}/software-assets`, assetData);
