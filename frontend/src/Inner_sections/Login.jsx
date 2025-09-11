@@ -25,10 +25,8 @@ const Login = ({ setProfileUser }) => {
         console.log(response.token)
         sessionStorage.setItem("token", response.token);
         sessionStorage.setItem("email", email);
-        
         sessionStorage.setItem("role", response.role);
         sessionStorage.setItem("userId", response.userId); // ✅ Save userId
-
 
         Swal.fire({
           title: "Success",
