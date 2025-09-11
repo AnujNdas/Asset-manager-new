@@ -47,10 +47,9 @@ const addAsset = async (req, res) => {
 };
 
 
-// Update an asset by ID
 const updateAsset = async (req, res) => {
-      const { id } = req.params;
-      const userId = req.user.id;
+  const { id } = req.params;
+  const userId = req.user.id;
 
   try {
     // Check if the asset exists
@@ -59,43 +58,41 @@ const updateAsset = async (req, res) => {
       return res.status(404).json({ message: "Asset not found" });
     }
 
-    // Create a copy of the request body (excluding the assetCode and barcode)
+    // Copy request body
     let updatedAssetData = { ...req.body };
 
-    // Make sure the asset code and barcode remain unchanged
+    // Preserve assetCode & barcode
     updatedAssetData.assetCode = existingAsset.assetCode;
     updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
 
-    // Handle the image update if a new image is provided
+    // Handle image update
     if (req.file) {
-      updatedAssetData.image = `/uploads/${req.file.filename}`; // Save the image path if a new image is uploaded
+      updatedAssetData.image = `/uploads/${req.file.filename}`;
     }
 
-    // Update the asset in the database
+    // Update the asset
     const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
 
-    // Return the updated asset
-    res.status(200).json(updatedAsset);
-
-     // Create notification
+    // Create notification (before sending response)
     const newNotification = await Notification.create({
       title: "Asset updated",
       message: "Asset updated successfully.",
       userId,
     });
 
-    // Emit via Socket.IO
+    // Emit to user's room
     const io = req.app.get("io");
-    const userSocketMap = req.app.get("userSocketMap");
-    const socketId = userSocketMap[userId];
-    if (socketId) {
-      io.to(socketId).emit("newNotification", newNotification);
-    }
+    io.to(userId.toString()).emit("newNotification", newNotification);
+
+    // ✅ Send response at the very end
+    return res.status(200).json(updatedAsset);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error updating asset", error: error.message });
+    return res.status(500).json({ message: "Error updating asset", error: error.message });
   }
 };
+
 
 
 
@@ -117,14 +114,9 @@ const deleteAsset = async (req,res) => {
       message: "Asset Deleted  successfully.",
       userId,
     });
-
-    // Emit via Socket.IO
+    // Emit to user's room
     const io = req.app.get("io");
-    const userSocketMap = req.app.get("userSocketMap");
-    const socketId = userSocketMap[userId];
-    if (socketId) {
-      io.to(socketId).emit("newNotification", newNotification);
-    }
+    io.to(userId.toString()).emit("newNotification", newNotification);
     } catch (error) {
         res.status(500).json({ message : "Error deleting asset", error : error.message});
     }
@@ -179,7 +171,6 @@ const generateAssetCode = async (req, res) => {
       res.status(500).json({ message: 'Internal server error while generating barcode' });
     }
   };
-  
 
 module.exports = {
     addAsset,
