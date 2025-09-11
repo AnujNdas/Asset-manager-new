@@ -25,7 +25,7 @@ const app = express();
 
 // ✅ Middleware
 app.use(cors({
-    origin: "https://asset-manager-new.onrender.com",
+    origin: "https://asset-manager-new-frontend.onrender.com",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://asset-manager-new.onrender.com",
+        origin: "https://asset-manager-new-frontend.onrender.com",
         methods: ["GET", "POST"]
     }
 });
