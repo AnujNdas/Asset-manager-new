@@ -31,13 +31,9 @@ const addAsset = async (req, res) => {
       userId,
     });
 
-    // Emit via Socket.IO
+    // Emit to user's room
     const io = req.app.get("io");
-    const userSocketMap = req.app.get("userSocketMap");
-    const socketId = userSocketMap[userId];
-    if (socketId) {
-      io.to(socketId).emit("newNotification", newNotification);
-    }
+    io.to(userId.toString()).emit("newNotification", newNotification);
       // Return the saved asset
       res.status(201).json(savedAsset);
   } catch (error) {
