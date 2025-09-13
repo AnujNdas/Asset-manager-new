@@ -34,7 +34,6 @@ const Setting = () => {
     { path: "profile", label: "Profile", icon: FaUser },
     { path: "security", label: "Security", icon: FaLock },
     { path: "general", label: "General", icon: FaCogs },
-    { path: "teamMember", label: "Team", icon: FaUsers },
     { path: "notification", label: "Notifications", icon: FaBell },
   ];
 
