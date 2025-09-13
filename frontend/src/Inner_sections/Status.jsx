@@ -1,91 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import '../Page_styles/Unit.css';  // Make sure to style this page
-import { getStatuses, createStatus } from '../Services/ApiServices';  // Import these functions from api.js
+import '../Page_styles/Unit.css'; // Shared CSS for consistency
+import { getStatuses, createStatus } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Status = () => {
-  const [statusName, setStatusName] = useState('');  // State to store the new status name
-  const [statuses, setStatuses] = useState([]);  // State to store all fetched statuses
-  const [loading, setLoading] = useState(false);  // State for loading indicator
-  const [error, setError] = useState(null);  // State for error handling
-  const [classifyCurrentPage, setClassifyCurrentPage] = useState(1);
-  const classifyPerPage = 5;
-  
-  // Your classification data array
-  const classificationData = statuses; // Replace with your actual array
-  
-  // Calculate number of pages
-  const totalClassifyPages = Math.ceil(classificationData.length / classifyPerPage);
-  
-  // Paginate function for classification
-  const paginateClassify = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalClassifyPages) {
-      setClassifyCurrentPage(pageNumber);
-    }
-  };
-  
-  // Get current items for this page
-  const indexOfLastItem = classifyCurrentPage * classifyPerPage;
-  const indexOfFirstItem = indexOfLastItem - classifyPerPage;
-  const currentClassifyItems = classificationData.slice(indexOfFirstItem, indexOfLastItem);
-  
-  // Fetch all statuses from the backend
+  const [statusName, setStatusName] = useState('');
+  const [statuses, setStatuses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 5;
+
+  const totalPages = Math.ceil(statuses.length / perPage);
+  const indexOfLast = currentPage * perPage;
+  const indexOfFirst = indexOfLast - perPage;
+  const currentItems = statuses.slice(indexOfFirst, indexOfLast);
+
   const fetchStatuses = async () => {
     setLoading(true);
     try {
-      const statusesData = await getStatuses();
-      setStatuses(statusesData);
-    } catch (error) {
+      const data = await getStatuses();
+      setStatuses(data);
+    } catch (err) {
       setError('Error fetching statuses');
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle form submission to create a new status
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!statusName) return;  // Prevent submitting if status name is empty
-
+    if (!statusName) return;
     try {
-      await createStatus({ name: statusName });  // Create a new status using the API
-      setStatusName('');  // Clear the input field
-      fetchStatuses();  // Refresh the statuses list
-    } catch (error) {
+      await createStatus({ name: statusName });
+      setStatusName('');
+      fetchStatuses();
+    } catch (err) {
       setError('Error creating status');
     }
   };
 
-  // Fetch statuses when the component mounts
   useEffect(() => {
     fetchStatuses();
   }, []);
 
   return (
-    <div className='classify_content_box'>
-      <form className="input" onSubmit={handleFormSubmit}>
-        <p> Enter Status: </p>
-        <input
-          type="text"
-          value={statusName}
-          onChange={(e) => setStatusName(e.target.value)}
-          placeholder="Enter status name"
-        />
-        <button type="submit" className='add-btn'>
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
-      </form>
+    <div className="classification_card">
+      <div className="card_header">
+        <h3>Status Management</h3>
+        <form onSubmit={handleSubmit} className="status_form">
+          <input
+            type="text"
+            placeholder="Enter status name"
+            value={statusName}
+            onChange={(e) => setStatusName(e.target.value)}
+          />
+          <button type="submit">
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+        </form>
+      </div>
 
       {loading && <p>Loading statuses...</p>}
-      {error && <p className="error">{error}</p>}  {/* Display error if any */}
+      {error && <p className="error">{error}</p>}
 
-      <div className="input_content">
-        <h3>Status List</h3>
-        {currentClassifyItems.length === 0 ? (
-          <p>No statuses available</p>  // Show a message if no statuses are available
+      <div className="card_content">
+        {currentItems.length === 0 ? (
+          <p>No statuses available</p>
         ) : (
-          <table className="status-table">
+          <table>
             <thead>
               <tr>
                 <th>#</th>
@@ -93,47 +77,44 @@ const Status = () => {
               </tr>
             </thead>
             <tbody>
-              {currentClassifyItems.map((status, index) => (
+              {currentItems.map((status, idx) => (
                 <tr key={status._id}>
-                  <td data-label="S.No">{indexOfFirstItem + index + 1}</td>
-                  <td data-label="Name">{status.name}</td>  {/* Display the status name */}
+                  <td>{indexOfFirst + idx + 1}</td>
+                  <td>{status.name}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
-        <div className="pages">
-  <button
-    onClick={() => paginateClassify(classifyCurrentPage - 1)}
-    disabled={classifyCurrentPage === 1}
-    className={`pagination ${classifyCurrentPage === 1 ? 'disabled' : ''}`}
-  >
-    Prev
-  </button>
 
-  {Array.from({ length: totalClassifyPages }, (_, index) => (
-    <button
-      key={index + 1}
-      onClick={() => paginateClassify(index + 1)}
-      className={`pagination ${classifyCurrentPage === index + 1 ? 'active' : ''}`}
-      style={{ padding: "5px" }}
-    >
-      {index + 1}
-    </button>
-  ))}
+        <div className="pagination_container">
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
 
-  <button
-    onClick={() => paginateClassify(classifyCurrentPage + 1)}
-    disabled={classifyCurrentPage === totalClassifyPages}
-    className={`pagination ${classifyCurrentPage === totalClassifyPages ? 'disabled' : ''}`}
-  >
-    Next
-  </button>
-</div>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? "active" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Status;
-
