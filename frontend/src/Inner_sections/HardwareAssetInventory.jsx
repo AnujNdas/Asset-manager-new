@@ -172,9 +172,9 @@ useEffect(() => {
              <p>
   <strong>Status:</strong> {statuses.find(s => s._id === asset.assetStatus)?.name || "N/A"}
 </p>
-              <div className="barcode-box">
+{/*               <div className="barcode-box">
                 <Barcode value={asset.barcodeNumber} width={1.5} height={40} />
-              </div>
+              </div> */}
 
               <div className="card-actions">
                 <button
@@ -229,9 +229,9 @@ useEffect(() => {
             <p><strong>Date of Expiry:</strong> {selectedAsset.DOE ? new Date(selectedAsset.DOE).toLocaleDateString() : "N/A"}</p>
             <p><strong>Purchase From:</strong> {selectedAsset.purchaseFrom}</p>
             <p><strong>Lifetime:</strong> {selectedAsset.assetLifetime}</p>
-            <div className="barcode-box">
+{/*             <div className="barcode-box">
               <Barcode value={selectedAsset.barcodeNumber} width={2} height={60} />
-            </div>
+            </div> */}
             <button className="close-btn" onClick={() => setSelectedAsset(null)}>
               Close
             </button>
