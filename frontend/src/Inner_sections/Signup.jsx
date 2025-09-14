@@ -104,14 +104,14 @@ const Signup = () => {
             <p className="form-sub">Fill in your details to get started</p>
           </div>
 
-          <div className="social-row">
+{/*           <div className="social-row">
             <button type="button" className="social-btn"><FontAwesomeIcon icon={faFacebook} /></button>
             <button type="button" className="social-btn"><FontAwesomeIcon icon={faTwitter} /></button>
             <button type="button" className="social-btn"><FontAwesomeIcon icon={faLinkedin} /></button>
             <button type="button" className="social-btn"><FontAwesomeIcon icon={faGithub} /></button>
           </div>
 
-          <div className="divider"><span>or</span></div>
+          <div className="divider"><span>or</span></div> */}
 
           <label className="field">
             <span className="field-label"><FontAwesomeIcon icon={faPerson} /> Username</span>
