@@ -90,14 +90,14 @@ const Login = ({ setProfileUser }) => {
             <p className="form-sub">Use your account credentials</p>
           </div>
 
-          <div className="social-row" aria-label="Social options">
+{/*           <div className="social-row" aria-label="Social options">
             <button type="button" className="social-btn" title="Facebook"><FontAwesomeIcon icon={faFacebook} /></button>
             <button type="button" className="social-btn" title="Twitter"><FontAwesomeIcon icon={faTwitter} /></button>
             <button type="button" className="social-btn" title="LinkedIn"><FontAwesomeIcon icon={faLinkedin} /></button>
             <button type="button" className="social-btn" title="GitHub"><FontAwesomeIcon icon={faGithub} /></button>
           </div>
 
-          <div className="divider"><span>or</span></div>
+          <div className="divider"><span>or</span></div> */}
 
           <label className="field">
             <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> E mail</span>
