@@ -22,6 +22,7 @@ import {
 const MyProfile = lazy(() => import("../Inner_sections/MyProfile"));
 const Security = lazy(() => import("../Inner_sections/Security"));
 const Notification = lazy(() => import("../Inner_sections/Notification"));
+const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
 // Add more when needed
 
 const Setting = () => {
@@ -29,32 +30,18 @@ const Setting = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Tabs config
-  const tabs = [
-    { path: "profile", label: "Profile", icon: FaUser },
-    { path: "security", label: "Security", icon: FaLock },
-    { path: "general", label: "General", icon: FaCogs },
-    { path: "notification", label: "Notifications", icon: FaBell },
-  ];
+// Tabs config
+const tabs = [
+  { path: "profile", label: "Profile", icon: FaUser },
+  { path: "security", label: "Security", icon: FaLock },
+  { path: "general", label: "General", icon: FaCogs },
+  { path: "notification", label: "Notifications", icon: FaBell },
+  // User Management only visible for super-admin
+  ...(userData?.role === "super-admin"
+    ? [{ path: "users", label: "User Management", icon: FaUsers }]
+    : []),
+];
 
-  // Logout
-  // const handleLogout = () => {
-  //   Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "You will be logged out.",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Logout",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       sessionStorage.removeItem("token");
-  //       sessionStorage.removeItem("username");
-  //       sessionStorage.removeItem("user");
-  //       setUserData(null);
-  //       navigate("/user/login");
-  //     }
-  //   });
-  // };
 
   // Fetch user data (with cache)
   useEffect(() => {
@@ -123,6 +110,8 @@ const Setting = () => {
             <Route path="profile" element={<MyProfile />} />
             <Route path="security" element={<Security />} />
             <Route path="notification" element={<Notification />} />
+            <Route path="users" element={<UserManagement />} />
+
             {/* Add other routes here when components are ready */}
           </Routes>
         </Suspense>
