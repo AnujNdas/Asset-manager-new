@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getAllUsers, updateUserRole } from "../Services/ApiServices";
 import Swal from "sweetalert2";
+import "../Page_styles/UserManagement.css"
+
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
