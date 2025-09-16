@@ -42,28 +42,7 @@ const UserManagement = () => {
             <th>Change Role</th>
           </tr>
         </thead>
-        <tbody>
-          {users.map((u) => (
-            <tr key={u._id}>
-              <td>{u.username}</td>
-              <td>{u.email}</td>
-              <td>{u.role}</td>
-              <td>
-                {u.role === "super-admin" ? (
-                  <span>🔒 Protected</span>
-                ) : (
-                  <select
-                    value={u.role}
-                    onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                  >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>        <tbody>
+       <tbody>
   {users.map((u) => (
     <tr key={u._id}>
       <td data-label="Username">{u.username}</td>
