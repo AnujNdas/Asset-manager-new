@@ -15,11 +15,12 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  role: {
-    type : String,
-    enum : ["admin" , "user"],
-    default : "user",
-  },
+role: {
+  type: String,
+  enum: ["super-admin", "admin", "user"], // ✅ added "super-admin"
+  default: "user",
+},
+
   bio: { type: String, default: "" },
   name: { type: String, default: "" },
   phone: { type: String, default: "" },
