@@ -5,9 +5,10 @@ const HardwareAsset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const CoreCompanyLicense = require("../models/CoreCompanyLicense");
 const User = require("../models/User");
+const authenticateToken = require("../Middleware/Authentication-token"); // ✅ use your middleware
 
-// GET /api/admin/stats
-router.get("/stats", async (req, res) => {
+// 📊 GET /api/admin/stats (super-admin & admin can see stats)
+router.get("/stats", authenticateToken(["super-admin", "admin"]), async (req, res) => {
   try {
     const hardwareCount = await HardwareAsset.countDocuments();
     const softwareCount = await SoftwareAsset.countDocuments();
@@ -22,10 +23,44 @@ router.get("/stats", async (req, res) => {
       coreLicensesCount,
       activeLicenses,
       expiredLicenses,
-      usersCount
+      usersCount,
     });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch stats" });
+  }
+});
+
+// 👥 GET all users (super-admin only)
+router.get("/users", authenticateToken(["super-admin"]), async (req, res) => {
+  try {
+    const users = await User.find({}, "-password"); // exclude password
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+});
+
+// ✏️ Update user role (super-admin only)
+router.put("/users/:id/role", authenticateToken(["super-admin"]), async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!["user", "admin"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update role" });
   }
 });
 
