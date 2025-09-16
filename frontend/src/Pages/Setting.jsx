@@ -23,6 +23,7 @@ const MyProfile = lazy(() => import("../Inner_sections/MyProfile"));
 const Security = lazy(() => import("../Inner_sections/Security"));
 const Notification = lazy(() => import("../Inner_sections/Notification"));
 const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
+
 // Add more when needed
 
 const Setting = () => {
@@ -69,7 +70,7 @@ const tabs = [
 
         const data = await response.json();
         setUserData(data);
-        sessionStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("user", JSON.stringify(data));
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -89,14 +90,14 @@ const tabs = [
         {tabs.map(({ path, label, icon: Icon }) => (
           <Link
             key={path}
-            to={`/setting/${path}`}
+            to={`/Setting/${path}`}
             className={location.pathname.includes(path) ? "active" : ""}
           >
             <Icon className="tab-icon" />
             <span className="tab-text">{label}</span>
           </Link>
         ))}
-{/*         <button onClick={handleLogout} className="logout-tab">
+        {/* <button onClick={handleLogout} className="logout-tab">
           <FaSignOutAlt className="tab-icon" />
           <span className="tab-text">Logout</span>
         </button> */}
