@@ -56,7 +56,7 @@ const App = () => {
 
     <section className={`third-container ${isUserPage ? 'blurred' : ''} ${theme}`}>
       <Routes>
-        <Route path="/" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><DashboardWrapper /></ProtectedRoute>} />
+        <Route path="/" element={<ProtectedRoute allowedRoles={["admin" , "user"  , "super-admin"]}><DashboardWrapper /></ProtectedRoute>} />
         <Route path="/assetCapture" element={<ProtectedRoute allowedRoles={["admin" , "super-admin"]}><AssetCapture /></ProtectedRoute>} />
         <Route path="/inventory" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><Inventory /></ProtectedRoute>} />
         <Route path="/setting/*" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><Setting /></ProtectedRoute>} />
