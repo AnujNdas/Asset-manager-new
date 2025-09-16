@@ -240,4 +240,23 @@ export const getAdminStats = async () => {
   return res.data;
 }
 
+// Get all users
+export const getAllUsers = async () => {
+  const token = sessionStorage.getItem("token");
+  const res = await axios.get(`${API_URL}/admin/users`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+// Update user role
+export const updateUserRole = async (userId, role) => {
+  const token = sessionStorage.getItem("token");
+  const res = await axios.put(
+    `${API_URL}/admin/users/${userId}/role`,
+    { role },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return res.data;
+};
 
