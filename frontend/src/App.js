@@ -57,12 +57,12 @@ const App = () => {
     <section className={`third-container ${isUserPage ? 'blurred' : ''} ${theme}`}>
       <Routes>
         <Route path="/" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><DashboardWrapper /></ProtectedRoute>} />
-        <Route path="/assetCapture" element={<ProtectedRoute allowedRoles={["admin"]}><AssetCapture /></ProtectedRoute>} />
-        <Route path="/inventory" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><Inventory /></ProtectedRoute>} />
-        <Route path="/setting/*" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><Setting /></ProtectedRoute>} />
-        <Route path="/classification/*" element={<ProtectedRoute allowedRoles={["admin"]}><Classification /></ProtectedRoute>} />
-        <Route path="/misreport" element={<ProtectedRoute allowedRoles={["admin" , "user"]}><MisReport /></ProtectedRoute>} />
-        <Route path="/scanner" element={<ProtectedRoute allowedRoles={["admin"]}><AssetScanner /></ProtectedRoute>} />
+        <Route path="/assetCapture" element={<ProtectedRoute allowedRoles={["admin" , "super-admin"]}><AssetCapture /></ProtectedRoute>} />
+        <Route path="/inventory" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><Inventory /></ProtectedRoute>} />
+        <Route path="/setting/*" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><Setting /></ProtectedRoute>} />
+        <Route path="/classification/*" element={<ProtectedRoute allowedRoles={["admin", "super-admin"]}><Classification /></ProtectedRoute>} />
+        <Route path="/misreport" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><MisReport /></ProtectedRoute>} />
+        <Route path="/scanner" element={<ProtectedRoute allowedRoles={["admin", "super-admin"]}><AssetScanner /></ProtectedRoute>} />
       </Routes>
     </section>
 
