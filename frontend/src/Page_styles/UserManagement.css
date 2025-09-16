@@ -1,18 +1,96 @@
 .user-management {
   padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.user-management h2 {
+  margin-bottom: 15px;
+}
+
+/* Desktop Table */
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
 }
 
-.user-table th, .user-table td {
+.user-table th,
+.user-table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px 10px;
+  text-align: left;
 }
 
 .user-table th {
-  background: #f4f4f4;
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.user-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.user-table select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Role badges */
+.role-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.role-user {
+  background-color: #4caf50; /* green */
+}
+
+.role-admin {
+  background-color: #2196f3; /* blue */
+}
+
+.role-super-admin {
+  background-color: #f44336; /* red */
+}
+
+/* Responsive Cards for Mobile */
+@media (max-width: 768px) {
+  .user-table {
+    display: block;
+  }
+
+  .user-table thead {
+    display: none;
+  }
+
+  .user-table tr {
+    display: block;
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 15px;
+  }
+
+  .user-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .user-table td:last-child {
+    border-bottom: none;
+  }
+
+  .user-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+  }
 }
