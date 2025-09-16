@@ -9,7 +9,13 @@ const DashboardWrapper = () => {
   if (role === "admin") {
     return <AdminDashboard />;
   }
-  return <Dashboard />;
+  else if (role === "super-admin") {
+    return <AdminDashboard/>
+  }
+  else{
+
+    return <Dashboard />;
+  }
 };
 
 export default DashboardWrapper;
