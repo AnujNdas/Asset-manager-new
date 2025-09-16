@@ -234,11 +234,17 @@ export const bulkUploadCoreLicenses = async (data) => {
   return res.data;
 };
 
-// admin route for admin dashboard 
+// Example for getAdminStats
 export const getAdminStats = async () => {
-  const res = await axios.get(`${API_URL}/admin/stats`);
+  const token = sessionStorage.getItem("token");
+  if (!token) throw new Error("No token found");
+
+  const res = await axios.get(`${API_URL}/admin/stats`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
   return res.data;
-}
+};
 
 // Get all users
 export const getAllUsers = async () => {
