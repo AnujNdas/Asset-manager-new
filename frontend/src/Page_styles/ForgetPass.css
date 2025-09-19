@@ -1,0 +1,73 @@
+/* src/Page_styles/ForgotPassword.css */
+.forgot-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: #f4f6f9;
+}
+
+.forgot-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.forgot-card h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.forgot-card p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.forgot-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.forgot-card label {
+  font-size: 14px;
+  text-align: left;
+  color: #444;
+}
+
+.forgot-card input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.forgot-card input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.forgot-card button {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.forgot-card button:hover {
+  background: #0056b3;
+}
+
+.message {
+  margin-top: 15px;
+  font-size: 14px;
+  color: green;
+}
