@@ -20,7 +20,10 @@ role: {
   enum: ["super-admin", "admin", "user"], // ✅ added "super-admin"
   default: "user",
 },
-
+  // Reset password fields
+  resetToken: String,
+  resetTokenExpiry: Date,
+  
   bio: { type: String, default: "" },
   name: { type: String, default: "" },
   phone: { type: String, default: "" },
