@@ -1,7 +1,7 @@
 // src/pages/ResetPassword.jsx
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// import "../Page_styles/ResetPass.css";
+import "../Page_styles/ResetPass.css";
 
 const ResetPassword = () => {
   const { token } = useParams();
