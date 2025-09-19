@@ -263,4 +263,5 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
-module.exports = { sendOtp, verifyOtpAndSignup, login, getUserData, changePassword };
+module.exports = { sendOtp, verifyOtpAndSignup, login, getUserData, changePassword , forgotPassword , resetPassword};
+
