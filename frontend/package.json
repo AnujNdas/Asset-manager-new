@@ -29,6 +29,7 @@
      "react-icons": "^5.5.0",
     "recharts": "^2.15.0",
     "rimraf": "^6.0.1",
+    "framer-motion": "^12.23.16",
     "svgo": "^3.3.2",
     "web-vitals": "^4.2.4",
     "sweetalert2": "^11.15.10",
