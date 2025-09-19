@@ -15,6 +15,9 @@ import MisReport from "./Pages/MisReport";
 import { ThemeContext } from "./Context/ThemeContext";
 import DashboardWrapper from "./Pages/DashboardWrapper";
 import AssetScanner from "./Pages/Scanner";
+import ForgotPassword from "./Inner_sections/ForgetPass";
+import ResetPassword from "./Inner_sections/ResetPass";
+const App = () => {
 const App = () => {
   const {theme} = useContext(ThemeContext)
   const [profileUser, setProfileUser] = useState(null);
@@ -71,6 +74,8 @@ const App = () => {
         <Route path="/user" element={<User removeUser={removeUser} />}>
           <Route path="login" element={<Login setProfileUser={setProfileUser} />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="forgot" element={<ForgotPassword />} />
+          <Route path="reset/:token" element={<ResetPassword />} />
         </Route>
       </Routes>
     </section>
