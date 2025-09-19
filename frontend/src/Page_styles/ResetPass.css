@@ -1,0 +1,118 @@
+/* src/Page_styles/ResetPass.css */
+
+.reset-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  padding: 20px;
+}
+
+.reset-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.reset-card h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+.reset-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+}
+
+.reset-card label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.reset-card input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.reset-card input:focus {
+  border-color: #2575fc;
+  box-shadow: 0 0 5px rgba(37, 117, 252, 0.4);
+}
+
+.reset-card button {
+  background: #2575fc;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.reset-card button:hover {
+  background: #1d63d1;
+}
+
+.message {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.message:before {
+  content: "ℹ️ ";
+}
+
+.message.success {
+  color: #2ecc71;
+}
+
+.message.error {
+  color: #e74c3c;
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .reset-card {
+    padding: 20px;
+  }
+
+  .reset-card h2 {
+    font-size: 20px;
+  }
+
+  .reset-card button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
