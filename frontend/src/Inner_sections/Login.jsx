@@ -122,7 +122,7 @@ const Login = ({ setProfileUser }) => {
           </label>
 
           <div className="form-actions">
-            <Link to="/forget" className="link">Forgot password?</Link>
+            <Link to="/user/forgot" className="link">Forgot password?</Link>
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? 'Logging in…' : 'Login'}
             </button>
