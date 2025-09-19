@@ -18,7 +18,6 @@ import AssetScanner from "./Pages/Scanner";
 import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 const App = () => {
-const App = () => {
   const {theme} = useContext(ThemeContext)
   const [profileUser, setProfileUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
