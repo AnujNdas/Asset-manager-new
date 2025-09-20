@@ -1,7 +1,7 @@
 // src/Services/axiosInstance.js
 import axios from "axios";
 
-const API_URL = "https://asset-manager-new-frontend.onrender.com/api";
+const API_URL = "https://asset-manager-new.onrender.com/api";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
