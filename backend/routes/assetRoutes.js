@@ -7,7 +7,6 @@ const {
   deleteAsset,
   getAllAssets,
   generateAssetCode,
-  generateBarcode,
   updateAsset,
 } = require("../controllers/assetControllers");
 
@@ -36,8 +35,6 @@ router.delete("/:id", authenticateToken(), deleteAsset); // Delete an asset usin
 // Route to generate asset code
 router.get("/asset-code", generateAssetCode);
 
-// Route to generate barcode
-router.get("/generate-barcode", generateBarcode);
 
 // Update asset with ID and image upload
 router.put("/:id", authenticateToken(), upload.single("image"), updateAsset);
