@@ -148,31 +148,12 @@ const generateAssetCode = async (req, res) => {
       res.status(500).json({ message: 'Internal server error while generating asset code' });
     }
   };
-  
-  // Function to generate unique barcode
-  const generateBarcode = async (req, res) => {
-    try {
-      const generateBarcode = () => crypto.randomBytes(6).toString('hex').toUpperCase(); // Random 12-character barcode
-  
-      let barcode = generateBarcode();
-  
-      // Ensure the barcode is unique
-      while (await Asset.findOne({ barcodeNumber: barcode })) {
-        barcode = generateBarcode();
-      }
-  
-      res.json({ barcodeNumber: barcode });
-    } catch (error) {
-      console.error('Error generating barcode:', error);
-      res.status(500).json({ message: 'Internal server error while generating barcode' });
-    }
-  };
+
 
 module.exports = {
     addAsset,
     deleteAsset,
     getAllAssets,
     generateAssetCode,
-    generateBarcode,
     updateAsset
 };
