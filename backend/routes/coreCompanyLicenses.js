@@ -8,14 +8,15 @@ const {
   deleteCompanyLicense
 } = require("../controllers/coreCompanyLicenseController");
 
+const authenticateToken = require("../Middleware/Authentication-token");
 const router = express.Router();
 
-router.post("/", createCompanyLicense);
-router.get("/", getCompanyLicenses);
-router.get("/:id", getCompanyLicenseById);
-router.put("/:id", updateCompanyLicense);
-router.delete("/:id", deleteCompanyLicense);
-router.post("/bulk-upload", async (req, res) => {
+router.post("/",authenticateToken(), createCompanyLicense);
+router.get("/",authenticateToken(), getCompanyLicenses);
+router.get("/:id" , authenticateToken(), getCompanyLicenseById);
+router.put("/:id",authenticateToken(), updateCompanyLicense);
+router.delete("/:id",authenticateToken(), deleteCompanyLicense);
+router.post("/bulk-upload",authenticateToken(), async (req, res) => {
   try {
     const { assets } = req.body;
 
