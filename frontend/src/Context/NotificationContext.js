@@ -20,21 +20,21 @@ export const NotificationProvider = ({ children }) => {
     if (!userId || !token) return;
 
     axios
-      .get("https://asset-manager-new.onrender.com00/api/notifications", {
+      .get("https://asset-manager-new.onrender.com/api/notifications", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setNotifications(res.data))
       .catch(console.error);
 
     axios
-      .get("https://asset-manager-new.onrender.com00/api/notifications/unreadCount", {
+      .get("https://asset-manager-new.onrender.com/api/notifications/unreadCount", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUnreadCount(res.data.count || 0))
       .catch(console.error);
 
     // setup socket
-    socketRef.current = io("https://asset-manager-new.onrender.com00");
+    socketRef.current = io("https://asset-manager-new.onrender.com");
     socketRef.current.emit("joinRoom", userId);
 
     socketRef.current.on("newNotification", (notification) => {
@@ -48,7 +48,7 @@ export const NotificationProvider = ({ children }) => {
   // Mark all as read
   const markAllAsRead = async () => {
     await axios.put(
-      "https://asset-manager-new.onrender.com00/api/notifications/markAllRead",
+      "https://asset-manager-new.onrender.com/api/notifications/markAllRead",
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -59,7 +59,7 @@ export const NotificationProvider = ({ children }) => {
   // Mark one as read
   const markAsRead = async (id) => {
     await axios.put(
-      `https://asset-manager-new.onrender.com00/api/notifications/${id}/read`,
+      `https://asset-manager-new.onrender.com/api/notifications/${id}/read`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
