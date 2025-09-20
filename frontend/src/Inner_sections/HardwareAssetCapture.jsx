@@ -58,10 +58,11 @@ const AssetCapture = () => {
           getCategories(),
           getStatuses(),
         ]);
-        setUnits(u || []);
-        setLocations(l || []);
-        setCategories(c || []);
-        setStatuses(s || []);
+        setUnits(Array.isArray(u) ? u : []);
+setLocations(Array.isArray(l) ? l : []);
+setCategories(Array.isArray(c) ? c : []);
+setStatuses(Array.isArray(s) ? s : []);
+
       } catch (e) {
         console.error(e);
         Swal.fire('Error', 'Failed to load classifications', 'error');
@@ -190,15 +191,9 @@ const AssetCapture = () => {
         <div>
           <select name="assetCategory" value={formData.assetCategory} onChange={handleChange} required>
             <option value="">Select Category</option>
-            {Array.isArray(categories) && categories.length > 0 ? (
-  categories.map((c) => (
-    <option key={c._id} value={c._id}>
-      {c.name}
-    </option>
-  ))
-) : (
-  <option disabled>No categories found</option>
-)}
+{categories.map((c) => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
 
           </select>
         </div>
