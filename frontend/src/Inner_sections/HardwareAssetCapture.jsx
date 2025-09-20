@@ -13,7 +13,6 @@ const AssetCapture = () => {
   const defaultFormData = {
     assetCode: '',
     assetCategory: '',
-    barcodeNumber: '',
     assetName: '',
     associateUnit: '',
     locationName: '',
@@ -42,12 +41,12 @@ const AssetCapture = () => {
     return data.assetCode;
   };
 
-  const generateUniqueBarcode = async () => {
-    const res = await fetch(`${API_URL}/assets/generate-barcode`);
-    if (!res.ok) throw new Error('Failed to generate barcode');
-    const data = await res.json();
-    return data.barcodeNumber;
-  };
+  // const generateUniqueBarcode = async () => {
+  //   const res = await fetch(`${API_URL}/assets/generate-barcode`);
+  //   if (!res.ok) throw new Error('Failed to generate barcode');
+  //   const data = await res.json();
+  //   return data.barcodeNumber;
+  // };
 
   // ---- Load classifications ----
   useEffect(() => {
@@ -143,12 +142,11 @@ const AssetCapture = () => {
     if (!validateRequired()) return;
 
     try {
-      const [assetCode, barcodeNumber] = await Promise.all([
+      const [assetCode] = await Promise.all([
         generateAssetCode(),
-        generateUniqueBarcode(),
       ]);
 
-      const payload = { ...formData, assetCode, barcodeNumber };
+      const payload = { ...formData, assetCode };
       await saveAssetToDatabase(payload);
 
       Swal.fire('Success', 'Asset added successfully!', 'success');
@@ -159,27 +157,26 @@ const AssetCapture = () => {
     }
   };
 
-  const handleAddAnother = async (e) => {
-    e.preventDefault();
-    if (!validateRequired()) return;
+  // const handleAddAnother = async (e) => {
+  //   e.preventDefault();
+  //   if (!validateRequired()) return;
 
-    try {
-      const [assetCode, barcodeNumber] = await Promise.all([
-        generateAssetCode(),
-        generateUniqueBarcode(),
-      ]);
+  //   try {
+  //     const [assetCode, barcodeNumber] = await Promise.all([
+  //       generateAssetCode(),
+  //     ]);
 
-      const payload = { ...formData, assetCode, barcodeNumber };
-      await saveAssetToDatabase(payload);
+  //     const payload = { ...formData, assetCode, barcodeNumber };
+  //     await saveAssetToDatabase(payload);
 
-      Swal.fire('Success', 'Asset added. You can add another.', 'success');
-      setFormData(defaultFormData);
-      setImagePreview(null);
-    } catch (err) {
-      console.error(err);
-      Swal.fire('Error', err.message || 'Failed to add asset.', 'error');
-    }
-  };
+  //     Swal.fire('Success', 'Asset added. You can add another.', 'success');
+  //     setFormData(defaultFormData);
+  //     setImagePreview(null);
+  //   } catch (err) {
+  //     console.error(err);
+  //     Swal.fire('Error', err.message || 'Failed to add asset.', 'error');
+  //   }
+  // };
 
   return (
     <div className="capture-container">
