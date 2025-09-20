@@ -17,26 +17,31 @@ const AdminDashboard = () => {
   const [statuses, setStatuses] = useState([]);
   const [units, setUnits] = useState([]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [statsData, catData, locData, statData, unitData] = await Promise.all([
-          getAdminStats(),
-          getCategories(),
-          getLocations(),
-          getStatuses(),
-          getUnits(),
-        ]);
-        setCategories(Array.isArray(catData.data) ? catData.data : []);
-setLocations(Array.isArray(locData.data) ? locData.data : []);
-setStatuses(Array.isArray(statData.data) ? statData.data : []);
-setUnits(Array.isArray(unitData.data) ? unitData.data : []);
+useEffect(() => {
+  (async () => {
+    try {
+      const [statsData, catData, locData, statData, unitData] = await Promise.all([
+        getAdminStats(),
+        getCategories(),
+        getLocations(),
+        getStatuses(),
+        getUnits(),
+      ]);
 
-      } catch (err) {
-        console.error("Error loading dashboard data:", err);
-      }
-    })();
-  }, []);
+      // ✅ set stats
+      setStats(statsData);
+
+      // ✅ categories, locations, etc.
+      setCategories(Array.isArray(catData) ? catData : []);
+      setLocations(Array.isArray(locData) ? locData : []);
+      setStatuses(Array.isArray(statData) ? statData : []);
+      setUnits(Array.isArray(unitData) ? unitData : []);
+
+    } catch (err) {
+      console.error("Error loading dashboard data:", err);
+    }
+  })();
+}, []);
 
   if (!stats) return <p>Loading...</p>;
 
