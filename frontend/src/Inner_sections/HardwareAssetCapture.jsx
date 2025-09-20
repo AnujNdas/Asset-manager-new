@@ -5,7 +5,7 @@ import { getUnits, getLocations, getCategories, getStatuses } from '../Services/
 import Swal from 'sweetalert2';
 import '../Page_styles/CaptureForm.css';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://asset-manager-new.onrender.com/api';
 
 const AssetCapture = () => {
   const navigate = useNavigate();
