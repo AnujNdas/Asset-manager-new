@@ -190,9 +190,16 @@ const AssetCapture = () => {
         <div>
           <select name="assetCategory" value={formData.assetCategory} onChange={handleChange} required>
             <option value="">Select Category</option>
-            {categories.map((c) => (
-              <option key={c._id} value={c._id}>{c.name}</option>
-            ))}
+            {Array.isArray(categories) && categories.length > 0 ? (
+  categories.map((c) => (
+    <option key={c._id} value={c._id}>
+      {c.name}
+    </option>
+  ))
+) : (
+  <option disabled>No categories found</option>
+)}
+
           </select>
         </div>
 
