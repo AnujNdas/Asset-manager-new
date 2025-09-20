@@ -2,9 +2,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const Otp = require("../models/Otp");
+const crypto = require("crypto");
 const User = require("../models/User");
 const Notification = require("../models/Notification");
-const crypto = require("crypto");
 
 // In-memory OTP store (better: Redis or DB)
 const otpStore = {};
@@ -90,12 +90,12 @@ const verifyOtpAndSignup = async (req, res) => {
     });
     
     // Emit via socket if needed
-    if (req.io) {
-      req.io.to(newUser._id.toString()).emit("notification", {
-        title: "Welcome!",
-        message: `Account created successfully.`
-      });
-    }
+const io = req.app.get("io");
+io.to(newUser._id.toString()).emit("newNotification", {
+  title: "Welcome!",
+  message: "Account created successfully."
+});
+
     // Delete OTP after successful signup
     await Otp.deleteMany({ email });
 
@@ -134,14 +134,14 @@ const login = async (req, res) => {
       userId: user._id,
     });
     
-    if (req.io) {
-      req.io.to(user._id.toString()).emit("notification", {
-        title: "Login Successful",
-        message: "You have successfully logged in."
-      });
-    }
+   const io = req.app.get("io");
+io.to(user._id.toString()).emit("newNotification", {
+  title: "Login Successful",
+  message: "You have successfully logged in."
+});
+
     
-    res.json({ message: "Logged in!", token  , role : user.role , userId: user._id});
+    res.json({ message: "Logged in!", token  , role : user.role , userId : user._id});
   } catch (error) {
     res.status(500).json({ error: "Error logging in!" });
   }
@@ -255,7 +255,21 @@ const resetPassword = async (req, res) => {
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
 
-    await user.save();
+    await user.save(); 
+       // 🔔 Save notification in DB
+    await Notification.create({
+      title: "Password Changed",
+      message: "Your password has been updated successfully.",
+      userId: user._id,
+    });
+
+    // 🔔 Emit real-time notification
+    if (req.io) {
+      req.io.to(user._id.toString()).emit("notification", {
+        title: "Password Changed",
+        message: "Your password has been updated successfully.",
+      });
+    }
 
     res.json({ message: "Password has been reset successfully" });
   } catch (err) {
@@ -263,5 +277,5 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
-module.exports = { sendOtp, verifyOtpAndSignup, login, getUserData, changePassword , forgotPassword , resetPassword};
 
+module.exports = { sendOtp, verifyOtpAndSignup, login, getUserData, changePassword , forgotPassword , resetPassword};
