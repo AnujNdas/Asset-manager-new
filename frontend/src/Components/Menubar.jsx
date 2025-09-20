@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./Profiledropdown";
+import NotificationButton from "./NotificationBtn";
 
 const Menubar = ({ username  , toggleSidebar}) => {
   const navigate = useNavigate();
@@ -35,9 +36,7 @@ const Menubar = ({ username  , toggleSidebar}) => {
           </button>
         </div> */}
         <div className="control-panel">
-          <button className="controls" onClick={handlenotification}>
-            <FontAwesomeIcon icon={faBell} style={{ color: "#7870f7" }} />
-          </button>
+          <NotificationButton/>
           <button className="controls">
             <FontAwesomeIcon
               icon={faCircleQuestion}
