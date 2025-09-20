@@ -27,11 +27,11 @@ const AdminDashboard = () => {
           getStatuses(),
           getUnits(),
         ]);
-        setStats(statsData);
-        setCategories(catData);
-        setLocations(locData);
-        setStatuses(statData);
-        setUnits(unitData);
+        setCategories(Array.isArray(catData.data) ? catData.data : []);
+setLocations(Array.isArray(locData.data) ? locData.data : []);
+setStatuses(Array.isArray(statData.data) ? statData.data : []);
+setUnits(Array.isArray(unitData.data) ? unitData.data : []);
+
       } catch (err) {
         console.error("Error loading dashboard data:", err);
       }
