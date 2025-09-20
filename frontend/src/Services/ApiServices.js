@@ -1,268 +1,136 @@
-import axios from 'axios';
-
-const API_URL = 'https://asset-manager-new.onrender.com/api';  // Update if your backend URL is different
+// src/Services/ApiServices.js
+import axiosInstance from "./axiosInstance";
 
 // ----- UNIT API CALLS -----
-// Get all units
 export const getUnits = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/unit`);
-    return response.data;  // Return the list of units
-  } catch (error) {
-    console.error('Error fetching units:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.get("/unit");
+  return response.data;
 };
 
-// Create a new unit
 export const createUnit = async (unitData) => {
-  try {
-    const response = await axios.post(`${API_URL}/unit`, unitData);
-    return response.data;  // Return the newly created unit
-  } catch (error) {
-    console.error('Error creating unit:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.post("/unit", unitData);
+  return response.data;
 };
 
 // ----- LOCATION API CALLS -----
-// Get all locations
 export const getLocations = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/location`);
-    return response.data;  // Return the list of locations
-  } catch (error) {
-    console.error('Error fetching locations:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.get("/location");
+  return response.data;
 };
 
-// Create a new location
 export const createLocation = async (locationData) => {
-  try {
-    const response = await axios.post(`${API_URL}/location`, locationData);
-    return response.data;  // Return the newly created location
-  } catch (error) {
-    console.error('Error creating location:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.post("/location", locationData);
+  return response.data;
 };
 
 // ----- CATEGORY API CALLS -----
-// Get all categories
 export const getCategories = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/category`);
-    return response.data;  // Return the list of categories
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.get("/category");
+  return response.data;
 };
 
-// Create a new category
 export const createCategory = async (categoryData) => {
-  try {
-    const response = await axios.post(`${API_URL}/category`, categoryData);
-    return response.data;  // Return the newly created category
-  } catch (error) {
-    console.error('Error creating category:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.post("/category", categoryData);
+  return response.data;
 };
 
-// Services/ApiServices.js
-
+// ----- STATUS API CALLS -----
 export const getStatuses = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/status`);  // Make sure your backend has the correct endpoint
-    return response.data;  // Return the list of statuses
-  } catch (error) {
-    console.error('Error fetching statuses:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.get("/status");
+  return response.data;
 };
 
-// Create a new status
 export const createStatus = async (statusData) => {
-  try {
-    const response = await axios.post(`${API_URL}/status`, statusData);  // Adjust endpoint for creating status
-    return response.data;  // Return the newly created status
-  } catch (error) {
-    console.error('Error creating status:', error);
-    throw error;  // Throw error so we can catch it in the component
-  }
+  const response = await axiosInstance.post("/status", statusData);
+  return response.data;
 };
 
 // ----- SOFTWARE ASSETS API CALLS -----
-
-// Get all software assets
 export const getSoftwareAssets = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/software-assets`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching software assets:", error);
-    throw error;
-  }
+  const response = await axiosInstance.get("/software-assets");
+  return response.data;
 };
 
-// Create new software asset
-export const createHardwareAsset = async (assetData) => {
-  try {
-    const response = await axios.post(`${API_URL}/assets/`, assetData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creating hardware asset:", error);
-    throw error;
-  }
-};
-// Create new software asset
 export const createSoftwareAsset = async (assetData) => {
-  try {
-    const response = await axios.post(`${API_URL}/software-assets`, assetData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creating software asset:", error);
-    throw error;
-  }
+  const response = await axiosInstance.post("/software-assets", assetData);
+  return response.data;
 };
 
-// Get single software asset by ID
 export const getSoftwareAssetById = async (id) => {
-  try {
-    const response = await axios.get(`${API_URL}/software-assets/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching software asset:", error);
-    throw error;
-  }
+  const response = await axiosInstance.get(`/software-assets/${id}`);
+  return response.data;
 };
 
-// Update software asset
 export const updateSoftwareAsset = async (id, updatedData) => {
-  try {
-    const response = await axios.put(`${API_URL}/software-assets/${id}`, updatedData);
-    return response.data;
-  } catch (error) {
-    console.error("Error updating software asset:", error);
-    throw error;
-  }
+  const response = await axiosInstance.put(`/software-assets/${id}`, updatedData);
+  return response.data;
 };
 
-// Delete software asset
 export const deleteSoftwareAsset = async (id) => {
-  try {
-    const response = await axios.delete(`${API_URL}/software-assets/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error deleting software asset:", error);
-    throw error;
-  }
+  const response = await axiosInstance.delete(`/software-assets/${id}`);
+  return response.data;
+};
+
+// ----- HARDWARE ASSETS API CALLS -----
+export const createHardwareAsset = async (assetData) => {
+  const response = await axiosInstance.post("/assets", assetData);
+  return response.data;
 };
 
 // ----- CORE COMPANY LICENSE API CALLS -----
-
-// Get all licenses
 export const getCoreLicenses = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/company-licenses`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching core licenses:", error);
-    throw error;
-  }
+  const response = await axiosInstance.get("/company-licenses");
+  return response.data;
 };
 
-// Create a new license
 export const createCoreLicense = async (licenseData) => {
-  try {
-    const response = await axios.post(`${API_URL}/company-licenses`, licenseData);
-    return response.data;
-  } catch (error) {
-    console.error("Error creating core license:", error);
-    throw error;
-  }
+  const response = await axiosInstance.post("/company-licenses", licenseData);
+  return response.data;
 };
 
-// Get single license by ID
 export const getCoreLicenseById = async (id) => {
-  try {
-    const response = await axios.get(`${API_URL}/company-licenses/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching core license:", error);
-    throw error;
-  }
+  const response = await axiosInstance.get(`/company-licenses/${id}`);
+  return response.data;
 };
 
-// Update license
 export const updateCoreLicense = async (id, updatedData) => {
-  try {
-    const response = await axios.put(`${API_URL}/company-licenses/${id}`, updatedData);
-    return response.data;
-  } catch (error) {
-    console.error("Error updating core license:", error);
-    throw error;
-  }
+  const response = await axiosInstance.put(`/company-licenses/${id}`, updatedData);
+  return response.data;
 };
 
-// Delete license
 export const deleteCoreLicense = async (id) => {
-  try {
-    const response = await axios.delete(`${API_URL}/company-licenses/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error deleting core license:", error);
-    throw error;
-  }
+  const response = await axiosInstance.delete(`/company-licenses/${id}`);
+  return response.data;
 };
 
-// BULK UPLOAD API CALLS
+// ----- BULK UPLOAD API CALLS -----
 export const bulkUploadHardwareAssets = async (data) => {
-  const res = await axios.post(`${API_URL}/assets/bulk-upload`, { assets: data });
-  return res.data;
+  const response = await axiosInstance.post("/assets/bulk-upload", { assets: data });
+  return response.data;
 };
 
 export const bulkUploadSoftwareAssets = async (data) => {
-  const res = await axios.post(`${API_URL}/software-assets/bulk-upload`, { assets: data });
-  return res.data;
+  const response = await axiosInstance.post("/software-assets/bulk-upload", { assets: data });
+  return response.data;
 };
 
 export const bulkUploadCoreLicenses = async (data) => {
-  const res = await axios.post(`${API_URL}/company-licenses/bulk-upload`, { assets: data });
-  return res.data;
+  const response = await axiosInstance.post("/company-licenses/bulk-upload", { assets: data });
+  return response.data;
 };
 
-// Example for getAdminStats
+// ----- ADMIN API CALLS -----
 export const getAdminStats = async () => {
-  const token = sessionStorage.getItem("token");
-  if (!token) throw new Error("No token found");
-
-  const res = await axios.get(`${API_URL}/admin/stats`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  return res.data;
+  const response = await axiosInstance.get("/admin/stats");
+  return response.data;
 };
 
-// Get all users
 export const getAllUsers = async () => {
-  const token = sessionStorage.getItem("token");
-  const res = await axios.get(`${API_URL}/admin/users`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
+  const response = await axiosInstance.get("/admin/users");
+  return response.data;
 };
 
-// Update user role
 export const updateUserRole = async (userId, role) => {
-  const token = sessionStorage.getItem("token");
-  const res = await axios.put(
-    `${API_URL}/admin/users/${userId}/role`,
-    { role },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return res.data;
+  const response = await axiosInstance.put(`/admin/users/${userId}/role`, { role });
+  return response.data;
 };
-
