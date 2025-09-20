@@ -5,7 +5,7 @@ import { getUnits, getLocations, getCategories, getStatuses } from '../Services/
 import Swal from 'sweetalert2';
 import '../Page_styles/CaptureForm.css';
 
-const API_URL = 'https://asset-manager-new.onrender.com/api';
+const API_URL = 'http://localhost:5000/api';
 
 const AssetCapture = () => {
   const navigate = useNavigate();
@@ -58,11 +58,10 @@ const AssetCapture = () => {
           getCategories(),
           getStatuses(),
         ]);
-        setUnits(Array.isArray(u) ? u : []);
-setLocations(Array.isArray(l) ? l : []);
-setCategories(Array.isArray(c) ? c : []);
-setStatuses(Array.isArray(s) ? s : []);
-
+        setUnits(u || []);
+        setLocations(l || []);
+        setCategories(c || []);
+        setStatuses(s || []);
       } catch (e) {
         console.error(e);
         Swal.fire('Error', 'Failed to load classifications', 'error');
@@ -191,10 +190,9 @@ setStatuses(Array.isArray(s) ? s : []);
         <div>
           <select name="assetCategory" value={formData.assetCategory} onChange={handleChange} required>
             <option value="">Select Category</option>
-{categories.map((c) => (
+            {categories.map((c) => (
               <option key={c._id} value={c._id}>{c.name}</option>
             ))}
-
           </select>
         </div>
 
