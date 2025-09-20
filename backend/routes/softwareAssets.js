@@ -8,15 +8,16 @@ const {
   deleteSoftwareAsset
 } = require("../controllers/softwareAssetController");
 
+const authenticateToken = require("../Middleware/Authentication-token");
 const router = express.Router();
 
-router.post("/", createSoftwareAsset);
-router.get("/", getSoftwareAssets);
-router.get("/:id", getSoftwareAssetById);
-router.put("/:id", updateSoftwareAsset);
-router.delete("/:id", deleteSoftwareAsset);
+router.post("/",authenticateToken(), createSoftwareAsset);
+router.get("/",authenticateToken(),getSoftwareAssets);
+router.get("/:id",authenticateToken(), getSoftwareAssetById);
+router.put("/:id",authenticateToken(), updateSoftwareAsset);
+router.delete("/:id",authenticateToken(), deleteSoftwareAsset);
 
-router.post("/bulk-upload", async (req, res) => {
+router.post("/bulk-upload",authenticateToken(), async (req, res) => {
   try {
     const { assets } = req.body;
 
