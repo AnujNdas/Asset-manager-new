@@ -1,14 +1,18 @@
 // src/Pages/AssetScanner.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import { createHardwareAsset } from "../Services/ApiServices";
+import { Html5Qrcode } from "html5-qrcode";
 import "../Page_styles/Scanner.css";
 
 const AssetScanner = () => {
   const [scannedData, setScannedData] = useState(null);
   const [formData, setFormData] = useState({});
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [cameras, setCameras] = useState([]);
+  const [currentCamera, setCurrentCamera] = useState(null);
+  const scannerRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -17,33 +21,52 @@ const AssetScanner = () => {
   }, []);
 
   useEffect(() => {
-    if (!isMobile) return; // ❌ prevent scanner init on desktop
+    if (!isMobile) return;
 
-    import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
-      const scanner = new Html5QrcodeScanner("scanner", { fps: 10, qrbox: 250 });
-      scanner.render(onScanSuccess, onScanFailure);
+    const scanner = new Html5Qrcode("scanner");
+    scannerRef.current = scanner;
 
-      function onScanSuccess(decodedText) {
-        let parsed;
-        try {
-          parsed = JSON.parse(decodedText);
-        } catch {
-          parsed = { assetCode: decodedText };
+    Html5Qrcode.getCameras()
+      .then((devices) => {
+        setCameras(devices);
+        if (devices.length) {
+          setCurrentCamera(devices[0].id);
+          startScanner(devices[0].id);
         }
-        setScannedData(parsed);
-        setFormData(mapToAssetSchema(parsed));
-        scanner.clear();
-      }
+      })
+      .catch((err) => console.error("Camera error:", err));
 
-      function onScanFailure(err) {
-        console.warn("Scan error:", err);
-      }
+    function startScanner(cameraId) {
+      scanner
+        .start(
+          cameraId,
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            let parsed;
+            try {
+              parsed = JSON.parse(decodedText);
+            } catch {
+              parsed = { assetCode: decodedText };
+            }
+            setScannedData(parsed);
+            setFormData(mapToAssetSchema(parsed));
+            scanner.stop().catch(() => {});
+          },
+          (err) => console.warn("Scan error:", err)
+        )
+        .catch((err) => console.error("Start error:", err));
+    }
 
-      return () => {
-        scanner.clear().catch(() => {});
-      };
-    });
-  }, [isMobile]);
+    // restart scanner when switching camera
+    if (currentCamera) {
+      startScanner(currentCamera);
+    }
+
+    return () => {
+      scanner.stop().catch(() => {});
+      scanner.clear().catch(() => {});
+    };
+  }, [isMobile, currentCamera]);
 
   const mapToAssetSchema = (src) => ({
     assetCode: src.assetCode ?? src.serial ?? "UNKNOWN_CODE",
@@ -70,12 +93,30 @@ const AssetScanner = () => {
       Swal.fire("✔️ Saved", "Asset has been added successfully.", "success");
       setScannedData(null);
       setFormData({});
+      scannerRef.current?.start(currentCamera); // restart scanning
     } catch {
       Swal.fire("❌ Error", "Failed to save asset.", "error");
     }
   };
 
-  // ❌ Don't load scanner at all on desktop
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    scannerRef.current
+      .scanFile(file, true)
+      .then((decodedText) => {
+        let parsed;
+        try {
+          parsed = JSON.parse(decodedText);
+        } catch {
+          parsed = { assetCode: decodedText };
+        }
+        setScannedData(parsed);
+        setFormData(mapToAssetSchema(parsed));
+      })
+      .catch((err) => Swal.fire("❌ Error", "Invalid QR code file", "error"));
+  };
+
   if (!isMobile) {
     return (
       <div className="desktop-warning">
@@ -96,12 +137,38 @@ const AssetScanner = () => {
       </motion.h2>
 
       {!scannedData ? (
-        <motion.div
-          id="scanner"
-          className="scanner-box"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-        />
+        <>
+          {/* Controls outside scanner */}
+          <div className="scanner-controls">
+            <select
+              value={currentCamera || ""}
+              onChange={(e) => setCurrentCamera(e.target.value)}
+            >
+              {cameras.map((cam) => (
+                <option key={cam.id} value={cam.id}>
+                  {cam.label || `Camera ${cam.id}`}
+                </option>
+              ))}
+            </select>
+
+            <label className="upload-btn">
+              Upload QR
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                hidden
+              />
+            </label>
+          </div>
+
+          <motion.div
+            id="scanner"
+            className="scanner-box"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+          />
+        </>
       ) : (
         <motion.div
           className="form-card"
@@ -132,7 +199,10 @@ const AssetScanner = () => {
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.95 }}
-              onClick={() => setScannedData(null)}
+              onClick={() => {
+                setScannedData(null);
+                scannerRef.current?.start(currentCamera);
+              }}
               className="btn-secondary"
             >
               Cancel
