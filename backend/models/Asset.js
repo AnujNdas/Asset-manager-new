@@ -23,7 +23,6 @@ const assetSchema = new mongoose.Schema({
     },
     image : {
         type : String,
-        required: true,
     },
     locationName : {
         type : String,
