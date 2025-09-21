@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "../Component_styles/Sidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import image from "../Images/logo.png";
 import { ThemeContext } from "../Context/ThemeContext";
 import {
@@ -10,81 +10,65 @@ import {
   faCartShopping,
   faGear,
   faReceipt,
+  faPaperPlane,
   faRecycle,
 } from "@fortawesome/free-solid-svg-icons";
-import Switch from "./Switch";
-// import { useContext } from 'react'
+// import Switch from "./Switch";
 
 const Sidebar = ({ closeSidebar }) => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+
   return (
     <div className={`sidebar-container ${theme}`}>
       <div className={`sidebar ${theme}`}>
         <div className={`sidebar-heading ${theme}`}>
-          <div className="logo">
-            <img
-              src={image}
-              style={{
-                height: "100%",
-                width: "100%",
-              }}
-            />
-          </div>
-          <div className={`title ${theme}`}>ASSERA</div>
+          <div className={`title ${theme}`}>Vault<span>ifly</span><FontAwesomeIcon icon={faPaperPlane} style={{ marginLeft: "8px", color: "#6596ffff" }} /></div>
         </div>
         <div className={`sidebar-menu ${theme}`}>
           <ul>
             <li>
-              <Link to="/" onClick={closeSidebar}>
+              <NavLink to="/" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faGauge} style={{ width: "25%" }} />
                 <span className="tab-text">Dashboard</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/assetCapture" onClick={closeSidebar}>
-                <FontAwesomeIcon
-                  icon={faCartShopping}
-                  style={{ width: "25%" }}
-                />
-                <span className="tab-text">Asset capture</span>
-              </Link>
+              <NavLink to="/assetCapture" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                <FontAwesomeIcon icon={faCartShopping} style={{ width: "25%" }} />
+                <span className="tab-text">Asset Capture</span>
+              </NavLink>
             </li>
-            {/* <li><Link to="/Product_list"><FontAwesomeIcon icon={faList} />Product List</Link></li> */}
             <li>
-              <Link to="/inventory" onClick={closeSidebar}>
+              <NavLink to="/inventory" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faLayerGroup} style={{ width: "25%" }} />
                 <span className="tab-text">Inventory</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/misReport" onClick={closeSidebar}>
+              <NavLink to="/misReport" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faReceipt} style={{ width: "25%" }} />
                 <span className="tab-text">MIS Report</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/setting" onClick={closeSidebar}>
+              <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
                 <span className="tab-text">Settings</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/classification" onClick={closeSidebar}>
+              <NavLink to="/classification" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faRecycle} style={{ width: "25%" }} />
                 <span className="tab-text">Classifications</span>
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/scanner" onClick={closeSidebar}>
+              <NavLink to="/scanner" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faRecycle} style={{ width: "25%" }} />
                 <span className="tab-text">Scanner</span>
-              </Link>
+              </NavLink>
             </li>
           </ul>
-        </div>
-        {/* ✅ Dark/Light Toggle at Bottom */}
-        <div className="sidebar-toggle">
-          <Switch isOn={theme === "dark"} handleToggle={toggleTheme} />
         </div>
       </div>
     </div>
