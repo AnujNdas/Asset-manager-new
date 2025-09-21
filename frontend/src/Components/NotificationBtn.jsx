@@ -8,8 +8,8 @@ const NotificationBtn = () => {
 
   return (
     <button className="controls" onClick={() => navigate("setting/notification")}>
-      <FaBell style={{ color: "#7870f7", fontSize: "20px" }} />
-      {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+      <FaBell style={{ color: "#2463eb", fontSize: "20px" }} />
+      {unreadCount > 0 && <span className="badge" style={{color: "red",borderRadius : "50%" , background : "yellow"}}>{unreadCount}</span>}
     </button>
   );
 };
