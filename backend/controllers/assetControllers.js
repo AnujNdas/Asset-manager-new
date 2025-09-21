@@ -10,15 +10,20 @@ const addAsset = async (req, res) => {
       console.log("Incoming data:", req.body); // Log the incoming request body
       console.log("Uploaded file:", req.file);  // Log the uploaded file
 
-      if (!req.file) {
-          return res.status(400).json({ message: "Image is required" });
-      }
+      let imagePath = req.body.image || "";
+if (req.file) {
+  imagePath = `/uploads/${req.file.filename}`;
+}
+if (!imagePath) {
+  return res.status(400).json({ message: "Image is required" });
+}
 
       // Create the asset object with the data from req.body and image path
-      const newAsset = new Asset({
-          ...req.body,
-          image: `/uploads/${req.file.filename}`,  // Save the image path
-      });
+     const newAsset = new Asset({
+    ...req.body,
+    image: imagePath,  // ✅ safe, whether file exists or req.body.image was passed
+});
+
 
       // Save the asset to the database
       const savedAsset = await newAsset.save();
