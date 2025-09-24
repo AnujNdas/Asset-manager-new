@@ -2,77 +2,103 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 20px;
+  gap: 24px;
+  padding: 16px;
+  background: #f7f9fc; /* subtle background */
 }
 
 /* Tabs Navigation */
 .settings-tabs {
   display: flex;
-  /* flex-wrap: wrap; */
-  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 8px;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  border-bottom: 1px solid #ddd;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .settings-tabs a,
 .settings-tabs button {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
   text-decoration: none;
   border: none;
-  background: white;
-  padding: 7px 7px;
-  border-radius: 8px;
+  background: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 12px;
-  transition: all 0.2s ease-in-out;
-  min-width: 80px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-
-.settings-tabs a.active,
+.tab-text2{
+  color: #2463eb;
+}
+.settings-tabs a:hover,
 .settings-tabs button:hover {
-  background: #007bff;
-  color: white;
+  background: #f0f5ff;
+  color: #007bff;
+  transform: translateY(-2px);
 }
 
+.settings-tabs a.active {
+  background: #bbd8ff;
+  box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+}
+.tab-text2.active {
+  color: #fff;
+}
 .settings-tabs .tab-icon {
-  font-size: 18px;
-  margin-bottom: 4px;
+  font-size: 16px;
 }
 
 .settings-tabs .tab-text {
-  font-size: 12px;
-  display: block;
+  font-size: 13px;
+}
+
+/* Content area */
+.settings {
+  flex: 1;
+  padding: 10px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Small animation for content */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .setting-container{
-        gap: 20px;
-    }
   .settings-tabs {
-    display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    display: grid;
+    gap: 10px;
   }
 
   .settings-tabs a,
   .settings-tabs button {
-    min-width: auto;
-    padding: 10px;
-    font-size: 10px;
+    padding: 12px;
+    font-size: 12px;
+    justify-content: center;
   }
 
   .settings-tabs .tab-icon {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .settings-tabs .tab-text {
-    font-size: 10px;
+    font-size: 11px;
   }
 }
 
@@ -82,6 +108,6 @@
   }
 
   .settings-tabs .tab-text {
-    display: none; /* Only show icons on very small screens */
+    display: none; /* icons only on very small screens */
   }
 }
