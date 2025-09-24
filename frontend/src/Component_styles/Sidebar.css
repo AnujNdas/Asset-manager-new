@@ -5,7 +5,248 @@
 }
 
 h1 {
+  color: #F8FAFC;* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+h1 {
   color: #F8FAFC;
+  font-size: 25px;
+  font-weight: 700;
+  font-family: "Montserrat", sans-serif;
+}
+
+ul {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+li {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: 0.2s;
+  font-family: "Lato", sans-serif;
+}
+.tab-text{
+  color : #2563eb;
+}
+a{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0px;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+a:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb; /* soft blue highlight */
+  text-decoration: none;
+}
+
+/* Sidebar container */
+.sidebar-container {
+  height: 100%;
+  width: 100%;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+/* Sidebar base */
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* Sidebar Heading */
+.sidebar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1e1e2f;
+  position: relative;
+  margin-bottom: 2rem;
+  padding-bottom: 12px;
+  text-align: center;
+}
+
+.sidebar-heading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 90%;
+  height: 2px;
+  background: linear-gradient(90deg, #4f46e5, transparent);
+  border-radius: 2px;
+}
+
+.title {
+  font-family: "Nunito", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.title span {
+  color: #2563eb; /* highlight Vault */
+}
+
+
+.logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* Menu styles */
+.sidebar-menu {
+  flex: 1;
+}
+
+.sidebar-menu.light {
+  color: #111827; /* slate-900 */
+}
+
+.sidebar-menu.dark {
+  color: #f1f5f9; /* slate-100 */
+}
+
+.title.light {
+  color: #3a3a3b;
+}
+.title.dark {
+  color: #f1f5f9;
+}
+
+/* Light mode links */
+.sidebar.light a {
+  color: #333; /* slate-700 */
+}
+.sidebar.light a:hover {
+  color: #2563eb;
+}
+
+/* Dark mode */
+.sidebar.dark {
+  background: #1e293b;
+}
+.sidebar.dark a {
+  color: #f1f5f9;
+}
+.sidebar.dark a:hover {
+  background: rgba(148, 163, 184, 0.15);
+  color: #38bdf8;
+}
+/* Active link (currently selected page) */
+.sidebar.light a.active{
+  background: #eff6ff; /* very light blue background */
+  color: #2563eb;       /* primary blue text */
+  font-weight: 700;
+}
+
+.sidebar.dark a.active {
+  background: rgba(37, 99, 235, 0.15);
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+
+/* Toggle section */
+.sidebar-toggle {
+  padding: 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------------- MOBILE RESPONSIVE ---------------- */
+@media screen and (max-width: 768px) {
+  .sidebar-container {
+    width: 200px;
+    position: fixed;
+    left: 200px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  .sidebar-container.open {
+    transform: translateX(0);
+  }
+
+  .sidebar {
+    padding: 10px;
+  }
+
+  .sidebar-heading {
+    justify-content: flex-end;
+    /* padding: 0 15px; */
+    margin-bottom: 10px;
+  }
+
+
+  .title {
+    justify-content: right;
+  }
+
+  ul {
+    gap: 10px;
+  }
+
+  li {
+    font-size: 0.95rem;
+    padding: 6px 0;
+  }
+
+  a {
+    font-size: 14px;
+    padding: 10px 12px;
+    gap: 12px;
+  }
+}
+
+/* Tablet (hide text, show icons only) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tab-text {
+    display: none;
+  }
+  li a {
+    justify-content: center;
+  }
+  .title {
+    display: none;
+  }
+  .logo {
+    width: 100%;
+  }
+}
+
   font-size: 25px;
   font-weight: 700;
   font-family: "Montserrat", sans-serif;
