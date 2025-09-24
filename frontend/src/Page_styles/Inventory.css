@@ -23,7 +23,8 @@
 .tab {
   padding: 10px 20px;
   border: none;
-  background: #e0e0e0;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   color: #333;
   font-weight: 500;
   border-radius: 8px;
@@ -32,11 +33,14 @@
 }
 
 .tab:hover {
-  background: #d5d5d5;
+  background: #f0f5ff;
+  color: #007bff;
+  transform: translateY(-2px);
 }
 
 .tab.active {
-  background: #007bff;
+  background: #bbd8ff;
+  box-shadow: 0 4px 8px rgba(0,123,255,0.2);
   color: #fff;
   font-weight: 600;
 }
