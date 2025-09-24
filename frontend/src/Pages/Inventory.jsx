@@ -12,24 +12,24 @@ const Inventory = () => {
       <h2 className="inventory-title">📦 Asset Inventory</h2>
 
       {/* Tabs */}
-      <div className="tabs">
+<div className="tabs">
         <button
           className={activeTab === "hardware" ? "tab active" : "tab"}
           onClick={() => setActiveTab("hardware")}
         >
-          💻 Hardware
+          <span className="tab-text2">💻 Hardware</span>
         </button>
         <button
           className={activeTab === "software" ? "tab active" : "tab"}
           onClick={() => setActiveTab("software")}
         >
-          🖥️ Software
+          <span className="tab-text2">🖥️ Software</span>
         </button>
         <button
           className={activeTab === "core" ? "tab active" : "tab"}
           onClick={() => setActiveTab("core")}
         >
-          🏢 Core Licenses
+          <span className="tab-text2">🏢 Core Licenses</span>
         </button>
       </div>
 
