@@ -26,9 +26,9 @@ const Classification = () => {
           <Link
             key={tab.name}
             to={tab.path}
-            className={`tab_link ${location.pathname === tab.path ? "active" : ""}`}
+            className={`tab ${location.pathname === tab.path ? "active" : ""}`}
           >
-            {tab.name}
+            <span className="tab-text2">{tab.name}</span>
           </Link>
         ))}
       </div>
