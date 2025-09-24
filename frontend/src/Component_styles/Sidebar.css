@@ -121,7 +121,7 @@ a:hover {
 
 /* Light mode links */
 .sidebar.light a {
-  color: #374151; /* slate-700 */
+  color: #333; /* slate-700 */
 }
 .sidebar.light a:hover {
   color: #2563eb;
