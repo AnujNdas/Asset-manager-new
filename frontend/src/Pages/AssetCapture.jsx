@@ -13,25 +13,25 @@ const AssetCapture = () => {
       <h2>Asset Capture</h2>
 
       {/* Tabs */}
-      <div className="tabs">
+<div className="tabs">
         {/* Capture Tabs */}
         <button
           className={activeTab === "hardware" ? "tab active" : "tab"}
           onClick={() => setActiveTab("hardware")}
         >
-          Hardware
+          <span className="tab-text2">Hardware</span>
         </button>
         <button
           className={activeTab === "software" ? "tab active" : "tab"}
           onClick={() => setActiveTab("software")}
         >
-          Software
+          <span className="tab-text2">Software</span>
         </button>
         <button
           className={activeTab === "core" ? "tab active" : "tab"}
           onClick={() => setActiveTab("core")}
         >
-          Core License
+          <span className="tab-text2">Core License</span>
         </button>
 
         {/* Bulk Upload Tabs */}
@@ -39,19 +39,19 @@ const AssetCapture = () => {
           className={activeTab === "bulk-hardware" ? "tab active" : "tab"}
           onClick={() => setActiveTab("bulk-hardware")}
         >
-          Bulk Hardware
+          <span className="tab-text2">Bulk Hardware</span>
         </button>
         <button
           className={activeTab === "bulk-software" ? "tab active" : "tab"}
           onClick={() => setActiveTab("bulk-software")}
         >
-          Bulk Software
+          <span className="tab-text2">Bulk Software</span>
         </button>
         <button
           className={activeTab === "bulk-core" ? "tab active" : "tab"}
           onClick={() => setActiveTab("bulk-core")}
         >
-          Bulk Core License
+          <span className="tab-text2">Bulk Core License</span>
         </button>
       </div>
 
