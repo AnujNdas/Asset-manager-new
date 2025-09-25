@@ -64,7 +64,7 @@ const Sidebar = ({ closeSidebar }) => {
             </li>
             <li>
               <NavLink to="/scanner" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                <FontAwesomeIcon icon={faRecycle} style={{ width: "25%" }} />
+                <FontAwesomeIcon icon={faExpand} style={{ width: "25%" }} />
                 <span className="tab-text">Scanner</span>
               </NavLink>
             </li>
