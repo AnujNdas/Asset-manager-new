@@ -12,7 +12,7 @@ import {
   faReceipt,
   faPaperPlane,
   faRecycle,
-  faExpand
+  faExpand,
 } from "@fortawesome/free-solid-svg-icons";
 // import Switch from "./Switch";
 
