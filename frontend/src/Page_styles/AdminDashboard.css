@@ -48,11 +48,13 @@
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   transition: all 0.3s ease;
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .data-card h4 {
   margin-bottom: 0.5rem;
   font-size: 1rem;
+  color: #333;
 }
 
 .scrollable-list {
@@ -63,6 +65,7 @@
 
 .scrollable-list li {
   margin-bottom: 0.3rem;
+  color: #2486ed;
 }
 
 /* Scrollbar styling */
