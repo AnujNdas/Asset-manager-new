@@ -10,7 +10,7 @@ const AssetCapture = () => {
 
   return (
     <div className="capture-container">
-      <h2>Asset Capture</h2>
+      <h2 className="classify_heading">Asset Capture</h2>
 
       {/* Tabs */}
 <div className="tabs">
