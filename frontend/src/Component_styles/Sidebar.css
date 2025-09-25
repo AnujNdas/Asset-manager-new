@@ -28,7 +28,7 @@ li {
   flex-direction: row;
   cursor: pointer;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: 0.2s;
   font-family: "Lato", sans-serif;
 }
