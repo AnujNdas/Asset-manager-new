@@ -52,7 +52,7 @@ useEffect(() => {
 
   return (
     <div className="admin-dashboard">
-      <h2 className="dashboard-title"> Admin Dashboard</h2>
+      <h2 className="classify_heading"> Admin Dashboard</h2>
 
       {/* --- STATS GRID --- */}
       <motion.div 
