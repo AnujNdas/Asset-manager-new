@@ -8,7 +8,31 @@ import {
   getUnits,
 } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
-import { motion } from "framer-motion"; // npm install framer-motion
+import { motion, AnimatePresence } from "framer-motion";
+
+// Add images (store banners in /public/images/)
+const features = [
+  {
+    title: "📊 Manage Assets",
+    description: "Easily track and organize all hardware and software assets.",
+    image: "/images/assets.png",
+  },
+  {
+    title: "🔑 License Tracking",
+    description: "Monitor active and expired licenses with real-time insights.",
+    image: "/images/vaultifly.com.png",
+  },
+  {
+    title: "👥 User Management",  
+    description: "Control roles, permissions, and streamline team collaboration.",
+    image: "/images/User Management.png",
+  },
+  {
+    title: "📍 Location Management",
+    description: "Assign and monitor assets across multiple locations seamlessly.",
+    image: "/images/webinar.png",
+  },
+];
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -16,32 +40,37 @@ const AdminDashboard = () => {
   const [locations, setLocations] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [units, setUnits] = useState([]);
+  const [index, setIndex] = useState(0);
 
-useEffect(() => {
-  (async () => {
-    try {
-      const [statsData, catData, locData, statData, unitData] = await Promise.all([
-        getAdminStats(),
-        getCategories(),
-        getLocations(),
-        getStatuses(),
-        getUnits(),
-      ]);
+  // Auto-slide carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % features.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
-      // ✅ set stats
-      setStats(statsData);
-
-      // ✅ categories, locations, etc.
-      setCategories(Array.isArray(catData) ? catData : []);
-      setLocations(Array.isArray(locData) ? locData : []);
-      setStatuses(Array.isArray(statData) ? statData : []);
-      setUnits(Array.isArray(unitData) ? unitData : []);
-
-    } catch (err) {
-      console.error("Error loading dashboard data:", err);
-    }
-  })();
-}, []);
+  useEffect(() => {
+    (async () => {
+      try {
+        const [statsData, catData, locData, statData, unitData] =
+          await Promise.all([
+            getAdminStats(),
+            getCategories(),
+            getLocations(),
+            getStatuses(),
+            getUnits(),
+          ]);
+        setStats(statsData);
+        setCategories(catData);
+        setLocations(locData);
+        setStatuses(statData);
+        setUnits(unitData);
+      } catch (err) {
+        console.error("Error loading dashboard data:", err);
+      }
+    })();
+  }, []);
 
   if (!stats) return <p>Loading...</p>;
 
@@ -54,17 +83,66 @@ useEffect(() => {
     <div className="admin-dashboard">
       <h2 className="classify_heading"> Admin Dashboard</h2>
 
+      {/* --- FEATURE CAROUSEL --- */}
+<div className="feature-carousel">
+  <AnimatePresence mode="wait">
+    <motion.div
+      key={index}
+      className="feature-card"
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      transition={{ duration: 0.5 }}
+    >
+  <div className="feature-image-container">
+    <img
+      src={features[index].image}
+      alt={features[index].title}
+      className="feature-image"
+    />
+    <button className="feature-btn">Explore</button>
+  </div>
+    </motion.div>
+  </AnimatePresence>
+
+  {/* Manual Controls */}
+  <div className="carousel-controls">
+    {features.map((_, idx) => (
+      <button
+        key={idx}
+        className={`dot ${idx === index ? "active" : ""}`}
+        onClick={() => setIndex(idx)}
+      />
+    ))}
+  </div>
+</div>
+
+
+
+
       {/* --- STATS GRID --- */}
-      <motion.div 
+      <motion.div
         className="stats-grid"
         initial="hidden"
         animate="visible"
         transition={{ staggerChildren: 0.2 }}
       >
         {[
-          { title: "Hardware Assets", value: stats.hardwareCount, color: "#A7C7E7" },
-          { title: "Software Assets", value: stats.softwareCount, color: "#F7B2AD" },
-          { title: "Core Licenses", value: stats.coreLicensesCount, color: "#FFD97D" },
+          {
+            title: "Hardware Assets",
+            value: stats.hardwareCount,
+            color: "#A7C7E7",
+          },
+          {
+            title: "Software Assets",
+            value: stats.softwareCount,
+            color: "#F7B2AD",
+          },
+          {
+            title: "Core Licenses",
+            value: stats.coreLicensesCount,
+            color: "#FFD97D",
+          },
           { title: "Total Users", value: stats.usersCount, color: "#B5EAD7" },
         ].map((stat, idx) => (
           <motion.div
@@ -72,7 +150,10 @@ useEffect(() => {
             className="stat-card"
             style={{ backgroundColor: stat.color }}
             variants={cardVariants}
-            whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.15)" }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
+            }}
           >
             <h3>{stat.title}</h3>
             <p>{stat.value}</p>
@@ -92,7 +173,10 @@ useEffect(() => {
             key={idx}
             className="data-card"
             variants={cardVariants}
-            whileHover={{ scale: 1.03, boxShadow: "0px 5px 15px rgba(0,0,0,0.1)" }}
+            whileHover={{
+              scale: 1.03,
+              boxShadow: "0px 5px 15px rgba(0,0,0,0.1)",
+            }}
           >
             <h4>{item.title}</h4>
             <ul className="scrollable-list">
@@ -105,13 +189,6 @@ useEffect(() => {
           </motion.div>
         ))}
       </div>
-
-      {/* --- CHART PLACEHOLDER --- */}
-      <motion.div className="chart-section" variants={cardVariants}>
-        <h3>Licenses Status</h3>
-        <p>Active: {stats.activeLicenses}</p>
-        <p>Expired: {stats.expiredLicenses}</p>
-      </motion.div>
     </div>
   );
 };
