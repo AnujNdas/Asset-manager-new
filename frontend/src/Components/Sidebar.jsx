@@ -1,4 +1,4 @@
-pandimport React, { useContext } from "react";
+import React, { useContext } from "react";
 import "../Component_styles/Sidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
