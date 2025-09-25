@@ -180,7 +180,7 @@ const AssetCapture = () => {
 
   return (
     <div className="capture-container">
-      <h2>New Hardware Asset</h2>
+      <h2 className="capture-title">New Hardware Asset</h2>
 
       <form className="capture-form">
         <div>
