@@ -13,6 +13,11 @@
   flex-direction: column;
   gap: 15px;
 }
+.capture-title{
+  color: #333;
+  font-size: 18px;
+  
+}
 
 /* Labels */
 .capture-form label {
