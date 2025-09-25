@@ -9,7 +9,7 @@ const Inventory = () => {
 
   return (
     <div className="inventory-container">
-      <h2 className="inventory-title">📦 Asset Inventory</h2>
+      <h2 className="classify_heading"> Asset Inventory</h2>
 
       {/* Tabs */}
 <div className="tabs">
