@@ -73,11 +73,6 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
             </Link>
           </li>
           <li>
-            <Link to="/setting/notification" onClick={onClose}>
-              <FontAwesomeIcon icon={faInbox} /> Inbox
-            </Link>
-          </li>
-          <li>
             <button onClick={handleLogout} className="logout-btn">
               <FontAwesomeIcon icon={faSignOut} /> Logout
             </button>
