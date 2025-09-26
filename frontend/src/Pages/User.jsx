@@ -13,12 +13,6 @@ const User = ({ removeUser }) => {
   return (
     <div className="user-overlay">
       <div className="user-card">
-        <button onClick={goBackToHomepage} className="back-btn">
-          ⬅ Back to Homepage
-        </button>
-
-        <h2 className="welcome-text">Welcome to Asset Manager</h2>
-
         <div className="tab-buttons">
           <button
             onClick={() => navigate("/user/login")}
