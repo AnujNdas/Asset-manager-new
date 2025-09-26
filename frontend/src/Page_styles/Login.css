@@ -182,8 +182,8 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
 }
 .field input::placeholder{ color: #2346ed; opacity: .75;font-size: 13px; }
 .field input:focus{
-  border-color: #cc794a;
-  box-shadow: 0 0 0 1px #cc794a;
+  border-color: #2346ed;
+  box-shadow: 0 0 0 1px #2346ed;
   background: rgba(255,255,255,.035);
 }
 
