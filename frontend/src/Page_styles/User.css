@@ -25,43 +25,24 @@
   animation: fadeIn 0.4s ease-in-out;
 }
 
-/* Back Button */
-.back-btn {
-  background: transparent;
-  border: none;
-  font-size: 14px;
-  color: #ff0000;
-  cursor: pointer;
-  /* margin-bottom: 15px; */
-  transition: color 0.3s;
-}
-.back-btn:hover {
-  color: #d91d5f;
-}
 
-/* Heading */
-.welcome-text {
-  font-size: 22px;
-  font-weight: bold;
-  text-align: center;
-  color: #cc794a;
-  margin-bottom: 10px;
-}
 
 /* Tab Buttons */
 .tab-buttons {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   gap: 10px;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 .tab-btn {
-  flex: 1;
-  padding: 10px;
+  padding: 10px 30px;
   border-radius: 8px;
   border: 1px solid #ddd;
   background: #f7f7f7;
   color: #555;
   font-weight: bold;
+  font-size: 13px;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -69,7 +50,7 @@
   background: #ffffff;
 }
 .tab-btn.active {
-  background: #2a67ff;
+  background: #2346ed;
   color: white;
   border-color: #4891ff;
 }
