@@ -26,14 +26,12 @@
 
 .tab:hover {
   background: #f0f5ff;
-  color: #007bff;
   transform: translateY(-2px);
 }
 
 .tab.active {
   background: #bbd8ff;
   box-shadow: 0 4px 8px rgba(0,123,255,0.2);
-  color: #fff;
   font-weight: 600;
 }
 
