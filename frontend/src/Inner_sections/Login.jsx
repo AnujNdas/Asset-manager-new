@@ -87,7 +87,6 @@ const Login = ({ setProfileUser }) => {
           <div className="form-header">
             {/* <img src={image} alt="Logo" className="form-logo" /> */}
             <h2>Sign in</h2>
-            <p className="form-sub">Use your account credentials</p>
           </div>
 
 {/*           <div className="social-row" aria-label="Social options">
