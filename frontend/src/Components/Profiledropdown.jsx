@@ -86,7 +86,7 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
             <span className="username">{username || 'Guest User'}</span>
           </li>
 
-          <hr className="divider" />
+          <hr className="divide" />
 
           {/* Logout Button */}
           <li>
