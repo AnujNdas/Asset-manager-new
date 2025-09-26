@@ -78,6 +78,32 @@ right: 200px;
   transform: scale(1.1);
   transition: 0.2s ease-in-out;
 }
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.user-info .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.username {
+  font-weight: 500;
+  font-size: 13px;
+  color: #2346ed;
+}
+
+.divide {
+  margin: 0;
+  width:100%;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
 
 /* ✅ Responsive Styling for Logout Button */
 @media screen and (max-width: 480px) {
