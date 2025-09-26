@@ -116,7 +116,7 @@ io.to(newUser._id.toString()).emit("newNotification", {
 // ✅ Login controller (keep same as before)
 const login = async (req, res) => {
   const { email, password } = req.body;
-  try {
+  try { 
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found!" });
     
@@ -124,11 +124,11 @@ const login = async (req, res) => {
     if (!validPassword)
       return res.status(401).json({ error: "Invalid Password!" });
     
-    const token = jwt.sign({ email: user.email, id: user._id , role : user.role }, "jwt_secret", {
-      expiresIn: "1h",
+    const token = jwt.sign({ email: user.email, id: user._id , role : user.role , username : user.username }, "jwt_secret", {
+      expiresIn: "3h",
     });
     
-    await Notification.create({
+    await Notification.create({ 
       title: "Login Successful",
       message: "You have successfully logged in.",
       userId: user._id,
@@ -141,7 +141,7 @@ io.to(user._id.toString()).emit("newNotification", {
 });
 
     
-    res.json({ message: "Logged in!", token  , role : user.role , userId : user._id});
+    res.json({ message: "Logged in!", token  , role : user.role , userId : user._id , username : user.username});
   } catch (error) {
     res.status(500).json({ error: "Error logging in!" });
   }
@@ -212,7 +212,7 @@ const forgotPassword = async (req, res) => {
     user.resetTokenExpiry = Date.now() + 3600000; // valid 1 hour
     await user.save();
 
-    const resetLink = `https://asset-manager-new-frontend.onrender.com/user/reset/${token}`;
+    const resetLink = `http://localhost:3000/user/reset/${token}`;
 
     // Transporter (use your SMTP or Gmail)
     const transporter = nodemailer.createTransport({
