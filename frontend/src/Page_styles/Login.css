@@ -69,16 +69,16 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
 }
 
 .brand-panel h1{
-  font-size: clamp(24px, 3.4vw, 34px);
+  font-size: clamp(18px, 3.4vw, 20px);
   line-height: 1.15;
   letter-spacing: .2px;
   margin: 6px 0 2px;
-  color: #cc794a;
+  color: #2346ed;
 }
 
 .brand-sub{
-  color: var(--muted);
-  font-size: clamp(14px, 1.5vw, 16px);
+  color: #333;
+  font-size: clamp(10px, 1.5vw, 13px);
   max-width: 44ch;
   text-align: center;
 }
