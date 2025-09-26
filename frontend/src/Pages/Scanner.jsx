@@ -1,4 +1,3 @@
-// src/pages/AssetScanner.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import Swal from "sweetalert2";
@@ -17,15 +16,23 @@ const AssetScanner = () => {
   const [formData, setFormData] = useState({});
   const scannerRef = useRef(null);
 
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+  // --- Cleanup on unmount ---
+  useEffect(() => {
+    return () => {
+      stopScanner();
+    };
+  }, []);
+
   // --- Start Scanner ---
   const startScanner = async () => {
     if (!scannerRef.current) {
       scannerRef.current = new Html5Qrcode("reader");
     }
-
     try {
       await scannerRef.current.start(
-        { facingMode: "environment" }, // back camera
+        { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         (decodedText) => {
           stopScanner();
@@ -34,7 +41,6 @@ const AssetScanner = () => {
       );
       setIsScanning(true);
     } catch (err) {
-      console.error("Camera start failed:", err);
       Swal.fire({
         icon: "error",
         title: "Camera Error",
@@ -109,7 +115,6 @@ const AssetScanner = () => {
 
       setFormData({});
     } catch (error) {
-      console.error(error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -118,12 +123,14 @@ const AssetScanner = () => {
     }
   };
 
-  // --- Cleanup ---
-  useEffect(() => {
-    return () => {
-      stopScanner();
-    };
-  }, []);
+  // --- UI ---
+  if (!isMobile) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "30vh" }}>
+        <h2>📱 This page is only accessible on mobile devices.</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="scanner-page">
@@ -143,9 +150,13 @@ const AssetScanner = () => {
       {/* Scanner Controls */}
       <div className="scanner-controls">
         {!isScanning ? (
-          <button onClick={startScanner} className="start-btn">Start Scanner</button>
+          <button onClick={startScanner} className="start-btn">
+            Start Scanner
+          </button>
         ) : (
-          <button onClick={stopScanner} className="stop-btn">Stop Scanner</button>
+          <button onClick={stopScanner} className="stop-btn">
+            Stop Scanner
+          </button>
         )}
         <label className="upload-btn">
           Upload QR / Barcode
@@ -160,45 +171,13 @@ const AssetScanner = () => {
       {formData.assetCode && (
         <form onSubmit={handleSubmit} className="asset-form">
           <h3>{activeTab} Asset Form</h3>
-
-          <input
-            type="text"
-            name="assetCode"
-            placeholder="Asset Code"
-            value={formData.assetCode || ""}
-            readOnly
-          />
-          <input
-            type="text"
-            name="name"
-            placeholder="Asset Name"
-            value={formData.name || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Category"
-            value={formData.category || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={formData.location || ""}
-            onChange={handleChange}
-          />
+          <input type="text" name="assetCode" value={formData.assetCode || ""} readOnly />
+          <input type="text" name="name" placeholder="Asset Name" value={formData.name || ""} onChange={handleChange} />
+          <input type="text" name="category" placeholder="Category" value={formData.category || ""} onChange={handleChange} />
+          <input type="text" name="location" placeholder="Location" value={formData.location || ""} onChange={handleChange} />
           {activeTab !== "Hardware" && (
-            <input
-              type="text"
-              name="licenseKey"
-              placeholder="License Key"
-              value={formData.licenseKey || ""}
-              onChange={handleChange}
-            />
+            <input type="text" name="licenseKey" placeholder="License Key" value={formData.licenseKey || ""} onChange={handleChange} />
           )}
-
           <button type="submit">Save Asset</button>
         </form>
       )}
