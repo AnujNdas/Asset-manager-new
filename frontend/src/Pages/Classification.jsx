@@ -18,7 +18,7 @@ const Classification = () => {
 
   return (
     <div className="classification_container">
-      <div className="classify_heading">Classification</div>
+      <h2 className="classify_heading2">Classification</h2>
 
       {/* Horizontal Tabs */}
       <div className="tabs_container">
