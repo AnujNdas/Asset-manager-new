@@ -68,11 +68,6 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
       <div className={`dropdown-menu ${isVisible ? 'show' : ''}`}>
         <ul className="drop-box">
           <li>
-            <Link to="/user/login" onClick={onClose}>
-              <FontAwesomeIcon icon={faUser} /> User
-            </Link>
-          </li>
-          <li>
             <button onClick={handleLogout} className="logout-btn">
               <FontAwesomeIcon icon={faSignOut} /> Logout
             </button>
