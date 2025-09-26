@@ -25,6 +25,7 @@ const Login = ({ setProfileUser }) => {
         console.log(response.token)
         sessionStorage.setItem("token", response.token);
         sessionStorage.setItem("email", email);
+        sessionStorage.setItem("username", response.username);
         sessionStorage.setItem("role", response.role);
         sessionStorage.setItem("userId", response.userId); // ✅ Save userId
 
