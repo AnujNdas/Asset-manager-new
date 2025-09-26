@@ -180,7 +180,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   outline: none;
   transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
-.field input::placeholder{ color: #cc794a; opacity: .75;font-size: 13px; }
+.field input::placeholder{ color: #2346ed; opacity: .75;font-size: 13px; }
 .field input:focus{
   border-color: #cc794a;
   box-shadow: 0 0 0 1px #cc794a;
@@ -196,12 +196,12 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   margin-top: 2px;
 }
 .link{
-  color: var(--brand-2);
+  color: #2346ed;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   background: none;
 }
-.link:hover{ text-decoration: underline; }
+.link:hover{ text-decoration: underline;background : none;}
 
 /* Primary button */
 .btn-primary{
