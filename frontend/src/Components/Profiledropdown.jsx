@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faInbox, faSignOut } from '@fortawesome/free-solid-svg-icons';
@@ -8,8 +8,16 @@ import { Link, useNavigate } from 'react-router-dom';
 const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
 
-    const handleLogout = () => {
+  useEffect(() => {
+    const storedUsername = sessionStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
+  const handleLogout = () => {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to logout?',
@@ -25,6 +33,7 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
         if (token) {
           sessionStorage.removeItem('token');
         }
+        sessionStorage.removeItem('username'); // also clear username
         Swal.fire({
           icon: 'success',
           title: 'Logged Out',
@@ -67,6 +76,19 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
     >
       <div className={`dropdown-menu ${isVisible ? 'show' : ''}`}>
         <ul className="drop-box">
+          {/* User Info Section */}
+          <li className="user-info">
+            <img
+              src={`https://robohash.org/${username || 'guest'}?set=set2&size=50x50`}
+              alt="avatar"
+              className="avatar"
+            />
+            <span className="username">{username || 'Guest User'}</span>
+          </li>
+
+          <hr className="divider" />
+
+          {/* Logout Button */}
           <li>
             <button onClick={handleLogout} className="logout-btn">
               <FontAwesomeIcon icon={faSignOut} /> Logout
@@ -79,6 +101,3 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
 };
 
 export default ProfileDropdown;
-
-
-
