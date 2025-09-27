@@ -9,12 +9,7 @@
   transition: 0.3s ease-in-out;
 }
 
-.bulk-upload h2 {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #333;
-}
+
 
 /* Drag & Drop Zone */
 .file-dropzone {
