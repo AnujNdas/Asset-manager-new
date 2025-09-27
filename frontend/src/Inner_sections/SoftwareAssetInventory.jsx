@@ -111,7 +111,7 @@ const SoftwareAssetList = () => {
 
   return (
     <div className="list-container">
-      <h2 className="list-title">📦 Software Assets</h2>
+      <h2 className="list-title"> Software Assets</h2>
 
       <div className="asset-grid">
         {currentItems.map((asset) => (
