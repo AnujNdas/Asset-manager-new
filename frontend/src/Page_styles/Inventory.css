@@ -1,5 +1,5 @@
 .inventory-container {
-  padding: 20px;
+  padding: 10px;
   background: var(--bg-color, #f9f9f9);
   min-height: 100vh;
 }
