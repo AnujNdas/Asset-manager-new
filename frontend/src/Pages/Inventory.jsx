@@ -17,19 +17,19 @@ const Inventory = () => {
           className={activeTab === "hardware" ? "tab active" : "tab"}
           onClick={() => setActiveTab("hardware")}
         >
-          <span className="tab-text2">💻 Hardware</span>
+          <span className="tab-text2">Hardware</span>
         </button>
         <button
           className={activeTab === "software" ? "tab active" : "tab"}
           onClick={() => setActiveTab("software")}
         >
-          <span className="tab-text2">🖥️ Software</span>
+          <span className="tab-text2"> Software</span>
         </button>
         <button
           className={activeTab === "core" ? "tab active" : "tab"}
           onClick={() => setActiveTab("core")}
         >
-          <span className="tab-text2">🏢 Core Licenses</span>
+          <span className="tab-text2"> Core Licenses</span>
         </button>
       </div>
 
