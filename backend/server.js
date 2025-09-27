@@ -39,7 +39,9 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
+// Remove: const bodyParser = require("body-parser");
+app.use(express.json({ limit: "10mb" })); // <-- replace bodyParser.json()
+app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Routes
