@@ -10,29 +10,7 @@ import {
 import "../Page_styles/AdminDashboard.css";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Add images (store banners in /public/images/)
-const features = [
-  {
-    title: "📊 Manage Assets",
-    description: "Easily track and organize all hardware and software assets.",
-    image: "/images/assets.png",
-  },
-  {
-    title: "🔑 License Tracking",
-    description: "Monitor active and expired licenses with real-time insights.",
-    image: "/images/vaultifly.com.png",
-  },
-  {
-    title: "👥 User Management",  
-    description: "Control roles, permissions, and streamline team collaboration.",
-    image: "/images/User Management.png",
-  },
-  {
-    title: "📍 Location Management",
-    description: "Assign and monitor assets across multiple locations seamlessly.",
-    image: "/images/webinar.png",
-  },
-];
+
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -82,44 +60,6 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <h2 className="classify_heading"> Admin Dashboard</h2>
-
-      {/* --- FEATURE CAROUSEL --- */}
-<div className="feature-carousel">
-  <AnimatePresence mode="wait">
-    <motion.div
-      key={index}
-      className="feature-card"
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -100 }}
-      transition={{ duration: 0.5 }}
-    >
-  <div className="feature-image-container">
-    <img
-      src={features[index].image}
-      alt={features[index].title}
-      className="feature-image"
-    />
-    <button className="feature-btn">Explore</button>
-  </div>
-    </motion.div>
-  </AnimatePresence>
-
-  {/* Manual Controls */}
-  <div className="carousel-controls">
-    {features.map((_, idx) => (
-      <button
-        key={idx}
-        className={`dot ${idx === index ? "active" : ""}`}
-        onClick={() => setIndex(idx)}
-      />
-    ))}
-  </div>
-</div>
-
-
-
-
       {/* --- STATS GRID --- */}
       <motion.div
         className="stats-grid"
