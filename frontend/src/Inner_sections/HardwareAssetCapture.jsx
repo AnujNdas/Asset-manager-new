@@ -157,103 +157,79 @@ const AssetCapture = () => {
     }
   };
 
-  // const handleAddAnother = async (e) => {
-  //   e.preventDefault();
-  //   if (!validateRequired()) return;
 
-  //   try {
-  //     const [assetCode, barcodeNumber] = await Promise.all([
-  //       generateAssetCode(),
-  //     ]);
+return (
+      <div className="capture-container">
+        <h2 className='capture-title'>New Hardware Asset</h2>
 
-  //     const payload = { ...formData, assetCode, barcodeNumber };
-  //     await saveAssetToDatabase(payload);
+        <form className="capture-form">
+            <input name="assetName" value={formData.assetName} onChange={handleChange} placeholder='Asset Name' required />
+          
 
-  //     Swal.fire('Success', 'Asset added. You can add another.', 'success');
-  //     setFormData(defaultFormData);
-  //     setImagePreview(null);
-  //   } catch (err) {
-  //     console.error(err);
-  //     Swal.fire('Error', err.message || 'Failed to add asset.', 'error');
-  //   }
-  // };
+            <select name="assetCategory" value={formData.assetCategory} onChange={handleChange} required>
+              <option value="">Select Category</option>
+              {categories.map((c) => (
+                <option key={c._id} value={c._id}>{c.name}</option>
+              ))}
+            </select>
 
-  return (
-    <div className="capture-container">
-      <h2 className="capture-title">New Hardware Asset</h2>
+            <input name="assetSpecification" value={formData.assetSpecification} onChange={handleChange} placeholder='Specification' />
+          
 
-      <form className="capture-form">
-        <div>
-          <input name="assetName" value={formData.assetName} onChange={handleChange} placeholder='Asset Name' required />
-        </div>
+          
+            <select name="locationName" value={formData.locationName} onChange={handleChange} required>
+              <option value="">Select Location</option>
+              {locations.map((l) => (
+                <option key={l._id} value={l._id}>{l.name}</option>
+              ))}
+            </select>
+          
 
-        <div>
-          <select name="assetCategory" value={formData.assetCategory} onChange={handleChange} required>
-            <option value="">Select Category</option>
-            {categories.map((c) => (
-              <option key={c._id} value={c._id}>{c.name}</option>
-            ))}
-          </select>
-        </div>
+          
+            <select name="associateUnit" value={formData.associateUnit} onChange={handleChange} required>
+              <option value="">Select Unit</option>
+              {units.map((u) => (
+                <option key={u._id} value={u._id}>{u.name}</option>
+              ))}
+            </select>
+          
 
-        <div>
-          <input name="assetSpecification" value={formData.assetSpecification} onChange={handleChange} placeholder='Specification' />
-        </div>
+          
+            <select name="assetStatus" value={formData.assetStatus} onChange={handleChange} required>
+              <option value="">Select Status</option>
+              {statuses.map((s) => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
+            </select>
+          
 
-        <div>
-          <select name="locationName" value={formData.locationName} onChange={handleChange} required>
-            <option value="">Select Location</option>
-            {locations.map((l) => (
-              <option key={l._id} value={l._id}>{l.name}</option>
-            ))}
-          </select>
-        </div>
+          
+            <input type="date" name="DOP" value={formData.DOP} onChange={handleChange} />
+          
 
-        <div>
-          <select name="associateUnit" value={formData.associateUnit} onChange={handleChange} required>
-            <option value="">Select Unit</option>
-            {units.map((u) => (
-              <option key={u._id} value={u._id}>{u.name}</option>
-            ))}
-          </select>
-        </div>
+        
+            <input type="date" name="DOE" value={formData.DOE} onChange={handleChange} />
+          
 
-        <div>
-          <select name="assetStatus" value={formData.assetStatus} onChange={handleChange} required>
-            <option value="">Select Status</option>
-            {statuses.map((s) => (
-              <option key={s._id} value={s._id}>{s.name}</option>
-            ))}
-          </select>
-        </div>
+          
+            <input name="purchaseFrom" value={formData.purchaseFrom} onChange={handleChange} placeholder='Purcahsed From' />
+          
 
-        <div>
-          <input type="date" name="DOP" value={formData.DOP} onChange={handleChange} />
-        </div>
+          
+            <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
+          
 
-        <div>
-          <input type="date" name="DOE" value={formData.DOE} onChange={handleChange} />
-        </div>
+          
+            <input type="file" name="image" accept="image/*" onChange={handleChange} />
+            {imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
+          
 
-        <div>
-          <input name="purchaseFrom" value={formData.purchaseFrom} onChange={handleChange} placeholder='Purcahsed From' />
-        </div>
-
-        <div>
-          <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
-        </div>
-
-        <div>
-          <input type="file" name="image" accept="image/*" onChange={handleChange} />
-          {imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
-        </div>
-
-        <div>
-          <button type="submit" onClick={handleAddAsset}>Add Asset</button>
-        </div>
-      </form>
-    </div>
-  );
+          
+        <button type="submit" className="btn-primary">Save Software Asset</button>
+          
+        </form>
+      </div>
+    );
 };
 
 export default AssetCapture;
