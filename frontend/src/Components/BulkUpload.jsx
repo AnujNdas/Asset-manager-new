@@ -122,7 +122,8 @@ const BulkUpload = ({ type }) => {
 
   return (
     <div className="bulk-upload">
-      <h2>
+    
+      <h2 className="capture-title">
         📥 Bulk Upload{" "}
         {type === "hardware"
           ? "Hardware Assets"
