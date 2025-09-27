@@ -91,7 +91,7 @@ const SoftwareAssetCapture = () => {
 
   return (
     <div className="capture-container">
-      <h2>Software Asset Capture</h2>
+      <h2 className="capture-title">Software Asset Capture</h2>
       <form className="capture-form" onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="Software Name" value={formData.name} onChange={handleChange} required />
         <input type="text" name="version" placeholder="Version" value={formData.version} onChange={handleChange} />
