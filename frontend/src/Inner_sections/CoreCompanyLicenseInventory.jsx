@@ -112,7 +112,7 @@ const CoreCompanyLicenseList = () => {
 
   return (
     <div className="list-container">
-      <h2 className="list-title">🏢 Core Company Licenses</h2>
+      <h2 className="list-title"> Core Company Licenses</h2>
 
       <div className="asset-grid">
         {currentItems.map((license) => (
