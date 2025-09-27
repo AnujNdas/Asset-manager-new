@@ -102,15 +102,14 @@ export const deleteCoreLicense = async (id) => {
   const response = await axiosInstance.delete(`/company-licenses/${id}`);
   return response.data;
 };
-
-// ----- BULK UPLOAD API CALLS -----
+ // Bulk upload calls 
 export const bulkUploadHardwareAssets = async (data) => {
   const response = await axiosInstance.post("/assets/bulk-upload", data);
   return response.data;
 };
 
 export const bulkUploadSoftwareAssets = async (data) => {
-  const response = await axiosInstance.post("/software-assets/bulk-upload", data);
+  const response = await axiosInstance.post("/software-assets/bulk-upload",data );
   return response.data;
 };
 
