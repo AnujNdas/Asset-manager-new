@@ -20,13 +20,7 @@ const AdminDashboard = () => {
   const [units, setUnits] = useState([]);
   const [index, setIndex] = useState(0);
 
-  // Auto-slide carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % features.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+
 
   useEffect(() => {
     (async () => {
