@@ -96,6 +96,7 @@
   position: sticky;
   top: 0;
   z-index: 1;
+  color : #2346ed;
 }
 
 .mis-table tbody td {
