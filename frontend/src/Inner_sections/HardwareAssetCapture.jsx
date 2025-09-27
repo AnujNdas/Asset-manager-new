@@ -225,7 +225,7 @@ return (
           
 
           
-        <button type="submit" className="btn-primary">Save Software Asset</button>
+        <button type="submit" className="btn-primary">Save Hardware Asset</button>
           
         </form>
       </div>
