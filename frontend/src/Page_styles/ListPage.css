@@ -131,6 +131,8 @@ h3{
 }
 p{
   color: #000000;
+  display : flex;
+  jsutify-content : space-between;
 }
 strong{
   color: #322ce5;
