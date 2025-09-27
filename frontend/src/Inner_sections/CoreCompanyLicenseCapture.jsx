@@ -53,7 +53,7 @@ const CoreCompanyLicenseCapture = () => {
 
   return (
     <div className="capture-container">
-      <h2 className="capture-form">Core Company License Capture</h2>
+      <h2 className="capture-title">Core Company License Capture</h2>
       <form className="capture-form" onSubmit={handleSubmit}>
         <input type="text" name="documentType" placeholder="Document Type" value={formData.documentType} onChange={handleChange} required />
         <input type="text" name="licenseNumber" placeholder="License Number" value={formData.licenseNumber} onChange={handleChange} required />
