@@ -105,7 +105,7 @@ export const deleteCoreLicense = async (id) => {
 
 // ----- BULK UPLOAD API CALLS -----
 export const bulkUploadHardwareAssets = async (data) => {
-  const response = await axiosInstance.post("/assets/bulk-upload", { assets: data });
+  const response = await axiosInstance.post("/assets/bulk-upload", data);
   return response.data;
 };
 
