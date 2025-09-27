@@ -123,7 +123,7 @@ const MisReport = () => {
 
   return (
     <div className="mis-content">
-        <h1 className="classify_heading">Asset Management Report</h1>
+        <h1 className="classify_heading">Report</h1>
       <header>
         <div className="navs">
           <button onClick={() => setActiveTab("hardware")}>Hardware</button>
