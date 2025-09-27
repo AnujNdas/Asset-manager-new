@@ -139,7 +139,7 @@ useEffect(() => {
 
   return (
     <div className="list-container">
-      <h2 className="list-title">💻 Hardware Assets</h2>
+      <h2 className="list-title"> Hardware Assets</h2>
 
       <div className="asset-grid">
         {currentItems.length === 0 ? (
