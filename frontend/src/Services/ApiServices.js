@@ -110,12 +110,12 @@ export const bulkUploadHardwareAssets = async (data) => {
 };
 
 export const bulkUploadSoftwareAssets = async (data) => {
-  const response = await axiosInstance.post("/software-assets/bulk-upload", { assets: data });
+  const response = await axiosInstance.post("/software-assets/bulk-upload", data);
   return response.data;
 };
 
 export const bulkUploadCoreLicenses = async (data) => {
-  const response = await axiosInstance.post("/company-licenses/bulk-upload", { assets: data });
+  const response = await axiosInstance.post("/company-licenses/bulk-upload", data);
   return response.data;
 };
 
