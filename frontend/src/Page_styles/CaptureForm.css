@@ -48,16 +48,15 @@
 /* Submit button */
 .capture-form button {
   padding: 12px 18px;
-  background: #4a90e2;
+  background: #2346ed;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
 }
-
 .capture-form button:hover {
   background: #357abd;
 }
