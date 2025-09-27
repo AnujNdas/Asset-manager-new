@@ -57,11 +57,10 @@
   gap: 15px;
   justify-content: center;
 }
-
 .bulk-actions button {
   flex: 1;
   min-width: 140px;
-  padding: 10px 16px;
+  padding: 10px 10px;
   border: none;
   border-radius: 8px;
   font-size: 13px;
@@ -69,6 +68,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
 
 .bulk-actions button:first-child {
   background: #007bff;
