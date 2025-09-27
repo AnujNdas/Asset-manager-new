@@ -46,7 +46,7 @@ const Menubar = ({ username  , toggleSidebar}) => {
 
           {/* Profile Dropdown */}
           <button className="profile-button" onClick={toggleDropdown} ref={toggleButtonRef}>
-            <FontAwesomeIcon icon={faUser} style={{ fontSize: "20px" }} />
+            <FontAwesomeIcon icon={faUser} style={{ fontSize: "0.8rem" }} />
             <FontAwesomeIcon
               icon={faAngleDown}
               style={{
