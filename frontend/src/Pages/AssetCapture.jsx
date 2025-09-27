@@ -8,12 +8,16 @@ import "../Page_styles/Tabs.css";
 const AssetCapture = () => {
   const [activeTab, setActiveTab] = useState("hardware");
 
+  // Get user info from sessionStorage
+  const role = sessionStorage.getItem("role")
+  const userRole = role || "user"; // default to "user" if not found
+
   return (
     <div className="capture-container">
       <h2 className="classify_heading">Asset Capture</h2>
 
       {/* Tabs */}
-<div className="tabs">
+      <div className="tabs">
         {/* Capture Tabs */}
         <button
           className={activeTab === "hardware" ? "tab active" : "tab"}
@@ -63,9 +67,15 @@ const AssetCapture = () => {
         {activeTab === "core" && <CoreCompanyLicenseCapture />}
 
         {/* Bulk Uploads */}
-        {activeTab === "bulk-hardware" && <BulkUpload type="hardware" />}
-        {activeTab === "bulk-software" && <BulkUpload type="software" />}
-        {activeTab === "bulk-core" && <BulkUpload type="core-license" />}
+        {activeTab === "bulk-hardware" && (
+          <BulkUpload type="hardware" userRole={userRole} />
+        )}
+        {activeTab === "bulk-software" && (
+          <BulkUpload type="software" userRole={userRole} />
+        )}
+        {activeTab === "bulk-core" && (
+          <BulkUpload type="core-license" userRole={userRole} />
+        )}
       </div>
     </div>
   );
