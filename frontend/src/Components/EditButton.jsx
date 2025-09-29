@@ -6,7 +6,7 @@ const EditButton = ({
   text = "Edit",
   icon = faPenToSquare,
   onClick,
-  backgroundColor = "#4a90e2",
+  backgroundColor = "#2346ed",
   color = "#ffffffff",
 }) => {
   return (
