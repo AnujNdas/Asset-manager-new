@@ -73,7 +73,7 @@
   border: 1px solid #d1d5db;
   border-radius: 8px;
   background: #fff;
-  font-size: 14px;
+  font-size: 13px;
   color: #374151;
   outline: none;
   transition: border 0.2s ease-in-out;
@@ -89,7 +89,7 @@
 .mis-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
@@ -128,7 +128,7 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   background: #fff;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -152,7 +152,7 @@
   background: #10b981;
   color: #fff;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: background 0.2s;
 }
