@@ -40,7 +40,7 @@ const Menubar = ({ username  , toggleSidebar}) => {
           <button className="controls">
             <FontAwesomeIcon
               icon={faCircleQuestion}
-              style={{ color: "#7870f7" }}
+              style={{ color: "#2346ed" }}
             />
           </button>
 
