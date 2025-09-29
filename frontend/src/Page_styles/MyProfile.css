@@ -6,6 +6,16 @@
     gap: 20px;
     padding: 10px;
 }
+.Profile-heading{
+    font-size: 1.3rem;
+    font-weight: 500;
+    background: linear-gradient(90deg, #000000ff, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+    padding: 10px 0px;
+    width: 100%;
+}
 /* Logout button */
 .logout-btn {
     border-radius: 10px;
