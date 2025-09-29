@@ -8,17 +8,18 @@ const Notification = require("../models/Notification");
 
 // In-memory OTP store (better: Redis or DB)
 const otpStore = {};
-console.log("Email User:", process.env.EMAIL_USER);
-console.log("Email Pass:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
-
-// Email transporter (Use your Gmail or SMTP service)
+console.log("Email User:", process.env.BREVO_USER);
+console.log("Email Pass:", process.env.BREVO_PASS ? "Loaded" : "Missing");
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER, // Your email
-    pass: process.env.EMAIL_PASS  // Your email password or app password
-  }
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
+  },
 });
+
 
 // Send OTP API
 const sendOtp = async (req, res) => {
@@ -39,16 +40,10 @@ const sendOtp = async (req, res) => {
     
     // Save new OTP in DB
     await Otp.create({ email, otp });
-    console.log("🧪 Verifying transporter...");
-await transporter.verify().then(() => {
-  console.log("✅ SMTP connection verified");
-}).catch(err => {
-  console.error("❌ SMTP verification failed:", err);
-});
-
+    
     // Send email
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: "vaultifly@gmail.com", // 👈 this must be a verified Brevo sender email
       to: email,
       subject: "Your OTP for Signup",
       text: `Your OTP code is ${otp}. It will expire in 5 minutes.`
@@ -221,21 +216,24 @@ const forgotPassword = async (req, res) => {
     const resetLink = `http://localhost:3000/user/reset/${token}`;
 
     // Transporter (use your SMTP or Gmail)
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
+  },
+});
 
-    await transporter.sendMail({
-      from: `"Asset Manager" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: "Password Reset Request",
-      html: `<p>Click the link below to reset your password:</p>
-             <a href="${resetLink}">${resetLink}</a>`,
-    });
+await transporter.sendMail({
+  from: 'anujd339@gmail.com', // 👈 verified sender on Brevo
+  to: user.email,
+  subject: "Password Reset Request",
+  html: `<p>Click the link below to reset your password:</p>
+         <a href="${resetLink}">${resetLink}</a>`,
+});
+
 
     res.json({ message: "Password reset link sent to your email" });
   } catch (err) {
