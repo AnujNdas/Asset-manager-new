@@ -126,10 +126,26 @@ const MisReport = () => {
         <h1 className="classify_heading">Report</h1>
       <header>
         <div className="navs">
-          <button onClick={() => setActiveTab("hardware")}>Hardware</button>
-          <button onClick={() => setActiveTab("software")}>Software</button>
-          <button onClick={() => setActiveTab("licenses")}>Core Licenses</button>
+          <button
+            className={activeTab === "hardware" ? "active-tab" : ""}
+            onClick={() => setActiveTab("hardware")}
+          >
+            Hardware
+          </button>
+          <button
+            className={activeTab === "software" ? "active-tab" : ""}
+            onClick={() => setActiveTab("software")}
+          >
+            Software
+          </button>
+          <button
+            className={activeTab === "licenses" ? "active-tab" : ""}
+            onClick={() => setActiveTab("licenses")}
+          >
+            Core Licenses
+          </button>
         </div>
+
       </header>
 
       {/* Filters */}
