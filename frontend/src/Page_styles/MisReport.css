@@ -47,13 +47,13 @@
   background: #e5e7eb;
   transform: translateY(-2px);
 }
-
-.navs button.active,
-.navs button:focus {
+.navs button.active-tab {
   background: #bbd8ff;
     box-shadow: 0 4px 8px #007bff33;
     font-weight: 600;
 }
+
+
 
 /* ==== Filters ==== */
 .filters {
