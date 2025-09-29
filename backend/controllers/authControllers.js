@@ -149,7 +149,7 @@ const forgotPassword = async (req, res) => {
     user.resetTokenExpiry = Date.now() + 3600000;
     await user.save();
 
-    const resetLink = `https://your-frontend-domain.com/user/reset/${token}`;
+    const resetLink = `https://asset-manager-new-frontend.onrender.com/user/reset/${token}`;
 
     const html = `
       <div style="font-family:sans-serif;padding:10px;">
