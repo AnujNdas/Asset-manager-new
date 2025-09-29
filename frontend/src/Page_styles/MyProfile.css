@@ -6,18 +6,6 @@
     gap: 20px;
     padding: 10px;
 }
-
-/* Heading */
-.Profile-heading {
-    /* width: 90%; */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 600;
-    color: #565656;
-}
-
 /* Logout button */
 .logout-btn {
     border-radius: 10px;
