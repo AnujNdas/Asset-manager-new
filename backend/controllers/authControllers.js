@@ -39,7 +39,13 @@ const sendOtp = async (req, res) => {
     
     // Save new OTP in DB
     await Otp.create({ email, otp });
-    
+    console.log("🧪 Verifying transporter...");
+await transporter.verify().then(() => {
+  console.log("✅ SMTP connection verified");
+}).catch(err => {
+  console.error("❌ SMTP verification failed:", err);
+});
+
     // Send email
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
