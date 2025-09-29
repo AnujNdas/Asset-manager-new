@@ -19,7 +19,7 @@ const EditButton = ({
         borderRadius: "5px",
         backgroundColor,
         color,
-        fontSize: "14px",
+        fontSize: "13px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
