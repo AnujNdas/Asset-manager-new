@@ -17,6 +17,7 @@ const unitRoutes = require("./routes/unitRoutes");
 const locationRoutes = require("./routes/locationRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const statusRoutes = require("./routes/statusRoutes");
+const nodemailer = require("nodemailer");
 const updateRoutes = require("./routes/updateRoutes");
 const softwareAssetRoutes = require("./routes/softwareAssets");
 const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
@@ -56,6 +57,27 @@ app.use("/api/status", statusRoutes);
 app.use("/api/software-assets", softwareAssetRoutes);
 app.use("/api/company-licenses", companyLicenseRoutes);
 app.use("/api/admin", adminRoutes);
+
+app.get("/smtp-test", async (req, res) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp-relay.brevo.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_PASS,
+      },
+      connectionTimeout: 10000,
+    });
+
+    await transporter.verify();
+    return res.status(200).json({ success: true, message: "SMTP connection successful ✅" });
+  } catch (error) {
+    console.error("❌ SMTP Connection Failed:", error);
+    return res.status(500).json({ success: false, message: "SMTP connection failed", error });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Asset management API is running...");
