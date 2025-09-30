@@ -73,7 +73,7 @@ const Location = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Location Name</th>
+                <th>Location </th>
               </tr>
             </thead>
             <tbody>
