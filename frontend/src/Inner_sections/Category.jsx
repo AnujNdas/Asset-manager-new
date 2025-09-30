@@ -73,7 +73,7 @@ const Category = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Category Name</th>
+                <th>Category </th>
               </tr>
             </thead>
             <tbody>
