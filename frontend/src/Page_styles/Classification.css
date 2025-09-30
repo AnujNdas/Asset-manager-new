@@ -31,7 +31,7 @@
 
 .tabs_container {
   display: flex;
-  width: 90%;
+  width: 100%;
   flex-direction: row;
   gap: 15px;
   justify-content: center;
