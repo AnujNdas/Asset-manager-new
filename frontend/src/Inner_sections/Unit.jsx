@@ -73,7 +73,7 @@ const Unit = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Unit Name</th>
+                <th>Unit </th>
               </tr>
             </thead>
             <tbody>
