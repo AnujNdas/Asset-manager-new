@@ -48,7 +48,7 @@ const Category = () => {
   return (
     <div className="classification_card">
       <div className="card_header">
-        <h3>Category Management</h3>
+        <h3>Category</h3>
         <form onSubmit={handleSubmit} className="status_form">
           <input
             type="text"
