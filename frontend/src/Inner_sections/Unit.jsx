@@ -48,7 +48,7 @@ const Unit = () => {
   return (
     <div className="classification_card">
       <div className="card_header">
-        <h3>Unit Management</h3>
+        <h3>Unit </h3>
         <form onSubmit={handleSubmit} className="status_form">
           <input
             type="text"
