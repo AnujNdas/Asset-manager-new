@@ -73,7 +73,7 @@ const Status = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Status Name</th>
+                <th>Status </th>
               </tr>
             </thead>
             <tbody>
