@@ -48,7 +48,7 @@ const Location = () => {
   return (
     <div className="classification_card">
       <div className="card_header">
-        <h3>Management</h3>
+        <h3>Location</h3>
         <form onSubmit={handleSubmit} className="status_form">
           <input
             type="text"
