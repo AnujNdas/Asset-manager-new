@@ -3,6 +3,7 @@ import '../Page_styles/Unit.css'; // Shared modern CSS
 import { getUnits, createUnit } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 const Unit = () => {
   const [unitName, setUnitName] = useState('');
@@ -29,17 +30,41 @@ const Unit = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!unitName) return;
-    try {
-      await createUnit({ name: unitName });
-      setUnitName('');
-      fetchUnits();
-    } catch (err) {
-      setError('Error creating unit');
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!unitName) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Unit Name',
+      text: 'Please enter a unit name before submitting.',
+      confirmButtonColor: '#3085d6',
+    });
+    return;
+  }
+
+  try {
+    await createUnit({ name: unitName });
+    setUnitName('');
+    fetchUnits();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Unit Added',
+      text: 'The unit has been created successfully!',
+      confirmButtonColor: '#3085d6',
+      timer: 1800,
+      showConfirmButton: false,
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Unit',
+      text: err.response?.data?.message || 'Something went wrong while creating the unit.',
+      confirmButtonColor: '#d33',
+    });
+  }
+};
 
   useEffect(() => {
     fetchUnits();
