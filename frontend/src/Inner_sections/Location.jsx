@@ -4,6 +4,7 @@ import { getLocations, createLocation } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
+import Swal from 'sweetalert2';
 const Location = () => {
   const [locationName, setLocationName] = useState('');
   const [locations, setLocations] = useState([]);
@@ -29,17 +30,42 @@ const Location = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!locationName) return;
-    try {
-      await createLocation({ name: locationName });
-      setLocationName('');
-      fetchLocations();
-    } catch (err) {
-      setError('Error creating location');
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!locationName) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Location Name',
+      text: 'Please enter a location name before submitting.',
+      confirmButtonColor: '#3085d6',
+    });
+    return;
+  }
+
+  try {
+    await createLocation({ name: locationName });
+    setLocationName('');
+    fetchLocations();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Location Added',
+      text: 'The location has been created successfully!',
+      confirmButtonColor: '#3085d6',
+      timer: 1800,
+      showConfirmButton: false,
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Location',
+      text: err.response?.data?.message || 'Something went wrong while creating the location.',
+      confirmButtonColor: '#d33',
+    });
+  }
+};
+  
 
   useEffect(() => {
     fetchLocations();
