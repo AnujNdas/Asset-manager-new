@@ -87,31 +87,18 @@ const Unit = () => {
           </table>
         )}
 
-        <div className="pagination_container">
+{/* Pagination */}
+      <div className="pagination">
+        {[...Array(totalPages).keys()].map((n) => (
           <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
+            key={n}
+            className={currentPage === n + 1 ? "active" : ""}
+            onClick={() => setCurrentPage(n + 1)}
           >
-            Prev
+            {n + 1}
           </button>
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              className={currentPage === i + 1 ? "active" : ""}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
+        ))}
+      </div>
       </div>
     </div>
   );
