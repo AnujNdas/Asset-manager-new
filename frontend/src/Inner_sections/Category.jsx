@@ -29,17 +29,38 @@ const Category = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!categoryName) return;
-    try {
-      await createCategory({ name: categoryName });
-      setCategoryName('');
-      fetchCategories();
-    } catch (err) {
-      setError('Error creating category');
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!categoryName) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Category Name',
+      text: 'Please enter a category name before submitting.',
+      confirmButtonColor: '#3085d6',
+    });
+    return;
+  }
+
+  try {
+    await createCategory({ name: categoryName });
+    setCategoryName('');
+    fetchCategories();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Category Created',
+      text: 'The category has been added successfully!',
+      confirmButtonColor: '#3085d6',
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Category',
+      text: err.response?.data?.message || 'Something went wrong while creating the category.',
+      confirmButtonColor: '#d33',
+    });
+  }
+};
 
   useEffect(() => {
     fetchCategories();
