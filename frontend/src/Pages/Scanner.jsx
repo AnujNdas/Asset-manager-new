@@ -127,7 +127,7 @@ const AssetScanner = () => {
   if (!isMobile) {
     return (
       <div style={{ textAlign: "center", marginTop: "30vh" }}>
-        <h2>📱 This page is only accessible on mobile devices.</h2>
+        <h2 style={{fontSize : "20px"}}>📱 This page is only accessible on mobile devices.</h2>
       </div>
     );
   }
