@@ -85,6 +85,7 @@ const tabs = [
 
   return (
     <div className="setting-container">
+    <h2 className="classify_heading"> Settings</h2>
       {/* Tabs Navigation */}
       <nav className="settings-tabs">
         {tabs.map(({ path, label, icon: Icon }) => (
