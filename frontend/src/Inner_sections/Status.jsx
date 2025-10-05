@@ -3,6 +3,7 @@ import '../Page_styles/Unit.css'; // Shared CSS for consistency
 import { getStatuses, createStatus } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 const Status = () => {
   const [statusName, setStatusName] = useState('');
@@ -29,17 +30,43 @@ const Status = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!statusName) return;
-    try {
-      await createStatus({ name: statusName });
-      setStatusName('');
-      fetchStatuses();
-    } catch (err) {
-      setError('Error creating status');
-    }
-  };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!statusName) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Status Name',
+      text: 'Please enter a status name before submitting.',
+      confirmButtonColor: '#3085d6',
+    });
+    return;
+  }
+
+  try {
+    await createStatus({ name: statusName });
+    setStatusName('');
+    fetchStatuses();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Status Added',
+      text: 'The status has been created successfully!',
+      confirmButtonColor: '#3085d6',
+      timer: 1800,
+      showConfirmButton: false,
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Status',
+      text: err.response?.data?.message || 'Something went wrong while creating the status.',
+      confirmButtonColor: '#d33',
+    });
+  }
+};
+
 
   useEffect(() => {
     fetchStatuses();
