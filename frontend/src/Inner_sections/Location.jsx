@@ -3,7 +3,6 @@ import '../Page_styles/Unit.css'; // Shared CSS for all tabs
 import { getLocations, createLocation } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-
 import Swal from 'sweetalert2';
 const Location = () => {
   const [locationName, setLocationName] = useState('');
