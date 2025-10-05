@@ -3,6 +3,7 @@ import '../Page_styles/Unit.css'; // Shared modern CSS
 import { getCategories, createCategory } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 const Category = () => {
   const [categoryName, setCategoryName] = useState('');
