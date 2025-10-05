@@ -52,12 +52,6 @@ const Sidebar = ({ closeSidebar }) => {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
-                <span className="tab-text">Settings</span>
-              </NavLink>
-            </li>
-            <li>
               <NavLink to="/classification" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faRecycle} style={{ width: "25%" }} />
                 <span className="tab-text">Classifications</span>
@@ -67,6 +61,12 @@ const Sidebar = ({ closeSidebar }) => {
               <NavLink to="/scanner" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faExpand} style={{ width: "25%" }} />
                 <span className="tab-text">Scanner</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
+                <span className="tab-text">Settings</span>
               </NavLink>
             </li>
           </ul>
