@@ -122,8 +122,11 @@ const MisReport = () => {
   };
 
   return (
-    <div className="mis-content">
-        <h1 className="classify_heading">Report</h1>
+    <div className="mis-content">     
+      <div style={{ display : "flex", justifyContent : "space-between"}}>
+        <h2 className="classify_heading">Asset Management Report</h2>
+        <button onClick={exportData}>Export {activeTab} Excel</button>
+      </div>
       <header>
         <div className="navs">
           <button
@@ -255,7 +258,6 @@ const MisReport = () => {
 
       {/* Pagination */}
       <div className="pagination">
-        <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}>Prev</button>
         {[...Array(totalPages).keys()].map(n => (
           <button
             key={n}
@@ -265,10 +267,8 @@ const MisReport = () => {
             {n + 1}
           </button>
         ))}
-        <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}>Next</button>
       </div>
 
-      <button onClick={exportData}>Export {activeTab} Excel</button>
     </div>
   );
 };
