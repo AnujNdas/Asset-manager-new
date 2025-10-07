@@ -18,7 +18,7 @@ const CoreCompanyLicenseList = () => {
   const [editing, setEditing] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const itemsPerPage = 6;
 
   // 📡 Fetch data
   useEffect(() => {
