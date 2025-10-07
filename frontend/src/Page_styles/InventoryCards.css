@@ -18,14 +18,14 @@
 .inventory-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 15px;
 }
 
 /* 📦 Card */
 .inventory-card {
   background: #fff;
   border-radius: 12px;
-  padding: 18px;
+  padding: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
@@ -49,9 +49,9 @@
 }
 
 .card-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
   flex: 1;
   word-break: break-word;
 }
@@ -59,7 +59,7 @@
 .status-badge {
   background: #e0e7ff;
   color: #4338ca;
-  font-size: 0.8rem;
+  font-size: 13px;
   padding: 4px 10px;
   border-radius: 20px;
   font-weight: 500;
@@ -69,7 +69,7 @@
 /* 📑 Card Info */
 .card-info2 {
   flex: 1;
-  font-size: 0.9rem;
+  font-size: 13px;
   color: #374151;
   line-height: 1.4;
   margin-bottom: 14px;
@@ -95,7 +95,7 @@
   justify-content: center;
   align-items: center;
   gap: 6px;
-  font-size: 0.85rem;
+  font-size: 13px;
   font-weight: 500;
   padding: 6px 0;
   border: none;
@@ -163,17 +163,17 @@
 }
 
 .overlay-content h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   margin-bottom: 12px;
-  color: #1e293b;
+  color: #2456ed;
   text-align: left;
 }
 
 .overlay-content p {
-  font-size: 0.95rem;
+  font-size: 13px;
   margin: 6px 0;
-  color: #374151;
+  color: #333;
 }
 
 /* 📝 Form */
@@ -187,7 +187,7 @@
 .overlay-form select,
 .overlay-form textarea {
   padding: 8px 10px;
-  font-size: 0.9rem;
+  font-size: 13px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
   outline: none;
@@ -250,7 +250,7 @@
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 13px;
 }
 
 .pagination button.active {
@@ -277,7 +277,7 @@
 /* 📱 Responsive */
 @media (max-width: 600px) {
   .inventory-title {
-    font-size: 1.4rem;
+    font-size: 18px;
     text-align: center;
   }
 
@@ -291,11 +291,11 @@
   }
 
   .card-title {
-    font-size: 1rem;
+    font-size: 15px;
   }
 
   .card-actions button {
-    font-size: 0.8rem;
+    font-size: 13px;
     min-width: unset;
     flex: 1;
   }
