@@ -1,7 +1,7 @@
 .inventory-container {
   padding: 10px;
   background: var(--bg-color, #f9f9f9);
-  min-height: 100vh;
+  max-height: 100vh;
 }
 
 .tabs {
