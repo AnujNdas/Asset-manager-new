@@ -125,7 +125,7 @@ const MisReport = () => {
     <div className="mis-content">     
       <div style={{ display : "flex", justifyContent : "space-between"}}>
         <h2 className="classify_heading">Asset Management Report</h2>
-        <button onClick={exportData}>Export {activeTab} Excel</button>
+        <button onClick={exportData} className="misbutton" >Export {activeTab} Excel</button>
       </div>
       <header>
         <div className="navs">
