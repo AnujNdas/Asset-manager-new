@@ -1,313 +1,281 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import Swal from "sweetalert2";
 import {
   getCoreLicenses,
   getStatuses,
   deleteCoreLicense,
-  updateCoreLicense, // ✅ add update API
+  updateCoreLicense,
 } from "../Services/ApiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import "../Page_styles/ListPage.css";
+import "../Page_styles/InventoryCards.css";
 
 const CoreCompanyLicenseList = () => {
   const [licenses, setLicenses] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [statuses, setStatuses] = useState([]);
-  const [selectedAsset, setSelectedAsset] = useState(null);
-  const itemsPerPage = 6;
-  const navigate = useNavigate();
-
-  // State for edit modal
-  const [editingLicense, setEditingLicense] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [editing, setEditing] = useState(null);
   const [editForm, setEditForm] = useState({});
-  useEffect(() => {
-    console.log("Statuses in CoreCompanyLicense:", statuses);
-  }, [statuses]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
-  // Fetch licenses
+  // 📡 Fetch data
   useEffect(() => {
-    const fetchMetaData = async () => {
+    const fetchData = async () => {
       try {
-        const [statusesList] = await Promise.all([getStatuses()]);
-        setStatuses(statusesList);
+        const [statusRes, licenseRes] = await Promise.all([
+          getStatuses(),
+          getCoreLicenses(),
+        ]);
+
+        setStatuses(statusRes);
+
+        if (licenseRes.success && Array.isArray(licenseRes.data)) {
+          setLicenses(licenseRes.data);
+        } else {
+          console.error("Unexpected response:", licenseRes);
+        }
       } catch (err) {
         Swal.fire("Error", err.message, "error");
       }
     };
-    const fetchLicenses = async () => {
-      try {
-        const res = await getCoreLicenses();
-        console.log(res);
-        if (res.success && Array.isArray(res.data)) {
-          setLicenses(res.data); // ✅ only save the array
-        } else {
-          setLicenses([]);
-        }
-      } catch (err) {
-        console.error("Error fetching core licenses:", err);
-        setLicenses([]);
-      }
-    };
-    fetchLicenses();
-
-
-    fetchMetaData();
+    fetchData();
   }, []);
 
-  // Delete license
+  // 🧭 Pagination helpers
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentItems = licenses.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(licenses.length / itemsPerPage);
+
+  // 🗑️ Delete License
   const handleDelete = async (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This will permanently delete the company license!",
+    const confirm = await Swal.fire({
+      title: "Delete License?",
+      text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteCoreLicense(id);
-          setLicenses(licenses.filter((license) => license._id !== id));
-          Swal.fire("Deleted!", "Company license has been deleted.", "success");
-        } catch {
-          Swal.fire("Error", "Failed to delete company license.", "error");
-        }
-      }
+      confirmButtonText: "Delete",
     });
-  };
-
-  // ✅ Handle Edit (open modal)
-  const handleEdit = (license) => {
-    setEditingLicense(license);
-    setEditForm({ ...license }); // pre-fill form
-  };
-
-  // ✅ Save Edit
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const updated = await updateCoreLicense(editingLicense._id, editForm);
-
-      setLicenses((prev) =>
-        prev.map((l) => (l._id === updated._id ? updated : l))
-      );
-
-      Swal.fire("Updated!", "Company license updated successfully.", "success");
-      setEditingLicense(null); // close modal
-    } catch (err) {
-      Swal.fire("Error", "Failed to update company license.", "error");
+    if (confirm.isConfirmed) {
+      try {
+        await deleteCoreLicense(id);
+        setLicenses((prev) => prev.filter((l) => l._id !== id));
+        Swal.fire("Deleted!", "License removed successfully.", "success");
+      } catch (err) {
+        Swal.fire("Error", "Could not delete license.", "error");
+      }
     }
   };
 
-  // Pagination
-  const indexOfLast = currentPage * itemsPerPage;
-  const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = Array.isArray(licenses)
-    ? licenses.slice(indexOfFirst, indexOfLast)
-    : [];
-  const totalPages = Math.ceil(licenses.length / itemsPerPage);
+  // ✏️ Start Editing
+  const startEditing = (license) => {
+    setEditing(license);
+    setEditForm({
+      ...license,
+      expiryDate: license.expiryDate
+        ? new Date(license.expiryDate).toISOString().split("T")[0]
+        : "",
+      issueDate: license.issueDate
+        ? new Date(license.issueDate).toISOString().split("T")[0]
+        : "",
+    });
+  };
+
+  // 💾 Submit Edit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const updated = await updateCoreLicense(editing._id, editForm);
+      setLicenses((prev) =>
+        prev.map((l) => (l._id === updated._id ? updated : l))
+      );
+      Swal.fire("Updated!", "License updated successfully.", "success");
+      setEditing(null);
+    } catch (err) {
+      Swal.fire("Error", "Failed to update license.", "error");
+    }
+  };
+
+  // 📝 Handle Form Changes
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
-    <div className="list-container">
-      <h2 className="list-title"> Core Company Licenses</h2>
+    <div className="inventory-container">
+      <h2 className="inventory-title"> Core Company Licenses</h2>
 
-      <div className="asset-grid">
-        {currentItems.map((license) => (
-          <div key={license._id} className="asset-card">
-            <h3>{license.licenseHolder}</h3>
-            <p>
-              <strong>Document Type:</strong> {license.documentType}
-            </p>
-            <p>
-              <strong>License No:</strong> {license.licenseNumber}
-            </p>
-            <p>
-              <strong>Issuing Authority:</strong> {license.issuingAuthority}
-            </p>
-            <p>
-              <strong>Status:</strong>{" "}
-              {statuses.find((s) => s._id === license.status)?.name || "N/A"}
-            </p>
-            <p>
-              <strong>Expiry:</strong>{" "}
-              {new Date(license.expiryDate).toLocaleDateString()}
-            </p>
-
-            <div className="card-actions">
-              <button
-                className="view-btn"
-                onClick={() => setSelectedAsset(license)}
-              >
-                <FontAwesomeIcon icon={faEye} /> View
-              </button>
-              <button
-                className="edit-btn"
-                onClick={() => handleEdit(license)} // ✅ open modal
-              >
-                <FontAwesomeIcon icon={faEdit} /> Edit
-              </button>
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(license._id)}
-              >
-                <FontAwesomeIcon icon={faTrash} /> Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="pagination">
-        {[...Array(totalPages).keys()].map((n) => (
-          <button
-            key={n}
-            className={currentPage === n + 1 ? "active" : ""}
-            onClick={() => setCurrentPage(n + 1)}
-          >
-            {n + 1}
-          </button>
-        ))}
-      </div>
-
-      {/* View Overlay */}
-      {selectedAsset && (
-        <div className="overlay">
-          <div className="overlay-content">
-            <h3>{selectedAsset.licenseHolder} - Details</h3>
-            <p>
-              <strong>License No :</strong> {selectedAsset.licenseNumber}
-            </p>
-            <p>
-              <strong>Document Type:</strong> {selectedAsset.documentType}
-            </p>
-            <p>
-              <strong>Date of Issue:</strong>{" "}
-              {new Date(selectedAsset.issueDate).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Business Activity:</strong> {selectedAsset.businessActivity}
-            </p>
-            <p>
-              <strong>Renewal Cycle:</strong> {selectedAsset.renewalCycle}
-            </p>
-
-            <button
-              className="close-btn"
-              onClick={() => setSelectedAsset(null)}
+      {/* 🧊 Card Grid */}
+      <div className="inventory-grid">
+        <AnimatePresence>
+          {currentItems.map((license) => (
+            <motion.div
+              key={license._id}
+              className="inventory-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
+              transition={{ duration: 0.25 }}
             >
-              Close
+              <div className="card-header">
+                <h3 className="card-title">{license.licenseHolder}</h3>
+                <span className={`status-badge`}>
+                  {statuses.find((s) => s._id === license.status)?.name || "N/A"}
+                </span>
+              </div>
+
+              <div className="card-info2">
+                <p><strong>Document:</strong> {license.documentType}</p>
+                <p><strong>License No:</strong> {license.licenseNumber}</p>
+                <p><strong>Authority:</strong> {license.issuingAuthority}</p>
+                <p><strong>Expiry:</strong> {new Date(license.expiryDate).toLocaleDateString()}</p>
+              </div>
+
+              <div className="card-actions">
+                <button onClick={() => setSelected(license)} className="btn-view">
+                  <FontAwesomeIcon icon={faEye} /> View
+                </button>
+                <button onClick={() => startEditing(license)} className="btn-edit">
+                  <FontAwesomeIcon icon={faEdit} /> Edit
+                </button>
+                <button onClick={() => handleDelete(license._id)} className="btn-delete">
+                  <FontAwesomeIcon icon={faTrash} /> Delete
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* 📄 Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              className={currentPage === i + 1 ? "active" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
             </button>
-          </div>
+          ))}
         </div>
       )}
 
-      {/* ✅ Edit Modal Overlay */}
-      {editingLicense && (
-        <div className="overlay">
-          <div className="overlay-card">
-            <h2 className="overlay-title">
-              Edit License – {editingLicense.licenseHolder}
-            </h2>
+      {/* 👁️ View Modal */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            className="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="overlay-content"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+            >
+              <h3>{selected.licenseHolder} — Details</h3>
+              {Object.entries(selected).map(([key, val]) => {
+                if (["_id", "__v", "createdAt", "updatedAt"].includes(key)) return null;
+                return (
+                  <p key={key}>
+                    <strong>{key}:</strong> {val?.toString()}
+                  </p>
+                );
+              })}
+              <button className="close-btn" onClick={() => setSelected(null)}>Close</button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            <form onSubmit={handleEditSubmit} className="overlay-form">
-              <div className="form-group">
-                <label>Document Type</label>
+      {/* ✏️ Edit Modal */}
+      <AnimatePresence>
+        {editing && (
+          <motion.div
+            className="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="overlay-content"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+            >
+              <h3>Edit License – {editing.licenseHolder}</h3>
+              <form onSubmit={handleEditSubmit} className="overlay-form">
                 <input
                   type="text"
+                  name="documentType"
                   value={editForm.documentType || ""}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, documentType: e.target.value })
-                  }
+                  onChange={handleFormChange}
+                  placeholder="Document Type"
                 />
-              </div>
-
-              <div className="form-group">
-                <label>License Number</label>
                 <input
                   type="text"
+                  name="licenseNumber"
                   value={editForm.licenseNumber || ""}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, licenseNumber: e.target.value })
-                  }
+                  onChange={handleFormChange}
+                  placeholder="License Number"
                 />
-              </div>
-
-              <div className="form-group">
-                <label>Issuing Authority</label>
                 <input
                   type="text"
+                  name="issuingAuthority"
                   value={editForm.issuingAuthority || ""}
-                  onChange={(e) =>
-                    setEditForm({
-                      ...editForm,
-                      issuingAuthority: e.target.value,
-                    })
-                  }
+                  onChange={handleFormChange}
+                  placeholder="Issuing Authority"
                 />
-              </div>
-
-              <div className="form-group">
-                <label>License Holder</label>
-                <input
-                  type="text"
-                  value={editForm.licenseHolder || ""}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, licenseHolder: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Expiry Date</label>
                 <input
                   type="date"
-                  value={
-                    editForm.expiryDate
-                      ? new Date(editForm.expiryDate)
-                          .toISOString()
-                          .split("T")[0]
-                      : ""
-                  }
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, expiryDate: e.target.value })
-                  }
+                  name="issueDate"
+                  value={editForm.issueDate || ""}
+                  onChange={handleFormChange}
                 />
-              </div>
-
-              <div className="form-group">
-                <label>Status</label>
-                <select
-                  value={editForm.status || ""}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, status: e.target.value })
-                  }
-                ><option value="">Select Status</option>
-            {statuses.map((s) => (
-              <option key={s._id} value={s._id}>{s.name}</option>
-            ))}
-                </select>
-              </div>
-
-              <div className="modal-actions">
-                <button type="submit" className="save-btn">
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="close-btn"
-                  onClick={() => setEditingLicense(null)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                <input
+                  type="date"
+                  name="expiryDate"
+                  value={editForm.expiryDate || ""}
+                  onChange={handleFormChange}
+                />
+                <input
+                  type="text"
+                  name="businessActivity"
+                  value={editForm.businessActivity || ""}
+                  onChange={handleFormChange}
+                  placeholder="Business Activity"
+                />
+                <input
+                  type="text"
+                  name="renewalCycle"
+                  value={editForm.renewalCycle || ""}
+                  onChange={handleFormChange}
+                  placeholder="Renewal Cycle"
+                />
+                <div className="modal-actions">
+                  <button type="submit" className="save-btn">Save</button>
+                  <button
+                    type="button"
+                    className="close-btn"
+                    onClick={() => setEditing(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
