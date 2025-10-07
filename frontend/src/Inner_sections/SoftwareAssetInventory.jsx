@@ -105,10 +105,11 @@ const SoftwareAssetList = () => {
               <motion.div
                 key={asset._id}
                 className="inventory-card"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                whileHover={{ scale: 1.02 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
+              transition={{ duration: 0.25 }}
               >
                 {/* 🧭 Header */}
                 <div className="card-header">
