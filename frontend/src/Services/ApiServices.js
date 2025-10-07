@@ -76,6 +76,27 @@ export const createHardwareAsset = async (assetData) => {
   const response = await axiosInstance.post("/assets", assetData);
   return response.data;
 };
+// ----- HARDWARE ASSETS API CALLS -----
+export const getHardwareAssets = async () => {
+  const response = await axiosInstance.get("/assets");
+  return response.data;
+};
+
+export const getHardwareAssetById = async (id) => {
+  const response = await axiosInstance.get(`/assets/${id}`);
+  return response.data;
+};
+
+export const updateHardwareAsset = async (id, updatedData) => {
+  const response = await axiosInstance.put(`/assets/${id}`, updatedData);
+  return response.data;
+};
+
+export const deleteHardwareAsset = async (id) => {
+  const response = await axiosInstance.delete(`/assets/${id}`);
+  return response.data;
+};
+
 
 // ----- CORE COMPANY LICENSE API CALLS -----
 export const getCoreLicenses = async () => {
@@ -102,11 +123,14 @@ export const deleteCoreLicense = async (id) => {
   const response = await axiosInstance.delete(`/company-licenses/${id}`);
   return response.data;
 };
- // Bulk upload calls 
+
+
 export const bulkUploadHardwareAssets = async (data) => {
   const response = await axiosInstance.post("/assets/bulk-upload", data);
   return response.data;
 };
+
+
 
 export const bulkUploadSoftwareAssets = async (data) => {
   const response = await axiosInstance.post("/software-assets/bulk-upload",data );
