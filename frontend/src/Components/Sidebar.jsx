@@ -3,7 +3,6 @@ import "../Component_styles/Sidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
 import image from "../Images/logo.png";
-import { ThemeContext } from "../Context/ThemeContext";
 import {
   faGauge,
   faLayerGroup,
@@ -17,15 +16,14 @@ import {
 // import Switch from "./Switch";
 
 const Sidebar = ({ closeSidebar }) => {
-  const { theme } = useContext(ThemeContext);
 
   return (
-    <div className={`sidebar-container ${theme}`}>
-      <div className={`sidebar ${theme}`}>
-        <div className={`sidebar-heading ${theme}`}>
-          <div className={`title ${theme}`}>Vault<span>ifly</span><FontAwesomeIcon icon={faPaperPlane} style={{ marginLeft: "8px", color: "#6596ffff" }} /></div>
+    <div className="sidebar-container">
+      <div className="sidebar">
+        <div className="sidebar-heading">
+          <div className="title">Vault<span>ifly</span><FontAwesomeIcon icon={faPaperPlane} style={{ marginLeft: "8px", color: "#6596ffff" }} /></div>
         </div>
-        <div className={`sidebar-menu ${theme}`}>
+        <div className="sidebar-menu">
           <ul>
             <li>
               <NavLink to="/" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
