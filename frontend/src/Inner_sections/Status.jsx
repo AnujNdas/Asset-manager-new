@@ -13,7 +13,7 @@ const Status = () => {
 
   // ✅ Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 8; // cards per page
+  const perPage = 9; // cards per page
 
   const totalPages = Math.ceil(statuses.length / perPage);
   const indexOfLast = currentPage * perPage;
