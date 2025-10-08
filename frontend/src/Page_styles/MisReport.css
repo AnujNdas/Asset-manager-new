@@ -173,6 +173,10 @@
     padding: 6px 12px;
     font-size: 13px;
   }
+    .pagination {
+        justify-content: center;
+    }
+}
 
   .filters {
     grid-template-columns: 1fr 1fr;
