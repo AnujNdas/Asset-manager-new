@@ -176,13 +176,10 @@
     .pagination {
         justify-content: center;
     }
-}
+
 
   .filters {
     grid-template-columns: 1fr 1fr;
   }
 
-  .pagination {
-    justify-content: flex-start;
-  }
 }
