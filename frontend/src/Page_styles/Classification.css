@@ -155,9 +155,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .tab-text {
-    display: none; /* icons only for compact look */
-  }
 
   .tab_link {
     padding: 10px;
