@@ -32,28 +32,6 @@
   font-family: li;
   src: url('Poppins/Poppins-ExtraLightItalic.ttf');
 }
-/* Light Theme */
-body.light {
-  background: #f4f7fa;
-}
-
-/* Dark Theme */
-body.dark {
-  background: #2B2B2B;
-  color: #ffffff;
-}
-.third-container.light{
-  background: #f4f7fa;
-}
-.third-container.dark{
-  background: #383838;
-}
-
-
-body.light .sidebar-toggle button {
-  background: #ddd;
-  color: #333;
-}
 
 .sidebar-toggle button:hover {
   opacity: 0.8;
@@ -84,7 +62,7 @@ body.light .sidebar-toggle button {
   left: 16%;
   height: calc(100% - 60px);
   width: 83%;
-  /* background: #f6f6f6; */
+  background: #f6f6f6;
   border-radius: 10px;
   overflow-y: auto;
   transition: left 0.3s ease, width 0.3s ease;
@@ -125,19 +103,7 @@ body.light .sidebar-toggle button {
 .swal2-container {
   z-index: 9999 !important;
 }
-/* Light theme + open */
-.first-container.open.light {
-  transform: translateX(0);
-  background-color: #fff;   /* light bg */
-  color: #333;              /* dark text */
-}
 
-/* Dark theme + open */
-.first-container.open.dark {
-  transform: translateX(0);
-  background-color: #3f4045;   /* dark bg */
-  color: #eee;              /* light text */
-}
 
 /* ========== RESPONSIVE ========== */
 
