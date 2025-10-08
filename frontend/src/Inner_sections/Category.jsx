@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../Page_styles/Unit.css'; // Shared modern CSS
+import '../Page_styles/Unit.css'; // You can keep using this for shared styles
 import { getCategories, createCategory } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -11,18 +11,21 @@ const Category = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 5;
+  const perPage = 6; // works better with grid layout
 
   const totalPages = Math.ceil(categories.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
   const currentItems = categories.slice(indexOfFirst, indexOfLast);
 
+  // ✅ Fetch categories
   const fetchCategories = async () => {
     setLoading(true);
     try {
       const data = await getCategories();
-      setCategories(data);
+      // Sort categories by creation date (if available) or just reverse to show latest first
+      const sorted = [...data].reverse();
+      setCategories(sorted);
     } catch (err) {
       setError('Error fetching categories');
     } finally {
@@ -30,38 +33,42 @@ const Category = () => {
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!categoryName) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Missing Category Name',
-      text: 'Please enter a category name before submitting.',
-      confirmButtonColor: '#3085d6',
-    });
-    return;
-  }
+  // ✅ Handle submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!categoryName.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Category Name',
+        text: 'Please enter a category name before submitting.',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
 
-  try {
-    await createCategory({ name: categoryName });
-    setCategoryName('');
-    fetchCategories();
+    try {
+      const newCategory = await createCategory({ name: categoryName.trim() });
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Category Created',
-      text: 'The category has been added successfully!',
-      confirmButtonColor: '#3085d6',
-    });
-  } catch (err) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error Creating Category',
-      text: err.response?.data?.message || 'Something went wrong while creating the category.',
-      confirmButtonColor: '#d33',
-    });
-  }
-};
+      // 🆕 Prepend the newly created category to the list
+      setCategories((prev) => [newCategory, ...prev]);
+      setCategoryName('');
+      setCurrentPage(1); // Always jump back to page 1 to show new entry
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Category Created',
+        text: 'The category has been added successfully!',
+        confirmButtonColor: '#3085d6',
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Creating Category',
+        text: err.response?.data?.message || 'Something went wrong while creating the category.',
+        confirmButtonColor: '#d33',
+      });
+    }
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -69,59 +76,56 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="classification_card">
-      <div className="card_header">
-        <h3>Category</h3>
-        <form onSubmit={handleSubmit} className="status_form">
-          <input
-            type="text"
-            placeholder="Enter category name"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-          />
-          <button type="submit">
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
-        </form>
-      </div>
+<div className="card_header">
+  <h3 className="category_title"> Category</h3>
+  <form onSubmit={handleSubmit} className="category_form">
+    <input
+      type="text"
+      className="category_input"
+      placeholder="Add a new category..."
+      value={categoryName}
+      onChange={(e) => setCategoryName(e.target.value)}
+    />
+    <button type="submit" className="category_add_btn">
+      <FontAwesomeIcon icon={faPlus} />
+    </button>
+  </form>
+</div>
+
 
       {loading && <p>Loading categories...</p>}
       {error && <p className="error">{error}</p>}
 
-      <div className="card_content">
+      {/* 🌿 Grid Card Layout */}
+      <div className="category-grid">
         {currentItems.length === 0 ? (
           <p>No categories available</p>
         ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Category </th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((category, idx) => (
-                <tr key={category._id}>
-                  <td>{indexOfFirst + idx + 1}</td>
-                  <td>{category.name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="grid">
+            {currentItems.map((category, idx) => (
+              <div key={category._id} className="category-card">
+                <div className="category-number">{indexOfFirst + idx + 1}</div>
+                <div className="category-name">{category.name}</div>
+              </div>
+            ))}
+          </div>
         )}
+      </div>
 
-{/* Pagination */}
-      <div className="pagination">
-        {[...Array(totalPages).keys()].map((n) => (
-          <button
-            key={n}
-            className={currentPage === n + 1 ? "active" : ""}
-            onClick={() => setCurrentPage(n + 1)}
-          >
-            {n + 1}
-          </button>
-        ))}
-      </div>
-      </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          {[...Array(totalPages).keys()].map((n) => (
+            <button
+              key={n}
+              className={currentPage === n + 1 ? 'active' : ''}
+              onClick={() => setCurrentPage(n + 1)}
+            >
+              {n + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
