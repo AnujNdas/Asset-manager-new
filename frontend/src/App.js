@@ -1,6 +1,6 @@
 import Menubar from "./Components/Menubar";
 import Sidebar from "./Components/Sidebar";
-import { useState , useEffect, useContext} from "react";
+import { useState , useEffect} from "react";
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 import User from "./Pages/User"; 
@@ -12,13 +12,11 @@ import Classification from "./Pages/Classification";
 import Inventory from "./Pages/Inventory";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import MisReport from "./Pages/MisReport";
-import { ThemeContext } from "./Context/ThemeContext";
 import DashboardWrapper from "./Pages/DashboardWrapper";
 import AssetScanner from "./Pages/Scanner";
 import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 const App = () => {
-  const {theme} = useContext(ThemeContext)
   const [profileUser, setProfileUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
   const location = useLocation(); // Use location to track the current route
@@ -48,7 +46,7 @@ const App = () => {
   return (
   <div className="app-wrapper">
     <button className="toggle-btn" onClick={toggleSidebar}>☰</button>
-    <section className={`first-container ${isSidebarOpen ? "open" : ""} ${isUserPage ? 'blurred' : ''} ${theme}`}>
+    <section className={`first-container ${isSidebarOpen ? "open" : ""} ${isUserPage ? 'blurred' : ''}`}>
       <Sidebar toggleSidebar={toggleSidebar} closeSidebar={closeSidebar}/>
     </section>
 
@@ -56,7 +54,7 @@ const App = () => {
       <Menubar username={profileUser}/>
     </section>
 
-    <section className={`third-container ${isUserPage ? 'blurred' : ''} ${theme}`}>
+    <section className={`third-container ${isUserPage ? 'blurred' : ''}`}>
       <Routes>
         <Route path="/" element={<ProtectedRoute allowedRoles={["admin" , "user"  , "super-admin"]}><DashboardWrapper /></ProtectedRoute>} />
         <Route path="/assetCapture" element={<ProtectedRoute allowedRoles={["admin" , "super-admin"]}><AssetCapture /></ProtectedRoute>} />
