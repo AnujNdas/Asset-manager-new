@@ -11,7 +11,7 @@ const Category = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 8; // works better with grid layout
+  const perPage = 9; // works better with grid layout
 
   const totalPages = Math.ceil(categories.length / perPage);
   const indexOfLast = currentPage * perPage;
