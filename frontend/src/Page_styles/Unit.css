@@ -1,112 +1,131 @@
-.classification_card {
-  background-color: #fff;
-  border-radius: 16px;
-  /* padding: 25px; */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  box-sizing: border-box;
+/* 🌿 Card Grid Layout */
+.category-grid .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
 }
 
+.category-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-number {
+  background: #3085d6;
+  color: white;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.category-name {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  color: #333;
+  word-break: break-word;
+}
+/* 🌿 Header Section */
 .card_header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 18px;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 12px;
 }
 
-.card_header h3 {
-  font-size: 20px;
-  font-weight: 500;
-  color: #1e1e2f;
-}
-
-.status_form {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.status_form input {
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  min-width: 200px;
-  font-size: 0.95rem;
-}
-
-.status_form button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  background : #2346ed;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-.status_form button:hover {
-  opacity: 0.9;
-}
-
-.card_content table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.card_content th, .card_content td {
-  text-align: left;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  font-size : 13px;
-}
-
-.card_content th {
-  color: #555;
+.category_title {
+  font-size: 22px;
   font-weight: 600;
-  font-size : 13px;
-}
-
-.pagination_container {
-  margin-top: 15px;
+  color: #2c3e50;
   display: flex;
-  gap: 5px;
-  justify-content: center;
-  flex-wrap: wrap;
-  font-size : 13px;
+  align-items: center;
+  gap: 6px;
 }
 
-.pagination_container button {
-  padding: 6px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background-color: #f9f9f9;
+.category_form {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  padding: 4px 8px;
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s ease;
+}
+
+.category_form:focus-within {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.category_input {
+  border: none;
+  outline: none;
+  padding: 8px 10px;
+  font-size: 15px;
+  width: 180px;
+}
+
+.category_add_btn {
+  background: #2356ed;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.pagination_container button.active {
-  background-color: #4f46e5;
-  color: #fff;
-  border-color: #4f46e5;
+.category_add_btn:hover {
+  background: #2453ed;
 }
 
-.pagination_container button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .card_header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .status_form input {
-    width: 100%;
+@media (max-width: 480px) {
+  .category_input {
+    width: 140px;
+    font-size: 14px;
   }
 }
+
+/* .pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.pagination button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pagination button.active,
+.pagination button:hover {
+  background: #3085d6;
+  color: white;
+  border-color: #3085d6;
+} */
