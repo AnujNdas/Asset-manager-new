@@ -75,13 +75,13 @@ const Login = ({ setProfileUser }) => {
     <div className="auth-page">
       <div className="auth-card">
         {/* Brand / Welcome panel (left on desktop, stacked on mobile) */}
-        <aside className="brand-panel">
+        {/* <aside className="brand-panel">
           <img src={image} alt="Logo" className="brand-logo" />
           <h1>Welcome back</h1>
           <p className="brand-sub">
             Sign in to access your dashboard and continue where you left off.
           </p>
-        </aside>
+        </aside> */}
 
         {/* Form panel */}
         <form className="form-panel" onSubmit={handlelogin}>
