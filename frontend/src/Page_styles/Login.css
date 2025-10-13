@@ -91,7 +91,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   align-content: center;
   gap: 10px;
   color: var(--text);
-  /* height: 100%; */
+  height: 100%;
 }
 
 .form-header{
