@@ -88,7 +88,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
   background: #ffffff;
   padding: 0px 20px;
   display: grid;
-  align-content: center;
+  /* align-content: center; */
   gap: 10px;
   color: var(--text);
   height: 100%;
@@ -96,7 +96,7 @@ body { background: var(--bg); font-family: Inter, system-ui, -apple-system, Sego
 
 .form-header{
   display: grid;
-  justify-items: start;
+  justify-items: center;
   gap: 6px;
 }
 
