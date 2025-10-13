@@ -89,13 +89,13 @@ const Signup = () => {
     <div className="auth-page">
       <div className="auth-card">
         {/* Brand panel */}
-        <aside className="brand-panel">
+        {/* <aside className="brand-panel">
           <img src={image} alt="Logo" className="brand-logo" />
           <h1>Join Us</h1>
           <p className="brand-sub">
             Create your account and start exploring our dashboard.
           </p>
-        </aside>
+        </aside> */}
 
         {/* Form panel */}
         <form className="form-panel" onSubmit={handleSignup}>
