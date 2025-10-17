@@ -32,11 +32,9 @@ body {
 .auth-card {
   width: 100%;
   max-width: 900px;
-  height: auto;
   background: #fff;
   border-radius: 20px;
   display: grid;
-  grid-template-columns: 1fr;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
@@ -228,10 +226,7 @@ body {
 
 /* Phones */
 @media (max-width: 600px) {
-  .auth-card {
-    border-radius: 0;
-    box-shadow: none;
-  }
+
   .form-panel {
     padding: 18px 14px;
     gap: 14px;
