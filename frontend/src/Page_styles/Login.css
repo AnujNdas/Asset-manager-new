@@ -21,7 +21,7 @@ body {
 
 /* ========== Layout ========== */
 .auth-page {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   width: 100%;
   display: grid;
   place-items: center;
