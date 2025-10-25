@@ -170,6 +170,7 @@
   .third-container {
     left: 0;
     width: 100%;
+    border-radius: none;
   }
 }
 
