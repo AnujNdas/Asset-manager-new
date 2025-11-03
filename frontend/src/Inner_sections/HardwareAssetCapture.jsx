@@ -219,13 +219,21 @@ return (
             <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
           
 
+{/* Camera Option */}
 <input
   type="file"
-  name="image"
-  accept="image/*;capture=camera"  // IMPORTANT
-  capture="camera" // Works better on Android + iPhone
+  accept="image/*"
+  capture="environment"
   onChange={handleChange}
 />
+
+{/* Gallery/File Option */}
+<input
+  type="file"
+  accept="image/*"
+  onChange={handleChange}
+/>
+
 {imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
 
 
