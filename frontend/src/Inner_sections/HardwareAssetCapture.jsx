@@ -219,22 +219,32 @@ return (
             <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
           
             
-            {/* Camera Option */}
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handleChange}
-            />
-            
-            {/* Gallery/File Option */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleChange}
-            />
-            
-            {imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
+{/* Camera Capture Button */}
+<label className="file-btn">
+  Open Camera
+  <input
+    type="file"
+    accept="image/*"
+    capture="environment"
+    onChange={handleChange}
+    style={{ display: "none" }}
+  />
+</label>
+
+{/* Upload from Device Button */}
+<label className="file-btn">
+  Upload from Device
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleChange}
+    style={{ display: "none" }}
+  />
+</label>
+
+{/* Preview Image */}
+{imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
+
             
 
         <button type="submit" className="btn-primary">Save Hardware Asset</button>
