@@ -219,13 +219,42 @@ return (
             <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
           
 
-  <input 
+<input 
     type="file" 
     name="image" 
     accept="image/*" 
-    capture="environment"  // Opens rear camera on mobile devices 
+    id="fileInput"
     onChange={handleChange} 
+    style={{ display: 'none' }}
   />
+  
+  <button 
+    type="button" 
+    onClick={() => document.getElementById('fileInput').click()}
+    className="btn-secondary"
+  >
+    Choose File
+  </button>
+
+  <button 
+    type="button" 
+    onClick={() =>
+      document.getElementById('cameraInput').click()
+    } 
+    className="btn-danger"
+  >
+    Open Camera
+  </button>
+
+  <input 
+    type="file" 
+    id="cameraInput"
+    accept="image/*" 
+    capture="environment"
+    style={{ display: 'none' }}
+    onChange={handleChange}
+  />
+  
   {imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
 
           
