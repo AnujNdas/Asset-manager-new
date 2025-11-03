@@ -1,4 +1,4 @@
-import React, { useEffect, useState , useNavigate } from "react";
+import React, { useEffect, useState  } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMicrochip,
@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Chart from "chart.js/auto";
 import "../Page_styles/AdminDashboard.css";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAdminStats } from "../Services/ApiServices";
 
 const Dashboard = () => {
