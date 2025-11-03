@@ -15,6 +15,17 @@ const Dashboard = () => {
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // ✅ Track Selected Card
+  const [activeCard, setActiveCard] = useState(null);
+
+  const handleCardClick = (tab) => {
+    setActiveCard(tab);
+    if (tab === "users") {
+      navigate("/users");
+    } else {
+      navigate(`/inventory?tab=${tab}`);
+    }
+  };
 
   // 🧩 Fetch dashboard data
   useEffect(() => {
