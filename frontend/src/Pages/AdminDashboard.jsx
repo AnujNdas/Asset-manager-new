@@ -195,7 +195,7 @@ const Dashboard = () => {
 
         <div className="chart-card">
           <div className="chart-header">
-            <p>Usage Trends</p>
+            <p>Renewable Management</p>
             <p>Show by Month</p>
           </div>
           <canvas id="lineChart"></canvas>
