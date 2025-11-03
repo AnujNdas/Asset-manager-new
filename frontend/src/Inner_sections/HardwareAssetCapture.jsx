@@ -219,9 +219,15 @@ return (
             <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
           
 
-          
-            <input type="file" name="image" accept="image/*" onChange={handleChange} />
-            {imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
+  <input 
+    type="file" 
+    name="image" 
+    accept="image/*" 
+    capture="environment"  // Opens rear camera on mobile devices 
+    onChange={handleChange} 
+  />
+  {imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
+
           
 
           
