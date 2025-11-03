@@ -66,6 +66,22 @@
   gap: 20px;
   justify-content: right;
 }
+.file-btn {
+  display: inline-block;
+  padding: 10px 15px;
+  margin-top: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.file-btn:hover {
+  background-color: #0056b3;
+}
+
 /* Responsive grid for large screens */
 @media (min-width: 768px) {
   .capture-form {
