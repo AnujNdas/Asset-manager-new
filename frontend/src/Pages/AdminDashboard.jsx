@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useNavigate } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMicrochip,
@@ -12,6 +12,7 @@ import "../Page_styles/AdminDashboard.css";
 import { getAdminStats } from "../Services/ApiServices";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
