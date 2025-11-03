@@ -23,7 +23,7 @@ const Dashboard = () => {
   const handleCardClick = (tab) => {
     setActiveCard(tab);
     if (tab === "users") {
-      navigate("/users");
+      navigate("/Setting/users");
     } else {
       navigate(`/inventory?tab=${tab}`);
     }
