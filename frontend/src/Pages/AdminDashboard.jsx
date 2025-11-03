@@ -136,10 +136,10 @@ const Dashboard = () => {
     return <div className="dashboard-container error">{error}</div>;
 
   const stats = [
-    { icon: faMicrochip, title: "Hardware", value: statsData.hardwareCount, color: "#6366f1" },
-    { icon: faLaptop, title: "Software", value: statsData.softwareCount, color: "#a855f7" },
-    { icon: faCopy, title: "Licenses", value: statsData.coreLicensesCount, color: "#f59e0b" },
-    { icon: faUsers, title: "Users", value: statsData.usersCount, color: "#f43f5e" },
+    { icon: faMicrochip, title: "Hardware", value: statsData.hardwareCount, color: "#6366f1", tab: "hardware" },
+    { icon: faLaptop, title: "Software", value: statsData.softwareCount, color: "#a855f7", tab: "software" },
+    { icon: faCopy, title: "Licenses", value: statsData.coreLicensesCount, color: "#f59e0b", tab: "core" },
+    { icon: faUsers, title: "Users", value: statsData.usersCount, color: "#f43f5e", tab: "users" },
   ];
 
   return (
@@ -147,7 +147,12 @@ const Dashboard = () => {
       {/* --- Top Stats --- */}
       <div className="stats-grid">
         {stats.map((item, index) => (
-          <div className="stat-card" key={index}>
+          <div
+            className={`stat-card ${activeCard === item.tab ? "active-card" : ""}`}
+            key={index}
+            onClick={() => handleCardClick(item.tab)}
+            style={{ cursor: "pointer" }}
+          >
             <div className="stat-icon" style={{ backgroundColor: item.color }}>
               <FontAwesomeIcon icon={item.icon} />
             </div>
