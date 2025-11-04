@@ -20,7 +20,6 @@ const CoreCompanyLicenseList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  // 📡 Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,13 +27,9 @@ const CoreCompanyLicenseList = () => {
           getStatuses(),
           getCoreLicenses(),
         ]);
-
         setStatuses(statusRes);
-
         if (licenseRes.success && Array.isArray(licenseRes.data)) {
           setLicenses(licenseRes.data);
-        } else {
-          console.error("Unexpected response:", licenseRes);
         }
       } catch (err) {
         Swal.fire("Error", err.message, "error");
@@ -43,13 +38,11 @@ const CoreCompanyLicenseList = () => {
     fetchData();
   }, []);
 
-  // 🧭 Pagination helpers
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = licenses.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(licenses.length / itemsPerPage);
 
-  // 🗑️ Delete License
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Delete License?",
@@ -70,11 +63,17 @@ const CoreCompanyLicenseList = () => {
     }
   };
 
-  // ✏️ Start Editing
   const startEditing = (license) => {
     setEditing(license);
     setEditForm({
       ...license,
+      businessName: license.businessName || "",
+      registrationNumber: license.registrationNumber || "",
+      businessAddress: license.businessAddress || "",
+      contactEmail: license.contactEmail || "",
+      contactPhone: license.contactPhone || "",
+      reminderDays: license.reminderDays || 30,
+      notes: license.notes || "",
       expiryDate: license.expiryDate
         ? new Date(license.expiryDate).toISOString().split("T")[0]
         : "",
@@ -84,7 +83,6 @@ const CoreCompanyLicenseList = () => {
     });
   };
 
-  // 💾 Submit Edit
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -99,60 +97,74 @@ const CoreCompanyLicenseList = () => {
     }
   };
 
-  // 📝 Handle Form Changes
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const getDaysLeft = (expiryDate) => {
+    if (!expiryDate) return null;
+    const diff = new Date(expiryDate) - new Date();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  };
+
   return (
     <div className="inventory-container">
-      <h2 className="inventory-title"> Core Company Licenses</h2>
+      <h2 className="inventory-title">Core Company Licenses</h2>
 
-      {/* 🧊 Card Grid */}
       <div className="inventory-grid">
         <AnimatePresence>
-          {currentItems.map((license) => (
-            <motion.div
-              key={license._id}
-              className="inventory-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
-              transition={{ duration: 0.25 }}
-            >
-              <div className="card-header">
-                <h3 className="card-title">{license.licenseHolder}</h3>
-                <span className={`status-badge`}>
-                  {statuses.find((s) => s._id === license.status)?.name || "N/A"}
-                </span>
-              </div>
+          {currentItems.map((license) => {
+            const daysLeft = getDaysLeft(license.expiryDate);
+            return (
+              <motion.div
+                key={license._id}
+                className="inventory-card"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
+                transition={{ duration: 0.25 }}
+              >
+                <div className="card-header">
+                  <h3 className="card-title">{license.licenseHolder}</h3>
+                  <span
+                    className={`status-badge ${
+                      daysLeft < 0
+                        ? "expired"
+                        : daysLeft < 30
+                        ? "near-expiry"
+                        : ""
+                    }`}
+                  >
+                    {daysLeft < 0 ? "Expired" : `${daysLeft} days left`}
+                  </span>
+                </div>
 
-              <div className="card-info2">
-                <p><strong>Document:</strong> {license.documentType}</p>
-                <p><strong>License No:</strong> {license.licenseNumber}</p>
-                <p><strong>Authority:</strong> {license.issuingAuthority}</p>
-                <p><strong>Expiry:</strong> {new Date(license.expiryDate).toLocaleDateString()}</p>
-              </div>
+                <div className="card-info2">
+                  <p><strong>Document:</strong> {license.documentType}</p>
+                  <p><strong>License No:</strong> {license.licenseNumber}</p>
+                  <p><strong>Authority:</strong> {license.issuingAuthority}</p>
+                  <p><strong>Expiry:</strong> {new Date(license.expiryDate).toLocaleDateString()}</p>
+                </div>
 
-              <div className="card-actions">
-                <button onClick={() => setSelected(license)} className="btn-view">
-                  <FontAwesomeIcon icon={faEye} /> View
-                </button>
-                <button onClick={() => startEditing(license)} className="btn-edit">
-                  <FontAwesomeIcon icon={faEdit} /> Edit
-                </button>
-                <button onClick={() => handleDelete(license._id)} className="btn-delete">
-                  <FontAwesomeIcon icon={faTrash} /> Delete
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                <div className="card-actions">
+                  <button onClick={() => setSelected(license)} className="btn-view">
+                    <FontAwesomeIcon icon={faEye} /> View
+                  </button>
+                  <button onClick={() => startEditing(license)} className="btn-edit">
+                    <FontAwesomeIcon icon={faEdit} /> Edit
+                  </button>
+                  <button onClick={() => handleDelete(license._id)} className="btn-delete">
+                    <FontAwesomeIcon icon={faTrash} /> Delete
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </div>
 
-      {/* 📄 Pagination */}
       {totalPages > 1 && (
         <div className="pagination">
           {Array.from({ length: totalPages }, (_, i) => (
@@ -167,21 +179,11 @@ const CoreCompanyLicenseList = () => {
         </div>
       )}
 
-      {/* 👁️ View Modal */}
+      {/* VIEW MODAL */}
       <AnimatePresence>
         {selected && (
-          <motion.div
-            className="overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="overlay-content"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-            >
+          <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div className="overlay-content" initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}>
               <h3>{selected.licenseHolder} — Details</h3>
               {Object.entries(selected).map(([key, val]) => {
                 if (["_id", "__v", "createdAt", "updatedAt"].includes(key)) return null;
@@ -197,79 +199,32 @@ const CoreCompanyLicenseList = () => {
         )}
       </AnimatePresence>
 
-      {/* ✏️ Edit Modal */}
+      {/* EDIT MODAL */}
       <AnimatePresence>
         {editing && (
-          <motion.div
-            className="overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="overlay-content"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-            >
+          <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div className="overlay-content" initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}>
               <h3>Edit License – {editing.licenseHolder}</h3>
               <form onSubmit={handleEditSubmit} className="overlay-form">
-                <input
-                  type="text"
-                  name="documentType"
-                  value={editForm.documentType || ""}
-                  onChange={handleFormChange}
-                  placeholder="Document Type"
-                />
-                <input
-                  type="text"
-                  name="licenseNumber"
-                  value={editForm.licenseNumber || ""}
-                  onChange={handleFormChange}
-                  placeholder="License Number"
-                />
-                <input
-                  type="text"
-                  name="issuingAuthority"
-                  value={editForm.issuingAuthority || ""}
-                  onChange={handleFormChange}
-                  placeholder="Issuing Authority"
-                />
-                <input
-                  type="date"
-                  name="issueDate"
-                  value={editForm.issueDate || ""}
-                  onChange={handleFormChange}
-                />
-                <input
-                  type="date"
-                  name="expiryDate"
-                  value={editForm.expiryDate || ""}
-                  onChange={handleFormChange}
-                />
-                <input
-                  type="text"
-                  name="businessActivity"
-                  value={editForm.businessActivity || ""}
-                  onChange={handleFormChange}
-                  placeholder="Business Activity"
-                />
-                <input
-                  type="text"
-                  name="renewalCycle"
-                  value={editForm.renewalCycle || ""}
-                  onChange={handleFormChange}
-                  placeholder="Renewal Cycle"
-                />
+                {/* Required New Fields */}
+                <input type="text" name="businessName" value={editForm.businessName} onChange={handleFormChange} placeholder="Business Legal Name" />
+                <input type="text" name="registrationNumber" value={editForm.registrationNumber} onChange={handleFormChange} placeholder="CIN / GSTIN / Registration No" />
+                <textarea name="businessAddress" value={editForm.businessAddress} onChange={handleFormChange} placeholder="Business Address" />
+                <input type="email" name="contactEmail" value={editForm.contactEmail} onChange={handleFormChange} placeholder="Contact Email" />
+                <input type="text" name="contactPhone" value={editForm.contactPhone} onChange={handleFormChange} placeholder="Contact Phone" />
+                <input type="number" name="reminderDays" value={editForm.reminderDays} onChange={handleFormChange} placeholder="Reminder Days (e.g. 30)" />
+                <textarea name="notes" value={editForm.notes} onChange={handleFormChange} placeholder="Description / Notes" />
+
+                {/* Existing Fields */}
+                <input type="text" name="documentType" value={editForm.documentType || ""} onChange={handleFormChange} placeholder="Document Type" />
+                <input type="text" name="licenseNumber" value={editForm.licenseNumber || ""} onChange={handleFormChange} placeholder="License Number" />
+                <input type="text" name="issuingAuthority" value={editForm.issuingAuthority || ""} onChange={handleFormChange} placeholder="Issuing Authority" />
+                <input type="date" name="issueDate" value={editForm.issueDate || ""} onChange={handleFormChange} />
+                <input type="date" name="expiryDate" value={editForm.expiryDate || ""} onChange={handleFormChange} />
+
                 <div className="modal-actions">
                   <button type="submit" className="save-btn">Save</button>
-                  <button
-                    type="button"
-                    className="close-btn"
-                    onClick={() => setEditing(null)}
-                  >
-                    Cancel
-                  </button>
+                  <button type="button" className="close-btn" onClick={() => setEditing(null)}>Cancel</button>
                 </div>
               </form>
             </motion.div>
