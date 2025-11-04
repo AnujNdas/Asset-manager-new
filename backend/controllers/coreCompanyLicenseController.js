@@ -4,46 +4,56 @@ const Notification = require("../models/Notification");
 // Create a new company license
 const createCompanyLicense = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
-    const license = new CoreCompanyLicense(req.body);
-    await license.save();
+    const newLicense = new CoreCompanyLicense({
+      ...req.body,
+      auditTrail: [
+        {
+          action: "Created",
+          user: userId,
+          timestamp: new Date(),
+        },
+      ],
+    });
 
-    // Create notification
+    await newLicense.save();
+
+    // ✅ Create real-time notification
     const newNotification = await Notification.create({
-      title: "License Added",
-      message: `Company license for "${license.licenseHolder}" created successfully.`,
+      title: "New License Added",
+      message: `License "${newLicense.licenseName}" was created for ${newLicense.businessDetails?.legalName || "a company"}.`,
       userId,
     });
 
-    // Emit notification to user's room
+    // ✅ Emit notification using Socket.IO
     const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    if (io && userId) io.to(userId.toString()).emit("newNotification", newNotification);
 
-    res.status(201).json({ success: true, data: license });
+    res.status(201).json({ success: true, data: newLicense });
   } catch (err) {
-    console.error("❌ Error creating license:", err); // log full error
-    res.status(500).json({ success: false, message: err.message, error: err });
+    console.error("❌ Error creating license:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
 // Get all licenses
 const getCompanyLicenses = async (req, res) => {
   try {
-    const licenses = await CoreCompanyLicense.find();
+    const licenses = await CoreCompanyLicense.find().sort({ createdAt: -1 });
     res.json({ success: true, data: licenses });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// Get single license
+// Get a single license by ID
 const getCompanyLicenseById = async (req, res) => {
   try {
     const license = await CoreCompanyLicense.findById(req.params.id);
-    if (!license)
+    if (!license) {
       return res.status(404).json({ success: false, message: "License not found" });
-
+    }
     res.json({ success: true, data: license });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -53,30 +63,38 @@ const getCompanyLicenseById = async (req, res) => {
 // Update license
 const updateCompanyLicense = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
-    const license = await CoreCompanyLicense.findByIdAndUpdate(
+    const updatedLicense = await CoreCompanyLicense.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      {
+        ...req.body,
+        $push: {
+          auditTrail: {
+            action: "Updated",
+            user: userId,
+            timestamp: new Date(),
+          },
+        },
+      },
       { new: true }
     );
 
-    if (!license) {
+    if (!updatedLicense) {
       return res.status(404).json({ success: false, message: "License not found" });
     }
 
-    // Create notification
+    // ✅ Send notification
     const newNotification = await Notification.create({
       title: "License Updated",
-      message: `Company license "${license.name}" updated successfully.`,
+      message: `License "${updatedLicense.licenseName}" has been updated.`,
       userId,
     });
 
-    // Emit notification
     const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    if (io) io.to(userId.toString()).emit("newNotification", newNotification);
 
-    res.json({ success: true, data: license });
+    res.json({ success: true, data: updatedLicense });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -85,24 +103,22 @@ const updateCompanyLicense = async (req, res) => {
 // Delete license
 const deleteCompanyLicense = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
-    const license = await CoreCompanyLicense.findByIdAndDelete(req.params.id);
-
-    if (!license) {
+    const deletedLicense = await CoreCompanyLicense.findByIdAndDelete(req.params.id);
+    if (!deletedLicense) {
       return res.status(404).json({ success: false, message: "License not found" });
     }
 
-    // Create notification
+    // ✅ Notification after deletion
     const newNotification = await Notification.create({
-      title: "License Deleted",
-      message: `Company license "${license.name}" deleted successfully.`,
+      title: "License Removed",
+      message: `License "${deletedLicense.licenseName}" has been deleted.`,
       userId,
     });
 
-    // Emit notification
     const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    if (io) io.to(userId.toString()).emit("newNotification", newNotification);
 
     res.json({ success: true, message: "License deleted successfully" });
   } catch (err) {
