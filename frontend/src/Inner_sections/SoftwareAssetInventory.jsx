@@ -19,325 +19,159 @@ const SoftwareAssetList = () => {
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [editingAsset, setEditingAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [search, setSearch] = useState("");
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
-
+  // ✅ Fetch all data when component loads
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [assetsRes, cats, stats] = await Promise.all([
-          getSoftwareAssets(),
-          getCategories(),
-          getStatuses(),
-        ]);
-        setSoftwareAssets(assetsRes.data || []);
-        setCategories(cats);
-        setStatuses(stats);
-      } catch (err) {
-        Swal.fire("Error", err.message, "error");
-      }
-    };
-    fetchData();
+    fetchAssets();
+    fetchDropdowns();
   }, []);
 
-  const handleDelete = async (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This will permanently delete the software asset!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#2346ed",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteSoftwareAsset(id);
-          setSoftwareAssets((prev) => prev.filter((a) => a._id !== id));
-          Swal.fire("Deleted!", "Software asset deleted.", "success");
-        } catch {
-          Swal.fire("Error", "Failed to delete software asset.", "error");
-        }
-      }
-    });
-  };
-
-  const handleEdit = (asset) => {
-    setEditingAsset(asset);
-    setEditForm({ ...asset });
-  };
-
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
+  const fetchAssets = async () => {
     try {
-      const updatedAsset = await updateSoftwareAsset(editingAsset._id, editForm);
-      setSoftwareAssets((prev) =>
-        prev.map((a) => (a._id === updatedAsset._id ? updatedAsset : a))
-      );
-      Swal.fire("Updated!", "Software asset updated successfully.", "success");
-      setEditingAsset(null);
-    } catch (err) {
-      Swal.fire("Error", err.message, "error");
+      const assets = await getSoftwareAssets();
+      setSoftwareAssets(assets || []);
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "Failed to load software assets.", "error");
     }
   };
 
-  // Pagination calculations
-  const indexOfLast = currentPage * itemsPerPage;
-  const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = softwareAssets.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(softwareAssets.length / itemsPerPage);
+  const fetchDropdowns = async () => {
+    try {
+      setCategories(await getCategories());
+      setStatuses(await getStatuses());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ✅ Get Category / Status Names
+  const getCategoryName = (id) => {
+    const found = categories.find((c) => c._id === id);
+    return found ? found.name : "N/A";
+  };
+
+  const getStatusName = (id) => {
+    const found = statuses.find((s) => s._id === id);
+    return found ? found.name : "N/A";
+  };
+
+  // ✅ Delete
+  const handleDelete = async (id) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This software asset will be deleted permanently!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
+    if (confirm.isConfirmed) {
+      await deleteSoftwareAsset(id);
+      fetchAssets();
+    }
+  };
+
+  // ✅ Search Filter
+  const filteredAssets = softwareAssets.filter((asset) =>
+    asset.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // ✅ Format Date
+  const formatDate = (date) => {
+    return date ? new Date(date).toISOString().split("T")[0] : "—";
+  };
 
   return (
     <div className="inventory-container">
-      <h2 className="inventory-title"> Software Inventory</h2>
+      <h2>Software Inventory</h2>
 
-      {/* 📦 Card Grid */}
-      <div className="inventory-grid">
+      {/* ✅ Search Bar */}
+      <input
+        type="text"
+        placeholder="Search Software by name..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="search-input"
+      />
+
+      {/* ✅ Card Display Grid */}
+      <div className="card-grid">
         <AnimatePresence>
-          {currentItems.map((asset) => {
-            const categoryName =
-              categories.find((c) => c._id === asset.category)?.name || "N/A";
-            const statusName =
-              statuses.find((s) => s._id === asset.complianceStatus)?.name ||
-              "N/A";
-
-            return (
+          {filteredAssets.length > 0 ? (
+            filteredAssets.map((asset) => (
               <motion.div
+                className="card"
                 key={asset._id}
-                className="inventory-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
-              transition={{ duration: 0.25 }}
+                whileHover={{ scale: 1.02 }}
+                layout
               >
-                {/* 🧭 Header */}
-                <div className="card-header">
-                  <h3 className="card-title">{asset.name}</h3>
-                  <span
-                    className={`status-badge status-${statusName
-                      .toLowerCase()
-                      .replace(/\s/g, "-")}`}
-                  >
-                    {statusName}
-                  </span>
-                </div>
+                <h3>{asset.name}</h3>
+                <p><strong>Version:</strong> {asset.version || "N/A"}</p>
+                <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
+                <p><strong>Category:</strong> {getCategoryName(asset.category)}</p>
+                <p><strong>Business Unit:</strong> {asset.businessUnit || "—"}</p>
+                <p><strong>License Type:</strong> {asset.licenseType || "—"}</p>
+                <p><strong>Expiry:</strong> {formatDate(asset.licenseExpiry)}</p>
+                <p><strong>Cost:</strong> {asset.totalCost ? `${asset.totalCost} ${asset.currency}` : "—"}</p>
 
-                {/* 📑 Info */}
-                <div className="card-info2">
-                  <p>
-                    <strong>Version:</strong> {asset.version || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Category:</strong> {categoryName}
-                  </p>
-                  <p>
-                    <strong>Licenses:</strong> {asset.licensesAssigned || 0}/
-                    {asset.totalLicenses || 0}
-                  </p>
-                  <p>
-                    <strong>License Type:</strong> {asset.licenseType || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Expiry:</strong>{" "}
-                    {asset.licenseExpiry
-                      ? new Date(asset.licenseExpiry).toLocaleDateString()
-                      : "N/A"}
-                  </p>
-                </div>
-
-                {/* 🔘 Actions */}
+                {/* ✅ Card Action Buttons */}
                 <div className="card-actions">
-                  <button
-                    className="btn-view"
-                    onClick={() => setSelectedAsset(asset)}
-                  >
-                    <FontAwesomeIcon icon={faEye} /> View
+                  <button onClick={() => setSelectedAsset(asset)}>
+                    <FontAwesomeIcon icon={faEye} />
                   </button>
-                  <button
-                    className="btn-edit"
-                    onClick={() => handleEdit(asset)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} /> Edit
+                  <button onClick={() => setEditingAsset(asset)}>
+                    <FontAwesomeIcon icon={faEdit} />
                   </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(asset._id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Delete
+                  <button onClick={() => handleDelete(asset._id)}>
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </div>
               </motion.div>
-            );
-          })}
+            ))
+          ) : (
+            <p>No software found.</p>
+          )}
         </AnimatePresence>
       </div>
 
-      {/* 📌 Pagination */}
-      {totalPages > 1 && (
-        <div className="pagination">
-          {[...Array(totalPages).keys()].map((n) => (
-            <button
-              key={n}
-              className={currentPage === n + 1 ? "active" : ""}
-              onClick={() => setCurrentPage(n + 1)}
+      {/* ✅ View Details Modal */}
+      <AnimatePresence>
+        {selectedAsset && (
+          <motion.div className="modal-overlay" onClick={() => setSelectedAsset(null)}>
+            <motion.div
+              className="modal-content"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
             >
-              {n + 1}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* 👁 View Modal */}
-     {/* 👁 View Modal */}
-<AnimatePresence>
-  {selectedAsset && (
-    <motion.div
-      className="overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <div className="overlay-content">
-        <h3>{selectedAsset.name} - Details</h3>
-
-        <div className="card-info2">
-          <p><strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}</p>
-          <p><strong>Category:</strong> {categories.find(c => c._id === selectedAsset.category)?.name || "N/A"}</p>
-          <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
-          <p><strong>License Key:</strong> {selectedAsset.licenseKey || "N/A"}</p>
-          <p><strong>License Type:</strong> {selectedAsset.licenseType || "N/A"}</p>
-          <p><strong>License Model:</strong> {selectedAsset.licenseModel || "N/A"}</p>
-          <p><strong>Licenses Assigned:</strong> {selectedAsset.licensesAssigned || 0}</p>
-          <p><strong>Total Licenses:</strong> {selectedAsset.totalLicenses || 0}</p>
-          <p><strong>License Use:</strong> {selectedAsset.licenseUse || "N/A"}</p>
-          <p><strong>License Expiry:</strong> {selectedAsset.licenseExpiry ? new Date(selectedAsset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
-          <p><strong>Purchase Date:</strong> {selectedAsset.purchaseDate ? new Date(selectedAsset.purchaseDate).toLocaleDateString() : "N/A"}</p>
-          <p><strong>Cost Per Unit:</strong> ₹{selectedAsset.costPerUnit || 0}</p>
-          <p><strong>Total Cost:</strong> ₹{selectedAsset.totalCost || 0}</p>
-          <p><strong>Business Unit:</strong> {selectedAsset.businessUnit || "N/A"}</p>
-          <p><strong>Criticality:</strong> {selectedAsset.criticality || "N/A"}</p>
-          <p><strong>Risk Classification:</strong> {selectedAsset.riskClassification || "N/A"}</p>
-          <p><strong>Authentication Method:</strong> {selectedAsset.authenticationMethod || "N/A"}</p>
-          <p><strong>Last Access:</strong> {selectedAsset.lastAccess ? new Date(selectedAsset.lastAccess).toLocaleDateString() : "N/A"}</p>
-        </div>
-
-        <button className="close-btn" onClick={() => setSelectedAsset(null)}>
-          Close
-        </button>
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
-
-      {/* ✍️ Edit Modal */}
-     {/* ✍️ Edit Modal */}
-<AnimatePresence>
-  {editingAsset && (
-    <motion.div
-      className="overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <div className="overlay-content">
-        <h3>Edit {editingAsset.name}</h3>
-        <form onSubmit={handleEditSubmit} className="overlay-form">
-          <input
-            value={editForm.name || ""}
-            onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-            placeholder="Name"
-          />
-          <input
-            value={editForm.version || ""}
-            onChange={(e) => setEditForm({ ...editForm, version: e.target.value })}
-            placeholder="Version"
-          />
-          <input
-            value={editForm.publisher || ""}
-            onChange={(e) => setEditForm({ ...editForm, publisher: e.target.value })}
-            placeholder="Publisher"
-          />
-          <input
-            value={editForm.licenseKey || ""}
-            onChange={(e) => setEditForm({ ...editForm, licenseKey: e.target.value })}
-            placeholder="License Key"
-          />
-          <input
-            value={editForm.licenseType || ""}
-            onChange={(e) => setEditForm({ ...editForm, licenseType: e.target.value })}
-            placeholder="License Type"
-          />
-          <input
-            value={editForm.licenseModel || ""}
-            onChange={(e) => setEditForm({ ...editForm, licenseModel: e.target.value })}
-            placeholder="License Model"
-          />
-          <input
-            type="number"
-            value={editForm.totalLicenses || ""}
-            onChange={(e) => setEditForm({ ...editForm, totalLicenses: e.target.value })}
-            placeholder="Total Licenses"
-          />
-          <input
-            type="number"
-            value={editForm.licensesAssigned || ""}
-            onChange={(e) => setEditForm({ ...editForm, licensesAssigned: e.target.value })}
-            placeholder="Licenses Assigned"
-          />
-          <input
-            type="date"
-            value={editForm.licenseExpiry ? editForm.licenseExpiry.split("T")[0] : ""}
-            onChange={(e) => setEditForm({ ...editForm, licenseExpiry: e.target.value })}
-            placeholder="License Expiry"
-          />
-          <input
-            type="number"
-            value={editForm.costPerUnit || ""}
-            onChange={(e) => setEditForm({ ...editForm, costPerUnit: e.target.value })}
-            placeholder="Cost Per Unit"
-          />
-          <input
-            type="number"
-            value={editForm.totalCost || ""}
-            onChange={(e) => setEditForm({ ...editForm, totalCost: e.target.value })}
-            placeholder="Total Cost"
-          />
-          <input
-            value={editForm.businessUnit || ""}
-            onChange={(e) => setEditForm({ ...editForm, businessUnit: e.target.value })}
-            placeholder="Business Unit"
-          />
-          <input
-            value={editForm.criticality || ""}
-            onChange={(e) => setEditForm({ ...editForm, criticality: e.target.value })}
-            placeholder="Criticality"
-          />
-          <input
-            value={editForm.riskClassification || ""}
-            onChange={(e) => setEditForm({ ...editForm, riskClassification: e.target.value })}
-            placeholder="Risk Classification"
-          />
-
-          <div className="modal-actions">
-            <button type="submit" className="save-btn">
-              Save
-            </button>
-            <button
-              type="button"
-              className="close-btn"
-              onClick={() => setEditingAsset(null)}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
+              <h2>{selectedAsset.name}</h2>
+              <div className="modal-grid">
+                <p><strong>Version:</strong> {selectedAsset.version}</p>
+                <p><strong>Publisher:</strong> {selectedAsset.publisher}</p>
+                <p><strong>Category:</strong> {getCategoryName(selectedAsset.category)}</p>
+                <p><strong>Business Unit:</strong> {selectedAsset.businessUnit}</p>
+                <p><strong>Installation Location:</strong> {selectedAsset.installationLocation}</p>
+                <p><strong>License Type:</strong> {selectedAsset.licenseType}</p>
+                <p><strong>License Key:</strong> {selectedAsset.licenseKey}</p>
+                <p><strong>License Expiry:</strong> {formatDate(selectedAsset.licenseExpiry)}</p>
+                <p><strong>Total Cost:</strong> {selectedAsset.totalCost} {selectedAsset.currency}</p>
+                <p><strong>Purchase Date:</strong> {formatDate(selectedAsset.purchaseDate)}</p>
+                <p><strong>Assigned Users:</strong> {(selectedAsset.assignedTo || []).join(", ")}</p>
+                <p><strong>Linked Devices:</strong> {(selectedAsset.linkedDevices || []).join(", ")}</p>
+                <p><strong>Compliance Status:</strong> {getStatusName(selectedAsset.complianceStatus)}</p>
+                <p><strong>Criticality:</strong> {selectedAsset.criticality}</p>
+                <p><strong>Risk:</strong> {selectedAsset.riskClassification}</p>
+                <p><strong>Support Vendor:</strong> {selectedAsset.supportVendor}</p>
+              </div>
+              <button className="close-btn" onClick={() => setSelectedAsset(null)}>
+                Close
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
