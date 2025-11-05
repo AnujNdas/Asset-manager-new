@@ -1,43 +1,46 @@
 const SoftwareAsset = require("../models/SoftwareAsset");
-
 const Notification = require("../models/Notification");
+
 // Create a new software asset
 const createSoftwareAsset = async (req, res) => {
   try {
-    const userId = req.user?.id; // <-- ensure req.user exists
+    const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized: userId missing" });
+      return res.status(401).json({ success: false, message: "Unauthorized: Missing userId" });
     }
 
-    const asset = new SoftwareAsset(req.body);
-    await asset.save();
+    // Auto-calc available licenses if data is provided
+    if (req.body.totalLicenses && req.body.licensesAssigned) {
+      req.body.licensesAvailable = req.body.totalLicenses - req.body.licensesAssigned;
+    }
 
-    // Create notification
+    // Save into DB
+    const asset = await SoftwareAsset.create(req.body);
+
+    // Notification
     const newNotification = await Notification.create({
-      title: "SoftwareAsset Added",
-      message: "SoftwareAsset added successfully.",
+      title: "Software Asset Added",
+      message: `Software '${asset.name}' has been added.`,
       userId,
     });
 
-    // Emit to user's room
     const io = req.app.get("io");
     io.to(userId.toString()).emit("newNotification", newNotification);
 
     res.status(201).json({ success: true, data: asset });
-  } catch (err) {
-    console.error("Error in createSoftwareAsset:", err); // 👈 log full error
-    res.status(500).json({ success: false, message: err.message });
+  } catch (error) {
+    console.error("Error in createSoftwareAsset:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 // Get all software assets
 const getSoftwareAssets = async (req, res) => {
   try {
-    const assets = await SoftwareAsset.find();
+    const assets = await SoftwareAsset.find().sort({ createdAt: -1 });
     res.json({ success: true, data: assets });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -45,10 +48,10 @@ const getSoftwareAssets = async (req, res) => {
 const getSoftwareAssetById = async (req, res) => {
   try {
     const asset = await SoftwareAsset.findById(req.params.id);
-    if (!asset) return res.status(404).json({ success: false, message: "Software asset not found" });
+    if (!asset) return res.status(404).json({ success: false, message: "Not found" });
     res.json({ success: true, data: asset });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -56,20 +59,26 @@ const getSoftwareAssetById = async (req, res) => {
 const updateSoftwareAsset = async (req, res) => {
   try {
     const userId = req.user.id;
+
+    // Optional: Auto update available licenses
+    if (req.body.totalLicenses && req.body.licensesAssigned) {
+      req.body.licensesAvailable = req.body.totalLicenses - req.body.licensesAssigned;
+    }
+
     const asset = await SoftwareAsset.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    // Create notification
-        const newNotification = await Notification.create({
-          title: "SoftwareAsset Updated",
-          message: "SoftwareAsset Updated successfully.",
-          userId,
-        });
-    
-       // Emit to user's room
-        const io = req.app.get("io");
-        io.to(userId.toString()).emit("newNotification", newNotification);
+
+    const newNotification = await Notification.create({
+      title: "Software Asset Updated",
+      message: `Software '${asset?.name || ''}' has been updated.`,
+      userId,
+    });
+
+    const io = req.app.get("io");
+    io.to(userId.toString()).emit("newNotification", newNotification);
+
     res.json({ success: true, data: asset });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -77,20 +86,22 @@ const updateSoftwareAsset = async (req, res) => {
 const deleteSoftwareAsset = async (req, res) => {
   try {
     const userId = req.user.id;
-    await SoftwareAsset.findByIdAndDelete(req.params.id);
-    // Create notification
-     const newNotification = await Notification.create({
-       title: "SoftwareAsset Deleted",
-       message: "SoftwareAsset Deleted successfully.",
-       userId,
-     });
- 
-    // Emit to user's room
-     const io = req.app.get("io");
-     io.to(userId.toString()).emit("newNotification", newNotification);
-    res.json({ success: true, message: "Software asset deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    const asset = await SoftwareAsset.findByIdAndDelete(req.params.id);
+
+    if (!asset) return res.status(404).json({ success: false, message: "Not found" });
+
+    const newNotification = await Notification.create({
+      title: "Software Asset Deleted",
+      message: `Software '${asset.name}' has been deleted.`,
+      userId,
+    });
+
+    const io = req.app.get("io");
+    io.to(userId.toString()).emit("newNotification", newNotification);
+
+    res.json({ success: true, message: "Deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -99,5 +110,5 @@ module.exports = {
   getSoftwareAssets,
   getSoftwareAssetById,
   updateSoftwareAsset,
-  deleteSoftwareAsset
+  deleteSoftwareAsset,
 };
