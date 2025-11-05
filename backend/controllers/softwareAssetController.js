@@ -1,5 +1,17 @@
 const SoftwareAsset = require("../models/SoftwareAsset");
 const Notification = require("../models/Notification");
+const mongoose = require("mongoose");
+
+// Helper to update compliance based on license usage & expiry
+const checkCompliance = (asset) => {
+  if (asset.licenseExpiry && new Date(asset.licenseExpiry) < new Date()) {
+    return "Expired";
+  }
+  if (asset.licensesAssigned > asset.totalLicenses) {
+    return "Non-Compliant";
+  }
+  return "Compliant";
+};
 
 // Create a new software asset
 const createSoftwareAsset = async (req, res) => {
@@ -9,15 +21,38 @@ const createSoftwareAsset = async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized: Missing userId" });
     }
 
-    // Auto-calc available licenses if data is provided
+    // Auto calculations
     if (req.body.totalLicenses && req.body.licensesAssigned) {
       req.body.licensesAvailable = req.body.totalLicenses - req.body.licensesAssigned;
     }
+    if (req.body.totalLicenses && req.body.costPerUnit) {
+      req.body.totalCost = req.body.totalLicenses * req.body.costPerUnit;
+    }
 
-    // Save into DB
+    // Compliance
+    req.body.complianceStatus = checkCompliance(req.body);
+
+    // Add audit log
+    req.body.auditHistory = [
+      ...(req.body.auditHistory || []),
+      { date: new Date(), notes: `Created by user ${userId}` },
+    ];
+
     const asset = await SoftwareAsset.create(req.body);
 
-    // Notification
+    // Expiry reminder (30 days before)
+    if (
+      asset.licenseExpiry &&
+      new Date(asset.licenseExpiry) - new Date() < 30 * 24 * 60 * 60 * 1000
+    ) {
+      await Notification.create({
+        title: "License Expiry Soon",
+        message: `License for '${asset.name}' will expire soon.`,
+        userId,
+      });
+    }
+
+    // Notification - Asset added
     const newNotification = await Notification.create({
       title: "Software Asset Added",
       message: `Software '${asset.name}' has been added.`,
@@ -60,16 +95,26 @@ const updateSoftwareAsset = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Optional: Auto update available licenses
+    // Auto calculations
     if (req.body.totalLicenses && req.body.licensesAssigned) {
       req.body.licensesAvailable = req.body.totalLicenses - req.body.licensesAssigned;
     }
+    if (req.body.totalLicenses && req.body.costPerUnit) {
+      req.body.totalCost = req.body.totalLicenses * req.body.costPerUnit;
+    }
+
+    req.body.complianceStatus = checkCompliance(req.body);
+
+    // Add audit log
+    req.body.$push = {
+      auditHistory: { date: new Date(), notes: `Updated by user ${userId}` },
+    };
 
     const asset = await SoftwareAsset.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
     const newNotification = await Notification.create({
       title: "Software Asset Updated",
-      message: `Software '${asset?.name || ''}' has been updated.`,
+      message: `Software '${asset?.name || ""}' has been updated.`,
       userId,
     });
 
