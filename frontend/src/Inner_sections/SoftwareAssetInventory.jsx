@@ -1,6 +1,7 @@
 // PART 1 of 4 — Imports, component setup, state, data fetching, pagination logic
 
 import React, { useEffect, useState } from "react";
+import "../Page_styles/InventoryCards.css";
 import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -12,7 +13,6 @@ import {
 } from "../Services/ApiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import "../Page_styles/InventoryCards.css";
 /**
  * PART 1: Top-level component, states, data fetchers and pagination logic.
  * Paste PART 2, PART 3 and PART 4 immediately after this file content (in order).
