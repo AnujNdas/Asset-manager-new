@@ -273,21 +273,13 @@ const SoftwareAssetList = () => {
       </div>
 
       {/* Pagination */}
-      <div className="pagination-container">
-        <button
-          className="page-btn"
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-
+      <div className="pagination">
         {[...Array(totalPages)].map((_, pageIndex) => {
           const pageNum = pageIndex + 1;
           return (
             <button
               key={pageNum}
-              className={`page-number ${currentPage === pageNum ? "active" : ""}`}
+              className={` ${currentPage === pageNum ? "active" : ""}`}
               onClick={() => goToPage(pageNum)}
             >
               {pageNum}
@@ -295,13 +287,7 @@ const SoftwareAssetList = () => {
           );
         })}
 
-        <button
-          className="page-btn"
-          onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
+        
       </div>
       {/* ====================== VIEW MODAL ====================== */}
       <AnimatePresence>
