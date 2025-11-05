@@ -1,179 +1,178 @@
-import React, { useEffect, useState } from "react";
+// ✅ SoftwareInventory.jsx
+import React, { useState, useEffect } from "react";
+import { getSoftwareAssets, updateSoftwareAsset, deleteSoftwareAsset } from "../Services/ApiServices";
 import Swal from "sweetalert2";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  getSoftwareAssets,
-  deleteSoftwareAsset,
-  updateSoftwareAsset,
-  getCategories,
-  getStatuses,
-} from "../Services/ApiServices";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import "../Page_styles/InventoryCards.css";
+import "../Page_styles/InventoryPage.css"; // ✅ Your existing styles
 
-const SoftwareAssetList = () => {
+const SoftwareInventory = () => {
   const [softwareAssets, setSoftwareAssets] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [statuses, setStatuses] = useState([]);
-  const [selectedAsset, setSelectedAsset] = useState(null);
-  const [editingAsset, setEditingAsset] = useState(null);
-  const [editForm, setEditForm] = useState({});
-  const [search, setSearch] = useState("");
+  const [selectedSoftware, setSelectedSoftware] = useState(null);
+  const [editData, setEditData] = useState(null);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
-  // ✅ Fetch all data when component loads
+  // ✅ Fetch all software assets
+  const fetchSoftwareData = async () => {
+    try {
+      const response = await getSoftwareAssets();
+      if (response.success && response.data) {
+        setSoftwareAssets(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching software assets:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchAssets();
-    fetchDropdowns();
+    fetchSoftwareData();
   }, []);
 
-  const fetchAssets = async () => {
-    try {
-      const assets = await getSoftwareAssets();
-      setSoftwareAssets(assets || []);
-    } catch (error) {
-      console.error(error);
-      Swal.fire("Error", "Failed to load software assets.", "error");
-    }
+  // ✅ VIEW modal handler
+  const handleView = (software) => {
+    setSelectedSoftware(software);
+    setViewModalOpen(true);
   };
 
-  const fetchDropdowns = async () => {
-    try {
-      setCategories(await getCategories());
-      setStatuses(await getStatuses());
-    } catch (err) {
-      console.error(err);
-    }
+  // ✅ EDIT modal handler
+  const handleEdit = (software) => {
+    setEditData({ ...software });
+    setEditModalOpen(true);
   };
 
-  // ✅ Get Category / Status Names
-  const getCategoryName = (id) => {
-    const found = categories.find((c) => c._id === id);
-    return found ? found.name : "N/A";
-  };
-
-  const getStatusName = (id) => {
-    const found = statuses.find((s) => s._id === id);
-    return found ? found.name : "N/A";
-  };
-
-  // ✅ Delete
+  // ✅ DELETE handler
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
-      text: "This software asset will be deleted permanently!",
+      text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, Delete it!",
+      cancelButtonText: "Cancel",
     });
+
     if (confirm.isConfirmed) {
-      await deleteSoftwareAsset(id);
-      fetchAssets();
+      try {
+        const res = await deleteSoftwareAsset(id);
+        if (res.success) {
+          Swal.fire("Deleted!", "Software asset removed.", "success");
+          fetchSoftwareData();
+        }
+      } catch (err) {
+        Swal.fire("Error", "Failed to delete asset.", "error");
+      }
     }
   };
 
-  // ✅ Search Filter
-  const filteredAssets = softwareAssets.filter((asset) =>
-    asset.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // ✅ Handle edit form submission
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await updateSoftwareAsset(editData._id, editData);
+      if (res.success) {
+        Swal.fire("Updated!", "Software asset updated successfully.", "success");
+        setEditModalOpen(false);
+        fetchSoftwareData();
+      }
+    } catch (error) {
+      Swal.fire("Error", "Failed to update asset.", "error");
+    }
+  };
 
-  // ✅ Format Date
-  const formatDate = (date) => {
-    return date ? new Date(date).toISOString().split("T")[0] : "—";
+  // ✅ Handle input change in Edit Modal
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <div className="inventory-container">
-      <h2>Software Inventory</h2>
+    <div className="software-inventory-container">
+      <h2 className="page-title">Software Inventory</h2>
 
-      {/* ✅ Search Bar */}
-      <input
-        type="text"
-        placeholder="Search Software by name..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="search-input"
-      />
+      {/* ✅ Software Table / Card Layout */}
+      <div className="inventory-grid">
+        {softwareAssets.map((software) => (
+          <div className="inventory-card" key={software._id}>
+            <h3>{software.name} ({software.version})</h3>
+            <p><strong>Publisher:</strong> {software.publisher}</p>
+            <p><strong>Category:</strong> {software.category?.name || "N/A"}</p>
+            <p><strong>License Type:</strong> {software.licenseType}</p>
+            <p><strong>Expiry:</strong> {software.licenseExpiry ? software.licenseExpiry.split("T")[0] : "N/A"}</p>
 
-      {/* ✅ Card Display Grid */}
-      <div className="card-grid">
-        <AnimatePresence>
-          {filteredAssets.length > 0 ? (
-            filteredAssets.map((asset) => (
-              <motion.div
-                className="card"
-                key={asset._id}
-                whileHover={{ scale: 1.02 }}
-                layout
-              >
-                <h3>{asset.name}</h3>
-                <p><strong>Version:</strong> {asset.version || "N/A"}</p>
-                <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
-                <p><strong>Category:</strong> {getCategoryName(asset.category)}</p>
-                <p><strong>Business Unit:</strong> {asset.businessUnit || "—"}</p>
-                <p><strong>License Type:</strong> {asset.licenseType || "—"}</p>
-                <p><strong>Expiry:</strong> {formatDate(asset.licenseExpiry)}</p>
-                <p><strong>Cost:</strong> {asset.totalCost ? `${asset.totalCost} ${asset.currency}` : "—"}</p>
-
-                {/* ✅ Card Action Buttons */}
-                <div className="card-actions">
-                  <button onClick={() => setSelectedAsset(asset)}>
-                    <FontAwesomeIcon icon={faEye} />
-                  </button>
-                  <button onClick={() => setEditingAsset(asset)}>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
-                  <button onClick={() => handleDelete(asset._id)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
-              </motion.div>
-            ))
-          ) : (
-            <p>No software found.</p>
-          )}
-        </AnimatePresence>
+            <div className="inventory-actions">
+              <button className="view-btn" onClick={() => handleView(software)}>👁 View</button>
+              <button className="edit-btn" onClick={() => handleEdit(software)}>✏ Edit</button>
+              <button className="delete-btn" onClick={() => handleDelete(software._id)}>🗑 Delete</button>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* ✅ View Details Modal */}
-      <AnimatePresence>
-        {selectedAsset && (
-          <motion.div className="modal-overlay" onClick={() => setSelectedAsset(null)}>
-            <motion.div
-              className="modal-content"
-              onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-            >
-              <h2>{selectedAsset.name}</h2>
-              <div className="modal-grid">
-                <p><strong>Version:</strong> {selectedAsset.version}</p>
-                <p><strong>Publisher:</strong> {selectedAsset.publisher}</p>
-                <p><strong>Category:</strong> {getCategoryName(selectedAsset.category)}</p>
-                <p><strong>Business Unit:</strong> {selectedAsset.businessUnit}</p>
-                <p><strong>Installation Location:</strong> {selectedAsset.installationLocation}</p>
-                <p><strong>License Type:</strong> {selectedAsset.licenseType}</p>
-                <p><strong>License Key:</strong> {selectedAsset.licenseKey}</p>
-                <p><strong>License Expiry:</strong> {formatDate(selectedAsset.licenseExpiry)}</p>
-                <p><strong>Total Cost:</strong> {selectedAsset.totalCost} {selectedAsset.currency}</p>
-                <p><strong>Purchase Date:</strong> {formatDate(selectedAsset.purchaseDate)}</p>
-                <p><strong>Assigned Users:</strong> {(selectedAsset.assignedTo || []).join(", ")}</p>
-                <p><strong>Linked Devices:</strong> {(selectedAsset.linkedDevices || []).join(", ")}</p>
-                <p><strong>Compliance Status:</strong> {getStatusName(selectedAsset.complianceStatus)}</p>
-                <p><strong>Criticality:</strong> {selectedAsset.criticality}</p>
-                <p><strong>Risk:</strong> {selectedAsset.riskClassification}</p>
-                <p><strong>Support Vendor:</strong> {selectedAsset.supportVendor}</p>
+      {/* ✅ VIEW MODAL */}
+      {viewModalOpen && selectedSoftware && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Software Details</h3>
+            <table className="details-table">
+              <tbody>
+                <tr><th>Name</th><td>{selectedSoftware.name}</td></tr>
+                <tr><th>Version</th><td>{selectedSoftware.version}</td></tr>
+                <tr><th>Category</th><td>{selectedSoftware.category?.name || "N/A"}</td></tr>
+                <tr><th>Publisher</th><td>{selectedSoftware.publisher}</td></tr>
+                <tr><th>License Key</th><td>{selectedSoftware.licenseKey}</td></tr>
+                <tr><th>License Expiry</th><td>{selectedSoftware.licenseExpiry?.split("T")[0]}</td></tr>
+                <tr><th>Business Unit</th><td>{selectedSoftware.businessUnit}</td></tr>
+                <tr><th>Assigned To</th><td>{selectedSoftware.assignedTo?.join(", ") || "N/A"}</td></tr>
+                <tr><th>Devices</th><td>{selectedSoftware.linkedDevices?.join(", ") || "N/A"}</td></tr>
+                <tr><th>Total Cost</th><td>{selectedSoftware.totalCost} {selectedSoftware.currency}</td></tr>
+                <tr><th>Compliance</th><td>{selectedSoftware.complianceStatus}</td></tr>
+                <tr><th>Criticality</th><td>{selectedSoftware.criticality}</td></tr>
+                <tr><th>Risk Level</th><td>{selectedSoftware.riskClassification}</td></tr>
+                <tr><th>Support Vendor</th><td>{selectedSoftware.supportVendor}</td></tr>
+              </tbody>
+            </table>
+            <button className="close-btn" onClick={() => setViewModalOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ EDIT MODAL */}
+      {editModalOpen && editData && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Edit Software</h3>
+            <form onSubmit={handleEditSubmit} className="edit-form">
+              <label>Name</label>
+              <input type="text" name="name" value={editData.name} onChange={handleEditChange} />
+
+              <label>Version</label>
+              <input type="text" name="version" value={editData.version} onChange={handleEditChange} />
+
+              <label>Publisher</label>
+              <input type="text" name="publisher" value={editData.publisher} onChange={handleEditChange} />
+
+              <label>License Key</label>
+              <input type="text" name="licenseKey" value={editData.licenseKey} onChange={handleEditChange} />
+
+              <label>License Expiry</label>
+              <input type="date" name="licenseExpiry" value={editData.licenseExpiry?.split("T")[0]} onChange={handleEditChange} />
+
+              <label>Total Cost</label>
+              <input type="number" name="totalCost" value={editData.totalCost || ""} onChange={handleEditChange} />
+
+              <label>Currency</label>
+              <input type="text" name="currency" value={editData.currency || ""} onChange={handleEditChange} />
+
+              <div className="modal-actions">
+                <button type="submit" className="save-btn">Save</button>
+                <button type="button" className="cancel-btn" onClick={() => setEditModalOpen(false)}>Cancel</button>
               </div>
-              <button className="close-btn" onClick={() => setSelectedAsset(null)}>
-                Close
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
 
-export default SoftwareAssetList;
+export default SoftwareInventory;
