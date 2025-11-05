@@ -238,12 +238,12 @@ const SoftwareAssetList = () => {
               </h3>
                 <span className="card-version">({asset.version || "N/A"})</span>
               </div>
-
+              <div className="card-info2">
               <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
               <p><strong>Category:</strong> {asset.category || "N/A"}</p>
               <p><strong>Status:</strong> {asset.status || "N/A"}</p>
               <p><strong>License Type:</strong> {asset.licenseType || "N/A"}</p>
-
+              </div>
               {/* Action Buttons */}
               <div className="card-actions">
                 <button
