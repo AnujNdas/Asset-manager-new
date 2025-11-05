@@ -232,10 +232,12 @@ const SoftwareAssetList = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
+              <div className="card-header">
               <h3 className="card-title">
                 {asset.name || "Unnamed Software"}{" "}
                 <span className="card-version">({asset.version || "N/A"})</span>
               </h3>
+              </div>
 
               <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
               <p><strong>Category:</strong> {asset.category || "N/A"}</p>
