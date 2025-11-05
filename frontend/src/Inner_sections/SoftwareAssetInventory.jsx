@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { getSoftwareAssets, updateSoftwareAsset, deleteSoftwareAsset } from "../Services/ApiServices";
 import Swal from "sweetalert2";
-import "../Page_styles/InventoryPage.css"; // ✅ Your existing styles
+import "../Page_styles/InventoryCard.css"; // ✅ Your existing styles
 
 const SoftwareInventory = () => {
   const [softwareAssets, setSoftwareAssets] = useState([]);
