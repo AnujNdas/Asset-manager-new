@@ -13,7 +13,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../Page_styles/InventoryCards.css";
-
 /**
  * PART 1: Top-level component, states, data fetchers and pagination logic.
  * Paste PART 2, PART 3 and PART 4 immediately after this file content (in order).
