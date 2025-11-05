@@ -1,185 +1,460 @@
-// ✅ SoftwareInventory.jsx
-import React, { useState, useEffect } from "react";
-import { getSoftwareAssets, updateSoftwareAsset, deleteSoftwareAsset } from "../Services/ApiServices";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import "../Page_styles/InventoryCards.css"; // ✅ Your existing styles
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  getSoftwareAssets,
+  deleteSoftwareAsset,
+  updateSoftwareAsset,
+  getCategories,
+  getStatuses,
+} from "../Services/ApiServices";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import "../Page_styles/InventoryCards.css";
 
-const SoftwareInventory = () => {
+const SoftwareAssetList = () => {
   const [softwareAssets, setSoftwareAssets] = useState([]);
-  const [selectedSoftware, setSelectedSoftware] = useState(null);
-  const [editData, setEditData] = useState(null);
-  const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [editingAsset, setEditingAsset] = useState(null);
+  const [editForm, setEditForm] = useState({});
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-  // ✅ Fetch all software assets
-  const fetchSoftwareData = async () => {
-    try {
-      const response = await getSoftwareAssets();
-      if (response.success && response.data) {
-        setSoftwareAssets(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching software assets:", error);
-    }
-  };
 
+  // ✅ Fetch on Load
   useEffect(() => {
-    fetchSoftwareData();
+    const fetchData = async () => {
+      try {
+        const [assetsRes, cats, stats] = await Promise.all([
+          getSoftwareAssets(),
+          getCategories(),
+          getStatuses(),
+        ]);
+        setSoftwareAssets(assetsRes.data || []);
+        setCategories(cats);
+        setStatuses(stats);
+      } catch (err) {
+        Swal.fire("Error", err.message, "error");
+      }
+    };
+    fetchData();
   }, []);
 
-  // ✅ VIEW modal handler
-  const handleView = (software) => {
-    setSelectedSoftware(software);
-    setViewModalOpen(true);
-  };
-
-  // ✅ EDIT modal handler
-  const handleEdit = (software) => {
-    setEditData({ ...software });
-    setEditModalOpen(true);
-  };
-
-  // ✅ DELETE handler
+  // ✅ Delete Asset
   const handleDelete = async (id) => {
-    const confirm = await Swal.fire({
+    Swal.fire({
       title: "Are you sure?",
-      text: "This action cannot be undone!",
+      text: "This will permanently delete the software asset!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, Delete it!",
-      cancelButtonText: "Cancel",
-    });
-
-    if (confirm.isConfirmed) {
-      try {
-        const res = await deleteSoftwareAsset(id);
-        if (res.success) {
-          Swal.fire("Deleted!", "Software asset removed.", "success");
-          fetchSoftwareData();
+      confirmButtonColor: "#2346ed",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteSoftwareAsset(id);
+          setSoftwareAssets((prev) => prev.filter((a) => a._id !== id));
+          Swal.fire("Deleted!", "Software asset deleted.", "success");
+        } catch {
+          Swal.fire("Error", "Failed to delete software asset.", "error");
         }
-      } catch (err) {
-        Swal.fire("Error", "Failed to delete asset.", "error");
       }
-    }
+    });
   };
 
-  // ✅ Handle edit form submission
+  // ✅ Open Edit Modal
+  const handleEdit = (asset) => {
+    setEditingAsset(asset);
+    setEditForm({ ...asset });
+  };
+
+  // ✅ Submit Edited Asset
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await updateSoftwareAsset(editData._id, editData);
-      if (res.success) {
-        Swal.fire("Updated!", "Software asset updated successfully.", "success");
-        setEditModalOpen(false);
-        fetchSoftwareData();
-      }
-    } catch (error) {
-      Swal.fire("Error", "Failed to update asset.", "error");
+      const updatedAsset = await updateSoftwareAsset(
+        editingAsset._id,
+        editForm
+      );
+      setSoftwareAssets((prev) =>
+        prev.map((a) => (a._id === updatedAsset._id ? updatedAsset : a))
+      );
+      Swal.fire("Updated!", "Software asset updated successfully.", "success");
+      setEditingAsset(null);
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
     }
   };
 
-  // ✅ Handle input change in Edit Modal
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditData((prev) => ({ ...prev, [name]: value }));
-  };
-  // Pagination calculations
-  const indexOfLast = currentPage * itemsPerPage; 
-  const indexOfFirst = indexOfLast - itemsPerPage; 
-  const currentItems = softwareAssets.slice(indexOfFirst, indexOfLast); 
+  // ✅ Pagination Logic
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentItems = softwareAssets.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(softwareAssets.length / itemsPerPage);
 
   return (
-    <div className="software-inventory-container">
-      <h2 className="page-title">Software Inventory</h2>
+    <div className="inventory-container">
+      <h2 className="inventory-title">Software Inventory</h2>
 
-      {/* ✅ Software Table / Card Layout */}
+      {/* 📦 CARD GRID */}
       <div className="inventory-grid">
-        {softwareAssets.map((software) => (
-          <div className="inventory-card" key={software._id}>
-            <h3>{software.name} ({software.version})</h3>
-            <p><strong>Publisher:</strong> {software.publisher}</p>
-            <p><strong>Category:</strong> {software.category?.name || "N/A"}</p>
-            <p><strong>License Type:</strong> {software.licenseType}</p>
-            <p><strong>Expiry:</strong> {software.licenseExpiry ? software.licenseExpiry.split("T")[0] : "N/A"}</p>
+        <AnimatePresence>
+          {currentItems.map((asset) => {
+            const categoryName =
+              categories.find((c) => c._id === asset.category)?.name || "N/A";
+            const statusName =
+              statuses.find((s) => s._id === asset.complianceStatus)?.name ||
+              "N/A";
 
-            <div className="inventory-actions">
-              <button className="view-btn" onClick={() => handleView(software)}>👁 View</button>
-              <button className="edit-btn" onClick={() => handleEdit(software)}>✏ Edit</button>
-              <button className="delete-btn" onClick={() => handleDelete(software._id)}>🗑 Delete</button>
-            </div>
-          </div>
-        ))}
+            return (
+              <motion.div
+                key={asset._id}
+                className="inventory-card"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
+                transition={{ duration: 0.25 }}
+              >
+                {/* 🧭 Header */}
+                <div className="card-header">
+                  <h3 className="card-title">{asset.name}</h3>
+                  <span
+                    className={`status-badge status-${statusName
+                      .toLowerCase()
+                      .replace(/\s/g, "-")}`}
+                  >
+                    {statusName}
+                  </span>
+                </div>
+
+                {/* 📑 Info */}
+                <div className="card-info2">
+                  <p>
+                    <strong>Version:</strong> {asset.version || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Category:</strong> {categoryName}
+                  </p>
+                  <p>
+                    <strong>Licenses:</strong> {asset.licensesAssigned || 0}/
+                    {asset.totalLicenses || 0}
+                  </p>
+                  <p>
+                    <strong>License Type:</strong> {asset.licenseType || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Expiry:</strong>{" "}
+                    {asset.licenseExpiry
+                      ? new Date(asset.licenseExpiry).toLocaleDateString()
+                      : "N/A"}
+                  </p>
+                </div>
+
+                {/* 🔘 Actions */}
+                <div className="card-actions">
+                  <button
+                    className="btn-view"
+                    onClick={() => setSelectedAsset(asset)}
+                  >
+                    <FontAwesomeIcon icon={faEye} /> View
+                  </button>
+                  <button
+                    className="btn-edit"
+                    onClick={() => handleEdit(asset)}
+                  >
+                    <FontAwesomeIcon icon={faEdit} /> Edit
+                  </button>
+                  <button
+                    className="btn-delete"
+                    onClick={() => handleDelete(asset._id)}
+                  >
+                    <FontAwesomeIcon icon={faTrash} /> Delete
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
 
-      {/* ✅ VIEW MODAL */}
-      {viewModalOpen && selectedSoftware && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Software Details</h3>
-            <table className="details-table">
-              <tbody>
-                <tr><th>Name</th><td>{selectedSoftware.name}</td></tr>
-                <tr><th>Version</th><td>{selectedSoftware.version}</td></tr>
-                <tr><th>Category</th><td>{selectedSoftware.category?.name || "N/A"}</td></tr>
-                <tr><th>Publisher</th><td>{selectedSoftware.publisher}</td></tr>
-                <tr><th>License Key</th><td>{selectedSoftware.licenseKey}</td></tr>
-                <tr><th>License Expiry</th><td>{selectedSoftware.licenseExpiry?.split("T")[0]}</td></tr>
-                <tr><th>Business Unit</th><td>{selectedSoftware.businessUnit}</td></tr>
-                <tr><th>Assigned To</th><td>{selectedSoftware.assignedTo?.join(", ") || "N/A"}</td></tr>
-                <tr><th>Devices</th><td>{selectedSoftware.linkedDevices?.join(", ") || "N/A"}</td></tr>
-                <tr><th>Total Cost</th><td>{selectedSoftware.totalCost} {selectedSoftware.currency}</td></tr>
-                <tr><th>Compliance</th><td>{selectedSoftware.complianceStatus}</td></tr>
-                <tr><th>Criticality</th><td>{selectedSoftware.criticality}</td></tr>
-                <tr><th>Risk Level</th><td>{selectedSoftware.riskClassification}</td></tr>
-                <tr><th>Support Vendor</th><td>{selectedSoftware.supportVendor}</td></tr>
-              </tbody>
-            </table>
-            <button className="close-btn" onClick={() => setViewModalOpen(false)}>Close</button>
-          </div>
+      {/* 📌 Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          {[...Array(totalPages).keys()].map((n) => (
+            <button
+              key={n}
+              className={currentPage === n + 1 ? "active" : ""}
+              onClick={() => setCurrentPage(n + 1)}
+            >
+              {n + 1}
+            </button>
+          ))}
         </div>
       )}
-      {/* 📌 Pagination */} {totalPages > 1 && ( <div className="pagination"> {[...Array(totalPages).keys()].map((n) => ( <button key={n} className={currentPage === n + 1 ? "active" : ""} onClick={() => setCurrentPage(n + 1)} > {n + 1} </button> ))} </div> )}
-      {/* ✅ EDIT MODAL */}
-      {editModalOpen && editData && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Edit Software</h3>
-            <form onSubmit={handleEditSubmit} className="edit-form">
-              <label>Name</label>
-              <input type="text" name="name" value={editData.name} onChange={handleEditChange} />
 
-              <label>Version</label>
-              <input type="text" name="version" value={editData.version} onChange={handleEditChange} />
-
-              <label>Publisher</label>
-              <input type="text" name="publisher" value={editData.publisher} onChange={handleEditChange} />
-
-              <label>License Key</label>
-              <input type="text" name="licenseKey" value={editData.licenseKey} onChange={handleEditChange} />
-
-              <label>License Expiry</label>
-              <input type="date" name="licenseExpiry" value={editData.licenseExpiry?.split("T")[0]} onChange={handleEditChange} />
-
-              <label>Total Cost</label>
-              <input type="number" name="totalCost" value={editData.totalCost || ""} onChange={handleEditChange} />
-
-              <label>Currency</label>
-              <input type="text" name="currency" value={editData.currency || ""} onChange={handleEditChange} />
-
-              <div className="modal-actions">
-                <button type="submit" className="save-btn">Save</button>
-                <button type="button" className="cancel-btn" onClick={() => setEditModalOpen(false)}>Cancel</button>
+      {/* 👁 VIEW MODAL */}
+      <AnimatePresence>
+        {selectedAsset && (
+          <motion.div
+            className="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="overlay-content">
+              <h3>{selectedAsset.name} - Details</h3>
+              <div className="card-info2">
+                <p>
+                  <strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}
+                </p>
+                <p>
+                  <strong>Category:</strong>
+                  {categories.find((c) => c._id === selectedAsset.category)
+                    ?.name || "N/A"}
+                </p>
+                <p>
+                  <strong>Version:</strong> {selectedAsset.version || "N/A"}
+                </p>
+                <p>
+                  <strong>License Key:</strong>{" "}
+                  {selectedAsset.licenseKey || "N/A"}
+                </p>
+                <p>
+                  <strong>License Type:</strong>{" "}
+                  {selectedAsset.licenseType || "N/A"}
+                </p>
+                <p>
+                  <strong>License Model:</strong>{" "}
+                  {selectedAsset.licenseModel || "N/A"}
+                </p>
+                <p>
+                  <strong>Licenses Assigned:</strong>{" "}
+                  {selectedAsset.licensesAssigned || 0}
+                </p>
+                <p>
+                  <strong>Total Licenses:</strong>{" "}
+                  {selectedAsset.totalLicenses || 0}
+                </p>
+                <p>
+                  <strong>License Use:</strong>{" "}
+                  {selectedAsset.licenseUse || "N/A"}
+                </p>
+                <p>
+                  <strong>License Expiry:</strong>{" "}
+                  {selectedAsset.licenseExpiry
+                    ? new Date(
+                        selectedAsset.licenseExpiry
+                      ).toLocaleDateString()
+                    : "N/A"}
+                </p>
+                <p>
+                  <strong>Purchase Date:</strong>{" "}
+                  {selectedAsset.purchaseDate
+                    ? new Date(
+                        selectedAsset.purchaseDate
+                      ).toLocaleDateString()
+                    : "N/A"}
+                </p>
+                <p>
+                  <strong>Cost Per Unit:</strong> ₹
+                  {selectedAsset.costPerUnit || 0}
+                </p>
+                <p>
+                  <strong>Total Cost:</strong> ₹
+                  {selectedAsset.totalCost || 0}
+                </p>
+                <p>
+                  <strong>Business Unit:</strong>{" "}
+                  {selectedAsset.businessUnit || "N/A"}
+                </p>
+                <p>
+                  <strong>Criticality:</strong>{" "}
+                  {selectedAsset.criticality || "N/A"}
+                </p>
+                <p>
+                  <strong>Risk Classification:</strong>{" "}
+                  {selectedAsset.riskClassification || "N/A"}
+                </p>
+                <p>
+                  <strong>Authentication Method:</strong>{" "}
+                  {selectedAsset.authenticationMethod || "N/A"}
+                </p>
+                <p>
+                  <strong>Last Access:</strong>{" "}
+                  {selectedAsset.lastAccess
+                    ? new Date(selectedAsset.lastAccess).toLocaleDateString()
+                    : "N/A"}
+                </p>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+              <button className="close-btn" onClick={() => setSelectedAsset(null)}>
+                Close
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      {/* ✍️ EDIT MODAL */}
+      <AnimatePresence>
+        {editingAsset && (
+          <motion.div
+            className="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="overlay-content">
+              <h3>Edit {editingAsset.name}</h3>
+              <form onSubmit={handleEditSubmit} className="overlay-form">
+                <input
+                  value={editForm.name || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, name: e.target.value })
+                  }
+                  placeholder="Name"
+                />
+                <input
+                  value={editForm.version || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, version: e.target.value })
+                  }
+                  placeholder="Version"
+                />
+                <input
+                  value={editForm.publisher || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, publisher: e.target.value })
+                  }
+                  placeholder="Publisher"
+                />
+                <input
+                  value={editForm.licenseKey || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, licenseKey: e.target.value })
+                  }
+                  placeholder="License Key"
+                />
+                <input
+                  value={editForm.licenseType || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, licenseType: e.target.value })
+                  }
+                  placeholder="License Type"
+                />
+                <input
+                  value={editForm.licenseModel || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, licenseModel: e.target.value })
+                  }
+                  placeholder="License Model"
+                />
+                <input
+                  type="number"
+                  value={editForm.totalLicenses || ""}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      totalLicenses: e.target.value,
+                    })
+                  }
+                  placeholder="Total Licenses"
+                />
+                <input
+                  type="number"
+                  value={editForm.licensesAssigned || ""}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      licensesAssigned: e.target.value,
+                    })
+                  }
+                  placeholder="Licenses Assigned"
+                />
+                <input
+                  type="date"
+                  value={
+                    editForm.licenseExpiry
+                      ? editForm.licenseExpiry.split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      licenseExpiry: e.target.value,
+                    })
+                  }
+                  placeholder="License Expiry"
+                />
+                <input
+                  type="number"
+                  value={editForm.costPerUnit || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, costPerUnit: e.target.value })
+                  }
+                  placeholder="Cost Per Unit"
+                />
+                <input
+                  type="number"
+                  value={editForm.totalCost || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, totalCost: e.target.value })
+                  }
+                  placeholder="Total Cost"
+                />
+                <input
+                  value={editForm.businessUnit || ""}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      businessUnit: e.target.value,
+                    })
+                  }
+                  placeholder="Business Unit"
+                />
+                <input
+                  value={editForm.criticality || ""}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      criticality: e.target.value,
+                    })
+                  }
+                  placeholder="Criticality"
+                />
+                <input
+                  value={editForm.riskClassification || ""}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      riskClassification: e.target.value,
+                    })
+                  }
+                  placeholder="Risk Classification"
+                />
+
+                {/* Buttons */}
+                <div className="modal-actions">
+                  <button type="submit" className="save-btn">
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="close-btn"
+                    onClick={() => setEditingAsset(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-export default SoftwareInventory;
+export default SoftwareAssetList;
