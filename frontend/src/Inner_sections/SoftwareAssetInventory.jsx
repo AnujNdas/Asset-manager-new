@@ -432,6 +432,11 @@ const SoftwareAssetList = () => {
     </motion.div>
   )}
 </AnimatePresence>
-)}
+    </>
+  );
+};
+
+export default SoftwareAssetList;
+
 
 export default SoftwareAssetList;
