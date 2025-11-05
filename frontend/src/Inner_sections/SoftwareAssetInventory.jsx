@@ -10,7 +10,9 @@ const SoftwareInventory = () => {
   const [editData, setEditData] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
   // ✅ Fetch all software assets
   const fetchSoftwareData = async () => {
     try {
@@ -83,6 +85,11 @@ const SoftwareInventory = () => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
+  // Pagination calculations
+  const indexOfLast = currentPage * itemsPerPage; 
+  const indexOfFirst = indexOfLast - itemsPerPage; 
+  const currentItems = softwareAssets.slice(indexOfFirst, indexOfLast); 
+  const totalPages = Math.ceil(softwareAssets.length / itemsPerPage);
 
   return (
     <div className="software-inventory-container">
