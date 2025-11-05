@@ -138,12 +138,19 @@
 }
 
 /* Form actions */
+/* Form actions - make it sticky at bottom inside form */
 .form-actions {
+  position: sticky;
+  bottom: 0;
+  background: #fff;        /* so it doesn’t overlap content visually */
+  padding: 10px;
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  margin-top: 8px;
+  border-top: 1px solid #e3e6ee; /* optional divider */
+  z-index: 10;               /* ensures it stays above other content */
 }
+
 .btn-primary {
   padding: 8px 16px;
   background: #2346ed;
