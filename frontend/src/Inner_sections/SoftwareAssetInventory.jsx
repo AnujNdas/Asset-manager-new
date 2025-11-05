@@ -235,8 +235,8 @@ const SoftwareAssetList = () => {
               <div className="card-header">
               <h3 className="card-title">
                 {asset.name || "Unnamed Software"}{" "}
-                <span className="card-version">({asset.version || "N/A"})</span>
               </h3>
+                <span className="card-version">({asset.version || "N/A"})</span>
               </div>
 
               <p><strong>Publisher:</strong> {asset.publisher || "N/A"}</p>
