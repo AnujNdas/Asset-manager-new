@@ -134,7 +134,7 @@ const SoftwareInventory = () => {
           </div>
         </div>
       )}
-
+      {/* 📌 Pagination */} {totalPages > 1 && ( <div className="pagination"> {[...Array(totalPages).keys()].map((n) => ( <button key={n} className={currentPage === n + 1 ? "active" : ""} onClick={() => setCurrentPage(n + 1)} > {n + 1} </button> ))} </div> )}
       {/* ✅ EDIT MODAL */}
       {editModalOpen && editData && (
         <div className="modal-overlay">
