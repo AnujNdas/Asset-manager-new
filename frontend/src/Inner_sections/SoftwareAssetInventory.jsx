@@ -437,9 +437,3 @@ const SoftwareAssetList = () => {
 };
 
 export default SoftwareAssetList;
-
-
-export default SoftwareAssetList;
-
-
-export default SoftwareAssetList;
