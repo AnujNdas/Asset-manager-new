@@ -245,21 +245,21 @@ const SoftwareAssetList = () => {
               {/* Action Buttons */}
               <div className="card-actions">
                 <button
-                  className="view-btn"
+                  className="btn-view"
                   onClick={() => setSelectedAsset(asset)}
                 >
                   <FontAwesomeIcon icon={faEye} /> View
                 </button>
 
                 <button
-                  className="edit-btn"
+                  className="btn-edit"
                   onClick={() => openEditModal(asset)}
                 >
                   <FontAwesomeIcon icon={faEdit} /> Edit
                 </button>
 
                 <button
-                  className="delete-btn"
+                  className="btn-delete"
                   onClick={() => handleDelete(asset._id)}
                 >
                   <FontAwesomeIcon icon={faTrash} /> Delete
@@ -358,7 +358,7 @@ const SoftwareAssetList = () => {
                 </p>
               </div>
 
-              <button className="close-btn" onClick={() => setSelectedAsset(null)}>Close</button>
+              <button className="btn-close" onClick={() => setSelectedAsset(null)}>Close</button>
             </motion.div>
           </motion.div>
         )}
