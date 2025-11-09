@@ -1,0 +1,142 @@
+.license-capture-container {
+  max-width: 800px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  font-family: "Poppins", sans-serif;
+  transition: all 0.3s ease;
+}
+
+.license-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+.business-selection {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.form-group select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: 0.3s;
+}
+
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+/* Document Section */
+.document-section {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.scan-card,
+.upload-card {
+  flex: 1;
+  min-width: 300px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.scan-card:hover,
+.upload-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+.icon {
+  font-size: 2.4rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.btn-scan {
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-scan:hover {
+  background: #0056b3;
+}
+
+.upload-btn {
+  display: inline-block;
+  background: #007bff;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  position: relative;
+  transition: 0.3s;
+}
+
+.upload-btn:hover {
+  background: #0056b3;
+}
+
+.upload-btn input {
+  display: none;
+}
+
+.file-name {
+  display: block;
+  margin-top: 8px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .business-selection,
+  .document-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .scan-card,
+  .upload-card {
+    width: 100%;
+  }
+}
