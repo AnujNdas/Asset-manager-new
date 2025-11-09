@@ -1,86 +1,76 @@
-import React, { useState , useEffect} from "react";
-import { createCoreLicense } from "../Services/ApiServices";
-import Swal from "sweetalert2";
-import "../Page_styles/CaptureForm.css";
-import { getStatuses } from '../Services/ApiServices';
+import React, { useState } from "react";
+import { FiUploadCloud, FiCamera } from "react-icons/fi";
+import "../Page_styles/CoreLicenseCapture.css";
 
 const CoreCompanyLicenseCapture = () => {
-  const defaultFormData = {
-    documentType: "",
-    licenseNumber: "",
-    issuingAuthority: "",
-    licenseHolder: "",
-    businessActivity: "",
-    issueDate: "",
-    expiryDate: "",
-    renewalCycle: "Annual",
-    reminderDaysBefore: 30,
-    status: "",
-  };
-  
-  const [statuses, setStatuses] = useState([]);
-  const [formData, setFormData] = useState(defaultFormData);
+  const [location, setLocation] = useState("");
+  const [registrationType, setRegistrationType] = useState("");
+  const [fileName, setFileName] = useState("No file chosen");
 
-  useEffect(() => {
-        (async () => {
-          try {
-            const [s] = await Promise.all([
-              getStatuses(),
-            ]);
-            setStatuses(s || []);
-          } catch (e) {
-            console.error(e);
-            Swal.fire('Error', 'Failed to load classifications', 'error');
-          }
-        })();
-      }, []);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await createCoreLicense(formData);
-      Swal.fire("✅ Success", "Core Company License captured successfully!", "success");
-      setFormData(defaultFormData); // reset properly
-    } catch (error) {
-      console.error("Error creating core license:", error);
-      Swal.fire("❌ Error", "Failed to capture license", "error");
-    }
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) setFileName(file.name);
   };
 
   return (
-    <div className="capture-container">
-      <h2 className="capture-title">Core Company License Capture</h2>
-      <form className="capture-form" onSubmit={handleSubmit}>
-        <input type="text" name="documentType" placeholder="Document Type" value={formData.documentType} onChange={handleChange} required />
-        <input type="text" name="licenseNumber" placeholder="License Number" value={formData.licenseNumber} onChange={handleChange} required />
-        <input type="text" name="issuingAuthority" placeholder="Issuing Authority" value={formData.issuingAuthority} onChange={handleChange} required />
-        <input type="text" name="licenseHolder" placeholder="License Holder / Company Name" value={formData.licenseHolder} onChange={handleChange} required />
-        <input type="text" name="businessActivity" placeholder="Business Activity" value={formData.businessActivity} onChange={handleChange} required />
+    <div className="license-capture-container">
+      <h2 className="license-title">Core Company License Capture</h2>
 
-        <input type="date" name="issueDate" value={formData.issueDate} onChange={handleChange} required />
+      {/* Business Selection */}
+      <div className="business-selection">
+        <div className="form-group">
+          <label>Business Location</label>
+          <select
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            required
+          >
+            <option value="">Select Region</option>
+            <option value="Asia">Asia</option>
+            <option value="Africa">Africa</option>
+            <option value="Europe">Europe</option>
+            <option value="North America">North America</option>
+            <option value="South America">South America</option>
+            <option value="Oceania">Oceania</option>
+          </select>
+        </div>
 
-        <input type="date" name="expiryDate" value={formData.expiryDate} onChange={handleChange} required />
+        <div className="form-group">
+          <label>Business Registration Type</label>
+          <select
+            value={registrationType}
+            onChange={(e) => setRegistrationType(e.target.value)}
+            required
+          >
+            <option value="">Select Type</option>
+            <option value="Sole Proprietorship">Sole Proprietorship</option>
+            <option value="Partnership">Partnership (General / Limited)</option>
+            <option value="Private Limited">Private Limited Company (Pvt Ltd)</option>
+            <option value="Public Limited">Public Limited Company</option>
+            <option value="LLC">LLC (Limited Liability Company)</option>
+            <option value="Non-Profit">Non-Profit Organization</option>
+          </select>
+        </div>
+      </div>
 
-        <select name="renewalCycle" value={formData.renewalCycle} onChange={handleChange}>
-          <option value="Annual">Annual</option>
-          <option value="Biennial">Biennial</option>
-          <option value="Custom">Custom</option>
-        </select>
-        <input type="number" name="reminderDaysBefore" value={formData.reminderDaysBefore} onChange={handleChange} />
+      {/* Document Section */}
+      <div className="document-section">
+        <div className="scan-card">
+          <FiCamera className="icon" />
+          <p>Scan Document</p>
+          <button className="btn-scan">Start Scan</button>
+        </div>
 
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="">Select Status</option>
-            {statuses.map((s) => (
-              <option key={s._id} value={s._id}>{s.name}</option>
-            ))}
-        </select>
-
-        <button type="submit" className="btn-primary">Save Company License</button>
-      </form>
+        <div className="upload-card">
+          <FiUploadCloud className="icon" />
+          <p>Upload Document</p>
+          <label className="upload-btn">
+            Choose File
+            <input type="file" onChange={handleFileChange} />
+          </label>
+          <span className="file-name">{fileName}</span>
+        </div>
+      </div>
     </div>
   );
 };
