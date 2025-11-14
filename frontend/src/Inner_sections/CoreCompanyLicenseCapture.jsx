@@ -72,6 +72,9 @@ const handleFileChange = async (e) => {
     Swal.close();
 
     if (res.data.success) {
+      console.log("RAW TEXT:", res.data.rawText);
+      console.log("EXTRACTED DATA:", res.data.extractedData);
+
       const extracted = res.data.extractedData || {};
 
       // SAFE UPDATE
