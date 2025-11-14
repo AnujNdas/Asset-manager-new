@@ -8,30 +8,64 @@ const parseExtractedText = require("../utils/parseExtractedText");
 // --------------------------------------------------------
 const extractLicenseData = async (req, res) => {
   try {
-    const { licenseType, businessLocation } = req.body;
+    console.log("========== OCR DEBUG START ==========");
 
+    // 1️⃣ Check uploaded file
     if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
+      console.log("❌ No file received in request");
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
     }
 
-    // OCR extraction
+    console.log("📁 Uploaded File Info:");
+    console.log(" - Filename:", req.file.filename);
+    console.log(" - Path:", req.file.path);
+    console.log(" - Mime type:", req.file.mimetype);
+    console.log(" - Size:", req.file.size);
+
+    // 2️⃣ Extract using OCR
+    console.log("🔍 Starting extractTextFromFile...");
+
     const extractedText = await extractTextFromFile(req.file);
 
-    // Parse based on licenseType
-    const extractedFields = parseExtractedText(licenseType, extractedText);
+    console.log("📄 OCR Raw Output Length:", extractedText?.length);
 
+    if (!extractedText || extractedText.trim().length < 5) {
+      console.log("❌ OCR returned EMPTY text");
+    } else {
+      console.log("✔ OCR extracted some text");
+    }
+
+    // 3️⃣ Parse based on license type
+    console.log("🔄 Running Text Parser...");
+    const extractedFields = parseExtractedText(req.body.licenseType, extractedText);
+
+    console.log("🧾 Parsed Fields:", extractedFields);
+
+    console.log("========== OCR DEBUG END ==========");
+
+    // 4️⃣ Final Response
     res.status(200).json({
       success: true,
       extractedData: extractedFields,
       rawText: extractedText,
     });
+
   } catch (err) {
-    console.error("OCR Error:", err);
-    res.status(500).json({ success: false, message: err.message });
+    console.log("========== OCR DEBUG ERROR ==========");
+    console.error("❌ OCR Route Error:", err);
+    console.log("======================================");
+
+    res.status(500).json({
+      success: false,
+      message: err.message || "OCR processing failed",
+      error: err
+    });
   }
 };
+
 
 // --------------------------------------------------------
 // 2️⃣ SAVE FINAL LICENSE AFTER USER EDITS
