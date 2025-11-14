@@ -64,7 +64,7 @@ const CoreCompanyLicenseCapture = () => {
       Swal.showLoading();
 
       const res = await axios.post(
-        "/api/core-company-license/extract",
+        "https://asset-manager-new.onrender.com/api/core-company-license/extract",
         form,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -96,7 +96,7 @@ const CoreCompanyLicenseCapture = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("/api/core-company-license", formData);
+      const res = await axios.post("https://asset-manager-new.onrender.com/api/core-company-license", formData);
 
       if (res.data.success) {
         Swal.fire("Saved!", "License saved successfully.", "success");
