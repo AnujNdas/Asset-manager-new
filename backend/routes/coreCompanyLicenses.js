@@ -1,23 +1,68 @@
 const express = require("express");
-const CoreCompanyLicense = require("../models/CoreCompanyLicense"); // ✅ import model
+const CoreCompanyLicense = require("../models/CoreCompanyLicense");
 const {
-  createCompanyLicense,
+  extractLicenseData,
+  saveFinalLicense,
+  updateLicense,
   getCompanyLicenses,
   getCompanyLicenseById,
-  updateCompanyLicense,
   deleteCompanyLicense
 } = require("../controllers/coreCompanyLicenseController");
 
-const Status = require("../models/Status")
+const Status = require("../models/Status");
 const authenticateToken = require("../Middleware/Authentication-token");
+const multer = require("multer");
+
 const router = express.Router();
 
-router.post("/",authenticateToken(), createCompanyLicense);
-router.get("/",authenticateToken(), getCompanyLicenses);
-router.get("/:id" , authenticateToken(), getCompanyLicenseById);
-router.put("/:id",authenticateToken(), updateCompanyLicense);
-router.delete("/:id",authenticateToken(), deleteCompanyLicense);
-router.post("/bulk-upload", async (req, res) => {
+// ------------------------------------------
+// Multer setup for file uploads
+// ------------------------------------------
+const upload = multer({ storage: multer.memoryStorage() });
+
+// ------------------------------------------
+// 1️⃣ OCR Extract Route
+// ------------------------------------------
+router.post(
+  "/extract",
+  authenticateToken(),
+  upload.single("document"),
+  extractLicenseData
+);
+
+// ------------------------------------------
+// 2️⃣ Save final edited license
+// ------------------------------------------
+router.post(
+  "/",
+  authenticateToken(),
+  saveFinalLicense
+);
+
+// ------------------------------------------
+// 3️⃣ Get all licenses
+// ------------------------------------------
+router.get("/", authenticateToken(), getCompanyLicenses);
+
+// ------------------------------------------
+// 4️⃣ Get one license
+// ------------------------------------------
+router.get("/:id", authenticateToken(), getCompanyLicenseById);
+
+// ------------------------------------------
+// 5️⃣ Update license
+// ------------------------------------------
+router.put("/:id", authenticateToken(), updateLicense);
+
+// ------------------------------------------
+// 6️⃣ Delete license
+// ------------------------------------------
+router.delete("/:id", authenticateToken(), deleteCompanyLicense);
+
+// ------------------------------------------
+// 7️⃣ Bulk Upload
+// ------------------------------------------
+router.post("/bulk-upload", authenticateToken(), async (req, res) => {
   try {
     const { assets, mode } = req.body;
 
@@ -25,23 +70,20 @@ router.post("/bulk-upload", async (req, res) => {
       return res.status(400).json({ success: false, message: "No core licenses provided" });
     }
 
-    // Fetch existing statuses
     const statuses = await Status.find({});
     const statusMap = new Map(statuses.map(s => [s.name.toLowerCase(), s._id]));
 
     const formatted = [];
 
-    for (const [index, a] of assets.entries()) {
+    for (const a of assets) {
       let statusId = statusMap.get(a["Status"]?.toLowerCase() || "");
 
       if (mode === "auto" && !statusId && a["Status"]) {
-        // Create missing status safely
         try {
           const newStatus = await Status.create({ name: a["Status"] });
           statusId = newStatus._id;
           statusMap.set(a["Status"].toLowerCase(), statusId);
         } catch (err) {
-          // Handle duplicate key race
           const existing = await Status.findOne({ name: a["Status"] });
           statusId = existing._id;
           statusMap.set(a["Status"].toLowerCase(), statusId);
@@ -58,7 +100,7 @@ router.post("/bulk-upload", async (req, res) => {
         expiryDate: a["Expiry Date"] ? new Date(a["Expiry Date"]) : null,
         renewalCycle: a["Renewal Cycle"] || "Annual",
         reminderDaysBefore: Number(a["Reminder Days"] || 30),
-        status: statusId || null, // store reference if exists
+        status: statusId || null,
       });
     }
 
