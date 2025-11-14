@@ -1,38 +1,72 @@
 const CoreCompanyLicense = require("../models/CoreCompanyLicense");
 const Notification = require("../models/Notification");
+const extractTextFromFile = require("../utils/extractTextFromFile"); 
+
+// Extract fields from uploaded document
+const extractLicenseData = async (req, res) => {
+  try {
+    const { licenseType, businessLocation } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
+
+    // Perform OCR / text extraction
+    const extractedText = await extractTextFromFile(req.file);
+
+    // TODO: We will create dynamic field extractors per licenseType
+    const extractedFields = parseExtractedText(licenseType, extractedText);
+
+    return res.status(200).json({
+      success: true,
+      extractedData: extractedFields,
+    });
+
+  } catch (err) {
+    console.error("OCR Error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 // Create a new company license
-const createCompanyLicense = async (req, res) => {
+const saveFinalLicense = async (req, res) => {
   try {
     const userId = req.user?.id;
 
-    const newLicense = new CoreCompanyLicense({
-      ...req.body,
+    const {
+      licenseType,
+      businessLocation,
+      extractedData,
+      finalizedData,
+      documents
+    } = req.body;
+
+    const newLicense = await CoreCompanyLicense.create({
+      licenseType,
+      businessLocation,
+      extractedData,
+      finalizedData,
+      documents,
       auditTrail: [
         {
-          action: "Created",
+          action: "Created License",
           user: userId,
           timestamp: new Date(),
         },
       ],
     });
 
-    await newLicense.save();
-
-    // ✅ Create real-time notification
-    const newNotification = await Notification.create({
+    // Send notification
+    await Notification.create({
       title: "New License Added",
-      message: `License "${newLicense.licenseName}" was created for ${newLicense.businessDetails?.legalName || "a company"}.`,
+      message: `License created of type ${licenseType}`,
       userId,
     });
 
-    // ✅ Emit notification using Socket.IO
-    const io = req.app.get("io");
-    if (io && userId) io.to(userId.toString()).emit("newNotification", newNotification);
+    return res.status(201).json({ success: true, data: newLicense });
 
-    res.status(201).json({ success: true, data: newLicense });
   } catch (err) {
-    console.error("❌ Error creating license:", err);
+    console.error("Error saving license:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -61,17 +95,17 @@ const getCompanyLicenseById = async (req, res) => {
 };
 
 // Update license
-const updateCompanyLicense = async (req, res) => {
+const updateLicense = async (req, res) => {
   try {
     const userId = req.user?.id;
 
-    const updatedLicense = await CoreCompanyLicense.findByIdAndUpdate(
+    const updated = await CoreCompanyLicense.findByIdAndUpdate(
       req.params.id,
       {
-        ...req.body,
+        $set: { finalizedData: req.body.finalizedData },
         $push: {
           auditTrail: {
-            action: "Updated",
+            action: "Updated License",
             user: userId,
             timestamp: new Date(),
           },
@@ -80,9 +114,23 @@ const updateCompanyLicense = async (req, res) => {
       { new: true }
     );
 
-    if (!updatedLicense) {
+    if (!updated) {
       return res.status(404).json({ success: false, message: "License not found" });
     }
+
+    await Notification.create({
+      title: "License Updated",
+      message: `License updated: ${updated.licenseType}`,
+      userId,
+    });
+
+    res.json({ success: true, data: updated });
+
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 
     // ✅ Send notification
     const newNotification = await Notification.create({
@@ -127,9 +175,11 @@ const deleteCompanyLicense = async (req, res) => {
 };
 
 module.exports = {
-  createCompanyLicense,
+  extractLicenseData,
+  saveFinalLicense,
+  updateLicense,
   getCompanyLicenses,
   getCompanyLicenseById,
-  updateCompanyLicense,
   deleteCompanyLicense,
 };
+
