@@ -12,21 +12,41 @@ const {
 const Status = require("../models/Status");
 const authenticateToken = require("../Middleware/Authentication-token");
 const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const router = express.Router();
 
 // ------------------------------------------
-// Multer setup for file uploads
+// Ensure upload directory exists
 // ------------------------------------------
-const upload = multer({ storage: multer.memoryStorage() });
+const uploadDir = "uploads/licenses";
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// ------------------------------------------
+// Multer Disk Storage Setup (IMPORTANT)
+// ------------------------------------------
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
 
 // ------------------------------------------
 // 1️⃣ OCR Extract Route
+// FIELD NAME MUST BE: "file"
 // ------------------------------------------
 router.post(
   "/extract",
   authenticateToken(),
-  upload.single("document"),
+  upload.single("file"),
   extractLicenseData
 );
 
@@ -85,8 +105,8 @@ router.post("/bulk-upload", authenticateToken(), async (req, res) => {
           statusMap.set(a["Status"].toLowerCase(), statusId);
         } catch (err) {
           const existing = await Status.findOne({ name: a["Status"] });
-          statusId = existing._id;
-          statusMap.set(a["Status"].toLowerCase(), statusId);
+          statusId = existing?._id;
+          if (existing) statusMap.set(a["Status"].toLowerCase(), statusId);
         }
       }
 
