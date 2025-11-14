@@ -1,34 +1,41 @@
 const CoreCompanyLicense = require("../models/CoreCompanyLicense");
 const Notification = require("../models/Notification");
-const extractTextFromFile = require("../utils/extractTextFromFile"); 
+const extractTextFromFile = require("../utils/extractTextFromFile");
+const parseExtractedText = require("../utils/parseExtractedText");
 
-// Extract fields from uploaded document
+// --------------------------------------------------------
+// 1️⃣ EXTRACT DATA FROM DOCUMENT (OCR)
+// --------------------------------------------------------
 const extractLicenseData = async (req, res) => {
   try {
     const { licenseType, businessLocation } = req.body;
 
     if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded" });
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
     }
 
-    // Perform OCR / text extraction
+    // OCR extraction
     const extractedText = await extractTextFromFile(req.file);
 
-    // TODO: We will create dynamic field extractors per licenseType
+    // Parse based on licenseType
     const extractedFields = parseExtractedText(licenseType, extractedText);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       extractedData: extractedFields,
+      rawText: extractedText,
     });
-
   } catch (err) {
     console.error("OCR Error:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// Create a new company license
+// --------------------------------------------------------
+// 2️⃣ SAVE FINAL LICENSE AFTER USER EDITS
+// --------------------------------------------------------
 const saveFinalLicense = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -38,7 +45,7 @@ const saveFinalLicense = async (req, res) => {
       businessLocation,
       extractedData,
       finalizedData,
-      documents
+      documents,
     } = req.body;
 
     const newLicense = await CoreCompanyLicense.create({
@@ -56,22 +63,22 @@ const saveFinalLicense = async (req, res) => {
       ],
     });
 
-    // Send notification
     await Notification.create({
       title: "New License Added",
       message: `License created of type ${licenseType}`,
       userId,
     });
 
-    return res.status(201).json({ success: true, data: newLicense });
-
+    res.status(201).json({ success: true, data: newLicense });
   } catch (err) {
     console.error("Error saving license:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// Get all licenses
+// --------------------------------------------------------
+// 3️⃣ GET ALL LICENSES
+// --------------------------------------------------------
 const getCompanyLicenses = async (req, res) => {
   try {
     const licenses = await CoreCompanyLicense.find().sort({ createdAt: -1 });
@@ -81,12 +88,16 @@ const getCompanyLicenses = async (req, res) => {
   }
 };
 
-// Get a single license by ID
+// --------------------------------------------------------
+// 4️⃣ GET A SINGLE LICENSE
+// --------------------------------------------------------
 const getCompanyLicenseById = async (req, res) => {
   try {
     const license = await CoreCompanyLicense.findById(req.params.id);
     if (!license) {
-      return res.status(404).json({ success: false, message: "License not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "License not found" });
     }
     res.json({ success: true, data: license });
   } catch (err) {
@@ -94,7 +105,9 @@ const getCompanyLicenseById = async (req, res) => {
   }
 };
 
-// Update license
+// --------------------------------------------------------
+// 5️⃣ UPDATE LICENSE
+// --------------------------------------------------------
 const updateLicense = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -115,7 +128,9 @@ const updateLicense = async (req, res) => {
     );
 
     if (!updated) {
-      return res.status(404).json({ success: false, message: "License not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "License not found" });
     }
 
     await Notification.create({
@@ -125,54 +140,39 @@ const updateLicense = async (req, res) => {
     });
 
     res.json({ success: true, data: updated });
-
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-
-    // ✅ Send notification
-    const newNotification = await Notification.create({
-      title: "License Updated",
-      message: `License "${updatedLicense.licenseName}" has been updated.`,
-      userId,
-    });
-
-    const io = req.app.get("io");
-    if (io) io.to(userId.toString()).emit("newNotification", newNotification);
-
-    res.json({ success: true, data: updatedLicense });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-// Delete license
+// --------------------------------------------------------
+// 6️⃣ DELETE LICENSE
+// --------------------------------------------------------
 const deleteCompanyLicense = async (req, res) => {
   try {
     const userId = req.user?.id;
 
-    const deletedLicense = await CoreCompanyLicense.findByIdAndDelete(req.params.id);
-    if (!deletedLicense) {
-      return res.status(404).json({ success: false, message: "License not found" });
+    const deleted = await CoreCompanyLicense.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res
+        .status(404)
+        .json({ success: false, message: "License not found" });
     }
 
-    // ✅ Notification after deletion
-    const newNotification = await Notification.create({
+    await Notification.create({
       title: "License Removed",
-      message: `License "${deletedLicense.licenseName}" has been deleted.`,
+      message: `License removed: ${deleted.licenseType}`,
       userId,
     });
 
-    const io = req.app.get("io");
-    if (io) io.to(userId.toString()).emit("newNotification", newNotification);
-
     res.json({ success: true, message: "License deleted successfully" });
   } catch (err) {
+    console.error("Delete Error:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+// --------------------------------------------------------
 
 module.exports = {
   extractLicenseData,
@@ -182,4 +182,3 @@ module.exports = {
   getCompanyLicenseById,
   deleteCompanyLicense,
 };
-
