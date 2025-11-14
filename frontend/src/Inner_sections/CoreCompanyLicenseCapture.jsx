@@ -44,46 +44,60 @@ const CoreCompanyLicenseCapture = () => {
   });
 
   // 1️⃣ FILE UPLOAD + OCR EXTRACT
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+const handleFileChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    if (!registrationType || !licenseType) {
-      Swal.fire("Select Type First", "Please select both dropdowns.", "warning");
-      return;
+  if (!registrationType || !licenseType) {
+    Swal.fire("Select Type First", "Please select both dropdowns.", "warning");
+    return;
+  }
+
+  setFileName(file.name);
+
+  const form = new FormData();
+  form.append("file", file);
+  form.append("registrationType", registrationType);
+  form.append("licenseType", licenseType);
+
+  try {
+    Swal.showLoading();
+
+    const res = await axios.post(
+      "https://asset-manager-new.onrender.com/api/company-licenses/extract",
+      form,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    Swal.close();
+
+    if (res.data.success) {
+      const extracted = res.data.extractedData || {};
+
+      // SAFE UPDATE
+      setFormData({
+        businessName: extracted.businessName || "",
+        licenseNumber: extracted.licenseNumber || "",
+        issuingAuthority: extracted.issuingAuthority || "",
+        businessActivity: extracted.businessActivity || "",
+        address: extracted.address || "",
+        issueDate: extracted.issueDate || "",
+        expiryDate: extracted.expiryDate || "",
+        classification: extracted.classification || "",
+      });
+
+      setShowForm(true);
+
+      Swal.fire("Extracted!", "OCR reading completed successfully.", "success");
+    } else {
+      Swal.fire("OCR Failed", "Could not read data from document.", "error");
     }
 
-    setFileName(file.name);
+  } catch (err) {
+    Swal.fire("Error", err.message, "error");
+  }
+};
 
-    const form = new FormData();
-    form.append("file", file);
-    form.append("registrationType", registrationType);
-    form.append("licenseType", licenseType);
-
-    try {
-      Swal.showLoading();
-
-      const res = await axios.post(
-        "https://asset-manager-new.onrender.com/api/company-licenses/extract",
-        form,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      Swal.close();
-
-      if (res.data.success) {
-        setFormData(res.data.data);
-        setShowForm(true);
-
-        Swal.fire("Extracted!", "OCR reading completed successfully.", "success");
-      } else {
-        throw new Error("OCR failed");
-      }
-
-    } catch (err) {
-      Swal.fire("Error", err.message, "error");
-    }
-  };
 
   // 2️⃣ FORM INPUT CHANGES
   const handleChange = (e) => {
