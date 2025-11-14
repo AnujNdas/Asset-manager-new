@@ -45,7 +45,6 @@ const upload = multer({ storage });
 // ------------------------------------------
 router.post(
   "/extract",
-  authenticateToken(),
   upload.single("file"),
   extractLicenseData
 );
