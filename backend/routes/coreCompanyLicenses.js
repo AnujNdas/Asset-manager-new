@@ -54,7 +54,6 @@ router.post(
 // ------------------------------------------
 router.post(
   "/",
-  authenticateToken(),
   saveFinalLicense
 );
 
