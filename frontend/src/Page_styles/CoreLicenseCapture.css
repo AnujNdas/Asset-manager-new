@@ -1,93 +1,82 @@
-.ocr-container {
-  max-width: 600px;
+.license-wrapper {
+  max-width: 650px;
   margin: auto;
-  background: #ffffff;
   padding: 25px;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease;
 }
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
+  margin-bottom: 25px;
 }
 
 .input-group {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
 }
 
 .input-group label {
-  font-weight: 600;
   margin-bottom: 6px;
+  font-weight: 600;
 }
 
 .input-group select,
 .input-group input,
 .input-group textarea {
   padding: 10px;
+  border: 1px solid #dcdcdc;
   border-radius: 8px;
-  border: 1px solid #c9c9c9;
   font-size: 15px;
 }
 
 .btn {
   width: 100%;
-  padding: 12px;
+  background: #007bff;
+  color: white;
+  padding: 13px;
+  border-radius: 10px;
   font-size: 16px;
-  font-weight: 600;
-  border-radius: 8px;
+  border: none;
   cursor: pointer;
   margin-top: 10px;
+  transition: 0.2s ease;
 }
 
-.extract {
-  background: #0066ff;
-  color: white;
+.btn:hover {
+  opacity: 0.85;
 }
 
-.save {
-  background: #00a651;
-  color: white;
+.save-btn {
+  background: #28a745;
 }
 
-.upload-section {
-  text-align: center;
+.capture-section {
+  background: #fafafa;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
 }
 
-.scan-btn,
-.upload-btn {
-  background: #f1f1f1;
-  padding: 12px;
-  display: block;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  border: 1px solid #d2d2d2;
+.upload-box {
+  margin-bottom: 15px;
 }
 
-.hidden-input {
-  display: none;
+.slide-in {
+  animation: slideIn 0.4s ease;
 }
 
-.file-name {
-  font-size: 14px;
-  margin-bottom: 10px;
-  color: #444;
-}
-
-.form-section {
-  margin-top: 20px;
-}
-
-.animate-fade {
-  animation: fadeIn 0.3s ease-out;
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
