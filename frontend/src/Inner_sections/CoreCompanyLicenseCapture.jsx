@@ -1,71 +1,54 @@
 import React, { useState } from "react";
-import { FiUploadCloud } from "react-icons/fi";
-import Swal from "sweetalert2";
 import axios from "axios";
-import "../Page_styles/CoreLicenseCapture.css";
-
-const REGISTRATION_TYPES = [
-  "Sole Proprietorship",
-  "Partnership (General / Limited)",
-  "Private Limited Company (Pvt Ltd)",
-  "Public Limited Company",
-  "LLC (Limited Liability Company)",
-  "Non-Profit Organization",
-];
-
-const LICENSE_TYPES = [
-  "GST",
-  "FSSAI",
-  "Pollution",
-  "Trade License",
-  "Import Export (IEC)",
-  "Fire NOC",
-  "Factory License",
-  "Shop & Establishment Act License",
-  "Labour License",
-  "ISO Certificate",
-];
-
-const LOCATIONS = ["Head Office", "Branch Office", "Factory", "Warehouse"];
 
 const CoreCompanyLicenseCapture = () => {
-  const [registrationType, setRegistrationType] = useState("");
-  const [licenseType, setLicenseType] = useState("");
-  const [businessLocation, setBusinessLocation] = useState("");
-
-  const [fileName, setFileName] = useState("No file chosen");
-  const [showForm, setShowForm] = useState(false);
-
-  const [formData, setFormData] = useState({
-    businessName: "",
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [extractedData, setExtractedData] = useState({
     licenseNumber: "",
-    issuingAuthority: "",
-    businessActivity: "",
-    address: "",
+    licenseName: "",
+    businessName: "",
     issueDate: "",
     expiryDate: "",
-    classification: "",
+    issuingAuthority: "",
+    address: "",
+    additionalFields: {}
   });
 
-  // 🟦 1) FILE UPLOAD + OCR EXTRACT
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const [formData, setFormData] = useState({
+    licenseNumber: "",
+    licenseName: "",
+    businessName: "",
+    issueDate: "",
+    expiryDate: "",
+    issuingAuthority: "",
+    address: "",
+    businessLocation: "",
+    licenseType: "",
+  });
 
-    if (!registrationType || !licenseType || !businessLocation) {
-      Swal.fire("Missing Info", "Please select all dropdowns.", "warning");
-      return;
-    }
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-    setFileName(file.name);
+  // ---------------------------------------------------------
+  // 1️⃣ STEP: OCR Extract
+  // ---------------------------------------------------------
+  const handleExtract = async () => {
+    if (!file) return alert("Please upload a document first!");
 
-    const form = new FormData();
-    form.append("file", file);
-    form.append("registrationType", registrationType);
-    form.append("licenseType", licenseType);
+    setLoading(true);
 
     try {
-      Swal.showLoading();
+      const form = new FormData();
+      form.append("file", file);
+      form.append("licenseType", formData.licenseType);
+      form.append("businessLocation", formData.businessLocation);
+
+      console.log("📤 SENDING TO OCR ROUTE:", {
+        licenseType: formData.licenseType,
+        businessLocation: formData.businessLocation,
+      });
 
       const res = await axios.post(
         "https://asset-manager-new.onrender.com/api/company-licenses/extract",
@@ -73,234 +56,114 @@ const CoreCompanyLicenseCapture = () => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      Swal.close();
+      console.log("📥 OCR RESPONSE:", res.data);
 
-      if (res.data.success) {
-        const extracted = res.data.extractedData || {};
+      const extracted = res.data.extractedData || {};
 
-        // Update OCR fields safely
-        setFormData({
-          businessName: extracted.businessName || "",
-          licenseNumber: extracted.licenseNumber || "",
-          issuingAuthority: extracted.issuingAuthority || "",
-          businessActivity: extracted.businessActivity || "",
-          address: extracted.address || "",
-          issueDate: extracted.issueDate || "",
-          expiryDate: extracted.expiryDate || "",
-          classification: extracted.classification || "",
-        });
+      // safe fallback fields
+      const safe = {
+        licenseNumber: extracted.licenseNumber || "",
+        licenseName: extracted.licenseName || "",
+        businessName: extracted.businessName || "",
+        issueDate: extracted.issueDate || "",
+        expiryDate: extracted.expiryDate || "",
+        issuingAuthority: extracted.issuingAuthority || "",
+        address: extracted.address || "",
+        additionalFields: extracted.additionalFields || {},
+      };
 
-        setShowForm(true);
-
-        Swal.fire("Success", "OCR extraction completed.", "success");
-      } else {
-        Swal.fire("OCR Failed", "Could not extract data.", "error");
-      }
+      setExtractedData(safe);
+      setFormData({ ...formData, ...safe });
     } catch (err) {
-      Swal.fire("Error", err.message, "error");
+      console.error("❌ OCR Extract Error:", err.response?.data || err);
+      alert("OCR extraction failed. Check console.");
     }
+
+    setLoading(false);
   };
 
-  // 🟩 2) MANUAL INPUT CHANGE
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // ---------------------------------------------------------
+  // 2️⃣ STEP: Save Final License
+  // ---------------------------------------------------------
+  const handleSave = async () => {
+    const userId = sessionStorage.getItem("userId");
 
-  // 🟧 3) SAVE LICENSE TO DB
-  const handleSave = async (e) => {
-    e.preventDefault();
+    if (!userId) {
+      alert("User ID missing! Something is wrong with login.");
+      return;
+    }
 
     const payload = {
-      registrationType,
-      licenseType,
-      businessLocation,
       ...formData,
+      userId, // ⭐ REQUIRED
     };
+
+    console.log("📤 PAYLOAD TO SAVE:", payload);
 
     try {
       const res = await axios.post(
-        "https://asset-manager-new.onrender.com/api/company-licenses",
+        "https://asset-manager-new.onrender.com/api/company-licenses/",
         payload
       );
 
-      if (res.data.success) {
-        Swal.fire("Saved!", "License saved successfully.", "success");
-
-        setShowForm(false);
-        setFileName("No file chosen");
-      }
+      console.log("📥 SAVE RESPONSE:", res.data);
+      alert("License Saved Successfully!");
     } catch (err) {
-      Swal.fire("Error", err.message, "error");
+      console.error("❌ Save Error:", err.response?.data || err);
+      alert("Failed to save license. Check console.");
     }
   };
 
+  // ---------------------------------------------------------
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   return (
-    <div className="license-capture-container">
-      <h2 className="license-title">Core Company License Capture</h2>
+    <div className="capture-container">
+      <h2>Company License OCR Scanner</h2>
 
-      {/* 🟦 REGISTRATION + LICENSE DROPDOWN SECTION */}
-      <div className="business-selection">
-        <div className="form-group">
-          <label>Business Registration Type</label>
-          <select
-            value={registrationType}
-            onChange={(e) => {
-              setRegistrationType(e.target.value);
-              setLicenseType("");
-            }}
-          >
-            <option value="">Select Registration Type</option>
-            {REGISTRATION_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
+      {/* Upload */}
+      <input type="file" accept="image/*,.pdf" onChange={handleFileChange} />
+
+      {/* Basic Fields Needed Before Extraction */}
+      <input
+        name="licenseType"
+        placeholder="License Type"
+        value={formData.licenseType}
+        onChange={handleInputChange}
+      />
+
+      <input
+        name="businessLocation"
+        placeholder="Business Location"
+        value={formData.businessLocation}
+        onChange={handleInputChange}
+      />
+
+      <button onClick={handleExtract} disabled={loading}>
+        {loading ? "Extracting..." : "Extract License Data"}
+      </button>
+
+      <hr />
+
+      {/* Extracted Form */}
+      <h3>Extracted / Editable Data</h3>
+
+      {Object.keys(formData).map((key) => (
+        <div key={key} style={{ marginBottom: 10 }}>
+          <label>{key}</label>
+          <input
+            type="text"
+            name={key}
+            value={formData[key]}
+            onChange={handleInputChange}
+          />
         </div>
+      ))}
 
-        {registrationType && (
-          <div className="form-group">
-            <label>License Type</label>
-            <select
-              value={licenseType}
-              onChange={(e) => setLicenseType(e.target.value)}
-            >
-              <option value="">Select License Type</option>
-              {LICENSE_TYPES.map((lt) => (
-                <option key={lt} value={lt}>
-                  {lt}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {licenseType && (
-          <div className="form-group">
-            <label>Business Location</label>
-            <select
-              value={businessLocation}
-              onChange={(e) => setBusinessLocation(e.target.value)}
-            >
-              <option value="">Select Business Location</option>
-              {LOCATIONS.map((loc) => (
-                <option key={loc} value={loc}>
-                  {loc}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-      </div>
-
-      {/* 🟩 UPLOAD SECTION */}
-      <div className="document-section">
-        <div className="upload-card">
-          <FiUploadCloud className="icon" />
-          <p>Upload Document</p>
-
-          <label className="upload-btn">
-            Choose File
-            <input type="file" onChange={handleFileChange} />
-          </label>
-
-          <span className="file-name">{fileName}</span>
-        </div>
-      </div>
-
-      {/* 🟧 AUTO-FILLED OCR FORM */}
-      {showForm && (
-        <form className="extracted-form" onSubmit={handleSave}>
-          <h3>Extracted License Details</h3>
-
-          <div className="form-grid">
-            <div className="form-field">
-              <label>Business Name</label>
-              <input
-                type="text"
-                name="businessName"
-                value={formData.businessName}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-field">
-              <label>License Number</label>
-              <input
-                type="text"
-                name="licenseNumber"
-                value={formData.licenseNumber}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-field">
-              <label>Issuing Authority</label>
-              <input
-                type="text"
-                name="issuingAuthority"
-                value={formData.issuingAuthority}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-field">
-              <label>Issue Date</label>
-              <input
-                type="date"
-                name="issueDate"
-                value={formData.issueDate}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-field">
-              <label>Expiry Date</label>
-              <input
-                type="date"
-                name="expiryDate"
-                value={formData.expiryDate}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-field full-width">
-              <label>Business Activity</label>
-              <input
-                type="text"
-                name="businessActivity"
-                value={formData.businessActivity}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-field full-width">
-              <label>Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-field full-width">
-              <label>Classification</label>
-              <input
-                type="text"
-                name="classification"
-                value={formData.classification}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <button type="submit" className="btn-save">
-            Save License Info
-          </button>
-        </form>
-      )}
+      <button onClick={handleSave}>Save License</button>
     </div>
   );
 };
