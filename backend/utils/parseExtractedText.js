@@ -1,8 +1,8 @@
 // utils/parseExtractedText.js
-
 const extractByRegex = (text, regex) => {
   const match = text.match(regex);
-  return match ? match[1].trim() : "";
+  if (!match) return "";
+  return match[2] ? match[2].trim() : match[1].trim();
 };
 
 const parseExtractedText = (licenseType, text) => {
@@ -31,17 +31,10 @@ const parseExtractedText = (licenseType, text) => {
       console.log("🔍 Using GST regex patterns...");
 
       // GSTIN (always 15-character)
-      result.licenseNumber = extractByRegex(
-        text,
-        /gstin\s*([a-z0-9]{15})/i
-      );
-
-      // Legal name
       result.businessName = extractByRegex(
         text,
-        /legal name\s*([a-z0-9 ,.]+)/i
+        /(legal name|trade name)[\s:]*([a-z0-9 .]+)/i
       );
-
       // Trade name (if any)
       const tradeName = extractByRegex(
         text,
