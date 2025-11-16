@@ -115,62 +115,59 @@ const CoreCompanyLicenseCapture = () => {
   };
 
   // Save to DB
-  const handleSave = async () => {
-    const userId = sessionStorage.getItem("userId");
+const handleSave = async () => {
+  const userId = sessionStorage.getItem("userId");
+  const token = sessionStorage.getItem("token");
 
-    if (!userId) {
-      alert("User not logged in");
-      return;
-    }
+  if (!userId) {
+    alert("User not logged in!");
+    return;
+  }
 
-    const payload = {
-      userId,
-      businessType: formData.businessType,
-      licenseType: formData.licenseType,
-      businessLocation: formData.businessLocation,
+  if (!token) {
+    alert("Token missing. Please login again.");
+    return;
+  }
 
-      extractedData: {
-        licenseNumber: formData.licenseNumber,
-        licenseName: formData.licenseName,
-        businessName: formData.businessName,
-        issueDate: formData.issueDate,
-        expiryDate: formData.expiryDate,
-        issuingAuthority: formData.issuingAuthority,
-        address: formData.address,
-      },
+  const payload = {
+    userId,
+    businessType: formData.businessType,
+    licenseType: formData.licenseType,
+    businessLocation: formData.businessLocation,
 
-      status: "Pending Verification",
-    };
+    extractedData: {
+      licenseNumber: formData.licenseNumber,
+      licenseName: formData.licenseName,
+      businessName: formData.businessName,
+      issueDate: formData.issueDate,
+      expiryDate: formData.expiryDate,
+      issuingAuthority: formData.issuingAuthority,
+      address: formData.address,
+    },
 
-    try {
-      const res = await axios.post(
-        "https://asset-manager-new.onrender.com/api/company-licenses",
-        payload
-      );
-
-      console.log("SAVE RESPONSE:", res.data);
-      alert("License saved successfully!");
-
-      setShowForm(false);
-      setFormData({
-        businessType: "",
-        licenseType: "",
-        businessLocation: "",
-        licenseNumber: "",
-        licenseName: "",
-        businessName: "",
-        issueDate: "",
-        expiryDate: "",
-        issuingAuthority: "",
-        address: "",
-      });
-      setFile(null);
-
-    } catch (err) {
-      console.error("SAVE ERROR:", err.response?.data || err);
-      alert("Saving failed. Check console.");
-    }
+    status: "Pending Verification",
   };
+
+  try {
+    const res = await axios.post(
+      "https://asset-manager-new.onrender.com/api/company-licenses",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("License saved successfully!");
+    console.log(res.data);
+
+  } catch (err) {
+    console.error("SAVE ERROR:", err.response?.data || err);
+    alert("Save failed!");
+  }
+};
+
 
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
