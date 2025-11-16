@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../Page_styles/CoreLicenseCapture.css"; // 👈 CSS FILE
+import "../Page_styles/CoreLicenseCapture.css";
 
 const CoreCompanyLicenseCapture = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
+  // FORM STATE
   const [formData, setFormData] = useState({
     businessType: "",
     licenseType: "",
@@ -20,7 +21,7 @@ const CoreCompanyLicenseCapture = () => {
     address: "",
   });
 
-  // Dropdown options
+  // Dropdown Options
   const BUSINESS_TYPES = [
     "Private Limited Company",
     "Public Limited Company",
@@ -58,17 +59,21 @@ const CoreCompanyLicenseCapture = () => {
     setFile(e.target.files[0]);
   };
 
-  // Mobile Scan (camera capture)
+  // Mobile Camera
   const handleCameraCapture = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // OCR Extraction Flow
+  // Extract OCR
   const handleExtract = async () => {
-    if (!file) return alert("Please upload or scan a document!");
+    if (!file) {
+      alert("Please upload or scan a document first!");
+      return;
+    }
 
     if (!formData.businessType || !formData.licenseType || !formData.businessLocation) {
-      return alert("Please select all dropdowns before scanning!");
+      alert("Please fill the three dropdowns before OCR!");
+      return;
     }
 
     setLoading(true);
@@ -86,7 +91,7 @@ const CoreCompanyLicenseCapture = () => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      const extracted = res.data.extractedData || {};
+      const extracted = res.data?.extractedData || {};
 
       setFormData((prev) => ({
         ...prev,
@@ -100,9 +105,10 @@ const CoreCompanyLicenseCapture = () => {
       }));
 
       setShowForm(true);
+
     } catch (err) {
       console.error("OCR ERROR:", err.response?.data || err);
-      alert("OCR failed!");
+      alert("OCR failed. Try again.");
     }
 
     setLoading(false);
@@ -113,7 +119,7 @@ const CoreCompanyLicenseCapture = () => {
     const userId = sessionStorage.getItem("userId");
 
     if (!userId) {
-      alert("User not logged in!");
+      alert("User not logged in");
       return;
     }
 
@@ -122,6 +128,7 @@ const CoreCompanyLicenseCapture = () => {
       businessType: formData.businessType,
       licenseType: formData.licenseType,
       businessLocation: formData.businessLocation,
+
       extractedData: {
         licenseNumber: formData.licenseNumber,
         licenseName: formData.licenseName,
@@ -131,18 +138,37 @@ const CoreCompanyLicenseCapture = () => {
         issuingAuthority: formData.issuingAuthority,
         address: formData.address,
       },
+
       status: "Pending Verification",
     };
 
     try {
-      await axios.post(
-        "https://asset-manager-new.onrender.com/api/company-licenses/",
+      const res = await axios.post(
+        "https://asset-manager-new.onrender.com/api/company-licenses",
         payload
       );
+
+      console.log("SAVE RESPONSE:", res.data);
       alert("License saved successfully!");
+
+      setShowForm(false);
+      setFormData({
+        businessType: "",
+        licenseType: "",
+        businessLocation: "",
+        licenseNumber: "",
+        licenseName: "",
+        businessName: "",
+        issueDate: "",
+        expiryDate: "",
+        issuingAuthority: "",
+        address: "",
+      });
+      setFile(null);
+
     } catch (err) {
       console.error("SAVE ERROR:", err.response?.data || err);
-      alert("Saving failed!");
+      alert("Saving failed. Check console.");
     }
   };
 
@@ -154,7 +180,7 @@ const CoreCompanyLicenseCapture = () => {
     <div className="license-wrapper">
       <h2 className="title">Company License Capture</h2>
 
-      {/* Step 1: Business Type */}
+      {/* BUSINESS TYPE */}
       <div className="input-group">
         <label>Business Type</label>
         <select name="businessType" value={formData.businessType} onChange={handleInput}>
@@ -165,7 +191,7 @@ const CoreCompanyLicenseCapture = () => {
         </select>
       </div>
 
-      {/* Step 2: License Type */}
+      {/* LICENSE TYPE */}
       {formData.businessType && (
         <div className="input-group slide-in">
           <label>License Type</label>
@@ -178,7 +204,7 @@ const CoreCompanyLicenseCapture = () => {
         </div>
       )}
 
-      {/* Step 3: Business Location */}
+      {/* BUSINESS LOCATION */}
       {formData.licenseType && (
         <div className="input-group slide-in">
           <label>Business Location</label>
@@ -195,20 +221,23 @@ const CoreCompanyLicenseCapture = () => {
         </div>
       )}
 
-      {/* Step 4: Scan & Upload Options */}
+      {/* FILE UPLOAD + SCAN */}
       {formData.businessLocation && (
         <div className="capture-section slide-in">
 
-          {/* Upload */}
           <div className="upload-box">
             <label>Upload Document</label>
             <input type="file" accept="image/*,.pdf" onChange={handleFileChange} />
           </div>
 
-          {/* Mobile Scan */}
           <div className="upload-box">
             <label>Scan Using Camera</label>
-            <input type="file" accept="image/*" capture="environment" onChange={handleCameraCapture} />
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleCameraCapture}
+            />
           </div>
 
           <button className="btn" onClick={handleExtract}>
@@ -217,11 +246,12 @@ const CoreCompanyLicenseCapture = () => {
         </div>
       )}
 
-      {/* Step 5: OCR Form */}
+      {/* EXTRACTED FORM */}
       {showForm && (
         <div className="form-section slide-in">
           <h3>Extracted License Details</h3>
 
+          {/* AUTO PREFILLED FIELDS */}
           {[
             "licenseNumber",
             "licenseName",
@@ -230,23 +260,42 @@ const CoreCompanyLicenseCapture = () => {
           ].map((field) => (
             <div className="input-group" key={field}>
               <label>{field.replace(/([A-Z])/g, " $1")}</label>
-              <input name={field} value={formData[field]} onChange={handleInput} />
+              <input
+                name={field}
+                value={formData[field]}
+                onChange={handleInput}
+              />
             </div>
           ))}
 
           <div className="input-group">
             <label>Issue Date</label>
-            <input type="date" name="issueDate" value={formData.issueDate} onChange={handleInput} />
+            <input
+              type="date"
+              name="issueDate"
+              value={formData.issueDate}
+              onChange={handleInput}
+            />
           </div>
 
           <div className="input-group">
             <label>Expiry Date</label>
-            <input type="date" name="expiryDate" value={formData.expiryDate} onChange={handleInput} />
+            <input
+              type="date"
+              name="expiryDate"
+              value={formData.expiryDate}
+              onChange={handleInput}
+            />
           </div>
 
           <div className="input-group">
             <label>Address</label>
-            <textarea name="address" rows={2} value={formData.address} onChange={handleInput} />
+            <textarea
+              name="address"
+              rows={2}
+              value={formData.address}
+              onChange={handleInput}
+            />
           </div>
 
           <button className="btn save-btn" onClick={handleSave}>
