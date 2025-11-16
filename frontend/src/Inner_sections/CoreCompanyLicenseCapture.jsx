@@ -4,16 +4,7 @@ import axios from "axios";
 const CoreCompanyLicenseCapture = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [extractedData, setExtractedData] = useState({
-    licenseNumber: "",
-    licenseName: "",
-    businessName: "",
-    issueDate: "",
-    expiryDate: "",
-    issuingAuthority: "",
-    address: "",
-    additionalFields: {}
-  });
+  const [showForm, setShowForm] = useState(false); // 👈 show editable form only after OCR
 
   const [formData, setFormData] = useState({
     licenseNumber: "",
@@ -27,15 +18,40 @@ const CoreCompanyLicenseCapture = () => {
     licenseType: "",
   });
 
+  const LICENSE_TYPES = [
+    "GST Registration",
+    "Trade License",
+    "FSSAI License",
+    "Factory License",
+    "Shop & Establishment",
+    "Professional Tax",
+    "Fire Safety Certificate",
+  ];
+
+  const BUSINESS_LOCATIONS = [
+    "Ranchi",
+    "Jamshedpur",
+    "Bokaro",
+    "Dhanbad",
+    "Delhi",
+    "Mumbai",
+    "Bangalore",
+    "Other",
+  ];
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // ---------------------------------------------------------
-  // 1️⃣ STEP: OCR Extract
-  // ---------------------------------------------------------
+  // ------------------------------------------------------
+  // 1️⃣ OCR Extraction
+  // ------------------------------------------------------
   const handleExtract = async () => {
     if (!file) return alert("Please upload a document first!");
+
+    if (!formData.licenseType || !formData.businessLocation) {
+      return alert("Please select License Type & Business Location first!");
+    }
 
     setLoading(true);
 
@@ -45,22 +61,16 @@ const CoreCompanyLicenseCapture = () => {
       form.append("licenseType", formData.licenseType);
       form.append("businessLocation", formData.businessLocation);
 
-      console.log("📤 SENDING TO OCR ROUTE:", {
-        licenseType: formData.licenseType,
-        businessLocation: formData.businessLocation,
-      });
-
       const res = await axios.post(
         "https://asset-manager-new.onrender.com/api/company-licenses/extract",
         form,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      console.log("📥 OCR RESPONSE:", res.data);
+      console.log("📥 OCR RESULT:", res.data);
 
       const extracted = res.data.extractedData || {};
 
-      // safe fallback fields
       const safe = {
         licenseNumber: extracted.licenseNumber || "",
         licenseName: extracted.licenseName || "",
@@ -69,78 +79,88 @@ const CoreCompanyLicenseCapture = () => {
         expiryDate: extracted.expiryDate || "",
         issuingAuthority: extracted.issuingAuthority || "",
         address: extracted.address || "",
-        additionalFields: extracted.additionalFields || {},
+        businessLocation: formData.businessLocation,
+        licenseType: formData.licenseType,
       };
 
-      setExtractedData(safe);
-      setFormData({ ...formData, ...safe });
+      setFormData(safe);
+      setShowForm(true); // 👈 now show form
+
     } catch (err) {
-      console.error("❌ OCR Extract Error:", err.response?.data || err);
-      alert("OCR extraction failed. Check console.");
+      console.error("❌ OCR ERROR:", err);
+      alert("OCR failed. Check console.");
     }
 
     setLoading(false);
   };
 
-  // ---------------------------------------------------------
-  // 2️⃣ STEP: Save Final License
-  // ---------------------------------------------------------
+  // ------------------------------------------------------
+  // 2️⃣ Save License
+  // ------------------------------------------------------
   const handleSave = async () => {
     const userId = sessionStorage.getItem("userId");
 
     if (!userId) {
-      alert("User ID missing! Something is wrong with login.");
+      alert("User not logged in!");
       return;
     }
 
-    const payload = {
-      ...formData,
-      userId, // ⭐ REQUIRED
-    };
-
-    console.log("📤 PAYLOAD TO SAVE:", payload);
+    const payload = { ...formData, userId };
 
     try {
-      const res = await axios.post(
+      await axios.post(
         "https://asset-manager-new.onrender.com/api/company-licenses/",
         payload
       );
 
-      console.log("📥 SAVE RESPONSE:", res.data);
-      alert("License Saved Successfully!");
+      alert("License saved successfully!");
+
     } catch (err) {
-      console.error("❌ Save Error:", err.response?.data || err);
-      alert("Failed to save license. Check console.");
+      console.error("SAVE ERROR:", err);
+      alert("Failed to save license.");
     }
   };
-
-  // ---------------------------------------------------------
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ------------------------------------------------------
+
   return (
     <div className="capture-container">
       <h2>Company License OCR Scanner</h2>
 
-      {/* Upload */}
+      {/* File Upload */}
       <input type="file" accept="image/*,.pdf" onChange={handleFileChange} />
 
-      {/* Basic Fields Needed Before Extraction */}
-      <input
+      {/* License Type Dropdown */}
+      <select
         name="licenseType"
-        placeholder="License Type"
         value={formData.licenseType}
         onChange={handleInputChange}
-      />
+      >
+        <option value="">Select License Type</option>
+        {LICENSE_TYPES.map((t, i) => (
+          <option key={i} value={t}>
+            {t}
+          </option>
+        ))}
+      </select>
 
-      <input
+      {/* Business Location Dropdown */}
+      <select
         name="businessLocation"
-        placeholder="Business Location"
         value={formData.businessLocation}
         onChange={handleInputChange}
-      />
+      >
+        <option value="">Select Business Location</option>
+        {BUSINESS_LOCATIONS.map((b, i) => (
+          <option key={i} value={b}>
+            {b}
+          </option>
+        ))}
+      </select>
 
       <button onClick={handleExtract} disabled={loading}>
         {loading ? "Extracting..." : "Extract License Data"}
@@ -148,22 +168,26 @@ const CoreCompanyLicenseCapture = () => {
 
       <hr />
 
-      {/* Extracted Form */}
-      <h3>Extracted / Editable Data</h3>
+      {/* 👇 SHOW ONLY AFTER OCR IS DONE */}
+      {showForm && (
+        <>
+          <h3>Extracted / Editable Data</h3>
 
-      {Object.keys(formData).map((key) => (
-        <div key={key} style={{ marginBottom: 10 }}>
-          <label>{key}</label>
-          <input
-            type="text"
-            name={key}
-            value={formData[key]}
-            onChange={handleInputChange}
-          />
-        </div>
-      ))}
+          {Object.keys(formData).map((key) => (
+            <div key={key} style={{ marginBottom: 10 }}>
+              <label>{key}</label>
+              <input
+                type="text"
+                name={key}
+                value={formData[key]}
+                onChange={handleInputChange}
+              />
+            </div>
+          ))}
 
-      <button onClick={handleSave}>Save License</button>
+          <button onClick={handleSave}>Save License</button>
+        </>
+      )}
     </div>
   );
 };
