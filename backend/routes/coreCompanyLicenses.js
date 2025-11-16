@@ -54,8 +54,10 @@ router.post(
 // ------------------------------------------
 router.post(
   "/",
+  authenticateToken(),  // 🔥 ADD BACK AUTH so req.user works
   saveFinalLicense
 );
+
 
 // ------------------------------------------
 // 3️⃣ Get all licenses
