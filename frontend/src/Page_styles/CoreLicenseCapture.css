@@ -1,70 +1,93 @@
-.ocr-wrapper {
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 25px;
+.ocr-container {
+  max-width: 600px;
+  margin: auto;
   background: #ffffff;
+  padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  font-family: "Inter", sans-serif;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
 }
 
 .title {
   text-align: center;
   margin-bottom: 20px;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
 }
 
 .input-group {
-  margin-bottom: 16px;
+  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
 }
 
 .input-group label {
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
-.input-group input,
 .input-group select,
+.input-group input,
 .input-group textarea {
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #c9c9c9;
   font-size: 15px;
 }
 
 .btn {
-  background: #2563eb;
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
   width: 100%;
+  padding: 12px;
   font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
   margin-top: 10px;
-  transition: 0.2s;
 }
 
-.btn:hover {
-  background: #1e4fd6;
+.extract {
+  background: #0066ff;
+  color: white;
 }
 
-.btn.save {
-  background: #10b981;
+.save {
+  background: #00a651;
+  color: white;
 }
 
-.btn.save:hover {
-  background: #0a946b;
+.upload-section {
+  text-align: center;
+}
+
+.scan-btn,
+.upload-btn {
+  background: #f1f1f1;
+  padding: 12px;
+  display: block;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid #d2d2d2;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.file-name {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #444;
 }
 
 .form-section {
   margin-top: 20px;
 }
 
-hr {
-  margin: 20px 0;
-  opacity: 0.3;
+.animate-fade {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
