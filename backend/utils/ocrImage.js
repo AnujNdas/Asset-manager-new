@@ -22,6 +22,11 @@ const ocrImage = async (filePath) => {
 
     const text = result.data.text || "";
 
+    // ⭐ PRINT RAW OCR TEXT HERE
+    console.log("\n================ OCR RAW TEXT START ================");
+    console.log(text);
+    console.log("================ OCR RAW TEXT END ==================\n");
+
     if (text.trim().length < 5) {
       console.warn("⚠️ Very low OCR output!");
     }
