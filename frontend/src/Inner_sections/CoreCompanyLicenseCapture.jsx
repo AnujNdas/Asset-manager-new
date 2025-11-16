@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./CoreCompanyLicenseCapture.css";
 
 const CoreCompanyLicenseCapture = () => {
   const [file, setFile] = useState(null);
@@ -16,8 +17,19 @@ const CoreCompanyLicenseCapture = () => {
     address: "",
     businessLocation: "",
     licenseType: "",
-    businessType: "",     // 👈 Added missing field!
+    businessType: "",
   });
+
+  const BUSINESS_TYPES = [
+    "Private Limited Company",
+    "Public Limited Company",
+    "Partnership",
+    "Proprietorship",
+    "LLP (Limited Liability Partnership)",
+    "NGO / Trust",
+    "One Person Company (OPC)",
+    "Co-operative Society",
+  ];
 
   const LICENSE_TYPES = [
     "GST Registration",
@@ -40,33 +52,25 @@ const CoreCompanyLicenseCapture = () => {
     "Other",
   ];
 
-  const BUSINESS_TYPES = [
-    "Private Limited Company",
-    "Public Limited Company",
-    "Partnership",
-    "Proprietorship",
-    "LLP (Limited Liability Partnership)",
-    "NGO / Trust",
-    "One Person Company (OPC)",
-    "Co-operative Society",
-  ];
-
-  // ───────────────────────────────────────────────
-  // File upload handler
+  // ----------------------------
+  // File Upload
+  // ----------------------------
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // ───────────────────────────────────────────────
-  // OCR Extraction
+  // ----------------------------
+  // OCR EXTRACT
+  // ----------------------------
   const handleExtract = async () => {
-    if (!file) return alert("Please upload a document first!");
+    if (!file) return alert("Please upload or scan a document!");
 
-    if (!formData.licenseType || !formData.businessLocation) {
-      return alert("Please select License Type & Business Location first!");
+    if (!formData.businessType || !formData.licenseType || !formData.businessLocation) {
+      return alert("Please select all dropdowns first.");
     }
 
     setLoading(true);
+
     try {
       const form = new FormData();
       form.append("file", file);
@@ -78,8 +82,6 @@ const CoreCompanyLicenseCapture = () => {
         form,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      console.log("📥 OCR RESULT:", res.data);
 
       const extracted = res.data.extractedData || {};
 
@@ -95,7 +97,6 @@ const CoreCompanyLicenseCapture = () => {
       }));
 
       setShowForm(true);
-
     } catch (err) {
       console.error("❌ OCR ERROR:", err);
       alert("OCR failed. Check console.");
@@ -104,84 +105,41 @@ const CoreCompanyLicenseCapture = () => {
     setLoading(false);
   };
 
-  // ───────────────────────────────────────────────
-  // Save license
+  // ----------------------------
+  // SAVE LICENSE
+  // ----------------------------
   const handleSave = async () => {
     const userId = sessionStorage.getItem("userId");
 
-    if (!userId) {
-      alert("User not logged in!");
-      return;
-    }
-
-    const payload = { ...formData, userId };
+    if (!userId) return alert("No user logged in!");
 
     try {
-      await axios.post(
-        "https://asset-manager-new.onrender.com/api/company-licenses/",
-        payload
-      );
+      await axios.post("https://asset-manager-new.onrender.com/api/company-licenses/", {
+        ...formData,
+        userId,
+      });
 
       alert("License saved successfully!");
     } catch (err) {
       console.error("SAVE ERROR:", err);
-      alert("Failed to save license.");
+      alert("Saving failed!");
     }
   };
 
-  // ───────────────────────────────────────────────
-  // Input handler
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   return (
-    <div className="ocr-wrapper">
+    <div className="ocr-container">
+
       <h2 className="title">Company License OCR Scanner</h2>
 
-      {/* File Upload */}
-      <div className="input-group">
-        <label>Upload License Document</label>
-        <input type="file" accept="image/*,.pdf" onChange={handleFileChange} />
-      </div>
-
-      {/* License Type */}
-      <div className="input-group">
-        <label>License Type</label>
-        <select
-          name="licenseType"
-          value={formData.licenseType}
-          onChange={handleInputChange}
-        >
-          <option value="">Select License Type</option>
-          {LICENSE_TYPES.map((t, i) => (
-            <option key={i} value={t}>{t}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Business Location */}
-      <div className="input-group">
-        <label>Business Location</label>
-        <select
-          name="businessLocation"
-          value={formData.businessLocation}
-          onChange={handleInputChange}
-        >
-          <option value="">Select Business Location</option>
-          {BUSINESS_LOCATIONS.map((b, i) => (
-            <option key={i} value={b}>{b}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Business Type */}
+      {/* BUSINESS TYPE → FIRST LEVEL */}
       <div className="input-group">
         <label>Business Type</label>
         <select
           name="businessType"
           value={formData.businessType}
-          onChange={handleInputChange}
+          onChange={(e) =>
+            setFormData({ ...formData, businessType: e.target.value })
+          }
         >
           <option value="">Select Business Type</option>
           {BUSINESS_TYPES.map((t, i) => (
@@ -190,44 +148,111 @@ const CoreCompanyLicenseCapture = () => {
         </select>
       </div>
 
-      <button className="btn" onClick={handleExtract} disabled={loading}>
-        {loading ? "Extracting..." : "Extract License Data"}
-      </button>
+      {/* LICENSE TYPE → visible only after business type */}
+      {formData.businessType && (
+        <div className="input-group animate-fade">
+          <label>License Type</label>
+          <select
+            name="licenseType"
+            value={formData.licenseType}
+            onChange={(e) =>
+              setFormData({ ...formData, licenseType: e.target.value })
+            }
+          >
+            <option value="">Select License Type</option>
+            {LICENSE_TYPES.map((t, i) => (
+              <option key={i} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
-      <hr />
+      {/* BUSINESS LOCATION → visible only after license type */}
+      {formData.licenseType && (
+        <div className="input-group animate-fade">
+          <label>Business Location</label>
+          <select
+            name="businessLocation"
+            value={formData.businessLocation}
+            onChange={(e) =>
+              setFormData({ ...formData, businessLocation: e.target.value })
+            }
+          >
+            <option value="">Select Business Location</option>
+            {BUSINESS_LOCATIONS.map((b, i) => (
+              <option key={i} value={b}>{b}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
-      {/* ─────────────────────────────────────────────── */}
-      {/* SHOW FORM AFTER OCR */}
+      {/* FILE UPLOAD + MOBILE SCAN */}
+      {formData.businessLocation && (
+        <div className="upload-section animate-fade">
+
+          {/* SCAN (Mobile Only) */}
+          <label className="scan-btn">
+            Scan (Mobile)
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden-input"
+              onChange={handleFileChange}
+            />
+          </label>
+
+          {/* UPLOAD */}
+          <label className="upload-btn">
+            Upload File
+            <input
+              type="file"
+              accept="image/*,.pdf"
+              className="hidden-input"
+              onChange={handleFileChange}
+            />
+          </label>
+
+          {file && <p className="file-name">📄 {file.name}</p>}
+
+          <button className="btn extract" onClick={handleExtract}>
+            {loading ? "Extracting..." : "Run OCR"}
+          </button>
+        </div>
+      )}
+
+      {/* SHOW EXTRACTED FORM */}
       {showForm && (
-        <div className="form-section">
-          <h3>Extracted / Editable Data</h3>
-
-          {/* NOT showing dropdowns inside dynamic loop */}
+        <div className="form-section animate-fade">
+          <h3>Extracted Details</h3>
 
           <div className="input-group">
             <label>License Number</label>
             <input
-              name="licenseNumber"
               value={formData.licenseNumber}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, licenseNumber: e.target.value })
+              }
             />
           </div>
 
           <div className="input-group">
             <label>License Name</label>
             <input
-              name="licenseName"
               value={formData.licenseName}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, licenseName: e.target.value })
+              }
             />
           </div>
 
           <div className="input-group">
             <label>Business Name</label>
             <input
-              name="businessName"
               value={formData.businessName}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, businessName: e.target.value })
+              }
             />
           </div>
 
@@ -235,9 +260,10 @@ const CoreCompanyLicenseCapture = () => {
             <label>Issue Date</label>
             <input
               type="date"
-              name="issueDate"
               value={formData.issueDate}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, issueDate: e.target.value })
+              }
             />
           </div>
 
@@ -245,29 +271,32 @@ const CoreCompanyLicenseCapture = () => {
             <label>Expiry Date</label>
             <input
               type="date"
-              name="expiryDate"
               value={formData.expiryDate}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, expiryDate: e.target.value })
+              }
             />
           </div>
 
           <div className="input-group">
             <label>Issuing Authority</label>
             <input
-              name="issuingAuthority"
               value={formData.issuingAuthority}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setFormData({ ...formData, issuingAuthority: e.target.value })
+              }
             />
           </div>
 
           <div className="input-group">
             <label>Address</label>
             <textarea
-              name="address"
-              rows={2}
+              rows="2"
               value={formData.address}
-              onChange={handleInputChange}
-            ></textarea>
+              onChange={(e) =>
+                setFormData({ ...formData, address: e.target.value })
+              }
+            />
           </div>
 
           <button className="btn save" onClick={handleSave}>
