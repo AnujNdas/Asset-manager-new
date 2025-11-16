@@ -1,212 +1,70 @@
-.license-capture-container {
-  max-width: 800px;
-  margin: 0px auto;
-  background: #fff;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-  font-family: "Poppins", sans-serif;
-  transition: all 0.3s ease;
-}
-
-.license-title {
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 40px;
-}
-
-.business-selection {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.form-group {
-  flex: 1;
-  min-width: 250px;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #444;
-}
-
-.form-group select {
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  transition: 0.3s;
-}
-
-.form-group select:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
-}
-
-/* Document Section */
-.document-section {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.scan-card,
-.upload-card {
-  flex: 1;
-  min-width: 300px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 30px 20px;
-  text-align: center;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.scan-card:hover,
-.upload-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+.ocr-wrapper {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 25px;
   background: #ffffff;
-}
-
-.icon {
-  font-size: 2.4rem;
-  color: #007bff;
-  margin-bottom: 10px;
-}
-
-.btn-scan {
-  margin-top: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-scan:hover {
-  background: #0056b3;
-}
-
-.upload-btn {
-  display: inline-block;
-  background: #007bff;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-  position: relative;
-  transition: 0.3s;
-}
-
-.upload-btn:hover {
-  background: #0056b3;
-}
-
-.upload-btn input {
-  display: none;
-}
-
-.file-name {
-  display: block;
-  margin-top: 8px;
-  color: #555;
-  font-size: 0.9rem;
-}
-/* ---- Form Below Upload ---- */
-.extracted-form {
-  margin-top: 40px;
-  padding: 30px;
-  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  background: #fafafa;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  font-family: "Inter", sans-serif;
 }
 
-.extracted-form h3 {
-  font-size: 1.4rem;
-  color: #333;
-  margin-bottom: 20px;
-  font-weight: 600;
+.title {
   text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
 }
 
-.form-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.form-field {
-  flex: 1 1 calc(50% - 20px);
+.input-group {
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
 }
 
-.form-field.full-width {
-  flex: 1 1 100%;
+.input-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
 }
 
-.form-field label {
-  font-weight: 500;
-  margin-bottom: 6px;
-  color: #444;
-}
-
-.form-field input {
-  padding: 10px 12px;
+.input-group input,
+.input-group select,
+.input-group textarea {
+  padding: 10px;
+  border-radius: 8px;
   border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.btn {
+  background: #2563eb;
+  color: #fff;
+  padding: 12px 18px;
   border-radius: 8px;
-  font-size: 0.95rem;
-  transition: 0.3s;
-}
-
-.form-field input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
-  outline: none;
-}
-
-.btn-save {
-  display: block;
-  margin: 30px auto 0;
-  background: #007bff;
-  color: white;
-  padding: 12px 24px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: 0.3s;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: 0.2s;
 }
 
-.btn-save:hover {
-  background: #0056b3;
+.btn:hover {
+  background: #1e4fd6;
 }
 
-@media (max-width: 600px) {
-  .business-selection,
-  .document-section {
-    flex-direction: column;
-    align-items: center;
-  }
+.btn.save {
+  background: #10b981;
+}
 
-  .scan-card,
-  .upload-card {
-    width: 100%;
-  }
+.btn.save:hover {
+  background: #0a946b;
+}
+
+.form-section {
+  margin-top: 20px;
+}
+
+hr {
+  margin: 20px 0;
+  opacity: 0.3;
 }
