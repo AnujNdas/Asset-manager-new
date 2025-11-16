@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./CoreLicenseCapture.css"; // 👈 CSS FILE
+import "../Page_styles/CoreLicenseCapture.css"; // 👈 CSS FILE
 
 const CoreCompanyLicenseCapture = () => {
   const [file, setFile] = useState(null);
