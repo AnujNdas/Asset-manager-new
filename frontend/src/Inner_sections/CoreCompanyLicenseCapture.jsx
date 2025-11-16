@@ -17,6 +17,16 @@ const CoreCompanyLicenseCapture = () => {
     businessLocation: "",
     licenseType: "",
   });
+  const businessTypes = [
+  "Private Limited Company",
+  "Public Limited Company",
+  "Partnership",
+  "Proprietorship",
+  "LLP (Limited Liability Partnership)",
+  "NGO / Trust",
+  "One Person Company (OPC)",
+  "Co-operative Society",
+];
 
   const LICENSE_TYPES = [
     "GST Registration",
@@ -135,6 +145,24 @@ const CoreCompanyLicenseCapture = () => {
       <input type="file" accept="image/*,.pdf" onChange={handleFileChange} />
 
       {/* License Type Dropdown */}
+      <div>
+          <label className="block mb-1 font-medium">Business Type</label>
+
+          <select
+            name="businessType"
+            value={formData.businessType}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg bg-white"
+          >
+            <option value="">Select Business Type</option>
+
+            {businessTypes.map((type, index) => (
+              <option key={index} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
       <select
         name="licenseType"
         value={formData.licenseType}
