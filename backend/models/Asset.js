@@ -11,7 +11,7 @@ const assetSchema = new mongoose.Schema({
     },
     barcodeNumber : {
         type : String,
-        required: true,
+        // required: true,
     },
     assetName : {
         type : String,
