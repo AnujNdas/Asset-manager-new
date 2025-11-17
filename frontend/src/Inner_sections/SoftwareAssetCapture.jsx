@@ -544,7 +544,6 @@ export default function SoftwareAssetCapture() {
           </div>
         </div>
 
-        <div className="form-actions">
           {/* <div className="left-actions">
             <button type="button" className="btn-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
               Top
@@ -554,12 +553,9 @@ export default function SoftwareAssetCapture() {
             </button>
           </div> */}
 
-          <div className="right-actions">
             <button className="btn-primary" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Saving..." : "Save Software Asset"}
             </button>
-          </div>
-        </div>
       </form>
     </div>
   );
