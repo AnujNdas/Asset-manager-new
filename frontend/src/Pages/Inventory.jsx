@@ -34,19 +34,19 @@ const Inventory = () => {
         >
           <span className="tab-text2">Software</span>
         </button>
-        <button
+        {/* <button
           className={activeTab === "core" ? "tab active" : "tab"}
           onClick={() => setActiveTab("core")}
         >
           <span className="tab-text2">Core Licenses</span>
-        </button>
+        </button> */}
       </div>
 
       {/* Tab Content */}
       <div className="tab-content">
         {activeTab === "hardware" && <HardwareAssetList />}
         {activeTab === "software" && <SoftwareAssetList />}
-        {activeTab === "core" && <CoreCompanyLicenseList />}
+        /* {activeTab === "core" && <CoreCompanyLicenseList />} */
       </div>
     </div>
   );
