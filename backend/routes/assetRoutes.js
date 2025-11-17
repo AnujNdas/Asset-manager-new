@@ -23,7 +23,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
-const upload = multer({ storage: storage });
 
 // Routes
 router.post("/", authenticateToken(), upload.single("image"), addAsset);
