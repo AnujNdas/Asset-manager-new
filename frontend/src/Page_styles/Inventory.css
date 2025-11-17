@@ -11,7 +11,11 @@
   border-radius: 10px;
   display: block;
 }
-
+.image-container{
+  display : flex;
+  justify-content: center;
+  width : 100%;
+}
 .tabs {
   display: flex;
   justify-content: center;
