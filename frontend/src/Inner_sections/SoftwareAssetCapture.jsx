@@ -250,7 +250,7 @@ export default function SoftwareAssetCapture() {
   return (
     <div className="asset-wrapper">
       <div className="asset-header">
-        <h2>Software Asset Capture</h2>
+        <h2>Software Capture</h2>
       </div>
 
       <form className="asset-form" onSubmit={handleSubmit} encType="multipart/form-data">
