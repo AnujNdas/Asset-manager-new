@@ -73,9 +73,9 @@ const AssetCapture = () => {
         {activeTab === "bulk-software" && (
           <BulkUpload type="software" userRole={userRole} />
         )}
-        /* {activeTab === "bulk-core" && (
+        {/*{activeTab === "bulk-core" && (
           <BulkUpload type="core-license" userRole={userRole} />
-        )} */
+        )} */}
       </div>
     </div>
   );
