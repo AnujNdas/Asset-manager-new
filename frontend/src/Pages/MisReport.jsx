@@ -218,7 +218,7 @@ const MisReport = () => {
               <>
                 <th>Document</th><th>License No</th><th>Holder</th><th>Status</th><th>Expiry</th>
               </>
-            )} */ */}
+            )}  */ */}
           </tr>
         </thead>
         <tbody>
@@ -242,7 +242,7 @@ const MisReport = () => {
                   <td>{categories.find(c => c._id === row.category)?.name}</td>
                 </>
               )}
-              {/* /* {activeTab === "licenses" && (
+              {/* {activeTab === "licenses" && (
                 <>
                   <td>{row.documentType}</td>
                   <td>{row.licenseNumber}</td>
@@ -250,7 +250,7 @@ const MisReport = () => {
                   <td>{statuses.find(s => s._id === row.status)?.name}</td>
                   <td>{formatDate(row.expiryDate)}</td>
                 </>
-              )} */ */}
+              )} */}
             </tr>
           ))}
         </tbody>
