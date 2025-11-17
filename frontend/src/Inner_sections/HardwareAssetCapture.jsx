@@ -190,7 +190,6 @@ const AssetCapture = () => {
     <div className="asset-wrapper">
       <div className="asset-header">
         <h2>New Hardware Asset</h2>
-        <p>Add a new hardware asset to the inventory system.</p>
       </div>
 
       <form className="asset-form" onSubmit={handleAddAsset}>
