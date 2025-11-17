@@ -553,7 +553,7 @@ export default function SoftwareAssetCapture() {
             </button>
           </div> */}
 
-            <button className="btn-primary" type="submit" disabled={isSubmitting}>
+            <button className="submit-btn" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Saving..." : "Save Software Asset"}
             </button>
       </form>
