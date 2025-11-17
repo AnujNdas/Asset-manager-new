@@ -139,7 +139,6 @@ const AssetCapture = () => {
                 <option value="Accounts">Accounts</option>
                 <option value="HR">HR</option>
               </select>
-            </select>
             </div>
           </div>
 
