@@ -2,13 +2,13 @@
 .asset-wrapper {
   /* max-width: 900px; */
   margin: auto;
-  padding: 30px;
+  padding: 10px;
   background: #f9f9fb;
 }
 
 /* Header */
 .asset-header h2 {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 600;
 }
 
