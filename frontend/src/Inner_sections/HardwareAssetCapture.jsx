@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./AssetCapture.css";
+import "../Page_styles/HardwareCapture.css";
 import { FiUploadCloud, FiCamera, FiSave } from "react-icons/fi";
 
 const AssetCapture = () => {
