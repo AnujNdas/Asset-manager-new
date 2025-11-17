@@ -1,0 +1,137 @@
+/* Wrapper */
+.asset-wrapper {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px;
+  background: #f9f9fb;
+}
+
+/* Header */
+.asset-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.asset-header p {
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Sections */
+.section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  font-size: 18px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Grids */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+}
+
+/* Input fields */
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #555;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px;
+  border: 1.5px solid #dcdcdc;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #4f46e5;
+}
+
+/* Upload Buttons */
+.upload-box {
+  display: flex;
+  gap: 15px;
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eef2ff;
+  border: 1px dashed #6366f1;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.upload-btn input {
+  display: none;
+}
+
+.upload-btn:hover {
+  background: #e0e7ff;
+}
+
+/* Preview Image */
+.image-preview img {
+  margin-top: 15px;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+/* Submit Button */
+.submit-btn {
+  margin-top: 25px;
+  width: 100%;
+  padding: 12px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-btn:hover {
+  background: #4338ca;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
