@@ -19,12 +19,9 @@ const Status = require("../models/Status");
 const router = express.Router();
 
 // Multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) =>
-    cb(null, path.join(__dirname, "../uploads")),  // IMPORTANT FIX
-  filename: (req, file, cb) =>
-    cb(null, Date.now() + path.extname(file.originalname)),
-});
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 
 const upload = multer({ storage: storage });
 
