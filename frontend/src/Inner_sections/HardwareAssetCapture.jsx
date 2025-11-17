@@ -179,7 +179,6 @@ export default function HardwareAssetCapture() {
   return (
     <div className="capture-container capture-upgraded">
       <h2 className="capture-title">Hardware Asset Capture</h2>
-      <p className="capture-sub">Use this form to capture hardware inventory items. Fields marked * are required.</p>
 
       <div className="tabs-wrap">
         <TabBtn idx={0} label="Basic Info" />
