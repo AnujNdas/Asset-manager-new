@@ -189,7 +189,7 @@ const MisReport = () => {
           </>
         )}
 {/* 
-        /* {activeTab === "licenses" && (
+        {activeTab === "licenses" && (
           <>
             <select onChange={e => setSelectedStatus(e.target.value)}>
               <option value="">All Statuses</option>
@@ -197,7 +197,7 @@ const MisReport = () => {
             </select>
             <input type="date" onChange={e => setStartDate(e.target.value)} />
           </>
-        )} */ */}
+        )}  */}
       </div>
 
       {/* Table */}
