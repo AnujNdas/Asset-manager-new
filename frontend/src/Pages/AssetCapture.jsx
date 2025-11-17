@@ -64,7 +64,7 @@ const AssetCapture = () => {
         {/* Capture Forms */}
         {activeTab === "hardware" && <HardwareAssetCapture />}
         {activeTab === "software" && <SoftwareAssetCapture />}
-        /* {activeTab === "core" && <CoreCompanyLicenseCapture />} */
+        {/* {activeTab === "core" && <CoreCompanyLicenseCapture />} */ }
 
         {/* Bulk Uploads */}
         {activeTab === "bulk-hardware" && (
