@@ -204,7 +204,9 @@ const HardwareAssetList = () => {
         exit={{ scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
       >
+        <div className="image-container">
         <img src={selectedAsset.image} alt="Asset Image" className="asset-image" />
+          </div>
         <h3>{selectedAsset.assetName || selectedAsset.assetCode}</h3>
 
         <div style={{ marginTop: 8, maxHeight: "60vh", overflowY: "auto" }}>
