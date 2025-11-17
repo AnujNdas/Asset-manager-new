@@ -3,6 +3,14 @@
   background: var(--bg-color, #f9f9f9);
   max-height: 100vh;
 }
+.asset-image {
+  width: 100%;
+  max-width: 120px;       /* adjust as needed */
+  height: 120px;          /* fixed height for uniform cards */
+  object-fit: cover;      /* prevents stretching / overlap */
+  border-radius: 10px;
+  display: block;
+}
 
 .tabs {
   display: flex;
