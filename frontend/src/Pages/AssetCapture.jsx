@@ -31,12 +31,12 @@ const AssetCapture = () => {
         >
           <span className="tab-text2">Software</span>
         </button>
-        <button
+        {/* <button
           className={activeTab === "core" ? "tab active" : "tab"}
           onClick={() => setActiveTab("core")}
         >
           <span className="tab-text2">Core License</span>
-        </button>
+        </button> */}
 
         {/* Bulk Upload Tabs */}
         <button
@@ -51,12 +51,12 @@ const AssetCapture = () => {
         >
           <span className="tab-text2">Bulk Software</span>
         </button>
-        <button
+        {/* <button
           className={activeTab === "bulk-core" ? "tab active" : "tab"}
           onClick={() => setActiveTab("bulk-core")}
         >
           <span className="tab-text2">Bulk Core License</span>
-        </button>
+        </button> */}
       </div>
 
       {/* Tab Content */}
@@ -64,7 +64,7 @@ const AssetCapture = () => {
         {/* Capture Forms */}
         {activeTab === "hardware" && <HardwareAssetCapture />}
         {activeTab === "software" && <SoftwareAssetCapture />}
-        {activeTab === "core" && <CoreCompanyLicenseCapture />}
+        /* {activeTab === "core" && <CoreCompanyLicenseCapture />} */
 
         {/* Bulk Uploads */}
         {activeTab === "bulk-hardware" && (
@@ -73,9 +73,9 @@ const AssetCapture = () => {
         {activeTab === "bulk-software" && (
           <BulkUpload type="software" userRole={userRole} />
         )}
-        {activeTab === "bulk-core" && (
+        /* {activeTab === "bulk-core" && (
           <BulkUpload type="core-license" userRole={userRole} />
-        )}
+        )} */
       </div>
     </div>
   );
