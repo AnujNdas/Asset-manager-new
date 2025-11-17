@@ -218,7 +218,7 @@ const MisReport = () => {
               <>
                 <th>Document</th><th>License No</th><th>Holder</th><th>Status</th><th>Expiry</th>
               </>
-            )}  */ */}
+            )}  */}
           </tr>
         </thead>
         <tbody>
