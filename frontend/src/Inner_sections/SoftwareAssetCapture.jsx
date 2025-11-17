@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+// src/Pages/SoftwareAssetCapture.jsx
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import "../Page_styles/CaptureForm.css";
-import { getStatuses, getCategories, createSoftwareAsset } from "../Services/ApiServices"; 
-// Note: createSoftwareAsset is used only for JSON-only payloads. Multipart posts go directly to /api/software-assets.
+import "../Page_styles/HardwareCapture.css"; // reuse same CSS as hardware
+import { getStatuses, getCategories, createSoftwareAsset } from "../Services/ApiServices";
 
 const initialForm = {
   // Basic
@@ -47,10 +47,10 @@ const initialForm = {
   vendorContactDetails: "",
 
   // Deployment & Assignment
-  assignedTo: "", // comma-separated
+  assignedTo: "",
   assignedDepartment: "",
-  linkedDevices: "", // comma-separated ids
-  integrationDependencies: "", // comma-separated
+  linkedDevices: "",
+  integrationDependencies: "",
 
   // Compliance & Risk
   complianceStatus: "",
@@ -60,19 +60,17 @@ const initialForm = {
   lastAccess: "",
 
   // Misc
-  subscriptionId: "",
   auditHistory: [],
 };
 
-const SoftwareAssetCapture = () => {
-  const [tab, setTab] = useState(0);
+export default function SoftwareAssetCapture() {
+  const [formData, setFormData] = useState(initialForm);
+  const [tab, setTab] = useState(0); // not used visually but keep for quick nav if needed
   const [statuses, setStatuses] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [formData, setFormData] = useState(initialForm);
-
-  // Files
-  const [contractFiles, setContractFiles] = useState([]); // contractDocs (multiple)
-  const [licenseFiles, setLicenseFiles] = useState([]); // licenseDocument (multiple)
+  const [contractFiles, setContractFiles] = useState([]);
+  const [licenseFiles, setLicenseFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -80,14 +78,14 @@ const SoftwareAssetCapture = () => {
         const [s, c] = await Promise.all([getStatuses(), getCategories()]);
         setStatuses(s || []);
         setCategories(c || []);
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error(err);
         Swal.fire("Error", "Failed to load dropdown data", "error");
       }
     })();
   }, []);
 
-  // Auto calculations: licensesAvailable & totalCost
+  // Auto calculations for licensesAvailable & totalCost
   useEffect(() => {
     const total = Number(formData.totalLicenses) || 0;
     const assigned = Number(formData.licensesAssigned) || 0;
@@ -104,8 +102,10 @@ const SoftwareAssetCapture = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      setFormData({ ...formData, [name]: checked });
-    } else setFormData({ ...formData, [name]: value });
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleFiles = (e, setFilesFn) => {
@@ -121,7 +121,6 @@ const SoftwareAssetCapture = () => {
   };
 
   const buildJsonPayload = () => {
-    // Convert comma-separated fields into arrays
     const assignedToArr = formData.assignedTo
       ? formData.assignedTo.split(",").map((s) => s.trim()).filter(Boolean)
       : [];
@@ -195,37 +194,27 @@ const SoftwareAssetCapture = () => {
     // Basic validation
     if (!formData.name) {
       Swal.fire("Validation", "Please provide the software name.", "warning");
-      setTab(0);
       return;
     }
     if (!formData.category) {
       Swal.fire("Validation", "Please select a category.", "warning");
-      setTab(0);
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-      // If there are files to upload, send multipart/form-data
       const hasFiles = (contractFiles && contractFiles.length > 0) || (licenseFiles && licenseFiles.length > 0);
 
       if (hasFiles) {
         const fd = new FormData();
-        const jsonPayload = buildJsonPayload();
+        const metadata = buildJsonPayload();
+        fd.append("metadata", JSON.stringify(metadata));
 
-        // Append JSON fields as a single JSON string (server should parse)
-        fd.append("metadata", JSON.stringify(jsonPayload));
+        contractFiles.forEach((file) => fd.append("contractDocs", file));
+        licenseFiles.forEach((file) => fd.append("licenseDocuments", file));
 
-        // Append contract files
-        contractFiles.forEach((file, i) => {
-          fd.append("contractDocs", file);
-        });
-        // Append license files
-        licenseFiles.forEach((file, i) => {
-          fd.append("licenseDocuments", file);
-        });
-
-        // POST to backend directly (adjust endpoint if your API path differs)
-        const token = localStorage.getItem("token"); // if you use auth token
+        const token = sessionStorage.getItem("token");
         const res = await fetch("/api/software-assets", {
           method: "POST",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -237,12 +226,12 @@ const SoftwareAssetCapture = () => {
 
         Swal.fire("Success", "Software asset created with files.", "success");
         resetForm();
+        setIsSubmitting(false);
         return;
       }
 
-      // No files → use existing createSoftwareAsset helper (assumed to accept JSON)
+      // No files → use JSON helper
       const payload = buildJsonPayload();
-      // If your createSoftwareAsset expects a different shape, update ApiServices accordingly
       await createSoftwareAsset(payload);
 
       Swal.fire("Success", "Software asset captured successfully!", "success");
@@ -250,176 +239,328 @@ const SoftwareAssetCapture = () => {
     } catch (err) {
       console.error("Error creating software asset:", err);
       Swal.fire("Error", err.message || "Failed to capture asset", "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // Simple Tab components
-  const Tabs = ({ index, label }) => (
-    <button
-      type="button"
-      className={`tab-btn ${tab === index ? "active" : ""}`}
-      onClick={() => setTab(index)}
-    >
-      {label}
-    </button>
-  );
+  // Small helper UI components to match hardware layout
+  const SectionTitle = ({ children }) => <h3 className="section-title">{children}</h3>;
 
   return (
-    <div className="capture-container capture-upgraded">
-      <h2 className="capture-title">Software Asset Capture</h2>
-
-      <div className="tabs-wrap">
-        <Tabs index={0} label="Basic Info" />
-        <Tabs index={1} label="License Details" />
-        <Tabs index={2} label="Financial & Contract" />
-        <Tabs index={3} label="Deployment & Assignment" />
-        <Tabs index={4} label="Compliance & Risk" />
+    <div className="asset-wrapper">
+      <div className="asset-header">
+        <h2>Software Asset Capture</h2>
       </div>
 
-      <form className="capture-form upgrade-form" onSubmit={handleSubmit} encType="multipart/form-data">
-        {/* ====== TAB 0: BASIC ====== */}
-        {tab === 0 && (
-          <div className="tab-panel">
-            <input name="name" placeholder="Software Name" value={formData.name} onChange={handleChange} required />
-            <input name="version" placeholder="Version" value={formData.version} onChange={handleChange} />
-            <input name="publisher" placeholder="Publisher" value={formData.publisher} onChange={handleChange} />
-
-            <select name="category" value={formData.category} onChange={handleChange} required>
-              <option value="">Select Category</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-
-            <input name="businessUnit" placeholder="Business Unit" value={formData.businessUnit} onChange={handleChange} />
-            <input name="installLocation" placeholder="Install Location" value={formData.installLocation} onChange={handleChange} />
-            <input name="assetTag" placeholder="Asset Tag (e.g., LICS-0001)" value={formData.assetTag} onChange={handleChange} />
-            <input name="softwareID" placeholder="Software ID (internal)" value={formData.softwareID} onChange={handleChange} />
-          </div>
-        )}
-
-        {/* ====== TAB 1: LICENSE ====== */}
-        {tab === 1 && (
-          <div className="tab-panel">
-            <input name="licenseKey" placeholder="License Key" value={formData.licenseKey} onChange={handleChange} />
-            <input name="licenseType" placeholder="License Type (Perpetual / Subscription / Trial)" value={formData.licenseType} onChange={handleChange} />
-            <input name="licenseModel" placeholder="License Model (OEM / Volume / Enterprise)" value={formData.licenseModel} onChange={handleChange} />
-            <input name="licenseMetric" placeholder="License Metric (Per User / Per Device / Per Core)" value={formData.licenseMetric} onChange={handleChange} />
-            <input name="licenseUse" placeholder="License Use (Internal / External / Test)" value={formData.licenseUse} onChange={handleChange} />
-            <label className="small-label">License Start Date</label>
-            <input type="date" name="licenseStartDate" value={formData.licenseStartDate} onChange={handleChange} />
-            <label className="small-label">License Expiry Date</label>
-            <input type="date" name="licenseExpiry" value={formData.licenseExpiry} onChange={handleChange} />
-            <select name="renewalCycle" value={formData.renewalCycle} onChange={handleChange}>
-              <option value="Annual">Annual</option>
-              <option value="Monthly">Monthly</option>
-              <option value="Lifetime">Lifetime</option>
-            </select>
-            <div className="row">
-              <input type="number" name="totalLicenses" placeholder="Total Licenses" value={formData.totalLicenses} onChange={handleChange} />
-              <input type="number" name="licensesAssigned" placeholder="Licenses Assigned" value={formData.licensesAssigned} onChange={handleChange} />
-              <input type="number" name="licensesAvailable" placeholder="Licenses Available" value={formData.licensesAvailable} readOnly />
+      <form className="asset-form" onSubmit={handleSubmit} encType="multipart/form-data">
+        {/* Basic Details */}
+        <div className="section">
+          <SectionTitle>Basic Details</SectionTitle>
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Software Name <span style={{ color: "#e11d48" }}>*</span></label>
+              <input name="name" value={formData.name} onChange={handleChange} placeholder="Software name" />
             </div>
-            <input name="subscriptionId" placeholder="Subscription ID (SaaS tenant)" value={formData.subscriptionId} onChange={handleChange} />
-          </div>
-        )}
 
-        {/* ====== TAB 2: FINANCIAL & CONTRACT ====== */}
-        {tab === 2 && (
-          <div className="tab-panel">
-            <div className="row">
-              <input type="number" name="costPerUnit" placeholder="Cost Per Unit" value={formData.costPerUnit} onChange={handleChange} />
-              <input type="number" name="totalCost" placeholder="Total Cost" value={formData.totalCost} readOnly />
+            <div className="input-group">
+              <label>Version</label>
+              <input name="version" value={formData.version} onChange={handleChange} placeholder="1.0.0" />
             </div>
-            <select name="currency" value={formData.currency} onChange={handleChange}>
-              <option>INR</option>
-              <option>USD</option>
-              <option>EUR</option>
-              <option>GBP</option>
-            </select>
-            <input name="costCenter" placeholder="Cost Center / Dept" value={formData.costCenter} onChange={handleChange} />
-            <label className="small-label">Purchase Date</label>
-            <input type="date" name="purchaseDate" value={formData.purchaseDate} onChange={handleChange} />
-            <input name="purchaseOrder" placeholder="Purchase Order" value={formData.purchaseOrder} onChange={handleChange} />
-            <input name="contractTerm" placeholder="Contract Term / Notes" value={formData.contractTerm} onChange={handleChange} />
+          </div>
 
-            <h4>Support / Vendor</h4>
-            <input name="supportVendor" placeholder="Support Vendor" value={formData.supportVendor} onChange={handleChange} />
-            <input name="supportEmail" placeholder="Support Email" value={formData.supportEmail} onChange={handleChange} />
-            <input name="supportPhone" placeholder="Support Phone" value={formData.supportPhone} onChange={handleChange} />
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Publisher</label>
+              <input name="publisher" value={formData.publisher} onChange={handleChange} placeholder="Publisher name" />
+            </div>
 
-            <label className="small-label">Upload Contract Documents (multiple)</label>
+            <div className="input-group">
+              <label>Category <span style={{ color: "#e11d48" }}>*</span></label>
+              <select name="category" value={formData.category} onChange={handleChange}>
+                <option value="">Select Category</option>
+                {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Business Unit</label>
+              <input name="businessUnit" value={formData.businessUnit} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>Install Location</label>
+              <input name="installLocation" value={formData.installLocation} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Asset Tag</label>
+              <input name="assetTag" value={formData.assetTag} onChange={handleChange} placeholder="e.g. LICS-0001" />
+            </div>
+
+            <div className="input-group">
+              <label>Software ID</label>
+              <input name="softwareID" value={formData.softwareID} onChange={handleChange} placeholder="internal id" />
+            </div>
+          </div>
+        </div>
+
+        {/* License Details */}
+        <div className="section">
+          <SectionTitle>License Details</SectionTitle>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>License Key</label>
+              <input name="licenseKey" value={formData.licenseKey} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>License Type</label>
+              <input name="licenseType" value={formData.licenseType} onChange={handleChange} placeholder="Perpetual / Subscription" />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>License Model</label>
+              <input name="licenseModel" value={formData.licenseModel} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>License Metric</label>
+              <input name="licenseMetric" value={formData.licenseMetric} onChange={handleChange} placeholder="Per User / Per Device" />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>License Start Date</label>
+              <input type="date" name="licenseStartDate" value={formData.licenseStartDate} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>License Expiry</label>
+              <input type="date" name="licenseExpiry" value={formData.licenseExpiry} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Total Licenses</label>
+              <input type="number" name="totalLicenses" value={formData.totalLicenses} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>Licenses Assigned</label>
+              <input type="number" name="licensesAssigned" value={formData.licensesAssigned} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Licenses Available</label>
+              <input type="number" name="licensesAvailable" value={formData.licensesAvailable} disabled />
+            </div>
+
+            <div className="input-group">
+              <label>Subscription ID</label>
+              <input name="subscriptionId" value={formData.subscriptionId} onChange={handleChange} />
+            </div>
+          </div>
+        </div>
+
+        {/* Financial & Contract */}
+        <div className="section">
+          <SectionTitle>Financial & Contract</SectionTitle>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Cost Per Unit</label>
+              <input type="number" name="costPerUnit" value={formData.costPerUnit} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>Total Cost</label>
+              <input type="number" name="totalCost" value={formData.totalCost} disabled />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Currency</label>
+              <select name="currency" value={formData.currency} onChange={handleChange}>
+                <option>INR</option>
+                <option>USD</option>
+                <option>EUR</option>
+                <option>GBP</option>
+              </select>
+            </div>
+
+            <div className="input-group">
+              <label>Cost Center</label>
+              <input name="costCenter" value={formData.costCenter} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Purchase Date</label>
+              <input type="date" name="purchaseDate" value={formData.purchaseDate} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>Purchase Order</label>
+              <input name="purchaseOrder" value={formData.purchaseOrder} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Contract Term / Notes</label>
+            <input name="contractTerm" value={formData.contractTerm} onChange={handleChange} />
+          </div>
+
+          <div className="input-group">
+            <label>Support Vendor</label>
+            <input name="supportVendor" value={formData.supportVendor} onChange={handleChange} />
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Support Email</label>
+              <input name="supportEmail" value={formData.supportEmail} onChange={handleChange} />
+            </div>
+            <div className="input-group">
+              <label>Support Phone</label>
+              <input name="supportPhone" value={formData.supportPhone} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Upload Contract Documents (multiple)</label>
             <input type="file" multiple onChange={(e) => handleFiles(e, setContractFiles)} />
+            {contractFiles.length > 0 && (
+              <ul className="file-list">
+                {contractFiles.map((f, i) => <li key={i}>{f.name}</li>)}
+              </ul>
+            )}
+          </div>
 
-            <label className="small-label">Upload License Documents (multiple)</label>
+          <div className="input-group">
+            <label>Upload License Documents (multiple)</label>
             <input type="file" multiple onChange={(e) => handleFiles(e, setLicenseFiles)} />
+            {licenseFiles.length > 0 && (
+              <ul className="file-list">
+                {licenseFiles.map((f, i) => <li key={i}>{f.name}</li>)}
+              </ul>
+            )}
+          </div>
 
-            <label className="small-label">Or paste contract doc URLs (one per line)</label>
+          <div className="input-group">
+            <label>Or paste contract doc URLs (one per line)</label>
             <textarea
               name="contractDocsURLs"
               value={formData.contractDocsURLs.join("\n")}
               onChange={(e) => setFormData({ ...formData, contractDocsURLs: e.target.value.split("\n").map(s => s.trim()).filter(Boolean)})}
-              rows={4}
+              rows={3}
             />
           </div>
-        )}
+        </div>
 
-        {/* ====== TAB 3: DEPLOYMENT & ASSIGNMENT ====== */}
-        {tab === 3 && (
-          <div className="tab-panel">
-            <label className="small-label">Assigned To (comma-separated emails/usernames)</label>
-            <input name="assignedTo" placeholder="user1@org.com, user2@org.com" value={formData.assignedTo} onChange={handleChange} />
+        {/* Deployment & Assignment */}
+        <div className="section">
+          <SectionTitle>Deployment & Assignment</SectionTitle>
 
-            <input name="assignedDepartment" placeholder="Assigned Department" value={formData.assignedDepartment} onChange={handleChange} />
-            <label className="small-label">Linked Devices (comma-separated IDs)</label>
-            <input name="linkedDevices" placeholder="deviceId1, deviceId2" value={formData.linkedDevices} onChange={handleChange} />
-            <label className="small-label">Integration Dependencies (comma-separated)</label>
-            <input name="integrationDependencies" placeholder="ServiceA, ServiceB" value={formData.integrationDependencies} onChange={handleChange} />
+          <div className="input-group">
+            <label>Assigned To (comma-separated)</label>
+            <input name="assignedTo" value={formData.assignedTo} onChange={handleChange} placeholder="user1@org.com, user2@org.com" />
           </div>
-        )}
 
-        {/* ====== TAB 4: COMPLIANCE & RISK ====== */}
-        {tab === 4 && (
-          <div className="tab-panel">
-            <select name="complianceStatus" value={formData.complianceStatus} onChange={handleChange}>
-              <option value="">Select Status</option>
-              {statuses.map((s) => (
-                <option key={s._id} value={s._id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Assigned Department</label>
+              <input name="assignedDepartment" value={formData.assignedDepartment} onChange={handleChange} />
+            </div>
 
-            <select name="criticality" value={formData.criticality} onChange={handleChange}>
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
-            </select>
+            <div className="input-group">
+              <label>Linked Devices (comma-separated)</label>
+              <input name="linkedDevices" value={formData.linkedDevices} onChange={handleChange} />
+            </div>
+          </div>
 
-            <input name="riskClassification" placeholder="Risk Classification" value={formData.riskClassification} onChange={handleChange} />
-            <input name="authenticationMethod" placeholder="Authentication Method" value={formData.authenticationMethod} onChange={handleChange} />
-            <label className="small-label">Last Access</label>
+          <div className="input-group">
+            <label>Integration Dependencies</label>
+            <input name="integrationDependencies" value={formData.integrationDependencies} onChange={handleChange} />
+          </div>
+        </div>
+
+        {/* Compliance & Risk */}
+        <div className="section">
+          <SectionTitle>Compliance & Risk</SectionTitle>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Compliance Status</label>
+              <select name="complianceStatus" value={formData.complianceStatus} onChange={handleChange}>
+                <option value="">Select Status</option>
+                {statuses.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
+              </select>
+            </div>
+
+            <div className="input-group">
+              <label>Criticality</label>
+              <select name="criticality" value={formData.criticality} onChange={handleChange}>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Risk Classification</label>
+              <input name="riskClassification" value={formData.riskClassification} onChange={handleChange} />
+            </div>
+
+            <div className="input-group">
+              <label>Authentication Method</label>
+              <input name="authenticationMethod" value={formData.authenticationMethod} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Last Access</label>
             <input type="date" name="lastAccess" value={formData.lastAccess} onChange={handleChange} />
-            <input name="vendorContactDetails" placeholder="Vendor Contact Details / Notes" value={formData.vendorContactDetails} onChange={handleChange} />
           </div>
-        )}
+
+          <div className="input-group">
+            <label>Vendor Contact Details / Notes</label>
+            <input name="vendorContactDetails" value={formData.vendorContactDetails} onChange={handleChange} />
+          </div>
+        </div>
 
         <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => setTab((t) => Math.max(0, t - 1))}>
-            Previous
-          </button>
-          <button type="button" className="btn-secondary" onClick={() => setTab((t) => Math.min(4, t + 1))}>
-            Next
-          </button>
-          <button type="submit" className="btn-primary">
-            Save Software Asset
-          </button>
+          <div className="left-actions">
+            <button type="button" className="btn-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+              Top
+            </button>
+            <button type="button" className="btn-secondary" onClick={() => resetForm()}>
+              Reset
+            </button>
+          </div>
+
+          <div className="right-actions">
+            <button className="btn-primary" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Saving..." : "Save Software Asset"}
+            </button>
+          </div>
         </div>
       </form>
     </div>
   );
-};
-
-export default SoftwareAssetCapture;
+}
