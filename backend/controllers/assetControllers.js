@@ -7,45 +7,41 @@ const Notification = require("../models/Notification");
 const addAsset = async (req, res) => {
   try {
     const userId = req.user.id;
-      console.log("Incoming data:", req.body); // Log the incoming request body
-      console.log("Uploaded file:", req.file);  // Log the uploaded file
 
-      let imagePath = req.body.image || "";
-if (req.file) {
-  imagePath = `/uploads/${req.file.filename}`;
-}
-if (!imagePath) {
-  return res.status(400).json({ message: "Image is required" });
-}
+    console.log("Incoming data:", req.body);
+    console.log("Uploaded file:", req.file);
 
-      // Create the asset object with the data from req.body and image path
-     const newAsset = new Asset({
-    ...req.body,
-    image: imagePath,  // ✅ safe, whether file exists or req.body.image was passed
-});
+    if (!req.file) {
+      return res.status(400).json({ message: "Image is required" });
+    }
 
+    // Convert uploaded file to Base64
+    const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
 
-      // Save the asset to the database
-      const savedAsset = await newAsset.save();
+    const newAsset = new Asset({
+      ...req.body,
+      image: base64Image,
+    });
 
-      
- // Create notification
+    const savedAsset = await newAsset.save();
+
+    // Notification
     const newNotification = await Notification.create({
       title: "Asset Added",
       message: "Asset added successfully.",
       userId,
     });
 
-    // Emit to user's room
     const io = req.app.get("io");
     io.to(userId.toString()).emit("newNotification", newNotification);
-      // Return the saved asset
-      res.status(201).json(savedAsset);
+
+    return res.status(201).json(savedAsset);
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error adding asset", error: error.message });
+    console.error(error);
+    return res.status(500).json({ message: "Error adding asset", error: error.message });
   }
 };
+
 
 
 const updateAsset = async (req, res) => {
@@ -53,39 +49,31 @@ const updateAsset = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    // Check if the asset exists
     const existingAsset = await Asset.findById(id);
     if (!existingAsset) {
       return res.status(404).json({ message: "Asset not found" });
     }
 
-    // Copy request body
     let updatedAssetData = { ...req.body };
 
-    // Preserve assetCode & barcode
     updatedAssetData.assetCode = existingAsset.assetCode;
     updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
 
-    // Handle image update
     if (req.file) {
-      updatedAssetData.image = `/uploads/${req.file.filename}`;
+      updatedAssetData.image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
     }
 
-    // Update the asset
     const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
 
-    // Create notification (before sending response)
     const newNotification = await Notification.create({
       title: "Asset updated",
       message: "Asset updated successfully.",
       userId,
     });
 
-    // Emit to user's room
     const io = req.app.get("io");
     io.to(userId.toString()).emit("newNotification", newNotification);
 
-    // ✅ Send response at the very end
     return res.status(200).json(updatedAsset);
 
   } catch (error) {
