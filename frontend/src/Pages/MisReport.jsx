@@ -139,12 +139,12 @@ const MisReport = () => {
           >
             Software
           </button>
-          <button
+          {/* <button
             className={activeTab === "licenses" ? "active-tab" : ""}
             onClick={() => setActiveTab("licenses")}
           >
             Core Licenses
-          </button>
+          </button> */}
         </div>
 
       </header>
