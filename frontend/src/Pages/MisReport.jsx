@@ -107,8 +107,7 @@ const MisReport = () => {
   const currentData =
     activeTab === "hardware"
       ? filteredHardware
-      : activeTab === "software"
-      ? filteredSoftware;
+      : filteredSoftware;
 
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
 
