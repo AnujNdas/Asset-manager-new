@@ -189,7 +189,7 @@ const AssetCapture = () => {
   return (
     <div className="asset-wrapper">
       <div className="asset-header">
-        <h2>New Hardware Asset</h2>
+        <h2>Hardware Capture</h2>
       </div>
 
       <form className="asset-form" onSubmit={handleAddAsset}>
