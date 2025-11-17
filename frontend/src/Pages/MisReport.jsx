@@ -93,10 +93,10 @@ const MisReport = () => {
     (startDate ? formatDate(a.purchaseDate) >= startDate : true)
   );
 
-  const filteredLicenses = licenses.filter(a =>
-    (selectedStatus ? a.status === selectedStatus : true) &&
-    (startDate ? formatDate(a.issueDate) >= startDate : true)
-  );
+  // const filteredLicenses = licenses.filter(a =>
+  //   (selectedStatus ? a.status === selectedStatus : true) &&
+  //   (startDate ? formatDate(a.issueDate) >= startDate : true)
+  // );
 
   // Pagination slice
   const paginate = (data) => {
@@ -188,8 +188,8 @@ const MisReport = () => {
             <input type="date" onChange={e => setStartDate(e.target.value)} />
           </>
         )}
-
-        {activeTab === "licenses" && (
+{/* 
+        /* {activeTab === "licenses" && (
           <>
             <select onChange={e => setSelectedStatus(e.target.value)}>
               <option value="">All Statuses</option>
@@ -197,7 +197,7 @@ const MisReport = () => {
             </select>
             <input type="date" onChange={e => setStartDate(e.target.value)} />
           </>
-        )}
+        )} */ */}
       </div>
 
       {/* Table */}
@@ -214,11 +214,11 @@ const MisReport = () => {
                 <th>Name</th><th>Version</th><th>Publisher</th><th>Status</th><th>Category</th>
               </>
             )}
-            {activeTab === "licenses" && (
+            {/* /* {activeTab === "licenses" && (
               <>
                 <th>Document</th><th>License No</th><th>Holder</th><th>Status</th><th>Expiry</th>
               </>
-            )}
+            )} */ */}
           </tr>
         </thead>
         <tbody>
@@ -242,7 +242,7 @@ const MisReport = () => {
                   <td>{categories.find(c => c._id === row.category)?.name}</td>
                 </>
               )}
-              {activeTab === "licenses" && (
+              {/* /* {activeTab === "licenses" && (
                 <>
                   <td>{row.documentType}</td>
                   <td>{row.licenseNumber}</td>
@@ -250,7 +250,7 @@ const MisReport = () => {
                   <td>{statuses.find(s => s._id === row.status)?.name}</td>
                   <td>{formatDate(row.expiryDate)}</td>
                 </>
-              )}
+              )} */ */}
             </tr>
           ))}
         </tbody>
