@@ -545,14 +545,14 @@ export default function SoftwareAssetCapture() {
         </div>
 
         <div className="form-actions">
-          <div className="left-actions">
+          {/* <div className="left-actions">
             <button type="button" className="btn-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
               Top
             </button>
             <button type="button" className="btn-secondary" onClick={() => resetForm()}>
               Reset
             </button>
-          </div>
+          </div> */}
 
           <div className="right-actions">
             <button className="btn-primary" type="submit" disabled={isSubmitting}>
