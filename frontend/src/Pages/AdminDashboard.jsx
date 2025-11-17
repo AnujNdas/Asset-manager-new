@@ -151,7 +151,7 @@ const Dashboard = () => {
   const stats = [
     { icon: faMicrochip, title: "Hardware", value: statsData.hardwareCount, color: "#6366f1", tab: "hardware" },
     { icon: faLaptop, title: "Software", value: statsData.softwareCount, color: "#a855f7", tab: "software" },
-    { icon: faCopy, title: "Licenses", value: statsData.coreLicensesCount, color: "#f59e0b", tab: "core" },
+    // { icon: faCopy, title: "Licenses", value: statsData.coreLicensesCount, color: "#f59e0b", tab: "core" },
     { icon: faUsers, title: "Users", value: statsData.usersCount, color: "#f43f5e", tab: "users" },
   ];
 
