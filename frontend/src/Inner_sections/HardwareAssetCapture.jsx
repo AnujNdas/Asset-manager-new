@@ -1,257 +1,252 @@
-// src/Pages/AssetCapture.jsx
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getUnits, getLocations, getCategories, getStatuses } from '../Services/ApiServices';
-import Swal from 'sweetalert2';
-import '../Page_styles/CaptureForm.css';
-
-const API_URL = 'https://asset-manager-new.onrender.com/api';
+import React, { useState } from "react";
+import "./AssetCapture.css";
+import { FiUploadCloud, FiCamera, FiSave } from "react-icons/fi";
 
 const AssetCapture = () => {
-  const navigate = useNavigate();
-
-  const defaultFormData = {
-    assetCode: '',
-    assetCategory: '',
-    assetName: '',
-    associateUnit: '',
-    locationName: '',
-    assetSpecification: '',
-    assetStatus: '',
-    DOP: '',
-    DOE: '',
-    assetLifetime: '',
-    purchaseFrom: '',
-    image: '',
-  };
-
-  const [formData, setFormData] = useState(defaultFormData);
   const [imagePreview, setImagePreview] = useState(null);
-  const [units, setUnits] = useState([]);
-  const [locations, setLocations] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [statuses, setStatuses] = useState([]);
 
-  // ---- Helpers from your message (now using API_URL) ----
-  const generateAssetCode = async () => {
-    const res = await fetch(`${API_URL}/assets/asset-code`);
-    console.log(res)
-    if (!res.ok) throw new Error('Failed to generate asset code');
-    const data = await res.json();
-    return data.assetCode;
-  };
+  const [formData, setFormData] = useState({
+    assetName: "",
+    assetCategory: "",
+    specification: "",
+    location: "",
+    unit: "",
+    status: "",
+    dop: "",
+    doe: "",
+    purchaseFrom: "",
+    assetLifetime: "",
+    image: "",
+  });
 
-  // const generateUniqueBarcode = async () => {
-  //   const res = await fetch(`${API_URL}/assets/generate-barcode`);
-  //   if (!res.ok) throw new Error('Failed to generate barcode');
-  //   const data = await res.json();
-  //   return data.barcodeNumber;
-  // };
-
-  // ---- Load classifications ----
-  useEffect(() => {
-    (async () => {
-      try {
-        const [u, l, c, s] = await Promise.all([
-          getUnits(),
-          getLocations(),
-          getCategories(),
-          getStatuses(),
-        ]);
-        setUnits(u || []);
-        setLocations(l || []);
-        setCategories(c || []);
-        setStatuses(s || []);
-      } catch (e) {
-        console.error(e);
-        Swal.fire('Error', 'Failed to load classifications', 'error');
-      }
-    })();
-  }, []);
-
-  // ---- Change handlers ----
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
-    if (type === 'file') {
+    if (type === "file") {
       const file = files?.[0];
-      setFormData((prev) => ({ ...prev, image: file || '' }));
+      setFormData({ ...formData, image: file });
 
-      if (file) {
-        const r = new FileReader();
-        r.onloadend = () => setImagePreview(r.result);
-        r.readAsDataURL(file);
-      } else {
-        setImagePreview(null);
-      }
+      const r = new FileReader();
+      r.onloadend = () => setImagePreview(r.result);
+      r.readAsDataURL(file);
+
       return;
     }
 
-    setFormData((prev) => {
-      const updated = { ...prev, [name]: value };
+    let updated = { ...formData, [name]: value };
 
-      // auto-calc lifetime when both dates present
-      if (name === 'DOP' || name === 'DOE') {
-        const { DOP, DOE } = updated;
-        if (DOP && DOE) {
-          const start = new Date(DOP);
-          const end = new Date(DOE);
-          const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-          updated.assetLifetime = Number.isFinite(days) && days >= 0 ? `${days} days` : 'Invalid';
-        } else {
-          updated.assetLifetime = '';
-        }
+    if (name === "dop" || name === "doe") {
+      if (updated.dop && updated.doe) {
+        const start = new Date(updated.dop);
+        const end = new Date(updated.doe);
+        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+        updated.assetLifetime = days >= 0 ? `${days} days` : "";
       }
-      return updated;
-    });
-  };
-
-  // ---- Save to backend ----
-  const saveAssetToDatabase = async (data) => {
-    const token = sessionStorage.getItem('token');
-    const payload = new FormData();
-    Object.entries(data).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== '') payload.append(k, v);
-    });
-
-    const res = await fetch(`${API_URL}/assets`, {
-      method: 'POST',
-      body: payload,
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || 'Failed to save asset');
     }
+
+    setFormData(updated);
   };
 
-  const validateRequired = () => {
-    const required = ['assetName', 'assetCategory', 'associateUnit', 'locationName', 'assetStatus'];
-    const missing = required.filter((k) => !formData[k]);
-    if (missing.length) {
-      Swal.fire('Error', 'Please fill in all required fields.', 'error');
-      return false;
-    }
-    return true;
-  };
-
-  // ---- Actions ----
-  const handleAddAsset = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateRequired()) return;
-
-    try {
-      const [assetCode] = await Promise.all([
-        generateAssetCode(),
-      ]);
-
-      const payload = { ...formData, assetCode };
-      await saveAssetToDatabase(payload);
-
-      Swal.fire('Success', 'Asset added successfully!', 'success');
-      navigate('/inventory');
-    } catch (err) {
-      console.error(err);
-      Swal.fire('Error', err.message || 'Failed to add asset.', 'error');
-    }
+    console.log(formData);
+    alert("Form Submitted (replace with API call)");
   };
 
-
-return (
-      <div className="capture-container">
-        <h2 className='capture-title'>New Hardware Asset</h2>
-
-        <form className="capture-form">
-            <input name="assetName" value={formData.assetName} onChange={handleChange} placeholder='Asset Name' required />
-          
-
-            <select name="assetCategory" value={formData.assetCategory} onChange={handleChange} required>
-              <option value="">Select Category</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>{c.name}</option>
-              ))}
-            </select>
-
-            <input name="assetSpecification" value={formData.assetSpecification} onChange={handleChange} placeholder='Specification' />
-          
-
-          
-            <select name="locationName" value={formData.locationName} onChange={handleChange} required>
-              <option value="">Select Location</option>
-              {locations.map((l) => (
-                <option key={l._id} value={l._id}>{l.name}</option>
-              ))}
-            </select>
-          
-
-          
-            <select name="associateUnit" value={formData.associateUnit} onChange={handleChange} required>
-              <option value="">Select Unit</option>
-              {units.map((u) => (
-                <option key={u._id} value={u._id}>{u.name}</option>
-              ))}
-            </select>
-          
-
-          
-            <select name="assetStatus" value={formData.assetStatus} onChange={handleChange} required>
-              <option value="">Select Status</option>
-              {statuses.map((s) => (
-                <option key={s._id} value={s._id}>{s.name}</option>
-              ))}
-            </select>
-          
-
-          
-            <input type="date" name="DOP" value={formData.DOP} onChange={handleChange} />
-          
-
-        
-            <input type="date" name="DOE" value={formData.DOE} onChange={handleChange} />
-          
-
-          
-            <input name="purchaseFrom" value={formData.purchaseFrom} onChange={handleChange} placeholder='Purcahsed From' />
-          
-
-          
-            <input name="assetLifetime" value={formData.assetLifetime} placeholder='Lifetime' disabled />
-          
-            
-{/* Camera Capture Button */}
-<label className="file-btn">
-  Open Camera
-  <input
-    type="file"
-    accept="image/*"
-    capture="environment"
-    onChange={handleChange}
-    style={{ display: "none" }}
-  />
-</label>
-
-{/* Upload from Device Button */}
-<label className="file-btn">
-  Upload from Device
-  <input
-    type="file"
-    accept="image/*"
-    onChange={handleChange}
-    style={{ display: "none" }}
-  />
-</label>
-
-{/* Preview Image */}
-{imagePreview && <img src={imagePreview} alt="Preview" height={100} />}
-
-            
-
-        <button type="submit" className="btn-primary">Save Hardware Asset</button>
-          
-        </form>
+  return (
+    <div className="asset-wrapper">
+      <div className="asset-header">
+        <h2>New Hardware Asset</h2>
+        <p>Add a new hardware asset to the inventory system.</p>
       </div>
-    );
+
+      <form className="asset-form" onSubmit={handleSubmit}>
+        {/* Basic Info */}
+        <div className="section">
+          <h3 className="section-title">Basic Details</h3>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Asset Name</label>
+              <input
+                type="text"
+                name="assetName"
+                value={formData.assetName}
+                onChange={handleChange}
+                placeholder="Enter asset name"
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Category</label>
+              <select
+                name="assetCategory"
+                value={formData.assetCategory}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Desktop">Desktop</option>
+                <option value="Monitor">Monitor</option>
+                <option value="Printer">Printer</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Specification</label>
+            <input
+              type="text"
+              name="specification"
+              value={formData.specification}
+              onChange={handleChange}
+              placeholder="Example: i5 / 8GB / 256GB SSD"
+            />
+          </div>
+        </div>
+
+        {/* Location & Unit */}
+        <div className="section">
+          <h3 className="section-title">Location & Management</h3>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Location</label>
+              <select
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Location</option>
+                <option value="Head Office">Head Office</option>
+                <option value="Branch">Branch</option>
+              </select>
+            </div>
+
+            <div className="input-group">
+              <label>Unit</label>
+              <select
+                name="unit"
+                value={formData.unit}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Unit</option>
+                <option value="IT">IT</option>
+                <option value="Accounts">Accounts</option>
+                <option value="HR">HR</option>
+              </select>
+            </select>
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Status</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Status</option>
+              <option value="Working">Working</option>
+              <option value="In Repair">In Repair</option>
+              <option value="Damaged">Damaged</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Dates */}
+        <div className="section">
+          <h3 className="section-title">Date & Lifetime</h3>
+
+          <div className="grid-3">
+            <div className="input-group">
+              <label>Date of Purchase</label>
+              <input
+                type="date"
+                name="dop"
+                value={formData.dop}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Date of Expiry</label>
+              <input
+                type="date"
+                name="doe"
+                value={formData.doe}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Lifetime</label>
+              <input
+                type="text"
+                value={formData.assetLifetime}
+                placeholder="Auto Calculated"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Purchased From</label>
+            <input
+              type="text"
+              name="purchaseFrom"
+              value={formData.purchaseFrom}
+              onChange={handleChange}
+              placeholder="Vendor / Shop Name"
+            />
+          </div>
+        </div>
+
+        {/* Image Upload */}
+        <div className="section">
+          <h3 className="section-title">Upload Asset Image</h3>
+
+          <div className="upload-box">
+            <label className="upload-btn">
+              <FiCamera />
+              Open Camera
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleChange}
+              />
+            </label>
+
+            <label className="upload-btn">
+              <FiUploadCloud />
+              Upload Image
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+
+          {imagePreview && (
+            <div className="image-preview">
+              <img src={imagePreview} alt="Preview" />
+            </div>
+          )}
+        </div>
+
+        <button className="submit-btn">
+          <FiSave /> Save Hardware Asset
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default AssetCapture;
