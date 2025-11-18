@@ -103,22 +103,38 @@ const HardwareAssetList = () => {
     });
   };
 
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    if (!editingAsset) return;
-    try {
-      const payload = { ...editForm };
-      const updated = await updateHardwareAsset(editingAsset._id, payload);
-      const updatedAsset = updated?.data ?? updated;
+const handleEditSubmit = async (e) => {
+  e.preventDefault();
+  if (!editingAsset) return;
 
-      setAssets((prev) => prev.map((a) => (a._id === updatedAsset._id ? updatedAsset : a)));
-      setEditingAsset(null);
-      setEditForm({});
-      Swal.fire("Updated", "Asset updated successfully.", "success");
-    } catch (err) {
-      Swal.fire("Error", err.message || "Failed to update asset", "error");
+  try {
+    const formData = new FormData();
+
+    // Append text fields
+    Object.entries(editForm).forEach(([key, value]) => {
+      if (key !== "imageFile" && key !== "imagePreview") {
+        formData.append(key, value);
+      }
+    });
+
+    // Append file with correct field name
+    if (editForm.imageFile) {
+      formData.append("image", editForm.imageFile);  // MUST be "image"
     }
-  };
+
+    const updated = await updateHardwareAsset(editingAsset._id, formData);
+
+    const updatedAsset = updated?.data ?? updated;
+
+    setAssets((prev) => prev.map((a) => (a._id === updatedAsset._id ? updatedAsset : a)));
+    setEditingAsset(null);
+    setEditForm({});
+    Swal.fire("Updated", "Asset updated successfully.", "success");
+
+  } catch (err) {
+    Swal.fire("Error", err.message || "Failed to update asset", "error");
+  }
+};
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
