@@ -87,6 +87,24 @@
 .bulk-actions button:last-child:hover {
   background: #ddd;
 }
+.import-container {
+  margin-top: 20px;
+}
+
+.import-label {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.import-select {
+  width: 250px;
+  padding: 10px 12px;
+  margin: 10px 0 20px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
