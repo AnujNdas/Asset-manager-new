@@ -56,15 +56,20 @@ const updateAsset = async (req, res) => {
 
     let updatedAssetData = { ...req.body };
 
+    // Preserve generated fields
     updatedAssetData.assetCode = existingAsset.assetCode;
     updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
 
-    if (req.file) {
-      updatedAssetData.image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    // Image from multer.fields()
+    const uploadedImage = req.files?.image?.[0];
+
+    if (uploadedImage) {
+      updatedAssetData.image = `data:${uploadedImage.mimetype};base64,${uploadedImage.buffer.toString("base64")}`;
     }
 
     const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
 
+    // Notification
     const newNotification = await Notification.create({
       title: "Asset updated",
       message: "Asset updated successfully.",
@@ -81,8 +86,6 @@ const updateAsset = async (req, res) => {
     return res.status(500).json({ message: "Error updating asset", error: error.message });
   }
 };
-
-
 
 
 // Delete an asset by ID
