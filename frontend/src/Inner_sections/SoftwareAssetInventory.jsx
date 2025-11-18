@@ -296,7 +296,7 @@ const SoftwareAssetList = () => {
               transition={{ delay: idx * 0.03 }}
             >
               <div className="card-header">
-                <div className="card-avatar">{initialsFor(asset.name)}</div>
+                {/* <div className="card-avatar">{initialsFor(asset.name)}</div> */}
                 <div style={{ flex: 1, marginLeft: 12 }}>
                   <h3 className="card-title">{asset.name || "Unnamed"}</h3>
                   <div className="card-sub">{asset.publisher || "—"} • {asset.version || "v—"}</div>
