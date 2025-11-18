@@ -322,57 +322,206 @@ const HardwareAssetList = () => {
       </AnimatePresence>
 
       {/* Edit Modal (unchanged) */}
-      <AnimatePresence>
-        {editingAsset && (
-          <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setEditingAsset(null)}>
-            <motion.div className="overlay-content" initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} onClick={(e) => e.stopPropagation()}>
-              <h3>Edit Asset — {editingAsset.assetName || editingAsset.assetCode}</h3>
+      {/* ========================= EDIT MODAL ========================= */}
+<AnimatePresence>
+  {editingAsset && (
+    <motion.div
+      className="overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditingAsset(null)}
+    >
+      <motion.div
+        className="overlay-content edit-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="edit-left">
+          <img
+            src={editForm.imagePreview || editingAsset.image}
+            alt="Asset"
+            className="edit-image"
+          />
 
-              <form className="overlay-form" onSubmit={handleEditSubmit}>
-                <input name="assetName" placeholder="Asset Name" value={editForm.assetName || ""} onChange={handleEditChange} />
-                <input name="assetCode" placeholder="Asset Code" value={editForm.assetCode || ""} onChange={handleEditChange} />
-                <input name="assetSpecification" placeholder="Specification" value={editForm.assetSpecification || ""} onChange={handleEditChange} />
+          <label className="upload-label">
+            Update Image
+            <input
+              type="file"
+              accept="image/*"
+              className="file-input"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    setEditForm((prev) => ({
+                      ...prev,
+                      imageFile: file,
+                      imagePreview: reader.result,
+                    }));
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+          </label>
+        </div>
 
-                <select name="assetCategory" value={editForm.assetCategory || ""} onChange={handleEditChange}>
-                  <option value="">Select Category</option>
-                  {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
-                </select>
+        <div className="edit-right">
+          <h3 className="modal-title">
+            Edit Asset — {editingAsset.assetName || editingAsset.assetCode}
+          </h3>
 
-                <select name="locationName" value={editForm.locationName || ""} onChange={handleEditChange}>
-                  <option value="">Select Location</option>
-                  {locations.map((l) => <option key={l._id} value={l._id}>{l.name}</option>)}
-                </select>
+          <form
+            className="edit-grid"
+            onSubmit={async (e) => {
+              e.preventDefault();
 
-                <select name="associateUnit" value={editForm.associateUnit || ""} onChange={handleEditChange}>
-                  <option value="">Select Unit</option>
-                  {units.map((u) => <option key={u._id} value={u._id}>{u.name}</option>)}
-                </select>
+              const formData = new FormData();
+              Object.entries(editForm).forEach(([key, value]) => {
+                if (key !== "imagePreview") formData.append(key, value);
+              });
 
-                <select name="assetStatus" value={editForm.assetStatus || ""} onChange={handleEditChange}>
-                  <option value="">Select Status</option>
-                  {statuses.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
-                </select>
+              // if new image uploaded
+              if (editForm.imageFile) {
+                formData.append("image", editForm.imageFile);
+              }
 
-                <label>Purchase Date
-                  <input name="purchaseDate" type="date" value={editForm.purchaseDate || ""} onChange={handleEditChange} />
-                </label>
+              try {
+                const updated = await updateHardwareAsset(
+                  editingAsset._id,
+                  formData
+                );
 
-                <label>Expiry Date
-                  <input name="expiryDate" type="date" value={editForm.expiryDate || ""} onChange={handleEditChange} />
-                </label>
+                const newAsset = updated?.data ?? updated;
+                setAssets((prev) =>
+                  prev.map((a) => (a._id === newAsset._id ? newAsset : a))
+                );
 
-                <input name="purchaseFrom" placeholder="Purchase From" value={editForm.purchaseFrom || ""} onChange={handleEditChange} />
-                <input name="assetLifetime" placeholder="Asset Lifetime" value={editForm.assetLifetime || ""} onChange={handleEditChange} />
+                setEditingAsset(null);
+                setEditForm({});
+                Swal.fire("Updated", "Asset updated successfully.", "success");
+              } catch (err) {
+                Swal.fire("Error", err.message || "Update failed", "error");
+              }
+            }}
+          >
+            <input
+              name="assetName"
+              placeholder="Asset Name"
+              value={editForm.assetName || ""}
+              onChange={handleEditChange}
+            />
 
-                <div className="modal-actions">
-                  <button type="submit" className="save-btn">Save</button>
-                  <button type="button" className="close-btn" onClick={() => setEditingAsset(null)}>Cancel</button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <input
+              name="assetSpecification"
+              placeholder="Specification"
+              value={editForm.assetSpecification || ""}
+              onChange={handleEditChange}
+            />
+
+            <select
+              name="assetCategory"
+              value={editForm.assetCategory || ""}
+              onChange={handleEditChange}
+            >
+              <option value="">Select Category</option>
+              {categories.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="locationName"
+              value={editForm.locationName || ""}
+              onChange={handleEditChange}
+            >
+              <option value="">Select Location</option>
+              {locations.map((l) => (
+                <option key={l._id} value={l._id}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="associateUnit"
+              value={editForm.associateUnit || ""}
+              onChange={handleEditChange}
+            >
+              <option value="">Select Unit</option>
+              {units.map((u) => (
+                <option key={u._id} value={u._id}>
+                  {u.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="assetStatus"
+              value={editForm.assetStatus || ""}
+              onChange={handleEditChange}
+            >
+              <option value="">Select Status</option>
+              {statuses.map((s) => (
+                <option key={s._id} value={s._id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+
+            <input
+              type="date"
+              name="purchaseDate"
+              value={editForm.purchaseDate || ""}
+              onChange={handleEditChange}
+            />
+
+            <input
+              type="date"
+              name="expiryDate"
+              value={editForm.expiryDate || ""}
+              onChange={handleEditChange}
+            />
+
+            <input
+              name="purchaseFrom"
+              placeholder="Purchase From"
+              value={editForm.purchaseFrom || ""}
+              onChange={handleEditChange}
+            />
+
+            <input
+              name="assetLifetime"
+              placeholder="Asset Lifetime"
+              value={editForm.assetLifetime || ""}
+              onChange={handleEditChange}
+            />
+
+            <div className="modal-actions">
+              <button type="submit" className="save-btn">
+                Save
+              </button>
+              <button
+                type="button"
+                className="close-btn"
+                onClick={() => setEditingAsset(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </div>
   );
 };
