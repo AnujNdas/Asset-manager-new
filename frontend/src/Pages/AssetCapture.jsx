@@ -60,7 +60,6 @@ const AssetCapture = () => {
             >
               <option value="hardware">Hardware Assets</option>
               <option value="software">Software Assets</option>
-              <option value="core-license">Core Licenses</option>
             </select>
 
             {/* Dynamic bulk upload */}
