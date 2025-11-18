@@ -126,8 +126,7 @@ const BulkUpload = ({ type, userRole }) => {
     <div className="bulk-wrapper">
       <div className="bulk-card">
         <h2 className="bulk-title">
-          Import {type === "hardware" ? "Hardware Assets" :
-                  type === "software" ? "Software Assets"}
+          Import {type === "hardware" ? "Hardware Assets" : "Software Assets"}
         </h2>
 
         <p className="bulk-mode">
