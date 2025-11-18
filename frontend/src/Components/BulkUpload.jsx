@@ -63,20 +63,20 @@ const BulkUpload = ({ type, userRole }) => {
         complianceStatus: "",
       },
     ],
-    "core-license": [
-      {
-        documentType: "",
-        licenseNumber: "",
-        issuingAuthority: "",
-        licenseHolder: "",
-        businessActivity: "",
-        issueDate: "",
-        expiryDate: "",
-        renewalCycle: "Annual",
-        reminderDaysBefore: 30,
-        status: "",
-      },
-    ],
+    // "core-license": [
+    //   {
+    //     documentType: "",
+    //     licenseNumber: "",
+    //     issuingAuthority: "",
+    //     licenseHolder: "",
+    //     businessActivity: "",
+    //     issueDate: "",
+    //     expiryDate: "",
+    //     renewalCycle: "Annual",
+    //     reminderDaysBefore: 30,
+    //     status: "",
+    //   },
+    // ],
   };
 
   const handleUpload = async () => {
@@ -107,8 +107,8 @@ const BulkUpload = ({ type, userRole }) => {
           res = await bulkUploadHardwareAssets(payload);
         if (type === "software")
           res = await bulkUploadSoftwareAssets(payload);
-        if (type === "core-license")
-          res = await bulkUploadCoreLicenses(payload);
+        // if (type === "core-license")
+        //   res = await bulkUploadCoreLicenses(payload);
 
         Swal.fire(
           "Success",
@@ -127,8 +127,7 @@ const BulkUpload = ({ type, userRole }) => {
       <div className="bulk-card">
         <h2 className="bulk-title">
           Import {type === "hardware" ? "Hardware Assets" :
-                  type === "software" ? "Software Assets" :
-                  "Core Licenses"}
+                  type === "software" ? "Software Assets"}
         </h2>
 
         <p className="bulk-mode">
