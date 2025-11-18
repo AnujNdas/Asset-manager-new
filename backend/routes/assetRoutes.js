@@ -25,11 +25,24 @@ const upload = multer({ storage });
 
 
 // Routes
-router.post("/", authenticateToken(), upload.single("image"), addAsset);
+router.post(
+  "/", 
+  authenticateToken(), 
+  upload.fields([{ name: "image", maxCount: 1 }]), 
+  addAsset
+);
 router.get("/", getAllAssets);
 router.delete("/:id", authenticateToken(), deleteAsset);
 router.get("/asset-code", generateAssetCode);
-router.put("/:id", authenticateToken(), upload.single("image"), updateAsset);
+
+
+router.put(
+  "/:id", 
+  authenticateToken(), 
+  upload.fields([{ name: "image", maxCount: 1 }]), 
+  updateAsset
+);
+
 
 // ✅ Bulk Upload Route
 router.post("/bulk-upload", async (req, res) => {
