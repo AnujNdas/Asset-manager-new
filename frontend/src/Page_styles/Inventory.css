@@ -294,3 +294,65 @@
   display: block;
 }
 
+/* ===========================
+   RESPONSIVE EDIT MODAL UI
+   =========================== */
+
+@media (max-width: 900px) {
+  .edit-modal {
+    width: 95%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .edit-left {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .edit-image {
+    height: 220px;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .edit-right {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .edit-grid {
+    grid-template-columns: 1fr; /* 1 column layout */
+  }
+
+  .modal-actions {
+    grid-column: span 1;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .save-btn,
+  .close-btn {
+    width: 100%; /* buttons full width */
+  }
+}
+
+@media (max-width: 500px) {
+  .edit-title {
+    font-size: 18px;
+  }
+
+  .edit-modal {
+    border-radius: 10px;
+  }
+
+  .edit-left {
+    padding: 12px;
+  }
+
+  .edit-image {
+    height: 180px;
+  }
+}
