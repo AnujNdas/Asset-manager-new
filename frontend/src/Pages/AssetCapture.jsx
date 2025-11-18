@@ -7,10 +7,10 @@ import "../Page_styles/Tabs.css";
 
 const AssetCapture = () => {
   const [activeTab, setActiveTab] = useState("hardware");
+  const [importType, setImportType] = useState("hardware");
 
-  // Get user info from sessionStorage
-  const role = sessionStorage.getItem("role")
-  const userRole = role || "user"; // default to "user" if not found
+  const role = sessionStorage.getItem("role");
+  const userRole = role || "user";
 
   return (
     <div className="capture-container">
@@ -18,64 +18,57 @@ const AssetCapture = () => {
 
       {/* Tabs */}
       <div className="tabs">
-        {/* Capture Tabs */}
+
         <button
           className={activeTab === "hardware" ? "tab active" : "tab"}
           onClick={() => setActiveTab("hardware")}
         >
           <span className="tab-text2">Hardware</span>
         </button>
+
         <button
           className={activeTab === "software" ? "tab active" : "tab"}
           onClick={() => setActiveTab("software")}
         >
           <span className="tab-text2">Software</span>
         </button>
-        {/* <button
-          className={activeTab === "core" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("core")}
-        >
-          <span className="tab-text2">Core License</span>
-        </button> */}
 
-        {/* Bulk Upload Tabs */}
         <button
-          className={activeTab === "bulk-hardware" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("bulk-hardware")}
+          className={activeTab === "import" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("import")}
         >
-          <span className="tab-text2">Bulk Hardware</span>
+          <span className="tab-text2">Import</span> {/* Only one import tab */}
         </button>
-        <button
-          className={activeTab === "bulk-software" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("bulk-software")}
-        >
-          <span className="tab-text2">Bulk Software</span>
-        </button>
-        {/* <button
-          className={activeTab === "bulk-core" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("bulk-core")}
-        >
-          <span className="tab-text2">Bulk Core License</span>
-        </button> */}
+
       </div>
 
-      {/* Tab Content */}
+      {/* CONTENT SECTION */}
       <div className="tab-content">
-        {/* Capture Forms */}
+
         {activeTab === "hardware" && <HardwareAssetCapture />}
         {activeTab === "software" && <SoftwareAssetCapture />}
-        {/* {activeTab === "core" && <CoreCompanyLicenseCapture />} */ }
 
-        {/* Bulk Uploads */}
-        {activeTab === "bulk-hardware" && (
-          <BulkUpload type="hardware" userRole={userRole} />
+        {/* ----- IMPORT SECTION ----- */}
+        {activeTab === "import" && (
+          <div className="import-container">
+            <label className="import-label">Select Import Type:</label>
+
+            <select
+              className="import-select"
+              value={importType}
+              onChange={(e) => setImportType(e.target.value)}
+            >
+              <option value="hardware">Hardware Assets</option>
+              <option value="software">Software Assets</option>
+              <option value="core-license">Core Licenses</option>
+            </select>
+
+            {/* Dynamic bulk upload */}
+            <BulkUpload type={importType} userRole={userRole} />
+
+          </div>
         )}
-        {activeTab === "bulk-software" && (
-          <BulkUpload type="software" userRole={userRole} />
-        )}
-        {/*{activeTab === "bulk-core" && (
-          <BulkUpload type="core-license" userRole={userRole} />
-        )} */}
+
       </div>
     </div>
   );
