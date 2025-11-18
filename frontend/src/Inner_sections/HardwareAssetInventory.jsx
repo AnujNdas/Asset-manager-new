@@ -56,7 +56,7 @@ const HardwareAssetList = () => {
   const currentAssets = assets.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(assets.length / assetsPerPage);
 
-  // ✅ Safer name resolver (handles both IDs and objects)
+  // Safer name resolver (handles both IDs and objects)
   const getName = (list, value) => {
     if (!value) return "N/A";
     const id = typeof value === "object" ? value._id : value;
@@ -85,7 +85,7 @@ const HardwareAssetList = () => {
     }
   };
 
-  // ✅ Normalize fields for editing
+  // Normalize fields for editing
   const startEdit = (asset) => {
     setEditingAsset(asset);
     setEditForm({
@@ -96,12 +96,8 @@ const HardwareAssetList = () => {
       locationName: asset.locationName?._id || asset.locationName || "",
       associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
       assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
-      purchaseDate: asset.DOP
-        ? new Date(asset.DOP).toISOString().split("T")[0]
-        : "",
-      expiryDate: asset.DOE
-        ? new Date(asset.DOE).toISOString().split("T")[0]
-        : "",
+      purchaseDate: asset.DOP ? new Date(asset.DOP).toISOString().split("T")[0] : "",
+      expiryDate: asset.DOE ? new Date(asset.DOE).toISOString().split("T")[0] : "",
       purchaseFrom: asset.purchaseFrom || "",
       assetLifetime: asset.assetLifetime || "",
     });
@@ -129,6 +125,103 @@ const HardwareAssetList = () => {
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ===== expiry badge logic (Option A: color tiers) =====
+  const getExpiryBadge = (DOE) => {
+    if (!DOE) return null;
+    const today = new Date();
+    const expiry = new Date(DOE);
+    // Normalize date-only expiry (ignore time zone)
+    const diffMS = expiry.setHours(0,0,0,0) - new Date(today).setHours(0,0,0,0);
+    const diffDays = Math.ceil(diffMS / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      // expired
+      return <span className="badge badge-renew">Renewable</span>;
+    }
+    // coloring: red if <=3, yellow if <=14, green otherwise
+    if (diffDays <= 3) {
+      return <span className="badge badge-red">{diffDays} days left</span>;
+    }
+    if (diffDays <= 14) {
+      return <span className="badge badge-yellow">{diffDays} days left</span>;
+    }
+    return <span className="badge badge-green">{diffDays} days left</span>;
+  };
+
+  // ===== pagination renderer (compact, works for many pages) =====
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const visibleRange = 1; // how many pages left/right of current to show
+
+    // always show first page
+    pages.push(
+      <button
+        key={1}
+        className={currentPage === 1 ? "active" : ""}
+        onClick={() => setCurrentPage(1)}
+      >
+        1
+      </button>
+    );
+
+    const left = Math.max(2, currentPage - visibleRange);
+    const right = Math.min(totalPages - 1, currentPage + visibleRange);
+
+    if (left > 2) {
+      pages.push(<span key="leftdots" className="dots">...</span>);
+    }
+
+    for (let i = left; i <= right; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={currentPage === i ? "active" : ""}
+          onClick={() => setCurrentPage(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (right < totalPages - 1) {
+      pages.push(<span key="rightdots" className="dots">...</span>);
+    }
+
+    if (totalPages > 1) {
+      pages.push(
+        <button
+          key={totalPages}
+          className={currentPage === totalPages ? "active" : ""}
+          onClick={() => setCurrentPage(totalPages)}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return (
+      <div className="pagination">
+        <button
+          onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </button>
+
+        {pages}
+
+        <button
+          onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div className="inventory-container">
       <h2 className="inventory-title"> Hardware Assets</h2>
@@ -137,32 +230,30 @@ const HardwareAssetList = () => {
       <div className="inventory-grid">
         <AnimatePresence>
           {currentAssets.map((asset) => {
-            const categoryName = getName(categories, asset.assetCategory);
-            const locationName = getName(locations, asset.locationName);
             const unitName = getName(units, asset.associateUnit);
-            const statusName = getName(statuses, asset.assetStatus);
-
             return (
               <motion.div
                 key={asset._id}
                 className="inventory-card"
                 layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
-              transition={{ duration: 0.25 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                whileHover={{ y: -5, boxShadow: "0 6px 18px rgba(0,0,0,0.08)" }}
+                transition={{ duration: 0.25 }}
               >
                 <div className="card-header">
                   <h3 className="card-title">{asset.assetName || asset.assetCode}</h3>
-                  <span className="status-badge">{statusName}</span>
+                  <div className="badge-wrap">
+                    {getExpiryBadge(asset.DOE)}
+                  </div>
                 </div>
 
                 <div className="card-info2">
-                  <p><strong>Category:</strong> {categoryName}</p>
-                  <p><strong>Location:</strong> {locationName}</p>
+                  <p><strong>Code:</strong> {asset.assetCode || "—"}</p>
+                  <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
                   <p><strong>Unit:</strong> {unitName}</p>
-                  <p><strong>Purchase Date:</strong> {asset.DOP ? new Date(asset.DOP).toLocaleDateString() : "N/A"}</p>
+                  <p><strong>Purchase:</strong> {asset.DOP ? new Date(asset.DOP).toLocaleDateString() : "N/A"}</p>
                   <p><strong>Expiry:</strong> {asset.DOE ? new Date(asset.DOE).toLocaleDateString() : "N/A"}</p>
                 </div>
 
@@ -178,95 +269,59 @@ const HardwareAssetList = () => {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="pagination">
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button key={i} className={currentPage === i + 1 ? "active" : ""} onClick={() => setCurrentPage(i + 1)}>
-              {i + 1}
-            </button>
-          ))}
-        </div>
-      )}
-      {/* ✅ View Modal */}
-<AnimatePresence>
-  {selectedAsset && (
-    <motion.div
-      className="overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={() => setSelectedAsset(null)}
-    >
-      <motion.div
-        className="overlay-content"
-        initial={{ scale: 0.95 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0.95 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="image-container">
-        <img src={selectedAsset.image} alt="Asset Image" className="asset-image" />
-          </div>
-        <h3>{selectedAsset.assetName || selectedAsset.assetCode}</h3>
+      {renderPagination()}
 
-        <div style={{ marginTop: 8, maxHeight: "60vh", overflowY: "auto" }}>
-          <p>
-            <strong>Asset Code:</strong> {selectedAsset.assetCode || "—"}
-          </p>
-          <p>
-            <strong>Specification:</strong> {selectedAsset.assetSpecification || "—"}
-          </p>
-          <p>
-            <strong>Category:</strong>{" "}
-            {getName(categories, selectedAsset.assetCategory)}
-          </p>
-          <p>
-            <strong>Location:</strong>{" "}
-            {getName(locations, selectedAsset.locationName)}
-          </p>
-          <p>
-            <strong>Unit:</strong>{" "}
-            {getName(units, selectedAsset.associateUnit)}
-          </p>
-          <p>
-            <strong>Status:</strong>{" "}
-            {getName(statuses, selectedAsset.assetStatus)}
-          </p>
-          <p>
-            <strong>Purchase Date:</strong>{" "}
-            {selectedAsset.DOP
-              ? new Date(selectedAsset.DOP).toLocaleDateString()
-              : selectedAsset.purchaseDate
-              ? new Date(selectedAsset.purchaseDate).toLocaleDateString()
-              : "N/A"}
-          </p>
-          <p>
-            <strong>Expiry:</strong>{" "}
-            {selectedAsset.DOE
-              ? new Date(selectedAsset.DOE).toLocaleDateString()
-              : selectedAsset.expiryDate
-              ? new Date(selectedAsset.expiryDate).toLocaleDateString()
-              : "N/A"}
-          </p>
-          <p>
-            <strong>Purchase From:</strong> {selectedAsset.purchaseFrom || "N/A"}
-          </p>
-          <p>
-            <strong>Lifetime:</strong> {selectedAsset.assetLifetime || "N/A"}
-          </p>
-        </div>
+      {/* View Modal: image left, details right */}
+      <AnimatePresence>
+        {selectedAsset && (
+          <motion.div
+            className="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedAsset(null)}
+          >
+            <motion.div
+              className="overlay-content view-modal"
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="view-left">
+                <img
+                  src={selectedAsset.image}
+                  alt="Asset"
+                  className="view-image"
+                />
+              </div>
 
-        <div className="modal-actions" style={{ marginTop: 12 }}>
-          <button className="close-btn" onClick={() => setSelectedAsset(null)}>
-            Close
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+              <div className="view-right">
+                <h3 className="view-title">{selectedAsset.assetName || selectedAsset.assetCode}</h3>
 
-      {/* Edit Modal */}
+                <div className="view-details">
+                  <p><strong>Asset Code:</strong> {selectedAsset.assetCode || "—"}</p>
+                  <p><strong>Specification:</strong> {selectedAsset.assetSpecification || "—"}</p>
+                  <p><strong>Category:</strong> {getName(categories, selectedAsset.assetCategory)}</p>
+                  <p><strong>Location:</strong> {getName(locations, selectedAsset.locationName)}</p>
+                  <p><strong>Unit:</strong> {getName(units, selectedAsset.associateUnit)}</p>
+                  <p><strong>Status:</strong> {getName(statuses, selectedAsset.assetStatus)}</p>
+                  <p><strong>Purchase Date:</strong> {selectedAsset.DOP ? new Date(selectedAsset.DOP).toLocaleDateString() : "N/A"}</p>
+                  <p><strong>Expiry Date:</strong> {selectedAsset.DOE ? new Date(selectedAsset.DOE).toLocaleDateString() : "N/A"}</p>
+                  <p><strong>Purchase From:</strong> {selectedAsset.purchaseFrom || "N/A"}</p>
+                  <p><strong>Lifetime:</strong> {selectedAsset.assetLifetime || "N/A"}</p>
+                </div>
+
+                <div className="modal-actions" style={{ marginTop: 12 }}>
+                  <button className="close-btn" onClick={() => setSelectedAsset(null)}>Close</button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Modal (unchanged) */}
       <AnimatePresence>
         {editingAsset && (
           <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setEditingAsset(null)}>
