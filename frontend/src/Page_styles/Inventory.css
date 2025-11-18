@@ -50,3 +50,169 @@
 .tab-content {
   margin-top: 20px;
 }
+/* Badge styles for expiry */
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.badge-green {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid rgba(5,150,105,0.08);
+}
+
+.badge-yellow {
+  background: #fff7ed;
+  color: #b45309;
+  border: 1px solid rgba(180,83,9,0.08);
+}
+
+.badge-red {
+  background: #fff1f2;
+  color: #b91c1c;
+  border: 1px solid rgba(185,28,28,0.08);
+}
+
+.badge-renew {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid rgba(30,64,175,0.08);
+}
+
+/* small wrapper to keep badges aligned in header */
+.badge-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Pagination - compact & robust */
+.pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  min-width: 40px;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination .dots {
+  padding: 6px 8px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* View modal two-column layout */
+.view-modal {
+  display: flex;
+  gap: 20px;
+  width: 92%;
+  max-width: 980px;
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  overflow: hidden;
+  max-height: 90vh;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.12);
+}
+
+/* Left: image container */
+.view-left {
+  flex: 1.05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 260px;
+  max-width: 420px;
+}
+
+.view-image {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #e6eef8;
+  background: #fafafa;
+}
+
+/* Right: details */
+.view-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.view-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.view-details p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #111827;
+}
+
+.view-details strong {
+  display: inline-block;
+  width: 120px; /* aligns labels */
+  color: #111827;
+}
+
+/* Responsive stacking for mobile */
+@media (max-width: 720px) {
+  .view-modal {
+    flex-direction: column;
+    padding: 12px;
+    width: 95%;
+  }
+
+  .view-left {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .view-details strong {
+    width: auto;
+  }
+}
+
+/* Card image tweak (if any card shows image) */
+.asset-image {
+  width: 100%;
+  max-width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
