@@ -88,10 +88,13 @@ export const getHardwareAssetById = async (id) => {
 };
 
 export const updateHardwareAsset = async (id, data) => {
-  return axios.put(`/api/assets/${id}`, data, {
-    headers: { "Content-Type": "multipart/form-data" },
+  return axiosInstance.put(`/assets/${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
 };
+
 
 export const deleteHardwareAsset = async (id) => {
   const response = await axiosInstance.delete(`/assets/${id}`);
