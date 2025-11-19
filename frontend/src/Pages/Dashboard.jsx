@@ -33,6 +33,7 @@ const DashboardCompact = () => {
       try {
         const res = await getUserDashboard();
         setData(res);
+        console.log(res)
       } catch (err) {
         console.error("Dashboard fetch error:", err);
       } finally {
@@ -40,7 +41,9 @@ const DashboardCompact = () => {
       }
     };
     load();
+
   }, []);
+  
 
   // SAFE VALUES (always defined so hooks run safely)
   const counts = data?.counts || {
