@@ -1,200 +1,105 @@
-/* ---- A1 Minimal Dashboard ---- */
+/* === COMPACT SaaS LAYOUT === */
 
-.a1-dashboard {
-  padding: 20px;
-  background: #fafafa;
+.a1-dashboard-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  overflow: hidden;
 }
 
-/* KPI CARDS */
-.a1-kpi-grid {
+/* --- KPI Row --- */
+.a1-kpi-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
 }
 
 .a1-kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   background: #fff;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  text-align: center;
+  height: 80px;
 }
 
 .a1-kpi-icon {
   font-size: 24px;
-  color: #2563EB;
-  margin-bottom: 6px;
+  color: #6366F1;
 }
 
-.a1-kpi-label {
-  font-size: 14px;
-  color: #555;
+.a1-kpi-data div {
+  font-size: 13px;
+  color: #777;
 }
 
-.a1-kpi-value {
-  font-size: 22px;
-  font-weight: 600;
-}
-
-/* MAIN CHART */
-.a1-chart-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 28px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.a1-section-title {
-  margin-bottom: 16px;
+.a1-kpi-data span {
   font-size: 18px;
   font-weight: 600;
+  color: #111;
 }
 
-/* RECENT ACTIVITY */
+/* --- Middle Row --- */
+.a1-middle-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  height: calc(100vh - 120px);
+}
+
+/* --- Chart Card --- */
+.a1-chart-card,
 .a1-recent-card {
   background: #fff;
-  padding: 20px;
-  border-radius: 12px;
+  border-radius: 10px;
+  padding: 14px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.a1-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.a1-chart-box {
+  flex: 1;
+  min-height: 240px;
+}
+
+/* --- Recent Activity --- */
+.a1-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
 }
 
 .a1-recent-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.a1-recent-item:last-child {
-  border-bottom: none;
+  gap: 10px;
 }
 
 .a1-thumb {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
+  width: 45px;
+  height: 45px;
+  border-radius: 6px;
   object-fit: cover;
 }
 
 .a1-recent-name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .a1-recent-date {
-  font-size: 13px;
+  font-size: 12px;
   color: #777;
 }
-
-.a1-empty {
-  text-align: center;
-  color: #888;
-  padding: 20px;
-}
-/* --- SaaS Layout --- */
-.saas-dashboard {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 18px 22px;
-  overflow: hidden;
-}
-
-/* KPIs row */
-.saas-kpi-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-
-.saas-kpi-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  height: 95px;
-  border: 1px solid #e5e7eb;
-}
-
-.saas-kpi-icon {
-  font-size: 26px;
-  color: #6366f1;
-}
-
-.saas-kpi-label {
-  font-size: 14px;
-  color: #6b7280;
-}
-
-.saas-kpi-value {
-  font-size: 22px;
-  font-weight: 600;
-  color: #111827;
-}
-
-/* Middle Content */
-.saas-middle-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 18px;
-  height: calc(100vh - 150px);
-}
-
-/* Chart Card */
-.saas-chart-card {
-  background: white;
-  border-radius: 14px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #e5e7eb;
-  height: 100%;
-}
-
-.saas-section-title {
-  margin-bottom: 12px;
-  font-size: 17px;
-  font-weight: 600;
-}
-
-.saas-chart-wrapper {
-  flex-grow: 1;
-  min-height: 260px;
-}
-
-/* Recent Activity */
-.saas-recent-card {
-  background: white;
-  border-radius: 14px;
-  padding: 18px;
-  border: 1px solid #e5e7eb;
-  height: 100%;
-}
-
-.saas-recent-list {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.saas-recent-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.saas-thumb {
-  width: 46px;
-  height: 46px;
-  border-radius: 10px;
-  object-fit: cover;
-  background: #f3f4f6;
-}
-
