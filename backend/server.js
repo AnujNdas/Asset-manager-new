@@ -22,7 +22,7 @@ const updateRoutes = require("./routes/updateRoutes");
 const softwareAssetRoutes = require("./routes/softwareAssets");
 const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
 const adminRoutes = require("./routes/adminRoutes");
-const userDashboardRoute = require("./routes/userRoutes");
+const userRoute = require("./routes/userRoutes");
 
 
 // ✅ Import User model for Super Admin seeding
@@ -59,7 +59,7 @@ app.use("/api/status", statusRoutes);
 app.use("/api/software-assets", softwareAssetRoutes);
 app.use("/api/company-licenses", companyLicenseRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/user-data", userDashboardRoute);
+app.use("/api/user-data", userRoute);
 
 app.get("/smtp-test", async (req, res) => {
   try {
