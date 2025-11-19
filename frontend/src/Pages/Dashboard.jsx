@@ -23,15 +23,13 @@ import { getUserDashboard } from "../Services/ApiServices";
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
 
-const MONTHS_TO_SHOW = 6;
-const MAX_RECENT = 5;
-
 const DashboardCompact = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Fetch data once
   useEffect(() => {
-    const fetchDash = async () => {
+    const load = async () => {
       try {
         setLoading(true);
         const res = await getUserDashboard();
@@ -42,94 +40,69 @@ const DashboardCompact = () => {
         setLoading(false);
       }
     };
-    fetchDash();
+
+    load();
   }, []);
 
-  if (!data) {
-    return <div className="a1-dashboard-container"><Spinner /></div>;
+  // If loading or no data yet → safe return (no hooks inside!)
+  if (loading) {
+    return (
+      <div className="a1-dashboard-container">
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Spinner />
+        </div>
+      </div>
+    );
   }
 
+  if (!data) {
+    return <div>Error loading dashboard</div>;
+  }
+
+  // Extract
   const {
-    hardwareCount,
-    softwareCount,
-    categoryCount,
-    locationCount,
-    recentHardware = [],
-    recentSoftware = []
+    counts,
+    recent,
+    chart
   } = data;
 
-  const totalAssets = hardwareCount + softwareCount;
-
-  // Build last 6 months bucket
-  const months = useMemo(() => {
-    const now = new Date();
-    const arr = [];
-    for (let i = MONTHS_TO_SHOW - 1; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      arr.push({
-        key: `${d.getFullYear()}-${d.getMonth()}`,
-        label: d.toLocaleString("default", { month: "short" }),
-      });
-    }
-    return arr;
-  }, []);
-
-  // Count assets by month
-  const assetsOverTime = useMemo(() => {
-    const bucket = months.reduce((m, x) => {
-      m[x.key] = 0;
-      return m;
-    }, {});
-
-    const addToBucket = (item) => {
-      const dateStr = item.createdAt || item.DOP;
-      if (!dateStr) return;
-      const dt = new Date(dateStr);
-      const key = `${dt.getFullYear()}-${dt.getMonth()}`;
-      if (bucket[key] !== undefined) bucket[key] += 1;
-    };
-
-    recentHardware.forEach(addToBucket);
-    recentSoftware.forEach(addToBucket);
-
-    return months.map((m) => bucket[m.key]);
-  }, [months, recentHardware, recentSoftware]);
-
-  const lineData = {
-    labels: months.map((m) => m.label),
+  // Chart Memo (always runs in same order)
+  const lineData = useMemo(() => ({
+    labels: chart.months,
     datasets: [
       {
         label: "Assets added",
-        data: assetsOverTime,
+        data: chart.values,
         borderColor: "#6366F1",
         backgroundColor: "rgba(99,102,241,0.12)",
         tension: 0.35,
         fill: true,
         pointRadius: 3,
-      },
-    ],
-  };
+      }
+    ]
+  }), [chart]);
 
-  const lineOptions = {
+  const lineOptions = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-  };
-
-  // merge recent
-  const recent = [...recentHardware, ...recentSoftware]
-    .sort((a, b) => new Date(b.createdAt || b.DOP) - new Date(a.createdAt || a.DOP))
-    .slice(0, MAX_RECENT);
+    plugins: { legend: { display: false }, tooltip: { mode: "index" } },
+    scales: {
+      x: { ticks: { maxRotation: 0, minRotation: 0 } },
+      y: { beginAtZero: true, precision: 0 },
+    },
+  }), []);
 
   return (
     <div className="a1-dashboard-container">
+      
       {/* KPI Row */}
       <div className="a1-kpi-row">
+
         <div className="a1-kpi-card">
           <FontAwesomeIcon icon={faCubes} className="a1-kpi-icon" />
           <div className="a1-kpi-data">
             <div>Hardware</div>
-            <span>{hardwareCount}</span>
+            <span>{counts.hardware}</span>
           </div>
         </div>
 
@@ -137,15 +110,15 @@ const DashboardCompact = () => {
           <FontAwesomeIcon icon={faBoxOpen} className="a1-kpi-icon" />
           <div className="a1-kpi-data">
             <div>Software</div>
-            <span>{softwareCount}</span>
+            <span>{counts.software}</span>
           </div>
         </div>
 
         <div className="a1-kpi-card">
           <FontAwesomeIcon icon={faUsers} className="a1-kpi-icon" />
           <div className="a1-kpi-data">
-            <div>Categories</div>
-            <span>{categoryCount}</span>
+            <div>Users</div>
+            <span>{counts.users || 0}</span>
           </div>
         </div>
 
@@ -153,39 +126,41 @@ const DashboardCompact = () => {
           <FontAwesomeIcon icon={faChartSimple} className="a1-kpi-icon" />
           <div className="a1-kpi-data">
             <div>Total Assets</div>
-            <span>{totalAssets}</span>
+            <span>{counts.totalAssets}</span>
           </div>
         </div>
+
       </div>
 
       {/* Middle Row */}
       <div className="a1-middle-row" style={{ gap: 12 }}>
         <div className="a1-chart-card">
-          <div className="a1-card-title">Assets (last {MONTHS_TO_SHOW} months)</div>
-          <div className="a1-chart-box">
+          <div className="a1-card-title">Assets (last 6 months)</div>
+          <div className="a1-chart-box" style={{ minHeight: 200 }}>
             <Line data={lineData} options={lineOptions} />
           </div>
         </div>
 
         <div className="a1-recent-card">
           <div className="a1-card-title">Recent Activity</div>
-          <div className="a1-recent-list">
+
+          <div className="a1-recent-list" style={{ overflowY: "auto" }}>
             {recent.length === 0 ? (
-              <div className="a1-empty">No recent items</div>
+              <div className="a1-empty">No recent activity</div>
             ) : (
               recent.map((item, i) => (
                 <div className="a1-recent-item" key={i}>
                   <img
                     src={item.image || "/assets/placeholder.png"}
-                    alt=""
                     className="a1-thumb"
+                    alt=""
                   />
                   <div className="a1-recent-info">
                     <div className="a1-recent-name">
-                      {item.assetName || item.name || "Unnamed"}
+                      {item.name || item.assetName || "Untitled"}
                     </div>
                     <div className="a1-recent-date">
-                      {new Date(item.createdAt || item.DOP).toLocaleDateString()}
+                      {new Date(item.date).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
@@ -195,10 +170,11 @@ const DashboardCompact = () => {
         </div>
       </div>
 
-      {/* Mini Footer KPIs */}
-      <div className="a1-footer-row">
-        <div>Categories: <strong>{categoryCount}</strong></div>
-        <div>Locations: <strong>{locationCount}</strong></div>
+      {/* Footer Mini KPIs */}
+      <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+        <div style={{ fontSize: 13 }}>Categories: <strong>{counts.categories}</strong></div>
+        <div style={{ fontSize: 13 }}>Locations: <strong>{counts.locations}</strong></div>
+        <div style={{ fontSize: 13 }}>In Use: <strong>{counts.inUse}</strong></div>
       </div>
     </div>
   );
