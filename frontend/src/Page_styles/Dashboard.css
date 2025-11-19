@@ -94,3 +94,107 @@
   color: #888;
   padding: 20px;
 }
+/* --- SaaS Layout --- */
+.saas-dashboard {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 22px;
+  overflow: hidden;
+}
+
+/* KPIs row */
+.saas-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.saas-kpi-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 95px;
+  border: 1px solid #e5e7eb;
+}
+
+.saas-kpi-icon {
+  font-size: 26px;
+  color: #6366f1;
+}
+
+.saas-kpi-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.saas-kpi-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Middle Content */
+.saas-middle-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+  height: calc(100vh - 150px);
+}
+
+/* Chart Card */
+.saas-chart-card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e7eb;
+  height: 100%;
+}
+
+.saas-section-title {
+  margin-bottom: 12px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.saas-chart-wrapper {
+  flex-grow: 1;
+  min-height: 260px;
+}
+
+/* Recent Activity */
+.saas-recent-card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  height: 100%;
+}
+
+.saas-recent-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.saas-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.saas-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f3f4f6;
+}
+
