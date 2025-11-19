@@ -1,158 +1,96 @@
-/* Notion-like minimal dashboard styles */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+/* ---- A1 Minimal Dashboard ---- */
 
-.notion-dashboard {
-  width: 100%;
-  padding: 28px;
+.a1-dashboard {
+  padding: 20px;
+  background: #fafafa;
+}
+
+/* KPI CARDS */
+.a1-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.a1-kpi-card {
   background: #fff;
-  color: #2b2b2b;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  text-align: center;
 }
 
-/* top row */
-.dashboard-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.a1-kpi-icon {
+  font-size: 24px;
+  color: #2563EB;
+  margin-bottom: 6px;
 }
 
-.dash-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827;
+.a1-kpi-label {
+  font-size: 14px;
+  color: #555;
 }
 
-/* quick actions */
-.quick-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.qa-btn {
-  border: 1px solid #e6e9ee;
-  background: white;
-  padding: 8px 12px;
-  border-radius: 8px;
+.a1-kpi-value {
+  font-size: 22px;
   font-weight: 600;
+}
+
+/* MAIN CHART */
+.a1-chart-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.a1-section-title {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* RECENT ACTIVITY */
+.a1-recent-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.a1-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.a1-recent-item:last-child {
+  border-bottom: none;
+}
+
+.a1-thumb {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.a1-recent-name {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.a1-recent-date {
   font-size: 13px;
-  color: #1f2937;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  box-shadow: 0 1px 0 rgba(15,23,42,0.02);
-}
-.qa-btn.primary {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid rgba(37,99,235,0.12);
-  color: #174ea6;
-  box-shadow: 0 6px 18px rgba(37,99,235,0.06);
+  color: #777;
 }
 
-/* KPI grid */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  width: 100%;
-}
-
-.kpi-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 14px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  box-shadow: 0 6px 18px rgba(15,23,42,0.04);
-  border: 1px solid #eef2f6;
-}
-
-.kpi-left { width: 52px; height: 52px; display:flex; align-items:center; justify-content:center; border-radius: 10px; background: #FBFBFC; }
-.kpi-icon { color: #111827; font-size: 18px; opacity: 0.9; }
-.kpi-right { flex:1; }
-.kpi-label { font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 6px; }
-.kpi-value { font-size: 20px; font-weight: 700; color: #111827; }
-.kpi-meta { font-size: 12px; color: #94a3b8; margin-top: 6px; }
-
-/* charts grid */
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  width: 100%;
-}
-
-.chart-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 14px;
-  box-shadow: 0 6px 18px rgba(15,23,42,0.04);
-  border: 1px solid #eef2f6;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 220px;
-}
-
-.chart-card.wide { grid-column: span 2; min-height: 260px; }
-
-.chart-card-head { display:flex; justify-content:space-between; align-items:center; }
-.chart-title { font-weight: 700; color: #111827; font-size: 14px; }
-
-.chart-area { flex:1; display:flex; align-items:center; justify-content:center; padding: 6px 0; }
-
-/* lower section */
-.lower-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 14px;
-  width: 100%;
-}
-
-.recent-card, .todo-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 14px;
-  box-shadow: 0 6px 18px rgba(15,23,42,0.04);
-  border: 1px solid #eef2f6;
-}
-
-.card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; }
-.card-title { font-weight: 700; color: #111827; font-size: 14px; }
-
-/* recent list */
-.recent-list { display:flex; flex-direction:column; gap: 10px; max-height: 300px; overflow:auto; padding-right:6px; }
-.recent-item { display:flex; gap:12px; align-items:center; padding: 8px; border-radius: 8px; transition: background 0.12s; }
-.recent-item:hover { background: #fbfcfd; }
-.ri-thumb { width:54px; height:40px; object-fit:cover; border-radius:6px; background: #f3f4f6; border: 1px solid #eef2f6; }
-.ri-title { font-weight: 700; color: #0f172a; font-size: 13px; }
-.ri-sub { color: #6b7280; font-size: 12px; margin-top: 4px; }
-.ri-meta { font-size: 11px; color: #94a3b8; margin-top: 6px; }
-
-/* insights list */
-.insights-list { list-style:none; display:flex; flex-direction:column; gap: 8px; color:#374151; font-size: 13px; }
-.insights-list li { display:flex; justify-content:space-between; gap:12px; align-items:center; padding: 8px 0; border-bottom: 1px dashed #f1f5f9; }
-
-/* small utility */
-.empty { color: #9aa3b2; padding: 20px; text-align:center; }
-
-/* responsive */
-@media (max-width: 1100px) {
-  .charts-grid { grid-template-columns: repeat(2, 1fr); }
-  .chart-card.wide { grid-column: span 2; }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .lower-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 640px) {
-  .kpi-grid { grid-template-columns: 1fr; }
-  .charts-grid { grid-template-columns: 1fr; }
-  .quick-actions { display: none; } /* reduce clutter */
-  .notion-dashboard { padding: 16px; }
-  .qa-btn { padding: 8px; font-size: 13px; }
+.a1-empty {
+  text-align: center;
+  color: #888;
+  padding: 20px;
 }
