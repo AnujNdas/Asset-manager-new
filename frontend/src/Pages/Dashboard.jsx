@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../Page_styles/Dashboard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartSimple, faList, faLocationDot, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChartSimple,
+  faList,
+  faLocationDot,
+  faCircleCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { Line } from "react-chartjs-2";
 import {
@@ -32,22 +37,18 @@ const Dashboard = () => {
       try {
         setLoading(true);
 
-        const [assetsRes, categoriesRes, statusesRes, locationsRes] = await Promise.all([
-          fetch(`${API_BASE}/assets`),
-          fetch(`${API_BASE}/category`),
-          fetch(`${API_BASE}/status`),
-          fetch(`${API_BASE}/location`),
-        ]);
+        const [assetsRes, categoriesRes, statusesRes, locationsRes] =
+          await Promise.all([
+            fetch(`${API_BASE}/assets`),
+            fetch(`${API_BASE}/category`),
+            fetch(`${API_BASE}/status`),
+            fetch(`${API_BASE}/location`),
+          ]);
 
-        const assetsData = await assetsRes.json();
-        const categoriesData = await categoriesRes.json();
-        const statusesData = await statusesRes.json();
-        const locationsData = await locationsRes.json();
-
-        setAssets(assetsData);
-        setCategories(categoriesData);
-        setStatuses(statusesData);
-        setLocations(locationsData);
+        setAssets(await assetsRes.json());
+        setCategories(await categoriesRes.json());
+        setStatuses(await statusesRes.json());
+        setLocations(await locationsRes.json());
       } catch (err) {
         Swal.fire("Error", "Failed to load dashboard data", "error");
       } finally {
@@ -60,16 +61,17 @@ const Dashboard = () => {
 
   const resolveId = (v) => (typeof v === "object" ? v?._id : v);
 
-  // --- A1 Metrics ---
   const totalAssets = assets.length;
 
   const inUseCount = (() => {
     const statusMap = {};
     statuses.forEach((s) => (statusMap[s._id] = s.name));
-    return assets.filter((a) => statusMap[resolveId(a.assetStatus)] === "Check Out").length;
+    return assets.filter(
+      (a) => statusMap[resolveId(a.assetStatus)] === "Check Out"
+    ).length;
   })();
 
-  // --- Assets Over Time Chart (last 6 months) ---
+  // --- Assets Over Time Chart (6 months)
   const assetsOverTime = useMemo(() => {
     const result = [];
     const now = new Date();
@@ -104,11 +106,11 @@ const Dashboard = () => {
       {
         label: "Assets Added",
         data: assetsOverTime.map((m) => m.count),
-        borderColor: "#2563EB",
-        backgroundColor: "rgba(37,99,235,0.1)",
-        tension: 0.3,
+        borderColor: "#6366F1",
+        backgroundColor: "rgba(99,102,241,0.12)",
+        tension: 0.4,
         fill: true,
-        pointRadius: 4,
+        pointRadius: 3,
       },
     ],
   };
@@ -116,70 +118,92 @@ const Dashboard = () => {
   const lineOptions = {
     responsive: true,
     plugins: { legend: { display: false } },
+    maintainAspectRatio: false,
   };
 
-  // --- Recent Activity (last 6 assets) ---
+  // --- Recent Activity (last 4 only to avoid scroll)
   const recent = [...assets]
     .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
-    .slice(0, 6);
+    .slice(0, 4);
 
   return (
-    <div className="a1-dashboard">
+    <div className="saas-dashboard">
 
-      {/* --- KPI CARDS --- */}
-      <div className="a1-kpi-grid">
-        <div className="a1-kpi-card">
-          <FontAwesomeIcon icon={faChartSimple} className="a1-kpi-icon" />
-          <div className="a1-kpi-label">Total Assets</div>
-          <div className="a1-kpi-value">{loading ? <Spinner size="sm" /> : totalAssets}</div>
-        </div>
-
-        <div className="a1-kpi-card">
-          <FontAwesomeIcon icon={faCircleCheck} className="a1-kpi-icon" />
-          <div className="a1-kpi-label">In Use</div>
-          <div className="a1-kpi-value">{inUseCount}</div>
-        </div>
-
-        <div className="a1-kpi-card">
-          <FontAwesomeIcon icon={faList} className="a1-kpi-icon" />
-          <div className="a1-kpi-label">Categories</div>
-          <div className="a1-kpi-value">{categories.length}</div>
-        </div>
-
-        <div className="a1-kpi-card">
-          <FontAwesomeIcon icon={faLocationDot} className="a1-kpi-icon" />
-          <div className="a1-kpi-label">Locations</div>
-          <div className="a1-kpi-value">{locations.length}</div>
-        </div>
-      </div>
-
-      {/* --- SINGLE MAIN CHART (A1 Requirement) --- */}
-      <div className="a1-chart-card">
-        <h3 className="a1-section-title">Assets Over Time</h3>
-        {loading ? <Spinner /> : <Line data={lineData} options={lineOptions} />}
-      </div>
-
-      {/* --- RECENT ACTIVITY --- */}
-      <div className="a1-recent-card">
-        <h3 className="a1-section-title">Recent Activity</h3>
-
-        {recent.length === 0 ? (
-          <p className="a1-empty">No recent assets</p>
-        ) : (
-          recent.map((r) => (
-            <div className="a1-recent-item" key={r._id}>
-              <img src={r.image || "/assets/placeholder.png"} className="a1-thumb" />
-              <div>
-                <div className="a1-recent-name">{r.assetName || r.assetCode}</div>
-                <div className="a1-recent-date">
-                  {r.DOP ? new Date(r.DOP).toLocaleDateString() : "No Date"}
-                </div>
-              </div>
+      {/* KPIs */}
+      <div className="saas-kpi-row">
+        <div className="saas-kpi-card">
+          <FontAwesomeIcon icon={faChartSimple} className="saas-kpi-icon" />
+          <div className="saas-kpi-info">
+            <div className="saas-kpi-label">Total Assets</div>
+            <div className="saas-kpi-value">
+              {loading ? <Spinner size="sm" /> : totalAssets}
             </div>
-          ))
-        )}
+          </div>
+        </div>
+
+        <div className="saas-kpi-card">
+          <FontAwesomeIcon icon={faCircleCheck} className="saas-kpi-icon" />
+          <div className="saas-kpi-info">
+            <div className="saas-kpi-label">In Use</div>
+            <div className="saas-kpi-value">{inUseCount}</div>
+          </div>
+        </div>
+
+        <div className="saas-kpi-card">
+          <FontAwesomeIcon icon={faList} className="saas-kpi-icon" />
+          <div className="saas-kpi-info">
+            <div className="saas-kpi-label">Categories</div>
+            <div className="saas-kpi-value">{categories.length}</div>
+          </div>
+        </div>
+
+        <div className="saas-kpi-card">
+          <FontAwesomeIcon icon={faLocationDot} className="saas-kpi-icon" />
+          <div className="saas-kpi-info">
+            <div className="saas-kpi-label">Locations</div>
+            <div className="saas-kpi-value">{locations.length}</div>
+          </div>
+        </div>
       </div>
 
+      {/* Middle Row: Chart + Recent */}
+      <div className="saas-middle-row">
+
+        {/* Chart */}
+        <div className="saas-chart-card">
+          <h3 className="saas-section-title">Assets Over Time</h3>
+          <div className="saas-chart-wrapper">
+            {loading ? <Spinner /> : <Line data={lineData} options={lineOptions} />}
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="saas-recent-card">
+          <h3 className="saas-section-title">Recent Activity</h3>
+          <div className="saas-recent-list">
+            {recent.length === 0 ? (
+              <p className="saas-empty">No recent assets</p>
+            ) : (
+              recent.map((r) => (
+                <div className="saas-recent-item" key={r._id}>
+                  <img
+                    src={r.image || "/assets/placeholder.png"}
+                    className="saas-thumb"
+                    alt="asset"
+                  />
+                  <div>
+                    <div className="saas-recent-name">{r.assetName || r.assetCode}</div>
+                    <div className="saas-recent-date">
+                      {r.DOP ? new Date(r.DOP).toLocaleDateString() : "No Date"}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };
