@@ -28,22 +28,49 @@ const DashboardCompact = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch only once
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await getUserDashboard();
-        setData(res);
-        console.log(res)
-      } catch (err) {
-        console.error("Dashboard fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+useEffect(() => {
+  const load = async () => {
+    try {
+      const raw = await getUserDashboard();
 
-  }, []);
-  
+      console.log("RAW DATA:", raw);
+
+      // Transform to match frontend format
+      const formatted = {
+        counts: {
+          hardware: raw.hardwareCount || 0,
+          software: raw.softwareCount || 0,
+          categories: raw.categoryCount || 0,
+          locations: raw.locationCount || 0,
+          totalAssets:
+            (raw.hardwareCount || 0) +
+            (raw.softwareCount || 0),
+          users: raw.userCount || 0,   // if exists
+          inUse: raw.inUseCount || 0,  // if exists
+        },
+
+        chart: {
+          months: raw.chartMonths || [],
+          values: raw.chartValues || [],
+        },
+
+        recent: [
+          ...(raw.recentHardware || []),
+          ...(raw.recentSoftware || []),
+        ],
+      };
+
+      setData(formatted);
+    } catch (err) {
+      console.error("Dashboard fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  load();
+}, []);
+
 
   // SAFE VALUES (always defined so hooks run safely)
   const counts = data?.counts || {
