@@ -1,184 +1,80 @@
-/* === COMPACT SaaS LAYOUT === */
-
+/* Compact SaaS A1 layout - responsive, full-height */
 .a1-dashboard-container {
+  height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   padding: 14px;
+  background: #F7F8FA;
+  box-sizing: border-box;
   overflow: hidden;
-  height:100%;
 }
 
-/* --- KPI Row --- */
+/* KPI Row */
 .a1-kpi-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 12px;
 }
-
 .a1-kpi-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: #fff;
-  padding: 14px;
+  gap: 12px;
+  background: #ffffff;
+  padding: 10px 12px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  height: 80px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  min-height: 72px;
 }
-
 .a1-kpi-icon {
-  font-size: 24px;
+  font-size: 20px;
   color: #6366F1;
 }
+.a1-kpi-data div { font-size: 12px; color: #6B7280; }
+.a1-kpi-data span { font-size: 17px; font-weight: 600; color: #111827; }
 
-.a1-kpi-data div {
-  font-size: 13px;
-  color: #777;
-}
-
-.a1-kpi-data span {
-  font-size: 18px;
-  font-weight: 600;
-  color: #111;
-}
-
-/* --- Middle Row --- */
+/* middle row */
 .a1-middle-row {
-  display: flex;
-  gap: 14px;
-  height: 70%;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-height: 0; /* important so children can scroll if needed */
 }
 
-/* --- Cards --- */
-.a1-chart-card,
-.a1-recent-card {
+/* Chart and Recent cards */
+.a1-chart-card, .a1-recent-card {
   background: #fff;
   border-radius: 10px;
-  padding: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
-  width: 60%;
+  min-height: 0;
+}
+.a1-card-title { font-weight: 600; color: #111827; font-size: 14px; margin-bottom: 8px; }
+.a1-chart-box { flex: 1 1 auto; min-height: 180px; position: relative; }
+
+/* Recent list */
+.a1-recent-list { display: flex; flex-direction: column; gap: 10px; overflow: auto; padding-right: 6px; }
+.a1-recent-item { display: flex; align-items: center; gap: 10px; padding: 6px 2px; }
+.a1-thumb { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; background: #f0f0f0; }
+.a1-recent-name { font-size: 14px; font-weight: 600; color: #111827; }
+.a1-recent-date { font-size: 12px; color: #6B7280; }
+.a1-empty { color: #6B7280; font-size: 13px; padding: 8px 4px }
+
+/* responsive - stack on smaller screens */
+@media (max-width: 900px) {
+  .a1-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .a1-middle-row { grid-template-columns: 1fr; }
+  .a1-chart-box { min-height: 200px; }
 }
 
-.a1-card-title {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.a1-chart-box {
-  flex: 1;
-  min-height: 240px;
-}
-
-.a1-recent-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
-}
-
-.a1-recent-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.a1-thumb {
-  width: 45px;
-  height: 45px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.a1-recent-name {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.a1-recent-date {
-  font-size: 12px;
-  color: #777;
-}
-
-
-/* ============================
-   📱 RESPONSIVE BREAKPOINTS
-   ============================ */
-
-
-/* 1) Tablet — between 768px and 1100px */
-@media (max-width: 1100px) {
-  .a1-kpi-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .a1-middle-row {
-    grid-template-columns: 1fr;
-    height: auto;
-    overflow-y: auto;
-  }
-
-  .a1-chart-card,
-  .a1-recent-card {
-    height: auto;
-  }
-}
-
-/* 2) Mobile — below 768px */
-@media (max-width: 768px) {
-  .a1-dashboard-container {
-    height: auto;
-    overflow-y: auto;
-  }
-
-  .a1-kpi-row {
-    grid-template-columns: 1fr;
-  }
-
-  .a1-kpi-card {
-    height: 70px;
-    padding: 12px;
-  }
-
-  .a1-middle-row {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    height: auto;
-  }
-
-  .a1-chart-box {
-    min-height: 200px;
-  }
-
-  .a1-thumb {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-/* 3) Small Mobile — below 480px */
+/* very small */
 @media (max-width: 480px) {
-  .a1-kpi-card {
-    gap: 10px;
-    padding: 10px;
-  }
-
-  .a1-kpi-icon {
-    font-size: 20px;
-  }
-
-  .a1-kpi-data span {
-    font-size: 16px;
-  }
-
-  .a1-card-title {
-    font-size: 14px;
-  }
-
-  .a1-chart-box {
-    min-height: 180px;
-  }
+  .a1-kpi-row { grid-template-columns: 1fr; }
+  .a1-kpi-card { padding: 10px; gap: 8px; }
+  .a1-kpi-data span { font-size: 16px; }
+  .a1-thumb { width: 40px; height: 40px; }
 }
