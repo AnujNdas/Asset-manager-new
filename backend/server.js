@@ -22,7 +22,7 @@ const updateRoutes = require("./routes/updateRoutes");
 const softwareAssetRoutes = require("./routes/softwareAssets");
 const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
 const adminRoutes = require("./routes/adminRoutes");
-const userDashboardRoute = require("./routes/userDashboardRoute");
+const userDashboardRoute = require("./routes/userRoutes");
 
 
 // ✅ Import User model for Super Admin seeding
