@@ -21,7 +21,15 @@ import {
 } from "chart.js";
 import { Spinner } from "react-bootstrap";
 
-ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const API_BASE = "https://asset-manager-new.onrender.com/api";
 
@@ -71,7 +79,6 @@ const Dashboard = () => {
     ).length;
   })();
 
-  // --- Assets Over Time Chart (6 months)
   const assetsOverTime = useMemo(() => {
     const result = [];
     const now = new Date();
@@ -117,93 +124,90 @@ const Dashboard = () => {
 
   const lineOptions = {
     responsive: true,
-    plugins: { legend: { display: false } },
     maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
   };
 
-  // --- Recent Activity (last 4 only to avoid scroll)
   const recent = [...assets]
     .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
     .slice(0, 4);
 
   return (
-    <div className="saas-dashboard">
+    <div className="a1-dashboard-container">
 
-      {/* KPIs */}
-      <div className="saas-kpi-row">
-        <div className="saas-kpi-card">
-          <FontAwesomeIcon icon={faChartSimple} className="saas-kpi-icon" />
-          <div className="saas-kpi-info">
-            <div className="saas-kpi-label">Total Assets</div>
-            <div className="saas-kpi-value">
-              {loading ? <Spinner size="sm" /> : totalAssets}
-            </div>
+      {/* KPI Row */}
+      <div className="a1-kpi-row">
+        <div className="a1-kpi-card">
+          <FontAwesomeIcon icon={faChartSimple} className="a1-kpi-icon" />
+          <div className="a1-kpi-data">
+            <div>Total Assets</div>
+            <span>{loading ? <Spinner size="sm" /> : totalAssets}</span>
           </div>
         </div>
 
-        <div className="saas-kpi-card">
-          <FontAwesomeIcon icon={faCircleCheck} className="saas-kpi-icon" />
-          <div className="saas-kpi-info">
-            <div className="saas-kpi-label">In Use</div>
-            <div className="saas-kpi-value">{inUseCount}</div>
+        <div className="a1-kpi-card">
+          <FontAwesomeIcon icon={faCircleCheck} className="a1-kpi-icon" />
+          <div className="a1-kpi-data">
+            <div>In Use</div>
+            <span>{inUseCount}</span>
           </div>
         </div>
 
-        <div className="saas-kpi-card">
-          <FontAwesomeIcon icon={faList} className="saas-kpi-icon" />
-          <div className="saas-kpi-info">
-            <div className="saas-kpi-label">Categories</div>
-            <div className="saas-kpi-value">{categories.length}</div>
+        <div className="a1-kpi-card">
+          <FontAwesomeIcon icon={faList} className="a1-kpi-icon" />
+          <div className="a1-kpi-data">
+            <div>Categories</div>
+            <span>{categories.length}</span>
           </div>
         </div>
 
-        <div className="saas-kpi-card">
-          <FontAwesomeIcon icon={faLocationDot} className="saas-kpi-icon" />
-          <div className="saas-kpi-info">
-            <div className="saas-kpi-label">Locations</div>
-            <div className="saas-kpi-value">{locations.length}</div>
+        <div className="a1-kpi-card">
+          <FontAwesomeIcon icon={faLocationDot} className="a1-kpi-icon" />
+          <div className="a1-kpi-data">
+            <div>Locations</div>
+            <span>{locations.length}</span>
           </div>
         </div>
       </div>
 
       {/* Middle Row: Chart + Recent */}
-      <div className="saas-middle-row">
-
-        {/* Chart */}
-        <div className="saas-chart-card">
-          <h3 className="saas-section-title">Assets Over Time</h3>
-          <div className="saas-chart-wrapper">
+      <div className="a1-middle-row">
+        <div className="a1-chart-card">
+          <div className="a1-card-title">Assets Over Time</div>
+          <div className="a1-chart-box">
             {loading ? <Spinner /> : <Line data={lineData} options={lineOptions} />}
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="saas-recent-card">
-          <h3 className="saas-section-title">Recent Activity</h3>
-          <div className="saas-recent-list">
-            {recent.length === 0 ? (
-              <p className="saas-empty">No recent assets</p>
-            ) : (
-              recent.map((r) => (
-                <div className="saas-recent-item" key={r._id}>
+        <div className="a1-recent-card">
+          <div className="a1-card-title">Recent Activity</div>
+
+          {recent.length === 0 ? (
+            <p className="a1-empty">No recent assets</p>
+          ) : (
+            <div className="a1-recent-list">
+              {recent.map((r) => (
+                <div className="a1-recent-item" key={r._id}>
                   <img
                     src={r.image || "/assets/placeholder.png"}
-                    className="saas-thumb"
-                    alt="asset"
+                    alt=""
+                    className="a1-thumb"
                   />
-                  <div>
-                    <div className="saas-recent-name">{r.assetName || r.assetCode}</div>
-                    <div className="saas-recent-date">
+                  <div className="a1-recent-info">
+                    <div className="a1-recent-name">
+                      {r.assetName || r.assetCode}
+                    </div>
+                    <div className="a1-recent-date">
                       {r.DOP ? new Date(r.DOP).toLocaleDateString() : "No Date"}
                     </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
-
       </div>
+
     </div>
   );
 };
