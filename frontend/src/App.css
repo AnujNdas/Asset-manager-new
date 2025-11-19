@@ -51,7 +51,7 @@
   left: 16%;
   width: 84%;
   height: 60px;
-  background-color: #f1f1f1;
+  background-color: #ffffff;
   z-index: 10;
   transition: left 0.3s ease, width 0.3s ease;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
