@@ -1,425 +1,325 @@
-import React, { useState, useEffect } from 'react';
-import '../Page_styles/Dashboard.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationDot, faList, faChartSimple, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import Swal from 'sweetalert2';
-import { Pie } from 'react-chartjs-2';
-import { ProgressBar } from 'react-bootstrap'; // Using Bootstrap for ProgressBar
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-import { Spinner } from 'react-bootstrap'; // Importing Spinner for loading state
+import React, { useState, useEffect, useMemo } from "react";
+import "../Page_styles/Dashboard.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationDot, faList, faChartSimple, faCircleCheck, faPlus, faFileUpload, faDownload } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
+import { Pie, Bar, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  LineElement,
+  PointElement,
+  TimeScale,
+} from "chart.js";
+import { Spinner } from "react-bootstrap";
 
-// Register Chart.js components
-ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  TimeScale,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const API_BASE = "https://asset-manager-new.onrender.com/api";
+
+// calm neutral palette (Notion-like)
+const PALETTE = {
+  bg: "#FFFFFF",
+  surface: "#F5F6F7",
+  text: "#2B2B2B",
+  muted: "#6B7280",
+  accent: "#2563EB",
+  cardShadow: "rgba(15, 23, 42, 0.06)",
+  grey: "#E6E9EE",
+};
 
 const Dashboard = () => {
   const [assets, setAssets] = useState([]);
-  const [category, setCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [loading, setLoading] = useState(true); // State to manage loading
+  const [loading, setLoading] = useState(true);
+  const [loadingAssets, setLoadingAssets] = useState(true);
 
-  const adjustHue = (hue, adjustment) => (hue + adjustment + 360) % 360;
-
-  const hslToRgb = (h, s, l) => {
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-    const m = l - c / 2;
-    let r = 0, g = 0, b = 0;
-    
-    if (0 <= h && h < 60) {
-      r = c;
-      g = x;
-      b = 0;
-    } else if (60 <= h && h < 120) {
-      r = x;
-      g = c;
-      b = 0;
-    } else if (120 <= h && h < 180) {
-      r = 0;
-      g = c;
-      b = x;
-    } else if (180 <= h && h < 240) {
-      r = 0;
-      g = x;
-      b = c;
-    } else if (240 <= h && h < 300) {
-      r = x;
-      g = 0;
-      b = c;
-    } else {
-      r = c;
-      g = 0;
-      b = x;
-    }
-  
-    return [
-      Math.round((r + m) * 255),
-      Math.round((g + m) * 255),
-      Math.round((b + m) * 255)
-    ];
-  };
-  
-  const getAnalogousColor = () => {
-    const hue = Math.floor(Math.random() * 360); // random hue
-    const saturation = 0.6 + Math.random() * 0.4; // random saturation
-    const lightness = 0.4 + Math.random() * 0.2; // random lightness
-    
-    const color1 = hslToRgb(hue, saturation, lightness);
-    const color2 = hslToRgb(adjustHue(hue, 30), saturation, lightness); // Adjust hue for analogous colors
-    const color3 = hslToRgb(adjustHue(hue, -30), saturation, lightness); // Adjust hue for analogous colors
-    
-    const rgbToHex = (r, g, b) => `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase()}`;
-    
-    return [rgbToHex(...color1), rgbToHex(...color2), rgbToHex(...color3)];
-  };
-  
   useEffect(() => {
-    const fetchAssets = async () => {
+    const fetchAll = async () => {
       try {
-        const response = await fetch('https://asset-manager-new.onrender.com/api/assets');
-        if (!response.ok) {
-          throw new Error('Failed to fetch assets');
-        }
-        const data = await response.json();
-        setAssets(data);
+        setLoading(true);
+        setLoadingAssets(true);
+
+        const [assetsRes, categoriesRes, statusesRes, locationsRes] = await Promise.all([
+          fetch(`${API_BASE}/assets`),
+          fetch(`${API_BASE}/category`),
+          fetch(`${API_BASE}/status`),
+          fetch(`${API_BASE}/location`),
+        ]);
+
+        if (!assetsRes.ok) throw new Error("Failed to fetch assets");
+        if (!categoriesRes.ok) throw new Error("Failed to fetch categories");
+        if (!statusesRes.ok) throw new Error("Failed to fetch statuses");
+        if (!locationsRes.ok) throw new Error("Failed to fetch locations");
+
+        const assetsData = await assetsRes.json();
+        const categoriesData = await categoriesRes.json();
+        const statusesData = await statusesRes.json();
+        const locationsData = await locationsRes.json();
+
+        setAssets(Array.isArray(assetsData) ? assetsData : []);
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+        setStatuses(Array.isArray(statusesData) ? statusesData : []);
+        setLocations(Array.isArray(locationsData) ? locationsData : []);
       } catch (err) {
-        Swal.fire({
-          title: "Error",
-          text: err.message,
-          icon: "error",
-          confirmButtonText: "OK"
-        });
+        console.error(err);
+        Swal.fire("Error", err.message || "Failed to load dashboard data", "error");
+      } finally {
+        setLoading(false);
+        setLoadingAssets(false);
       }
     };
 
-    const fetchCategoriesAndStatuses = async () => {
-      try {
-        const categoriesResponse = await fetch('https://asset-manager-new.onrender.com/api/category');
-        const statusesResponse = await fetch('https://asset-manager-new.onrender.com/api/status');
-        const locationsResponse = await fetch('https://asset-manager-new.onrender.com/api/location');
-
-        if (!categoriesResponse.ok || !statusesResponse.ok || !locationsResponse.ok) {
-          throw new Error('Failed to fetch required data');
-        }
-
-        const categoriesData = await categoriesResponse.json();
-        const statusesData = await statusesResponse.json();
-        const locationsData = await locationsResponse.json();
-
-        setCategory(categoriesData);
-        setStatuses(statusesData);
-        setLocations(locationsData);
-        setLoading(false); // Set loading to false once data is fetched
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-
-    fetchAssets();
-    fetchCategoriesAndStatuses();
+    fetchAll();
   }, []);
 
-  // Calculate total number of assets
+  // safe resolver: field may be id or object
+  const resolveId = (value) => {
+    if (!value) return null;
+    if (typeof value === "object") return value._id ?? value.id ?? null;
+    return String(value);
+  };
+
+  // basic KPIs
   const totalAssets = assets.length;
+  const hardwareAssets = assets.filter((a) => (a.assetCategory ? true : true)).length; // placeholder - keep count same as total for now
+  const softwareAssets = 0; // you can derive separately if you store software in same collection
+  const inUseCount = (() => {
+    // try to map status names to IDs
+    const statusMap = {};
+    statuses.forEach((s) => (statusMap[String(s._id)] = s.name));
+    return assets.filter((a) => statusMap[resolveId(a.assetStatus)] === "Check Out").length;
+  })();
 
-  // Calculate assets per location
-  const locationCounts = locations.map(loc => ({
-    locationName: loc.name,
-    count: assets.filter(asset => asset.locationName === loc._id).length,
-  }));
+  // locations counts
+  const locationCounts = useMemo(() => {
+    const map = {};
+    locations.forEach((loc) => (map[String(loc._id)] = { name: loc.name, count: 0 }));
+    assets.forEach((asset) => {
+      const id = resolveId(asset.locationName);
+      if (id && map[id]) map[id].count++;
+    });
+    return Object.values(map);
+  }, [assets, locations]);
 
-  // Calculate assets per category
-  const categoryCounts = category.map(cat => ({
-    categoryName: cat.name,
-    count: assets.filter(asset => asset.assetCategory === cat._id).length,
-  }));
+  // category counts
+  const categoryCounts = useMemo(() => {
+    const map = {};
+    categories.forEach((c) => (map[String(c._id)] = { name: c.name, count: 0 }));
+    assets.forEach((asset) => {
+      const id = resolveId(asset.assetCategory);
+      if (id && map[id]) map[id].count++;
+    });
+    return Object.values(map);
+  }, [assets, categories]);
 
-  // Map the status IDs to the status names
-  const statusNames = statuses.reduce((acc, status) => {
-    acc[status._id] = status.name;
-    return acc;
-  }, {});
+  // status counts (map IDs to names)
+  const statusCounts = useMemo(() => {
+    const map = {};
+    statuses.forEach((s) => (map[String(s._id)] = { name: s.name, count: 0 }));
+    assets.forEach((asset) => {
+      const id = resolveId(asset.assetStatus);
+      if (id && map[id]) map[id].count++;
+    });
+    return Object.values(map);
+  }, [assets, statuses]);
 
-  // Count assets by status
-  const checkedInAssets = assets.filter(asset => statusNames[asset.assetStatus] === 'Check In').length;
-  const checkedOutAssets = assets.filter(asset => statusNames[asset.assetStatus] === 'Check Out').length;
-  
-  // Chart data for Status
-  const statuscolor = getAnalogousColor();
-  const statusData = {
-    labels: ['Check In', 'Check Out'],
+  // assets over time (last 6 months) based on DOP
+  const assetsOverTime = useMemo(() => {
+    const months = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const label = d.toLocaleString("default", { month: "short", year: "numeric" });
+      months.push({ label, key: `${d.getFullYear()}-${d.getMonth()}` , count: 0 });
+    }
+    const keys = months.map(m => m.key);
+    assets.forEach((a) => {
+      const dop = a.DOP || a.purchaseDate || a.purchase_date || null;
+      if (!dop) return;
+      const dt = new Date(dop);
+      if (isNaN(dt)) return;
+      const key = `${dt.getFullYear()}-${dt.getMonth()}`;
+      const idx = keys.indexOf(key);
+      if (idx !== -1) months[idx].count++;
+    });
+    return months;
+  }, [assets]);
+
+  // chart datasets
+  const piePalette = [PALETTE.accent, "#94A3B8", "#CBD5E1", "#F1F5F9", "#E2E8F0"];
+  const statusPieData = {
+    labels: statusCounts.map((s) => s.name),
+    datasets: [{ data: statusCounts.map((s) => s.count), backgroundColor: piePalette.slice(0, statusCounts.length) }],
+  };
+
+  const locationBarData = {
+    labels: locationCounts.map((l) => l.name),
+    datasets: [{ label: "Assets", data: locationCounts.map((l) => l.count), backgroundColor: "#CBD5E1" }],
+  };
+
+  const categoryBarData = {
+    labels: categoryCounts.map((c) => c.name),
+    datasets: [{ label: "Assets", data: categoryCounts.map((c) => c.count), backgroundColor: "#E6EEF8" }],
+  };
+
+  const lineData = {
+    labels: assetsOverTime.map((m) => m.label),
     datasets: [
       {
-        label : "Assets Entry",
-        data: [checkedInAssets, checkedOutAssets],
-        backgroundColor: statuscolor,
+        label: "Assets added",
+        data: assetsOverTime.map((m) => m.count),
+        fill: true,
+        tension: 0.3,
+        borderColor: PALETTE.accent,
+        backgroundColor: "rgba(37,99,235,0.08)",
+        pointRadius: 3,
       },
     ],
   };
 
-  // Bar Chart options
-  const barChartOptions = {
+  const smallOptions = {
     responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Assets Summary',
-        font: {
-          family: 'Roboto',
-          size: 18,
-          weight: 'bold',
-        },
-        color: "#565656",
-      },
-    },
+    plugins: { legend: { display: false }, tooltip: { enabled: true } },
     scales: {
-      x: {
-        ticks: {
-          color: '#565656',
-          font: {
-            family: 'Roboto',
-            size: 10,
-            weight: 'bold',
-          },
-        },
-        grid: {
-          color: '#cccccc',
-          borderColor: '#aaaaaa',
-        },
-      },
-      y: {
-        ticks: {
-          color: '#565656',
-          font: {
-            family: 'Roboto',
-            size: 14,
-            weight: 'normal',
-          },
-        },
-      },
+      x: { ticks: { color: PALETTE.muted } },
+      y: { ticks: { color: PALETTE.muted }, beginAtZero: true, precision: 0 },
     },
   };
 
-  // Bar Chart for Location
-  const locationcolor = getAnalogousColor();
-  const locationData = {
-    labels: locationCounts.map(loc => loc.locationName),
-    datasets: [
-      {
-        label: 'Assets per Location',
-        data: locationCounts.map(loc => loc.count),
-        backgroundColor: locationcolor,
-      },
-    ],
-  };
-
-  // Bar Chart for Category
-  const categorycolor = getAnalogousColor();
-  const categoryData = {
-    labels: categoryCounts.map(cat => cat.categoryName),
-    datasets: [
-      {
-        label: 'Assets per Category',
-        data: categoryCounts.map(cat => cat.count),
-        backgroundColor: categorycolor,
-      },
-    ],
-  };
+  // recent activity (last 6 assets)
+  const recent = [...assets].sort((a,b) => new Date(b.createdAt || b.DOP || 0) - new Date(a.createdAt || a.DOP || 0)).slice(0, 6);
 
   return (
-    <div className='dashboard-section'>
-      <div className="classify_heading">
-        Assets Overview
+    <div className="notion-dashboard">
+      <div className="dashboard-top">
+        <h1 className="dash-title">Assets Overview</h1>
+
+        <div className="quick-actions">
+          <button className="qa-btn primary"><FontAwesomeIcon icon={faPlus} /> Add Asset</button>
+          <button className="qa-btn"><FontAwesomeIcon icon={faFileUpload} /> Bulk Upload</button>
+          <button className="qa-btn"><FontAwesomeIcon icon={faDownload} /> Export</button>
+        </div>
       </div>
 
-      {/* Card Section */}
-      <div className='card-section'>
-        {/* Total Assets Card with Progress Bar */}
-        <div className="card">
-          <div className="card-info" style={{ backgroundColor: "#3f4045" }}>
-            <FontAwesomeIcon
-              icon={faChartSimple}
-              style={{
-                color: "white",
-                fontSize: "20px",
-                border: "none",
-                textAlign: "center",
-                textShadow: "2px 2px 8px rgba(0, 0, 0, 0.6)"
-              }}
-            />
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <div className="kpi-left">
+            <div className="kpi-icon"><FontAwesomeIcon icon={faChartSimple} /></div>
           </div>
-          <div className="asset-info" style={{
-            display : "flex",
-            flexDirection : "column",
-          }}>
-            <p style={{
-              fontWeight : "600",
-              color : "#565656",
-              fontFamily : "Montserrat"
-            }}>Total Assets</p>
-            <ProgressBar now={(totalAssets / 50) * 100} variant='dark' style={{ height: '30px', backgroundColor: 'lightgrey', borderRadius: '10px' }}/>
-            <p style={{
-              fontFamily : "Lato",
-              fontWeight : "600",
-              color : '#565656'
-            }}>{totalAssets}</p>
+          <div className="kpi-right">
+            <div className="kpi-label">Total Assets</div>
+            <div className="kpi-value">{loadingAssets ? <Spinner animation="border" size="sm" /> : totalAssets}</div>
+            <div className="kpi-meta">Managed assets in system</div>
           </div>
         </div>
 
-        {/* Total Locations Card with Pie Chart */}
-        <div className="card">
-          <div className="card-info" style={{ backgroundColor: "#3d97ef" }}>
-            <FontAwesomeIcon
-              icon={faLocationDot}
-              style={{
-                color: "white",
-                fontSize: "20px",
-                border: "none",
-                textAlign: "center",
-                textShadow: "0px 0px 5px 15px rgba(0,0,0,0.5)"
-              }}
-            />
-          </div>
-          <div className="asset-info">
-            <div className="edge-box">
-            <p style={{
-              fontWeight : "600",
-              color : "#565656",
-              fontFamily : "Montserrat"
-            }}>Total Locations</p>
-            <p style={{
-              fontFamily : "Lato",
-              fontWeight : "800",
-              textAlign : "center",
-              color : '#565656'
-            }}>{locationCounts.length}</p>
-            </div>
-            
-            {loading ? <Spinner animation="border" variant="dark" /> : 
-              <Pie data={locationData} options={{
-                plugins: {
-                  legend: { display: false },
-                  tooltip: { enabled: true },
-                },
-              }} />
-            }
+        <div className="kpi-card">
+          <div className="kpi-left"><div className="kpi-icon"><FontAwesomeIcon icon={faList} /></div></div>
+          <div className="kpi-right">
+            <div className="kpi-label">Categories</div>
+            <div className="kpi-value">{categories.length}</div>
+            <div className="kpi-meta">Configured categories</div>
           </div>
         </div>
 
-        {/* Total Categories Card with Pie Chart */}
-        <div className="card">
-          <div className="card-info" style={{ backgroundColor: "#5cb762" }}>
-            <FontAwesomeIcon
-              icon={faList}
-              style={{
-                color: "white",
-                fontSize: "20px",
-                border: "none",
-                textAlign: "center",
-                textShadow: "0px 0px 5px 15px rgba(0,0,0,0.5)"
-              }}
-            />
-          </div>
-          <div className="asset-info">
-            <div className="edge-box">
-            <p style={{
-              fontWeight : "600",
-              color : "#565656",
-              fontFamily : "Montserrat"
-            }}>Total Categories</p>
-            <p style={{
-              fontFamily : "Lato",
-              fontWeight : "600",
-              textAlign : "center",color : '#565656'
-            }}>{categoryCounts.length}</p>
-            </div>
-            
-            {loading ? <Spinner animation="border" variant="dark" /> : 
-              <Pie data={categoryData} options={{
-                plugins: {
-                  legend: { display: false },
-                  tooltip: { enabled: true },
-                },
-              }} />
-            }
+        <div className="kpi-card">
+          <div className="kpi-left"><div className="kpi-icon"><FontAwesomeIcon icon={faLocationDot} /></div></div>
+          <div className="kpi-right">
+            <div className="kpi-label">Locations</div>
+            <div className="kpi-value">{locations.length}</div>
+            <div className="kpi-meta">Tracked locations</div>
           </div>
         </div>
 
-        {/* Asset Status Card with Pie Chart */}
-        <div className="card">
-          <div className="card-info" style={{ backgroundColor: "#FF9800" }}>
-            <FontAwesomeIcon
-              icon={faCircleCheck}
-              style={{
-                color: "white",
-                fontSize: "20px",
-                border: "none",
-                textAlign: "center",
-                textShadow: "0px 0px 5px 15px rgba(0,0,0,0.5)"
-              }}
-            />
-          </div>
-          <div className="asset-info">
-            <div className="edge-box">
-            <p style={{
-              fontWeight : "600",
-              color : "#565656",
-              fontFamily : "Montserrat",
-              textAlign : "center"
-            }}>Total Status</p>
-            <p style={{
-              fontFamily : "Lato",
-              fontWeight : "600",
-              textAlign : "center",
-              color : '#565656'
-            }}>{checkedInAssets}</p>
-            <p style={{
-              fontFamily : "Lato",
-              fontWeight : "600",
-              textAlign : "center",
-              color : '#565656'
-            }}>{checkedOutAssets}</p>
-            </div>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
-              <Pie data={statusData} options={{
-                plugins: {
-                  legend: { display: false },
-                  tooltip: { enabled: true },
-                },
-              }} />
-            }
+        <div className="kpi-card">
+          <div className="kpi-left"><div className="kpi-icon"><FontAwesomeIcon icon={faCircleCheck} /></div></div>
+          <div className="kpi-right">
+            <div className="kpi-label">Checked out</div>
+            <div className="kpi-value">{inUseCount}</div>
+            <div className="kpi-meta">Assets currently in use</div>
           </div>
         </div>
       </div>
 
-      {/* Graph Section */}
-      <div className="graph-section">
-        {/* Bar Graph for Locations */}
-        <div className="graph">
-          <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
-              <Bar data={locationData} options={barChartOptions} />
-            }
+      <div className="charts-grid">
+        <div className="chart-card">
+          <div className="chart-card-head">
+            <div className="chart-title">Status Distribution</div>
+          </div>
+          <div className="chart-area">
+            {loading ? <div className="chart-loading"><Spinner /></div> : <Pie data={statusPieData} options={smallOptions} />}
           </div>
         </div>
 
-        {/* Bar Graph for Categories */}
-        <div className="graph">
-          <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
-              <Bar data={categoryData} options={barChartOptions} />
-            }
+        <div className="chart-card">
+          <div className="chart-card-head"><div className="chart-title">Assets by Location</div></div>
+          <div className="chart-area">{loading ? <Spinner /> : <Bar data={locationBarData} options={smallOptions} />}</div>
+        </div>
+
+        <div className="chart-card wide">
+          <div className="chart-card-head"><div className="chart-title">Assets Over Time</div></div>
+          <div className="chart-area">{loading ? <Spinner /> : <Line data={lineData} options={smallOptions} />}</div>
+        </div>
+
+        <div className="chart-card">
+          <div className="chart-card-head"><div className="chart-title">Categories</div></div>
+          <div className="chart-area">{loading ? <Spinner /> : <Bar data={categoryBarData} options={smallOptions} />}</div>
+        </div>
+      </div>
+
+      <div className="lower-grid">
+        <div className="recent-card">
+          <div className="card-head">
+            <div className="card-title">Recent Activity</div>
+          </div>
+          <div className="recent-list">
+            {recent.length === 0 ? (
+              <div className="empty">No recent assets</div>
+            ) : (
+              recent.map((r) => (
+                <div key={r._id} className="recent-item">
+                  <div className="ri-left">
+                    <img src={r.image || "/assets/placeholder.png"} alt="" className="ri-thumb" />
+                  </div>
+                  <div className="ri-right">
+                    <div className="ri-title">{r.assetName || r.assetCode}</div>
+                    <div className="ri-sub">{r.assetSpecification || r.purchaseFrom || "—"}</div>
+                    <div className="ri-meta">{r.DOP ? new Date(r.DOP).toLocaleDateString() : "Date N/A"}</div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
-        {/* Bar Chart for Status */}
-        <div className="graph">
-          <div className="graph-info" style={{ backgroundColor: "#ffffff" }}>
-            {loading ? <Spinner animation="border" variant="dark" /> : 
-              <Bar data={statusData} options={barChartOptions} />
-            }
-          </div>
+        <div className="todo-card">
+          <div className="card-head"><div className="card-title">Quick Insights</div></div>
+          <ul className="insights-list">
+            <li>Assets expiring within 30 days: <strong>{assets.filter(a => { if(!a.DOE) return false; const diff = (new Date(a.DOE) - new Date())/(1000*60*60*24); return diff <= 30 && diff >= 0; }).length}</strong></li>
+            <li>Assets missing images: <strong>{assets.filter(a => !a.image || a.image === "N/A").length}</strong></li>
+            <li>Assets without category: <strong>{assets.filter(a => !a.assetCategory).length}</strong></li>
+            <li>Low inventory categories: <strong>{categoryCounts.filter(c => c.count <= 2).length}</strong></li>
+          </ul>
         </div>
       </div>
     </div>
