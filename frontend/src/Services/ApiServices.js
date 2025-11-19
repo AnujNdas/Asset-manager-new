@@ -161,3 +161,9 @@ export const updateUserRole = async (userId, role) => {
   const response = await axiosInstance.put(`/admin/users/${userId}/role`, { role });
   return response.data;
 };
+
+export const getUserDashboard = async () => {
+  const response = await axiosInstance.get("/user-data/dashboard");
+  return response.data;
+};
+
