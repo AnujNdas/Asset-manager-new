@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../Page_styles/Dashboard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -6,8 +6,10 @@ import {
   faList,
   faLocationDot,
   faCircleCheck,
+  faCubes,
+  faBoxOpen,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import Swal from "sweetalert2";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -20,102 +22,137 @@ import {
   Legend,
 } from "chart.js";
 import { Spinner } from "react-bootstrap";
+import {
+  getHardwareAssets,
+  getSoftwareAssets,
+  getCategories,
+  getStatuses,
+  getLocations,
+  getAllUsers,
+} from "../Services/ApiServices";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
 
-const API_BASE = "https://asset-manager-new.onrender.com/api";
+const MONTHS_TO_SHOW = 6; // last 6 months
+const MAX_RECENT = 5; // recent items to show
 
-const Dashboard = () => {
-  const [assets, setAssets] = useState([]);
+const DashboardCompact = () => {
+  const [hardware, setHardware] = useState([]);
+  const [software, setSoftware] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     const fetchAll = async () => {
       try {
         setLoading(true);
+        const [
+          hwRes,
+          swRes,
+          catsRes,
+          statsRes,
+          locsRes,
+          usersRes
+        ] = await Promise.all([
+          getHardwareAssets(),
+          getSoftwareAssets(),
+          getCategories(),
+          getStatuses(),
+          getLocations(),
+          getAllUsers(),
+        ]);
 
-        const [assetsRes, categoriesRes, statusesRes, locationsRes] =
-          await Promise.all([
-            fetch(`${API_BASE}/assets`),
-            fetch(`${API_BASE}/category`),
-            fetch(`${API_BASE}/status`),
-            fetch(`${API_BASE}/location`),
-          ]);
+        if (!mounted) return;
 
-        setAssets(await assetsRes.json());
-        setCategories(await categoriesRes.json());
-        setStatuses(await statusesRes.json());
-        setLocations(await locationsRes.json());
+        // api service returns data (see your ApiServices.js)
+        setHardware(Array.isArray(hwRes) ? hwRes : (hwRes?.data ?? []));
+        setSoftware(Array.isArray(swRes) ? swRes : (swRes?.data ?? []));
+        setCategories(Array.isArray(catsRes) ? catsRes : (catsRes?.data ?? []));
+        setStatuses(Array.isArray(statsRes) ? statsRes : (statsRes?.data ?? []));
+        setLocations(Array.isArray(locsRes) ? locsRes : (locsRes?.data ?? []));
+        setUsers(Array.isArray(usersRes) ? usersRes : (usersRes?.data ?? []));
       } catch (err) {
-        Swal.fire("Error", "Failed to load dashboard data", "error");
+        console.error("Dashboard fetch error:", err);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
     fetchAll();
+    return () => { mounted = false; };
   }, []);
 
-  const resolveId = (v) => (typeof v === "object" ? v?._id : v);
+  // KPI values
+  const hardwareCount = hardware.length;
+  const softwareCount = software.length;
+  const usersCount = users.length;
+  const categoriesCount = categories.length;
+  const locationsCount = locations.length;
+  const totalAssets = hardwareCount + softwareCount;
 
-  const totalAssets = assets.length;
+  // status mapping to find "Check Out"
+  const statusNameById = useMemo(() => {
+    const map = {};
+    statuses.forEach((s) => { map[String(s._id)] = s.name; });
+    return map;
+  }, [statuses]);
 
-  const inUseCount = (() => {
-    const statusMap = {};
-    statuses.forEach((s) => (statusMap[s._id] = s.name));
-    return assets.filter(
-      (a) => statusMap[resolveId(a.assetStatus)] === "Check Out"
-    ).length;
-  })();
+  const inUseCount = useMemo(() => {
+    // prefer hardware.assetStatus (id or object) and software.assetStatus
+    const all = [...hardware, ...software];
+    return all.filter(a => {
+      const sid = (typeof a.assetStatus === "object") ? a.assetStatus?._id : a.assetStatus;
+      return statusNameById[String(sid)] === "Check Out";
+    }).length;
+  }, [hardware, software, statusNameById]);
 
-  const assetsOverTime = useMemo(() => {
-    const result = [];
+  // Build month buckets for last 6 months
+  const months = useMemo(() => {
     const now = new Date();
-
-    for (let i = 5; i >= 0; i--) {
+    const arr = [];
+    for (let i = MONTHS_TO_SHOW - 1; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      result.push({
-        label: d.toLocaleString("default", { month: "short" }),
-        year: d.getFullYear(),
-        month: d.getMonth(),
-        count: 0,
-      });
+      arr.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleString("default", { month: "short" }) });
     }
+    return arr;
+  }, []);
 
-    assets.forEach((a) => {
-      const dop = a.DOP ? new Date(a.DOP) : null;
-      if (!dop) return;
+  // assetsOverTime: combine hardware (DOP) and software (createdAt)
+  const assetsOverTime = useMemo(() => {
+    const map = months.reduce((acc, m) => { acc[m.key] = 0; return acc; }, {});
+    const incByDate = (dateStr) => {
+      if (!dateStr) return;
+      const dt = new Date(dateStr);
+      if (isNaN(dt)) return;
+      const key = `${dt.getFullYear()}-${dt.getMonth()}`;
+      if (map[key] !== undefined) map[key] += 1;
+    };
 
-      result.forEach((m) => {
-        if (m.year === dop.getFullYear() && m.month === dop.getMonth()) {
-          m.count++;
-        }
-      });
+    hardware.forEach(h => {
+      // hardware uses DOP for timeline per your note
+      incByDate(h.DOP);
+    });
+    software.forEach(s => {
+      // software has createdAt
+      incByDate(s.createdAt || s.created_at || s.created);
     });
 
-    return result;
-  }, [assets]);
+    return months.map(m => map[m.key] || 0);
+  }, [hardware, software, months]);
 
   const lineData = {
-    labels: assetsOverTime.map((m) => m.label),
+    labels: months.map(m => m.label),
     datasets: [
       {
-        label: "Assets Added",
-        data: assetsOverTime.map((m) => m.count),
+        label: "Assets added",
+        data: assetsOverTime,
         borderColor: "#6366F1",
         backgroundColor: "rgba(99,102,241,0.12)",
-        tension: 0.4,
+        tension: 0.35,
         fill: true,
         pointRadius: 3,
       },
@@ -125,18 +162,52 @@ const Dashboard = () => {
   const lineOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
+    plugins: { legend: { display: false }, tooltip: { mode: "index" } },
+    scales: {
+      x: { ticks: { maxRotation: 0, minRotation: 0 } },
+      y: { beginAtZero: true, precision: 0 },
+    },
   };
 
-  const recent = [...assets]
-    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
-    .slice(0, 4);
+  // Recent: combine both, get date field (software: createdAt, hardware: DOP)
+  const recent = useMemo(() => {
+    const combined = [
+      ...hardware.map(h => ({ __type: "hardware", date: h.DOP || h.createdAt || h.created_at, item: h })),
+      ...software.map(s => ({ __type: "software", date: s.createdAt || s.created_at || s.DOP, item: s })),
+    ];
+
+    combined.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    return combined.slice(0, MAX_RECENT);
+  }, [hardware, software]);
 
   return (
-    <div className="a1-dashboard-container">
-
+    <div className="a1-dashboard-container" aria-busy={loading}>
       {/* KPI Row */}
       <div className="a1-kpi-row">
+        <div className="a1-kpi-card">
+          <FontAwesomeIcon icon={faCubes} className="a1-kpi-icon" />
+          <div className="a1-kpi-data">
+            <div>Hardware</div>
+            <span>{loading ? <Spinner size="sm" /> : hardwareCount}</span>
+          </div>
+        </div>
+
+        <div className="a1-kpi-card">
+          <FontAwesomeIcon icon={faBoxOpen} className="a1-kpi-icon" />
+          <div className="a1-kpi-data">
+            <div>Software</div>
+            <span>{loading ? <Spinner size="sm" /> : softwareCount}</span>
+          </div>
+        </div>
+
+        <div className="a1-kpi-card">
+          <FontAwesomeIcon icon={faUsers} className="a1-kpi-icon" />
+          <div className="a1-kpi-data">
+            <div>Users</div>
+            <span>{loading ? <Spinner size="sm" /> : usersCount}</span>
+          </div>
+        </div>
+
         <div className="a1-kpi-card">
           <FontAwesomeIcon icon={faChartSimple} className="a1-kpi-icon" />
           <div className="a1-kpi-data">
@@ -144,72 +215,53 @@ const Dashboard = () => {
             <span>{loading ? <Spinner size="sm" /> : totalAssets}</span>
           </div>
         </div>
-
-        <div className="a1-kpi-card">
-          <FontAwesomeIcon icon={faCircleCheck} className="a1-kpi-icon" />
-          <div className="a1-kpi-data">
-            <div>In Use</div>
-            <span>{inUseCount}</span>
-          </div>
-        </div>
-
-        <div className="a1-kpi-card">
-          <FontAwesomeIcon icon={faList} className="a1-kpi-icon" />
-          <div className="a1-kpi-data">
-            <div>Categories</div>
-            <span>{categories.length}</span>
-          </div>
-        </div>
-
-        <div className="a1-kpi-card">
-          <FontAwesomeIcon icon={faLocationDot} className="a1-kpi-icon" />
-          <div className="a1-kpi-data">
-            <div>Locations</div>
-            <span>{locations.length}</span>
-          </div>
-        </div>
       </div>
 
-      {/* Middle Row: Chart + Recent */}
-      <div className="a1-middle-row">
+      {/* Middle Row: Chart + Recent (keeps inside viewport) */}
+      <div className="a1-middle-row" style={{ gap: 12 }}>
         <div className="a1-chart-card">
-          <div className="a1-card-title">Assets Over Time</div>
-          <div className="a1-chart-box">
+          <div className="a1-card-title">Assets (last {MONTHS_TO_SHOW} months)</div>
+          <div className="a1-chart-box" style={{ minHeight: 200 }}>
             {loading ? <Spinner /> : <Line data={lineData} options={lineOptions} />}
           </div>
         </div>
 
         <div className="a1-recent-card">
           <div className="a1-card-title">Recent Activity</div>
-
-          {recent.length === 0 ? (
-            <p className="a1-empty">No recent assets</p>
-          ) : (
-            <div className="a1-recent-list">
-              {recent.map((r) => (
-                <div className="a1-recent-item" key={r._id}>
-                  <img
-                    src={r.image || "/assets/placeholder.png"}
-                    alt=""
-                    className="a1-thumb"
-                  />
-                  <div className="a1-recent-info">
-                    <div className="a1-recent-name">
-                      {r.assetName || r.assetCode}
-                    </div>
-                    <div className="a1-recent-date">
-                      {r.DOP ? new Date(r.DOP).toLocaleDateString() : "No Date"}
+          <div className="a1-recent-list" style={{ overflowY: "auto", paddingRight: 6 }}>
+            {recent.length === 0 ? (
+              <div className="a1-empty">No recent assets</div>
+            ) : (
+              recent.map((r, idx) => {
+                const item = r.item || {};
+                const title = item.assetName || item.assetCode || item.name || "Untitled";
+                const date = r.date ? new Date(r.date).toLocaleDateString() : "No date";
+                const thumb = item.image && item.image !== "N/A" ? item.image : "/assets/placeholder.png";
+                return (
+                  <div className="a1-recent-item" key={idx}>
+                    <img src={thumb} alt={title} className="a1-thumb" />
+                    <div className="a1-recent-info">
+                      <div className="a1-recent-name">{title}</div>
+                      <div className="a1-recent-date">{date}</div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                );
+              })
+            )}
+            {/* small spacer to ensure content doesn't touch bottom */}
+            <div style={{ height: 6 }} />
+          </div>
         </div>
       </div>
 
+      {/* Tiny footer KPIs row (compact) */}
+      <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", alignItems: "center" }}>
+        <div style={{ fontSize: 13, color: "#6B7280" }}>Categories: <strong>{categoriesCount}</strong></div>
+        <div style={{ fontSize: 13, color: "#6B7280" }}>Locations: <strong>{locationsCount}</strong></div>
+        <div style={{ fontSize: 13, color: "#6B7280" }}>In Use: <strong>{inUseCount}</strong></div>
+      </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default DashboardCompact;
