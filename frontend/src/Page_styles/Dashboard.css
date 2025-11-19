@@ -51,7 +51,7 @@
   height: calc(100vh - 120px);
 }
 
-/* --- Chart Card --- */
+/* --- Cards --- */
 .a1-chart-card,
 .a1-recent-card {
   background: #fff;
@@ -73,7 +73,6 @@
   min-height: 240px;
 }
 
-/* --- Recent Activity --- */
 .a1-recent-list {
   display: flex;
   flex-direction: column;
@@ -102,4 +101,84 @@
 .a1-recent-date {
   font-size: 12px;
   color: #777;
+}
+
+
+/* ============================
+   📱 RESPONSIVE BREAKPOINTS
+   ============================ */
+
+
+/* 1) Tablet — between 768px and 1100px */
+@media (max-width: 1100px) {
+  .a1-kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .a1-middle-row {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .a1-chart-card,
+  .a1-recent-card {
+    height: auto;
+  }
+}
+
+/* 2) Mobile — below 768px */
+@media (max-width: 768px) {
+  .a1-dashboard-container {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .a1-kpi-row {
+    grid-template-columns: 1fr;
+  }
+
+  .a1-kpi-card {
+    height: 70px;
+    padding: 12px;
+  }
+
+  .a1-middle-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    height: auto;
+  }
+
+  .a1-chart-box {
+    min-height: 200px;
+  }
+
+  .a1-thumb {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* 3) Small Mobile — below 480px */
+@media (max-width: 480px) {
+  .a1-kpi-card {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .a1-kpi-icon {
+    font-size: 20px;
+  }
+
+  .a1-kpi-data span {
+    font-size: 16px;
+  }
+
+  .a1-card-title {
+    font-size: 14px;
+  }
+
+  .a1-chart-box {
+    min-height: 180px;
+  }
 }
