@@ -39,7 +39,20 @@ router.put(
   updateAsset
 );
 router.get("/", authenticateToken(), getAllAssets);
+// Get single asset by ID
+router.get("/:id", authenticateToken(), async (req, res) => {
+  try {
+    const asset = await Assets.findById(req.params.id);
 
+    if (!asset) {
+      return res.status(404).json({ success: false, message: "Asset not found" });
+    }
+
+    res.json({ success: true, asset });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
 // ✅ Bulk Upload Route
 router.post("/bulk-upload", async (req, res) => {
