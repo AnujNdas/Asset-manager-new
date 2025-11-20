@@ -1,5 +1,6 @@
   import React, { useEffect, useMemo, useState } from "react";
 import "../Page_styles/Dashboard.css";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartSimple,
@@ -24,9 +25,12 @@ import { getUserDashboard } from "../Services/ApiServices";
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
 
 const DashboardCompact = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const handlenavigate = () => {
+    navigate("/inventory/hardware")
+  }
   // Fetch only once
 useEffect(() => {
   const load = async () => {
@@ -140,7 +144,7 @@ useEffect(() => {
           {/* KPI Row */}
           <div className="a1-kpi-row">
 
-            <div className="a1-kpi-card">
+            <div className="a1-kpi-card" onClick={handlenavigate} >
               <FontAwesomeIcon icon={faCubes} className="a1-kpi-icon" />
               <div className="a1-kpi-data">
                 <div>Hardware</div>
