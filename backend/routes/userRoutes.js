@@ -12,21 +12,43 @@ const authenticateToken = require("../Middleware/Authentication-token");
 // 📊 GET /api/user/dashboard
 router.get("/dashboard", authenticateToken(), async (req, res) => {
   try {
-    // Counts
     const hardwareCount = await HardwareAsset.countDocuments();
     const softwareCount = await SoftwareAsset.countDocuments();
     const categoryCount = await Category.countDocuments();
     const locationCount = await Location.countDocuments();
 
-    // Recent hardware assets (limit 5)
     const recentHardware = await HardwareAsset.find()
       .sort({ createdAt: -1 })
       .limit(5);
 
-    // Recent software assets (limit 5)
     const recentSoftware = await SoftwareAsset.find()
       .sort({ createdAt: -1 })
       .limit(5);
+
+    // ---------------------------------------
+    // 🔥 EXPIRY SYSTEM
+    // ---------------------------------------
+    const today = new Date();
+    const next30Days = new Date();
+    next30Days.setDate(today.getDate() + 30);
+
+    // --- SOFTWARE EXPIRY ---
+    const expiredSoftware = await SoftwareAsset.find({
+      licenseExpiry: { $lt: today },
+    });
+
+    const expiringSoonSoftware = await SoftwareAsset.find({
+      licenseExpiry: { $gte: today, $lte: next30Days }
+    });
+
+    // --- HARDWARE EXPIRY (if you have warrantyExpiry field) ---
+    const expiredHardware = await HardwareAsset.find({
+      warrantyExpiry: { $lt: today }
+    });
+
+    const expiringSoonHardware = await HardwareAsset.find({
+      warrantyExpiry: { $gte: today, $lte: next30Days }
+    });
 
     res.json({
       hardwareCount,
@@ -35,6 +57,12 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       locationCount,
       recentHardware,
       recentSoftware,
+
+      // ADD NEW FIELD
+      expiry: {
+        expired: [...expiredHardware, ...expiredSoftware],
+        expiringSoon: [...expiringSoonHardware, ...expiringSoonSoftware],
+      }
     });
 
   } catch (err) {
