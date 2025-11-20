@@ -31,6 +31,9 @@ const DashboardCompact = () => {
   const handlenavigatehardware = () => {
     navigate("/inventory?hardware")
   }
+  const handlenavigatesoftware = () => {
+    navigate("/inventory?software")
+  }
   // Fetch only once
 useEffect(() => {
   const load = async () => {
@@ -152,7 +155,7 @@ useEffect(() => {
               </div>
             </div>
 
-            <div className="a1-kpi-card">
+            <div className="a1-kpi-card" onClick={handlenavigatesoftware} >
               <FontAwesomeIcon icon={faBoxOpen} className="a1-kpi-icon" />
               <div className="a1-kpi-data">
                 <div>Software</div>
