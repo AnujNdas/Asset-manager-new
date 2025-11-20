@@ -15,15 +15,14 @@ const addAsset = async (req, res) => {
       return res.status(400).json({ message: "Image is required" });
     }
 
-    // Upload to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-      folder: "assets",
-    });
+    // CloudinaryStorage already uploads and gives this:
+    const imageUrl = req.file.path; // secure url
+    const publicId = req.file.filename; // public id
 
     const newAsset = new Asset({
       ...req.body,
-      image: uploadResult.secure_url,
-      imagePublicId: uploadResult.public_id,
+      image: imageUrl,
+      imagePublicId: publicId,
     });
 
     const savedAsset = await newAsset.save();
@@ -41,11 +40,13 @@ const addAsset = async (req, res) => {
     return res.status(201).json(savedAsset);
 
   } catch (error) {
-
-    return res.status(500).json({ message: "Error adding asset", error: JSON.stringify(error, null, 2) });
+    console.error("❌ Add Asset Error:", error);
+    return res.status(500).json({
+      message: "Error adding asset",
+      error: error.message,
+    });
   }
 };
-
 
 
 // -----------------------------------------
@@ -68,12 +69,13 @@ const updateAsset = async (req, res) => {
     updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
 
     // If new image uploaded → replace old Cloudinary image
-    if (req.file) {
+if (req.file) {
+  await cloudinary.uploader.destroy(existingAsset.imagePublicId);
 
-      // Delete old file from Cloudinary
-      if (existingAsset.imagePublicId) {
-        await cloudinary.uploader.destroy(existingAsset.imagePublicId);
-      }
+  updatedAssetData.image = req.file.path;
+  updatedAssetData.imagePublicId = req.file.filename;
+}
+
 
       // Upload new one
       const uploadResult = await cloudinary.uploader.upload(req.file.path, {
