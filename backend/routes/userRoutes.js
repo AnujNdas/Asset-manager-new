@@ -30,7 +30,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
     // ---------------------------------------
     const today = new Date();
     const next30Days = new Date();
-    next30Days.setDate(today.getDate() + 30);
+    next50Days.setDate(today.getDate() + 50);
 
     // --- SOFTWARE EXPIRY ---
     const expiredSoftware = await SoftwareAsset.find({
@@ -38,7 +38,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
     });
 
     const expiringSoonSoftware = await SoftwareAsset.find({
-      licenseExpiry: { $gte: today, $lte: next30Days }
+      licenseExpiry: { $gte: today, $lte: next50Days }
     });
 
     // --- HARDWARE EXPIRY (if you have warrantyExpiry field) ---
@@ -47,7 +47,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
     });
 
     const expiringSoonHardware = await HardwareAsset.find({
-      warrantyExpiry: { $gte: today, $lte: next30Days }
+      warrantyExpiry: { $gte: today, $lte: next50Days }
     });
 
     res.json({
