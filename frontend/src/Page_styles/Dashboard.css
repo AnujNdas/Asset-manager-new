@@ -196,7 +196,7 @@
 }
 
 /* Ultra small devices (≤350px) */
-@media (max-width: 320px) {
+@media (max-width: 300px) {
   .a1-kpi-card {
     gap: 6px;
     padding: 8px;
