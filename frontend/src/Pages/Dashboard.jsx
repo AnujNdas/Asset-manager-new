@@ -246,8 +246,8 @@ useEffect(() => {
                   ))
                 )}
               </div>
-            </div>
-          </div> */}
+            </div> */}
+          </div>
 
           {/* Footer KPIs */}
           <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
