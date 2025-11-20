@@ -159,7 +159,6 @@
 
      .a1-kpi-row {
     grid-template-columns: repeat(2, 1fr) !important;
-    overflow-y: auto;      /* allow scroll */
     max-height: 200px;     /* fits 2 rows cleanly */
     padding-right: 4px;
   }
