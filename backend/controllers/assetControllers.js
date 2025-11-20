@@ -9,6 +9,9 @@ const cloudinary = require("../config/cloudinary");
 // -----------------------------------------
 const addAsset = async (req, res) => {
   try {
+    console.log("FILE RECEIVED →", req.file);
+    console.log("BODY RECEIVED →", req.body);
+
     const userId = req.user.id;
 
     if (!req.file) {
@@ -39,13 +42,15 @@ const addAsset = async (req, res) => {
 
     return res.status(201).json(savedAsset);
 
-  } catch (error) {
-    console.error("❌ Add Asset Error:", error);
-    return res.status(500).json({
-      message: "Error adding asset",
-      error: error.message,
-    });
-  }
+} catch (error) {
+  console.log("🔥 REAL ADD ASSET ERROR →", error);
+
+  return res.status(500).json({
+    message: "Error adding asset",
+    error: JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
+  });
+}
+
 };
 
 
