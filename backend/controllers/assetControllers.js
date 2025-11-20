@@ -1,7 +1,7 @@
 const Asset = require("../models/Asset");
 const LastAssetCode = require("../models/LastAssetCode");
 const Notification = require("../models/Notification");
-const cloudinary = require("../config/cloudinary");
+const cloudinary = require("../Middleware/cloudinaryStorage");
 
 // -----------------------------------------
 // ADD ASSET
