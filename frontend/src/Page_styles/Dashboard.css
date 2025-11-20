@@ -143,12 +143,7 @@
   .a1-middle-row {
     grid-template-columns: 1fr;
   }
-     .a1-kpi-row {
-    grid-template-columns: repeat(2, 1fr) !important;
-    overflow-y: auto;      /* allow scroll */
-    max-height: 200px;     /* fits 2 rows cleanly */
-    padding-right: 4px;
-  }
+
 
   .a1-chart-box {
     min-height: 220px;
@@ -162,8 +157,11 @@
     overflow : auto;
   }
 
-  .a1-kpi-row {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+     .a1-kpi-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    overflow-y: auto;      /* allow scroll */
+    max-height: 200px;     /* fits 2 rows cleanly */
+    padding-right: 4px;
   }
 
   .a1-kpi-card {
