@@ -39,6 +39,8 @@ router.put(
   updateAsset
 );
 router.get("/", authenticateToken(), getAllAssets);
+router.delete("/:id", authenticateToken(), deleteAsset); 
+router.get("/asset-code", generateAssetCode);
 // Get single asset by ID
 router.get("/:id", authenticateToken(), async (req, res) => {
   try {
