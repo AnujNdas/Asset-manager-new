@@ -1,15 +1,12 @@
-const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("../config/cloudinary");
+const cloudinary = require("./cloudinary");
 
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "assets_uploads",
-    allowed_formats: ["jpg", "png", "jpeg", "pdf"],
+    folder: "assets",             // Folder name on Cloudinary
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
 });
 
-const upload = multer({ storage });
-
-module.exports = upload;
+module.exports = storage;
