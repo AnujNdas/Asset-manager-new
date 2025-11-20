@@ -155,6 +155,7 @@
   .a1-dashboard-container {
     padding: 10px;
     overflow : auto;
+     height : 100dvh;
   }
 
      .a1-kpi-row {
