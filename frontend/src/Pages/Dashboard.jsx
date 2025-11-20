@@ -49,11 +49,10 @@ useEffect(() => {
           inUse: raw.inUseCount || 0,  // if exists
         },
 
-        chart: {
-          months: raw.chartMonths || [],
-          values: raw.chartValues || [],
-        },
-
+  expiry: {
+    expired: raw.expiry?.expired || [],
+    expiringSoon: raw.expiry?.expiringSoon || [],
+  },
         recent: [
           ...(raw.recentHardware || []),
           ...(raw.recentSoftware || []),
@@ -178,11 +177,49 @@ useEffect(() => {
           {/* Chart + Recent */}
           <div className="a1-middle-row" style={{ gap: 12 }}>
             <div className="a1-chart-card">
-              <div className="a1-card-title">Assets (last 6 months)</div>
-              <div className="a1-chart-box" style={{ minHeight: 200 }}>
-                <Line data={lineData} options={lineOptions} />
-              </div>
+  <div className="a1-card-title">Expiring Soon (Next 30 Days)</div>
+
+  <div className="a1-recent-list" style={{ maxHeight: 250, overflowY: "auto" }}>
+    {data.expiry.expiringSoon.length === 0 ? (
+      <div className="a1-empty">No assets expiring soon</div>
+    ) : (
+      data.expiry.expiringSoon.map((item, i) => (
+        <div className="a1-recent-item" key={i}>
+          <img src={item.image || "/assets/placeholder.png"} className="a1-thumb" />
+          <div className="a1-recent-info">
+            <div className="a1-recent-name">{item.name || item.assetName}</div>
+            <div className="a1-recent-date">
+              Expires: {new Date(item.licenseExpiry || item.warrantyExpiry).toLocaleDateString()}
             </div>
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</div>
+
+<div className="a1-chart-card">
+  <div className="a1-card-title">Expired Assets</div>
+
+  <div className="a1-recent-list" style={{ maxHeight: 250, overflowY: "auto" }}>
+    {data.expiry.expired.length === 0 ? (
+      <div className="a1-empty">No expired assets 🎉</div>
+    ) : (
+      data.expiry.expired.map((item, i) => (
+        <div className="a1-recent-item" key={i}>
+          <img src={item.image || "/assets/placeholder.png"} className="a1-thumb" />
+          <div className="a1-recent-info">
+            <div className="a1-recent-name">{item.name || item.assetName}</div>
+            <div className="a1-recent-date">
+              Expired: {new Date(item.licenseExpiry || item.warrantyExpiry).toLocaleDateString()}
+            </div>
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</div>
+
 
             <div className="a1-recent-card">
               <div className="a1-card-title">Recent Activity</div>
