@@ -93,6 +93,7 @@
   gap: 12px;
   overflow-y: auto;
   padding-right: 6px;
+  height : 450px;
 }
 
 .a1-recent-item {
