@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+  import React, { useEffect, useMemo, useState } from "react";
 import "../Page_styles/Dashboard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -221,7 +221,7 @@ useEffect(() => {
 </div>
 
 
-            <div className="a1-recent-card">
+            {/* <div className="a1-recent-card">
               <div className="a1-card-title">Recent Activity</div>
               <div className="a1-recent-list" style={{ overflowY: "auto" }}>
                 {recent.length === 0 ? (
@@ -247,7 +247,7 @@ useEffect(() => {
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Footer KPIs */}
           <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
