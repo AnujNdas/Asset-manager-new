@@ -28,9 +28,18 @@ const upload = multer({ storage });
 router.post(
   "/",
   authenticateToken(),
+  (req, res, next) => {
+    console.log("🔥 A - Before Multer");
+    next();
+  },
   upload.single("image"),
+  (req, res, next) => {
+    console.log("🔥 B - After Multer - req.file =", req.file);
+    next();
+  },
   addAsset
 );
+
 
 router.put(
   "/:id",
