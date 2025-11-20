@@ -76,16 +76,6 @@ if (req.file) {
   updatedAssetData.imagePublicId = req.file.filename;
 }
 
-
-      // Upload new one
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-        folder: "assets",
-      });
-
-      updatedAssetData.image = uploadResult.secure_url;
-      updatedAssetData.imagePublicId = uploadResult.public_id;
-    }
-
     const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
 
     // Notification
