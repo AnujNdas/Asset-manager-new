@@ -1,26 +1,28 @@
-const Asset = require("../models/Asset")
-const LastAssetCode = require('../models/LastAssetCode');
-const crypto = require('crypto');
-
+const Asset = require("../models/Asset");
+const LastAssetCode = require("../models/LastAssetCode");
 const Notification = require("../models/Notification");
-// Add a new Asset
+const cloudinary = require("../config/cloudinary");
+
+// -----------------------------------------
+// ADD ASSET
+// -----------------------------------------
 const addAsset = async (req, res) => {
   try {
     const userId = req.user.id;
-
-    console.log("Incoming data:", req.body);
-    console.log("Uploaded file:", req.file);
 
     if (!req.file) {
       return res.status(400).json({ message: "Image is required" });
     }
 
-    // Convert uploaded file to Base64
-    const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    // Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: "assets",
+    });
 
     const newAsset = new Asset({
       ...req.body,
-      image: base64Image,
+      image: uploadResult.secure_url,
+      imagePublicId: uploadResult.public_id,
     });
 
     const savedAsset = await newAsset.save();
@@ -36,6 +38,7 @@ const addAsset = async (req, res) => {
     io.to(userId.toString()).emit("newNotification", newNotification);
 
     return res.status(201).json(savedAsset);
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error adding asset", error: error.message });
@@ -44,11 +47,14 @@ const addAsset = async (req, res) => {
 
 
 
+// -----------------------------------------
+// UPDATE ASSET
+// -----------------------------------------
 const updateAsset = async (req, res) => {
-  const { id } = req.params;
-  const userId = req.user.id;
-
   try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
     const existingAsset = await Asset.findById(id);
     if (!existingAsset) {
       return res.status(404).json({ message: "Asset not found" });
@@ -56,22 +62,32 @@ const updateAsset = async (req, res) => {
 
     let updatedAssetData = { ...req.body };
 
-    // Preserve generated fields
+    // Keep generated fields unchanged
     updatedAssetData.assetCode = existingAsset.assetCode;
     updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
 
-    // Image from multer.fields()
-    const uploadedImage = req.files?.image?.[0];
+    // If new image uploaded → replace old Cloudinary image
+    if (req.file) {
 
-    if (uploadedImage) {
-      updatedAssetData.image = `data:${uploadedImage.mimetype};base64,${uploadedImage.buffer.toString("base64")}`;
+      // Delete old file from Cloudinary
+      if (existingAsset.imagePublicId) {
+        await cloudinary.uploader.destroy(existingAsset.imagePublicId);
+      }
+
+      // Upload new one
+      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+        folder: "assets",
+      });
+
+      updatedAssetData.image = uploadResult.secure_url;
+      updatedAssetData.imagePublicId = uploadResult.public_id;
     }
 
     const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
 
     // Notification
     const newNotification = await Notification.create({
-      title: "Asset updated",
+      title: "Asset Updated",
       message: "Asset updated successfully.",
       userId,
     });
@@ -88,68 +104,91 @@ const updateAsset = async (req, res) => {
 };
 
 
-// Delete an asset by ID
-const deleteAsset = async (req,res) => {
-    try {
-        const { id } = req.params;
-        const userId = req.user.id;
 
-        const deletedAsset = await Asset.findByIdAndDelete(id);
-        if (!deletedAsset) {
-            return res.status(404).json({ message : "Asset not found"});
-        }
-        res.status(200).json({ message : "Asset succesfully deleted", deletedAsset});
+// -----------------------------------------
+// DELETE ASSET
+// -----------------------------------------
+const deleteAsset = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
 
-             // Create notification
+    const deletedAsset = await Asset.findByIdAndDelete(id);
+    if (!deletedAsset) {
+      return res.status(404).json({ message: "Asset not found" });
+    }
+
+    // Delete image from Cloudinary
+    if (deletedAsset.imagePublicId) {
+      await cloudinary.uploader.destroy(deletedAsset.imagePublicId);
+    }
+
+    // Notification
     const newNotification = await Notification.create({
       title: "Asset Deleted",
-      message: "Asset Deleted  successfully.",
+      message: "Asset deleted successfully.",
       userId,
     });
-    // Emit to user's room
+
     const io = req.app.get("io");
     io.to(userId.toString()).emit("newNotification", newNotification);
-    } catch (error) {
-        res.status(500).json({ message : "Error deleting asset", error : error.message});
-    }
+
+    return res.status(200).json({ message: "Asset successfully deleted", deletedAsset });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Error deleting asset", error: error.message });
+  }
 };
 
-// Get all Assets
-const getAllAssets = async (req,res)=>{
-    try {
-        const Assets = await Asset.find();
-        res.status(200).json(Assets);
-    } catch (error) {
-        res.status(500).json({ message : "Error feteching assets", error : error.message});
-    }
+
+
+
+// -----------------------------------------
+// GET ALL ASSETS
+// -----------------------------------------
+const getAllAssets = async (req, res) => {
+  try {
+    const assets = await Asset.find();
+    return res.status(200).json(assets);
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching assets", error: error.message });
+  }
 };
 
+
+
+// -----------------------------------------
+// GENERATE ASSET CODE
+// -----------------------------------------
 const generateAssetCode = async (req, res) => {
-    try {
-      const lastCodeData = await LastAssetCode.findOne();
-  
-      let newCodeNumber;
-      if (!lastCodeData) {
-        newCodeNumber = 1;
-        await LastAssetCode.create({ lastCode: newCodeNumber });
-      } else {
-        newCodeNumber = lastCodeData.lastCode + 1;
-        await LastAssetCode.updateOne({}, { lastCode: newCodeNumber });
-      }
-  
-      const assetCode = `ASSET-${newCodeNumber.toString().padStart(3, '0')}`;
-      res.json({ assetCode });
-    } catch (error) {
-      console.error('Error generating asset code:', error);
-      res.status(500).json({ message: 'Internal server error while generating asset code' });
+  try {
+    const lastCodeData = await LastAssetCode.findOne();
+
+    let newCodeNumber;
+
+    if (!lastCodeData) {
+      newCodeNumber = 1;
+      await LastAssetCode.create({ lastCode: newCodeNumber });
+    } else {
+      newCodeNumber = lastCodeData.lastCode + 1;
+      await LastAssetCode.updateOne({}, { lastCode: newCodeNumber });
     }
-  };
+
+    const assetCode = `ASSET-${newCodeNumber.toString().padStart(3, "0")}`;
+
+    res.json({ assetCode });
+  } catch (error) {
+    console.error("Error generating asset code:", error);
+    res.status(500).json({ message: "Internal server error while generating asset code" });
+  }
+};
+
 
 
 module.exports = {
-    addAsset,
-    deleteAsset,
-    getAllAssets,
-    generateAssetCode,
-    updateAsset
+  addAsset,
+  updateAsset,
+  deleteAsset,
+  getAllAssets,
+  generateAssetCode,
 };
