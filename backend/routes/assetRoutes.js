@@ -19,29 +19,26 @@ const Status = require("../models/Status");
 const router = express.Router();
 
 // Multer storage
-const storage = multer.memoryStorage();
+const storage = require("../Middleware/cloudinaryStorage");
 const upload = multer({ storage });
 
 
 
 // Routes
 router.post(
-  "/", 
-  authenticateToken(), 
-  upload.fields([{ name: "image", maxCount: 1 }]), 
+  "/",
+  authenticateToken(),
+  upload.single("image"),
   addAsset
 );
-router.get("/", getAllAssets);
-router.delete("/:id", authenticateToken(), deleteAsset);
-router.get("/asset-code", generateAssetCode);
-
 
 router.put(
-  "/:id", 
-  authenticateToken(), 
-  upload.fields([{ name: "image", maxCount: 1 }]), 
+  "/:id",
+  authenticateToken(),
+  upload.single("image"),
   updateAsset
 );
+
 
 
 // ✅ Bulk Upload Route
