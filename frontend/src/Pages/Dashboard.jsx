@@ -179,7 +179,7 @@ useEffect(() => {
             <div className="a1-chart-card">
   <div className="a1-card-title">Expiring Soon (Next 30 Days)</div>
 
-  <div className="a1-recent-list" style={{ maxHeight: 250, overflowY: "auto" }}>
+  <div className="a1-recent-list" style={{ overflowY: "auto" }}>
     {data.expiry.expiringSoon.length === 0 ? (
       <div className="a1-empty">No assets expiring soon</div>
     ) : (
@@ -201,7 +201,7 @@ useEffect(() => {
 <div className="a1-chart-card">
   <div className="a1-card-title">Expired Assets</div>
 
-  <div className="a1-recent-list" style={{ maxHeight: 250, overflowY: "auto" }}>
+  <div className="a1-recent-list" style={{ overflowY: "auto" }}>
     {data.expiry.expired.length === 0 ? (
       <div className="a1-empty">No expired assets 🎉</div>
     ) : (
