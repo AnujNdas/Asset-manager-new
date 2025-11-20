@@ -18,10 +18,11 @@
 =========================== */
 .a1-kpi-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* desktop default */
   gap: 14px;
 }
 
+/* Each card */
 .a1-kpi-card {
   display: flex;
   align-items: center;
@@ -32,7 +33,6 @@
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
   min-height: 80px;
 }
-
 .a1-kpi-icon {
   font-size: clamp(18px, 2vw, 24px);
   color: #6366F1;
@@ -143,6 +143,12 @@
   .a1-middle-row {
     grid-template-columns: 1fr;
   }
+     .a1-kpi-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    overflow-y: auto;      /* allow scroll */
+    max-height: 200px;     /* fits 2 rows cleanly */
+    padding-right: 4px;
+  }
 
   .a1-chart-box {
     min-height: 220px;
@@ -170,11 +176,17 @@
 }
 
 /* Extra small phones (≤420px) */
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .a1-kpi-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+    max-height: 180px;
   }
 
+  .a1-kpi-card {
+    padding: 10px;
+    min-height: 70px;
+  }
   .a1-chart-box {
     min-height: 180px;
   }
@@ -191,7 +203,10 @@
     gap: 6px;
     padding: 8px;
   }
-
+  .a1-kpi-row {
+    grid-template-columns: 1fr !important;
+    max-height: none;
+  }
   .a1-kpi-data span {
     font-size: 15px;
   }
