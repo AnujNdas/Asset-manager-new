@@ -159,6 +159,7 @@
 @media (max-width: 600px) {
   .a1-dashboard-container {
     padding: 10px;
+    overflow : auto;
   }
 
   .a1-kpi-row {
