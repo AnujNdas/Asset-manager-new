@@ -28,8 +28,8 @@ const DashboardCompact = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const handlenavigate = () => {
-    navigate("/inventory/hardware")
+  const handlenavigatehardware = () => {
+    navigate("/inventory?hardware")
   }
   // Fetch only once
 useEffect(() => {
@@ -144,7 +144,7 @@ useEffect(() => {
           {/* KPI Row */}
           <div className="a1-kpi-row">
 
-            <div className="a1-kpi-card" onClick={handlenavigate} >
+            <div className="a1-kpi-card" onClick={handlenavigatehardware} >
               <FontAwesomeIcon icon={faCubes} className="a1-kpi-icon" />
               <div className="a1-kpi-data">
                 <div>Hardware</div>
