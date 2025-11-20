@@ -1,80 +1,202 @@
-/* Compact SaaS A1 layout - responsive, full-height */
+/* ===========================
+   MAIN CONTAINER
+=========================== */
 .a1-dashboard-container {
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   padding: 14px;
   background: #F7F8FA;
   box-sizing: border-box;
   overflow: hidden;
 }
 
-/* KPI Row */
+/* ===========================
+   KPI ROW
+=========================== */
 .a1-kpi-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
 }
+
 .a1-kpi-card {
   display: flex;
   align-items: center;
   gap: 12px;
   background: #ffffff;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-  min-height: 72px;
+  min-height: 80px;
 }
+
 .a1-kpi-icon {
-  font-size: 20px;
+  font-size: clamp(18px, 2vw, 24px);
   color: #6366F1;
 }
-.a1-kpi-data div { font-size: 12px; color: #6B7280; }
-.a1-kpi-data span { font-size: 17px; font-weight: 600; color: #111827; }
 
-/* middle row */
+.a1-kpi-data div {
+  font-size: clamp(11px, 1.5vw, 13px);
+  color: #6B7280;
+}
+
+.a1-kpi-data span {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ===========================
+   MIDDLE ROW (Chart + Recent)
+=========================== */
 .a1-middle-row {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 12px;
-  flex: 1 1 auto;
-  height: 70%; /* important so children can scroll if needed */
+  gap: 14px;
+  flex-grow: 1;
+  min-height: 0;
 }
 
-/* Chart and Recent cards */
-.a1-chart-card, .a1-recent-card {
+.a1-chart-card,
+.a1-recent-card {
   background: #fff;
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 14px;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
-.a1-card-title { font-weight: 600; color: #111827; font-size: 14px; margin-bottom: 8px; }
-.a1-chart-box { flex: 1 1 auto; min-height: 180px; position: relative; }
 
-/* Recent list */
-.a1-recent-list { display: flex; flex-direction: column; gap: 10px; overflow: auto; padding-right: 6px; }
-.a1-recent-item { display: flex; align-items: center; gap: 10px; padding: 6px 2px; }
-.a1-thumb { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; background: #f0f0f0; }
-.a1-recent-name { font-size: 14px; font-weight: 600; color: #111827; }
-.a1-recent-date { font-size: 12px; color: #6B7280; }
-.a1-empty { color: #6B7280; font-size: 13px; padding: 8px 4px }
-
-/* responsive - stack on smaller screens */
-@media (max-width: 900px) {
-  .a1-kpi-row { grid-template-columns: repeat(2, 1fr); }
-  .a1-middle-row { grid-template-columns: 1fr; }
-  .a1-chart-box { min-height: 200px; }
+.a1-card-title {
+  font-weight: 600;
+  color: #111827;
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
-/* very small */
-@media (max-width: 480px) {
-  .a1-kpi-row { grid-template-columns: 1fr; }
-  .a1-kpi-card { padding: 10px; gap: 8px; }
-  .a1-kpi-data span { font-size: 16px; }
-  .a1-thumb { width: 40px; height: 40px; }
+.a1-chart-box {
+  flex: 1 1 auto;
+  min-height: 200px;
+  position: relative;
+}
+
+/* ===========================
+   RECENT ACTIVITY LIST
+=========================== */
+.a1-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.a1-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 2px;
+}
+
+.a1-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+
+.a1-recent-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.a1-recent-date {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+.a1-empty {
+  color: #6B7280;
+  font-size: 13px;
+  padding: 8px 4px;
+}
+
+/* ===========================
+   RESPONSIVE BREAKPOINTS
+=========================== */
+
+/* Large laptop (≤1200px) */
+@media (max-width: 1200px) {
+  .a1-middle-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Tablets (≤900px) */
+@media (max-width: 900px) {
+  .a1-middle-row {
+    grid-template-columns: 1fr;
+  }
+
+  .a1-chart-box {
+    min-height: 220px;
+  }
+}
+
+/* Phones (≤600px) */
+@media (max-width: 600px) {
+  .a1-dashboard-container {
+    padding: 10px;
+  }
+
+  .a1-kpi-row {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .a1-kpi-card {
+    padding: 10px;
+  }
+
+  .a1-thumb {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Extra small phones (≤420px) */
+@media (max-width: 420px) {
+  .a1-kpi-row {
+    grid-template-columns: 1fr;
+  }
+
+  .a1-chart-box {
+    min-height: 180px;
+  }
+
+  .a1-thumb {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* Ultra small devices (≤350px) */
+@media (max-width: 350px) {
+  .a1-kpi-card {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .a1-kpi-data span {
+    font-size: 15px;
+  }
+
+  .a1-chart-box {
+    min-height: 150px;
+  }
 }
