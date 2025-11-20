@@ -38,7 +38,7 @@ router.put(
   upload.single("image"),
   updateAsset
 );
-
+router.get("/", authenticateToken(), getAllAssets);
 
 
 // ✅ Bulk Upload Route
