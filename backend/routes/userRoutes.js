@@ -29,7 +29,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
     // 🔥 EXPIRY SYSTEM
     // ---------------------------------------
     const today = new Date();
-    const next30Days = new Date();
+    const next50Days = new Date();
     next50Days.setDate(today.getDate() + 50);
 
     // --- SOFTWARE EXPIRY ---
