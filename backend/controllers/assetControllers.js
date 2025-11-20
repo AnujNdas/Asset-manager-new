@@ -41,7 +41,8 @@ const addAsset = async (req, res) => {
     return res.status(201).json(savedAsset);
 
   } catch (error) {
-    console.error(error);
+    console.log("❌ Add Asset Error →", JSON.stringify(error, null, 2));
+
     return res.status(500).json({ message: "Error adding asset", error: error.message });
   }
 };
