@@ -111,11 +111,12 @@ const handleEditSubmit = async (e) => {
     const formData = new FormData();
 
     // Append text fields
-    Object.entries(editForm).forEach(([key, value]) => {
-      if (key !== "imageFile" && key !== "imagePreview") {
-        formData.append(key, value);
-      }
-    });
+  Object.entries(editForm).forEach(([key, value]) => {
+  if (key !== "imagePreview" && key !== "imageFile") {
+    formData.append(key, value);
+  }
+});
+
 
     // Append file with correct field name
     if (editForm.imageFile) {
