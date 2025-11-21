@@ -59,11 +59,20 @@ const addAsset = async (req, res) => {
 // -----------------------------------------
 const updateAsset = async (req, res) => {
   try {
+    console.log("⚡ UPDATE ASSET DEBUG START ⚡");
+    console.log("➡ Route Params:", req.params);
+    console.log("➡ Raw Body:", req.body);
+
+    // Multer file debug
+    console.log("➡ Multer req.file:", req.file);
+    console.log("➡ Multer req.files:", req.files);
+
     const { id } = req.params;
     const userId = req.user.id;
 
     const existingAsset = await Asset.findById(id);
     if (!existingAsset) {
+      console.log("❌ Asset not found in DB");
       return res.status(404).json({ message: "Asset not found" });
     }
 
@@ -75,21 +84,31 @@ const updateAsset = async (req, res) => {
 
     // Check for new uploaded file
     if (req.file) {
+      console.log("📸 New image uploaded:", {
+        url: req.file.path,
+        public_id: req.file.public_id,
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname
+      });
+
       // Delete old image from Cloudinary
       if (existingAsset.imagePublicId) {
+        console.log("🧹 Deleting old Cloudinary image:", existingAsset.imagePublicId);
         await cloudinary.uploader.destroy(existingAsset.imagePublicId);
       }
 
       // Save new Cloudinary data
-      updatedAssetData.image = req.file.path;        // URL
-      updatedAssetData.imagePublicId = req.file.public_id; // REAL public_id
+      updatedAssetData.image = req.file.path; // URL
+      updatedAssetData.imagePublicId = req.file.public_id; // public_id
+    } else {
+      console.log("⚠ No new image uploaded — multer did not receive file!");
     }
 
-    const updatedAsset = await Asset.findByIdAndUpdate(
-      id,
-      updatedAssetData,
-      { new: true }
-    );
+    const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, {
+      new: true
+    });
+
+    console.log("✅ Asset updated successfully:", updatedAsset._id);
 
     // Notification
     const newNotification = await Notification.create({
@@ -101,13 +120,21 @@ const updateAsset = async (req, res) => {
     const io = req.app.get("io");
     io.to(userId.toString()).emit("newNotification", newNotification);
 
+    console.log("📨 Notification sent to user:", userId);
+
+    console.log("⚡ UPDATE ASSET DEBUG END ⚡");
+
     return res.status(200).json(updatedAsset);
 
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Error updating asset", error: error.message });
+    console.error("🔥 UPDATE ASSET ERROR:", error);
+    return res.status(500).json({
+      message: "Error updating asset",
+      error: error.message
+    });
   }
 };
+
 
 
 
