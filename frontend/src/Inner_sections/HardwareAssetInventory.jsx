@@ -366,6 +366,7 @@ const handleEditSubmit = async (e) => {
             Update Image
             <input
               type="file"
+              name="image"
               accept="image/*"
               className="file-input"
               onChange={(e) => {
