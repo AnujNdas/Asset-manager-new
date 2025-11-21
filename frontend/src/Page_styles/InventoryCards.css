@@ -10,11 +10,15 @@
 }
 
 /* 🧾 Inventory Grid */
+/* === 3×2 GRID (3 columns, 2 rows) === */
 .inventory-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-rows: repeat(2, auto);   /* 2 rows */
   gap: 20px;
+  margin-top: 25px;
 }
+
 
 /* 📦 Card */
 .inventory-card {
