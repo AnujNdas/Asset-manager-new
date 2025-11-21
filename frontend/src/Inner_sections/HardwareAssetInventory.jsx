@@ -25,7 +25,7 @@ const HardwareAssetList = () => {
   const [editForm, setEditForm] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
-  const assetsPerPage = 6;
+  const assetsPerPage = 8;
 
   useEffect(() => {
     fetchAll();
