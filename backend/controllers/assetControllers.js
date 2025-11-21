@@ -73,15 +73,23 @@ const updateAsset = async (req, res) => {
     updatedAssetData.assetCode = existingAsset.assetCode;
     updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
 
-    // If new image uploaded → replace old Cloudinary image
-if (req.file) {
-  await cloudinary.uploader.destroy(existingAsset.imagePublicId);
+    // Check for new uploaded file
+    if (req.file) {
+      // Delete old image from Cloudinary
+      if (existingAsset.imagePublicId) {
+        await cloudinary.uploader.destroy(existingAsset.imagePublicId);
+      }
 
-  updatedAssetData.image = req.file.path;
-  updatedAssetData.imagePublicId = req.file.filename;
-}
+      // Save new Cloudinary data
+      updatedAssetData.image = req.file.path;        // URL
+      updatedAssetData.imagePublicId = req.file.public_id; // REAL public_id
+    }
 
-    const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
+    const updatedAsset = await Asset.findByIdAndUpdate(
+      id,
+      updatedAssetData,
+      { new: true }
+    );
 
     // Notification
     const newNotification = await Notification.create({
