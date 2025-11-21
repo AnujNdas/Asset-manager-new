@@ -122,9 +122,6 @@ const handleEditSubmit = async (e) => {
     if (editForm.imageFile) {
       formData.append("image", editForm.imageFile);  // MUST be "image"
     }
-    for (let pair of data.entries()) {
-  console.log(pair[0], pair[1]);
-}
 
     const updated = await updateHardwareAsset(editingAsset._id, formData);
 
