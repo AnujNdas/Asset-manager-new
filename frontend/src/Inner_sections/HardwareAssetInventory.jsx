@@ -343,11 +343,20 @@ const handleEditSubmit = async (e) => {
 <AnimatePresence>
  {/* EDIT ASSET MODAL */}
 {editingAsset && (
-  <div className="popup-backdrop" onClick={() => setEditingAsset(null)}>
-    <div
-      className="popup-card"
-      onClick={(e) => e.stopPropagation()}
+  <motion.div
+      className="popup-backdrop fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditingAsset(null)}
     >
+    <motion.div
+        className="popup-card bg-white rounded-lg p-6 w-full max-w-lg shadow-xl"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        onClick={(e) => e.stopPropagation()}
+      >
       <form className="edit-grid" onSubmit={handleEditSubmit}>
         
         <h3 className="modal-title">Edit Asset</h3>
@@ -537,8 +546,8 @@ const handleEditSubmit = async (e) => {
         </div>
 
       </form>
-    </div>
-  </div>
+ </motion.div>
+    </motion.div>
 )}
 
 </AnimatePresence>
