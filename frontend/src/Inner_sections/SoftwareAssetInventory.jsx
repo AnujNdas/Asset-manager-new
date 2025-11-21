@@ -281,7 +281,7 @@ const SoftwareAssetList = () => {
 
   return (
     <div className="inventory-container">
-      <h2 className="inventory-title">Software Inventory</h2>
+      {/* <h2 className="inventory-title">Software Inventory</h2> */}
 
       <div className="inventory-grid">
         {currentItems.length === 0 ? (
