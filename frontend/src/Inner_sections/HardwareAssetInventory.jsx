@@ -439,7 +439,7 @@ const handleEditSubmit = async (e) => {
             onChange={handleEditChange}
           >
             <option value="">Select</option>
-            {statusList.map((s) => (
+            {statuses.map((s) => (
               <option key={s._id} value={s._id}>{s.name}</option>
             ))}
           </select>
