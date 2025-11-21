@@ -240,7 +240,7 @@ const handleEditSubmit = async (e) => {
 
   return (
     <div className="inventory-container">
-      <h2 className="inventory-title"> Hardware Assets</h2>
+      {/* <h2 className="inventory-title"> Hardware Assets</h2> */}
 
       {/* Grid */}
       <div className="inventory-grid">
