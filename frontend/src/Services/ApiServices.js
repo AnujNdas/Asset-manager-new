@@ -127,9 +127,18 @@ export const deleteCoreLicense = async (id) => {
 
 
 export const bulkUploadHardwareAssets = async (data) => {
-  const response = await axiosInstance.post("/assets/bulk-upload", data);
+  const response = await axiosInstance.post(
+    "/assets/bulk-upload",
+    data,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+      validateStatus: () => true, // ← prevents axios auto-throwing errors
+    }
+  );
+
   return response.data;
 };
+
 
 
 
