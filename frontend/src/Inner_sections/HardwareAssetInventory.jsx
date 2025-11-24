@@ -289,54 +289,113 @@ const handleEditSubmit = async (e) => {
       {renderPagination()}
 
       {/* View Modal: image left, details right */}
-      <AnimatePresence>
-        {selectedAsset && (
-          <motion.div
-            className="overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedAsset(null)}
-          >
-            <motion.div
-              className="overlay-content view-modal"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="view-left">
-                <img
-                  src={selectedAsset.image}
-                  alt="Asset"
-                  className="view-image"
-                />
-              </div>
+     <AnimatePresence>
+  {selectedAsset && (
+    <motion.div
+      className="overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setSelectedAsset(null)}
+    >
+      <motion.div
+        className="overlay-content view-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* LEFT IMAGE SIDE */}
+        <div className="view-left saas-image-card">
+          <img
+            src={selectedAsset.image}
+            alt="Asset"
+            className="view-image saas-image"
+          />
+        </div>
 
-              <div className="view-right">
-                <h3 className="view-title">{selectedAsset.assetName || selectedAsset.assetCode}</h3>
+        {/* RIGHT CONTENT SIDE */}
+        <div className="view-right saas-content">
+          {/* TITLE */}
+          <h3 className="view-title saas-title">
+            {selectedAsset.assetName || selectedAsset.assetCode}
+          </h3>
 
-                <div className="view-details">
-                  <p><strong>Asset Code:</strong> {selectedAsset.assetCode || "—"}</p>
-                  <p><strong>Specification:</strong> {selectedAsset.assetSpecification || "—"}</p>
-                  <p><strong>Category:</strong> {getName(categories, selectedAsset.assetCategory)}</p>
-                  <p><strong>Location:</strong> {getName(locations, selectedAsset.locationName)}</p>
-                  <p><strong>Unit:</strong> {getName(units, selectedAsset.associateUnit)}</p>
-                  <p><strong>Status:</strong> {getName(statuses, selectedAsset.assetStatus)}</p>
-                  <p><strong>Purchase Date:</strong> {selectedAsset.DOP ? new Date(selectedAsset.DOP).toLocaleDateString() : "N/A"}</p>
-                  <p><strong>Expiry Date:</strong> {selectedAsset.DOE ? new Date(selectedAsset.DOE).toLocaleDateString() : "N/A"}</p>
-                  <p><strong>Purchase From:</strong> {selectedAsset.purchaseFrom || "N/A"}</p>
-                  <p><strong>Lifetime:</strong> {selectedAsset.assetLifetime || "N/A"}</p>
-                </div>
+          {/* BADGES */}
+          <div className="saas-badges">
+            <span className="saas-badge">
+              {getName(categories, selectedAsset.assetCategory)}
+            </span>
+            <span className="saas-badge status">
+              {getName(statuses, selectedAsset.assetStatus)}
+            </span>
+          </div>
 
-                <div className="modal-actions" style={{ marginTop: 12 }}>
-                  <button className="close-btn" onClick={() => setSelectedAsset(null)}>Close</button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {/* DETAILS SECTION */}
+          <h4 className="saas-section-title">Asset Details</h4>
+
+          <div className="saas-details-grid">
+            <div>
+              <label>Asset Code</label>
+              <p>{selectedAsset.assetCode || "—"}</p>
+            </div>
+
+            <div>
+              <label>Specification</label>
+              <p>{selectedAsset.assetSpecification || "—"}</p>
+            </div>
+
+            <div>
+              <label>Location</label>
+              <p>{getName(locations, selectedAsset.locationName) || "—"}</p>
+            </div>
+
+            <div>
+              <label>Unit</label>
+              <p>{getName(units, selectedAsset.associateUnit) || "—"}</p>
+            </div>
+
+            <div>
+              <label>Purchase Date</label>
+              <p>
+                {selectedAsset.DOP
+                  ? new Date(selectedAsset.DOP).toLocaleDateString()
+                  : "N/A"}
+              </p>
+            </div>
+
+            <div>
+              <label>Expiry Date</label>
+              <p>
+                {selectedAsset.DOE
+                  ? new Date(selectedAsset.DOE).toLocaleDateString()
+                  : "N/A"}
+              </p>
+            </div>
+
+            <div>
+              <label>Purchase From</label>
+              <p>{selectedAsset.purchaseFrom || "N/A"}</p>
+            </div>
+
+            <div>
+              <label>Lifetime</label>
+              <p>{selectedAsset.assetLifetime || "N/A"}</p>
+            </div>
+          </div>
+
+          {/* FOOTER ACTIONS */}
+          <div className="modal-actions saas-actions">
+            <button className="close-btn" onClick={() => setSelectedAsset(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
       {/* Edit Modal (unchanged) */}
       {/* ========================= EDIT MODAL ========================= */}
