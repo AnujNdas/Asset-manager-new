@@ -8,7 +8,7 @@ const {
   getAllAssets,
   generateAssetCode,
   updateAsset,
-  bulkupload,
+  bulkUpload,
 } = require("../controllers/assetControllers");
 
 const Assets = require("../models/Asset"); 
@@ -64,7 +64,7 @@ router.post(
     { name: "excel" },
     { name: "imagesZip" }
   ]),
-  bulkupload
+  bulkUpload
 );
 
 
