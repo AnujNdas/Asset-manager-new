@@ -288,8 +288,7 @@
 /* Badges Row */
 .saas-badges {
   display: flex;
-  gap: 6px;                /* reduced gap */
-  margin-bottom: 14px;     /* reduced */
+  gap: 6px;               /* reduced */
 }
 
 .saas-badge {
@@ -313,8 +312,6 @@
 .saas-details-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px 14px;           /* tighter grid */
-  margin-bottom: 18px;      /* less bottom space */
 }
 
 .saas-details-grid label {
@@ -332,8 +329,7 @@
 /* Modal Actions */
 .saas-actions {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 4px;          /* compact spacing */
+  justify-content: flex-end;         /* compact spacing */
 }
 
 .close-btn {
