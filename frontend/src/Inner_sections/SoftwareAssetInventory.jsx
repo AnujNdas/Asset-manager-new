@@ -341,136 +341,55 @@ const SoftwareAssetList = () => {
       onClick={() => setSelectedAsset(null)}
     >
       <motion.div
-        className="overlay-content view-modal"
+        className="overlay-content view-modal compact-modal"
         initial={{ scale: 0.96 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.96 }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* LEFT SIDE — ICON BOX */}
-        <div className="view-left saas-image-card icon-left">
-          <div className="software-icon">
-            <span className="software-initials">{initialsFor(selectedAsset.name)}</span>
+
+        {/* TOP HEADER */}
+        <div className="compact-header">
+          <div className="software-icon-sm">
+            <span className="software-initials-sm">
+              {initialsFor(selectedAsset.name)}
+            </span>
           </div>
+          <h3 className="view-title">{selectedAsset.name}</h3>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="view-right">
-
-          {/* TITLE */}
-          <h3 className="saas-title">{selectedAsset.name || "Software"}</h3>
-
-          {/* BADGES */}
-          <div className="saas-badges">
-            <span className="saas-badge">{selectedAsset.category || "Uncategorized"}</span>
-            <span className="saas-badge">{selectedAsset.licenseType || "License"}</span>
-          </div>
-
-          {/* DETAILS */}
-          <div className="saas-section-title">Software Information</div>
-
-          <div className="saas-details-grid">
-            <div>
-              <label>Version</label>
-              <p>{selectedAsset.version || "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Publisher</label>
-              <p>{selectedAsset.publisher || "N/A"}</p>
-            </div>
-
-            <div>
-              <label>License Key</label>
-              <p>{selectedAsset.licenseKey || "N/A"}</p>
-            </div>
-
-            <div>
-              <label>License Term</label>
-              <p>{selectedAsset.contractTerm || "N/A"}</p>
-            </div>
-
-            <div>
-              <label>License Start</label>
-              <p>{selectedAsset.licenseStartDate ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() : "N/A"}</p>
-            </div>
-
-            <div>
-              <label>License Expiry</label>
-              <p>{selectedAsset.licenseExpiry ? new Date(selectedAsset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Total Licenses</label>
-              <p>{selectedAsset.totalLicenses ?? 0}</p>
-            </div>
-
-            <div>
-              <label>Assigned</label>
-              <p>{selectedAsset.licensesAssigned ?? 0}</p>
-            </div>
-
-            <div>
-              <label>Purchase Date</label>
-              <p>{selectedAsset.purchaseDate ? new Date(selectedAsset.purchaseDate).toLocaleDateString() : "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Cost Per Unit</label>
-              <p>{selectedAsset.costPerUnit ? `₹${selectedAsset.costPerUnit}` : "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Total Cost</label>
-              <p>{selectedAsset.totalCost ? `₹${selectedAsset.totalCost}` : "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Assigned Users</label>
-              <p>{selectedAsset.assignedUsers?.length ? selectedAsset.assignedUsers.join(", ") : "None"}</p>
-            </div>
-
-            <div>
-              <label>Linked Devices</label>
-              <p>{selectedAsset.linkedDevices?.length ? selectedAsset.linkedDevices.join(", ") : "None"}</p>
-            </div>
-
-            <div>
-              <label>Support Vendor</label>
-              <p>{selectedAsset.supportContract?.vendorContact || selectedAsset.supportVendor || "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Compliance</label>
-              <p>{selectedAsset.complianceStatus || "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Last Access</label>
-              <p>{selectedAsset.lastAccess ? new Date(selectedAsset.lastAccess).toLocaleDateString() : "N/A"}</p>
-            </div>
-
-            <div>
-              <label>Audit</label>
-              <p>
-                {selectedAsset.auditHistory?.length
-                  ? selectedAsset.auditHistory
-                      .map(a => `${new Date(a.date).toLocaleDateString()}: ${a.notes}`)
-                      .join(" | ")
-                  : "None"}
-              </p>
-            </div>
-          </div>
-
-          {/* ACTIONS */}
-          <div className="saas-actions">
-            <button className="close-btn" onClick={() => setSelectedAsset(null)}>Close</button>
-          </div>
+        {/* DETAILS */}
+        <div className="view-details compact-grid">
+          <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
+          <p><strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}</p>
+          <p><strong>Category:</strong> {selectedAsset.category || "N/A"}</p>
+          <p><strong>License Type:</strong> {selectedAsset.licenseType || "N/A"}</p>
+          <p><strong>License Key:</strong> {selectedAsset.licenseKey || "N/A"}</p>
+          <p><strong>License Start:</strong> {selectedAsset.licenseStartDate ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() : "N/A"}</p>
+          <p><strong>License Expiry:</strong> {selectedAsset.licenseExpiry ? new Date(selectedAsset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
+          <p><strong>Total Licenses:</strong> {selectedAsset.totalLicenses ?? 0}</p>
+          <p><strong>Assigned:</strong> {selectedAsset.licensesAssigned ?? 0}</p>
+          <p><strong>Purchase Date:</strong> {selectedAsset.purchaseDate ? new Date(selectedAsset.purchaseDate).toLocaleDateString() : "N/A"}</p>
+          <p><strong>Cost Per Unit:</strong> {selectedAsset.costPerUnit ? `₹${selectedAsset.costPerUnit}` : "N/A"}</p>
+          <p><strong>Total Cost:</strong> {selectedAsset.totalCost ? `₹${selectedAsset.totalCost}` : "N/A"}</p>
+          <p><strong>Assigned Users:</strong> {selectedAsset.assignedUsers?.length ? selectedAsset.assignedUsers.join(", ") : "None"}</p>
+          <p><strong>Linked Devices:</strong> {selectedAsset.linkedDevices?.length ? selectedAsset.linkedDevices.join(", ") : "None"}</p>
+          <p><strong>Contract Term:</strong> {selectedAsset.contractTerm || "N/A"}</p>
+          <p><strong>Support Vendor:</strong> {selectedAsset.supportContract?.vendorContact || selectedAsset.supportVendor || "N/A"}</p>
+          <p><strong>Compliance:</strong> {selectedAsset.complianceStatus || "N/A"}</p>
+          <p><strong>Last Access:</strong> {selectedAsset.lastAccess ? new Date(selectedAsset.lastAccess).toLocaleDateString() : "N/A"}</p>
         </div>
+
+        {/* BUTTON */}
+        <div className="modal-actions" style={{ marginTop: 10 }}>
+          <button className="close-btn" onClick={() => setSelectedAsset(null)}>Close</button>
+        </div>
+
       </motion.div>
     </motion.div>
   )}
 </AnimatePresence>
+
 
 
       {/* Edit Modal */}
