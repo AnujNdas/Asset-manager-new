@@ -45,17 +45,15 @@ router.post(
 router.put(
   "/:id",
   authenticateToken(),
+  upload.any(),
   (req, res, next) => {
-    console.log("🔥 PUT A - Before Multer");
-    next();
-  },
-  upload.single("image"),
-  (req, res, next) => {
-    console.log("🔥 PUT B - After Multer - req.file =", req.file);
+    console.log("📌 Incoming BODY:", req.body);
+    console.log("📌 Incoming FILES:", req.files);
     next();
   },
   updateAsset
 );
+
 
 router.get("/", authenticateToken(), getAllAssets);
 router.delete("/:id", authenticateToken(), deleteAsset); 
