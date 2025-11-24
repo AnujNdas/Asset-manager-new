@@ -355,12 +355,12 @@ const SoftwareAssetList = () => {
         <div className="software-col icon-col">
           <div className="software-icon-box">
             {initialsFor(selectedAsset.name)}
+            <h3 className="software-title">{selectedAsset.name || "Software"}</h3>
           </div>
         </div>
 
         {/* COLUMN 2: DATA */}
         <div className="software-col data-col">
-          <h3 className="software-title">{selectedAsset.name || "Software"}</h3>
 
           <div className="software-data-grid">
             <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
