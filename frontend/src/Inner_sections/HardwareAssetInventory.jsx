@@ -135,7 +135,7 @@ const handleEditSubmit = async (e) => {
   } catch (err) {
     Swal.fire("Error", err.message || "Update failed", "error");
   }
-}}
+}
 
 
   const handleEditChange = (e) => {
@@ -238,7 +238,7 @@ const handleEditSubmit = async (e) => {
         </button>
       </div>
     );
-
+  }
   return (
     <div className="inventory-container">
       {/* <h2 className="inventory-title"> Hardware Assets</h2> */}
