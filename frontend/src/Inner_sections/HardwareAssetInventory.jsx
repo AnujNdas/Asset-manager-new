@@ -396,42 +396,8 @@ const handleEditSubmit = async (e) => {
           Edit Asset — {editingAsset.assetName || editingAsset.assetCode}
         </h3>
 
-        <form
-          className="edit-grid"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const formData = new FormData();
+       <form className="edit-grid" onSubmit={handleEditSubmit}>
 
-            // Add normal fields
-            Object.entries(editForm).forEach(([key, value]) => {
-              if (key !== "imagePreview") formData.append(key, value);
-            });
-
-            // Add file if uploaded
-            if (editForm.imageFile) {
-              formData.append("image", editForm.imageFile);
-            }
-
-            try {
-              const updated = await updateHardwareAsset(
-                editingAsset._id,
-                formData
-              );
-
-              const newAsset = updated?.data ?? updated;
-
-              setAssets((prev) =>
-                prev.map((a) => (a._id === newAsset._id ? newAsset : a))
-              );
-
-              setEditingAsset(null);
-              setEditForm({});
-              Swal.fire("Updated", "Asset updated successfully.", "success");
-            } catch (err) {
-              Swal.fire("Error", err.message || "Update failed", "error");
-            }
-          }}
-        >
           <input
             name="assetName"
             placeholder="Asset Name"
