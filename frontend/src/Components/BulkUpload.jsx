@@ -4,13 +4,13 @@ import Swal from "sweetalert2";
 import {
   bulkUploadHardwareAssets,
   bulkUploadSoftwareAssets,
-  bulkUploadCoreLicenses,
 } from "../Services/ApiServices";
 import "../Component_styles/BulkUpload.css";
-import { FiUploadCloud, FiDownload, FiFile } from "react-icons/fi";
+import { FiUploadCloud, FiDownload, FiFile, FiArchive } from "react-icons/fi";
 
 const BulkUpload = ({ type, userRole }) => {
-  const [file, setFile] = useState(null);
+  const [excelFile, setExcelFile] = useState(null);
+  const [zipFile, setZipFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [mode, setMode] = useState("strict");
 
@@ -22,134 +22,95 @@ const BulkUpload = ({ type, userRole }) => {
     if (!DOP || !DOE) return "";
     const start = new Date(DOP);
     const end = new Date(DOE);
-    const diffTime = end - start;
-    if (diffTime <= 0) return "0 years";
-    return `${Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 365))} years`;
+    const diff = end - start;
+    if (diff <= 0) return "0 years";
+    return `${Math.ceil(diff / (1000 * 60 * 60 * 24 * 365))} years`;
   };
 
- const templates = {
-  hardware: [
-    {
-      assetCode: "",
-      assetCategory: "",
-      barcodeNumber: "",
-      assetName: "",
-      associateUnit: "",
-      image: "",
-      imagePublicId: "",
-      locationName: "",
-      assetSpecification: "",
-      assetStatus: "",
-      DOP: "",
-      DOE: "",
-      assetLifetime: "",
-      purchaseFrom: "",
-      PMD: "",
-    },
-  ],
+  const templates = {
+    hardware: [
+      {
+        assetCode: "",
+        assetCategory: "",
+        barcodeNumber: "",
+        assetName: "",
+        associateUnit: "",
+        image: "", // <-- REQUIRED for ZIP matching
+        locationName: "",
+        assetSpecification: "",
+        assetStatus: "",
+        DOP: "",
+        DOE: "",
+        assetLifetime: "",
+        purchaseFrom: "",
+      },
+    ],
+    software: [
+      {
+        name: "",
+        version: "",
+        publisher: "",
+        category: "",
+      },
+    ],
+  };
 
-  software: [
-    {
-      name: "",
-      version: "",
-      publisher: "",
-      category: "",
-      installLocation: "",
-      assetTag: "",
-
-      licenseKey: "",
-      licenseType: "",
-      licenseModel: "",
-      licenseMetric: "",
-      licenseUse: "",
-      licenseStartDate: "",
-      licenseExpiry: "",
-      renewalCycle: "",
-      renewalReminder: "",
-
-      totalLicenses: "",
-      licensesAssigned: "",
-      licensesAvailable: "",
-
-      purchaseDate: "",
-      costPerUnit: "",
-      totalCost: "",
-      currency: "",
-      costCenter: "",
-      purchaseOrder: "",
-
-      assignedTo: "",
-      assignedUsers: "",
-      linkedDevices: "",
-      geoRestriction: "",
-
-      contractTerm: "",
-      contractDocs: "",
-      "supportContract.startDate": "",
-      "supportContract.endDate": "",
-      "supportContract.vendorContact": "",
-      licenseDocument: "",
-      subscriptionId: "",
-      complianceStatus: "",
-
-      lastAccess: "",
-      authenticationMethod: "",
-      businessUnit: "",
-      criticality: "",
-      riskClassification: "",
-      vendorContactDetails: "",
-      integrationDependencies: "",
-      auditHistory: "",
-      optimizationRecommendation: "",
-    },
-  ],
-};
   const handleUpload = async () => {
-    if (!file)
-      return Swal.fire("No File", "Please upload an Excel file!", "warning");
+    if (!excelFile)
+      return Swal.fire("Missing File", "Upload an Excel file first!", "warning");
 
     const reader = new FileReader();
+
     reader.onload = async (e) => {
-      const workbook = XLSX.read(new Uint8Array(e.target.result), {
-        type: "array",
-      });
-      const worksheet = XLSX.utils.sheet_to_json(
-        workbook.Sheets[workbook.SheetNames[0]]
+      const workbook = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
+      const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+
+      if (type === "hardware") {
+        worksheet.forEach(
+          (row) => (row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE))
+        );
+      }
+
+      // -----------------------------
+      // PREPARE FORM DATA
+      // -----------------------------
+      const formData = new FormData();
+      formData.append("excel", excelFile);
+      if (zipFile) formData.append("imagesZip", zipFile);
+
+      formData.append(
+        "assets",
+        JSON.stringify(worksheet)
       );
+      formData.append("mode", mode);
+
+      let res;
 
       try {
         if (type === "hardware") {
-          worksheet.forEach(
-            (row) =>
-              (row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE))
-          );
+          res = await bulkUploadHardwareAssets(formData);
+        } else if (type === "software") {
+          res = await bulkUploadSoftwareAssets(formData);
         }
 
-        const payload = { assets: worksheet, mode };
-        let res;
-
-        if (type === "hardware")
-          res = await bulkUploadHardwareAssets(payload);
-        if (type === "software")
-          res = await bulkUploadSoftwareAssets(payload);
-        // if (type === "core-license")
-        //   res = await bulkUploadCoreLicenses(payload);
-
         Swal.fire(
-          "Success",
-          `${res.insertedCount} records imported successfully`,
+          "Success!",
+          `${res.data.inserted} assets imported\n${res.data.skipped} skipped`,
           "success"
         );
       } catch (err) {
         Swal.fire("Error", "Import failed!", "error");
       }
     };
-    reader.readAsArrayBuffer(file);
+
+    reader.readAsArrayBuffer(excelFile);
   };
 
   return (
     <div className="bulk-wrapper">
+
       <div className="bulk-card">
+
         <h2 className="bulk-title">
           Import {type === "hardware" ? "Hardware Assets" : "Software Assets"}
         </h2>
@@ -158,7 +119,7 @@ const BulkUpload = ({ type, userRole }) => {
           Mode: <strong>{mode === "auto" ? "Auto (Super Admin)" : "Strict"}</strong>
         </p>
 
-        {/* DRAG AND DROP ZONE */}
+        {/* EXCEL UPLOAD */}
         <div
           className={`dropzone ${dragOver ? "drag-over" : ""}`}
           onDragOver={(e) => {
@@ -169,31 +130,51 @@ const BulkUpload = ({ type, userRole }) => {
           onDrop={(e) => {
             e.preventDefault();
             setDragOver(false);
-            setFile(e.dataTransfer.files[0]);
+            setExcelFile(e.dataTransfer.files[0]);
           }}
         >
           <FiUploadCloud className="drop-icon" />
-          <p className="drop-main-text">
-            Drag & drop your Excel file here
-          </p>
+          <p className="drop-main-text">Drag & drop Excel file</p>
           <p className="drop-sub-text">or click to browse</p>
 
           <input
             type="file"
-            accept=".xlsx, .xls"
-            onChange={(e) => setFile(e.target.files[0])}
+            accept=".xlsx"
+            onChange={(e) => setExcelFile(e.target.files[0])}
           />
         </div>
 
-        {/* SELECTED FILE PREVIEW */}
-        {file && (
+        {excelFile && (
           <div className="file-preview">
             <FiFile className="file-icon" />
-            <span>{file.name}</span>
+            <span>{excelFile.name}</span>
           </div>
         )}
 
-        {/* BUTTONS */}
+        {/* ZIP UPLOAD */}
+        {type === "hardware" && (
+          <>
+            <label className="zip-label">Upload ZIP (Images Folder)</label>
+
+            <div className="zip-box">
+              <FiArchive className="zip-icon" />
+              <input
+                type="file"
+                accept=".zip"
+                onChange={(e) => setZipFile(e.target.files[0])}
+              />
+            </div>
+
+            {zipFile && (
+              <div className="file-preview">
+                <FiArchive className="file-icon" />
+                <span>{zipFile.name}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ACTION BUTTONS */}
         <div className="bulk-actions-modern">
           <button className="import-btn" onClick={handleUpload}>
             <FiUploadCloud /> Import
@@ -211,6 +192,7 @@ const BulkUpload = ({ type, userRole }) => {
             <FiDownload /> Template
           </button>
         </div>
+
       </div>
     </div>
   );
