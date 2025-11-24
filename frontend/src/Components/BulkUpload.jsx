@@ -106,96 +106,78 @@ const BulkUpload = ({ type, userRole }) => {
     reader.readAsArrayBuffer(excelFile);
   };
 
-  return (
-    <div className="bulk-wrapper">
+return (
+  <div className="bulk-wrapper">
+    <div className="bulk-card">
 
-      <div className="bulk-card">
-
-        <h2 className="bulk-title">
+      <div className="bulk-header">
+        <h2>
           Import {type === "hardware" ? "Hardware Assets" : "Software Assets"}
         </h2>
 
-        <p className="bulk-mode">
-          Mode: <strong>{mode === "auto" ? "Auto (Super Admin)" : "Strict"}</strong>
-        </p>
+        <span className="mode-chip">
+          {mode === "auto" ? "Auto Mode (Super Admin)" : "Strict Mode"}
+        </span>
+      </div>
 
-        {/* EXCEL UPLOAD */}
-        <div
-          className={`dropzone ${dragOver ? "drag-over" : ""}`}
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDragOver(true);
-          }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setDragOver(false);
-            setExcelFile(e.dataTransfer.files[0]);
+      {/* Upload Zone */}
+      <div
+        className={`dropzone ${dragOver ? "drag-over" : ""}`}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          setFile(e.dataTransfer.files[0]);
+        }}
+      >
+        <FiUploadCloud className="drop-icon" />
+
+        <div className="drop-text-group">
+          <p className="drop-main-text">Drag & Drop Excel File</p>
+          <p className="drop-sub-text">or click to browse</p>
+        </div>
+
+        <input
+          type="file"
+          accept=".xlsx,.xls"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
+      </div>
+
+      {/* File Preview */}
+      {file && (
+        <div className="file-preview">
+          <FiFile className="file-icon" />
+          <span>{file.name}</span>
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      <div className="bulk-actions">
+        <button className="import-btn" onClick={handleUpload}>
+          <FiUploadCloud /> Import
+        </button>
+
+        <button
+          className="template-btn"
+          onClick={() => {
+            const ws = XLSX.utils.json_to_sheet(templates[type]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Template");
+            XLSX.writeFile(wb, `${type}-template.xlsx`);
           }}
         >
-          <FiUploadCloud className="drop-icon" />
-          <p className="drop-main-text">Drag & drop Excel file</p>
-          <p className="drop-sub-text">or click to browse</p>
-
-          <input
-            type="file"
-            accept=".xlsx"
-            onChange={(e) => setExcelFile(e.target.files[0])}
-          />
-        </div>
-
-        {excelFile && (
-          <div className="file-preview">
-            <FiFile className="file-icon" />
-            <span>{excelFile.name}</span>
-          </div>
-        )}
-
-        {/* ZIP UPLOAD */}
-        {type === "hardware" && (
-          <>
-            <label className="zip-label">Upload ZIP (Images Folder)</label>
-
-            <div className="zip-box">
-              <FiArchive className="zip-icon" />
-              <input
-                type="file"
-                accept=".zip"
-                onChange={(e) => setZipFile(e.target.files[0])}
-              />
-            </div>
-
-            {zipFile && (
-              <div className="file-preview">
-                <FiArchive className="file-icon" />
-                <span>{zipFile.name}</span>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* ACTION BUTTONS */}
-        <div className="bulk-actions-modern">
-          <button className="import-btn" onClick={handleUpload}>
-            <FiUploadCloud /> Import
-          </button>
-
-          <button
-            className="template-btn"
-            onClick={() => {
-              const ws = XLSX.utils.json_to_sheet(templates[type]);
-              const wb = XLSX.utils.book_new();
-              XLSX.utils.book_append_sheet(wb, ws, "Template");
-              XLSX.writeFile(wb, `${type}-template.xlsx`);
-            }}
-          >
-            <FiDownload /> Template
-          </button>
-        </div>
-
+          <FiDownload /> Template
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default BulkUpload;
