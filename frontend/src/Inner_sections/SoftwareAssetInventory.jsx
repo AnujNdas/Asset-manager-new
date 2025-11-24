@@ -333,7 +333,7 @@ const SoftwareAssetList = () => {
       {/* View Modal (left = icon, right = details) */}
 <AnimatePresence>
   {selectedAsset && (
-    <motion.div
+    <motion.div 
       className="overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -341,54 +341,52 @@ const SoftwareAssetList = () => {
       onClick={() => setSelectedAsset(null)}
     >
       <motion.div
-        className="overlay-content view-modal compact-modal"
+        className="software-modal"
         initial={{ scale: 0.96 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.96 }}
         onClick={(e) => e.stopPropagation()}
       >
 
-        {/* TOP HEADER */}
-        <div className="compact-header">
-          <div className="software-icon-sm">
-            <span className="software-initials-sm">
-              {initialsFor(selectedAsset.name)}
-            </span>
+        {/* CLOSE BUTTON (Column 3) */}
+        <button className="software-close-btn" onClick={() => setSelectedAsset(null)}>✕</button>
+
+        {/* COLUMN 1: ICON */}
+        <div className="software-col icon-col">
+          <div className="software-icon-box">
+            {initialsFor(selectedAsset.name)}
           </div>
-          <h3 className="view-title">{selectedAsset.name}</h3>
         </div>
 
-        {/* DETAILS */}
-        <div className="view-details compact-grid">
-          <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
-          <p><strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}</p>
-          <p><strong>Category:</strong> {selectedAsset.category || "N/A"}</p>
-          <p><strong>License Type:</strong> {selectedAsset.licenseType || "N/A"}</p>
-          <p><strong>License Key:</strong> {selectedAsset.licenseKey || "N/A"}</p>
-          <p><strong>License Start:</strong> {selectedAsset.licenseStartDate ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() : "N/A"}</p>
-          <p><strong>License Expiry:</strong> {selectedAsset.licenseExpiry ? new Date(selectedAsset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
-          <p><strong>Total Licenses:</strong> {selectedAsset.totalLicenses ?? 0}</p>
-          <p><strong>Assigned:</strong> {selectedAsset.licensesAssigned ?? 0}</p>
-          <p><strong>Purchase Date:</strong> {selectedAsset.purchaseDate ? new Date(selectedAsset.purchaseDate).toLocaleDateString() : "N/A"}</p>
-          <p><strong>Cost Per Unit:</strong> {selectedAsset.costPerUnit ? `₹${selectedAsset.costPerUnit}` : "N/A"}</p>
-          <p><strong>Total Cost:</strong> {selectedAsset.totalCost ? `₹${selectedAsset.totalCost}` : "N/A"}</p>
-          <p><strong>Assigned Users:</strong> {selectedAsset.assignedUsers?.length ? selectedAsset.assignedUsers.join(", ") : "None"}</p>
-          <p><strong>Linked Devices:</strong> {selectedAsset.linkedDevices?.length ? selectedAsset.linkedDevices.join(", ") : "None"}</p>
-          <p><strong>Contract Term:</strong> {selectedAsset.contractTerm || "N/A"}</p>
-          <p><strong>Support Vendor:</strong> {selectedAsset.supportContract?.vendorContact || selectedAsset.supportVendor || "N/A"}</p>
-          <p><strong>Compliance:</strong> {selectedAsset.complianceStatus || "N/A"}</p>
-          <p><strong>Last Access:</strong> {selectedAsset.lastAccess ? new Date(selectedAsset.lastAccess).toLocaleDateString() : "N/A"}</p>
-        </div>
+        {/* COLUMN 2: DATA */}
+        <div className="software-col data-col">
+          <h3 className="software-title">{selectedAsset.name || "Software"}</h3>
 
-        {/* BUTTON */}
-        <div className="modal-actions" style={{ marginTop: 10 }}>
-          <button className="close-btn" onClick={() => setSelectedAsset(null)}>Close</button>
+          <div className="software-data-grid">
+            <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
+            <p><strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}</p>
+            <p><strong>Category:</strong> {selectedAsset.category || "N/A"}</p>
+            <p><strong>License Type:</strong> {selectedAsset.licenseType || "N/A"}</p>
+            <p><strong>License Key:</strong> {selectedAsset.licenseKey || "N/A"}</p>
+            <p><strong>Start:</strong> {selectedAsset.licenseStartDate ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() : "N/A"}</p>
+            <p><strong>Expiry:</strong> {selectedAsset.licenseExpiry ? new Date(selectedAsset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
+            <p><strong>Total Licenses:</strong> {selectedAsset.totalLicenses ?? "0"}</p>
+            <p><strong>Assigned:</strong> {selectedAsset.licensesAssigned ?? "0"}</p>
+            <p><strong>Purchase:</strong> {selectedAsset.purchaseDate ? new Date(selectedAsset.purchaseDate).toLocaleDateString() : "N/A"}</p>
+            <p><strong>Cost Per Unit:</strong> {selectedAsset.costPerUnit ? `₹${selectedAsset.costPerUnit}` : "N/A"}</p>
+            <p><strong>Total Cost:</strong> {selectedAsset.totalCost ? `₹${selectedAsset.totalCost}` : "N/A"}</p>
+            <p><strong>Users:</strong> {selectedAsset.assignedUsers?.length ? selectedAsset.assignedUsers.join(", ") : "None"}</p>
+            <p><strong>Devices:</strong> {selectedAsset.linkedDevices?.length ? selectedAsset.linkedDevices.join(", ") : "None"}</p>
+            <p><strong>Support:</strong> {selectedAsset.supportVendor || "N/A"}</p>
+            <p><strong>Last Access:</strong> {selectedAsset.lastAccess ? new Date(selectedAsset.lastAccess).toLocaleDateString() : "N/A"}</p>
+          </div>
         </div>
 
       </motion.div>
     </motion.div>
   )}
 </AnimatePresence>
+
 
 
 
