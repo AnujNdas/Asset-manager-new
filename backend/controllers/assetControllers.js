@@ -137,7 +137,7 @@ const bulkUpload = async (req, res) => {
       await Asset.insertMany(validAssets, { ordered: false });
     }
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       inserted: validAssets.length,
       skipped: invalidRows.length,
