@@ -82,12 +82,15 @@ const BulkUpload = ({ type, userRole }) => {
 
         Swal.fire(
           "Success!",
-          `${res.data.inserted} assets imported\n${res.data.skipped} skipped`,
+         `${res.inserted} assets imported\n${res.skipped} skipped`,
           "success"
         );
       } catch (err) {
-        Swal.fire("Error", "Import failed!", "error");
-      }
+  console.log("❌ AXIOS ERROR:", err);
+  console.log("❌ AXIOS RESPONSE:", err.response?.data);
+  Swal.fire("Error", "Import failed!", "error");
+}
+
     };
 
     reader.readAsArrayBuffer(excelFile);
