@@ -86,22 +86,23 @@ const HardwareAssetList = () => {
   };
 
   // Normalize fields for editing
-  const startEdit = (asset) => {
-    setEditingAsset(asset);
-    setEditForm({
-      assetName: asset.assetName || "",
-      assetCode: asset.assetCode || "",
-      assetSpecification: asset.assetSpecification || "",
-      assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
-      locationName: asset.locationName?._id || asset.locationName || "",
-      associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
-      assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
-      purchaseDate: asset.DOP ? new Date(asset.DOP).toISOString().split("T")[0] : "",
-      expiryDate: asset.DOE ? new Date(asset.DOE).toISOString().split("T")[0] : "",
-      purchaseFrom: asset.purchaseFrom || "",
-      assetLifetime: asset.assetLifetime || "",
-    });
-  };
+const startEdit = (asset) => {
+  setEditingAsset(asset);
+  setEditForm({
+    assetName: asset.assetName || "",
+    assetCode: asset.assetCode || "",
+    assetSpecification: asset.assetSpecification || "",
+    assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
+    locationName: asset.locationName?._id || asset.locationName || "",
+    associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
+    assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
+    DOP: asset.DOP ? new Date(asset.DOP).toISOString().split("T")[0] : "",
+    DOE: asset.DOE ? new Date(asset.DOE).toISOString().split("T")[0] : "",
+    purchaseFrom: asset.purchaseFrom || "",
+    assetLifetime: asset.assetLifetime || "",
+  });
+};
+
 
 const handleEditSubmit = async (e) => {
   e.preventDefault();
