@@ -105,38 +105,38 @@ const startEdit = (asset) => {
 
 
 const handleEditSubmit = async (e) => {
-  e.preventDefault();
-  if (!editingAsset) return;
+ e.preventDefault();
+  const formData = new FormData();
+
+  // Append normal fields (except preview + file)
+  Object.entries(editForm).forEach(([key, value]) => {
+    if (key !== "imagePreview" && key !== "imageFile") {
+      formData.append(key, value);
+    }
+  });
+
+  // ✔ Append file only if chosen
+  if (editForm.imageFile) {
+    formData.append("image", editForm.imageFile);
+  }
 
   try {
-    const formData = new FormData();
-
-    // Append text fields
-  Object.entries(editForm).forEach(([key, value]) => {
-  if (key !== "imagePreview" && key !== "imageFile") {
-    formData.append(key, value);
-  }
-});
-
-
-    // Append file with correct field name
-    if (editForm.imageFile) {
-      formData.append("image", editForm.imageFile);  // MUST be "image"
-    }
-
     const updated = await updateHardwareAsset(editingAsset._id, formData);
 
-    const updatedAsset = updated?.data ?? updated;
+    const newAsset = updated?.data ?? updated;
 
-    setAssets((prev) => prev.map((a) => (a._id === updatedAsset._id ? updatedAsset : a)));
+    setAssets((prev) =>
+      prev.map((a) => (a._id === newAsset._id ? newAsset : a))
+    );
+
     setEditingAsset(null);
     setEditForm({});
     Swal.fire("Updated", "Asset updated successfully.", "success");
-
   } catch (err) {
-    Swal.fire("Error", err.message || "Failed to update asset", "error");
+    Swal.fire("Error", err.message || "Update failed", "error");
   }
-};
+}}
+
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -504,19 +504,20 @@ const handleEditSubmit = async (e) => {
           </select>
 
           {/* DATES */}
-          <input
-            type="date"
-            name="purchaseDate"
-            value={editForm.purchaseDate || ""}
-            onChange={handleEditChange}
-          />
+<input
+  type="date"
+  name="DOP"
+  value={editForm.DOP || ""}
+  onChange={handleEditChange}
+/>
 
-          <input
-            type="date"
-            name="expiryDate"
-            value={editForm.expiryDate || ""}
-            onChange={handleEditChange}
-          />
+<input
+  type="date"
+  name="DOE"
+  value={editForm.DOE || ""}
+  onChange={handleEditChange}
+/>
+
 
           {/* EXTRA FIELDS */}
           <input
