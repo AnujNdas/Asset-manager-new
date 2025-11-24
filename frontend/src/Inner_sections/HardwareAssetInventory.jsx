@@ -238,7 +238,6 @@ const handleEditSubmit = async (e) => {
         </button>
       </div>
     );
-  };
 
   return (
     <div className="inventory-container">
