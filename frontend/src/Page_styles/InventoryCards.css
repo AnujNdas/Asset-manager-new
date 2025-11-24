@@ -400,6 +400,38 @@
   width: 140px;
   color: #111827;
 }
+.compact-modal {
+  width: 480px; 
+  padding: 20px;
+}
+
+.compact-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.software-icon-sm {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  background: #eef2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.software-initials-sm {
+  color: #4f46e5;
+}
+
+.compact-grid p {
+  margin: 3px 0;
+  font-size: 13.5px;
+}
 
 /* responsive */
 @media (max-width: 720px) {
