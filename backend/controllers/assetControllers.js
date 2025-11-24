@@ -3,6 +3,153 @@ const LastAssetCode = require("../models/LastAssetCode");
 const Notification = require("../models/Notification");
 const cloudinary = require("../config/cloudinary");
 
+const unzipper = require("unzipper");
+const path = require("path");
+const fs = require("fs");
+const cloudinary = require("../config/cloudinary");
+
+const Category = require("../models/Category");
+const Unit = require("../models/Unit");
+const Location = require("../models/Location");
+const Status = require("../models/Status");
+
+const bulkUpload = async (req, res) => {
+  try {
+    console.log("🔥 Bulk upload request received.");
+
+    const { assets, mode } = req.body;
+    const parsedAssets = JSON.parse(assets);
+
+    let extractedImagesDir = null;
+
+    // ------------------------------
+    // 1) Extract ZIP Images (if exists)
+    // ------------------------------
+    if (req.files.imagesZip) {
+      const zipPath = req.files.imagesZip[0].path;
+
+      extractedImagesDir = path.join(
+        "uploads",
+        "unzipped",
+        Date.now().toString()
+      );
+
+      fs.mkdirSync(extractedImagesDir, { recursive: true });
+
+      await fs.createReadStream(zipPath)
+        .pipe(unzipper.Extract({ path: extractedImagesDir }))
+        .promise();
+
+      console.log("📦 ZIP extracted at:", extractedImagesDir);
+    }
+
+    // ------------------------------
+    // 2) Load DB Reference Lists
+    // ------------------------------
+    const categories = await Category.find({});
+    const units = await Unit.find({});
+    const locations = await Location.find({});
+    const statuses = await Status.find({});
+
+    const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c._id]));
+    const unitMap = new Map(units.map(u => [u.name.toLowerCase(), u._id]));
+    const locationMap = new Map(locations.map(l => [l.name.toLowerCase(), l._id]));
+    const statusMap = new Map(statuses.map(s => [s.name.toLowerCase(), s._id]));
+
+    let validAssets = [];
+    let invalidRows = [];
+
+    // ------------------------------
+    // 3) Process Asset Rows
+    // ------------------------------
+    for (const [index, asset] of parsedAssets.entries()) {
+      let categoryId = categoryMap.get(asset.assetCategory?.toLowerCase() || "");
+      let unitId = unitMap.get(asset.associateUnit?.toLowerCase() || "");
+      let locationId = locationMap.get(asset.locationName?.toLowerCase() || "");
+      let statusId = statusMap.get(asset.assetStatus?.toLowerCase() || "");
+
+      // Strict mode → skip missing
+      if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
+        invalidRows.push({ row: index + 2, asset });
+        continue;
+      }
+
+      // Auto-create (non-strict)
+      if (!categoryId && asset.assetCategory) {
+        const newCategory = await Category.create({ name: asset.assetCategory });
+        categoryId = newCategory._id;
+      }
+
+      if (!unitId && asset.associateUnit) {
+        const newUnit = await Unit.create({ name: asset.associateUnit });
+        unitId = newUnit._id;
+      }
+
+      if (!locationId && asset.locationName) {
+        const newLocation = await Location.create({ name: asset.locationName });
+        locationId = newLocation._id;
+      }
+
+      if (!statusId && asset.assetStatus) {
+        const newStatus = await Status.create({ name: asset.assetStatus });
+        statusId = newStatus._id;
+      }
+
+      // ------------------------------
+      // 4) Upload Image (if included)
+      // ------------------------------
+      let imageUrl = null;
+      let imagePublicId = null;
+
+      if (asset.imageFile && extractedImagesDir) {
+        const localImagePath = path.join(extractedImagesDir, asset.imageFile);
+
+        if (fs.existsSync(localImagePath)) {
+          const uploaded = await cloudinary.uploader.upload(localImagePath, {
+            folder: "assets",
+            public_id: `${Date.now()}-${asset.imageFile.split(".")[0]}`,
+          });
+
+          imageUrl = uploaded.secure_url;
+          imagePublicId = uploaded.public_id;
+        }
+      }
+
+      validAssets.push({
+        assetCode: asset.assetCode,
+        assetCategory: categoryId,
+        barcodeNumber: asset.barcodeNumber,
+        assetName: asset.assetName,
+        associateUnit: unitId,
+        image: imageUrl,
+        imagePublicId,
+        locationName: locationId,
+        assetSpecification: asset.assetSpecification,
+        assetStatus: statusId,
+        DOP: asset.DOP,
+        DOE: asset.DOE,
+        assetLifetime: asset.assetLifetime,
+        purchaseFrom: asset.purchaseFrom,
+      });
+    }
+
+    // Insert into DB
+    if (validAssets.length > 0) {
+      await Asset.insertMany(validAssets, { ordered: false });
+    }
+
+    return res.status(201).json({
+      success: true,
+      inserted: validAssets.length,
+      skipped: invalidRows.length,
+      invalidRows,
+    });
+
+  } catch (err) {
+    console.error("❌ Bulk Upload Error:", err);
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 // -----------------------------------------
 // ADD ASSET
@@ -224,4 +371,5 @@ module.exports = {
   deleteAsset,
   getAllAssets,
   generateAssetCode,
+  bulkUpload,
 };
