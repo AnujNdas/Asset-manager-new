@@ -6,7 +6,6 @@ const cloudinary = require("../config/cloudinary");
 const unzipper = require("unzipper");
 const path = require("path");
 const fs = require("fs");
-const cloudinary = require("../config/cloudinary");
 
 const Category = require("../models/Category");
 const Unit = require("../models/Unit");
