@@ -45,7 +45,7 @@ router.post(
 router.put(
   "/:id",
   authenticateToken(),
-  upload.any(),
+  upload.single("image"),
   (req, res, next) => {
     console.log("📌 Incoming BODY:", req.body);
     console.log("📌 Incoming FILES:", req.files);
