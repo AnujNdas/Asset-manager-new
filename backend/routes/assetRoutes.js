@@ -64,7 +64,7 @@ router.post(
     { name: "excel" },
     { name: "imagesZip" }
   ]),
-  bulkUpload
+  bulkupload
 );
 
 
