@@ -27,58 +27,83 @@ const BulkUpload = ({ type, userRole }) => {
     return `${Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 365))} years`;
   };
 
-  const templates = {
-    hardware: [
-      {
-        assetCategory: "",
-        assetName: "",
-        associateUnit: "",
-        locationName: "",
-        assetSpecification: "",
-        assetStatus: "",
-        DOP: "",
-        DOE: "",
-        purchaseFrom: "",
-        image: "",
-      },
-    ],
-    software: [
-      {
-        name: "",
-        version: "",
-        publisher: "",
-        category: "",
-        licenseKey: "",
-        licenseType: "",
-        licenseModel: "",
-        licenseUse: "",
-        installLocation: "",
-        totalLicenses: "",
-        licensesAssigned: "",
-        licenseExpiry: "",
-        purchaseDate: "",
-        purchaseOrder: "",
-        cost: "",
-        assignedTo: "",
-        complianceStatus: "",
-      },
-    ],
-    // "core-license": [
-    //   {
-    //     documentType: "",
-    //     licenseNumber: "",
-    //     issuingAuthority: "",
-    //     licenseHolder: "",
-    //     businessActivity: "",
-    //     issueDate: "",
-    //     expiryDate: "",
-    //     renewalCycle: "Annual",
-    //     reminderDaysBefore: 30,
-    //     status: "",
-    //   },
-    // ],
-  };
+ const templates = {
+  hardware: [
+    {
+      assetCode: "",
+      assetCategory: "",
+      barcodeNumber: "",
+      assetName: "",
+      associateUnit: "",
+      image: "",
+      imagePublicId: "",
+      locationName: "",
+      assetSpecification: "",
+      assetStatus: "",
+      DOP: "",
+      DOE: "",
+      assetLifetime: "",
+      purchaseFrom: "",
+      PMD: "",
+    },
+  ],
 
+  software: [
+    {
+      name: "",
+      version: "",
+      publisher: "",
+      category: "",
+      installLocation: "",
+      assetTag: "",
+
+      licenseKey: "",
+      licenseType: "",
+      licenseModel: "",
+      licenseMetric: "",
+      licenseUse: "",
+      licenseStartDate: "",
+      licenseExpiry: "",
+      renewalCycle: "",
+      renewalReminder: "",
+
+      totalLicenses: "",
+      licensesAssigned: "",
+      licensesAvailable: "",
+
+      purchaseDate: "",
+      costPerUnit: "",
+      totalCost: "",
+      currency: "",
+      costCenter: "",
+      purchaseOrder: "",
+
+      assignedTo: "",
+      assignedUsers: "",
+      linkedDevices: "",
+      geoRestriction: "",
+
+      contractTerm: "",
+      contractDocs: "",
+      "supportContract.startDate": "",
+      "supportContract.endDate": "",
+      "supportContract.vendorContact": "",
+      licenseDocument: "",
+      subscriptionId: "",
+      complianceStatus: "",
+
+      lastAccess: "",
+      authenticationMethod: "",
+      businessUnit: "",
+      criticality: "",
+      riskClassification: "",
+      vendorContactDetails: "",
+      integrationDependencies: "",
+      auditHistory: "",
+      optimizationRecommendation: "",
+    },
+  ],
+};
   const handleUpload = async () => {
     if (!file)
       return Swal.fire("No File", "Please upload an Excel file!", "warning");
