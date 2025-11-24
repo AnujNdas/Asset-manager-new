@@ -8,6 +8,7 @@ const {
   getAllAssets,
   generateAssetCode,
   updateAsset,
+  bulkupload,
 } = require("../controllers/assetControllers");
 
 const Assets = require("../models/Asset"); 
@@ -21,7 +22,7 @@ const router = express.Router();
 // Multer storage
 const storage = require("../Middleware/cloudinaryStorage");
 const upload = multer({ storage });
-
+const uploadBulk = multer({ dest: "uploads/bulk/" });
 
 
 // Routes
@@ -57,8 +58,14 @@ router.put(
 
 router.get("/", authenticateToken(), getAllAssets);
 router.delete("/:id", authenticateToken(), deleteAsset); 
-// Get single asset by ID
-
+router.post(
+  "/bulk-upload",
+  uploadBulk.fields([
+    { name: "excel" },
+    { name: "imagesZip" }
+  ]),
+  bulkUpload
+);
 
 
 // ✅ Correct
