@@ -262,6 +262,82 @@
   border-radius: 6px;
 }
 
+/* Left image card */
+.saas-image-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.saas-image {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Title */
+.saas-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Badges */
+.saas-badges {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.saas-badge {
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.saas-badge.status {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+/* Section title */
+.saas-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+/* Grid layout */
+.saas-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 20px;
+  margin-bottom: 24px;
+}
+
+.saas-details-grid label {
+  font-size: 12px;
+  color: #888;
+}
+
+.saas-details-grid p {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Footer actions */
+.saas-actions {
+  display: flex;
+  justify-content: flex-end;
+}
 
 /* Responsive stacking for mobile */
 @media (max-width: 720px) {
