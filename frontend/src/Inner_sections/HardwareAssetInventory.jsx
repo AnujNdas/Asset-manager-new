@@ -105,24 +105,23 @@ const startEdit = (asset) => {
 
 
 const handleEditSubmit = async (e) => {
- e.preventDefault();
+  e.preventDefault();
   const formData = new FormData();
 
-  // Append normal fields (except preview + file)
+  // Append normal fields (except preview, file AND image)
   Object.entries(editForm).forEach(([key, value]) => {
-    if (key !== "imagePreview" && key !== "imageFile") {
+    if (key !== "imagePreview" && key !== "imageFile" && key !== "image") {
       formData.append(key, value);
     }
   });
 
-  // ✔ Append file only if chosen
+  // Append file only if chosen
   if (editForm.imageFile) {
     formData.append("image", editForm.imageFile);
   }
 
   try {
     const updated = await updateHardwareAsset(editingAsset._id, formData);
-
     const newAsset = updated?.data ?? updated;
 
     setAssets((prev) =>
@@ -135,7 +134,8 @@ const handleEditSubmit = async (e) => {
   } catch (err) {
     Swal.fire("Error", err.message || "Update failed", "error");
   }
-}
+};
+
 
 
   const handleEditChange = (e) => {
