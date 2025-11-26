@@ -111,6 +111,50 @@
   transition: all 0.3s ease;
   animation: fadeIn 0.3s ease-in-out;
 }
+.classification_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.export-wrapper {
+  position: relative;
+}
+
+.export-btn {
+  background: #3949ab;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.export-dropdown {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  width: 140px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease-in-out;
+  z-index: 999;
+}
+
+.export-dropdown div {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.export-dropdown div:hover {
+  background: #f0f0f0;
+}
+
 
 /* ✨ Fade-in Animation */
 @keyframes fadeIn {
