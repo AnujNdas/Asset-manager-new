@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import "../Page_styles/MisReport.css";
-import { getHardwareAssets } from "../services/ApiServices.js"
 import {
   getStatuses,
   getUnits,
@@ -10,6 +9,7 @@ import {
   getCategories,
   getSoftwareAssets,
   getCoreLicenses,
+  getHardwareAssets 
 } from "../Services/ApiServices";
 
 const MisReport = () => {
@@ -40,12 +40,13 @@ const MisReport = () => {
   useEffect(() => {
     (async () => {
       try {
-        const [s, u, l, c, sw, lic] = await Promise.all([
+        const [s, u, l, c, sw,ha, lic] = await Promise.all([
           getStatuses(),
           getUnits(),
           getLocations(),
           getCategories(),
           getSoftwareAssets(),
+          getHardwareAssets(),
           getCoreLicenses()
         ]);
 
@@ -54,23 +55,12 @@ const MisReport = () => {
         setLocations(l);
         setCategories(c);
         setSoftware(sw?.data || sw);   // depending on your API response
+        setHardware(ha?.data || ha);
         setLicenses(lic?.data || lic);
       } catch (err) {
         console.error("Error fetching filters/data:", err);
       }
     })();
-    const fetchAssets = async () => {
-        try {
-          const res = await fetch("https://asset-manager-new.onrender.com/api/assets");
-          console.log(res)
-          if (!res.ok) throw new Error("Failed to fetch hardware assets");
-          const data = await res.json();
-          setHardware(data);
-        } catch (err) {
-          Swal.fire("Error", err.message, "error");
-        }
-    }
-    fetchAssets();
   }, []);
 
   const formatDate = (date) => {
