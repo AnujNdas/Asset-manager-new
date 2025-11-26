@@ -8,7 +8,8 @@ import Location from "../Inner_sections/Location";
 import Status from "../Inner_sections/Status";
 
 // Export utilities
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
+
 import Swal from "sweetalert2";
 
 // API calls
