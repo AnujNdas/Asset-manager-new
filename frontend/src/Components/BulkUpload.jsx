@@ -44,13 +44,30 @@ const BulkUpload = ({ type, userRole }) => {
       },
     ],
     software: [
-      {
-        name: "",
-        version: "",
-        publisher: "",
-        category: "",
-      },
-    ],
+  {
+    "Software Name": "",
+    "Version": "",
+    "Publisher": "",
+    "Category": "",
+    "License Key": "",
+    "License Type": "",
+    "License Model": "",
+    "License Use": "",
+    "Total Licenses": "",
+    "Licenses Assigned": "",
+    "License Start Date": "",
+    "License Expiry": "",
+    "Renewal Cycle": "",
+    "Purchase Date": "",
+    "Cost Per Unit": "",
+    "Currency": "",
+    "Purchase Order": "",
+    "Compliance Status": "",
+    "Assigned To": "",
+    "Install Location": "",
+  }
+]
+
   };
 
   const handleUpload = async () => {
