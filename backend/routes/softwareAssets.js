@@ -20,13 +20,21 @@ router.delete("/:id",authenticateToken(), deleteSoftwareAsset);
 
 router.post("/bulk-upload", async (req, res) => {
   try {
-    const { assets, mode } = req.body;
+    let assets = [];
 
-    if (!assets || !Array.isArray(assets) || assets.length === 0) {
-      return res.status(400).json({ success: false, message: "No software assets provided" });
+    // Parse JSON array
+    try {
+      assets = JSON.parse(req.body.assets);
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid assets JSON received",
+      });
     }
 
-    // Fetch existing categories and statuses
+    const mode = req.body.mode || "strict";
+
+    // Fetch existing categories & statuses
     const categories = await Category.find({});
     const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c._id]));
 
@@ -35,68 +43,86 @@ router.post("/bulk-upload", async (req, res) => {
 
     const formatted = [];
 
-    for (const a of assets) {
-      // Handle category
-      let categoryId = categoryMap.get(a["Category"]?.toLowerCase() || "");
-      if (mode === "auto" && !categoryId && a["Category"]) {
-        try {
-          const newCategory = await Category.create({ name: a["Category"] });
-          categoryId = newCategory._id;
-          categoryMap.set(a["Category"].toLowerCase(), categoryId);
-        } catch (err) {
-          const existing = await Category.findOne({ name: a["Category"] });
-          categoryId = existing._id;
-          categoryMap.set(a["Category"].toLowerCase(), categoryId);
-        }
+    for (const row of assets) {
+
+      // CATEGORY
+      let categoryId = null;
+      const categoryName = row["Category"]?.toLowerCase();
+
+      if (categoryName && categoryMap.has(categoryName)) {
+        categoryId = categoryMap.get(categoryName);
+      } else if (mode === "auto" && categoryName) {
+        const newCat = await Category.create({ name: row["Category"] });
+        categoryId = newCat._id;
+        categoryMap.set(categoryName, newCat._id);
       }
 
-      // Handle compliance status
-      let statusId = statusMap.get(a["Compliance Status"]?.toLowerCase() || "");
-      if (mode === "auto" && !statusId && a["Compliance Status"]) {
-        try {
-          const newStatus = await Status.create({ name: a["Compliance Status"] });
-          statusId = newStatus._id;
-          statusMap.set(a["Compliance Status"].toLowerCase(), statusId);
-        } catch (err) {
-          const existing = await Status.findOne({ name: a["Compliance Status"] });
-          statusId = existing._id;
-          statusMap.set(a["Compliance Status"].toLowerCase(), statusId);
-        }
+      // STATUS / COMPLIANCE
+      let statusId = null;
+      const statusName = row["Compliance Status"]?.toLowerCase();
+
+      if (statusName && statusMap.has(statusName)) {
+        statusId = statusMap.get(statusName);
+      } else if (mode === "auto" && statusName) {
+        const newStatus = await Status.create({ name: row["Compliance Status"] });
+        statusId = newStatus._id;
+        statusMap.set(statusName, newStatus._id);
       }
 
+      // FORMAT RECORD
       formatted.push({
-        name: a["Software Name"] || "N/A",
-        version: a["Version"] || "N/A",
-        publisher: a["Publisher"] || "N/A",
-        category: categoryId || null,
-        licenseKey: a["License Key"] || "N/A",
-        licenseType: a["License Type"] || "N/A",
-        totalLicenses: Number(a["Total Licenses"] || 0),
-        licensesAssigned: Number(a["Licenses Assigned"] || 0),
-        licenseExpiry: a["License Expiry"] ? new Date(a["License Expiry"]) : null,
-        purchaseDate: a["Purchase Date"] ? new Date(a["Purchase Date"]) : null,
-        complianceStatus: statusId || null, // store reference
-        assignedTo: a["Assigned To"] || "N/A",
-        installLocation: a["Install Location"] || "N/A",
-        purchaseOrder: a["Purchase Order"] || "N/A",
-        cost: a["Cost"] || 0,
-        licenseModel: a["License Model"] || "N/A",
-        licenseUse: a["License Use"] || "N/A",
+        name: row["Software Name"],
+        version: row["Version"] || null,
+        publisher: row["Publisher"] || null,
+        category: categoryId,
+
+        licenseKey: row["License Key"] || null,
+        licenseType: row["License Type"] || null,
+        licenseModel: row["License Model"] || null,
+        licenseUse: row["License Use"] || null,
+        licenseMetric: row["License Metric"] || null,
+
+        totalLicenses: Number(row["Total Licenses"] || 0),
+        licensesAssigned: Number(row["Licenses Assigned"] || 0),
+
+        licenseStartDate: row["License Start Date"] ? new Date(row["License Start Date"]) : null,
+        licenseExpiry: row["License Expiry"] ? new Date(row["License Expiry"]) : null,
+
+        renewalCycle: row["Renewal Cycle"] || null,
+
+        purchaseDate: row["Purchase Date"] ? new Date(row["Purchase Date"]) : null,
+        costPerUnit: Number(row["Cost Per Unit"] || 0),
+        currency: row["Currency"] || "INR",
+        purchaseOrder: row["Purchase Order"] || null,
+
+        complianceStatus: statusId,
+
+        assignedTo: row["Assigned To"]
+          ? row["Assigned To"].split(",").map(s => s.trim())
+          : [],
+
+        installLocation: row["Install Location"] || null,
       });
     }
 
     const inserted = await SoftwareAsset.insertMany(formatted, { ordered: false });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      insertedCount: inserted.length,
-      mode: mode || "strict",
+      inserted: inserted.length,
+      skipped: assets.length - inserted.length,
+      mode,
     });
+
   } catch (err) {
     console.error("Software bulk upload error:", err);
-    res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 });
+
 
 
 
