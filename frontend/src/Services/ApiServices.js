@@ -154,7 +154,7 @@ export const bulkUploadCoreLicenses = async (data) => {
 
 // ----- ADMIN API CALLS -----
 export const getAdminStats = async () => {
-  const response = await axiosInstance.get("/admin/stat");
+  const response = await axiosInstance.get("/admin/stats");
   return response.data;
 };
 
