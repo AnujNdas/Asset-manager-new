@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import "../Page_styles/MisReport.css";
+import { getHardwareAssets } from "../services/ApiServices.js"
 import {
   getStatuses,
   getUnits,
