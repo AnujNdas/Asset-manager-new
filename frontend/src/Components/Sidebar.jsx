@@ -16,6 +16,16 @@ import {
 // import Switch from "./Switch";
 
 const Sidebar = ({ closeSidebar }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   return (
     <div className="sidebar-container">
@@ -55,13 +65,19 @@ const Sidebar = ({ closeSidebar }) => {
                 <span className="tab-text">Classifications</span>
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/scanner" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                <FontAwesomeIcon icon={faExpand} style={{ width: "25%" }} />
-                <span className="tab-text">Scanner</span>
-              </NavLink>
-            </li>
-            <li>
+            {isMobile && (
+              <li>
+                <NavLink
+                  to="/scanner"
+                  onClick={closeSidebar}
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  <FontAwesomeIcon icon={faExpand} style={{ width: "25%" }} />
+                  <span className="tab-text">Scanner</span>
+                </NavLink>
+              </li>
+            )}
+
               <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
                 <span className="tab-text">Settings</span>
