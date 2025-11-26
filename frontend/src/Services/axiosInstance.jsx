@@ -9,14 +9,15 @@ const axiosInstance = axios.create({
 
 // Automatically attach token if it exists
 axiosInstance.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    await new Promise(res => setTimeout(res, 50)); // small delay fixes many issues
     const token = sessionStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
-  },
-  (error) => Promise.reject(error)
+  }
 );
+
 
 export default axiosInstance;
