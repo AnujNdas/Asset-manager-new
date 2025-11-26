@@ -77,7 +77,7 @@ useEffect(() => {
                 </NavLink>
               </li>
             )}
-
+            <li>
               <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
                 <span className="tab-text">Settings</span>
