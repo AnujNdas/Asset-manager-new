@@ -242,6 +242,8 @@
   margin: 6px 0;
   font-size: 13px;
   color: #374151;
+  display : flex;
+  justify-content : space-between;
 }
 
 /* badge styles (reuse from hardware) */
