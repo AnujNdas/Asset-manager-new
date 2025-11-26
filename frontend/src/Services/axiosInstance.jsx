@@ -22,22 +22,24 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// AUTO LOGOUT if token expires or API returns 401
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      console.log("🔒 Token expired → logging out");
+    const status = error.response?.status;
+
+    // 🔥 Handle both EXPIRED + INVALID token cases
+    if (status === 401 || status === 403) {
+      console.log("🔒 Unauthorized or Forbidden → logging out");
 
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("user");
 
-      // Redirect to login page
-      window.location.href = "/login";
+      window.location.href = "/user/login"; // <-- your login route
     }
 
     return Promise.reject(error);
   }
 );
+
 
 export default axiosInstance;
