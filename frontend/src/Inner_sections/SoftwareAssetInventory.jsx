@@ -64,6 +64,19 @@ const SoftwareAssetList = () => {
       Swal.fire("Error", err.message || "Failed to load data", "error");
     }
   };
+  // Convert ID → Category Name
+const getCategoryName = (categoryId) => {
+  if (!categoryId) return "N/A";
+  const cat = categories.find((c) => c._id === categoryId);
+  return cat ? cat.categoryName : categoryId;
+};
+
+// Convert ID → Status Name
+const getStatusName = (statusId) => {
+  if (!statusId) return "N/A";
+  const stat = statuses.find((s) => s._id === statusId);
+  return stat ? stat.statusName : statusId;
+};
 
   const refreshAssets = async () => {
     try {
@@ -306,7 +319,7 @@ const SoftwareAssetList = () => {
               </div>
 
               <div className="card-info2">
-                <p><strong>Category:</strong> {asset.category || "N/A"}</p>
+                <p><strong>Category:</strong> {getCategoryName(asset.category)}</p>
                 <p><strong>License:</strong> {asset.licenseType || "N/A"}</p>
                 <p><strong>Assigned:</strong> {asset.assignedUsers?.length ?? 0}</p>
                 <p><strong>Expiry:</strong> {asset.licenseExpiry ? new Date(asset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
@@ -365,7 +378,7 @@ const SoftwareAssetList = () => {
           <div className="software-data-grid">
             <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
             <p><strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}</p>
-            <p><strong>Category:</strong> {selectedAsset.category || "N/A"}</p>
+            <p><strong>Category:</strong> {getCategoryName(asset.category)}</p>
             <p><strong>License Type:</strong> {selectedAsset.licenseType || "N/A"}</p>
             <p><strong>License Key:</strong> {selectedAsset.licenseKey || "N/A"}</p>
             <p><strong>Start:</strong> {selectedAsset.licenseStartDate ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() : "N/A"}</p>
