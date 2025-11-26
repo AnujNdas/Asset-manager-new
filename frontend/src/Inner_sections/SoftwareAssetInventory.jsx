@@ -378,7 +378,7 @@ const getStatusName = (statusId) => {
           <div className="software-data-grid">
             <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
             <p><strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}</p>
-            <p><strong>Category:</strong> {getCategoryName(asset.category)}</p>
+            <p><strong>Category:</strong> {getCategoryName(selectedAsset.category)}</p>
             <p><strong>License Type:</strong> {selectedAsset.licenseType || "N/A"}</p>
             <p><strong>License Key:</strong> {selectedAsset.licenseKey || "N/A"}</p>
             <p><strong>Start:</strong> {selectedAsset.licenseStartDate ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() : "N/A"}</p>
