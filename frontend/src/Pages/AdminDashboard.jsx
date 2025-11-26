@@ -30,20 +30,45 @@ const Dashboard = () => {
   };
 
   // 🧩 Fetch dashboard data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getAdminStats();
-        setStatsData(res);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load dashboard data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await getAdminStats();
+      setStatsData(res);
+    } catch (err) {
+      console.error(err);
+
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: "We couldn’t load your dashboard data.",
+        footer: '<a style="cursor:pointer; text-decoration:underline" id="retryBtn">Retry</a>',
+        confirmButtonText: "Dismiss",
+        heightAuto: false,
+      });
+
+      setError("Failed to load dashboard data.");
+
+      // Enable retry inside SweetAlert
+      setTimeout(() => {
+        const retryButton = document.getElementById("retryBtn");
+        if (retryButton) {
+          retryButton.onclick = () => {
+            Swal.close();
+            setLoading(true);
+            setError(null);
+            fetchData(); // 🔄 retry
+          };
+        }
+      }, 50);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   // 📊 Initialize Charts once data loads
   useEffect(() => {
@@ -143,10 +168,36 @@ const Dashboard = () => {
     return () => charts.forEach((chart) => chart.destroy());
   }, [statsData]);
 
-  if (loading)
-    return <div className="dashboard-container">Loading dashboard...</div>;
-  if (error)
-    return <div className="dashboard-container error">{error}</div>;
+ if (loading)
+  return (
+    <div className="dashboard-container">
+      <div className="loading-skeleton">
+        <p>Loading your dashboard…</p>
+      </div>
+    </div>
+  );
+
+
+ if (error)
+  return (
+    <div className="dashboard-container">
+      <div className="error-fallback">
+        <h3>Unable to load dashboard</h3>
+        <p>Please check your network and try again.</p>
+        <button
+          onClick={() => {
+            setLoading(true);
+            setError(null);
+            window.location.reload();
+          }}
+          className="retry-btn"
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+  );
+
 
   const stats = [
     { icon: faMicrochip, title: "Hardware", value: statsData.hardwareCount, color: "#6366f1", tab: "hardware" },
