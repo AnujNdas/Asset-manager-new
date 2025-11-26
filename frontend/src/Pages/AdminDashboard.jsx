@@ -11,6 +11,8 @@ import Chart from "chart.js/auto";
 import "../Page_styles/AdminDashboard.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getAdminStats } from "../Services/ApiServices";
+import Swal from "sweetalert2";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
