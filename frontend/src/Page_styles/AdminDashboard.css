@@ -174,6 +174,87 @@
   color: #666;
   margin-bottom: 4px;
 }
+/* ================================
+   LOADING SKELETON
+================================ */
+.loading-skeleton {
+  width: 100%;
+  padding: 40px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #f4f4f7 25%, #ececf0 37%, #f4f4f7 63%);
+  background-size: 400% 100%;
+  animation: skeletonShimmer 1.4s ease infinite;
+  text-align: center;
+  color: #777;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* ================================
+   ERROR FALLBACK UI
+================================ */
+.error-fallback {
+  width: 100%;
+  text-align: center;
+  padding: 50px 20px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  margin-top: 30px;
+}
+
+.error-fallback h3 {
+  font-size: 1.6rem;
+  color: #dc2626;
+  margin-bottom: 10px;
+}
+
+.error-fallback p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Retry Button */
+.retry-btn {
+  padding: 10px 20px;
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: 0.2s ease;
+}
+
+.retry-btn:hover {
+  background-color: #4f46e5;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
+}
+
+.retry-btn:active {
+  transform: scale(0.97);
+}
+
+/* ================================
+   GLOBAL ERROR TEXT (if needed)
+================================ */
+.error {
+  color: #dc2626;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 1.05rem;
+}
 
 /* --- Responsive --- */
 
