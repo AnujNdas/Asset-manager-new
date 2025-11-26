@@ -7,12 +7,9 @@ import Category from "../Inner_sections/Category";
 import Location from "../Inner_sections/Location";
 import Status from "../Inner_sections/Status";
 
-// Export utilities
 import * as XLSX from "xlsx";
-
 import Swal from "sweetalert2";
 
-// API calls
 import {
   getUnits,
   getLocations,
@@ -21,37 +18,52 @@ import {
 } from "../Services/ApiServices";
 
 const tabs = [
-  { name: "Location", path: "/classification/location" },
-  { name: "Unit", path: "/classification/unit" },
-  { name: "Category", path: "/classification/category" },
-  { name: "Status", path: "/classification/status" },
+  { name: "Location", key: "location", path: "/classification/location" },
+  { name: "Unit", key: "unit", path: "/classification/unit" },
+  { name: "Category", key: "category", path: "/classification/category" },
+  { name: "Status", key: "status", path: "/classification/status" },
 ];
 
 const Classification = () => {
   const location = useLocation();
   const [exportOpen, setExportOpen] = useState(false);
 
+  // Determine active tab key
+  const activeTab = tabs.find((t) => location.pathname.includes(t.key));
+
   // EXPORT HANDLER
   const handleExport = async (format) => {
     try {
-      const [units, locations, categories, statuses] = await Promise.all([
-        getUnits(),
-        getLocations(),
-        getCategories(),
-        getStatuses(),
-      ]);
+      let data = [];
+      let fileName = "";
 
-      const data = {
-        Units: units,
-        Locations: locations,
-        Categories: categories,
-        Statuses: statuses,
-      };
+      // Fetch only the active tab's data
+      switch (activeTab.key) {
+        case "location":
+          data = await getLocations();
+          fileName = "locations";
+          break;
+        case "unit":
+          data = await getUnits();
+          fileName = "units";
+          break;
+        case "category":
+          data = await getCategories();
+          fileName = "categories";
+          break;
+        case "status":
+          data = await getStatuses();
+          fileName = "statuses";
+          break;
+        default:
+          return Swal.fire("Error", "Unknown tab selected!", "error");
+      }
 
+      // Export based on selected format
       if (format === "csv") {
-        exportCSV(data);
+        exportCSV(data, fileName);
       } else if (format === "excel") {
-        exportExcel(data);
+        exportExcel(data, fileName);
       }
 
       setExportOpen(false);
@@ -61,42 +73,30 @@ const Classification = () => {
     }
   };
 
-  // CSV EXPORT FUNCTION
-  const exportCSV = (data) => {
-    let csv = "";
+  // CSV EXPORT
+  const exportCSV = (rows, fileName) => {
+    if (!rows.length) {
+      return Swal.fire("Empty", "No data to export!", "warning");
+    }
 
-    Object.keys(data).forEach((section) => {
-      csv += `\n${section}\n`;
+    const headers = Object.keys(rows[0]).join(",");
+    const csvRows = rows.map((row) => Object.values(row).join(",")).join("\n");
 
-      const rows = data[section];
-
-      if (rows.length === 0) return;
-
-      const headers = Object.keys(rows[0]).join(",");
-      csv += headers + "\n";
-
-      rows.forEach((r) => {
-        csv += Object.values(r).join(",") + "\n";
-      });
-    });
+    const csv = `${headers}\n${csvRows}`;
 
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "classification_export.csv";
+    link.download = `${fileName}.csv`;
     link.click();
   };
 
-  // EXCEL EXPORT FUNCTION
-  const exportExcel = (data) => {
+  // EXCEL EXPORT
+  const exportExcel = (rows, fileName) => {
+    const sheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
-
-    Object.keys(data).forEach((sheetName) => {
-      const sheet = XLSX.utils.json_to_sheet(data[sheetName]);
-      XLSX.utils.book_append_sheet(workbook, sheet, sheetName);
-    });
-
-    XLSX.writeFile(workbook, "classification_export.xlsx");
+    XLSX.utils.book_append_sheet(workbook, sheet, fileName);
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
 
   return (
