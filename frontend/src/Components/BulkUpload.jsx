@@ -70,48 +70,65 @@ const BulkUpload = ({ type, userRole }) => {
 
   };
 
-  const handleUpload = async () => {
-    if (!excelFile)
-      return Swal.fire("Missing File", "Upload an Excel file!", "warning");
+const handleUpload = async () => {
+  if (!excelFile)
+    return Swal.fire("Missing File", "Upload an Excel file!", "warning");
 
-    const reader = new FileReader();
+  const reader = new FileReader();
 
-    reader.onload = async (e) => {
-      const workbook = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
-      const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+  reader.onload = async (e) => {
+    const workbook = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
+    const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
+    if (type === "hardware") {
+      sheet.forEach(
+        (row) => (row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE))
+      );
+    }
+
+    try {
+      let res;
+
+      // -------------------------------------------------------
+      // ✅ HARDWARE (UNCHANGED) — Uses FormData + Multer + ZIP
+      // -------------------------------------------------------
       if (type === "hardware") {
-        sheet.forEach(
-          (row) => (row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE))
-        );
+        const formData = new FormData();
+        formData.append("excel", excelFile);
+        if (zipFile) formData.append("imagesZip", zipFile);
+        formData.append("assets", JSON.stringify(sheet));
+        formData.append("mode", mode);
+
+        res = await bulkUploadHardwareAssets(formData);
       }
 
-      const formData = new FormData();
-      formData.append("excel", excelFile);
-      if (zipFile) formData.append("imagesZip", zipFile);
-      formData.append("assets", JSON.stringify(sheet));
-      formData.append("mode", mode);
+      // -------------------------------------------------------
+      // ✅ SOFTWARE — Must NOT send files → Multer(upload.none())
+      // -------------------------------------------------------
+      if (type === "software") {
+        const payload = {
+          assets: JSON.stringify(sheet),
+          mode,
+        };
 
-      try {
-        let res;
-        if (type === "hardware") res = await bulkUploadHardwareAssets(formData);
-        if (type === "software") res = await bulkUploadSoftwareAssets(formData);
+        res = await bulkUploadSoftwareAssets(payload); // sends JSON only
+      }
 
-        Swal.fire(
-          "Success!",
-         `${res.inserted} assets imported\n${res.skipped} skipped`,
-          "success"
-        );
-      } catch (err) {
-  console.log("❌ AXIOS ERROR:", err);
-  console.log("❌ AXIOS RESPONSE:", err.response?.data);
-  Swal.fire("Error", "Import failed!", "error");
-}
+      Swal.fire(
+        "Success!",
+        `${res.inserted} assets imported\n${res.skipped} skipped`,
+        "success"
+      );
 
-    };
-
-    reader.readAsArrayBuffer(excelFile);
+    } catch (err) {
+      console.log("❌ AXIOS ERROR:", err);
+      console.log("❌ AXIOS RESPONSE:", err.response?.data);
+      Swal.fire("Error", "Import failed!", "error");
+    }
   };
+
+  reader.readAsArrayBuffer(excelFile);
+};
 
   return (
     <div className="bulk-wrapper">
