@@ -36,7 +36,9 @@ role: {
   tfaEnabled: { type: Boolean, default: false },
   tfaOTP: { type: String },              // Store the current OTP
   tfaOTPExpiry: { type: Date },          // OTP expiration time
-});
+  lastActive: { type: Date, default: Date.now },
+
+},{ timestamps: true });
 
 const User = mongoose.model("user", UserSchema);
 module.exports = User;
