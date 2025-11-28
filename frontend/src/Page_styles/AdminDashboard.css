@@ -18,7 +18,7 @@
 
 /* Page Base */
 .saas-dashboard {
-  padding: 20px;
+  padding: 10px;
   background: var(--bg);
   font-family: "Inter", sans-serif;
   color: var(--text-dark);
@@ -34,51 +34,39 @@
 
 .dashboard-header .sub {
   color: var(--text-light);
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 15px;
 }
 
 /* =============================
-   TOP CARDS (3–4 CARDS)
+   TOP CARDS (3 CARDS)
 ================================ */
 .top-cards {
-  margin-top: 20px;
+  margin-top: 10px;
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
-/* =============================
-   2x2 DASH GRID
-================================ */
 .dash-cover {
-  margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 22px;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 250px; /* change size as needed */
+  gap: 20px; /* spacing */
 }
 
-.dash-cover > .card {
-  height: 220px; /* fixed for uniform dashboard look */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 25px;
-}
 
-/* =============================
-   CARD STYLING
-================================ */
 .card {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 15px;
   background: var(--card-bg);
-  padding: 22px;
+  padding: 20px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   cursor: pointer;
   transition: 0.25s ease;
+   flex-direction : row;
 }
 
 .card:hover {
@@ -87,8 +75,8 @@
 }
 
 .icon {
-  height: 50px;
-  width: 50px;
+  height: 45px;
+  width: 45px;
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -117,15 +105,15 @@
 ================================ */
 .dashboard-section {
   background: var(--card-bg);
-  padding: 20px;
-  margin-top: 22px;
+  padding: 10px;
+  margin-top: 10px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
 .dashboard-section h3 {
   font-size: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
   font-weight: 600;
 }
 
@@ -135,12 +123,11 @@
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 650px;
 }
 
 .admin-table th,
 .admin-table td {
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--border);
   text-align: left;
 }
@@ -154,12 +141,13 @@
   background: #f9fafb;
 }
 
+/* Responsive table (scroll on mobile) */
 .dashboard-section {
-  overflow-x: auto; /* useful for mobile */
+  overflow-x: auto;
 }
 
 /* =============================
-   EXPIRING + RECENT GRIDS
+   EXPIRING ASSETS GRID
 ================================ */
 .expiring-grid,
 .recent-grid {
@@ -202,16 +190,6 @@
 
 /* Tablets */
 @media (max-width: 992px) {
-
-  .dash-cover {
-    grid-template-columns: 1fr; /* stack into one column */
-  }
-
-  .dash-cover > .card {
-    height: auto;
-    padding: 20px;
-  }
-
   .dashboard-header h2 {
     font-size: 24px;
   }
@@ -223,33 +201,27 @@
 
 /* Mobile Large */
 @media (max-width: 768px) {
-
-  .saas-dashboard {
-    padding: 14px;
-  }
-
   .card {
-    padding: 18px;
+    padding: 16px;
   }
 
   .icon {
-    height: 42px;
-    width: 42px;
-    font-size: 20px;
+    height: 40px;
+    width: 40px;
+    font-size: 19px;
+  }
+
+  .card h3 {
+    font-size: 22px;
   }
 
   .dashboard-header {
     text-align: center;
   }
-
-  .dash-cover {
-    gap: 16px;
-  }
 }
 
 /* Mobile Small */
 @media (max-width: 480px) {
-
   .top-cards {
     grid-template-columns: 1fr;
   }
@@ -266,9 +238,5 @@
   .expiring-grid,
   .recent-grid {
     grid-template-columns: 1fr;
-  }
-
-  .card h3 {
-    font-size: 20px;
   }
 }
