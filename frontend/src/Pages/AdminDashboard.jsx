@@ -55,10 +55,10 @@ const Dashboard = () => {
     <div className="saas-dashboard">
 
       {/* ---- Page Header ---- */}
-      <div className="dashboard-header">
+      {/* <div className="dashboard-header">
         <h2>Admin Overview</h2>
         <p className="sub">System analytics & important insights.</p>
-      </div>
+      </div> */}
 
       {/* ---- Only 3 Cards ---- */}
       <div className="top-cards">
