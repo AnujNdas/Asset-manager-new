@@ -64,4 +64,106 @@ router.put("/users/:id/role", authenticateToken(["super-admin"]), async (req, re
   }
 });
 
+// 📦 Top 5 Locations with Most Assets
+router.get("/top-locations", authenticateToken(["super-admin", "admin"]), async (req, res) => {
+  try {
+    const hardwareLocations = await HardwareAsset.aggregate([
+      { $group: { _id: "$locationName", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }
+    ]);
+
+    res.json(hardwareLocations);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch top locations" });
+  }
+});
+// ⏳ Assets Expiring in Next 3 Months
+router.get("/expiring-assets", authenticateToken(["super-admin", "admin"]), async (req, res) => {
+  try {
+    const today = new Date();
+    const threeMonthsLater = new Date();
+    threeMonthsLater.setMonth(today.getMonth() + 3);
+
+    const expiringHardware = await HardwareAsset.find({
+      DOE: { $gte: today, $lte: threeMonthsLater }
+    });
+
+    const expiringSoftware = await SoftwareAsset.find({
+      licenseExpiry: { $gte: today, $lte: threeMonthsLater }
+    });
+
+    res.json({
+      expiringHardware,
+      expiringSoftware,
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch expiring assets" });
+  }
+});
+// ⏳ Assets Expiring in Next 3 Months
+router.get("/expiring-assets", authenticateToken(["super-admin", "admin"]), async (req, res) => {
+  try {
+    const today = new Date();
+    const threeMonthsLater = new Date();
+    threeMonthsLater.setMonth(today.getMonth() + 3);
+
+    const expiringHardware = await HardwareAsset.find({
+      DOE: { $gte: today, $lte: threeMonthsLater }
+    });
+
+    const expiringSoftware = await SoftwareAsset.find({
+      licenseExpiry: { $gte: today, $lte: threeMonthsLater }
+    });
+
+    res.json({
+      expiringHardware,
+      expiringSoftware,
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch expiring assets" });
+  }
+});
+// 🆕 5 Most Recently Added Assets
+router.get("/recent-assets", authenticateToken(["super-admin", "admin"]), async (req, res) => {
+  try {
+    const recentHardware = await HardwareAsset.find()
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    const recentSoftware = await SoftwareAsset.find()
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.json({
+      hardware: recentHardware,
+      software: recentSoftware,
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch recent assets" });
+  }
+});
+// 👥 Most Active Users (Last 30 Days)
+router.get("/active-users", authenticateToken(["super-admin", "admin"]), async (req, res) => {
+  try {
+    const lastMonth = new Date();
+    lastMonth.setDate(lastMonth.getDate() - 30);
+
+    const activeUsers = await User.find({
+      updatedAt: { $gte: lastMonth }
+    })
+      .select("-password")
+      .sort({ updatedAt: -1 })
+      .limit(5);
+
+    res.json(activeUsers);
+
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch active users" });
+  }
+});
+
 module.exports = router;
