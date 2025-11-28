@@ -105,6 +105,7 @@ const verifyOtpAndSignup = async (req, res) => {
 /* --------------------------------- LOGIN ---------------------------------- */
 const login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found!" });
@@ -112,12 +113,17 @@ const login = async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(401).json({ error: "Invalid Password!" });
 
+    // 🔥 UPDATE lastActive timestamp
+    user.lastActive = new Date();
+    await user.save();
+
     const token = jwt.sign(
       { email: user.email, id: user._id, role: user.role, username: user.username },
       "jwt_secret",
       { expiresIn: "3h" }
     );
 
+    // Notification
     await Notification.create({
       title: "Login Successful",
       message: "You have successfully logged in.",
@@ -127,11 +133,19 @@ const login = async (req, res) => {
     const io = req.app.get("io");
     io.to(user._id.toString()).emit("newNotification", {
       title: "Login Successful",
-      message: "You have successfully logged in."
+      message: "You have successfully logged in.",
     });
 
-    res.json({ message: "Logged in!", token, role: user.role, userId: user._id, username: user.username });
+    res.json({
+      message: "Logged in!",
+      token,
+      role: user.role,
+      userId: user._id,
+      username: user.username,
+    });
+
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error logging in!" });
   }
 };
