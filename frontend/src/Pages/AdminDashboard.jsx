@@ -88,6 +88,7 @@ const Dashboard = () => {
       </div>
 
       {/* ---- Top 5 Locations ---- */}
+      <div className="dash-cover">
       <div className="dashboard-section">
         <h3>Top 5 Locations with Most Assets</h3>
         <table className="admin-table">
@@ -109,7 +110,7 @@ const Dashboard = () => {
       </div>
 
       {/* ---- Expiring Assets ---- */}
-      {/* <div className="dashboard-section">
+     <div className="dashboard-section">
         <h3>Assets Expiring in Next 3 Months</h3>
         <div className="expiring-grid">
 
@@ -132,7 +133,7 @@ const Dashboard = () => {
           </div>
 
         </div>
-      </div> */}
+      </div>
 
       {/* ---- Recent Assets ---- */}
       <div className="dashboard-section">
@@ -182,6 +183,7 @@ const Dashboard = () => {
           </tbody>
         </table>
       </div>
+        </div>
 
     </div>
   );
