@@ -119,3 +119,204 @@
 html, body {
   overflow-x: hidden;
 }
+/* ================================
+   GLOBAL STYLES
+================================ */
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --secondary: #f3f4f6;
+  --text: #1f2937;
+  --white: #ffffff;
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+  --shadow: 0 4px 14px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --transition: 0.3s ease;
+}
+
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--secondary);
+}
+
+/* ================================
+   SIDEBAR
+================================ */
+.admin-sidebar {
+  width: 260px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  position: fixed;
+  height: 100vh;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.admin-sidebar h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.admin-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-menu a {
+  padding: 12px 14px;
+  background: var(--white);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--text);
+  font-size: 15px;
+  transition: var(--transition);
+  border: 1px solid transparent;
+}
+
+.admin-menu a:hover,
+.admin-menu a.active {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+/* ================================
+   MAIN AREA
+================================ */
+.admin-main {
+  margin-left: 260px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* Topbar */
+.admin-topbar {
+  background: var(--white);
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-topbar input {
+  width: 260px;
+  padding: 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* ================================
+   STAT CARDS
+================================ */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.stat-card p {
+  font-size: 32px;
+  margin-top: 5px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ================================
+   TABLE SECTION
+================================ */
+.table-section {
+  margin-top: 30px;
+  background: var(--white);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.table-section h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table th,
+.table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  background: var(--secondary);
+  text-align: left;
+}
+
+.table tr:hover {
+  background: #f9fafb;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 900px) {
+  .admin-sidebar {
+    width: 200px;
+  }
+
+  .admin-main {
+    margin-left: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-sidebar {
+    display: none;
+  }
+
+  .admin-main {
+    margin-left: 0;
+  }
+
+  .admin-topbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .admin-topbar input {
+    width: 100%;
+  }
+}
+
