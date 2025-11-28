@@ -49,6 +49,11 @@
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.dash-cover{
+   display: grid;
+   grid-template-columns: 1fr 1fr; /* Two equal columns */
+}
+
 .card {
   display: flex;
   align-items: center;
