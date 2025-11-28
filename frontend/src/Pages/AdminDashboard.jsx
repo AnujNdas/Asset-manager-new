@@ -1,270 +1,118 @@
-import React, { useEffect, useState  } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMicrochip,
   faLaptop,
-  faCopy,
   faUsers,
-  faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 import Chart from "chart.js/auto";
-import "../Page_styles/AdminDashboard.css";
-import { useNavigate, useLocation } from "react-router-dom";
-import { getAdminStats } from "../Services/ApiServices";
 import Swal from "sweetalert2";
-
+import { useNavigate } from "react-router-dom";
+import { getAdminStats } from "../Services/ApiServices";
+import "../Page_styles/AdminDashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  // ✅ Track Selected Card
-  const [activeCard, setActiveCard] = useState(null);
 
-  const handleCardClick = (tab) => {
-    setActiveCard(tab);
-    if (tab === "users") {
-      navigate("/Setting/users");
-    } else {
-      navigate(`/inventory?tab=${tab}`);
-    }
-  };
-
-  // 🧩 Fetch dashboard data
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await getAdminStats();
-      setStatsData(res);
-    } catch (err) {
-      console.error(err);
-
-      Swal.fire({
-        icon: "error",
-        title: "Oops!",
-        text: "We couldn’t load your dashboard data.",
-        footer: '<a style="cursor:pointer; text-decoration:underline" id="retryBtn">Retry</a>',
-        confirmButtonText: "Dismiss",
-        heightAuto: false,
-      });
-
-      setError("Failed to load dashboard data.");
-
-      // Enable retry inside SweetAlert
-      setTimeout(() => {
-        const retryButton = document.getElementById("retryBtn");
-        if (retryButton) {
-          retryButton.onclick = () => {
-            Swal.close();
-            setLoading(true);
-            setError(null);
-            fetchData(); // 🔄 retry
-          };
-        }
-      }, 50);
-    } finally {
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await getAdminStats();
+        setStatsData(res);
+      } catch (err) {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Unable to load dashboard data.",
+        });
+      }
       setLoading(false);
-    }
-  };
+    };
+    fetchStats();
+  }, []);
 
-  fetchData();
-}, []);
-
-
-  // 📊 Initialize Charts once data loads
   useEffect(() => {
     if (!statsData) return;
 
-    const charts = [];
+    new Chart(document.getElementById("assetsChart"), {
+      type: "doughnut",
+      data: {
+        labels: ["Hardware", "Software", "Licenses"],
+        datasets: [
+          {
+            data: [
+              statsData.hardwareCount,
+              statsData.softwareCount,
+              statsData.coreLicensesCount,
+            ],
+            backgroundColor: ["#6366f1", "#a855f7", "#f59e0b"],
+            cutout: "75%",
+          },
+        ],
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } },
+    });
 
-    // Bar Chart (Active vs Expired Licenses)
-    const bar = document.getElementById("barchart");
-    if (bar) {
-      const barChart = new Chart(bar, {
-        type: "bar",
-        data: {
-          labels: ["Active", "Expired"],
-          datasets: [
-            {
-              label: "Licenses",
-              data: [statsData.activeLicenses, statsData.expiredLicenses],
-              backgroundColor: ["#22c55e", "#ef4444"],
-              borderRadius: 6,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-        },
-      });
-      charts.push(barChart);
-    }
-
-    // Doughnut Chart (Asset Overview)
-    const doughnut = document.getElementById("doughnutchart");
-    if (doughnut) {
-      const doughnutChart = new Chart(doughnut, {
-        type: "doughnut",
-        data: {
-          labels: ["Hardware", "Software", "Licenses"],
-          datasets: [
-            {
-              data: [
-                statsData.hardwareCount,
-                statsData.softwareCount,
-                statsData.coreLicensesCount,
-              ],
-              backgroundColor: ["#6366f1", "#a855f7", "#f59e0b"],
-            },
-          ],
-        },
-        options: { cutout: "70%" },
-      });
-      charts.push(doughnutChart);
-    }
-
-    // Line Chart (Mock Monthly Data)
-    const line = document.getElementById("lineChart");
-    if (line) {
-      const lineChart = new Chart(line, {
-        type: "line",
-        data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-          datasets: [
-            {
-              label: "System Usage",
-              data: [10, 15, 20, 18, 25],
-              borderColor: "#8b5cf6",
-              fill: false,
-              tension: 0.4,
-            },
-          ],
-        },
-      });
-      charts.push(lineChart);
-    }
-
-    // Radar Chart (Mock Performance Data)
-    const radar = document.getElementById("radarChart");
-    if (radar) {
-      const radarChart = new Chart(radar, {
-        type: "radar",
-        data: {
-          labels: ["Speed", "Quality", "Support", "Efficiency", "Security"],
-          datasets: [
-            {
-              label: "Performance",
-              data: [8, 9, 7, 8, 9],
-              backgroundColor: "rgba(99,102,241,0.3)",
-              borderColor: "#6366f1",
-            },
-          ],
-        },
-      });
-      charts.push(radarChart);
-    }
-
-    // Cleanup
-    return () => charts.forEach((chart) => chart.destroy());
   }, [statsData]);
 
- if (loading)
+  if (loading) return <div className="loader">Loading...</div>;
+
   return (
-    <div className="dashboard-container">
-      <div className="loading-skeleton">
-        <p>Loading your dashboard…</p>
+    <div className="saas-dashboard">
+      {/* ---- Page Title ---- */}
+      <div className="dashboard-header">
+        <h2>Admin Overview</h2>
+        <p className="sub">Summary of your system activity and assets.</p>
       </div>
-    </div>
-  );
 
-
- if (error)
-  return (
-    <div className="dashboard-container">
-      <div className="error-fallback">
-        <h3>Unable to load dashboard</h3>
-        <p>Please check your network and try again.</p>
-        <button
-          onClick={() => {
-            setLoading(true);
-            setError(null);
-            window.location.reload();
-          }}
-          className="retry-btn"
-        >
-          Retry
-        </button>
-      </div>
-    </div>
-  );
-
-
-  const stats = [
-    { icon: faMicrochip, title: "Hardware", value: statsData.hardwareCount, color: "#6366f1", tab: "hardware" },
-    { icon: faLaptop, title: "Software", value: statsData.softwareCount, color: "#a855f7", tab: "software" },
-    // { icon: faCopy, title: "Licenses", value: statsData.coreLicensesCount, color: "#f59e0b", tab: "core" },
-    { icon: faUsers, title: "Users", value: statsData.usersCount, color: "#f43f5e", tab: "users" },
-  ];
-
-  return (
-    <div className="dashboard-container">
-      {/* --- Top Stats --- */}
-      <div className="stats-grid">
-        {stats.map((item, index) => (
-          <div
-            className={`stat-card ${activeCard === item.tab ? "active-card" : ""}`}
-            key={index}
-            onClick={() => handleCardClick(item.tab)}
-            style={{ cursor: "pointer" }}
-          >
-            <div className="stat-icon" style={{ backgroundColor: item.color }}>
-              <FontAwesomeIcon icon={item.icon} />
-            </div>
-            <div className="stat-data">
-              <h4>{item.value}</h4>
-              <p>{item.title}</p>
-            </div>
-            <FontAwesomeIcon icon={faEllipsisH} className="menu-icon" />
+      {/* ---- Top Stats Cards ---- */}
+      <div className="top-cards">
+        <div className="card" onClick={() => navigate("/inventory?tab=hardware")}>
+          <div className="icon purple">
+            <FontAwesomeIcon icon={faMicrochip} />
           </div>
-        ))}
-      </div>
-
-      {/* --- Middle Charts --- */}
-      <div className="middle-section">
-        {/* <div className="chart-card">
-          <div className="chart-header">
-            <p>License Status</p>
-            <p>Active vs Expired</p>
+          <div>
+            <h3>{statsData.hardwareCount}</h3>
+            <p>Hardware Assets</p>
           </div>
-          <canvas id="barchart"></canvas>
-        </div> */}
-
-        <div className="chart-card">
-          <p className="chart-title">Asset Distribution</p>
-          <canvas id="doughnutchart"></canvas>
         </div>
 
-        <div className="chart-card">
-          <div className="chart-header">
-            <p>Renewable Management</p>
-            <p>Show by Month</p>
+        <div className="card" onClick={() => navigate("/inventory?tab=software")}>
+          <div className="icon violet">
+            <FontAwesomeIcon icon={faLaptop} />
           </div>
-          <canvas id="lineChart"></canvas>
+          <div>
+            <h3>{statsData.softwareCount}</h3>
+            <p>Software Assets</p>
+          </div>
+        </div>
+
+        <div className="card" onClick={() => navigate("/setting/users")}>
+          <div className="icon red">
+            <FontAwesomeIcon icon={faUsers} />
+          </div>
+          <div>
+            <h3>{statsData.usersCount}</h3>
+            <p>Total Users</p>
+          </div>
         </div>
       </div>
 
-      {/* --- Bottom Section --- */}
-      <div className="bottom-section">
-        <div className="table-card">
+      {/* ---- Middle Section ---- */}
+      <div className="middle-grid">
+        {/* Chart */}
+        <div className="chart-wrapper">
+          <h4>Asset Distribution</h4>
+          <canvas id="assetsChart"></canvas>
+        </div>
+
+        {/* Summary Table */}
+        <div className="summary-card">
+          <h4>Overall Summary</h4>
           <table>
-            <thead>
-              <tr>
-                <th>Category</th>
-                <th>Count</th>
-              </tr>
-            </thead>
             <tbody>
               <tr>
                 <td>Hardware</td>
@@ -285,13 +133,8 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
-
-        <div className="chart-card monthly">
-          <h4>{statsData.activeLicenses}</h4>
-          <p>Active Licenses</p>
-          <canvas id="radarChart"></canvas>
-        </div>
       </div>
+
     </div>
   );
 };
