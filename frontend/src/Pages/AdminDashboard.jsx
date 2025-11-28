@@ -233,13 +233,13 @@ const Dashboard = () => {
 
       {/* --- Middle Charts --- */}
       <div className="middle-section">
-        <div className="chart-card">
+        {/* <div className="chart-card">
           <div className="chart-header">
             <p>License Status</p>
             <p>Active vs Expired</p>
           </div>
           <canvas id="barchart"></canvas>
-        </div>
+        </div> */}
 
         <div className="chart-card">
           <p className="chart-title">Asset Distribution</p>
