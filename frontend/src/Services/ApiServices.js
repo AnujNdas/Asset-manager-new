@@ -172,4 +172,15 @@ export const getUserDashboard = async () => {
   const response = await axiosInstance.get("/user-data/dashboard");
   return response.data;
 };
+export const getTopLocations = async () =>
+  axiosInstance.get("/admin/top-locations").then((res) => res.data);
+
+export const getExpiringAssets = async () =>
+  axiosInstance.get("/admin/expiring-assets").then((res) => res.data);
+
+export const getRecentAssets = async () =>
+  axiosInstance.get("/admin/recent-assets").then((res) => res.data);
+
+export const getActiveUsers = async () =>
+  axiosInstance.get("/admin/active-users").then((res) => res.data);
 
