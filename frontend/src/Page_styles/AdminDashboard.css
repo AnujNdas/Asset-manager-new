@@ -49,10 +49,13 @@
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
-.dash-cover{
-   display: grid;
-   grid-template-columns: 1fr 1fr; /* Two equal columns */
+.dash-cover {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 250px; /* change size as needed */
+  gap: 20px; /* spacing */
 }
+
 
 .card {
   display: flex;
