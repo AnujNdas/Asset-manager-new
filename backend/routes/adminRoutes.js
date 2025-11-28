@@ -146,24 +146,25 @@ router.get("/recent-assets", authenticateToken(["super-admin", "admin"]), async 
     res.status(500).json({ error: "Failed to fetch recent assets" });
   }
 });
-// 👥 Most Active Users (Last 30 Days)
+
 router.get("/active-users", authenticateToken(["super-admin", "admin"]), async (req, res) => {
   try {
-    const lastMonth = new Date();
-    lastMonth.setDate(lastMonth.getDate() - 30);
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 30);
 
-    const activeUsers = await User.find({
-      updatedAt: { $gte: lastMonth }
+    const users = await User.find({
+      lastActive: { $gte: cutoff }
     })
       .select("-password")
-      .sort({ updatedAt: -1 })
+      .sort({ lastActive: -1 })
       .limit(5);
 
-    res.json(activeUsers);
+    res.json(users);
 
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch active users" });
   }
 });
+
 
 module.exports = router;
