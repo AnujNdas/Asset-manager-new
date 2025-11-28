@@ -109,7 +109,7 @@ const Dashboard = () => {
       </div>
 
       {/* ---- Expiring Assets ---- */}
-      <div className="dashboard-section">
+      {/* <div className="dashboard-section">
         <h3>Assets Expiring in Next 3 Months</h3>
         <div className="expiring-grid">
 
@@ -132,7 +132,7 @@ const Dashboard = () => {
           </div>
 
         </div>
-      </div>
+      </div> */}
 
       {/* ---- Recent Assets ---- */}
       <div className="dashboard-section">
