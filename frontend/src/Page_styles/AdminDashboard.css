@@ -20,7 +20,6 @@
 .saas-dashboard {
   padding: 10px;
   background: var(--bg);
-  min-height: 100vh;
   font-family: "Inter", sans-serif;
   color: var(--text-dark);
 }
