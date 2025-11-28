@@ -105,7 +105,7 @@
 ================================ */
 .dashboard-section {
   background: var(--card-bg);
-  padding: 20px;
+  padding: 10px;
   margin-top: 10px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
