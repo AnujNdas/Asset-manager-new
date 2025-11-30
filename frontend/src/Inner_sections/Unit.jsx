@@ -124,12 +124,14 @@ const Unit = () => {
       ) : (
         <>
           <div className="category-grid">
+            <div className="grid">
             {currentItems.map((unit, idx) => (
               <div key={unit._id} className="category-card">
                 <div className="category-number">{indexOfFirst + idx + 1}</div>
                 <div className="category-name">{unit.name}</div>
               </div>
             ))}
+              </div>
           </div>
 
           {/* ✅ Reusable Pagination */}
