@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from "../Components/Pagination"; // ✅ Unified Pagination
-
+import Loader from "../Components/Loader";
 const Unit = () => {
   const [unitName, setUnitName] = useState('');
   const [units, setUnits] = useState([]);
   const [filteredUnits, setFilteredUnits] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Pagination
@@ -91,7 +91,11 @@ const Unit = () => {
   useEffect(() => {
     fetchUnits();
   }, []);
-
+    if (loading) {
+  return (
+      <Loader />
+  );
+}
   return (
     <div className="classification_card">
       {/* Header */}
