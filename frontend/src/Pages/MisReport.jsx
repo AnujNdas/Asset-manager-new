@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import "../Page_styles/MisReport.css";
 import Pagination from "../Components/Pagination";
+import Loader from "../Components/Loader";
 
 import {
   getStatuses,
@@ -23,6 +24,7 @@ const MisReport = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [loading, setLoading] = useState(true);
 
   // Data
   const [hardware, setHardware] = useState([]);
@@ -61,7 +63,9 @@ const MisReport = () => {
         setLicenses(lic?.data || lic);
       } catch (err) {
         console.error("Error fetching filters/data:", err);
-      }
+      } finally {
+      setLoading(false);
+    }
     })();
   }, []);
 
@@ -106,6 +110,13 @@ const MisReport = () => {
     XLSX.utils.book_append_sheet(wb, ws, activeTab);
     XLSX.writeFile(wb, `${activeTab}_report.xlsx`);
   };
+  if (loading) {
+  return (
+    <div style={{ paddingTop: "80px" }}>
+      <Loader />
+    </div>
+  );
+}
 
   return (
     <div className="mis-content">
