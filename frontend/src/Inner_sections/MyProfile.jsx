@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import EditButton from '../Components/EditButton';
 import '../Page_styles/MyProfile.css';
 import { useNavigate } from 'react-router-dom';
+import Loader from "../Components/Loader" ;
+
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
@@ -127,8 +129,10 @@ useEffect(() => {
   };
 
   if (loading) {
-    return <div className="Profile-container"><div className="Profile-heading"><p>My Profile</p></div><p>Loading…</p></div>;
-  }
+  return (
+      <Loader />
+  );
+}
 
   return (
     <div className="Profile-container">
