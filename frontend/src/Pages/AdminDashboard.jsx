@@ -29,10 +29,11 @@ const Dashboard = () => {
   const [locationList, setLocationList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const getLocationName = (id) => {
-    const loc = locationList.find((l) => l.locationName === id || l._id === id);
-    return loc ? loc.locationName : id;
-  };
+const getLocationName = (id) => {
+  const loc = locationList.find((l) => l._id === id);
+  return loc ? loc.name : "Unknown Location";
+};
+
 
   useEffect(() => {
     const load = async () => {
