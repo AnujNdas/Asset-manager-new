@@ -9,17 +9,26 @@ import {
   getExpiringAssets,
   getRecentAssets,
   getActiveUsers,
+  getLocations,           // ✅ Added
 } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+
   const [statsData, setStatsData] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
   const [expiringAssets, setExpiringAssets] = useState(null);
   const [recentAssets, setRecentAssets] = useState(null);
   const [activeUsers, setActiveUsers] = useState(null);
+  const [locationList, setLocationList] = useState([]); // ✅ Added to map names
   const [loading, setLoading] = useState(true);
+
+  // ✅ Convert ID → Name
+  const getLocationName = (id) => {
+    const loc = locationList.find((l) => l._id === id);
+    return loc ? loc.locationName : "Unknown Location";
+  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -29,12 +38,14 @@ const Dashboard = () => {
         const expiring = await getExpiringAssets();
         const recent = await getRecentAssets();
         const active = await getActiveUsers();
+        const allLocations = await getLocations(); // ✅ Fetch all names
 
         setStatsData(stats);
         setTopLocations(locations);
         setExpiringAssets(expiring);
         setRecentAssets(recent);
         setActiveUsers(active);
+        setLocationList(allLocations); // ✅ Store location list
       } catch (err) {
         console.error(err);
         Swal.fire({
@@ -54,13 +65,7 @@ const Dashboard = () => {
   return (
     <div className="saas-dashboard">
 
-      {/* ---- Page Header ---- */}
-      {/* <div className="dashboard-header">
-        <h2>Admin Overview</h2>
-        <p className="sub">System analytics & important insights.</p>
-      </div> */}
-
-      {/* ---- Only 3 Cards ---- */}
+      {/* ---- Top Summary Cards ---- */}
       <div className="top-cards">
         <div className="card" onClick={() => navigate("/inventory?tab=hardware")}>
           <div className="icon purple"><FontAwesomeIcon icon={faMicrochip} /></div>
@@ -87,104 +92,106 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ---- Top 5 Locations ---- */}
+      {/* ---- Main Sections ---- */}
       <div className="dash-cover">
-      <div className="dashboard-section">
-        <h3>Top 5 Locations with Most Assets</h3>
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Location</th>
-              <th>Assets Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {topLocations.map((loc, idx) => (
-              <tr key={idx}>
-                <td>{loc._id}</td>
-                <td>{loc.count}</td>
+
+        {/* ---- Top 5 Locations ---- */}
+        <div className="dashboard-section">
+          <h3>Top 5 Locations with Most Assets</h3>
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>Assets Count</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* ---- Expiring Assets ---- */}
-     <div className="dashboard-section">
-        <h3>Assets Expiring in Next 3 Months</h3>
-        <div className="expiring-grid">
-
-          <div>
-            <h4>Hardware</h4>
-            <ul>
-              {expiringAssets?.expiringHardware?.map((item) => (
-                <li key={item._id}>{item.assetName} → {item.DOE}</li>
+            </thead>
+            <tbody>
+              {topLocations.map((loc, idx) => (
+                <tr key={idx}>
+                  <td>{getLocationName(loc._id)}</td> {/* ✅ Name instead of ID */}
+                  <td>{loc.count}</td>
+                </tr>
               ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4>Software</h4>
-            <ul>
-              {expiringAssets?.expiringSoftware?.map((item) => (
-                <li key={item._id}>{item.name} → {item.licenseExpiry}</li>
-              ))}
-            </ul>
-          </div>
-
+            </tbody>
+          </table>
         </div>
-      </div>
 
-      {/* ---- Recent Assets ---- */}
-      <div className="dashboard-section">
-        <h3>Recently Added Assets (5)</h3>
-        <div className="recent-grid">
+        {/* ---- Expiring Assets ---- */}
+        <div className="dashboard-section">
+          <h3>Assets Expiring in Next 3 Months</h3>
+          <div className="expiring-grid">
 
-          <div>
-            <h4>Hardware</h4>
-            <ul>
-              {recentAssets?.hardware?.map((item) => (
-                <li key={item._id}>{item.assetName}</li>
-              ))}
-            </ul>
+            <div>
+              <h4>Hardware</h4>
+              <ul>
+                {expiringAssets?.expiringHardware?.map((item) => (
+                  <li key={item._id}>{item.assetName} → {item.DOE}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4>Software</h4>
+              <ul>
+                {expiringAssets?.expiringSoftware?.map((item) => (
+                  <li key={item._id}>{item.name} → {item.licenseExpiry}</li>
+                ))}
+              </ul>
+            </div>
+
           </div>
-
-          <div>
-            <h4>Software</h4>
-            <ul>
-              {recentAssets?.software?.map((item) => (
-                <li key={item._id}>{item.name}</li>
-              ))}
-            </ul>
-          </div>
-
         </div>
-      </div>
 
-      {/* ---- Active Users ---- */}
-      <div className="dashboard-section">
-        <h3>Most Active Users (Last 30 Days)</h3>
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th>Last Active</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activeUsers?.map((user) => (
-              <tr key={user._id}>
-                <td>{user.username}</td>
-                <td>{user.email}</td>
-                <td>{new Date(user.updatedAt).toLocaleString()}</td>
+        {/* ---- Recently Added Assets ---- */}
+        <div className="dashboard-section">
+          <h3>Recently Added Assets (5)</h3>
+          <div className="recent-grid">
+
+            <div>
+              <h4>Hardware</h4>
+              <ul>
+                {recentAssets?.hardware?.map((item) => (
+                  <li key={item._id}>{item.assetName}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4>Software</h4>
+              <ul>
+                {recentAssets?.software?.map((item) => (
+                  <li key={item._id}>{item.name}</li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ---- Active Users ---- */}
+        <div className="dashboard-section">
+          <h3>Most Active Users (Last 30 Days)</h3>
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Last Active</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {activeUsers?.map((user) => (
+                <tr key={user._id}>
+                  <td>{user.username}</td>
+                  <td>{user.email}</td>
+                  <td>{new Date(user.updatedAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
+      </div>
     </div>
   );
 };
