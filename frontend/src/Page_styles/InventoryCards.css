@@ -469,6 +469,7 @@
   font-weight: 700;
   color: #4f46e5;
   letter-spacing: 1px;
+  flex-direction : column;
 }
 
 /* COLUMN 2 — Data */
