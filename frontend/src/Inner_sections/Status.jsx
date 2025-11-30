@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from "../Components/Pagination";  // ✅ Reusable Pagination
-
+import Loader from "../Components/Loader";
 const Status = () => {
   const [statusName, setStatusName] = useState('');
   const [statuses, setStatuses] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Pagination
@@ -70,7 +70,11 @@ const Status = () => {
   useEffect(() => {
     fetchStatuses();
   }, []);
-
+    if (loading) {
+  return (
+      <Loader />
+  );
+}
   return (
     <div className="classification_card">
       {/* Header */}
