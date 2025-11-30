@@ -5,13 +5,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from "../Components/Pagination";   // ✅ Using reusable pagination
+import Loader from "../Components/Loader";
 
 const Category = () => {
   const [categoryName, setCategoryName] = useState('');
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+
   const perPage = 18;
 
   const totalPages = Math.ceil(categories.length / perPage);
@@ -71,6 +73,13 @@ const Category = () => {
   useEffect(() => {
     fetchCategories();
   }, []);
+  if (loading) {
+  return (
+    <div style={{ paddingTop: "80px" }}>
+      <Loader />
+    </div>
+  );
+}
 
   return (
     <div className="classification_card">
