@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import '../Page_styles/Unit.css'; // You can keep using this for shared styles
+import '../Page_styles/Unit.css';
 import { getCategories, createCategory } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
+import Pagination from "../Components/Pagination";   // ✅ Using reusable pagination
 
 const Category = () => {
   const [categoryName, setCategoryName] = useState('');
@@ -11,21 +12,19 @@ const Category = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 9; // works better with grid layout
+  const perPage = 9;
 
   const totalPages = Math.ceil(categories.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
   const currentItems = categories.slice(indexOfFirst, indexOfLast);
 
-  // ✅ Fetch categories
+  // Fetch categories
   const fetchCategories = async () => {
     setLoading(true);
     try {
       const data = await getCategories();
-      // Sort categories by creation date (if available) or just reverse to show latest first
-      const sorted = [...data].reverse();
-      setCategories(sorted);
+      setCategories([...data].reverse());
     } catch (err) {
       setError('Error fetching categories');
     } finally {
@@ -33,7 +32,7 @@ const Category = () => {
     }
   };
 
-  // ✅ Handle submit
+  // Handle new category
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!categoryName.trim()) {
@@ -49,10 +48,9 @@ const Category = () => {
     try {
       const newCategory = await createCategory({ name: categoryName.trim() });
 
-      // 🆕 Prepend the newly created category to the list
       setCategories((prev) => [newCategory, ...prev]);
       setCategoryName('');
-      setCurrentPage(1); // Always jump back to page 1 to show new entry
+      setCurrentPage(1);
 
       Swal.fire({
         icon: 'success',
@@ -76,27 +74,30 @@ const Category = () => {
 
   return (
     <div className="classification_card">
-<div className="card_header">
-  <h3 className="category_title"> Category</h3>
-  <form onSubmit={handleSubmit} className="category_form">
-    <input
-      type="text"
-      className="category_input"
-      placeholder="Add a new category..."
-      value={categoryName}
-      onChange={(e) => setCategoryName(e.target.value)}
-    />
-    <button type="submit" className="category_add_btn">
-      <FontAwesomeIcon icon={faPlus} />
-    </button>
-  </form>
-</div>
 
+      {/* Header */}
+      <div className="card_header">
+        <h3 className="category_title"> Category</h3>
 
+        <form onSubmit={handleSubmit} className="category_form">
+          <input
+            type="text"
+            className="category_input"
+            placeholder="Add a new category..."
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+          />
+          <button type="submit" className="category_add_btn">
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+        </form>
+      </div>
+
+      {/* Loading and Error */}
       {loading && <p>Loading categories...</p>}
       {error && <p className="error">{error}</p>}
 
-      {/* 🌿 Grid Card Layout */}
+      {/* Grid */}
       <div className="category-grid">
         {currentItems.length === 0 ? (
           <p>No categories available</p>
@@ -112,19 +113,13 @@ const Category = () => {
         )}
       </div>
 
-      {/* Pagination */}
+      {/* ✅ Reusable Pagination Component */}
       {totalPages > 1 && (
-        <div className="pagination">
-          {[...Array(totalPages).keys()].map((n) => (
-            <button
-              key={n}
-              className={currentPage === n + 1 ? 'active' : ''}
-              onClick={() => setCurrentPage(n + 1)}
-            >
-              {n + 1}
-            </button>
-          ))}
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );
