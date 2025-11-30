@@ -107,33 +107,6 @@ const Dashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-
-        {/* PIE CHART – LICENSE STATUS */}
-        <div className="chart-card">
-          <h3>License Status Overview</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <PieChart>
-              <Pie
-                data={[
-                  { name: "Active", value: statsData.activeLicenses },
-                  { name: "Expired", value: statsData.expiredLicenses },
-                ]}
-                innerRadius={50}
-                outerRadius={80}
-                fill="#8884d8"
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {[0, 1].map((i) => (
-                  <Cell key={i} fill={COLORS[i]} />
-                ))}
-              </Pie>
-              <Legend />
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
       </div>
 
       {/* OTHER SECTIONS */}
