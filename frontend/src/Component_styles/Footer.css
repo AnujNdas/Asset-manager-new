@@ -1,7 +1,7 @@
 .footer {
-  width: 100%;
+  width: 83%;
   text-align: center;
-  padding: 10px 0;
+  padding: 8px 0;
   background: #f5f5f5;
   color: #555;
   font-size: 14px;
@@ -12,6 +12,3 @@
   border-top: 1px solid #ddd;
 }
 
-.app-wrapper {
-  padding-bottom: 50px; /* To prevent content from hiding behind footer */
-}
