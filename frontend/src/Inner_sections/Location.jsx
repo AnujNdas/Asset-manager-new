@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import '../Page_styles/Unit.css'; // Shared modern CSS
+import '../Page_styles/Unit.css';
 import { getLocations, createLocation } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
+import Pagination from '../Components/Pagination'; // ✅ Imported the global pagination
 
 const Location = () => {
   const [locationName, setLocationName] = useState('');
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // ✅ Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 9; // grid layout works well with 6 per page
+  const itemsPerPage = 9;
 
-  const totalPages = Math.ceil(locations.length / perPage);
-  const indexOfLast = currentPage * perPage;
-  const indexOfFirst = indexOfLast - perPage;
-  const currentItems = locations.slice(indexOfFirst, indexOfLast);
+  useEffect(() => {
+    fetchLocations();
+  }, []);
 
-  // ✅ Fetch all locations
   const fetchLocations = async () => {
     setLoading(true);
     try {
       const data = await getLocations();
-      // Reverse to show latest added at top
-      setLocations([...data].reverse());
+      setLocations([...data].reverse()); // newest first
     } catch (err) {
       setError('Error fetching locations');
     } finally {
@@ -32,7 +32,11 @@ const Location = () => {
     }
   };
 
-  // ✅ Handle new location submission
+  // Pagination Slice
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = locations.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(locations.length / itemsPerPage);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,8 +44,7 @@ const Location = () => {
       Swal.fire({
         icon: 'warning',
         title: 'Missing Location Name',
-        text: 'Please enter a location name before submitting.',
-        confirmButtonColor: '#3085d6',
+        text: 'Please enter a location name.',
       });
       return;
     }
@@ -49,16 +52,14 @@ const Location = () => {
     try {
       const newLocation = await createLocation({ name: locationName.trim() });
 
-      // 🆕 Prepend the new location to the top
       setLocations((prev) => [newLocation, ...prev]);
       setLocationName('');
-      setCurrentPage(1); // go back to page 1 to show new entry
+      setCurrentPage(1); // jump back to page 1
 
       Swal.fire({
         icon: 'success',
         title: 'Location Added',
         text: 'The location has been created successfully!',
-        confirmButtonColor: '#3085d6',
         timer: 1800,
         showConfirmButton: false,
       });
@@ -66,21 +67,15 @@ const Location = () => {
       Swal.fire({
         icon: 'error',
         title: 'Error Creating Location',
-        text: err.response?.data?.message || 'Something went wrong while creating the location.',
-        confirmButtonColor: '#d33',
+        text: err.response?.data?.message || 'Something went wrong.',
       });
     }
   };
 
-  useEffect(() => {
-    fetchLocations();
-  }, []);
-
   return (
     <div className="classification_card">
-      {/* 🌿 Header Section */}
       <div className="card_header">
-        <h3 className="category_title"> Location </h3>
+        <h3 className="category_title">Location</h3>
         <form onSubmit={handleSubmit} className="category_form">
           <input
             type="text"
@@ -95,7 +90,6 @@ const Location = () => {
         </form>
       </div>
 
-      {/* 🌿 Content Section */}
       {loading && <p>Loading locations...</p>}
       {error && <p className="error">{error}</p>}
 
@@ -106,7 +100,7 @@ const Location = () => {
           <div className="grid">
             {currentItems.map((loc, idx) => (
               <div key={loc._id} className="category-card">
-                <div className="category-number">{indexOfFirst + idx + 1}</div>
+                <div className="category-number">{startIndex + idx + 1}</div>
                 <div className="category-name">{loc.name}</div>
               </div>
             ))}
@@ -114,20 +108,12 @@ const Location = () => {
         )}
       </div>
 
-      {/* 🌿 Pagination */}
-      {totalPages > 1 && (
-        <div className="pagination">
-          {[...Array(totalPages).keys()].map((n) => (
-            <button
-              key={n}
-              className={currentPage === n + 1 ? 'active' : ''}
-              onClick={() => setCurrentPage(n + 1)}
-            >
-              {n + 1}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* ✅ Using Global Pagination Component */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
     </div>
   );
 };
