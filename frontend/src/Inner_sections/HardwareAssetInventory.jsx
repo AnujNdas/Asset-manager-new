@@ -12,6 +12,8 @@ import {
   getStatuses,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
+import Loader from "../Components/Loader";
+
 
 const HardwareAssetList = () => {
   const [assets, setAssets] = useState([]);
@@ -23,6 +25,7 @@ const HardwareAssetList = () => {
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [editingAsset, setEditingAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(1);
   const assetsPerPage = 6;
@@ -46,9 +49,11 @@ const HardwareAssetList = () => {
       setLocations(locsRes ?? []);
       setUnits(unitsRes ?? []);
       setStatuses(statusesRes ?? []);
-    } catch (err) {
-      Swal.fire("Error", err.message || "Failed to load data", "error");
-    }
+  } catch (err) {
+    Swal.fire("Error", err.message || "Failed to load data", "error");
+  } finally {
+    setLoading(false);
+  }
   };
 
   const indexOfLast = currentPage * assetsPerPage;
@@ -239,6 +244,10 @@ const handleEditSubmit = async (e) => {
       </div>
     );
   }
+  if (loading) {
+  return <Loader />;
+}
+  
   return (
     <div className="inventory-container">
       {/* <h2 className="inventory-title"> Hardware Assets</h2> */}
