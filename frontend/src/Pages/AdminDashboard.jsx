@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line
-} from "recharts";
-
+import { useNavigate } from "react-router-dom";
 import {
   getAdminStats,
   getTopLocations,
@@ -13,191 +9,201 @@ import {
   getLocations,
 } from "../Services/ApiServices";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMicrochip, faLaptop, faUsers } from "@fortawesome/free-solid-svg-icons";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie,
+  ResponsiveContainer, Cell, Legend,
+} from "recharts";
 
 import "../Page_styles/AdminDashboard.css";
 
-const COLORS = ["#7b5dff", "#ef4444", "#10b981", "#6366f1", "#f59e0b"];
+const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#22C55E", "#F59E0B"];
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const [stats, setStats] = useState(null);
+  const [statsData, setStatsData] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
-  const [recentAssets, setRecentAssets] = useState(null);
-  const [activeUsers, setActiveUsers] = useState([]);
   const [expiringAssets, setExpiringAssets] = useState(null);
+  const [recentAssets, setRecentAssets] = useState(null);
+  const [activeUsers, setActiveUsers] = useState(null);
   const [locationList, setLocationList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Convert ID → name
   const getLocationName = (id) => {
-    const loc = locationList.find((l) => l._id === id);
-    return loc ? loc.locationName : "Unknown";
+    const loc = locationList.find((l) => l.locationName === id || l._id === id);
+    return loc ? loc.locationName : id;
   };
 
   useEffect(() => {
-    const fetch = async () => {
+    const load = async () => {
       try {
-        const s = await getAdminStats();
-        const tl = await getTopLocations();
-        const recent = await getRecentAssets();
-        const active = await getActiveUsers();
+        const stats = await getAdminStats();
+        const locs = await getTopLocations();
         const exp = await getExpiringAssets();
-        const allLoc = await getLocations();
+        const recent = await getRecentAssets();
+        const users = await getActiveUsers();
+        const allLocs = await getLocations();
 
-        setStats(s);
-        setTopLocations(tl);
-        setRecentAssets(recent);
-        setActiveUsers(active);
+        setStatsData(stats);
+        setTopLocations(locs);
         setExpiringAssets(exp);
-        setLocationList(allLoc);
-
+        setRecentAssets(recent);
+        setActiveUsers(users);
+        setLocationList(allLocs);
       } catch (err) {
-        Swal.fire("Error", "Failed to load Dashboard", "error");
+        console.error(err);
       }
       setLoading(false);
     };
-    fetch();
+
+    load();
   }, []);
 
   if (loading) return <div className="loader">Loading...</div>;
 
-  // Pie chart data (Active vs Expired)
-  const licensePieData = [
-    { name: "Active", value: stats.activeLicenses },
-    { name: "Expired", value: stats.expiredLicenses },
-  ];
-
-  // Line chart for recently added assets
-  const recentLineData = [
-    { name: "Software", count: recentAssets.software.length },
-    { name: "Hardware", count: recentAssets.hardware.length },
-  ];
+  // Transform Top Location Data
+  const locChartData = topLocations.map((loc) => ({
+    name: getLocationName(loc._id),
+    value: loc.count,
+  }));
 
   return (
     <div className="admin-dashboard">
 
-      {/* ========= Summary Cards ========= */}
-      <div className="summary-grid">
-        <div className="summary-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
-          <FontAwesomeIcon icon={faMicrochip} className="summary-icon" />
-          <h3>{stats.hardwareCount}</h3>
+      {/* TOP STATS */}
+      <div className="stats-grid">
+        <div className="stat-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
+          <h2>{statsData.hardwareCount}</h2>
           <p>Hardware Assets</p>
         </div>
 
-        <div className="summary-card blue" onClick={() => navigate("/inventory?tab=software")}>
-          <FontAwesomeIcon icon={faLaptop} className="summary-icon" />
-          <h3>{stats.softwareCount}</h3>
+        <div className="stat-card violet" onClick={() => navigate("/inventory?tab=software")}>
+          <h2>{statsData.softwareCount}</h2>
           <p>Software Assets</p>
         </div>
 
-        <div className="summary-card red" onClick={() => navigate("/setting/users")}>
-          <FontAwesomeIcon icon={faUsers} className="summary-icon" />
-          <h3>{stats.usersCount}</h3>
+        <div className="stat-card pink" onClick={() => navigate("/setting/users")}>
+          <h2>{statsData.usersCount}</h2>
           <p>Total Users</p>
+        </div>
+
+        <div className="stat-card green">
+          <h2>{statsData.coreLicensesCount}</h2>
+          <p>Total Licenses</p>
         </div>
       </div>
 
-      {/* ========= Charts Row ========= */}
-      <div className="chart-row">
+      {/* CHARTS SECTION */}
+      <div className="charts-grid">
 
-        {/* ---- Bar Chart: Top Locations ---- */}
+        {/* TOP LOCATIONS – BAR CHART */}
         <div className="chart-card">
-          <h3>Top 5 Locations (Assets)</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={topLocations.map(loc => ({
-              name: getLocationName(loc._id),
-              count: loc.count,
-            }))}>
+          <h3>Top 5 Locations With Most Assets</h3>
+          <ResponsiveContainer width="100%" height={260}>
+            <BarChart data={locChartData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="count" fill="#7b5dff" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="value">
+                {locChartData.map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* ---- Pie Chart: License Status ---- */}
+        {/* PIE CHART – LICENSE STATUS */}
         <div className="chart-card">
-          <h3>License Status</h3>
-          <ResponsiveContainer width="100%" height={250}>
+          <h3>License Status Overview</h3>
+          <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie
-                data={licensePieData}
+                data={[
+                  { name: "Active", value: statsData.activeLicenses },
+                  { name: "Expired", value: statsData.expiredLicenses },
+                ]}
+                innerRadius={50}
+                outerRadius={80}
+                fill="#8884d8"
+                paddingAngle={5}
                 dataKey="value"
-                nameKey="name"
-                outerRadius={90}
-                label
               >
-                {licensePieData.map((_, index) => (
-                  <Cell key={index} fill={COLORS[index]} />
+                {[0, 1].map((i) => (
+                  <Cell key={i} fill={COLORS[i]} />
                 ))}
               </Pie>
+              <Legend />
+              <Tooltip />
             </PieChart>
           </ResponsiveContainer>
         </div>
 
       </div>
 
-      {/* ========= Recent Assets Line Chart ========= */}
-      <div className="chart-card full">
-        <h3>Recent Assets Added</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={recentLineData}>
-            <XAxis dataKey="name" />
-            <YAxis allowDecimals={false} />
-            <Tooltip />
-            <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={3} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      {/* OTHER SECTIONS */}
+      <div className="grid-2">
 
-      {/* ========= Active Users ========= */}
-      <div className="section">
-        <h3>Most Active Users (Last 30 Days)</h3>
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th>Last Active</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activeUsers.map((u) => (
-              <tr key={u._id}>
-                <td>{u.username}</td>
-                <td>{u.email}</td>
-                <td>{new Date(u.lastActive).toLocaleString()}</td>
-              </tr>
+        {/* RECENT ASSETS */}
+        <div className="panel-card">
+          <h3>Recently Added Assets</h3>
+          <ul className="list">
+            {recentAssets?.hardware?.map((item) => (
+              <li key={item._id}>
+                <span className="dot purple"></span>
+                {item.assetName}
+              </li>
             ))}
-          </tbody>
-        </table>
+            {recentAssets?.software?.map((item) => (
+              <li key={item._id}>
+                <span className="dot violet"></span>
+                {item.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* ACTIVE USERS */}
+        <div className="panel-card">
+          <h3>Most Active Users</h3>
+          <ul className="list">
+            {activeUsers?.map((u) => (
+              <li key={u._id}>
+                <strong>{u.username}</strong>
+                <small>{new Date(u.updatedAt).toLocaleString()}</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+
       </div>
 
-      {/* ========= Expiring Assets ========= */}
-      <div className="section">
-        <h3>Expiring Within 3 Months</h3>
-        <div className="expiring-row">
+      {/* EXPIRING ASSETS */}
+      <div className="panel-card full">
+        <h3>Assets Expiring in Next 3 Months</h3>
 
-          <div className="expiring-col">
+        <div className="expiring-flex">
+
+          <div>
             <h4>Hardware</h4>
-            <ul>
-              {expiringAssets.expiringHardware.map((asset) => (
-                <li key={asset._id}>{asset.assetName} – {asset.DOE}</li>
+            <ul className="list">
+              {expiringAssets?.expiringHardware?.map((item) => (
+                <li key={item._id}>
+                  {item.assetName} —{" "}
+                  <span className="date">{item.DOE}</span>
+                </li>
               ))}
             </ul>
           </div>
 
-          <div className="expiring-col">
+          <div>
             <h4>Software</h4>
-            <ul>
-              {expiringAssets.expiringSoftware.map((asset) => (
-                <li key={asset._id}>{asset.name} – {asset.licenseExpiry}</li>
+            <ul className="list">
+              {expiringAssets?.expiringSoftware?.map((item) => (
+                <li key={item._id}>
+                  {item.name} —{" "}
+                  <span className="date">{item.licenseExpiry}</span>
+                </li>
               ))}
             </ul>
           </div>
