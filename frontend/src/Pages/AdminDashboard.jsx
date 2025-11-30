@@ -146,38 +146,7 @@ const Dashboard = () => {
 
       </div>
 
-      {/* EXPIRING ASSETS */}
-      <div className="panel-card full">
-        <h3>Assets Expiring in Next 3 Months</h3>
-
-        <div className="expiring-flex">
-
-          <div>
-            <h4>Hardware</h4>
-            <ul className="list">
-              {expiringAssets?.expiringHardware?.map((item) => (
-                <li key={item._id}>
-                  {item.assetName} —{" "}
-                  <span className="date">{item.DOE}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4>Software</h4>
-            <ul className="list">
-              {expiringAssets?.expiringSoftware?.map((item) => (
-                <li key={item._id}>
-                  {item.name} —{" "}
-                  <span className="date">{item.licenseExpiry}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-        </div>
-      </div>
+    
 
     </div>
   );
