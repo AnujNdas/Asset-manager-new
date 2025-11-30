@@ -13,7 +13,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie,
   ResponsiveContainer, Cell, Legend,
 } from "recharts";
-
+import Loader from "../Components/Loader"
 import "../Page_styles/AdminDashboard.css";
 
 const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#22C55E", "#F59E0B"];
@@ -60,7 +60,7 @@ const getLocationName = (id) => {
     load();
   }, []);
 
-  if (loading) return <div className="loader">Loading...</div>;
+  if (loading) return <Loader />;
 
   // Transform Top Location Data
   const locChartData = topLocations.map((loc) => ({
