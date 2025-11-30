@@ -4,6 +4,7 @@ import { getStatuses, createStatus } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
+import Pagination from "../Components/Pagination";  // ✅ Reusable Pagination
 
 const Status = () => {
   const [statusName, setStatusName] = useState('');
@@ -11,20 +12,20 @@ const Status = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ✅ Pagination states
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 9; // cards per page
-
+  const perPage = 9;
   const totalPages = Math.ceil(statuses.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
   const currentItems = statuses.slice(indexOfFirst, indexOfLast);
 
+  // Fetch all statuses
   const fetchStatuses = async () => {
     setLoading(true);
     try {
       const data = await getStatuses();
-      setStatuses(data.reverse()); // Newest on top
+      setStatuses([...data].reverse()); // Show newest first
     } catch (err) {
       setError('Error fetching statuses');
     } finally {
@@ -32,15 +33,25 @@ const Status = () => {
     }
   };
 
+  // Add new status
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!statusName.trim()) return;
+
+    if (!statusName.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Status Name',
+        text: 'Please enter a status name.',
+      });
+      return;
+    }
 
     try {
       await createStatus({ name: statusName });
       setStatusName('');
-      setCurrentPage(1); // ✅ Go back to page 1 so new item appears on top
+      setCurrentPage(1); // Always show new item on page 1
       fetchStatuses();
+
       Swal.fire({
         icon: 'success',
         title: 'Status added!',
@@ -48,7 +59,11 @@ const Status = () => {
         showConfirmButton: false,
       });
     } catch (err) {
-      setError('Error creating status');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Creating Status',
+        text: err.response?.data?.message || 'Something went wrong.',
+      });
     }
   };
 
@@ -57,10 +72,11 @@ const Status = () => {
   }, []);
 
   return (
-    <div className="category-grid">
-      {/* 🌿 Header Section */}
+    <div className="classification_card">
+      {/* Header */}
       <div className="card_header">
-        <h3 className="category_title">Status </h3>
+        <h3 className="category_title">Status</h3>
+
         <form onSubmit={handleSubmit} className="category_form">
           <input
             type="text"
@@ -75,7 +91,7 @@ const Status = () => {
         </form>
       </div>
 
-      {/* 🌿 Content */}
+      {/* Content */}
       {loading ? (
         <p>Loading statuses...</p>
       ) : error ? (
@@ -87,28 +103,18 @@ const Status = () => {
           <div className="grid">
             {currentItems.map((status, idx) => (
               <div key={status._id} className="category-card">
-                <div className="category-number">
-                  {indexOfFirst + idx + 1}
-                </div>
+                <div className="category-number">{indexOfFirst + idx + 1}</div>
                 <div className="category-name">{status.name}</div>
               </div>
             ))}
           </div>
 
-          {/* 🌿 Pagination */}
-          <div className="pagination">
-
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                className={currentPage === i + 1 ? 'active' : ''}
-                onClick={() => setCurrentPage(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
-
-          </div>
+          {/* ✅ Unified Pagination Component */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </>
       )}
     </div>
