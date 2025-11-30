@@ -112,16 +112,7 @@ const Unit = () => {
         </form>
       </div>
 
-      {/* Search Bar */}
-      <div className="search_container">
-        <input
-          type="text"
-          className="search_input"
-          placeholder="Search unit..."
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-      </div>
+
 
       {/* Content */}
       {loading ? (
@@ -132,7 +123,7 @@ const Unit = () => {
         <p>No units available</p>
       ) : (
         <>
-          <div className="grid">
+          <div className="category-grid">
             {currentItems.map((unit, idx) => (
               <div key={unit._id} className="category-card">
                 <div className="category-number">{indexOfFirst + idx + 1}</div>
