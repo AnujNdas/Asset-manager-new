@@ -16,6 +16,8 @@ import DashboardWrapper from "./Pages/DashboardWrapper";
 import AssetScanner from "./Pages/Scanner";
 import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
+import Footer from "./Components/Footer";
+
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
@@ -76,6 +78,8 @@ const App = () => {
         </Route>
       </Routes>
     </section>
+   {/* ⭐ Add Footer Here */}
+    <Footer />
   </div>
 );
 
