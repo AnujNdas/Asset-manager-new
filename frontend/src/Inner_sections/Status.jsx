@@ -100,7 +100,7 @@ const Status = () => {
         <p>No statuses available</p>
       ) : (
         <>
-          <div className="grid">
+          <div className="category-grid">
             {currentItems.map((status, idx) => (
               <div key={status._id} className="category-card">
                 <div className="category-number">{indexOfFirst + idx + 1}</div>
