@@ -101,8 +101,6 @@
 /* 🌱 Content Area */
 .classify_items {
   width: 100%;
-  max-width: 800px; /* ✅ center limit on large screens */
-  margin: 0 auto;
   background-color: #fff;
   border-radius: 16px;
   padding: 20px;
