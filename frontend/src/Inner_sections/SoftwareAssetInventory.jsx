@@ -13,6 +13,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
+import Loader from "../components/Loader";
 
 /**
  * SoftwareAssetList
@@ -32,6 +33,7 @@ const SoftwareAssetList = () => {
   const [selectedAsset, setSelectedAsset] = useState(null); // view modal
   const [editingAsset, setEditingAsset] = useState(null); // edit modal
   const [editForm, setEditForm] = useState({});
+  const [loading, setLoading] = useState(true);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,7 +64,9 @@ const SoftwareAssetList = () => {
     } catch (err) {
       console.error("Failed to fetch inventory data:", err);
       Swal.fire("Error", err.message || "Failed to load data", "error");
-    }
+    } finally {
+    setLoading(false);
+  }
   };
   // Convert ID → Category Name
 const getCategoryName = (categoryId) => {
@@ -297,9 +301,12 @@ const getStatusName = (statusId) => {
       {/* <h2 className="inventory-title">Software Inventory</h2> */}
 
       <div className="inventory-grid">
-        {currentItems.length === 0 ? (
-          <p className="empty-note">No software assets found.</p>
-        ) : (
+  {loading ? (
+    <Loader />
+  ) : currentItems.length === 0 ? (
+    <p>No software assets found.</p>
+  ) : (
+
           currentItems.map((asset, idx) => (
             <motion.div
               key={asset._id}
