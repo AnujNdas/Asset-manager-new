@@ -16,7 +16,7 @@ const Unit = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 9;
+  const perPage = 18;
   const totalPages = Math.ceil(filteredUnits.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
