@@ -77,9 +77,9 @@ const App = () => {
           <Route path="reset/:token" element={<ResetPassword />} />
         </Route>
       </Routes>
-    </section>
-   {/* ⭐ Add Footer Here */}
+     {/* ⭐ Add Footer Here */}
     <Footer />
+    </section>
   </div>
 );
 
