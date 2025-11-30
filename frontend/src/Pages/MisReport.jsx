@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import "../Page_styles/MisReport.css";
+import Pagination from "../Components/Pagination";
+
 import {
   getStatuses,
   getUnits,
@@ -9,7 +11,7 @@ import {
   getCategories,
   getSoftwareAssets,
   getCoreLicenses,
-  getHardwareAssets 
+  getHardwareAssets,
 } from "../Services/ApiServices";
 
 const MisReport = () => {
@@ -40,21 +42,21 @@ const MisReport = () => {
   useEffect(() => {
     (async () => {
       try {
-        const [s, u, l, c, sw,ha, lic] = await Promise.all([
+        const [s, u, l, c, sw, ha, lic] = await Promise.all([
           getStatuses(),
           getUnits(),
           getLocations(),
           getCategories(),
           getSoftwareAssets(),
           getHardwareAssets(),
-          getCoreLicenses()
+          getCoreLicenses(),
         ]);
 
         setStatuses(s);
         setUnits(u);
         setLocations(l);
         setCategories(c);
-        setSoftware(sw?.data || sw);   // depending on your API response
+        setSoftware(sw?.data || sw);
         setHardware(ha?.data || ha);
         setLicenses(lic?.data || lic);
       } catch (err) {
@@ -63,59 +65,58 @@ const MisReport = () => {
     })();
   }, []);
 
+  // Reset Page When Filter or Tab Changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, selectedLocation, selectedUnit, selectedStatus, selectedCategory, startDate]);
+
   const formatDate = (date) => {
     if (!date) return "";
     const d = new Date(date);
     return d.toISOString().split("T")[0];
   };
 
-  // Filter logic for each tab
-  const filteredHardware = hardware.filter(a =>
+  // -------- Hardware Filter Logic -------- //
+  const filteredHardware = hardware.filter((a) =>
     (selectedLocation ? a.locationName === selectedLocation : true) &&
     (selectedUnit ? a.associateUnit === selectedUnit : true) &&
     (selectedStatus ? a.assetStatus === selectedStatus : true) &&
     (startDate ? formatDate(a.DOP) >= startDate : true)
   );
 
-  const filteredSoftware = software.filter(a =>
+  // -------- Software Filter Logic -------- //
+  const filteredSoftware = software.filter((a) =>
     (selectedLocation ? a.locationName === selectedLocation : true) &&
     (selectedCategory ? a.category === selectedCategory : true) &&
     (selectedStatus ? a.complianceStatus === selectedStatus : true) &&
     (startDate ? formatDate(a.purchaseDate) >= startDate : true)
   );
 
-  // const filteredLicenses = licenses.filter(a =>
-  //   (selectedStatus ? a.status === selectedStatus : true) &&
-  //   (startDate ? formatDate(a.issueDate) >= startDate : true)
-  // );
+  const currentData = activeTab === "hardware" ? filteredHardware : filteredSoftware;
+  const totalPages = Math.ceil(currentData.length / itemsPerPage);
 
-  // Pagination slice
   const paginate = (data) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return data.slice(startIndex, startIndex + itemsPerPage);
   };
 
-  const currentData =
-    activeTab === "hardware"
-      ? filteredHardware
-      : filteredSoftware;
-
-  const totalPages = Math.ceil(currentData.length / itemsPerPage);
-
-  // Export CSV/Excel
   const exportData = () => {
     const ws = XLSX.utils.json_to_sheet(currentData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, activeTab);
-    XLSX.writeFile(wb, `${activeTab}.xlsx`);
+    XLSX.writeFile(wb, `${activeTab}_report.xlsx`);
   };
 
   return (
-    <div className="mis-content">     
-      <div style={{ display : "flex", justifyContent : "space-between"}}>
+    <div className="mis-content">
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h2 className="classify_heading">Asset Management Report</h2>
-        <button onClick={exportData} className="misbutton" >Export {activeTab} Excel</button>
+        <button onClick={exportData} className="misbutton">
+          Export {activeTab} Excel
+        </button>
       </div>
+
+      {/* Tabs */}
       <header>
         <div className="navs">
           <button
@@ -124,92 +125,99 @@ const MisReport = () => {
           >
             Hardware
           </button>
+
           <button
             className={activeTab === "software" ? "active-tab" : ""}
             onClick={() => setActiveTab("software")}
           >
             Software
           </button>
-          {/* <button
-            className={activeTab === "licenses" ? "active-tab" : ""}
-            onClick={() => setActiveTab("licenses")}
-          >
-            Core Licenses
-          </button> */}
         </div>
-
       </header>
 
       {/* Filters */}
       <div className="filters">
         {activeTab === "hardware" && (
           <>
-            <select onChange={e => setSelectedLocation(e.target.value)}>
+            <select onChange={(e) => setSelectedLocation(e.target.value)}>
               <option value="">All Locations</option>
-              {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
+              {locations.map((l) => (
+                <option key={l._id} value={l._id}>{l.name}</option>
+              ))}
             </select>
-            <select onChange={e => setSelectedUnit(e.target.value)}>
+
+            <select onChange={(e) => setSelectedUnit(e.target.value)}>
               <option value="">All Units</option>
-              {units.map(u => <option key={u._id} value={u._id}>{u.name}</option>)}
+              {units.map((u) => (
+                <option key={u._id} value={u._id}>{u.name}</option>
+              ))}
             </select>
-            <select onChange={e => setSelectedStatus(e.target.value)}>
+
+            <select onChange={(e) => setSelectedStatus(e.target.value)}>
               <option value="">All Statuses</option>
-              {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+              {statuses.map((s) => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
             </select>
-            <input type="date" onChange={e => setStartDate(e.target.value)} />
+
+            <input type="date" onChange={(e) => setStartDate(e.target.value)} />
           </>
         )}
 
         {activeTab === "software" && (
           <>
-            <select onChange={e => setSelectedCategory(e.target.value)}>
+            <select onChange={(e) => setSelectedCategory(e.target.value)}>
               <option value="">All Categories</option>
-              {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+              {categories.map((c) => (
+                <option key={c._id} value={c._id}>{c.name}</option>
+              ))}
             </select>
-            <select onChange={e => setSelectedLocation(e.target.value)}>
+
+            <select onChange={(e) => setSelectedLocation(e.target.value)}>
               <option value="">All Locations</option>
-              {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
+              {locations.map((l) => (
+                <option key={l._id} value={l._id}>{l.name}</option>
+              ))}
             </select>
-            <select onChange={e => setSelectedStatus(e.target.value)}>
+
+            <select onChange={(e) => setSelectedStatus(e.target.value)}>
               <option value="">All Statuses</option>
-              {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+              {statuses.map((s) => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
             </select>
-            <input type="date" onChange={e => setStartDate(e.target.value)} />
+
+            <input type="date" onChange={(e) => setStartDate(e.target.value)} />
           </>
         )}
-{/* 
-        {activeTab === "licenses" && (
-          <>
-            <select onChange={e => setSelectedStatus(e.target.value)}>
-              <option value="">All Statuses</option>
-              {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
-            </select>
-            <input type="date" onChange={e => setStartDate(e.target.value)} />
-          </>
-        )}  */}
       </div>
 
-      {/* Table */}
+      {/* TABLE */}
       <table className="mis-table">
         <thead>
           <tr>
             {activeTab === "hardware" && (
               <>
-                <th>Name</th><th>Spec</th><th>Unit</th><th>Status</th><th>Location</th>
+                <th>Name</th>
+                <th>Spec</th>
+                <th>Unit</th>
+                <th>Status</th>
+                <th>Location</th>
               </>
             )}
+
             {activeTab === "software" && (
               <>
-                <th>Name</th><th>Version</th><th>Publisher</th><th>Status</th><th>Category</th>
+                <th>Name</th>
+                <th>Version</th>
+                <th>Publisher</th>
+                <th>Status</th>
+                <th>Category</th>
               </>
             )}
-            {/* /* {activeTab === "licenses" && (
-              <>
-                <th>Document</th><th>License No</th><th>Holder</th><th>Status</th><th>Expiry</th>
-              </>
-            )}  */}
           </tr>
         </thead>
+
         <tbody>
           {paginate(currentData).map((row, i) => (
             <tr key={i}>
@@ -217,47 +225,32 @@ const MisReport = () => {
                 <>
                   <td>{row.assetName}</td>
                   <td>{row.assetSpecification}</td>
-                  <td>{units.find(u => u._id === row.associateUnit)?.name}</td>
-                  <td>{statuses.find(s => s._id === row.assetStatus)?.name}</td>
-                  <td>{locations.find(l => l._id === row.locationName)?.name}</td>
+                  <td>{units.find((u) => u._id === row.associateUnit)?.name}</td>
+                  <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
+                  <td>{locations.find((l) => l._id === row.locationName)?.name}</td>
                 </>
               )}
+
               {activeTab === "software" && (
                 <>
                   <td>{row.name}</td>
                   <td>{row.version}</td>
                   <td>{row.publisher}</td>
-                  <td>{statuses.find(s => s._id === row.complianceStatus)?.name}</td>
-                  <td>{categories.find(c => c._id === row.category)?.name}</td>
+                  <td>{statuses.find((s) => s._id === row.complianceStatus)?.name}</td>
+                  <td>{categories.find((c) => c._id === row.category)?.name}</td>
                 </>
               )}
-              {/* {activeTab === "licenses" && (
-                <>
-                  <td>{row.documentType}</td>
-                  <td>{row.licenseNumber}</td>
-                  <td>{row.licenseHolder}</td>
-                  <td>{statuses.find(s => s._id === row.status)?.name}</td>
-                  <td>{formatDate(row.expiryDate)}</td>
-                </>
-              )} */}
             </tr>
           ))}
         </tbody>
       </table>
 
       {/* Pagination */}
-      <div className="pagination">
-        {[...Array(totalPages).keys()].map(n => (
-          <button
-            key={n}
-            className={currentPage === n + 1 ? "active" : ""}
-            onClick={() => setCurrentPage(n + 1)}
-          >
-            {n + 1}
-          </button>
-        ))}
-      </div>
-
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };
