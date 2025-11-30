@@ -86,11 +86,6 @@ const Dashboard = () => {
           <h2>{statsData.usersCount}</h2>
           <p>Total Users</p>
         </div>
-
-        <div className="stat-card green">
-          <h2>{statsData.coreLicensesCount}</h2>
-          <p>Total Licenses</p>
-        </div>
       </div>
 
       {/* CHARTS SECTION */}
