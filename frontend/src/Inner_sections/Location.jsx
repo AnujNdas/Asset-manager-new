@@ -14,7 +14,7 @@ const Location = () => {
 
   // ✅ Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 18;
 
   useEffect(() => {
     fetchLocations();
