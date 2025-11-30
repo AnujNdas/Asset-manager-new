@@ -75,9 +75,7 @@ const Category = () => {
   }, []);
   if (loading) {
   return (
-    <div style={{ paddingTop: "80px" }}>
       <Loader />
-    </div>
   );
 }
 
