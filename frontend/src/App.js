@@ -66,6 +66,8 @@ const App = () => {
         <Route path="/misreport" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><MisReport /></ProtectedRoute>} />
         <Route path="/scanner" element={<ProtectedRoute allowedRoles={["admin", "super-admin"]}><AssetScanner /></ProtectedRoute>} />
       </Routes>
+       {/* ⭐ Add Footer Here */}
+    <Footer />
     </section>
 
     <section className={`user-container ${isUserPage ? "visible" : "hidden"}`}>
@@ -77,8 +79,7 @@ const App = () => {
           <Route path="reset/:token" element={<ResetPassword />} />
         </Route>
       </Routes>
-     {/* ⭐ Add Footer Here */}
-    <Footer />
+
     </section>
   </div>
 );
