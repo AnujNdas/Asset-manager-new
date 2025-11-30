@@ -101,12 +101,14 @@ const Status = () => {
       ) : (
         <>
           <div className="category-grid">
+            <div className="grid">
             {currentItems.map((status, idx) => (
               <div key={status._id} className="category-card">
                 <div className="category-number">{indexOfFirst + idx + 1}</div>
                 <div className="category-name">{status.name}</div>
               </div>
             ))}
+              </div>
           </div>
 
           {/* ✅ Unified Pagination Component */}
