@@ -22,12 +22,12 @@ const assetSchema = new mongoose.Schema({
   },
 
   // Cloudinary fields
-  image: {
-    type: String, // Cloudinary URL
-  },
-  imagePublicId: {
-    type: String, // Cloudinary public_id (for delete/update)
-  },
+  // image: {
+  //   type: String, // Cloudinary URL
+  // },
+  // imagePublicId: {
+  //   type: String, // Cloudinary public_id (for delete/update)
+  // },
 
   locationName: {
     type: String,
