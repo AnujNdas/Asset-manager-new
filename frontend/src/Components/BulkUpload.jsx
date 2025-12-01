@@ -11,8 +11,6 @@ import { FiUploadCloud, FiDownload, FiFile, FiArchive } from "react-icons/fi";
 const BulkUpload = ({ type, userRole }) => {
   const [excelFile, setExcelFile] = useState(null);
   const [zipFile, setZipFile] = useState(null);
-  const [dragOverExcel, setDragOverExcel] = useState(false);
-  const [dragOverZip, setDragOverZip] = useState(false);
   const [mode, setMode] = useState("strict");
 
   useEffect(() => {
@@ -26,23 +24,23 @@ const BulkUpload = ({ type, userRole }) => {
   };
 
   const templates = {
-    hardware: [
-      {
-        assetCode: "",
-        assetCategory: "",
-        barcodeNumber: "",
-        assetName: "",
-        associateUnit: "",
-        image: "",
-        locationName: "",
-        assetSpecification: "",
-        assetStatus: "",
-        DOP: "",
-        DOE: "",
-        assetLifetime: "",
-        purchaseFrom: "",
-      },
-    ],
+hardware: [
+  {
+    assetCode: "",
+    assetCategory: "",
+    barcodeNumber: "",
+    assetName: "",
+    associateUnit: "",
+    locationName: "",
+    assetSpecification: "",
+    assetStatus: "",
+    DOP: "",
+    DOE: "",
+    assetLifetime: "",
+    purchaseFrom: "",
+  },
+],
+
     software: [
   {
     "Software Name": "",
@@ -95,9 +93,9 @@ const handleUpload = async () => {
       if (type === "hardware") {
         const formData = new FormData();
         formData.append("excel", excelFile);
-        if (zipFile) formData.append("imagesZip", zipFile);
         formData.append("assets", JSON.stringify(sheet));
         formData.append("mode", mode);
+
 
         res = await bulkUploadHardwareAssets(formData);
       }
@@ -171,39 +169,6 @@ const handleUpload = async () => {
           </div>
         )}
 
-        {/* ZIP UPLOAD (ONLY FOR HARDWARE) */}
-        {type === "hardware" && (
-          <>
-            <div
-              className={`dropzone ${dragOverZip ? "drag-over" : ""}`}
-              onDragOver={(e) => { e.preventDefault(); setDragOverZip(true); }}
-              onDragLeave={() => setDragOverZip(false)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setDragOverZip(false);
-                setZipFile(e.dataTransfer.files[0]);
-              }}
-            >
-              <FiArchive className="drop-icon" />
-              <div className="drop-text-group">
-                <p className="drop-main-text">Upload Images ZIP (Optional)</p>
-                <p className="drop-sub-text">ZIP filenames must match Excel image column</p>
-              </div>
-              <input
-                type="file"
-                accept=".zip"
-                onChange={(e) => setZipFile(e.target.files[0])}
-              />
-            </div>
-
-            {zipFile && (
-              <div className="file-preview">
-                <FiArchive className="file-icon" />
-                <span>{zipFile.name}</span>
-              </div>
-            )}
-          </>
-        )}
 
         {/* ACTION BUTTONS */}
         <div className="bulk-actions">
