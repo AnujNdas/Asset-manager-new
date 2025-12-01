@@ -6,143 +6,153 @@ import {
   bulkUploadSoftwareAssets,
 } from "../Services/ApiServices";
 import "../Component_styles/BulkUpload.css";
-import { FiUploadCloud, FiDownload, FiFile, FiArchive } from "react-icons/fi";
+import { FiUploadCloud, FiDownload, FiFile } from "react-icons/fi";
 
 const BulkUpload = ({ type, userRole }) => {
   const [excelFile, setExcelFile] = useState(null);
-  const [zipFile, setZipFile] = useState(null);
   const [mode, setMode] = useState("strict");
+  const [dragOverExcel, setDragOverExcel] = useState(false);
 
   useEffect(() => {
     if (userRole === "super-admin") setMode("auto");
   }, [userRole]);
 
+  // Auto-calc asset lifetime (hardware only)
   const calculateAssetLifetime = (DOP, DOE) => {
     if (!DOP || !DOE) return "";
     const diff = new Date(DOE) - new Date(DOP);
-    return diff <= 0 ? "0 years" : `${Math.ceil(diff / (1000 * 60 * 60 * 24 * 365))} years`;
+    return diff <= 0
+      ? "0 years"
+      : `${Math.ceil(diff / (1000 * 60 * 60 * 24 * 365))} years`;
   };
 
+  // Excel templates
   const templates = {
-hardware: [
-  {
-    assetCode: "",
-    assetCategory: "",
-    barcodeNumber: "",
-    assetName: "",
-    associateUnit: "",
-    locationName: "",
-    assetSpecification: "",
-    assetStatus: "",
-    DOP: "",
-    DOE: "",
-    assetLifetime: "",
-    purchaseFrom: "",
-  },
-],
+    hardware: [
+      {
+        assetCode: "",
+        assetCategory: "",
+        barcodeNumber: "",
+        assetName: "",
+        associateUnit: "",
+        locationName: "",
+        assetSpecification: "",
+        assetStatus: "",
+        DOP: "",
+        DOE: "",
+        assetLifetime: "",
+        purchaseFrom: "",
+      },
+    ],
 
     software: [
-  {
-    "Software Name": "",
-    "Version": "",
-    "Publisher": "",
-    "Category": "",
-    "License Key": "",
-    "License Type": "",
-    "License Model": "",
-    "License Use": "",
-    "Total Licenses": "",
-    "Licenses Assigned": "",
-    "License Start Date": "",
-    "License Expiry": "",
-    "Renewal Cycle": "",
-    "Purchase Date": "",
-    "Cost Per Unit": "",
-    "Currency": "",
-    "Purchase Order": "",
-    "Compliance Status": "",
-    "Assigned To": "",
-    "Install Location": "",
-  }
-]
-
+      {
+        "Software Name": "",
+        Version: "",
+        Publisher: "",
+        Category: "",
+        "License Key": "",
+        "License Type": "",
+        "License Model": "",
+        "License Use": "",
+        "Total Licenses": "",
+        "Licenses Assigned": "",
+        "License Start Date": "",
+        "License Expiry": "",
+        "Renewal Cycle": "",
+        "Purchase Date": "",
+        "Cost Per Unit": "",
+        Currency: "",
+        "Purchase Order": "",
+        "Compliance Status": "",
+        "Assigned To": "",
+        "Install Location": "",
+      },
+    ],
   };
 
-const handleUpload = async () => {
-  if (!excelFile)
-    return Swal.fire("Missing File", "Upload an Excel file!", "warning");
+  const handleUpload = () => {
+    if (!excelFile)
+      return Swal.fire("Missing File", "Please upload an Excel file!", "warning");
 
-  const reader = new FileReader();
+    const reader = new FileReader();
 
-  reader.onload = async (e) => {
-    const workbook = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
-    const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-
-    if (type === "hardware") {
-      sheet.forEach(
-        (row) => (row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE))
+    reader.onload = async (e) => {
+      const workbook = XLSX.read(new Uint8Array(e.target.result), {
+        type: "array",
+      });
+      const sheet = XLSX.utils.sheet_to_json(
+        workbook.Sheets[workbook.SheetNames[0]]
       );
-    }
 
-    try {
-      let res;
-
-      // -------------------------------------------------------
-      // ✅ HARDWARE (UNCHANGED) — Uses FormData + Multer + ZIP
-      // -------------------------------------------------------
+      // Add lifetime for hardware
       if (type === "hardware") {
-        const formData = new FormData();
-        formData.append("excel", excelFile);
-        formData.append("assets", JSON.stringify(sheet));
-        formData.append("mode", mode);
-
-
-        res = await bulkUploadHardwareAssets(formData);
+        sheet.forEach((row) => {
+          row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE);
+        });
       }
 
-      // -------------------------------------------------------
-      // ✅ SOFTWARE — Must NOT send files → Multer(upload.none())
-      // -------------------------------------------------------
-      if (type === "software") {
-        const payload = {
-          assets: JSON.stringify(sheet),
-          mode,
-        };
+      try {
+        let res;
 
-        res = await bulkUploadSoftwareAssets(payload); // sends JSON only
+        // -------------------------
+        // ✅ Hardware (JSON upload)
+        // -------------------------
+        if (type === "hardware") {
+          const payload = {
+            assets: JSON.stringify(sheet),
+            mode,
+          };
+
+          res = await bulkUploadHardwareAssets(payload);
+        }
+
+        // -------------------------
+        // ✅ Software (JSON upload)
+        // -------------------------
+        if (type === "software") {
+          const payload = {
+            assets: JSON.stringify(sheet),
+            mode,
+          };
+
+          res = await bulkUploadSoftwareAssets(payload);
+        }
+
+        Swal.fire(
+          "Success!",
+          `${res.inserted} assets imported\n${res.skipped} skipped`,
+          "success"
+        );
+      } catch (err) {
+        console.log("❌ ERROR:", err);
+        console.log("❌ RESPONSE:", err.response?.data);
+        Swal.fire("Error", "Import failed!", "error");
       }
+    };
 
-      Swal.fire(
-        "Success!",
-        `${res.inserted} assets imported\n${res.skipped} skipped`,
-        "success"
-      );
-
-    } catch (err) {
-      console.log("❌ AXIOS ERROR:", err);
-      console.log("❌ AXIOS RESPONSE:", err.response?.data);
-      Swal.fire("Error", "Import failed!", "error");
-    }
+    reader.readAsArrayBuffer(excelFile);
   };
-
-  reader.readAsArrayBuffer(excelFile);
-};
 
   return (
     <div className="bulk-wrapper">
       <div className="bulk-card">
-
         <div className="bulk-header">
-          <h2>Import {type === "hardware" ? "Hardware Assets" : "Software Assets"}</h2>
+          <h2>
+            Import {type === "hardware" ? "Hardware Assets" : "Software Assets"}
+          </h2>
           <span className="mode-chip">
             {mode === "auto" ? "Auto Mode (Super Admin)" : "Strict Mode"}
           </span>
         </div>
 
-        {/* EXCEL UPLOAD */}
+        {/* Excel Upload */}
         <div
           className={`dropzone ${dragOverExcel ? "drag-over" : ""}`}
-          onDragOver={(e) => { e.preventDefault(); setDragOverExcel(true); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragOverExcel(true);
+          }}
           onDragLeave={() => setDragOverExcel(false)}
           onDrop={(e) => {
             e.preventDefault();
@@ -169,8 +179,7 @@ const handleUpload = async () => {
           </div>
         )}
 
-
-        {/* ACTION BUTTONS */}
+        {/* Buttons */}
         <div className="bulk-actions">
           <button className="import-btn" onClick={handleUpload}>
             <FiUploadCloud /> Import
