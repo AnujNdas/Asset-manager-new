@@ -270,91 +270,101 @@ const HardwareAssetList = () => {
 
       {renderPagination()}
 
-      {/* VIEW MODAL (NO IMAGE) */}
-      <AnimatePresence>
-        {selectedAsset && (
-          <motion.div
-            className="overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedAsset(null)}
-          >
-            <motion.div
-              className="overlay-content view-modal"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="view-right saas-content">
-                <h3 className="view-title saas-title">
-                  {selectedAsset.assetName || selectedAsset.assetCode}
-                </h3>
+{/* VIEW MODAL – NEW UI */}
+<AnimatePresence>
+  {selectedAsset && (
+    <motion.div
+      className="asset-view-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setSelectedAsset(null)}
+    >
+      <motion.div
+        className="asset-view-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="asset-view-header">
+          <h3 className="asset-view-title">
+            {selectedAsset.assetName || selectedAsset.assetCode}
+          </h3>
 
-                <div className="saas-badges">
-                  <span className="saas-badge">
-                    {getName(categories, selectedAsset.assetCategory)}
-                  </span>
-                  <span className="saas-badge status">
-                    {getName(statuses, selectedAsset.assetStatus)}
-                  </span>
-                </div>
+          <div className="asset-view-badges">
+            <span className="asset-view-badge category">
+              {getName(categories, selectedAsset.assetCategory)}
+            </span>
+            <span className="asset-view-badge status">
+              {getName(statuses, selectedAsset.assetStatus)}
+            </span>
+          </div>
+        </div>
 
-                <h4 className="saas-section-title">Asset Details</h4>
+        <h4 className="asset-view-section-title">Asset Details</h4>
 
-                <div className="saas-details-grid">
-                  <div>
-                    <label>Asset Code</label>
-                    <p>{selectedAsset.assetCode || "—"}</p>
-                  </div>
+        <div className="asset-view-grid">
+          <div>
+            <label>Asset Code</label>
+            <p>{selectedAsset.assetCode || "—"}</p>
+          </div>
 
-                  <div>
-                    <label>Specification</label>
-                    <p>{selectedAsset.assetSpecification || "—"}</p>
-                  </div>
+          <div>
+            <label>Specification</label>
+            <p>{selectedAsset.assetSpecification || "—"}</p>
+          </div>
 
-                  <div>
-                    <label>Location</label>
-                    <p>{getName(locations, selectedAsset.locationName)}</p>
-                  </div>
+          <div>
+            <label>Location</label>
+            <p>{getName(locations, selectedAsset.locationName)}</p>
+          </div>
 
-                  <div>
-                    <label>Unit</label>
-                    <p>{getName(units, selectedAsset.associateUnit)}</p>
-                  </div>
+          <div>
+            <label>Unit</label>
+            <p>{getName(units, selectedAsset.associateUnit)}</p>
+          </div>
 
-                  <div>
-                    <label>Purchase Date</label>
-                    <p>{selectedAsset.DOP ? new Date(selectedAsset.DOP).toLocaleDateString() : "N/A"}</p>
-                  </div>
+          <div>
+            <label>Purchase Date</label>
+            <p>
+              {selectedAsset.DOP
+                ? new Date(selectedAsset.DOP).toLocaleDateString()
+                : "N/A"}
+            </p>
+          </div>
 
-                  <div>
-                    <label>Expiry Date</label>
-                    <p>{selectedAsset.DOE ? new Date(selectedAsset.DOE).toLocaleDateString() : "N/A"}</p>
-                  </div>
+          <div>
+            <label>Expiry Date</label>
+            <p>
+              {selectedAsset.DOE
+                ? new Date(selectedAsset.DOE).toLocaleDateString()
+                : "N/A"}
+            </p>
+          </div>
 
-                  <div>
-                    <label>Purchase From</label>
-                    <p>{selectedAsset.purchaseFrom || "N/A"}</p>
-                  </div>
+          <div>
+            <label>Purchase From</label>
+            <p>{selectedAsset.purchaseFrom || "N/A"}</p>
+          </div>
 
-                  <div>
-                    <label>Lifetime</label>
-                    <p>{selectedAsset.assetLifetime || "N/A"}</p>
-                  </div>
-                </div>
+          <div>
+            <label>Lifetime</label>
+            <p>{selectedAsset.assetLifetime || "N/A"}</p>
+          </div>
+        </div>
 
-                <div className="modal-actions saas-actions">
-                  <button className="close-btn" onClick={() => setSelectedAsset(null)}>
-                    Close
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <button
+          className="asset-view-close-btn"
+          onClick={() => setSelectedAsset(null)}
+        >
+          Close
+        </button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
       {/* EDIT MODAL (NO IMAGE) */}
       <AnimatePresence>
