@@ -452,49 +452,87 @@ const getStatusName = (statusId) => {
 
 
 
-      {/* Edit Modal */}
-      <AnimatePresence>
-        {editingAsset && (
-          <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setEditingAsset(null)}>
-            <motion.div className="overlay-content" initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} onClick={(e) => e.stopPropagation()}>
-              <h3>Edit {editingAsset.name || "Software"}</h3>
+     <AnimatePresence>
+  {editingAsset && (
+    <motion.div 
+      className="sw-edit-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditingAsset(null)}
+    >
+      <motion.div
+        className="sw-edit-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        
+        {/* Header */}
+        <div className="sw-edit-header">
+          <h2>Edit {editingAsset.name || "Software"}</h2>
+          <button className="sw-edit-close" onClick={() => setEditingAsset(null)}>✕</button>
+        </div>
 
-              <form onSubmit={handleEditSubmit} className="overlay-form">
-                <input value={editForm.name || ""} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} placeholder="Name" />
-                <input value={editForm.version || ""} onChange={(e) => setEditForm({ ...editForm, version: e.target.value })} placeholder="Version" />
-                <input value={editForm.publisher || ""} onChange={(e) => setEditForm({ ...editForm, publisher: e.target.value })} placeholder="Publisher" />
-                <input value={editForm.assetTag || ""} onChange={(e) => setEditForm({ ...editForm, assetTag: e.target.value })} placeholder="Asset Tag" />
-                <input value={editForm.installLocation || ""} onChange={(e) => setEditForm({ ...editForm, installLocation: e.target.value })} placeholder="Install Location" />
+        {/* Form */}
+        <form onSubmit={handleEditSubmit} className="sw-edit-form">
 
-                <input value={editForm.licenseKey || ""} onChange={(e) => setEditForm({ ...editForm, licenseKey: e.target.value })} placeholder="License Key" />
-                <input value={editForm.licenseType || ""} onChange={(e) => setEditForm({ ...editForm, licenseType: e.target.value })} placeholder="License Type" />
-                <input value={editForm.licenseModel || ""} onChange={(e) => setEditForm({ ...editForm, licenseModel: e.target.value })} placeholder="License Model" />
+          {/* Basic Info */}
+          <div className="sw-section-title">Basic Details</div>
+          <div className="sw-form-grid">
+            <input value={editForm.name || ""} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} placeholder="Software Name" />
+            <input value={editForm.version || ""} onChange={(e) => setEditForm({ ...editForm, version: e.target.value })} placeholder="Version" />
+            <input value={editForm.publisher || ""} onChange={(e) => setEditForm({ ...editForm, publisher: e.target.value })} placeholder="Publisher" />
+            <input value={editForm.assetTag || ""} onChange={(e) => setEditForm({ ...editForm, assetTag: e.target.value })} placeholder="Asset Tag" />
+            <input value={editForm.installLocation || ""} onChange={(e) => setEditForm({ ...editForm, installLocation: e.target.value })} placeholder="Install Location" />
+          </div>
 
-                <label>License Start Date:</label>
-                <input type="date" value={editForm.licenseStartDate || ""} onChange={(e) => setEditForm({ ...editForm, licenseStartDate: e.target.value })} />
+          {/* License Info */}
+          <div className="sw-section-title">License Information</div>
+          <div className="sw-form-grid">
+            <input value={editForm.licenseKey || ""} onChange={(e) => setEditForm({ ...editForm, licenseKey: e.target.value })} placeholder="License Key" />
+            <input value={editForm.licenseType || ""} onChange={(e) => setEditForm({ ...editForm, licenseType: e.target.value })} placeholder="License Type" />
+            <input value={editForm.licenseModel || ""} onChange={(e) => setEditForm({ ...editForm, licenseModel: e.target.value })} placeholder="License Model" />
 
-                <label>License Expiry:</label>
-                <input type="date" value={editForm.licenseExpiry || ""} onChange={(e) => setEditForm({ ...editForm, licenseExpiry: e.target.value })} />
+            <label className="sw-field-label">Start Date</label>
+            <input type="date" value={editForm.licenseStartDate || ""} onChange={(e) => setEditForm({ ...editForm, licenseStartDate: e.target.value })} />
 
-                <label>Purchase Date:</label>
-                <input type="date" value={editForm.purchaseDate || ""} onChange={(e) => setEditForm({ ...editForm, purchaseDate: e.target.value })} />
+            <label className="sw-field-label">Expiry Date</label>
+            <input type="date" value={editForm.licenseExpiry || ""} onChange={(e) => setEditForm({ ...editForm, licenseExpiry: e.target.value })} />
+          </div>
 
-                <input value={editForm.costPerUnit || ""} onChange={(e) => setEditForm({ ...editForm, costPerUnit: e.target.value })} placeholder="Cost Per Unit" />
-                <input value={editForm.totalCost || ""} onChange={(e) => setEditForm({ ...editForm, totalCost: e.target.value })} placeholder="Total Cost" />
+          {/* Purchase Info */}
+          <div className="sw-section-title">Purchase & Cost</div>
+          <div className="sw-form-grid">
+            <label className="sw-field-label">Purchase Date</label>
+            <input type="date" value={editForm.purchaseDate || ""} onChange={(e) => setEditForm({ ...editForm, purchaseDate: e.target.value })} />
 
-                <input value={editForm.assignedUsers || ""} onChange={(e) => setEditForm({ ...editForm, assignedUsers: e.target.value })} placeholder="Assigned Users (comma-separated)" />
-                <input value={editForm.linkedDevices || ""} onChange={(e) => setEditForm({ ...editForm, linkedDevices: e.target.value })} placeholder="Linked Devices (comma-separated)" />
-                <input value={editForm.integrationDependencies || ""} onChange={(e) => setEditForm({ ...editForm, integrationDependencies: e.target.value })} placeholder="Integration Dependencies (comma-separated)" />
+            <input value={editForm.costPerUnit || ""} onChange={(e) => setEditForm({ ...editForm, costPerUnit: e.target.value })} placeholder="Cost Per Unit (₹)" />
+            <input value={editForm.totalCost || ""} onChange={(e) => setEditForm({ ...editForm, totalCost: e.target.value })} placeholder="Total Cost (₹)" />
+          </div>
 
-                <div className="modal-actions">
-                  <button type="submit" className="save-btn">Save</button>
-                  <button type="button" className="close-btn" onClick={() => setEditingAsset(null)}>Cancel</button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {/* Linked Data */}
+          <div className="sw-section-title">Associations</div>
+          <div className="sw-form-grid">
+            <input value={editForm.assignedUsers || ""} onChange={(e) => setEditForm({ ...editForm, assignedUsers: e.target.value })} placeholder="Assigned Users (comma-separated)" />
+            <input value={editForm.linkedDevices || ""} onChange={(e) => setEditForm({ ...editForm, linkedDevices: e.target.value })} placeholder="Linked Devices (comma-separated)" />
+            <input value={editForm.integrationDependencies || ""} onChange={(e) => setEditForm({ ...editForm, integrationDependencies: e.target.value })} placeholder="Integration Dependencies (comma-separated)" />
+          </div>
+
+          {/* Actions */}
+          <div className="sw-edit-actions">
+            <button type="submit" className="sw-save-btn">Save Changes</button>
+            <button type="button" className="sw-cancel-btn" onClick={() => setEditingAsset(null)}>Cancel</button>
+          </div>
+
+        </form>
+
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </div>
   );
 };
