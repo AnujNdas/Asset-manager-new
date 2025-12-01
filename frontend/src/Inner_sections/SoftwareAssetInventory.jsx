@@ -354,51 +354,92 @@ const getStatusName = (statusId) => {
 <AnimatePresence>
   {selectedAsset && (
     <motion.div 
-      className="overlay"
+      className="swv-overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={() => setSelectedAsset(null)}
     >
       <motion.div
-        className="software-modal"
-        initial={{ scale: 0.96 }}
+        className="swv-modal"
+        initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
-        exit={{ scale: 0.96 }}
+        exit={{ scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
       >
+        
+        {/* Close Button */}
+        <button className="swv-close-btn" onClick={() => setSelectedAsset(null)}>
+          ✕
+        </button>
 
-        {/* CLOSE BUTTON (Column 3) */}
-        <button className="software-close-btn" onClick={() => setSelectedAsset(null)}>✕</button>
-
-        {/* COLUMN 1: ICON */}
-        <div className="software-col icon-col">
-          <div className="software-icon-box">
+        {/* LEFT: Icon + Title */}
+        <div className="swv-left">
+          <div className="swv-icon-box">
             {initialsFor(selectedAsset.name)}
-            <h3 className="software-title">{selectedAsset.name || "Software"}</h3>
           </div>
+          <h2 className="swv-title">{selectedAsset.name || "Software"}</h2>
         </div>
 
-        {/* COLUMN 2: DATA */}
-        <div className="software-col data-col">
+        {/* RIGHT: Data */}
+        <div className="swv-right">
+          <div className="swv-info-grid">
 
-          <div className="software-data-grid">
-            <p><strong>Version:</strong> {selectedAsset.version || "N/A"}</p>
-            <p><strong>Publisher:</strong> {selectedAsset.publisher || "N/A"}</p>
-            <p><strong>Category:</strong> {getCategoryName(selectedAsset.category)}</p>
-            <p><strong>License Type:</strong> {selectedAsset.licenseType || "N/A"}</p>
-            <p><strong>License Key:</strong> {selectedAsset.licenseKey || "N/A"}</p>
-            <p><strong>Start:</strong> {selectedAsset.licenseStartDate ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() : "N/A"}</p>
-            <p><strong>Expiry:</strong> {selectedAsset.licenseExpiry ? new Date(selectedAsset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
-            <p><strong>Total Licenses:</strong> {selectedAsset.totalLicenses ?? "0"}</p>
-            <p><strong>Assigned:</strong> {selectedAsset.licensesAssigned ?? "0"}</p>
-            <p><strong>Purchase:</strong> {selectedAsset.purchaseDate ? new Date(selectedAsset.purchaseDate).toLocaleDateString() : "N/A"}</p>
-            <p><strong>Cost Per Unit:</strong> {selectedAsset.costPerUnit ? `₹${selectedAsset.costPerUnit}` : "N/A"}</p>
-            <p><strong>Total Cost:</strong> {selectedAsset.totalCost ? `₹${selectedAsset.totalCost}` : "N/A"}</p>
-            <p><strong>Users:</strong> {selectedAsset.assignedUsers?.length ? selectedAsset.assignedUsers.join(", ") : "None"}</p>
-            <p><strong>Devices:</strong> {selectedAsset.linkedDevices?.length ? selectedAsset.linkedDevices.join(", ") : "None"}</p>
-            <p><strong>Support:</strong> {selectedAsset.supportVendor || "N/A"}</p>
-            <p><strong>Last Access:</strong> {selectedAsset.lastAccess ? new Date(selectedAsset.lastAccess).toLocaleDateString() : "N/A"}</p>
+            <p><span>Version:</span> {selectedAsset.version || "N/A"}</p>
+            <p><span>Publisher:</span> {selectedAsset.publisher || "N/A"}</p>
+            <p><span>Category:</span> {getCategoryName(selectedAsset.category)}</p>
+            <p><span>License Type:</span> {selectedAsset.licenseType || "N/A"}</p>
+            <p><span>License Key:</span> {selectedAsset.licenseKey || "N/A"}</p>
+
+            <p><span>Start Date:</span> 
+              {selectedAsset.licenseStartDate 
+                ? new Date(selectedAsset.licenseStartDate).toLocaleDateString() 
+                : "N/A"}
+            </p>
+
+            <p><span>Expiry Date:</span> 
+              {selectedAsset.licenseExpiry 
+                ? new Date(selectedAsset.licenseExpiry).toLocaleDateString() 
+                : "N/A"}
+            </p>
+
+            <p><span>Total Licenses:</span> {selectedAsset.totalLicenses ?? "0"}</p>
+            <p><span>Assigned:</span> {selectedAsset.licensesAssigned ?? "0"}</p>
+
+            <p><span>Purchase Date:</span> 
+              {selectedAsset.purchaseDate 
+                ? new Date(selectedAsset.purchaseDate).toLocaleDateString() 
+                : "N/A"}
+            </p>
+
+            <p><span>Cost Per Unit:</span> 
+              {selectedAsset.costPerUnit ? `₹${selectedAsset.costPerUnit}` : "N/A"}
+            </p>
+
+            <p><span>Total Cost:</span> 
+              {selectedAsset.totalCost ? `₹${selectedAsset.totalCost}` : "N/A"}
+            </p>
+
+            <p><span>Users:</span> 
+              {selectedAsset.assignedUsers?.length 
+                ? selectedAsset.assignedUsers.join(", ") 
+                : "None"}
+            </p>
+
+            <p><span>Devices:</span> 
+              {selectedAsset.linkedDevices?.length 
+                ? selectedAsset.linkedDevices.join(", ") 
+                : "None"}
+            </p>
+
+            <p><span>Support Vendor:</span> {selectedAsset.supportVendor || "N/A"}</p>
+
+            <p><span>Last Access:</span> 
+              {selectedAsset.lastAccess 
+                ? new Date(selectedAsset.lastAccess).toLocaleDateString() 
+                : "N/A"}
+            </p>
+
           </div>
         </div>
 
@@ -406,6 +447,7 @@ const getStatusName = (statusId) => {
     </motion.div>
   )}
 </AnimatePresence>
+
 
 
 
