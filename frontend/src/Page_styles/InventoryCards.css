@@ -680,3 +680,135 @@
     padding: 18px;
   }
 }
+
+/* =======================
+  software edit overlay styles 
+===================== */
+
+/* Overlay */
+.sw-edit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Modal Wrapper */
+.sw-edit-modal {
+  background: #fff;
+  width: 90%;
+  max-width: 820px;
+  border-radius: 18px;
+  padding: 25px 30px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+/* Header */
+.sw-edit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.sw-edit-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2f2f2f;
+}
+
+.sw-edit-close {
+  background: #eee;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Section Labels */
+.sw-section-title {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+}
+
+/* Form Grid */
+.sw-edit-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.sw-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+
+.sw-form-grid input,
+.sw-form-grid select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.sw-field-label {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #555;
+}
+
+/* Actions */
+.sw-edit-actions {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.sw-save-btn {
+  background: #7b5dff;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sw-cancel-btn {
+  background: #f3f3f3;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sw-edit-modal {
+    padding: 20px;
+  }
+
+  .sw-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sw-edit-actions {
+    flex-direction: column;
+  }
+
+  .sw-save-btn,
+  .sw-cancel-btn {
+    width: 100%;
+  }
+}
