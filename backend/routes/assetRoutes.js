@@ -1,7 +1,7 @@
 const express = require("express");
-const multer = require("multer");
 const path = require("path");
 const authenticateToken = require("../Middleware/Authentication-token");
+
 const {
   addAsset,
   deleteAsset,
@@ -19,54 +19,40 @@ const Status = require("../models/Status");
 
 const router = express.Router();
 
-// Multer storage
-const storage = require("../Middleware/cloudinaryStorage");
-const upload = multer({ storage });
-const uploadBulk = multer({ dest: "uploads/bulk/" });
+// ❌ REMOVE image multer storage
+// const storage = require("../Middleware/cloudinaryStorage");
+// const upload = multer({ storage });
 
+// ❌ KEEP only bulk excel upload
+const multer = require("multer");
+const uploadBulk = multer({ dest: "uploads/bulk/" });
 
 // Routes
 router.get("/asset-code", generateAssetCode);
+
+// ➤ ADD ASSET (NO IMAGE NOW)
 router.post(
   "/",
   authenticateToken(),
-  (req, res, next) => {
-    console.log("🔥 A - Before Multer");
-    next();
-  },
-  upload.single("image"),
-  (req, res, next) => {
-    console.log("🔥 B - After Multer - req.file =", req.file);
-    next();
-  },
   addAsset
 );
 
-
+// ➤ UPDATE ASSET (NO IMAGE NOW)
 router.put(
   "/:id",
   authenticateToken(),
-  upload.single("image"),
-  (req, res, next) => {
-    console.log("📌 Incoming BODY:", req.body);
-    console.log("📌 Incoming FILES:", req.files);
-    next();
-  },
   updateAsset
 );
 
-
 router.get("/", authenticateToken(), getAllAssets);
-router.delete("/:id", authenticateToken(), deleteAsset); 
+
+router.delete("/:id", authenticateToken(), deleteAsset);
+
+// ➤ BULK UPLOAD (ONLY EXCEL NOW)
 router.post(
   "/bulk-upload",
-  uploadBulk.fields([
-    { name: "excel" },
-    { name: "imagesZip" }
-  ]),
+  uploadBulk.fields([{ name: "excel" }]),
   bulkUpload
 );
 
-
-// ✅ Correct
 module.exports = router;
