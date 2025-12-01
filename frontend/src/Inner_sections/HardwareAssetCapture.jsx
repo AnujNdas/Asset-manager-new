@@ -9,7 +9,7 @@ import {
 } from "../Services/ApiServices";
 import Swal from "sweetalert2";
 import "../Page_styles/HardwareCapture.css";
-import { FiUploadCloud, FiCamera, FiSave } from "react-icons/fi";
+import { FiSave } from "react-icons/fi";
 
 const API_URL = "https://asset-manager-new.onrender.com/api";
 
@@ -28,18 +28,16 @@ const AssetCapture = () => {
     DOE: "",
     assetLifetime: "",
     purchaseFrom: "",
-    image: "",
   };
 
   const [formData, setFormData] = useState(defaultFormData);
-  const [imagePreview, setImagePreview] = useState(null);
   const [units, setUnits] = useState([]);
   const [locations, setLocations] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ----- Helpers -----
+  // Generate asset code
   const generateAssetCode = async () => {
     const res = await fetch(`${API_URL}/assets/asset-code`);
     if (!res.ok) throw new Error("Failed to generate asset code");
@@ -47,27 +45,19 @@ const AssetCapture = () => {
     return data.assetCode;
   };
 
+  // Save asset (NO IMAGE)
   const saveAssetToDatabase = async (data) => {
     const token = sessionStorage.getItem("token");
-    const payload = new FormData();
-
-    // append only meaningful fields
-    Object.entries(data).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== "") {
-        // For objects like arrays or nested objects, convert if necessary.
-        // But here all fields are strings or file, so append directly.
-        payload.append(k, v);
-      }
-    });
-
     const res = await fetch(`${API_URL}/assets`, {
       method: "POST",
-      body: payload,
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      body: JSON.stringify(data),
     });
 
     if (!res.ok) {
-      // try to parse informative message
       const text = await res.text();
       throw new Error(text || "Failed to save asset");
     }
@@ -75,7 +65,7 @@ const AssetCapture = () => {
     return true;
   };
 
-  // ---- Load classifications ----
+  // Load dropdown lists
   useEffect(() => {
     (async () => {
       try {
@@ -96,28 +86,14 @@ const AssetCapture = () => {
     })();
   }, []);
 
-  // ---- Change handler ----
+  // Change handler (NO IMAGE LOGIC)
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-
-    if (type === "file") {
-      const file = files?.[0];
-      setFormData((prev) => ({ ...prev, image: file || "" }));
-
-      if (file) {
-        const r = new FileReader();
-        r.onloadend = () => setImagePreview(r.result);
-        r.readAsDataURL(file);
-      } else {
-        setImagePreview(null);
-      }
-      return;
-    }
+    const { name, value } = e.target;
 
     setFormData((prev) => {
       const updated = { ...prev, [name]: value };
 
-      // auto-calc lifetime when both dates present
+      // auto-calc lifetime
       if (name === "DOP" || name === "DOE") {
         const { DOP, DOE } = updated;
         if (DOP && DOE) {
@@ -135,7 +111,7 @@ const AssetCapture = () => {
     });
   };
 
-  // ---- Validation ----
+  // Validation
   const validateRequired = () => {
     const required = [
       "assetName",
@@ -146,17 +122,13 @@ const AssetCapture = () => {
     ];
     const missing = required.filter((k) => !formData[k]);
     if (missing.length) {
-      Swal.fire(
-        "Missing fields",
-        "Please fill in all required fields.",
-        "error"
-      );
+      Swal.fire("Missing fields", "Please fill in all required fields.", "error");
       return false;
     }
     return true;
   };
 
-  // ---- Submit / Add Asset ----
+  // Submit
   const handleAddAsset = async (e) => {
     e.preventDefault();
     if (!validateRequired()) return;
@@ -164,14 +136,8 @@ const AssetCapture = () => {
     setIsSubmitting(true);
 
     try {
-      // generate asset code from backend
       const assetCode = await generateAssetCode();
-
-      // assemble payload using backend field names
-      const payload = {
-        ...formData,
-        assetCode,
-      };
+      const payload = { ...formData, assetCode };
 
       await saveAssetToDatabase(payload);
 
@@ -185,7 +151,6 @@ const AssetCapture = () => {
     }
   };
 
-  // ---- JSX UI (your styled modern UI) ----
   return (
     <div className="asset-wrapper">
       <div className="asset-header">
@@ -193,7 +158,7 @@ const AssetCapture = () => {
       </div>
 
       <form className="asset-form" onSubmit={handleAddAsset}>
-        {/* Basic Info */}
+        {/* Basic */}
         <div className="section">
           <h3 className="section-title">Basic Details</h3>
 
@@ -244,7 +209,7 @@ const AssetCapture = () => {
           </div>
         </div>
 
-        {/* Location & Unit */}
+        {/* Location */}
         <div className="section">
           <h3 className="section-title">Location & Management</h3>
 
@@ -357,40 +322,7 @@ const AssetCapture = () => {
           </div>
         </div>
 
-        {/* Image Upload */}
-        <div className="section">
-          <h3 className="section-title">Upload Asset Image</h3>
-
-          <div className="upload-box">
-            <label className="upload-btn">
-              <FiCamera />
-              Open Camera
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleChange}
-              />
-            </label>
-
-            <label className="upload-btn">
-              <FiUploadCloud />
-              Upload Image
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleChange}
-              />
-            </label>
-          </div>
-
-          {imagePreview && (
-            <div className="image-preview">
-              <img src={imagePreview} alt="Preview" />
-            </div>
-          )}
-        </div>
-
+        {/* Submit */}
         <button
           className="submit-btn"
           type="submit"
