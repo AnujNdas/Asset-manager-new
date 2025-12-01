@@ -364,9 +364,6 @@
   border-radius: 8px;
   display: block;
 }
-/* ==========================
-    view modal layout styles 
-=========================== */
 /* =============================
    NEW ASSET VIEW MODAL UI
 ================================ */
@@ -513,50 +510,134 @@
   }
 }
 
-/* ===========================
-   RESPONSIVE EDIT MODAL UI
-   =========================== */
+/* ====================================
+   NEW EDIT MODAL UI (NO IMAGE)
+==================================== */
 
-@media (max-width: 900px) {
-  .edit-modal {
-    width: 95%;
-    height: auto;
-    flex-direction: column;
+/* Overlay */
+.asset-edit-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+/* Modal */
+.asset-edit-modal {
+  width: 100%;
+  max-width: 550px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 22px;
+  box-shadow: 0px 12px 38px rgba(0, 0, 0, 0.22);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: editPopup 0.25s ease;
+}
+
+@keyframes editPopup {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Title */
+.asset-edit-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+/* Input Grid */
+.asset-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* Inputs + Selects */
+.asset-edit-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 0.95rem;
+  color: #111827;
+  transition: 0.2s ease;
+}
+
+.asset-edit-input:focus {
+  border-color: #6366f1;
+  background: #ffffff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* Action Buttons */
+.asset-edit-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.asset-edit-save-btn {
+  padding: 12px 20px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.asset-edit-save-btn:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+.asset-edit-cancel-btn {
+  padding: 12px 20px;
+  background: #e5e7eb;
+  color: #111827;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.asset-edit-cancel-btn:hover {
+  background: #d1d5db;
+  transform: translateY(-2px);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 500px) {
+  .asset-edit-modal {
+    padding: 22px;
   }
 
-  .edit-left {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
+  .asset-edit-grid {
+    grid-template-columns: 1fr;
   }
 
-  .edit-image {
-    height: 220px;
-    width: 100%;
-    object-fit: contain;
-  }
-
-  .edit-right {
-    width: 100%;
-    padding: 18px;
-  }
-
-  .edit-grid {
-    grid-template-columns: 1fr; /* 1 column layout */
-  }
-
-  .modal-actions {
-    grid-column: span 1;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .save-btn,
-  .close-btn {
-    width: 100%; /* buttons full width */
+  .asset-edit-title {
+    font-size: 1.25rem;
   }
 }
+
 
 @media (max-width: 500px) {
   .edit-title {
