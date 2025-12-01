@@ -364,6 +364,154 @@
   border-radius: 8px;
   display: block;
 }
+/* ==========================
+    view modal layout styles 
+=========================== */
+/* =============================
+   NEW ASSET VIEW MODAL UI
+================================ */
+
+/* Overlay */
+.asset-view-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+/* Modal */
+.asset-view-modal {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0px 12px 38px rgba(0, 0, 0, 0.25);
+  animation: popUp 0.25s ease;
+}
+
+@keyframes popUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Header */
+.asset-view-header {
+  margin-bottom: 18px;
+}
+
+.asset-view-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 10px;
+}
+
+/* Badges */
+.asset-view-badges {
+  display: flex;
+  gap: 10px;
+}
+
+.asset-view-badge {
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.asset-view-badge.category {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.asset-view-badge.status {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* Section Title */
+.asset-view-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+/* Details Grid */
+.asset-view-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.asset-view-grid label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.asset-view-grid p {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Close Button */
+.asset-view-close-btn {
+  width: 100%;
+  margin-top: 24px;
+  padding: 12px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.asset-view-close-btn:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+/* ========= RESPONSIVE ========= */
+@media (max-width: 480px) {
+  .asset-view-modal {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .asset-view-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .asset-view-title {
+    font-size: 1.25rem;
+  }
+}
 
 /* ===========================
    RESPONSIVE EDIT MODAL UI
