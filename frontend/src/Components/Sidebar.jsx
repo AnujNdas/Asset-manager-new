@@ -31,7 +31,15 @@ useEffect(() => {
     <div className="sidebar-container">
       <div className="sidebar">
         <div className="sidebar-heading">
-          <div className="title">Vault<span>ifly</span><FontAwesomeIcon icon={faPaperPlane} style={{ marginLeft: "8px", color: "#6596ffff" }} /></div>
+          <div className="title">
+  Vault<span>ifly</span>
+  <img
+    src={image}
+    alt="icon"
+    className="title-icon"
+  />
+</div>
+
         </div>
         <div className="sidebar-menu">
           <ul>
