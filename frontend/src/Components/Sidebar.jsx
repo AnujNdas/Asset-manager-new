@@ -36,7 +36,7 @@ useEffect(() => {
               Asset
               <span>Management</span>
             </div>
-            <img src={image} alt="icon" className="title-icon" width="40" height="40"/>
+            <img src={image} alt="icon" className="title-icon" width="50" height="40"/>
           </div>
         </div>
         <div className="sidebar-menu">
