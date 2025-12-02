@@ -31,7 +31,7 @@ useEffect(() => {
     <div className="sidebar-container">
       <div className="sidebar">
         <div className="sidebar-heading">
-          <div className="title">
+          <div className="title-head">
             <div className="title-text">
               Asset
               <span>Management</span>
