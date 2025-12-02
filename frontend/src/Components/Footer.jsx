@@ -4,7 +4,7 @@ import "../Component_styles/Footer.css";
 const Footer = () => {
   return (
     <footer className="footer">
-      <p>
+      <p className="copyright-box">
         Copyright © 2025{" "}
         <a
           href="https://socialflylive.com/"
