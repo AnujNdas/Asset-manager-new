@@ -66,10 +66,10 @@ const App = () => {
         <Route path="/misreport" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><MisReport /></ProtectedRoute>} />
         <Route path="/scanner" element={<ProtectedRoute allowedRoles={["admin", "super-admin"]}><AssetScanner /></ProtectedRoute>} />
       </Routes>
-       {/* ⭐ Add Footer Here */}
-    <Footer />
     </section>
-
+    <section className={`fourth-container ${isUserPage ? 'blurred' : ''}`}>
+      <Footer/>
+    </section>
     <section className={`user-container ${isUserPage ? "visible" : "hidden"}`}>
       <Routes>
         <Route path="/user" element={<User removeUser={removeUser} />}>
