@@ -76,6 +76,8 @@
 .fourth-container{
   width : 84%;
   height : 40px;
+  position : fixed;
+  left : 16%;
 }
 
 /* Blur when overlay/modal is active */
