@@ -32,7 +32,7 @@ useEffect(() => {
       <div className="sidebar">
         <div className="sidebar-heading">
           <div className="title">
-  Vault<span>ifly</span>
+  Asset<span>Management</span>
   <img
     src={image}
     alt="icon"
