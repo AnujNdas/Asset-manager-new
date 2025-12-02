@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <p className="copyright-box">
-        Copyright © 2025{" "}
+        <span>Copyright © 2025{" "}</span>
         <a
           href="https://socialflylive.com/"
           target="_blank"
