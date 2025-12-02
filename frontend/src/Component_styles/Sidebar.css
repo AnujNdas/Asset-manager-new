@@ -102,12 +102,14 @@ a:hover {
 
 .title-head {
   font-family: "Nunito", sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: #0f172a;
     display: flex;
   align-items: center;
   gap: 5px;
+  justify-content : space-between;
+  width : 100%;
 }
 .title-text span {
   color: #2563eb; /* highlight Vault */
