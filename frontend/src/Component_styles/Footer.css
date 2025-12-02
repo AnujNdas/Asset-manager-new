@@ -11,4 +11,7 @@
   height: 40px;
   border-top: 1px solid #ddd;
 }
-
+.copyright-box{
+  display : flex;
+  justify-content : center;
+}
