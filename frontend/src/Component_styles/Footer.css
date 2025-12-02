@@ -1,17 +1,18 @@
 .footer {
-  width: 84%;
+  width: 100%;
   text-align: center;
-  padding: 8px 0;
   background: #ffffff;
   color: #555;
   font-size: 14px;
-  position: fixed;
   bottom: 0;
   z-index: 5;
-  height: 40px;
+  gap:20px;
   border-top: 1px solid #ddd;
 }
 .copyright-box{
   display : flex;
   justify-content : center;
+}
+.copyright-box span{
+  width: 40%
 }
