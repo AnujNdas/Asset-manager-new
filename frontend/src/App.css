@@ -78,6 +78,7 @@
   height : 40px;
   position : fixed;
   left : 16%;
+  bottom : 0;
 }
 
 /* Blur when overlay/modal is active */
