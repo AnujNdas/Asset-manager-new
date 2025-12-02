@@ -32,14 +32,12 @@ useEffect(() => {
       <div className="sidebar">
         <div className="sidebar-heading">
           <div className="title">
-  Asset<span>Management</span>
-  <img
-    src={image}
-    alt="icon"
-    className="title-icon"
-  />
-</div>
-
+            <div className="title-text">
+              Asset
+              <span>Management</span>
+            </div>
+            <img src={image} alt="icon" className="title-icon" />
+          </div>
         </div>
         <div className="sidebar-menu">
           <ul>
