@@ -64,7 +64,7 @@
   position: absolute;
   top: 60px;
   left: 16%;
-  height: calc(100% - 60px);
+  height: calc(100% - 100px);
   width: 83%;
   background: #f1f1f1;
   border-radius: 10px;
