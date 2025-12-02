@@ -109,6 +109,11 @@ a:hover {
 .title span {
   color: #2563eb; /* highlight Vault */
 }
+.title-text {
+  display: flex;
+  flex-direction: column;  /* forces two lines */
+  line-height: 1;
+}
 .title-icon {
   width: 20px;
   height: 20px;
