@@ -109,13 +109,13 @@ a:hover {
 .title span {
   color: #2563eb; /* highlight Vault */
 }
-
-
-.logo {
-  width: 40px;
-  height: 40px;
+.title-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
   object-fit: contain;
 }
+
 
 /* Menu styles */
 .sidebar-menu {
