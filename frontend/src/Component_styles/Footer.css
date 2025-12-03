@@ -22,3 +22,7 @@
 .copyright-box span{
   width: 40%
 }
+
+.copyright-box a{
+  font-size: clamp(8px,4vw,12px)
+}
