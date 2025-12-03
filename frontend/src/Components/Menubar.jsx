@@ -19,30 +19,59 @@ const Menubar = ({ username, toggleSidebar }) => {
 
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
-  // 👉 A2HS state
+  // A2HS states
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
 
-  // Capture beforeinstallprompt
   useEffect(() => {
-    window.addEventListener("beforeinstallprompt", (e) => {
+    // 👉 Check if already installed
+    const installedBefore = localStorage.getItem("pwaInstalled");
+
+    // 👉 Detect standalone mode (Android + Desktop)
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+
+    // 👉 Detect iOS installed mode
+    const isiOSInstalled = window.navigator.standalone === true;
+
+    if (installedBefore || isStandalone || isiOSInstalled) {
+      setShowInstallButton(false);
+      return;
+    }
+
+    // Listen for install prompt
+    const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
       setShowInstallButton(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    // Listen for actual install event
+    window.addEventListener("appinstalled", () => {
+      console.log("PWA Installed!");
+      localStorage.setItem("pwaInstalled", "true");
+      setShowInstallButton(false);
     });
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    };
   }, []);
 
-  // Trigger install prompt
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
 
     deferredPrompt.prompt();
     const result = await deferredPrompt.userChoice;
 
-    console.log("User choice:", result.outcome);
+    if (result.outcome === "accepted") {
+      console.log("User accepted install");
+      localStorage.setItem("pwaInstalled", "true");
+      setShowInstallButton(false);
+    }
 
     setDeferredPrompt(null);
-    setShowInstallButton(false);
   };
 
   const toggleDropdown = () => {
@@ -52,7 +81,6 @@ const Menubar = ({ username, toggleSidebar }) => {
   return (
     <div className="menubar-container">
       <div className="menubar">
-
         <div className="control-panel">
           <NotificationButton />
 
