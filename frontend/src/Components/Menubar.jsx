@@ -1,4 +1,4 @@
-import React, { useState , useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../Component_styles/Menubar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,62 +7,87 @@ import {
   faMagnifyingGlass,
   faUser,
   faAngleDown,
+  faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
 
-const Menubar = ({ username  , toggleSidebar}) => {
+const Menubar = ({ username, toggleSidebar }) => {
   const navigate = useNavigate();
   const toggleButtonRef = useRef(null);
+
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
-  // Toggle the visibility of the dropdown
+  // 👉 A2HS state
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+
+  // Capture beforeinstallprompt
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    });
+  }, []);
+
+  // Trigger install prompt
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+
+    console.log("User choice:", result.outcome);
+
+    setDeferredPrompt(null);
+    setShowInstallButton(false);
+  };
+
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
   };
 
-  const handlenotification = () => {
-    navigate("/setting/notification")
-  }
-
   return (
     <div className="menubar-container">
       <div className="menubar">
-        {/* <div className="search-box">
-          <input type="text" placeholder="Search" className="search-input" />
-          <button className="search-btn">
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </button>
-        </div> */}
+
         <div className="control-panel">
-          <NotificationButton/>
+          <NotificationButton />
+
+          {/* HELP ICON */}
           <button className="controls">
-            <FontAwesomeIcon
-              icon={faCircleQuestion}
-              style={{ color: "#2346ed" }}
-            />
+            <FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} />
           </button>
 
-          {/* Profile Dropdown */}
+          {/* ⭐ Add to Home Screen Button */}
+          {showInstallButton && (
+            <button className="controls" onClick={handleInstallClick} title="Install App">
+              <FontAwesomeIcon icon={faDownload} style={{ color: "#28a745" }} />
+            </button>
+          )}
+
+          {/* PROFILE DROPDOWN */}
           <button className="profile-button" onClick={toggleDropdown} ref={toggleButtonRef}>
             <FontAwesomeIcon icon={faUser} style={{ fontSize: "0.9rem" }} />
             <FontAwesomeIcon
               icon={faAngleDown}
               style={{
                 fontSize: "16px",
-                transform: isDropdownVisible
-                  ? "rotate(180deg)"
-                  : "rotate(0deg)",
-                transition: "transform 0.3s ease-in-out", // Smooth rotation transition
+                transform: isDropdownVisible ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.3s ease-in-out",
               }}
             />
           </button>
         </div>
       </div>
 
-      {/* Pass visibility state to ProfileDropdown */}
-      <ProfileDropdown isVisible={isDropdownVisible} onClose={() => setDropdownVisible(false)} toggleButtonRef={toggleButtonRef}/>
+      <ProfileDropdown
+        isVisible={isDropdownVisible}
+        onClose={() => setDropdownVisible(false)}
+        toggleButtonRef={toggleButtonRef}
+      />
     </div>
   );
 };
