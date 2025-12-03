@@ -7,7 +7,7 @@
   bottom: 0;
   z-index: 5;
   display : flex;
-  juatify-content : center;
+  justify-content : center;
   gap:20px;
   border-top: 1px solid #ddd;
 }
