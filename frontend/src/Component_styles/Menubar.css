@@ -157,6 +157,28 @@
   font-size: 24px;
   margin-left: 10px;
 }
+.install-hint {
+  position: relative;
+}
+
+.hint-text {
+  position: absolute;
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 5px 10px;
+  border-radius: 8px;
+  opacity: 0;
+  animation: hintShow 1.4s ease-out forwards;
+}
+
+@keyframes hintShow {
+  0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 
 /* 📱 Small screens */
 @media screen and (max-width: 768px) {
