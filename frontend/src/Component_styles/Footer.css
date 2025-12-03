@@ -17,7 +17,7 @@
   align-items : center;
   width : 70%;
   height : 100%;
-  font-size: clamp(12px,4vw,16px)
+  font-size: clamp(8px,4vw,12px)
 }
 .copyright-box span{
   width: 40%
