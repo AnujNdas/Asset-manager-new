@@ -35,6 +35,7 @@ useEffect(() => {
             <div className="title-text">
               Asset
               <span>Management</span>
+              <span>System</span>
             </div>
             <img src={image} alt="icon" className="title-icon" width="50" height="40"/>
           </div>
