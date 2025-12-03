@@ -63,8 +63,9 @@ const Menubar = ({ username, toggleSidebar }) => {
 
           {/* ⭐ Add to Home Screen Button */}
           {showInstallButton && (
-            <button className="controls" onClick={handleInstallClick} title="Install App">
+            <button className="controls install-hint" onClick={handleInstallClick} title="Install App">
               <FontAwesomeIcon icon={faDownload} style={{ color: "#28a745" }} />
+              <span className="hint-text">Tap here to install</span>
             </button>
           )}
 
