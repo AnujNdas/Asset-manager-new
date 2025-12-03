@@ -16,6 +16,7 @@
   display : flex;
   align-items : center;
   width : 70%;
+  height : 100%;
 }
 .copyright-box span{
   width: 40%
