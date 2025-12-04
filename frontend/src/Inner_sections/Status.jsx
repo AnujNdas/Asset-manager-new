@@ -35,37 +35,41 @@ const Status = () => {
 
   // Add new status
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!statusName.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Status Name',
-        text: 'Please enter a status name.',
-      });
-      return;
-    }
+  if (!statusName.trim()) {
+    Swal.fire({
+      icon: "warning",
+      title: "Missing Status Name",
+      text: "Please enter a status name.",
+    });
+    return;
+  }
 
-    try {
-      await createStatus({ name: statusName });
-      setStatusName('');
-      setCurrentPage(1); // Always show new item on page 1
-      fetchStatuses();
+  try {
+    const res = await createStatus({ name: statusName.trim() });
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Status added!',
-        timer: 1200,
-        showConfirmButton: false,
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error Creating Status',
-        text: err.response?.data?.message || 'Something went wrong.',
-      });
-    }
-  };
+    // FIX: extract correct status object
+    const newStatus = res.status || res.data || res;
+
+    setStatuses((prev) => [newStatus, ...prev]);  // instant update
+    setStatusName("");
+    setCurrentPage(1);
+
+    Swal.fire({
+      icon: "success",
+      title: "Status added!",
+      timer: 1200,
+      showConfirmButton: false,
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Error Creating Status",
+      text: err.response?.data?.message || "Something went wrong.",
+    });
+  }
+};
 
   useEffect(() => {
     fetchStatuses();
