@@ -38,88 +38,39 @@ const Location = () => {
   const totalPages = Math.ceil(locations.length / itemsPerPage);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!locationName.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Location Name',
-        text: 'Please enter a location name.',
-      });
-      return;
-    }
+  if (!locationName.trim()) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Location Name',
+      text: 'Please enter a location name.',
+    });
+    return;
+  }
 
-    try {
-      const newLocation = await createLocation({ name: locationName.trim() });
+  try {
+    const res = await createLocation({ name: locationName.trim() });
 
-      setLocations((prev) => [newLocation, ...prev]);
-      setLocationName('');
-      setCurrentPage(1); // jump back to page 1
+    // FIX: extract actual location object
+    const newLocation = res.location || res.data || res;
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Location Added',
-        text: 'The location has been created successfully!',
-        timer: 1800,
-        showConfirmButton: false,
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error Creating Location',
-        text: err.response?.data?.message || 'Something went wrong.',
-      });
-    }
-  };
-  if (loading) {
-  return (
-      <Loader />
-  );
-}
-  return (
-    <div className="classification_card">
-      <div className="card_header">
-        <h3 className="category_title">Location</h3>
-        <form onSubmit={handleSubmit} className="category_form">
-          <input
-            type="text"
-            className="category_input"
-            placeholder="Add a new location..."
-            value={locationName}
-            onChange={(e) => setLocationName(e.target.value)}
-          />
-          <button type="submit" className="category_add_btn">
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
-        </form>
-      </div>
+    setLocations((prev) => [newLocation, ...prev]);
+    setLocationName('');
+    setCurrentPage(1);
 
-      {loading && <p>Loading locations...</p>}
-      {error && <p className="error">{error}</p>}
-
-      <div className="category-grid">
-        {currentItems.length === 0 ? (
-          <p>No locations available</p>
-        ) : (
-          <div className="grid">
-            {currentItems.map((loc, idx) => (
-              <div key={loc._id} className="category-card">
-                <div className="category-number">{startIndex + idx + 1}</div>
-                <div className="category-name">{loc.name}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ✅ Using Global Pagination Component */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={(page) => setCurrentPage(page)}
-      />
-    </div>
-  );
+    Swal.fire({
+      icon: 'success',
+      title: 'Location Added',
+      text: 'The location has been created successfully!',
+      timer: 1800,
+      showConfirmButton: false,
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Location',
+      text: err.response?.data?.message || 'Something went wrong.',
+    });
+  }
 };
-
-export default Location;
