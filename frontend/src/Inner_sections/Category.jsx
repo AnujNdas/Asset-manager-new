@@ -36,39 +36,42 @@ const Category = () => {
 
   // Handle new category
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!categoryName.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Category Name',
-        text: 'Please enter a category name before submitting.',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
+  e.preventDefault();
 
-    try {
-      const newCategory = await createCategory({ name: categoryName.trim() });
+  if (!categoryName.trim()) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Category Name',
+      text: 'Please enter a category name before submitting.',
+    });
+    return;
+  }
 
-      setCategories((prev) => [newCategory, ...prev]);
-      setCategoryName('');
-      setCurrentPage(1);
+  try {
+    const res = await createCategory({ name: categoryName.trim() });
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Category Created',
-        text: 'The category has been added successfully!',
-        confirmButtonColor: '#3085d6',
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error Creating Category',
-        text: err.response?.data?.message || 'Something went wrong while creating the category.',
-        confirmButtonColor: '#d33',
-      });
-    }
-  };
+    // IMPORTANT FIX: Extract the real category object
+    const newCategory = res.category || res.data || res;
+
+    setCategories((prev) => [newCategory, ...prev]);
+
+    setCategoryName('');
+    setCurrentPage(1);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Category Created',
+      text: 'The category has been added successfully!',
+    });
+
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Category',
+      text: err.response?.data?.message || 'Something went wrong.',
+    });
+  }
+};
 
   useEffect(() => {
     fetchCategories();
