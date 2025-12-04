@@ -39,38 +39,45 @@ const Unit = () => {
 
   // Add new unit
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!unitName.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Unit Name',
-        text: 'Please enter a unit name before submitting.',
-      });
-      return;
-    }
+  e.preventDefault();
 
-    try {
-      await createUnit({ name: unitName });
-      setUnitName('');
-      fetchUnits();
-      setCurrentPage(1);
+  if (!unitName.trim()) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Unit Name',
+      text: 'Please enter a unit name before submitting.',
+    });
+    return;
+  }
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Unit Added',
-        text: 'The unit has been created successfully!',
-        timer: 1500,
-        showConfirmButton: false,
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error Creating Unit',
-        text: err.response?.data?.message || 'Something went wrong.',
-      });
-    }
-  };
+  try {
+    const res = await createUnit({ name: unitName.trim() });
 
+    // Extract actual unit object
+    const newUnit = res.unit || res.data || res;
+
+    // Update lists instantly without re-fetching
+    setUnits((prev) => [newUnit, ...prev]);
+    setFilteredUnits((prev) => [newUnit, ...prev]);
+
+    setUnitName('');
+    setCurrentPage(1);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Unit Added',
+      text: 'The unit has been created successfully!',
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Unit',
+      text: err.response?.data?.message || 'Something went wrong.',
+    });
+  }
+};
   // Search filter
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
