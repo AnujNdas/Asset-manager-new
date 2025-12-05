@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getCategories, createCategory , delete categories } from '../Services/ApiServices';
+import { getCategories, createCategory , deleteCategories } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
