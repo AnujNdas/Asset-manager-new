@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getCategories, createCategory } from '../Services/ApiServices';
+import { getCategories, createCategory , delete categories } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
@@ -70,6 +70,27 @@ const Category = () => {
       title: 'Error Creating Category',
       text: err.response?.data?.message || 'Something went wrong.',
     });
+  }
+};
+
+const handleDelete = async (id, name) => {
+  const confirmDelete = await Swal.fire({
+    title: "Delete Category?",
+    text: `Are you sure you want to delete "${name}"?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel"
+  });
+
+  if (!confirmDelete.isConfirmed) return;
+
+  try {
+    await deleteCategory(id);
+    setCategories(prev => prev.filter(cat => cat._id !== id));
+    Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
+  } catch (err) {
+    Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
   }
 };
 
