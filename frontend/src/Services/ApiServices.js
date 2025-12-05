@@ -34,6 +34,11 @@ export const createCategory = async (categoryData) => {
   return response.data;
 };
 
+export const deleteCategory = async (id) => {
+  const response = await axiosInstance.delete(`/categories/${id}`);
+  return response.data;
+};
+
 // ----- STATUS API CALLS -----
 export const getStatuses = async () => {
   const response = await axiosInstance.get("/status");
