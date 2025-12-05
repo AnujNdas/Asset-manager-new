@@ -128,7 +128,21 @@
   color: white;
   border-color: #3085d6;
 }
+.delete-category-btn {
+  margin-top: 10px;
+  padding: 5px 12px;
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
 
+.delete-category-btn:hover {
+  background: #d9363e;
+}
 /* 📱 Responsive Breakpoints */
 
 /* Tablets */
