@@ -9,5 +9,7 @@ router.post('/', categoryController.createCategory);
 // Route to get all categories
 router.get('/', categoryController.getCategories);
 
+router.delete("/:id", categoryController.deleteCategories);
+
 module.exports = router;
 
