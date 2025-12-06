@@ -16,7 +16,12 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
       setUsername(storedUsername);
     }
   }, []);
-
+useEffect(() => {
+  if (isVisible) {
+    const storedUsername = sessionStorage.getItem("username");
+    setUsername(storedUsername);
+  }
+}, [isVisible]);
   const handleLogout = () => {
     Swal.fire({
       title: 'Are you sure?',
