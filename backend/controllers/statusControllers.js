@@ -30,7 +30,7 @@ const deleteStatus = async (req, res) => {
 
     const deletedStatus = await Status.findByIdAndDelete(id);
 
-    if (!deletedStatue) {
+    if (!deletedStatus) {
       return res.status(404).json({ error: "Status not found" });
     }
 
