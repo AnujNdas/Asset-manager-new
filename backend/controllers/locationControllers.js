@@ -25,5 +25,28 @@ const getLocations = async (req, res) => {
   }
 };
 
+// Delete a category
+const deleteLocation = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedLocation = await Location.findByIdAndDelete(id);
+
+    if (!deletedLocation) {
+      return res.status(404).json({ error: "Location not found" });
+    }
+
+    res.status(200).json({ message: "Location deleted successfully", deletedLocation });
+  } catch (error) {
+    console.error("Error deleting Location:", error);
+    res.status(500).json({ error: "Error deleting Location" });
+  }
+};
+
+module.exports = {
+ createLocation,
+ getLocations,
+ deleteLocation
+}
 
 
