@@ -10,7 +10,7 @@ router.post('/', createLocation);
 router.get('/', getLocations);
 
 // Route to delete locations
-router.delete(':id', deleteLocation);
+router.delete('/:id', deleteLocation);
 
 module.exports = router;
 
