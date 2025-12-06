@@ -2,7 +2,7 @@
 const Unit = require('../models/Unit');
 
 // Create a new unit
-exports.createUnit = async (req, res) => {
+const createUnit = async (req, res) => {
   try {
     const { name } = req.body;
     const newUnit = new Unit({ name });
@@ -15,7 +15,7 @@ exports.createUnit = async (req, res) => {
 };
 
 // Get all units
-exports.getUnits = async (req, res) => {
+const getUnits = async (req, res) => {
   try {
     const units = await Unit.find();
     res.status(200).json(units);
@@ -24,4 +24,26 @@ exports.getUnits = async (req, res) => {
     res.status(500).json({ error: 'Error fetching units' });
   }
 };
+ // Delete a category
+const deleteUnit = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const deletedUnit = await Unit.findByIdAndDelete(id);
+
+    if (!deletedUnit) {
+      return res.status(404).json({ error: "Unit not found" });
+    }
+
+    res.status(200).json({ message: "Unit deleted successfully", deletedUnit });
+  } catch (error) {
+    console.error("Error deleting unit:", error);
+    res.status(500).json({ error: "Error deleting unit" });
+  }
+};
+
+module.exports = {
+ createUnit, 
+ getUnits,
+ deleteUnit
+}
