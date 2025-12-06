@@ -1,13 +1,16 @@
 // routes/locationRoutes.js
 const express = require('express');
-const locationController = require('../controllers/locationControllers');
+const { createLocation , getLocations , deleteLocation }= require('../controllers/locationControllers');
 const router = express.Router();
 
 // Route to create a location
-router.post('/', locationController.createLocation);
+router.post('/', createLocation);
 
 // Route to get all locations
-router.get('/', locationController.getLocations);
+router.get('/', getLocations);
+
+// Route to delete locations
+router.delete(':id', deleteLocation);
 
 module.exports = router;
 
