@@ -1,13 +1,16 @@
 // routes/unitRoutes.js
 const express = require('express');
-const unitController = require('../controllers/unitControllers');
+const { createUnit , getUnits , deleteUnit } = require('../controllers/unitControllers');
 const router = express.Router();
 
 // Route to create a unit
-router.post('/', unitController.createUnit);
+router.post('/', createUnit);
 
 // Route to get all units
-router.get('/', unitController.getUnits);
+router.get('/', getUnits);
+
+// Route to delete unit
+router.delete('/:id', deleteUnit);
 
 module.exports = router;
 
