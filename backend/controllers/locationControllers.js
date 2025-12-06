@@ -2,7 +2,7 @@
 const Location = require('../models/Location');
 
 // Create a new location
-exports.createLocation = async (req, res) => {
+const createLocation = async (req, res) => {
   try {
     const { name } = req.body;
     const newLocation = new Location({ name });
@@ -15,7 +15,7 @@ exports.createLocation = async (req, res) => {
 };
 
 // Get all locations
-exports.getLocations = async (req, res) => {
+const getLocations = async (req, res) => {
   try {
     const locations = await Location.find();
     res.status(200).json(locations);
@@ -24,5 +24,6 @@ exports.getLocations = async (req, res) => {
     res.status(500).json({ error: 'Error fetching locations' });
   }
 };
+
 
 
