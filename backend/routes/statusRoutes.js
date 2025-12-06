@@ -10,6 +10,6 @@ router.post('/', createStatus);
 router.get('/', getStatuses);
 
 // Route for deleting status
-router delete('/:id', deleteStatus); 
+router.delete('/:id', deleteStatus); 
 
 module.exports = router;
