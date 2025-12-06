@@ -1,5 +1,5 @@
 const express = require('express');
-const { createStatus, getStatuses } = require('../controllers/statusControllers');
+const { createStatus, getStatuses , deleteStatus } = require('../controllers/statusControllers');
 
 const router = express.Router();
 
@@ -8,5 +8,8 @@ router.post('/', createStatus);
 
 // Route for getting all statuses
 router.get('/', getStatuses);
+
+// Route for deleting status
+router delete('/:id', deleteStatus); 
 
 module.exports = router;
