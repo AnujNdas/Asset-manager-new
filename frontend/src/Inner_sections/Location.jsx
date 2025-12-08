@@ -132,7 +132,8 @@ onChange={(e) => setLocationName(e.target.value)}
             <div className="category-name">{loc.name}</div>
             <button
     className="delete-category-btn"
-    onClick={() => handleDelete(location._id, location.name)}
+    onClick={() => handleDelete(loc._id, loc.name)}
+
   >
     Delete
   </button>
