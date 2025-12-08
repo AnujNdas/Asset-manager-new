@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getUnits, createUnit } from '../Services/ApiServices';
+import { getUnits, createUnit , deleteUnit } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
@@ -94,6 +94,26 @@ const Unit = () => {
 
     setCurrentPage(1);
   };
+const handleDelete = async (id, name) => {
+  const confirmDelete = await Swal.fire({
+    title: "Delete Category?",
+    text: `Are you sure you want to delete "${name}"?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel"
+  });
+
+  if (!confirmDelete.isConfirmed) return;
+
+  try {
+    await deleteUnit(id);
+    setCategories(prev => prev.filter(cat => cat._id !== id));
+    Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
+  } catch (err) {
+    Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
+  }
+};
 
   useEffect(() => {
     fetchUnits();
