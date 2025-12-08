@@ -168,7 +168,7 @@ const Category = () => {
                     className="edit-category-btn"
                     onClick={() => openEditModal(category)}
                   >
-                    <FontAwesomeIcon icon={faEdit} /> Edit
+                    <FontAwesomeIcon icon={faEdit} />
                   </button>
 
                   <button
