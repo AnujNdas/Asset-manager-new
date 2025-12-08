@@ -19,6 +19,7 @@ const AssetCapture = () => {
   const defaultFormData = {
     assetCode: "",
     assetCategory: "",
+    barcodeNumber: "",
     assetName: "",
     associateUnit: "",
     locationName: "",
@@ -28,6 +29,9 @@ const AssetCapture = () => {
     DOE: "",
     assetLifetime: "",
     purchaseFrom: "",
+    PMD: "",
+    assetCost: "",
+    assetQuantity: "",
   };
 
   const [formData, setFormData] = useState(defaultFormData);
@@ -45,7 +49,6 @@ const AssetCapture = () => {
     return data.assetCode;
   };
 
-  // Save asset (NO IMAGE)
   const saveAssetToDatabase = async (data) => {
     const token = sessionStorage.getItem("token");
     const res = await fetch(`${API_URL}/assets`, {
@@ -65,7 +68,6 @@ const AssetCapture = () => {
     return true;
   };
 
-  // Load dropdown lists
   useEffect(() => {
     (async () => {
       try {
@@ -86,14 +88,13 @@ const AssetCapture = () => {
     })();
   }, []);
 
-  // Change handler (NO IMAGE LOGIC)
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setFormData((prev) => {
       const updated = { ...prev, [name]: value };
 
-      // auto-calc lifetime
+      // Auto calculate lifetime
       if (name === "DOP" || name === "DOE") {
         const { DOP, DOE } = updated;
         if (DOP && DOE) {
@@ -106,12 +107,10 @@ const AssetCapture = () => {
           updated.assetLifetime = "";
         }
       }
-
       return updated;
     });
   };
 
-  // Validation
   const validateRequired = () => {
     const required = [
       "assetName",
@@ -119,7 +118,10 @@ const AssetCapture = () => {
       "associateUnit",
       "locationName",
       "assetStatus",
+      "assetCost",
+      "assetQuantity",
     ];
+
     const missing = required.filter((k) => !formData[k]);
     if (missing.length) {
       Swal.fire("Missing fields", "Please fill in all required fields.", "error");
@@ -128,7 +130,6 @@ const AssetCapture = () => {
     return true;
   };
 
-  // Submit
   const handleAddAsset = async (e) => {
     e.preventDefault();
     if (!validateRequired()) return;
@@ -163,23 +164,25 @@ const AssetCapture = () => {
           <h3 className="section-title">Basic Details</h3>
 
           <div className="grid-2">
+
+            {/* Asset Name */}
             <div className="input-group">
               <label>
-                Asset Name <span style={{ color: "#e11d48" }}>*</span>
+                Asset Name <span>*</span>
               </label>
               <input
                 type="text"
                 name="assetName"
                 value={formData.assetName}
                 onChange={handleChange}
-                placeholder="Enter asset name"
                 required
               />
             </div>
 
+            {/* Category */}
             <div className="input-group">
               <label>
-                Category <span style={{ color: "#e11d48" }}>*</span>
+                Category <span>*</span>
               </label>
               <select
                 name="assetCategory"
@@ -197,6 +200,19 @@ const AssetCapture = () => {
             </div>
           </div>
 
+          {/* Barcode Number */}
+          <div className="input-group">
+            <label>Barcode Number</label>
+            <input
+              type="text"
+              name="barcodeNumber"
+              value={formData.barcodeNumber}
+              onChange={handleChange}
+              placeholder="Enter barcode"
+            />
+          </div>
+
+          {/* Specification */}
           <div className="input-group">
             <label>Specification</label>
             <input
@@ -204,7 +220,6 @@ const AssetCapture = () => {
               name="assetSpecification"
               value={formData.assetSpecification}
               onChange={handleChange}
-              placeholder="Example: i5 / 8GB / 256GB SSD"
             />
           </div>
         </div>
@@ -214,9 +229,10 @@ const AssetCapture = () => {
           <h3 className="section-title">Location & Management</h3>
 
           <div className="grid-2">
+            {/* Location */}
             <div className="input-group">
               <label>
-                Location <span style={{ color: "#e11d48" }}>*</span>
+                Location <span>*</span>
               </label>
               <select
                 name="locationName"
@@ -233,9 +249,10 @@ const AssetCapture = () => {
               </select>
             </div>
 
+            {/* Associate Unit */}
             <div className="input-group">
               <label>
-                Associate Unit <span style={{ color: "#e11d48" }}>*</span>
+                Associate Unit <span>*</span>
               </label>
               <select
                 name="associateUnit"
@@ -253,9 +270,10 @@ const AssetCapture = () => {
             </div>
           </div>
 
+          {/* Status */}
           <div className="input-group">
             <label>
-              Status <span style={{ color: "#e11d48" }}>*</span>
+              Status <span>*</span>
             </label>
             <select
               name="assetStatus"
@@ -271,11 +289,58 @@ const AssetCapture = () => {
               ))}
             </select>
           </div>
+
+          {/* PMD */}
+          <div className="input-group">
+            <label>PMD</label>
+            <input
+              type="text"
+              name="PMD"
+              value={formData.PMD}
+              onChange={handleChange}
+              placeholder="Enter PMD"
+            />
+          </div>
+        </div>
+
+        {/* Cost & Quantity */}
+        <div className="section">
+          <h3 className="section-title">Cost & Quantity</h3>
+
+          <div className="grid-2">
+            {/* Cost */}
+            <div className="input-group">
+              <label>
+                Asset Cost (₹) <span>*</span>
+              </label>
+              <input
+                type="number"
+                name="assetCost"
+                value={formData.assetCost}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Quantity */}
+            <div className="input-group">
+              <label>
+                Quantity <span>*</span>
+              </label>
+              <input
+                type="number"
+                name="assetQuantity"
+                value={formData.assetQuantity}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
         </div>
 
         {/* Dates */}
         <div className="section">
-          <h3 className="section-title">Date & Lifetime</h3>
+          <h3 className="section-title">Dates</h3>
 
           <div className="grid-3">
             <div className="input-group">
@@ -317,18 +382,12 @@ const AssetCapture = () => {
               name="purchaseFrom"
               value={formData.purchaseFrom}
               onChange={handleChange}
-              placeholder="Vendor / Shop Name"
             />
           </div>
         </div>
 
         {/* Submit */}
-        <button
-          className="submit-btn"
-          type="submit"
-          disabled={isSubmitting}
-          aria-busy={isSubmitting}
-        >
+        <button className="submit-btn" type="submit" disabled={isSubmitting}>
           <FiSave />
           {isSubmitting ? " Saving..." : " Save Hardware Asset"}
         </button>
