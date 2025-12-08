@@ -1,28 +1,52 @@
 .footer {
   width: 100%;
-  height : 100%;
-  text-align: center;
   background: #ffffff;
   color: #555;
-  font-size: 14px;
-  bottom: 0;
-  z-index: 5;
-  display : flex;
-  justify-content : center;
-  gap:20px;
   border-top: 1px solid #ddd;
-}
-.copyright-box{
-  display : flex;
-  align-items : center;
-  width : 70%;
-  height : 100%;
-  font-size: clamp(8px,4vw,12px)
-}
-.copyright-box span{
-  width: 40%
+  overflow: hidden;
+  padding: 6px 0;
+  position: relative;
+  z-index: 10;
 }
 
-.copyright-box a{
-  font-size: clamp(8px,4vw,12px)
+/* Marquee wrapper */
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+/* Scroll animation */
+.marquee-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll-left 12s linear infinite;
+  font-size: clamp(10px, 2.5vw, 14px);
+}
+
+/* Animated movement */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee-content a {
+  color: #2346ed;
+  text-decoration: none;
+}
+
+.marquee-content a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive height adjustments */
+@media (max-width: 600px) {
+  .footer {
+    padding: 4px 0;
+  }
 }
