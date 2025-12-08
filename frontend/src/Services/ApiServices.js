@@ -11,6 +11,11 @@ export const createUnit = async (unitData) => {
   const response = await axiosInstance.post("/unit", unitData);
   return response.data;
 };
+export const updateUnit = async (id, body) => {
+  const res = await axiosInstance.put(`/unit/${id}`, body);
+  return res.data;
+};
+
 export const deleteUnit = async (id) => {
   const response = await axiosInstance.delete(`/unit/${id}`);
   return response.data;
