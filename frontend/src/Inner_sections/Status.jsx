@@ -164,12 +164,12 @@ const handleDelete = async (id, name) => {
                 <div className="category-number">{indexOfFirst + idx + 1}</div>
                 <div className="category-name">{status.name}</div>
                 <div className="category-actions">
-    <button
-      className="edit-category-btn"
-      onClick={() => handleEdit(status._id, status.name)}
-    >
-      Edit
-    </button>
+                <button
+                    className="edit-category-btn"
+                    onClick={() => openEditModal(category)}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </button>
 
     <button
       className="delete-category-btn"
