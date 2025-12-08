@@ -1,158 +1,230 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getLocations, createLocation , deleteLocation } from '../Services/ApiServices';
+import { getLocations, createLocation, deleteLocation, updateLocation } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-import Pagination from '../Components/Pagination'; // ✅ Imported the global pagination
+import Pagination from '../Components/Pagination';
 import Loader from "../Components/Loader";
+
 const Location = () => {
-const [locationName, setLocationName] = useState('');
-const [locations, setLocations] = useState([]);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState(null);
+  const [locationName, setLocationName] = useState('');
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-// ✅ Pagination
-const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 18;
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 18;
 
-useEffect(() => {
-fetchLocations();
-}, []);
+  // Edit Modal State
+  const [editingLocation, setEditingLocation] = useState(null);
+  const [updatedName, setUpdatedName] = useState('');
 
-const fetchLocations = async () => {
-setLoading(true);
-try {
-const data = await getLocations();
-setLocations([...data].reverse()); // newest first
-} catch (err) {
-setError('Error fetching locations');
-} finally {
-setLoading(false);
-}
-};
+  useEffect(() => {
+    fetchLocations();
+  }, []);
 
-// Pagination Slice
-const startIndex = (currentPage - 1) * itemsPerPage;
-const currentItems = locations.slice(startIndex, startIndex + itemsPerPage);
-const totalPages = Math.ceil(locations.length / itemsPerPage);
+  const fetchLocations = async () => {
+    setLoading(true);
+    try {
+      const data = await getLocations();
+      setLocations([...data].reverse());
+    } catch (err) {
+      setError('Error fetching locations');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  // Pagination Logic
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = locations.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(locations.length / itemsPerPage);
 
-  if (!locationName.trim()) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Missing Location Name',
-      text: 'Please enter a location name.',
-    });
-    return;
-  }
+  // Create Location
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const res = await createLocation({ name: locationName.trim() });
+    if (!locationName.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Location Name',
+        text: 'Please enter a location name.',
+      });
+      return;
+    }
 
-    // FIX: extract actual location object
-    const newLocation = res.location || res.data || res;
+    try {
+      const res = await createLocation({ name: locationName.trim() });
+      const newLocation = res.location || res.data || res;
 
-    setLocations((prev) => [newLocation, ...prev]);
-    setLocationName('');
-    setCurrentPage(1);
+      setLocations((prev) => [newLocation, ...prev]);
+      setLocationName('');
+      setCurrentPage(1);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Location Added',
-      text: 'The location has been created successfully!',
-      timer: 1800,
-      showConfirmButton: false,
-    });
-  } catch (err) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error Creating Location',
-      text: err.response?.data?.message || 'Something went wrong.',
-    });
-  }
-};
+      Swal.fire({
+        icon: 'success',
+        title: 'Location Added',
+        text: 'The location has been created successfully!',
+        timer: 1800,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Creating Location',
+        text: err.response?.data?.message || 'Something went wrong.',
+      });
+    }
+  };
+
+  // Delete
   const handleDelete = async (id, name) => {
-  const confirmDelete = await Swal.fire({
-    title: "Delete Category?",
-    text: `Are you sure you want to delete "${name}"?`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Delete",
-    cancelButtonText: "Cancel"
-  });
+    const confirmDelete = await Swal.fire({
+      title: "Delete Location?",
+      text: `Are you sure you want to delete "${name}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel"
+    });
 
-  if (!confirmDelete.isConfirmed) return;
+    if (!confirmDelete.isConfirmed) return;
 
-  try {
-    await deleteLocation(id);
-    setLocations(prev => prev.filter(cat => cat._id !== id));
-    Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
-  } catch (err) {
-    Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
-  }
-};
+    try {
+      await deleteLocation(id);
+      setLocations(prev => prev.filter(loc => loc._id !== id));
+      Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
+    } catch (err) {
+      Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
+    }
+  };
 
-if (loading) {
-return (
-<Loader />
-);
-}
-return (
-<div className="classification_card">
-<div className="card_header">
-<h3 className="category_title">Location</h3>
-<form onSubmit={handleSubmit} className="category_form">
-<input
-type="text"
-className="category_input"
-placeholder="Add a new location..."
-value={locationName}
-onChange={(e) => setLocationName(e.target.value)}
-/>
-<button type="submit" className="category_add_btn">
-<FontAwesomeIcon icon={faPlus} />
-</button>
-</form>
-</div>
+  // Open Edit Modal
+  const openEditModal = (location) => {
+    setEditingLocation(location);
+    setUpdatedName(location.name);
+  };
 
-{loading && <p>Loading locations...</p>}  
-  {error && <p className="error">{error}</p>}  
+  // Update Location
+  const handleUpdate = async () => {
+    if (!updatedName.trim()) {
+      Swal.fire("Warning", "Location name cannot be empty!", "warning");
+      return;
+    }
 
-  <div className="category-grid">  
-    {currentItems.length === 0 ? (  
-      <p>No locations available</p>  
-    ) : (  
-      <div className="grid">  
-        {currentItems.map((loc, idx) => (  
-          <div key={loc._id} className="category-card">  
-            <div className="category-number">{startIndex + idx + 1}</div>  
-            <div className="category-name">{loc.name}</div>
-            <button
-    className="delete-category-btn"
-    onClick={() => handleDelete(loc._id, loc.name)}
+    try {
+      await updateLocation(editingLocation._id, { name: updatedName.trim() });
 
-  >
-    Delete
-  </button>
-          </div>  
-        ))}  
-      </div>  
-    )}  
-  </div>  
+      setLocations(prev =>
+        prev.map(loc =>
+          loc._id === editingLocation._id ? { ...loc, name: updatedName.trim() } : loc
+        )
+      );
 
-  {/* ✅ Using Global Pagination Component */}  
-  <Pagination  
-    currentPage={currentPage}  
-    totalPages={totalPages}  
-    onPageChange={(page) => setCurrentPage(page)}  
-  />  
-</div>
+      Swal.fire("Success", "Location updated successfully!", "success");
+      setEditingLocation(null);
+    } catch (err) {
+      Swal.fire("Error", err.response?.data?.message || "Failed to update location", "error");
+    }
+  };
 
-);
+  if (loading) return <Loader />;
+
+  return (
+    <div className="classification_card">
+
+      <div className="card_header">
+        <h3 className="category_title">Location</h3>
+
+        <form onSubmit={handleSubmit} className="category_form">
+          <input
+            type="text"
+            className="category_input"
+            placeholder="Add a new location..."
+            value={locationName}
+            onChange={(e) => setLocationName(e.target.value)}
+          />
+          <button type="submit" className="category_add_btn">
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+        </form>
+      </div>
+
+      <div className="category-grid">
+        {currentItems.length === 0 ? (
+          <p>No locations available</p>
+        ) : (
+          <div className="grid">
+            {currentItems.map((loc, idx) => (
+              <div key={loc._id} className="category-card">
+                <div className="category-number">{startIndex + idx + 1}</div>
+                <div className="category-name">{loc.name}</div>
+
+                <div className="category-actions">
+                  
+                  {/* EDIT BUTTON */}
+                  <button
+                    className="edit-category-btn"
+                    onClick={() => openEditModal(loc)}
+                  >
+                    <FontAwesomeIcon icon={faEdit} /> Edit
+                  </button>
+
+                  {/* DELETE BUTTON */}
+                  <button
+                    className="delete-category-btn"
+                    onClick={() => handleDelete(loc._id, loc.name)}
+                  >
+                    Delete
+                  </button>
+
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
+
+      {/* EDIT MODAL */}
+      {editingLocation && (
+        <div className="edit-modal">
+          <div className="edit-modal-content">
+            <h3>Edit Location</h3>
+
+            <input
+              type="text"
+              value={updatedName}
+              onChange={(e) => setUpdatedName(e.target.value)}
+              className="edit-input"
+            />
+
+            <div className="modal-buttons">
+              <button className="save-btn" onClick={handleUpdate}>
+                <FontAwesomeIcon icon={faSave} /> Save
+              </button>
+
+              <button className="cancel-btn" onClick={() => setEditingLocation(null)}>
+                <FontAwesomeIcon icon={faTimes} /> Cancel
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
 };
 
 export default Location;
-
