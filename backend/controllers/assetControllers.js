@@ -1,7 +1,6 @@
 const Asset = require("../models/Asset");
 const LastAssetCode = require("../models/LastAssetCode");
 const Notification = require("../models/Notification");
-const cloudinary = require("../config/cloudinary");
 
 const unzipper = require("unzipper");
 const path = require("path");
@@ -12,6 +11,10 @@ const Unit = require("../models/Unit");
 const Location = require("../models/Location");
 const Status = require("../models/Status");
 
+
+// =======================================================================
+// BULK UPLOAD
+// =======================================================================
 const bulkUpload = async (req, res) => {
   try {
     console.log("🔥 Bulk upload request received.");
@@ -19,17 +22,7 @@ const bulkUpload = async (req, res) => {
     const { assets, mode } = req.body;
     const parsedAssets = JSON.parse(assets);
 
-    let extractedImagesDir = null;
-
-    // ------------------------------
-    // 1) REMOVE ZIP IMAGE EXTRACTION
-    // ------------------------------
-    // if (req.files.imagesZip) { ... }  ❌ commented out
-    // We no longer process ZIP image uploads.
-
-    // ------------------------------
-    // 2) Load DB Reference Lists
-    // ------------------------------
+    // Fetch DB reference lists
     const categories = await Category.find({});
     const units = await Unit.find({});
     const locations = await Location.find({});
@@ -43,9 +36,6 @@ const bulkUpload = async (req, res) => {
     let validAssets = [];
     let invalidRows = [];
 
-    // ------------------------------
-    // 3) Process Asset Rows
-    // ------------------------------
     for (const [index, asset] of parsedAssets.entries()) {
       let categoryId = categoryMap.get(asset.assetCategory?.toLowerCase() || "");
       let unitId = unitMap.get(asset.associateUnit?.toLowerCase() || "");
@@ -57,31 +47,11 @@ const bulkUpload = async (req, res) => {
         continue;
       }
 
-      // Auto-create
-      if (!categoryId && asset.assetCategory) {
-        const newCategory = await Category.create({ name: asset.assetCategory });
-        categoryId = newCategory._id;
-      }
-
-      if (!unitId && asset.associateUnit) {
-        const newUnit = await Unit.create({ name: asset.associateUnit });
-        unitId = newUnit._id;
-      }
-
-      if (!locationId && asset.locationName) {
-        const newLocation = await Location.create({ name: asset.locationName });
-        locationId = newLocation._id;
-      }
-
-      if (!statusId && asset.assetStatus) {
-        const newStatus = await Status.create({ name: asset.assetStatus });
-        statusId = newStatus._id;
-      }
-
-      // ------------------------------
-      // 4) REMOVE IMAGE UPLOAD LOGIC
-      // ------------------------------
-      // image & imagePublicId removed
+      // auto create missing values
+      if (!categoryId && asset.assetCategory) categoryId = (await Category.create({ name: asset.assetCategory }))._id;
+      if (!unitId && asset.associateUnit) unitId = (await Unit.create({ name: asset.associateUnit }))._id;
+      if (!locationId && asset.locationName) locationId = (await Location.create({ name: asset.locationName }))._id;
+      if (!statusId && asset.assetStatus) statusId = (await Status.create({ name: asset.assetStatus }))._id;
 
       validAssets.push({
         assetCode: asset.assetCode,
@@ -89,8 +59,6 @@ const bulkUpload = async (req, res) => {
         barcodeNumber: asset.barcodeNumber,
         assetName: asset.assetName,
         associateUnit: unitId,
-        // image: null,
-        // imagePublicId: null,
         locationName: locationId,
         assetSpecification: asset.assetSpecification,
         assetStatus: statusId,
@@ -98,6 +66,10 @@ const bulkUpload = async (req, res) => {
         DOE: asset.DOE,
         assetLifetime: asset.assetLifetime,
         purchaseFrom: asset.purchaseFrom,
+
+        // NEW FIELDS
+        cost: asset.cost || 0,
+        quantity: asset.quantity || 1,
       });
     }
 
@@ -119,23 +91,23 @@ const bulkUpload = async (req, res) => {
 };
 
 
-// -----------------------------------------
+
+
+// =======================================================================
 // ADD ASSET
-// -----------------------------------------
+// =======================================================================
 const addAsset = async (req, res) => {
   try {
     console.log("BODY RECEIVED →", req.body);
 
     const userId = req.user.id;
 
-    // REMOVE file check
-    // if (!req.file) return res.status(400).json({ message: "Image is required" });
-
-    // REMOVE Cloudinary fields
     const newAsset = new Asset({
       ...req.body,
-      // image: null,
-      // imagePublicId: null,
+
+      // ensure new fields exist
+      cost: req.body.cost || 0,
+      quantity: req.body.quantity || 1,
     });
 
     const savedAsset = await newAsset.save();
@@ -153,7 +125,6 @@ const addAsset = async (req, res) => {
 
   } catch (error) {
     console.log("🔥 REAL ADD ASSET ERROR →", error);
-
     return res.status(500).json({
       message: "Error adding asset",
       error: error.message,
@@ -162,9 +133,11 @@ const addAsset = async (req, res) => {
 };
 
 
-// -----------------------------------------
+
+
+// =======================================================================
 // UPDATE ASSET
-// -----------------------------------------
+// =======================================================================
 const updateAsset = async (req, res) => {
   try {
     console.log("⚡ UPDATE ASSET DEBUG START ⚡");
@@ -177,17 +150,19 @@ const updateAsset = async (req, res) => {
       return res.status(404).json({ message: "Asset not found" });
     }
 
-    let updatedAssetData = { ...req.body };
+    let updatedAssetData = {
+      ...req.body,
 
-    updatedAssetData.assetCode = existingAsset.assetCode;
-    updatedAssetData.barcodeNumber = existingAsset.barcodeNumber;
+      // preserve these
+      assetCode: existingAsset.assetCode,
+      barcodeNumber: existingAsset.barcodeNumber,
 
-    // REMOVE new image upload logic
-    // REMOVE Cloudinary delete logic
+      // ensure new fields always exist
+      cost: req.body.cost ?? existingAsset.cost,
+      quantity: req.body.quantity ?? existingAsset.quantity,
+    };
 
-    const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, {
-      new: true,
-    });
+    const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
 
     const newNotification = await Notification.create({
       title: "Asset Updated",
@@ -212,9 +187,9 @@ const updateAsset = async (req, res) => {
 
 
 
-// -----------------------------------------
+// =======================================================================
 // DELETE ASSET
-// -----------------------------------------
+// =======================================================================
 const deleteAsset = async (req, res) => {
   try {
     const { id } = req.params;
@@ -224,9 +199,6 @@ const deleteAsset = async (req, res) => {
     if (!deletedAsset) {
       return res.status(404).json({ message: "Asset not found" });
     }
-
-    // REMOVE Cloudinary destroy
-    // if (deletedAsset.imagePublicId) cloudinary.uploader.destroy(...)
 
     const newNotification = await Notification.create({
       title: "Asset Deleted",
@@ -247,9 +219,9 @@ const deleteAsset = async (req, res) => {
 
 
 
-// -----------------------------------------
+// =======================================================================
 // GET ALL ASSETS
-// -----------------------------------------
+// =======================================================================
 const getAllAssets = async (req, res) => {
   try {
     const assets = await Asset.find();
@@ -261,9 +233,10 @@ const getAllAssets = async (req, res) => {
 
 
 
-// -----------------------------------------
+
+// =======================================================================
 // GENERATE ASSET CODE
-// -----------------------------------------
+// =======================================================================
 const generateAssetCode = async (req, res) => {
   try {
     const lastCodeData = await LastAssetCode.findOne();
@@ -286,6 +259,7 @@ const generateAssetCode = async (req, res) => {
     res.status(500).json({ message: "Internal server error while generating asset code" });
   }
 };
+
 
 
 
