@@ -10,7 +10,7 @@ router.post('/', createCategory);
 router.get('/',getCategories);
 
 // Route to update category 
-router.put('/update' , updateCategory)
+router.put('/:id' , updateCategory)
 
 // Route to delete category 
 router.delete("/:id", (req, res, next) => {
