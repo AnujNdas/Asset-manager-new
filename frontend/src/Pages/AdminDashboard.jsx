@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   getAdminStats,
   getTopLocations,
   getExpiringAssets,
-  getValuationTrend,  // ⭐ NEW
   getActiveUsers,
   getLocations,
+  getMonthlyValuation
 } from "../Services/ApiServices";
 
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  Cell, Legend, LineChart, Line, CartesianGrid
+  BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie,
+  ResponsiveContainer, Cell, Legend, LineChart, Line
 } from "recharts";
 
 import Loader from "../Components/Loader";
@@ -25,14 +24,16 @@ const Dashboard = () => {
 
   const [statsData, setStatsData] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
-  const [valuationTrend, setValuationTrend] = useState([]);
-  const [activeUsers, setActiveUsers] = useState(null);
+  const [expiringAssets, setExpiringAssets] = useState([]);
+  const [activeUsers, setActiveUsers] = useState([]);
   const [locationList, setLocationList] = useState([]);
+  const [valuationData, setValuationData] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const getLocationName = (id) => {
     const loc = locationList.find((l) => l._id === id);
-    return loc ? loc.name : "Unknown Location";
+    return loc ? loc.name : "Unknown";
   };
 
   useEffect(() => {
@@ -40,20 +41,22 @@ const Dashboard = () => {
       try {
         const stats = await getAdminStats();
         const locs = await getTopLocations();
-        const valuation = await getValuationTrend();  // ⭐ Fetch valuation
+        const exp = await getExpiringAssets();
         const users = await getActiveUsers();
         const allLocs = await getLocations();
+        const valuation = await getMonthlyValuation();
 
         setStatsData(stats);
         setTopLocations(locs);
-        setValuationTrend(formatValuationTrend(valuation));
+        setExpiringAssets(exp);
         setActiveUsers(users);
         setLocationList(allLocs);
-
+        setValuationData(valuation);
       } catch (err) {
-        console.error(err);
+        console.error("Dashboard load error:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     load();
@@ -61,15 +64,6 @@ const Dashboard = () => {
 
   if (loading) return <Loader />;
 
-  // Convert API response into chart-friendly data
-  function formatValuationTrend(data) {
-    return data.map(item => ({
-      month: `${item._id.month}-${item._id.year}`,
-      totalValuation: item.monthlyValuation,
-    }));
-  }
-
-  // Top Location Chart Data
   const locChartData = topLocations.map((loc) => ({
     name: getLocationName(loc._id),
     value: loc.count,
@@ -80,42 +74,28 @@ const Dashboard = () => {
 
       {/* TOP STATS */}
       <div className="stats-grid">
+
         <div className="stat-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
-          <h2>{statsData.hardwareCount}</h2>
+          <h2>{statsData?.hardwareCount ?? 0}</h2>
           <p>Hardware Assets</p>
         </div>
 
         <div className="stat-card violet" onClick={() => navigate("/inventory?tab=software")}>
-          <h2>{statsData.softwareCount}</h2>
+          <h2>{statsData?.softwareCount ?? 0}</h2>
           <p>Software Assets</p>
         </div>
 
         <div className="stat-card pink" onClick={() => navigate("/setting/users")}>
-          <h2>{statsData.usersCount}</h2>
+          <h2>{statsData?.usersCount ?? 0}</h2>
           <p>Total Users</p>
         </div>
+
       </div>
 
-
-      {/* CHARTS SECTION */}
+      {/* CHARTS GRID */}
       <div className="charts-grid">
 
-        {/* MONTHLY HARDWARE VALUATION TREND */}
-        <div className="chart-card">
-          <h3>Hardware Asset Valuation (Monthly)</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={valuationTrend}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="totalValuation" stroke="#6366F1" strokeWidth={3} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* TOP LOCATIONS */}
+        {/* TOP LOCATIONS BAR CHART */}
         <div className="chart-card">
           <h3>Top 5 Locations With Most Assets</h3>
           <ResponsiveContainer width="100%" height={260}>
@@ -131,11 +111,29 @@ const Dashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+        {/* MONTHLY VALUATION CHART */}
+        <div className="chart-card">
+          <h3>Monthly Asset Valuation (₹)</h3>
+
+          <ResponsiveContainer width="100%" height={260}>
+            <LineChart data={valuationData}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="valuation" stroke="#6366F1" strokeWidth={3} />
+            </LineChart>
+          </ResponsiveContainer>
+
+        </div>
+
       </div>
 
-
-      {/* ACTIVE USERS */}
+      {/* BOTTOM GRID */}
       <div className="grid-2">
+
+        {/* ACTIVE USERS */}
         <div className="panel-card">
           <h3>Most Active Users</h3>
           <ul className="list">
@@ -147,6 +145,20 @@ const Dashboard = () => {
             ))}
           </ul>
         </div>
+
+        {/* EXPIRING ASSETS */}
+        <div className="panel-card">
+          <h3>Assets Expiring Soon</h3>
+          <ul className="list">
+            {expiringAssets?.map((item) => (
+              <li key={item._id}>
+                <span className="dot red"></span>
+                {item.assetName} — {item.DOE}
+              </li>
+            ))}
+          </ul>
+        </div>
+
       </div>
 
     </div>
