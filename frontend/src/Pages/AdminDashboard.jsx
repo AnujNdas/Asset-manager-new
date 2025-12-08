@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   getAdminStats,
   getTopLocations,
   getExpiringAssets,
-  getRecentAssets,
+  getValuationTrend,  // ⭐ NEW
   getActiveUsers,
   getLocations,
 } from "../Services/ApiServices";
 
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie,
-  ResponsiveContainer, Cell, Legend,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  Cell, Legend, LineChart, Line, CartesianGrid
 } from "recharts";
-import Loader from "../Components/Loader"
+
+import Loader from "../Components/Loader";
 import "../Page_styles/AdminDashboard.css";
 
 const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#22C55E", "#F59E0B"];
@@ -23,34 +25,31 @@ const Dashboard = () => {
 
   const [statsData, setStatsData] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
-  const [expiringAssets, setExpiringAssets] = useState(null);
-  const [recentAssets, setRecentAssets] = useState(null);
+  const [valuationTrend, setValuationTrend] = useState([]);
   const [activeUsers, setActiveUsers] = useState(null);
   const [locationList, setLocationList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-const getLocationName = (id) => {
-  const loc = locationList.find((l) => l._id === id);
-  return loc ? loc.name : "Unknown Location";
-};
-
+  const getLocationName = (id) => {
+    const loc = locationList.find((l) => l._id === id);
+    return loc ? loc.name : "Unknown Location";
+  };
 
   useEffect(() => {
     const load = async () => {
       try {
         const stats = await getAdminStats();
         const locs = await getTopLocations();
-        const exp = await getExpiringAssets();
-        const recent = await getRecentAssets();
+        const valuation = await getValuationTrend();  // ⭐ Fetch valuation
         const users = await getActiveUsers();
         const allLocs = await getLocations();
 
         setStatsData(stats);
         setTopLocations(locs);
-        setExpiringAssets(exp);
-        setRecentAssets(recent);
+        setValuationTrend(formatValuationTrend(valuation));
         setActiveUsers(users);
         setLocationList(allLocs);
+
       } catch (err) {
         console.error(err);
       }
@@ -62,7 +61,15 @@ const getLocationName = (id) => {
 
   if (loading) return <Loader />;
 
-  // Transform Top Location Data
+  // Convert API response into chart-friendly data
+  function formatValuationTrend(data) {
+    return data.map(item => ({
+      month: `${item._id.month}-${item._id.year}`,
+      totalValuation: item.monthlyValuation,
+    }));
+  }
+
+  // Top Location Chart Data
   const locChartData = topLocations.map((loc) => ({
     name: getLocationName(loc._id),
     value: loc.count,
@@ -89,10 +96,26 @@ const getLocationName = (id) => {
         </div>
       </div>
 
+
       {/* CHARTS SECTION */}
       <div className="charts-grid">
 
-        {/* TOP LOCATIONS – BAR CHART */}
+        {/* MONTHLY HARDWARE VALUATION TREND */}
+        <div className="chart-card">
+          <h3>Hardware Asset Valuation (Monthly)</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={valuationTrend}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="totalValuation" stroke="#6366F1" strokeWidth={3} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* TOP LOCATIONS */}
         <div className="chart-card">
           <h3>Top 5 Locations With Most Assets</h3>
           <ResponsiveContainer width="100%" height={260}>
@@ -110,29 +133,9 @@ const getLocationName = (id) => {
         </div>
       </div>
 
-      {/* OTHER SECTIONS */}
+
+      {/* ACTIVE USERS */}
       <div className="grid-2">
-
-        {/* RECENT ASSETS */}
-        <div className="panel-card">
-          <h3>Recently Added Assets</h3>
-          <ul className="list">
-            {recentAssets?.hardware?.map((item) => (
-              <li key={item._id}>
-                <span className="dot purple"></span>
-                {item.assetName}
-              </li>
-            ))}
-            {recentAssets?.software?.map((item) => (
-              <li key={item._id}>
-                <span className="dot violet"></span>
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* ACTIVE USERS */}
         <div className="panel-card">
           <h3>Most Active Users</h3>
           <ul className="list">
@@ -144,10 +147,7 @@ const getLocationName = (id) => {
             ))}
           </ul>
         </div>
-
       </div>
-
-    
 
     </div>
   );
