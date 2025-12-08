@@ -92,19 +92,24 @@ const HardwareAssetList = () => {
   // Normalize fields for editing
   const startEdit = (asset) => {
     setEditingAsset(asset);
-    setEditForm({
-      assetName: asset.assetName || "",
-      assetCode: asset.assetCode || "",
-      assetSpecification: asset.assetSpecification || "",
-      assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
-      locationName: asset.locationName?._id || asset.locationName || "",
-      associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
-      assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
-      DOP: asset.DOP ? new Date(asset.DOP).toISOString().split("T")[0] : "",
-      DOE: asset.DOE ? new Date(asset.DOE).toISOString().split("T")[0] : "",
-      purchaseFrom: asset.purchaseFrom || "",
-      assetLifetime: asset.assetLifetime || "",
-    });
+setEditForm({
+  assetName: asset.assetName || "",
+  assetCode: asset.assetCode || "",
+  assetSpecification: asset.assetSpecification || "",
+  assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
+  locationName: asset.locationName?._id || asset.locationName || "",
+  associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
+  assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
+  DOP: asset.DOP ? new Date(asset.DOP).toISOString().split("T")[0] : "",
+  DOE: asset.DOE ? new Date(asset.DOE).toISOString().split("T")[0] : "",
+  purchaseFrom: asset.purchaseFrom || "",
+  assetLifetime: asset.assetLifetime || "",
+
+  // NEW FIELDS
+  assetCost: asset.assetCost || "",
+  assetQuantity: asset.assetQuantity || "",
+});
+
   };
 
   const handleEditSubmit = async (e) => {
@@ -342,6 +347,20 @@ const HardwareAssetList = () => {
                 : "N/A"}
             </p>
           </div>
+          <div>
+  <label>Asset Cost</label>
+  <p>₹{selectedAsset.assetCost || "0"}</p>
+</div>
+
+<div>
+  <label>Quantity</label>
+  <p>{selectedAsset.assetQuantity || "1"}</p>
+</div>
+
+<div>
+  <label>Total Value</label>
+  <p>₹{(selectedAsset.assetCost || 0) * (selectedAsset.assetQuantity || 1)}</p>
+</div>
 
           <div>
             <label>Purchase From</label>
@@ -475,6 +494,23 @@ const HardwareAssetList = () => {
             value={editForm.purchaseFrom || ""}
             onChange={handleEditChange}
           />
+          <input
+  type="number"
+  name="assetCost"
+  placeholder="Asset Cost (₹)"
+  className="asset-edit-input"
+  value={editForm.assetCost || ""}
+  onChange={handleEditChange}
+/>
+
+<input
+  type="number"
+  name="assetQuantity"
+  placeholder="Asset Quantity"
+  className="asset-edit-input"
+  value={editForm.assetQuantity || ""}
+  onChange={handleEditChange}
+/>
 
           <input
             name="assetLifetime"
