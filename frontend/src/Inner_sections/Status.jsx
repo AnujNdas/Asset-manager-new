@@ -8,7 +8,7 @@ import {
 } from '../Services/ApiServices';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit , faBin } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
@@ -178,7 +178,7 @@ const Status = () => {
                       className="delete-category-btn"
                       onClick={() => handleDelete(status._id, status.name)}
                     >
-                      Delete
+                      <FontAwesomeIcon icon={faBin} />
                     </button>
                   </div>
                 </div>
