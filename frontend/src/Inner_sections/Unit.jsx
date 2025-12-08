@@ -194,10 +194,11 @@ const Unit = () => {
                   <div className="category-name">{unit.name}</div>
 
                   <div className="category-actions">
+                     <button
                       className="edit-category-btn"
-                      onClick={() => handleEdit(unit._id, unit.name)}
+                      onClick={() => handleEdit(status._id, status.name)}
                     >
-                      Edit
+                      <FontAwesomeIcon icon={faEdit} />
                     </button>
 
                     <button
