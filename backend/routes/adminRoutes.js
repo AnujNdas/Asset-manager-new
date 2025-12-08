@@ -166,5 +166,34 @@ router.get("/active-users", authenticateToken(["super-admin", "admin"]), async (
   }
 });
 
+// 📈 Monthly Hardware Valuation (last 12 months)
+router.get("/valuation-trend", authenticateToken(["super-admin", "admin"]), async (req, res) => {
+  try {
+    const valuation = await HardwareAsset.aggregate([
+      {
+        $addFields: {
+          totalCost: {
+            $multiply: ["$assetCost", "$assetQuantity"]
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          monthlyValuation: { $sum: "$totalCost" },
+          assetsAdded: { $sum: 1 }
+        }
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } }
+    ]);
+
+    res.json(valuation);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch valuation trend" });
+  }
+});
 
 module.exports = router;
