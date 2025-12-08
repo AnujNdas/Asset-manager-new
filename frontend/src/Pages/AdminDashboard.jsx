@@ -68,10 +68,13 @@ const Dashboard = () => {
     name: getLocationName(loc._id),
     value: loc.count,
   }));
-const valuationChartData = valuationData.map(v => ({
-  month: `${v._id.month}/${v._id.year}`,
-  valuation: v.monthlyValuation
-}));
+const valuationChartData = Array.isArray(valuationData)
+  ? valuationData.map((v) => ({
+      month: `${v.month}/${v.year}`,
+      valuation: v.monthlyValuation ?? 0,
+    }))
+  : [];
+
 
   return (
     <div className="admin-dashboard">
