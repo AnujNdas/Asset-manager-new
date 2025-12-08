@@ -108,7 +108,7 @@ const handleDelete = async (id, name) => {
 
   try {
     await deleteUnit(id);
-    setCategories(prev => prev.filter(cat => cat._id !== id));
+    setUnits(prev => prev.filter(cat => cat._id !== id));
     Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
   } catch (err) {
     Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
