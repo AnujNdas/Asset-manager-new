@@ -187,15 +187,6 @@ const Unit = () => {
         </form>
       </div>
 
-      {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search units..."
-        value={searchTerm}
-        onChange={handleSearch}
-        className="search-input"
-      />
-
       {error ? (
         <p className="error">{error}</p>
       ) : filteredUnits.length === 0 ? (
