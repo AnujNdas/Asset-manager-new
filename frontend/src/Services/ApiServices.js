@@ -219,7 +219,7 @@ export const getRecentAssets = async () =>
 export const getActiveUsers = async () =>
   axiosInstance.get("/admin/active-users").then((res) => res.data);
 
-export const getMonthlyValuation = async () => {
+export const getValuationTrend  = async () => {
   const response = await axiosInstance.get("admin/valuation-trend");
   return response.data;
 };
