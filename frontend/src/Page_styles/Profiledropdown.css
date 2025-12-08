@@ -1,13 +1,14 @@
 .profile-dropdown-container {
-  position: absolute;
-right: 200px;
-  /* top: 50px; */
+  position: fixed !important;
+  right: 200px;
+  top: 10px;
+  z-index: 99999 !important;
 }
 
 .profile-dropdown-container .dropdown-menu {
-  position: absolute;
-  top: 10px;
-  right: 0;
+  position: fixed !important;
+  top: 60px;
+  right: 200px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -18,13 +19,14 @@ right: 200px;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  z-index: 999;
+  z-index: 99999 !important;
 }
 
 .dropdown-menu.show {
   opacity: 1;
   visibility: visible;
 }
+
 
 .drop-box {
   list-style: none;
