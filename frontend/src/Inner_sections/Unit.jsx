@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
 import { getUnits, createUnit, deleteUnit, updateUnit } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from "../Components/Pagination"; 
 import Loader from "../Components/Loader";
@@ -18,6 +18,11 @@ const Unit = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 18;
+
+  // Edit Modal State
+  const [editingUnit, setEditingUnit] = useState(null);
+  const [updatedName, setUpdatedName] = useState("");
+
   const totalPages = Math.ceil(filteredUnits.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
@@ -46,7 +51,7 @@ const Unit = () => {
       Swal.fire({
         icon: 'warning',
         title: 'Missing Unit Name',
-        text: 'Please enter a unit name before submitting.',
+        text: 'Please enter a unit name.',
       });
       return;
     }
@@ -57,16 +62,16 @@ const Unit = () => {
 
       setUnits((prev) => [newUnit, ...prev]);
       setFilteredUnits((prev) => [newUnit, ...prev]);
-
       setUnitName('');
       setCurrentPage(1);
 
       Swal.fire({
         icon: 'success',
         title: 'Unit Added',
-        timer: 1500,
+        timer: 1200,
         showConfirmButton: false,
       });
+
     } catch (err) {
       Swal.fire({
         icon: 'error',
@@ -76,43 +81,43 @@ const Unit = () => {
     }
   };
 
-  // ============================
-  // ⭐ EDIT UNIT
-  // ============================
-  const handleEdit = async (id, oldName) => {
-    const { value: newName } = await Swal.fire({
-      title: "Edit Unit",
-      input: "text",
-      inputValue: oldName,
-      placeholder: "Enter new unit name",
-      showCancelButton: true,
-      confirmButtonText: "Update",
-    });
+  // Open Edit Modal
+  const openEditModal = (unit) => {
+    setEditingUnit(unit);
+    setUpdatedName(unit.name);
+  };
 
-    if (!newName || newName.trim() === "") {
-      Swal.fire("Error", "Unit name cannot be empty.", "error");
+  // Update Unit
+  const handleUpdate = async () => {
+    if (!updatedName.trim()) {
+      Swal.fire("Warning", "Unit name cannot be empty!", "warning");
       return;
     }
 
     try {
-      await updateUnit(id, { name: newName.trim() });
+      await updateUnit(editingUnit._id, { name: updatedName.trim() });
 
-      // Update instantly in UI
       setUnits((prev) =>
-        prev.map((u) => (u._id === id ? { ...u, name: newName.trim() } : u))
+        prev.map((u) =>
+          u._id === editingUnit._id ? { ...u, name: updatedName.trim() } : u
+        )
       );
 
       setFilteredUnits((prev) =>
-        prev.map((u) => (u._id === id ? { ...u, name: newName.trim() } : u))
+        prev.map((u) =>
+          u._id === editingUnit._id ? { ...u, name: updatedName.trim() } : u
+        )
       );
 
-      Swal.fire("Updated!", "Unit updated successfully.", "success");
+      Swal.fire("Success", "Unit updated successfully!", "success");
+      setEditingUnit(null);
+
     } catch (err) {
       Swal.fire("Error", err.response?.data?.message || "Failed to update", "error");
     }
   };
 
-  // Search filter
+  // Search
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
@@ -120,10 +125,11 @@ const Unit = () => {
     if (term === '') {
       setFilteredUnits(units);
     } else {
-      const filtered = units.filter((u) =>
-        u.name.toLowerCase().includes(term)
+      setFilteredUnits(
+        units.filter((u) =>
+          u.name.toLowerCase().includes(term)
+        )
       );
-      setFilteredUnits(filtered);
     }
 
     setCurrentPage(1);
@@ -163,6 +169,7 @@ const Unit = () => {
 
   return (
     <div className="classification_card">
+
       <div className="card_header">
         <h3 className="category_title">Unit</h3>
 
@@ -180,6 +187,15 @@ const Unit = () => {
         </form>
       </div>
 
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search units..."
+        value={searchTerm}
+        onChange={handleSearch}
+        className="search-input"
+      />
+
       {error ? (
         <p className="error">{error}</p>
       ) : filteredUnits.length === 0 ? (
@@ -191,12 +207,14 @@ const Unit = () => {
               {currentItems.map((unit, idx) => (
                 <div key={unit._id} className="category-card">
                   <div className="category-number">{indexOfFirst + idx + 1}</div>
+
                   <div className="category-name">{unit.name}</div>
 
                   <div className="category-actions">
-                     <button
+
+                    <button
                       className="edit-category-btn"
-                      onClick={() => handleEdit(status._id, status.name)}
+                      onClick={() => openEditModal(unit)}
                     >
                       <FontAwesomeIcon icon={faEdit} />
                     </button>
@@ -207,6 +225,7 @@ const Unit = () => {
                     >
                       Delete
                     </button>
+
                   </div>
                 </div>
               ))}
@@ -220,6 +239,33 @@ const Unit = () => {
           />
         </>
       )}
+
+      {/* ⭐ EDIT MODAL */}
+      {editingUnit && (
+        <div className="edit-modal">
+          <div className="edit-modal-content">
+            <h3>Edit Unit</h3>
+
+            <input
+              type="text"
+              value={updatedName}
+              onChange={(e) => setUpdatedName(e.target.value)}
+              className="edit-input"
+            />
+
+            <div className="modal-buttons">
+              <button className="save-btn" onClick={handleUpdate}>
+                <FontAwesomeIcon icon={faSave} /> Save
+              </button>
+
+              <button className="cancel-btn" onClick={() => setEditingUnit(null)}>
+                <FontAwesomeIcon icon={faTimes} /> Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
