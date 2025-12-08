@@ -169,7 +169,7 @@ const Location = () => {
                     className="edit-category-btn"
                     onClick={() => openEditModal(loc)}
                   >
-                    <FontAwesomeIcon icon={faEdit} /> Edit
+                    <FontAwesomeIcon icon={faEdit} /> 
                   </button>
 
                   {/* DELETE BUTTON */}
