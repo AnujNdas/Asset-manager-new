@@ -134,6 +134,12 @@ const handleDelete = async (id, name) => {
               <div key={status._id} className="category-card">
                 <div className="category-number">{indexOfFirst + idx + 1}</div>
                 <div className="category-name">{status.name}</div>
+                <button
+    className="delete-category-btn"
+    onClick={() => handleDelete(status._id, status.name)}
+  >
+    Delete
+  </button>
               </div>
             ))}
               </div>
