@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getLocations, createLocation } from '../Services/ApiServices';
+import { getLocations, createLocation , deleteLocation } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
@@ -87,7 +87,7 @@ const handleSubmit = async (e) => {
   if (!confirmDelete.isConfirmed) return;
 
   try {
-    await deleteCategory(id);
+    await deleteLocation(id);
     setCategories(prev => prev.filter(cat => cat._id !== id));
     Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
   } catch (err) {
