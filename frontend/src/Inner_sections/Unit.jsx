@@ -193,8 +193,7 @@ const Unit = () => {
                   <div className="category-number">{indexOfFirst + idx + 1}</div>
                   <div className="category-name">{unit.name}</div>
 
-                  <div className="card-btn-group">
-                    <button
+                  <div className="category-actions">
                       className="edit-category-btn"
                       onClick={() => handleEdit(unit._id, unit.name)}
                     >
