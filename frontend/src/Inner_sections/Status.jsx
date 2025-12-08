@@ -8,12 +8,13 @@ import {
 } from '../Services/ApiServices';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit , faBin } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faTimes, faSave , faBin } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
 
 const Status = () => {
+
   const [statusName, setStatusName] = useState('');
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,11 @@ const Status = () => {
   const indexOfFirst = indexOfLast - perPage;
   const currentItems = statuses.slice(indexOfFirst, indexOfLast);
 
-  // Fetch statuses
+  // Edit Modal State
+  const [editingStatus, setEditingStatus] = useState(null);
+  const [updatedName, setUpdatedName] = useState('');
+
+  // Fetch all statuses
   const fetchStatuses = async () => {
     setLoading(true);
     try {
@@ -40,16 +45,16 @@ const Status = () => {
     }
   };
 
+  useEffect(() => {
+    fetchStatuses();
+  }, []);
+
   // Add status
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!statusName.trim()) {
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Status Name",
-        text: "Please enter a status name.",
-      });
+      Swal.fire("Warning", "Status name cannot be empty!", "warning");
       return;
     }
 
@@ -58,54 +63,47 @@ const Status = () => {
       const newStatus = res.status || res.data || res;
 
       setStatuses(prev => [newStatus, ...prev]);
-      setStatusName("");
+      setStatusName('');
       setCurrentPage(1);
 
-      Swal.fire({
-        icon: "success",
-        title: "Status added!",
-        timer: 1200,
-        showConfirmButton: false,
-      });
+      Swal.fire("Success", "Status added successfully!", "success");
+
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Error Creating Status",
-        text: err.response?.data?.message || "Something went wrong.",
-      });
+      Swal.fire("Error", err.response?.data?.message || "Failed to create status", "error");
     }
   };
 
-  // Edit status
-  const handleEdit = async (id, oldName) => {
-    const { value: newName } = await Swal.fire({
-      title: "Edit Status",
-      input: "text",
-      inputValue: oldName,
-      placeholder: "Enter new status name",
-      showCancelButton: true,
-      confirmButtonText: "Update",
-    });
+  // Open Edit Modal
+  const openEditModal = (status) => {
+    setEditingStatus(status);
+    setUpdatedName(status.name);
+  };
 
-    if (!newName || newName.trim() === "") {
-      Swal.fire("Error", "Status name cannot be empty.", "error");
+  // Save Edited Status
+  const handleUpdate = async () => {
+    if (!updatedName.trim()) {
+      Swal.fire("Warning", "Status name cannot be empty!", "warning");
       return;
     }
 
     try {
-      await updateStatus(id, { name: newName.trim() });
+      await updateStatus(editingStatus._id, { name: updatedName.trim() });
 
       setStatuses(prev =>
-        prev.map(st => (st._id === id ? { ...st, name: newName.trim() } : st))
+        prev.map(st =>
+          st._id === editingStatus._id ? { ...st, name: updatedName.trim() } : st
+        )
       );
 
-      Swal.fire("Updated!", "Status updated successfully.", "success");
+      Swal.fire("Success", "Status updated successfully!", "success");
+      setEditingStatus(null);
+
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to update", "error");
+      Swal.fire("Error", err.response?.data?.message || "Update failed", "error");
     }
   };
 
-  // Delete status
+  // Delete Status
   const handleDelete = async (id, name) => {
     const confirmDelete = await Swal.fire({
       title: "Delete Status?",
@@ -113,7 +111,6 @@ const Status = () => {
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Delete",
-      cancelButtonText: "Cancel"
     });
 
     if (!confirmDelete.isConfirmed) return;
@@ -122,20 +119,18 @@ const Status = () => {
       await deleteStatus(id);
       setStatuses(prev => prev.filter(st => st._id !== id));
 
-      Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
+      Swal.fire("Deleted!", `"${name}" has been removed.`, "success");
+
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
+      Swal.fire("Error", err.response?.data?.message || "Failed to delete status", "error");
     }
   };
-
-  useEffect(() => {
-    fetchStatuses();
-  }, []);
 
   if (loading) return <Loader />;
 
   return (
     <div className="classification_card">
+      
       <div className="card_header">
         <h3 className="category_title">Status</h3>
 
@@ -169,7 +164,7 @@ const Status = () => {
                   <div className="category-actions">
                     <button
                       className="edit-category-btn"
-                      onClick={() => handleEdit(status._id, status.name)}
+                      onClick={() => openEditModal(status)}
                     >
                       <FontAwesomeIcon icon={faEdit} />
                     </button>
@@ -193,6 +188,33 @@ const Status = () => {
           />
         </>
       )}
+
+      {/* EDIT MODAL — Same as Category */}
+      {editingStatus && (
+        <div className="edit-modal">
+          <div className="edit-modal-content">
+            <h3>Edit Status</h3>
+
+            <input
+              type="text"
+              className="edit-input"
+              value={updatedName}
+              onChange={(e) => setUpdatedName(e.target.value)}
+            />
+
+            <div className="modal-buttons">
+              <button className="save-btn" onClick={handleUpdate}>
+                <FontAwesomeIcon icon={faSave} /> Save
+              </button>
+
+              <button className="cancel-btn" onClick={() => setEditingStatus(null)}>
+                <FontAwesomeIcon icon={faTimes} /> Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
