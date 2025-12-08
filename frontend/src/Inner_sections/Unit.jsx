@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getUnits, createUnit , deleteUnit } from '../Services/ApiServices';
+import { getUnits, createUnit, deleteUnit, updateUnit } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-import Pagination from "../Components/Pagination"; // ✅ Unified Pagination
+import Pagination from "../Components/Pagination"; 
 import Loader from "../Components/Loader";
+
 const Unit = () => {
   const [unitName, setUnitName] = useState('');
   const [units, setUnits] = useState([]);
@@ -39,45 +40,78 @@ const Unit = () => {
 
   // Add new unit
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!unitName.trim()) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Missing Unit Name',
-      text: 'Please enter a unit name before submitting.',
+    if (!unitName.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Unit Name',
+        text: 'Please enter a unit name before submitting.',
+      });
+      return;
+    }
+
+    try {
+      const res = await createUnit({ name: unitName.trim() });
+      const newUnit = res.unit || res.data || res;
+
+      setUnits((prev) => [newUnit, ...prev]);
+      setFilteredUnits((prev) => [newUnit, ...prev]);
+
+      setUnitName('');
+      setCurrentPage(1);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Unit Added',
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Creating Unit',
+        text: err.response?.data?.message || 'Something went wrong.',
+      });
+    }
+  };
+
+  // ============================
+  // ⭐ EDIT UNIT
+  // ============================
+  const handleEdit = async (id, oldName) => {
+    const { value: newName } = await Swal.fire({
+      title: "Edit Unit",
+      input: "text",
+      inputValue: oldName,
+      placeholder: "Enter new unit name",
+      showCancelButton: true,
+      confirmButtonText: "Update",
     });
-    return;
-  }
 
-  try {
-    const res = await createUnit({ name: unitName.trim() });
+    if (!newName || newName.trim() === "") {
+      Swal.fire("Error", "Unit name cannot be empty.", "error");
+      return;
+    }
 
-    // Extract actual unit object
-    const newUnit = res.unit || res.data || res;
+    try {
+      await updateUnit(id, { name: newName.trim() });
 
-    // Update lists instantly without re-fetching
-    setUnits((prev) => [newUnit, ...prev]);
-    setFilteredUnits((prev) => [newUnit, ...prev]);
+      // Update instantly in UI
+      setUnits((prev) =>
+        prev.map((u) => (u._id === id ? { ...u, name: newName.trim() } : u))
+      );
 
-    setUnitName('');
-    setCurrentPage(1);
+      setFilteredUnits((prev) =>
+        prev.map((u) => (u._id === id ? { ...u, name: newName.trim() } : u))
+      );
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Unit Added',
-      text: 'The unit has been created successfully!',
-      timer: 1500,
-      showConfirmButton: false,
-    });
-  } catch (err) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error Creating Unit',
-      text: err.response?.data?.message || 'Something went wrong.',
-    });
-  }
-};
+      Swal.fire("Updated!", "Unit updated successfully.", "success");
+    } catch (err) {
+      Swal.fire("Error", err.response?.data?.message || "Failed to update", "error");
+    }
+  };
+
   // Search filter
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
@@ -94,38 +128,41 @@ const Unit = () => {
 
     setCurrentPage(1);
   };
-const handleDelete = async (id, name) => {
-  const confirmDelete = await Swal.fire({
-    title: "Delete Category?",
-    text: `Are you sure you want to delete "${name}"?`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Delete",
-    cancelButtonText: "Cancel"
-  });
 
-  if (!confirmDelete.isConfirmed) return;
+  // Delete
+  const handleDelete = async (id, name) => {
+    const confirmDelete = await Swal.fire({
+      title: "Delete Unit?",
+      text: `Are you sure you want to delete "${name}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel"
+    });
 
-  try {
-    await deleteUnit(id);
-    setUnits(prev => prev.filter(cat => cat._id !== id));
-    Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
-  } catch (err) {
-    Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
-  }
-};
+    if (!confirmDelete.isConfirmed) return;
+
+    try {
+      await deleteUnit(id);
+
+      const newList = units.filter((u) => u._id !== id);
+      setUnits(newList);
+      setFilteredUnits(newList);
+
+      Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
+    } catch (err) {
+      Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
+    }
+  };
 
   useEffect(() => {
     fetchUnits();
   }, []);
-    if (loading) {
-  return (
-      <Loader />
-  );
-}
+
+  if (loading) return <Loader />;
+
   return (
     <div className="classification_card">
-      {/* Header */}
       <div className="card_header">
         <h3 className="category_title">Unit</h3>
 
@@ -143,12 +180,7 @@ const handleDelete = async (id, name) => {
         </form>
       </div>
 
-
-
-      {/* Content */}
-      {loading ? (
-        <p>Loading units...</p>
-      ) : error ? (
+      {error ? (
         <p className="error">{error}</p>
       ) : filteredUnits.length === 0 ? (
         <p>No units available</p>
@@ -156,22 +188,31 @@ const handleDelete = async (id, name) => {
         <>
           <div className="category-grid">
             <div className="grid">
-            {currentItems.map((unit, idx) => (
-              <div key={unit._id} className="category-card">
-                <div className="category-number">{indexOfFirst + idx + 1}</div>
-                <div className="category-name">{unit.name}</div>
-                <button
-    className="delete-category-btn"
-    onClick={() => handleDelete(unit._id, unit.name)}
-  >
-    Delete
-  </button>
-              </div>
-            ))}
-              </div>
+              {currentItems.map((unit, idx) => (
+                <div key={unit._id} className="category-card">
+                  <div className="category-number">{indexOfFirst + idx + 1}</div>
+                  <div className="category-name">{unit.name}</div>
+
+                  <div className="card-btn-group">
+                    <button
+                      className="edit-category-btn"
+                      onClick={() => handleEdit(unit._id, unit.name)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="delete-category-btn"
+                      onClick={() => handleDelete(unit._id, unit.name)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* ✅ Reusable Pagination */}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
