@@ -41,6 +41,11 @@ export const createCategory = async (categoryData) => {
   const response = await axiosInstance.post("/category", categoryData);
   return response.data;
 };
+export const updateCategory = async (id, body) => {
+  const res = await axiosInstance.put(`/category/${id}`, body);
+  return res.data;
+};
+
 
 export const deleteCategory = async (id) => {
   const response = await axiosInstance.delete(`/category/${id}`);
