@@ -35,6 +35,10 @@ export const deleteLocation = async (id) => {
   const response = await axiosInstance.delete(`/location/${id}`);
   return response.data;
 };
+export const updateLocation = async (id, body) => {
+  const res = await axiosInstance.put(`/location/${id}`, body);
+  return res.data;
+};
 
 // ----- CATEGORY API CALLS -----
 export const getCategories = async () => {
@@ -70,6 +74,10 @@ export const createStatus = async (statusData) => {
 export const deleteStatus = async (id) => {
   const response = await axiosInstance.delete(`/status/${id}`);
   return response.data;
+};
+export const updateStatus = async (id, body) => {
+  const res = await axiosInstance.put(`/status/${id}`, body);
+  return res.data;
 };
 
 // ----- SOFTWARE ASSETS API CALLS -----
