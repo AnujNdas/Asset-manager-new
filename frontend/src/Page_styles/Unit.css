@@ -144,6 +144,142 @@
   background: #d9363e;
 }
 /* 📱 Responsive Breakpoints */
+/* Action Buttons */
+.category-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Edit Button */
+.edit-category-btn {
+  background: #4f46e5; /* Indigo */
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.2s ease-in-out;
+}
+
+.edit-category-btn:hover {
+  background: #4338ca; /* Darker Indigo */
+  transform: scale(1.05);
+}
+
+/* Delete Button */
+.delete-category-btn {
+  background: #dc2626; /* Red */
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.delete-category-btn:hover {
+  background: #b91c1c; /* Darker Red */
+  transform: scale(1.05);
+}
+/* Modal Background Overlay */
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+/* Modal Box */
+.edit-modal-content {
+  background: white;
+  padding: 25px;
+  width: 350px;
+  border-radius: 10px;
+  animation: popup 0.25s ease-in-out;
+  box-shadow: 0px 6px 18px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+@keyframes popup {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Input Field */
+.edit-input {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+/* Modal Buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+/* Save Button */
+.save-btn {
+  background: #10b981; /* Emerald */
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.25s;
+}
+
+.save-btn:hover {
+  background: #059669;
+  transform: scale(1.05);
+}
+
+/* Cancel Button */
+.cancel-btn {
+  background: #6b7280; /* Gray */
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.25s;
+}
+
+.cancel-btn:hover {
+  background: #4b5563;
+  transform: scale(1.05);
+}
 
 /* Tablets */
 @media (max-width: 768px) {
