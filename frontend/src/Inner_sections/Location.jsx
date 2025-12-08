@@ -74,6 +74,27 @@ const handleSubmit = async (e) => {
     });
   }
 };
+  const handleDelete = async (id, name) => {
+  const confirmDelete = await Swal.fire({
+    title: "Delete Category?",
+    text: `Are you sure you want to delete "${name}"?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel"
+  });
+
+  if (!confirmDelete.isConfirmed) return;
+
+  try {
+    await deleteCategory(id);
+    setCategories(prev => prev.filter(cat => cat._id !== id));
+    Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
+  } catch (err) {
+    Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
+  }
+};
+
 if (loading) {
 return (
 <Loader />
