@@ -13,7 +13,32 @@ const createLocation = async (req, res) => {
     res.status(500).json({ error: 'Error creating location' });
   }
 };
+// Update/edit a location
+const updateLocation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
 
+    const updatedLocation = await Location.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedLocation) {
+      return res.status(404).json({ error: "Location not found" });
+    }
+
+    res.status(200).json({
+      message: "Location updated successfully",
+      updatedLocation
+    });
+
+  } catch (error) {
+    console.error("Error updating location:", error);
+    res.status(500).json({ error: "Error updating location" });
+  }
+};
 // Get all locations
 const getLocations = async (req, res) => {
   try {
@@ -46,7 +71,8 @@ const deleteLocation = async (req, res) => {
 module.exports = {
  createLocation,
  getLocations,
- deleteLocation
+ deleteLocation,
+  updateLocation
 }
 
 
