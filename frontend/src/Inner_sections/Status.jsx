@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getStatuses, createStatus } from '../Services/ApiServices';
+import { getStatuses, createStatus , deleteStatus } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
@@ -68,6 +68,26 @@ const Status = () => {
       title: "Error Creating Status",
       text: err.response?.data?.message || "Something went wrong.",
     });
+  }
+};
+const handleDelete = async (id, name) => {
+  const confirmDelete = await Swal.fire({
+    title: "Delete Category?",
+    text: `Are you sure you want to delete "${name}"?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel"
+  });
+
+  if (!confirmDelete.isConfirmed) return;
+
+  try {
+    await deleteStatus(id);
+    setCategories(prev => prev.filter(cat => cat._id !== id));
+    Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
+  } catch (err) {
+    Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
   }
 };
 
