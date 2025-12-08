@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
 import { getLocations, createLocation, deleteLocation, updateLocation } from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faSave, faTimes , faTrash } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from '../Components/Pagination';
 import Loader from "../Components/Loader";
@@ -177,7 +177,7 @@ const Location = () => {
                     className="delete-category-btn"
                     onClick={() => handleDelete(loc._id, loc.name)}
                   >
-                    Delete
+                    <FontAwesomeIcon icon={faTrash} /> 
                   </button>
 
                 </div>
