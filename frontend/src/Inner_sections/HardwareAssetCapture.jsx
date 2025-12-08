@@ -201,7 +201,7 @@ const AssetCapture = () => {
           </div>
 
           {/* Barcode Number */}
-          <div className="input-group">
+          {/* <div className="input-group">
             <label>Barcode Number</label>
             <input
               type="text"
@@ -210,7 +210,7 @@ const AssetCapture = () => {
               onChange={handleChange}
               placeholder="Enter barcode"
             />
-          </div>
+          </div> */}
 
           {/* Specification */}
           <div className="input-group">
@@ -291,7 +291,7 @@ const AssetCapture = () => {
           </div>
 
           {/* PMD */}
-          <div className="input-group">
+          {/* <div className="input-group">
             <label>PMD</label>
             <input
               type="text"
@@ -300,7 +300,7 @@ const AssetCapture = () => {
               onChange={handleChange}
               placeholder="Enter PMD"
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Cost & Quantity */}
