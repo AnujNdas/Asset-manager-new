@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/', createStatus);
 
 //Route to update status 
-router.put('/update' , updateStatus )
+router.put('/:id' , updateStatus )
 // Route for getting all statuses
 router.get('/', getStatuses);
 
