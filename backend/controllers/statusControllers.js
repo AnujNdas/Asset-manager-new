@@ -12,7 +12,32 @@ const createStatus = async (req, res) => {
     res.status(500).json({ error: 'Error creating status' });
   }
 };
+// Update/edit a status
+const updateStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
 
+    const updatedStatus = await Status.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStatus) {
+      return res.status(404).json({ error: "Status not found" });
+    }
+
+    res.status(200).json({
+      message: "Status updated successfully",
+      updatedStatus
+    });
+
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).json({ error: "Error updating status" });
+  }
+};
 // Get all statuses
 const getStatuses = async (req, res) => {
   try {
@@ -44,5 +69,6 @@ const deleteStatus = async (req, res) => {
 module.exports = {
  createStatus,
  getStatuses, 
- deleteStatus 
+ deleteStatus ,
+  updateStatus
 }
