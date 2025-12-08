@@ -1,16 +1,12 @@
 .profile-dropdown-container {
   position: fixed !important;
-  right: 200px;
+  right: 170px;
   top: 10px;
   z-index: 99999 !important;
 }
 
 .profile-dropdown-container .dropdown-menu {
-  position: fixed !important;
-  top: 60px;
-  right: 200px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
+  position: absolute;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   width: 160px;
