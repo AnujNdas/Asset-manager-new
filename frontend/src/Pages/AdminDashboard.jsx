@@ -51,7 +51,7 @@ const Dashboard = () => {
         setExpiringAssets(exp);
         setActiveUsers(users);
         setLocationList(allLocs);
-        setValuationData(valuation);
+        setValuationData(Array.isArray(valuation) ? valuation : []);
       } catch (err) {
         console.error("Dashboard load error:", err);
       } finally {
@@ -68,6 +68,10 @@ const Dashboard = () => {
     name: getLocationName(loc._id),
     value: loc.count,
   }));
+const valuationChartData = valuationData.map(v => ({
+  month: `${v._id.month}/${v._id.year}`,
+  valuation: v.monthlyValuation
+}));
 
   return (
     <div className="admin-dashboard">
@@ -114,19 +118,18 @@ const Dashboard = () => {
 
         {/* MONTHLY VALUATION CHART */}
         <div className="chart-card">
-          <h3>Monthly Asset Valuation (₹)</h3>
+  <h3>Monthly Asset Valuation Trend</h3>
 
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={valuationData}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="valuation" stroke="#6366F1" strokeWidth={3} />
-            </LineChart>
-          </ResponsiveContainer>
+  <ResponsiveContainer width="100%" height={260}>
+    <BarChart data={valuationChartData}>
+      <XAxis dataKey="month" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="valuation" fill="#6366F1" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
 
-        </div>
 
       </div>
 
