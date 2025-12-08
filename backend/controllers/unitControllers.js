@@ -13,6 +13,32 @@ const createUnit = async (req, res) => {
     res.status(500).json({ error: 'Error creating unit' });
   }
 };
+// Update a unit
+const updateUnit = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const updatedUnit = await Unit.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUnit) {
+      return res.status(404).json({ error: "Unit not found" });
+    }
+
+    res.status(200).json({
+      message: "Unit updated successfully",
+      updatedUnit
+    });
+
+  } catch (error) {
+    console.error("Error updating unit:", error);
+    res.status(500).json({ error: "Error updating unit" });
+  }
+};
 
 // Get all units
 const getUnits = async (req, res) => {
@@ -45,5 +71,6 @@ const deleteUnit = async (req, res) => {
 module.exports = {
  createUnit, 
  getUnits,
- deleteUnit
+ deleteUnit,
+  updateUnit
 }
