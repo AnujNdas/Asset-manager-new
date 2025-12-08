@@ -1,7 +1,7 @@
-const CACHE_NAME = "asset-app-cache-v3"; // Change version to force update
+const CACHE_NAME = "asset-app-cache-v3";
 
-// Static files to cache on install
-const URLS_TO_CACHE = [
+// Only cache these static files
+const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/manifest.json",
@@ -9,42 +9,28 @@ const URLS_TO_CACHE = [
   "/icons/icon-512.png"
 ];
 
-// ---------------------------------------
-// INSTALL
-// ---------------------------------------
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Caching static files...");
-      return cache.addAll(URLS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
   );
-  self.skipWaiting(); // Activate immediately
+  self.skipWaiting();
 });
 
-// ---------------------------------------
-// ACTIVATE
-// ---------------------------------------
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log("Deleting old cache:", key);
             return caches.delete(key);
           }
         })
       )
     )
   );
-
   self.clients.claim();
 });
 
-// ---------------------------------------
-// FETCH
-// ---------------------------------------
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
@@ -54,24 +40,38 @@ self.addEventListener("fetch", (event) => {
     return event.respondWith(fetch(req));
   }
 
-  // ❌ Do NOT cache POST / PUT / DELETE / PATCH
+  // ❌ Do NOT cache JS, CSS, images, or React files
+  if (
+    req.destination === "script" ||
+    req.destination === "style" ||
+    req.destination === "image" ||
+    req.url.includes("static")
+  ) {
+    return event.respondWith(fetch(req));
+  }
+
+  // ❌ Do NOT cache POST/PUT/DELETE
   if (req.method !== "GET") {
     return event.respondWith(fetch(req));
   }
 
-  // ✅ Cache First for static files only
-  event.respondWith(
-    caches.match(req).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse; // Return cached static file
-      }
+  // ✅ Cache only predefined static files
+  if (STATIC_ASSETS.includes(url.pathname)) {
+    return event.respondWith(
+      caches.match(req).then((cacheRes) => {
+        return (
+          cacheRes ||
+          fetch(req).then((networkRes) => {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(req, networkRes.clone());
+            });
+            return networkRes;
+          })
+        );
+      })
+    );
+  }
 
-      return fetch(req).then((networkResponse) => {
-        return caches.open(CACHE_NAME).then((cache) => {
-          cache.put(req, networkResponse.clone());
-          return networkResponse;
-        });
-      }).catch(() => caches.match("/index.html"));
-    })
-  );
+  // Default: do NOT cache anything else
+  return event.respondWith(fetch(req));
 });
