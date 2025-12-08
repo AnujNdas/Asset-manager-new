@@ -129,7 +129,13 @@ onChange={(e) => setLocationName(e.target.value)}
         {currentItems.map((loc, idx) => (  
           <div key={loc._id} className="category-card">  
             <div className="category-number">{startIndex + idx + 1}</div>  
-            <div className="category-name">{loc.name}</div>  
+            <div className="category-name">{loc.name}</div>
+            <button
+    className="delete-category-btn"
+    onClick={() => handleDelete(location._id, location.name)}
+  >
+    Delete
+  </button>
           </div>  
         ))}  
       </div>  
