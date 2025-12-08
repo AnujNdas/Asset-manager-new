@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getStatuses, createStatus , deleteStatus } from '../Services/ApiServices';
+import { getStatuses, createStatus , deleteStatus , updateStatus} from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
@@ -70,6 +70,35 @@ const Status = () => {
     });
   }
 };
+  const handleEdit = async (id, oldName) => {
+  const { value: newName } = await Swal.fire({
+    title: "Edit Status",
+    input: "text",
+    inputValue: oldName,
+    placeholder: "Enter new status name",
+    showCancelButton: true,
+    confirmButtonText: "Update",
+  });
+
+  if (!newName || newName.trim() === "") {
+    Swal.fire("Error", "Status name cannot be empty.", "error");
+    return;
+  }
+
+  try {
+    const updated = await updateStatus(id, { name: newName.trim() });
+
+    // Update UI instantly
+    setStatuses(prev =>
+      prev.map(st => st._id === id ? { ...st, name: newName.trim() } : st)
+    );
+
+    Swal.fire("Updated!", "Status updated successfully.", "success");
+  } catch (err) {
+    Swal.fire("Error", err.response?.data?.message || "Failed to update", "error");
+  }
+};
+
 const handleDelete = async (id, name) => {
   const confirmDelete = await Swal.fire({
     title: "Delete Category?",
@@ -134,12 +163,21 @@ const handleDelete = async (id, name) => {
               <div key={status._id} className="category-card">
                 <div className="category-number">{indexOfFirst + idx + 1}</div>
                 <div className="category-name">{status.name}</div>
-                <button
-    className="delete-category-btn"
-    onClick={() => handleDelete(status._id, status.name)}
-  >
-    Delete
-  </button>
+                <div className="card-btn-group">
+    <button
+      className="edit-category-btn"
+      onClick={() => handleEdit(status._id, status.name)}
+    >
+      Edit
+    </button>
+
+    <button
+      className="delete-category-btn"
+      onClick={() => handleDelete(status._id, status.name)}
+    >
+      Delete
+    </button>
+  </div>
               </div>
             ))}
               </div>
