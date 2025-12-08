@@ -11,6 +11,10 @@ export const createUnit = async (unitData) => {
   const response = await axiosInstance.post("/unit", unitData);
   return response.data;
 };
+export const deleteUnit = async (id) => {
+  const response = await axiosInstance.delete(`/unit/${id}`);
+  return response.data;
+};
 
 // ----- LOCATION API CALLS -----
 export const getLocations = async () => {
@@ -20,6 +24,10 @@ export const getLocations = async () => {
 
 export const createLocation = async (locationData) => {
   const response = await axiosInstance.post("/location", locationData);
+  return response.data;
+};
+export const deleteLocation = async (id) => {
+  const response = await axiosInstance.delete(`/location/${id}`);
   return response.data;
 };
 
@@ -47,6 +55,10 @@ export const getStatuses = async () => {
 
 export const createStatus = async (statusData) => {
   const response = await axiosInstance.post("/status", statusData);
+  return response.data;
+};
+export const deleteStatus = async (id) => {
+  const response = await axiosInstance.delete(`/status/${id}`);
   return response.data;
 };
 
