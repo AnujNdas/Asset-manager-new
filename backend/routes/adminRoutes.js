@@ -87,21 +87,36 @@ router.get("/expiring-assets", authenticateToken(["super-admin", "admin"]), asyn
 
     const expiringHardware = await HardwareAsset.find({
       DOE: { $gte: today, $lte: threeMonthsLater }
-    });
+    }).select("assetName DOE");
 
     const expiringSoftware = await SoftwareAsset.find({
       licenseExpiry: { $gte: today, $lte: threeMonthsLater }
-    });
+    }).select("softwareName licenseExpiry");
 
-    res.json({
-      expiringHardware,
-      expiringSoftware,
-    });
+    // 👉 Normalize both to SAME structure
+    const merged = [
+      ...expiringHardware.map(item => ({
+        _id: item._id,
+        assetName: item.assetName,
+        DOE: item.DOE,
+        type: "Hardware"
+      })),
+
+      ...expiringSoftware.map(item => ({
+        _id: item._id,
+        assetName: item.softwareName,
+        DOE: item.licenseExpiry,
+        type: "Software"
+      }))
+    ];
+
+    res.json(merged);
 
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch expiring assets" });
   }
 });
+
 // ⏳ Assets Expiring in Next 3 Months
 router.get("/expiring-assets", authenticateToken(["super-admin", "admin"]), async (req, res) => {
   try {
