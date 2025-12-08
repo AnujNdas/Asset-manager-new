@@ -24,6 +24,32 @@ const getCategories = async (req, res) => {
     res.status(500).json({ error: 'Error fetching categories' });
   }
 };
+// Update/edit category
+const updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    // Find and update category
+    const updatedCategory = await Category.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true, runValidators: true } // Returns updated document
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    res.status(200).json({
+      message: "Category updated successfully",
+      updatedCategory
+    });
+  } catch (error) {
+    console.error("Error updating category:", error);
+    res.status(500).json({ error: "Error updating category" });
+  }
+};
 
 // Delete a category
 const deleteCategory = async (req, res) => {
@@ -46,5 +72,6 @@ const deleteCategory = async (req, res) => {
 module.exports = {
  createCategory,
  getCategories,
- deleteCategory
+ deleteCategory,
+ updateCategory
 }
