@@ -21,14 +21,6 @@ const assetSchema = new mongoose.Schema({
     required: true,
   },
 
-  // Cloudinary fields
-  // image: {
-  //   type: String, // Cloudinary URL
-  // },
-  // imagePublicId: {
-  //   type: String, // Cloudinary public_id (for delete/update)
-  // },
-
   locationName: {
     type: String,
     required: true,
@@ -59,6 +51,24 @@ const assetSchema = new mongoose.Schema({
   },
   PMD: {
     type: String,
+  },
+
+  // -------------------------------
+  // ⭐ NEW FIELDS (MOST COMMON IN SAAS)
+  // -------------------------------
+  
+  // Cost per 1 asset (e.g., ₹50,000 for a laptop)
+  assetCost: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+
+  // Quantity of the asset (e.g., 10 laptops)
+  assetQuantity: {
+    type: Number,
+    required: true,
+    default: 1,
   },
 });
 
