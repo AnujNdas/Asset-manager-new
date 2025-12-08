@@ -51,7 +51,8 @@ const Dashboard = () => {
         setExpiringAssets(exp);
         setActiveUsers(users);
         setLocationList(allLocs);
-        setValuationData(Array.isArray(valuation) ? valuation : []);
+        setValuationData(Array.isArray(valuation) ? valuation : [valuation]);
+
       } catch (err) {
         console.error("Dashboard load error:", err);
       } finally {
@@ -70,10 +71,11 @@ const Dashboard = () => {
   }));
 const valuationChartData = Array.isArray(valuationData)
   ? valuationData.map((v) => ({
-      month: `${v.month}/${v.year}`,
+      month: `${v._id.month}/${v._id.year}`,
       valuation: v.monthlyValuation ?? 0,
     }))
   : [];
+
 
 
   return (
