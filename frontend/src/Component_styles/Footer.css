@@ -7,6 +7,7 @@
   padding: 6px 0;
   position: relative;
   z-index: 10;
+  height : 100%;
 }
 
 /* Marquee wrapper */
@@ -19,7 +20,8 @@
 
 /* Scroll animation */
 .marquee-content {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   padding-left: 100%;
   animation: scroll-left 12s linear infinite;
   font-size: clamp(10px, 2.5vw, 14px);
