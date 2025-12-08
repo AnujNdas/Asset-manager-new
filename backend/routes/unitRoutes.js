@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/', createUnit);
 
 //Route to update units 
-router.put('/update' , updateUnit )
+router.put('/:id' , updateUnit )
 // Route to get all units
 router.get('/', getUnits);
 
