@@ -16,6 +16,9 @@
   align-items : center;
   gap : 10px;
 }
+.copy-text {
+  font-size : 15px;
+}
 /* Responsive height adjustments */
 @media (max-width: 600px) {
   .footer {
