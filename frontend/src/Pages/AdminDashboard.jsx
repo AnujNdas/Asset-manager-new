@@ -87,11 +87,11 @@ const valuationChartData = Array.isArray(valuationData)
   {/* Total Valuation */}
   <div className="stat-card green">
     <div className="stat-1">
-    <h2>₹ {statsData?.totalValuation?.toLocaleString() ?? "0"}</h2>
     <p>Total Asset Valuation</p>
+    <p>Hardware + Software</p>
   </div>
       <div className="stat-2">
-    <p>Hardware + Software</p>
+    <h2>₹ {statsData?.totalValuation?.toLocaleString() ?? "0"}</h2>
   </div>
   </div>
   {/* Hardware */}
