@@ -91,8 +91,8 @@ const valuationChartData = Array.isArray(valuationData)
     <p>Hardware Assets</p>
       </div>
     <div className="stat-2">
-    <h4>₹ {statsData?.hardwareValuation?.toLocaleString() ?? "0"}</h4>
-    <small>Total Valuation</small>
+    <h2>₹ {statsData?.hardwareValuation?.toLocaleString() ?? "0"}</h2>
+    <p>Total Valuation</p>
       </div>
   </div>
 
@@ -103,8 +103,8 @@ const valuationChartData = Array.isArray(valuationData)
     <p>Software Assets</p>
   </div>
       <div className="stat-2">
-    <h4>₹ {statsData?.softwareValuation?.toLocaleString() ?? "0"}</h4>
-    <small>Total Valuation</small>
+    <h2>₹ {statsData?.softwareValuation?.toLocaleString() ?? "0"}</h2>
+    <p>Total Valuation</p>
   </div>
   </div>
 
@@ -121,7 +121,7 @@ const valuationChartData = Array.isArray(valuationData)
     <p>Total Asset Valuation</p>
   </div>
       <div className="stat-2">
-    <small>Hardware + Software</small>
+    <p>Hardware + Software</p>
   </div>
   </div>
 </div>
