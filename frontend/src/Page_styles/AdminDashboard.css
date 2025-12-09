@@ -20,6 +20,7 @@
   cursor: pointer;
   transition: 0.2s ease;
   display : flex;
+  justify-content : center;
 }
 .stat-card:hover {
   transform: translateY(-3px);
