@@ -35,7 +35,6 @@ const Setting = () => {
 const tabs = [
   { path: "profile", label: "Profile", icon: FaUser },
   { path: "security", label: "Security", icon: FaLock },
-  { path: "general", label: "General", icon: FaCogs },
   { path: "notification", label: "Notifications", icon: FaBell },
   // User Management only visible for super-admin
   ...(userData?.role === "super-admin"
