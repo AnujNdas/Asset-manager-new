@@ -31,6 +31,7 @@ h2{
 .stat-1, .stat-2{
   display : flex;
   flex-direction : column;
+  justify-content : center;
 }
 
 .stat-card h2 {
