@@ -84,6 +84,7 @@ const Menubar = ({ username, toggleSidebar }) => {
            <div className="title-text">
               Asset
               <span>Management</span>
+              <span>System</span>
             </div> 
         <div className="control-panel">
           <NotificationButton />
