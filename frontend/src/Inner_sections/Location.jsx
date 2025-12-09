@@ -166,7 +166,7 @@ const Location = () => {
                   
                   {/* EDIT BUTTON */}
                   <button
-                    className="edit-category-btn"
+                    className="btn-view"
                     onClick={() => openEditModal(loc)}
                   >
                     <FontAwesomeIcon icon={faEdit} /> 
@@ -174,7 +174,7 @@ const Location = () => {
 
                   {/* DELETE BUTTON */}
                   <button
-                    className="delete-category-btn"
+                    className="btn-delete"
                     onClick={() => handleDelete(loc._id, loc.name)}
                   >
                     <FontAwesomeIcon icon={faTrash} /> 
