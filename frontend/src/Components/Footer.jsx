@@ -4,7 +4,6 @@ import "../Component_styles/Footer.css";
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="marquee">
         <div className="marquee-content">
           Copyright © 2025{" "}
           <a
@@ -15,7 +14,6 @@ const Footer = () => {
             Socialfly - Business Growth & Management System
           </a>
         </div>
-      </div>
     </footer>
   );
 };
