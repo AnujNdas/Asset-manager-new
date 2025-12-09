@@ -15,7 +15,7 @@
 .stat-card {
   background: white;
   border-radius: 14px;
-  padding: 20px;
+  padding: 10px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.05);
   cursor: pointer;
   transition: 0.2s ease;
