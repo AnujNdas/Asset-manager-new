@@ -166,7 +166,7 @@ const Location = () => {
                   
                   {/* EDIT BUTTON */}
                   <button
-                    className="btn-view"
+                    className="btn-edit"
                     onClick={() => openEditModal(loc)}
                   >
                     <FontAwesomeIcon icon={faEdit} /> 
