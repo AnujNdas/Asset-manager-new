@@ -84,6 +84,16 @@ const valuationChartData = Array.isArray(valuationData)
       {/* TOP STATS */}
      <div className="stats-grid">
 
+  {/* Total Valuation */}
+  <div className="stat-card green">
+    <div className="stat-1">
+    <h2>₹ {statsData?.totalValuation?.toLocaleString() ?? "0"}</h2>
+    <p>Total Asset Valuation</p>
+  </div>
+      <div className="stat-2">
+    <p>Hardware + Software</p>
+  </div>
+  </div>
   {/* Hardware */}
   <div className="stat-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
     <div className="stat-1">
@@ -114,16 +124,6 @@ const valuationChartData = Array.isArray(valuationData)
     <p>Total Users</p>
   </div>
 
-  {/* Total Valuation */}
-  <div className="stat-card green">
-    <div className="stat-1">
-    <h2>₹ {statsData?.totalValuation?.toLocaleString() ?? "0"}</h2>
-    <p>Total Asset Valuation</p>
-  </div>
-      <div className="stat-2">
-    <p>Hardware + Software</p>
-  </div>
-  </div>
 </div>
 
 
