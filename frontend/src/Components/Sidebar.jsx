@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect} from "react";
 import "../Component_styles/Sidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
-import image from "../Images/SideLogo.png";
+import image from "../Images/Socialfly 2k25 Logo (1).png";
 import {
   faGauge,
   faLayerGroup,
