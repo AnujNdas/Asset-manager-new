@@ -4,7 +4,6 @@
   height: 100%;
   gap: 5px;
   padding: 10px;
-  background: #f9f9f9; /* subtle background */
 }
 
 /* Tabs Navigation */
@@ -64,7 +63,6 @@
 .settings {
   flex: 1;
   padding: 10px;
-  background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   animation: fadeIn 0.3s ease-in-out;
