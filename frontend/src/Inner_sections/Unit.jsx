@@ -204,14 +204,14 @@ const Unit = () => {
                   <div className="category-actions">
 
                     <button
-                      className="edit-category-btn"
+                      className="btn-edit"
                       onClick={() => openEditModal(unit)}
                     >
                       <FontAwesomeIcon icon={faEdit} />
                     </button>
 
                     <button
-                      className="delete-category-btn"
+                      className="btn-delete"
                       onClick={() => handleDelete(unit._id, unit.name)}
                     >
                       <FontAwesomeIcon icon={faTrash} />
