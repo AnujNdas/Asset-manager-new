@@ -4,6 +4,7 @@ import "../Component_styles/Footer.css";
 const Footer = () => {
   return (
     <footer className="footer">
+      <div className="copyright-box">
           Copyright © 2025{" "}
           <a
             href="https://socialflylive.com/"
@@ -12,6 +13,7 @@ const Footer = () => {
           >
             Socialfly - Business Growth & Management System
           </a>
+        </div>
     </footer>
   );
 };
