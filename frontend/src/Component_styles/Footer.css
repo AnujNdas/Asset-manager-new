@@ -8,43 +8,12 @@
   z-index: 10;
   height : 100%;
 }
-
-/* Marquee wrapper */
-.marquee {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
+.copyright-box{
+  display : flex;
+  justify-content : center;
+  align-items : center;
+  gap : 10px;
 }
-
-/* Scroll animation */
-.marquee-content {
-  display: flex;
-  align-items: center;
-  padding-left: 100%;
-  animation: scroll-left 12s linear infinite;
-  font-size: clamp(10px, 2.5vw, 14px);
-}
-
-/* Animated movement */
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-.marquee-content a {
-  color: #2346ed;
-  text-decoration: none;
-}
-
-.marquee-content a:hover {
-  text-decoration: underline;
-}
-
 /* Responsive height adjustments */
 @media (max-width: 600px) {
   .footer {
