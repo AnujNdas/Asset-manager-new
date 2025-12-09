@@ -149,7 +149,7 @@ const valuationChartData = Array.isArray(valuationData)
 
         {/* MONTHLY VALUATION CHART */}
         <div className="chart-card">
-  <h3>Monthly Asset Valuation Trend</h3>
+  <h2>Monthly Asset Valuation Trend</h2>
 
   <ResponsiveContainer width="100%" height={260}>
     <BarChart data={valuationChartData}>
@@ -169,7 +169,7 @@ const valuationChartData = Array.isArray(valuationData)
 
         {/* ACTIVE USERS */}
         <div className="panel-card">
-          <h3>Most Active Users</h3>
+          <h2>Most Active Users</h2>
           <ul className="list">
             {activeUsers?.map((u) => (
               <li key={u._id}>
@@ -182,7 +182,7 @@ const valuationChartData = Array.isArray(valuationData)
 
         {/* EXPIRING ASSETS */}
         <div className="panel-card">
-          <h3>Assets Expiring Soon</h3>
+          <h2>Assets Expiring Soon</h2>
           <ul className="list">
             {expiringAssets?.map((item) => (
               <li key={item._id}>
