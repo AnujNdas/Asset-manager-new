@@ -115,9 +115,10 @@ a:hover {
 }
 .title-text {
   display: flex;
-  flex-direction: column;  /* forces two lines */
   line-height: 1;
   text-align: left;
+  gap : 10px;
+  align-items : center;
 }
 
 
