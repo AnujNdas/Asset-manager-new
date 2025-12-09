@@ -165,14 +165,14 @@ const Category = () => {
 
                 <div className="category-actions">
                   <button
-                    className="edit-category-btn"
+                    className="btn-edit"
                     onClick={() => openEditModal(category)}
                   >
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
 
                   <button
-                    className="delete-category-btn"
+                    className="btn-delete"
                     onClick={() => handleDelete(category._id, category.name)}
                   >
                      <FontAwesomeIcon icon={faTrash} />
