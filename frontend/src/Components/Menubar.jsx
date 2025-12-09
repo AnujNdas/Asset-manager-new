@@ -81,6 +81,10 @@ const Menubar = ({ username, toggleSidebar }) => {
   return (
     <div className="menubar-container">
       <div className="menubar">
+           <div className="title-text">
+              Asset
+              <span>Management</span>
+            </div> 
         <div className="control-panel">
           <NotificationButton />
 
