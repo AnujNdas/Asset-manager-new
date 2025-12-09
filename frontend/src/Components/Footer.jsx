@@ -8,6 +8,7 @@ const Footer = () => {
         <div className="copy-text">
           Copyright © 2025{" "}
           </div>
+        <div className="copy-link">
           <a
             href="https://socialflylive.com/"
             target="_blank"
@@ -15,6 +16,7 @@ const Footer = () => {
           >
             Socialfly - Business Growth & Management System
           </a>
+          </div>
         </div>
     </footer>
   );
