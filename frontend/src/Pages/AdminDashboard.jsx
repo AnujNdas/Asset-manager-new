@@ -82,24 +82,38 @@ const valuationChartData = Array.isArray(valuationData)
     <div className="admin-dashboard">
 
       {/* TOP STATS */}
-      <div className="stats-grid">
+     <div className="stats-grid">
 
-        <div className="stat-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
-          <h2>{statsData?.hardwareCount ?? 0}</h2>
-          <p>Hardware Assets</p>
-        </div>
+  {/* Hardware */}
+  <div className="stat-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
+    <h2>{statsData?.hardwareCount ?? 0}</h2>
+    <p>Hardware Assets</p>
+    <h4>₹ {statsData?.hardwareValuation?.toLocaleString() ?? "0"}</h4>
+    <small>Total Valuation</small>
+  </div>
 
-        <div className="stat-card violet" onClick={() => navigate("/inventory?tab=software")}>
-          <h2>{statsData?.softwareCount ?? 0}</h2>
-          <p>Software Assets</p>
-        </div>
+  {/* Software */}
+  <div className="stat-card violet" onClick={() => navigate("/inventory?tab=software")}>
+    <h2>{statsData?.softwareCount ?? 0}</h2>
+    <p>Software Assets</p>
+    <h4>₹ {statsData?.softwareValuation?.toLocaleString() ?? "0"}</h4>
+    <small>Total Valuation</small>
+  </div>
 
-        <div className="stat-card pink" onClick={() => navigate("/setting/users")}>
-          <h2>{statsData?.usersCount ?? 0}</h2>
-          <p>Total Users</p>
-        </div>
+  {/* Users */}
+  <div className="stat-card pink" onClick={() => navigate("/setting/users")}>
+    <h2>{statsData?.usersCount ?? 0}</h2>
+    <p>Total Users</p>
+  </div>
 
-      </div>
+  {/* Total Valuation */}
+  <div className="stat-card green">
+    <h2>₹ {statsData?.totalValuation?.toLocaleString() ?? "0"}</h2>
+    <p>Total Asset Valuation</p>
+    <small>Hardware + Software</small>
+  </div>
+</div>
+
 
       {/* CHARTS GRID */}
       <div className="charts-grid">
