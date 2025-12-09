@@ -21,9 +21,14 @@
   transition: 0.2s ease;
   display : flex;
   justify-content : center;
+  gap : 10px;
 }
 .stat-card:hover {
   transform: translateY(-3px);
+}
+.stat-1, .stat-2{
+  display : flex;
+  flex-direction : column;
 }
 
 .stat-card h2 {
