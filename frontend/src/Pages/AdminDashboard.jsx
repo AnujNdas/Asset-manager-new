@@ -86,10 +86,14 @@ const valuationChartData = Array.isArray(valuationData)
 
   {/* Hardware */}
   <div className="stat-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
+    <div className="stat-1">
     <h2>{statsData?.hardwareCount ?? 0}</h2>
     <p>Hardware Assets</p>
+      </div>
+    <div className="stat-2">
     <h4>₹ {statsData?.hardwareValuation?.toLocaleString() ?? "0"}</h4>
     <small>Total Valuation</small>
+      </div>
   </div>
 
   {/* Software */}
