@@ -15,10 +15,11 @@
   justify-content : center;
   align-items : center;
   gap : 10px;
+  width : 60%;
 }
 .copy-text {
   font-size : 12px;
-  width : 30%
+  width : 25%
 }
   .copy-link{
     font-size : 12px;
