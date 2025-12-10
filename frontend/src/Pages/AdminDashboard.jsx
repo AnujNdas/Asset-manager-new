@@ -133,7 +133,7 @@ const valuationChartData = Array.isArray(valuationData)
         {/* TOP LOCATIONS BAR CHART */}
         <div className="chart-card">
           <h2>Top 5 Locations With Most Assets</h2>
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer width="100%" height={200}>
             <BarChart data={locChartData}>
               <XAxis dataKey="name" />
               <YAxis />
@@ -151,7 +151,7 @@ const valuationChartData = Array.isArray(valuationData)
         <div className="chart-card">
   <h2>Monthly Asset Valuation Trend</h2>
 
-  <ResponsiveContainer width="100%" height={260}>
+  <ResponsiveContainer width="100%" height={200}>
     <BarChart data={valuationChartData}>
       <XAxis dataKey="month" />
       <YAxis />
