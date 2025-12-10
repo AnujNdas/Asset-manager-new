@@ -8,7 +8,9 @@
   flex-direction: column;
   gap: 28px;
 }
-
+.admin-dashboard {
+   font-size : 20px
+}
 
 /* =========================================================
    STATS CARDS (TOP ROW)
