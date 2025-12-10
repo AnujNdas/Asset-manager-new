@@ -189,45 +189,64 @@ const valuationChartData = Array.isArray(valuationData)
     {/* Hardware */}
     <div className="expiring-column">
       <h3>
-        Hardware ({expiringAssets.expiringHardware?.length ?? 0})
+        Hardware (
+          {
+            expiringAssets?.filter(a => a.type === "Hardware").length
+            ?? 0
+          }
+        )
       </h3>
       <ul>
-        {expiringAssets.expiringHardware?.length > 0 ? (
-          expiringAssets.expiringHardware.map((item) => (
-            <li key={item._id}>
-              <span className="dot red"></span>
-              {item.hardwareName ?? "Unnamed Hardware"} — 
-              {new Date(item.DOE).toLocaleDateString()}
-            </li>
-          ))
-        ) : (
-          <p className="empty-state">No hardware expiring soon</p>
-        )}
+        {
+          expiringAssets?.filter(a => a.type === "Hardware").length > 0 ? (
+            expiringAssets
+              .filter(a => a.type === "Hardware")
+              .map((item) => (
+                <li key={item._id}>
+                  <span className="dot red"></span>
+                  {item.name ?? "Unnamed Hardware"} —
+                  {new Date(item.expiry).toLocaleDateString()}
+                </li>
+              ))
+          ) : (
+            <p className="empty-state">No hardware expiring soon</p>
+          )
+        }
       </ul>
     </div>
 
     {/* Software */}
     <div className="expiring-column">
       <h3>
-        Software ({expiringAssets.expiringSoftware?.length ?? 0})
+        Software (
+          {
+            expiringAssets?.filter(a => a.type === "Software").length
+            ?? 0
+          }
+        )
       </h3>
       <ul>
-        {expiringAssets.expiringSoftware?.length > 0 ? (
-          expiringAssets.expiringSoftware.map((item) => (
-            <li key={item._id}>
-              <span className="dot red"></span>
-              {item.softwareName ?? "Unnamed Software"} — 
-              {new Date(item.licenseExpiry).toLocaleDateString()}
-            </li>
-          ))
-        ) : (
-          <p className="empty-state">No software expiring soon</p>
-        )}
+        {
+          expiringAssets?.filter(a => a.type === "Software").length > 0 ? (
+            expiringAssets
+              .filter(a => a.type === "Software")
+              .map((item) => (
+                <li key={item._id}>
+                  <span className="dot red"></span>
+                  {item.name ?? "Unnamed Software"} —
+                  {new Date(item.expiry).toLocaleDateString()}
+                </li>
+              ))
+          ) : (
+            <p className="empty-state">No software expiring soon</p>
+          )
+        }
       </ul>
     </div>
 
   </div>
 </div>
+
 
 
       </div>
