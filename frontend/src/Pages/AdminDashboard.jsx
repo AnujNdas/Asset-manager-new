@@ -45,7 +45,7 @@ const Dashboard = () => {
         const users = await getActiveUsers();
         const allLocs = await getLocations();
         const valuation = await getMonthlyValuation();
-
+        console.log("EXPIRING ASSETS RESPONSE:", exp);
         setStatsData(stats);
         setTopLocations(locs);
         setExpiringAssets(exp);
