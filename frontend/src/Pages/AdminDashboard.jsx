@@ -55,7 +55,8 @@ const Dashboard = () => {
         setExpiringAssets(exp);
         setActiveUsers(users);
         setLocationList(allLocs);
-        setValuationData(Array.isArray(valuation) ? valuation : [valuation]);
+        setValuationData(valuation);
+
 
       } catch (err) {
         console.error("Dashboard load error:", err);
@@ -73,12 +74,14 @@ const Dashboard = () => {
     name: getLocationName(loc._id),
     value: loc.count,
   }));
-const valuationChartData = valuationData.labels?.map((label, index) => ({
-  month: label,
-  hardware: valuationData.hardwareValuation[index] || 0,
-  software: valuationData.softwareValuation[index] || 0,
-  total: valuationData.totalValuation[index] || 0,
-})) || [];
+const valuationChartData =
+  valuationData?.labels?.map((label, index) => ({
+    month: label,
+    hardware: valuationData?.hardwareValuation?.[index] ?? 0,
+    software: valuationData?.softwareValuation?.[index] ?? 0,
+    total: valuationData?.totalValuation?.[index] ?? 0,
+  })) || [];
+
 
 
 const hardwareList = expiringAssets?.expiringHardware ?? [];
