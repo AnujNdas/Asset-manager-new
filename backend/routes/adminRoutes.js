@@ -239,7 +239,9 @@ router.get("/active-users", authenticateToken(["super-admin", "admin"]), async (
 // 📈 Monthly Hardware Valuation (last 12 months)
 router.get("/valuation-trend", authenticateToken(["super-admin", "admin"]), async (req, res) => {
   try {
-    const valuation = await HardwareAsset.aggregate([
+
+    // HARDWARE AGGREGATION
+    const hardwareValuation = await HardwareAsset.aggregate([
       {
         $addFields: {
           totalCost: {
@@ -253,17 +255,105 @@ router.get("/valuation-trend", authenticateToken(["super-admin", "admin"]), asyn
             year: { $year: "$createdAt" },
             month: { $month: "$createdAt" }
           },
-          monthlyValuation: { $sum: "$totalCost" },
-          assetsAdded: { $sum: 1 }
+          hardwareValuation: { $sum: "$totalCost" },
+          hardwareCount: { $sum: 1 }
         }
-      },
-      { $sort: { "_id.year": 1, "_id.month": 1 } }
+      }
     ]);
 
-    res.json(valuation);
+    // SOFTWARE AGGREGATION
+    const softwareValuation = await SoftwareAsset.aggregate([
+      {
+        $addFields: {
+          totalCost: {
+            $cond: {
+              if: { $gt: ["$totalCost", 0] },
+              then: "$totalCost",
+              else: { $multiply: ["$costPerUnit", "$totalLicenses"] }
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          softwareValuation: { $sum: "$totalCost" },
+          softwareCount: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // MERGE HARDWARE + SOFTWARE
+    const trendMap = new Map();
+
+    // Place hardware data
+    hardwareValuation.forEach(h => {
+      const key = `${h._id.year}-${h._id.month}`;
+      trendMap.set(key, {
+        year: h._id.year,
+        month: h._id.month,
+        hardwareValuation: h.hardwareValuation || 0,
+        softwareValuation: 0,
+        totalValuation: h.hardwareValuation || 0,
+        hardwareCount: h.hardwareCount || 0,
+        softwareCount: 0
+      });
+    });
+
+    // Place or merge software data
+    softwareValuation.forEach(s => {
+      const key = `${s._id.year}-${s._id.month}`;
+      const existing = trendMap.get(key);
+
+      if (existing) {
+        existing.softwareValuation = s.softwareValuation || 0;
+        existing.totalValuation =
+          existing.hardwareValuation + (s.softwareValuation || 0);
+        existing.softwareCount = s.softwareCount || 0;
+      } else {
+        trendMap.set(key, {
+          year: s._id.year,
+          month: s._id.month,
+          hardwareValuation: 0,
+          softwareValuation: s.softwareValuation || 0,
+          totalValuation: s.softwareValuation || 0,
+          hardwareCount: 0,
+          softwareCount: s.softwareCount || 0
+        });
+      }
+    });
+
+    // SORT
+    const finalTrend = Array.from(trendMap.values()).sort((a, b) => {
+      if (a.year === b.year) return a.month - b.month;
+      return a.year - b.year;
+    });
+
+    // FORMAT FOR CHARTS
+    const labels = finalTrend.map(v => `${String(v.month).padStart(2, "0")}/${v.year}`);
+    const hardwareValuationArr = finalTrend.map(v => v.hardwareValuation);
+    const softwareValuationArr = finalTrend.map(v => v.softwareValuation);
+    const totalValuationArr = finalTrend.map(v => v.totalValuation);
+    const hardwareCountArr = finalTrend.map(v => v.hardwareCount);
+    const softwareCountArr = finalTrend.map(v => v.softwareCount);
+
+    return res.json({
+      labels,
+      hardwareValuation: hardwareValuationArr,
+      softwareValuation: softwareValuationArr,
+      totalValuation: totalValuationArr,
+      hardwareCount: hardwareCountArr,
+      softwareCount: softwareCountArr
+    });
+
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch valuation trend" });
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch valuation trend" });
   }
 });
+
 
 module.exports = router;
