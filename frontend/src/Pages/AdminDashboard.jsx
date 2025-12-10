@@ -73,12 +73,13 @@ const Dashboard = () => {
     name: getLocationName(loc._id),
     value: loc.count,
   }));
-const valuationChartData = Array.isArray(valuationData)
-  ? valuationData.map((v) => ({
-      month: `${v._id.month}/${v._id.year}`,
-      valuation: v.monthlyValuation ?? 0,
-    }))
-  : [];
+const valuationChartData = valuationData.labels?.map((label, index) => ({
+  month: label,
+  hardware: valuationData.hardwareValuation[index] || 0,
+  software: valuationData.softwareValuation[index] || 0,
+  total: valuationData.totalValuation[index] || 0,
+})) || [];
+
 
 const hardwareList = expiringAssets?.expiringHardware ?? [];
 const softwareList = expiringAssets?.expiringSoftware ?? [];
@@ -157,14 +158,19 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
         <div className="chart-card">
   <h2>Monthly Asset Valuation Trend</h2>
 
-  <ResponsiveContainer width="100%" height={200}>
-    <BarChart data={valuationChartData}>
-      <XAxis dataKey="month" />
-      <YAxis />
-      <Tooltip />
-      <Bar dataKey="valuation" fill="#6366F1" />
-    </BarChart>
-  </ResponsiveContainer>
+<ResponsiveContainer width="100%" height={250}>
+  <BarChart data={valuationChartData}>
+    <XAxis dataKey="month" />
+    <YAxis />
+    <Tooltip />
+    <Legend />
+
+    <Bar dataKey="hardware" name="Hardware Valuation" fill="#6366F1" />
+    <Bar dataKey="software" name="Software Valuation" fill="#F59E0B" />
+    <Bar dataKey="total" name="Total Valuation" fill="#22C55E" />
+  </BarChart>
+</ResponsiveContainer>
+
 </div>
 
 
