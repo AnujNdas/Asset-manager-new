@@ -1,117 +1,198 @@
+/* =========================================================
+   ADMIN DASHBOARD LAYOUT
+   Optimized for mobile-first, fluid grids, and charts
+   ========================================================= */
 .admin-dashboard {
-  padding: 25px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 28px;
 }
-h2{
-  font-size : 20px;
+
+/* Typography */
+.admin-dashboard h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
-/* -- Stats Cards -- */
+
+/* =========================================================
+   STATS CARDS (TOP ROW)
+   ========================================================= */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 20px;
 }
 
 .stat-card {
   background: white;
   border-radius: 14px;
-  padding: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-  cursor: pointer;
-  transition: 0.2s ease;
-  display : flex;
-  justify-content : space-between;
-  gap : 10px;
+  padding: 16px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.2s ease;
 }
+
 .stat-card:hover {
   transform: translateY(-3px);
 }
-.stat-1, .stat-2{
-  display : flex;
-  flex-direction : column;
-  justify-content : center;
+
+.stat-1,
+.stat-2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .stat-card h2 {
-  margin: 0;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 600;
+  margin: 0;
 }
 
 .stat-card p {
-  margin-top: 6px;
+  margin: 4px 0 0;
   color: #6b7280;
-  font-size : 12px;
+  font-size: 13px;
 }
 
-/* Color accents */
-.purple { border-left: 6px solid #6366F1; }
-.violet { border-left: 6px solid #8B5CF6; }
-.pink   { border-left: 6px solid #EC4899; }
-.green  { border-left: 6px solid #22C55E; }
+/* Accent borders */
+.purple { border-left: 5px solid #6366F1; }
+.violet { border-left: 5px solid #8B5CF6; }
+.pink   { border-left: 5px solid #EC4899; }
+.green  { border-left: 5px solid #22C55E; }
 
-/* CHARTS */
+/* =========================================================
+   CHARTS GRID (BAR / LINE / PIE)
+   ========================================================= */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
 }
 
 .chart-card {
   background: white;
-  padding: 10px;
+  padding: 16px;
   border-radius: 14px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+  width: 100%;
+  overflow-x: auto;
 }
 
-/* Panels */
+/* Chart title */
+.chart-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* =========================================================
+   PANELS & LISTS (BOTTOM SECTION)
+   ========================================================= */
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px;
 }
 
 .panel-card {
   background: white;
   padding: 20px;
   border-radius: 14px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
 }
 
 .panel-card.full {
   grid-column: span 2;
 }
 
+.panel-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* List Styling */
 .list {
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .list li {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 14px;
   color: #374151;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.list li:last-child {
+  border-bottom: none;
 }
 
 .dot {
   width: 10px;
   height: 10px;
-  background: #ccc;
+  background: #dc2626;
   border-radius: 50%;
-  margin-right: 8px;
 }
 
 .date {
+  margin-left: auto;
   color: #6B7280;
   font-size: 13px;
 }
 
-.expiring-flex {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================= */
+@media (max-width: 1024px) {
+  .admin-dashboard {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .chart-card {
+    padding: 14px;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-card.full {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard {
+    padding: 14px;
+  }
+
+  .stat-card {
+    padding: 12px;
+  }
+
+  .chart-card {
+    padding: 12px;
+  }
+
+  .stats-grid,
+  .charts-grid {
+    gap: 12px;
+  }
 }
