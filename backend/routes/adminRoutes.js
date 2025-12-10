@@ -160,62 +160,37 @@ router.get("/expiring-assets", authenticateToken(["super-admin", "admin"]), asyn
     const threeMonthsLater = new Date();
     threeMonthsLater.setMonth(today.getMonth() + 3);
 
-    const expiringHardware = await HardwareAsset.find({
-      DOE: { $gte: today, $lte: threeMonthsLater }
-    }).select("assetName DOE");
+    const expiringHardware = await HardwareAsset.find(
+      { DOE: { $gte: today, $lte: threeMonthsLater } },
+      { _id: 1, DOE: 1, hardwareName: 1 }   // return only required fields
+    ).lean();
 
-    const expiringSoftware = await SoftwareAsset.find({
-      licenseExpiry: { $gte: today, $lte: threeMonthsLater }
-    }).select("softwareName licenseExpiry");
+    const expiringSoftware = await SoftwareAsset.find(
+      { licenseExpiry: { $gte: today, $lte: threeMonthsLater } },
+      { _id: 1, licenseExpiry: 1, softwareName: 1 }
+    ).lean();
 
-    // 👉 Normalize both to SAME structure
-    const merged = [
-      ...expiringHardware.map(item => ({
-        _id: item._id,
-        assetName: item.assetName,
-        DOE: item.DOE,
-        type: "Hardware"
-      })),
+    const formattedHardware = expiringHardware.map(h => ({
+      _id: h._id,
+      name: h.hardwareName,
+      expiry: h.DOE,
+      type: "Hardware"
+    }));
 
-      ...expiringSoftware.map(item => ({
-        _id: item._id,
-        assetName: item.softwareName,
-        DOE: item.licenseExpiry,
-        type: "Software"
-      }))
-    ];
+    const formattedSoftware = expiringSoftware.map(s => ({
+      _id: s._id,
+      name: s.softwareName,
+      expiry: s.licenseExpiry,
+      type: "Software"
+    }));
 
-    res.json(merged);
-
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch expiring assets" });
-  }
-});
-
-// ⏳ Assets Expiring in Next 3 Months
-router.get("/expiring-assets", authenticateToken(["super-admin", "admin"]), async (req, res) => {
-  try {
-    const today = new Date();
-    const threeMonthsLater = new Date();
-    threeMonthsLater.setMonth(today.getMonth() + 3);
-
-    const expiringHardware = await HardwareAsset.find({
-      DOE: { $gte: today, $lte: threeMonthsLater }
-    });
-
-    const expiringSoftware = await SoftwareAsset.find({
-      licenseExpiry: { $gte: today, $lte: threeMonthsLater }
-    });
-
-    res.json({
-      expiringHardware,
-      expiringSoftware,
-    });
+    res.json([...formattedHardware, ...formattedSoftware]);
 
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch expiring assets" });
   }
 });
+
 // 🆕 5 Most Recently Added Assets
 router.get("/recent-assets", authenticateToken(["super-admin", "admin"]), async (req, res) => {
   try {
