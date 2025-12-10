@@ -24,7 +24,11 @@ const Dashboard = () => {
 
   const [statsData, setStatsData] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
-  const [expiringAssets, setExpiringAssets] = useState([]);
+  const [expiringAssets, setExpiringAssets] = useState({
+  expiringHardware: [],
+  expiringSoftware: []
+});
+
   const [activeUsers, setActiveUsers] = useState([]);
   const [locationList, setLocationList] = useState([]);
   const [valuationData, setValuationData] = useState([]);
@@ -76,6 +80,8 @@ const valuationChartData = Array.isArray(valuationData)
     }))
   : [];
 
+const hardwareList = expiringAssets?.expiringHardware ?? [];
+const softwareList = expiringAssets?.expiringSoftware ?? [];
 
 
   return (
@@ -189,59 +195,45 @@ const valuationChartData = Array.isArray(valuationData)
     {/* Hardware */}
     <div className="expiring-column">
       <h3>
-        Hardware (
-          {
-            expiringAssets?.filter(a => a.type === "Hardware").length
-            ?? 0
-          }
-        )
-      </h3>
-      <ul>
-        {
-          expiringAssets?.filter(a => a.type === "Hardware").length > 0 ? (
-            expiringAssets
-              .filter(a => a.type === "Hardware")
-              .map((item) => (
-                <li key={item._id}>
-                  <span className="dot red"></span>
-                  {item.name ?? "Unnamed Hardware"} —
-                  {new Date(item.expiry).toLocaleDateString()}
-                </li>
-              ))
-          ) : (
-            <p className="empty-state">No hardware expiring soon</p>
-          )
-        }
-      </ul>
+  Hardware ({hardwareList.length})
+</h3>
+
+<ul>
+  {hardwareList.length > 0 ? (
+    hardwareList.map((item) => (
+      <li key={item._id}>
+        <span className="dot red"></span>
+        {item.name ?? "Unnamed Hardware"} — 
+        {new Date(item.expiry).toLocaleDateString()}
+      </li>
+    ))
+  ) : (
+    <p className="empty-state">No hardware expiring soon</p>
+  )}
+</ul>
+
     </div>
 
     {/* Software */}
     <div className="expiring-column">
-      <h3>
-        Software (
-          {
-            expiringAssets?.filter(a => a.type === "Software").length
-            ?? 0
-          }
-        )
-      </h3>
-      <ul>
-        {
-          expiringAssets?.filter(a => a.type === "Software").length > 0 ? (
-            expiringAssets
-              .filter(a => a.type === "Software")
-              .map((item) => (
-                <li key={item._id}>
-                  <span className="dot red"></span>
-                  {item.name ?? "Unnamed Software"} —
-                  {new Date(item.expiry).toLocaleDateString()}
-                </li>
-              ))
-          ) : (
-            <p className="empty-state">No software expiring soon</p>
-          )
-        }
-      </ul>
+     <h3>
+  Software ({softwareList.length})
+</h3>
+
+<ul>
+  {softwareList.length > 0 ? (
+    softwareList.map((item) => (
+      <li key={item._id}>
+        <span className="dot red"></span>
+        {item.name ?? "Unnamed Software"} — 
+        {new Date(item.expiry).toLocaleDateString()}
+      </li>
+    ))
+  ) : (
+    <p className="empty-state">No software expiring soon</p>
+  )}
+</ul>
+
     </div>
 
   </div>
