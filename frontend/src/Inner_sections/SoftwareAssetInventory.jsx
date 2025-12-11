@@ -300,14 +300,13 @@ const getStatusName = (statusId) => {
     <div className="inventory-container">
       {/* <h2 className="inventory-title">Software Inventory</h2> */}
 
-  {loading ? (
-    <Loader />
-  ) : currentItems.length === 0 ? (
-    <p>No software assets found.</p>
-  ) : (
-      <div className="inventory-grid">
-
-          currentItems.map((asset, idx) => (
+{loading ? (
+  <Loader />
+) : currentItems.length === 0 ? (
+  <p>No software assets found.</p>
+) : (
+  <div className="inventory-grid">
+    {currentItems.map((asset, idx) => (
             <motion.div
               key={asset._id}
               className="inventory-card"
