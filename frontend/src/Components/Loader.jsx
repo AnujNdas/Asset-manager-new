@@ -1,4 +1,3 @@
-// src/Components/Loader.jsx
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -13,7 +12,6 @@ const Loader = () => {
 
   const [index, setIndex] = useState(0);
 
-  // Rotate messages every 1.5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % messages.length);
@@ -24,19 +22,22 @@ const Loader = () => {
 
   return (
     <div style={styles.container}>
+      {/* Modern Ring Loader */}
       <motion.div
-        style={styles.circle}
+        style={styles.ring}
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.6, 1, 0.6],
+          rotate: 360,
         }}
         transition={{
-          duration: 1,
+          duration: 1.2,
           repeat: Infinity,
-          ease: "easeInOut",
+          ease: "linear",
         }}
-      />
+      >
+        <div style={styles.innerRing}></div>
+      </motion.div>
 
+      {/* Animated Dynamic Text */}
       <motion.p
         key={index}
         style={styles.text}
@@ -58,22 +59,36 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    gap: "12px",
+    gap: "18px",
     background: "transparent",
   },
 
-  circle: {
-    height: "55px",
-    width: "55px",
-    background: "linear-gradient(135deg, #7B5DFF, #6D28D9)",
+  ring: {
+    height: "70px",
+    width: "70px",
     borderRadius: "50%",
-    boxShadow: "0 0 20px rgba(123, 93, 255, 0.6)",
+    border: "5px solid rgba(124, 58, 237, 0.25)", // subtle outline
+    borderTopColor: "#7B5DFF", // vibrant accent line
+    borderLeftColor: "#6D28D9",
+    borderRightColor: "transparent",
+    borderBottomColor: "transparent",
+    boxShadow: "0 0 25px rgba(123, 93, 255, 0.4)",
+    position: "relative",
+  },
+
+  innerRing: {
+    position: "absolute",
+    inset: "10px",
+    borderRadius: "50%",
+    border: "3px solid rgba(124, 58, 237, 0.2)",
+    borderTopColor: "transparent",
   },
 
   text: {
     color: "#6B7280",
-    fontSize: "15px",
+    fontSize: "16px",
     fontWeight: 500,
+    letterSpacing: "0.3px",
   },
 };
 
