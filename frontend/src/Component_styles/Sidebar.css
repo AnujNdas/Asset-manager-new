@@ -200,7 +200,9 @@ a:hover {
   .sidebar-container.open {
     transform: translateX(0);
   }
-
+  .title-text {
+    font-size : 16px;
+  }
   .sidebar {
     padding: 10px;
   }
