@@ -289,7 +289,9 @@
   .admin-dashboard {
     padding: 14px;
   }
-
+   .admin-dashboard h2{
+      font-size : 14px;
+   }
   .stat-card {
     padding: 12px;
   }
