@@ -192,9 +192,6 @@
   .tabs_container {
     grid-template-columns: repeat(2, 1fr);
   }
-.classify_heading {
-  margin : 0;
-}
 
   .tab_link {
     padding: 10px;
@@ -208,5 +205,6 @@
   .classify_heading {
     font-size: 1.2rem;
     text-align: center;
+    margin : 0;
   }
 }
