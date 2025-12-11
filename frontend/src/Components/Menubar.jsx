@@ -90,9 +90,9 @@ const Menubar = ({ username, toggleSidebar }) => {
           <NotificationButton />
 
           {/* HELP ICON */}
-          <button className="controls">
+          {/* <button className="controls">
             <FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} />
-          </button>
+          </button> */}
 
           {/* ⭐ Add to Home Screen Button */}
           {showInstallButton && (
