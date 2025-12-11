@@ -182,10 +182,7 @@
 
 /* 📱 Small screens */
 @media screen and (max-width: 768px) {
-  .menubar {
-    /* width: 100%; */
-    justify-content: flex-end;
-  }
+
 
   .control-panel,
   .additional-button {
@@ -207,7 +204,10 @@
   .search-input {
     display: none;
   }
-
+  .menubar {
+    /* width: 100%; */
+    justify-content: flex-end;
+  }
   .search-btn {
     margin-left: 0;
     font-size: 18px;
