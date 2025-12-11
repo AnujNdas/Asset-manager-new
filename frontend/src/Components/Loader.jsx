@@ -1,8 +1,27 @@
 // src/Components/Loader.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const Loader = () => {
+  const messages = [
+    "Loading…",
+    "Please wait…",
+    "Almost there…",
+    "Preparing your dashboard…",
+    "Fetching data…",
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  // Rotate messages every 1.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % messages.length);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={styles.container}>
       <motion.div
@@ -17,12 +36,15 @@ const Loader = () => {
           ease: "easeInOut",
         }}
       />
+
       <motion.p
+        key={index}
         style={styles.text}
-        animate={{ opacity: [0.3, 1, 0.3] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
+        initial={{ opacity: 0, y: 5 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
       >
-        Loading...
+        {messages[index]}
       </motion.p>
     </div>
   );
