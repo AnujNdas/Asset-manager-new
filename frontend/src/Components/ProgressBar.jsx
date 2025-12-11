@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import "../Page_styles/ProgressBar.css";
+import "../Component_styles/ProgressBar.css";
 
 const ProgressContext = createContext();
 
