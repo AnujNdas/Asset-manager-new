@@ -101,6 +101,7 @@
 @media (max-width: 480px) {
   .settings-tabs {
     grid-template-columns: repeat(2, 1fr);
+    padding : 5px;
   }
 
   .settings-tabs .tab-text {
