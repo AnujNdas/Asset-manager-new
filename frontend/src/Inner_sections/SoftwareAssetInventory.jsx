@@ -307,45 +307,52 @@ const getStatusName = (statusId) => {
 ) : (
   <div className="inventory-grid">
     {currentItems.map((asset, idx) => (
-            <motion.div
-              key={asset._id}
-              className="inventory-card"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.03 }}
-            >
-              <div className="card-header">
-                {/* <div className="card-avatar">{initialsFor(asset.name)}</div> */}
-                <div style={{ flex: 1, marginLeft: 12 }}>
-                  <h3 className="card-title">{asset.name || "Unnamed"}</h3>
-                  <div className="card-sub">{asset.publisher || "—"} • {asset.version || "v—"}</div>
-                </div>
+      <motion.div
+        key={asset._id}
+        className="inventory-card"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: idx * 0.03 }}
+      >
+        <div className="card-header">
+          <div style={{ flex: 1, marginLeft: 12 }}>
+            <h3 className="card-title">{asset.name || "Unnamed"}</h3>
+            <div className="card-sub">
+              {asset.publisher || "—"} • {asset.version || "v—"}
+            </div>
+          </div>
 
-                <div className="badge-wrap">{getExpiryBadge(asset.licenseExpiry)}</div>
-              </div>
+          <div className="badge-wrap">{getExpiryBadge(asset.licenseExpiry)}</div>
+        </div>
 
-              <div className="card-info2">
-                <p><strong>Category:</strong> {getCategoryName(asset.category)}</p>
-                <p><strong>License:</strong> {asset.licenseType || "N/A"}</p>
-                <p><strong>Assigned:</strong> {asset.assignedUsers?.length ?? 0}</p>
-                <p><strong>Expiry:</strong> {asset.licenseExpiry ? new Date(asset.licenseExpiry).toLocaleDateString() : "N/A"}</p>
-              </div>
+        <div className="card-info2">
+          <p><strong>Category:</strong> {getCategoryName(asset.category)}</p>
+          <p><strong>License:</strong> {asset.licenseType || "N/A"}</p>
+          <p><strong>Assigned:</strong> {asset.assignedUsers?.length ?? 0}</p>
+          <p>
+            <strong>Expiry:</strong>{" "}
+            {asset.licenseExpiry
+              ? new Date(asset.licenseExpiry).toLocaleDateString()
+              : "N/A"}
+          </p>
+        </div>
 
-              <div className="card-actions">
-                <button className="btn-view" onClick={() => setSelectedAsset(asset)}>
-                  <FontAwesomeIcon icon={faEye} /> View
-                </button>
-                <button className="btn-edit" onClick={() => openEditModal(asset)}>
-                  <FontAwesomeIcon icon={faEdit} /> Edit
-                </button>
-                <button className="btn-delete" onClick={() => handleDelete(asset._id)}>
-                  <FontAwesomeIcon icon={faTrash} /> Delete
-                </button>
-              </div>
-            </motion.div>
-          ))
-        )}
-      </div>
+        <div className="card-actions">
+          <button className="btn-view" onClick={() => setSelectedAsset(asset)}>
+            <FontAwesomeIcon icon={faEye} /> View
+          </button>
+          <button className="btn-edit" onClick={() => openEditModal(asset)}>
+            <FontAwesomeIcon icon={faEdit} /> Edit
+          </button>
+          <button className="btn-delete" onClick={() => handleDelete(asset._id)}>
+            <FontAwesomeIcon icon={faTrash} /> Delete
+          </button>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+)}
+
 
       {renderPagination()}
 
