@@ -7,7 +7,7 @@ import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-b
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import AuthService from '../Services/AuthService';
 import Swal from 'sweetalert2';
-
+import Loader from "../Components/Loader";
 const Login = ({ setProfileUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,6 +70,11 @@ const Login = ({ setProfileUser }) => {
     }
     setLoading(false);
   };
+  {loading && (
+  <div className="loader-overlay">
+    <Loader />
+  </div>
+)}
 
   return (
     <div className="auth-page">
