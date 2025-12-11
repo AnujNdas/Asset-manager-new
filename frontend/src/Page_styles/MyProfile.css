@@ -173,6 +173,7 @@
     .profile-img {
         flex: 0 0 100px;
         height: 100px;
+        width : 40%;
     }
 }
 
@@ -193,5 +194,6 @@
     }
     .boxes-1{
         flex-direction : column;
+        width : 90%;
     }
 }
