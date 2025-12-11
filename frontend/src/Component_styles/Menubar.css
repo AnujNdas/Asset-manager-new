@@ -207,6 +207,7 @@
   .menubar {
     /* width: 100%; */
     justify-content: flex-end;
+    padding : 4px 10px;
   }
   .search-btn {
     margin-left: 0;
