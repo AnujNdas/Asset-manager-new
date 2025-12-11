@@ -70,13 +70,13 @@ const Login = ({ setProfileUser }) => {
     }
     setLoading(false);
   };
+
+  return (
   {loading && (
   <div className="loader-overlay">
     <Loader />
   </div>
 )}
-
-  return (
     <div className="auth-page">
       <div className="auth-card">
         {/* Brand / Welcome panel (left on desktop, stacked on mobile) */}
