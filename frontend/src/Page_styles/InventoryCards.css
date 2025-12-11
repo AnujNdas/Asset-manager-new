@@ -248,7 +248,6 @@
 /* badge styles (reuse from hardware) */
 .badge {
   display: inline-block;
-  padding: 6px 10px;
   border-radius: 999px;
   font-weight: 600;
   font-size: 13px;
