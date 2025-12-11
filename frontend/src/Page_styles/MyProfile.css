@@ -191,4 +191,7 @@
     .data-info {
         text-align: center;
     }
+    .boxes-1{
+        flex-direction : column;
+    }
 }
