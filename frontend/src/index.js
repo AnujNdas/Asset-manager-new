@@ -4,19 +4,18 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider } from './Context/ThemeContext';
 import { NotificationProvider } from './Context/NotificationContext';
-
+import { ProgressProvider } from "./Components/ProgressBar";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <BrowserRouter>
     <React.StrictMode>
-      <ThemeProvider>
+      <ProgressProvider>
         <NotificationProvider>
           <App />
         </NotificationProvider>
-      </ThemeProvider>
+       </ProgressProvider> 
     </React.StrictMode>
   </BrowserRouter>
 );
