@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import "../Component_styles/ProgressBar.css";
+import { registerProgressController } from "./ProgressController";
 
 const ProgressContext = createContext();
 
@@ -32,14 +33,19 @@ export const ProgressProvider = ({ children }) => {
     }, 300);
   };
 
+  useEffect(() => {
+    registerProgressController(startProgress, stopProgress);
+  }, []);
+
   return (
-    <ProgressContext.Provider value={{ startProgress, stopProgress }}>
+    <>
       {loading && (
         <div className="progress-bar-wrapper">
           <div className="progress-bar" style={{ width: `${width}%` }}></div>
         </div>
       )}
       {children}
-    </ProgressContext.Provider>
+    </>
   );
 };
+
