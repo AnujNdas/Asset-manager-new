@@ -1,0 +1,15 @@
+.progress-bar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  height: 3px;
+  background: transparent;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #4f46e5; /* Indigo-like color */
+  transition: width 0.2s ease;
+}
