@@ -72,6 +72,7 @@ const Login = ({ setProfileUser }) => {
   };
 
   return (
+    <>
   {loading && (
   <div className="loader-overlay">
     <Loader />
@@ -139,6 +140,7 @@ const Login = ({ setProfileUser }) => {
         </form>
       </div>
     </div>
+      </>
   );
 };
 
