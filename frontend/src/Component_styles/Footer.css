@@ -33,7 +33,7 @@
   .copyright-box{
     width : 100%;
   }
-  .copy-text , .copy-link {
+  .copy-text , .copy-link a{
     font-size : 8px;
   }
 }
