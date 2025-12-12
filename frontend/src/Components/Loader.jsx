@@ -1,14 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const Loader = () => {
-  const messages = [
-    "Loading…",
-    "Please wait…",
-    "Almost there…",
-    "Preparing your dashboard…",
-    "Fetching data…",
-  ];
+const Loader = ({ type = "default" }) => {
+  const messageSets = {
+    login: [
+      "Verifying credentials…",
+      "Checking user access…",
+      "Setting up your workspace…",
+      "Almost logged in…",
+    ],
+    signup: [
+      "Creating your account…",
+      "Saving your details…",
+      "Initializing profile settings…",
+      "Finalizing signup…",
+    ],
+    dashboard: [
+      "Loading dashboard…",
+      "Fetching business insights…",
+      "Preparing widgets…",
+      "Almost ready…",
+    ],
+    inventory: [
+      "Loading inventory…",
+      "Fetching product list…",
+      "Syncing stock levels…",
+      "Preparing inventory view…",
+    ],
+    mis: [
+      "Preparing MIS reports…",
+      "Aggregating data…",
+      "Generating insights…",
+      "Finalizing report structure…",
+    ],
+    classification: [
+      "Sorting items…",
+      "Applying category rules…",
+      "Filtering classifications…",
+      "Almost done…",
+    ],
+    default: [
+      "Loading…",
+      "Please wait…",
+      "Almost there…",
+      "Preparing data…"
+    ],
+  };
+
+  const messages = messageSets[type] || messageSets.default;
 
   const [index, setIndex] = useState(0);
 
@@ -18,26 +57,18 @@ const Loader = () => {
     }, 1500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [messages.length]);
 
   return (
     <div style={styles.container}>
-      {/* Modern Ring Loader */}
       <motion.div
         style={styles.ring}
-        animate={{
-          rotate: 360,
-        }}
-        transition={{
-          duration: 1.2,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
       >
         <div style={styles.innerRing}></div>
       </motion.div>
 
-      {/* Animated Dynamic Text */}
       <motion.p
         key={index}
         style={styles.text}
@@ -62,20 +93,18 @@ const styles = {
     gap: "18px",
     background: "transparent",
   },
-
   ring: {
     height: "70px",
     width: "70px",
     borderRadius: "50%",
-    border: "5px solid rgba(124, 58, 237, 0.25)", // subtle outline
-    borderTopColor: "#7B5DFF", // vibrant accent line
+    border: "5px solid rgba(124, 58, 237, 0.25)",
+    borderTopColor: "#7B5DFF",
     borderLeftColor: "#6D28D9",
     borderRightColor: "transparent",
     borderBottomColor: "transparent",
     boxShadow: "0 0 25px rgba(123, 93, 255, 0.4)",
     position: "relative",
   },
-
   innerRing: {
     position: "absolute",
     inset: "10px",
@@ -83,7 +112,6 @@ const styles = {
     border: "3px solid rgba(124, 58, 237, 0.2)",
     borderTopColor: "transparent",
   },
-
   text: {
     color: "#6B7280",
     fontSize: "16px",
