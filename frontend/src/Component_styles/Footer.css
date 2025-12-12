@@ -15,14 +15,12 @@
   justify-content : center;
   align-items : center;
   gap : 10px;
-  width : 60%;
 }
 .copy-text {
   font-size : 12px;
 }
   .copy-link{
     font-size : 12px;
-    width : 70%;
   }
 /* Responsive height adjustments */
 @media (max-width: 600px) {
