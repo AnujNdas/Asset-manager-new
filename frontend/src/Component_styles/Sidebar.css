@@ -102,16 +102,10 @@ a:hover {
 /* SaaS-style logo container */
 .logo-wrapper {
   width: 56px;
-  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border-radius: 12px;
-  padding: 6px;
-
-  /* subtle shadow like SaaS design */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
   /* center the wrapper */
   margin: 0 auto;
