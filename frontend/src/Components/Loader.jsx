@@ -49,15 +49,36 @@ const Loader = ({ type = "default" }) => {
 
   const messages = messageSets[type] || messageSets.default;
 
-  const [index, setIndex] = useState(0);
+  // Smart distribution of messages across progress milestones
+  const milestones = [10, 25, 45, 70, 90];
+  const distributedMessages = messages.slice(0, milestones.length);
+
+  const [progress, setProgress] = useState(0);
+  const [currentMessage, setCurrentMessage] = useState(distributedMessages[0]);
 
   useEffect(() => {
+    let msgIndex = 0;
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % messages.length);
-    }, 1500);
+      setProgress((prev) => {
+        const next = prev + 1;
+
+        // Update message when we cross a milestone
+        if (msgIndex < milestones.length && next >= milestones[msgIndex]) {
+          setCurrentMessage(distributedMessages[msgIndex]);
+          msgIndex++;
+        }
+
+        if (next >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+
+        return next;
+      });
+    }, 40); // speed of loading
 
     return () => clearInterval(interval);
-  }, [messages.length]);
+  }, [distributedMessages]);
 
   return (
     <div style={styles.container}>
@@ -70,13 +91,23 @@ const Loader = ({ type = "default" }) => {
       </motion.div>
 
       <motion.p
-        key={index}
+        style={styles.percent}
+        key={progress}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        {progress}%
+      </motion.p>
+
+      <motion.p
+        key={currentMessage}
         style={styles.text}
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        {messages[index]}
+        {currentMessage}
       </motion.p>
     </div>
   );
@@ -90,7 +121,7 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    gap: "18px",
+    gap: "14px",
     background: "transparent",
   },
   ring: {
@@ -112,11 +143,17 @@ const styles = {
     border: "3px solid rgba(124, 58, 237, 0.2)",
     borderTopColor: "transparent",
   },
+  percent: {
+    color: "#7C3AED",
+    fontSize: "20px",
+    fontWeight: 700,
+  },
   text: {
     color: "#6B7280",
     fontSize: "16px",
     fontWeight: 500,
     letterSpacing: "0.3px",
+    textAlign: "center",
   },
 };
 
