@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const Loader = ({ type = "default" }) => {
+const Loader = ({ type = "default", apiDone = false }) => {
   const messageSets = {
     login: [
       "Verifying credentials…",
@@ -39,75 +39,94 @@ const Loader = ({ type = "default" }) => {
       "Filtering classifications…",
       "Almost done…",
     ],
-    default: [
-      "Loading…",
-      "Please wait…",
-      "Almost there…",
-      "Preparing data…"
-    ],
+    default: ["Loading…", "Please wait…", "Almost there…", "Preparing data…"],
   };
 
   const messages = messageSets[type] || messageSets.default;
 
-  // Smart distribution of messages across progress milestones
-  const milestones = [10, 25, 45, 70, 90];
-  const distributedMessages = messages.slice(0, milestones.length);
+  const [index, setIndex] = useState(0);
+  const [progress, setProgress] = useState(1);
 
-  const [progress, setProgress] = useState(0);
-  const [currentMessage, setCurrentMessage] = useState(distributedMessages[0]);
-
+  // Random simulated progress
   useEffect(() => {
-    let msgIndex = 0;
+    if (apiDone) {
+      setProgress(100);
+      return;
+    }
+
     const interval = setInterval(() => {
       setProgress((prev) => {
-        const next = prev + 1;
+        if (prev >= 95) return prev;
 
-        // Update message when we cross a milestone
-        if (msgIndex < milestones.length && next >= milestones[msgIndex]) {
-          setCurrentMessage(distributedMessages[msgIndex]);
-          msgIndex++;
-        }
+        const step = Math.floor(Math.random() * 4) + 1; // 1–4%
+        let next = prev + step;
 
-        if (next >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-
+        if (next > 95) next = 95;
         return next;
       });
-    }, 40); // speed of loading
+    }, 350);
 
     return () => clearInterval(interval);
-  }, [distributedMessages]);
+  }, [apiDone]);
+
+  // Cycle messages
+  useEffect(() => {
+    const msgInterval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % messages.length);
+    }, 1500);
+
+    return () => clearInterval(msgInterval);
+  }, [messages.length]);
+
+  // Circular progress calculation
+  const radius = 28;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (progress / 100) * circumference;
 
   return (
     <div style={styles.container}>
+      {/* Rotating Outer Ring */}
       <motion.div
         style={styles.ring}
         animate={{ rotate: 360 }}
         transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
       >
         <div style={styles.innerRing}></div>
+
+        {/* Circular Progress */}
+        <svg width="70" height="70" style={styles.svg}>
+          <circle
+            cx="35"
+            cy="35"
+            r={radius}
+            stroke="rgba(124, 58, 237, 0.2)"
+            strokeWidth="5"
+            fill="none"
+          />
+          <motion.circle
+            cx="35"
+            cy="35"
+            r={radius}
+            stroke="#7B5DFF"
+            strokeWidth="5"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          />
+        </svg>
       </motion.div>
 
+      {/* Animated Text */}
       <motion.p
-        style={styles.percent}
-        key={progress}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        {progress}%
-      </motion.p>
-
-      <motion.p
-        key={currentMessage}
+        key={index}
         style={styles.text}
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        {currentMessage}
+        {progress}% – {messages[index]}
       </motion.p>
     </div>
   );
@@ -121,32 +140,35 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    gap: "14px",
+    gap: "18px",
     background: "transparent",
   },
   ring: {
-    height: "70px",
-    width: "70px",
+    height: "90px",
+    width: "90px",
     borderRadius: "50%",
-    border: "5px solid rgba(124, 58, 237, 0.25)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    border: "6px solid rgba(124, 58, 237, 0.25)",
     borderTopColor: "#7B5DFF",
     borderLeftColor: "#6D28D9",
     borderRightColor: "transparent",
     borderBottomColor: "transparent",
     boxShadow: "0 0 25px rgba(123, 93, 255, 0.4)",
-    position: "relative",
   },
   innerRing: {
     position: "absolute",
-    inset: "10px",
+    inset: "12px",
     borderRadius: "50%",
-    border: "3px solid rgba(124, 58, 237, 0.2)",
+    border: "4px solid rgba(124, 58, 237, 0.15)",
     borderTopColor: "transparent",
   },
-  percent: {
-    color: "#7C3AED",
-    fontSize: "20px",
-    fontWeight: 700,
+  svg: {
+    position: "absolute",
+    top: 0,
+    left: 0,
   },
   text: {
     color: "#6B7280",
