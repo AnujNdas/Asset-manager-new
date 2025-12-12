@@ -226,7 +226,7 @@ setEditForm({
     );
   };
 
-  if (loading) return <Loader />;
+  if (loading) return <Loader type="inventory"/>;
 
   return (
     <div className="inventory-container">
