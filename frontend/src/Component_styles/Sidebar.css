@@ -101,7 +101,7 @@ a:hover {
 
 /* SaaS-style logo container */
 .logo-wrapper {
-  width: 56px;
+  /* width: 56px; */
   display: flex;
   align-items: center;
   justify-content: center;
