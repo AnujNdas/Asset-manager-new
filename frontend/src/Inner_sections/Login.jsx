@@ -12,6 +12,7 @@ const Login = ({ setProfileUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [apiDone , setApiDone] = useState(false);
   const navigate = useNavigate();
 
   // Keep your original logic intact
@@ -36,6 +37,8 @@ const Login = ({ setProfileUser }) => {
           confirmButtonText: "OK"
         });
         navigate("/");
+        setApiDone(true)
+        setLoading(false);
       } else {
         Swal.fire({
           title: "Unexpected Error",
@@ -68,14 +71,13 @@ const Login = ({ setProfileUser }) => {
         });
       }
     }
-    setLoading(false);
   };
 
   return (
     <>
   {loading && (
   <div className="loader-overlay">
-    <Loader type="login" />
+    <Loader type="login" apiDone{false}/>
   </div>
 )}
     <div className="auth-page">
