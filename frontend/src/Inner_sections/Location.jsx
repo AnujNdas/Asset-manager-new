@@ -130,7 +130,7 @@ const Location = () => {
     }
   };
 
-  if (loading) return <Loader />;
+  if (loading) return <Loader type="classification" />;
 
   return (
     <div className="classification_card">
