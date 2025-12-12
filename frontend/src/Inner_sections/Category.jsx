@@ -129,7 +129,7 @@ const Category = () => {
   }, []);
 
   if (loading) {
-    return <Loader />;
+    return <Loader type="classification" />;
   }
 
   return (
