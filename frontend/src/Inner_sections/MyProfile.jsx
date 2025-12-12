@@ -143,7 +143,12 @@ useEffect(() => {
       {/* Top profile card */}
       <div className="personal-Profile">
         <div className="boxes-1">
-          <div className="profile-img" />
+          <img
+  src={`https://robohash.org/${userData.username}?set=set2&size=80x80`}
+  alt="Profile Avatar"
+  className="profile-img"
+/>
+
           <div className="data-info">
             <div className="p-name" style={{ fontWeight: '600', color: '#565656', fontFamily: 'Montserrat,san-serif' }}>
               {userData?.username || '—'}
