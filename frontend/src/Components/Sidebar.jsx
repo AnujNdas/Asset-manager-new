@@ -31,10 +31,11 @@ useEffect(() => {
     <div className="sidebar-container">
       <div className="sidebar">
         <div className="sidebar-heading">
-          <div className="title-head">
-
-            <img src={image} alt="icon" className="title-icon" width="50" height="40"/>
-          </div>
+       <div className="title-head">
+    <div className="logo-wrapper">
+      <img src={image} alt="Logo" className="app-logo" />
+    </div>
+  </div>
         </div>
         <div className="sidebar-menu">
           <ul>
