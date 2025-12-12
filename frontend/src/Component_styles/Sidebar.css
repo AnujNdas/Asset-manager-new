@@ -99,17 +99,40 @@ a:hover {
   border-radius: 2px;
 }
 
-.title-head {
-  font-family: "Nunito", sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #0f172a;
-    display: flex;
+/* SaaS-style logo container */
+.logo-wrapper {
+  width: 48px;
+  height: 48px;
+  display: flex;
   align-items: center;
-  gap: 5px;
-  justify-content :center;
-  width : 100%;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 6px;
+
+  /* subtle shadow like SaaS design */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* center the wrapper */
+  margin: 0 auto;
 }
+
+/* actual logo */
+.app-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* container */
+.title-head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0;
+}
+
 .title-text span {
   color: #2563eb; /* highlight Vault */
 }
