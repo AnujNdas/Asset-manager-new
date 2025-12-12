@@ -36,9 +36,9 @@ const Login = ({ setProfileUser }) => {
           icon: "success",
           confirmButtonText: "OK"
         });
-        navigate("/");
         setApiDone(true)
         setLoading(false);
+        navigate("/");
       } else {
         Swal.fire({
           title: "Unexpected Error",
@@ -77,7 +77,7 @@ const Login = ({ setProfileUser }) => {
     <>
   {loading && (
   <div className="loader-overlay">
-    <Loader type="login" apiDone{false}/>
+    <Loader type="login" apiDone{apiDone}/>
   </div>
 )}
     <div className="auth-page">
