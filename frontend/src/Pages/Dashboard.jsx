@@ -21,6 +21,7 @@ import {
 } from "chart.js";
 import { Spinner } from "react-bootstrap";
 import { getUserDashboard } from "../Services/ApiServices";
+import Loader from "../Components/Loader" ;
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
 
@@ -129,9 +130,7 @@ useEffect(() => {
 
       {/* LOADING STATE */}
       {loading && (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 50 }}>
-          <Spinner />
-        </div>
+        <Loader type="default" />
       )}
 
       {/* ERROR STATE */}
