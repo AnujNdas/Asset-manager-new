@@ -68,7 +68,7 @@ const Dashboard = () => {
     load();
   }, []);
 
-  if (loading) return <Loader />;
+  if (loading) return <Loader type="dashboard"/>;
 
   const locChartData = topLocations.map((loc) => ({
     name: getLocationName(loc._id),
