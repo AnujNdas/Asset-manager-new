@@ -71,7 +71,7 @@ a:hover {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 5px 15px;
 }
 
 /* Sidebar Heading */
@@ -84,8 +84,8 @@ a:hover {
   font-weight: 600;
   color: #1e1e2f;
   position: relative;
-  padding-bottom: 12px;
   text-align: center;
+  height: 15%;
 }
 
 .sidebar-heading::after {
@@ -109,6 +109,7 @@ a:hover {
 
   /* center the wrapper */
   margin: 0 auto;
+  height : 100%;
 }
 
 /* actual logo */
@@ -124,7 +125,7 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 0;
+  height : 100%;
 }
 
 .title-text span {
