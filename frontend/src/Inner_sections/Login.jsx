@@ -75,7 +75,7 @@ const Login = ({ setProfileUser }) => {
     <>
   {loading && (
   <div className="loader-overlay">
-    <Loader type="login">
+    <Loader type="login" />
   </div>
 )}
     <div className="auth-page">
