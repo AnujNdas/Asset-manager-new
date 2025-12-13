@@ -11,6 +11,7 @@ const Location = () => {
   const [locationName, setLocationName] = useState('');
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [apiDone, setApiDone] = useState(false);
   const [error, setError] = useState(null);
 
   // Pagination
@@ -30,9 +31,13 @@ const Location = () => {
     try {
       const data = await getLocations();
       setLocations([...data].reverse());
+      setApiDone(true)
+      // ✅ allow progress to hit 100%
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
     } catch (err) {
       setError('Error fetching locations');
-    } finally {
       setLoading(false);
     }
   };
@@ -130,7 +135,7 @@ const Location = () => {
     }
   };
 
-  if (loading) return <Loader type="classification" />;
+  if (loading) return <Loader type="classification" apiDone={apiDone} />;
 
   return (
     <div className="classification_card">
