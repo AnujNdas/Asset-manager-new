@@ -25,7 +25,8 @@ const MisReport = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [startDate, setStartDate] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const [apiDone, setApiDone] = useState(false);
+  
   // Data
   const [hardware, setHardware] = useState([]);
   const [software, setSoftware] = useState([]);
@@ -61,11 +62,15 @@ const MisReport = () => {
         setSoftware(sw?.data || sw);
         setHardware(ha?.data || ha);
         setLicenses(lic?.data || lic);
+        setApiDone(true);
+        // ✅ allow progress to hit 100%
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
       } catch (err) {
         console.error("Error fetching filters/data:", err);
-      } finally {
       setLoading(false);
-    }
+      }
     })();
   }, []);
 
@@ -112,7 +117,7 @@ const MisReport = () => {
   };
   if (loading) {
   return (
-      <Loader type="mis" />
+      <Loader type="mis" apiDone={apiDone} />
   );
 }
 
