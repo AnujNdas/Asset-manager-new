@@ -154,6 +154,9 @@ const updateAsset = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
+    console.log("REQ BODY:", req.body);
+console.log("REQ HEADERS:", req.headers["content-type"]);
+
 
     const existingAsset = await Asset.findById(id);
     if (!existingAsset) {
