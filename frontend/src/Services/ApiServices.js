@@ -130,7 +130,6 @@ export const updateHardwareAsset = async (id, data) => {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
     }
   );
 
