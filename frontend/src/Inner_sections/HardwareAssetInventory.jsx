@@ -25,6 +25,7 @@ const HardwareAssetList = () => {
   const [editingAsset, setEditingAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [loading, setLoading] = useState(true);
+  const [apiDone, setApiDone] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const assetsPerPage = 6;
@@ -33,28 +34,37 @@ const HardwareAssetList = () => {
     fetchAll();
   }, []);
 
-  const fetchAll = async () => {
-    try {
-      const [assetsRes, catsRes, locsRes, unitsRes, statusesRes] =
-        await Promise.all([
-          getHardwareAssets(),
-          getCategories(),
-          getLocations(),
-          getUnits(),
-          getStatuses(),
-        ]);
+const fetchAll = async () => {
+  try {
+    const [assetsRes, catsRes, locsRes, unitsRes, statusesRes] =
+      await Promise.all([
+        getHardwareAssets(),
+        getCategories(),
+        getLocations(),
+        getUnits(),
+        getStatuses(),
+      ]);
 
-      setAssets(assetsRes?.data ?? assetsRes ?? []);
-      setCategories(catsRes ?? []);
-      setLocations(locsRes ?? []);
-      setUnits(unitsRes ?? []);
-      setStatuses(statusesRes ?? []);
-    } catch (err) {
-      Swal.fire("Error", err.message || "Failed to load data", "error");
-    } finally {
+    setAssets(assetsRes?.data ?? assetsRes ?? []);
+    setCategories(catsRes ?? []);
+    setLocations(locsRes ?? []);
+    setUnits(unitsRes ?? []);
+    setStatuses(statusesRes ?? []);
+
+    // ✅ SIGNAL LOADER COMPLETION
+    setApiDone(true);
+
+    // ✅ allow progress to hit 100%
+    setTimeout(() => {
       setLoading(false);
-    }
-  };
+    }, 400);
+
+  } catch (err) {
+    Swal.fire("Error", err.message || "Failed to load data", "error");
+    setLoading(false);
+  }
+};
+
 
   const indexOfLast = currentPage * assetsPerPage;
   const indexOfFirst = indexOfLast - assetsPerPage;
@@ -226,7 +236,7 @@ setEditForm({
     );
   };
 
-  if (loading) return <Loader type="inventory"/>;
+  if (loading) return <Loader type="inventory" apiDone={apiDone} />;
 
   return (
     <div className="inventory-container">
