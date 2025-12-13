@@ -30,7 +30,6 @@ const assetSchema = new mongoose.Schema(
       min: 0,
     },
 
-    // ✅ NEW FIELD
     inUse: {
       type: Number,
       required: true,
@@ -44,5 +43,10 @@ const assetSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-module.exports = mongoose.model("Asset", assetSchema);
 
+// ✅ ADD THIS (CRITICAL)
+assetSchema.virtual("inStock").get(function () {
+  return this.assetQuantity - this.inUse;
+});
+
+module.exports = mongoose.model("Asset", assetSchema);
