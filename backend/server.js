@@ -90,7 +90,7 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://asset-manager-new-frontend.onrender.com",
+    origin: "https://assetsmanagementsystem.socialflylive.com",
     methods: ["GET", "POST"],
   },
 });
