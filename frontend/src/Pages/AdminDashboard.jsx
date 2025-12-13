@@ -64,8 +64,7 @@ const Dashboard = () => {
       setTimeout(() => setLoading(false), 400);
       } catch (err) {
         console.error("Dashboard load error:", err);
-      } finally {
-        setLoading(false);
+        setLoading(false); // only here
       }
     };
 
