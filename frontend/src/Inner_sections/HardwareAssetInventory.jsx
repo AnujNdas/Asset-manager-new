@@ -115,10 +115,11 @@ setEditForm({
   purchaseFrom: asset.purchaseFrom || "",
   assetLifetime: asset.assetLifetime || "",
 
-  // NEW FIELDS
   assetCost: asset.assetCost || "",
-  assetQuantity: asset.assetQuantity || "",
+  assetQuantity: asset.assetQuantity || 1,
+  inUse: asset.inUse || 0,
 });
+
 
   };
 
@@ -147,10 +148,18 @@ setEditForm({
     }
   };
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditForm((prev) => ({ ...prev, [name]: value }));
-  };
+ const handleEditChange = (e) => {
+  const { name, value } = e.target;
+
+  if (name === "inUse") {
+    const total = Number(editForm.assetQuantity || 0);
+    const inUseVal = Math.min(Number(value), total);
+    setEditForm((prev) => ({ ...prev, inUse: inUseVal }));
+    return;
+  }
+
+  setEditForm((prev) => ({ ...prev, [name]: value }));
+};
 
   const getExpiryBadge = (DOE) => {
     if (!DOE) return null;
@@ -265,11 +274,19 @@ setEditForm({
                 </div>
 
                 <div className="card-info2">
-                  <p><strong>Code:</strong> {asset.assetCode || "—"}</p>
                   <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
                   <p><strong>Unit:</strong> {unitName}</p>
                   <p><strong>Purchase:</strong> {asset.DOP ? new Date(asset.DOP).toLocaleDateString() : "N/A"}</p>
                   <p><strong>Expiry:</strong> {asset.DOE ? new Date(asset.DOE).toLocaleDateString() : "N/A"}</p>
+                  <p>
+  <strong>Stock:</strong>{" "}
+  {asset.inStock > 0 ? (
+    <span className="stock-green">{asset.inStock} Available</span>
+  ) : (
+    <span className="stock-red">Out of Stock</span>
+  )}
+</p>
+
                 </div>
 
                 <div className="card-actions">
@@ -371,6 +388,21 @@ setEditForm({
   <label>Total Value</label>
   <p>₹{(selectedAsset.assetCost || 0) * (selectedAsset.assetQuantity || 1)}</p>
 </div>
+          <div>
+  <label>Total Quantity</label>
+  <p>{selectedAsset.assetQuantity || 1}</p>
+</div>
+
+<div>
+  <label>In Use</label>
+  <p>{selectedAsset.inUse || 0}</p>
+</div>
+
+<div>
+  <label>In Stock</label>
+  <p>{selectedAsset.inStock || 0}</p>
+</div>
+
 
           <div>
             <label>Purchase From</label>
@@ -521,6 +553,15 @@ setEditForm({
   value={editForm.assetQuantity || ""}
   onChange={handleEditChange}
 />
+          <input
+  type="number"
+  name="inUse"
+  placeholder="Assets In Use"
+  className="asset-edit-input"
+  value={editForm.inUse || 0}
+  onChange={handleEditChange}
+/>
+
 
           <input
             name="assetLifetime"
