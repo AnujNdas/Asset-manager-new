@@ -283,6 +283,8 @@ const AssetCapture = () => {
           </div> */}
         </div>
 
+
+          </div>
         {/* Cost & Quantity */}
         <div className="section">
           <h3 className="section-title">Cost & Quantity</h3>
@@ -334,8 +336,6 @@ const AssetCapture = () => {
                 ))}
               </select>
             </div>
-          </div>
-
           </div>
         </div>
 
