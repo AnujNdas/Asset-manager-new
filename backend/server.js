@@ -36,7 +36,7 @@ const app = express();
 // ✅ Middleware
 app.use(
   cors({
-    origin: "https://asset-manager-new-frontend.onrender.com",
+    origin: "https://assetsmanagementsystem.socialflylive.com",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
