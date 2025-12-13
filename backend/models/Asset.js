@@ -44,3 +44,5 @@ const assetSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+module.exports = mongoose.model("Asset", assetSchema);
+
