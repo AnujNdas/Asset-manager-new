@@ -105,21 +105,25 @@ const Classification = () => {
       <div className="classification_header">
         <h2 className="classify_heading2">Classification</h2>
 
-        <div className="export-wrapper">
-          <button
-            className="export-btn"
-            onClick={() => setExportOpen(!exportOpen)}
-          >
-            Export ▾
-          </button>
+<div className="export-wrapper">
+  <button
+    className="export-btn"
+    onClick={() => setExportOpen((prev) => !prev)}
+    aria-haspopup="true"
+    aria-expanded={exportOpen}
+  >
+    Export
+    <span className={`export-caret ${exportOpen ? "open" : ""}`}>▾</span>
+  </button>
 
-          {exportOpen && (
-            <div className="export-dropdown">
-              <div onClick={() => handleExport("csv")}>CSV</div>
-              <div onClick={() => handleExport("excel")}>Excel</div>
-            </div>
-          )}
-        </div>
+  {exportOpen && (
+    <div className="export-dropdown">
+      <button onClick={() => handleExport("csv")}>Export as CSV</button>
+      <button onClick={() => handleExport("excel")}>Export as Excel</button>
+    </div>
+  )}
+</div>
+
       </div>
 
       {/* TABS */}
