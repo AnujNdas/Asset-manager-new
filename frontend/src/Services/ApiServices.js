@@ -123,8 +123,20 @@ export const getHardwareAssetById = async (id) => {
 };
 
 export const updateHardwareAsset = async (id, data) => {
-  return axiosInstance.put(`/assets/${id}`, data);
+  const res = await axiosInstance.put(
+    `/assets/${id}`,
+    data,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    }
+  );
+
+  return res.data;
 };
+;
 
 
 
