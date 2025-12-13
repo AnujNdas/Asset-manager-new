@@ -15,6 +15,7 @@ const Status = require("../models/Status");
 // =======================================================================
 // BULK UPLOAD
 // =======================================================================
+// ================= BULK UPLOAD =================
 const bulkUpload = async (req, res) => {
   try {
     console.log("🔥 Bulk upload request received.");
@@ -22,7 +23,6 @@ const bulkUpload = async (req, res) => {
     const { assets, mode } = req.body;
     const parsedAssets = JSON.parse(assets);
 
-    // Fetch DB reference lists
     const categories = await Category.find({});
     const units = await Unit.find({});
     const locations = await Location.find({});
@@ -37,21 +37,32 @@ const bulkUpload = async (req, res) => {
     let invalidRows = [];
 
     for (const [index, asset] of parsedAssets.entries()) {
-      let categoryId = categoryMap.get(asset.assetCategory?.toLowerCase() || "");
-      let unitId = unitMap.get(asset.associateUnit?.toLowerCase() || "");
-      let locationId = locationMap.get(asset.locationName?.toLowerCase() || "");
-      let statusId = statusMap.get(asset.assetStatus?.toLowerCase() || "");
+      let categoryId = categoryMap.get(asset.assetCategory?.toLowerCase());
+      let unitId = unitMap.get(asset.associateUnit?.toLowerCase());
+      let locationId = locationMap.get(asset.locationName?.toLowerCase());
+      let statusId = statusMap.get(asset.assetStatus?.toLowerCase());
 
       if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
         invalidRows.push({ row: index + 2, asset });
         continue;
       }
 
-      // auto create missing values
-      if (!categoryId && asset.assetCategory) categoryId = (await Category.create({ name: asset.assetCategory }))._id;
-      if (!unitId && asset.associateUnit) unitId = (await Unit.create({ name: asset.associateUnit }))._id;
-      if (!locationId && asset.locationName) locationId = (await Location.create({ name: asset.locationName }))._id;
-      if (!statusId && asset.assetStatus) statusId = (await Status.create({ name: asset.assetStatus }))._id;
+      if (!categoryId && asset.assetCategory)
+        categoryId = (await Category.create({ name: asset.assetCategory }))._id;
+      if (!unitId && asset.associateUnit)
+        unitId = (await Unit.create({ name: asset.associateUnit }))._id;
+      if (!locationId && asset.locationName)
+        locationId = (await Location.create({ name: asset.locationName }))._id;
+      if (!statusId && asset.assetStatus)
+        statusId = (await Status.create({ name: asset.assetStatus }))._id;
+
+      const totalQty = Number(asset.assetQuantity || 1);
+      const inUse = Number(asset.inUse || 0);
+
+      if (inUse > totalQty) {
+        invalidRows.push({ row: index + 2, reason: "InUse > Quantity", asset });
+        continue;
+      }
 
       validAssets.push({
         assetCode: asset.assetCode,
@@ -67,13 +78,13 @@ const bulkUpload = async (req, res) => {
         assetLifetime: asset.assetLifetime,
         purchaseFrom: asset.purchaseFrom,
 
-        // NEW FIELDS
-        cost: asset.cost || 0,
-        quantity: asset.quantity || 1,
+        assetCost: Number(asset.assetCost || 0),
+        assetQuantity: totalQty,
+        inUse,
       });
     }
 
-    if (validAssets.length > 0) {
+    if (validAssets.length) {
       await Asset.insertMany(validAssets, { ordered: false });
     }
 
@@ -83,7 +94,6 @@ const bulkUpload = async (req, res) => {
       skipped: invalidRows.length,
       invalidRows,
     });
-
   } catch (err) {
     console.error("❌ Bulk Upload Error:", err);
     return res.status(500).json({ success: false, message: err.message });
@@ -92,43 +102,44 @@ const bulkUpload = async (req, res) => {
 
 
 
-
 // =======================================================================
 // ADD ASSET
 // =======================================================================
+// ================= ADD ASSET =================
 const addAsset = async (req, res) => {
   try {
-    console.log("BODY RECEIVED →", req.body);
-
     const userId = req.user.id;
+
+    const assetQuantity = Number(req.body.assetQuantity || 1);
+    const inUse = Number(req.body.inUse || 0);
+
+    if (inUse > assetQuantity) {
+      return res.status(400).json({
+        message: "In-use quantity cannot exceed total quantity",
+      });
+    }
 
     const newAsset = new Asset({
       ...req.body,
-
-      // ensure new fields exist
-      cost: req.body.cost || 0,
-      quantity: req.body.quantity || 1,
+      assetCost: req.body.assetCost || 0,
+      assetQuantity,
+      inUse,
     });
 
     const savedAsset = await newAsset.save();
 
-    const newNotification = await Notification.create({
+    const notification = await Notification.create({
       title: "Asset Added",
       message: "Asset added successfully.",
       userId,
     });
 
-    const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
 
     return res.status(201).json(savedAsset);
-
   } catch (error) {
-    console.log("🔥 REAL ADD ASSET ERROR →", error);
-    return res.status(500).json({
-      message: "Error adding asset",
-      error: error.message,
-    });
+    console.error("🔥 ADD ASSET ERROR:", error);
+    return res.status(500).json({ message: "Error adding asset", error: error.message });
   }
 };
 
@@ -138,10 +149,9 @@ const addAsset = async (req, res) => {
 // =======================================================================
 // UPDATE ASSET
 // =======================================================================
+// ================= UPDATE ASSET =================
 const updateAsset = async (req, res) => {
   try {
-    console.log("⚡ UPDATE ASSET DEBUG START ⚡");
-
     const { id } = req.params;
     const userId = req.user.id;
 
@@ -150,37 +160,42 @@ const updateAsset = async (req, res) => {
       return res.status(404).json({ message: "Asset not found" });
     }
 
-    let updatedAssetData = {
-      ...req.body,
+    const assetQuantity =
+      req.body.assetQuantity ?? existingAsset.assetQuantity;
+    const inUse =
+      req.body.inUse ?? existingAsset.inUse;
 
-      // preserve these
-      assetCode: existingAsset.assetCode,
-      barcodeNumber: existingAsset.barcodeNumber,
+    if (inUse > assetQuantity) {
+      return res.status(400).json({
+        message: "In-use quantity cannot exceed total quantity",
+      });
+    }
 
-      // ensure new fields always exist
-      cost: req.body.cost ?? existingAsset.cost,
-      quantity: req.body.quantity ?? existingAsset.quantity,
-    };
+    const updatedAsset = await Asset.findByIdAndUpdate(
+      id,
+      {
+        ...req.body,
+        assetCode: existingAsset.assetCode,
+        barcodeNumber: existingAsset.barcodeNumber,
+        assetCost: req.body.assetCost ?? existingAsset.assetCost,
+        assetQuantity,
+        inUse,
+      },
+      { new: true }
+    );
 
-    const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
-
-    const newNotification = await Notification.create({
+    const notification = await Notification.create({
       title: "Asset Updated",
       message: "Asset updated successfully.",
       userId,
     });
 
-    const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
 
     return res.status(200).json(updatedAsset);
-
   } catch (error) {
     console.error("🔥 UPDATE ASSET ERROR:", error);
-    return res.status(500).json({
-      message: "Error updating asset",
-      error: error.message,
-    });
+    return res.status(500).json({ message: "Error updating asset", error: error.message });
   }
 };
 
