@@ -335,6 +335,106 @@
   font-size: 13px;
 }
 
+/* ===== Export Dropdown ===== */
+
+.export-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Main button */
+.export-btn {
+  background-color: #2456ed;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 10px rgba(36, 86, 237, 0.25);
+}
+
+.export-btn:hover {
+  background-color: #1e48c6;
+  box-shadow: 0 6px 16px rgba(36, 86, 237, 0.35);
+}
+
+.export-btn:active {
+  transform: translateY(1px);
+}
+
+/* Caret animation */
+.export-caret {
+  transition: transform 0.2s ease;
+}
+
+.export-caret.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.export-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: #fff;
+  min-width: 160px;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  animation: dropdownFade 0.15s ease-out;
+}
+
+/* Dropdown items */
+.export-dropdown button {
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.export-dropdown button:hover {
+  background: rgba(36, 86, 237, 0.08);
+  color: #2456ed;
+}
+
+/* Animation */
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Mobile Responsive ===== */
+@media (max-width: 600px) {
+  .export-btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .export-dropdown {
+    width: 100%;
+    right: auto;
+    left: 0;
+  }
+}
 
 /* Responsive stacking for mobile */
 @media (max-width: 720px) {
