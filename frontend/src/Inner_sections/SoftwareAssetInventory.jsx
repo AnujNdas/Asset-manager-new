@@ -34,6 +34,7 @@ const SoftwareAssetList = () => {
   const [editingAsset, setEditingAsset] = useState(null); // edit modal
   const [editForm, setEditForm] = useState({});
   const [loading, setLoading] = useState(true);
+  const [apiDone, setApiDone] = useState(false);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,12 +62,17 @@ const SoftwareAssetList = () => {
       setSoftwareAssets(assetsArray);
       setCategories(catsRes || []);
       setStatuses(statsRes || []);
+      // ✅ SIGNAL LOADER COMPLETION
+    setApiDone(true);
+      // ✅ allow progress to hit 100%
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
     } catch (err) {
       console.error("Failed to fetch inventory data:", err);
       Swal.fire("Error", err.message || "Failed to load data", "error");
-    } finally {
-    setLoading(false);
-  }
+      setLoading(false)
+    } 
   };
   // Convert ID → Category Name
 const getCategoryName = (categoryId) => {
@@ -301,7 +307,7 @@ const getStatusName = (statusId) => {
       {/* <h2 className="inventory-title">Software Inventory</h2> */}
 
 {loading ? (
-  <Loader />
+  <Loader type="inventory" apiDone={apiDone} />
 ) : currentItems.length === 0 ? (
   <p>No software assets found.</p>
 ) : (
