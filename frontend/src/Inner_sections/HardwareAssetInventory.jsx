@@ -280,7 +280,6 @@ setEditForm({
                   <p><strong>Quantity:</strong> {asset.assetQuantity || "N/A"}</p>
                   <p><strong>Total Value:</strong> {asset.assetCost * asset.assetQuantity || "N/A"}</p>
                   <p><strong>In Use:</strong> {asset.inUse || "N/A"}</p>
-                  <p><strong>In Stock:</strong> {asset.inStock || "N/A"}</p>
                   <p>
   <strong>Stock:</strong>{" "}
   {asset.inStock > 0 ? (
