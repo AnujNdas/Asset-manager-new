@@ -34,7 +34,8 @@ const Dashboard = () => {
   const [valuationData, setValuationData] = useState([]);
 
   const [loading, setLoading] = useState(true);
-
+  const [apiDone, setApiDone] = useState(false);
+    
   const getLocationName = (id) => {
     const loc = locationList.find((l) => l._id === id);
     return loc ? loc.name : "Unknown";
@@ -57,7 +58,10 @@ const Dashboard = () => {
         setLocationList(allLocs);
         setValuationData(valuation);
 
-
+      // ✅ SIGNAL LOADER TO COMPLETE
+      setApiDone(true);
+     // small delay for smooth UX
+      setTimeout(() => setLoading(false), 400);
       } catch (err) {
         console.error("Dashboard load error:", err);
       } finally {
@@ -68,7 +72,7 @@ const Dashboard = () => {
     load();
   }, []);
 
-  if (loading) return <Loader type="dashboard"/>;
+  if (loading) return <Loader type="dashboard" apiDone={apiDone} />;
 
   const locChartData = topLocations.map((loc) => ({
     name: getLocationName(loc._id),
