@@ -1,7 +1,7 @@
 import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../Context/NotificationContext";
-import "../Component_Styles/NotificationBtn.css";
+import "../Component_styles/NotificationBtn.css";
 
 const NotificationBtn = () => {
   const { unreadCount } = useNotifications();
