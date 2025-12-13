@@ -391,10 +391,6 @@ const handleEditSubmit = async (e) => {
   <label>Total Value</label>
   <p>₹{(selectedAsset.assetCost || 0) * (selectedAsset.assetQuantity || 1)}</p>
 </div>
-          <div>
-  <label>Total Quantity</label>
-  <p>{selectedAsset.assetQuantity || 1}</p>
-</div>
 
 <div>
   <label>In Use</label>
