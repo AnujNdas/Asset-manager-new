@@ -11,6 +11,7 @@ const Category = () => {
   const [categoryName, setCategoryName] = useState('');
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [apiDone, setApiDone] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -30,11 +31,15 @@ const Category = () => {
     try {
       const data = await getCategories();
       setCategories([...data].reverse());
+      setApiDone(true)
+      // ✅ allow progress to hit 100%
+      setTimeout(() => {
+      setLoading(false);
+    }, 400);
     } catch (err) {
       setError('Error fetching categories');
-    } finally {
       setLoading(false);
-    }
+    } 
   };
 
   // Create category
@@ -129,7 +134,7 @@ const Category = () => {
   }, []);
 
   if (loading) {
-    return <Loader type="classification" />;
+    return <Loader type="classification" apiDone={apiDone} />;
   }
 
   return (
