@@ -18,6 +18,7 @@ const Status = () => {
   const [statusName, setStatusName] = useState('');
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [apiDone, setApiDone] = useState(false);
   const [error, setError] = useState(null);
 
   // Pagination
@@ -38,9 +39,13 @@ const Status = () => {
     try {
       const data = await getStatuses();
       setStatuses([...data].reverse());
+      setApiDone(true);
+      // ✅ allow progress to hit 100%
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
     } catch (err) {
       setError('Error fetching statuses');
-    } finally {
       setLoading(false);
     }
   };
@@ -126,7 +131,7 @@ const Status = () => {
     }
   };
 
-  if (loading) return <Loader type="classification" />;
+  if (loading) return <Loader type="classification" apiDone={apiDone}/>;
 
   return (
     <div className="classification_card">
