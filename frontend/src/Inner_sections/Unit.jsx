@@ -13,6 +13,7 @@ const Unit = () => {
   const [filteredUnits, setFilteredUnits] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [apiDone, setApiDone] = useState(false);
   const [error, setError] = useState(null);
 
   // Pagination
@@ -36,11 +37,15 @@ const Unit = () => {
       const reversed = [...data].reverse();
       setUnits(reversed);
       setFilteredUnits(reversed);
+      setApiDone(true)
+      // ✅ allow progress to hit 100%
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
     } catch (err) {
       setError('Error fetching units');
-    } finally {
       setLoading(false);
-    }
+    } 
   };
 
   // Add new unit
@@ -165,7 +170,7 @@ const Unit = () => {
     fetchUnits();
   }, []);
 
-  if (loading) return <Loader type="classification" />;
+  if (loading) return <Loader type="classification" apiDone={apiDone} />;
 
   return (
     <div className="classification_card">
