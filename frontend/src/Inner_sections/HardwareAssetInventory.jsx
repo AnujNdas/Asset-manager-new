@@ -275,9 +275,12 @@ setEditForm({
 
                 <div className="card-info2">
                   <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
-                  <p><strong>Unit:</strong> {unitName}</p>
-                  <p><strong>Purchase:</strong> {asset.DOP ? new Date(asset.DOP).toLocaleDateString() : "N/A"}</p>
-                  <p><strong>Expiry:</strong> {asset.DOE ? new Date(asset.DOE).toLocaleDateString() : "N/A"}</p>
+                  <p><strong>Cost:</strong> {asset.assetCost || "N/A"}</p>
+                  {/* <p><strong>Unit:</strong> {unitName}</p> */}
+                  <p><strong>Quantity:</strong> {asset.assetQuantity || "N/A"}</p>
+                  <p><strong>Total Value:</strong> {asset.assetCost * asset.assetQuantity || "N/A"}</p>
+                  <p><strong>In Use:</strong> {asset.inUse || "N/A"}</p>
+                  <p><strong>In Stock:</strong> {asset.inStock || "N/A"}</p>
                   <p>
   <strong>Stock:</strong>{" "}
   {asset.inStock > 0 ? (
