@@ -249,26 +249,6 @@ const AssetCapture = () => {
               </select>
             </div>
 
-            {/* Associate Unit */}
-            <div className="input-group">
-              <label>
-                Associate Unit <span>*</span>
-              </label>
-              <select
-                name="associateUnit"
-                value={formData.associateUnit}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Unit</option>
-                {units.map((u) => (
-                  <option key={u._id} value={u._id}>
-                    {u.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
 
           {/* Status */}
           <div className="input-group">
@@ -335,6 +315,27 @@ const AssetCapture = () => {
                 required
               />
             </div>
+                        {/* Associate Unit */}
+            <div className="input-group">
+              <label>
+                Associate Unit <span>*</span>
+              </label>
+              <select
+                name="associateUnit"
+                value={formData.associateUnit}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Unit</option>
+                {units.map((u) => (
+                  <option key={u._id} value={u._id}>
+                    {u.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           </div>
         </div>
 
