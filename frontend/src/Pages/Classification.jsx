@@ -19,7 +19,7 @@ import {
 
 const tabs = [
   { name: "Location", key: "location", path: "/classification/location" },
-  { name: "Department", key: "unit", path: "/classification/unit" },
+  { name: "Unit", key: "unit", path: "/classification/unit" },
   { name: "Category", key: "category", path: "/classification/category" },
   { name: "Status", key: "status", path: "/classification/status" },
 ];
