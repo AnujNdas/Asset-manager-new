@@ -40,24 +40,38 @@ const Loader = ({ type = "default", apiDone = false }) => {
 
   return (
     <div style={styles.container}>
-      {/* Outer rotating ring */}
-      <motion.div
-        style={styles.outerRing}
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
-      />
-
-      {/* Inner progress circle */}
-      <div style={styles.innerCircle}>
+      {/* Ring Wrapper */}
+      <div style={styles.ringWrapper}>
+        {/* Outer rotating ring */}
         <motion.div
-          style={{
-            ...styles.liquid,
-            height: `${progress}%`,
-          }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          style={styles.outerRing}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
         />
 
-        <span style={styles.percent}>{progress}%</span>
+        {/* Inner progress circle */}
+        <div style={styles.innerCircle}>
+          <motion.div
+            style={{
+              ...styles.liquid,
+              height: `${progress}%`,
+            }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            {/* Wave layer */}
+            <motion.div
+              style={styles.wave}
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{
+                repeat: Infinity,
+                duration: 2,
+                ease: "linear",
+              }}
+            />
+          </motion.div>
+
+          <span style={styles.percent}>{progress}%</span>
+        </div>
       </div>
 
       <motion.p
@@ -73,6 +87,7 @@ const Loader = ({ type = "default", apiDone = false }) => {
   );
 };
 
+
 const styles = {
   container: {
     height: "100vh",
@@ -83,10 +98,19 @@ const styles = {
     gap: "20px",
   },
 
+  ringWrapper: {
+    position: "relative",
+    height: "100px",
+    width: "100px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   outerRing: {
     position: "absolute",
-    height: "96px",
-    width: "96px",
+    height: "100px",
+    width: "100px",
     borderRadius: "50%",
     border: "3px solid rgba(124,58,237,0.25)",
     borderTopColor: "#7B5DFF",
@@ -102,7 +126,8 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+    zIndex: 2,
   },
 
   liquid: {
@@ -110,12 +135,23 @@ const styles = {
     bottom: 0,
     width: "100%",
     background: "linear-gradient(180deg, #7B5DFF, #6D28D9)",
-    borderRadius: "0 0 50% 50%",
+    overflow: "hidden",
+  },
+
+  wave: {
+    position: "absolute",
+    top: "-12px",
+    left: 0,
+    width: "200%",
+    height: "24px",
+    background:
+      "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.35) 30%, transparent 31%)",
+    opacity: 0.6,
   },
 
   percent: {
     position: "relative",
-    zIndex: 2,
+    zIndex: 3,
     color: "#fff",
     fontWeight: 600,
     fontSize: "18px",
