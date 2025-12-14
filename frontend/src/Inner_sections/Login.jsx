@@ -46,6 +46,7 @@ const Login = ({ setProfileUser }) => {
           icon: "error",
           confirmButtonText: "OK"
         });
+        setLoading(false);
       }
     } catch (error) {
       if (error.response) {
@@ -55,6 +56,7 @@ const Login = ({ setProfileUser }) => {
           icon: "error",
           confirmButtonText: "OK"
         });
+        setLoading(false);
       } else if (error.request) {
         Swal.fire({
           title: "Network Error",
@@ -62,6 +64,7 @@ const Login = ({ setProfileUser }) => {
           icon: "error",
           confirmButtonText: "OK"
         });
+        setLoading(false);
       } else {
         Swal.fire({
           title: "Error",
@@ -69,6 +72,7 @@ const Login = ({ setProfileUser }) => {
           icon: "error",
           confirmButtonText: "OK"
         });
+        setLoading(false);
       }
     }
   };
