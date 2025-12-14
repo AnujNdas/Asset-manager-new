@@ -3,7 +3,7 @@ const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 
-exports.assignAsset = async (req, res) => {
+const assignAsset = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -80,7 +80,7 @@ exports.assignAsset = async (req, res) => {
     });
   }
 };
-exports.returnAsset = async (req, res) => {
+const returnAsset = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -133,3 +133,4 @@ exports.returnAsset = async (req, res) => {
   }
 };
 
+module.exports = { assignAsset , returnAsset };
