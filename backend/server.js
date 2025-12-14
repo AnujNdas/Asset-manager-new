@@ -60,6 +60,8 @@ app.use("/api/software-assets", softwareAssetRoutes);
 app.use("/api/company-licenses", companyLicenseRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user-data", userRoute);
+app.use("/api/assignments", assignmentRoutes);
+
 
 app.get("/smtp-test", async (req, res) => {
   try {
