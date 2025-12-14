@@ -80,3 +80,56 @@ exports.assignAsset = async (req, res) => {
     });
   }
 };
+exports.returnAsset = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const { assignmentId } = req.params;
+
+    const assignment = await AssetAssignment.findById(assignmentId).session(
+      session
+    );
+
+    if (!assignment || assignment.status === "returned") {
+      throw new Error("Invalid or already returned assignment");
+    }
+
+    if (assignment.assetType === "hardware") {
+      await Asset.findByIdAndUpdate(
+        assignment.assetId,
+        { $inc: { inUse: -assignment.quantity } },
+        { session }
+      );
+    }
+
+    if (assignment.assetType === "software") {
+      await SoftwareAsset.findByIdAndUpdate(
+        assignment.assetId,
+        { $inc: { licensesAssigned: -assignment.quantity } },
+        { session }
+      );
+    }
+
+    assignment.status = "returned";
+    assignment.returnedAt = new Date();
+    await assignment.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.json({
+      success: true,
+      message: "Asset returned successfully",
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
