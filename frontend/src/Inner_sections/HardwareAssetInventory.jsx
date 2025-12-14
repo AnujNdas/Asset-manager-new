@@ -292,11 +292,14 @@ const getInStock = (asset) =>
                   <p><strong>In Use:</strong> {asset.inUse || "N/A"}</p>
                   <p>
   <strong>Stock:</strong>{" "}
-  {asset.inStock > 0 ? (
-    <span className="stock-green">{asset.inStock} Available</span>
-  ) : (
-    <span className="stock-red">Out of Stock</span>
-  )}
+ {getInStock(asset) > 0 ? (
+  <span className="stock-green">
+    {getInStock(asset)} Available
+  </span>
+) : (
+  <span className="stock-red">Out of Stock</span>
+)}
+
 </p>
 
                 </div>
@@ -418,8 +421,9 @@ const getInStock = (asset) =>
 
 <div>
   <label>In Stock</label>
-  <p>{selectedAsset.inStock || 0}</p>
+  <p>{getInStock(selectedAsset)}</p>
 </div>
+
 
 
           <div>
@@ -632,13 +636,15 @@ const getInStock = (asset) =>
          max={getInStock(assigningAsset)}
 
           value={assignQty}
-          onChange={(e) =>
-            setAssignQty(
-  Math.min(Number(e.target.value), getInStock(assigningAsset))
-);
+         onChange={(e) =>
+  setAssignQty(
+    Math.min(
+      Number(e.target.value),
+      getInStock(assigningAsset)
+    )
+  )
+}
 
-            )
-          }
         />
 
         <div className="asset-assign-actions">
@@ -647,8 +653,12 @@ const getInStock = (asset) =>
             onClick={async () => {
               try {
                 const payload = {
-                  inUse: assigningAsset.inUse + assignQty,
-                };
+  inUse: Math.min(
+    assigningAsset.inUse + assignQty,
+    assigningAsset.assetQuantity
+  ),
+};
+
 
                 const updated = await updateHardwareAsset(
                   assigningAsset._id,
