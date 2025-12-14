@@ -22,6 +22,7 @@ const updateRoutes = require("./routes/updateRoutes");
 const softwareAssetRoutes = require("./routes/softwareAssets");
 const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
 const adminRoutes = require("./routes/adminRoutes");
+const assignmentRoutes = require("./routes/assignment routes");
 const userRoute = require("./routes/userRoutes");
 
 
