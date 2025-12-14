@@ -26,6 +26,8 @@ const HardwareAssetList = () => {
   const [editForm, setEditForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
+  const [assigningAsset, setAssigningAsset] = useState(null);
+  const [assignQty, setAssignQty] = useState(1);
 
   const [currentPage, setCurrentPage] = useState(1);
   const assetsPerPage = 6;
@@ -147,7 +149,12 @@ const handleEditSubmit = async (e) => {
     Swal.fire("Error", err.message || "Update failed", "error");
   }
 };
-;
+
+  const openAssign = (asset) => {
+  setAssigningAsset(asset);
+  setAssignQty(1);
+};
+
 
  const handleEditChange = (e) => {
   const { name, value } = e.target;
@@ -295,6 +302,15 @@ const handleEditSubmit = async (e) => {
                 <div className="card-actions">
                   <button className="btn-view" onClick={() => setSelectedAsset(asset)}>View</button>
                   <button className="btn-edit" onClick={() => startEdit(asset)}>Edit</button>
+                  {asset.inStock > 0 && (
+  <button
+    className="btn-assign"
+    onClick={() => openAssign(asset)}
+  >
+    Assign
+  </button>
+)}
+
                   <button className="btn-delete" onClick={() => handleDelete(asset._id)}>Delete</button>
                 </div>
               </motion.div>
@@ -585,6 +601,86 @@ const handleEditSubmit = async (e) => {
     </motion.div>
   )}
 </AnimatePresence>
+      <AnimatePresence>
+  {assigningAsset && (
+    <motion.div
+      className="asset-assign-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setAssigningAsset(null)}
+    >
+      <motion.div
+        className="asset-assign-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3>Assign Asset</h3>
+
+        <p><strong>{assigningAsset.assetName}</strong></p>
+        <p>Available: {assigningAsset.inStock}</p>
+
+        <input
+          type="number"
+          min={1}
+          max={assigningAsset.inStock}
+          value={assignQty}
+          onChange={(e) =>
+            setAssignQty(
+              Math.min(
+                Number(e.target.value),
+                assigningAsset.inStock
+              )
+            )
+          }
+        />
+
+        <div className="asset-assign-actions">
+          <button
+            className="btn-confirm"
+            onClick={async () => {
+              try {
+                const payload = {
+                  inUse: assigningAsset.inUse + assignQty,
+                };
+
+                const updated = await updateHardwareAsset(
+                  assigningAsset._id,
+                  payload
+                );
+
+                const newAsset = updated?.data ?? updated;
+
+                setAssets((prev) =>
+                  prev.map((a) =>
+                    a._id === newAsset._id ? newAsset : a
+                  )
+                );
+
+                setAssigningAsset(null);
+                Swal.fire("Assigned", "Asset assigned successfully.", "success");
+              } catch (err) {
+                Swal.fire("Error", err.message, "error");
+              }
+            }}
+          >
+            Assign
+          </button>
+
+          <button
+            className="btn-cancel"
+            onClick={() => setAssigningAsset(null)}
+          >
+            Cancel
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
     </div>
   );
