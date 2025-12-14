@@ -37,7 +37,11 @@ const Login = ({ setProfileUser }) => {
           confirmButtonText: "OK"
         });
         setApiDone(true)
-        setLoading(false);
+       // ✅ allow progress to hit 100%
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
+
         navigate("/");
       } else {
         Swal.fire({
