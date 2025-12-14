@@ -154,6 +154,8 @@ const handleEditSubmit = async (e) => {
   setAssigningAsset(asset);
   setAssignQty(1);
 };
+const getInStock = (asset) =>
+  Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
 
 
  const handleEditChange = (e) => {
@@ -302,7 +304,7 @@ const handleEditSubmit = async (e) => {
                 <div className="card-actions">
                   <button className="btn-view" onClick={() => setSelectedAsset(asset)}>View</button>
                   <button className="btn-edit" onClick={() => startEdit(asset)}>Edit</button>
-                  {asset.inStock > 0 && (
+{getInStock(asset) > 0 && (
   <button
     className="btn-assign"
     onClick={() => openAssign(asset)}
@@ -310,6 +312,7 @@ const handleEditSubmit = async (e) => {
     Assign
   </button>
 )}
+
 
                   <button className="btn-delete" onClick={() => handleDelete(asset._id)}>Delete</button>
                 </div>
@@ -620,19 +623,20 @@ const handleEditSubmit = async (e) => {
         <h3>Assign Asset</h3>
 
         <p><strong>{assigningAsset.assetName}</strong></p>
-        <p>Available: {assigningAsset.inStock}</p>
+        <p>Available: {getInStock(assigningAsset)}</p>
+
 
         <input
           type="number"
           min={1}
-          max={assigningAsset.inStock}
+         max={getInStock(assigningAsset)}
+
           value={assignQty}
           onChange={(e) =>
             setAssignQty(
-              Math.min(
-                Number(e.target.value),
-                assigningAsset.inStock
-              )
+  Math.min(Number(e.target.value), getInStock(assigningAsset))
+);
+
             )
           }
         />
