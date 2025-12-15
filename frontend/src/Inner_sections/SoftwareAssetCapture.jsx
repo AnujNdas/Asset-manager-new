@@ -152,7 +152,7 @@ export default function SoftwareAssetCapture() {
       renewalReminder: formData.renewalReminder,
 
       totalLicenses: Number(formData.totalLicenses) || 0,
-      licensesAssigned: Number(formData.licensesAssigned) || 0,
+      licensesAssigned: 0,
       licensesAvailable: Number(formData.licensesAvailable) || 0,
       subscriptionId: formData.subscriptionId,
 
