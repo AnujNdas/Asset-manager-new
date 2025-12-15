@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../Page_styles/AssignmentPage.css";
+import Pagination from "../Components/Pagination";
 import {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
@@ -7,14 +8,20 @@ import {
   getDepartments,
 } from "../Services/ApiServices";
 
+const PAGE_SIZE = 8;
+
 const AssignmentPage = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [assets, setAssets] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [selectedDepartments, setSelectedDepartments] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [assignments, setAssignments] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // search + pagination
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   // ---- INITIAL LOAD ----
   useEffect(() => {
@@ -40,40 +47,51 @@ const AssignmentPage = () => {
     }
   };
 
-  const openCategory = async (category) => {
-    setSelectedCategory(category);
+  const openCategory = async (categoryObj) => {
+    setSelectedCategory(categoryObj);
     setAssignments({});
-    setSelectedDepartments([]);
+    setSelectedDepartment("");
+    setSearch("");
+    setCurrentPage(1);
 
     try {
-      const res = await getInStockAssetsByCategory(category);
+      const res = await getInStockAssetsByCategory(categoryObj.category);
       setAssets(res.data || []);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const closeDrawer = () => {
+  const closeModal = () => {
     setSelectedCategory(null);
     setAssets([]);
   };
 
-  const handleQtyChange = (assetId, value) => {
-    setAssignments((prev) => ({
-      ...prev,
-      [assetId]: Number(value),
-    }));
+  const handleQtyChange = (assetId, value, max) => {
+    const qty = Math.min(Number(value), max);
+    setAssignments((prev) => ({ ...prev, [assetId]: qty }));
   };
 
-  const handleDepartmentChange = (e) => {
-    const values = Array.from(e.target.selectedOptions, (o) => o.value);
-    setSelectedDepartments(values);
-  };
+  // ---- FILTERED + PAGINATED ASSETS ----
+  const filteredAssets = useMemo(() => {
+    return assets.filter((a) =>
+      (a.name || a.assetName)
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    );
+  }, [assets, search]);
+
+  const totalPages = Math.ceil(filteredAssets.length / PAGE_SIZE);
+
+  const paginatedAssets = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredAssets.slice(start, start + PAGE_SIZE);
+  }, [filteredAssets, currentPage]);
 
   // ---- ASSIGN ASSETS ----
   const submitAssignments = async () => {
-    if (selectedDepartments.length === 0) {
-      alert("Please select at least one department");
+    if (!selectedDepartment) {
+      alert("Please select a department");
       return;
     }
 
@@ -82,13 +100,11 @@ const AssignmentPage = () => {
     assets.forEach((asset) => {
       const qty = assignments[asset._id];
       if (qty && qty > 0) {
-        selectedDepartments.forEach((deptId) => {
-          payload.push({
-            assetType: asset.assetType,
-            assetId: asset._id,
-            departmentId: deptId,
-            quantity: qty,
-          });
+        payload.push({
+          assetType: asset.assetType,
+          assetId: asset._id,
+          departmentId: selectedDepartment,
+          quantity: qty,
         });
       }
     });
@@ -102,7 +118,7 @@ const AssignmentPage = () => {
       setLoading(true);
       await assignAssetsFromStock({ assignments: payload });
       alert("Assets assigned successfully");
-      closeDrawer();
+      closeModal();
       fetchCategorySummary();
     } catch (err) {
       alert(err?.message || "Assignment failed");
@@ -124,9 +140,9 @@ const AssignmentPage = () => {
           <div
             key={cat.category}
             className="category-card"
-            onClick={() => openCategory(cat.category)}
+            onClick={() => openCategory(cat)}
           >
-            <h3>{cat.category}</h3>
+            <h3>{cat.categoryName || cat.category}</h3>
             <span>{cat.totalInStock} in stock</span>
             <div className="counts">
               <p>Hardware: {cat.hardwareCount}</p>
@@ -136,64 +152,78 @@ const AssignmentPage = () => {
         ))}
       </div>
 
-      {/* DRAWER */}
+      {/* MODAL */}
       {selectedCategory && (
-        <div className="drawer-overlay">
-          <div className="drawer">
-            <div className="drawer-header">
-              <h2>{selectedCategory} Assets</h2>
-              <button onClick={closeDrawer}>✕</button>
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>{selectedCategory.categoryName || selectedCategory.category}</h2>
+              <button onClick={closeModal}>✕</button>
             </div>
 
-            <div className="drawer-body">
-              <table className="asset-table">
-                <thead>
-                  <tr>
-                    <th>Asset Name</th>
-                    <th>Type</th>
-                    <th>Available</th>
-                    <th>Assign Qty</th>
+            <div className="modal-controls">
+              <input
+                type="text"
+                placeholder="Search assets..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+
+              <select
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+              >
+                <option value="">Select Department</option>
+                {departments.map((dep) => (
+                  <option key={dep._id} value={dep._id}>
+                    {dep.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <table className="asset-table">
+              <thead>
+                <tr>
+                  <th>Asset Name</th>
+                  <th>Type</th>
+                  <th>Available</th>
+                  <th>Assign Qty</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedAssets.map((asset) => (
+                  <tr key={asset._id}>
+                    <td>{asset.name || asset.assetName}</td>
+                    <td>{asset.assetType}</td>
+                    <td>{asset.available}</td>
+                    <td>
+                      <input
+                        type="number"
+                        min="0"
+                        max={asset.available}
+                        value={assignments[asset._id] || ""}
+                        onChange={(e) =>
+                          handleQtyChange(
+                            asset._id,
+                            e.target.value,
+                            asset.available
+                          )
+                        }
+                      />
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {assets.map((asset) => (
-                    <tr key={asset._id}>
-                      <td>{asset.name || asset.assetName}</td>
-                      <td>{asset.assetType}</td>
-                      <td>{asset.available}</td>
-                      <td>
-                        <input
-                          type="number"
-                          min="0"
-                          max={asset.available}
-                          value={assignments[asset._id] || ""}
-                          onChange={(e) =>
-                            handleQtyChange(asset._id, e.target.value)
-                          }
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                ))}
+              </tbody>
+            </table>
 
-              <div className="department-section">
-                <label>Assign to Departments</label>
-                <select
-                  multiple
-                  value={selectedDepartments}
-                  onChange={handleDepartmentChange}
-                >
-                  {departments.map((dep) => (
-                    <option key={dep._id} value={dep._id}>
-                      {dep.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
 
-            <div className="drawer-footer">
+            <div className="modal-footer">
               <button
                 className="assign-btn"
                 disabled={loading}
