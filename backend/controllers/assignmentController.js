@@ -6,28 +6,63 @@ const AssetAssignment = require("../models/AssetAssignment");
 
 const getInStockCategorySummary = async (req, res) => {
   try {
-    // HARDWARE
+    /* ================= HARDWARE ================= */
     const hardware = await Asset.aggregate([
       {
+        $lookup: {
+          from: "categories",
+          localField: "assetCategory",
+          foreignField: "_id",
+          as: "category"
+        }
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
         $project: {
-          category: "$assetCategory",
+          categoryId: "$assetCategory",
+          categoryName: {
+            $ifNull: ["$category.name", "Unknown Category"]
+          },
           available: { $subtract: ["$assetQuantity", "$inUse"] }
         }
       },
       { $match: { available: { $gt: 0 } } },
       {
         $group: {
-          _id: "$category",
+          _id: "$categoryId",
+          categoryName: { $first: "$categoryName" },
           hardwareCount: { $sum: "$available" }
         }
       }
     ]);
 
-    // SOFTWARE
+    /* ================= SOFTWARE ================= */
     const software = await SoftwareAsset.aggregate([
       {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category"
+        }
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
         $project: {
-          category: "$category",
+          categoryId: "$category._id",
+          categoryName: {
+            $ifNull: ["$category.name", "Unknown Category"]
+          },
           available: {
             $subtract: ["$totalLicenses", "$licensesAssigned"]
           }
@@ -36,32 +71,36 @@ const getInStockCategorySummary = async (req, res) => {
       { $match: { available: { $gt: 0 } } },
       {
         $group: {
-          _id: "$category",
+          _id: "$categoryId",
+          categoryName: { $first: "$categoryName" },
           softwareCount: { $sum: "$available" }
         }
       }
     ]);
 
-    // MERGE RESULTS
+    /* ================= MERGE ================= */
     const map = {};
 
     hardware.forEach(item => {
-      map[item._id] = {
+      map[item._id?.toString()] = {
         category: item._id,
+        categoryName: item.categoryName,
         hardwareCount: item.hardwareCount,
         softwareCount: 0
       };
     });
 
     software.forEach(item => {
-      if (!map[item._id]) {
-        map[item._id] = {
+      const key = item._id?.toString();
+      if (!map[key]) {
+        map[key] = {
           category: item._id,
+          categoryName: item.categoryName,
           hardwareCount: 0,
           softwareCount: item.softwareCount
         };
       } else {
-        map[item._id].softwareCount = item.softwareCount;
+        map[key].softwareCount = item.softwareCount;
       }
     });
 
@@ -78,7 +117,7 @@ const getInStockCategorySummary = async (req, res) => {
     });
   }
 };
- 
+
 const assignAssetsFromStock = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
