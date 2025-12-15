@@ -64,7 +64,7 @@ app.use("/api/company-licenses", companyLicenseRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user-data", userRoute);
 app.use("/api/assignments", assignmentRoutes);
-app.use("/api/departments", departmentRoutes);
+app.use("/api/department", departmentRoutes);
 
 
 app.get("/smtp-test", async (req, res) => {
