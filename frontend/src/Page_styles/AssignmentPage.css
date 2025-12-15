@@ -4,6 +4,7 @@
   min-height: 100vh;
 }
 
+/* HEADER */
 .page-header h1 {
   font-size: 24px;
   margin-bottom: 4px;
@@ -14,6 +15,7 @@
   font-size: 14px;
 }
 
+/* CATEGORY GRID */
 .stock-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -49,44 +51,58 @@
   color: #555;
 }
 
-/* DRAWER */
-.drawer-overlay {
+/* MODAL */
+.modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.45);
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 
-.drawer {
-  width: 520px;
-  height: 100%;
+.modal {
   background: #fff;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
 }
 
-.drawer-header {
+.modal-header {
   padding: 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e5e5e5;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.drawer-header button {
+.modal-header button {
   border: none;
   background: none;
   font-size: 20px;
   cursor: pointer;
 }
 
-.drawer-body {
+.modal-controls {
+  display: flex;
+  gap: 12px;
   padding: 16px;
+}
+
+.modal-controls input,
+.modal-controls select {
+  padding: 8px;
+  flex: 1;
+}
+
+/* BODY */
+.modal-body {
+  padding: 0 16px 16px;
   overflow-y: auto;
   flex: 1;
 }
@@ -110,25 +126,8 @@
   padding: 4px;
 }
 
-/* DEPARTMENT */
-.department-section {
-  margin-top: 20px;
-}
-
-.department-section label {
-  font-size: 14px;
-  display: block;
-  margin-bottom: 6px;
-}
-
-.department-section select {
-  width: 100%;
-  height: 120px;
-  padding: 6px;
-}
-
 /* FOOTER */
-.drawer-footer {
+.modal-footer {
   padding: 16px;
   border-top: 1px solid #eee;
 }
@@ -147,43 +146,4 @@
 .assign-btn:disabled {
   background: #94a3b8;
   cursor: not-allowed;
-}
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal {
-  background: #fff;
-  width: 90%;
-  max-width: 900px;
-  max-height: 90vh;
-  overflow-y: auto;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.modal-controls {
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-}
-
-.modal-controls input,
-.modal-controls select {
-  padding: 8px;
-  flex: 1;
 }
