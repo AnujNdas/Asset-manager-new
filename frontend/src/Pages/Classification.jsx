@@ -156,7 +156,7 @@ const Classification = () => {
           <Route path="/category" element={<Category />} />
           <Route path="/location" element={<Location />} />
           <Route path="/status" element={<Status />} />
-          <Route path="/deapartment" element={<Department />} />
+          <Route path="/department" element={<Department />} />
         </Routes>
       </div>
     </div>
