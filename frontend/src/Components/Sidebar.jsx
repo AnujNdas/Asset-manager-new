@@ -69,6 +69,12 @@ useEffect(() => {
                 <span className="tab-text">Classifications</span>
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/assignment" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                <FontAwesomeIcon icon={faRecycle} style={{ width: "25%" }} />
+                <span className="tab-text">Assignment</span>
+              </NavLink>
+            </li>
             {isMobile && (
               <li>
                 <NavLink
