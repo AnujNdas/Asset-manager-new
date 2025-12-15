@@ -2,73 +2,81 @@ const mongoose = require("mongoose");
 const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
-
-const assignAsset = async (req, res) => {
+const assignAssetsFromStock = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const {
-      assetType,
-      assetId,
-      assignedToType,
-      assignedTo,
-      quantity = 1,
-    } = req.body;
+    const { assignments } = req.body;
 
-    let asset;
-
-    if (assetType === "hardware") {
-      asset = await Asset.findById(assetId).session(session);
-
-      if (!asset) throw new Error("Hardware asset not found");
-
-      if (asset.inStock < quantity) {
-        throw new Error("Not enough stock available");
-      }
-
-      asset.inUse += quantity;
-      await asset.save({ session });
+    if (!Array.isArray(assignments) || assignments.length === 0) {
+      throw new Error("No assignments provided");
     }
 
-    if (assetType === "software") {
-      asset = await SoftwareAsset.findById(assetId).session(session);
+    const createdAssignments = [];
 
-      if (!asset) throw new Error("Software asset not found");
+    for (const item of assignments) {
+      const { assetType, assetId, departmentId, quantity } = item;
 
-      const available =
-        asset.totalLicenses - asset.licensesAssigned;
-
-      if (available < quantity) {
-        throw new Error("Not enough licenses available");
+      if (quantity <= 0) {
+        throw new Error("Invalid quantity");
       }
 
-      asset.licensesAssigned += quantity;
-      await asset.save({ session });
-    }
+      let asset;
 
-    const assignment = await AssetAssignment.create(
-      [
-        {
-          assetType,
-          assetId,
-          assetModel:
-            assetType === "hardware" ? "Asset" : "SoftwareAsset",
-          assignedToType,
-          assignedTo,
-          quantity,
-        },
-      ],
-      { session }
-    );
+      // HARDWARE
+      if (assetType === "hardware") {
+        asset = await Asset.findById(assetId).session(session);
+        if (!asset) throw new Error("Hardware asset not found");
+
+        const inStock = asset.assetQuantity - asset.inUse;
+        if (inStock < quantity) {
+          throw new Error(`Insufficient stock for ${asset.assetName}`);
+        }
+
+        asset.inUse += quantity;
+        await asset.save({ session });
+      }
+
+      // SOFTWARE
+      if (assetType === "software") {
+        asset = await SoftwareAsset.findById(assetId).session(session);
+        if (!asset) throw new Error("Software asset not found");
+
+        const available =
+          asset.totalLicenses - asset.licensesAssigned;
+
+        if (available < quantity) {
+          throw new Error(`Insufficient licenses for ${asset.name}`);
+        }
+
+        asset.licensesAssigned += quantity;
+        await asset.save({ session });
+      }
+
+      const assignment = await AssetAssignment.create(
+        [
+          {
+            assetType,
+            assetId,
+            departmentId,
+            quantity,
+            status: "assigned",
+          },
+        ],
+        { session }
+      );
+
+      createdAssignments.push(assignment[0]);
+    }
 
     await session.commitTransaction();
     session.endSession();
 
     res.status(201).json({
       success: true,
-      message: "Asset assigned successfully",
-      assignment: assignment[0],
+      message: "Assets assigned successfully",
+      assignments: createdAssignments,
     });
   } catch (error) {
     await session.abortTransaction();
@@ -80,6 +88,7 @@ const assignAsset = async (req, res) => {
     });
   }
 };
+;
 const returnAsset = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -87,28 +96,30 @@ const returnAsset = async (req, res) => {
   try {
     const { assignmentId } = req.params;
 
-    const assignment = await AssetAssignment.findById(assignmentId).session(
-      session
-    );
+    const assignment = await AssetAssignment.findById(assignmentId).session(session);
 
     if (!assignment || assignment.status === "returned") {
       throw new Error("Invalid or already returned assignment");
     }
 
     if (assignment.assetType === "hardware") {
-      await Asset.findByIdAndUpdate(
-        assignment.assetId,
-        { $inc: { inUse: -assignment.quantity } },
-        { session }
-      );
+      const asset = await Asset.findById(assignment.assetId).session(session);
+      if (!asset || asset.inUse < assignment.quantity) {
+        throw new Error("Invalid hardware stock state");
+      }
+
+      asset.inUse -= assignment.quantity;
+      await asset.save({ session });
     }
 
     if (assignment.assetType === "software") {
-      await SoftwareAsset.findByIdAndUpdate(
-        assignment.assetId,
-        { $inc: { licensesAssigned: -assignment.quantity } },
-        { session }
-      );
+      const asset = await SoftwareAsset.findById(assignment.assetId).session(session);
+      if (!asset || asset.licensesAssigned < assignment.quantity) {
+        throw new Error("Invalid license state");
+      }
+
+      asset.licensesAssigned -= assignment.quantity;
+      await asset.save({ session });
     }
 
     assignment.status = "returned";
@@ -133,4 +144,5 @@ const returnAsset = async (req, res) => {
   }
 };
 
-module.exports = { assignAsset , returnAsset };
+
+module.exports = { assignAssetsFromStock , returnAsset };
