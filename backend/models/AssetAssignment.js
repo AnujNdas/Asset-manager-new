@@ -22,18 +22,19 @@ const AssetAssignmentSchema = new mongoose.Schema(
 
     assignedToType: {
       type: String,
-      enum: ["User", "Department", "Unit", "Device"],
+      enum: ["Department"], // lock for now
       required: true,
     },
 
     assignedTo: {
-      type: String, // username / dept name / device id
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
       required: true,
     },
 
     quantity: {
       type: Number,
-      default: 1,
+      required: true,
       min: 1,
     },
 
@@ -50,7 +51,13 @@ const AssetAssignmentSchema = new mongoose.Schema(
 
     returnedAt: Date,
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
+
+/* INDEXES (IMPORTANT) */
+AssetAssignmentSchema.index({ assetId: 1, status: 1 });
+AssetAssignmentSchema.index({ assignedTo: 1, status: 1 });
 
 module.exports = mongoose.model("AssetAssignment", AssetAssignmentSchema);
