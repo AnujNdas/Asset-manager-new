@@ -19,7 +19,9 @@ const AssignmentPage = () => {
   const [assignments, setAssignments] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const [search, setSearch] = useState("");
+  // 🔍 CATEGORY SEARCH
+  const [categorySearch, setCategorySearch] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -49,7 +51,6 @@ const AssignmentPage = () => {
     setSelectedCategory(categoryObj);
     setAssignments({});
     setSelectedDepartment("");
-    setSearch("");
     setCurrentPage(1);
 
     try {
@@ -70,20 +71,21 @@ const AssignmentPage = () => {
     setAssignments((prev) => ({ ...prev, [assetId]: qty }));
   };
 
-  const filteredAssets = useMemo(() => {
-    return assets.filter((a) =>
-      (a.name || a.assetName)
+  // ✅ FILTER CATEGORIES
+  const filteredCategories = useMemo(() => {
+    return categories.filter((cat) =>
+      (cat.categoryName || cat.category)
         .toLowerCase()
-        .includes(search.toLowerCase())
+        .includes(categorySearch.toLowerCase())
     );
-  }, [assets, search]);
+  }, [categories, categorySearch]);
 
-  const totalPages = Math.ceil(filteredAssets.length / PAGE_SIZE);
+  const totalPages = Math.ceil(assets.length / PAGE_SIZE);
 
   const paginatedAssets = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
-    return filteredAssets.slice(start, start + PAGE_SIZE);
-  }, [filteredAssets, currentPage]);
+    return assets.slice(start, start + PAGE_SIZE);
+  }, [assets, currentPage]);
 
   const submitAssignments = async () => {
     if (!selectedDepartment) {
@@ -116,7 +118,7 @@ const AssignmentPage = () => {
       alert("Assets assigned successfully");
       closeModal();
       fetchCategorySummary();
-    } catch (err) {
+    } catch {
       alert("Assignment failed");
     } finally {
       setLoading(false);
@@ -130,11 +132,22 @@ const AssignmentPage = () => {
         <p>Assign in-stock assets to departments</p>
       </div>
 
-      <div className="stock-grid">
-        {categories.map((cat) => (
+      {/* 🔍 CATEGORY SEARCH */}
+      <div className="category-search">
+        <input
+          type="text"
+          placeholder="Search category..."
+          value={categorySearch}
+          onChange={(e) => setCategorySearch(e.target.value)}
+        />
+      </div>
+
+      {/* CATEGORY GRID */}
+      <div className="category-grid">
+        {filteredCategories.map((cat) => (
           <div
             key={cat.category}
-            className="asset-card"
+            className="category-card"
             onClick={() => openCategory(cat)}
           >
             <h3>{cat.categoryName || cat.category}</h3>
@@ -148,22 +161,19 @@ const AssignmentPage = () => {
         ))}
       </div>
 
+      {/* MODAL */}
       {selectedCategory && (
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
-              <h2>{selectedCategory.categoryName || selectedCategory.category}</h2>
+              <h2>
+                {selectedCategory.categoryName ||
+                  selectedCategory.category}
+              </h2>
               <button onClick={closeModal}>✕</button>
             </div>
 
             <div className="modal-controls">
-              <input
-                type="text"
-                placeholder="Search assets..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-
               <select
                 value={selectedDepartment}
                 onChange={(e) => setSelectedDepartment(e.target.value)}
