@@ -19,11 +19,9 @@ const AssignmentPage = () => {
   const [assignments, setAssignments] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // search + pagination
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // ---- INITIAL LOAD ----
   useEffect(() => {
     fetchCategorySummary();
     fetchDepartments();
@@ -68,11 +66,10 @@ const AssignmentPage = () => {
   };
 
   const handleQtyChange = (assetId, value, max) => {
-    const qty = Math.min(Number(value), max);
+    const qty = Math.max(0, Math.min(Number(value), max));
     setAssignments((prev) => ({ ...prev, [assetId]: qty }));
   };
 
-  // ---- FILTERED + PAGINATED ASSETS ----
   const filteredAssets = useMemo(() => {
     return assets.filter((a) =>
       (a.name || a.assetName)
@@ -88,7 +85,6 @@ const AssignmentPage = () => {
     return filteredAssets.slice(start, start + PAGE_SIZE);
   }, [filteredAssets, currentPage]);
 
-  // ---- ASSIGN ASSETS ----
   const submitAssignments = async () => {
     if (!selectedDepartment) {
       alert("Please select a department");
@@ -101,8 +97,8 @@ const AssignmentPage = () => {
       const qty = assignments[asset._id];
       if (qty && qty > 0) {
         payload.push({
-          assetType: asset.assetType,
           assetId: asset._id,
+          assetType: asset.assetType,
           departmentId: selectedDepartment,
           quantity: qty,
         });
@@ -110,7 +106,7 @@ const AssignmentPage = () => {
     });
 
     if (payload.length === 0) {
-      alert("No valid asset quantities selected");
+      alert("No assets selected");
       return;
     }
 
@@ -121,7 +117,7 @@ const AssignmentPage = () => {
       closeModal();
       fetchCategorySummary();
     } catch (err) {
-      alert(err?.message || "Assignment failed");
+      alert("Assignment failed");
     } finally {
       setLoading(false);
     }
@@ -134,25 +130,24 @@ const AssignmentPage = () => {
         <p>Assign in-stock assets to departments</p>
       </div>
 
-      {/* CATEGORY GRID */}
-      <div className="stock-grid">
+      <div className="category-grid">
         {categories.map((cat) => (
           <div
             key={cat.category}
-            className="asset-card"
+            className="category-card"
             onClick={() => openCategory(cat)}
           >
             <h3>{cat.categoryName || cat.category}</h3>
             <span>{cat.totalInStock} in stock</span>
+
             <div className="counts">
               <p>Hardware: {cat.hardwareCount}</p>
-              <p>Software: {cat.softwareCount}</p>
+              <p>Virtual: {cat.softwareCount}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* MODAL */}
       {selectedCategory && (
         <div className="modal-overlay">
           <div className="modal">
@@ -182,46 +177,48 @@ const AssignmentPage = () => {
               </select>
             </div>
 
-            <table className="asset-table">
-              <thead>
-                <tr>
-                  <th>Asset Name</th>
-                  <th>Type</th>
-                  <th>Available</th>
-                  <th>Assign Qty</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedAssets.map((asset) => (
-                  <tr key={asset._id}>
-                    <td>{asset.name || asset.assetName}</td>
-                    <td>{asset.assetType}</td>
-                    <td>{asset.available}</td>
-                    <td>
-                      <input
-                        type="number"
-                        min="0"
-                        max={asset.available}
-                        value={assignments[asset._id] || ""}
-                        onChange={(e) =>
-                          handleQtyChange(
-                            asset._id,
-                            e.target.value,
-                            asset.available
-                          )
-                        }
-                      />
-                    </td>
+            <div className="modal-body">
+              <table className="asset-table">
+                <thead>
+                  <tr>
+                    <th>Asset Name</th>
+                    <th>Type</th>
+                    <th>Available</th>
+                    <th>Assign Qty</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {paginatedAssets.map((asset) => (
+                    <tr key={asset._id}>
+                      <td>{asset.name || asset.assetName}</td>
+                      <td>{asset.assetType}</td>
+                      <td>{asset.available}</td>
+                      <td>
+                        <input
+                          type="number"
+                          min="0"
+                          max={asset.available}
+                          value={assignments[asset._id] || ""}
+                          onChange={(e) =>
+                            handleQtyChange(
+                              asset._id,
+                              e.target.value,
+                              asset.available
+                            )
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
 
             <div className="modal-footer">
               <button
