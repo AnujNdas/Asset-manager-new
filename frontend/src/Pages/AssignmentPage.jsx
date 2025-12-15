@@ -7,7 +7,6 @@ import {
   getDepartments,
 } from "../Services/ApiServices";
 
-
 const AssignmentPage = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -17,44 +16,42 @@ const AssignmentPage = () => {
   const [assignments, setAssignments] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // ---- FETCH CATEGORY SUMMARY ----
+  // ---- INITIAL LOAD ----
   useEffect(() => {
     fetchCategorySummary();
     fetchDepartments();
   }, []);
 
-const fetchCategorySummary = async () => {
-  try {
-    const res = await getInStockCategorySummary();
-    setCategories(res.data || []);
-  } catch (err) {
-    console.error(err);
-  }
-};
+  const fetchCategorySummary = async () => {
+    try {
+      const res = await getInStockCategorySummary();
+      setCategories(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-const fetchDepartments = async () => {
-  try {
-    const res = await getDepartments();
-    setDepartments(res.data || []);
-  } catch (err) {
-    console.error(err);
-  }
-};
+  const fetchDepartments = async () => {
+    try {
+      const res = await getDepartments();
+      setDepartments(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
+  const openCategory = async (category) => {
+    setSelectedCategory(category);
+    setAssignments({});
+    setSelectedDepartments([]);
 
-const openCategory = async (category) => {
-  setSelectedCategory(category);
-  setAssignments({});
-  setSelectedDepartments([]);
-
-  try {
-    const res = await getInStockAssetsByCategory(category);
-    setAssets(res.data || []);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
+    try {
+      const res = await getInStockAssetsByCategory(category);
+      setAssets(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const closeDrawer = () => {
     setSelectedCategory(null);
@@ -73,45 +70,12 @@ const openCategory = async (category) => {
     setSelectedDepartments(values);
   };
 
+  // ---- ASSIGN ASSETS ----
   const submitAssignments = async () => {
-  if (selectedDepartments.length === 0) {
-    alert("Please select at least one department");
-    return;
-  }
-
-  const payload = [];
-
-  assets.forEach((asset) => {
-    const qty = assignments[asset._id];
-    if (qty && qty > 0) {
-      selectedDepartments.forEach((deptId) => {
-        payload.push({
-          assetType: asset.assetType,
-          assetId: asset._id,
-          departmentId: deptId,
-          quantity: qty,
-        });
-      });
+    if (selectedDepartments.length === 0) {
+      alert("Please select at least one department");
+      return;
     }
-  });
-
-  if (payload.length === 0) {
-    alert("No valid asset quantities selected");
-    return;
-  }
-
-  try {
-    setLoading(true);
-    await assignAssetsFromStock({ assignments: payload });
-    alert("Assets assigned successfully");
-    closeDrawer();
-    fetchCategorySummary();
-  } catch (err) {
-    alert(err?.message || "Assignment failed");
-  } finally {
-    setLoading(false);
-  }
-};
 
     const payload = [];
 
@@ -136,14 +100,12 @@ const openCategory = async (category) => {
 
     try {
       setLoading(true);
-      await axios.post("/assignment/instock/assign", {
-        assignments: payload,
-      });
+      await assignAssetsFromStock({ assignments: payload });
       alert("Assets assigned successfully");
       closeDrawer();
       fetchCategorySummary();
     } catch (err) {
-      alert(err.response?.data?.message || "Assignment failed");
+      alert(err?.message || "Assignment failed");
     } finally {
       setLoading(false);
     }
