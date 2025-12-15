@@ -1,16 +1,30 @@
-// controllers/categoryController.js
-const Category = require('../models/Category');
+const Category = require("../models/Category");
 
 // Create a new category
 const createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    let { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: "Category name is required" });
+    }
+
+    name = name.trim();
+
     const newCategory = new Category({ name });
     await newCategory.save();
+
     res.status(201).json(newCategory);
   } catch (error) {
-    console.error('Error creating category:', error);
-    res.status(500).json({ error: 'Error creating category' });
+    // Duplicate category error
+    if (error.code === 11000) {
+      return res.status(409).json({
+        error: "Category already exists"
+      });
+    }
+
+    console.error("Error creating category:", error);
+    res.status(500).json({ error: "Error creating category" });
   }
 };
 
@@ -30,11 +44,21 @@ const updateCategory = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
 
-    // Find and update category
+const updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: "Category name is required" });
+    }
+
+    name = name.trim();
+
     const updatedCategory = await Category.findByIdAndUpdate(
       id,
       { name },
-      { new: true, runValidators: true } // Returns updated document
+      { new: true, runValidators: true }
     );
 
     if (!updatedCategory) {
@@ -46,6 +70,13 @@ const updateCategory = async (req, res) => {
       updatedCategory
     });
   } catch (error) {
+    // Duplicate category error
+    if (error.code === 11000) {
+      return res.status(409).json({
+        error: "Category with this name already exists"
+      });
+    }
+
     console.error("Error updating category:", error);
     res.status(500).json({ error: "Error updating category" });
   }
