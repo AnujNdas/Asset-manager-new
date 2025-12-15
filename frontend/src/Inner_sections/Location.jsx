@@ -19,14 +19,10 @@ import Pagination from '../Components/Pagination';
 import Loader from "../Components/Loader";
 
 const Location = () => {
-  const [locationName, setLocationName] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
-  const [error, setError] = useState(null);
-
-  // 🔍 Search
-  const [searchTerm, setSearchTerm] = useState('');
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,19 +42,15 @@ const Location = () => {
       const data = await getLocations();
       setLocations([...data].reverse());
       setApiDone(true);
-
-      setTimeout(() => {
-        setLoading(false);
-      }, 400);
-    } catch (err) {
-      setError('Error fetching locations');
+      setTimeout(() => setLoading(false), 400);
+    } catch {
       setLoading(false);
     }
   };
 
-  // 🔎 Filter BEFORE pagination
+  // 🔍 Search using SAME input
   const filteredLocations = locations.filter(loc =>
-    loc.name.toLowerCase().includes(searchTerm.toLowerCase())
+    loc.name.toLowerCase().includes(inputValue.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredLocations.length / itemsPerPage);
@@ -68,58 +60,51 @@ const Location = () => {
     startIndex + itemsPerPage
   );
 
-  // Reset page on search
+  // Reset page while searching
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [inputValue]);
 
-  // Create Location
+  // ➕ Add Location (same input)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!locationName.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Location Name',
-        text: 'Please enter a location name.',
-      });
+    if (!inputValue.trim()) {
+      Swal.fire("Warning", "Please enter a location name", "warning");
       return;
     }
 
     try {
-      const res = await createLocation({ name: locationName.trim() });
+      const res = await createLocation({ name: inputValue.trim() });
       const newLocation = res.location || res.data || res;
 
       setLocations(prev => [newLocation, ...prev]);
-      setLocationName('');
-      setSearchTerm('');
+      setInputValue('');
       setCurrentPage(1);
 
       Swal.fire({
         icon: 'success',
         title: 'Location Added',
-        text: 'The location has been created successfully!',
-        timer: 1800,
-        showConfirmButton: false,
+        timer: 1500,
+        showConfirmButton: false
       });
     } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error Creating Location',
-        text: err.response?.data?.message || 'Something went wrong.',
-      });
+      Swal.fire(
+        "Error",
+        err.response?.data?.error || "Location already exists",
+        "error"
+      );
     }
   };
 
-  // Delete Location
+  // Delete
   const handleDelete = async (id, name) => {
     const confirmDelete = await Swal.fire({
       title: "Delete Location?",
       text: `Are you sure you want to delete "${name}"?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Delete",
-      cancelButtonText: "Cancel"
+      confirmButtonText: "Delete"
     });
 
     if (!confirmDelete.isConfirmed) return;
@@ -128,18 +113,17 @@ const Location = () => {
       await deleteLocation(id);
       setLocations(prev => prev.filter(loc => loc._id !== id));
       Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
-    } catch (err) {
+    } catch {
       Swal.fire("Error", "Failed to delete location", "error");
     }
   };
 
-  // Open Edit Modal
+  // Edit
   const openEditModal = (location) => {
     setEditingLocation(location);
     setUpdatedName(location.name);
   };
 
-  // Update Location
   const handleUpdate = async () => {
     if (!updatedName.trim()) {
       Swal.fire("Warning", "Location name cannot be empty!", "warning");
@@ -161,8 +145,8 @@ const Location = () => {
 
       Swal.fire("Success", "Location updated successfully!", "success");
       setEditingLocation(null);
-    } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to update location", "error");
+    } catch {
+      Swal.fire("Error", "Failed to update location", "error");
     }
   };
 
@@ -176,23 +160,16 @@ const Location = () => {
       <div className="card_header">
         <h3 className="category_title">Location</h3>
 
-        {/* 🔍 Search */}
-        <input
-          type="text"
-          className="category_search_input"
-          placeholder="Search locations..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-
-        <form onSubmit={handleSubmit} className="category_form">
+        {/* 🔍➕ Unified Search + Add */}
+        <form onSubmit={handleSubmit} className="category_form unified-input">
           <input
             type="text"
-            className="category_input"
-            placeholder="Add a new location..."
-            value={locationName}
-            onChange={(e) => setLocationName(e.target.value)}
+            className="category_search_input"
+            placeholder="Search or add location..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
           />
+
           <button type="submit" className="category_add_btn">
             <FontAwesomeIcon icon={faPlus} />
           </button>
@@ -202,7 +179,7 @@ const Location = () => {
       <div className="category-grid">
         {currentItems.length === 0 ? (
           <p>
-            {searchTerm
+            {inputValue
               ? "No matching locations found"
               : "No locations available"}
           </p>
@@ -214,9 +191,7 @@ const Location = () => {
                   {startIndex + idx + 1}
                 </div>
 
-                <div className="category-name">
-                  {loc.name}
-                </div>
+                <div className="category-name">{loc.name}</div>
 
                 <div className="category-actions">
                   <button
@@ -228,9 +203,7 @@ const Location = () => {
 
                   <button
                     className="btn-delete"
-                    onClick={() =>
-                      handleDelete(loc._id, loc.name)
-                    }
+                    onClick={() => handleDelete(loc._id, loc.name)}
                   >
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
@@ -241,8 +214,8 @@ const Location = () => {
         )}
       </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && !searchTerm && (
+      {/* Pagination disabled while searching */}
+      {totalPages > 1 && !inputValue && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
