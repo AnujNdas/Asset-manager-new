@@ -1,4 +1,4 @@
-const express = require("express");
+  const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
@@ -63,7 +63,7 @@ app.use("/api/software-assets", softwareAssetRoutes);
 app.use("/api/company-licenses", companyLicenseRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user-data", userRoute);
-app.use("/api/assignments", assignmentRoutes);
+app.use("/api/assignment", assignmentRoutes);
 app.use("/api/department", departmentRoutes);
 
 
