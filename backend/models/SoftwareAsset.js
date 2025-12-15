@@ -68,7 +68,8 @@ licensesAssigned: {
   auditHistory: [{ date: Date, notes: String }],
   optimizationRecommendation: String,
 
-}, { timestamps: true });
+}, { timestamps: true, toJSON: { virtuals: true },
+    toObject: { virtuals: true }, });
 SoftwareAssetSchema.virtual("licensesAvailable").get(function () {
   return this.totalLicenses - this.licensesAssigned;
 });
