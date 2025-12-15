@@ -24,11 +24,12 @@ const Login = ({ setProfileUser }) => {
       const response = await AuthService.login(email, password);
       if (response && response.token) {
         console.log(response.token)
-        sessionStorage.setItem("token", response.token);
-        sessionStorage.setItem("email", email);
-        sessionStorage.setItem("username", response.username);
-        sessionStorage.setItem("role", response.role);
-        sessionStorage.setItem("userId", response.userId); // ✅ Save userId
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("email", email);
+        localStorage.setItem("username", response.username);
+        localStorage.setItem("role", response.role);
+        localStorage.setItem("userId", response.userId);
+
 
         Swal.fire({
           title: "Success",
