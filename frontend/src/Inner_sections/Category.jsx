@@ -10,11 +10,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faSearch,
+  faChevronDown,
   faEdit,
   faSave,
   faTimes,
   faTrash,
-  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Pagination from "../Components/Pagination";
@@ -23,44 +23,29 @@ import Loader from "../Components/Loader";
 const Category = () => {
   const [inputValue, setInputValue] = useState("");
   const [mode, setMode] = useState("search"); // search | add
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
 
-  // Edit
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+
+  // Edit Modal
   const [editingCategory, setEditingCategory] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
-  const perPage = 12;
-
-  // Capitalize first letter (frontend cosmetic)
-  const formatValue = (value) =>
+  // Capitalize helper
+  const capitalize = (value) =>
     value
       ? value.charAt(0).toUpperCase() + value.slice(1)
       : value;
 
-  // Filter (only when in search mode)
-  const filteredCategories =
-    mode === "search"
-      ? categories.filter((cat) =>
-          cat.name.toLowerCase().includes(inputValue.toLowerCase())
-        )
-      : categories;
-
-  const totalPages = Math.ceil(filteredCategories.length / perPage);
-  const indexOfLast = currentPage * perPage;
-  const indexOfFirst = indexOfLast - perPage;
-  const currentItems = filteredCategories.slice(
-    indexOfFirst,
-    indexOfLast
-  );
-
   useEffect(() => {
-    setCurrentPage(1);
-  }, [inputValue, mode]);
+    fetchCategories();
+  }, []);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -74,26 +59,49 @@ const Category = () => {
     }
   };
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  // SEARCH FILTER
+  const filteredCategories =
+    mode === "search"
+      ? categories.filter((cat) =>
+          cat.name.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      : categories;
 
-  // ADD CATEGORY
-  const handleAdd = async () => {
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [inputValue, mode]);
+
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = filteredCategories.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // ADD / SEARCH ACTION
+  const handleAction = async (e) => {
+    e.preventDefault();
+
     if (!inputValue.trim()) {
-      Swal.fire("Warning", "Please enter a category name", "warning");
+      Swal.fire("Warning", "Input cannot be empty", "warning");
       return;
     }
 
+    if (mode === "search") return;
+
     try {
-      const res = await createCategory({ name: inputValue.trim() });
-      const newCategory = res.data || res;
+      const res = await createCategory({ name: capitalize(inputValue.trim()) });
+      const newCategory = res.category || res.data || res;
 
       setCategories((prev) => [newCategory, ...prev]);
       setInputValue("");
-      setMode("search");
 
-      Swal.fire("Success", "Category added successfully!", "success");
+      Swal.fire({
+        icon: "success",
+        title: "Category Added",
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } catch (err) {
       Swal.fire(
         "Error",
@@ -116,95 +124,86 @@ const Category = () => {
 
     await deleteCategory(id);
     setCategories((prev) => prev.filter((c) => c._id !== id));
-    Swal.fire("Deleted", "Category removed", "success");
+    Swal.fire("Deleted!", "Category removed", "success");
   };
 
-  // UPDATE
-  const handleUpdate = async () => {
-    if (!updatedName.trim()) return;
+  // EDIT
+  const openEditModal = (cat) => {
+    setEditingCategory(cat);
+    setUpdatedName(cat.name);
+  };
 
+  const handleUpdate = async () => {
     await updateCategory(editingCategory._id, {
-      name: updatedName.trim(),
+      name: capitalize(updatedName.trim()),
     });
 
     setCategories((prev) =>
       prev.map((c) =>
         c._id === editingCategory._id
-          ? { ...c, name: updatedName.trim() }
+          ? { ...c, name: capitalize(updatedName.trim()) }
           : c
       )
     );
 
+    Swal.fire("Updated", "Category updated", "success");
     setEditingCategory(null);
-    Swal.fire("Success", "Category updated", "success");
   };
 
-  if (loading) {
-    return <Loader type="classification" apiDone={apiDone} />;
-  }
+  if (loading) return <Loader type="classification" apiDone={apiDone} />;
 
   return (
     <div className="classification_card">
       <div className="card_header">
         <h3 className="category_title">Category</h3>
 
-        {/* 🔍➕ Unified Input */}
-        <div className="unified-input-wrapper">
+        {/* INPUT WITH MODE DROPDOWN (SAME AS LOCATION) */}
+        <form onSubmit={handleAction} className="category_form mode-input">
+          <div className="mode-selector">
+            <button
+              type="button"
+              className="mode-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <FontAwesomeIcon icon={mode === "search" ? faSearch : faPlus} />
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
+
+            {showDropdown && (
+              <div className="mode-dropdown">
+                <div
+                  onClick={() => {
+                    setMode("search");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSearch} /> Search
+                </div>
+
+                <div
+                  onClick={() => {
+                    setMode("add");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlus} /> Add
+                </div>
+              </div>
+            )}
+          </div>
+
           <input
             type="text"
             className="category_search_input"
             placeholder={
               mode === "search"
-                ? "Search categories..."
+                ? "Search category..."
                 : "Add new category..."
             }
             value={inputValue}
-            onChange={(e) =>
-              setInputValue(formatValue(e.target.value))
-            }
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && mode === "add") {
-                e.preventDefault();
-                handleAdd();
-              }
-            }}
+            onChange={(e) => setInputValue(capitalize(e.target.value))}
           />
-
-          {/* MODE ICON */}
-          <button
-            type="button"
-            className="mode-btn"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-          >
-            <FontAwesomeIcon
-              icon={mode === "search" ? faSearch : faPlus}
-            />
-            <FontAwesomeIcon icon={faChevronDown} />
-          </button>
-
-          {/* DROPDOWN */}
-          {dropdownOpen && (
-            <div className="mode-dropdown">
-              <div
-                onClick={() => {
-                  setMode("search");
-                  setDropdownOpen(false);
-                }}
-              >
-                <FontAwesomeIcon icon={faSearch} /> Search
-              </div>
-
-              <div
-                onClick={() => {
-                  setMode("add");
-                  setDropdownOpen(false);
-                }}
-              >
-                <FontAwesomeIcon icon={faPlus} /> Add
-              </div>
-            </div>
-          )}
-        </div>
+        </form>
       </div>
 
       {/* LIST */}
@@ -216,26 +215,21 @@ const Category = () => {
             {currentItems.map((cat, idx) => (
               <div key={cat._id} className="category-card">
                 <div className="category-number">
-                  {indexOfFirst + idx + 1}
+                  {startIndex + idx + 1}
                 </div>
                 <div className="category-name">{cat.name}</div>
 
                 <div className="category-actions">
                   <button
                     className="btn-edit"
-                    onClick={() => {
-                      setEditingCategory(cat);
-                      setUpdatedName(cat.name);
-                    }}
+                    onClick={() => openEditModal(cat)}
                   >
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
 
                   <button
                     className="btn-delete"
-                    onClick={() =>
-                      handleDelete(cat._id, cat.name)
-                    }
+                    onClick={() => handleDelete(cat._id, cat.name)}
                   >
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
@@ -247,7 +241,7 @@ const Category = () => {
       </div>
 
       {/* PAGINATION */}
-      {totalPages > 1 && mode === "search" && !inputValue && (
+      {mode === "search" && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -260,15 +254,13 @@ const Category = () => {
         <div className="edit-modal">
           <div className="edit-modal-content">
             <h3>Edit Category</h3>
-
             <input
-              className="edit-input"
               value={updatedName}
               onChange={(e) =>
-                setUpdatedName(formatValue(e.target.value))
+                setUpdatedName(capitalize(e.target.value))
               }
+              className="edit-input"
             />
-
             <div className="modal-buttons">
               <button className="save-btn" onClick={handleUpdate}>
                 <FontAwesomeIcon icon={faSave} /> Save
