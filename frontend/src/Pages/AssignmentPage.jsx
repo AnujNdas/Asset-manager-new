@@ -130,11 +130,11 @@ const AssignmentPage = () => {
         <p>Assign in-stock assets to departments</p>
       </div>
 
-      <div className="category-grid">
+      <div className="stock-grid">
         {categories.map((cat) => (
           <div
             key={cat.category}
-            className="category-card"
+            className="asset-card"
             onClick={() => openCategory(cat)}
           >
             <h3>{cat.categoryName || cat.category}</h3>
