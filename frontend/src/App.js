@@ -17,7 +17,7 @@ import AssetScanner from "./Pages/Scanner";
 import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 import Footer from "./Components/Footer";
-import AssignmentPage from "./Components/AssignmentPage" ;
+import AssignmentPage from "./Pages/AssignmentPage" ;
 
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
