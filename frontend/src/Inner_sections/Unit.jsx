@@ -1,251 +1,271 @@
-import React, { useState, useEffect } from 'react';
-import '../Page_styles/Unit.css';
-import { getUnits, createUnit, deleteUnit, updateUnit } from '../Services/ApiServices';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faSave, faTimes , faTrash} from '@fortawesome/free-solid-svg-icons';
-import Swal from 'sweetalert2';
-import Pagination from "../Components/Pagination"; 
+import React, { useState, useEffect } from "react";
+import "../Page_styles/Unit.css";
+import {
+  getUnits,
+  createUnit,
+  deleteUnit,
+  updateUnit,
+} from "../Services/ApiServices";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faSearch,
+  faChevronDown,
+  faEdit,
+  faSave,
+  faTimes,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
+import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
 
 const Unit = () => {
-  const [unitName, setUnitName] = useState('');
+  const [inputValue, setInputValue] = useState("");
+  const [mode, setMode] = useState("search"); // search | add
+  const [showDropdown, setShowDropdown] = useState(false);
+
   const [units, setUnits] = useState([]);
-  const [filteredUnits, setFilteredUnits] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
-  const [error, setError] = useState(null);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 18;
+  const itemsPerPage = 18;
 
-  // Edit Modal State
+  // Edit Modal
   const [editingUnit, setEditingUnit] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
-  const totalPages = Math.ceil(filteredUnits.length / perPage);
-  const indexOfLast = currentPage * perPage;
-  const indexOfFirst = indexOfLast - perPage;
-  const currentItems = filteredUnits.slice(indexOfFirst, indexOfLast);
-
-  // Fetch all units
-  const fetchUnits = async () => {
-    setLoading(true);
-    try {
-      const data = await getUnits();
-      const reversed = [...data].reverse();
-      setUnits(reversed);
-      setFilteredUnits(reversed);
-      setApiDone(true)
-      // ✅ allow progress to hit 100%
-    setTimeout(() => {
-      setLoading(false);
-    }, 400);
-    } catch (err) {
-      setError('Error fetching units');
-      setLoading(false);
-    } 
-  };
-
-  // Add new unit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!unitName.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Unit Name',
-        text: 'Please enter a unit name.',
-      });
-      return;
-    }
-
-    try {
-      const res = await createUnit({ name: unitName.trim() });
-      const newUnit = res.unit || res.data || res;
-
-      setUnits((prev) => [newUnit, ...prev]);
-      setFilteredUnits((prev) => [newUnit, ...prev]);
-      setUnitName('');
-      setCurrentPage(1);
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Unit Added',
-        timer: 1200,
-        showConfirmButton: false,
-      });
-
-    } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error Creating Unit',
-        text: err.response?.data?.message || 'Something went wrong.',
-      });
-    }
-  };
-
-  // Open Edit Modal
-  const openEditModal = (unit) => {
-    setEditingUnit(unit);
-    setUpdatedName(unit.name);
-  };
-
-  // Update Unit
-  const handleUpdate = async () => {
-    if (!updatedName.trim()) {
-      Swal.fire("Warning", "Unit name cannot be empty!", "warning");
-      return;
-    }
-
-    try {
-      await updateUnit(editingUnit._id, { name: updatedName.trim() });
-
-      setUnits((prev) =>
-        prev.map((u) =>
-          u._id === editingUnit._id ? { ...u, name: updatedName.trim() } : u
-        )
-      );
-
-      setFilteredUnits((prev) =>
-        prev.map((u) =>
-          u._id === editingUnit._id ? { ...u, name: updatedName.trim() } : u
-        )
-      );
-
-      Swal.fire("Success", "Unit updated successfully!", "success");
-      setEditingUnit(null);
-
-    } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to update", "error");
-    }
-  };
-
-  // Search
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-
-    if (term === '') {
-      setFilteredUnits(units);
-    } else {
-      setFilteredUnits(
-        units.filter((u) =>
-          u.name.toLowerCase().includes(term)
-        )
-      );
-    }
-
-    setCurrentPage(1);
-  };
-
-  // Delete
-  const handleDelete = async (id, name) => {
-    const confirmDelete = await Swal.fire({
-      title: "Delete Unit?",
-      text: `Are you sure you want to delete "${name}"?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-      cancelButtonText: "Cancel"
-    });
-
-    if (!confirmDelete.isConfirmed) return;
-
-    try {
-      await deleteUnit(id);
-
-      const newList = units.filter((u) => u._id !== id);
-      setUnits(newList);
-      setFilteredUnits(newList);
-
-      Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
-    } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
-    }
-  };
+  // Capitalize helper
+  const capitalize = (value) =>
+    value
+      ? value.charAt(0).toUpperCase() + value.slice(1)
+      : value;
 
   useEffect(() => {
     fetchUnits();
   }, []);
 
+  const fetchUnits = async () => {
+    setLoading(true);
+    try {
+      const data = await getUnits();
+      setUnits([...data].reverse());
+      setApiDone(true);
+      setTimeout(() => setLoading(false), 400);
+    } catch {
+      setLoading(false);
+    }
+  };
+
+  // SEARCH FILTER
+  const filteredUnits =
+    mode === "search"
+      ? units.filter((u) =>
+          u.name.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      : units;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [inputValue, mode]);
+
+  const totalPages = Math.ceil(filteredUnits.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = filteredUnits.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // ADD / SEARCH HANDLER
+  const handleAction = async (e) => {
+    e.preventDefault();
+
+    if (!inputValue.trim()) {
+      Swal.fire("Warning", "Input cannot be empty", "warning");
+      return;
+    }
+
+    if (mode === "search") return;
+
+    try {
+      const res = await createUnit({ name: capitalize(inputValue.trim()) });
+      const newUnit = res.unit || res.data || res;
+
+      setUnits((prev) => [newUnit, ...prev]);
+      setInputValue("");
+
+      Swal.fire({
+        icon: "success",
+        title: "Unit Added",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Unit already exists",
+        "error"
+      );
+    }
+  };
+
+  // DELETE
+  const handleDelete = async (id, name) => {
+    const confirm = await Swal.fire({
+      title: "Delete Unit?",
+      text: `Delete "${name}"?`,
+      icon: "warning",
+      showCancelButton: true,
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    await deleteUnit(id);
+    setUnits((prev) => prev.filter((u) => u._id !== id));
+    Swal.fire("Deleted!", "Unit removed", "success");
+  };
+
+  // EDIT
+  const openEditModal = (unit) => {
+    setEditingUnit(unit);
+    setUpdatedName(unit.name);
+  };
+
+  const handleUpdate = async () => {
+    if (!updatedName.trim()) {
+      Swal.fire("Warning", "Unit name cannot be empty", "warning");
+      return;
+    }
+
+    await updateUnit(editingUnit._id, {
+      name: capitalize(updatedName.trim()),
+    });
+
+    setUnits((prev) =>
+      prev.map((u) =>
+        u._id === editingUnit._id
+          ? { ...u, name: capitalize(updatedName.trim()) }
+          : u
+      )
+    );
+
+    Swal.fire("Updated", "Unit updated successfully", "success");
+    setEditingUnit(null);
+  };
+
   if (loading) return <Loader type="classification" apiDone={apiDone} />;
 
   return (
     <div className="classification_card">
-
       <div className="card_header">
         <h3 className="category_title">Unit</h3>
 
-        <form onSubmit={handleSubmit} className="category_form">
+        {/* INPUT WITH MODE DROPDOWN */}
+        <form onSubmit={handleAction} className="category_form mode-input">
+          <div className="mode-selector">
+            <button
+              type="button"
+              className="mode-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <FontAwesomeIcon icon={mode === "search" ? faSearch : faPlus} />
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
+
+            {showDropdown && (
+              <div className="mode-dropdown">
+                <div
+                  onClick={() => {
+                    setMode("search");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSearch} /> Search
+                </div>
+
+                <div
+                  onClick={() => {
+                    setMode("add");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlus} /> Add
+                </div>
+              </div>
+            )}
+          </div>
+
           <input
             type="text"
-            placeholder="Enter unit name"
-            value={unitName}
-            onChange={(e) => setUnitName(e.target.value)}
-            className="category_input"
+            className="category_search_input"
+            placeholder={
+              mode === "search" ? "Search unit..." : "Add new unit..."
+            }
+            value={inputValue}
+            onChange={(e) => setInputValue(capitalize(e.target.value))}
           />
-          <button type="submit" className="category_add_btn">
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
         </form>
       </div>
 
-      {error ? (
-        <p className="error">{error}</p>
-      ) : filteredUnits.length === 0 ? (
-        <p>No units available</p>
-      ) : (
-        <>
-          <div className="category-grid">
-            <div className="grid">
-              {currentItems.map((unit, idx) => (
-                <div key={unit._id} className="category-card">
-                  <div className="category-number">{indexOfFirst + idx + 1}</div>
-
-                  <div className="category-name">{unit.name}</div>
-
-                  <div className="category-actions">
-
-                    <button
-                      className="btn-edit"
-                      onClick={() => openEditModal(unit)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </button>
-
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDelete(unit._id, unit.name)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-
-                  </div>
+      {/* LIST */}
+      <div className="category-grid">
+        {currentItems.length === 0 ? (
+          <p>No units found</p>
+        ) : (
+          <div className="grid">
+            {currentItems.map((unit, idx) => (
+              <div key={unit._id} className="category-card">
+                <div className="category-number">
+                  {startIndex + idx + 1}
                 </div>
-              ))}
-            </div>
-          </div>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </>
+                <div className="category-name">{unit.name}</div>
+
+                <div className="category-actions">
+                  <button
+                    className="btn-edit"
+                    onClick={() => openEditModal(unit)}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </button>
+
+                  <button
+                    className="btn-delete"
+                    onClick={() =>
+                      handleDelete(unit._id, unit.name)
+                    }
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* PAGINATION */}
+      {mode === "search" && totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
 
-      {/* ⭐ EDIT MODAL */}
+      {/* EDIT MODAL */}
       {editingUnit && (
         <div className="edit-modal">
           <div className="edit-modal-content">
             <h3>Edit Unit</h3>
 
             <input
-              type="text"
               value={updatedName}
-              onChange={(e) => setUpdatedName(e.target.value)}
+              onChange={(e) =>
+                setUpdatedName(capitalize(e.target.value))
+              }
               className="edit-input"
             />
 
@@ -254,14 +274,16 @@ const Unit = () => {
                 <FontAwesomeIcon icon={faSave} /> Save
               </button>
 
-              <button className="cancel-btn" onClick={() => setEditingUnit(null)}>
+              <button
+                className="cancel-btn"
+                onClick={() => setEditingUnit(null)}
+              >
                 <FontAwesomeIcon icon={faTimes} /> Cancel
               </button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };
