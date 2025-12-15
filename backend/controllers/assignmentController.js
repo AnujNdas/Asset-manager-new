@@ -3,44 +3,78 @@ const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 
-const getInStockAssetsByCategory = async (req, res) => {
+const mongoose = require("mongoose");
+const Asset = require("../models/Asset");
+const SoftwareAsset = require("../models/SoftwareAsset");
+const AssetAssignment = require("../models/AssetAssignment");
+
+const getInStockCategorySummary = async (req, res) => {
   try {
-    const { category } = req.params;
+    // HARDWARE
+    const hardware = await Asset.aggregate([
+      {
+        $project: {
+          category: "$assetCategory",
+          available: { $subtract: ["$assetQuantity", "$inUse"] }
+        }
+      },
+      { $match: { available: { $gt: 0 } } },
+      {
+        $group: {
+          _id: "$category",
+          hardwareCount: { $sum: "$available" }
+        }
+      }
+    ]);
 
-    /* ================= HARDWARE ================= */
-    const hardwareAssets = await Asset.find({
-      assetCategory: category,
-      $expr: { $gt: ["$assetQuantity", "$inUse"] }
-    }).select("assetName assetQuantity inUse");
+    // SOFTWARE
+    const software = await SoftwareAsset.aggregate([
+      {
+        $project: {
+          category: "$category",
+          available: {
+            $subtract: ["$totalLicenses", "$licensesAssigned"]
+          }
+        }
+      },
+      { $match: { available: { $gt: 0 } } },
+      {
+        $group: {
+          _id: "$category",
+          softwareCount: { $sum: "$available" }
+        }
+      }
+    ]);
 
-    /* ================= SOFTWARE ================= */
-    const softwareAssets = await SoftwareAsset.find({
-      category,
-      $expr: { $gt: ["$totalLicenses", "$licensesAssigned"] }
-    }).select("name totalLicenses licensesAssigned");
+    // MERGE RESULTS
+    const map = {};
 
-    const response = [
-      ...hardwareAssets.map(a => ({
-        _id: a._id,
-        name: a.assetName,
-        assetType: "hardware",
-        assetModel: "Asset",
-        available: a.assetQuantity - a.inUse
-      })),
-
-      ...softwareAssets.map(s => ({
-        _id: s._id,
-        name: s.name,
-        assetType: "software",
-        assetModel: "SoftwareAsset",
-        available: s.totalLicenses - s.licensesAssigned
-      }))
-    ];
-
-    res.json({
-      success: true,
-      data: response
+    hardware.forEach(item => {
+      map[item._id] = {
+        category: item._id,
+        hardwareCount: item.hardwareCount,
+        softwareCount: 0
+      };
     });
+
+    software.forEach(item => {
+      if (!map[item._id]) {
+        map[item._id] = {
+          category: item._id,
+          hardwareCount: 0,
+          softwareCount: item.softwareCount
+        };
+      } else {
+        map[item._id].softwareCount = item.softwareCount;
+      }
+    });
+
+    const result = Object.values(map).map(item => ({
+      ...item,
+      totalInStock: item.hardwareCount + item.softwareCount
+    }));
+
+    res.json({ success: true, data: result });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -48,7 +82,7 @@ const getInStockAssetsByCategory = async (req, res) => {
     });
   }
 };
-
+ 
 
 const assignAssetsFromStock = async (req, res) => {
   const session = await mongoose.startSession();
@@ -211,36 +245,40 @@ const getInStockAssetsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
 
-    // HARDWARE
+    /* ================= HARDWARE ================= */
     const hardwareAssets = await Asset.find({
       assetCategory: category,
       $expr: { $gt: ["$assetQuantity", "$inUse"] }
-    }).select("assetName assetCategory assetQuantity inUse");
+    }).select("assetName assetQuantity inUse");
 
-    // SOFTWARE
+    /* ================= SOFTWARE ================= */
     const softwareAssets = await SoftwareAsset.find({
       category,
       $expr: { $gt: ["$totalLicenses", "$licensesAssigned"] }
-    }).select("name category totalLicenses licensesAssigned");
+    }).select("name totalLicenses licensesAssigned");
 
     const response = [
       ...hardwareAssets.map(a => ({
-        id: a._id,
+        _id: a._id,
         name: a.assetName,
-        category: a.assetCategory,
         assetType: "hardware",
+        assetModel: "Asset",
         available: a.assetQuantity - a.inUse
       })),
+
       ...softwareAssets.map(s => ({
-        id: s._id,
+        _id: s._id,
         name: s.name,
-        category: s.category,
         assetType: "software",
+        assetModel: "SoftwareAsset",
         available: s.totalLicenses - s.licensesAssigned
       }))
     ];
 
-    res.json({ success: true, data: response });
+    res.json({
+      success: true,
+      data: response
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
