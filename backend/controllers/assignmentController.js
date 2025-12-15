@@ -3,73 +3,44 @@ const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 
-const getInStockCategorySummary = async (req, res) => {
+const getInStockAssetsByCategory = async (req, res) => {
   try {
-    // HARDWARE
-    const hardware = await Asset.aggregate([
-      {
-        $project: {
-          category: "$assetCategory",
-          available: { $subtract: ["$assetQuantity", "$inUse"] }
-        }
-      },
-      { $match: { available: { $gt: 0 } } },
-      {
-        $group: {
-          _id: "$category",
-          hardwareCount: { $sum: "$available" }
-        }
-      }
-    ]);
+    const { category } = req.params;
 
-    // SOFTWARE
-    const software = await SoftwareAsset.aggregate([
-      {
-        $project: {
-          category: "$category",
-          available: {
-            $subtract: ["$totalLicenses", "$licensesAssigned"]
-          }
-        }
-      },
-      { $match: { available: { $gt: 0 } } },
-      {
-        $group: {
-          _id: "$category",
-          softwareCount: { $sum: "$available" }
-        }
-      }
-    ]);
+    /* ================= HARDWARE ================= */
+    const hardwareAssets = await Asset.find({
+      assetCategory: category,
+      $expr: { $gt: ["$assetQuantity", "$inUse"] }
+    }).select("assetName assetQuantity inUse");
 
-    // MERGE RESULTS
-    const map = {};
+    /* ================= SOFTWARE ================= */
+    const softwareAssets = await SoftwareAsset.find({
+      category,
+      $expr: { $gt: ["$totalLicenses", "$licensesAssigned"] }
+    }).select("name totalLicenses licensesAssigned");
 
-    hardware.forEach(item => {
-      map[item._id] = {
-        category: item._id,
-        hardwareCount: item.hardwareCount,
-        softwareCount: 0
-      };
+    const response = [
+      ...hardwareAssets.map(a => ({
+        _id: a._id,
+        name: a.assetName,
+        assetType: "hardware",
+        assetModel: "Asset",
+        available: a.assetQuantity - a.inUse
+      })),
+
+      ...softwareAssets.map(s => ({
+        _id: s._id,
+        name: s.name,
+        assetType: "software",
+        assetModel: "SoftwareAsset",
+        available: s.totalLicenses - s.licensesAssigned
+      }))
+    ];
+
+    res.json({
+      success: true,
+      data: response
     });
-
-    software.forEach(item => {
-      if (!map[item._id]) {
-        map[item._id] = {
-          category: item._id,
-          hardwareCount: 0,
-          softwareCount: item.softwareCount
-        };
-      } else {
-        map[item._id].softwareCount = item.softwareCount;
-      }
-    });
-
-    const result = Object.values(map).map(item => ({
-      ...item,
-      totalInStock: item.hardwareCount + item.softwareCount
-    }));
-
-    res.json({ success: true, data: result });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -77,6 +48,7 @@ const getInStockCategorySummary = async (req, res) => {
     });
   }
 };
+
 
 const assignAssetsFromStock = async (req, res) => {
   const session = await mongoose.startSession();
@@ -94,15 +66,26 @@ const assignAssetsFromStock = async (req, res) => {
     for (const item of assignments) {
       const { assetType, assetId, departmentId, quantity } = item;
 
-      if (quantity <= 0) {
+      if (!mongoose.Types.ObjectId.isValid(assetId)) {
+        throw new Error("Invalid assetId");
+      }
+
+      if (!mongoose.Types.ObjectId.isValid(departmentId)) {
+        throw new Error("Invalid departmentId");
+      }
+
+      if (!quantity || quantity <= 0) {
         throw new Error("Invalid quantity");
       }
 
       let asset;
+      let assetModel;
 
-      // HARDWARE
+      /* ================= HARDWARE ================= */
       if (assetType === "hardware") {
+        assetModel = "Asset";
         asset = await Asset.findById(assetId).session(session);
+
         if (!asset) throw new Error("Hardware asset not found");
 
         const inStock = asset.assetQuantity - asset.inUse;
@@ -114,9 +97,11 @@ const assignAssetsFromStock = async (req, res) => {
         await asset.save({ session });
       }
 
-      // SOFTWARE
+      /* ================= SOFTWARE ================= */
       if (assetType === "software") {
+        assetModel = "SoftwareAsset";
         asset = await SoftwareAsset.findById(assetId).session(session);
+
         if (!asset) throw new Error("Software asset not found");
 
         const available =
@@ -130,14 +115,17 @@ const assignAssetsFromStock = async (req, res) => {
         await asset.save({ session });
       }
 
+      /* ================= CREATE ASSIGNMENT ================= */
       const assignment = await AssetAssignment.create(
         [
           {
             assetType,
             assetId,
-            departmentId,
+            assetModel,
+            assignedToType: "Department",
+            assignedTo: departmentId,
             quantity,
-            status: "assigned",
+            status: "active",
           },
         ],
         { session }
@@ -152,7 +140,7 @@ const assignAssetsFromStock = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Assets assigned successfully",
-      assignments: createdAssignments,
+      data: createdAssignments,
     });
   } catch (error) {
     await session.abortTransaction();
@@ -164,7 +152,7 @@ const assignAssetsFromStock = async (req, res) => {
     });
   }
 };
-;
+
 const returnAsset = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
