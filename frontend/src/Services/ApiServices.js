@@ -21,6 +21,25 @@ export const deleteUnit = async (id) => {
   return response.data;
 };
 
+export const getDepartments = async () => {
+  const response = await axiosInstance.get("/department");
+  return response.data;
+};
+
+export const createDepartment = async (departmentData) => {
+  const response = await axiosInstance.post("/department", departmentData);
+  return response.data;
+};
+export const updateDepartment = async (id, body) => {
+  const res = await axiosInstance.put(`/department/${id}`, body);
+  return res.data;
+};
+
+export const deleteDepartment = async (id) => {
+  const response = await axiosInstance.delete(`/department/${id}`);
+  return response.data;
+};
+
 // ----- LOCATION API CALLS -----
 export const getLocations = async () => {
   const response = await axiosInstance.get("/location");
