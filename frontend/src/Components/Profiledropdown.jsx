@@ -11,14 +11,14 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const storedUsername = sessionStorage.getItem('username');
+    const storedUsername = localStorage.getItem('username');
     if (storedUsername) {
       setUsername(storedUsername);
     }
   }, []);
 useEffect(() => {
   if (isVisible) {
-    const storedUsername = sessionStorage.getItem("username");
+    const storedUsername = localStorage.getItem("username");
     setUsername(storedUsername);
   }
 }, [isVisible]);
@@ -34,11 +34,11 @@ useEffect(() => {
       cancelButtonColor: '#3085d6'
     }).then((result) => {
       if (result.isConfirmed) {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         if (token) {
-          sessionStorage.removeItem('token');
+          localStorage.removeItem('token');
         }
-        sessionStorage.removeItem('username'); // also clear username
+        localStorage.removeItem('username'); // also clear username
         Swal.fire({
           icon: 'success',
           title: 'Logged Out',
