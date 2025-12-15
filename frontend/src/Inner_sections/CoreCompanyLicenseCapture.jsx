@@ -116,8 +116,8 @@ const CoreCompanyLicenseCapture = () => {
 
   // Save to DB
 const handleSave = async () => {
-  const userId = sessionStorage.getItem("userId");
-  const token = sessionStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   if (!userId) {
     alert("User not logged in!");
