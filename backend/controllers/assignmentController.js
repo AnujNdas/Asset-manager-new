@@ -79,7 +79,6 @@ const getInStockCategorySummary = async (req, res) => {
   }
 };
  
-
 const assignAssetsFromStock = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -95,20 +94,24 @@ const assignAssetsFromStock = async (req, res) => {
 
     for (const item of assignments) {
       const {
-  assetType,
-  assetId,
-  assetModel,
-  assignedTo,
-  assignedToType,
-  quantity
-} = item;
+        assetType,
+        assetId,
+        assetModel,
+        assignedTo,
+        assignedToType,
+        quantity,
+      } = item;
 
+      /* ================= VALIDATIONS ================= */
 
       if (!mongoose.Types.ObjectId.isValid(assetId)) {
         throw new Error("Invalid assetId");
       }
 
-      if (!mongoose.Types.ObjectId.isValid(departmentId)) {
+      if (
+        assignedToType === "Department" &&
+        !mongoose.Types.ObjectId.isValid(assignedTo)
+      ) {
         throw new Error("Invalid departmentId");
       }
 
@@ -120,9 +123,7 @@ const assignAssetsFromStock = async (req, res) => {
 
       /* ================= HARDWARE ================= */
       if (assetType === "hardware") {
-        assetModel = "Asset";
         asset = await Asset.findById(assetId).session(session);
-
         if (!asset) throw new Error("Hardware asset not found");
 
         const inStock = asset.assetQuantity - asset.inUse;
@@ -136,9 +137,7 @@ const assignAssetsFromStock = async (req, res) => {
 
       /* ================= SOFTWARE ================= */
       if (assetType === "software") {
-        assetModel = "SoftwareAsset";
         asset = await SoftwareAsset.findById(assetId).session(session);
-
         if (!asset) throw new Error("Software asset not found");
 
         const available =
@@ -153,14 +152,14 @@ const assignAssetsFromStock = async (req, res) => {
       }
 
       /* ================= CREATE ASSIGNMENT ================= */
-      const assignment = await AssetAssignment.create(
+      const [assignment] = await AssetAssignment.create(
         [
           {
             assetType,
             assetId,
             assetModel,
-            assignedToType: "Department",
-            assignedTo: departmentId,
+            assignedToType,
+            assignedTo, // ✅ FIXED
             quantity,
             status: "active",
           },
@@ -168,7 +167,7 @@ const assignAssetsFromStock = async (req, res) => {
         { session }
       );
 
-      createdAssignments.push(assignment[0]);
+      createdAssignments.push(assignment);
     }
 
     await session.commitTransaction();
