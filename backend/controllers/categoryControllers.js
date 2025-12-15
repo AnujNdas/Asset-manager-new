@@ -38,11 +38,6 @@ const getCategories = async (req, res) => {
     res.status(500).json({ error: 'Error fetching categories' });
   }
 };
-// Update/edit category
-const updateCategory = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name } = req.body;
 
 const updateCategory = async (req, res) => {
   try {
