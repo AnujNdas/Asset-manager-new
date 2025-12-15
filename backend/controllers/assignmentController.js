@@ -2,6 +2,82 @@ const mongoose = require("mongoose");
 const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
+
+const getInStockCategorySummary = async (req, res) => {
+  try {
+    // HARDWARE
+    const hardware = await Asset.aggregate([
+      {
+        $project: {
+          category: "$assetCategory",
+          available: { $subtract: ["$assetQuantity", "$inUse"] }
+        }
+      },
+      { $match: { available: { $gt: 0 } } },
+      {
+        $group: {
+          _id: "$category",
+          hardwareCount: { $sum: "$available" }
+        }
+      }
+    ]);
+
+    // SOFTWARE
+    const software = await SoftwareAsset.aggregate([
+      {
+        $project: {
+          category: "$category",
+          available: {
+            $subtract: ["$totalLicenses", "$licensesAssigned"]
+          }
+        }
+      },
+      { $match: { available: { $gt: 0 } } },
+      {
+        $group: {
+          _id: "$category",
+          softwareCount: { $sum: "$available" }
+        }
+      }
+    ]);
+
+    // MERGE RESULTS
+    const map = {};
+
+    hardware.forEach(item => {
+      map[item._id] = {
+        category: item._id,
+        hardwareCount: item.hardwareCount,
+        softwareCount: 0
+      };
+    });
+
+    software.forEach(item => {
+      if (!map[item._id]) {
+        map[item._id] = {
+          category: item._id,
+          hardwareCount: 0,
+          softwareCount: item.softwareCount
+        };
+      } else {
+        map[item._id].softwareCount = item.softwareCount;
+      }
+    });
+
+    const result = Object.values(map).map(item => ({
+      ...item,
+      totalInStock: item.hardwareCount + item.softwareCount
+    }));
+
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 const assignAssetsFromStock = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -143,6 +219,53 @@ const returnAsset = async (req, res) => {
     });
   }
 };
+const getInStockAssetsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    // HARDWARE
+    const hardwareAssets = await Asset.find({
+      assetCategory: category,
+      $expr: { $gt: ["$assetQuantity", "$inUse"] }
+    }).select("assetName assetCategory assetQuantity inUse");
+
+    // SOFTWARE
+    const softwareAssets = await SoftwareAsset.find({
+      category,
+      $expr: { $gt: ["$totalLicenses", "$licensesAssigned"] }
+    }).select("name category totalLicenses licensesAssigned");
+
+    const response = [
+      ...hardwareAssets.map(a => ({
+        id: a._id,
+        name: a.assetName,
+        category: a.assetCategory,
+        assetType: "hardware",
+        available: a.assetQuantity - a.inUse
+      })),
+      ...softwareAssets.map(s => ({
+        id: s._id,
+        name: s.name,
+        category: s.category,
+        assetType: "software",
+        available: s.totalLicenses - s.licensesAssigned
+      }))
+    ];
+
+    res.json({ success: true, data: response });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
 
-module.exports = { assignAssetsFromStock , returnAsset };
+module.exports = {
+  getInStockCategorySummary,
+  getInStockAssetsByCategory,
+  assignAssetsFromStock,
+  returnAsset
+};
+
