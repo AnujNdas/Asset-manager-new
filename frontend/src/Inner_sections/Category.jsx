@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getCategories, createCategory, deleteCategory, updateCategory } from '../Services/ApiServices';
+import {
+  getCategories,
+  createCategory,
+  deleteCategory,
+  updateCategory
+} from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faSave, faTimes  , faTrash} from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faEdit,
+  faSave,
+  faTimes,
+  faTrash
+} from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
@@ -15,15 +26,29 @@ const Category = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Edit State
+  // 🔍 Search State
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // ✏️ Edit State
   const [editingCategory, setEditingCategory] = useState(null);
   const [updatedName, setUpdatedName] = useState('');
 
   const perPage = 18;
-  const totalPages = Math.ceil(categories.length / perPage);
+
+  // 🔎 Filter categories BEFORE pagination
+  const filteredCategories = categories.filter(cat =>
+    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredCategories.length / perPage);
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
-  const currentItems = categories.slice(indexOfFirst, indexOfLast);
+  const currentItems = filteredCategories.slice(indexOfFirst, indexOfLast);
+
+  // Reset page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Fetch categories
   const fetchCategories = async () => {
@@ -31,15 +56,15 @@ const Category = () => {
     try {
       const data = await getCategories();
       setCategories([...data].reverse());
-      setApiDone(true)
-      // ✅ allow progress to hit 100%
+      setApiDone(true);
+
       setTimeout(() => {
-      setLoading(false);
-    }, 400);
+        setLoading(false);
+      }, 400);
     } catch (err) {
       setError('Error fetching categories');
       setLoading(false);
-    } 
+    }
   };
 
   // Create category
@@ -50,7 +75,7 @@ const Category = () => {
       Swal.fire({
         icon: 'warning',
         title: 'Missing Category Name',
-        text: 'Please enter a category name before submitting.',
+        text: 'Please enter a category name before submitting.'
       });
       return;
     }
@@ -59,26 +84,27 @@ const Category = () => {
       const res = await createCategory({ name: categoryName.trim() });
       const newCategory = res.category || res.data || res;
 
-      setCategories((prev) => [newCategory, ...prev]);
+      setCategories(prev => [newCategory, ...prev]);
       setCategoryName('');
+      setSearchTerm('');
       setCurrentPage(1);
 
       Swal.fire({
         icon: 'success',
         title: 'Category Created',
-        text: 'The category has been added successfully!',
+        text: 'The category has been added successfully!'
       });
 
     } catch (err) {
       Swal.fire({
         icon: 'error',
         title: 'Error Creating Category',
-        text: err.response?.data?.message || 'Something went wrong.',
+        text: err.response?.data?.error || 'Category already exists.'
       });
     }
   };
 
-  // Delete Category
+  // Delete category
   const handleDelete = async (id, name) => {
     const confirmDelete = await Swal.fire({
       title: "Delete Category?",
@@ -96,17 +122,17 @@ const Category = () => {
       setCategories(prev => prev.filter(cat => cat._id !== id));
       Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
+      Swal.fire("Error", "Failed to delete category", "error");
     }
   };
 
-  // Open Edit Modal
+  // Open edit modal
   const openEditModal = (category) => {
     setEditingCategory(category);
     setUpdatedName(category.name);
   };
 
-  // Update Category
+  // Update category
   const handleUpdate = async () => {
     if (!updatedName.trim()) {
       Swal.fire("Warning", "Category name cannot be empty!", "warning");
@@ -114,18 +140,27 @@ const Category = () => {
     }
 
     try {
-      const res = await updateCategory(editingCategory._id, { name: updatedName.trim() });
+      await updateCategory(editingCategory._id, {
+        name: updatedName.trim()
+      });
 
       setCategories(prev =>
         prev.map(cat =>
-          cat._id === editingCategory._id ? { ...cat, name: updatedName.trim() } : cat
+          cat._id === editingCategory._id
+            ? { ...cat, name: updatedName.trim() }
+            : cat
         )
       );
 
       Swal.fire("Success", "Category updated successfully!", "success");
       setEditingCategory(null);
+
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to update category", "error");
+      Swal.fire(
+        "Error",
+        err.response?.data?.error || "Category already exists",
+        "error"
+      );
     }
   };
 
@@ -143,6 +178,14 @@ const Category = () => {
       <div className="card_header">
         <h3 className="category_title">Category</h3>
 
+        <input
+          type="text"
+          className="category_search_input"
+          placeholder="Search categories..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
         <form onSubmit={handleSubmit} className="category_form">
           <input
             type="text"
@@ -159,14 +202,22 @@ const Category = () => {
 
       <div className="category-grid">
         {currentItems.length === 0 ? (
-          <p>No categories available</p>
+          <p>
+            {searchTerm
+              ? "No matching categories found"
+              : "No categories available"}
+          </p>
         ) : (
           <div className="grid">
             {currentItems.map((category, idx) => (
               <div key={category._id} className="category-card">
-                <div className="category-number">{indexOfFirst + idx + 1}</div>
+                <div className="category-number">
+                  {indexOfFirst + idx + 1}
+                </div>
 
-                <div className="category-name">{category.name}</div>
+                <div className="category-name">
+                  {category.name}
+                </div>
 
                 <div className="category-actions">
                   <button
@@ -178,9 +229,11 @@ const Category = () => {
 
                   <button
                     className="btn-delete"
-                    onClick={() => handleDelete(category._id, category.name)}
+                    onClick={() =>
+                      handleDelete(category._id, category.name)
+                    }
                   >
-                     <FontAwesomeIcon icon={faTrash} />
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </div>
               </div>
@@ -190,7 +243,7 @@ const Category = () => {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPages > 1 && !searchTerm && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -216,7 +269,10 @@ const Category = () => {
                 <FontAwesomeIcon icon={faSave} /> Save
               </button>
 
-              <button className="cancel-btn" onClick={() => setEditingCategory(null)}>
+              <button
+                className="cancel-btn"
+                onClick={() => setEditingCategory(null)}
+              >
                 <FontAwesomeIcon icon={faTimes} /> Cancel
               </button>
             </div>
