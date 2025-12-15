@@ -9,6 +9,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlus,
+  faSearch,
+  faChevronDown,
   faEdit,
   faSave,
   faTimes,
@@ -20,6 +22,8 @@ import Loader from "../Components/Loader";
 
 const Location = () => {
   const [inputValue, setInputValue] = useState('');
+  const [mode, setMode] = useState('search'); // search | add
+  const [showDropdown, setShowDropdown] = useState(false);
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
@@ -48,10 +52,17 @@ const Location = () => {
     }
   };
 
-  // 🔍 Search using SAME input
-  const filteredLocations = locations.filter(loc =>
-    loc.name.toLowerCase().includes(inputValue.toLowerCase())
-  );
+  // SEARCH FILTER (only active in search mode)
+  const filteredLocations =
+    mode === 'search'
+      ? locations.filter(loc =>
+          loc.name.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      : locations;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [inputValue, mode]);
 
   const totalPages = Math.ceil(filteredLocations.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -60,27 +71,24 @@ const Location = () => {
     startIndex + itemsPerPage
   );
 
-  // Reset page while searching
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [inputValue]);
-
-  // ➕ Add Location (same input)
-  const handleSubmit = async (e) => {
+  // ACTION HANDLER
+  const handleAction = async (e) => {
     e.preventDefault();
 
     if (!inputValue.trim()) {
-      Swal.fire("Warning", "Please enter a location name", "warning");
+      Swal.fire("Warning", "Input cannot be empty", "warning");
       return;
     }
 
+    if (mode === 'search') return;
+
+    // ADD MODE
     try {
       const res = await createLocation({ name: inputValue.trim() });
       const newLocation = res.location || res.data || res;
 
       setLocations(prev => [newLocation, ...prev]);
       setInputValue('');
-      setCurrentPage(1);
 
       Swal.fire({
         icon: 'success',
@@ -97,62 +105,46 @@ const Location = () => {
     }
   };
 
-  // Delete
+  // DELETE
   const handleDelete = async (id, name) => {
-    const confirmDelete = await Swal.fire({
+    const confirm = await Swal.fire({
       title: "Delete Location?",
-      text: `Are you sure you want to delete "${name}"?`,
+      text: `Delete "${name}"?`,
       icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Delete"
+      showCancelButton: true
     });
 
-    if (!confirmDelete.isConfirmed) return;
+    if (!confirm.isConfirmed) return;
 
-    try {
-      await deleteLocation(id);
-      setLocations(prev => prev.filter(loc => loc._id !== id));
-      Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
-    } catch {
-      Swal.fire("Error", "Failed to delete location", "error");
-    }
+    await deleteLocation(id);
+    setLocations(prev => prev.filter(l => l._id !== id));
+    Swal.fire("Deleted!", "Location removed", "success");
   };
 
-  // Edit
-  const openEditModal = (location) => {
-    setEditingLocation(location);
-    setUpdatedName(location.name);
+  // EDIT
+  const openEditModal = (loc) => {
+    setEditingLocation(loc);
+    setUpdatedName(loc.name);
   };
 
   const handleUpdate = async () => {
-    if (!updatedName.trim()) {
-      Swal.fire("Warning", "Location name cannot be empty!", "warning");
-      return;
-    }
+    await updateLocation(editingLocation._id, {
+      name: updatedName.trim()
+    });
 
-    try {
-      await updateLocation(editingLocation._id, {
-        name: updatedName.trim()
-      });
+    setLocations(prev =>
+      prev.map(l =>
+        l._id === editingLocation._id
+          ? { ...l, name: updatedName.trim() }
+          : l
+      )
+    );
 
-      setLocations(prev =>
-        prev.map(loc =>
-          loc._id === editingLocation._id
-            ? { ...loc, name: updatedName.trim() }
-            : loc
-        )
-      );
-
-      Swal.fire("Success", "Location updated successfully!", "success");
-      setEditingLocation(null);
-    } catch {
-      Swal.fire("Error", "Failed to update location", "error");
-    }
+    Swal.fire("Updated", "Location updated", "success");
+    setEditingLocation(null);
   };
 
-  if (loading) {
-    return <Loader type="classification" apiDone={apiDone} />;
-  }
+  if (loading) return <Loader type="classification" apiDone={apiDone} />;
 
   return (
     <div className="classification_card">
@@ -160,51 +152,69 @@ const Location = () => {
       <div className="card_header">
         <h3 className="category_title">Location</h3>
 
-        {/* 🔍➕ Unified Search + Add */}
-        <form onSubmit={handleSubmit} className="category_form unified-input">
+        {/* INPUT WITH MODE DROPDOWN */}
+        <form onSubmit={handleAction} className="category_form mode-input">
+
+          <div className="mode-selector">
+            <button
+              type="button"
+              className="mode-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <FontAwesomeIcon icon={mode === 'search' ? faSearch : faPlus} />
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
+
+            {showDropdown && (
+              <div className="mode-dropdown">
+                <div onClick={() => {
+                  setMode('search');
+                  setShowDropdown(false);
+                }}>
+                  <FontAwesomeIcon icon={faSearch} /> Search
+                </div>
+
+                <div onClick={() => {
+                  setMode('add');
+                  setShowDropdown(false);
+                }}>
+                  <FontAwesomeIcon icon={faPlus} /> Add
+                </div>
+              </div>
+            )}
+          </div>
+
           <input
             type="text"
             className="category_search_input"
-            placeholder="Search or add location..."
+            placeholder={
+              mode === 'search'
+                ? 'Search location...'
+                : 'Add new location...'
+            }
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
 
-          <button type="submit" className="category_add_btn">
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
         </form>
       </div>
 
       <div className="category-grid">
         {currentItems.length === 0 ? (
-          <p>
-            {inputValue
-              ? "No matching locations found"
-              : "No locations available"}
-          </p>
+          <p>No locations found</p>
         ) : (
           <div className="grid">
             {currentItems.map((loc, idx) => (
               <div key={loc._id} className="category-card">
-                <div className="category-number">
-                  {startIndex + idx + 1}
-                </div>
-
+                <div className="category-number">{startIndex + idx + 1}</div>
                 <div className="category-name">{loc.name}</div>
 
                 <div className="category-actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => openEditModal(loc)}
-                  >
+                  <button className="btn-edit" onClick={() => openEditModal(loc)}>
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
 
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(loc._id, loc.name)}
-                  >
+                  <button className="btn-delete" onClick={() => handleDelete(loc._id, loc.name)}>
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </div>
@@ -214,8 +224,7 @@ const Location = () => {
         )}
       </div>
 
-      {/* Pagination disabled while searching */}
-      {totalPages > 1 && !inputValue && (
+      {mode === 'search' && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -223,28 +232,21 @@ const Location = () => {
         />
       )}
 
-      {/* Edit Modal */}
+      {/* EDIT MODAL */}
       {editingLocation && (
         <div className="edit-modal">
           <div className="edit-modal-content">
             <h3>Edit Location</h3>
-
             <input
-              type="text"
               value={updatedName}
               onChange={(e) => setUpdatedName(e.target.value)}
               className="edit-input"
             />
-
             <div className="modal-buttons">
               <button className="save-btn" onClick={handleUpdate}>
                 <FontAwesomeIcon icon={faSave} /> Save
               </button>
-
-              <button
-                className="cancel-btn"
-                onClick={() => setEditingLocation(null)}
-              >
+              <button className="cancel-btn" onClick={() => setEditingLocation(null)}>
                 <FontAwesomeIcon icon={faTimes} /> Cancel
               </button>
             </div>
