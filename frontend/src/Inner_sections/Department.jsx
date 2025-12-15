@@ -11,11 +11,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faSearch,
+  faChevronDown,
   faEdit,
   faSave,
   faTimes,
-  faTrash,
-  faChevronDown
+  faTrash
 } from "@fortawesome/free-solid-svg-icons";
 
 import Swal from "sweetalert2";
@@ -24,30 +24,23 @@ import Loader from "../Components/Loader";
 
 const Department = () => {
   const [inputValue, setInputValue] = useState("");
-  const [mode, setMode] = useState("search"); // search | add
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mode, setMode] = useState("search");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 12;
+  const itemsPerPage = 12;
 
-  // Edit
   const [editingDepartment, setEditingDepartment] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
-  // Capitalize first letter (UI only – backend enforces final format)
-  const formatValue = (value) =>
-    value
-      ? value.charAt(0).toUpperCase() + value.slice(1)
-      : value;
+  const capitalize = (v) =>
+    v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
 
-  /* ============================
-     Fetch Departments
-  ============================ */
+  /* ================= FETCH ================= */
   const fetchDepartments = async () => {
     setLoading(true);
     try {
@@ -64,9 +57,7 @@ const Department = () => {
     fetchDepartments();
   }, []);
 
-  /* ============================
-     Search Filter
-  ============================ */
+  /* ================= FILTER ================= */
   const filteredDepartments =
     mode === "search"
       ? departments.filter((d) =>
@@ -78,44 +69,50 @@ const Department = () => {
     setCurrentPage(1);
   }, [inputValue, mode]);
 
-  const totalPages = Math.ceil(filteredDepartments.length / perPage);
-  const indexOfLast = currentPage * perPage;
-  const indexOfFirst = indexOfLast - perPage;
+  const totalPages = Math.ceil(filteredDepartments.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredDepartments.slice(
-    indexOfFirst,
-    indexOfLast
+    startIndex,
+    startIndex + itemsPerPage
   );
 
-  /* ============================
-     Add Department
-  ============================ */
-  const handleAdd = async () => {
+  /* ================= ADD / SEARCH ================= */
+  const handleAction = async (e) => {
+    e.preventDefault();
+
     if (!inputValue.trim()) {
-      Swal.fire("Warning", "Department name cannot be empty", "warning");
+      Swal.fire("Warning", "Input cannot be empty", "warning");
       return;
     }
 
+    if (mode === "search") return;
+
     try {
-      const res = await createDepartment({ name: inputValue.trim() });
+      const res = await createDepartment({
+        name: capitalize(inputValue.trim())
+      });
+
       const newDepartment = res.data || res;
 
       setDepartments((prev) => [newDepartment, ...prev]);
       setInputValue("");
-      setMode("search");
 
-      Swal.fire("Success", "Department added successfully!", "success");
+      Swal.fire({
+        icon: "success",
+        title: "Department Added",
+        timer: 1500,
+        showConfirmButton: false
+      });
     } catch (err) {
       Swal.fire(
         "Error",
-        err.response?.data?.message || "Department already exists",
+        err.response?.data?.error || "Department already exists",
         "error"
       );
     }
   };
 
-  /* ============================
-     Delete Department
-  ============================ */
+  /* ================= DELETE ================= */
   const handleDelete = async (id, name) => {
     const confirm = await Swal.fire({
       title: "Delete Department?",
@@ -128,30 +125,25 @@ const Department = () => {
 
     await deleteDepartment(id);
     setDepartments((prev) => prev.filter((d) => d._id !== id));
-
-    Swal.fire("Deleted", "Department removed", "success");
+    Swal.fire("Deleted!", "Department removed", "success");
   };
 
-  /* ============================
-     Update Department
-  ============================ */
+  /* ================= UPDATE ================= */
   const handleUpdate = async () => {
-    if (!updatedName.trim()) return;
-
     await updateDepartment(editingDepartment._id, {
-      name: updatedName.trim()
+      name: capitalize(updatedName.trim())
     });
 
     setDepartments((prev) =>
       prev.map((d) =>
         d._id === editingDepartment._id
-          ? { ...d, name: updatedName.trim() }
+          ? { ...d, name: capitalize(updatedName.trim()) }
           : d
       )
     );
 
+    Swal.fire("Updated", "Department updated", "success");
     setEditingDepartment(null);
-    Swal.fire("Success", "Department updated", "success");
   };
 
   if (loading) {
@@ -163,62 +155,57 @@ const Department = () => {
       <div className="card_header">
         <h3 className="category_title">Department</h3>
 
-        {/* 🔍➕ Unified Search / Add Input */}
-        <div className="unified-input-wrapper">
+        {/* EXACT SAME STRUCTURE AS CATEGORY */}
+        <form onSubmit={handleAction} className="category_form mode-input">
+          <div className="mode-selector">
+            <button
+              type="button"
+              className="mode-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <FontAwesomeIcon
+                icon={mode === "search" ? faSearch : faPlus}
+              />
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
+
+            {showDropdown && (
+              <div className="mode-dropdown">
+                <div
+                  onClick={() => {
+                    setMode("search");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSearch} /> Search
+                </div>
+
+                <div
+                  onClick={() => {
+                    setMode("add");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlus} /> Add
+                </div>
+              </div>
+            )}
+          </div>
+
           <input
             type="text"
             className="category_search_input"
             placeholder={
               mode === "search"
-                ? "Search departments..."
+                ? "Search department..."
                 : "Add new department..."
             }
             value={inputValue}
             onChange={(e) =>
-              setInputValue(formatValue(e.target.value))
+              setInputValue(capitalize(e.target.value))
             }
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && mode === "add") {
-                e.preventDefault();
-                handleAdd();
-              }
-            }}
           />
-
-          {/* MODE SELECTOR */}
-          <button
-            type="button"
-            className="mode-btn"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-          >
-            <FontAwesomeIcon
-              icon={mode === "search" ? faSearch : faPlus}
-            />
-            <FontAwesomeIcon icon={faChevronDown} />
-          </button>
-
-          {dropdownOpen && (
-            <div className="mode-dropdown">
-              <div
-                onClick={() => {
-                  setMode("search");
-                  setDropdownOpen(false);
-                }}
-              >
-                <FontAwesomeIcon icon={faSearch} /> Search
-              </div>
-
-              <div
-                onClick={() => {
-                  setMode("add");
-                  setDropdownOpen(false);
-                }}
-              >
-                <FontAwesomeIcon icon={faPlus} /> Add
-              </div>
-            </div>
-          )}
-        </div>
+        </form>
       </div>
 
       {/* LIST */}
@@ -230,7 +217,7 @@ const Department = () => {
             {currentItems.map((dep, idx) => (
               <div key={dep._id} className="category-card">
                 <div className="category-number">
-                  {indexOfFirst + idx + 1}
+                  {startIndex + idx + 1}
                 </div>
 
                 <div className="category-name">{dep.name}</div>
@@ -262,7 +249,7 @@ const Department = () => {
       </div>
 
       {/* PAGINATION */}
-      {totalPages > 1 && mode === "search" && (
+      {mode === "search" && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -280,7 +267,7 @@ const Department = () => {
               className="edit-input"
               value={updatedName}
               onChange={(e) =>
-                setUpdatedName(formatValue(e.target.value))
+                setUpdatedName(capitalize(e.target.value))
               }
             />
 
@@ -290,7 +277,9 @@ const Department = () => {
               </button>
               <button
                 className="cancel-btn"
-                onClick={() => setEditingDepartment(null)}
+                onClick={() =>
+                  setEditingDepartment(null)
+                }
               >
                 <FontAwesomeIcon icon={faTimes} /> Cancel
               </button>
