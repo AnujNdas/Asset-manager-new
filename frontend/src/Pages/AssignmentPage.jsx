@@ -109,12 +109,14 @@ const fetchDepartments = async () => {
       const qty = assignments[asset._id];
       if (qty && qty > 0) {
         payload.push({
-          assetId: asset._id,
-          assetType: asset.assetType,
-          assetModel: asset.assetType === "hardware" ? "Asset" : "SoftwareAsset",
-          assignedTo: selectedDepartment,
-          quantity: qty,
-        });
+  assetId: asset._id,
+  assetType: asset.assetType,
+  assetModel: asset.assetType === "software" ? "SoftwareAsset" : "Asset",
+  assignedToType: "Department",
+  assignedTo: selectedDepartment,
+  quantity: qty,
+});
+
 
       }
     });
