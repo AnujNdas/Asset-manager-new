@@ -16,6 +16,7 @@ import {
   getLocations,
   getCategories,
   getStatuses,
+  getDepartments
 } from "../Services/ApiServices";
 
 const tabs = [
