@@ -57,6 +57,10 @@ const Classification = () => {
           data = await getStatuses();
           fileName = "statuses";
           break;
+        case "department":
+          data = await getDepartments();
+          fileName = "departments";
+          break;
         default:
           return Swal.fire("Error", "Unknown tab selected!", "error");
       }
