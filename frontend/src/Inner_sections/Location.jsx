@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../Page_styles/Unit.css';
-import { getLocations, createLocation, deleteLocation, updateLocation } from '../Services/ApiServices';
+import {
+  getLocations,
+  createLocation,
+  deleteLocation,
+  updateLocation
+} from '../Services/ApiServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faSave, faTimes , faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faEdit,
+  faSave,
+  faTimes,
+  faTrash
+} from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Pagination from '../Components/Pagination';
 import Loader from "../Components/Loader";
@@ -14,11 +25,14 @@ const Location = () => {
   const [apiDone, setApiDone] = useState(false);
   const [error, setError] = useState(null);
 
+  // 🔍 Search
+  const [searchTerm, setSearchTerm] = useState('');
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
 
-  // Edit Modal State
+  // Edit Modal
   const [editingLocation, setEditingLocation] = useState(null);
   const [updatedName, setUpdatedName] = useState('');
 
@@ -31,21 +45,33 @@ const Location = () => {
     try {
       const data = await getLocations();
       setLocations([...data].reverse());
-      setApiDone(true)
-      // ✅ allow progress to hit 100%
-    setTimeout(() => {
-      setLoading(false);
-    }, 400);
+      setApiDone(true);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 400);
     } catch (err) {
       setError('Error fetching locations');
       setLoading(false);
     }
   };
 
-  // Pagination Logic
+  // 🔎 Filter BEFORE pagination
+  const filteredLocations = locations.filter(loc =>
+    loc.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredLocations.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = locations.slice(startIndex, startIndex + itemsPerPage);
-  const totalPages = Math.ceil(locations.length / itemsPerPage);
+  const currentItems = filteredLocations.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // Reset page on search
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Create Location
   const handleSubmit = async (e) => {
@@ -64,8 +90,9 @@ const Location = () => {
       const res = await createLocation({ name: locationName.trim() });
       const newLocation = res.location || res.data || res;
 
-      setLocations((prev) => [newLocation, ...prev]);
+      setLocations(prev => [newLocation, ...prev]);
       setLocationName('');
+      setSearchTerm('');
       setCurrentPage(1);
 
       Swal.fire({
@@ -84,7 +111,7 @@ const Location = () => {
     }
   };
 
-  // Delete
+  // Delete Location
   const handleDelete = async (id, name) => {
     const confirmDelete = await Swal.fire({
       title: "Delete Location?",
@@ -102,7 +129,7 @@ const Location = () => {
       setLocations(prev => prev.filter(loc => loc._id !== id));
       Swal.fire("Deleted!", `"${name}" removed successfully.`, "success");
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to delete", "error");
+      Swal.fire("Error", "Failed to delete location", "error");
     }
   };
 
@@ -120,11 +147,15 @@ const Location = () => {
     }
 
     try {
-      await updateLocation(editingLocation._id, { name: updatedName.trim() });
+      await updateLocation(editingLocation._id, {
+        name: updatedName.trim()
+      });
 
       setLocations(prev =>
         prev.map(loc =>
-          loc._id === editingLocation._id ? { ...loc, name: updatedName.trim() } : loc
+          loc._id === editingLocation._id
+            ? { ...loc, name: updatedName.trim() }
+            : loc
         )
       );
 
@@ -135,13 +166,24 @@ const Location = () => {
     }
   };
 
-  if (loading) return <Loader type="classification" apiDone={apiDone} />;
+  if (loading) {
+    return <Loader type="classification" apiDone={apiDone} />;
+  }
 
   return (
     <div className="classification_card">
 
       <div className="card_header">
         <h3 className="category_title">Location</h3>
+
+        {/* 🔍 Search */}
+        <input
+          type="text"
+          className="category_search_input"
+          placeholder="Search locations..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
         <form onSubmit={handleSubmit} className="category_form">
           <input
@@ -159,32 +201,39 @@ const Location = () => {
 
       <div className="category-grid">
         {currentItems.length === 0 ? (
-          <p>No locations available</p>
+          <p>
+            {searchTerm
+              ? "No matching locations found"
+              : "No locations available"}
+          </p>
         ) : (
           <div className="grid">
             {currentItems.map((loc, idx) => (
               <div key={loc._id} className="category-card">
-                <div className="category-number">{startIndex + idx + 1}</div>
-                <div className="category-name">{loc.name}</div>
+                <div className="category-number">
+                  {startIndex + idx + 1}
+                </div>
+
+                <div className="category-name">
+                  {loc.name}
+                </div>
 
                 <div className="category-actions">
-                  
-                  {/* EDIT BUTTON */}
                   <button
                     className="btn-edit"
                     onClick={() => openEditModal(loc)}
                   >
-                    <FontAwesomeIcon icon={faEdit} /> 
+                    <FontAwesomeIcon icon={faEdit} />
                   </button>
 
-                  {/* DELETE BUTTON */}
                   <button
                     className="btn-delete"
-                    onClick={() => handleDelete(loc._id, loc.name)}
+                    onClick={() =>
+                      handleDelete(loc._id, loc.name)
+                    }
                   >
-                    <FontAwesomeIcon icon={faTrash} /> 
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
-
                 </div>
               </div>
             ))}
@@ -193,7 +242,7 @@ const Location = () => {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPages > 1 && !searchTerm && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -201,7 +250,7 @@ const Location = () => {
         />
       )}
 
-      {/* EDIT MODAL */}
+      {/* Edit Modal */}
       {editingLocation && (
         <div className="edit-modal">
           <div className="edit-modal-content">
@@ -219,11 +268,13 @@ const Location = () => {
                 <FontAwesomeIcon icon={faSave} /> Save
               </button>
 
-              <button className="cancel-btn" onClick={() => setEditingLocation(null)}>
+              <button
+                className="cancel-btn"
+                onClick={() => setEditingLocation(null)}
+              >
                 <FontAwesomeIcon icon={faTimes} /> Cancel
               </button>
             </div>
-
           </div>
         </div>
       )}
