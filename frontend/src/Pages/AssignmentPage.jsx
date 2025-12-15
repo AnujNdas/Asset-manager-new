@@ -41,6 +41,7 @@ const AssignmentPage = () => {
   const fetchDepartments = async () => {
     try {
       const res = await getDepartments();
+      console.log(res)
       setDepartments(res.data || []);
     } catch (err) {
       console.error(err);
