@@ -38,15 +38,15 @@ const AssignmentPage = () => {
     }
   };
 
-  const fetchDepartments = async () => {
-    try {
-      const res = await getDepartments();
-      console.log(res)
-      setDepartments(res.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+const fetchDepartments = async () => {
+  try {
+    const res = await getDepartments();
+    setDepartments(res.data.data || []); // ✅ FIX
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
   const openCategory = async (categoryObj) => {
     setSelectedCategory(categoryObj);
