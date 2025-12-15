@@ -1,0 +1,151 @@
+.assignment-page {
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.page-header p {
+  color: #666;
+  font-size: 14px;
+}
+
+/* CATEGORY GRID */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.category-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.category-card h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.category-card span {
+  font-size: 13px;
+  color: #777;
+}
+
+.counts {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #555;
+}
+
+/* DRAWER */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.drawer {
+  width: 520px;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-header {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-header button {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.drawer-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* TABLE */
+.asset-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.asset-table th,
+.asset-table td {
+  border-bottom: 1px solid #eee;
+  padding: 10px 6px;
+  text-align: left;
+}
+
+.asset-table input {
+  width: 70px;
+  padding: 4px;
+}
+
+/* DEPARTMENT */
+.department-section {
+  margin-top: 20px;
+}
+
+.department-section label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.department-section select {
+  width: 100%;
+  height: 120px;
+  padding: 6px;
+}
+
+/* FOOTER */
+.drawer-footer {
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+.assign-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.assign-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
