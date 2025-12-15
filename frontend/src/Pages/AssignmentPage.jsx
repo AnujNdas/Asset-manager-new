@@ -111,9 +111,11 @@ const fetchDepartments = async () => {
         payload.push({
           assetId: asset._id,
           assetType: asset.assetType,
-          departmentId: selectedDepartment,
+          assetModel: asset.assetType === "hardware" ? "Asset" : "SoftwareAsset",
+          assignedTo: selectedDepartment,
           quantity: qty,
         });
+
       }
     });
 
