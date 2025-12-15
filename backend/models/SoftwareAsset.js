@@ -19,9 +19,17 @@ const SoftwareAssetSchema = new mongoose.Schema({
   renewalCycle: String, // ✅ Monthly / Yearly
   renewalReminder: { type: Boolean, default: true }, // ✅ Notify before expiration
 
-  totalLicenses: Number,
-  licensesAssigned: Number,
-  licensesAvailable: Number,
+totalLicenses: {
+  type: Number,
+  required: true,
+  min: 0
+},
+licensesAssigned: {
+  type: Number,
+  default: 0,
+  min: 0
+}
+
 
   // Financial Info
   purchaseDate: Date,
@@ -61,6 +69,9 @@ const SoftwareAssetSchema = new mongoose.Schema({
   optimizationRecommendation: String,
 
 }, { timestamps: true });
+SoftwareAssetSchema.virtual("licensesAvailable").get(function () {
+  return this.totalLicenses - this.licensesAssigned;
+});
 
 const SoftwareAsset = mongoose.model("SoftwareAsset", SoftwareAssetSchema);
 module.exports = SoftwareAsset;
