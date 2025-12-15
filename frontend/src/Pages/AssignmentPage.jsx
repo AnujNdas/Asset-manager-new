@@ -135,7 +135,7 @@ const AssignmentPage = () => {
       </div>
 
       {/* CATEGORY GRID */}
-      <div className="category-grid">
+      <div className="stock-grid">
         {categories.map((cat) => (
           <div
             key={cat.category}
