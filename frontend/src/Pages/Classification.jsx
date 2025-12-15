@@ -6,6 +6,7 @@ import Unit from "../Inner_sections/Unit";
 import Category from "../Inner_sections/Category";
 import Location from "../Inner_sections/Location";
 import Status from "../Inner_sections/Status";
+import Department from "../Inner_sections/Department";
 
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
@@ -21,6 +22,7 @@ const tabs = [
   { name: "Location", key: "location", path: "/classification/location" },
   { name: "Unit", key: "unit", path: "/classification/unit" },
   { name: "Category", key: "category", path: "/classification/category" },
+  { name: "Department", key: "department", path: "/classification/department" },
   { name: "Status", key: "status", path: "/classification/status" },
 ];
 
@@ -149,6 +151,7 @@ const Classification = () => {
           <Route path="/category" element={<Category />} />
           <Route path="/location" element={<Location />} />
           <Route path="/status" element={<Status />} />
+          <Route path="/deapartment" element={<Department />} />
         </Routes>
       </div>
     </div>
