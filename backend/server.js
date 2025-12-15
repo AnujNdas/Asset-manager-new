@@ -24,6 +24,8 @@ const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
 const adminRoutes = require("./routes/adminRoutes");
 const assignmentRoutes = require("./routes/assignmentRoutes");
 const userRoute = require("./routes/userRoutes");
+const departmentRoutes = require("./routes/departmentRoutes");
+
 
 
 // ✅ Import User model for Super Admin seeding
@@ -62,6 +64,7 @@ app.use("/api/company-licenses", companyLicenseRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user-data", userRoute);
 app.use("/api/assignments", assignmentRoutes);
+app.use("/api/departments", departmentRoutes);
 
 
 app.get("/smtp-test", async (req, res) => {
