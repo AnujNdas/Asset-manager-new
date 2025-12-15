@@ -1,23 +1,60 @@
-// controllers/locationController.js
-const Location = require('../models/Location');
+const Location = require("../models/Location");
 
-// Create a new location
+/* ============================
+   Create Location
+============================ */
 const createLocation = async (req, res) => {
   try {
-    const { name } = req.body;
-    const newLocation = new Location({ name });
-    await newLocation.save();
+    let { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: "Location name is required" });
+    }
+
+    name = name.trim();
+
+    // Case-insensitive duplicate check
+    const exists = await Location.findOne({
+      name: { $regex: `^${name}$`, $options: "i" }
+    });
+
+    if (exists) {
+      return res.status(409).json({ message: "Location already exists" });
+    }
+
+    const newLocation = await Location.create({ name });
+
     res.status(201).json(newLocation);
+
   } catch (error) {
-    console.error('Error creating location:', error);
-    res.status(500).json({ error: 'Error creating location' });
+    console.error("Error creating location:", error);
+    res.status(500).json({ message: "Error creating location" });
   }
 };
-// Update/edit a location
+
+/* ============================
+   Update Location
+============================ */
 const updateLocation = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    let { name } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: "Location name is required" });
+    }
+
+    name = name.trim();
+
+    // Prevent duplicate names (excluding current record)
+    const exists = await Location.findOne({
+      _id: { $ne: id },
+      name: { $regex: `^${name}$`, $options: "i" }
+    });
+
+    if (exists) {
+      return res.status(409).json({ message: "Location already exists" });
+    }
 
     const updatedLocation = await Location.findByIdAndUpdate(
       id,
@@ -26,7 +63,7 @@ const updateLocation = async (req, res) => {
     );
 
     if (!updatedLocation) {
-      return res.status(404).json({ error: "Location not found" });
+      return res.status(404).json({ message: "Location not found" });
     }
 
     res.status(200).json({
@@ -36,21 +73,26 @@ const updateLocation = async (req, res) => {
 
   } catch (error) {
     console.error("Error updating location:", error);
-    res.status(500).json({ error: "Error updating location" });
-  }
-};
-// Get all locations
-const getLocations = async (req, res) => {
-  try {
-    const locations = await Location.find();
-    res.status(200).json(locations);
-  } catch (error) {
-    console.error('Error fetching locations:', error);
-    res.status(500).json({ error: 'Error fetching locations' });
+    res.status(500).json({ message: "Error updating location" });
   }
 };
 
-// Delete a category
+/* ============================
+   Get All Locations
+============================ */
+const getLocations = async (req, res) => {
+  try {
+    const locations = await Location.find().sort({ createdAt: -1 });
+    res.status(200).json(locations);
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+    res.status(500).json({ message: "Error fetching locations" });
+  }
+};
+
+/* ============================
+   Delete Location
+============================ */
 const deleteLocation = async (req, res) => {
   try {
     const { id } = req.params;
@@ -58,21 +100,23 @@ const deleteLocation = async (req, res) => {
     const deletedLocation = await Location.findByIdAndDelete(id);
 
     if (!deletedLocation) {
-      return res.status(404).json({ error: "Location not found" });
+      return res.status(404).json({ message: "Location not found" });
     }
 
-    res.status(200).json({ message: "Location deleted successfully", deletedLocation });
+    res.status(200).json({
+      message: "Location deleted successfully",
+      deletedLocation
+    });
+
   } catch (error) {
-    console.error("Error deleting Location:", error);
-    res.status(500).json({ error: "Error deleting Location" });
+    console.error("Error deleting location:", error);
+    res.status(500).json({ message: "Error deleting location" });
   }
 };
 
 module.exports = {
- createLocation,
- getLocations,
- deleteLocation,
-  updateLocation
-}
-
-
+  createLocation,
+  updateLocation,
+  getLocations,
+  deleteLocation
+};
