@@ -1,210 +1,278 @@
-import React, { useState, useEffect } from 'react';
-import '../Page_styles/Unit.css';
-import { 
-  getStatuses, 
-  createStatus, 
-  deleteStatus, 
-  updateStatus 
-} from '../Services/ApiServices';
+import React, { useState, useEffect } from "react";
+import "../Page_styles/Unit.css";
+import {
+  getStatuses,
+  createStatus,
+  deleteStatus,
+  updateStatus,
+} from "../Services/ApiServices";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTimes, faSave , faTrash } from '@fortawesome/free-solid-svg-icons';
-import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faSearch,
+  faChevronDown,
+  faEdit,
+  faSave,
+  faTimes,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+
+import Swal from "sweetalert2";
 import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
 
 const Status = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [mode, setMode] = useState("search"); // search | add
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const [statusName, setStatusName] = useState('');
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
-  const [error, setError] = useState(null);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 18;
-  const totalPages = Math.ceil(statuses.length / perPage);
-  const indexOfLast = currentPage * perPage;
-  const indexOfFirst = indexOfLast - perPage;
-  const currentItems = statuses.slice(indexOfFirst, indexOfLast);
+  const itemsPerPage = 18;
 
-  // Edit Modal State
+  // Edit Modal
   const [editingStatus, setEditingStatus] = useState(null);
-  const [updatedName, setUpdatedName] = useState('');
+  const [updatedName, setUpdatedName] = useState("");
 
-  // Fetch all statuses
+  // Capitalize helper
+  const capitalize = (value) =>
+    value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+
+  useEffect(() => {
+    fetchStatuses();
+  }, []);
+
   const fetchStatuses = async () => {
     setLoading(true);
     try {
       const data = await getStatuses();
       setStatuses([...data].reverse());
       setApiDone(true);
-      // ✅ allow progress to hit 100%
-    setTimeout(() => {
-      setLoading(false);
-    }, 400);
-    } catch (err) {
-      setError('Error fetching statuses');
+      setTimeout(() => setLoading(false), 400);
+    } catch {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchStatuses();
-  }, []);
+  // SEARCH FILTER
+  const filteredStatuses =
+    mode === "search"
+      ? statuses.filter((st) =>
+          st.name.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      : statuses;
 
-  // Add status
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [inputValue, mode]);
+
+  const totalPages = Math.ceil(filteredStatuses.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = filteredStatuses.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // ADD / SEARCH HANDLER
+  const handleAction = async (e) => {
     e.preventDefault();
 
-    if (!statusName.trim()) {
-      Swal.fire("Warning", "Status name cannot be empty!", "warning");
+    if (!inputValue.trim()) {
+      Swal.fire("Warning", "Input cannot be empty", "warning");
       return;
     }
 
+    if (mode === "search") return;
+
     try {
-      const res = await createStatus({ name: statusName.trim() });
+      const res = await createStatus({
+        name: capitalize(inputValue.trim()),
+      });
       const newStatus = res.status || res.data || res;
 
-      setStatuses(prev => [newStatus, ...prev]);
-      setStatusName('');
-      setCurrentPage(1);
+      setStatuses((prev) => [newStatus, ...prev]);
+      setInputValue("");
 
-      Swal.fire("Success", "Status added successfully!", "success");
-
+      Swal.fire({
+        icon: "success",
+        title: "Status Added",
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to create status", "error");
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Status already exists",
+        "error"
+      );
     }
   };
 
-  // Open Edit Modal
+  // DELETE
+  const handleDelete = async (id, name) => {
+    const confirm = await Swal.fire({
+      title: "Delete Status?",
+      text: `Delete "${name}"?`,
+      icon: "warning",
+      showCancelButton: true,
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    await deleteStatus(id);
+    setStatuses((prev) => prev.filter((s) => s._id !== id));
+    Swal.fire("Deleted!", "Status removed", "success");
+  };
+
+  // EDIT
   const openEditModal = (status) => {
     setEditingStatus(status);
     setUpdatedName(status.name);
   };
 
-  // Save Edited Status
   const handleUpdate = async () => {
     if (!updatedName.trim()) {
-      Swal.fire("Warning", "Status name cannot be empty!", "warning");
+      Swal.fire("Warning", "Status name cannot be empty", "warning");
       return;
     }
 
-    try {
-      await updateStatus(editingStatus._id, { name: updatedName.trim() });
-
-      setStatuses(prev =>
-        prev.map(st =>
-          st._id === editingStatus._id ? { ...st, name: updatedName.trim() } : st
-        )
-      );
-
-      Swal.fire("Success", "Status updated successfully!", "success");
-      setEditingStatus(null);
-
-    } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Update failed", "error");
-    }
-  };
-
-  // Delete Status
-  const handleDelete = async (id, name) => {
-    const confirmDelete = await Swal.fire({
-      title: "Delete Status?",
-      text: `Are you sure you want to delete "${name}"?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Delete",
+    await updateStatus(editingStatus._id, {
+      name: capitalize(updatedName.trim()),
     });
 
-    if (!confirmDelete.isConfirmed) return;
+    setStatuses((prev) =>
+      prev.map((s) =>
+        s._id === editingStatus._id
+          ? { ...s, name: capitalize(updatedName.trim()) }
+          : s
+      )
+    );
 
-    try {
-      await deleteStatus(id);
-      setStatuses(prev => prev.filter(st => st._id !== id));
-
-      Swal.fire("Deleted!", `"${name}" has been removed.`, "success");
-
-    } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Failed to delete status", "error");
-    }
+    Swal.fire("Updated", "Status updated successfully", "success");
+    setEditingStatus(null);
   };
 
-  if (loading) return <Loader type="classification" apiDone={apiDone}/>;
+  if (loading) return <Loader type="classification" apiDone={apiDone} />;
 
   return (
     <div className="classification_card">
-      
       <div className="card_header">
         <h3 className="category_title">Status</h3>
 
-        <form onSubmit={handleSubmit} className="category_form">
+        {/* INPUT WITH MODE DROPDOWN */}
+        <form onSubmit={handleAction} className="category_form mode-input">
+          <div className="mode-selector">
+            <button
+              type="button"
+              className="mode-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <FontAwesomeIcon icon={mode === "search" ? faSearch : faPlus} />
+              <FontAwesomeIcon icon={faChevronDown} />
+            </button>
+
+            {showDropdown && (
+              <div className="mode-dropdown">
+                <div
+                  onClick={() => {
+                    setMode("search");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSearch} /> Search
+                </div>
+
+                <div
+                  onClick={() => {
+                    setMode("add");
+                    setShowDropdown(false);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlus} /> Add
+                </div>
+              </div>
+            )}
+          </div>
+
           <input
             type="text"
-            placeholder="Enter status name"
-            value={statusName}
-            onChange={(e) => setStatusName(e.target.value)}
-            className="category_input"
+            className="category_search_input"
+            placeholder={
+              mode === "search"
+                ? "Search status..."
+                : "Add new status..."
+            }
+            value={inputValue}
+            onChange={(e) =>
+              setInputValue(capitalize(e.target.value))
+            }
           />
-          <button type="submit" className="category_add_btn">
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
         </form>
       </div>
 
-      {error ? (
-        <p className="error">{error}</p>
-      ) : statuses.length === 0 ? (
-        <p>No statuses available</p>
-      ) : (
-        <>
-          <div className="category-grid">
-            <div className="grid">
-              {currentItems.map((status, idx) => (
-                <div key={status._id} className="category-card">
-                  <div className="category-number">{indexOfFirst + idx + 1}</div>
-                  <div className="category-name">{status.name}</div>
-
-                  <div className="category-actions">
-                    <button
-                      className="btn-edit"
-                      onClick={() => openEditModal(status)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </button>
-
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDelete(status._id, status.name)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
+      {/* LIST */}
+      <div className="category-grid">
+        {currentItems.length === 0 ? (
+          <p>No statuses found</p>
+        ) : (
+          <div className="grid">
+            {currentItems.map((status, idx) => (
+              <div key={status._id} className="category-card">
+                <div className="category-number">
+                  {startIndex + idx + 1}
                 </div>
-              ))}
-            </div>
-          </div>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </>
+                <div className="category-name">{status.name}</div>
+
+                <div className="category-actions">
+                  <button
+                    className="btn-edit"
+                    onClick={() => openEditModal(status)}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </button>
+
+                  <button
+                    className="btn-delete"
+                    onClick={() =>
+                      handleDelete(status._id, status.name)
+                    }
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* PAGINATION */}
+      {mode === "search" && totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
 
-      {/* EDIT MODAL — Same as Category */}
+      {/* EDIT MODAL */}
       {editingStatus && (
         <div className="edit-modal">
           <div className="edit-modal-content">
             <h3>Edit Status</h3>
 
             <input
-              type="text"
               className="edit-input"
               value={updatedName}
-              onChange={(e) => setUpdatedName(e.target.value)}
+              onChange={(e) =>
+                setUpdatedName(capitalize(e.target.value))
+              }
             />
 
             <div className="modal-buttons">
@@ -212,14 +280,16 @@ const Status = () => {
                 <FontAwesomeIcon icon={faSave} /> Save
               </button>
 
-              <button className="cancel-btn" onClick={() => setEditingStatus(null)}>
+              <button
+                className="cancel-btn"
+                onClick={() => setEditingStatus(null)}
+              >
                 <FontAwesomeIcon icon={faTimes} /> Cancel
               </button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };
