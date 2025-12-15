@@ -251,4 +251,52 @@ export const getActiveUsers = async () =>
 
 export const getMonthlyValuation = async () =>
   axiosInstance.get("/admin/valuation-trend").then(res => res.data);
+// ===============================
+// ----- ASSIGNMENT / STOCK API CALLS -----
+// ===============================
+
+// Category-wise in-stock summary (Hardware + Software)
+export const getInStockCategorySummary = async () => {
+  const response = await axiosInstance.get(
+    "/assignment/instock/category-summary"
+  );
+  return response.data;
+};
+
+// Get in-stock assets by category
+export const getInStockAssetsByCategory = async (category) => {
+  const response = await axiosInstance.get(
+    `/assignment/instock/assets/${category}`
+  );
+  return response.data;
+};
+
+// Assign assets from stock (bulk, multi-department)
+export const assignAssetsFromStock = async (assignments) => {
+  /**
+   * assignments = {
+   *   assignments: [
+   *     {
+   *       assetType: "hardware" | "software",
+   *       assetId: string,
+   *       departmentId: string,
+   *       quantity: number
+   *     }
+   *   ]
+   * }
+   */
+  const response = await axiosInstance.post(
+    "/assignment/instock/assign",
+    assignments
+  );
+  return response.data;
+};
+
+// Return assigned asset
+export const returnAssignedAsset = async (assignmentId) => {
+  const response = await axiosInstance.put(
+    `/assignment/return/${assignmentId}`
+  );
+  return response.data;
+};
 
