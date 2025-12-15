@@ -1,16 +1,25 @@
-// models/unit.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-// Define the schema for Unit
-const unitSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true, // Optional, if you want unique units
+const unitSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
   },
-}, { timestamps: true });  // Optional, adds createdAt and updatedAt fields
+  { timestamps: true }
+);
 
-const Unit = mongoose.model('Unit', unitSchema);
+// Normalize before validation
+unitSchema.pre("validate", function (next) {
+  if (this.name) {
+    this.name =
+      this.name.charAt(0).toUpperCase() +
+      this.name.slice(1).toLowerCase();
+  }
+  next();
+});
 
-module.exports = Unit;
-
+module.exports = mongoose.model("Unit", unitSchema);
