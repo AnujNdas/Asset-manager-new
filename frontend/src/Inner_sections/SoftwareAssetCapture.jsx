@@ -357,7 +357,7 @@ export default function SoftwareAssetCapture() {
 
             <div className="input-group">
               <label>Licenses Assigned</label>
-              <input type="number" name="licensesAssigned" value={formData.licensesAssigned} onChange={handleChange} />
+              <input type="number" name="licensesAssigned" value={formData.licensesAssigned} onChange={handleChange} disabled/>
             </div>
           </div>
 
