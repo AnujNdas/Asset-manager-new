@@ -94,7 +94,15 @@ const assignAssetsFromStock = async (req, res) => {
     const createdAssignments = [];
 
     for (const item of assignments) {
-      const { assetType, assetId, departmentId, quantity } = item;
+      const {
+  assetType,
+  assetId,
+  assetModel,
+  assignedTo,
+  assignedToType,
+  quantity
+} = item;
+
 
       if (!mongoose.Types.ObjectId.isValid(assetId)) {
         throw new Error("Invalid assetId");
