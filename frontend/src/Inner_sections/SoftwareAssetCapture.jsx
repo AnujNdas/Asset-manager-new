@@ -120,73 +120,76 @@ export default function SoftwareAssetCapture() {
     setTab(0);
   };
 
-  const buildJsonPayload = () => {
-    const assignedToArr = formData.assignedTo
-      ? formData.assignedTo.split(",").map((s) => s.trim()).filter(Boolean)
-      : [];
-    const linkedDevicesArr = formData.linkedDevices
-      ? formData.linkedDevices.split(",").map((s) => s.trim()).filter(Boolean)
-      : [];
-    const integrationDependenciesArr = formData.integrationDependencies
-      ? formData.integrationDependencies.split(",").map((s) => s.trim()).filter(Boolean)
-      : [];
+const buildJsonPayload = () => {
+  const assignedUsers = formData.assignedTo
+    ? formData.assignedTo.split(",").map(s => s.trim()).filter(Boolean)
+    : [];
 
-    return {
-      name: formData.name,
-      version: formData.version,
-      publisher: formData.publisher,
-      category: formData.category,
-      businessUnit: formData.businessUnit,
-      installLocation: formData.installLocation,
-      assetTag: formData.assetTag,
-      softwareID: formData.softwareID,
+  const integrationDependencies = formData.integrationDependencies
+    ? formData.integrationDependencies.split(",").map(s => s.trim()).filter(Boolean)
+    : [];
 
-      licenseKey: formData.licenseKey,
-      licenseType: formData.licenseType,
-      licenseModel: formData.licenseModel,
-      licenseMetric: formData.licenseMetric,
-      licenseUse: formData.licenseUse,
-      licenseStartDate: formData.licenseStartDate || null,
-      licenseExpiry: formData.licenseExpiry || null,
-      renewalCycle: formData.renewalCycle,
-      renewalReminder: formData.renewalReminder,
+  return {
+    // Basic
+    name: formData.name,
+    version: formData.version,
+    publisher: formData.publisher,
+    category: formData.category,
+    businessUnit: formData.businessUnit,
+    installLocation: formData.installLocation,
+    assetTag: formData.assetTag,
 
-      totalLicenses: Number(formData.totalLicenses) || 0,
-      licensesAssigned: 0,
-      licensesAvailable: Number(formData.licensesAvailable) || 0,
-      subscriptionId: formData.subscriptionId,
+    // License
+    licenseKey: formData.licenseKey,
+    licenseType: formData.licenseType,
+    licenseModel: formData.licenseModel,
+    licenseMetric: formData.licenseMetric,
+    licenseUse: formData.licenseUse,
+    licenseStartDate: formData.licenseStartDate || null,
+    licenseExpiry: formData.licenseExpiry || null,
+    renewalCycle: formData.renewalCycle,
+    renewalReminder: formData.renewalReminder,
 
-      costPerUnit: Number(formData.costPerUnit) || 0,
-      totalCost: Number(formData.totalCost) || 0,
-      currency: formData.currency,
-      costCenter: formData.costCenter,
-      purchaseDate: formData.purchaseDate || null,
-      purchaseOrder: formData.purchaseOrder,
-      contractTerm: formData.contractTerm,
-      contractDocs: formData.contractDocsURLs || [],
+    totalLicenses: Number(formData.totalLicenses) || 0,
+    licensesAssigned: 0,
+    subscriptionId: formData.subscriptionId,
 
-      supportVendor: formData.supportVendor,
-      supportEmail: formData.supportEmail,
-      supportPhone: formData.supportPhone,
-      vendorContactDetails: formData.vendorContactDetails,
+    // Financial
+    purchaseDate: formData.purchaseDate || null,
+    costPerUnit: Number(formData.costPerUnit) || 0,
+    totalCost: Number(formData.totalCost) || 0,
+    currency: formData.currency,
+    costCenter: formData.costCenter,
+    purchaseOrder: formData.purchaseOrder,
 
-      assignedTo: assignedToArr,
-      assignedDepartment: formData.assignedDepartment,
-      linkedDevices: linkedDevicesArr,
-      integrationDependencies: integrationDependenciesArr,
+    // Contract
+    contractTerm: formData.contractTerm,
+    contractDocs: formData.contractDocsURLs || [],
+    licenseDocument: [],
 
-      complianceStatus: formData.complianceStatus,
-      criticality: formData.criticality,
-      riskClassification: formData.riskClassification,
-      authenticationMethod: formData.authenticationMethod,
-      lastAccess: formData.lastAccess || null,
+    // Support
+    supportContract: {
+      vendorContact: formData.vendorContactDetails || "",
+    },
 
-      auditHistory: [
-        ...(formData.auditHistory || []),
-        { date: new Date().toISOString(), notes: "Created via capture form" },
-      ],
-    };
+    // Assignment / Usage
+    assignedUsers,
+    integrationDependencies,
+
+    // Compliance
+    complianceStatus: formData.complianceStatus,
+    criticality: formData.criticality,
+    riskClassification: formData.riskClassification,
+    authenticationMethod: formData.authenticationMethod,
+    lastAccess: formData.lastAccess || null,
+
+    // Audit
+    auditHistory: [
+      { date: new Date(), notes: "Created via Software Capture" }
+    ],
   };
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -353,12 +356,7 @@ export default function SoftwareAssetCapture() {
             <div className="input-group">
               <label>Total Licenses</label>
               <input type="number" name="totalLicenses" value={formData.totalLicenses} onChange={handleChange} />
-            </div>
-
-            <div className="input-group">
-              <label>Licenses Assigned</label>
-              <input type="number" name="licensesAssigned" value={formData.licensesAssigned} onChange={handleChange} disabled/>
-            </div>
+            </div> 1   
           </div>
 
           <div className="grid-2">
