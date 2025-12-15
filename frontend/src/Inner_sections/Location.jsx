@@ -30,7 +30,7 @@ const Location = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 18;
+  const itemsPerPage = 12;
 
   // Edit Modal
   const [editingLocation, setEditingLocation] = useState(null);
