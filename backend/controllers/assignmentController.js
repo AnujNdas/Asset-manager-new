@@ -117,7 +117,6 @@ const assignAssetsFromStock = async (req, res) => {
       }
 
       let asset;
-      let assetModel;
 
       /* ================= HARDWARE ================= */
       if (assetType === "hardware") {
