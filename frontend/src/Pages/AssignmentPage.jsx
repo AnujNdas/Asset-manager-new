@@ -37,15 +37,24 @@ const AssignmentPage = () => {
       console.error(err);
     }
   };
-
 const fetchDepartments = async () => {
   try {
     const res = await getDepartments();
-    setDepartments(res.data.data || []); // ✅ FIX
+
+    // works for BOTH wrapped and unwrapped responses
+    const list = Array.isArray(res)
+      ? res
+      : Array.isArray(res?.data)
+      ? res.data
+      : [];
+
+    setDepartments(list);
   } catch (err) {
-    console.error(err);
+    console.error("Failed to load departments", err);
+    setDepartments([]);
   }
 };
+
 
 
   const openCategory = async (categoryObj) => {
