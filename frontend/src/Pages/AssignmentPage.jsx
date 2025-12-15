@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./AssignmentPage.css";
+import "../Page_styles/AssignmentPage.css";
 import axios from "../Services/ApiServices"; // adjust path if needed
 
 const AssignmentPage = () => {
