@@ -139,7 +139,7 @@ const AssignmentPage = () => {
         {categories.map((cat) => (
           <div
             key={cat.category}
-            className="category-card"
+            className="asset-card"
             onClick={() => openCategory(cat)}
           >
             <h3>{cat.categoryName || cat.category}</h3>
