@@ -1,4 +1,6 @@
 const Department = require("../models/Department");
+const escapeRegex = (text) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /* ============================
    Create Department
@@ -12,10 +14,10 @@ const createDepartment = async (req, res) => {
     }
 
     name = name.trim();
+    const safeName = escapeRegex(name);
 
-    // Case-insensitive duplicate check
     const exists = await Department.findOne({
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${safeName}$`, $options: "i" }
     });
 
     if (exists) {
@@ -25,7 +27,6 @@ const createDepartment = async (req, res) => {
     const newDepartment = await Department.create({ name });
 
     res.status(201).json(newDepartment);
-
   } catch (error) {
     console.error("Error creating department:", error);
     res.status(500).json({ message: "Error creating department" });
@@ -45,11 +46,11 @@ const updateDepartment = async (req, res) => {
     }
 
     name = name.trim();
+    const safeName = escapeRegex(name);
 
-    // Prevent duplicates (excluding current record)
     const exists = await Department.findOne({
       _id: { $ne: id },
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${safeName}$`, $options: "i" }
     });
 
     if (exists) {
@@ -70,12 +71,12 @@ const updateDepartment = async (req, res) => {
       message: "Department updated successfully",
       updatedDepartment
     });
-
   } catch (error) {
     console.error("Error updating department:", error);
     res.status(500).json({ message: "Error updating department" });
   }
 };
+
 
 /* ============================
    Get All Departments
