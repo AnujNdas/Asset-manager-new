@@ -50,7 +50,7 @@ const AssetCapture = () => {
   };
 
   const saveAssetToDatabase = async (data) => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const res = await fetch(`${API_URL}/assets`, {
       method: "POST",
       headers: {
