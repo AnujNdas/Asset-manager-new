@@ -27,7 +27,7 @@ const MyProfile = () => {
   const navigate = useNavigate();
 
   // ---- Helpers ----
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const authHeaders = token
     ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
     : { "Content-Type": "application/json" };
@@ -48,7 +48,7 @@ const MyProfile = () => {
 
 useEffect(() => {
   const fetchUserData = async () => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     if (!token) {
       alert("Please log in.");
