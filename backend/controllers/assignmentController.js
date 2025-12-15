@@ -3,10 +3,6 @@ const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 
-const mongoose = require("mongoose");
-const Asset = require("../models/Asset");
-const SoftwareAsset = require("../models/SoftwareAsset");
-const AssetAssignment = require("../models/AssetAssignment");
 
 const getInStockCategorySummary = async (req, res) => {
   try {
