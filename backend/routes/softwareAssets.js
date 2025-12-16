@@ -4,8 +4,7 @@ const multer = require("multer");
 
 const {
   createSoftwareAsset,
-  getSoftwareAssets,
-  getSoftwareAssetById,
+  getSoftwareAssets,,
   updateSoftwareAsset,
   deleteSoftwareAsset,
   bulkUploadSoftwareAssets // ✅ ADD THIS
@@ -19,7 +18,6 @@ const upload = multer(); // for bulk upload (excel / csv)
 
 router.post("/", authenticateToken(), createSoftwareAsset);
 router.get("/", authenticateToken(), getSoftwareAssets);
-router.get("/:id", authenticateToken(), getSoftwareAssetById);
 router.put("/:id", authenticateToken(), updateSoftwareAsset);
 router.delete("/:id", authenticateToken(), deleteSoftwareAsset);
 
