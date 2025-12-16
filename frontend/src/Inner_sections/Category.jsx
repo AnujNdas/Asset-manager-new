@@ -236,6 +236,7 @@ const handleRestore = async (id, name) => {
 
                <div className="category-name">
   {cat.name}
+</div>
 
   <span
     className={`status-badge ${
@@ -249,7 +250,6 @@ const handleRestore = async (id, name) => {
   >
     {cat.isActive ? "Active" : "Inactive"}
   </span>
-</div>
 
 
                 <div className="category-actions">
