@@ -4,7 +4,7 @@ import AdminDashboard from "./AdminDashboard";
 import Dashboard from "./Dashboard";
 
 const DashboardWrapper = () => {
-  const role = sessionStorage.getItem("role");
+  const role = localStorage.getItem("role");
 
   if (role === "admin") {
     return <AdminDashboard />;
