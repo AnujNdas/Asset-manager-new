@@ -2,38 +2,52 @@ const mongoose = require("mongoose");
 
 const SoftwareAssetSchema = new mongoose.Schema(
   {
-    // Core Identity
-    assetCode: { type: String, required: true }, // same as hardware
+    assetCode: { type: String, required: true },
     assetName: { type: String, required: true },
-    assetCategory: { type: String, required: true },
-    assetSpecification: { type: String }, // version
-    purchaseFrom: { type: String }, // publisher
-    associateUnit: { type: String, required: true },
 
-    // Location
-    locationName: { type: String, required: true }, // install location
+    assetCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+
+    assetSpecification: { type: String },
+    purchaseFrom: { type: String },
+
+    associateUnit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Unit",
+      required: true,
+    },
+
+    locationName: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Location",
+      required: true,
+    },
+
     locationAddress: {
       type: String,
       required: true,
       trim: true,
     },
 
-    // License Info
     licenseKey: String,
     licenseType: String,
     licenseModel: String,
     licenseMetric: String,
     licenseUse: String,
 
-    // Lifecycle
-    DOP: { type: String }, // purchase date
-    DOE: { type: String }, // license expiry
+    DOP: { type: String },
+    DOE: { type: String },
     assetLifetime: { type: String },
 
-    // Status
-    assetStatus: { type: String, required: true },
+    assetStatus: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Status",
+      required: true,
+    },
 
-    // Quantity
     assetQuantity: {
       type: Number,
       required: true,
@@ -46,13 +60,11 @@ const SoftwareAssetSchema = new mongoose.Schema(
       min: 0,
     },
 
-    // Financial
     assetCost: {
       type: Number,
       min: 0,
     },
 
-    // Assignment
     assignedUsers: [{ type: String }],
     linkedDevices: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],
   },
@@ -63,7 +75,6 @@ const SoftwareAssetSchema = new mongoose.Schema(
   }
 );
 
-// ✅ Virtual: Available licenses
 SoftwareAssetSchema.virtual("inStock").get(function () {
   return this.assetQuantity - this.inUse;
 });
