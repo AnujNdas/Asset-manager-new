@@ -241,15 +241,15 @@ const Department = () => {
 
   <span
     className={`status-badge ${
-      cat.isActive ? "badge-active" : "badge-inactive"
+      dep.isActive ? "badge-active" : "badge-inactive"
     }`}
     title={
-      cat.isActive
+      dep.isActive
         ? "This category is active"
         : "This category is inactive"
     }
   >
-    {cat.isActive ? "Active" : "Inactive"}
+    {dep.isActive ? "Active" : "Inactive"}
   </span>
 
               <div className="category-actions">
