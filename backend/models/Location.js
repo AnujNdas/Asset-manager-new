@@ -1,3 +1,4 @@
+// models/location.js
 const mongoose = require("mongoose");
 
 const locationSchema = new mongoose.Schema(
@@ -5,14 +6,18 @@ const locationSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true,
-      unique: true,
+      trim: true
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+      index: true
+    }
   },
   { timestamps: true }
 );
 
-// Normalize before validation
+/* ================= NORMALIZE NAME ================= */
 locationSchema.pre("validate", function (next) {
   if (this.name) {
     this.name =
@@ -21,5 +26,14 @@ locationSchema.pre("validate", function (next) {
   }
   next();
 });
+
+/* ================= UNIQUE ACTIVE LOCATION ================= */
+locationSchema.index(
+  { name: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isActive: true }
+  }
+);
 
 module.exports = mongoose.model("Location", locationSchema);
