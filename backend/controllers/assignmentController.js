@@ -7,109 +7,128 @@ const AssetAssignment = require("../models/AssetAssignment");
 const getInStockCategorySummary = async (req, res) => {
   try {
     /* ================= HARDWARE ================= */
-    const hardware = await Asset.aggregate([
-      {
-        $lookup: {
-          from: "categories",
-          localField: "assetCategory",
-          foreignField: "_id",
-          as: "category"
-        }
+const hardware = await Asset.aggregate([
+  {
+    $lookup: {
+      from: "categories",
+      localField: "assetCategory",
+      foreignField: "_id",
+      as: "category"
+    }
+  },
+  {
+    $unwind: {
+      path: "$category",
+      preserveNullAndEmptyArrays: true
+    }
+  },
+  {
+    $project: {
+      categoryId: "$assetCategory",
+      categoryName: {
+        $ifNull: ["$category.name", "Unknown Category"]
       },
-      {
-        $unwind: {
-          path: "$category",
-          preserveNullAndEmptyArrays: true
-        }
+      isActive: {
+        $ifNull: ["$category.isActive", false]
       },
-      {
-        $project: {
-          categoryId: "$assetCategory",
-          categoryName: {
-            $ifNull: ["$category.name", "Unknown Category"]
-          },
-          available: { $subtract: ["$assetQuantity", "$inUse"] }
-        }
-      },
-      { $match: { available: { $gt: 0 } } },
-      {
-        $group: {
-          _id: "$categoryId",
-          categoryName: { $first: "$categoryName" },
-          hardwareCount: { $sum: "$available" }
-        }
-      }
-    ]);
+      available: { $subtract: ["$assetQuantity", "$inUse"] }
+    }
+  },
+  { $match: { available: { $gt: 0 } } },
+  {
+    $group: {
+      _id: "$categoryId",
+      categoryName: { $first: "$categoryName" },
+      isActive: { $first: "$isActive" },
+      hardwareCount: { $sum: "$available" }
+    }
+  }
+]);
 
     /* ================= SOFTWARE ================= */
-    const software = await SoftwareAsset.aggregate([
-      {
-        $lookup: {
-          from: "categories",
-          localField: "category",
-          foreignField: "_id",
-          as: "category"
-        }
+  const software = await SoftwareAsset.aggregate([
+  {
+    $lookup: {
+      from: "categories",
+      localField: "category",
+      foreignField: "_id",
+      as: "category"
+    }
+  },
+  {
+    $unwind: {
+      path: "$category",
+      preserveNullAndEmptyArrays: true
+    }
+  },
+  {
+    $project: {
+      categoryId: "$category._id",
+      categoryName: {
+        $ifNull: ["$category.name", "Unknown Category"]
       },
-      {
-        $unwind: {
-          path: "$category",
-          preserveNullAndEmptyArrays: true
-        }
+      isActive: {
+        $ifNull: ["$category.isActive", false]
       },
-      {
-        $project: {
-          categoryId: "$category._id",
-          categoryName: {
-            $ifNull: ["$category.name", "Unknown Category"]
-          },
-          available: {
-            $subtract: ["$totalLicenses", "$licensesAssigned"]
-          }
-        }
-      },
-      { $match: { available: { $gt: 0 } } },
-      {
-        $group: {
-          _id: "$categoryId",
-          categoryName: { $first: "$categoryName" },
-          softwareCount: { $sum: "$available" }
-        }
+      available: {
+        $subtract: ["$totalLicenses", "$licensesAssigned"]
       }
-    ]);
+    }
+  },
+  { $match: { available: { $gt: 0 } } },
+  {
+    $group: {
+      _id: "$categoryId",
+      categoryName: { $first: "$categoryName" },
+      isActive: { $first: "$isActive" },
+      softwareCount: { $sum: "$available" }
+    }
+  }
+]);
 
     /* ================= MERGE ================= */
-    const map = {};
+const map = {};
 
-    hardware.forEach(item => {
-      map[item._id?.toString()] = {
-        category: item._id,
-        categoryName: item.categoryName,
-        hardwareCount: item.hardwareCount,
-        softwareCount: 0
-      };
-    });
+/* HARDWARE */
+hardware.forEach(item => {
+  map[item._id?.toString()] = {
+    category: item._id,
+    categoryName: item.categoryName,
+    isActive: item.isActive,
+    hardwareCount: item.hardwareCount,
+    softwareCount: 0
+  };
+});
 
-    software.forEach(item => {
-      const key = item._id?.toString();
-      if (!map[key]) {
-        map[key] = {
-          category: item._id,
-          categoryName: item.categoryName,
-          hardwareCount: 0,
-          softwareCount: item.softwareCount
-        };
-      } else {
-        map[key].softwareCount = item.softwareCount;
-      }
-    });
+/* SOFTWARE */
+software.forEach(item => {
+  const key = item._id?.toString();
 
-    const result = Object.values(map).map(item => ({
-      ...item,
-      totalInStock: item.hardwareCount + item.softwareCount
-    }));
+  if (!map[key]) {
+    map[key] = {
+      category: item._id,
+      categoryName: item.categoryName,
+      isActive: item.isActive,
+      hardwareCount: 0,
+      softwareCount: item.softwareCount
+    };
+  } else {
+    map[key].softwareCount = item.softwareCount;
+    // Safety: if either marks inactive → inactive
+    map[key].isActive = map[key].isActive && item.isActive;
+  }
+});
 
-    res.json({ success: true, data: result });
+   const result = Object.values(map).map(item => ({
+  ...item,
+  totalInStock: item.hardwareCount + item.softwareCount
+}));
+
+res.json({
+  success: true,
+  data: result
+});
+
   } catch (error) {
     res.status(500).json({
       success: false,
