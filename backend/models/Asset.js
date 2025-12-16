@@ -4,18 +4,28 @@ const assetSchema = new mongoose.Schema(
   {
     assetCode: { type: String, required: true },
 
-    assetCategory: { type: String, required: true },
+    assetCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
 
     barcodeNumber: { type: String },
 
     assetName: { type: String, required: true },
 
-    associateUnit: { type: String, required: true },
+    associateUnit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Unit",
+      required: true,
+    },
 
-    // Country / Region
-    locationName: { type: String, required: true },
+    locationName: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Location",
+      required: true,
+    },
 
-    // ✅ NEW: Specific physical address / location
     locationAddress: {
       type: String,
       required: true,
@@ -24,12 +34,14 @@ const assetSchema = new mongoose.Schema(
 
     assetSpecification: { type: String, required: true },
 
-    assetStatus: { type: String, required: true },
+    assetStatus: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Status",
+      required: true,
+    },
 
     DOP: { type: String, required: true },
-
     DOE: { type: String, required: true },
-
     assetLifetime: { type: String, required: true },
 
     purchaseFrom: { type: String, required: true },
@@ -39,20 +51,17 @@ const assetSchema = new mongoose.Schema(
     assetCost: {
       type: Number,
       required: true,
-      default: 0,
       min: 0,
     },
 
     assetQuantity: {
       type: Number,
       required: true,
-      default: 1,
       min: 0,
     },
 
     inUse: {
       type: Number,
-      required: true,
       default: 0,
       min: 0,
     },
@@ -64,7 +73,6 @@ const assetSchema = new mongoose.Schema(
   }
 );
 
-// ✅ Virtual: Stock calculation
 assetSchema.virtual("inStock").get(function () {
   return this.assetQuantity - this.inUse;
 });
