@@ -28,22 +28,29 @@ const BulkUpload = ({ type, userRole }) => {
 
   // Excel templates
   const templates = {
-    hardware: [
-      {
-        assetCode: "",
-        assetCategory: "",
-        barcodeNumber: "",
-        assetName: "",
-        associateUnit: "",
-        locationName: "",
-        assetSpecification: "",
-        assetStatus: "",
-        DOP: "",
-        DOE: "",
-        assetLifetime: "",
-        purchaseFrom: "",
-      },
-    ],
+hardware: [
+  {
+    assetCode: "",
+    assetName: "",
+    assetCategory: "",
+    assetSpecification: "",
+    purchaseFrom: "",
+    associateUnit: "",
+
+    locationName: "",
+    locationAddress: "",
+
+    assetStatus: "",
+
+    DOP: "",
+    DOE: "",
+    assetLifetime: "",
+
+    assetCost: "",
+    assetQuantity: "",
+  },
+],
+
 
     software: [
   {
