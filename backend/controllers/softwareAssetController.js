@@ -1,7 +1,10 @@
 const SoftwareAsset = require("../models/SoftwareAsset");
 const Notification = require("../models/Notification");
 const mongoose = require("mongoose");
-
+const Category = require("../models/Category");
+const Status = require("../models/Status");
+const Unit = require("../models/Unit");
+const Location = require("../models/Location");
 // Helper to update compliance based on license usage & expiry
 const checkCompliance = (asset) => {
   if (asset.licenseExpiry && new Date(asset.licenseExpiry) < new Date()) {
