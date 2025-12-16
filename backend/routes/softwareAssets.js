@@ -26,7 +26,7 @@ router.delete("/:id", authenticateToken(), deleteSoftwareAsset);
 router.post(
   "/bulk-upload",
   authenticateToken(),
-  upload.none(),
+ uploadBulk.fields([{ name: "excel" }]),
   bulkUploadSoftwareAssets
 );
 
