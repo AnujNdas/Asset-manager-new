@@ -13,7 +13,7 @@ const {
 const authenticateToken = require("../Middleware/Authentication-token");
 
 const upload = multer(); // for bulk upload (excel / csv)
-
+const uploadBulk = multer({ dest: "uploads/bulk/" });
 /* -------------------- CRUD -------------------- */
 
 router.post("/", authenticateToken(), createSoftwareAsset);
