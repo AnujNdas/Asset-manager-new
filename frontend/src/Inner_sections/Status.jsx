@@ -223,12 +223,18 @@ const Status = () => {
                 <div className="category-name">{status.name}</div>
 
                 <span
-                  className={`status-badge ${
-                    status.isActive ? "active" : "inactive"
-                  }`}
-                >
-                  {status.isActive ? "Active" : "Inactive"}
-                </span>
+  className={`status-badge ${
+    status.isActive ? "badge-active" : "badge-inactive"
+  }`}
+  title={
+    status.isActive
+      ? "This status is currently active"
+      : "This status is currently inactive"
+  }
+>
+  {status.isActive ? "Active" : "Inactive"}
+</span>
+
 
                 <div className="category-actions">
                   {status.isActive ? (
