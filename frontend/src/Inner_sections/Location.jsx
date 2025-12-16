@@ -238,20 +238,20 @@ const handleRestore = async (id, name) => {
                 </div>
 
                                <div className="category-name">
-  {cat.name}
+  {loc.name}
 </div>
 
   <span
     className={`status-badge ${
-      cat.isActive ? "badge-active" : "badge-inactive"
+      loc.isActive ? "badge-active" : "badge-inactive"
     }`}
     title={
-      cat.isActive
+      loc.isActive
         ? "This category is active"
         : "This category is inactive"
     }
   >
-    {cat.isActive ? "Active" : "Inactive"}
+    {loc.isActive ? "Active" : "Inactive"}
   </span>
 
               <div className="category-actions">
