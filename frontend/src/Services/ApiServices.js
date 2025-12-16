@@ -58,6 +58,10 @@ export const updateLocation = async (id, body) => {
   const res = await axiosInstance.put(`/location/${id}`, body);
   return res.data;
 };
+export const restoreLocation = async(id) => {
+  const response = await axiosInstance.patch(`/location/${id}/restore`);
+  return response.data;
+}
 
 // ----- CATEGORY API CALLS -----
 export const getCategories = async () => {
