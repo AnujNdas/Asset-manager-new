@@ -126,12 +126,26 @@ const Category = () => {
   };
 
   /* ================= RESTORE ================= */
-  const handleRestore = async () => {
-    await restoreCategory(editingCategory._id);
-    Swal.fire("Restored", "Category restored successfully", "success");
-    setEditingCategory(null);
-    fetchCategories();
-  };
+const handleRestore = async (id, name) => {
+  const confirm = await Swal.fire({
+    title: "Restore Category?",
+    text: `Restore "${name}"?`,
+    icon: "question",
+    showCancelButton: true
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  await restoreCategory(id);
+
+  setCategories(prev =>
+    prev.map(cat =>
+      cat._id === id ? { ...cat, isActive: true } : cat
+    )
+  );
+
+  Swal.fire("Restored", "Category restored successfully", "success");
+};
 
   /* ================= UPDATE ================= */
   const openEditModal = (cat) => {
@@ -228,22 +242,32 @@ const Category = () => {
                 </div>
 
                 <div className="category-actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => openEditModal(cat)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
+  {cat.isActive ? (
+    <>
+      <button
+        className="btn-edit"
+        onClick={() => openEditModal(cat)}
+      >
+        <FontAwesomeIcon icon={faEdit} />
+      </button>
 
-                  {cat.isActive && (
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDelete(cat._id, cat.name)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  )}
-                </div>
+      <button
+        className="btn-delete"
+        onClick={() => handleDelete(cat._id, cat.name)}
+      >
+        <FontAwesomeIcon icon={faTrash} />
+      </button>
+    </>
+  ) : (
+    <button
+      className="btn-restore"
+      onClick={() => handleRestore(cat._id, cat.name)}
+    >
+      <FontAwesomeIcon icon={faRotateLeft} />
+    </button>
+  )}
+</div>
+
               </div>
             ))}
           </div>
@@ -274,23 +298,18 @@ const Category = () => {
             />
 
             <div className="modal-buttons">
-              {editingCategory.isActive ? (
-                <button className="save-btn" onClick={handleUpdate}>
-                  <FontAwesomeIcon icon={faSave} /> Save
-                </button>
-              ) : (
-                <button className="restore-btn" onClick={handleRestore}>
-                  <FontAwesomeIcon icon={faRotateLeft} /> Restore
-                </button>
-              )}
+  <button className="save-btn" onClick={handleUpdate}>
+    <FontAwesomeIcon icon={faSave} /> Save
+  </button>
 
-              <button
-                className="cancel-btn"
-                onClick={() => setEditingCategory(null)}
-              >
-                <FontAwesomeIcon icon={faTimes} /> Close
-              </button>
-            </div>
+  <button
+    className="cancel-btn"
+    onClick={() => setEditingCategory(null)}
+  >
+    <FontAwesomeIcon icon={faTimes} /> Cancel
+  </button>
+</div>
+
           </div>
         </div>
       )}
