@@ -12,6 +12,6 @@ router.get("/", getDepartments);
 router.post("/", createDepartment);
 router.put("/:id", updateDepartment);
 router.delete("/:id", deleteDepartment);
-router.patch("/restore/:id", restoreDepartment);
+router.patch("/:id"/restore, restoreDepartment);
 
 module.exports = router;
