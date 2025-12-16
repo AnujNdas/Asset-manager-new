@@ -89,13 +89,14 @@ const updateLocation = async (req, res) => {
 ============================ */
 const getLocations = async (req, res) => {
   try {
-    const locations = await Location.find({ isActive: true })
-      .sort({ createdAt: -1 });
+    const locations = await Location.find().sort({
+      name: 1
+    });
 
     res.status(200).json(locations);
   } catch (error) {
     console.error("Error fetching locations:", error);
-    res.status(500).json({ message: "Error fetching locations" });
+    res.status(500).json({ error: "Error fetching locations" });
   }
 };
 
