@@ -1,22 +1,27 @@
-// routes/categoryRoutes.js
-const express = require('express');
-const { createCategory , getCategories , deleteCategory , updateCategory }= require('../controllers/categoryControllers');
+const express = require("express");
+const {
+  createCategory,
+  getCategories,
+  updateCategory,
+  deleteCategory,
+  restoreCategory
+} = require("../controllers/categoryControllers");
+
 const router = express.Router();
 
-// Route to create a category
-router.post('/', createCategory);
+/* ================= CREATE ================= */
+router.post("/", createCategory);
 
-// Route to get all categories
-router.get('/',getCategories);
+/* ================= READ (ACTIVE ONLY) ================= */
+router.get("/", getCategories);
 
-// Route to update category 
-router.put('/:id' , updateCategory)
+/* ================= UPDATE ================= */
+router.put("/:id", updateCategory);
 
-// Route to delete category 
-router.delete("/:id", (req, res, next) => {
-  console.log("Delete API hit for ID:", req.params.id);
-  next();
-}, deleteCategory);
+/* ================= SOFT DELETE ================= */
+router.delete("/:id", deleteCategory);
+
+/* ================= RESTORE ================= */
+router.patch("/:id/restore", restoreCategory);
 
 module.exports = router;
-
