@@ -92,15 +92,17 @@ const updateUnit = async (req, res) => {
 ============================ */
 const getUnits = async (req, res) => {
   try {
-    const units = await Unit.find({ isActive: true })
-      .sort({ createdAt: -1 });
+    const units = await Unit.find().sort({
+      name: 1
+    });
 
     res.status(200).json(units);
   } catch (error) {
     console.error("Error fetching units:", error);
-    res.status(500).json({ message: "Error fetching units" });
+    res.status(500).json({ error: "Error fetching units" });
   }
 };
+;
 
 /* ============================
    Soft Delete Unit
