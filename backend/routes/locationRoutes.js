@@ -1,6 +1,6 @@
 // routes/locationRoutes.js
 const express = require('express');
-const { createLocation , getLocations , deleteLocation , updateLocation ,restoreCategory }= require('../controllers/locationControllers');
+const { createLocation , getLocations , deleteLocation , updateLocation ,restoreLocation }= require('../controllers/locationControllers');
 const router = express.Router();
 
 // Route to create a location
@@ -13,6 +13,6 @@ router.get('/', getLocations);
 router.put('/:id' , updateLocation )
 // Route to delete locations
 router.delete('/:id', deleteLocation);
-router.patch("/:id/restore", restoreCategory);
+router.patch("/:id/restore", restoreLocation);
 module.exports = router;
 
