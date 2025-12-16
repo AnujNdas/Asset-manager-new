@@ -4,7 +4,7 @@ const multer = require("multer");
 
 const {
   createSoftwareAsset,
-  getSoftwareAssets,,
+  getSoftwareAssets,
   updateSoftwareAsset,
   deleteSoftwareAsset,
   bulkUploadSoftwareAssets // ✅ ADD THIS
