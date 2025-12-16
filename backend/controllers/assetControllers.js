@@ -98,12 +98,7 @@ const bulkUpload = async (req, res) => {
       }
     
       const totalQty = Number(asset.assetQuantity || 1);
-      const inUse = Number(asset.inUse || 0);
-    
-      if (inUse > totalQty) {
-        invalidRows.push({ row: index + 2, reason: "InUse > Quantity", asset });
-        continue;
-      }
+      const inUse = 0; // 🔒 Assignment happens ONLY via Assignment page
     
       validAssets.push({
         assetCode: asset.assetCode,
@@ -121,7 +116,7 @@ const bulkUpload = async (req, res) => {
         locationAddress: asset.locationAddress, // ✅ keep this
         assetCost: Number(asset.assetCost || 0),
         assetQuantity: totalQty,
-        inUse,
+        inUse : 0,
       });
     }
 
