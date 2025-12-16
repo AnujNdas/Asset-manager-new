@@ -5,6 +5,7 @@ import {
   createStatus,
   deleteStatus,
   updateStatus,
+  restoreStatus,
 } from "../Services/ApiServices";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,6 +17,7 @@ import {
   faSave,
   faTimes,
   faTrash,
+  faRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
 import Swal from "sweetalert2";
@@ -24,29 +26,23 @@ import Loader from "../Components/Loader";
 
 const Status = () => {
   const [inputValue, setInputValue] = useState("");
-  const [mode, setMode] = useState("search"); // search | add
+  const [mode, setMode] = useState("search");
   const [showDropdown, setShowDropdown] = useState(false);
 
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
 
-  // Edit Modal
   const [editingStatus, setEditingStatus] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
-  // Capitalize helper
-  const capitalize = (value) =>
-    value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+  const capitalize = (v) =>
+    v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
 
-  useEffect(() => {
-    fetchStatuses();
-  }, []);
-
+  /* ================= FETCH ================= */
   const fetchStatuses = async () => {
     setLoading(true);
     try {
@@ -59,11 +55,15 @@ const Status = () => {
     }
   };
 
-  // SEARCH FILTER
+  useEffect(() => {
+    fetchStatuses();
+  }, []);
+
+  /* ================= FILTER ================= */
   const filteredStatuses =
     mode === "search"
-      ? statuses.filter((st) =>
-          st.name.toLowerCase().includes(inputValue.toLowerCase())
+      ? statuses.filter((s) =>
+          s.name.toLowerCase().includes(inputValue.toLowerCase())
         )
       : statuses;
 
@@ -78,7 +78,7 @@ const Status = () => {
     startIndex + itemsPerPage
   );
 
-  // ADD / SEARCH HANDLER
+  /* ================= ADD ================= */
   const handleAction = async (e) => {
     e.preventDefault();
 
@@ -93,8 +93,8 @@ const Status = () => {
       const res = await createStatus({
         name: capitalize(inputValue.trim()),
       });
-      const newStatus = res.status || res.data || res;
 
+      const newStatus = res.data || res;
       setStatuses((prev) => [newStatus, ...prev]);
       setInputValue("");
 
@@ -107,17 +107,17 @@ const Status = () => {
     } catch (err) {
       Swal.fire(
         "Error",
-        err.response?.data?.message || "Status already exists",
+        err.response?.data?.error || "Status already exists",
         "error"
       );
     }
   };
 
-  // DELETE
+  /* ================= DELETE (SOFT) ================= */
   const handleDelete = async (id, name) => {
     const confirm = await Swal.fire({
-      title: "Delete Status?",
-      text: `Delete "${name}"?`,
+      title: "Deactivate Status?",
+      text: `"${name}" will be deactivated`,
       icon: "warning",
       showCancelButton: true,
     });
@@ -125,16 +125,29 @@ const Status = () => {
     if (!confirm.isConfirmed) return;
 
     await deleteStatus(id);
-    setStatuses((prev) => prev.filter((s) => s._id !== id));
-    Swal.fire("Deleted!", "Status removed", "success");
+    fetchStatuses();
+
+    Swal.fire("Deactivated!", "Status is now inactive", "success");
   };
 
-  // EDIT
-  const openEditModal = (status) => {
-    setEditingStatus(status);
-    setUpdatedName(status.name);
+  /* ================= RESTORE ================= */
+  const handleRestore = async (id, name) => {
+    const confirm = await Swal.fire({
+      title: "Restore Status?",
+      text: `Restore "${name}"?`,
+      icon: "question",
+      showCancelButton: true,
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    await restoreStatus(id);
+    fetchStatuses();
+
+    Swal.fire("Restored!", "Status is active again", "success");
   };
 
+  /* ================= UPDATE ================= */
   const handleUpdate = async () => {
     if (!updatedName.trim()) {
       Swal.fire("Warning", "Status name cannot be empty", "warning");
@@ -145,15 +158,8 @@ const Status = () => {
       name: capitalize(updatedName.trim()),
     });
 
-    setStatuses((prev) =>
-      prev.map((s) =>
-        s._id === editingStatus._id
-          ? { ...s, name: capitalize(updatedName.trim()) }
-          : s
-      )
-    );
-
-    Swal.fire("Updated", "Status updated successfully", "success");
+    fetchStatuses();
+    Swal.fire("Updated", "Status updated", "success");
     setEditingStatus(null);
   };
 
@@ -164,7 +170,6 @@ const Status = () => {
       <div className="card_header">
         <h3 className="category_title">Status</h3>
 
-        {/* INPUT WITH MODE DROPDOWN */}
         <form onSubmit={handleAction} className="category_form mode-input">
           <div className="mode-selector">
             <button
@@ -178,21 +183,10 @@ const Status = () => {
 
             {showDropdown && (
               <div className="mode-dropdown">
-                <div
-                  onClick={() => {
-                    setMode("search");
-                    setShowDropdown(false);
-                  }}
-                >
+                <div onClick={() => { setMode("search"); setShowDropdown(false); }}>
                   <FontAwesomeIcon icon={faSearch} /> Search
                 </div>
-
-                <div
-                  onClick={() => {
-                    setMode("add");
-                    setShowDropdown(false);
-                  }}
-                >
+                <div onClick={() => { setMode("add"); setShowDropdown(false); }}>
                   <FontAwesomeIcon icon={faPlus} /> Add
                 </div>
               </div>
@@ -203,14 +197,10 @@ const Status = () => {
             type="text"
             className="category_search_input"
             placeholder={
-              mode === "search"
-                ? "Search status..."
-                : "Add new status..."
+              mode === "search" ? "Search status..." : "Add new status..."
             }
             value={inputValue}
-            onChange={(e) =>
-              setInputValue(capitalize(e.target.value))
-            }
+            onChange={(e) => setInputValue(capitalize(e.target.value))}
           />
         </form>
       </div>
@@ -222,29 +212,56 @@ const Status = () => {
         ) : (
           <div className="grid">
             {currentItems.map((status, idx) => (
-              <div key={status._id} className="category-card">
+              <div
+                key={status._id}
+                className={`category-card ${!status.isActive ? "inactive" : ""}`}
+              >
                 <div className="category-number">
                   {startIndex + idx + 1}
                 </div>
 
                 <div className="category-name">{status.name}</div>
 
-                <div className="category-actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => openEditModal(status)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
+                <span
+                  className={`status-badge ${
+                    status.isActive ? "active" : "inactive"
+                  }`}
+                >
+                  {status.isActive ? "Active" : "Inactive"}
+                </span>
 
-                  <button
-                    className="btn-delete"
-                    onClick={() =>
-                      handleDelete(status._id, status.name)
-                    }
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
+                <div className="category-actions">
+                  {status.isActive ? (
+                    <>
+                      <button
+                        className="btn-edit"
+                        onClick={() => {
+                          setEditingStatus(status);
+                          setUpdatedName(status.name);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </button>
+
+                      <button
+                        className="btn-delete"
+                        onClick={() =>
+                          handleDelete(status._id, status.name)
+                        }
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="btn-restore"
+                      onClick={() =>
+                        handleRestore(status._id, status.name)
+                      }
+                    >
+                      <FontAwesomeIcon icon={faRotateLeft} />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -279,7 +296,6 @@ const Status = () => {
               <button className="save-btn" onClick={handleUpdate}>
                 <FontAwesomeIcon icon={faSave} /> Save
               </button>
-
               <button
                 className="cancel-btn"
                 onClick={() => setEditingStatus(null)}
