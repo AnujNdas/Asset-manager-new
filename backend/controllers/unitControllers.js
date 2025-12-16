@@ -1,7 +1,7 @@
 const Unit = require("../models/Unit");
 
 /* ============================
-   Create Unit
+   Create / Restore Unit
 ============================ */
 const createUnit = async (req, res) => {
   try {
@@ -13,12 +13,22 @@ const createUnit = async (req, res) => {
 
     name = name.trim();
 
-    // Case-insensitive duplicate check
-    const exists = await Unit.findOne({
+    const existing = await Unit.findOne({
       name: { $regex: `^${name}$`, $options: "i" }
     });
 
-    if (exists) {
+    // 🔁 Restore if soft deleted
+    if (existing) {
+      if (!existing.isActive) {
+        existing.isActive = true;
+        await existing.save();
+
+        return res.status(200).json({
+          message: "Unit restored successfully",
+          unit: existing
+        });
+      }
+
       return res.status(409).json({ message: "Unit already exists" });
     }
 
@@ -46,10 +56,10 @@ const updateUnit = async (req, res) => {
 
     name = name.trim();
 
-    // Prevent duplicates (excluding current record)
     const exists = await Unit.findOne({
       _id: { $ne: id },
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${name}$`, $options: "i" },
+      isActive: true
     });
 
     if (exists) {
@@ -78,11 +88,13 @@ const updateUnit = async (req, res) => {
 };
 
 /* ============================
-   Get All Units
+   Get Active Units
 ============================ */
 const getUnits = async (req, res) => {
   try {
-    const units = await Unit.find().sort({ createdAt: -1 });
+    const units = await Unit.find({ isActive: true })
+      .sort({ createdAt: -1 });
+
     res.status(200).json(units);
   } catch (error) {
     console.error("Error fetching units:", error);
@@ -91,21 +103,24 @@ const getUnits = async (req, res) => {
 };
 
 /* ============================
-   Delete Unit
+   Soft Delete Unit
 ============================ */
 const deleteUnit = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedUnit = await Unit.findByIdAndDelete(id);
+    const unit = await Unit.findById(id);
 
-    if (!deletedUnit) {
+    if (!unit) {
       return res.status(404).json({ message: "Unit not found" });
     }
 
+    unit.isActive = false;
+    await unit.save();
+
     res.status(200).json({
       message: "Unit deleted successfully",
-      deletedUnit
+      unit
     });
 
   } catch (error) {
@@ -114,9 +129,37 @@ const deleteUnit = async (req, res) => {
   }
 };
 
+/* ============================
+   Restore Unit
+============================ */
+const restoreUnit = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const unit = await Unit.findById(id);
+
+    if (!unit) {
+      return res.status(404).json({ message: "Unit not found" });
+    }
+
+    unit.isActive = true;
+    await unit.save();
+
+    res.status(200).json({
+      message: "Unit restored successfully",
+      unit
+    });
+
+  } catch (error) {
+    console.error("Error restoring unit:", error);
+    res.status(500).json({ message: "Error restoring unit" });
+  }
+};
+
 module.exports = {
   createUnit,
   updateUnit,
   getUnits,
-  deleteUnit
+  deleteUnit,
+  restoreUnit
 };
