@@ -42,7 +42,7 @@ const createCategory = async (req, res) => {
 /* ================= GET ACTIVE CATEGORIES ================= */
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find({ isActive: true }).sort({
+    const categories = await Category.find().sort({
       name: 1
     });
 
