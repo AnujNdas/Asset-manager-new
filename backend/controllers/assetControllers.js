@@ -35,35 +35,76 @@ const bulkUpload = async (req, res) => {
 
     let validAssets = [];
     let invalidRows = [];
+    const normalize = (v) => v?.trim().toLowerCase();
 
     for (const [index, asset] of parsedAssets.entries()) {
-      let categoryId = categoryMap.get(asset.assetCategory?.toLowerCase());
-      let unitId = unitMap.get(asset.associateUnit?.toLowerCase());
-      let locationId = locationMap.get(asset.locationName?.toLowerCase());
-      let statusId = statusMap.get(asset.assetStatus?.toLowerCase());
-
+      const catKey = normalize(asset.assetCategory);
+      const unitKey = normalize(asset.associateUnit);
+      const locKey = normalize(asset.locationName);
+      const statusKey = normalize(asset.assetStatus);
+    
+      let categoryId = categoryMap.get(catKey);
+      let unitId = unitMap.get(unitKey);
+      let locationId = locationMap.get(locKey);
+      let statusId = statusMap.get(statusKey);
+    
       if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
         invalidRows.push({ row: index + 2, asset });
         continue;
       }
-
-      if (!categoryId && asset.assetCategory)
-        categoryId = (await Category.create({ name: asset.assetCategory }))._id;
-      if (!unitId && asset.associateUnit)
-        unitId = (await Unit.create({ name: asset.associateUnit }))._id;
-      if (!locationId && asset.locationName)
-        locationId = (await Location.create({ name: asset.locationName }))._id;
-      if (!statusId && asset.assetStatus)
-        statusId = (await Status.create({ name: asset.assetStatus }))._id;
-
+    
+      // ✅ CATEGORY
+      if (!categoryId && catKey) {
+        const category = await Category.findOneAndUpdate(
+          { name: new RegExp(`^${asset.assetCategory}$`, "i") },
+          { name: asset.assetCategory },
+          { upsert: true, new: true }
+        );
+        categoryId = category._id;
+        categoryMap.set(catKey, categoryId);
+      }
+    
+      // ✅ UNIT
+      if (!unitId && unitKey) {
+        const unit = await Unit.findOneAndUpdate(
+          { name: new RegExp(`^${asset.associateUnit}$`, "i") },
+          { name: asset.associateUnit },
+          { upsert: true, new: true }
+        );
+        unitId = unit._id;
+        unitMap.set(unitKey, unitId);
+      }
+    
+      // ✅ LOCATION
+      if (!locationId && locKey) {
+        const location = await Location.findOneAndUpdate(
+          { name: new RegExp(`^${asset.locationName}$`, "i") },
+          { name: asset.locationName },
+          { upsert: true, new: true }
+        );
+        locationId = location._id;
+        locationMap.set(locKey, locationId);
+      }
+    
+      // ✅ STATUS
+      if (!statusId && statusKey) {
+        const status = await Status.findOneAndUpdate(
+          { name: new RegExp(`^${asset.assetStatus}$`, "i") },
+          { name: asset.assetStatus },
+          { upsert: true, new: true }
+        );
+        statusId = status._id;
+        statusMap.set(statusKey, statusId);
+      }
+    
       const totalQty = Number(asset.assetQuantity || 1);
       const inUse = Number(asset.inUse || 0);
-
+    
       if (inUse > totalQty) {
         invalidRows.push({ row: index + 2, reason: "InUse > Quantity", asset });
         continue;
       }
-
+    
       validAssets.push({
         assetCode: asset.assetCode,
         assetCategory: categoryId,
@@ -77,7 +118,7 @@ const bulkUpload = async (req, res) => {
         DOE: asset.DOE,
         assetLifetime: asset.assetLifetime,
         purchaseFrom: asset.purchaseFrom,
-
+        locationAddress: asset.locationAddress, // ✅ keep this
         assetCost: Number(asset.assetCost || 0),
         assetQuantity: totalQty,
         inUse,
