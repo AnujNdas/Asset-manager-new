@@ -9,7 +9,7 @@ const AssetCapture = () => {
   const [activeTab, setActiveTab] = useState("hardware");
   const [importType, setImportType] = useState("hardware");
 
-  const role = sessionStorage.getItem("role");
+  const role = localStorage.getItem("role");
   const userRole = role || "user";
 
   return (
