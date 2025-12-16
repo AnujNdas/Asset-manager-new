@@ -79,6 +79,10 @@ export const deleteCategory = async (id) => {
   const response = await axiosInstance.delete(`/category/${id}`);
   return response.data;
 };
+export const restoreCategory = async(id) => {
+  const response = await axiosInstance.patch(`/category/${id}/restore`);
+  return response.data;
+}
 
 // ----- STATUS API CALLS -----
 export const getStatuses = async () => {
