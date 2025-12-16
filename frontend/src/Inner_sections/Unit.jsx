@@ -230,20 +230,20 @@ const Unit = () => {
               <div className="category-number">{startIndex + idx + 1}</div>
 
                            <div className="category-name">
-  {cat.name}
+  {unit.name}
 </div>
 
   <span
     className={`status-badge ${
-      cat.isActive ? "badge-active" : "badge-inactive"
+      unit.isActive ? "badge-active" : "badge-inactive"
     }`}
     title={
-      cat.isActive
+      unit.isActive
         ? "This category is active"
         : "This category is inactive"
     }
   >
-    {cat.isActive ? "Active" : "Inactive"}
+    {unit.isActive ? "Active" : "Inactive"}
   </span>
 
               <div className="category-actions">
