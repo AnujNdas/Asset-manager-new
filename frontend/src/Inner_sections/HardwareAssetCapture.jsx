@@ -23,6 +23,7 @@ const AssetCapture = () => {
     assetName: "",
     associateUnit: "",
     locationName: "",
+    locationAddress: "", // ✅ NEW
     assetSpecification: "",
     assetStatus: "",
     DOP: "",
@@ -117,6 +118,7 @@ const AssetCapture = () => {
       "assetCategory",
       "associateUnit",
       "locationName",
+      "locationAddress", // ✅ NEW
       "assetStatus",
       "assetCost",
       "assetQuantity",
@@ -248,6 +250,20 @@ const AssetCapture = () => {
                 ))}
               </select>
             </div>
+            {/* Location Address */}
+<div className="input-group">
+  <label>
+    Location Address <span>*</span>
+  </label>
+  <input
+    type="text"
+    name="locationAddress"
+    value={formData.locationAddress}
+    onChange={handleChange}
+    placeholder="Building, floor, room, address"
+    required
+  />
+</div>
 
 
           {/* Status */}
