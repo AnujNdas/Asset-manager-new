@@ -5,6 +5,7 @@ import {
   createCategory,
   deleteCategory,
   updateCategory,
+  restoreCategory,
 } from "../Services/ApiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,6 +16,7 @@ import {
   faSave,
   faTimes,
   faTrash,
+  faRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Pagination from "../Components/Pagination";
@@ -22,7 +24,7 @@ import Loader from "../Components/Loader";
 
 const Category = () => {
   const [inputValue, setInputValue] = useState("");
-  const [mode, setMode] = useState("search"); // search | add
+  const [mode, setMode] = useState("search");
   const [showDropdown, setShowDropdown] = useState(false);
 
   const [categories, setCategories] = useState([]);
@@ -37,11 +39,8 @@ const Category = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
-  // Capitalize helper
   const capitalize = (value) =>
-    value
-      ? value.charAt(0).toUpperCase() + value.slice(1)
-      : value;
+    value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 
   useEffect(() => {
     fetchCategories();
@@ -51,15 +50,15 @@ const Category = () => {
     setLoading(true);
     try {
       const data = await getCategories();
-      setCategories([...data].reverse());
+      setCategories(data);
       setApiDone(true);
-      setTimeout(() => setLoading(false), 400);
+      setTimeout(() => setLoading(false), 300);
     } catch {
       setLoading(false);
     }
   };
 
-  // SEARCH FILTER
+  /* ================= SEARCH FILTER ================= */
   const filteredCategories =
     mode === "search"
       ? categories.filter((cat) =>
@@ -78,7 +77,7 @@ const Category = () => {
     startIndex + itemsPerPage
   );
 
-  // ADD / SEARCH ACTION
+  /* ================= ADD ================= */
   const handleAction = async (e) => {
     e.preventDefault();
 
@@ -90,16 +89,14 @@ const Category = () => {
     if (mode === "search") return;
 
     try {
-      const res = await createCategory({ name: capitalize(inputValue.trim()) });
-      const newCategory = res.category || res.data || res;
-
-      setCategories((prev) => [newCategory, ...prev]);
+      await createCategory({ name: capitalize(inputValue.trim()) });
       setInputValue("");
+      fetchCategories();
 
       Swal.fire({
         icon: "success",
         title: "Category Added",
-        timer: 1500,
+        timer: 1400,
         showConfirmButton: false,
       });
     } catch (err) {
@@ -111,11 +108,11 @@ const Category = () => {
     }
   };
 
-  // DELETE
+  /* ================= DEACTIVATE ================= */
   const handleDelete = async (id, name) => {
     const confirm = await Swal.fire({
-      title: "Delete Category?",
-      text: `Delete "${name}"?`,
+      title: "Deactivate Category?",
+      text: `Deactivate "${name}"?`,
       icon: "warning",
       showCancelButton: true,
     });
@@ -123,11 +120,20 @@ const Category = () => {
     if (!confirm.isConfirmed) return;
 
     await deleteCategory(id);
-    setCategories((prev) => prev.filter((c) => c._id !== id));
-    Swal.fire("Deleted!", "Category removed", "success");
+    fetchCategories();
+
+    Swal.fire("Deactivated", "Category deactivated", "success");
   };
 
-  // EDIT
+  /* ================= RESTORE ================= */
+  const handleRestore = async () => {
+    await restoreCategory(editingCategory._id);
+    Swal.fire("Restored", "Category restored successfully", "success");
+    setEditingCategory(null);
+    fetchCategories();
+  };
+
+  /* ================= UPDATE ================= */
   const openEditModal = (cat) => {
     setEditingCategory(cat);
     setUpdatedName(cat.name);
@@ -138,16 +144,9 @@ const Category = () => {
       name: capitalize(updatedName.trim()),
     });
 
-    setCategories((prev) =>
-      prev.map((c) =>
-        c._id === editingCategory._id
-          ? { ...c, name: capitalize(updatedName.trim()) }
-          : c
-      )
-    );
-
     Swal.fire("Updated", "Category updated", "success");
     setEditingCategory(null);
+    fetchCategories();
   };
 
   if (loading) return <Loader type="classification" apiDone={apiDone} />;
@@ -157,7 +156,6 @@ const Category = () => {
       <div className="card_header">
         <h3 className="category_title">Category</h3>
 
-        {/* INPUT WITH MODE DROPDOWN (SAME AS LOCATION) */}
         <form onSubmit={handleAction} className="category_form mode-input">
           <div className="mode-selector">
             <button
@@ -179,7 +177,6 @@ const Category = () => {
                 >
                   <FontAwesomeIcon icon={faSearch} /> Search
                 </div>
-
                 <div
                   onClick={() => {
                     setMode("add");
@@ -213,11 +210,22 @@ const Category = () => {
         ) : (
           <div className="grid">
             {currentItems.map((cat, idx) => (
-              <div key={cat._id} className="category-card">
+              <div
+                key={cat._id}
+                className={`category-card ${
+                  !cat.isActive ? "inactive" : ""
+                }`}
+              >
                 <div className="category-number">
                   {startIndex + idx + 1}
                 </div>
-                <div className="category-name">{cat.name}</div>
+
+                <div className="category-name">
+                  {cat.name}
+                  {!cat.isActive && (
+                    <span className="inactive-badge">Inactive</span>
+                  )}
+                </div>
 
                 <div className="category-actions">
                   <button
@@ -227,12 +235,14 @@ const Category = () => {
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
 
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(cat._id, cat.name)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
+                  {cat.isActive && (
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleDelete(cat._id, cat.name)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -240,7 +250,6 @@ const Category = () => {
         )}
       </div>
 
-      {/* PAGINATION */}
       {mode === "search" && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
@@ -254,22 +263,32 @@ const Category = () => {
         <div className="edit-modal">
           <div className="edit-modal-content">
             <h3>Edit Category</h3>
+
             <input
               value={updatedName}
               onChange={(e) =>
                 setUpdatedName(capitalize(e.target.value))
               }
               className="edit-input"
+              disabled={!editingCategory.isActive}
             />
+
             <div className="modal-buttons">
-              <button className="save-btn" onClick={handleUpdate}>
-                <FontAwesomeIcon icon={faSave} /> Save
-              </button>
+              {editingCategory.isActive ? (
+                <button className="save-btn" onClick={handleUpdate}>
+                  <FontAwesomeIcon icon={faSave} /> Save
+                </button>
+              ) : (
+                <button className="restore-btn" onClick={handleRestore}>
+                  <FontAwesomeIcon icon={faRotateLeft} /> Restore
+                </button>
+              )}
+
               <button
                 className="cancel-btn"
                 onClick={() => setEditingCategory(null)}
               >
-                <FontAwesomeIcon icon={faTimes} /> Cancel
+                <FontAwesomeIcon icon={faTimes} /> Close
               </button>
             </div>
           </div>
