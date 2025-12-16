@@ -423,7 +423,7 @@ const SoftwareAssetList = () => {
     </motion.div>
   )}
 </AnimatePresence>
-
+    </div>
   );
 };
 
