@@ -26,5 +26,12 @@ departmentSchema.pre("validate", function (next) {
   }
   next();
 });
+locationSchema.index(
+  { name: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isActive: true }
+  }
+);
 
 module.exports = mongoose.model("Department", departmentSchema);
