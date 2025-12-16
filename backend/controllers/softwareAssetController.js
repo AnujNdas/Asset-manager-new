@@ -309,7 +309,6 @@ module.exports = {
   bulkUploadSoftware,
   createSoftwareAsset,
   getSoftwareAssets,
-  getSoftwareAssetById,
   updateSoftwareAsset,
   deleteSoftwareAsset,
 };
