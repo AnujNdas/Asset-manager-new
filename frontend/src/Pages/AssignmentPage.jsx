@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+  import React, { useEffect, useMemo, useState } from "react";
 import "../Page_styles/AssignmentPage.css";
 import Pagination from "../Components/Pagination";
 import {
@@ -164,7 +164,14 @@ const fetchDepartments = async () => {
             className="asset-card"
             onClick={() => openCategory(cat)}
           >
-            <h3>{cat.categoryName || cat.category}</h3>
+           <h3>
+  {cat.categoryName || cat.category}
+  {!cat.isActive && (
+    <span className="inactive-tag">Deactivated</span>
+  )}
+</h3>
+
+
             <span>{cat.totalInStock} in stock</span>
 
             <div className="counts">
