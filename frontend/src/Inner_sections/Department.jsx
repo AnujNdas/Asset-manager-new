@@ -236,7 +236,7 @@ const Department = () => {
               </div>
 
                   <div className="category-name">
-  {cat.name}
+  {dep.name}
 </div>
 
   <span
