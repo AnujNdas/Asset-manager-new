@@ -92,15 +92,17 @@ const updateStatus = async (req, res) => {
 ============================ */
 const getStatuses = async (req, res) => {
   try {
-    const statuses = await Status.find({ isActive: true })
-      .sort({ createdAt: -1 });
+    const statuses = await Status.find().sort({
+      name: 1
+    });
 
     res.status(200).json(statuses);
   } catch (error) {
     console.error("Error fetching statuses:", error);
-    res.status(500).json({ message: "Error fetching statuses" });
+    res.status(500).json({ error: "Error fetching statuses" });
   }
 };
+
 
 /* ============================
    Soft Delete Status
