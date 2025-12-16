@@ -5,6 +5,7 @@ import {
   createUnit,
   deleteUnit,
   updateUnit,
+  restoreUnit
 } from "../Services/ApiServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,6 +16,7 @@ import {
   faSave,
   faTimes,
   faTrash,
+  faRotateLeft
 } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Pagination from "../Components/Pagination";
@@ -22,26 +24,21 @@ import Loader from "../Components/Loader";
 
 const Unit = () => {
   const [inputValue, setInputValue] = useState("");
-  const [mode, setMode] = useState("search"); // search | add
+  const [mode, setMode] = useState("search");
   const [showDropdown, setShowDropdown] = useState(false);
 
   const [units, setUnits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 18;
 
-  // Edit Modal
   const [editingUnit, setEditingUnit] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
-  // Capitalize helper
-  const capitalize = (value) =>
-    value
-      ? value.charAt(0).toUpperCase() + value.slice(1)
-      : value;
+  const capitalize = (v) =>
+    v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
 
   useEffect(() => {
     fetchUnits();
@@ -53,13 +50,13 @@ const Unit = () => {
       const data = await getUnits();
       setUnits([...data].reverse());
       setApiDone(true);
-      setTimeout(() => setLoading(false), 400);
+      setTimeout(() => setLoading(false), 300);
     } catch {
       setLoading(false);
     }
   };
 
-  // SEARCH FILTER
+  /* ================= SEARCH ================= */
   const filteredUnits =
     mode === "search"
       ? units.filter((u) =>
@@ -78,7 +75,7 @@ const Unit = () => {
     startIndex + itemsPerPage
   );
 
-  // ADD / SEARCH HANDLER
+  /* ================= ADD ================= */
   const handleAction = async (e) => {
     e.preventDefault();
 
@@ -91,7 +88,7 @@ const Unit = () => {
 
     try {
       const res = await createUnit({ name: capitalize(inputValue.trim()) });
-      const newUnit = res.unit || res.data || res;
+      const newUnit = res.data || res;
 
       setUnits((prev) => [newUnit, ...prev]);
       setInputValue("");
@@ -100,7 +97,7 @@ const Unit = () => {
         icon: "success",
         title: "Unit Added",
         timer: 1500,
-        showConfirmButton: false,
+        showConfirmButton: false
       });
     } catch (err) {
       Swal.fire(
@@ -111,23 +108,51 @@ const Unit = () => {
     }
   };
 
-  // DELETE
+  /* ================= DELETE (DEACTIVATE) ================= */
   const handleDelete = async (id, name) => {
     const confirm = await Swal.fire({
-      title: "Delete Unit?",
-      text: `Delete "${name}"?`,
+      title: "Deactivate Unit?",
+      text: `"${name}" will be deactivated`,
       icon: "warning",
-      showCancelButton: true,
+      showCancelButton: true
     });
 
     if (!confirm.isConfirmed) return;
 
     await deleteUnit(id);
-    setUnits((prev) => prev.filter((u) => u._id !== id));
-    Swal.fire("Deleted!", "Unit removed", "success");
+
+    setUnits((prev) =>
+      prev.map((u) =>
+        u._id === id ? { ...u, isActive: false } : u
+      )
+    );
+
+    Swal.fire("Deactivated", "Unit deactivated", "success");
   };
 
-  // EDIT
+  /* ================= RESTORE ================= */
+  const handleRestore = async (id, name) => {
+    const confirm = await Swal.fire({
+      title: "Restore Unit?",
+      text: `Restore "${name}"?`,
+      icon: "question",
+      showCancelButton: true
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    await restoreUnit(id);
+
+    setUnits((prev) =>
+      prev.map((u) =>
+        u._id === id ? { ...u, isActive: true } : u
+      )
+    );
+
+    Swal.fire("Restored", "Unit restored successfully", "success");
+  };
+
+  /* ================= EDIT ================= */
   const openEditModal = (unit) => {
     setEditingUnit(unit);
     setUpdatedName(unit.name);
@@ -140,7 +165,7 @@ const Unit = () => {
     }
 
     await updateUnit(editingUnit._id, {
-      name: capitalize(updatedName.trim()),
+      name: capitalize(updatedName.trim())
     });
 
     setUnits((prev) =>
@@ -162,7 +187,6 @@ const Unit = () => {
       <div className="card_header">
         <h3 className="category_title">Unit</h3>
 
-        {/* INPUT WITH MODE DROPDOWN */}
         <form onSubmit={handleAction} className="category_form mode-input">
           <div className="mode-selector">
             <button
@@ -176,21 +200,10 @@ const Unit = () => {
 
             {showDropdown && (
               <div className="mode-dropdown">
-                <div
-                  onClick={() => {
-                    setMode("search");
-                    setShowDropdown(false);
-                  }}
-                >
+                <div onClick={() => { setMode("search"); setShowDropdown(false); }}>
                   <FontAwesomeIcon icon={faSearch} /> Search
                 </div>
-
-                <div
-                  onClick={() => {
-                    setMode("add");
-                    setShowDropdown(false);
-                  }}
-                >
+                <div onClick={() => { setMode("add"); setShowDropdown(false); }}>
                   <FontAwesomeIcon icon={faPlus} /> Add
                 </div>
               </div>
@@ -198,11 +211,8 @@ const Unit = () => {
           </div>
 
           <input
-            type="text"
             className="category_search_input"
-            placeholder={
-              mode === "search" ? "Search unit..." : "Add new unit..."
-            }
+            placeholder={mode === "search" ? "Search unit..." : "Add new unit..."}
             value={inputValue}
             onChange={(e) => setInputValue(capitalize(e.target.value))}
           />
@@ -211,42 +221,40 @@ const Unit = () => {
 
       {/* LIST */}
       <div className="category-grid">
-        {currentItems.length === 0 ? (
-          <p>No units found</p>
-        ) : (
-          <div className="grid">
-            {currentItems.map((unit, idx) => (
-              <div key={unit._id} className="category-card">
-                <div className="category-number">
-                  {startIndex + idx + 1}
-                </div>
+        <div className="grid">
+          {currentItems.map((unit, idx) => (
+            <div
+              key={unit._id}
+              className={`category-card ${!unit.isActive ? "inactive-card" : ""}`}
+            >
+              <div className="category-number">{startIndex + idx + 1}</div>
 
-                <div className="category-name">{unit.name}</div>
-
-                <div className="category-actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => openEditModal(unit)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
-
-                  <button
-                    className="btn-delete"
-                    onClick={() =>
-                      handleDelete(unit._id, unit.name)
-                    }
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
+              <div className="category-name">
+                {unit.name}
+                {!unit.isActive && <span className="inactive-badge">Inactive</span>}
               </div>
-            ))}
-          </div>
-        )}
+
+              <div className="category-actions">
+                {unit.isActive ? (
+                  <>
+                    <button className="btn-edit" onClick={() => openEditModal(unit)}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button className="btn-delete" onClick={() => handleDelete(unit._id, unit.name)}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </>
+                ) : (
+                  <button className="btn-restore" onClick={() => handleRestore(unit._id, unit.name)}>
+                    <FontAwesomeIcon icon={faRotateLeft} />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* PAGINATION */}
       {mode === "search" && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
@@ -260,24 +268,16 @@ const Unit = () => {
         <div className="edit-modal">
           <div className="edit-modal-content">
             <h3>Edit Unit</h3>
-
             <input
-              value={updatedName}
-              onChange={(e) =>
-                setUpdatedName(capitalize(e.target.value))
-              }
               className="edit-input"
+              value={updatedName}
+              onChange={(e) => setUpdatedName(capitalize(e.target.value))}
             />
-
             <div className="modal-buttons">
               <button className="save-btn" onClick={handleUpdate}>
                 <FontAwesomeIcon icon={faSave} /> Save
               </button>
-
-              <button
-                className="cancel-btn"
-                onClick={() => setEditingUnit(null)}
-              >
+              <button className="cancel-btn" onClick={() => setEditingUnit(null)}>
                 <FontAwesomeIcon icon={faTimes} /> Cancel
               </button>
             </div>
