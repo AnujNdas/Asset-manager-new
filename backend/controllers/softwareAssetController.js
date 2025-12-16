@@ -13,37 +13,188 @@ const checkCompliance = (asset) => {
   return "Compliant";
 };
 
+const bulkUploadSoftware = async (req, res) => {
+  try {
+    console.log("🔥 Software Bulk upload request received.");
+
+    const { assets, mode } = req.body;
+    const parsedAssets = JSON.parse(assets);
+
+    const categories = await Category.find({});
+    const units = await Unit.find({});
+    const locations = await Location.find({});
+    const statuses = await Status.find({});
+
+    const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c._id]));
+    const unitMap = new Map(units.map(u => [u.name.toLowerCase(), u._id]));
+    const locationMap = new Map(locations.map(l => [l.name.toLowerCase(), l._id]));
+    const statusMap = new Map(statuses.map(s => [s.name.toLowerCase(), s._id]));
+
+    let validAssets = [];
+    let invalidRows = [];
+    const normalize = (v) => v?.trim().toLowerCase();
+
+    for (const [index, asset] of parsedAssets.entries()) {
+      const catKey = normalize(asset.assetCategory);
+      const unitKey = normalize(asset.associateUnit);
+      const locKey = normalize(asset.locationName);
+      const statusKey = normalize(asset.assetStatus);
+
+      let categoryId = categoryMap.get(catKey);
+      let unitId = unitMap.get(unitKey);
+      let locationId = locationMap.get(locKey);
+      let statusId = statusMap.get(statusKey);
+
+      // ---------- STRICT MODE ----------
+      if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
+        invalidRows.push({
+          row: index + 2,
+          reason: "Missing reference data",
+          asset
+        });
+        continue;
+      }
+
+      // ---------- CATEGORY ----------
+      if (!categoryId && catKey) {
+        const category = await Category.findOneAndUpdate(
+          { name: new RegExp(`^${asset.assetCategory}$`, "i") },
+          { name: asset.assetCategory },
+          { upsert: true, new: true }
+        );
+        categoryId = category._id;
+        categoryMap.set(catKey, categoryId);
+      }
+
+      // ---------- UNIT ----------
+      if (!unitId && unitKey) {
+        const unit = await Unit.findOneAndUpdate(
+          { name: new RegExp(`^${asset.associateUnit}$`, "i") },
+          { name: asset.associateUnit },
+          { upsert: true, new: true }
+        );
+        unitId = unit._id;
+        unitMap.set(unitKey, unitId);
+      }
+
+      // ---------- LOCATION ----------
+      if (!locationId && locKey) {
+        const location = await Location.findOneAndUpdate(
+          { name: new RegExp(`^${asset.locationName}$`, "i") },
+          { name: asset.locationName },
+          { upsert: true, new: true }
+        );
+        locationId = location._id;
+        locationMap.set(locKey, locationId);
+      }
+
+      // ---------- STATUS ----------
+      if (!statusId && statusKey) {
+        const status = await Status.findOneAndUpdate(
+          { name: new RegExp(`^${asset.assetStatus}$`, "i") },
+          { name: asset.assetStatus },
+          { upsert: true, new: true }
+        );
+        statusId = status._id;
+        statusMap.set(statusKey, statusId);
+      }
+
+      // ---------- LICENSE RULES ----------
+      const totalLicenses = Number(asset.assetQuantity || 1);
+
+      if (totalLicenses < 0) {
+        invalidRows.push({
+          row: index + 2,
+          reason: "Invalid license quantity",
+          asset
+        });
+        continue;
+      }
+
+      // ---------- FINAL PUSH ----------
+      validAssets.push({
+        assetCode: asset.assetCode,
+        assetName: asset.assetName,
+        assetCategory: categoryId,
+        assetSpecification: asset.assetSpecification,
+        purchaseFrom: asset.purchaseFrom,
+        associateUnit: unitId,
+
+        locationName: locationId,
+        locationAddress: asset.locationAddress,
+
+        licenseKey: asset.licenseKey,
+        licenseType: asset.licenseType,
+        licenseModel: asset.licenseModel,
+        licenseMetric: asset.licenseMetric,
+        licenseUse: asset.licenseUse,
+
+        DOP: asset.DOP,
+        DOE: asset.DOE,
+        assetLifetime: asset.assetLifetime,
+
+        assetStatus: statusId,
+
+        assetQuantity: totalLicenses,
+        inUse: 0, // 🔒 enforced
+
+        assetCost: Number(asset.assetCost || 0),
+
+        assignedUsers: [], // 🔒 empty on creation
+        linkedDevices: [],
+      });
+    }
+
+    if (validAssets.length) {
+      await SoftwareAsset.insertMany(validAssets, { ordered: false });
+    }
+
+    return res.status(200).json({
+      success: true,
+      inserted: validAssets.length,
+      skipped: invalidRows.length,
+      invalidRows,
+    });
+
+  } catch (err) {
+    console.error("❌ Software Bulk Upload Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+};
+
 // Create a new software asset
 const createSoftwareAsset = async (req, res) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized: Missing userId" });
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
+
+    const payload = {
+      ...req.body,
+      licensesAssigned: 0, // 🔒 enforced
+    };
 
     // Auto calculations
-    if (req.body.totalLicenses && req.body.licensesAssigned) {
-      req.body.licensesAvailable = req.body.totalLicenses - req.body.licensesAssigned;
-    }
-    if (req.body.totalLicenses && req.body.costPerUnit) {
-      req.body.totalCost = req.body.totalLicenses * req.body.costPerUnit;
+    if (payload.totalLicenses && payload.costPerUnit) {
+      payload.totalCost = payload.totalLicenses * payload.costPerUnit;
     }
 
-    // Compliance
-    req.body.complianceStatus = checkCompliance(req.body);
+    payload.complianceStatus = checkCompliance(payload);
 
-    // Add audit log
-    req.body.auditHistory = [
-      ...(req.body.auditHistory || []),
+    payload.auditHistory = [
       { date: new Date(), notes: `Created by user ${userId}` },
     ];
 
-    const asset = await SoftwareAsset.create(req.body);
+    const asset = await SoftwareAsset.create(payload);
 
-    // Expiry reminder (30 days before)
+    // Expiry reminder
     if (
       asset.licenseExpiry &&
-      new Date(asset.licenseExpiry) - new Date() < 30 * 24 * 60 * 60 * 1000
+      asset.licenseExpiry - new Date() < 30 * 24 * 60 * 60 * 1000
     ) {
       await Notification.create({
         title: "License Expiry Soon",
@@ -52,19 +203,17 @@ const createSoftwareAsset = async (req, res) => {
       });
     }
 
-    // Notification - Asset added
-    const newNotification = await Notification.create({
+    const notification = await Notification.create({
       title: "Software Asset Added",
       message: `Software '${asset.name}' has been added.`,
       userId,
     });
 
-    const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
 
     res.status(201).json({ success: true, data: asset });
   } catch (error) {
-    console.error("Error in createSoftwareAsset:", error);
+    console.error("Create Software Asset Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -79,70 +228,75 @@ const getSoftwareAssets = async (req, res) => {
   }
 };
 
-// Get single software asset
-const getSoftwareAssetById = async (req, res) => {
-  try {
-    const asset = await SoftwareAsset.findById(req.params.id);
-    if (!asset) return res.status(404).json({ success: false, message: "Not found" });
-    res.json({ success: true, data: asset });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
 
 // Update software asset
 const updateSoftwareAsset = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Auto calculations
-    if (req.body.totalLicenses && req.body.licensesAssigned) {
-      req.body.licensesAvailable = req.body.totalLicenses - req.body.licensesAssigned;
-    }
-    if (req.body.totalLicenses && req.body.costPerUnit) {
-      req.body.totalCost = req.body.totalLicenses * req.body.costPerUnit;
+    const existing = await SoftwareAsset.findById(req.params.id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: "Not found" });
     }
 
-    req.body.complianceStatus = checkCompliance(req.body);
-
-    // Add audit log
-    req.body.$push = {
-      auditHistory: { date: new Date(), notes: `Updated by user ${userId}` },
+    // Merge state
+    const updatedState = {
+      ...existing.toObject(),
+      ...req.body,
     };
 
-    const asset = await SoftwareAsset.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    // Auto calculations
+    if (updatedState.totalLicenses && updatedState.costPerUnit) {
+      updatedState.totalCost =
+        updatedState.totalLicenses * updatedState.costPerUnit;
+    }
 
-    const newNotification = await Notification.create({
+    updatedState.complianceStatus = checkCompliance(updatedState);
+
+    updatedState.auditHistory = [
+      ...(existing.auditHistory || []),
+      { date: new Date(), notes: `Updated by user ${userId}` },
+    ];
+
+    const asset = await SoftwareAsset.findByIdAndUpdate(
+      req.params.id,
+      updatedState,
+      { new: true, runValidators: true }
+    );
+
+    const notification = await Notification.create({
       title: "Software Asset Updated",
-      message: `Software '${asset?.name || ""}' has been updated.`,
+      message: `Software '${asset.name}' has been updated.`,
       userId,
     });
 
-    const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
 
     res.json({ success: true, data: asset });
   } catch (error) {
+    console.error("Update Software Asset Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Delete software asset
 const deleteSoftwareAsset = async (req, res) => {
   try {
     const userId = req.user.id;
+
     const asset = await SoftwareAsset.findByIdAndDelete(req.params.id);
+    if (!asset) {
+      return res.status(404).json({ success: false, message: "Not found" });
+    }
 
-    if (!asset) return res.status(404).json({ success: false, message: "Not found" });
-
-    const newNotification = await Notification.create({
+    const notification = await Notification.create({
       title: "Software Asset Deleted",
       message: `Software '${asset.name}' has been deleted.`,
       userId,
     });
 
-    const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
+    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
 
     res.json({ success: true, message: "Deleted successfully" });
   } catch (error) {
@@ -150,7 +304,9 @@ const deleteSoftwareAsset = async (req, res) => {
   }
 };
 
+
 module.exports = {
+  bulkUploadSoftware,
   createSoftwareAsset,
   getSoftwareAssets,
   getSoftwareAssetById,
