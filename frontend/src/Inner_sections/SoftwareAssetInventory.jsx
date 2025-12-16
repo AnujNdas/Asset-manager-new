@@ -345,6 +345,7 @@ const SoftwareAssetList = () => {
 
       {/* (Intentionally omitted here to keep answer readable) */}
       {/* ================= SOFTWARE EDIT MODAL ================= */}
+{/* ================= SOFTWARE EDIT MODAL ================= */}
 <AnimatePresence>
   {editingAsset && (
     <motion.div
@@ -366,81 +367,63 @@ const SoftwareAssetList = () => {
         </h3>
 
         <form className="asset-edit-grid" onSubmit={handleEditSubmit}>
-          <input
-            name="assetName"
-            placeholder="Software Name"
-            value={editForm.assetName}
-            onChange={handleEditChange}
-          />
 
-          <input
-            name="assetSpecification"
-            placeholder="Version"
-            value={editForm.assetSpecification}
-            onChange={handleEditChange}
-          />
+          <input name="assetCode" value={editForm.assetCode} onChange={handleEditChange} placeholder="Asset Code" />
 
-          <input
-            name="purchaseFrom"
-            placeholder="Publisher"
-            value={editForm.purchaseFrom}
-            onChange={handleEditChange}
-          />
+          <input name="assetName" value={editForm.assetName} onChange={handleEditChange} placeholder="Software Name" />
 
-          <select
-            name="assetCategory"
-            value={editForm.assetCategory}
-            onChange={handleEditChange}
-          >
+          <input name="assetSpecification" value={editForm.assetSpecification} onChange={handleEditChange} placeholder="Version" />
+
+          <input name="purchaseFrom" value={editForm.purchaseFrom} onChange={handleEditChange} placeholder="Publisher" />
+
+          <select name="assetCategory" value={editForm.assetCategory} onChange={handleEditChange}>
             <option value="">Select Category</option>
-            {categories.map((c) => (
-              <option key={c._id} value={c._id}>{c.name}</option>
-            ))}
+            {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
           </select>
 
-          <select
-            name="associateUnit"
-            value={editForm.associateUnit}
-            onChange={handleEditChange}
-          >
+          <select name="associateUnit" value={editForm.associateUnit} onChange={handleEditChange}>
             <option value="">Select Unit</option>
-            {units.map((u) => (
-              <option key={u._id} value={u._id}>{u.name}</option>
-            ))}
+            {units.map(u => <option key={u._id} value={u._id}>{u.name}</option>)}
           </select>
 
-          <select
-            name="locationName"
-            value={editForm.locationName}
-            onChange={handleEditChange}
-          >
+          <select name="locationName" value={editForm.locationName} onChange={handleEditChange}>
             <option value="">Select Location</option>
-            {locations.map((l) => (
-              <option key={l._id} value={l._id}>{l.name}</option>
-            ))}
+            {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
           </select>
 
-          <select
-            name="assetStatus"
-            value={editForm.assetStatus}
-            onChange={handleEditChange}
-          >
+          <input name="locationAddress" value={editForm.locationAddress} onChange={handleEditChange} placeholder="Location Address" />
+
+          <select name="assetStatus" value={editForm.assetStatus} onChange={handleEditChange}>
             <option value="">Select Status</option>
-            {statuses.map((s) => (
-              <option key={s._id} value={s._id}>{s.name}</option>
-            ))}
+            {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
           </select>
 
           <input type="date" name="DOP" value={editForm.DOP} onChange={handleEditChange} />
           <input type="date" name="DOE" value={editForm.DOE} onChange={handleEditChange} />
 
-          <input name="licenseKey" placeholder="License Key" value={editForm.licenseKey} onChange={handleEditChange} />
-          <input name="licenseType" placeholder="License Type" value={editForm.licenseType} onChange={handleEditChange} />
-          <input name="licenseModel" placeholder="License Model" value={editForm.licenseModel} onChange={handleEditChange} />
-          <input name="licenseMetric" placeholder="License Metric" value={editForm.licenseMetric} onChange={handleEditChange} />
-          <input
+          <input name="assetLifetime" value={editForm.assetLifetime} onChange={handleEditChange} placeholder="Lifetime" />
 
-    </div>
+          <input type="number" name="assetCost" value={editForm.assetCost} onChange={handleEditChange} placeholder="Cost" />
+          <input type="number" name="assetQuantity" value={editForm.assetQuantity} onChange={handleEditChange} placeholder="Quantity" />
+          <input type="number" name="inUse" value={editForm.inUse} onChange={handleEditChange} placeholder="In Use" />
+
+          <input name="licenseKey" value={editForm.licenseKey} onChange={handleEditChange} placeholder="License Key" />
+          <input name="licenseType" value={editForm.licenseType} onChange={handleEditChange} placeholder="License Type" />
+          <input name="licenseModel" value={editForm.licenseModel} onChange={handleEditChange} placeholder="License Model" />
+          <input name="licenseMetric" value={editForm.licenseMetric} onChange={handleEditChange} placeholder="License Metric" />
+          <input name="licenseUse" value={editForm.licenseUse} onChange={handleEditChange} placeholder="License Use" />
+
+          <div className="asset-edit-actions">
+            <button type="submit" className="btn-save">Save</button>
+            <button type="button" className="btn-cancel" onClick={() => setEditingAsset(null)}>Cancel</button>
+          </div>
+
+        </form>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
   );
 };
 
