@@ -368,13 +368,13 @@ const SoftwareAssetList = () => {
 
         <form className="asset-edit-grid" onSubmit={handleEditSubmit}>
 
-          <input name="assetCode" value={editForm.assetCode} onChange={handleEditChange} placeholder="Asset Code" />
+          <input name="assetCode" value={editForm.assetCode} onChange={handleEditChange} placeholder="Asset Code" className="asset-edit-input"/>
 
-          <input name="assetName" value={editForm.assetName} onChange={handleEditChange} placeholder="Software Name" />
+          <input name="assetName" value={editForm.assetName} onChange={handleEditChange} placeholder="Software Name" className="asset-edit-input"/>
 
-          <input name="assetSpecification" value={editForm.assetSpecification} onChange={handleEditChange} placeholder="Version" />
+          <input name="assetSpecification" value={editForm.assetSpecification} onChange={handleEditChange} placeholder="Version" className="asset-edit-input"/>
 
-          <input name="purchaseFrom" value={editForm.purchaseFrom} onChange={handleEditChange} placeholder="Publisher" />
+          <input name="purchaseFrom" value={editForm.purchaseFrom} onChange={handleEditChange} placeholder="Publisher" className="asset-edit-input"/>
 
           <select name="assetCategory" value={editForm.assetCategory} onChange={handleEditChange}>
             <option value="">Select Category</option>
@@ -391,27 +391,27 @@ const SoftwareAssetList = () => {
             {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
           </select>
 
-          <input name="locationAddress" value={editForm.locationAddress} onChange={handleEditChange} placeholder="Location Address" />
+          <input name="locationAddress" value={editForm.locationAddress} onChange={handleEditChange} placeholder="Location Address" className="asset-edit-input"/>
 
           <select name="assetStatus" value={editForm.assetStatus} onChange={handleEditChange}>
             <option value="">Select Status</option>
             {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
           </select>
 
-          <input type="date" name="DOP" value={editForm.DOP} onChange={handleEditChange} />
-          <input type="date" name="DOE" value={editForm.DOE} onChange={handleEditChange} />
+          <input type="date" name="DOP" value={editForm.DOP} onChange={handleEditChange} className="asset-edit-input"/>
+          <input type="date" name="DOE" value={editForm.DOE} onChange={handleEditChange} className="asset-edit-input"/>
 
-          <input name="assetLifetime" value={editForm.assetLifetime} onChange={handleEditChange} placeholder="Lifetime" />
+          <input name="assetLifetime" value={editForm.assetLifetime} onChange={handleEditChange} placeholder="Lifetime" className="asset-edit-input"/>
 
-          <input type="number" name="assetCost" value={editForm.assetCost} onChange={handleEditChange} placeholder="Cost" />
-          <input type="number" name="assetQuantity" value={editForm.assetQuantity} onChange={handleEditChange} placeholder="Quantity" />
-          <input type="number" name="inUse" value={editForm.inUse} onChange={handleEditChange} placeholder="In Use" />
+          <input type="number" name="assetCost" value={editForm.assetCost} onChange={handleEditChange} placeholder="Cost" className="asset-edit-input"/>
+          <input type="number" name="assetQuantity" value={editForm.assetQuantity} onChange={handleEditChange} placeholder="Quantity" className="asset-edit-input"/>
+          <input type="number" name="inUse" value={editForm.inUse} onChange={handleEditChange} placeholder="In Use" className="asset-edit-input"/>
 
-          <input name="licenseKey" value={editForm.licenseKey} onChange={handleEditChange} placeholder="License Key" />
-          <input name="licenseType" value={editForm.licenseType} onChange={handleEditChange} placeholder="License Type" />
-          <input name="licenseModel" value={editForm.licenseModel} onChange={handleEditChange} placeholder="License Model" />
-          <input name="licenseMetric" value={editForm.licenseMetric} onChange={handleEditChange} placeholder="License Metric" />
-          <input name="licenseUse" value={editForm.licenseUse} onChange={handleEditChange} placeholder="License Use" />
+          <input name="licenseKey" value={editForm.licenseKey} onChange={handleEditChange} placeholder="License Key" className="asset-edit-input"/>
+          <input name="licenseType" value={editForm.licenseType} onChange={handleEditChange} placeholder="License Type" className="asset-edit-input"/>
+          <input name="licenseModel" value={editForm.licenseModel} onChange={handleEditChange} placeholder="License Model" className="asset-edit-input"/>
+          <input name="licenseMetric" value={editForm.licenseMetric} onChange={handleEditChange} placeholder="License Metric" className="asset-edit-input"/>
+          <input name="licenseUse" value={editForm.licenseUse} onChange={handleEditChange} placeholder="License Use" className="asset-edit-input"/>
 
           <div className="asset-edit-actions">
             <button type="submit" className="btn-save">Save</button>
