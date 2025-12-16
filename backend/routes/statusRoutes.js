@@ -1,17 +1,19 @@
-const express = require('express');
-const { createStatus, getStatuses , deleteStatus , updateStatus } = require('../controllers/statusControllers');
+// routes/statusRoutes.js
+const express = require("express");
+const {
+  createStatus,
+  updateStatus,
+  getStatuses,
+  deleteStatus,
+  restoreStatus
+} = require("../controllers/statusControllers");
 
 const router = express.Router();
 
-// Route for creating a new status
-router.post('/', createStatus);
-
-//Route to update status 
-router.put('/:id' , updateStatus )
-// Route for getting all statuses
-router.get('/', getStatuses);
-
-// Route for deleting status
-router.delete('/:id', deleteStatus); 
+router.post("/", createStatus);
+router.get("/", getStatuses);
+router.put("/:id", updateStatus);
+router.delete("/:id", deleteStatus);
+router.patch("/:id/restore", restoreStatus); // optional
 
 module.exports = router;
