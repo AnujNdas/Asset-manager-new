@@ -1,4 +1,3 @@
-// models/category.js
 const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema(
@@ -6,14 +5,18 @@ const categorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true,
-      unique: true
+      trim: true
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+      index: true
     }
   },
   { timestamps: true }
 );
 
-// Normalize before validation
+/* ================= NORMALIZE NAME ================= */
 categorySchema.pre("validate", function (next) {
   if (this.name) {
     this.name =
@@ -22,5 +25,19 @@ categorySchema.pre("validate", function (next) {
   }
   next();
 });
+
+/* ================= UNIQUE ACTIVE CATEGORY ================= */
+/**
+ * Ensures:
+ * - Only ONE active category per name
+ * - Allows re-creating a category if the old one is inactive
+ */
+categorySchema.index(
+  { name: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isActive: true }
+  }
+);
 
 module.exports = mongoose.model("Category", categorySchema);
