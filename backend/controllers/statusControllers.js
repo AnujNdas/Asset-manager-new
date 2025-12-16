@@ -1,7 +1,7 @@
 const Status = require("../models/Status");
 
 /* ============================
-   Create Status
+   Create / Restore Status
 ============================ */
 const createStatus = async (req, res) => {
   try {
@@ -13,12 +13,22 @@ const createStatus = async (req, res) => {
 
     name = name.trim();
 
-    // Case-insensitive duplicate check
-    const exists = await Status.findOne({
+    const existing = await Status.findOne({
       name: { $regex: `^${name}$`, $options: "i" }
     });
 
-    if (exists) {
+    // 🔁 Restore if soft deleted
+    if (existing) {
+      if (!existing.isActive) {
+        existing.isActive = true;
+        await existing.save();
+
+        return res.status(200).json({
+          message: "Status restored successfully",
+          status: existing
+        });
+      }
+
       return res.status(409).json({ message: "Status already exists" });
     }
 
@@ -28,7 +38,7 @@ const createStatus = async (req, res) => {
 
   } catch (error) {
     console.error("Error creating status:", error);
-    res.status(500).json({ messagel: "Error creating status" });
+    res.status(500).json({ message: "Error creating status" });
   }
 };
 
@@ -46,10 +56,10 @@ const updateStatus = async (req, res) => {
 
     name = name.trim();
 
-    // Prevent duplicates (excluding current record)
     const exists = await Status.findOne({
       _id: { $ne: id },
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${name}$`, $options: "i" },
+      isActive: true
     });
 
     if (exists) {
@@ -78,11 +88,13 @@ const updateStatus = async (req, res) => {
 };
 
 /* ============================
-   Get All Statuses
+   Get Active Statuses
 ============================ */
 const getStatuses = async (req, res) => {
   try {
-    const statuses = await Status.find().sort({ createdAt: -1 });
+    const statuses = await Status.find({ isActive: true })
+      .sort({ createdAt: -1 });
+
     res.status(200).json(statuses);
   } catch (error) {
     console.error("Error fetching statuses:", error);
@@ -91,21 +103,24 @@ const getStatuses = async (req, res) => {
 };
 
 /* ============================
-   Delete Status
+   Soft Delete Status
 ============================ */
 const deleteStatus = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedStatus = await Status.findByIdAndDelete(id);
+    const status = await Status.findById(id);
 
-    if (!deletedStatus) {
+    if (!status) {
       return res.status(404).json({ message: "Status not found" });
     }
 
+    status.isActive = false;
+    await status.save();
+
     res.status(200).json({
       message: "Status deleted successfully",
-      deletedStatus
+      status
     });
 
   } catch (error) {
@@ -114,9 +129,37 @@ const deleteStatus = async (req, res) => {
   }
 };
 
+/* ============================
+   Restore Status (Optional)
+============================ */
+const restoreStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const status = await Status.findById(id);
+
+    if (!status) {
+      return res.status(404).json({ message: "Status not found" });
+    }
+
+    status.isActive = true;
+    await status.save();
+
+    res.status(200).json({
+      message: "Status restored successfully",
+      status
+    });
+
+  } catch (error) {
+    console.error("Error restoring status:", error);
+    res.status(500).json({ message: "Error restoring status" });
+  }
+};
+
 module.exports = {
   createStatus,
   updateStatus,
   getStatuses,
-  deleteStatus
+  deleteStatus,
+  restoreStatus
 };
