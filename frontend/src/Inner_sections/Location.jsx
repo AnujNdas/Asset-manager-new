@@ -123,12 +123,27 @@ const Location = () => {
   };
 
   // RESTORE
-  const handleRestore = async () => {
-    await restoreLocation(editingLocation._id);
-    Swal.fire("Restored", "Location restored successfully", "success");
-    setEditingLocation(null);
-    fetchLocations();
-  };
+const handleRestore = async (id, name) => {
+  const confirm = await Swal.fire({
+    title: "Restore Location?",
+    text: `Restore "${name}"?`,
+    icon: "question",
+    showCancelButton: true
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  await restoreLocation(id);
+
+  setLocations(prev =>
+    prev.map(loc =>
+      loc._id === id ? { ...loc, isActive: true } : loc
+    )
+  );
+
+  Swal.fire("Restored", "Location restored successfully", "success");
+};
+;
 
   // EDIT
   const openEditModal = (loc) => {
@@ -229,23 +244,33 @@ const Location = () => {
                   )}
                 </div>
 
-                <div className="category-actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => openEditModal(loc)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
+              <div className="category-actions">
+  {loc.isActive ? (
+    <>
+      <button
+        className="btn-edit"
+        onClick={() => openEditModal(loc)}
+      >
+        <FontAwesomeIcon icon={faEdit} />
+      </button>
 
-                  {loc.isActive && (
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDelete(loc._id, loc.name)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  )}
-                </div>
+      <button
+        className="btn-delete"
+        onClick={() => handleDelete(loc._id, loc.name)}
+      >
+        <FontAwesomeIcon icon={faTrash} />
+      </button>
+    </>
+  ) : (
+    <button
+      className="btn-restore"
+      onClick={() => handleRestore(loc._id, loc.name)}
+    >
+      <FontAwesomeIcon icon={faRotateLeft} />
+    </button>
+  )}
+</div>
+
               </div>
             ))}
           </div>
@@ -275,24 +300,19 @@ const Location = () => {
               disabled={!editingLocation.isActive}
             />
 
-            <div className="modal-buttons">
-              {editingLocation.isActive ? (
-                <button className="save-btn" onClick={handleUpdate}>
-                  <FontAwesomeIcon icon={faSave} /> Save
-                </button>
-              ) : (
-                <button className="restore-btn" onClick={handleRestore}>
-                  <FontAwesomeIcon icon={faRotateLeft} /> Restore
-                </button>
-              )}
+           <div className="modal-buttons">
+  <button className="save-btn" onClick={handleUpdate}>
+    <FontAwesomeIcon icon={faSave} /> Save
+  </button>
 
-              <button
-                className="cancel-btn"
-                onClick={() => setEditingLocation(null)}
-              >
-                <FontAwesomeIcon icon={faTimes} /> Close
-              </button>
-            </div>
+  <button
+    className="cancel-btn"
+    onClick={() => setEditingLocation(null)}
+  >
+    <FontAwesomeIcon icon={faTimes} /> Cancel
+  </button>
+</div>
+
           </div>
         </div>
       )}
