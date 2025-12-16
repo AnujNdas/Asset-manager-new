@@ -97,7 +97,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "https://assetsmanagementsystem.socialflylive.com",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST" , "PATCH"],
   },
 });
 
