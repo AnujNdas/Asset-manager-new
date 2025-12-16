@@ -20,7 +20,10 @@ export const deleteUnit = async (id) => {
   const response = await axiosInstance.delete(`/unit/${id}`);
   return response.data;
 };
-
+export const restoreUnit = async(id) => {
+  const response = await axiosInstance.patch(`/unit/${id}/restore`);
+  return response.data;
+}
 export const getDepartments = async () => {
   const response = await axiosInstance.get("/department");
   return response.data;
@@ -39,7 +42,10 @@ export const deleteDepartment = async (id) => {
   const response = await axiosInstance.delete(`/department/${id}`);
   return response.data;
 };
-
+export const restoreDepartment = async(id) => {
+  const response = await axiosInstance.patch(`/department/${id}/restore`);
+  return response.data;
+}
 // ----- LOCATION API CALLS -----
 export const getLocations = async () => {
   const response = await axiosInstance.get("/location");
@@ -106,7 +112,10 @@ export const updateStatus = async (id, body) => {
   const res = await axiosInstance.put(`/status/${id}`, body);
   return res.data;
 };
-
+export const restoreStatus = async(id) => {
+  const response = await axiosInstance.patch(`/status/${id}/restore`);
+  return response.data;
+}
 // ----- SOFTWARE ASSETS API CALLS -----
 export const getSoftwareAssets = async () => {
   const response = await axiosInstance.get("/software-assets");
