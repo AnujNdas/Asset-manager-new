@@ -3,17 +3,37 @@ const mongoose = require("mongoose");
 const assetSchema = new mongoose.Schema(
   {
     assetCode: { type: String, required: true },
+
     assetCategory: { type: String, required: true },
+
     barcodeNumber: { type: String },
+
     assetName: { type: String, required: true },
+
     associateUnit: { type: String, required: true },
+
+    // Country / Region
     locationName: { type: String, required: true },
+
+    // ✅ NEW: Specific physical address / location
+    locationAddress: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     assetSpecification: { type: String, required: true },
+
     assetStatus: { type: String, required: true },
+
     DOP: { type: String, required: true },
+
     DOE: { type: String, required: true },
+
     assetLifetime: { type: String, required: true },
+
     purchaseFrom: { type: String, required: true },
+
     PMD: { type: String },
 
     assetCost: {
@@ -44,7 +64,7 @@ const assetSchema = new mongoose.Schema(
   }
 );
 
-// ✅ ADD THIS (CRITICAL)
+// ✅ Virtual: Stock calculation
 assetSchema.virtual("inStock").get(function () {
   return this.assetQuantity - this.inUse;
 });
