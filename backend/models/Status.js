@@ -1,3 +1,4 @@
+// models/status.js
 const mongoose = require("mongoose");
 
 const statusSchema = new mongoose.Schema(
@@ -5,14 +6,18 @@ const statusSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true,
-      unique: true,
+      trim: true
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+      index: true
+    }
   },
   { timestamps: true }
 );
 
-// Normalize before validation
+/* ================= NORMALIZE NAME ================= */
 statusSchema.pre("validate", function (next) {
   if (this.name) {
     this.name =
@@ -21,5 +26,14 @@ statusSchema.pre("validate", function (next) {
   }
   next();
 });
+
+/* ================= UNIQUE ACTIVE STATUS ================= */
+statusSchema.index(
+  { name: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isActive: true }
+  }
+);
 
 module.exports = mongoose.model("Status", statusSchema);
