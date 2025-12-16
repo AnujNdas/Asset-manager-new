@@ -270,6 +270,37 @@
   justify-content: space-between;
   margin-top: 15px;
 }
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: default;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Active */
+.status-badge.badge-active {
+  background-color: #e6f7ee;
+  color: #1e7f4f;
+  border: 1px solid #b7ebd0;
+}
+
+/* Inactive */
+.status-badge.badge-inactive {
+  background-color: #fdecea;
+  color: #a61d24;
+  border: 1px solid #f5c2c0;
+}
+
+/* Optional hover polish */
+.status-badge:hover {
+  filter: brightness(0.95);
+}
 
 /* Save Button */
 .save-btn {
