@@ -46,29 +46,34 @@ const BulkUpload = ({ type, userRole }) => {
     ],
 
     software: [
-      {
-        "Software Name": "",
-        Version: "",
-        Publisher: "",
-        Category: "",
-        "License Key": "",
-        "License Type": "",
-        "License Model": "",
-        "License Use": "",
-        "Total Licenses": "",
-        "Licenses Assigned": "",
-        "License Start Date": "",
-        "License Expiry": "",
-        "Renewal Cycle": "",
-        "Purchase Date": "",
-        "Cost Per Unit": "",
-        Currency: "",
-        "Purchase Order": "",
-        "Compliance Status": "",
-        "Assigned To": "",
-        "Install Location": "",
-      },
-    ],
+  {
+    assetCode: "",
+    assetName: "",
+    assetCategory: "",
+    assetSpecification: "",   // version
+    purchaseFrom: "",         // publisher
+    associateUnit: "",
+
+    locationName: "",
+    locationAddress: "",
+
+    licenseKey: "",
+    licenseType: "",
+    licenseModel: "",
+    licenseMetric: "",
+    licenseUse: "",
+
+    assetStatus: "",
+
+    DOP: "",                  // license purchase/start date
+    DOE: "",                  // license expiry
+    assetLifetime: "",
+
+    assetCost: "",
+    assetQuantity: "",
+  },
+],
+
   };
 
   const handleUpload = () => {
