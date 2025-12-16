@@ -147,3 +147,18 @@
   background: #94a3b8;
   cursor: not-allowed;
 }
+.asset-card.inactive {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+}
+
+.inactive-tag {
+  background: #dc3545;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  margin-left: 8px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
