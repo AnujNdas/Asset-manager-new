@@ -7,133 +7,102 @@ const AssetAssignment = require("../models/AssetAssignment");
 const getInStockCategorySummary = async (req, res) => {
   try {
     /* ================= HARDWARE ================= */
-const hardware = await Asset.aggregate([
-  {
-    $lookup: {
-      from: "categories",
-      localField: "assetCategory",
-      foreignField: "_id",
-      as: "category"
-    }
-  },
-  {
-    $unwind: {
-      path: "$category",
-      preserveNullAndEmptyArrays: true
-    }
-  },
-  {
-    $project: {
-      categoryId: "$assetCategory",
-      categoryName: {
-        $ifNull: ["$category.name", "Unknown Category"]
+    const hardware = await Asset.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "assetCategory",
+          foreignField: "_id",
+          as: "category",
+        },
       },
-      isActive: {
-        $ifNull: ["$category.isActive", false]
+      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          categoryId: "$assetCategory",
+          categoryName: { $ifNull: ["$category.name", "Unknown Category"] },
+          isActive: { $ifNull: ["$category.isActive", false] },
+          available: { $subtract: ["$assetQuantity", "$inUse"] },
+        },
       },
-      available: { $subtract: ["$assetQuantity", "$inUse"] }
-    }
-  },
-  { $match: { available: { $gt: 0 } } },
-  {
-    $group: {
-      _id: "$categoryId",
-      categoryName: { $first: "$categoryName" },
-      isActive: { $first: "$isActive" },
-      hardwareCount: { $sum: "$available" }
-    }
-  }
-]);
+      { $match: { available: { $gt: 0 } } },
+      {
+        $group: {
+          _id: "$categoryId",
+          categoryName: { $first: "$categoryName" },
+          isActive: { $first: "$isActive" },
+          hardwareCount: { $sum: "$available" },
+        },
+      },
+    ]);
 
     /* ================= SOFTWARE ================= */
-  const software = await SoftwareAsset.aggregate([
-  {
-    $lookup: {
-      from: "categories",
-      localField: "category",
-      foreignField: "_id",
-      as: "category"
-    }
-  },
-  {
-    $unwind: {
-      path: "$category",
-      preserveNullAndEmptyArrays: true
-    }
-  },
-  {
-    $project: {
-      categoryId: "$category._id",
-      categoryName: {
-        $ifNull: ["$category.name", "Unknown Category"]
+    const software = await SoftwareAsset.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "assetCategory",
+          foreignField: "_id",
+          as: "category",
+        },
       },
-      isActive: {
-        $ifNull: ["$category.isActive", false]
+      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          categoryId: "$assetCategory",
+          categoryName: { $ifNull: ["$category.name", "Unknown Category"] },
+          isActive: { $ifNull: ["$category.isActive", false] },
+          available: { $subtract: ["$assetQuantity", "$inUse"] },
+        },
       },
-      available: {
-        $subtract: ["$totalLicenses", "$licensesAssigned"]
-      }
-    }
-  },
-  { $match: { available: { $gt: 0 } } },
-  {
-    $group: {
-      _id: "$categoryId",
-      categoryName: { $first: "$categoryName" },
-      isActive: { $first: "$isActive" },
-      softwareCount: { $sum: "$available" }
-    }
-  }
-]);
+      { $match: { available: { $gt: 0 } } },
+      {
+        $group: {
+          _id: "$categoryId",
+          categoryName: { $first: "$categoryName" },
+          isActive: { $first: "$isActive" },
+          softwareCount: { $sum: "$available" },
+        },
+      },
+    ]);
 
     /* ================= MERGE ================= */
-const map = {};
+    const map = {};
 
-/* HARDWARE */
-hardware.forEach(item => {
-  map[item._id?.toString()] = {
-    category: item._id,
-    categoryName: item.categoryName,
-    isActive: item.isActive,
-    hardwareCount: item.hardwareCount,
-    softwareCount: 0
-  };
-});
-
-/* SOFTWARE */
-software.forEach(item => {
-  const key = item._id?.toString();
-
-  if (!map[key]) {
-    map[key] = {
-      category: item._id,
-      categoryName: item.categoryName,
-      isActive: item.isActive,
-      hardwareCount: 0,
-      softwareCount: item.softwareCount
-    };
-  } else {
-    map[key].softwareCount = item.softwareCount;
-    // Safety: if either marks inactive → inactive
-    map[key].isActive = map[key].isActive && item.isActive;
-  }
-});
-
-   const result = Object.values(map).map(item => ({
-  ...item,
-  totalInStock: item.hardwareCount + item.softwareCount
-}));
-
-res.json({
-  success: true,
-  data: result
-});
-
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
+    hardware.forEach((h) => {
+      map[h._id.toString()] = {
+        category: h._id,
+        categoryName: h.categoryName,
+        isActive: h.isActive,
+        hardwareCount: h.hardwareCount,
+        softwareCount: 0,
+      };
     });
+
+    software.forEach((s) => {
+      const key = s._id.toString();
+      if (!map[key]) {
+        map[key] = {
+          category: s._id,
+          categoryName: s.categoryName,
+          isActive: s.isActive,
+          hardwareCount: 0,
+          softwareCount: s.softwareCount,
+        };
+      } else {
+        map[key].softwareCount = s.softwareCount;
+        map[key].isActive = map[key].isActive && s.isActive;
+      }
+    });
+
+    const result = Object.values(map).map((i) => ({
+      ...i,
+      totalInStock: i.hardwareCount + i.softwareCount,
+    }));
+
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -194,20 +163,19 @@ const assignAssetsFromStock = async (req, res) => {
       }
 
       /* ================= SOFTWARE ================= */
-      if (assetType === "software") {
-        asset = await SoftwareAsset.findById(assetId).session(session);
-        if (!asset) throw new Error("Software asset not found");
+if (assetType === "software") {
+  asset = await SoftwareAsset.findById(assetId).session(session);
+  if (!asset) throw new Error("Software asset not found");
 
-        const available =
-          asset.totalLicenses - asset.licensesAssigned;
+  const available = asset.assetQuantity - asset.inUse;
+  if (available < quantity) {
+    throw new Error(`Insufficient licenses for ${asset.assetName}`);
+  }
 
-        if (available < quantity) {
-          throw new Error(`Insufficient licenses for ${asset.name}`);
-        }
+  asset.inUse += quantity;
+  await asset.save({ session });
+}
 
-        asset.licensesAssigned += quantity;
-        await asset.save({ session });
-      }
 
       /* ================= CREATE ASSIGNMENT ================= */
       const [assignment] = await AssetAssignment.create(
@@ -305,47 +273,39 @@ const getInStockAssetsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
 
-    /* ================= HARDWARE ================= */
     const hardwareAssets = await Asset.find({
       assetCategory: category,
-      $expr: { $gt: ["$assetQuantity", "$inUse"] }
+      $expr: { $gt: ["$assetQuantity", "$inUse"] },
     }).select("assetName assetQuantity inUse");
 
-    /* ================= SOFTWARE ================= */
     const softwareAssets = await SoftwareAsset.find({
-      category,
-      $expr: { $gt: ["$totalLicenses", "$licensesAssigned"] }
-    }).select("name totalLicenses licensesAssigned");
+      assetCategory: category,
+      $expr: { $gt: ["$assetQuantity", "$inUse"] },
+    }).select("assetName assetQuantity inUse");
 
     const response = [
-      ...hardwareAssets.map(a => ({
+      ...hardwareAssets.map((a) => ({
         _id: a._id,
         name: a.assetName,
         assetType: "hardware",
         assetModel: "Asset",
-        available: a.assetQuantity - a.inUse
+        available: a.assetQuantity - a.inUse,
       })),
-
-      ...softwareAssets.map(s => ({
+      ...softwareAssets.map((s) => ({
         _id: s._id,
-        name: s.name,
+        name: s.assetName,
         assetType: "software",
         assetModel: "SoftwareAsset",
-        available: s.totalLicenses - s.licensesAssigned
-      }))
+        available: s.assetQuantity - s.inUse,
+      })),
     ];
 
-    res.json({
-      success: true,
-      data: response
-    });
+    res.json({ success: true, data: response });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 
 module.exports = {
