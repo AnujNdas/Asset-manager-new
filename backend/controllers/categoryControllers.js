@@ -11,32 +11,29 @@ const createCategory = async (req, res) => {
 
     name = name.trim();
 
-    // Check if inactive category exists → revive instead of duplicate
     const existing = await Category.findOne({
-      name,
-      isActive: false
+      name: { $regex: `^${name}$`, $options: "i" }
     });
 
     if (existing) {
-      existing.isActive = true;
-      await existing.save();
-      return res.status(200).json({
-        message: "Category restored successfully",
-        category: existing
-      });
-    }
+      if (!existing.isActive) {
+        existing.isActive = true;
+        await existing.save();
 
-    const newCategory = new Category({ name });
-    await newCategory.save();
+        return res.status(200).json({
+          message: "Category restored successfully",
+          category: existing
+        });
+      }
 
-    res.status(201).json(newCategory);
-  } catch (error) {
-    if (error.code === 11000) {
       return res.status(409).json({
         error: "Category already exists"
       });
     }
 
+    const newCategory = await Category.create({ name });
+    res.status(201).json(newCategory);
+  } catch (error) {
     console.error("Error creating category:", error);
     res.status(500).json({ error: "Error creating category" });
   }
@@ -68,6 +65,18 @@ const updateCategory = async (req, res) => {
 
     name = name.trim();
 
+    const exists = await Category.findOne({
+      _id: { $ne: id },
+      name: { $regex: `^${name}$`, $options: "i" },
+      isActive: true
+    });
+
+    if (exists) {
+      return res.status(409).json({
+        error: "Category with this name already exists"
+      });
+    }
+
     const updatedCategory = await Category.findOneAndUpdate(
       { _id: id, isActive: true },
       { name },
@@ -75,20 +84,14 @@ const updateCategory = async (req, res) => {
     );
 
     if (!updatedCategory) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Category not found or inactive" });
     }
 
     res.status(200).json({
       message: "Category updated successfully",
-      category: updatedCategory
+      updatedCategory
     });
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(409).json({
-        error: "Category with this name already exists"
-      });
-    }
-
     console.error("Error updating category:", error);
     res.status(500).json({ error: "Error updating category" });
   }
