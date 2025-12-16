@@ -235,12 +235,22 @@ const Department = () => {
                 {startIndex + idx + 1}
               </div>
 
-              <div className="category-name">
-                {dep.name}
-                {!dep.isActive && (
-                  <span className="inactive-badge">Inactive</span>
-                )}
-              </div>
+                  <div className="category-name">
+  {cat.name}
+</div>
+
+  <span
+    className={`status-badge ${
+      cat.isActive ? "badge-active" : "badge-inactive"
+    }`}
+    title={
+      cat.isActive
+        ? "This category is active"
+        : "This category is inactive"
+    }
+  >
+    {cat.isActive ? "Active" : "Inactive"}
+  </span>
 
               <div className="category-actions">
                 {dep.isActive ? (
