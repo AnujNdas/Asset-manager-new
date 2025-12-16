@@ -7,7 +7,7 @@ const {
   getSoftwareAssets,
   updateSoftwareAsset,
   deleteSoftwareAsset,
-  bulkUploadSoftwareAssets // ✅ ADD THIS
+  bulkUploadSoftware // ✅ ADD THIS
 } = require("../controllers/softwareAssetController");
 
 const authenticateToken = require("../Middleware/Authentication-token");
@@ -27,7 +27,7 @@ router.post(
   "/bulk-upload",
   authenticateToken(),
  uploadBulk.fields([{ name: "excel" }]),
-  bulkUploadSoftwareAssets
+  bulkUploadSoftware
 );
 
 module.exports = router;
