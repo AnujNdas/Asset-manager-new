@@ -1,6 +1,4 @@
-// src/Pages/SoftwareAssetList.jsx
 import React, { useEffect, useState } from "react";
-import "../Page_styles/InventoryCards.css";
 import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,16 +7,18 @@ import {
   updateSoftwareAsset,
   getCategories,
   getStatuses,
+  getUnits,
+  getLocations,
 } from "../Services/ApiServices";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
 
 const SoftwareAssetList = () => {
-  /* ===================== STATE ===================== */
-  const [softwareAssets, setSoftwareAssets] = useState([]);
+  const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [locations, setLocations] = useState([]);
 
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [editingAsset, setEditingAsset] = useState(null);
@@ -28,49 +28,74 @@ const SoftwareAssetList = () => {
   const [apiDone, setApiDone] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const assetsPerPage = 6;
 
-  /* ===================== FETCH ===================== */
   useEffect(() => {
     fetchAll();
   }, []);
 
   const fetchAll = async () => {
     try {
-      const [assetsRes, catRes, statRes] = await Promise.all([
+      const [
+        assetsRes,
+        catRes,
+        statRes,
+        unitRes,
+        locRes,
+      ] = await Promise.all([
         getSoftwareAssets(),
         getCategories(),
         getStatuses(),
+        getUnits(),
+        getLocations(),
       ]);
 
-      setSoftwareAssets(Array.isArray(assetsRes?.data) ? assetsRes.data : assetsRes || []);
-      setCategories(catRes || []);
-      setStatuses(statRes || []);
+      setAssets(assetsRes?.data ?? assetsRes ?? []);
+      setCategories(catRes ?? []);
+      setStatuses(statRes ?? []);
+      setUnits(unitRes ?? []);
+      setLocations(locRes ?? []);
 
       setApiDone(true);
       setTimeout(() => setLoading(false), 400);
-    } catch {
+    } catch (err) {
       Swal.fire("Error", "Failed to load software assets", "error");
       setLoading(false);
     }
   };
 
-  /* ===================== HELPERS ===================== */
-  const getCategoryName = (id) =>
-    categories.find((c) => c._id === id)?.categoryName || "N/A";
-
-  const getStatusName = (id) =>
-    statuses.find((s) => s._id === id)?.statusName || "N/A";
-
-  const getExpiryBadge = (date) => {
-    if (!date) return null;
-    const diff = Math.ceil((new Date(date) - new Date()) / 86400000);
-    if (diff < 0) return <span className="badge badge-red">Expired</span>;
-    if (diff <= 7) return <span className="badge badge-yellow">{diff} days</span>;
-    return <span className="badge badge-green">{diff} days</span>;
+  /* ================= HELPERS ================= */
+  const getName = (list, value) => {
+    if (!value) return "N/A";
+    const id = typeof value === "object" ? value._id : value;
+    const found = list.find((i) => String(i._id) === String(id));
+    return found ? found.name : "N/A";
   };
 
-  /* ===================== DELETE ===================== */
+  const getInStock = (asset) =>
+    Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
+
+  const getExpiryBadge = (DOE) => {
+    if (!DOE) return null;
+    const today = new Date();
+    const expiry = new Date(DOE);
+    const diffDays = Math.ceil(
+      (expiry.setHours(0, 0, 0, 0) -
+        today.setHours(0, 0, 0, 0)) /
+        86400000
+    );
+
+    if (diffDays < 0)
+      return <span className="badge badge-renew">Expired</span>;
+    if (diffDays <= 3)
+      return <span className="badge badge-red">{diffDays} days</span>;
+    if (diffDays <= 14)
+      return <span className="badge badge-yellow">{diffDays} days</span>;
+
+    return <span className="badge badge-green">{diffDays} days</span>;
+  };
+
+  /* ================= DELETE ================= */
   const handleDelete = async (id) => {
     const res = await Swal.fire({
       title: "Delete software asset?",
@@ -82,141 +107,339 @@ const SoftwareAssetList = () => {
     if (!res.isConfirmed) return;
 
     await deleteSoftwareAsset(id);
-    setSoftwareAssets((p) => p.filter((a) => a._id !== id));
+    setAssets((p) => p.filter((a) => a._id !== id));
     Swal.fire("Deleted", "Software asset removed", "success");
   };
 
-  /* ===================== EDIT ===================== */
-  const openEditModal = (asset) => {
+  /* ================= EDIT ================= */
+  const startEdit = (asset) => {
     setEditingAsset(asset);
     setEditForm({
       assetName: asset.assetName || "",
+      assetCode: asset.assetCode || "",
+      assetSpecification: asset.assetSpecification || "",
       assetCategory: asset.assetCategory || "",
+      associateUnit: asset.associateUnit || "",
+      locationName: asset.locationName || "",
       assetStatus: asset.assetStatus || "",
-      version: asset.version || "",
-      publisher: asset.publisher || "",
+      purchaseFrom: asset.purchaseFrom || "",
+      DOP: asset.DOP || "",
+      DOE: asset.DOE || "",
+      assetLifetime: asset.assetLifetime || "",
+      assetCost: asset.assetCost || "",
+      assetQuantity: asset.assetQuantity || 1,
+      inUse: asset.inUse || 0,
+
       licenseKey: asset.licenseKey || "",
       licenseType: asset.licenseType || "",
       licenseModel: asset.licenseModel || "",
       licenseMetric: asset.licenseMetric || "",
       licenseUse: asset.licenseUse || "",
-      licenseStartDate: asset.licenseStartDate?.split("T")[0] || "",
-      licenseExpiry: asset.licenseExpiry?.split("T")[0] || "",
-      purchaseDate: asset.purchaseDate?.split("T")[0] || "",
-      costPerUnit: asset.costPerUnit || "",
-      totalCost: asset.totalCost || "",
-      assignedUsers: asset.assignedUsers?.join(", ") || "",
-      linkedDevices: asset.linkedDevices?.join(", ") || "",
-      supportVendor: asset.supportVendor || "",
     });
   };
+
+  const handleEditChange = (e) =>
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
       ...editForm,
-      assignedUsers: editForm.assignedUsers.split(",").map((x) => x.trim()).filter(Boolean),
-      linkedDevices: editForm.linkedDevices.split(",").map((x) => x.trim()).filter(Boolean),
+      assetCost: Number(editForm.assetCost),
+      assetQuantity: Number(editForm.assetQuantity),
+      inUse: Number(editForm.inUse),
     };
 
-    const res = await updateSoftwareAsset(editingAsset._id, payload);
-    const updated = res?.data || res;
+    const updated = await updateSoftwareAsset(editingAsset._id, payload);
+    const newAsset = updated?.data ?? updated;
 
-    setSoftwareAssets((p) => p.map((a) => (a._id === updated._id ? updated : a)));
+    setAssets((p) =>
+      p.map((a) => (a._id === newAsset._id ? newAsset : a))
+    );
+
     setEditingAsset(null);
-
     Swal.fire("Updated", "Software asset updated", "success");
   };
 
-  /* ===================== PAGINATION ===================== */
-  const indexOfLast = currentPage * itemsPerPage;
-  const currentItems = softwareAssets.slice(indexOfLast - itemsPerPage, indexOfLast);
-  const totalPages = Math.max(1, Math.ceil(softwareAssets.length / itemsPerPage));
+  /* ================= PAGINATION ================= */
+  const indexOfLast = currentPage * assetsPerPage;
+  const currentAssets = assets.slice(indexOfLast - assetsPerPage, indexOfLast);
+  const totalPages = Math.ceil(assets.length / assetsPerPage);
 
-  /* ===================== RENDER ===================== */
+  if (loading) return <Loader type="inventory" apiDone={apiDone} />;
+
   return (
     <div className="inventory-container">
-      {loading ? (
-        <Loader type="inventory" apiDone={apiDone} />
-      ) : (
-        <div className="inventory-grid">
-          {currentItems.map((asset, i) => (
-            <motion.div key={asset._id} className="inventory-card" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <div className="inventory-grid">
+        <AnimatePresence>
+          {currentAssets.map((asset) => (
+            <motion.div
+              key={asset._id}
+              className="inventory-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
               <div className="card-header">
                 <h3>{asset.assetName}</h3>
-                {getExpiryBadge(asset.licenseExpiry)}
+                {getExpiryBadge(asset.DOE)}
               </div>
 
               <div className="card-info2">
-                <p><strong>Category:</strong> {getCategoryName(asset.assetCategory)}</p>
-                <p><strong>Status:</strong> {getStatusName(asset.assetStatus)}</p>
-                <p><strong>License:</strong> {asset.licenseType || "N/A"}</p>
+                <p><strong>Version:</strong> {asset.assetSpecification}</p>
+                <p><strong>Cost:</strong> ₹{asset.assetCost}</p>
+                <p><strong>Quantity:</strong> {asset.assetQuantity}</p>
+                <p><strong>In Use:</strong> {asset.inUse}</p>
+                <p>
+                  <strong>Stock:</strong>{" "}
+                  {getInStock(asset) > 0 ? (
+                    <span className="stock-green">{getInStock(asset)} Available</span>
+                  ) : (
+                    <span className="stock-red">Out of Stock</span>
+                  )}
+                </p>
               </div>
 
               <div className="card-actions">
-                <button onClick={() => setSelectedAsset(asset)}><FontAwesomeIcon icon={faEye} /> View</button>
-                <button onClick={() => openEditModal(asset)}><FontAwesomeIcon icon={faEdit} /> Edit</button>
-                <button onClick={() => handleDelete(asset._id)}><FontAwesomeIcon icon={faTrash} /> Delete</button>
+                <button className="btn-view" onClick={() => setSelectedAsset(asset)}>View</button>
+                <button className="btn-edit" onClick={() => startEdit(asset)}>Edit</button>
+                <button className="btn-delete" onClick={() => handleDelete(asset._id)}>Delete</button>
               </div>
             </motion.div>
           ))}
+        </AnimatePresence>
+      </div>
+
+      {/* VIEW & EDIT MODALS ARE NOW IDENTICAL TO HARDWARE */}
+      {/* ================= SOFTWARE VIEW MODAL ================= */}
+<AnimatePresence>
+  {selectedAsset && (
+    <motion.div
+      className="asset-view-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setSelectedAsset(null)}
+    >
+      <motion.div
+        className="asset-view-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="asset-view-header">
+          <h3 className="asset-view-title">
+            {selectedAsset.assetName}
+          </h3>
+
+          <div className="asset-view-badges">
+            <span className="asset-view-badge category">
+              {getName(categories, selectedAsset.assetCategory)}
+            </span>
+            <span className="asset-view-badge status">
+              {getName(statuses, selectedAsset.assetStatus)}
+            </span>
+          </div>
         </div>
-      )}
 
-      {/* ===================== VIEW MODAL ===================== */}
-      <AnimatePresence>
-        {selectedAsset && (
-          <motion.div className="swv-overlay" onClick={() => setSelectedAsset(null)}>
-            <motion.div className="swv-modal" onClick={(e) => e.stopPropagation()}>
-              <button className="swv-close-btn" onClick={() => setSelectedAsset(null)}>✕</button>
+        <h4 className="asset-view-section-title">Software Details</h4>
 
-              <div className="swv-info-grid">
-                <p><span>Name:</span> {selectedAsset.assetName}</p>
-                <p><span>Version:</span> {selectedAsset.version || "N/A"}</p>
-                <p><span>Publisher:</span> {selectedAsset.publisher || "N/A"}</p>
-                <p><span>Category:</span> {getCategoryName(selectedAsset.assetCategory)}</p>
-                <p><span>Status:</span> {getStatusName(selectedAsset.assetStatus)}</p>
-                <p><span>License Key:</span> {selectedAsset.licenseKey || "N/A"}</p>
-                <p><span>License Type:</span> {selectedAsset.licenseType || "N/A"}</p>
-                <p><span>Start Date:</span> {selectedAsset.licenseStartDate?.split("T")[0] || "N/A"}</p>
-                <p><span>Expiry:</span> {selectedAsset.licenseExpiry?.split("T")[0] || "N/A"}</p>
-                <p><span>Cost:</span> ₹{selectedAsset.totalCost || "0"}</p>
-                <p><span>Users:</span> {selectedAsset.assignedUsers?.join(", ") || "None"}</p>
-                <p><span>Devices:</span> {selectedAsset.linkedDevices?.join(", ") || "None"}</p>
-                <p><span>Support Vendor:</span> {selectedAsset.supportVendor || "N/A"}</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <div className="asset-view-grid">
+          <div>
+            <label>Asset Code</label>
+            <p>{selectedAsset.assetCode}</p>
+          </div>
 
-      {/* ===================== EDIT MODAL ===================== */}
-      <AnimatePresence>
-        {editingAsset && (
-          <motion.div className="sw-edit-overlay" onClick={() => setEditingAsset(null)}>
-            <motion.form className="sw-edit-modal" onClick={(e) => e.stopPropagation()} onSubmit={handleEditSubmit}>
-              <h2>Edit Software Asset</h2>
+          <div>
+            <label>Version</label>
+            <p>{selectedAsset.assetSpecification}</p>
+          </div>
 
-              <input value={editForm.assetName} onChange={(e) => setEditForm({ ...editForm, assetName: e.target.value })} placeholder="Software Name" />
-              <input value={editForm.version} onChange={(e) => setEditForm({ ...editForm, version: e.target.value })} placeholder="Version" />
-              <input value={editForm.publisher} onChange={(e) => setEditForm({ ...editForm, publisher: e.target.value })} placeholder="Publisher" />
-              <input value={editForm.licenseKey} onChange={(e) => setEditForm({ ...editForm, licenseKey: e.target.value })} placeholder="License Key" />
+          <div>
+            <label>Publisher</label>
+            <p>{selectedAsset.purchaseFrom}</p>
+          </div>
 
-              <input type="date" value={editForm.licenseStartDate} onChange={(e) => setEditForm({ ...editForm, licenseStartDate: e.target.value })} />
-              <input type="date" value={editForm.licenseExpiry} onChange={(e) => setEditForm({ ...editForm, licenseExpiry: e.target.value })} />
+          <div>
+            <label>Installed Location</label>
+            <p>{getName(locations, selectedAsset.locationName)}</p>
+          </div>
 
-              <input value={editForm.assignedUsers} onChange={(e) => setEditForm({ ...editForm, assignedUsers: e.target.value })} placeholder="Assigned Users" />
-              <input value={editForm.linkedDevices} onChange={(e) => setEditForm({ ...editForm, linkedDevices: e.target.value })} placeholder="Linked Devices" />
+          <div>
+            <label>Unit</label>
+            <p>{getName(units, selectedAsset.associateUnit)}</p>
+          </div>
 
-              <div className="sw-edit-actions">
-                <button type="submit">Save</button>
-                <button type="button" onClick={() => setEditingAsset(null)}>Cancel</button>
-              </div>
-            </motion.form>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <div>
+            <label>Purchase Date</label>
+            <p>{selectedAsset.DOP || "—"}</p>
+          </div>
+
+          <div>
+            <label>Expiry Date</label>
+            <p>{selectedAsset.DOE || "—"}</p>
+          </div>
+
+          <div>
+            <label>License Key</label>
+            <p>{selectedAsset.licenseKey || "—"}</p>
+          </div>
+
+          <div>
+            <label>License Type</label>
+            <p>{selectedAsset.licenseType || "—"}</p>
+          </div>
+
+          <div>
+            <label>License Model</label>
+            <p>{selectedAsset.licenseModel || "—"}</p>
+          </div>
+
+          <div>
+            <label>License Metric</label>
+            <p>{selectedAsset.licenseMetric || "—"}</p>
+          </div>
+
+          <div>
+            <label>License Use</label>
+            <p>{selectedAsset.licenseUse || "—"}</p>
+          </div>
+
+          <div>
+            <label>Asset Cost</label>
+            <p>₹{selectedAsset.assetCost}</p>
+          </div>
+
+          <div>
+            <label>Quantity</label>
+            <p>{selectedAsset.assetQuantity}</p>
+          </div>
+
+          <div>
+            <label>In Use</label>
+            <p>{selectedAsset.inUse}</p>
+          </div>
+
+          <div>
+            <label>In Stock</label>
+            <p>{getInStock(selectedAsset)}</p>
+          </div>
+
+          <div>
+            <label>Lifetime</label>
+            <p>{selectedAsset.assetLifetime || "—"}</p>
+          </div>
+        </div>
+
+        <button
+          className="asset-view-close-btn"
+          onClick={() => setSelectedAsset(null)}
+        >
+          Close
+        </button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
+      {/* (Intentionally omitted here to keep answer readable) */}
+      {/* ================= SOFTWARE EDIT MODAL ================= */}
+<AnimatePresence>
+  {editingAsset && (
+    <motion.div
+      className="asset-edit-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditingAsset(null)}
+    >
+      <motion.div
+        className="asset-edit-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="asset-edit-title">
+          Edit Software — {editingAsset.assetName}
+        </h3>
+
+        <form className="asset-edit-grid" onSubmit={handleEditSubmit}>
+          <input
+            name="assetName"
+            placeholder="Software Name"
+            value={editForm.assetName}
+            onChange={handleEditChange}
+          />
+
+          <input
+            name="assetSpecification"
+            placeholder="Version"
+            value={editForm.assetSpecification}
+            onChange={handleEditChange}
+          />
+
+          <input
+            name="purchaseFrom"
+            placeholder="Publisher"
+            value={editForm.purchaseFrom}
+            onChange={handleEditChange}
+          />
+
+          <select
+            name="assetCategory"
+            value={editForm.assetCategory}
+            onChange={handleEditChange}
+          >
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
+          </select>
+
+          <select
+            name="associateUnit"
+            value={editForm.associateUnit}
+            onChange={handleEditChange}
+          >
+            <option value="">Select Unit</option>
+            {units.map((u) => (
+              <option key={u._id} value={u._id}>{u.name}</option>
+            ))}
+          </select>
+
+          <select
+            name="locationName"
+            value={editForm.locationName}
+            onChange={handleEditChange}
+          >
+            <option value="">Select Location</option>
+            {locations.map((l) => (
+              <option key={l._id} value={l._id}>{l.name}</option>
+            ))}
+          </select>
+
+          <select
+            name="assetStatus"
+            value={editForm.assetStatus}
+            onChange={handleEditChange}
+          >
+            <option value="">Select Status</option>
+            {statuses.map((s) => (
+              <option key={s._id} value={s._id}>{s.name}</option>
+            ))}
+          </select>
+
+          <input type="date" name="DOP" value={editForm.DOP} onChange={handleEditChange} />
+          <input type="date" name="DOE" value={editForm.DOE} onChange={handleEditChange} />
+
+          <input name="licenseKey" placeholder="License Key" value={editForm.licenseKey} onChange={handleEditChange} />
+          <input name="licenseType" placeholder="License Type" value={editForm.licenseType} onChange={handleEditChange} />
+          <input name="licenseModel" placeholder="License Model" value={editForm.licenseModel} onChange={handleEditChange} />
+          <input name="licenseMetric" placeholder="License Metric" value={editForm.licenseMetric} onChange={handleEditChange} />
+          <input
+
     </div>
   );
 };
