@@ -26,7 +26,7 @@ departmentSchema.pre("validate", function (next) {
   }
   next();
 });
-locationSchema.index(
+departmentSchema.index(
   { name: 1 },
   {
     unique: true,
