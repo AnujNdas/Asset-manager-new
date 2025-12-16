@@ -46,7 +46,7 @@ const tabs = [
   // Fetch user data (with cache)
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       if (!token) {
         Swal.fire({
           title: "Login Required",
@@ -57,7 +57,7 @@ const tabs = [
         return;
       }
 
-      const cachedUser = sessionStorage.getItem("username");
+      const cachedUser = localStorage.getItem("username");
 
       try {
         const response = await fetch("https://asset-manager-new.onrender.com/api/auth/user", {
@@ -78,7 +78,7 @@ const tabs = [
   }, [navigate]);
 
   // Route guard (if not logged in, redirect immediately)
-  if (!sessionStorage.getItem("token")) {
+  if (!localStorage.getItem("token")) {
     return <Navigate to="/user/login" replace />;
   }
 
