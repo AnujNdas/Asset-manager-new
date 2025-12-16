@@ -229,10 +229,22 @@ const Unit = () => {
             >
               <div className="category-number">{startIndex + idx + 1}</div>
 
-              <div className="category-name">
-                {unit.name}
-                {!unit.isActive && <span className="inactive-badge">Inactive</span>}
-              </div>
+                           <div className="category-name">
+  {cat.name}
+</div>
+
+  <span
+    className={`status-badge ${
+      cat.isActive ? "badge-active" : "badge-inactive"
+    }`}
+    title={
+      cat.isActive
+        ? "This category is active"
+        : "This category is inactive"
+    }
+  >
+    {cat.isActive ? "Active" : "Inactive"}
+  </span>
 
               <div className="category-actions">
                 {unit.isActive ? (
