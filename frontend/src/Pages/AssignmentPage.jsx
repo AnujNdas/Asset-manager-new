@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../Page_styles/AssignmentPage.css";
 import Pagination from "../Components/Pagination";
+import Swal from "sweetalert2";
 import {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
@@ -34,7 +35,7 @@ const AssignmentPage = () => {
       const res = await getInStockCategorySummary();
       setCategories(res.data || []);
     } catch (err) {
-      console.error("Failed to fetch categories", err);
+      Swal.fire("Error", "Failed to load categories", "error");
     }
   };
 
@@ -47,8 +48,8 @@ const AssignmentPage = () => {
         ? res.data
         : [];
       setDepartments(list);
-    } catch (err) {
-      console.error("Failed to load departments", err);
+    } catch {
+      Swal.fire("Error", "Failed to load departments", "error");
       setDepartments([]);
     }
   };
@@ -68,8 +69,7 @@ const AssignmentPage = () => {
 
   const paginatedCategories = useMemo(() => {
     const start = (currentPage - 1) * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
-    return filteredCategories.slice(start, end);
+    return filteredCategories.slice(start, start + PAGE_SIZE);
   }, [filteredCategories, currentPage]);
 
   /* =========================
@@ -83,8 +83,8 @@ const AssignmentPage = () => {
     try {
       const res = await getInStockAssetsByCategory(categoryObj.category);
       setAssets(res.data || []);
-    } catch (err) {
-      console.error("Failed to load assets", err);
+    } catch {
+      Swal.fire("Error", "Failed to load assets", "error");
     }
   };
 
@@ -103,7 +103,11 @@ const AssignmentPage = () => {
   ========================== */
   const submitAssignments = async () => {
     if (!selectedDepartment) {
-      alert("Please select a department");
+      Swal.fire({
+        icon: "warning",
+        title: "Department Required",
+        text: "Please select a department before assigning assets.",
+      });
       return;
     }
 
@@ -125,18 +129,32 @@ const AssignmentPage = () => {
     });
 
     if (!payload.length) {
-      alert("No assets selected");
+      Swal.fire({
+        icon: "info",
+        title: "No Assets Selected",
+        text: "Please enter at least one quantity to assign.",
+      });
       return;
     }
 
     try {
       setLoading(true);
       await assignAssetsFromStock({ assignments: payload });
-      alert("Assets assigned successfully");
+
+      Swal.fire({
+        icon: "success",
+        title: "Assignment Successful",
+        text: "Assets have been assigned successfully.",
+      });
+
       closeModal();
       fetchCategorySummary();
     } catch {
-      alert("Assignment failed");
+      Swal.fire({
+        icon: "error",
+        title: "Assignment Failed",
+        text: "Something went wrong while assigning assets.",
+      });
     } finally {
       setLoading(false);
     }
@@ -152,7 +170,6 @@ const AssignmentPage = () => {
         <p>Assign in-stock assets to departments</p>
       </div>
 
-      {/* CATEGORY SEARCH */}
       <div className="category-search">
         <input
           type="text"
@@ -165,7 +182,6 @@ const AssignmentPage = () => {
         />
       </div>
 
-      {/* CATEGORY GRID */}
       <div className="stock-grid">
         {paginatedCategories.map((cat) => (
           <div
@@ -190,7 +206,6 @@ const AssignmentPage = () => {
         ))}
       </div>
 
-      {/* PAGINATION (CATEGORIES ONLY) */}
       {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
@@ -199,7 +214,6 @@ const AssignmentPage = () => {
         />
       )}
 
-      {/* MODAL */}
       {selectedCategory && (
         <div className="modal-overlay">
           <div className="modal">
