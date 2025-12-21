@@ -76,7 +76,7 @@
 .fourth-container{
   width : 86%;
   height : 40px;
-  position : fixed;
+  position : absolute;
   left : 14%;
   bottom : 0;
 }
