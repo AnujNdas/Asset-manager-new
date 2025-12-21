@@ -1,4 +1,4 @@
-  import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../Page_styles/AssignmentPage.css";
 import Pagination from "../Components/Pagination";
 import {
@@ -11,6 +11,7 @@ import {
 const PAGE_SIZE = 8;
 
 const AssignmentPage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [assets, setAssets] = useState([]);
@@ -18,12 +19,11 @@ const AssignmentPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [assignments, setAssignments] = useState({});
   const [loading, setLoading] = useState(false);
-
-  // 🔍 CATEGORY SEARCH
   const [categorySearch, setCategorySearch] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
-
+  /* =========================
+     INITIAL LOAD
+  ========================== */
   useEffect(() => {
     fetchCategorySummary();
     fetchDepartments();
@@ -34,40 +34,57 @@ const AssignmentPage = () => {
       const res = await getInStockCategorySummary();
       setCategories(res.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to fetch categories", err);
     }
   };
-const fetchDepartments = async () => {
-  try {
-    const res = await getDepartments();
 
-    // works for BOTH wrapped and unwrapped responses
-    const list = Array.isArray(res)
-      ? res
-      : Array.isArray(res?.data)
-      ? res.data
-      : [];
+  const fetchDepartments = async () => {
+    try {
+      const res = await getDepartments();
+      const list = Array.isArray(res)
+        ? res
+        : Array.isArray(res?.data)
+        ? res.data
+        : [];
+      setDepartments(list);
+    } catch (err) {
+      console.error("Failed to load departments", err);
+      setDepartments([]);
+    }
+  };
 
-    setDepartments(list);
-  } catch (err) {
-    console.error("Failed to load departments", err);
-    setDepartments([]);
-  }
-};
+  /* =========================
+     CATEGORY SEARCH + PAGINATION
+  ========================== */
+  const filteredCategories = useMemo(() => {
+    return categories.filter((cat) =>
+      (cat.categoryName || cat.category)
+        .toLowerCase()
+        .includes(categorySearch.toLowerCase())
+    );
+  }, [categories, categorySearch]);
 
+  const totalPages = Math.ceil(filteredCategories.length / PAGE_SIZE);
 
+  const paginatedCategories = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    return filteredCategories.slice(start, end);
+  }, [filteredCategories, currentPage]);
 
+  /* =========================
+     MODAL HANDLERS
+  ========================== */
   const openCategory = async (categoryObj) => {
     setSelectedCategory(categoryObj);
     setAssignments({});
     setSelectedDepartment("");
-    setCurrentPage(1);
 
     try {
       const res = await getInStockAssetsByCategory(categoryObj.category);
       setAssets(res.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to load assets", err);
     }
   };
 
@@ -81,22 +98,9 @@ const fetchDepartments = async () => {
     setAssignments((prev) => ({ ...prev, [assetId]: qty }));
   };
 
-  // ✅ FILTER CATEGORIES
-  const filteredCategories = useMemo(() => {
-    return categories.filter((cat) =>
-      (cat.categoryName || cat.category)
-        .toLowerCase()
-        .includes(categorySearch.toLowerCase())
-    );
-  }, [categories, categorySearch]);
-
-  const totalPages = Math.ceil(assets.length / PAGE_SIZE);
-
-  const paginatedAssets = useMemo(() => {
-    const start = (currentPage - 1) * PAGE_SIZE;
-    return assets.slice(start, start + PAGE_SIZE);
-  }, [assets, currentPage]);
-
+  /* =========================
+     SUBMIT ASSIGNMENT
+  ========================== */
   const submitAssignments = async () => {
     if (!selectedDepartment) {
       alert("Please select a department");
@@ -109,19 +113,18 @@ const fetchDepartments = async () => {
       const qty = assignments[asset._id];
       if (qty && qty > 0) {
         payload.push({
-  assetId: asset._id,
-  assetType: asset.assetType,
-  assetModel: asset.assetType === "software" ? "SoftwareAsset" : "Asset",
-  assignedToType: "Department",
-  assignedTo: selectedDepartment,
-  quantity: qty,
-});
-
-
+          assetId: asset._id,
+          assetType: asset.assetType,
+          assetModel:
+            asset.assetType === "software" ? "SoftwareAsset" : "Asset",
+          assignedToType: "Department",
+          assignedTo: selectedDepartment,
+          quantity: qty,
+        });
       }
     });
 
-    if (payload.length === 0) {
+    if (!payload.length) {
       alert("No assets selected");
       return;
     }
@@ -139,6 +142,9 @@ const fetchDepartments = async () => {
     }
   };
 
+  /* =========================
+     RENDER
+  ========================== */
   return (
     <div className="assignment-page">
       <div className="page-header">
@@ -146,31 +152,33 @@ const fetchDepartments = async () => {
         <p>Assign in-stock assets to departments</p>
       </div>
 
-      {/* 🔍 CATEGORY SEARCH */}
+      {/* CATEGORY SEARCH */}
       <div className="category-search">
         <input
           type="text"
           placeholder="Search category..."
           value={categorySearch}
-          onChange={(e) => setCategorySearch(e.target.value)}
+          onChange={(e) => {
+            setCategorySearch(e.target.value);
+            setCurrentPage(1);
+          }}
         />
       </div>
 
       {/* CATEGORY GRID */}
       <div className="stock-grid">
-        {filteredCategories.map((cat) => (
+        {paginatedCategories.map((cat) => (
           <div
             key={cat.category}
             className="asset-card"
             onClick={() => openCategory(cat)}
           >
-           <h3>
-  {cat.categoryName || cat.category}
-  {!cat.isActive && (
-    <span className="inactive-tag">Deactivated</span>
-  )}
-</h3>
-
+            <h3>
+              {cat.categoryName || cat.category}
+              {!cat.isActive && (
+                <span className="inactive-tag">Deactivated</span>
+              )}
+            </h3>
 
             <span>{cat.totalInStock} in stock</span>
 
@@ -181,6 +189,15 @@ const fetchDepartments = async () => {
           </div>
         ))}
       </div>
+
+      {/* PAGINATION (CATEGORIES ONLY) */}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
 
       {/* MODAL */}
       {selectedCategory && (
@@ -219,7 +236,7 @@ const fetchDepartments = async () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedAssets.map((asset) => (
+                  {assets.map((asset) => (
                     <tr key={asset._id}>
                       <td>{asset.name || asset.assetName}</td>
                       <td>{asset.assetType}</td>
@@ -243,12 +260,6 @@ const fetchDepartments = async () => {
                   ))}
                 </tbody>
               </table>
-
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
             </div>
 
             <div className="modal-footer">
