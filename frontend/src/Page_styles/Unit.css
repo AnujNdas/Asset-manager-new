@@ -63,44 +63,123 @@
   flex-shrink: 0;
 }
 
+/* ===== Form Container ===== */
 .category_form {
   display: flex;
   align-items: center;
+  gap: 10px;
   background: #ffffff;
-  padding: 4px 8px;
-  border-radius: 30px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-  transition: box-shadow 0.2s ease;
-  flex-shrink: 0;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  max-width: 420px;
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .category_form:focus-within {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-.category_input {
-  border: none;
-  outline: none;
-  padding: 8px 10px;
-  font-size: 15px;
-  width: 200px;
+/* ===== Mode Selector ===== */
+.mode-selector {
+  position: relative;
 }
 
-.category_add_btn {
-  background: #2356ed;
-  border: none;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.mode-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #374151;
+  font-size: 13px;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.category_add_btn:hover {
-  background: #1d47c7;
+.mode-btn:hover {
+  background: #f3f4f6;
+}
+
+.mode-btn svg {
+  font-size: 13px;
+}
+
+/* ===== Dropdown ===== */
+.mode-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 140px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+  overflow: hidden;
+}
+
+.mode-dropdown div {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mode-dropdown div:hover {
+  background: #f3f4f6;
+}
+
+/* ===== Input Field ===== */
+.category_search_input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #111827;
+  background: transparent;
+}
+
+.category_search_input::placeholder {
+  color: #9ca3af;
+}
+
+/* ===== Mobile Optimizations ===== */
+@media (max-width: 640px) {
+  .category_form {
+    max-width: 100%;
+    padding: 6px;
+  }
+
+  .mode-btn {
+    padding: 8px;
+  }
+
+  .category_search_input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .mode-dropdown {
+    width: 100%;
+  }
+}
+
+/* ===== Accessibility ===== */
+.mode-btn:focus-visible,
+.mode-dropdown div:focus-visible,
+.category_search_input:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 /* 🌿 Pagination */
