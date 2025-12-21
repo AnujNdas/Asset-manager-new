@@ -134,6 +134,10 @@
     left: 70px;
     width: calc(100% - 70px);
   }
+  .fourth-container {
+    left : 70px;
+    width: calc(100% - 60px);
+  }
 }
 
 /* Mobile View */
