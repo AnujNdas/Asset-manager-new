@@ -184,7 +184,7 @@ const AssignmentPage = () => {
 
             <div className="counts">
               <p>Hardware: {cat.hardwareCount}</p>
-              <p>Virtual: {cat.softwareCount}</p>
+              <p>Software: {cat.softwareCount}</p>
             </div>
           </div>
         ))}
