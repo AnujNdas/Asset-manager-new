@@ -1,164 +1,301 @@
+/* ================================
+   PAGE LAYOUT
+================================ */
 .assignment-page {
-  padding: 24px;
-  background: #f5f7fb;
+  padding: 28px;
+  background: #f8fafc;
   min-height: 100vh;
 }
 
-/* HEADER */
+/* ================================
+   HEADER
+================================ */
+.page-header {
+  margin-bottom: 20px;
+}
+
 .page-header h1 {
-  font-size: 24px;
-  margin-bottom: 4px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #0f172a;
 }
 
 .page-header p {
-  color: #666;
   font-size: 14px;
+  color: #64748b;
+  margin-top: 4px;
 }
 
-/* CATEGORY GRID */
+/* ================================
+   SEARCH
+================================ */
+.category-search {
+  margin-bottom: 22px;
+  max-width: 320px;
+}
+
+.category-search input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.category-search input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* ================================
+   CATEGORY GRID
+================================ */
 .stock-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
-  margin-top: 20px;
 }
 
+/* ================================
+   CATEGORY CARD
+================================ */
 .asset-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 18px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
   cursor: pointer;
-  transition: box-shadow 0.2s ease;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .asset-card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
 .asset-card h3 {
-  font-size: 18px;
-  margin-bottom: 4px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .asset-card span {
+  display: block;
+  margin-top: 6px;
   font-size: 13px;
-  color: #777;
+  color: #64748b;
 }
 
+/* ================================
+   CARD COUNTS
+================================ */
 .counts {
-  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
   font-size: 13px;
-  color: #555;
+  color: #334155;
 }
 
-/* MODAL */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+.counts p {
+  background: #f1f5f9;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+/* ================================
+   INACTIVE TAG
+================================ */
+.inactive-tag {
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* ================================
+   PAGINATION
+================================ */
+.pagination {
+  margin-top: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 6px;
+}
+
+.pagination button {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination .dots {
+  padding: 0 6px;
+  color: #64748b;
+}
+/* ================================
+   MODAL OVERLAY (FIXED CENTER)
+================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
   z-index: 1000;
 }
 
+/* ================================
+   MODAL CONTAINER (TRUE CENTER)
+================================ */
 .modal {
-  background: #fff;
-  width: 90%;
-  max-width: 900px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  width: 95%;
+  max-width: 960px;
   max-height: 90vh;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.35);
 }
 
+/* ================================
+   MODAL HEADER
+================================ */
 .modal-header {
-  padding: 16px;
-  border-bottom: 1px solid #e5e5e5;
+  padding: 18px 22px;
+  border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
 .modal-header button {
-  border: none;
   background: none;
+  border: none;
   font-size: 20px;
   cursor: pointer;
+  color: #64748b;
 }
 
+/* ================================
+   MODAL CONTROLS
+================================ */
 .modal-controls {
-  display: flex;
-  gap: 12px;
-  padding: 16px;
+  padding: 16px 22px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.modal-controls input,
 .modal-controls select {
-  padding: 8px;
-  flex: 1;
+  width: 280px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
 }
 
-/* BODY */
+/* ================================
+   MODAL BODY
+================================ */
 .modal-body {
-  padding: 0 16px 16px;
+  padding: 0 22px 20px;
   overflow-y: auto;
-  flex: 1;
 }
 
-/* TABLE */
+/* ================================
+   TABLE
+================================ */
 .asset-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
 
-.asset-table th,
-.asset-table td {
-  border-bottom: 1px solid #eee;
-  padding: 10px 6px;
+.asset-table thead {
+  background: #f8fafc;
+}
+
+.asset-table th {
   text-align: left;
+  padding: 12px 8px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.asset-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .asset-table input {
   width: 70px;
-  padding: 4px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #cbd5f5;
 }
 
-/* FOOTER */
+/* ================================
+   MODAL FOOTER
+================================ */
 .modal-footer {
-  padding: 16px;
-  border-top: 1px solid #eee;
+  padding: 16px 22px;
+  border-top: 1px solid #e5e7eb;
 }
 
 .assign-btn {
   width: 100%;
   padding: 12px;
+  border-radius: 10px;
   border: none;
   background: #2563eb;
-  color: white;
+  color: #ffffff;
   font-size: 15px;
-  border-radius: 6px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.assign-btn:hover:not(:disabled) {
+  background: #1d4ed8;
 }
 
 .assign-btn:disabled {
   background: #94a3b8;
   cursor: not-allowed;
-}
-.asset-card.inactive {
-  opacity: 0.6;
-  cursor: not-allowed;
-  filter: grayscale(40%);
-}
-
-.inactive-tag {
-  background: #dc3545;
-  color: #fff;
-  font-size: 11px;
-  padding: 2px 6px;
-  margin-left: 8px;
-  border-radius: 4px;
-  vertical-align: middle;
 }
