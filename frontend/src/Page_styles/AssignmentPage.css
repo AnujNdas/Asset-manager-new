@@ -3,8 +3,7 @@
 ================================ */
 .assignment-page {
   padding: 28px;
-  background: #f8fafc;
-  min-height: 100vh;
+  height: 100%;
 }
 
 /* ================================
@@ -88,7 +87,6 @@
   display: block;
   margin-top: 6px;
   font-size: 13px;
-  color: #64748b;
 }
 
 /* ================================
