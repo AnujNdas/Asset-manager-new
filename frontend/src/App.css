@@ -10,6 +10,7 @@
   height: 100dvh;
   width: 100%;
   background : #f1f1f1;
+  overflow : hidden
 }
 /* Font faces */
 @font-face {
@@ -49,7 +50,7 @@
 }
 
 .second-container {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 14%;
   width: 86%;
