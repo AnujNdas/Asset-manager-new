@@ -62,7 +62,7 @@
 .input-group select {
   padding: 10px;
   border: 1.5px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 8px !important;
   outline: none;
   transition: 0.2s;
 }
