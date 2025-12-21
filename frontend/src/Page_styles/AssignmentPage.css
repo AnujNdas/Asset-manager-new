@@ -297,3 +297,154 @@
   background: #94a3b8;
   cursor: not-allowed;
 }
+/* ============================================
+   SAAS-GRADE RESPONSIVE SYSTEM
+============================================ */
+
+/* ---------- Fluid page container ---------- */
+.assignment-page {
+  max-width: clamp(100%, 92vw, 1480px);
+  margin-inline: auto;
+}
+
+/* ---------- Adaptive card grid ---------- */
+.stock-grid {
+  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 26vw, 300px), 1fr));
+}
+
+/* ---------- Pagination stability ---------- */
+.pagination {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ============================================
+   MODAL — DESKTOP DIALOG (default)
+============================================ */
+.modal {
+  width: min(92vw, 960px);
+  max-height: min(90vh, 860px);
+  margin: auto;
+}
+
+/* ============================================
+   TABLET (≤ 1024px)
+============================================ */
+@media (max-width: 1024px) {
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .modal {
+    width: min(94vw, 900px);
+  }
+
+  .modal-controls select {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   MOBILE — SHEET STYLE (≤ 768px)
+============================================ */
+@media (max-width: 768px) {
+
+  /* Layout breathing room */
+  .assignment-page {
+    padding: 20px 16px 80px;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  /* Cards become touch-optimized */
+  .asset-card {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .counts p {
+    padding: 8px 12px;
+  }
+
+  /* ---------- Modal becomes bottom sheet ---------- */
+  .modal-overlay {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .modal {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+
+    width: 100%;
+    height: 92vh;
+    max-height: 92vh;
+
+    border-radius: 20px 20px 0 0;
+    animation: sheetUp 220ms cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes sheetUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* Sticky header/footer like real SaaS */
+  .modal-header,
+  .modal-footer {
+    position: sticky;
+    z-index: 10;
+    background: #ffffff;
+  }
+
+  .modal-header {
+    top: 0;
+  }
+
+  .modal-footer {
+    bottom: 0;
+    box-shadow: 0 -6px 14px rgba(15,23,42,0.06);
+  }
+
+  /* Table becomes scroll container */
+  .modal-body {
+    padding-bottom: 90px;
+    overflow-x: auto;
+  }
+
+  .asset-table {
+    min-width: 640px;
+  }
+}
+
+/* ============================================
+   SMALL MOBILE (≤ 420px)
+============================================ */
+@media (max-width: 420px) {
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .asset-card h3 {
+    font-size: 15px;
+  }
+
+  .pagination button {
+    min-width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .assign-btn {
+    height: 48px;
+    font-size: 15px;
+  }
+}
