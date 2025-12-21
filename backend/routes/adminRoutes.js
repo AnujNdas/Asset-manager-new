@@ -31,22 +31,27 @@ router.get("/stats", authenticateToken(["super-admin", "admin"]), async (req, re
     const hardwareValuation = hardwareValuationAgg[0]?.sum || 0;
 
     // 💰 SOFTWARE VALUATION → USE costPerUnit × totalLicenses
-    const softwareValuationAgg = await SoftwareAsset.aggregate([
-      {
-        $project: {
-          total: {
-            $cond: {
-              if: { $gt: ["$costPerUnit", 0] },
-              then: { $multiply: ["$costPerUnit", "$totalLicenses"] },
-              else: "$totalCost"
-            }
-          }
-        }
-      },
-      { $group: { _id: null, sum: { $sum: "$total" } } }
-    ]);
+const softwareValuationAgg = await SoftwareAsset.aggregate([
+  {
+    $project: {
+      total: {
+        $multiply: [
+          { $ifNull: ["$assetCost", 0] },
+          { $ifNull: ["$assetQuantity", 0] }
+        ]
+      }
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      sum: { $sum: "$total" }
+    }
+  }
+]);
 
-    const softwareValuation = softwareValuationAgg[0]?.sum || 0;
+const softwareValuation = softwareValuationAgg[0]?.sum || 0;
+
 
     const totalValuation = hardwareValuation + softwareValuation;
 
@@ -262,29 +267,30 @@ router.get("/valuation-trend", authenticateToken(["super-admin", "admin"]), asyn
     ]);
 
     // SOFTWARE AGGREGATION
-    const softwareValuation = await SoftwareAsset.aggregate([
-      {
-        $addFields: {
-          totalCost: {
-            $cond: {
-              if: { $gt: ["$totalCost", 0] },
-              then: "$totalCost",
-              else: { $multiply: ["$costPerUnit", "$totalLicenses"] }
-            }
-          }
-        }
-      },
-      {
-        $group: {
-          _id: {
-            year: { $year: "$createdAt" },
-            month: { $month: "$createdAt" }
-          },
-          softwareValuation: { $sum: "$totalCost" },
-          softwareCount: { $sum: 1 }
-        }
+const softwareValuation = await SoftwareAsset.aggregate([
+  {
+    $addFields: {
+      totalCost: {
+        $multiply: [
+          { $ifNull: ["$assetCost", 0] },
+          { $ifNull: ["$assetQuantity", 0] }
+        ]
       }
-    ]);
+    }
+  },
+  {
+    $group: {
+      _id: {
+        year: { $year: "$createdAt" },
+        month: { $month: "$createdAt" }
+      },
+      softwareValuation: { $sum: "$totalCost" },
+      softwareCount: { $sum: 1 }
+    }
+  },
+  { $sort: { "_id.year": 1, "_id.month": 1 } }
+]);
+
 
     // MERGE HARDWARE + SOFTWARE
     const trendMap = new Map();
