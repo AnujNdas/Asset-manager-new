@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "../Page_styles/AssignmentPage.css";
 import Pagination from "../Components/Pagination";
 import Swal from "sweetalert2";
@@ -12,6 +13,9 @@ import {
 const PAGE_SIZE = 8;
 
 const AssignmentPage = () => {
+  const location = useLocation();
+  const preselect = location.state; // { categoryId, assetId, assetType }
+
   const [currentPage, setCurrentPage] = useState(1);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -34,7 +38,7 @@ const AssignmentPage = () => {
     try {
       const res = await getInStockCategorySummary();
       setCategories(res.data || []);
-    } catch (err) {
+    } catch {
       Swal.fire("Error", "Failed to load categories", "error");
     }
   };
@@ -55,7 +59,22 @@ const AssignmentPage = () => {
   };
 
   /* =========================
-     CATEGORY SEARCH + PAGINATION
+     AUTO-OPEN CATEGORY FROM INVENTORY
+  ========================== */
+  useEffect(() => {
+    if (!preselect?.categoryId || !categories.length) return;
+
+    const cat = categories.find(
+      (c) => String(c.category) === String(preselect.categoryId)
+    );
+
+    if (cat) {
+      openCategory(cat);
+    }
+  }, [categories]);
+
+  /* =========================
+     SEARCH + PAGINATION
   ========================== */
   const filteredCategories = useMemo(() => {
     return categories.filter((cat) =>
@@ -73,7 +92,7 @@ const AssignmentPage = () => {
   }, [filteredCategories, currentPage]);
 
   /* =========================
-     MODAL HANDLERS
+     CATEGORY MODAL
   ========================== */
   const openCategory = async (categoryObj) => {
     setSelectedCategory(categoryObj);
@@ -82,7 +101,18 @@ const AssignmentPage = () => {
 
     try {
       const res = await getInStockAssetsByCategory(categoryObj.category);
-      setAssets(res.data || []);
+      const assetList = res.data || [];
+      setAssets(assetList);
+
+      // ✅ Pre-select asset when coming from Inventory
+      if (preselect?.assetId) {
+        const match = assetList.find(
+          (a) => String(a._id) === String(preselect.assetId)
+        );
+        if (match) {
+          setAssignments({ [match._id]: 1 });
+        }
+      }
     } catch {
       Swal.fire("Error", "Failed to load assets", "error");
     }
@@ -91,6 +121,7 @@ const AssignmentPage = () => {
   const closeModal = () => {
     setSelectedCategory(null);
     setAssets([]);
+    setAssignments({});
   };
 
   const handleQtyChange = (assetId, value, max) => {
@@ -103,37 +134,23 @@ const AssignmentPage = () => {
   ========================== */
   const submitAssignments = async () => {
     if (!selectedDepartment) {
-      Swal.fire({
-        icon: "warning",
-        title: "Department Required",
-        text: "Please select a department before assigning assets.",
-      });
+      Swal.fire("Warning", "Please select a department", "warning");
       return;
     }
 
-    const payload = [];
-
-    assets.forEach((asset) => {
-      const qty = assignments[asset._id];
-      if (qty && qty > 0) {
-        payload.push({
-          assetId: asset._id,
-          assetType: asset.assetType,
-          assetModel:
-            asset.assetType === "software" ? "SoftwareAsset" : "Asset",
-          assignedToType: "Department",
-          assignedTo: selectedDepartment,
-          quantity: qty,
-        });
-      }
-    });
+    const payload = assets
+      .filter((a) => assignments[a._id] > 0)
+      .map((a) => ({
+        assetId: a._id,
+        assetType: a.assetType,
+        assetModel: a.assetType === "software" ? "SoftwareAsset" : "Asset",
+        assignedToType: "Department",
+        assignedTo: selectedDepartment,
+        quantity: assignments[a._id],
+      }));
 
     if (!payload.length) {
-      Swal.fire({
-        icon: "info",
-        title: "No Assets Selected",
-        text: "Please enter at least one quantity to assign.",
-      });
+      Swal.fire("Info", "No assets selected", "info");
       return;
     }
 
@@ -141,20 +158,12 @@ const AssignmentPage = () => {
       setLoading(true);
       await assignAssetsFromStock({ assignments: payload });
 
-      Swal.fire({
-        icon: "success",
-        title: "Assignment Successful",
-        text: "Assets have been assigned successfully.",
-      });
+      Swal.fire("Success", "Assets assigned successfully", "success");
 
       closeModal();
       fetchCategorySummary();
     } catch {
-      Swal.fire({
-        icon: "error",
-        title: "Assignment Failed",
-        text: "Something went wrong while assigning assets.",
-      });
+      Swal.fire("Error", "Assignment failed", "error");
     } finally {
       setLoading(false);
     }
@@ -218,10 +227,7 @@ const AssignmentPage = () => {
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
-              <h2>
-                {selectedCategory.categoryName ||
-                  selectedCategory.category}
-              </h2>
+              <h2>{selectedCategory.categoryName}</h2>
               <button onClick={closeModal}>✕</button>
             </div>
 
@@ -250,28 +256,38 @@ const AssignmentPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {assets.map((asset) => (
-                    <tr key={asset._id}>
-                      <td>{asset.name || asset.assetName}</td>
-                      <td>{asset.assetType}</td>
-                      <td>{asset.available}</td>
-                      <td>
-                        <input
-                          type="number"
-                          min="0"
-                          max={asset.available}
-                          value={assignments[asset._id] || ""}
-                          onChange={(e) =>
-                            handleQtyChange(
-                              asset._id,
-                              e.target.value,
-                              asset.available
-                            )
-                          }
-                        />
-                      </td>
-                    </tr>
-                  ))}
+                  {assets.map((asset) => {
+                    const locked =
+                      preselect?.assetId &&
+                      String(asset._id) !== String(preselect.assetId);
+
+                    return (
+                      <tr
+                        key={asset._id}
+                        className={locked ? "disabled-row" : ""}
+                      >
+                        <td>{asset.name}</td>
+                        <td>{asset.assetType}</td>
+                        <td>{asset.available}</td>
+                        <td>
+                          <input
+                            type="number"
+                            min="0"
+                            max={asset.available}
+                            disabled={locked}
+                            value={assignments[asset._id] || ""}
+                            onChange={(e) =>
+                              handleQtyChange(
+                                asset._id,
+                                e.target.value,
+                                asset.available
+                              )
+                            }
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
