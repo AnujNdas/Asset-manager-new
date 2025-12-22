@@ -1,10 +1,10 @@
 const Asset = require("../models/Asset");
 const LastAssetCode = require("../models/LastAssetCode");
 const Notification = require("../models/Notification");
-
-const unzipper = require("unzipper");
-const path = require("path");
-const fs = require("fs");
+const AssetAssignment = require("../models/AssetAssignment");
+// const unzipper = require("unzipper");
+// const path = require("path");
+// const fs = require("fs");
 
 const Category = require("../models/Category");
 const Unit = require("../models/Unit");
@@ -276,14 +276,61 @@ const deleteAsset = async (req, res) => {
 // =======================================================================
 // GET ALL ASSETS
 // =======================================================================
+
 const getAllAssets = async (req, res) => {
   try {
-    const assets = await Asset.find();
-    return res.status(200).json(assets);
+    // 1️⃣ Fetch all assets
+    const assets = await Asset.find().lean();
+
+    // 2️⃣ Fetch active assignments for hardware assets
+    const assignments = await AssetAssignment.find({
+      assetType: "hardware",
+      status: "active",
+    })
+      .populate("assignedTo", "name")
+      .lean();
+
+    // 3️⃣ Group assignments by assetId
+    const assignmentMap = {};
+
+    for (const assign of assignments) {
+      const assetId = String(assign.assetId);
+
+      if (!assignmentMap[assetId]) {
+        assignmentMap[assetId] = {
+          inUse: 0,
+          assignedDepartments: [],
+        };
+      }
+
+      assignmentMap[assetId].inUse += assign.quantity;
+
+      assignmentMap[assetId].assignedDepartments.push({
+        department: assign.assignedTo,
+        quantity: assign.quantity,
+      });
+    }
+
+    // 4️⃣ Merge assignment data into assets
+    const enrichedAssets = assets.map((asset) => {
+      const assignmentData = assignmentMap[String(asset._id)];
+
+      return {
+        ...asset,
+        inUse: assignmentData?.inUse || 0,
+        assignedDepartments: assignmentData?.assignedDepartments || [],
+      };
+    });
+
+    return res.status(200).json(enrichedAssets);
   } catch (error) {
-    return res.status(500).json({ message: "Error fetching assets", error: error.message });
+    return res.status(500).json({
+      message: "Error fetching assets",
+      error: error.message,
+    });
   }
 };
+
 
 
 
