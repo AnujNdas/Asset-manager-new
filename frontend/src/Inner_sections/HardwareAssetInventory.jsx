@@ -13,7 +13,7 @@ import {
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
-
+import { useNavigate } from "react-router-dom";
 const HardwareAssetList = () => {
   const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -30,6 +30,17 @@ const HardwareAssetList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const assetsPerPage = 6;
 
+  const navigate = useNavigate();
+  
+  const handleAssign = (asset) => {
+    navigate("/assignment", {
+      state: {
+        categoryId: asset.assetCategory,
+        assetId: asset._id,
+        assetType: asset.assetType || "hardware", // safe fallback
+      },
+    });
+  };
   useEffect(() => {
     fetchAll();
   }, []);
@@ -66,6 +77,8 @@ const fetchAll = async () => {
   }
 };
 
+const isOutOfStock = (asset) =>
+  Number(asset.assetQuantity || 0) - Number(asset.inUse || 0) <= 0;
 
   const indexOfLast = currentPage * assetsPerPage;
   const indexOfFirst = indexOfLast - assetsPerPage;
@@ -317,6 +330,15 @@ const getInStock = (asset) =>
                   <button className="btn-view" onClick={() => setSelectedAsset(asset)}>View</button>
                   <button className="btn-edit" onClick={() => startEdit(asset)}>Edit</button>
                   <button className="btn-delete" onClick={() => handleDelete(asset._id)}>Delete</button>
+                  <button
+  className="btn-assign"
+  disabled={isOutOfStock(asset)}
+  onClick={() => handleAssign(asset)}
+  title={isOutOfStock(asset) ? "No stock available to assign" : "Assign asset"}
+>
+  Assign
+</button>
+
                 </div>
               </motion.div>
             );
