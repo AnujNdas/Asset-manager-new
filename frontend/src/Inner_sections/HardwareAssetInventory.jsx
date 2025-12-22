@@ -306,7 +306,7 @@ const getInStock = (asset) =>
 
                 <div className="card-info2">
                   <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
-                  <p><strong>Cost:</strong> {asset.assetCost || "N/A"}</p>
+                  <p style={{color : "red"}}><strong>Cost:</strong> {asset.assetCost || "N/A"}</p>
                   {/* <p><strong>Unit:</strong> {unitName}</p> */}
                   <p><strong>Quantity:</strong> {asset.assetQuantity || "N/A"}</p>
                   <p><strong>Total Value:</strong> {asset.assetCost * asset.assetQuantity || "N/A"}</p>
