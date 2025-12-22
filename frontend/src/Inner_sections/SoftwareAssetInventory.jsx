@@ -51,6 +51,7 @@ const SoftwareAssetList = () => {
       ]);
 
       setAssets(assetsRes?.data ?? assetsRes ?? []);
+      console.log('Fetched software assets:', assetsRes);
       setCategories(catRes ?? []);
       setStatuses(statRes ?? []);
       setUnits(unitRes ?? []);
@@ -161,7 +162,18 @@ const SoftwareAssetList = () => {
     setEditingAsset(null);
     Swal.fire("Updated", "Software asset updated", "success");
   };
+const renderDepartmentBadges = (asset) => {
+  if (!asset.assignedDepartments || asset.assignedDepartments.length === 0) {
+    return <span className="dept-muted">Not Assigned</span>;
+  }
 
+  return asset.assignedDepartments.map((item) => (
+    <span key={item.department._id} className="dept-badge">
+      {item.department.name}
+      {item.quantity ? ` (${item.quantity})` : ""}
+    </span>
+  ));
+};
   /* ================= PAGINATION ================= */
   const indexOfLast = currentPage * assetsPerPage;
   const currentAssets = assets.slice(indexOfLast - assetsPerPage, indexOfLast);
@@ -190,6 +202,10 @@ const SoftwareAssetList = () => {
                 <p><strong>Cost:</strong> ₹{asset.assetCost}</p>
                 <p><strong>Quantity:</strong> {asset.assetQuantity}</p>
                 <p><strong>In Use:</strong> {asset.inUse}</p>
+                <div className="dept-badge-wrapper">
+    {renderDepartmentBadges(asset)}
+
+  </div>
                 <p>
                   <strong>Stock:</strong>{" "}
                   {getInStock(asset) > 0 ? (
@@ -269,6 +285,10 @@ const SoftwareAssetList = () => {
           <div>
             <label>Unit</label>
             <p>{getName(units, selectedAsset.associateUnit)}</p>
+          </div>
+          <div>
+            <label>Category</label>
+            <p>{getName(categories, selectedAsset.assetCategory)}</p>
           </div>
 
           <div>
@@ -376,24 +396,24 @@ const SoftwareAssetList = () => {
 
           <input name="purchaseFrom" value={editForm.purchaseFrom} onChange={handleEditChange} placeholder="Publisher" className="asset-edit-input"/>
 
-          <select name="assetCategory" value={editForm.assetCategory} onChange={handleEditChange}>
+          <select name="assetCategory" className="asset-edit-input" value={editForm.assetCategory} onChange={handleEditChange}>
             <option value="">Select Category</option>
             {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
           </select>
 
-          <select name="associateUnit" value={editForm.associateUnit} onChange={handleEditChange}>
+          <select name="associateUnit" className="asset-edit-input" value={editForm.associateUnit} onChange={handleEditChange}>
             <option value="">Select Unit</option>
             {units.map(u => <option key={u._id} value={u._id}>{u.name}</option>)}
           </select>
 
-          <select name="locationName" value={editForm.locationName} onChange={handleEditChange}>
+          <select name="locationName" className="asset-edit-input" value={editForm.locationName} onChange={handleEditChange}>
             <option value="">Select Location</option>
             {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
           </select>
 
           <input name="locationAddress" value={editForm.locationAddress} onChange={handleEditChange} placeholder="Location Address" className="asset-edit-input"/>
 
-          <select name="assetStatus" value={editForm.assetStatus} onChange={handleEditChange}>
+          <select name="assetStatus" className="asset-edit-input" value={editForm.assetStatus} onChange={handleEditChange}>
             <option value="">Select Status</option>
             {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
           </select>
@@ -414,8 +434,8 @@ const SoftwareAssetList = () => {
           <input name="licenseUse" value={editForm.licenseUse} onChange={handleEditChange} placeholder="License Use" className="asset-edit-input"/>
 
           <div className="asset-edit-actions">
-            <button type="submit" className="btn-save">Save</button>
-            <button type="button" className="btn-cancel" onClick={() => setEditingAsset(null)}>Cancel</button>
+            <button type="submit" className="asset-edit-save-btn">Save</button>
+            <button type="button" className="asset-edit-cancel-btn" onClick={() => setEditingAsset(null)}>Cancel</button>
           </div>
 
         </form>
