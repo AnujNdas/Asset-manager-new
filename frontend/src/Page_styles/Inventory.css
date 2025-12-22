@@ -692,8 +692,9 @@
   /* ========= RESPONSIVE ========= */
   @media (max-width: 480px) {
     .asset-view-modal {
-      padding: 20px;
+      padding: 15px;
       border-radius: 18px;
+      width: 80%;
     }
 
     .asset-view-grid {
@@ -817,11 +818,33 @@
     background: #d1d5db;
     transform: translateY(-2px);
   }
+  .dept-badge-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.dept-badge {
+  background: #ff0000;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #d6e0ff;
+}
+
+.dept-muted {
+  font-size: 12px;
+  color: #999;
+}
 
   /* ========== RESPONSIVE ========== */
   @media (max-width: 500px) {
     .asset-edit-modal {
-      padding: 22px;
+      padding: 15px;
+      width: 80%;
     }
 
     .asset-edit-grid {
