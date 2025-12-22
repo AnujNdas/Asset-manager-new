@@ -46,6 +46,7 @@ const fetchAll = async () => {
       ]);
 
     setAssets(assetsRes?.data ?? assetsRes ?? []);
+    console.log('Fetched assets:', assetsRes);
     setCategories(catsRes ?? []);
     setLocations(locsRes ?? []);
     setUnits(unitsRes ?? []);
@@ -148,6 +149,18 @@ const handleEditSubmit = async (e) => {
   }
 };
 
+const renderDepartmentBadges = (asset) => {
+  if (!asset.assignedDepartments || asset.assignedDepartments.length === 0) {
+    return <span className="dept-muted">Not Assigned</span>;
+  }
+
+  return asset.assignedDepartments.map((item) => (
+    <span key={item.department._id} className="dept-badge">
+      {item.department.name}
+      {item.quantity ? ` (${item.quantity})` : ""}
+    </span>
+  ));
+};
 
 const getInStock = (asset) =>
   Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
@@ -284,21 +297,22 @@ const getInStock = (asset) =>
                   {/* <p><strong>Unit:</strong> {unitName}</p> */}
                   <p><strong>Quantity:</strong> {asset.assetQuantity || "N/A"}</p>
                   <p><strong>Total Value:</strong> {asset.assetCost * asset.assetQuantity || "N/A"}</p>
-                  <p><strong>In Use:</strong> {asset.inUse || "N/A"}</p>
+                  <p><strong>In Use:</strong> {asset.inUse || "0"}</p>
+                  <div className="dept-badge-wrapper">
+                    {renderDepartmentBadges(asset)}
+                  </div>
+
                   <p>
-  <strong>Stock:</strong>{" "}
- {getInStock(asset) > 0 ? (
-  <span className="stock-green">
-    {getInStock(asset)} Available
-  </span>
-) : (
-  <span className="stock-red">Out of Stock</span>
-)}
-
-</p>
-
+                      <strong>Stock:</strong>{" "}
+                    {getInStock(asset) > 0 ? (
+                      <span className="stock-green">
+                        {getInStock(asset)} Available
+                      </span>
+                    ) : (
+                      <span className="stock-red">Out of Stock</span>
+                    )}
+                  </p>
                 </div>
-
                 <div className="card-actions">
                   <button className="btn-view" onClick={() => setSelectedAsset(asset)}>View</button>
                   <button className="btn-edit" onClick={() => startEdit(asset)}>Edit</button>
@@ -365,6 +379,10 @@ const getInStock = (asset) =>
           <div>
             <label>Unit</label>
             <p>{getName(units, selectedAsset.associateUnit)}</p>
+          </div>
+          <div>
+            <label>Category</label>
+            <p>{getName(categories, selectedAsset.assetCategory)}</p>
           </div>
 
           <div>
