@@ -214,7 +214,7 @@ const renderDepartmentBadges = (asset) => {
 
               <div className="card-info2">
                 <p><strong>Version:</strong> {asset.assetSpecification}</p>
-                <p><strong>Cost:</strong> ₹{asset.assetCost}</p>
+                <p style={{color : "red"}}><strong>Cost:</strong> ₹{asset.assetCost}</p>
                 <p><strong>Quantity:</strong> {asset.assetQuantity}</p>
                 <p><strong>In Use:</strong> {asset.inUse}</p>
                 <div className="dept-badge-wrapper">
