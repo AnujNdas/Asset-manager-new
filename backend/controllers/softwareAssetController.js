@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Category = require("../models/Category");
 const Status = require("../models/Status");
 const Unit = require("../models/Unit");
+const AssetAssignment = require("../models/AssetAssignment");
 const Location = require("../models/Location");
 // Helper to update compliance based on license usage & expiry
 const checkCompliance = (asset) => {
@@ -224,14 +225,62 @@ const createSoftwareAsset = async (req, res) => {
 // Get all software assets
 const getSoftwareAssets = async (req, res) => {
   try {
-    const assets = await SoftwareAsset.find().sort({ createdAt: -1 });
-    res.json({ success: true, data: assets });
+    // 1️⃣ Fetch all software assets
+    const assets = await SoftwareAsset.find()
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // 2️⃣ Fetch active assignments for software assets
+    const assignments = await AssetAssignment.find({
+      assetType: "software",
+      status: "active",
+    })
+      .populate("assignedTo", "name")
+      .lean();
+
+    // 3️⃣ Group assignments by assetId
+    const assignmentMap = {};
+
+    for (const assign of assignments) {
+      const assetId = String(assign.assetId);
+
+      if (!assignmentMap[assetId]) {
+        assignmentMap[assetId] = {
+          inUse: 0,
+          assignedDepartments: [],
+        };
+      }
+
+      assignmentMap[assetId].inUse += assign.quantity;
+
+      assignmentMap[assetId].assignedDepartments.push({
+        department: assign.assignedTo,
+        quantity: assign.quantity,
+      });
+    }
+
+    // 4️⃣ Merge assignment data into assets
+    const enrichedAssets = assets.map((asset) => {
+      const assignmentData = assignmentMap[String(asset._id)];
+
+      return {
+        ...asset,
+        inUse: assignmentData?.inUse || 0,
+        assignedDepartments: assignmentData?.assignedDepartments || [],
+      };
+    });
+
+    return res.json({
+      success: true,
+      data: enrichedAssets,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
-
-
 // Update software asset
 const updateSoftwareAsset = async (req, res) => {
   try {
