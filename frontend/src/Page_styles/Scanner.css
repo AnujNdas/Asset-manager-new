@@ -130,8 +130,6 @@
 /* --- Asset Form Card --- */
 .asset-form {
   width: 100%;
-  max-width: 760px;
-  margin: 0 auto;
   padding: 2rem;
   background: linear-gradient(180deg, #ffffff, #fafbff);
   border-radius: var(--radius-xl);
