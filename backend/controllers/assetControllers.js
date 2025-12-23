@@ -16,12 +16,15 @@ const Status = require("../models/Status");
 // BULK UPLOAD
 // =======================================================================
 // ================= BULK UPLOAD =================
-const bulkUpload = async (req, res) => {
+const bulkUpload = async (req, res , next) => {
   try {
     console.log("🔥 Bulk upload request received.");
 
     const { assets, mode } = req.body;
     const parsedAssets = JSON.parse(assets);
+    if (!assets) {
+  return res.status(400).json({ message: "No asset data provided" });
+}
 
     const categories = await Category.find({});
     const units = await Unit.find({});
@@ -132,7 +135,8 @@ const bulkUpload = async (req, res) => {
     });
   } catch (err) {
     console.error("❌ Bulk Upload Error:", err);
-    return res.status(500).json({ success: false, message: err.message });
+    return next(err);
+
   }
 };
 
@@ -142,7 +146,7 @@ const bulkUpload = async (req, res) => {
 // ADD ASSET
 // =======================================================================
 // ================= ADD ASSET =================
-const addAsset = async (req, res) => {
+const addAsset = async (req, res , next) => {
   try {
     const userId = req.user.id;
 
@@ -175,7 +179,8 @@ const addAsset = async (req, res) => {
     return res.status(201).json(savedAsset);
   } catch (error) {
     console.error("🔥 ADD ASSET ERROR:", error);
-    return res.status(500).json({ message: "Error adding asset", error: error.message });
+    return next(error);
+
   }
 };
 
@@ -186,7 +191,7 @@ const addAsset = async (req, res) => {
 // UPDATE ASSET
 // =======================================================================
 // ================= UPDATE ASSET =================
-const updateAsset = async (req, res) => {
+const updateAsset = async (req, res ,next) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -234,7 +239,7 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
     return res.status(200).json(updatedAsset);
   } catch (error) {
     console.error("🔥 UPDATE ASSET ERROR:", error);
-    return res.status(500).json({ message: "Error updating asset", error: error.message });
+    return next(error);
   }
 };
 
@@ -244,7 +249,7 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
 // =======================================================================
 // DELETE ASSET
 // =======================================================================
-const deleteAsset = async (req, res) => {
+const deleteAsset = async (req, res , next) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -266,7 +271,7 @@ const deleteAsset = async (req, res) => {
     return res.status(200).json({ message: "Asset successfully deleted", deletedAsset });
 
   } catch (error) {
-    return res.status(500).json({ message: "Error deleting asset", error: error.message });
+    return next(error);
   }
 };
 
@@ -277,7 +282,7 @@ const deleteAsset = async (req, res) => {
 // GET ALL ASSETS
 // =======================================================================
 
-const getAllAssets = async (req, res) => {
+const getAllAssets = async (req, res , next) => {
   try {
     // 1️⃣ Fetch all assets
     const assets = await Asset.find().lean();
@@ -324,10 +329,7 @@ const getAllAssets = async (req, res) => {
 
     return res.status(200).json(enrichedAssets);
   } catch (error) {
-    return res.status(500).json({
-      message: "Error fetching assets",
-      error: error.message,
-    });
+    return next(error);
   }
 };
 
@@ -338,7 +340,7 @@ const getAllAssets = async (req, res) => {
 // =======================================================================
 // GENERATE ASSET CODE
 // =======================================================================
-const generateAssetCode = async (req, res) => {
+const generateAssetCode = async (req, res, next) => {
   try {
     const lastCodeData = await LastAssetCode.findOne();
 
@@ -357,7 +359,8 @@ const generateAssetCode = async (req, res) => {
     res.json({ assetCode });
   } catch (error) {
     console.error("Error generating asset code:", error);
-    res.status(500).json({ message: "Internal server error while generating asset code" });
+    return next(error);
+
   }
 };
 
