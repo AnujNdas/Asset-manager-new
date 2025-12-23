@@ -10,6 +10,8 @@ const { Server } = require("socket.io");
 const bcrypt = require("bcryptjs");
 
 // ✅ Import routes
+
+const errorMiddleware = require("./Middleware/errorMiddleware");
 const assetsRoutes = require("./routes/assetRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -66,6 +68,14 @@ app.use("/api/user-data", userRoute);
 app.use("/api/assignment", assignmentRoutes);
 app.use("/api/department", departmentRoutes);
 
+// ❗ Catch unknown routes (VERY IMPORTANT)
+app.all("*", (req, res, next) => {
+  const error = new Error(`Cannot find ${req.originalUrl}`);
+  error.statusCode = 404;
+  next(error);
+});
+// ❗ Global error handler (LAST)
+app.use(errorMiddleware);
 
 app.get("/smtp-test", async (req, res) => {
   try {
