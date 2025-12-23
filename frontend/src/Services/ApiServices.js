@@ -152,6 +152,11 @@ export const getHardwareAssets = async () => {
   const response = await axiosInstance.get("/assets");
   return response.data;
 };
+// ----- ASSET CODE GENERATION -----
+export const generateHardwareAssetCode = async () => {
+  const response = await axiosInstance.get("/assets/asset-code");
+  return response.data.assetCode;
+};
 
 export const getHardwareAssetById = async (id) => {
   const response = await axiosInstance.get(`/assets/${id}`);
