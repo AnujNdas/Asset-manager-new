@@ -6,12 +6,13 @@ import {
   getLocations,
   getCategories,
   getStatuses,
+  generateHardwareAssetCode,
+  createHardwareAsset
 } from "../Services/ApiServices";
 import Swal from "sweetalert2";
 import "../Page_styles/HardwareCapture.css";
 import { FiSave } from "react-icons/fi";
 
-const API_URL = "https://asset-manager-new.onrender.com/api";
 
 const AssetCapture = () => {
   const navigate = useNavigate();
@@ -42,32 +43,6 @@ const AssetCapture = () => {
   const [statuses, setStatuses] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Generate asset code
-  const generateAssetCode = async () => {
-    const res = await fetch(`${API_URL}/assets/asset-code`);
-    if (!res.ok) throw new Error("Failed to generate asset code");
-    const data = await res.json();
-    return data.assetCode;
-  };
-
-  const saveAssetToDatabase = async (data) => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`${API_URL}/assets`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || "Failed to save asset");
-    }
-
-    return true;
-  };
 
   useEffect(() => {
     (async () => {
@@ -139,10 +114,10 @@ const AssetCapture = () => {
     setIsSubmitting(true);
 
     try {
-      const assetCode = await generateAssetCode();
+      const assetCode = await generateHardwareAssetCode();
       const payload = { ...formData, assetCode };
 
-      await saveAssetToDatabase(payload);
+      await createHardwareAsset(payload);
 
       await Swal.fire("Success", "Asset added successfully!", "success");
       navigate("/inventory");
