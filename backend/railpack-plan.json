@@ -1,0 +1,10 @@
+{
+  "phases": {
+    "install": {
+      "commands": ["npm install"]
+    },
+    "start": {
+      "command": "npm start"
+    }
+  }
+}
