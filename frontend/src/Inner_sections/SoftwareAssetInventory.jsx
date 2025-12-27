@@ -208,7 +208,7 @@ const renderDepartmentBadges = (asset) => {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="card-header">
-                <h3>{asset.assetName}</h3>
+                <h3 className="card-title">{asset.assetName}</h3>
                 {getExpiryBadge(asset.DOE)}
               </div>
 

@@ -20,15 +20,15 @@
 /* Sections */
 .section {
   background: #fff;
-  padding: 20px;
+  /* padding: 20px; */
   border-radius: 12px;
   /* margin-top: 20px; */
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  /* box-shadow: 0 3px 10px rgba(0,0,0,0.05); */
 }
 
 .section-title {
   font-size: 18px;
-  margin-bottom: 12px;
+  /* margin-bottom: 12px; */
   font-weight: 600;
   color: #333;
 }
