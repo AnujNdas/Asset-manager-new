@@ -9,9 +9,9 @@ import {
   faCartShopping,
   faGear,
   faReceipt,
-  faPaperPlane,
   faRecycle,
   faExpand,
+  faUserPlus
 } from "@fortawesome/free-solid-svg-icons";
 // import Switch from "./Switch";
 
@@ -71,7 +71,7 @@ useEffect(() => {
             </li>
             <li>
               <NavLink to="/assignment" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                <FontAwesomeIcon icon={faRecycle} style={{ width: "25%" }} />
+                <FontAwesomeIcon icon={faUserPlus} style={{ width: "25%" }} />
                 <span className="tab-text">Assignment</span>
               </NavLink>
             </li>

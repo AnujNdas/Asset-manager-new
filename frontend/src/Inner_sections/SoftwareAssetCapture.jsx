@@ -2,18 +2,19 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "../Page_styles/HardwareCapture.css"; // reuse same CSS as hardware
-import { getStatuses, getCategories, createSoftwareAsset } from "../Services/ApiServices";
+import { getStatuses, getCategories, createSoftwareAsset , getUnits , getLocations , generateHardwareAssetCode } from "../Services/ApiServices";
 
 const initialForm = {
-  // Basic
-  name: "",
-  version: "",
-  publisher: "",
-  category: "",
-  businessUnit: "",
-  installLocation: "",
-  assetTag: "",
-  softwareID: "",
+  // Core
+  assetCode: "",
+  assetName: "",
+  assetCategory: "",
+  assetSpecification: "",
+  purchaseFrom: "",
+
+  associateUnit: "",
+  locationName: "",
+  locationAddress: "",
 
   // License
   licenseKey: "",
@@ -21,53 +22,23 @@ const initialForm = {
   licenseModel: "",
   licenseMetric: "",
   licenseUse: "",
-  licenseStartDate: "",
-  licenseExpiry: "",
-  renewalCycle: "Annual",
-  renewalReminder: true,
-  totalLicenses: "",
-  licensesAssigned: "",
-  licensesAvailable: 0,
-  subscriptionId: "",
+  DOP: "",
+  DOE: "",
+  assetLifetime: "",
 
-  // Financial & Contract
-  costPerUnit: "",
-  totalCost: 0,
-  currency: "INR",
-  costCenter: "",
-  purchaseDate: "",
-  purchaseOrder: "",
-  contractTerm: "",
-  contractDocsURLs: [], // for URLs if user wants to paste links
-
-  // Support & Vendor
-  supportVendor: "",
-  supportEmail: "",
-  supportPhone: "",
-  vendorContactDetails: "",
-
-  // Deployment & Assignment
-  assignedTo: "",
-  assignedDepartment: "",
-  linkedDevices: "",
-  integrationDependencies: "",
-
-  // Compliance & Risk
-  complianceStatus: "",
-  criticality: "Medium",
-  riskClassification: "",
-  authenticationMethod: "",
-  lastAccess: "",
-
-  // Misc
-  auditHistory: [],
+  // Quantity & Cost
+  assetQuantity: "",
+  assetCost: "",
 };
+
 
 export default function SoftwareAssetCapture() {
   const [formData, setFormData] = useState(initialForm);
   const [tab, setTab] = useState(0); // not used visually but keep for quick nav if needed
   const [statuses, setStatuses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [contractFiles, setContractFiles] = useState([]);
   const [licenseFiles, setLicenseFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,9 +46,11 @@ export default function SoftwareAssetCapture() {
   useEffect(() => {
     (async () => {
       try {
-        const [s, c] = await Promise.all([getStatuses(), getCategories()]);
+        const [s, c, u, l] = await Promise.all([getStatuses(), getCategories(), getUnits(), getLocations()]);
         setStatuses(s || []);
         setCategories(c || []);
+        setUnits(u || []);
+        setLocations(l || []);
       } catch (err) {
         console.error(err);
         Swal.fire("Error", "Failed to load dropdown data", "error");
@@ -85,19 +58,6 @@ export default function SoftwareAssetCapture() {
     })();
   }, []);
 
-  // Auto calculations for licensesAvailable & totalCost
-  useEffect(() => {
-    const total = Number(formData.totalLicenses) || 0;
-    const assigned = Number(formData.licensesAssigned) || 0;
-    const costPerUnit = Number(formData.costPerUnit) || 0;
-
-    setFormData((prev) => ({
-      ...prev,
-      licensesAvailable: total - assigned,
-      totalCost: total && costPerUnit ? total * costPerUnit : prev.totalCost,
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.totalLicenses, formData.licensesAssigned, formData.costPerUnit]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -108,10 +68,6 @@ export default function SoftwareAssetCapture() {
     }
   };
 
-  const handleFiles = (e, setFilesFn) => {
-    const files = Array.from(e.target.files || []);
-    setFilesFn(files);
-  };
 
   const resetForm = () => {
     setFormData(initialForm);
@@ -120,132 +76,87 @@ export default function SoftwareAssetCapture() {
     setTab(0);
   };
 
-const buildJsonPayload = () => {
-  const assignedUsers = formData.assignedTo
-    ? formData.assignedTo.split(",").map(s => s.trim()).filter(Boolean)
-    : [];
+const buildJsonPayload = (assetCode) => ({
+  assetCode,
+  assetName: formData.assetName,
+  assetCategory: formData.assetCategory,
+  assetSpecification: formData.assetSpecification,
+  purchaseFrom: formData.purchaseFrom,
 
-  const integrationDependencies = formData.integrationDependencies
-    ? formData.integrationDependencies.split(",").map(s => s.trim()).filter(Boolean)
-    : [];
+  associateUnit: formData.associateUnit,
+  locationName: formData.locationName,
+  locationAddress: formData.locationAddress,
 
-  return {
-    // Basic
-    name: formData.name,
-    version: formData.version,
-    publisher: formData.publisher,
-    category: formData.category,
-    businessUnit: formData.businessUnit,
-    installLocation: formData.installLocation,
-    assetTag: formData.assetTag,
+  licenseKey: formData.licenseKey,
+  licenseType: formData.licenseType,
+  licenseModel: formData.licenseModel,
+  licenseMetric: formData.licenseMetric,
+  licenseUse: formData.licenseUse,
 
-    // License
-    licenseKey: formData.licenseKey,
-    licenseType: formData.licenseType,
-    licenseModel: formData.licenseModel,
-    licenseMetric: formData.licenseMetric,
-    licenseUse: formData.licenseUse,
-    licenseStartDate: formData.licenseStartDate || null,
-    licenseExpiry: formData.licenseExpiry || null,
-    renewalCycle: formData.renewalCycle,
-    renewalReminder: formData.renewalReminder,
+  assetStatus: formData.assetStatus,
 
-    totalLicenses: Number(formData.totalLicenses) || 0,
-    licensesAssigned: 0,
-    subscriptionId: formData.subscriptionId,
+  DOP: formData.DOP,
+  DOE: formData.DOE,
+  assetLifetime: formData.assetLifetime,
 
-    // Financial
-    purchaseDate: formData.purchaseDate || null,
-    costPerUnit: Number(formData.costPerUnit) || 0,
-    totalCost: Number(formData.totalCost) || 0,
-    currency: formData.currency,
-    costCenter: formData.costCenter,
-    purchaseOrder: formData.purchaseOrder,
+  assetQuantity: Number(formData.assetQuantity),
+  assetCost: Number(formData.assetCost),
+});
 
-    // Contract
-    contractTerm: formData.contractTerm,
-    contractDocs: formData.contractDocsURLs || [],
-    licenseDocument: [],
 
-    // Support
-    supportContract: {
-      vendorContact: formData.vendorContactDetails || "",
-    },
+const calculateAssetLifetime = (start, end) => {
+  if (!start || !end) return "";
 
-    // Assignment / Usage
-    assignedUsers,
-    integrationDependencies,
+  const startDate = new Date(start);
+  const endDate = new Date(end);
 
-    // Compliance
-    complianceStatus: formData.complianceStatus,
-    criticality: formData.criticality,
-    riskClassification: formData.riskClassification,
-    authenticationMethod: formData.authenticationMethod,
-    lastAccess: formData.lastAccess || null,
+  if (endDate <= startDate) return "";
 
-    // Audit
-    auditHistory: [
-      { date: new Date(), notes: "Created via Software Capture" }
-    ],
-  };
+  const diffMs = endDate - startDate;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  const years = Math.floor(diffDays / 365);
+  const months = Math.floor((diffDays % 365) / 30);
+
+  if (years > 0 && months > 0) return `${years} year(s) ${months} month(s)`;
+  if (years > 0) return `${years} year(s)`;
+  return `${months} month(s)`;
 };
+useEffect(() => {
+  const lifetime = calculateAssetLifetime(formData.DOP, formData.DOE);
+
+  setFormData((prev) => ({
+    ...prev,
+    assetLifetime: lifetime,
+  }));
+}, [formData.DOP, formData.DOE]);
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Basic validation
-    if (!formData.name) {
-      Swal.fire("Validation", "Please provide the software name.", "warning");
-      return;
-    }
-    if (!formData.category) {
-      Swal.fire("Validation", "Please select a category.", "warning");
-      return;
-    }
+  if (!formData.assetName || !formData.assetCategory) {
+    Swal.fire("Validation", "Please fill required fields", "warning");
+    return;
+  }
 
-    setIsSubmitting(true);
+  setIsSubmitting(true);
 
-    try {
-      const hasFiles = (contractFiles && contractFiles.length > 0) || (licenseFiles && licenseFiles.length > 0);
+  try {
+    const assetCode = await generateHardwareAssetCode("SOFT");
+    const payload = buildJsonPayload(assetCode);
 
-      if (hasFiles) {
-        const fd = new FormData();
-        const metadata = buildJsonPayload();
-        fd.append("metadata", JSON.stringify(metadata));
+    await createSoftwareAsset(payload);
 
-        contractFiles.forEach((file) => fd.append("contractDocs", file));
-        licenseFiles.forEach((file) => fd.append("licenseDocuments", file));
-
-        const token = sessionStorage.getItem("token");
-        const res = await fetch("/api/software-assets", {
-          method: "POST",
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-          body: fd,
-        });
-
-        const result = await res.json();
-        if (!res.ok) throw new Error(result.message || "Upload failed");
-
-        Swal.fire("Success", "Software asset created with files.", "success");
-        resetForm();
-        setIsSubmitting(false);
-        return;
-      }
-
-      // No files → use JSON helper
-      const payload = buildJsonPayload();
-      await createSoftwareAsset(payload);
-
-      Swal.fire("Success", "Software asset captured successfully!", "success");
-      resetForm();
-    } catch (err) {
-      console.error("Error creating software asset:", err);
-      Swal.fire("Error", err.message || "Failed to capture asset", "error");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    Swal.fire("Success", "Software asset captured successfully!", "success");
+    resetForm();
+  } catch (err) {
+    console.error(err);
+    Swal.fire("Error", err.message || "Failed to capture asset", "error");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   // Small helper UI components to match hardware layout
   const SectionTitle = ({ children }) => <h3 className="section-title">{children}</h3>;
@@ -263,24 +174,24 @@ const buildJsonPayload = () => {
           <div className="grid-2">
             <div className="input-group">
               <label>Software Name <span style={{ color: "#e11d48" }}>*</span></label>
-              <input name="name" value={formData.name} onChange={handleChange} placeholder="Software name" />
+              <input name="assetName" value={formData.assetName} onChange={handleChange} placeholder="Software name" />
             </div>
 
             <div className="input-group">
               <label>Version</label>
-              <input name="version" value={formData.version} onChange={handleChange} placeholder="1.0.0" />
+              <input name="assetSpecification" value={formData.assetSpecification} onChange={handleChange} placeholder="1.0.0" />
             </div>
           </div>
 
           <div className="grid-2">
             <div className="input-group">
               <label>Publisher</label>
-              <input name="publisher" value={formData.publisher} onChange={handleChange} placeholder="Publisher name" />
+              <input name="purchaseFrom" value={formData.purchaseFrom} onChange={handleChange} placeholder="Publisher name" />
             </div>
 
             <div className="input-group">
               <label>Category <span style={{ color: "#e11d48" }}>*</span></label>
-              <select name="category" value={formData.category} onChange={handleChange}>
+              <select name="assetCategory" value={formData.assetCategory} onChange={handleChange}>
                 <option value="">Select Category</option>
                 {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
               </select>
@@ -289,17 +200,27 @@ const buildJsonPayload = () => {
 
           <div className="grid-2">
             <div className="input-group">
-              <label>Business Unit</label>
-              <input name="businessUnit" value={formData.businessUnit} onChange={handleChange} />
+              <label>Unit <span style={{ color: "#e11d48" }}>*</span></label>
+              <select name="associateUnit" value={formData.associateUnit} onChange={handleChange}>
+                <option value="">Select Unit</option>
+                {units.map((u) => <option key={u._id} value={u._id}>{u.name}</option>)}
+              </select>
             </div>
 
             <div className="input-group">
-              <label>Install Location</label>
-              <input name="installLocation" value={formData.installLocation} onChange={handleChange} />
+              <label>Location</label>
+              <select name="locationName" value={formData.locationName} onChange={handleChange}>
+                <option value="">Select Location</option>
+                {locations.map((l) => <option key={l._id} value={l._id}>{l.name}</option>)}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Landmark</label>
+              <input name="locationAddress" value={formData.locationAddress} onChange={handleChange} placeholder="Landmark" />
             </div>
           </div>
 
-          <div className="grid-2">
+          {/* <div className="grid-2">
             <div className="input-group">
               <label>Asset Tag</label>
               <input name="assetTag" value={formData.assetTag} onChange={handleChange} placeholder="e.g. LICS-0001" />
@@ -309,7 +230,7 @@ const buildJsonPayload = () => {
               <label>Software ID</label>
               <input name="softwareID" value={formData.softwareID} onChange={handleChange} placeholder="internal id" />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* License Details */}
@@ -343,31 +264,27 @@ const buildJsonPayload = () => {
           <div className="grid-2">
             <div className="input-group">
               <label>License Start Date</label>
-              <input type="date" name="licenseStartDate" value={formData.licenseStartDate} onChange={handleChange} />
+              <input type="date" name="DOP" value={formData.DOP} onChange={handleChange} />
             </div>
 
             <div className="input-group">
               <label>License Expiry</label>
-              <input type="date" name="licenseExpiry" value={formData.licenseExpiry} onChange={handleChange} />
+              <input type="date" name="DOE" value={formData.DOE} onChange={handleChange} />
             </div>
           </div>
 
           <div className="grid-2">
             <div className="input-group">
               <label>Total Licenses</label>
-              <input type="number" name="totalLicenses" value={formData.totalLicenses} onChange={handleChange} />
-            </div> 1   
+              <input type="number" name="assetQuantity" value={formData.assetQuantity} onChange={handleChange} />
+            </div> 
           </div>
 
           <div className="grid-2">
-            <div className="input-group">
-              <label>Licenses Available</label>
-              <input type="number" name="licensesAvailable" value={formData.licensesAvailable} disabled />
-            </div>
 
             <div className="input-group">
-              <label>Subscription ID</label>
-              <input name="subscriptionId" value={formData.subscriptionId} onChange={handleChange} />
+              <label>License Use</label>
+              <input name="licenseUse" value={formData.licenseUse} onChange={handleChange} />
             </div>
           </div>
         </div>
@@ -379,16 +296,27 @@ const buildJsonPayload = () => {
           <div className="grid-2">
             <div className="input-group">
               <label>Cost Per Unit</label>
-              <input type="number" name="costPerUnit" value={formData.costPerUnit} onChange={handleChange} />
-            </div>
-
-            <div className="input-group">
-              <label>Total Cost</label>
-              <input type="number" name="totalCost" value={formData.totalCost} disabled />
+              <input type="number" name="assetCost" value={formData.assetCost} onChange={handleChange} />
             </div>
           </div>
+            <div className="input-group">
+              <label>Status</label>
+              <select name="assetStatus" value={formData.assetStatus} onChange={handleChange}>
+                <option value="">Select Status</option>
+                {statuses.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
+              </select>
+            </div>
+            <div className="input-group">
+  <label>Asset Lifetime</label>
+  <input
+    value={formData.assetLifetime}
+    readOnly
+    placeholder="Auto-calculated"
+    style={{ backgroundColor: "#f9fafb" }}
+  />
+</div>
 
-          <div className="grid-2">
+          {/* <div className="grid-2">
             <div className="input-group">
               <label>Currency</label>
               <select name="currency" value={formData.currency} onChange={handleChange}>
@@ -403,8 +331,8 @@ const buildJsonPayload = () => {
               <label>Cost Center</label>
               <input name="costCenter" value={formData.costCenter} onChange={handleChange} />
             </div>
-          </div>
-
+          </div> */}
+{/* 
           <div className="grid-2">
             <div className="input-group">
               <label>Purchase Date</label>
@@ -415,8 +343,8 @@ const buildJsonPayload = () => {
               <label>Purchase Order</label>
               <input name="purchaseOrder" value={formData.purchaseOrder} onChange={handleChange} />
             </div>
-          </div>
-
+          </div> */}
+{/* 
           <div className="input-group">
             <label>Contract Term / Notes</label>
             <input name="contractTerm" value={formData.contractTerm} onChange={handleChange} />
@@ -425,9 +353,9 @@ const buildJsonPayload = () => {
           <div className="input-group">
             <label>Support Vendor</label>
             <input name="supportVendor" value={formData.supportVendor} onChange={handleChange} />
-          </div>
+          </div> */}
 
-          <div className="grid-2">
+          {/* <div className="grid-2">
             <div className="input-group">
               <label>Support Email</label>
               <input name="supportEmail" value={formData.supportEmail} onChange={handleChange} />
@@ -436,9 +364,9 @@ const buildJsonPayload = () => {
               <label>Support Phone</label>
               <input name="supportPhone" value={formData.supportPhone} onChange={handleChange} />
             </div>
-          </div>
+          </div> */}
 
-          <div className="input-group">
+          {/* <div className="input-group">
             <label>Upload Contract Documents (multiple)</label>
             <input type="file" multiple onChange={(e) => handleFiles(e, setContractFiles)} />
             {contractFiles.length > 0 && (
@@ -456,91 +384,10 @@ const buildJsonPayload = () => {
                 {licenseFiles.map((f, i) => <li key={i}>{f.name}</li>)}
               </ul>
             )}
-          </div>
-
-          <div className="input-group">
-            <label>Or paste contract doc URLs (one per line)</label>
-            <textarea
-              name="contractDocsURLs"
-              value={formData.contractDocsURLs.join("\n")}
-              onChange={(e) => setFormData({ ...formData, contractDocsURLs: e.target.value.split("\n").map(s => s.trim()).filter(Boolean)})}
-              rows={3}
-            />
-          </div>
+          </div> */}
         </div>
-
-        {/* Deployment & Assignment */}
-        <div className="section">
-          <SectionTitle>Deployment & Assignment</SectionTitle>
-
-          <div className="input-group">
-            <label>Assigned To (comma-separated)</label>
-            <input name="assignedTo" value={formData.assignedTo} onChange={handleChange} placeholder="user1@org.com, user2@org.com" />
-          </div>
-
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Assigned Department</label>
-              <input name="assignedDepartment" value={formData.assignedDepartment} onChange={handleChange} />
-            </div>
-
-            <div className="input-group">
-              <label>Linked Devices (comma-separated)</label>
-              <input name="linkedDevices" value={formData.linkedDevices} onChange={handleChange} />
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>Integration Dependencies</label>
-            <input name="integrationDependencies" value={formData.integrationDependencies} onChange={handleChange} />
-          </div>
-        </div>
-
         {/* Compliance & Risk */}
-        <div className="section">
-          <SectionTitle>Compliance & Risk</SectionTitle>
 
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Compliance Status</label>
-              <select name="complianceStatus" value={formData.complianceStatus} onChange={handleChange}>
-                <option value="">Select Status</option>
-                {statuses.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>Criticality</label>
-              <select name="criticality" value={formData.criticality} onChange={handleChange}>
-                <option>High</option>
-                <option>Medium</option>
-                <option>Low</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Risk Classification</label>
-              <input name="riskClassification" value={formData.riskClassification} onChange={handleChange} />
-            </div>
-
-            <div className="input-group">
-              <label>Authentication Method</label>
-              <input name="authenticationMethod" value={formData.authenticationMethod} onChange={handleChange} />
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>Last Access</label>
-            <input type="date" name="lastAccess" value={formData.lastAccess} onChange={handleChange} />
-          </div>
-
-          <div className="input-group">
-            <label>Vendor Contact Details / Notes</label>
-            <input name="vendorContactDetails" value={formData.vendorContactDetails} onChange={handleChange} />
-          </div>
-        </div>
 
           {/* <div className="left-actions">
             <button type="button" className="btn-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
