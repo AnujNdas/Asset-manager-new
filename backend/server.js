@@ -52,6 +52,9 @@ app.use(express.json({ limit: "10mb" })); // <-- replace bodyParser.json()
 app.use(express.urlencoded({ extended: true }));
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.get("/", (req, res) => {
+  res.send("Asset management API is running...");
+});
 // ✅ Routes
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/assets", assetsRoutes);
@@ -98,9 +101,6 @@ app.get("/smtp-test", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("Asset management API is running...");
-});
 
 // ✅ Create HTTP server & attach Socket.IO
 const server = http.createServer(app);
