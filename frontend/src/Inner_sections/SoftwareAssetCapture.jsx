@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "../Page_styles/HardwareCapture.css"; // reuse same CSS as hardware
-import { getStatuses, getCategories, createSoftwareAsset , getUnits , getLocations , generateHardwareAssetCode } from "../Services/ApiServices";
+import { getStatuses, getCategories, createSoftwareAsset , getUnits , getLocations , generateSoftwareAssetCode } from "../Services/ApiServices";
 
 const initialForm = {
   // Core
@@ -143,7 +143,7 @@ const handleSubmit = async (e) => {
   setIsSubmitting(true);
 
   try {
-    const assetCode = await generateHardwareAssetCode("SOFT");
+    const assetCode = await generateSoftwareAssetCode("SOFT");
     const payload = buildJsonPayload(assetCode);
 
     await createSoftwareAsset(payload);

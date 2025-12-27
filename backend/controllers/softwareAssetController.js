@@ -114,10 +114,11 @@ const bulkUploadSoftware = async (req, res) => {
         });
         continue;
       }
+const assetCode = await generateSoftwareCode(); // backend util
 
       // ---------- FINAL PUSH ----------
       validAssets.push({
-        assetCode: asset.assetCode,
+        assetCode,
         assetName: asset.assetName,
         assetCategory: categoryId,
         assetSpecification: asset.assetSpecification,
@@ -183,11 +184,11 @@ const createSoftwareAsset = async (req, res) => {
     };
 
     // Auto calculations
-    if (payload.totalLicenses && payload.costPerUnit) {
-      payload.totalCost = payload.totalLicenses * payload.costPerUnit;
+    if (payload.assetQuantity && payload.assetCost) {
+      payload.totalCost = payload.assetQuantity * payload.assetCost;
     }
 
-    payload.complianceStatus = checkCompliance(payload);
+    payload.assetStatus = checkCompliance(payload);
 
     payload.auditHistory = [
       { date: new Date(), notes: `Created by user ${userId}` },
@@ -197,8 +198,8 @@ const createSoftwareAsset = async (req, res) => {
 
     // Expiry reminder
     if (
-      asset.licenseExpiry &&
-      asset.licenseExpiry - new Date() < 30 * 24 * 60 * 60 * 1000
+      asset.DOE &&
+      asset.DOE - new Date() < 30 * 24 * 60 * 60 * 1000
     ) {
       await Notification.create({
         title: "License Expiry Soon",
@@ -355,6 +356,22 @@ const deleteSoftwareAsset = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+const generateSoftwareCode = async () => {
+  const lastAsset = await SoftwareAsset
+    .findOne({ assetCode: { $regex: /^SW-\d+$/ } })
+    .sort({ createdAt: -1 })
+    .select("assetCode")
+    .lean();
+
+  let nextNumber = 1;
+
+  if (lastAsset?.assetCode) {
+    const lastNumber = parseInt(lastAsset.assetCode.split("-")[1], 10);
+    nextNumber = lastNumber + 1;
+  }
+
+  return `SW-${String(nextNumber).padStart(3, "0")}`;
+};
 
 
 module.exports = {
@@ -363,4 +380,5 @@ module.exports = {
   getSoftwareAssets,
   updateSoftwareAsset,
   deleteSoftwareAsset,
+  generateSoftwareCode
 };

@@ -12,84 +12,81 @@ const BulkUpload = ({ type, userRole }) => {
   const [excelFile, setExcelFile] = useState(null);
   const [mode, setMode] = useState("strict");
   const [dragOverExcel, setDragOverExcel] = useState(false);
+  const [isValidExcel, setIsValidExcel] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (userRole === "super-admin") setMode("auto");
   }, [userRole]);
 
-  // Auto-calc asset lifetime (hardware only)
+  /* ---------- HELPERS ---------- */
+
   const calculateAssetLifetime = (DOP, DOE) => {
     if (!DOP || !DOE) return "";
     const diff = new Date(DOE) - new Date(DOP);
-    return diff <= 0
-      ? "0 years"
-      : `${Math.ceil(diff / (1000 * 60 * 60 * 24 * 365))} years`;
+    if (diff <= 0) return "0 years";
+    return `${Math.ceil(diff / (1000 * 60 * 60 * 24 * 365))} years`;
   };
 
-  // Excel templates
+  /* ---------- TEMPLATES ---------- */
+
   const templates = {
-hardware: [
-  {
-    assetCode: "",
-    assetName: "",
-    assetCategory: "",
-    assetSpecification: "",
-    purchaseFrom: "",
-    associateUnit: "",
-
-    locationName: "",
-    locationAddress: "",
-
-    assetStatus: "",
-
-    DOP: "",
-    DOE: "",
-    assetLifetime: "",
-
-    assetCost: "",
-    assetQuantity: "",
-  },
-],
-
-
+    hardware: [
+      {
+        assetName: "",
+        assetCategory: "",
+        assetSpecification: "",
+        purchaseFrom: "",
+        associateUnit: "",
+        locationName: "",
+        locationAddress: "",
+        assetStatus: "",
+        DOP: "",
+        DOE: "",
+        assetCost: "",
+        assetQuantity: "",
+      },
+    ],
     software: [
-  {
-    assetCode: "",
-    assetName: "",
-    assetCategory: "",
-    assetSpecification: "",   // version
-    purchaseFrom: "",         // publisher
-    associateUnit: "",
-
-    locationName: "",
-    locationAddress: "",
-
-    licenseKey: "",
-    licenseType: "",
-    licenseModel: "",
-    licenseMetric: "",
-    licenseUse: "",
-
-    assetStatus: "",
-
-    DOP: "",                  // license purchase/start date
-    DOE: "",                  // license expiry
-    assetLifetime: "",
-
-    assetCost: "",
-    assetQuantity: "",
-  },
-],
-
+      {
+        assetName: "",
+        assetCategory: "",
+        assetSpecification: "",
+        purchaseFrom: "",
+        associateUnit: "",
+        locationName: "",
+        locationAddress: "",
+        licenseKey: "",
+        licenseType: "",
+        licenseModel: "",
+        licenseMetric: "",
+        licenseUse: "",
+        assetStatus: "",
+        DOP: "",
+        DOE: "",
+        assetCost: "",
+        assetQuantity: "",
+      },
+    ],
   };
 
-  const handleUpload = () => {
-    if (!excelFile)
-      return Swal.fire("Missing File", "Please upload an Excel file!", "warning");
+  const getTemplateKeys = (t) =>
+    Object.keys(templates[t][0]).sort();
+
+  const validateExcelFormat = (row, type) => {
+    const excelKeys = Object.keys(row).sort();
+    const templateKeys = getTemplateKeys(type);
+    return JSON.stringify(excelKeys) === JSON.stringify(templateKeys);
+  };
+
+  /* ---------- FILE SELECT ---------- */
+
+  const handleFileSelect = (file) => {
+    setExcelFile(file);
+    setIsValidExcel(false);
 
     const reader = new FileReader();
-
-    reader.onload = async (e) => {
+    reader.onload = (e) => {
       const workbook = XLSX.read(new Uint8Array(e.target.result), {
         type: "array",
       });
@@ -97,68 +94,85 @@ hardware: [
         workbook.Sheets[workbook.SheetNames[0]]
       );
 
-      // Add lifetime for hardware
-      if (type === "hardware") {
-        sheet.forEach((row) => {
-          row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE);
-        });
-      }
+      if (!sheet.length)
+        return Swal.fire("Empty File", "Excel file has no data", "warning");
 
+      if (!validateExcelFormat(sheet[0], type))
+        return Swal.fire(
+          "Wrong Excel Format",
+          `This file does not match the ${type.toUpperCase()} template`,
+          "error"
+        );
+
+      setIsValidExcel(true);
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  /* ---------- UPLOAD ---------- */
+
+  const handleUpload = () => {
+    if (!excelFile || !isValidExcel || uploading) return;
+
+    setUploading(true);
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
       try {
-        let res;
+        const workbook = XLSX.read(new Uint8Array(e.target.result), {
+          type: "array",
+        });
+        const sheet = XLSX.utils.sheet_to_json(
+          workbook.Sheets[workbook.SheetNames[0]]
+        );
 
-        // -------------------------
-        // ✅ Hardware (JSON upload)
-        // -------------------------
-        if (type === "hardware") {
-          const payload = {
-            assets: JSON.stringify(sheet),
-            mode,
-          };
-
-          res = await bulkUploadHardwareAssets(payload);
+        // Only calculate derived fields
+        for (const row of sheet) {
+          row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE);
         }
 
-        // -------------------------
-        // ✅ Software (JSON upload)
-        // -------------------------
-        if (type === "software") {
-          const payload = {
-            assets: JSON.stringify(sheet),
-            mode,
-          };
+        const payload = {
+          assets: JSON.stringify(sheet),
+          mode,
+        };
 
-          res = await bulkUploadSoftwareAssets(payload);
-        }
+        const res =
+          type === "hardware"
+            ? await bulkUploadHardwareAssets(payload)
+            : await bulkUploadSoftwareAssets(payload);
 
         Swal.fire(
-          "Success!",
-          `${res.inserted} assets imported\n${res.skipped} skipped`,
-          "success"
+          "Import Completed",
+          `${res.inserted} imported, ${res.skipped} skipped`,
+          res.inserted ? "success" : "warning"
         );
+
+        setExcelFile(null);
+        setIsValidExcel(false);
       } catch (err) {
-        console.log("❌ ERROR:", err);
-        console.log("❌ RESPONSE:", err.response?.data);
-        Swal.fire("Error", "Import failed!", "error");
+        console.error(err);
+        Swal.fire("Error", "Import failed", "error");
+      } finally {
+        setUploading(false);
       }
     };
 
     reader.readAsArrayBuffer(excelFile);
   };
 
+  /* ---------- UI ---------- */
+
   return (
     <div className="bulk-wrapper">
       <div className="bulk-card">
         <div className="bulk-header">
-          <h2>
-            Import {type === "hardware" ? "Hardware Assets" : "Software Assets"}
-          </h2>
+          <h2>Import {type === "hardware" ? "Hardware" : "Software"} Assets</h2>
           <span className="mode-chip">
-            {mode === "auto" ? "Auto Mode (Super Admin)" : "Strict Mode"}
+            {mode === "auto" ? "Auto Mode" : "Strict Mode"}
           </span>
         </div>
 
-        {/* Excel Upload */}
         <div
           className={`dropzone ${dragOverExcel ? "drag-over" : ""}`}
           onDragOver={(e) => {
@@ -169,32 +183,31 @@ hardware: [
           onDrop={(e) => {
             e.preventDefault();
             setDragOverExcel(false);
-            setExcelFile(e.dataTransfer.files[0]);
+            handleFileSelect(e.dataTransfer.files[0]);
           }}
         >
           <FiUploadCloud className="drop-icon" />
-          <div className="drop-text-group">
-            <p className="drop-main-text">Upload Excel File</p>
-            <p className="drop-sub-text">Only .xlsx or .xls</p>
-          </div>
+          <p>Upload Excel File</p>
           <input
             type="file"
             accept=".xlsx,.xls"
-            onChange={(e) => setExcelFile(e.target.files[0])}
+            onChange={(e) => handleFileSelect(e.target.files[0])}
           />
         </div>
 
         {excelFile && (
           <div className="file-preview">
-            <FiFile className="file-icon" />
-            <span>{excelFile.name}</span>
+            <FiFile /> {excelFile.name}
           </div>
         )}
 
-        {/* Buttons */}
         <div className="bulk-actions">
-          <button className="import-btn" onClick={handleUpload}>
-            <FiUploadCloud /> Import
+          <button
+            className="import-btn"
+            onClick={handleUpload}
+            disabled={!excelFile || !isValidExcel || uploading}
+          >
+            {uploading ? "Importing..." : <><FiUploadCloud /> Import</>}
           </button>
 
           <button

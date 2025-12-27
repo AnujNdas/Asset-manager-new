@@ -9,6 +9,7 @@ import {
   getStatuses,
   getUnits,
   getLocations,
+  
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";

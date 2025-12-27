@@ -141,6 +141,10 @@ export const deleteSoftwareAsset = async (id) => {
   const response = await axiosInstance.delete(`/software-assets/${id}`);
   return response.data;
 };
+export const generateSoftwareAssetCode = async () => {
+  const response = await axiosInstance.get("/software-assets/asset-code");
+  return response.data.assetCode;
+};
 
 // ----- HARDWARE ASSETS API CALLS -----
 export const createHardwareAsset = async (assetData) => {
