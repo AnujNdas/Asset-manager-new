@@ -1,7 +1,7 @@
 import axios from "axios";
 import { progressController } from "../Components/ProgressController";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = `${process.env.REACT_APP_API_URL}/api`;
 console.log("ACTIVE API URL =", process.env.REACT_APP_API_URL);
 
 if (!API_URL) {
