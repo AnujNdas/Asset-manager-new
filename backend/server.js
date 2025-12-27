@@ -37,11 +37,14 @@ const User = require("./models/User");
 connectDB();
 
 const app = express();
-
+const allowedOrigins = [
+  "https://assetsmanagementsystem.socialflylive.com",
+  "https://asset-manager-new.vercel.app",
+];
 // ✅ Middleware
 app.use(
   cors({
-    origin: "https://assetsmanagementsystem.socialflylive.com",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE" , "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
