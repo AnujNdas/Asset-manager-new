@@ -41,15 +41,27 @@ const allowedOrigins = [
   "https://assetsmanagementsystem.socialflylive.com",
   "https://asset-manager-new.vercel.app",
 ];
-// ✅ Middleware
+
 app.use(
   cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE" , "PATCH"],
+    origin: function (origin, callback) {
+      // allow Postman / server-to-server calls
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+// ✅ VERY IMPORTANT: handle preflight
+app.options("*", cors());
 // Remove: const bodyParser = require("body-parser");
 app.use(express.json({ limit: "10mb" })); // <-- replace bodyParser.json()
 app.use(express.urlencoded({ extended: true }));
