@@ -40,6 +40,7 @@ const app = express();
 const allowedOrigins = [
   "https://assetsmanagementsystem.socialflylive.com",
   "https://asset-manager-new.vercel.app",
+  "http://localhost:3000",
 ];
 
 app.use(
