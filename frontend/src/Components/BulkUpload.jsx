@@ -18,6 +18,90 @@ const BulkUpload = ({ type, userRole }) => {
   useEffect(() => {
     if (userRole === "super-admin") setMode("auto");
   }, [userRole]);
+  useEffect(() => {
+  if (!mode) return;
+
+  const modeContent =
+    mode === "strict"
+      ? {
+          title: "Strict Import Mode Enabled",
+          html: `
+            <div style="text-align:left; line-height:1.6;">
+              <p>
+                You are importing assets in <b>Strict Mode</b>. This mode ensures
+                data consistency and prevents unintended changes to your system.
+              </p>
+              <ul>
+                <li>
+                  All classification fields such as <b>Category, Location, Unit,
+                  and Status</b> must already exist in the system.
+                </li>
+                <li>
+                  If an uploaded row contains a classification value that does not
+                  exist, that row will be <b>skipped automatically</b>.
+                </li>
+                <li>
+                  This mode is ideal when you want full control and predictable
+                  imports.
+                </li>
+              </ul>
+              <p style="margin-top:10px;">
+                Tip: You can review or download existing classifications from the
+                <b>Classification</b> section before importing.
+              </p>
+            </div>
+          `,
+          icon: "info",
+        }
+      : {
+          title: "Auto Import Mode Enabled",
+          html: `
+            <div style="text-align:left; line-height:1.6;">
+              <p>
+                You are importing assets in <b>Auto Mode</b>. This mode prioritizes
+                speed and flexibility during bulk imports.
+              </p>
+              <ul>
+                <li>
+                  Added classification values such as <b>Category, Location,
+                  Unit, or Status</b> will be created automatically.
+                </li>
+                <li>
+                  New classifications will be added permanently to the system.
+                </li>
+                <li>
+                  This process cannot be reversed, so accuracy is important.
+                </li>
+              </ul>
+              <p style="margin-top:10px;">
+                Recommended for large imports where classifications are still
+                evolving or incomplete.
+              </p>
+            </div>
+          `,
+          icon: "warning",
+        };
+
+Swal.fire({
+  title: modeContent.title,
+  html: modeContent.html,
+  icon: modeContent.icon,
+
+  width: "min(90%, 520px)",
+  height : "80%",
+
+  confirmButtonText: "Got it",
+  confirmButtonColor: "#2563eb",
+
+  allowOutsideClick: false,
+  scrollbarPadding: false,
+
+  customClass: {
+    popup: "responsive-swal",
+  },
+});
+
+}, [mode]);
 
   /* ---------- HELPERS ---------- */
 

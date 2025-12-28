@@ -320,11 +320,11 @@
 /* ============================================
    MODAL — DESKTOP DIALOG (default)
 ============================================ */
-.modal {
+/* .modal {
   width: min(92vw, 960px);
   max-height: min(90vh, 860px);
   margin: auto;
-}
+} */
 
 /* ============================================
    TABLET (≤ 1024px)
@@ -378,11 +378,11 @@
     top: auto;
     left: auto;
     transform: none;
-   margin : auto;
+
     width: 80%;
     height: 92vh;
     max-height: 92vh;
-
+    margin: auto;
     border-radius: 20px;
     animation: sheetUp 220ms cubic-bezier(.4,0,.2,1);
   }

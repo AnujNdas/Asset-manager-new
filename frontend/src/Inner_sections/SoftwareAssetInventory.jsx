@@ -9,7 +9,6 @@ import {
   getStatuses,
   getUnits,
   getLocations,
-  
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
@@ -190,11 +189,52 @@ const renderDepartmentBadges = (asset) => {
     </span>
   ));
 };
-  /* ================= PAGINATION ================= */
-  const indexOfLast = currentPage * assetsPerPage;
-  const currentAssets = assets.slice(indexOfLast - assetsPerPage, indexOfLast);
+
+  /* ================= PAGINATION LOGIC (FIXED) ================= */
   const totalPages = Math.ceil(assets.length / assetsPerPage);
 
+  const indexOfLast = currentPage * assetsPerPage;
+  const indexOfFirst = indexOfLast - assetsPerPage;
+  const currentAssets = assets.slice(indexOfFirst, indexOfLast);
+
+  /* Auto-fix page when deleting last item on page */
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages || 1);
+    }
+  }, [assets.length]);
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="pagination">
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </button>
+
+        {Array.from({ length: totalPages }).map((_, i) => (
+          <button
+            key={i}
+            className={currentPage === i + 1 ? "active" : ""}
+            onClick={() => setCurrentPage(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+    );
+  };
   if (loading) return <Loader type="inventory" apiDone={apiDone} />;
 
   return (
@@ -211,7 +251,7 @@ const renderDepartmentBadges = (asset) => {
               <div className="card-header">
                 <h3 className="card-title">{asset.assetName}</h3>
                 {getExpiryBadge(asset.DOE)}
-              </div>
+              </div>  
 
               <div className="card-info2">
                 <p><strong>Version:</strong> {asset.assetSpecification}</p>
@@ -250,7 +290,7 @@ const renderDepartmentBadges = (asset) => {
           ))}
         </AnimatePresence>
       </div>
-
+          {renderPagination()}
       {/* VIEW & EDIT MODALS ARE NOW IDENTICAL TO HARDWARE */}
       {/* ================= SOFTWARE VIEW MODAL ================= */}
 <AnimatePresence>
