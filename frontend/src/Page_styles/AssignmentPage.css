@@ -1,14 +1,18 @@
-/* ================================
-   PAGE LAYOUT
-================================ */
+/* =========================================================
+   ASSIGNMENT PAGE – MAIN LAYOUT
+   Controls overall page spacing and width
+========================================================= */
 .assignment-page {
-  padding: 10px;
-  height: 100%;
+  padding: 10px;           /* Base padding for desktop */
+  height: 100%;            /* Allow full-height layouts */
+  max-width: clamp(100%, 92vw, 1480px); /* SaaS-style max width */
+  margin-inline: auto;     /* Center horizontally */
 }
 
-/* ================================
-   HEADER
-================================ */
+/* =========================================================
+   PAGE HEADER
+   Title + description at top of page
+========================================================= */
 .page-header {
   margin-bottom: 20px;
 }
@@ -25,12 +29,13 @@
   margin-top: 4px;
 }
 
-/* ================================
-   SEARCH
-================================ */
+/* =========================================================
+   CATEGORY SEARCH
+   Search input for filtering categories
+========================================================= */
 .category-search {
   margin-bottom: 22px;
-  max-width: 320px;
+  max-width: 320px; /* Prevent overly wide search bar */
 }
 
 .category-search input {
@@ -42,24 +47,30 @@
   transition: all 0.2s ease;
 }
 
+/* Focus state for accessibility and UX */
 .category-search input:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-/* ================================
+/* =========================================================
    CATEGORY GRID
-================================ */
+   Responsive grid for asset/category cards
+========================================================= */
 .stock-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(220px, 26vw, 300px), 1fr)
+  );
   gap: 20px;
 }
 
-/* ================================
+/* =========================================================
    CATEGORY CARD
-================================ */
+   Individual clickable asset cards
+========================================================= */
 .asset-card {
   background: #ffffff;
   border-radius: 14px;
@@ -69,6 +80,7 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* Hover elevation for desktop */
 .asset-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
@@ -89,9 +101,10 @@
   font-size: 13px;
 }
 
-/* ================================
+/* =========================================================
    CARD COUNTS
-================================ */
+   Stock / assigned / available numbers
+========================================================= */
 .counts {
   display: flex;
   justify-content: space-between;
@@ -103,12 +116,13 @@
 .counts p {
   background: #f1f5f9;
   padding: 6px 10px;
-  border-radius: 999px;
+  border-radius: 999px; /* Pill style */
 }
 
-/* ================================
+/* =========================================================
    INACTIVE TAG
-================================ */
+   Used to mark disabled / inactive categories
+========================================================= */
 .inactive-tag {
   background: #dc2626;
   color: #fff;
@@ -117,15 +131,17 @@
   border-radius: 999px;
 }
 
-/* ================================
+/* =========================================================
    PAGINATION
-================================ */
+   Footer navigation for large datasets
+========================================================= */
 .pagination {
   margin-top: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
+  padding-bottom: env(safe-area-inset-bottom); /* iOS safe area */
 }
 
 .pagination button {
@@ -158,9 +174,11 @@
   padding: 0 6px;
   color: #64748b;
 }
-/* ================================
-   MODAL OVERLAY (FIXED CENTER)
-================================ */
+
+/* =========================================================
+   MODAL OVERLAY
+   Dark backdrop behind modal
+========================================================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -168,28 +186,32 @@
   z-index: 1000;
 }
 
-/* ================================
-   MODAL CONTAINER (TRUE CENTER)
-================================ */
+/* =========================================================
+   MODAL CONTAINER (DESKTOP)
+   Centered dialog layout
+========================================================= */
 .modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
   background: #ffffff;
   width: 95%;
   max-width: 960px;
   max-height: 90vh;
+
   border-radius: 14px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
   box-shadow: 0 25px 60px rgba(15, 23, 42, 0.35);
 }
 
-/* ================================
+/* =========================================================
    MODAL HEADER
-================================ */
+========================================================= */
 .modal-header {
   padding: 18px 22px;
   border-bottom: 1px solid #e5e7eb;
@@ -212,9 +234,10 @@
   color: #64748b;
 }
 
-/* ================================
+/* =========================================================
    MODAL CONTROLS
-================================ */
+   Dropdowns / filters inside modal
+========================================================= */
 .modal-controls {
   padding: 16px 22px;
   border-bottom: 1px solid #e5e7eb;
@@ -228,17 +251,18 @@
   font-size: 14px;
 }
 
-/* ================================
+/* =========================================================
    MODAL BODY
-================================ */
+   Scrollable content area
+========================================================= */
 .modal-body {
   padding: 0 22px 20px;
   overflow-y: auto;
 }
 
-/* ================================
-   TABLE
-================================ */
+/* =========================================================
+   ASSET TABLE
+========================================================= */
 .asset-table {
   width: 100%;
   border-collapse: collapse;
@@ -268,9 +292,10 @@
   border: 1px solid #cbd5f5;
 }
 
-/* ================================
+/* =========================================================
    MODAL FOOTER
-================================ */
+   Primary action area
+========================================================= */
 .modal-footer {
   padding: 16px 22px;
   border-top: 1px solid #e5e7eb;
@@ -297,38 +322,10 @@
   background: #94a3b8;
   cursor: not-allowed;
 }
-/* ============================================
-   SAAS-GRADE RESPONSIVE SYSTEM
-============================================ */
 
-/* ---------- Fluid page container ---------- */
-.assignment-page {
-  max-width: clamp(100%, 92vw, 1480px);
-  margin-inline: auto;
-}
-
-/* ---------- Adaptive card grid ---------- */
-.stock-grid {
-  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 26vw, 300px), 1fr));
-}
-
-/* ---------- Pagination stability ---------- */
-.pagination {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* ============================================
-   MODAL — DESKTOP DIALOG (default)
-============================================ */
-/* .modal {
-  width: min(92vw, 960px);
-  max-height: min(90vh, 860px);
-  margin: auto;
-} */
-
-/* ============================================
-   TABLET (≤ 1024px)
-============================================ */
+/* =========================================================
+   TABLET RESPONSIVE (≤ 1024px)
+========================================================= */
 @media (max-width: 1024px) {
   .page-header h1 {
     font-size: 24px;
@@ -343,31 +340,21 @@
   }
 }
 
-/* ============================================
-   MOBILE — SHEET STYLE (≤ 768px)
-============================================ */
+/* =========================================================
+   MOBILE RESPONSIVE — BOTTOM SHEET (≤ 768px)
+========================================================= */
 @media (max-width: 768px) {
 
-  /* Layout breathing room */
   .assignment-page {
     padding: 20px 16px 80px;
   }
 
-  .page-header h1 {
-    font-size: 22px;
-  }
-
-  /* Cards become touch-optimized */
   .asset-card {
     padding: 18px;
     border-radius: 16px;
   }
 
-  .counts p {
-    padding: 8px 12px;
-  }
-
-  /* ---------- Modal becomes bottom sheet ---------- */
+  /* Modal becomes mobile bottom sheet */
   .modal-overlay {
     display: flex;
     align-items: flex-end;
@@ -381,31 +368,22 @@
 
     width: 80%;
     height: 92vh;
-    max-height: 92vh;
-    margin: auto;
     border-radius: 20px;
+
     animation: sheetUp 220ms cubic-bezier(.4,0,.2,1);
   }
 
   @keyframes sheetUp {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
   }
 
-  /* Sticky header/footer like real SaaS */
+  /* Sticky header/footer for mobile UX */
   .modal-header,
   .modal-footer {
     position: sticky;
-    z-index: 10;
     background: #ffffff;
-  }
-
-  .modal-header {
-    top: 0;
+    z-index: 10;
   }
 
   .modal-footer {
@@ -413,7 +391,6 @@
     box-shadow: 0 -6px 14px rgba(15,23,42,0.06);
   }
 
-  /* Table becomes scroll container */
   .modal-body {
     padding-bottom: 90px;
     overflow-x: auto;
@@ -424,9 +401,9 @@
   }
 }
 
-/* ============================================
+/* =========================================================
    SMALL MOBILE (≤ 420px)
-============================================ */
+========================================================= */
 @media (max-width: 420px) {
 
   .page-header h1 {

@@ -1,32 +1,43 @@
+/* =========================================================
+   LIST PAGE CONTAINER
+========================================================= */
 .list-container {
-  padding: 20px;
   max-width: 1200px;
   margin: auto;
+  padding: 20px;
 }
 
 .list-title {
-  text-align: left;
-  margin-bottom: 20px;
   font-size: 20px;
   color: #333;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
+/* =========================================================
+   ASSET GRID
+========================================================= */
 .asset-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
+/* =========================================================
+   ASSET CARD
+========================================================= */
 .asset-card {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  transition: 0.3s ease;
+
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .asset-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
 }
 
 .asset-card h3 {
@@ -37,140 +48,174 @@
 
 .asset-card p {
   margin: 5px 0;
-  color: #555;
   font-size: 0.95rem;
+  color: #555;
 }
 
+/* =========================================================
+   CARD ACTIONS
+========================================================= */
 .card-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
+  gap: 8px;
 }
 
 .card-actions button {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
   display: flex;
   align-items: center;
   gap: 5px;
-  transition: 0.3s;
-}
 
-.view-btn {
-  background: #3498db;
-  color: white;
-}
+  padding: 8px 12px;
+  font-size: 13px;
 
-.edit-btn {
-  background: #f39c12;
-  color: white;
-}
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 
-.delete-btn {
-  background: #e74c3c;
-  color: white;
+  transition: opacity 0.3s ease;
 }
 
 .card-actions button:hover {
   opacity: 0.85;
 }
 
+/* Button variants */
+.view-btn {
+  background: #3498db;
+  color: #fff;
+}
+
+.edit-btn {
+  background: #f39c12;
+  color: #fff;
+}
+
+.delete-btn {
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
   gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .pagination button {
-  border: none;
   padding: 8px 12px;
   border-radius: 6px;
+
   background: #eee;
+  border: none;
   cursor: pointer;
-  transition: 0.3s;
+
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-.pagination button.active,
-.pagination button:hover {
+.pagination button:hover,
+.pagination button.active {
   background: #0073e6;
-  color: white;
-}/* --- Overlay Background --- */
+  color: #fff;
+}
+
+/* =========================================================
+   MODAL OVERLAY
+========================================================= */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(20, 20, 20, 0.65);
+  inset: 0;
+
+  background: rgba(20,20,20,0.65);
+  backdrop-filter: blur(2px);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   z-index: 1200;
   padding: 1rem;
   overflow-y: auto;
 }
-.overlay-content{
-  /* height: 80%; */
-  max-height: 90%;
+
+/* =========================================================
+   MODAL CONTENT WRAPPER
+========================================================= */
+.overlay-content {
   width: 40%;
+  max-height: 90%;
+
+  background: #fff;
+  border-radius: 8px;
   padding: 20px;
+
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
   gap: 10px;
-  background: #fff;
-  border-radius: 5px;
 }
-h3{
+
+/* Typography inside modal */
+.overlay-content h3 {
   color: rgb(255, 82, 82);
 }
-p{
-  color: #000000;
+
+.overlay-content p {
+  color: #000;
 }
-strong{
+
+.overlay-content strong {
   color: #322ce5;
 }
-/* --- Overlay Card --- */
+
+/* =========================================================
+   MODAL CARD
+========================================================= */
 .overlay-card {
-  background: #ffffff;
   width: 100%;
-  overflow: auto;
-  height: 80%;
   max-width: 600px;
+  height: 80%;
+  overflow-y: auto;
+
+  background: #fff;
   padding: 2rem;
-  /* border-radius: 16px; */
+
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   animation: slideDown 0.3s ease;
 }
 
-/* Title */
+/* =========================================================
+   MODAL TITLE
+========================================================= */
 .overlay-title {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
   color: #222;
+
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+
   text-align: center;
   border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 0.75rem;
 }
 
-/* --- Form --- */
+/* =========================================================
+   MODAL FORM
+========================================================= */
 .overlay-form {
   display: flex;
   flex-direction: column;
-  /* gap: 1.2rem; */
 }
 
-/* Form groups */
 .form-group {
   display: flex;
   flex-direction: column;
-  /* gap: 0.4rem; */
 }
 
 .form-group label {
@@ -182,9 +227,11 @@ strong{
 .form-group input,
 .form-group select {
   padding: 0.65rem 0.8rem;
+  font-size: 0.95rem;
+
   border-radius: 8px;
   border: 1px solid #d1d5db;
-  font-size: 0.95rem;
+
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -192,10 +239,12 @@ strong{
 .form-group select:focus {
   outline: none;
   border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
 }
 
-/* --- Actions --- */
+/* =========================================================
+   MODAL ACTIONS
+========================================================= */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -205,13 +254,14 @@ strong{
 
 .save-btn {
   background: #2563eb;
-  color: white;
-  border: none;
+  color: #fff;
+
   padding: 0.7rem 1.2rem;
   border-radius: 8px;
-  cursor: pointer;
+  border: none;
+
   font-weight: 500;
-  transition: background 0.2s ease;
+  cursor: pointer;
 }
 
 .save-btn:hover {
@@ -221,19 +271,22 @@ strong{
 .close-btn {
   background: #f3f4f6;
   color: #374151;
-  border: none;
+
   padding: 0.7rem 1.2rem;
   border-radius: 8px;
-  cursor: pointer;
+  border: none;
+
   font-weight: 500;
-  transition: background 0.5s ease;
+  cursor: pointer;
 }
 
 .close-btn:hover {
   background: #e5e7eb;
 }
 
-/* --- Animations --- */
+/* =========================================================
+   ANIMATION
+========================================================= */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -245,8 +298,22 @@ strong{
   }
 }
 
-/* --- Responsive --- */
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+========================================================= */
+@media (max-width: 768px) {
+
+  .overlay-content {
+    width: 90%;
+  }
+
+  .asset-card h3 {
+    font-size: 1.15rem;
+  }
+}
+
 @media (max-width: 640px) {
+
   .overlay-card {
     padding: 1.2rem;
     border-radius: 12px;
@@ -270,6 +337,5 @@ strong{
   .save-btn,
   .close-btn {
     width: 100%;
-    text-align: center;
   }
 }

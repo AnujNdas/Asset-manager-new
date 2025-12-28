@@ -1,111 +1,141 @@
-/* ========== Design Tokens ========== */
+/* =========================================================
+   DESIGN TOKENS (Theme Variables)
+   Centralized colors & effects for easy theming
+========================================================= */
 :root {
-  --bg: #0b1220;
-  --card: #0f172a;
-  --muted: #555;
-  --text: #171717;
-  --brand: #4f46e5;
-  --brand-2: #22d3ee;
-  --line: rgba(0, 0, 0, 0.2);
-  --ring: rgba(79, 70, 229, 0.45);
+  --bg: #0b1220;              /* App background */
+  --card: #0f172a;            /* Card surface */
+  --muted: #555;              /* Muted text */
+  --text: #171717;            /* Primary text */
+  --brand: #4f46e5;           /* Brand primary */
+  --brand-2: #22d3ee;         /* Brand accent */
+  --line: rgba(0, 0, 0, 0.2); /* Input borders / dividers */
+  --ring: rgba(79, 70, 229, 0.45); /* Focus ring */
 }
 
-/* Page Background */
+/* =========================================================
+   GLOBAL PAGE BACKGROUND
+========================================================= */
 body {
-  background: var(--bg);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto,
+               "Helvetica Neue", Arial;
+
+  background: var(--bg);
 }
 
-/* ========== Layout ========== */
+/* =========================================================
+   AUTH PAGE LAYOUT
+========================================================= */
 .auth-page {
-  /* min-height: 100vh; */
   width: 100%;
   display: grid;
   place-items: center;
-  background: #c2c2c2;
   overflow: hidden;
+
+  /* Page background behind card */
+  background: #c2c2c2;
 }
 
+/* Main auth container */
 .auth-card {
   width: 100%;
   max-width: 900px;
+
   background: #fff;
   border-radius: 20px;
+
   display: grid;
   overflow: hidden;
+
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* ========== Form Panel ========== */
+/* =========================================================
+   FORM PANEL (Login / Signup)
+========================================================= */
 .form-panel {
   background: #fff;
   padding: 24px 28px;
+
   display: grid;
   gap: 16px;
+
   color: var(--text);
 }
 
+/* Header section (logo + title) */
 .form-header {
   display: grid;
   justify-items: center;
-  gap: 8px;
   text-align: center;
+  gap: 8px;
 }
 
 .form-logo {
   width: 110px;
-  height: auto;
   opacity: 0.95;
 }
 
 .form-header h2 {
   font-size: clamp(16px, 2vw, 22px);
-  margin: 6px 0 0;
+  margin-top: 6px;
 }
 
 .form-sub {
-  color: var(--muted);
   font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--muted);
 }
 
-/* ========== Social Buttons ========== */
+/* =========================================================
+   SOCIAL LOGIN BUTTONS
+========================================================= */
 .social-row {
   display: flex;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .social-btn {
   height: 42px;
   width: 42px;
+
   display: grid;
   place-items: center;
+
   border-radius: 10px;
   border: 1px solid var(--line);
-  color: #cc794a;
+
   background: rgba(255, 255, 255, 0.02);
-  transition: 0.18s ease;
+  color: #cc794a;
+
   cursor: pointer;
+  transition: 0.18s ease;
 }
+
 .social-btn:hover {
   transform: translateY(-2px);
   color: var(--text);
   border-color: rgba(36, 36, 36, 0.18);
 }
 
-/* Divider */
+/* =========================================================
+   DIVIDER (OR CONTINUE WITH)
+========================================================= */
 .divider {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 10px;
-  color: var(--muted);
+
   font-size: 13px;
+  color: var(--muted);
 }
+
 .divider::before,
 .divider::after {
   content: "";
@@ -113,11 +143,14 @@ body {
   background: var(--line);
 }
 
-/* Fields */
+/* =========================================================
+   FORM FIELDS
+========================================================= */
 .field {
   display: grid;
   gap: 8px;
 }
+
 .field-label {
   font-size: 13px;
   color: var(--muted);
@@ -125,96 +158,130 @@ body {
   align-items: center;
   gap: 8px;
 }
+
+/* Input styling */
 .field input {
   height: 46px;
+  padding: 0 14px;
+
   border-radius: 12px;
   border: 1px solid var(--line);
+
   background: rgba(255, 255, 255, 0.02);
   color: var(--text);
-  padding: 0 14px;
+
   outline: none;
-  transition: 0.15s;
+  transition: 0.15s ease;
 }
+
 .field input::placeholder {
+  font-size: 13px;
   color: #2346ed;
   opacity: 0.75;
-  font-size: 13px;
 }
+
 .field input:focus {
   border-color: #2346ed;
   box-shadow: 0 0 0 1px #2346ed;
 }
 
-/* Actions */
+/* =========================================================
+   FORM ACTIONS & LINKS
+========================================================= */
 .form-actions {
   display: grid;
   gap: 10px;
 }
+
 .link {
-  color: #2346ed;
-  text-decoration: none;
   font-size: 13px;
+  color: #2346ed;
   text-align: center;
+  text-decoration: none;
 }
+
 .link:hover {
   text-decoration: underline;
 }
 
-/* Primary Button */
+/* =========================================================
+   PRIMARY CTA BUTTON
+========================================================= */
 .btn-primary {
   height: 46px;
   padding: 0 18px;
+
   border: none;
   border-radius: 12px;
+
   font-weight: 600;
   color: #fff;
-  background: linear-gradient(135deg, var(--brand), #6b8cff 60%, var(--brand-2));
+
+  background: linear-gradient(
+    135deg,
+    var(--brand),
+    #6b8cff 60%,
+    var(--brand-2)
+  );
+
   box-shadow: 0 8px 22px rgba(79, 70, 229, 0.35);
   cursor: pointer;
-  transition: 0.2s;
+
+  transition: 0.2s ease;
 }
+
 .btn-primary:hover {
   transform: translateY(-1px);
 }
+
 .btn-primary:active {
   transform: translateY(0);
   box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
 }
+
 .btn-primary:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   filter: grayscale(0.2);
 }
 
-/* Tiny Note */
+/* =========================================================
+   SMALL FOOT NOTE
+========================================================= */
 .tiny-note {
-  margin-top: 2px;
   font-size: 12px;
   color: var(--muted);
   text-align: center;
 }
+
+/* =========================================================
+   GLOBAL LOADER OVERLAY
+========================================================= */
 .loader-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100%;
+  inset: 0;
+
   background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(3px);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   z-index: 9999;
-  backdrop-filter: blur(3px);
 }
 
-/* ========== RESPONSIVE BREAKPOINTS ========== */
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+========================================================= */
 
-/* Laptops / Large Tablets */
+/* Large tablets & laptops */
 @media (max-width: 1024px) {
   .auth-card {
     max-width: 820px;
     border-radius: 16px;
   }
+
   .form-panel {
     padding: 20px;
   }
@@ -226,59 +293,64 @@ body {
     max-width: 720px;
     grid-template-columns: 1fr;
   }
+
   .form-panel {
     padding: 20px 18px;
   }
+
   .btn-primary {
     width: 100%;
-  }
-  .social-row {
-    justify-content: center;
   }
 }
 
 /* Phones */
 @media (max-width: 600px) {
-
   .form-panel {
     padding: 18px 14px;
     gap: 14px;
   }
+
   .form-logo {
     width: 90px;
   }
+
   .field input {
     height: 44px;
   }
+
   .social-btn {
-    height: 38px;
     width: 38px;
+    height: 38px;
   }
 }
 
-/* Very Small Phones */
+/* Very small phones */
 @media (max-width: 360px) {
   .form-header h2 {
     font-size: 15px;
   }
+
   .field input {
     height: 42px;
     font-size: 12px;
   }
+
   .btn-primary {
     height: 42px;
     font-size: 13px;
   }
+
   .social-btn {
-    height: 36px;
     width: 36px;
+    height: 36px;
   }
+
   .divider {
     font-size: 12px;
   }
 }
 
-/* Handle Vertical Overflow on Small Devices */
+/* Handle small-height screens */
 @media (max-height: 600px) {
   .auth-card {
     height: 100%;

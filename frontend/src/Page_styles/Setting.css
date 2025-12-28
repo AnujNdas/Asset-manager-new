@@ -1,3 +1,11 @@
+/* =========================================================
+   Settings Page Layout
+   Purpose: Container, Tabs Navigation, and Content Area
+   ========================================================= */
+
+/* =======================
+   Main Settings Container
+   ======================= */
 .setting-container {
   display: flex;
   flex-direction: column;
@@ -6,37 +14,51 @@
   padding: 10px;
 }
 
-/* Tabs Navigation */
+/* =======================
+   Tabs Navigation Wrapper
+   ======================= */
 .settings-tabs {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
   gap: 12px;
+
   padding: 12px 16px;
   backdrop-filter: blur(12px);
   border-radius: 12px;
 }
 
+/* =======================
+   Tab Buttons / Links
+   ======================= */
 .settings-tabs a,
 .settings-tabs button {
   display: flex;
   align-items: center;
   gap: 6px;
+
   text-decoration: none;
   border: none;
   background: #fff;
+
   padding: 10px 14px;
   border-radius: 10px;
+
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   color: #333;
+
   transition: all 0.25s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-.tab-text2{
+
+/* Secondary tab text color */
+.tab-text2 {
   color: #2463eb;
 }
+
+/* Hover interaction */
 .settings-tabs a:hover,
 .settings-tabs button:hover {
   background: #f0f5ff;
@@ -44,44 +66,67 @@
   transform: translateY(-2px);
 }
 
+/* Active tab state */
 .settings-tabs a.active {
   background: #bbd8ff;
-  box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
+
+/* Active tab text override */
 .tab-text2.active {
   color: #fff;
 }
+
+/* Tab icon styling */
 .settings-tabs .tab-icon {
   font-size: 16px;
 }
 
+/* Tab text styling */
 .settings-tabs .tab-text {
   font-size: 13px;
 }
 
-/* Content area */
+/* =======================
+   Content Area
+   ======================= */
 .settings {
   flex: 1;
   padding: 10px;
+
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* Subtle entrance animation */
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Small animation for content */
+/* =======================
+   Fade-in Animation
+   ======================= */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Mobile Responsive */
+/* =======================
+   Tablet Responsive
+   ======================= */
 @media (max-width: 768px) {
+  /* Switch tabs to grid layout */
   .settings-tabs {
-    grid-template-columns: repeat(3, 1fr);
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
   }
 
+  /* Compact tab buttons */
   .settings-tabs a,
   .settings-tabs button {
     padding: 12px;
@@ -98,13 +143,17 @@
   }
 }
 
+/* =======================
+   Mobile Responsive
+   ======================= */
 @media (max-width: 480px) {
   .settings-tabs {
     grid-template-columns: repeat(2, 1fr);
-    padding : 5px;
+    padding: 5px;
   }
 
+  /* Icon-only tabs on very small screens */
   .settings-tabs .tab-text {
-    display: none; /* icons only on very small screens */
+    display: none;
   }
 }

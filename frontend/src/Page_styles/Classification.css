@@ -1,51 +1,68 @@
-  /* 🌿 Container */
+/* =========================================================
+   CLASSIFICATION PAGE — ROOT CONTAINER
+   Wraps the entire classification module
+========================================================= */
 .classification_container {
   display: flex;
   flex-direction: column;
-  align-items: stretch; /* ✅ was center */
+  align-items: stretch; /* Stretch content full width */
   font-family: "Inter", sans-serif;
   gap: 10px;
   padding: 12px;
   box-sizing: border-box;
 }
 
-/* 📝 Headings */
+/* =========================================================
+   PAGE HEADINGS
+========================================================= */
 .classify_heading,
 .classify_heading2 {
   font-size: 1.3rem;
   font-weight: 500;
+
+  /* Gradient text effect */
   background: linear-gradient(90deg, #000000ff, #333);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
   letter-spacing: 0.5px;
-  padding: 10px 0px;
+  padding: 10px 0;
 }
 
+/* Secondary heading alignment */
 .classify_heading2 {
   width: 100%;
   text-align: left;
 }
 
-/* 🌟 Sticky Tabs Navigation */
+/* =========================================================
+   TABS NAVIGATION (STICKY)
+   Used to switch between classification types
+========================================================= */
 .tabs_container {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
   gap: 12px;
   padding: 12px 16px;
-  /* background: rgba(255, 255, 255, 0.9); */
+
+  /* Glassmorphism-style blur */
   backdrop-filter: blur(12px);
+
   border-radius: 12px;
-  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); */
   width: 100%;
   overflow-x: auto;
+
+  /* Custom scrollbar styling */
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
 
+  /* Sticky behavior */
   position: sticky;
   top: 0;
 }
 
+/* Horizontal scrollbar (WebKit browsers) */
 .tabs_container::-webkit-scrollbar {
   height: 6px;
 }
@@ -55,65 +72,90 @@
   border-radius: 10px;
 }
 
+/* =========================================================
+   INDIVIDUAL TAB BUTTON
+========================================================= */
 .tab_link {
   display: flex;
   align-items: center;
   gap: 6px;
+
   text-decoration: none;
   border: none;
-  background: #fff;
+  background: #ffffff;
+
   padding: 10px 14px;
   border-radius: 10px;
   cursor: pointer;
+
   font-size: 14px;
   font-weight: 500;
   color: #333;
-  transition: all 0.25s ease;
+
+  /* Soft elevation */
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+
   white-space: nowrap;
   flex-shrink: 0;
+
+  transition: all 0.25s ease;
 }
 
+/* Hover state */
 .tab_link:hover {
   background: #f0f5ff;
   color: #007bff;
   transform: translateY(-2px);
 }
 
+/* Active tab */
 .tab_link.active {
   background: #bbd8ff;
   box-shadow: 0 4px 8px rgba(0,123,255,0.2);
 }
 
+/* Tab icon styling */
 .tab-icon {
   font-size: 16px;
   color: #2463eb;
 }
 
+/* Tab text styling */
 .tab-text {
   font-size: 13px;
   color: #2463eb;
 }
 
-/* 🌱 Content Area */
+/* =========================================================
+   MAIN CONTENT AREA
+   Holds the classification table/forms
+========================================================= */
 .classify_items {
   width: 100%;
   border-radius: 16px;
   padding: 20px;
-  /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); */
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+
   transition: all 0.3s ease;
   animation: fadeIn 0.3s ease-in-out;
 }
+
+/* Header row inside content area */
 .classification_header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+/* =========================================================
+   EXPORT BUTTON & DROPDOWN
+========================================================= */
 .export-wrapper {
   position: relative;
 }
 
+/* Main export button */
 .export-btn {
   background: #3949ab;
   color: white;
@@ -124,41 +166,56 @@
   font-size: 14px;
 }
 
+/* Export dropdown menu */
 .export-dropdown {
   position: absolute;
   top: 42px;
   right: 0;
+
   background: white;
   border: 1px solid #ccc;
   width: 140px;
+
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   border-radius: 6px;
   overflow: hidden;
+
   animation: fadeIn 0.15s ease-in-out;
   z-index: 999;
 }
 
+/* Dropdown option */
 .export-dropdown div {
   padding: 10px 16px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s ease;
 }
 
+/* Hover state for dropdown option */
 .export-dropdown div:hover {
   background: #f0f0f0;
 }
 
-
-/* ✨ Fade-in Animation */
+/* =========================================================
+   FADE-IN ANIMATION
+========================================================= */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* 📱 Responsive Layout */
-
-/* Tablet */
+/* =========================================================
+   RESPONSIVE — TABLET (≤ 768px)
+========================================================= */
 @media (max-width: 768px) {
+
+  /* Tabs switch to grid layout */
   .tabs_container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -185,8 +242,12 @@
   }
 }
 
-/* Mobile */
+/* =========================================================
+   RESPONSIVE — MOBILE (≤ 480px)
+========================================================= */
 @media (max-width: 480px) {
+
+  /* Reduce tab grid columns */
   .tabs_container {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -200,9 +261,10 @@
     padding: 16px;
   }
 
+  /* Center heading on mobile */
   .classify_heading {
     font-size: 1.2rem;
     text-align: center;
-    margin : 0;
+    margin: 0;
   }
 }

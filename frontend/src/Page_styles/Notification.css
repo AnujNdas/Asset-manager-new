@@ -1,93 +1,120 @@
+/* ======================================================
+   NOTIFICATION CONTAINER
+   ====================================================== */
 
-
-/* Notification Container */
 .notification-container {
-  /* max-width: 700px; */
-  overflow: auto;
-  height: 80dvh;
-  /* margin: 30px auto; */
+  overflow: auto;          /* Enable scrolling for long lists */
+  height: 80dvh;           /* Viewport-based height */
   padding: 25px;
-  /* background: #fff; */
   border-radius: 12px;
-  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);? */
   animation: fadeIn 0.4s ease-in-out;
 }
 
-/* Header */
+/* ======================================================
+   HEADER SECTION
+   ====================================================== */
+
 .notification-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #eee;
+
   padding-bottom: 12px;
   margin-bottom: 20px;
+
+  border-bottom: 2px solid #eee;
 }
 
+/* Header Title */
 .notification-header h1 {
   font-size: 20px;
   font-weight: 500;
   color: #222;
+  font-family: "Lato", sans-serif;
+
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: "Lato" , sans-serif;
 }
 
-/* Mark All Read Button */
+/* ======================================================
+   MARK ALL AS READ BUTTON
+   ====================================================== */
+
 .mark-read-btn {
   background: #2346ed;
-  color: #fff;
+  color: #ffffff;
+
   border: none;
+  border-radius: 6px;
+
   padding: 10px 18px;
   font-size: 13px;
   font-weight: 500;
-  border-radius: 6px;
+
   cursor: pointer;
+
   display: flex;
   align-items: center;
   gap: 6px;
+
   transition: all 0.3s ease;
 }
 
+/* Hover interaction */
 .mark-read-btn:hover {
   transform: translateY(-2px);
 }
 
-/* Notification List */
+/* ======================================================
+   NOTIFICATION LIST
+   ====================================================== */
+
 .notification-list ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* Individual Notification Card */
 .notification-list li {
   padding: 15px;
   margin-bottom: 12px;
+
   border-radius: 10px;
   border: 1px solid #ddd;
-  transition: background 0.3s, box-shadow 0.3s;
+
   cursor: pointer;
+
   display: flex;
   flex-direction: column;
   gap: 6px;
+
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
+/* Hover effect */
 .notification-list li:hover {
   background: #f1f7ff;
   box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
 }
 
+/* Unread notification state */
 .notification-list li.unread {
   background: #f9faff;
   border-left: 5px solid #007bff;
 }
 
+/* Read notification state */
 .notification-list li.read {
   background: #ffffff;
   color: #666;
 }
 
-/* Notification Item Content */
+/* ======================================================
+   NOTIFICATION CONTENT
+   ====================================================== */
+
 .notification-item h3 {
   margin: 0;
   font-size: 16px;
@@ -102,26 +129,37 @@
   line-height: 1.5;
 }
 
-/* Footer (Time & Badge) */
+/* ======================================================
+   FOOTER (TIME + BADGE)
+   ====================================================== */
+
 .notification-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   font-size: 13px;
   color: #888;
 }
 
+/* Notification Type Badge */
 .badge {
   background: #007bff;
-  color: white;
+  color: #ffffff;
+
   font-size: 11px;
   font-weight: bold;
+
   padding: 4px 8px;
   border-radius: 14px;
+
   text-transform: uppercase;
 }
 
-/* Animation */
+/* ======================================================
+   ANIMATIONS
+   ====================================================== */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -133,7 +171,10 @@
   }
 }
 
-/* Responsive Design */
+/* ======================================================
+   RESPONSIVE DESIGN
+   ====================================================== */
+
 @media (max-width: 768px) {
   .notification-container {
     margin: 15px;

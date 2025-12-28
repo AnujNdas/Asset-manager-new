@@ -1,12 +1,16 @@
-/* Wrapper */
+/* =========================================================
+   ASSET FORM WRAPPER
+   Outer container for asset capture / edit pages
+========================================================= */
 .asset-wrapper {
-  /* max-width: 900px; */
   margin: auto;
   padding: 10px;
-  /* background: #f9f9fb; */
+  /* max-width intentionally omitted for fluid layouts */
 }
 
-/* Header */
+/* =========================================================
+   PAGE HEADER
+========================================================= */
 .asset-header h2 {
   font-size: 20px;
   font-weight: 600;
@@ -17,121 +21,157 @@
   margin-top: 4px;
 }
 
-/* Sections */
+/* =========================================================
+   FORM SECTIONS
+========================================================= */
 .section {
-  background: #fff;
-  /* padding: 20px; */
   border-radius: 12px;
-  /* margin-top: 20px; */
-  /* box-shadow: 0 3px 10px rgba(0,0,0,0.05); */
 }
 
+/* Section title */
 .section-title {
   font-size: 18px;
-  /* margin-bottom: 12px; */
+  margin-bottom: 12px;
   font-weight: 600;
   color: #333;
 }
 
-/* Grids */
+/* =========================================================
+   GRID SYSTEM
+   Used to control form layout density
+========================================================= */
+
+/* Two-column layout (desktop default) */
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
 }
 
+/* Three-column layout (wide desktop) */
 .grid-3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 15px;
 }
 
-/* Input fields */
+/* =========================================================
+   INPUT GROUPS
+========================================================= */
 .input-group {
   display: flex;
   flex-direction: column;
 }
 
+/* Input labels */
 .input-group label {
   margin-bottom: 6px;
   font-weight: 500;
   color: #555;
 }
 
+/* Inputs & selects */
 .input-group input,
 .input-group select {
   padding: 10px;
   border: 1.5px solid #dcdcdc;
   border-radius: 8px !important;
   outline: none;
-  transition: 0.2s;
+  transition: border-color 0.2s ease;
 }
 
+/* Focus state */
 .input-group input:focus,
 .input-group select:focus {
-  border-color: #4f46e5;
+  border-color: #4f46e5; /* Primary accent */
 }
 
-/* Upload Buttons */
+/* =========================================================
+   FILE UPLOAD CONTROLS
+========================================================= */
 .upload-box {
   display: flex;
   gap: 15px;
 }
 
+/* Upload button */
 .upload-btn {
   display: flex;
   align-items: center;
   gap: 8px;
+
   background: #eef2ff;
   border: 1px dashed #6366f1;
+
   padding: 10px 16px;
   border-radius: 10px;
   cursor: pointer;
+
   font-weight: 500;
+  justify-content: center;
 }
 
+/* Hide native file input */
 .upload-btn input {
   display: none;
 }
 
+/* Hover state */
 .upload-btn:hover {
   background: #e0e7ff;
 }
 
-/* Preview Image */
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
 .image-preview img {
   margin-top: 15px;
   height: 160px;
-  border-radius: 10px;
+
   object-fit: cover;
+  border-radius: 10px;
   border: 1px solid #ddd;
 }
 
-/* Submit Button */
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
 .submit-btn {
   margin-top: 25px;
   width: 100%;
+
   padding: 12px;
   background: #4f46e5;
-  color: #fff;
+  color: #ffffff;
+
   border: none;
   border-radius: 10px;
+
   font-weight: 600;
   font-size: 16px;
+
   display: flex;
   justify-content: center;
   gap: 10px;
+
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s ease;
 }
 
+/* Hover state */
 .submit-btn:hover {
   background: #4338ca;
 }
 
-/* Responsive */
+/* =========================================================
+   RESPONSIVE BEHAVIOR
+   Stack grids on tablet & mobile
+========================================================= */
 @media (max-width: 768px) {
-  .grid-2, .grid-3 {
+
+  /* Collapse multi-column grids into single column */
+  .grid-2,
+  .grid-3 {
     grid-template-columns: 1fr;
   }
 }

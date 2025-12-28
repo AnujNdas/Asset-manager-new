@@ -1,25 +1,44 @@
-/* src/Page_styles/ResetPass.css */
+/* ======================================================
+   RESET PASSWORD PAGE STYLES
+   File: src/Page_styles/ResetPass.css
+   ====================================================== */
+
+/* ======================================================
+   PAGE CONTAINER
+   ====================================================== */
 
 .reset-container {
   min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /* Gradient background */
   background: linear-gradient(135deg, #6a11cb, #2575fc);
+
   padding: 20px;
 }
 
+/* ======================================================
+   RESET CARD
+   ====================================================== */
+
 .reset-card {
   background: #fff;
-  border-radius: 12px;
-  padding: 30px;
   width: 100%;
   max-width: 400px;
+
+  padding: 30px;
+  border-radius: 12px;
+
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
+
+  /* Entry animation */
   animation: fadeIn 0.5s ease-in-out;
 }
 
+/* Card title */
 .reset-card h2 {
   margin-bottom: 20px;
   font-size: 24px;
@@ -27,13 +46,19 @@
   color: #333;
 }
 
+/* ======================================================
+   FORM LAYOUT
+   ====================================================== */
+
 .reset-card form {
   display: flex;
   flex-direction: column;
   gap: 15px;
+
   text-align: left;
 }
 
+/* Form labels */
 .reset-card label {
   font-size: 14px;
   font-weight: 500;
@@ -41,35 +66,52 @@
   margin-bottom: 5px;
 }
 
+/* Input fields */
 .reset-card input {
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
+
   font-size: 14px;
   outline: none;
+
   transition: border 0.2s, box-shadow 0.2s;
 }
 
+/* Input focus state */
 .reset-card input:focus {
   border-color: #2575fc;
   box-shadow: 0 0 5px rgba(37, 117, 252, 0.4);
 }
 
+/* ======================================================
+   SUBMIT BUTTON
+   ====================================================== */
+
 .reset-card button {
   background: #2575fc;
   color: #fff;
+
   border: none;
-  padding: 12px;
   border-radius: 8px;
+
+  padding: 12px;
+
   font-size: 16px;
   font-weight: 600;
+
   cursor: pointer;
   transition: background 0.3s;
 }
 
+/* Button hover state */
 .reset-card button:hover {
   background: #1d63d1;
 }
+
+/* ======================================================
+   STATUS MESSAGES
+   ====================================================== */
 
 .message {
   margin-top: 15px;
@@ -77,17 +119,24 @@
   font-weight: 500;
 }
 
+/* Info icon prefix */
 .message:before {
   content: "ℹ️ ";
 }
 
+/* Success message */
 .message.success {
   color: #2ecc71;
 }
 
+/* Error message */
 .message.error {
   color: #e74c3c;
 }
+
+/* ======================================================
+   RESPONSIVE STYLES
+   ====================================================== */
 
 /* Small screens */
 @media (max-width: 480px) {
@@ -105,7 +154,10 @@
   }
 }
 
-/* Animation */
+/* ======================================================
+   ANIMATIONS
+   ====================================================== */
+
 @keyframes fadeIn {
   from {
     opacity: 0;

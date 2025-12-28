@@ -247,11 +247,11 @@ const MisReport = () => {
 
               {activeTab === "software" && (
                 <>
-                  <td>{row.name}</td>
-                  <td>{row.version}</td>
-                  <td>{row.publisher}</td>
-                  <td>{statuses.find((s) => s._id === row.complianceStatus)?.name}</td>
-                  <td>{categories.find((c) => c._id === row.category)?.name}</td>
+                  <td>{row.assetName}</td>
+                  <td>{row.assetSpecification}</td>
+                  <td>{row.purchaseFrom}</td>
+                  <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
+                  <td>{categories.find((c) => c._id === row.assetCategory)?.name}</td>
                 </>
               )}
             </tr>

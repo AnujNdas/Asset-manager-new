@@ -1,33 +1,45 @@
-/* Container for all capture forms */
+/* =========================================================
+   CAPTURE CONTAINER
+   Outer wrapper for all capture forms (hardware / software)
+========================================================= */
 .capture-container {
   max-width: 100%;
   margin: 0 auto;
   padding: 10px;
-  background : #f9f9f9;
-  /* background: var(--card-bg, #fff);   */
+  background: #f9f9f9; /* Light neutral background */
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-/* Form wrapper */
+
+/* =========================================================
+   FORM WRAPPER
+   Controls overall form layout and spacing
+========================================================= */
 .capture-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-.capture-title{
+
+/* Form title */
+.capture-title {
   color: #333;
   font-size: 18px;
-  margin-bottom : 20px;
+  margin-bottom: 20px;
 }
 
-/* Labels */
+/* =========================================================
+   LABELS
+========================================================= */
 .capture-form label {
   font-weight: 600;
   color: var(--text-color, #444);
   margin-bottom: 5px;
 }
 
-/* Inputs, selects, textareas */
+/* =========================================================
+   INPUTS / SELECTS / TEXTAREAS
+========================================================= */
 .capture-form input,
 .capture-form select,
 .capture-form textarea {
@@ -35,37 +47,47 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 13px;
-  outline: none;
   width: 100%;
-  transition: border-color 0.2s;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
+/* Focus state for accessibility */
 .capture-form input:focus,
 .capture-form select:focus,
 .capture-form textarea:focus {
   border-color: #4a90e2;
 }
 
-/* Submit button */
+/* =========================================================
+   PRIMARY FORM BUTTON
+========================================================= */
 .capture-form button {
   padding: 12px 18px;
-  background: #2346ed;
+  background: #2346ed; /* Primary brand color */
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s ease;
 }
+
 .capture-form button:hover {
   background: #357abd;
 }
-.button-box{
+
+/* Button alignment container */
+.button-box {
   display: flex;
   gap: 20px;
-  justify-content: right;
+  justify-content: flex-end;
 }
+
+/* =========================================================
+   FILE UPLOAD BUTTON
+========================================================= */
 .file-btn {
   display: inline-block;
   padding: 10px 15px;
@@ -82,13 +104,18 @@
   background-color: #0056b3;
 }
 
-/* Tabs wrapper (add near your existing form css) */
+/* =========================================================
+   TABS WRAPPER
+   Used for multi-section capture forms
+========================================================= */
 .capture-upgraded .tabs-wrap {
   display: flex;
   gap: 8px;
   margin-bottom: 12px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
 }
+
+/* Individual tab button */
 .tab-btn {
   background: #f3f4f8;
   border: 1px solid #e3e6ee;
@@ -97,20 +124,27 @@
   cursor: pointer;
   font-weight: 600;
 }
+
+/* Active tab state */
 .tab-btn.active {
-  background: #2346ed; /* primary */
+  background: #2346ed;
   color: white;
-  box-shadow: 0 6px 18px rgba(35,70,237,0.12);
+  box-shadow: 0 6px 18px rgba(35, 70, 237, 0.12);
 }
 
-/* Panels */
+/* =========================================================
+   TAB PANELS
+   Content containers under each tab
+========================================================= */
 .tab-panel {
-  background: #fff;
+  background: #ffffff;
   padding: 14px;
   border-radius: 10px;
   border: 1px solid #eef2ff;
   margin-bottom: 12px;
 }
+
+/* Inputs inside tab panels */
 .tab-panel input,
 .tab-panel select,
 .tab-panel textarea {
@@ -121,15 +155,21 @@
   border-radius: 8px;
   border: 1px solid #dfe6f8;
 }
+
+/* Row layout for grouped inputs */
 .tab-panel .row {
   display: flex;
   gap: 8px;
 }
+
+/* Equal width inputs in a row */
 .tab-panel .row input {
   flex: 1;
 }
 
-/* small label */
+/* =========================================================
+   SMALL HELPER LABEL
+========================================================= */
 .small-label {
   font-size: 12px;
   color: #4b5563;
@@ -137,20 +177,23 @@
   display: inline-block;
 }
 
-/* Form actions */
-/* Form actions - make it sticky at bottom inside form */
+/* =========================================================
+   FORM ACTIONS
+   Sticky bottom action bar inside form
+========================================================= */
 .form-actions {
   position: sticky;
   bottom: 0;
-  background: #fff;        /* so it doesn’t overlap content visually */
+  background: #ffffff;
   padding: 10px;
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  border-top: 1px solid #e3e6ee; /* optional divider */
-  z-index: 10;               /* ensures it stays above other content */
+  border-top: 1px solid #e3e6ee;
+  z-index: 10; /* Stay above content while scrolling */
 }
 
+/* Primary action button */
 .btn-primary {
   padding: 8px 16px;
   background: #2346ed;
@@ -159,6 +202,8 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* Secondary / cancel button */
 .btn-secondary {
   padding: 8px 12px;
   background: #f3f4f8;
@@ -167,27 +212,44 @@
   cursor: pointer;
 }
 
-/* Responsive */
+/* =========================================================
+   RESPONSIVE — SMALL SCREENS (≤ 700px)
+========================================================= */
 @media (max-width: 700px) {
-  .tab-panel .row { flex-direction: column; }
-  .form-actions { flex-direction: column-reverse; align-items: stretch; }
+
+  /* Stack row inputs vertically */
+  .tab-panel .row {
+    flex-direction: column;
+  }
+
+  /* Buttons stack vertically for better tap targets */
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
 }
 
-/* Responsive grid for large screens */
+/* =========================================================
+   RESPONSIVE GRID — TABLET & UP (≥ 768px)
+   Converts form into two-column layout
+========================================================= */
 @media (min-width: 768px) {
   .capture-form {
     display: grid;
-    /* grid-template-columns: 1fr 1fr; */
     gap: 20px 30px;
   }
 
+  /* Allow specific elements to span both columns */
   .capture-form .full-width {
     grid-column: span 2;
   }
 }
 
-/* Mobile friendly adjustments */
+/* =========================================================
+   MOBILE OPTIMIZATION (≤ 480px)
+========================================================= */
 @media (max-width: 480px) {
+
   .capture-container {
     padding: 15px;
   }
