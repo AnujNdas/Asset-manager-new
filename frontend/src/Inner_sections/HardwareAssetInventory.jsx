@@ -417,7 +417,7 @@ const getInStock = (asset) =>
           </div>
 
           <div>
-            <label>Expiry Date</label>
+            <label>Maintainance Date</label>
             <p>
               {selectedAsset.DOE
                 ? new Date(selectedAsset.DOE).toLocaleDateString()

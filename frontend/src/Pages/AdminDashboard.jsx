@@ -200,56 +200,51 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
 
         {/* EXPIRING ASSETS */}
 <div className="panel-card expiring-panel">
-  <h2>Assets Expiring Soon</h2>
+  <h2>Assets Requiring Attention</h2>
 
   <div className="expiring-grid">
 
     {/* Hardware */}
     <div className="expiring-column">
-      <h3>
-  Hardware ({hardwareList.length})
-</h3>
+      <h3>Hardware ({hardwareList.length})</h3>
 
-<ul>
-  {hardwareList.length > 0 ? (
-    hardwareList.map((item) => (
-      <li key={item._id}>
-        <span className="dot red"></span>
-        {item.name ?? "Unnamed Hardware"} — 
-        {new Date(item.expiry).toLocaleDateString()}
-      </li>
-    ))
-  ) : (
-    <p className="empty-state">No hardware expiring soon</p>
-  )}
-</ul>
-
+      <ul>
+        {hardwareList.length > 0 ? (
+          hardwareList.map((item) => (
+            <li key={item._id}>
+              <span className="dot red"></span>
+              {item.name ?? "Unnamed Hardware"} — 
+              Warranty ends on {new Date(item.expiry).toLocaleDateString()}
+            </li>
+          ))
+        ) : (
+          <p className="empty-state">No hardware requiring attention</p>
+        )}
+      </ul>
     </div>
 
     {/* Software */}
     <div className="expiring-column">
-     <h3>
-  Software ({softwareList.length})
-</h3>
+      <h3>Software ({softwareList.length})</h3>
 
-<ul>
-  {softwareList.length > 0 ? (
-    softwareList.map((item) => (
-      <li key={item._id}>
-        <span className="dot red"></span>
-        {item.name ?? "Unnamed Software"} — 
-        {new Date(item.expiry).toLocaleDateString()}
-      </li>
-    ))
-  ) : (
-    <p className="empty-state">No software expiring soon</p>
-  )}
-</ul>
-
+      <ul>
+        {softwareList.length > 0 ? (
+          softwareList.map((item) => (
+            <li key={item._id}>
+              <span className="dot red"></span>
+              {item.name ?? "Unnamed Software"} — 
+              Expires on {new Date(item.expiry).toLocaleDateString()}
+            </li>
+          ))
+        ) : (
+          <p className="empty-state">No software expiring soon</p>
+        )}
+      </ul>
     </div>
 
   </div>
 </div>
+
 
 
 
