@@ -57,7 +57,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await fetch("https://asset-manager-new.onrender.com/api/auth/user", {
+      const response = await fetch("https://asset-manager-new-production.up.railway.appapi/auth/user", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ useEffect(() => {
     setSaving(true);
     try {
       const body = JSON.stringify(fields);
-      const res = await fetch("https://asset-manager-new.onrender.com/api/user/update", {
+      const res = await fetch("https://asset-manager-new-production.up.railway.appapi/user/update", {
         method: "PUT",
         headers: authHeaders,
         body
