@@ -40,6 +40,43 @@ const Dashboard = () => {
     const loc = locationList.find((l) => l._id === id);
     return loc ? loc.name : "Unknown";
   };
+const HorizontalLegend = ({ payload }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "14px",
+        fontSize: "11px",
+        marginTop: "4px",
+        color: "#334155",
+      }}
+    >
+      {payload.map((entry, index) => (
+        <div
+          key={`legend-${index}`}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            fontWeight: 500,
+          }}
+        >
+          <span
+            style={{
+              width: 10,
+              height: 10,
+              backgroundColor: entry.color,
+              display: "inline-block",
+            }}
+          />
+          <span>{entry.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
   useEffect(() => {
     const load = async () => {
@@ -144,40 +181,113 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
       <div className="charts-grid">
 
         {/* TOP LOCATIONS BAR CHART */}
-        <div className="chart-card">
-          <h2>Top 5 Locations With Most Assets</h2>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={locChartData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value">
-                {locChartData.map((_, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+<div className="chart-card">
+  <h2>Top 5 Locations With Most Assets</h2>
+
+  <ResponsiveContainer width="100%" height={200}>
+    <BarChart
+      data={locChartData}
+      layout="vertical"
+      margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+    >
+      <XAxis
+        type="number"
+        tick={{ fontSize: 11 }}
+        axisLine={true}
+        tickLine={true}
+      />
+
+      <YAxis
+        type="category"
+        dataKey="name"
+        width={70}                 // 🔥 KEY FIX
+        tick={{ fontSize: 11 }}
+        axisLine={true}
+        tickLine={true}
+      />
+
+      <Tooltip />
+
+      <Bar
+        dataKey="value"
+        barSize={18}               // thicker bars
+        radius={0}                 // squared ends
+      >
+        {locChartData.map((_, index) => (
+          <Cell
+            key={index}
+            fill={[
+              "#4988C4",
+              "#1D546D",
+              "#0F2854",
+              "#5C9BCF",
+              "#2E6F95",
+            ][index % 5]}
+          />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+</div>
+
+
 
         {/* MONTHLY VALUATION CHART */}
-        <div className="chart-card">
+<div className="chart-card">
   <h2>Monthly Asset Valuation Trend</h2>
 
-<ResponsiveContainer width="100%" height={250}>
-  <BarChart data={valuationChartData}>
-    <XAxis dataKey="month" />
-    <YAxis />
-    <Tooltip />
-    <Legend />
+  <ResponsiveContainer width="100%" height={220}>
+    <BarChart
+      data={valuationChartData}
+      layout="vertical"
+      margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+    >
+      <XAxis
+        type="number"
+        tick={{ fontSize: 11 }}
+        axisLine={true}
+        tickLine={true}
+      />
 
-    <Bar dataKey="hardware" name="Hardware Valuation" fill="#6366F1" />
-    <Bar dataKey="software" name="Software Valuation" fill="#F59E0B" />
-    <Bar dataKey="total" name="Total Valuation" fill="#22C55E" />
-  </BarChart>
-</ResponsiveContainer>
+      <YAxis
+        type="category"
+        dataKey="month"
+        width={65}                 // 🔥 critical
+        tick={{ fontSize: 11 }}
+        axisLine={true}
+        tickLine={true}
+      />
 
+      <Tooltip />
+
+ <Legend content={<HorizontalLegend />} />
+
+      <Bar
+        dataKey="hardware"
+        name="Hardware"
+        fill="#4988C4"
+        barSize={20}
+        radius={0}
+      />
+      <Bar
+        dataKey="software"
+        name="Software"
+        fill="#1D546D"
+        barSize={20}
+        radius={0}
+      />
+      <Bar
+        dataKey="total"
+        name="Total"
+        fill="#0F2854"
+        barSize={20}
+        radius={0}
+      />
+    </BarChart>
+  </ResponsiveContainer>
 </div>
+
+
 
 
       </div>
@@ -186,17 +296,31 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
       <div className="grid-2">
 
         {/* ACTIVE USERS */}
-        <div className="panel-card">
-          <h2>Most Active Users</h2>
-          <ul className="list">
-            {activeUsers?.map((u) => (
-              <li key={u._id}>
-                <strong>{u.username}</strong>
-                <small>{new Date(u.updatedAt).toLocaleString()}</small>
-              </li>
-            ))}
-          </ul>
+{/* ACTIVE USERS */}
+<div className="panel-card">
+  <h2>Most Active Users</h2>
+
+  <ul className="active-users-list">
+    {activeUsers?.map((u) => (
+      <li key={u._id} className="active-user-item">
+        <img
+          src={`https://robohash.org/${u.username || "guest"}?set=set2&size=50x50`}
+          alt="avatar"
+          className="avatar"
+        />
+
+        <div className="user-meta">
+          <strong className="username">{u.username}</strong>
+          <span className="email">{u.email}</span>
+          <small className="last-active">
+            Last active: {new Date(u.updatedAt).toLocaleString()}
+          </small>
         </div>
+      </li>
+    ))}
+  </ul>
+</div>
+
 
         {/* EXPIRING ASSETS */}
 <div className="panel-card expiring-panel">

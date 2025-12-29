@@ -1,56 +1,881 @@
-/* =========================================================
-   INVENTORY & CAPTURE PAGE CONTAINERS
-   Shared layout rules
-========================================================= */
-.inventory-container,
-.capture-container {
-  padding: 5px;
-  max-height: 100vh;
-}
+  .inventory-container,.capture-container {
+    padding: 5px;
+    max-height: 100vh;
+  }
+  .image-container{
+    display : flex;
+    justify-content: center;
+    width : 100%;
+  }
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
 
-/* =========================================================
-   IMAGE CENTERING
-========================================================= */
-.image-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
+  .tab {
+    padding: 10px 20px;
+    border: none;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: #333;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
 
-/* =========================================================
-   TABS NAVIGATION
-========================================================= */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap; /* Allows wrapping on small screens */
-}
+  .tab:hover {
+    background: #f0f5ff;
+    transform: translateY(-2px);
+  }
 
-/* =========================================================
-   RESPONSIVE ADJUSTMENTS
-   (Primarily tablets & mobile)
-========================================================= */
-@media (max-width: 768px) {
+  .tab.active {
+    background: #bbd8ff;
+    box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+    font-weight: 600;
+  }
 
-  /* ---------------------------------
-     Edit Modal Container
-  ---------------------------------- */
+  /* Badge styles for expiry */
+  .badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .badge-green {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid rgba(5,150,105,0.08);
+  }
+
+  .badge-yellow {
+    background: #fff7ed;
+    color: #b45309;
+    border: 1px solid rgba(180,83,9,0.08);
+  }
+
+  .badge-red {
+    background: #fff1f2;
+    color: #b91c1c;
+    border: 1px solid rgba(185,28,28,0.08);
+  }
+
+  .badge-renew {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid rgba(30,64,175,0.08);
+  }
+
+  /* small wrapper to keep badges aligned in header */
+  .badge-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Pagination - compact & robust */
+  .pagination {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .pagination button {
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    min-width: 40px;
+  }
+
+  .pagination button.active {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+  }
+
+  .pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .pagination .dots {
+    padding: 6px 8px;
+    color: #6b7280;
+    font-weight: 600;
+  }
+
+  /* View modal two-column layout */
+  .view-modal {
+    display: flex;
+    gap: 20px;
+    width: 92%;
+    max-width: 980px;
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    overflow: hidden;
+    max-height: 90vh;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.12);
+  }
+
+  /* Left: image container */
+  .view-left {
+    flex: 1.05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 260px;
+    max-width: 420px;
+  }
+
+  .view-image {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #e6eef8;
+    background: #fafafa;
+  }
+
+  /* Right: details */
+  .view-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .view-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .view-details p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #111827;
+  }
+
+  .view-details strong {
+    display: inline-block;
+    width: 120px; /* aligns labels */
+    color: #111827;
+  }
   .edit-modal {
+    display: flex;
+    /* width: 900px; */
+    /* height: 520px; */
+    /* background: #fff; */
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .edit-left {
+    width: 40%;
+    background: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px;
+    border-right: 1px solid #ddd;
+  }
+
+  .edit-image {
+    width: 100%;
+    height: 280px;
+    object-fit: contain;
     border-radius: 10px;
   }
 
-  /* ---------------------------------
-     Left Panel of Edit Modal
-  ---------------------------------- */
-  .edit-left {
-    padding: 12px;
+  .upload-label {
+    background: #1a73e8;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 14px;
   }
 
-  /* ---------------------------------
-     Edit Modal Image
-  ---------------------------------- */
-  .edit-image {
-    height: 180px;
+  .upload-label .file-input {
+    display: none;
   }
+
+  .edit-right {
+    width: 60%;
+    padding: 20px 24px;
+    overflow-y: auto;
+  }
+
+  .edit-grid {
+    display: flex;
+    flex-direction : column;
+    gap: 14px;
+    margin-top: 12px;
+  }
+
+  .edit-grid input,
+  .edit-grid select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .modal-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .save-btn {
+    background: #0d6efd;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+  }
+
+  .close-btn {
+    background: #999;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+  }
+
+  /* Compact Card for Image */
+  .saas-image-card {
+    background: #fff;
+    padding: 10px;           /* reduced padding */
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: center;
+  }
+
+  .saas-image {
+    border-radius: 10px;
+    object-fit: cover;
+    max-height: 180px;       /* smaller image */
+  }
+
+  /* Title */
+  .saas-title {
+    font-size: 18px;         /* compact size */
+    font-weight: 600;
+    margin-bottom: 6px;      /* reduced */
+  }
+
+  /* Badges Row */
+  .saas-badges {
+    display: flex;
+    gap: 6px;               /* reduced */
+  }
+
+  .saas-badge {
+    background: #eef2ff;
+    color: #4f46e5;
+    padding: 4px 8px;        /* compact padding */
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  /* Section Title */
+  .saas-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 6px;       /* compact */
+    margin-top: 4px;
+  }
+
+  /* Details Grid */
+  .saas-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .saas-details-grid label {
+    font-size: 11px;          /* smaller label */
+    color: #7e7e7e;
+  }
+
+  .saas-details-grid p {
+    font-size: 13px;          /* slightly smaller */
+    font-weight: 500;
+    color: #2c2c2c;
+    margin-top: 2px;          /* reduced spacing */
+  }
+
+  /* Modal Actions */
+  .saas-actions {
+    display: flex;
+    justify-content: flex-end;         /* compact spacing */
+  }
+
+  .close-btn {
+    padding: 6px 12px;        /* reduced padding */
+    font-size: 13px;
+  }
+
+  /* ===== Export Dropdown ===== */
+
+  .export-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Main button */
+  .export-btn {
+    background-color: #2456ed;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(36, 86, 237, 0.25);
+  }
+
+  .export-btn:hover {
+    background-color: #1e48c6;
+    box-shadow: 0 6px 16px rgba(36, 86, 237, 0.35);
+  }
+
+  .export-btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Caret animation */
+  .export-caret {
+    transition: transform 0.2s ease;
+  }
+
+  .export-caret.open {
+    transform: rotate(180deg);
+  }
+
+  /* Dropdown */
+  .export-dropdown {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: #fff;
+    min-width: 160px;
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    z-index: 100;
+    animation: dropdownFade 0.15s ease-out;
+  }
+
+  /* Dropdown items */
+  .export-dropdown button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .export-dropdown button:hover {
+    background: rgba(36, 86, 237, 0.08);
+    color: #2456ed;
+  }
+  /* ============================= */
+  /* ASSIGN ASSET MODAL */
+  /* ============================= */
+
+  .asset-assign-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+  }
+
+  .asset-assign-modal {
+    background: #ffffff;
+    width: 420px;
+    max-width: 92%;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    animation: fadeScaleIn 0.25s ease;
+  }
+
+  .asset-assign-modal h3 {
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .asset-assign-modal p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #444;
+  }
+
+  .asset-assign-modal input {
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    font-size: 0.95rem;
+  }
+
+  .asset-assign-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  /* Confirm Assign */
+  .asset-assign-actions .btn-confirm {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .asset-assign-actions .btn-confirm:hover {
+    background: #1e4fd6;
+  }
+
+  /* Cancel Assign */
+  .asset-assign-actions .btn-cancel {
+    background: #f3f4f6;
+    color: #333;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .asset-assign-actions .btn-cancel:hover {
+    background: #e5e7eb;
+  }
+
+  /* Animation */
+  @keyframes fadeScaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+
+  /* Animation */
+  @keyframes dropdownFade {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ===== Mobile Responsive ===== */
+  @media (max-width: 600px) {
+    .export-btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .export-dropdown {
+      width: 100%;
+      right: auto;
+      left: 0;
+    }
+  }
+
+  /* Responsive stacking for mobile */
+  @media (max-width: 720px) {
+    .view-modal {
+      flex-direction: column;
+      padding: 12px;
+      width: 95%;
+    }
+
+    .view-left {
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .view-details strong {
+      width: auto;
+    }
+  }
+
+  /* Card image tweak (if any card shows image) */
+  .asset-image {
+    width: 100%;
+    max-width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+  /* =============================
+    NEW ASSET VIEW MODAL UI
+  ================================ */
+
+  /* Overlay */
+  .asset-view-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 20px;
+  }
+
+  /* Modal */
+  .asset-view-modal {
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0px 12px 38px rgba(0, 0, 0, 0.25);
+    animation: popUp 0.25s ease;
+  }
+
+  @keyframes popUp {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Header */
+  .asset-view-header {
+    margin-bottom: 18px;
+  }
+
+  .asset-view-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 10px;
+  }
+
+  /* Badges */
+  .asset-view-badges {
+    display: flex;
+    gap: 10px;
+  }
+
+  .asset-view-badge {
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .asset-view-badge.category {
+    background: #e0e7ff;
+    color: #4338ca;
+  }
+
+  .asset-view-badge.status {
+    background: #fef3c7;
+    color: #b45309;
+  }
+
+  /* Section Title */
+  .asset-view-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* Details Grid */
+  .asset-view-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .asset-view-grid label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .asset-view-grid p {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #1f2937;
+    margin: 5px;
+  }
+
+  /* Close Button */
+  .asset-view-close-btn {
+    width: 100%;
+    /* margin-top: 24px; */
+    padding: 12px;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .asset-view-close-btn:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+  }
+
+  /* ========= RESPONSIVE ========= */
+  @media (max-width: 480px) {
+    .asset-view-modal {
+      padding: 15px;
+      border-radius: 18px;
+      width: 80%;
+    }
+
+    .asset-view-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .asset-view-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* ====================================
+    NEW EDIT MODAL UI (NO IMAGE)
+  ==================================== */
+
+  /* Overlay */
+  .asset-edit-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 20px;
+  }
+
+  /* Modal */
+  .asset-edit-modal {
+    width: 100%;
+    max-width: 550px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 22px;
+    box-shadow: 0px 12px 38px rgba(0, 0, 0, 0.22);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: editPopup 0.25s ease;
+  }
+
+  @keyframes editPopup {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Title */
+  .asset-edit-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 20px;
+  }
+
+  /* Input Grid */
+  .asset-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  /* Inputs + Selects */
+  .asset-edit-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    font-size: 0.95rem;
+    color: #111827;
+    transition: 0.2s ease;
+  }
+
+  .asset-edit-input:focus {
+    border-color: #6366f1;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  }
+
+  /* Action Buttons */
+  .asset-edit-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .asset-edit-save-btn {
+    padding: 12px 20px;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .asset-edit-save-btn:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+  }
+
+  .asset-edit-cancel-btn {
+    padding: 12px 20px;
+    background: #e5e7eb;
+    color: #111827;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+  }
+
+  .asset-edit-cancel-btn:hover {
+    background: #d1d5db;
+    transform: translateY(-2px);
+  }
+  .dept-badge-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
 }
+
+.dept-badge {
+  background: #ff0000;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #d6e0ff;
+}
+
+.dept-muted {
+  font-size: 12px;
+  color: #999;
+}
+.btn-assign:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 500px) {
+    .asset-edit-modal {
+      padding: 15px;
+      width: 80%;
+    }
+
+    .asset-edit-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .asset-edit-title {
+      font-size: 1.25rem;
+    }
+  }
+
+
+  @media (max-width: 500px) {
+    .edit-title {
+      font-size: 18px;
+    }
+
+    .edit-modal {
+      border-radius: 10px;
+    }
+
+    .edit-left {
+      padding: 12px;
+    }
+
+    .edit-image {
+      height: 180px;
+    }
+  }
