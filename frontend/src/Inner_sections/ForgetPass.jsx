@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     setMessage("");
 
     try {
-      const res = await axios.post("https://asset-manager-new.onrender.com/api/auth/forgot-password", { email });
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/forgot-password`, { email });
       setMessage("✅ " + res.data.message);
     } catch (error) {
       setMessage("❌ " + (error.response?.data?.message || "Something went wrong"));
