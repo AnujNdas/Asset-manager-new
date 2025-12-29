@@ -60,7 +60,7 @@ const tabs = [
       const cachedUser = localStorage.getItem("username");
 
       try {
-        const response = await fetch("https://asset-manager-new.onrender.com/api/auth/user", {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/user`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
