@@ -20,14 +20,14 @@ export const NotificationProvider = ({ children }) => {
     if (!userId || !token) return;
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}/notifications`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setNotifications(res.data))
       .catch(console.error);
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}/notifications/unreadCount`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/notifications/unreadCount`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUnreadCount(res.data.count || 0))
