@@ -163,7 +163,7 @@ const forgotPassword = async (req, res) => {
     user.resetTokenExpiry = Date.now() + 3600000;
     await user.save();
 
-    const resetLink = `https://asset-manager-new-production.up.railway.app/user/reset/${token}`;
+    const resetLink = `https://asset-manager-new.vercel.app/user/reset/${token}`;
 
     const html = `
       <div style="font-family:sans-serif;padding:10px;">
