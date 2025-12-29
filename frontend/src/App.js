@@ -18,7 +18,7 @@ import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 import Footer from "./Components/Footer";
 import AssignmentPage from "./Pages/AssignmentPage" ;
-
+import { Toaster } from "react-hot-toast";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
@@ -83,6 +83,15 @@ const App = () => {
       </Routes>
 
     </section>
+        <Toaster
+      position="top-right"
+      toastOptions={{
+        duration: 4000,
+        style: {
+          fontSize: "14px",
+        },
+      }}
+    />
   </div>
 );
 

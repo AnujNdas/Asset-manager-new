@@ -1,5 +1,5 @@
 const Status = require("../models/Status");
-
+const sendNotification = require("../utils/notify");
 /* ============================
    Create / Restore Status
 ============================ */
@@ -23,6 +23,14 @@ const createStatus = async (req, res) => {
         existing.isActive = true;
         await existing.save();
 
+        await sendNotification({
+          req,
+          userId: req.user.id,
+          title: "Status Restored",
+          message: `Status "${existing.name}" has been restored.`,
+          type: "success"
+        });
+
         return res.status(200).json({
           message: "Status restored successfully",
           status: existing
@@ -33,6 +41,14 @@ const createStatus = async (req, res) => {
     }
 
     const newStatus = await Status.create({ name });
+
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Status Created",
+      message: `Status "${newStatus.name}" was created successfully.`,
+      type: "success"
+    });
 
     res.status(201).json(newStatus);
 
@@ -76,6 +92,14 @@ const updateStatus = async (req, res) => {
       return res.status(404).json({ message: "Status not found" });
     }
 
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Status Updated",
+      message: `Status renamed to "${updatedStatus.name}".`,
+      type: "info"
+    });
+
     res.status(200).json({
       message: "Status updated successfully",
       updatedStatus
@@ -86,6 +110,7 @@ const updateStatus = async (req, res) => {
     res.status(500).json({ message: "Error updating status" });
   }
 };
+
 
 /* ============================
    Get Active Statuses
@@ -120,6 +145,14 @@ const deleteStatus = async (req, res) => {
     status.isActive = false;
     await status.save();
 
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Status Deactivated",
+      message: `Status "${status.name}" has been deactivated.`,
+      type: "warning"
+    });
+
     res.status(200).json({
       message: "Status deleted successfully",
       status
@@ -130,6 +163,7 @@ const deleteStatus = async (req, res) => {
     res.status(500).json({ message: "Error deleting status" });
   }
 };
+
 
 /* ============================
    Restore Status (Optional)
@@ -147,6 +181,14 @@ const restoreStatus = async (req, res) => {
     status.isActive = true;
     await status.save();
 
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Status Restored",
+      message: `Status "${status.name}" has been restored.`,
+      type: "success"
+    });
+
     res.status(200).json({
       message: "Status restored successfully",
       status
@@ -157,6 +199,7 @@ const restoreStatus = async (req, res) => {
     res.status(500).json({ message: "Error restoring status" });
   }
 };
+
 
 module.exports = {
   createStatus,

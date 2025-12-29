@@ -6,7 +6,7 @@ const NotificationSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   type: {
     type: String,
-    enum: ["info", "warning", "alert"],
+    enum: ["info", "warning", "alert" , "success" , "error"],
     default: "info"
   },
   isRead: { type: Boolean, default: false },

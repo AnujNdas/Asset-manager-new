@@ -12,9 +12,9 @@ const Security = () => {
 
   const handleChangePassword = async () => {
     try {
-      const token = sessionStorage.getItem("token"); // Assuming token is stored in localStorage
+      const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
       const res = await axios.put(
-        "https://asset-manager-new.onrender.com/api/auth/change-password",
+        `${process.env.REACT_APP_API_BASE_URL}/auth/change-password`,
         { currentPassword, newPassword },
         {
           headers: {
@@ -30,7 +30,7 @@ const Security = () => {
       confirmButtonText: "OK",
     }).then(() => {
       // ✅ Remove token and redirect to login page
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
       navigate('/user/login') // or use navigate("/login") if using React Router
     });
 

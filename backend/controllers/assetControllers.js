@@ -1,8 +1,8 @@
 const Asset = require("../models/Asset");
 const LastAssetCode = require("../models/LastAssetCode");
-const Notification = require("../models/Notification");
 const AssetAssignment = require("../models/AssetAssignment");
 // const unzipper = require("unzipper");
+const sendNotification = require("../utils/notify");
 // const path = require("path");
 // const fs = require("fs");
 
@@ -126,6 +126,14 @@ const bulkUpload = async (req, res , next) => {
     if (validAssets.length) {
       await Asset.insertMany(validAssets, { ordered: false });
     }
+    await sendNotification({
+  req,
+  userId: req.user.id,
+  title: "Bulk Upload Completed",
+  message: `${validAssets.length} assets uploaded successfully.`,
+  redirectUrl: "/inventory",
+  type: "success",
+});
 
     return res.status(200).json({
       success: true,
@@ -168,13 +176,16 @@ const addAsset = async (req, res , next) => {
 
     const savedAsset = await newAsset.save();
 
-    const notification = await Notification.create({
-      title: "Asset Added",
-      message: "Asset added successfully.",
-      userId,
-    });
+await sendNotification({
+  req,
+  userId: req.user.id,
+  title: "Asset Added",
+  message: `Asset "${savedAsset.assetName}" was added successfully.`,
+  redirectUrl: "/inventory?tab=hardware",
+  type: "success",
+});
 
-    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
+
 
     return res.status(201).json(savedAsset);
   } catch (error) {
@@ -228,13 +239,15 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
       { new: true }
     );
 
-    const notification = await Notification.create({
-      title: "Asset Updated",
-      message: "Asset updated successfully.",
-      userId,
-    });
+await sendNotification({
+  req,
+  userId,
+  title: "Asset Updated",
+  message: `Asset "${updatedAsset.assetName}" was updated.`,
+  redirectUrl: "/inventory?tab=hardware",
+  type: "info",
+});
 
-    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
 
     return res.status(200).json(updatedAsset);
   } catch (error) {
@@ -259,14 +272,15 @@ const deleteAsset = async (req, res , next) => {
       return res.status(404).json({ message: "Asset not found" });
     }
 
-    const newNotification = await Notification.create({
-      title: "Asset Deleted",
-      message: "Asset deleted successfully.",
-      userId,
-    });
+await sendNotification({
+  req,
+  userId,
+  title: "Asset Deleted",
+  message: `Asset "${deletedAsset.assetName}" was deleted.`,
+  redirectUrl: "/inventory?tab=hardware",
+  type: "alert",
+});
 
-    const io = req.app.get("io");
-    io.to(userId.toString()).emit("newNotification", newNotification);
 
     return res.status(200).json({ message: "Asset successfully deleted", deletedAsset });
 

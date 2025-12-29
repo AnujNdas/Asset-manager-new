@@ -105,14 +105,13 @@ const getInStockCategorySummary = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 const assignAssetsFromStock = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
+  let transactionCommitted = false;
 
   try {
     const { assignments } = req.body;
-
     if (!Array.isArray(assignments) || assignments.length === 0) {
       throw new Error("No assignments provided");
     }
@@ -129,32 +128,13 @@ const assignAssetsFromStock = async (req, res) => {
         quantity,
       } = item;
 
-      /* ================= VALIDATIONS ================= */
-
-      if (!mongoose.Types.ObjectId.isValid(assetId)) {
-        throw new Error("Invalid assetId");
-      }
-
-      if (
-        assignedToType === "Department" &&
-        !mongoose.Types.ObjectId.isValid(assignedTo)
-      ) {
-        throw new Error("Invalid departmentId");
-      }
-
-      if (!quantity || quantity <= 0) {
-        throw new Error("Invalid quantity");
-      }
-
       let asset;
 
-      /* ================= HARDWARE ================= */
       if (assetType === "hardware") {
         asset = await Asset.findById(assetId).session(session);
         if (!asset) throw new Error("Hardware asset not found");
 
-        const inStock = asset.assetQuantity - asset.inUse;
-        if (inStock < quantity) {
+        if (asset.assetQuantity - asset.inUse < quantity) {
           throw new Error(`Insufficient stock for ${asset.assetName}`);
         }
 
@@ -162,34 +142,28 @@ const assignAssetsFromStock = async (req, res) => {
         await asset.save({ session });
       }
 
-      /* ================= SOFTWARE ================= */
-if (assetType === "software") {
-  asset = await SoftwareAsset.findById(assetId).session(session);
-  if (!asset) throw new Error("Software asset not found");
+      if (assetType === "software") {
+        asset = await SoftwareAsset.findById(assetId).session(session);
+        if (!asset) throw new Error("Software asset not found");
 
-  const available = asset.assetQuantity - asset.inUse;
-  if (available < quantity) {
-    throw new Error(`Insufficient licenses for ${asset.assetName}`);
-  }
+        if (asset.assetQuantity - asset.inUse < quantity) {
+          throw new Error(`Insufficient licenses for ${asset.assetName}`);
+        }
 
-  asset.inUse += quantity;
-  await asset.save({ session });
-}
+        asset.inUse += quantity;
+        await asset.save({ session });
+      }
 
-
-      /* ================= CREATE ASSIGNMENT ================= */
       const [assignment] = await AssetAssignment.create(
-        [
-          {
-            assetType,
-            assetId,
-            assetModel,
-            assignedToType,
-            assignedTo, // ✅ FIXED
-            quantity,
-            status: "active",
-          },
-        ],
+        [{
+          assetType,
+          assetId,
+          assetModel,
+          assignedToType,
+          assignedTo,
+          quantity,
+          status: "active",
+        }],
         { session }
       );
 
@@ -197,18 +171,36 @@ if (assetType === "software") {
     }
 
     await session.commitTransaction();
+    transactionCommitted = true;
     session.endSession();
 
-    res.status(201).json({
+    // 🔔 Notification (isolated & safe)
+    try {
+      await sendNotification({
+        req,
+        userId: req.user.id,
+        title: "Assets Assigned",
+        message: `${createdAssignments.length} asset(s) assigned successfully.`,
+        redirectUrl: "/assignments",
+        type: "info",
+      });
+    } catch (err) {
+      console.error("Notification failed:", err.message);
+    }
+
+    return res.status(201).json({
       success: true,
       message: "Assets assigned successfully",
       data: createdAssignments,
     });
+
   } catch (error) {
-    await session.abortTransaction();
+    if (!transactionCommitted) {
+      await session.abortTransaction();
+    }
     session.endSession();
 
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: error.message,
     });

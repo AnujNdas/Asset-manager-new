@@ -1,5 +1,5 @@
 const Department = require("../models/Department");
-
+const sendNotification = require("../utils/notify");
 /* ============================
    Create Department
 ============================ */
@@ -13,7 +13,6 @@ const createDepartment = async (req, res) => {
 
     name = name.trim();
 
-    // Check existing (case-insensitive)
     const existing = await Department.findOne({
       name: { $regex: `^${name}$`, $options: "i" }
     });
@@ -27,8 +26,16 @@ const createDepartment = async (req, res) => {
       return res.status(409).json({ error: "Department already exists" });
     }
 
-    const newDepartment = new Department({ name });
-    await newDepartment.save();
+    const newDepartment = await Department.create({ name });
+
+    // 🔔 Notification
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Department Created",
+      message: `Department "${newDepartment.name}" was created successfully.`,
+      type: "success"
+    });
 
     res.status(201).json(newDepartment);
   } catch (error) {
@@ -36,6 +43,7 @@ const createDepartment = async (req, res) => {
     res.status(500).json({ error: "Error creating department" });
   }
 };
+
 
 /* ============================
    Update Department
@@ -51,7 +59,6 @@ const updateDepartment = async (req, res) => {
 
     name = name.trim();
 
-    // Duplicate name check (ignore self)
     const duplicate = await Department.findOne({
       _id: { $ne: id },
       name: { $regex: `^${name}$`, $options: "i" }
@@ -72,6 +79,15 @@ const updateDepartment = async (req, res) => {
     if (!updatedDepartment) {
       return res.status(404).json({ error: "Department not found" });
     }
+
+    // 🔔 Notification
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Department Updated",
+      message: `Department renamed to "${updatedDepartment.name}".`,
+      type: "info"
+    });
 
     res.status(200).json({
       message: "Department updated successfully",
@@ -114,6 +130,15 @@ const deleteDepartment = async (req, res) => {
       return res.status(404).json({ error: "Department not found" });
     }
 
+    // 🔔 Notification
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Department Deactivated",
+      message: `Department "${department.name}" has been deactivated.`,
+      type: "warning"
+    });
+
     res.status(200).json({
       message: "Department deactivated successfully",
       department
@@ -140,6 +165,15 @@ const restoreDepartment = async (req, res) => {
     if (!department) {
       return res.status(404).json({ error: "Department not found" });
     }
+
+    // 🔔 Notification
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Department Restored",
+      message: `Department "${department.name}" has been restored.`,
+      type: "success"
+    });
 
     res.status(200).json({
       message: "Department restored successfully",

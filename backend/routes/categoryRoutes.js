@@ -6,22 +6,21 @@ const {
   deleteCategory,
   restoreCategory
 } = require("../controllers/categoryControllers");
-
+const authenticateToken = require("../Middleware/Authentication-token");
 const router = express.Router();
 
 /* ================= CREATE ================= */
-router.post("/", createCategory);
-
+router.post("/", authenticateToken(["admin", "super-admin"]), createCategory);
 /* ================= READ (ACTIVE ONLY) ================= */
 router.get("/", getCategories);
 
 /* ================= UPDATE ================= */
-router.put("/:id", updateCategory);
+router.put("/:id", authenticateToken(["admin", "super-admin"]), updateCategory);
 
 /* ================= SOFT DELETE ================= */
-router.delete("/:id", deleteCategory);
+router.delete("/:id", authenticateToken(["admin", "super-admin"]), deleteCategory);
 
 /* ================= RESTORE ================= */
-router.patch("/:id/restore", restoreCategory);
+router.patch("/:id/restore", authenticateToken(["admin", "super-admin"]), restoreCategory);
 
 module.exports = router;

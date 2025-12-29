@@ -1,5 +1,5 @@
 const Location = require("../models/Location");
-
+const sendNotification = require("../utils/notify");
 /* ============================
    Create Location
 ============================ */
@@ -17,11 +17,20 @@ const createLocation = async (req, res) => {
       name: { $regex: `^${name}$`, $options: "i" }
     });
 
-    // If exists but inactive → restore
+    // Restore if inactive
     if (existing) {
       if (!existing.isActive) {
         existing.isActive = true;
         await existing.save();
+
+        await sendNotification({
+          req,
+          userId: req.user.id,
+          title: "Location Restored",
+          message: `Location "${existing.name}" has been restored.`,
+          type: "success"
+        });
+
         return res.status(200).json({
           message: "Location restored successfully",
           location: existing
@@ -32,6 +41,14 @@ const createLocation = async (req, res) => {
     }
 
     const newLocation = await Location.create({ name });
+
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Location Created",
+      message: `Location "${newLocation.name}" was created successfully.`,
+      type: "success"
+    });
 
     res.status(201).json(newLocation);
   } catch (error) {
@@ -74,6 +91,14 @@ const updateLocation = async (req, res) => {
       return res.status(404).json({ message: "Location not found or inactive" });
     }
 
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Location Updated",
+      message: `Location renamed to "${updatedLocation.name}".`,
+      type: "info"
+    });
+
     res.status(200).json({
       message: "Location updated successfully",
       updatedLocation
@@ -83,6 +108,7 @@ const updateLocation = async (req, res) => {
     res.status(500).json({ message: "Error updating location" });
   }
 };
+
 
 /* ============================
    Get Active Locations
@@ -117,6 +143,14 @@ const deleteLocation = async (req, res) => {
       return res.status(404).json({ message: "Location not found" });
     }
 
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Location Deactivated",
+      message: `Location "${deletedLocation.name}" has been deactivated.`,
+      type: "warning"
+    });
+
     res.status(200).json({
       message: "Location deleted successfully",
       deletedLocation
@@ -143,6 +177,14 @@ const restoreLocation = async (req, res) => {
     if (!restored) {
       return res.status(404).json({ message: "Location not found" });
     }
+
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Location Restored",
+      message: `Location "${restored.name}" has been restored.`,
+      type: "success"
+    });
 
     res.status(200).json({
       message: "Location restored successfully",

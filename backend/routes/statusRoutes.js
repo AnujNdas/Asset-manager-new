@@ -7,13 +7,13 @@ const {
   deleteStatus,
   restoreStatus
 } = require("../controllers/statusControllers");
-
+const authenticateToken = require("../Middleware/Authentication-token");
 const router = express.Router();
 
-router.post("/", createStatus);
+router.post("/", authenticateToken(["admin", "super-admin"]), createStatus);
 router.get("/", getStatuses);
-router.put("/:id", updateStatus);
-router.delete("/:id", deleteStatus);
-router.patch("/:id/restore", restoreStatus); // optional
+router.put("/:id", authenticateToken(["admin", "super-admin"]), updateStatus);
+router.delete("/:id", authenticateToken(["admin", "super-admin"]), deleteStatus);
+router.patch("/:id/restore", authenticateToken(["admin", "super-admin"]), restoreStatus); // optional
 
 module.exports = router;

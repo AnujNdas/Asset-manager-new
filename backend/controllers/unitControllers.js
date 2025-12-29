@@ -1,5 +1,5 @@
 const Unit = require("../models/Unit");
-
+const sendNotification = require("../utils/notify");
 /* ============================
    Create / Restore Unit
 ============================ */
@@ -23,6 +23,14 @@ const createUnit = async (req, res) => {
         existing.isActive = true;
         await existing.save();
 
+        await sendNotification({
+          req,
+          userId: req.user.id,
+          title: "Unit Restored",
+          message: `Unit "${existing.name}" has been restored.`,
+          type: "success"
+        });
+
         return res.status(200).json({
           message: "Unit restored successfully",
           unit: existing
@@ -33,6 +41,14 @@ const createUnit = async (req, res) => {
     }
 
     const newUnit = await Unit.create({ name });
+
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Unit Created",
+      message: `Unit "${newUnit.name}" was created successfully.`,
+      type: "success"
+    });
 
     res.status(201).json(newUnit);
 
@@ -75,6 +91,14 @@ const updateUnit = async (req, res) => {
     if (!updatedUnit) {
       return res.status(404).json({ message: "Unit not found" });
     }
+
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Unit Updated",
+      message: `Unit renamed to "${updatedUnit.name}".`,
+      type: "info"
+    });
 
     res.status(200).json({
       message: "Unit updated successfully",
@@ -120,6 +144,14 @@ const deleteUnit = async (req, res) => {
     unit.isActive = false;
     await unit.save();
 
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Unit Deactivated",
+      message: `Unit "${unit.name}" has been deactivated.`,
+      type: "warning"
+    });
+
     res.status(200).json({
       message: "Unit deleted successfully",
       unit
@@ -130,6 +162,7 @@ const deleteUnit = async (req, res) => {
     res.status(500).json({ message: "Error deleting unit" });
   }
 };
+
 
 /* ============================
    Restore Unit
@@ -147,6 +180,14 @@ const restoreUnit = async (req, res) => {
     unit.isActive = true;
     await unit.save();
 
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Unit Restored",
+      message: `Unit "${unit.name}" has been restored.`,
+      type: "success"
+    });
+
     res.status(200).json({
       message: "Unit restored successfully",
       unit
@@ -157,6 +198,7 @@ const restoreUnit = async (req, res) => {
     res.status(500).json({ message: "Error restoring unit" });
   }
 };
+
 
 module.exports = {
   createUnit,

@@ -2,9 +2,9 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
+import toast from "react-hot-toast";
 
 const NotificationContext = createContext();
-
 export const useNotifications = () => useContext(NotificationContext);
 
 export const NotificationProvider = ({ children }) => {
@@ -12,43 +12,64 @@ export const NotificationProvider = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
 
   const socketRef = useRef(null);
-  const token = sessionStorage.getItem("token");
-  const userId = sessionStorage.getItem("userId");
-
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  
   // Fetch initial notifications + unread count
   useEffect(() => {
     if (!userId || !token) return;
 
     axios
-      .get("https://asset-manager-new.onrender.com/api/notifications", {
+      .get(`${process.env.REACT_APP_API_URL}/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setNotifications(res.data))
       .catch(console.error);
 
     axios
-      .get("https://asset-manager-new.onrender.com/api/notifications/unreadCount", {
+      .get(`${process.env.REACT_APP_API_URL}/notifications/unreadCount`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUnreadCount(res.data.count || 0))
       .catch(console.error);
 
     // setup socket
-    socketRef.current = io("https://asset-manager-new.onrender.com");
+    socketRef.current = io(process.env.REACT_APP_API_URL);
     socketRef.current.emit("joinRoom", userId);
 
-    socketRef.current.on("newNotification", (notification) => {
-      setNotifications((prev) => [notification, ...prev]);
-      setUnreadCount((prev) => prev + 1);
-    });
+socketRef.current.on("newNotification", (notification) => {
+  console.log("🔥 REALTIME EVENT RECEIVED:", notification);
+  setNotifications((prev) => [notification, ...prev]);
+  setUnreadCount((prev) => prev + 1);
+
+  // 🔥 SHOW POPUP
+  showToast(notification);
+});
 
     return () => socketRef.current.disconnect();
   }, [userId, token]);
+  const showToast = (notification) => {
+  const { title, message, type } = notification;
+
+  switch (type) {
+    case "success":
+      toast.success(`${title}: ${message}`);
+      break;
+    case "error":
+      toast.error(`${title}: ${message}`);
+      break;
+    case "warning":
+      toast(`${title}: ${message}`, { icon: "⚠️" });
+      break;
+    default:
+      toast(`${title}: ${message}`);
+  }
+};
 
   // Mark all as read
   const markAllAsRead = async () => {
     await axios.put(
-      "https://asset-manager-new.onrender.com/api/notifications/markAllRead",
+      `${process.env.REACT_APP_API_URL}/notifications/markAllRead`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -59,7 +80,7 @@ export const NotificationProvider = ({ children }) => {
   // Mark one as read
   const markAsRead = async (id) => {
     await axios.put(
-      `https://asset-manager-new.onrender.com/api/notifications/${id}/read`,
+      `${process.env.REACT_APP_API_URL}/notifications/${id}/read`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
