@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const costSchema = require("./CostSchema");
 const assetSchema = new mongoose.Schema(
   {
     assetCode: { type: String, required: true },
