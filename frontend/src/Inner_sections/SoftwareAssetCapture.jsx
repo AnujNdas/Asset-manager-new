@@ -28,7 +28,13 @@ const initialForm = {
 
   // Quantity & Cost
   assetQuantity: "",
-  assetCost: "",
+  assetCost: {
+  amount: "",
+  currency: "INR",
+},
+assetStatus: "",
+
+
 };
 
 
@@ -58,16 +64,29 @@ export default function SoftwareAssetCapture() {
     })();
   }, []);
 
+const handleChange = (e) => {
+  const { name, value, type, checked } = e.target;
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+  // assetCost fields
+  if (name.startsWith("assetCost.")) {
+    const field = name.split(".")[1];
 
+    setFormData((prev) => ({
+      ...prev,
+      assetCost: {
+        ...prev.assetCost,
+        [field]: field === "amount" ? Number(value) || "" : value,
+      },
+    }));
+    return;
+  }
+
+  if (type === "checkbox") {
+    setFormData((prev) => ({ ...prev, [name]: checked }));
+  } else {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+};
 
   const resetForm = () => {
     setFormData(initialForm);
@@ -76,8 +95,7 @@ export default function SoftwareAssetCapture() {
     setTab(0);
   };
 
-const buildJsonPayload = (assetCode) => ({
-  assetCode,
+const buildJsonPayload = () => ({
   assetName: formData.assetName,
   assetCategory: formData.assetCategory,
   assetSpecification: formData.assetSpecification,
@@ -100,7 +118,11 @@ const buildJsonPayload = (assetCode) => ({
   assetLifetime: formData.assetLifetime,
 
   assetQuantity: Number(formData.assetQuantity),
-  assetCost: Number(formData.assetCost),
+  assetCost: {
+  amount: Number(formData.assetCost.amount),
+  currency: formData.assetCost.currency,
+},
+
 });
 
 
@@ -143,8 +165,7 @@ const handleSubmit = async (e) => {
   setIsSubmitting(true);
 
   try {
-    const assetCode = await generateSoftwareAssetCode("SOFT");
-    const payload = buildJsonPayload(assetCode);
+    const payload = buildJsonPayload();
 
     await createSoftwareAsset(payload);
 
@@ -157,6 +178,7 @@ const handleSubmit = async (e) => {
     setIsSubmitting(false);
   }
 };
+
 
   // Small helper UI components to match hardware layout
   const SectionTitle = ({ children }) => <h3 className="section-title">{children}</h3>;
@@ -293,12 +315,33 @@ const handleSubmit = async (e) => {
         <div className="section">
           <SectionTitle>Financial & Contract</SectionTitle>
 
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Cost Per Unit</label>
-              <input type="number" name="assetCost" value={formData.assetCost} onChange={handleChange} />
-            </div>
-          </div>
+         <div className="grid-2">
+  <div className="input-group">
+    <label>Currency</label>
+    <select
+      name="assetCost.currency"
+      value={formData.assetCost.currency}
+      onChange={handleChange}
+    >
+      <option value="INR">INR</option>
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+    </select>
+  </div>
+
+  <div className="input-group">
+    <label>Cost Per License</label>
+    <input
+      type="number"
+      name="assetCost.amount"
+      value={formData.assetCost.amount}
+      onChange={handleChange}
+      placeholder="Unit cost"
+    />
+  </div>
+</div>
+
             <div className="input-group">
               <label>Status</label>
               <select name="assetStatus" value={formData.assetStatus} onChange={handleChange}>

@@ -18,7 +18,7 @@ const BulkUpload = ({ type, userRole }) => {
   useEffect(() => {
     if (userRole === "super-admin") setMode("auto");
   }, [userRole]);
-  useEffect(() => {
+useEffect(() => {
   if (!mode) return;
 
   const modeContent =
@@ -114,45 +114,47 @@ Swal.fire({
 
   /* ---------- TEMPLATES ---------- */
 
-  const templates = {
-    hardware: [
-      {
-        assetName: "",
-        assetCategory: "",
-        assetSpecification: "",
-        purchaseFrom: "",
-        associateUnit: "",
-        locationName: "",
-        locationAddress: "",
-        assetStatus: "",
-        DOP: "",
-        DOE: "",
-        assetCost: "",
-        assetQuantity: "",
-      },
-    ],
-    software: [
-      {
-        assetName: "",
-        assetCategory: "",
-        assetSpecification: "",
-        purchaseFrom: "",
-        associateUnit: "",
-        locationName: "",
-        locationAddress: "",
-        licenseKey: "",
-        licenseType: "",
-        licenseModel: "",
-        licenseMetric: "",
-        licenseUse: "",
-        assetStatus: "",
-        DOP: "",
-        DOE: "",
-        assetCost: "",
-        assetQuantity: "",
-      },
-    ],
-  };
+ const templates = {
+  hardware: [
+    {
+      assetName: "",
+      assetCategory: "",
+      assetSpecification: "",
+      purchaseFrom: "",
+      associateUnit: "",
+      locationName: "",
+      locationAddress: "",
+      assetStatus: "",
+      DOP: "",
+      DOE: "",
+      assetCost: "",        // number
+      assetCurrency: "INR", // default
+      assetQuantity: "",
+    },
+  ],
+  software: [
+    {
+      assetName: "",
+      assetCategory: "",
+      assetSpecification: "",
+      purchaseFrom: "",
+      associateUnit: "",
+      locationName: "",
+      locationAddress: "",
+      licenseKey: "",
+      licenseType: "",
+      licenseModel: "",
+      licenseMetric: "",
+      licenseUse: "",
+      assetStatus: "",
+      DOP: "",
+      DOE: "",
+      assetCost: "",        // number
+      assetCurrency: "INR", // default
+      assetQuantity: "",
+    },
+  ],
+};
 
   const getTemplateKeys = (t) =>
     Object.keys(templates[t][0]).sort();

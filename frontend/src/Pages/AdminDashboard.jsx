@@ -342,7 +342,7 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
             </li>
           ))
         ) : (
-          <p className="empty-state">No hardware requiring attention</p>
+          <p className="empty-state">No hardware Maintenance</p>
         )}
       </ul>
     </div>

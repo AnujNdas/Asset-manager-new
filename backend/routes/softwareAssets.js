@@ -7,7 +7,6 @@ const {
   getSoftwareAssets,
   updateSoftwareAsset,
   deleteSoftwareAsset,
-  generateSoftwareCode,
   bulkUploadSoftware // ✅ ADD THIS
 } = require("../controllers/softwareAssetController");
 
@@ -21,7 +20,6 @@ router.post("/", authenticateToken(), createSoftwareAsset);
 router.get("/", authenticateToken(), getSoftwareAssets);
 router.put("/:id", authenticateToken(), updateSoftwareAsset);
 router.delete("/:id", authenticateToken(), deleteSoftwareAsset);
-router.get("/asset-code", generateSoftwareCode);
 /* -------------------- BULK UPLOAD -------------------- */
 
 router.post(

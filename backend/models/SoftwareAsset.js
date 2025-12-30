@@ -61,9 +61,11 @@ const SoftwareAssetSchema = new mongoose.Schema(
     },
 
     assetCost: {
-      type: Number,
+      type: costSchema,
+      required: true,
       min: 0,
     },
+
 
     assignedUsers: [{ type: String }],
     linkedDevices: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],

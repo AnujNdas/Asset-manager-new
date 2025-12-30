@@ -1,21 +1,12 @@
 const SoftwareAsset = require("../models/SoftwareAsset");
-const Notification = require("../models/Notification");
-const mongoose = require("mongoose");
 const Category = require("../models/Category");
 const Status = require("../models/Status");
 const Unit = require("../models/Unit");
 const AssetAssignment = require("../models/AssetAssignment");
 const Location = require("../models/Location");
-// Helper to update compliance based on license usage & expiry
-const checkCompliance = (asset) => {
-  if (asset.licenseExpiry && new Date(asset.licenseExpiry) < new Date()) {
-    return "Expired";
-  }
-  if (asset.licensesAssigned > asset.totalLicenses) {
-    return "Non-Compliant";
-  }
-  return "Compliant";
-};
+const sendNotification = require("../utils/notify");
+const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
+
 
 const bulkUploadSoftware = async (req, res) => {
   try {
@@ -37,7 +28,7 @@ const bulkUploadSoftware = async (req, res) => {
     let validAssets = [];
     let invalidRows = [];
     const normalize = (v) => v?.trim().toLowerCase();
-
+    
     for (const [index, asset] of parsedAssets.entries()) {
       const catKey = normalize(asset.assetCategory);
       const unitKey = normalize(asset.associateUnit);
@@ -115,7 +106,10 @@ const bulkUploadSoftware = async (req, res) => {
         continue;
       }
 const assetCode = await generateSoftwareCode(); // backend util
+      const amount = Number(asset.assetCost || 0);
+      const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
 
+      const baseAmount = convertToBase(amount, currency);
       // ---------- FINAL PUSH ----------
       validAssets.push({
         assetCode,
@@ -143,7 +137,11 @@ const assetCode = await generateSoftwareCode(); // backend util
         assetQuantity: totalLicenses,
         inUse: 0, // 🔒 enforced
 
-        assetCost: Number(asset.assetCost || 0),
+         assetCost: {
+            amount,
+            currency,
+            baseAmount,
+          },
 
         assignedUsers: [], // 🔒 empty on creation
         linkedDevices: [],
@@ -153,7 +151,14 @@ const assetCode = await generateSoftwareCode(); // backend util
     if (validAssets.length) {
       await SoftwareAsset.insertMany(validAssets, { ordered: false });
     }
-
+      await sendNotification({
+    req,
+    userId: req.user.id,
+    title: "Software Assets Uploaded",
+    message: `${validAssets.length} software assets uploaded successfully.`,
+    type: "success",
+    redirectUrl: "/inventory",
+  });
     return res.status(200).json({
       success: true,
       inserted: validAssets.length,
@@ -178,43 +183,48 @@ const createSoftwareAsset = async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const payload = {
-      ...req.body,
-      licensesAssigned: 0, // 🔒 enforced
-    };
+    // ✅ Generate asset code
+    const assetCode = await generateSoftwareCode();
 
-    // Auto calculations
-    if (payload.assetQuantity && payload.assetCost) {
-      payload.totalCost = payload.assetQuantity * payload.assetCost;
-    }
-
-    payload.assetStatus = checkCompliance(payload);
-
-    payload.auditHistory = [
-      { date: new Date(), notes: `Created by user ${userId}` },
-    ];
-
-    const asset = await SoftwareAsset.create(payload);
-
-    // Expiry reminder
-    if (
-      asset.DOE &&
-      asset.DOE - new Date() < 30 * 24 * 60 * 60 * 1000
-    ) {
-      await Notification.create({
-        title: "License Expiry Soon",
-        message: `License for '${asset.name}' will expire soon.`,
-        userId,
+    // ✅ Validate asset cost
+    if (!req.body.assetCost?.amount || !req.body.assetCost?.currency) {
+      return res.status(400).json({
+        success: false,
+        message: "Asset cost amount and currency are required",
       });
     }
 
-    const notification = await Notification.create({
-      title: "Software Asset Added",
-      message: `Software '${asset.name}' has been added.`,
-      userId,
-    });
+    const { amount, currency } = req.body.assetCost;
 
-    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
+    const assetCost = {
+      amount: Number(amount),
+      currency: currency.toUpperCase(),
+      baseAmount: convertToBase(
+        Number(amount),
+        currency.toUpperCase()
+      ),
+    };
+
+    const payload = {
+      ...req.body,
+      assetCode,               // 🔥 FIX
+      assetCost,
+      licensesAssigned: 0,
+      auditHistory: [
+        { date: new Date(), notes: `Created by user ${userId}` },
+      ],
+    };
+
+    const asset = await SoftwareAsset.create(payload);
+
+    await sendNotification({
+      req,
+      userId,
+      title: "Software Asset Added",
+      message: `Software "${asset.assetName}" was added successfully.`,
+      type: "success",
+      redirectUrl: "/inventory",
+    });
 
     res.status(201).json({ success: true, data: asset });
   } catch (error) {
@@ -292,24 +302,30 @@ const updateSoftwareAsset = async (req, res) => {
       return res.status(404).json({ success: false, message: "Not found" });
     }
 
-    // Merge state
+    let updatedCost = existing.assetCost;
+
+    if (req.body.assetCost) {
+      const { amount, currency } = req.body.assetCost;
+
+      updatedCost = {
+        amount: Number(amount),
+        currency: currency.toUpperCase(),
+        baseAmount: convertToBase(
+          Number(amount),
+          currency.toUpperCase()
+        ),
+      };
+    }
+
     const updatedState = {
       ...existing.toObject(),
       ...req.body,
+      assetCost: updatedCost,
+      auditHistory: [
+        ...(existing.auditHistory || []),
+        { date: new Date(), notes: `Updated by user ${userId}` },
+      ],
     };
-
-    // Auto calculations
-    if (updatedState.totalLicenses && updatedState.costPerUnit) {
-      updatedState.totalCost =
-        updatedState.totalLicenses * updatedState.costPerUnit;
-    }
-
-    updatedState.complianceStatus = checkCompliance(updatedState);
-
-    updatedState.auditHistory = [
-      ...(existing.auditHistory || []),
-      { date: new Date(), notes: `Updated by user ${userId}` },
-    ];
 
     const asset = await SoftwareAsset.findByIdAndUpdate(
       req.params.id,
@@ -317,13 +333,14 @@ const updateSoftwareAsset = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    const notification = await Notification.create({
-      title: "Software Asset Updated",
-      message: `Software '${asset.name}' has been updated.`,
+    await sendNotification({
+      req,
       userId,
+      title: "Software Asset Updated",
+      message: `Software "${asset.assetName}" was updated.`,
+      type: "info",
+      redirectUrl: "/inventory",
     });
-
-    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
 
     res.json({ success: true, data: asset });
   } catch (error) {
@@ -343,13 +360,14 @@ const deleteSoftwareAsset = async (req, res) => {
       return res.status(404).json({ success: false, message: "Not found" });
     }
 
-    const notification = await Notification.create({
-      title: "Software Asset Deleted",
-      message: `Software '${asset.name}' has been deleted.`,
-      userId,
-    });
-
-    req.app.get("io").to(userId.toString()).emit("newNotification", notification);
+await sendNotification({
+  req,
+  userId,
+  title: "Software Asset Deleted",
+  message: `Software "${asset.assetName}" was deleted.`,
+  type: "warning",
+  redirectUrl: "/inventory",
+});
 
     res.json({ success: true, message: "Deleted successfully" });
   } catch (error) {
@@ -380,5 +398,4 @@ module.exports = {
   getSoftwareAssets,
   updateSoftwareAsset,
   deleteSoftwareAsset,
-  generateSoftwareCode
 };

@@ -140,7 +140,12 @@ const handleAssign = (asset) => {
       DOP: asset.DOP || "",
       DOE: asset.DOE || "",
       assetLifetime: asset.assetLifetime || "",
-      assetCost: asset.assetCost || "",
+      assetCost: {
+  amount: asset.assetCost?.amount || 0,
+  currency: asset.assetCost?.currency || "INR",
+  baseAmount: asset.assetCost?.baseAmount || 0,
+},
+
       assetQuantity: asset.assetQuantity || 1,
       inUse: asset.inUse || 0,
 
@@ -255,7 +260,18 @@ const renderDepartmentBadges = (asset) => {
 
               <div className="card-info2">
                 <p><strong>Version:</strong> {asset.assetSpecification}</p>
-                <p style={{color : "red"}}><strong>Cost:</strong> ₹{asset.assetCost}</p>
+                <p>
+  <strong>Cost:</strong>{" "}
+  <span className="currency-badge">
+    {asset.assetCost?.currency || "INR"}
+  </span>{" "}
+  {asset.assetCost?.amount ?? 0}
+  {" "}
+  <span className="base-amount">
+    (₹{asset.assetCost?.baseAmount ?? 0})
+  </span>
+</p>
+
                 <p><strong>Quantity:</strong> {asset.assetQuantity}</p>
                 <p><strong>In Use:</strong> {asset.inUse}</p>
                 <div className="dept-badge-wrapper">
@@ -393,7 +409,15 @@ const renderDepartmentBadges = (asset) => {
 
           <div>
             <label>Asset Cost</label>
-            <p>₹{selectedAsset.assetCost}</p>
+            <p>
+  <span className="currency-badge">
+    {selectedAsset.assetCost?.currency || "INR"}
+  </span>{" "}
+  {selectedAsset.assetCost?.amount ?? 0}
+  {" "}
+  <small>(Base: ₹{selectedAsset.assetCost?.baseAmount ?? 0})</small>
+</p>
+
           </div>
 
           <div>
@@ -488,7 +512,40 @@ const renderDepartmentBadges = (asset) => {
 
           <input name="assetLifetime" value={editForm.assetLifetime} onChange={handleEditChange} placeholder="Lifetime" className="asset-edit-input"/>
 
-          <input type="number" name="assetCost" value={editForm.assetCost} onChange={handleEditChange} placeholder="Cost" className="asset-edit-input"/>
+          <input
+  type="number"
+  name="assetCost.amount"
+  value={editForm.assetCost.amount}
+  onChange={(e) =>
+    setEditForm({
+      ...editForm,
+      assetCost: {
+        ...editForm.assetCost,
+        amount: Number(e.target.value),
+        baseAmount: Number(e.target.value), // INR base
+      },
+    })
+  }
+  placeholder="Cost Amount"
+/>
+
+<select
+  value={editForm.assetCost.currency}
+  onChange={(e) =>
+    setEditForm({
+      ...editForm,
+      assetCost: {
+        ...editForm.assetCost,
+        currency: e.target.value,
+      },
+    })
+  }
+>
+  <option value="INR">INR</option>
+  <option value="USD">USD</option>
+  <option value="EUR">EUR</option>
+</select>
+
           <input type="number" name="assetQuantity" value={editForm.assetQuantity} onChange={handleEditChange} placeholder="Quantity" className="asset-edit-input"/>
           <input type="number" name="inUse" value={editForm.inUse} onChange={handleEditChange} placeholder="In Use" className="asset-edit-input"/>
 

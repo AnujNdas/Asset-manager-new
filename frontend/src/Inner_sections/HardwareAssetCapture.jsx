@@ -6,7 +6,6 @@ import {
   getLocations,
   getCategories,
   getStatuses,
-  generateHardwareAssetCode,
   createHardwareAsset
 } from "../Services/ApiServices";
 import Swal from "sweetalert2";
@@ -18,7 +17,6 @@ const AssetCapture = () => {
   const navigate = useNavigate();
 
   const defaultFormData = {
-    assetCode: "",
     assetCategory: "",
     barcodeNumber: "",
     assetName: "",
@@ -32,7 +30,10 @@ const AssetCapture = () => {
     assetLifetime: "",
     purchaseFrom: "",
     PMD: "",
-    assetCost: "",
+     assetCost: {
+    amount: "",
+    currency: "INR",
+  },
     assetQuantity: "",
   };
 
@@ -64,28 +65,48 @@ const AssetCapture = () => {
     })();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    setFormData((prev) => {
-      const updated = { ...prev, [name]: value };
+  setFormData((prev) => {
+    let updated = { ...prev };
 
-      // Auto calculate lifetime
-      if (name === "DOP" || name === "DOE") {
-        const { DOP, DOE } = updated;
-        if (DOP && DOE) {
-          const start = new Date(DOP);
-          const end = new Date(DOE);
-          const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-          updated.assetLifetime =
-            Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
-        } else {
-          updated.assetLifetime = "";
-        }
+    // ✅ Handle assetCost nested fields
+    if (name.startsWith("assetCost.")) {
+      const field = name.split(".")[1];
+
+      updated.assetCost = {
+        ...prev.assetCost,
+        [field]:
+          field === "amount" ? Number(value) || "" : value,
+      };
+    } else {
+      updated[name] = value;
+    }
+
+    // ✅ Auto-calculate lifetime
+    if (name === "DOP" || name === "DOE") {
+      const { DOP, DOE } = updated;
+
+      if (DOP && DOE) {
+        const start = new Date(DOP);
+        const end = new Date(DOE);
+        const days = Math.floor(
+          (end - start) / (1000 * 60 * 60 * 24)
+        );
+
+        updated.assetLifetime =
+          Number.isFinite(days) && days >= 0
+            ? `${days} days`
+            : "Invalid";
+      } else {
+        updated.assetLifetime = "";
       }
-      return updated;
-    });
-  };
+    }
+
+    return updated;
+  });
+};
 
   const validateRequired = () => {
     const required = [
@@ -107,27 +128,28 @@ const AssetCapture = () => {
     return true;
   };
 
-  const handleAddAsset = async (e) => {
-    e.preventDefault();
-    if (!validateRequired()) return;
+const handleAddAsset = async (e) => {
+  e.preventDefault();
+  if (!validateRequired()) return;
 
-    setIsSubmitting(true);
+  setIsSubmitting(true);
 
-    try {
-      const assetCode = await generateHardwareAssetCode();
-      const payload = { ...formData, assetCode };
+  try {
+    await createHardwareAsset(formData);
 
-      await createHardwareAsset(payload);
+    await Swal.fire("Success", "Asset added successfully!", "success");
+    navigate("/inventory");
+  } catch (err) {
+    Swal.fire(
+      "Error",
+      err.userMessage || err.response?.data?.message || "Failed to add asset.",
+      "error"
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
-      await Swal.fire("Success", "Asset added successfully!", "success");
-      navigate("/inventory");
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", err.message || "Failed to add asset.", "error");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="asset-wrapper">
@@ -282,18 +304,35 @@ const AssetCapture = () => {
 
           <div className="grid-2">
             {/* Cost */}
-            <div className="input-group">
-              <label>
-                Asset Cost (₹) <span>*</span>
-              </label>
-              <input
-                type="number"
-                name="assetCost"
-                value={formData.assetCost}
-                onChange={handleChange}
-                required
-              />
-            </div>
+<div className="form-group">
+  <label>Asset Cost</label>
+
+  <div className="cost-group">
+    <select
+      name="assetCost.currency"
+      value={formData.assetCost.currency}
+      onChange={handleChange}
+      required
+    >
+      <option value="INR">INR – Indian Rupee</option>
+      <option value="USD">USD – US Dollar</option>
+      <option value="EUR">EUR – Euro</option>
+      <option value="GBP">GBP – British Pound</option>
+    </select>
+
+    <input
+      type="number"
+      name="assetCost.amount"
+      value={formData.assetCost.amount}
+      onChange={handleChange}
+      min="0"
+      step="0.01"
+      placeholder="Unit cost"
+      required
+    />
+  </div>
+</div>
+
 
             {/* Quantity */}
             <div className="input-group">

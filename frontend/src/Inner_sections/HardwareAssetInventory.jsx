@@ -1,7 +1,7 @@
 // ✅ src/Pages/HardwareAssetList.jsx
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, color } from "framer-motion";
 import {
   getHardwareAssets,
   deleteHardwareAsset,
@@ -129,7 +129,12 @@ setEditForm({
   purchaseFrom: asset.purchaseFrom || "",
   assetLifetime: asset.assetLifetime || "",
 
-  assetCost: asset.assetCost || "",
+  assetCost: {
+  amount: asset.assetCost?.amount ?? "",
+  currency: asset.assetCost?.currency ?? "INR",
+  baseAmount: asset.assetCost?.baseAmount ?? 0,
+},
+
   assetQuantity: asset.assetQuantity || 1,
   inUse: asset.inUse || 0,
 });
@@ -142,7 +147,10 @@ const handleEditSubmit = async (e) => {
   try {
     const payload = {
       ...editForm,
-      assetCost: Number(editForm.assetCost),
+        assetCost: {
+    amount: Number(editForm.assetCost.amount),
+    currency: editForm.assetCost.currency,
+  },
       assetQuantity: Number(editForm.assetQuantity),
       inUse: Number(editForm.inUse),
     };
@@ -179,9 +187,25 @@ const getInStock = (asset) =>
   Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
 
 
- const handleEditChange = (e) => {
+const handleEditChange = (e) => {
   const { name, value } = e.target;
 
+  // 🔹 assetCost fields
+  if (name.startsWith("assetCost.")) {
+    const field = name.split(".")[1];
+
+    setEditForm((prev) => ({
+      ...prev,
+      assetCost: {
+        ...prev.assetCost,
+        [field]:
+          field === "amount" ? Number(value) || "" : value,
+      },
+    }));
+    return;
+  }
+
+  // 🔹 inUse safety
   if (name === "inUse") {
     const total = Number(editForm.assetQuantity || 0);
     const inUseVal = Math.min(Number(value), total);
@@ -191,6 +215,7 @@ const getInStock = (asset) =>
 
   setEditForm((prev) => ({ ...prev, [name]: value }));
 };
+
 
   const getExpiryBadge = (DOE) => {
     if (!DOE) return null;
@@ -306,10 +331,32 @@ const getInStock = (asset) =>
 
                 <div className="card-info2">
                   <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
-                  <p style={{color : "red"}}><strong>Cost:</strong> {asset.assetCost || "N/A"}</p>
-                  {/* <p><strong>Unit:</strong> {unitName}</p> */}
-                  <p><strong>Quantity:</strong> {asset.assetQuantity || "N/A"}</p>
-                  <p><strong>Total Value:</strong> {asset.assetCost * asset.assetQuantity || "N/A"}</p>
+  <p style={{ color: "red" }}>
+  <strong>Cost:</strong>{" "}
+  {asset.assetCost?.amount ?? "N/A"}
+  {asset.assetCost?.currency && (
+    <span className="currency-badge">
+      {asset.assetCost.currency}
+    </span>
+  )}
+</p>
+
+<p>
+  <strong>Base Cost (INR):</strong>{" "}
+  {asset.assetCost?.baseAmount
+    ? `₹${asset.assetCost.baseAmount.toLocaleString("en-IN")}`
+    : "N/A"}
+</p>
+
+<p>
+  <strong>Total Value (INR):</strong>{" "}
+  {asset.assetCost?.baseAmount && asset.assetQuantity
+    ? `₹${(
+        asset.assetCost.baseAmount * asset.assetQuantity
+      ).toLocaleString("en-IN")}`
+    : "N/A"}
+</p>
+
                   <p><strong>In Use:</strong> {asset.inUse || "0"}</p>
                   <div className="dept-badge-wrapper">
                     {renderDepartmentBadges(asset)}
@@ -417,26 +464,36 @@ const getInStock = (asset) =>
           </div>
 
           <div>
-            <label>Maintainance Date</label>
+            <label>Expiry Date</label>
             <p>
               {selectedAsset.DOE
                 ? new Date(selectedAsset.DOE).toLocaleDateString()
                 : "N/A"}
             </p>
           </div>
-          <div>
+         <div>
   <label>Asset Cost</label>
-  <p>₹{selectedAsset.assetCost || "0"}</p>
+  <p>
+    {selectedAsset.assetCost?.amount}{" "}
+    {selectedAsset.assetCost?.currency}
+  </p>
 </div>
 
 <div>
-  <label>Quantity</label>
-  <p>{selectedAsset.assetQuantity || "1"}</p>
+  <label>Base Cost (INR)</label>
+  <p>
+    ₹{selectedAsset.assetCost?.baseAmount?.toLocaleString("en-IN")}
+  </p>
 </div>
 
 <div>
-  <label>Total Value</label>
-  <p>₹{(selectedAsset.assetCost || 0) * (selectedAsset.assetQuantity || 1)}</p>
+  <label>Total Value (INR)</label>
+  <p>
+    ₹{(
+      selectedAsset.assetCost?.baseAmount *
+      selectedAsset.assetQuantity
+    )?.toLocaleString("en-IN")}
+  </p>
 </div>
 
 <div>
@@ -583,14 +640,27 @@ const getInStock = (asset) =>
             value={editForm.purchaseFrom || ""}
             onChange={handleEditChange}
           />
-          <input
-  type="number"
-  name="assetCost"
-  placeholder="Asset Cost (₹)"
+<select
+  name="assetCost.currency"
   className="asset-edit-input"
-  value={editForm.assetCost || ""}
+  value={editForm.assetCost?.currency || "INR"}
+  onChange={handleEditChange}
+>
+  <option value="INR">INR</option>
+  <option value="USD">USD</option>
+  <option value="EUR">EUR</option>
+  <option value="GBP">GBP</option>
+</select>
+
+<input
+  type="number"
+  name="assetCost.amount"
+  placeholder="Unit Cost"
+  className="asset-edit-input"
+  value={editForm.assetCost?.amount || ""}
   onChange={handleEditChange}
 />
+
 
 <input
   type="number"

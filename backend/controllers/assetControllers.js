@@ -3,8 +3,8 @@ const LastAssetCode = require("../models/LastAssetCode");
 const AssetAssignment = require("../models/AssetAssignment");
 // const unzipper = require("unzipper");
 const sendNotification = require("../utils/notify");
-// const path = require("path");
-// const fs = require("fs");
+const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
+
 
 const Category = require("../models/Category");
 const Unit = require("../models/Unit");
@@ -50,12 +50,13 @@ const bulkUpload = async (req, res , next) => {
       let unitId = unitMap.get(unitKey);
       let locationId = locationMap.get(locKey);
       let statusId = statusMap.get(statusKey);
-    
+      
+      
       if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
         invalidRows.push({ row: index + 2, asset });
         continue;
       }
-    
+      
       // ✅ CATEGORY
       if (!categoryId && catKey) {
         const category = await Category.findOneAndUpdate(
@@ -66,7 +67,7 @@ const bulkUpload = async (req, res , next) => {
         categoryId = category._id;
         categoryMap.set(catKey, categoryId);
       }
-    
+      
       // ✅ UNIT
       if (!unitId && unitKey) {
         const unit = await Unit.findOneAndUpdate(
@@ -77,7 +78,7 @@ const bulkUpload = async (req, res , next) => {
         unitId = unit._id;
         unitMap.set(unitKey, unitId);
       }
-    
+      
       // ✅ LOCATION
       if (!locationId && locKey) {
         const location = await Location.findOneAndUpdate(
@@ -88,7 +89,7 @@ const bulkUpload = async (req, res , next) => {
         locationId = location._id;
         locationMap.set(locKey, locationId);
       }
-    
+      
       // ✅ STATUS
       if (!statusId && statusKey) {
         const status = await Status.findOneAndUpdate(
@@ -99,12 +100,17 @@ const bulkUpload = async (req, res , next) => {
         statusId = status._id;
         statusMap.set(statusKey, statusId);
       }
-    
+      
       const totalQty = Number(asset.assetQuantity || 1);
       const inUse = 0; // 🔒 Assignment happens ONLY via Assignment page
-    
+      const amount = Number(asset.assetCost || 0);
+      const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
+
+      const baseAmount = convertToBase(amount, currency);
+      const assetCode = await generateHardwareCode();
+
       validAssets.push({
-        assetCode: asset.assetCode,
+        assetCode,
         assetCategory: categoryId,
         barcodeNumber: asset.barcodeNumber,
         assetName: asset.assetName,
@@ -117,7 +123,11 @@ const bulkUpload = async (req, res , next) => {
         assetLifetime: asset.assetLifetime,
         purchaseFrom: asset.purchaseFrom,
         locationAddress: asset.locationAddress, // ✅ keep this
-        assetCost: Number(asset.assetCost || 0),
+        assetCost: {
+          amount,
+          currency,
+          baseAmount,
+        },
         assetQuantity: totalQty,
         inUse : 0,
       });
@@ -154,12 +164,26 @@ const bulkUpload = async (req, res , next) => {
 // ADD ASSET
 // =======================================================================
 // ================= ADD ASSET =================
-const addAsset = async (req, res , next) => {
+const addAsset = async (req, res, next) => {
   try {
     const userId = req.user.id;
 
     const assetQuantity = Number(req.body.assetQuantity || 1);
     const inUse = Number(req.body.inUse || 0);
+
+    // 🔒 Validate cost
+    if (!req.body.assetCost?.amount || !req.body.assetCost?.currency) {
+      return res.status(400).json({
+        message: "Asset cost amount and currency are required",
+      });
+    }
+
+    const { amount, currency } = req.body.assetCost;
+
+    const baseAmount = convertToBase(
+      Number(amount),
+      currency.toUpperCase()
+    );
 
     if (inUse > assetQuantity) {
       return res.status(400).json({
@@ -167,33 +191,42 @@ const addAsset = async (req, res , next) => {
       });
     }
 
+    // ✅ Generate assetCode in backend
+    const assetCode = req.body.assetCode || await generateHardwareCode();
+
     const newAsset = new Asset({
       ...req.body,
-      assetCost: req.body.assetCost || 0,
+
+      assetCode, // 🔑 backend-controlled
+
+      assetCost: {
+        amount: Number(amount),
+        currency: currency.toUpperCase(),
+        baseAmount,
+      },
+
       assetQuantity,
       inUse,
     });
 
     const savedAsset = await newAsset.save();
 
-await sendNotification({
-  req,
-  userId: req.user.id,
-  title: "Asset Added",
-  message: `Asset "${savedAsset.assetName}" was added successfully.`,
-  redirectUrl: "/inventory?tab=hardware",
-  type: "success",
-});
-
-
+    await sendNotification({
+      req,
+      userId,
+      title: "Asset Added",
+      message: `Asset "${savedAsset.assetName}" was added successfully.`,
+      redirectUrl: "/inventory?tab=hardware",
+      type: "success",
+    });
 
     return res.status(201).json(savedAsset);
   } catch (error) {
     console.error("🔥 ADD ASSET ERROR:", error);
     return next(error);
-
   }
 };
+
 
 
 
@@ -220,6 +253,19 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
     const inUse =
       req.body.inUse ?? existingAsset.inUse;
 
+      let updatedCost = existingAsset.assetCost;
+
+      if (req.body.assetCost) {
+        const { amount, currency } = req.body.assetCost;
+                updatedCost = {
+          amount: Number(amount),
+          currency: currency.toUpperCase(),
+          baseAmount: convertToBase(
+            Number(amount),
+            currency.toUpperCase()
+          ),
+        };
+      }
     if (inUse > assetQuantity) {
       return res.status(400).json({
         message: "In-use quantity cannot exceed total quantity",
@@ -232,7 +278,7 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
         ...req.body,
         assetCode: existingAsset.assetCode,
         barcodeNumber: existingAsset.barcodeNumber,
-        assetCost: req.body.assetCost ?? existingAsset.assetCost,
+        assetCost: updatedCost,
         assetQuantity,
         inUse,
       },
@@ -354,28 +400,20 @@ const getAllAssets = async (req, res , next) => {
 // =======================================================================
 // GENERATE ASSET CODE
 // =======================================================================
-const generateAssetCode = async (req, res, next) => {
-  try {
-    const lastCodeData = await LastAssetCode.findOne();
+const generateHardwareCode = async () => {
+  const lastAsset = await Asset
+    .findOne({ assetCode: { $regex: /^AST-\d+$/ } })
+    .sort({ createdAt: -1 })
+    .select("assetCode")
+    .lean();
 
-    let newCodeNumber;
+  let next = 1;
 
-    if (!lastCodeData) {
-      newCodeNumber = 1;
-      await LastAssetCode.create({ lastCode: newCodeNumber });
-    } else {
-      newCodeNumber = lastCodeData.lastCode + 1;
-      await LastAssetCode.updateOne({}, { lastCode: newCodeNumber });
-    }
-
-    const assetCode = `ASSET-${newCodeNumber.toString().padStart(3, "0")}`;
-
-    res.json({ assetCode });
-  } catch (error) {
-    console.error("Error generating asset code:", error);
-    return next(error);
-
+  if (lastAsset?.assetCode) {
+    next = parseInt(lastAsset.assetCode.split("-")[1], 10) + 1;
   }
+
+  return `AST-${String(next).padStart(3, "0")}`;
 };
 
 
@@ -386,6 +424,5 @@ module.exports = {
   updateAsset,
   deleteAsset,
   getAllAssets,
-  generateAssetCode,
   bulkUpload,
 };

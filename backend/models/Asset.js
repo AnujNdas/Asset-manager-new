@@ -49,10 +49,11 @@ const assetSchema = new mongoose.Schema(
     PMD: { type: String },
 
     assetCost: {
-      type: Number,
+      type: costSchema,
       required: true,
       min: 0,
     },
+
 
     assetQuantity: {
       type: Number,
