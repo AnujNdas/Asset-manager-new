@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { NotificationProvider } from './Context/NotificationContext';
 import { ProgressProvider } from "./Components/ProgressBar";
+import { CurrencyProvider } from './Context/CurrencyContext'; 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -13,7 +14,9 @@ root.render(
     <React.StrictMode>
       <ProgressProvider>
         <NotificationProvider>
+          <CurrencyProvider>
           <App />
+          </CurrencyProvider>
         </NotificationProvider>
        </ProgressProvider> 
     </React.StrictMode>

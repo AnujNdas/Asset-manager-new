@@ -248,7 +248,7 @@ const renderDepartmentBadges = (asset) => {
   return (
     <div className="inventory-container">
       <div className="dashboard-header">
-  <h2>Software Inventory</h2>
+  <h2 className="hardware-title">Software Inventory</h2>
   <CurrencyFilter />
 </div>
       <div className="inventory-grid">

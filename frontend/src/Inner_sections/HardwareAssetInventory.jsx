@@ -311,7 +311,7 @@ const handleEditChange = (e) => {
   return (
     <div className="inventory-container">
       <div className="dashboard-header">
-  <h2>Hardware Inventory</h2>
+  <h2 className="hardware-title">Hardware Inventory</h2>
   <CurrencyFilter />
 </div>
 
