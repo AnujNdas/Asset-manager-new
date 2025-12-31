@@ -8,6 +8,9 @@ import {
   getLocations,
   getMonthlyValuation
 } from "../Services/ApiServices";
+import CurrencyFilter from "../Components/CurrencyFilter";
+import { useCurrency } from "../Context/CurrencyContext";
+import { convertFromBase } from "../utils/currency";
 
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie,
@@ -21,6 +24,7 @@ const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#22C55E", "#F59E0B"];
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { currency } = useCurrency();
 
   const [statsData, setStatsData] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
@@ -117,20 +121,47 @@ const HorizontalLegend = ({ payload }) => {
 const valuationChartData =
   valuationData?.labels?.map((label, index) => ({
     month: label,
-    hardware: valuationData?.hardwareValuation?.[index] ?? 0,
-    software: valuationData?.softwareValuation?.[index] ?? 0,
-    total: valuationData?.totalValuation?.[index] ?? 0,
+    hardware: convertFromBase(
+      valuationData?.hardwareValuation?.[index] ?? 0,
+      currency
+    ),
+    software: convertFromBase(
+      valuationData?.softwareValuation?.[index] ?? 0,
+      currency
+    ),
+    total: convertFromBase(
+      valuationData?.totalValuation?.[index] ?? 0,
+      currency
+    ),
   })) || [];
+
 
 
 
 const hardwareList = expiringAssets?.expiringHardware ?? [];
 const softwareList = expiringAssets?.expiringSoftware ?? [];
 
+const totalValuationView = convertFromBase(
+  statsData?.totalValuation ?? 0,
+  currency
+);
+
+const hardwareValuationView = convertFromBase(
+  statsData?.hardwareValuation ?? 0,
+  currency
+);
+
+const softwareValuationView = convertFromBase(
+  statsData?.softwareValuation ?? 0,
+  currency
+);
 
   return (
     <div className="admin-dashboard">
-
+      <div className="dashboard-header">
+  <h2>Admin Dashboard</h2>
+  <CurrencyFilter />
+</div>
       {/* TOP STATS */}
      <div className="stats-grid">
 
@@ -141,7 +172,10 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
     <p>Hardware + Software</p>
   </div>
       <div className="stat-2">
-    <h2>₹ {statsData?.totalValuation?.toLocaleString() ?? "0"}</h2>
+    <h2>
+  {currency} {totalValuationView.toLocaleString()}
+</h2>
+
   </div>
   </div>
   {/* Hardware */}
@@ -151,7 +185,10 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
     <p>Hardware Assets</p>
       </div>
     <div className="stat-2">
-    <h2>₹ {statsData?.hardwareValuation?.toLocaleString() ?? "0"}</h2>
+    <h2>
+  {currency} {hardwareValuationView.toLocaleString()}
+</h2>
+
     <p>Total Valuation</p>
       </div>
   </div>
@@ -163,7 +200,10 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
     <p>Software Assets</p>
   </div>
       <div className="stat-2">
-    <h2>₹ {statsData?.softwareValuation?.toLocaleString() ?? "0"}</h2>
+    <h2>
+  {currency} {softwareValuationView.toLocaleString()}
+</h2>
+
     <p>Total Valuation</p>
   </div>
   </div>
@@ -258,7 +298,10 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
         tickLine={true}
       />
 
-      <Tooltip />
+      <Tooltip
+  formatter={(value) => [`${currency} ${value.toLocaleString()}`, "Value"]}
+/>
+
 
  <Legend content={<HorizontalLegend />} />
 
@@ -342,7 +385,7 @@ const softwareList = expiringAssets?.expiringSoftware ?? [];
             </li>
           ))
         ) : (
-          <p className="empty-state">No hardware Maintenance</p>
+          <p className="empty-state">No hardware requiring attention</p>
         )}
       </ul>
     </div>

@@ -13,6 +13,9 @@ import {
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
 import { useNavigate } from "react-router-dom";
+import CurrencyFilter from "../Components/CurrencyFilter";
+import { useCurrency } from "../Context/CurrencyContext";
+import { convertFromBase } from "../utils/currency";
 
 const SoftwareAssetList = () => {
   const [assets, setAssets] = useState([]);
@@ -32,7 +35,7 @@ const SoftwareAssetList = () => {
   const assetsPerPage = 6;
 
 const navigate = useNavigate();
-
+  const { currency } = useCurrency();
 const handleAssign = (asset) => {
   navigate("/assignment", {
     state: {
@@ -244,6 +247,10 @@ const renderDepartmentBadges = (asset) => {
 
   return (
     <div className="inventory-container">
+      <div className="dashboard-header">
+  <h2>Software Inventory</h2>
+  <CurrencyFilter />
+</div>
       <div className="inventory-grid">
         <AnimatePresence>
           {currentAssets.map((asset) => (
@@ -260,17 +267,31 @@ const renderDepartmentBadges = (asset) => {
 
               <div className="card-info2">
                 <p><strong>Version:</strong> {asset.assetSpecification}</p>
+                  <p style={{ color: "red" }}>
+                  <strong>Cost:</strong>{" "}
+                  {currency}{" "}
+                {convertFromBase(
+                  asset.assetCost?.baseAmount ?? 0,
+                  currency
+                ).toLocaleString()}
+                </p>
+                
                 <p>
-  <strong>Cost:</strong>{" "}
-  <span className="currency-badge">
-    {asset.assetCost?.currency || "INR"}
-  </span>{" "}
-  {asset.assetCost?.amount ?? 0}
-  {" "}
-  <span className="base-amount">
-    (₹{asset.assetCost?.baseAmount ?? 0})
-  </span>
-</p>
+                  <strong>Base Cost (INR):</strong>{" "}
+                  {asset.assetCost?.baseAmount
+                    ? `₹${asset.assetCost.baseAmount.toLocaleString("en-IN")}`
+                    : "N/A"}
+                </p>
+                
+                <p>
+                  <strong>Total Value (INR):</strong>{" "}
+                {currency}{" "}
+                {convertFromBase(
+                  (asset.assetCost?.baseAmount ?? 0) * (asset.assetQuantity ?? 0),
+                  currency
+                ).toLocaleString()}
+                
+                </p>
 
                 <p><strong>Quantity:</strong> {asset.assetQuantity}</p>
                 <p><strong>In Use:</strong> {asset.inUse}</p>
@@ -409,14 +430,13 @@ const renderDepartmentBadges = (asset) => {
 
           <div>
             <label>Asset Cost</label>
-            <p>
-  <span className="currency-badge">
-    {selectedAsset.assetCost?.currency || "INR"}
-  </span>{" "}
-  {selectedAsset.assetCost?.amount ?? 0}
-  {" "}
-  <small>(Base: ₹{selectedAsset.assetCost?.baseAmount ?? 0})</small>
-</p>
+  <p>
+  {currency}{" "}
+{convertFromBase(
+  selectedAsset.assetCost?.baseAmount ?? 0,
+  currency
+).toLocaleString()}
+  </p>
 
           </div>
 
@@ -424,7 +444,16 @@ const renderDepartmentBadges = (asset) => {
             <label>Quantity</label>
             <p>{selectedAsset.assetQuantity}</p>
           </div>
-
+          <div>
+            <label>Total Value</label>
+            <p>
+            {currency}{" "}
+            {convertFromBase(
+              selectedAsset.assetCost?.baseAmount * selectedAsset.assetQuantity,
+              currency
+            ).toLocaleString()}
+            </p>
+          </div>
           <div>
             <label>In Use</label>
             <p>{selectedAsset.inUse}</p>

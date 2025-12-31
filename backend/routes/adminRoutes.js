@@ -8,35 +8,49 @@ const User = require("../models/User");
 const authenticateToken = require("../Middleware/Authentication-token"); // ✅ use your middleware
 
 // 📊 GET /api/admin/stats (super-admin & admin can see stats)
-router.get("/stats", authenticateToken(["super-admin", "admin"]), async (req, res) => {
-  try {
-    // Counts
-    const hardwareCount = await HardwareAsset.countDocuments();
-    const softwareCount = await SoftwareAsset.countDocuments();
-    const coreLicensesCount = await CoreCompanyLicense.countDocuments();
-    const activeLicenses = await CoreCompanyLicense.countDocuments({ status: "Active" });
-    const expiredLicenses = await CoreCompanyLicense.countDocuments({ status: "Expired" });
-    const usersCount = await User.countDocuments();
+router.get(
+  "/stats",
+  authenticateToken(["super-admin", "admin"]),
+  async (req, res) => {
+    try {
+      // Counts
+      const hardwareCount = await HardwareAsset.countDocuments();
+      const softwareCount = await SoftwareAsset.countDocuments();
+      const coreLicensesCount = await CoreCompanyLicense.countDocuments();
+      const activeLicenses = await CoreCompanyLicense.countDocuments({ status: "Active" });
+      const expiredLicenses = await CoreCompanyLicense.countDocuments({ status: "Expired" });
+      const usersCount = await User.countDocuments();
 
-    // 💰 HARDWARE VALUATION
-    const hardwareValuationAgg = await HardwareAsset.aggregate([
-      {
-        $project: {
-          total: { $multiply: ["$assetCost", "$assetQuantity"] }
-        }
-      },
-      { $group: { _id: null, sum: { $sum: "$total" } } }
-    ]);
+      // 💰 Hardware valuation
+const hardwareValuationAgg = await HardwareAsset.aggregate([
+  {
+    $project: {
+      total: {
+        $multiply: [
+          { $ifNull: ["$assetCost.baseAmount", 0] },
+          { $ifNull: ["$assetQuantity", 0] }
+        ]
+      }
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      sum: { $sum: "$total" }
+    }
+  }
+]);
 
-    const hardwareValuation = hardwareValuationAgg[0]?.sum || 0;
+const hardwareValuation = hardwareValuationAgg[0]?.sum || 0;
 
-    // 💰 SOFTWARE VALUATION → USE costPerUnit × totalLicenses
+
+      // 💰 Software valuation
 const softwareValuationAgg = await SoftwareAsset.aggregate([
   {
     $project: {
       total: {
         $multiply: [
-          { $ifNull: ["$assetCost", 0] },
+          { $ifNull: ["$assetCost.baseAmount", 0] },
           { $ifNull: ["$assetQuantity", 0] }
         ]
       }
@@ -53,62 +67,68 @@ const softwareValuationAgg = await SoftwareAsset.aggregate([
 const softwareValuation = softwareValuationAgg[0]?.sum || 0;
 
 
-    const totalValuation = hardwareValuation + softwareValuation;
 
-    // 📈 Monthly growth % calculation for hardware
-    const today = new Date();
-    const thisMonth = today.getMonth() + 1;
-    const thisYear = today.getFullYear();
+      const totalValuation = hardwareValuation + softwareValuation;
 
-    const lastMonthDate = new Date();
-    lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
-    const lastMonth = lastMonthDate.getMonth() + 1;
-    const lastYear = lastMonthDate.getFullYear();
+      // 📈 Monthly growth
+      const today = new Date();
+      const thisMonth = today.getMonth() + 1;
+      const thisYear = today.getFullYear();
 
-    const monthlyValuationAgg = await HardwareAsset.aggregate([
-      {
-        $project: {
-          month: { $month: "$createdAt" },
-          year: { $year: "$createdAt" },
-          total: { $multiply: ["$assetCost", "$assetQuantity"] }
-        }
+      const lastMonthDate = new Date();
+      lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+      const lastMonth = lastMonthDate.getMonth() + 1;
+      const lastYear = lastMonthDate.getFullYear();
+
+const monthlyValuationAgg = await HardwareAsset.aggregate([
+  {
+    $project: {
+      month: { $month: "$createdAt" },
+      year: { $year: "$createdAt" },
+      total: {
+        $multiply: [
+          { $ifNull: ["$assetCost.baseAmount", 0] },
+          { $ifNull: ["$assetQuantity", 0] }
+        ]
       }
-    ]);
-
-    const thisMonthValuation = monthlyValuationAgg
-      .filter(v => v.month === thisMonth && v.year === thisYear)
-      .reduce((sum, v) => sum + v.total, 0);
-
-    const lastMonthValuation = monthlyValuationAgg
-      .filter(v => v.month === lastMonth && v.year === lastYear)
-      .reduce((sum, v) => sum + v.total, 0);
-
-    let monthlyGrowthPercent = 0;
-    if (lastMonthValuation > 0) {
-      monthlyGrowthPercent = (
-        ((thisMonthValuation - lastMonthValuation) / lastMonthValuation) * 100
-      ).toFixed(2);
     }
-
-    res.json({
-      hardwareCount,
-      softwareCount,
-      coreLicensesCount,
-      activeLicenses,
-      expiredLicenses,
-      usersCount,
-
-      hardwareValuation,
-      softwareValuation,
-      totalValuation,
-      monthlyGrowthPercent
-    });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch stats" });
   }
-});
+]);
+
+
+
+      const thisMonthValuation = monthlyValuationAgg
+        .filter(v => v.month === thisMonth && v.year === thisYear)
+        .reduce((sum, v) => sum + v.total, 0);
+
+      const lastMonthValuation = monthlyValuationAgg
+        .filter(v => v.month === lastMonth && v.year === lastYear)
+        .reduce((sum, v) => sum + v.total, 0);
+
+      const monthlyGrowthPercent =
+        lastMonthValuation > 0
+          ? (((thisMonthValuation - lastMonthValuation) / lastMonthValuation) * 100).toFixed(2)
+          : 0;
+
+      res.json({
+        hardwareCount,
+        softwareCount,
+        coreLicensesCount,
+        activeLicenses,
+        expiredLicenses,
+        usersCount,
+        hardwareValuation,
+        softwareValuation,
+        totalValuation,
+        monthlyGrowthPercent,
+      });
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to fetch stats" });
+    }
+  }
+);
 
 // 👥 GET all users (super-admin only)
 router.get("/users", authenticateToken(["super-admin"]), async (req, res) => {
@@ -246,35 +266,59 @@ router.get("/valuation-trend", authenticateToken(["super-admin", "admin"]), asyn
   try {
 
     // HARDWARE AGGREGATION
-    const hardwareValuation = await HardwareAsset.aggregate([
-      {
-        $addFields: {
-          totalCost: {
-            $multiply: ["$assetCost", "$assetQuantity"]
+const hardwareValuation = await HardwareAsset.aggregate([
+  {
+    $addFields: {
+      normalizedCost: {
+        $cond: [
+          { $eq: [{ $type: "$assetCost" }, "object"] },
+          "$assetCost.baseAmount",
+          {
+            $cond: [{ $isNumber: "$assetCost" }, "$assetCost", 0]
           }
-        }
-      },
-      {
-        $group: {
-          _id: {
-            year: { $year: "$createdAt" },
-            month: { $month: "$createdAt" }
-          },
-          hardwareValuation: { $sum: "$totalCost" },
-          hardwareCount: { $sum: 1 }
-        }
+        ]
       }
-    ]);
+    }
+  },
+  {
+    $addFields: {
+      totalCost: {
+        $multiply: ["$normalizedCost", { $ifNull: ["$assetQuantity", 0] }]
+      }
+    }
+  },
+  {
+    $group: {
+      _id: {
+        year: { $year: "$createdAt" },
+        month: { $month: "$createdAt" }
+      },
+      hardwareValuation: { $sum: "$totalCost" },
+      hardwareCount: { $sum: 1 }
+    }
+  }
+]);
+
 
     // SOFTWARE AGGREGATION
 const softwareValuation = await SoftwareAsset.aggregate([
   {
     $addFields: {
-      totalCost: {
-        $multiply: [
-          { $ifNull: ["$assetCost", 0] },
-          { $ifNull: ["$assetQuantity", 0] }
+      normalizedCost: {
+        $cond: [
+          { $eq: [{ $type: "$assetCost" }, "object"] },
+          "$assetCost.baseAmount",
+          {
+            $cond: [{ $isNumber: "$assetCost" }, "$assetCost", 0]
+          }
         ]
+      }
+    }
+  },
+  {
+    $addFields: {
+      totalCost: {
+        $multiply: ["$normalizedCost", { $ifNull: ["$assetQuantity", 0] }]
       }
     }
   },

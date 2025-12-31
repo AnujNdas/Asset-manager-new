@@ -6,12 +6,16 @@
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 8px;
 }
 .admin-dashboard h2{
    font-size : 20px
 }
-
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 /* =========================================================
    STATS CARDS (TOP ROW)
    ========================================================= */

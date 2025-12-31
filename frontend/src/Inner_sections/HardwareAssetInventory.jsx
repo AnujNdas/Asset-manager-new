@@ -14,6 +14,10 @@ import {
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
 import { useNavigate } from "react-router-dom";
+import CurrencyFilter from "../Components/CurrencyFilter";
+import { useCurrency } from "../Context/CurrencyContext";
+import { convertFromBase } from "../utils/currency";
+
 const HardwareAssetList = () => {
   const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -31,7 +35,8 @@ const HardwareAssetList = () => {
   const assetsPerPage = 6;
 
   const navigate = useNavigate();
-  
+  const { currency } = useCurrency();
+
   const handleAssign = (asset) => {
     navigate("/assignment", {
       state: {
@@ -305,6 +310,11 @@ const handleEditChange = (e) => {
 
   return (
     <div className="inventory-container">
+      <div className="dashboard-header">
+  <h2>Hardware Inventory</h2>
+  <CurrencyFilter />
+</div>
+
       <div className="inventory-grid">
         <AnimatePresence>
           {currentAssets.map((asset) => {
@@ -333,12 +343,11 @@ const handleEditChange = (e) => {
                   <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
   <p style={{ color: "red" }}>
   <strong>Cost:</strong>{" "}
-  {asset.assetCost?.amount ?? "N/A"}
-  {asset.assetCost?.currency && (
-    <span className="currency-badge">
-      {asset.assetCost.currency}
-    </span>
-  )}
+  {currency}{" "}
+{convertFromBase(
+  asset.assetCost?.baseAmount ?? 0,
+  currency
+).toLocaleString()}
 </p>
 
 <p>
@@ -350,11 +359,12 @@ const handleEditChange = (e) => {
 
 <p>
   <strong>Total Value (INR):</strong>{" "}
-  {asset.assetCost?.baseAmount && asset.assetQuantity
-    ? `₹${(
-        asset.assetCost.baseAmount * asset.assetQuantity
-      ).toLocaleString("en-IN")}`
-    : "N/A"}
+{currency}{" "}
+{convertFromBase(
+  (asset.assetCost?.baseAmount ?? 0) * (asset.assetQuantity ?? 0),
+  currency
+).toLocaleString()}
+
 </p>
 
                   <p><strong>In Use:</strong> {asset.inUse || "0"}</p>
@@ -474,8 +484,11 @@ const handleEditChange = (e) => {
          <div>
   <label>Asset Cost</label>
   <p>
-    {selectedAsset.assetCost?.amount}{" "}
-    {selectedAsset.assetCost?.currency}
+  {currency}{" "}
+{convertFromBase(
+  selectedAsset.assetCost?.baseAmount ?? 0,
+  currency
+).toLocaleString()}
   </p>
 </div>
 
@@ -487,12 +500,13 @@ const handleEditChange = (e) => {
 </div>
 
 <div>
-  <label>Total Value (INR)</label>
+  <label>Total Value</label>
   <p>
-    ₹{(
-      selectedAsset.assetCost?.baseAmount *
-      selectedAsset.assetQuantity
-    )?.toLocaleString("en-IN")}
+  {currency}{" "}
+  {convertFromBase(
+    selectedAsset.assetCost?.baseAmount * selectedAsset.assetQuantity,
+    currency
+  ).toLocaleString()}
   </p>
 </div>
 
