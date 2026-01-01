@@ -23,6 +23,7 @@ const MyProfile = lazy(() => import("../Inner_sections/MyProfile"));
 const Security = lazy(() => import("../Inner_sections/Security"));
 const Notification = lazy(() => import("../Inner_sections/Notification"));
 const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
+const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 
 // Add more when needed
 
@@ -35,7 +36,8 @@ const Setting = () => {
 const tabs = [
   { path: "profile", label: "Profile", icon: FaUser },
   { path: "security", label: "Security", icon: FaLock },
-  { path: "notification", label: "Notifications", icon: FaBell },
+  { path: "notification", label: "Notifications", icon: FaBell }, 
+  { path: "subscription", label: "Subscription", icon: FaCogs },
   // User Management only visible for super-admin
   ...(userData?.role === "super-admin"
     ? [{ path: "users", label: "User Management", icon: FaUsers }]
@@ -57,10 +59,8 @@ const tabs = [
         return;
       }
 
-      const cachedUser = localStorage.getItem("username");
-
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/user`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -68,6 +68,7 @@ const tabs = [
         if (!response.ok) throw new Error("Failed to fetch user data");
 
         const data = await response.json();
+        console.log("Fetched user data:", data);
         setUserData(data);
         localStorage.setItem("user", JSON.stringify(data));
       } catch (error) {
@@ -110,6 +111,7 @@ const tabs = [
             <Route path="/" element={<Navigate to="profile" />} />
             <Route path="profile" element={<MyProfile />} />
             <Route path="security" element={<Security />} />
+            <Route path="subscription" element={<Subscription />} />
             <Route path="notification" element={<Notification />} />
             <Route path="users" element={<UserManagement />} />
 
