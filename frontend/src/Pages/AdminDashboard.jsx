@@ -10,7 +10,7 @@ import {
 } from "../Services/ApiServices";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase } from "../utils/currency";
+import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
 
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie,
@@ -173,7 +173,7 @@ const softwareValuationView = convertFromBase(
   </div>
       <div className="stat-2">
     <h2>
-  {currency} {totalValuationView.toLocaleString()}
+  {CURRENCY_SYMBOLS[currency]} {totalValuationView.toLocaleString()}
 </h2>
 
   </div>
@@ -186,7 +186,7 @@ const softwareValuationView = convertFromBase(
       </div>
     <div className="stat-2">
     <h2>
-  {currency} {hardwareValuationView.toLocaleString()}
+  {CURRENCY_SYMBOLS[currency]} {hardwareValuationView.toLocaleString()}
 </h2>
 
     <p>Total Valuation</p>
@@ -201,7 +201,7 @@ const softwareValuationView = convertFromBase(
   </div>
       <div className="stat-2">
     <h2>
-  {currency} {softwareValuationView.toLocaleString()}
+  {CURRENCY_SYMBOLS[currency]} {softwareValuationView.toLocaleString()}
 </h2>
 
     <p>Total Valuation</p>

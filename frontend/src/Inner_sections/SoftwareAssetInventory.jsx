@@ -15,7 +15,7 @@ import Loader from "../Components/Loader";
 import { useNavigate } from "react-router-dom";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase } from "../utils/currency";
+import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
 
 const SoftwareAssetList = () => {
   const [assets, setAssets] = useState([]);
@@ -269,7 +269,7 @@ const renderDepartmentBadges = (asset) => {
                 <p><strong>Version:</strong> {asset.assetSpecification}</p>
                   <p style={{ color: "red" }}>
                   <strong>Cost:</strong>{" "}
-                  {currency}{" "}
+                  {CURRENCY_SYMBOLS[currency]}{" "}
                 {convertFromBase(
                   asset.assetCost?.baseAmount ?? 0,
                   currency
@@ -285,7 +285,7 @@ const renderDepartmentBadges = (asset) => {
                 
                 <p>
                   <strong>Total Value (INR):</strong>{" "}
-                {currency}{" "}
+                {CURRENCY_SYMBOLS[currency]}{" "}
                 {convertFromBase(
                   (asset.assetCost?.baseAmount ?? 0) * (asset.assetQuantity ?? 0),
                   currency
@@ -431,7 +431,7 @@ const renderDepartmentBadges = (asset) => {
           <div>
             <label>Asset Cost</label>
   <p>
-  {currency}{" "}
+  {CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
   selectedAsset.assetCost?.baseAmount ?? 0,
   currency
@@ -447,7 +447,7 @@ const renderDepartmentBadges = (asset) => {
           <div>
             <label>Total Value</label>
             <p>
-            {currency}{" "}
+            {CURRENCY_SYMBOLS[currency]}{" "}
             {convertFromBase(
               selectedAsset.assetCost?.baseAmount * selectedAsset.assetQuantity,
               currency

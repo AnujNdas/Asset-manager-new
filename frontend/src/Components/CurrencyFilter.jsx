@@ -1,6 +1,24 @@
 import { useCurrency } from "../Context/CurrencyContext";
-import "../Component_styles/CurrencyFilter.css";
-const currencies = ["INR", "USD", "EUR", "GBP"];
+
+const currencies = [
+  "INR",
+  "USD",
+  "EUR",
+  "GBP",
+  "JPY",
+  "AUD",
+  "CAD",
+  "CHF",
+  "CNY",
+  "HKD",
+  "SGD",
+  "AED",
+  "SAR",
+  "SEK",
+  "KWD",
+  "QAR",
+  "NZD"
+];
 
 const CurrencyFilter = () => {
   const { currency, setCurrency } = useCurrency();

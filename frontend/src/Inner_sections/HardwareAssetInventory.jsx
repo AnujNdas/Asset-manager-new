@@ -16,7 +16,7 @@ import Loader from "../Components/Loader";
 import { useNavigate } from "react-router-dom";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase } from "../utils/currency";
+import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
 
 const HardwareAssetList = () => {
   const [assets, setAssets] = useState([]);
@@ -343,7 +343,7 @@ const handleEditChange = (e) => {
                   <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
   <p style={{ color: "red" }}>
   <strong>Cost:</strong>{" "}
-  {currency}{" "}
+  {CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
   asset.assetCost?.baseAmount ?? 0,
   currency
@@ -359,7 +359,7 @@ const handleEditChange = (e) => {
 
 <p>
   <strong>Total Value (INR):</strong>{" "}
-{currency}{" "}
+{CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
   (asset.assetCost?.baseAmount ?? 0) * (asset.assetQuantity ?? 0),
   currency
@@ -484,7 +484,7 @@ const handleEditChange = (e) => {
          <div>
   <label>Asset Cost</label>
   <p>
-  {currency}{" "}
+  {CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
   selectedAsset.assetCost?.baseAmount ?? 0,
   currency
@@ -502,7 +502,7 @@ const handleEditChange = (e) => {
 <div>
   <label>Total Value</label>
   <p>
-  {currency}{" "}
+  {CURRENCY_SYMBOLS[currency]}{" "}
   {convertFromBase(
     selectedAsset.assetCost?.baseAmount * selectedAsset.assetQuantity,
     currency

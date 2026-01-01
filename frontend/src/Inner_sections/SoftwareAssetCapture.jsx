@@ -3,7 +3,25 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "../Page_styles/HardwareCapture.css"; // reuse same CSS as hardware
 import { getStatuses, getCategories, createSoftwareAsset , getUnits , getLocations , generateSoftwareAssetCode } from "../Services/ApiServices";
-
+export const SUPPORTED_CURRENCIES = [
+  { code: "INR", label: "Indian Rupee", symbol: "₹" },
+  { code: "USD", label: "US Dollar", symbol: "$" },
+  { code: "EUR", label: "Euro", symbol: "€" },
+  { code: "GBP", label: "British Pound", symbol: "£" },
+  { code: "JPY", label: "Japanese Yen", symbol: "¥" },
+  { code: "AUD", label: "Australian Dollar", symbol: "A$" },
+  { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
+  { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
+  { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
+  { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
+  { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
+  { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
+  { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
+  { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
+  { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
+  { code: "SEK", label: "Swedish Krona", symbol: "kr" },
+  { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
+];
 const initialForm = {
   // Core
   assetCode: "",
@@ -316,19 +334,23 @@ const handleSubmit = async (e) => {
           <SectionTitle>Financial & Contract</SectionTitle>
 
          <div className="grid-2">
-  <div className="input-group">
-    <label>Currency</label>
+<div className="input-group">
+  <label> Currency</label>
+
     <select
       name="assetCost.currency"
       value={formData.assetCost.currency}
       onChange={handleChange}
+      required
     >
-      <option value="INR">INR</option>
-      <option value="USD">USD</option>
-      <option value="EUR">EUR</option>
-      <option value="GBP">GBP</option>
+      {SUPPORTED_CURRENCIES.map((c) => (
+        <option key={c.code} value={c.code}>
+          {c.code} — {c.label} ({c.symbol})
+        </option>
+      ))}
     </select>
-  </div>
+
+</div>
 
   <div className="input-group">
     <label>Cost Per License</label>

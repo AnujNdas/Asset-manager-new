@@ -12,8 +12,29 @@ import Swal from "sweetalert2";
 import "../Page_styles/HardwareCapture.css";
 import { FiSave } from "react-icons/fi";
 
-
+export const SUPPORTED_CURRENCIES = [
+  { code: "INR", label: "Indian Rupee", symbol: "₹" },
+  { code: "USD", label: "US Dollar", symbol: "$" },
+  { code: "EUR", label: "Euro", symbol: "€" },
+  { code: "GBP", label: "British Pound", symbol: "£" },
+  { code: "JPY", label: "Japanese Yen", symbol: "¥" },
+  { code: "AUD", label: "Australian Dollar", symbol: "A$" },
+  { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
+  { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
+  { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
+  { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
+  { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
+  { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
+  { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
+  { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
+  { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
+  { code: "SEK", label: "Swedish Krona", symbol: "kr" },
+  { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
+];
 const AssetCapture = () => {
+  // src/constants/currencies.js
+
+
   const navigate = useNavigate();
 
   const defaultFormData = {
@@ -304,22 +325,26 @@ const handleAddAsset = async (e) => {
 
           <div className="grid-2">
             {/* Cost */}
-<div className="form-group">
-  <label>Asset Cost</label>
 
-  <div className="cost-group">
+<div className="input-group">
+  <label> Currency</label>
+
     <select
       name="assetCost.currency"
       value={formData.assetCost.currency}
       onChange={handleChange}
       required
     >
-      <option value="INR">INR – Indian Rupee</option>
-      <option value="USD">USD – US Dollar</option>
-      <option value="EUR">EUR – Euro</option>
-      <option value="GBP">GBP – British Pound</option>
+      {SUPPORTED_CURRENCIES.map((c) => (
+        <option key={c.code} value={c.code}>
+          {c.code} — {c.label} ({c.symbol})
+        </option>
+      ))}
     </select>
 
+</div>
+<div className="input-group">
+  <label>Asset Cost</label>
     <input
       type="number"
       name="assetCost.amount"
@@ -330,9 +355,8 @@ const handleAddAsset = async (e) => {
       placeholder="Unit cost"
       required
     />
-  </div>
-</div>
 
+</div>
 
             {/* Quantity */}
             <div className="input-group">
