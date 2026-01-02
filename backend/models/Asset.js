@@ -45,7 +45,7 @@ const assetSchema = new mongoose.Schema(
     assetLifetime: { type: String, required: true },
 
     purchaseFrom: { type: String, required: true },
-
+    modelNo: { type: String, unique: true },
     PMD: { type: String },
 
     assetCost: {

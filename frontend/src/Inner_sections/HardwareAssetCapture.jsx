@@ -50,6 +50,7 @@ const AssetCapture = () => {
     DOE: "",
     assetLifetime: "",
     purchaseFrom: "",
+    modelNo: "",
     PMD: "",
      assetCost: {
     amount: "",
@@ -429,7 +430,7 @@ const handleAddAsset = async (e) => {
               />
             </div>
           </div>
-
+                     <div className="grid-2">
           <div className="input-group">
             <label>Purchased From</label>
             <input
@@ -439,8 +440,17 @@ const handleAddAsset = async (e) => {
               onChange={handleChange}
             />
           </div>
+          <div className="input-group">
+                        <label>Model No.</label>
+            <input
+              type="text"
+              name="modelNo"
+              value={formData.modelNo}
+              onChange={handleChange}
+            />
+          </div>
         </div>
-
+</div>
         {/* Submit */}
         <button className="submit-btn" type="submit" disabled={isSubmitting}>
           <FiSave />

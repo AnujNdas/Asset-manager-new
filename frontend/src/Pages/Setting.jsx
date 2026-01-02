@@ -60,7 +60,7 @@ const tabs = [
       }
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/user`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });

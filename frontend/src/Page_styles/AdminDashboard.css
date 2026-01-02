@@ -16,6 +16,7 @@
   justify-content: space-between;
   align-items: center;
 }
+
 /* =========================================================
    STATS CARDS (TOP ROW)
    ========================================================= */
@@ -28,12 +29,12 @@
 .stat-card {
   background: white;
   border-radius: 14px;
-  padding: 16px;
+  padding: 10px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.06);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   transition: transform 0.2s ease;
 }
 
@@ -49,7 +50,7 @@
 }
 
 .stat-card h2 {
-  font-size: 19px;
+  font-size: 15px;
   font-weight: 600;
   margin: 0;
 }
