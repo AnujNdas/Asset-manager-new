@@ -1,6 +1,4 @@
-
 import React from "react";
-
 const BillingToggle = ({ billing, setBilling }) => {
   return (
     <div className="billing-toggle">
@@ -14,16 +12,11 @@ const BillingToggle = ({ billing, setBilling }) => {
         className={billing === "yearly" ? "active" : ""}
         onClick={() => setBilling("yearly")}
       >
-        Yearly 
-      </button>
-      <button
-        className={billing === "multipleYearly" ? "active" : ""}
-        onClick={() => setBilling("multipleYearly")}
-      >
-        Multiple (Save 5%)
+        Yearly (Save 10%)
       </button>
     </div>
   );
 };
+
 
 export default BillingToggle;

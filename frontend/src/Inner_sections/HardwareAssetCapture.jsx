@@ -410,7 +410,7 @@ const handleAddAsset = async (e) => {
             </div>
 
             <div className="input-group">
-              <label>Date of Expiry</label>
+              <label>Warranty Date</label>
               <input
                 type="date"
                 name="DOE"
@@ -420,7 +420,7 @@ const handleAddAsset = async (e) => {
             </div>
 
             <div className="input-group">
-              <label>Lifetime</label>
+              <label>Servicing Date</label>
               <input
                 type="text"
                 name="assetLifetime"

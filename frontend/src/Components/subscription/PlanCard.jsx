@@ -1,49 +1,39 @@
 import React from "react";
 
-const PlanCard = ({ plan, billing, isCurrent }) => {
-  let price = null;
-  if (billing === "monthly") {
-    price = plan.priceMonthly;
-  } else if (billing === "yearly") {
-    price = plan.priceYearly;
-  } else if (billing === "multipleYearly") {
-    price = plan.pricemultipleYearly;
-  }
+const PlanCard = ({ tier, billing, selected, onSelect }) => {
+  if (!tier || !tier.prices) return null;
+
+  const price =
+    billing === "yearly"
+      ? tier.prices.yearly
+      : tier.prices.monthly;
 
   return (
-    <div className={`plan-card ${isCurrent ? "active" : ""}`}>
-      <h3>{plan.name}</h3>
+    <div
+      className={`plan-card ${selected ? "active" : ""}`}
+      onClick={() => onSelect(tier.id)}
+    >
+      <h3>{tier.name}</h3>
 
       <div className="plan-price">
-        {price === null ? (
-          <span className="contact-sales">Contact Sales</span>
-        ) : (
-          <>
-            <span className="amount">{price}</span>
-            <span className="duration">
-              /{billing === "monthly" ? "mo" : "yr"}
-            </span>
-          </>
-        )}
+        <span className="amount">${price}</span>
+        <span className="duration">
+          /{billing === "monthly" ? "mo" : "yr"}
+        </span>
       </div>
 
       <ul className="plan-features">
-        <li>Assets: {plan.limits.assets === Infinity ? "Unlimited" : plan.limits.assets}</li>
-        <li>Users: {plan.limits.users === Infinity ? "Unlimited" : plan.limits.users}</li>
-        <li>Reports: {plan.limits.reports ? "Included" : "Not Included"}</li>
+        {tier.features.map((f, i) => (
+          <li key={i}>{f}</li>
+        ))}
       </ul>
 
-      {isCurrent ? (
-        <button className="btn current" disabled>
-          Current Plan
-        </button>
-      ) : plan.code === "ENTERPRISE" ? (
-        <button className="btn outline">Contact Sales</button>
-      ) : (
-        <button className="btn primary">Upgrade</button>
-      )}
+      <button className="btn primary">
+        {selected ? "Selected" : "Choose Plan"}
+      </button>
     </div>
   );
 };
+
 
 export default PlanCard;

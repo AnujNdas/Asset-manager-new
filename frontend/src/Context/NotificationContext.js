@@ -69,7 +69,7 @@ socketRef.current.on("newNotification", (notification) => {
   // Mark all as read
   const markAllAsRead = async () => {
     await axios.put(
-      `${process.env.REACT_APP_API_URL}/notifications/markAllRead`,
+      `${process.env.REACT_APP_API_URL}/api/notifications/markAllRead`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -80,7 +80,7 @@ socketRef.current.on("newNotification", (notification) => {
   // Mark one as read
   const markAsRead = async (id) => {
     await axios.put(
-      `${process.env.REACT_APP_API_URL}/notifications/${id}/read`,
+      `${process.env.REACT_APP_API_URL}/api/notifications/${id}/read`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );

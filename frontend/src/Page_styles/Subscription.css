@@ -1,224 +1,158 @@
-/* ===============================
-   SUBSCRIPTION PAGE
-================================ */
 .subscription-page {
-  padding: 0px;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0px;
 }
 
-.subscription-header {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.subscription-header h2 {
-  font-size: 18px;
+.subscription-page h2 {
+  font-size: 22px;
   font-weight: 700;
-  color: #0f172a;
+  text-align: center;
+  margin-bottom: 8px;
 }
 
-.subscription-header p {
-  margin-top: 0px;
-  font-size: 14px;
-  color: #64748b;
+.subscription-page p {
+  text-align: center;
+  color: #6b7280;
+  margin: 5px;
+}
+.billing-toggle {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 999px;
+  padding: 4px;
 }
 
-/* ===============================
-   PLANS GRID
-================================ */
+.billing-toggle button {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  color: #374151;
+  transition: all 0.25s ease;
+}
+
+.billing-toggle button.active {
+  background: #111827;
+  color: #fff;
+}
 .plans-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
-  align-items: stretch;
+  margin-top: 18px;
+  margin-bottom: 18px;
 }
-
-/* ===============================
-   PLAN CARD
-================================ */
 .plan-card {
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #f8fafc 100%
-  );
-  border-radius: 18px;
-  padding: 10px 8px;
-  text-align: center;
-  box-shadow:
-    0 10px 25px rgba(15, 23, 42, 0.06),
-    0 2px 6px rgba(15, 23, 42, 0.04);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 8px 14px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
   transition: all 0.25s ease;
-  position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .plan-card:hover {
-  transform: translateY(-6px);
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.12),
-    0 6px 14px rgba(15, 23, 42, 0.06);
+  transform: translateY(-4px);
+  border-color: #6366f1;
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
 }
-
-/* ACTIVE PLAN */
 .plan-card.active {
   border: 2px solid #6366f1;
-  box-shadow:
-    0 20px 45px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 14px 35px rgba(99, 102, 241, 0.25);
 }
-
-/* ===============================
-   PLAN TITLE
-================================ */
 .plan-card h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #0f172a;
+  margin-bottom: 6px;
 }
 
-/* ===============================
-   PRICE
-================================ */
+.plan-card .subtext {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
 .plan-price {
   display: flex;
-  justify-content: center;
   align-items: baseline;
   gap: 6px;
-  margin: 18px 0 22px;
-
+  margin-bottom: 24px;
 }
 
-
 .plan-price .amount {
-  font-size: 40px;
+  font-size: 36px;
   font-weight: 800;
-  color: #024eff;
+  color: #111827;
 }
 
 .plan-price .duration {
   font-size: 14px;
-  color: #0032a6;
+  color: #6b7280;
 }
-
-.contact-sales {
-  font-size: 18px;
-  font-weight: 600;
-  color: #6366f1;
-}
-
-/* ===============================
-   FEATURES
-================================ */
 .plan-features {
   list-style: none;
   padding: 0;
   margin: 0px;
-  text-align: center;
   flex-grow: 1;
-  gap: 0px;
 }
 
 .plan-features li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin: 10px 0;
   font-size: 14px;
-  color: #475569;
+  color: #374151;
+  padding-left: 24px;
+  /* margin-bottom: 12px; */
+  position: relative;
 }
 
 .plan-features li::before {
   content: "✓";
+  position: absolute;
+  left: 0;
   color: #22c55e;
   font-weight: 700;
 }
-
-/* ===============================
-   BUTTONS
-================================ */
 .btn {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
+  padding: 12px 18px;
+  border-radius: 10px;
   font-weight: 600;
-  font-size: 14px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .btn.primary {
-  background: linear-gradient(
-    135deg,
-    #6366f1,
-    #4f46e5
-  );
-  color: white;
-  border: none;
+  background: #6366f1;
+  color: #fff;
 }
 
 .btn.primary:hover {
-  filter: brightness(1.1);
-}
-
-.btn.outline {
-  background: transparent;
-  border: 2px solid #6366f1;
-  color: #6366f1;
-}
-
-.btn.outline:hover {
-  background: rgba(99, 102, 241, 0.08);
+  background: #4f46e5;
 }
 
 .btn.current {
   background: #e5e7eb;
-  color: #64748b;
-  border: none;
+  color: #6b7280;
   cursor: default;
 }
-
-/* ===============================
-   BILLING TOGGLE
-================================ */
-.billing-toggle {
-  display: inline-flex;
-  background: #e5e7eb;
-  border-radius: 999px;
-  padding: 4px;
-  /* margin-top: 20px; */
+.subscription-page .proceed {
+  display: block;
+  margin: 0 auto;
+  padding: 14px 36px;
+  font-size: 16px;
 }
-
-.billing-toggle button {
-  padding: 8px 18px;
-  border: none;
-  background: transparent;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #475569;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.billing-toggle button.active {
-  background: white;
-  color: #0f172a;
-  box-shadow:
-    0 4px 12px rgba(15, 23, 42, 0.15);
-}
-
-/* ===============================
-   RESPONSIVE TWEAKS
-================================ */
 @media (max-width: 640px) {
-  .subscription-header h2 {
-    font-size: 24px;
+  .subscription-page {
+    padding: 24px 16px 60px;
   }
 
   .plan-price .amount {
-    font-size: 34px;
+    font-size: 32px;
   }
 }
