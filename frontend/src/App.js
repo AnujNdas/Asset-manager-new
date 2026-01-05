@@ -18,6 +18,7 @@ import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 import Footer from "./Components/Footer";
 import AssignmentPage from "./Pages/AssignmentPage" ;
+import Onboarding from "./Pages/OnBoarding";
 import { Toaster } from "react-hot-toast";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
@@ -67,6 +68,7 @@ const App = () => {
         <Route path="/misreport" element={<ProtectedRoute allowedRoles={["admin" , "user", "super-admin"]}><MisReport /></ProtectedRoute>} />
         <Route path="/scanner" element={<ProtectedRoute allowedRoles={["admin", "super-admin"]}><AssetScanner /></ProtectedRoute>} />
         <Route path="/assignment" element={<ProtectedRoute allowedRoles={["admin", "super-admin"]}><AssignmentPage /></ProtectedRoute>} />
+         <Route path="/onboarding" element={<Onboarding />} />
       </Routes>
     </section>
     <section className={`fourth-container ${isUserPage ? 'blurred' : ''}`}>
