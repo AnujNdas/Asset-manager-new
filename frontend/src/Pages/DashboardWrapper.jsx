@@ -4,18 +4,30 @@ import AdminDashboard from "./AdminDashboard";
 import Dashboard from "./Dashboard";
 
 const DashboardWrapper = () => {
-  const role = localStorage.getItem("role");
+  const authRaw = localStorage.getItem("auth");
 
-  if (role === "admin") {
-    return <AdminDashboard />;
-  }
-  else if (role === "super-admin") {
-    return <AdminDashboard/>
-  }
-  else{
-
+  // 🔐 Not logged in → normal dashboard or redirect handled elsewhere
+  if (!authRaw) {
     return <Dashboard />;
   }
+
+  let role = "user";
+
+  try {
+    const auth = JSON.parse(authRaw);
+    role = auth.user?.role || "user";
+  } catch (err) {
+    console.error("Invalid auth data in DashboardWrapper");
+    return <Dashboard />;
+  }
+
+  // 🛡️ Role-based dashboard
+  if (role === "admin" || role === "super-admin") {
+    return <AdminDashboard />;
+  }
+
+  return <Dashboard />;
 };
 
 export default DashboardWrapper;
+  

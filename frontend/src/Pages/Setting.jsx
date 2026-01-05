@@ -15,8 +15,9 @@ import {
   FaCogs,
   FaUsers,
   FaBell,
-  FaSignOutAlt,
 } from "react-icons/fa";
+
+import axiosInstance from "../Services/axiosInstance";
 
 // Lazy load inner sections
 const MyProfile = lazy(() => import("../Inner_sections/MyProfile"));
@@ -25,97 +26,115 @@ const Notification = lazy(() => import("../Inner_sections/Notification"));
 const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
 const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 
-// Add more when needed
-
 const Setting = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-// Tabs config
-const tabs = [
-  { path: "profile", label: "Profile", icon: FaUser },
-  { path: "security", label: "Security", icon: FaLock },
-  { path: "notification", label: "Notifications", icon: FaBell }, 
-  { path: "subscription", label: "Subscription", icon: FaCogs },
-  // User Management only visible for super-admin
-  ...(userData?.role === "super-admin"
-    ? [{ path: "users", label: "User Management", icon: FaUsers }]
-    : []),
-];
-
-
-  // Fetch user data (with cache)
+  /**
+   * 🔐 AUTH BOOTSTRAP
+   */
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        Swal.fire({
-          title: "Login Required",
-          text: "Please log in.",
-          icon: "warning",
-          confirmButtonText: "OK",
-        }).then(() => navigate("/user/login"));
-        return;
+    const authRaw = localStorage.getItem("auth");
+
+    if (!authRaw) {
+      navigate("/user/login", { replace: true });
+      return;
+    }
+
+    try {
+      const auth = JSON.parse(authRaw);
+
+      if (!auth.token || !auth.user) {
+        throw new Error("Invalid auth object");
       }
 
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/user`, {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      // Use cached user immediately
+      setUserData(auth.user);
 
-        if (!response.ok) throw new Error("Failed to fetch user data");
-
-        const data = await response.json();
-        console.log("Fetched user data:", data);
-        setUserData(data);
-        localStorage.setItem("user", JSON.stringify(data));
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchUserData();
+      // OPTIONAL: refresh user from backend
+      refreshUser();
+    } catch {
+      localStorage.clear();
+      navigate("/user/login", { replace: true });
+    }
   }, [navigate]);
 
-  // Route guard (if not logged in, redirect immediately)
-  if (!localStorage.getItem("token")) {
+  /**
+   * 🔄 OPTIONAL USER REFRESH (SAFE)
+   */
+  const refreshUser = async () => {
+    try {
+      const res = await axiosInstance.get("/user/me");
+
+      if (res.data?.user) {
+        setUserData(res.data.user);
+
+        // keep auth in sync
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            ...auth,
+            user: res.data.user,
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Failed to refresh user:", error);
+    }
+  };
+
+  /**
+   * 🧭 ROUTE GUARD
+   */
+  if (!localStorage.getItem("auth")) {
     return <Navigate to="/user/login" replace />;
   }
 
+  /**
+   * 🧩 TABS CONFIG
+   */
+  const tabs = [
+    { path: "profile", label: "Profile", icon: FaUser },
+    { path: "security", label: "Security", icon: FaLock },
+    { path: "notification", label: "Notifications", icon: FaBell },
+    { path: "subscription", label: "Subscription", icon: FaCogs },
+    ...(userData?.role === "super-admin"
+      ? [{ path: "users", label: "User Management", icon: FaUsers }]
+      : []),
+  ];
+
   return (
     <div className="setting-container">
-    <h2 className="classify_heading"> Settings</h2>
+      <h2 className="classify_heading">Settings</h2>
+
       {/* Tabs Navigation */}
       <nav className="settings-tabs">
         {tabs.map(({ path, label, icon: Icon }) => (
           <Link
             key={path}
-            to={`/Setting/${path}`}
+            to={`/setting/${path}`}
             className={location.pathname.includes(path) ? "active" : ""}
           >
             <Icon className="tab-icon" />
             <span className="tab-text">{label}</span>
           </Link>
         ))}
-        {/* <button onClick={handleLogout} className="logout-tab">
-          <FaSignOutAlt className="tab-icon" />
-          <span className="tab-text">Logout</span>
-        </button> */}
       </nav>
 
       {/* Content */}
       <main className="settings">
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="/" element={<Navigate to="profile" />} />
+            <Route path="/" element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<MyProfile />} />
             <Route path="security" element={<Security />} />
-            <Route path="subscription" element={<Subscription />} />
             <Route path="notification" element={<Notification />} />
-            <Route path="users" element={<UserManagement />} />
-
-            {/* Add other routes here when components are ready */}
+            <Route path="subscription" element={<Subscription />} />
+            {userData?.role === "super-admin" && (
+              <Route path="users" element={<UserManagement />} />
+            )}
           </Routes>
         </Suspense>
       </main>

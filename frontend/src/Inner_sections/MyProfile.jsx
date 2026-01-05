@@ -1,339 +1,235 @@
-import React, { useState, useEffect } from 'react';
-import EditButton from '../Components/EditButton';
-import '../Page_styles/MyProfile.css';
-import { useNavigate } from 'react-router-dom';
-import Loader from "../Components/Loader" ;
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import axiosInstance from "../Services/axiosInstance";
+import Loader from "../Components/Loader";
+import "../Page_styles/MyProfile.css";
 
 const MyProfile = () => {
-  const [userData, setUserData] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    bio: "",
-    email: "",
-    phone: "",
-    country: "",
-    city: "",
-    postalCode: "",
-    taxId: ""
-  });
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // separate edit toggles for each section
-  const [infoEdit, setInfoEdit] = useState(false);
-  const [addrEdit, setAddrEdit] = useState(false);
+  const [user, setUser] = useState(null);
+  const [avatarFile, setAvatarFile] = useState(null);
 
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    fullName: "",
+    profileTitle: "",
+    phone: "",
 
-  // ---- Helpers ----
-  const token = localStorage.getItem("token");
-  const authHeaders = token
-    ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
-    : { "Content-Type": "application/json" };
+    organizationName: "",
+    organizationType: "",
+    department: "",
+    designation: "",
+    workEmail: "",
 
-  const applyUserToForm = (u) => {
-    setFormData({
-      name: u?.name || "",
-      bio: u?.bio || "",
-      email: u?.email || "",
-      phone: u?.phone || "",
-      country: u?.country || "",
-      city: u?.city || "",
-      postalCode: u?.postalCode || "",
-      taxId: u?.taxId || "",
-    });
-  };
+    country: "",
+    city: "",
+    officeLocation: "",
+  });
 
-
+  // -----------------------------
+  // Fetch user profile
+  // -----------------------------
 useEffect(() => {
-  const fetchUserData = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Please log in.");
-      navigate("/user/login");
-      return;
-    }
-
+  const fetchProfile = async () => {
     try {
-      const response = await fetch("https://asset-manager-new-production.up.railway.app/api/auth/user", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axiosInstance.get("/user/me");
+
+      const userData = res.data.user; // ✅ FIX
+
+      setUser(userData);
+
+      setFormData({
+        fullName: userData.fullName || "",
+        profileTitle: userData.profileTitle || "",
+        phone: userData.phone || "",
+
+        organizationName: userData.organizationName || "",
+        organizationType: userData.organizationType || "",
+        department: userData.department || "",
+        designation: userData.designation || "",
+        workEmail: userData.workEmail || "",
+
+        country: userData.country || "",
+        city: userData.city || "",
+        officeLocation: userData.officeLocation || "",
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch user data: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setUserData(data);
-      applyUserToForm(data); // ✅ Fill the form with user data
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      alert("Error fetching user data. Please try again.");
-    } finally {
-      setLoading(false); // ✅ This fixes the infinite loading issue
-    }
-  };
-
-  fetchUserData();
-}, [navigate]);
-
-
-
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((s) => ({ ...s, [name]: value }));
-  };
-
-  const cancelInfo = () => {
-    applyUserToForm(userData);
-    setInfoEdit(false);
-  };
-  const cancelAddr = () => {
-    applyUserToForm(userData);
-    setAddrEdit(false);
-  };
-
-  const saveProfile = async (fields) => {
-    if (!token) {
-      navigate("/user/login");
-      return;
-    }
-    setSaving(true);
-    try {
-      const body = JSON.stringify(fields);
-      const res = await fetch("https://asset-manager-new-production.up.railway.app/api/user/update", {
-        method: "PUT",
-        headers: authHeaders,
-        body
-      });
-      console.log(res)
-      if (!res.ok) throw new Error("Failed to update profile");
-      const updated = await res.json();
-      setUserData(updated);
-      applyUserToForm(updated);
-      setInfoEdit(false);
-      setAddrEdit(false);
-      alert("Profile updated successfully!");
     } catch (err) {
-      console.error("Error updating profile:", err);
-      alert("Failed to update profile.");
+      console.error("Profile fetch failed:", err);
+      // ❌ DO NOT force redirect here
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProfile();
+}, []);
+
+
+  // -----------------------------
+  // Handlers
+  // -----------------------------
+  const handleChange = (e) => {
+    setFormData((s) => ({ ...s, [e.target.name]: e.target.value }));
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      const data = new FormData();
+      Object.entries(formData).forEach(([k, v]) => data.append(k, v));
+      if (avatarFile) data.append("avatar", avatarFile);
+
+      const res = await axiosInstance.put("/user/update", data);
+
+      setUser(res.data.user);
+      setAvatarFile(null);
+
+      Swal.fire("Updated", "Profile updated successfully", "success");
+    } catch (err) {
+      Swal.fire("Error", "Profile update failed", "error");
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
+  if (loading) return <Loader />;
+
+  // -----------------------------
+  // UI
+  // -----------------------------
   return (
-      <Loader />
-  );
-}
+    <div className="profile-container">
+      <h2 className="profile-title">My Profile</h2>
 
-  return (
-    <div className="Profile-container">
-      
-      <div className='Profile-heading'>My Profile
+      {/* Avatar Section */}
+      <div className="profile-avatar-section">
+        <img
+          src={user?.avatar?.url || "/default-avatar.png"}
+          alt="Profile"
+          className="profile-avatar"
+        />
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setAvatarFile(e.target.files[0])}
+        />
+
+        <small>Upload a square image for best results</small>
       </div>
 
-      {/* Top profile card */}
-      <div className="personal-Profile">
-        <div className="boxes-1">
-          <img
-  src={`https://robohash.org/${userData.username}?set=set2&size=80x80`}
-  alt="Profile Avatar"
-  className="profile-img"
-/>
+      {/* Personal Info */}
+      <section className="profile-section">
+        <h3>Personal Information</h3>
 
-          <div className="data-info">
-            <div className="p-name" style={{ fontWeight: '600', color: '#565656', fontFamily: 'Montserrat,san-serif' }}>
-              {userData?.username || '—'}
-            </div>
-            <div className="role" style={{ fontSize: '13px', fontWeight: '500', color: '#565656' }}>
-              {formData.bio || 'Team Member'}
-            </div>
-            <div className="location" style={{ fontSize: '13px', fontWeight: '500', color: '#565656' }}>
-              {formData.country || '—'}
-            </div>
-          </div>
-        </div>
-      </div>
+        <input
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          placeholder="Full Name"
+        />
 
-      {/* Personal Information */}
-      <div className="personal-data">
-        <div className="head-box">
-          <div className="title-p">Personal Information</div>
-          
-        </div>
+        <input
+          name="profileTitle"
+          value={formData.profileTitle}
+          onChange={handleChange}
+          placeholder="Profile Title (e.g. Frontend Developer)"
+        />
 
-        <div className="boxes">
-          <div className="one">
-            <p>First Name</p>
-            {infoEdit ? (
-              <input
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter your name"
-              />
-            ) : (
-              <h5>{formData.name || '—'}</h5>
-            )}
-          </div>
-          <div className="two">
-            <p>Bio</p>
-            {infoEdit ? (
-              <input
-                name="bio"
-                value={formData.bio}
-                onChange={handleChange}
-                placeholder="e.g., Team Member"
-              />
-            ) : (
-              <h5>{formData.bio || "Team Member"}</h5>
-            )}
-          </div>
-          <div className="three">
-            <p>E mail</p>
-            {infoEdit ? (
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-              />
-            ) : (
-              <h5>{formData.email || 'Anonymous@gmail.com'}</h5>
-            )}
-          </div>
-          <div className="four">
-            <p>Ph no</p>
-            {infoEdit ? (
-              <input
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Phone number"
-              />
-            ) : (
-              <h5>{formData.phone || '1234565789'}</h5>
-            )}
-          </div>
-          <div className="button-ed">
-            {!infoEdit ? (
-              <EditButton onClick={() => setInfoEdit(true)} />
-            ) : (
-              <div className="edit-actions">
-                <button
-                  className="save-btn"
-                  disabled={saving}
-                  onClick={() =>
-                    saveProfile({
-                      name: formData.name,
-                      bio: formData.bio,
-                      email: formData.email,
-                      phone: formData.phone,
-                    })
-                  }
-                >
-                  {saving ? "Saving…" : "Save"}
-                </button>
-                <button className="cancel-btn" onClick={cancelInfo}>Cancel</button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+        <input
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          placeholder="Phone"
+        />
+      </section>
 
-      {/* Address */}
-      <div className="address">
-        <div className="head-box">
-          <div className="title-p">Address</div>
-         
-        </div>
+      {/* Organization */}
+      <section className="profile-section">
+        <h3>Organization</h3>
 
-        <div className="boxes">
-          <div className="one">
-            <p>Country</p>
-            {addrEdit ? (
-              <input
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                placeholder="Country"
-              />
-            ) : (
-              <h5>{formData.country || 'India'}</h5>
-            )}
-          </div>
-          <div className="two">
-            <p>City/State</p>
-            {addrEdit ? (
-              <input
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                placeholder="City/State"
-              />
-            ) : (
-              <h5>{formData.city || 'JSR/India'}</h5>
-            )}
-          </div>
-          <div className="three">
-            <p>Postal-Code</p>
-            {addrEdit ? (
-              <input
-                name="postalCode"
-                value={formData.postalCode}
-                onChange={handleChange}
-                placeholder="Postal code"
-              />
-            ) : (
-              <h5>{formData.postalCode || '831001'}</h5>
-            )}
-          </div>
-          <div className="four">
-            <p>Tax-Id</p>
-            {addrEdit ? (
-              <input
-                name="taxId"
-                value={formData.taxId}
-                onChange={handleChange}
-                placeholder="Tax ID"
-              />
-            ) : (
-              <h5>{formData.taxId || 'sh78d78e'}</h5>
-            )}
-          </div>
-           <div className="button-ed">
-            {!addrEdit ? (
-              <EditButton onClick={() => setAddrEdit(true)} />
-            ) : (
-              <div className="edit-actions">
-                <button
-                  className="save-btn"
-                  disabled={saving}
-                  onClick={() =>
-                    saveProfile({
-                      country: formData.country,
-                      city: formData.city,
-                      postalCode: formData.postalCode,
-                      taxId: formData.taxId,
-                    })
-                  }
-                >
-                  {saving ? "Saving…" : "Save"}
-                </button>
-                <button className="cancel-btn" onClick={cancelAddr}>Cancel</button>
-              </div>
-            )}
-          </div>
-        </div>
+        <input
+          name="organizationName"
+          value={formData.organizationName}
+          onChange={handleChange}
+          placeholder="Organization Name"
+        />
+
+        <select
+          name="organizationType"
+          value={formData.organizationType}
+          onChange={handleChange}
+        >
+          <option value="">Organization Type</option>
+          <option value="Startup">Startup</option>
+          <option value="Enterprise">Enterprise</option>
+          <option value="Agency">Agency</option>
+          <option value="NGO">NGO</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <input
+          name="department"
+          value={formData.department}
+          onChange={handleChange}
+          placeholder="Department"
+        />
+
+        <input
+          name="designation"
+          value={formData.designation}
+          onChange={handleChange}
+          placeholder="Designation"
+        />
+
+        <input
+          name="workEmail"
+          value={formData.workEmail}
+          onChange={handleChange}
+          placeholder="Work Email"
+        />
+      </section>
+
+      {/* Location */}
+      <section className="profile-section">
+        <h3>Location</h3>
+
+        <input
+          name="country"
+          value={formData.country}
+          onChange={handleChange}
+          placeholder="Country"
+        />
+
+        <input
+          name="city"
+          value={formData.city}
+          onChange={handleChange}
+          placeholder="City"
+        />
+
+        <input
+          name="officeLocation"
+          value={formData.officeLocation}
+          onChange={handleChange}
+          placeholder="Office Location"
+        />
+      </section>
+
+      {/* Save */}
+      <div className="profile-actions">
+        <button
+          className="btn primary"
+          onClick={handleSave}
+          disabled={saving}
+        >
+          {saving ? "Saving..." : "Save Changes"}
+        </button>
       </div>
     </div>
   );

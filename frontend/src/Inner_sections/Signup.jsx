@@ -28,7 +28,6 @@ const Signup = () => {
     try {
       // Step 1: Send OTP
       const res = await AuthService.sendOtp(email);
-
       if (res.success) {
         // Step 2: Ask for OTP via SweetAlert
         const { value: otp } = await Swal.fire({
@@ -44,29 +43,50 @@ const Signup = () => {
             }
           }
         });
+        
+        if (otp) {
+          try {
+            // ✅ Step 3: Verify OTP & Signup in one step
+            const verifyRes = await AuthService.verifyOtpAndSignup(
+              email,
+              username,
+              password,
+              otp
+            );
+            console.log("VERIFY RESPONSE:", verifyRes);
 
- if (otp) {
-        try {
-          // ✅ Step 3: Verify OTP & Signup in one step
-          const verifyRes = await AuthService.verifyOtpAndSignup(
-            email,
-            username,
-            password,
-            otp
-          );
+if (verifyRes.success && verifyRes.user) {
+  await Swal.fire({
+    title: "Account Created",
+    text: "Let’s complete your profile to get started.",
+    icon: "success",
+    confirmButtonText: "Continue",
+    allowOutsideClick: false
+  });
+  localStorage.setItem(
+  "auth",
+  JSON.stringify({
+    token: verifyRes.token,
+    user: verifyRes.user
+  })
+);
 
-          if (verifyRes.message) {
-            await Swal.fire({
-              title: "Success!",
-              text: verifyRes.message || "Account created successfully!",
-              icon: "success",
-              confirmButtonText: "OK",
-              allowOutsideClick: false
-            });
-            navigate("/user/login");
-          } else {
-            Swal.fire("Error", verifyRes.error || "Verification failed", "error");
-          }
+
+
+  if (!verifyRes.user.onboardingCompleted) {
+    navigate("/onboarding");
+  } else {
+    navigate("/dashboard");
+  }
+} else {
+  Swal.fire(
+    "Error",
+    verifyRes.error || "Signup failed",
+    "error"
+  );
+}
+
+
         } catch (err) {
           Swal.fire(
             "Error",

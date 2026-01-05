@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import '../Page_styles/Login.css';
-import { Link, useNavigate } from 'react-router-dom';
-import image from '../Images/logo.png';
+import { Link, useNavigate } from 'react-router-dom'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import AuthService from '../Services/AuthService';
 import Swal from 'sweetalert2';
@@ -16,71 +14,56 @@ const Login = ({ setProfileUser }) => {
   const navigate = useNavigate();
 
   // Keep your original logic intact
-  const handlelogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handlelogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const response = await AuthService.login(email, password);
-      if (response && response.token) {
-        console.log(response.token)
-        localStorage.setItem("token", response.token);
-        localStorage.setItem("email", email);
-        localStorage.setItem("username", response.username);
-        localStorage.setItem("role", response.role);
-        localStorage.setItem("userId", response.userId);
+  try {
+    const response = await AuthService.login(email, password);
+    console.log("Login response:", response);
 
-
-        Swal.fire({
-          title: "Success",
-          text: "Login Successful!",
-          icon: "success",
-          confirmButtonText: "OK"
-        });
-        setApiDone(true)
-       // ✅ allow progress to hit 100%
-    setTimeout(() => {
-      setLoading(false);
-    }, 400);
-
-        navigate("/");
-      } else {
-        Swal.fire({
-          title: "Unexpected Error",
-          text: "Unexpected response format. Please try again.",
-          icon: "error",
-          confirmButtonText: "OK"
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      if (error.response) {
-        Swal.fire({
-          title: "Error",
-          text: error.response?.data?.error || "Login failed.",
-          icon: "error",
-          confirmButtonText: "OK"
-        });
-        setLoading(false);
-      } else if (error.request) {
-        Swal.fire({
-          title: "Network Error",
-          text: "No response from the server.",
-          icon: "error",
-          confirmButtonText: "OK"
-        });
-        setLoading(false);
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "An error occurred. Please try again.",
-          icon: "error",
-          confirmButtonText: "OK"
-        });
-        setLoading(false);
-      }
+    if (!response.success || !response.token || !response.user) {
+      throw new Error("Invalid login response");
     }
-  };
+
+    // ✅ STORE AUTH IN ONE PLACE, ONE FORMAT
+    localStorage.setItem(
+      "auth",
+      JSON.stringify({
+        token: response.token,
+        user: response.user
+      })
+    );
+
+    Swal.fire({
+      title: "Success",
+      text: "Login successful",
+      icon: "success",
+      confirmButtonText: "OK"
+    });
+
+    setApiDone(true);
+    setLoading(false);
+
+    // ✅ SINGLE, CORRECT REDIRECT
+    if (!response.user.onboardingCompleted) {
+      navigate("/onboarding");
+    } else {
+      navigate("/");
+    }
+
+  } catch (error) {
+    console.error("Login error:", error);
+
+    Swal.fire({
+      title: "Error",
+      text: error.response?.data?.error || "Login failed",
+      icon: "error"
+    });
+
+    setLoading(false);
+  }
+};
 
   return (
     <>

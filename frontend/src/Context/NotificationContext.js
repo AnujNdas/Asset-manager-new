@@ -1,8 +1,8 @@
 // src/context/NotificationContext.jsx
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
+import axiosInstance from "../Services/axiosInstance";
 
 const NotificationContext = createContext();
 export const useNotifications = () => useContext(NotificationContext);
@@ -12,80 +12,89 @@ export const NotificationProvider = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
 
   const socketRef = useRef(null);
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId");
-  
-  // Fetch initial notifications + unread count
+
+  // 🔐 Read auth ONCE, correctly
+  const authRaw = localStorage.getItem("auth");
+  const auth = authRaw ? JSON.parse(authRaw) : null;
+
+  const token = auth?.token;
+  const userId = auth?.user?._id;
+
+  // 🚀 Fetch notifications + setup socket
   useEffect(() => {
-    if (!userId || !token) return;
+    if (!token || !userId) return;
 
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/notifications`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setNotifications(res.data))
-      .catch(console.error);
+    const fetchNotifications = async () => {
+      try {
+        const [listRes, countRes] = await Promise.all([
+          axiosInstance.get("/api/notifications"),
+          axiosInstance.get("/api/notifications/unreadCount"),
+        ]);
 
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/notifications/unreadCount`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setUnreadCount(res.data.count || 0))
-      .catch(console.error);
+        setNotifications(listRes.data || []);
+        setUnreadCount(countRes.data?.count || 0);
+      } catch (err) {
+        console.error("Notification fetch failed:", err);
+      }
+    };
 
-    // setup socket
-    socketRef.current = io(process.env.REACT_APP_API_URL);
+    fetchNotifications();
+
+    // 🔌 Socket setup
+    socketRef.current = io(process.env.REACT_APP_API_BASE_URL, {
+      auth: { token },
+    });
+
     socketRef.current.emit("joinRoom", userId);
 
-socketRef.current.on("newNotification", (notification) => {
-  console.log("🔥 REALTIME EVENT RECEIVED:", notification);
-  setNotifications((prev) => [notification, ...prev]);
-  setUnreadCount((prev) => prev + 1);
+    socketRef.current.on("newNotification", (notification) => {
+      console.log("🔥 REALTIME NOTIFICATION:", notification);
 
-  // 🔥 SHOW POPUP
-  showToast(notification);
-});
+      setNotifications((prev) => [notification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
+      showToast(notification);
+    });
 
-    return () => socketRef.current.disconnect();
-  }, [userId, token]);
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, [token, userId]);
+
+  // 🔔 Toast handler
   const showToast = (notification) => {
-  const { title, message, type } = notification;
+    const { title, message, type } = notification;
 
-  switch (type) {
-    case "success":
-      toast.success(`${title}: ${message}`);
-      break;
-    case "error":
-      toast.error(`${title}: ${message}`);
-      break;
-    case "warning":
-      toast(`${title}: ${message}`, { icon: "⚠️" });
-      break;
-    default:
-      toast(`${title}: ${message}`);
-  }
-};
+    switch (type) {
+      case "success":
+        toast.success(`${title}: ${message}`);
+        break;
+      case "error":
+        toast.error(`${title}: ${message}`);
+        break;
+      case "warning":
+        toast(`${title}: ${message}`, { icon: "⚠️" });
+        break;
+      default:
+        toast(`${title}: ${message}`);
+    }
+  };
 
-  // Mark all as read
+  // ✅ Mark all as read
   const markAllAsRead = async () => {
-    await axios.put(
-      `${process.env.REACT_APP_API_URL}/api/notifications/markAllRead`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
+    await axiosInstance.put("/api/notifications/markAllRead");
+    setNotifications((prev) =>
+      prev.map((n) => ({ ...n, isRead: true }))
     );
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     setUnreadCount(0);
   };
 
-  // Mark one as read
+  // ✅ Mark one as read
   const markAsRead = async (id) => {
-    await axios.put(
-      `${process.env.REACT_APP_API_URL}/api/notifications/${id}/read`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    await axiosInstance.put(`/api/notifications/${id}/read`);
     setNotifications((prev) =>
-      prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+      prev.map((n) =>
+        n._id === id ? { ...n, isRead: true } : n
+      )
     );
     setUnreadCount((prev) => Math.max(prev - 1, 0));
   };
