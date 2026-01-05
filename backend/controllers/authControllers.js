@@ -75,7 +75,7 @@ const verifyOtpAndSignup = async (req, res) => {
     if (otpRecord.otp !== otp) return res.status(400).json({ error: "Invalid OTP" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword, role: "user" });
+    const newUser = new User({ username, email, password: hashedPassword, role: "user",onboardingCompleted : false });
     await newUser.save();
 
     await Notification.create({
@@ -91,11 +91,29 @@ const verifyOtpAndSignup = async (req, res) => {
     });
 
     await Otp.deleteMany({ email });
+const token = jwt.sign(
+  {
+    id: newUser._id,
+    email: newUser.email,
+    role: newUser.role,
+    username: newUser.username,
+    onboardingCompleted: false
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: "3h" }
+);
+res.status(201).json({
+  success: true,
+  token,
+  user: {
+    id: newUser._id,
+    email: newUser.email,
+    username: newUser.username,
+    role: newUser.role,
+    onboardingCompleted: false
+  }
+});
 
-    res.status(201).json({
-      message: "User created successfully!",
-      user: { username: newUser.username, email: newUser.email }
-    });
   } catch (error) {
     console.error("Error verifying OTP:", error);
     res.status(500).json({ error: "Failed to verify OTP" });
@@ -108,48 +126,65 @@ const login = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: "User not found!" });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found!",
+      });
+    }
 
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) return res.status(401).json({ error: "Invalid Password!" });
-
-    // 🔥 UPDATE lastActive timestamp
-    user.lastActive = new Date();
-    await user.save();
+    if (!validPassword) {
+      return res.status(401).json({
+        success: false,
+        error: "Invalid password!",
+      });
+    }
 
     const token = jwt.sign(
-      { email: user.email, id: user._id, role: user.role, username: user.username },
-      "jwt_secret",
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        username: user.username,
+      },
+      process.env.JWT_SECRET,
       { expiresIn: "3h" }
     );
 
-    // Notification
+    user.lastActive = new Date();
+    await user.save();
     await Notification.create({
-      title: "Login Successful",
-      message: "You have successfully logged in.",
-      userId: user._id,
-    });
+       title: "Login Successful",
+        message: "You have successfully logged in.", 
+        userId: user._id, 
+      });
+     const io = req.app.get("io"); 
+     io.to(user._id.toString()).emit("newNotification", 
+      { title: "Login Successful", 
+        message: "You have successfully logged in.", 
 
-    const io = req.app.get("io");
-    io.to(user._id.toString()).emit("newNotification", {
-      title: "Login Successful",
-      message: "You have successfully logged in.",
-    });
-
-    res.json({
-      message: "Logged in!",
+      });
+    return res.status(200).json({
+      success: true,
       token,
-      role: user.role,
-      userId: user._id,
-      username: user.username,
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        onboardingCompleted: user.onboardingCompleted
+      }
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error logging in!" });
+    console.error("Login Error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Error logging in!",
+    });
   }
 };
-
 /* ----------------------------- FORGOT PASSWORD ---------------------------- */
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -270,6 +305,48 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+const completeOnboarding = async (req, res) => {
+  try {
+    const { userId, profile } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update optional fields only
+    Object.assign(user, profile);
+    user.onboardingCompleted = true;
+
+    await user.save();
+
+    // 🔑 Auto-login token (ONLY HERE)
+    const token = jwt.sign(
+      {
+        email: user.email,
+        id: user._id,
+        role: user.role,
+        username: user.username,
+      },
+      "jwt_secret",
+      { expiresIn: "3h" }
+    );
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Complete onboarding error:", error);
+    res.status(500).json({ error: "Failed to complete onboarding" });
+  }
+};
 
 module.exports = {
   sendOtp,
@@ -278,5 +355,6 @@ module.exports = {
   forgotPassword,
   resetPassword,
   changePassword,
-  getUserData
+  getUserData,
+  completeOnboarding
 };

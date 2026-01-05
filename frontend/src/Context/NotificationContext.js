@@ -41,7 +41,7 @@ export const NotificationProvider = ({ children }) => {
     fetchNotifications();
 
     // 🔌 Socket setup
-    socketRef.current = io(process.env.REACT_APP_API_BASE_URL, {
+    socketRef.current = io(process.env.REACT_APP_API_URL, {
       auth: { token },
     });
 
