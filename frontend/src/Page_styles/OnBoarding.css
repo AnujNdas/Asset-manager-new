@@ -1,0 +1,105 @@
+/* ===== Modal Overlay ===== */
+.onboarding-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* ===== Modal Card ===== */
+.onboarding-card {
+  width: 100%;
+  max-width: 460px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 32px 28px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.35s ease;
+}
+
+/* ===== Heading ===== */
+.onboarding-card h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+  text-align: center;
+  color: #1f2937; /* slate-800 */
+}
+
+/* ===== Inputs & Select ===== */
+.onboarding-card input,
+.onboarding-card select {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db; /* gray-300 */
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.onboarding-card input:focus,
+.onboarding-card select:focus {
+  border-color: #2563eb; /* blue-600 */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ===== Select Placeholder Color ===== */
+.onboarding-card select {
+  color: #374151;
+}
+
+/* ===== Button ===== */
+.onboarding-card button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.onboarding-card button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+}
+
+.onboarding-card button:active {
+  transform: scale(0.98);
+}
+
+/* ===== Animation ===== */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== Mobile Responsiveness ===== */
+@media (max-width: 480px) {
+  .onboarding-card {
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .onboarding-card h2 {
+    font-size: 1.4rem;
+  }
+}

@@ -93,11 +93,15 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
       <div className={`dropdown-menu ${isVisible ? "show" : ""}`}>
         <ul className="drop-box">
           <li className="user-info">
-            <img
-              src={`https://robohash.org/${username}?set=set2&size=50x50`}
-              alt="avatar"
-              className="avatar"
-            />
+<img
+  src={
+    user?.avatar?.url
+      ? user.avatar.url
+      : "/default-avatar.png"
+  }
+  alt="avatar"
+  className="avatar"
+/>
             <span className="username">{username}</span>
           </li>
 

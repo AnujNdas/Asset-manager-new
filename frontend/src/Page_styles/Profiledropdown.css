@@ -123,15 +123,19 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
-  padding: 10px;
 }
 
 /* User Avatar */
-.user-info .avatar {
-  width: 40px;
-  height: 40px;
+.avatar {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
   border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
+  border: 2px solid #e5e7eb; /* subtle border */
+  background-color: #f3f4f6;
 }
 
 /* Username text */

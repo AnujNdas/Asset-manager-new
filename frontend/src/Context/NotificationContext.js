@@ -27,8 +27,8 @@ export const NotificationProvider = ({ children }) => {
     const fetchNotifications = async () => {
       try {
         const [listRes, countRes] = await Promise.all([
-          axiosInstance.get("/api/notifications"),
-          axiosInstance.get("/api/notifications/unreadCount"),
+          axiosInstance.get("/notifications"),
+          axiosInstance.get("/notifications/unreadCount"),
         ]);
 
         setNotifications(listRes.data || []);
@@ -81,7 +81,7 @@ export const NotificationProvider = ({ children }) => {
 
   // ✅ Mark all as read
   const markAllAsRead = async () => {
-    await axiosInstance.put("/api/notifications/markAllRead");
+    await axiosInstance.put("/notifications/markAllRead");
     setNotifications((prev) =>
       prev.map((n) => ({ ...n, isRead: true }))
     );
@@ -90,7 +90,7 @@ export const NotificationProvider = ({ children }) => {
 
   // ✅ Mark one as read
   const markAsRead = async (id) => {
-    await axiosInstance.put(`/api/notifications/${id}/read`);
+    await axiosInstance.put(`/notifications/${id}/read`);
     setNotifications((prev) =>
       prev.map((n) =>
         n._id === id ? { ...n, isRead: true } : n
