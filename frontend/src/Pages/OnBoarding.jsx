@@ -53,6 +53,7 @@ const handleSubmit = async () => {
 
 
   return (
+      <div className="onboarding-modal-overlay">
     <div className="onboarding-card">
       <h2>Set Up Your Workspace</h2>
 
@@ -102,6 +103,7 @@ const handleSubmit = async () => {
       />
 
       <button onClick={handleSubmit}>Continue</button>
+    </div>
     </div>
   );
 };
