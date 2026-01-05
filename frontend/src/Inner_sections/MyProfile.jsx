@@ -107,21 +107,33 @@ useEffect(() => {
       <h2 className="profile-title">My Profile</h2>
 
       {/* Avatar Section */}
-      <div className="profile-avatar-section">
-        <img
-          src={user?.avatar?.url || "/default-avatar.png"}
-          alt="Profile"
-          className="profile-avatar"
-        />
+      {/* Avatar Section */}
+<div className="profile-avatar-section">
+  <div className="avatar-wrapper">
+    <img
+      src={user?.avatar?.url || "/default-avatar.png"}
+      alt="Profile"
+      className="profile-avatar"
+    />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setAvatarFile(e.target.files[0])}
-        />
+    {/* Hidden file input */}
+    <input
+      type="file"
+      accept="image/*"
+      id="avatarUpload"
+      hidden
+      onChange={(e) => setAvatarFile(e.target.files[0])}
+    />
 
-        <small>Upload a square image for best results</small>
-      </div>
+    {/* Edit button */}
+    <label htmlFor="avatarUpload" className="avatar-edit-btn">
+      ✏️
+    </label>
+  </div>
+
+  <small>Upload a square image for best results</small>
+</div>
+
 
       {/* Personal Info */}
       <section className="profile-section">
