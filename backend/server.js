@@ -71,6 +71,10 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Asset management API is running...");
 });
+app.get("/api", (req, res) => {
+  res.send("Asset Management API is running (API root)");
+});
+
 // ✅ Routes
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/assets", assetsRoutes);
