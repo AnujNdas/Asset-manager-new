@@ -2,7 +2,6 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 const path = require("path");
 const http = require("http");
@@ -33,8 +32,6 @@ const subscriptionRoutes = require("./routes/subscriptionRoutes");
 // ✅ Import User model for Super Admin seeding
 const User = require("./models/User");
 
-// Connect DB
-connectDB();
 
 const app = express();
 const allowedOrigins = [
@@ -43,26 +40,24 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow Postman / server-to-server calls
-      if (!origin) return callback(null, true);
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-// ✅ VERY IMPORTANT: handle preflight
-app.options("*", cors());
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 // Remove: const bodyParser = require("body-parser");
 app.use(express.json({ limit: "10mb" })); // <-- replace bodyParser.json()
 app.use(express.urlencoded({ extended: true }));
