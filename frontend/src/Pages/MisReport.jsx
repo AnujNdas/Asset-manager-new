@@ -4,7 +4,9 @@ import Swal from "sweetalert2";
 import "../Page_styles/MisReport.css";
 import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
-
+import CurrencyFilter from "../Components/CurrencyFilter";
+import { useCurrency } from "../Context/CurrencyContext";
+import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
 import {
   getStatuses,
   getUnits,
@@ -16,6 +18,7 @@ import {
 } from "../Services/ApiServices";
 
 const MisReport = () => {
+  const { currency } = useCurrency();
   const [activeTab, setActiveTab] = useState("hardware");
 
   // Shared filters
@@ -217,6 +220,8 @@ const MisReport = () => {
                 <th>Unit</th>
                 <th>Status</th>
                 <th>Location</th>
+                <th>Maintainence</th>
+                <th>Total Cost</th>
               </>
             )}
 
@@ -227,6 +232,8 @@ const MisReport = () => {
                 <th>Publisher</th>
                 <th>Status</th>
                 <th>Category</th>
+                <th>Expiry</th>
+                <th>Total Cost</th>
               </>
             )}
           </tr>
@@ -242,6 +249,12 @@ const MisReport = () => {
                   <td>{units.find((u) => u._id === row.associateUnit)?.name}</td>
                   <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
                   <td>{locations.find((l) => l._id === row.locationName)?.name}</td>
+                  <td>{row.DOE}</td>
+                  <td>{CURRENCY_SYMBOLS[currency]}{" "}
+                  {convertFromBase(
+                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
+                    currency
+                  ).toLocaleString()}</td>
                 </>
               )}
 
@@ -252,6 +265,12 @@ const MisReport = () => {
                   <td>{row.purchaseFrom}</td>
                   <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
                   <td>{categories.find((c) => c._id === row.assetCategory)?.name}</td>
+                <td>{row.DOE}</td>
+                <td>{CURRENCY_SYMBOLS[currency]}{" "}
+                  {convertFromBase(
+                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
+                    currency
+                  ).toLocaleString()}</td>
                 </>
               )}
             </tr>

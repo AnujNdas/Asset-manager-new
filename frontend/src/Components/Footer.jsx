@@ -2,12 +2,15 @@ import React from "react";
 import "../Component_styles/Footer.css";
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="footer">
       <div className="copyright-box">
         <div className="copy-text">
-          Copyright © 2025{" "}
-          </div>
+          Copyright © {currentYear}
+        </div>
+
         <div className="copy-link">
           <a
             href="https://socialflylive.com/"
@@ -16,8 +19,8 @@ const Footer = () => {
           >
             Socialfly - Business Growth & Management System
           </a>
-          </div>
         </div>
+      </div>
     </footer>
   );
 };
