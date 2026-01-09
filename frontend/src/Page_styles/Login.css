@@ -292,6 +292,7 @@ body {
   .auth-card {
     max-width: 720px;
     grid-template-columns: 1fr;
+    overflow: auto;
   }
 
   .form-panel {
