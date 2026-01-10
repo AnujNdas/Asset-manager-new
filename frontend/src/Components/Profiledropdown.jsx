@@ -57,7 +57,10 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
       }
     });
   };
-
+  const handleProfileClick = () => {
+    navigate("/setting/profile");
+    onClose();
+  }
   /**
    * 🖱️ CLICK OUTSIDE HANDLER
    */
@@ -92,7 +95,7 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
     >
       <div className={`dropdown-menu ${isVisible ? "show" : ""}`}>
         <ul className="drop-box">
-          <li className="user-info">
+          <button className="user-info" onClick={handleProfileClick}>
 <img
   src={
     user?.avatar?.url
@@ -102,8 +105,9 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
   alt="avatar"
   className="avatar"
 />
+
             <span className="username">{username}</span>
-          </li>
+          </button>
 
           <hr className="divide" />
 
