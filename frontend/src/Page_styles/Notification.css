@@ -5,7 +5,7 @@
 .notification-container {
   overflow: auto;          /* Enable scrolling for long lists */
   height: 80dvh;           /* Viewport-based height */
-  padding: 25px;
+  padding: 20px;
   border-radius: 12px;
   animation: fadeIn 0.4s ease-in-out;
 }
