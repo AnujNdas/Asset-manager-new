@@ -75,7 +75,7 @@ useEffect(() => {
                 <span className="tab-text">Assignment</span>
               </NavLink>
             </li>
-            {isMobile && (
+            {/* {isMobile && (
               <li>
                 <NavLink
                   to="/scanner"
@@ -86,7 +86,7 @@ useEffect(() => {
                   <span className="tab-text">Scanner</span>
                 </NavLink>
               </li>
-            )}
+            )} */}
             <li>
               <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />

@@ -3,7 +3,7 @@
    Optimized for mobile-first, fluid grids, and charts
    ========================================================= */
 .admin-dashboard {
-  padding: 15px;
+  padding: 8px 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -15,6 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding : 8px;
 }
 
 /* =========================================================

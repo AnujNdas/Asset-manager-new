@@ -3,7 +3,7 @@
    Controls overall page spacing and width
 ========================================================= */
 .assignment-page {
-  padding: 10px;           /* Base padding for desktop */
+  padding: 8px 20px;           /* Base padding for desktop */
   height: 100%;            /* Allow full-height layouts */
   max-width: clamp(100%, 92vw, 1480px); /* SaaS-style max width */
   margin-inline: auto;     /* Center horizontally */

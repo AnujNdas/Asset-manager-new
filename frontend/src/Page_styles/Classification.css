@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: stretch; /* Stretch content full width */
   font-family: "Inter", sans-serif;
-  gap: 10px;
+  /* gap: 10px; */
   padding: 12px;
   box-sizing: border-box;
 }
@@ -26,7 +26,7 @@
   -webkit-text-fill-color: transparent;
 
   letter-spacing: 0.5px;
-  padding: 8px 20px;
+  padding: 8px 12px;
 }
 
 /* Secondary heading alignment */
@@ -133,7 +133,7 @@
 .classify_items {
   width: 100%;
   border-radius: 16px;
-  padding: 20px;
+  padding: 8px 20px;
 
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 
