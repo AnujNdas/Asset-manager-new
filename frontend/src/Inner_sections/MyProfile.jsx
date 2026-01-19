@@ -92,6 +92,7 @@ useEffect(() => {
       Swal.fire("Updated", "Profile updated successfully", "success");
     } catch (err) {
       Swal.fire("Error", "Profile update failed", "error");
+      console.log("Profile update error:", err);
     } finally {
       setSaving(false);
     }
