@@ -5,7 +5,7 @@ const authenticateToken = require("../Middleware/Authentication-token");
 
 const { getOverview } = require("../controllers/superAdmin/dashboardController");
 const { getAllOrganizations, createOrganization , getOrganizationById ,toggleOrganizationStatus , getOrganizationUsers  } = require("../controllers/superAdmin/organizationController");
-const {getSettings, updateSettings} = require("../controllers/superAdmin/settingsController");
+const {getSettings, updateSettings} = require("../controllers/superAdmin/settingController");
 const { getGAAnalytics } = require("../controllers/superAdmin/gaAnalysisController");
 
 
