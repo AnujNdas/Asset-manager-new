@@ -437,4 +437,3 @@ module.exports = {
   getUserData,
   completeOnboarding
 };
-  
