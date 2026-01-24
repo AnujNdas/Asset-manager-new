@@ -1,4 +1,3 @@
-// models/location.js
 const mongoose = require("mongoose");
 
 const locationSchema = new mongoose.Schema(
@@ -11,6 +10,12 @@ const locationSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+      index: true
+    },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
       index: true
     }
   },
@@ -27,9 +32,9 @@ locationSchema.pre("validate", function (next) {
   next();
 });
 
-/* ================= UNIQUE ACTIVE LOCATION ================= */
+/* ================= UNIQUE PER ORGANIZATION (ACTIVE ONLY) ================= */
 locationSchema.index(
-  { name: 1 },
+  { organizationId: 1, name: 1 },
   {
     unique: true,
     partialFilterExpression: { isActive: true }

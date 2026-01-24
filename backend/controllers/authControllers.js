@@ -6,10 +6,11 @@ const Otp = require("../models/Otp");
 const crypto = require("crypto");
 const User = require("../models/User");
 const Notification = require("../models/Notification");
-
+const Organization = require("../models/Organization");
+const Subscription = require("../models/Subscription");
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL = "vaultifly@gmail.com";
-
+const OrganizationInvite = require("../models/OrganizationInvite");
 /* ---------------------------------- UTIL ---------------------------------- */
 async function sendBrevoEmail(to, subject, html) {
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -67,65 +68,127 @@ const sendOtp = async (req, res) => {
 
 /* ------------------------- VERIFY OTP AND SIGNUP -------------------------- */
 const verifyOtpAndSignup = async (req, res) => {
-  const { email, otp, username, password } = req.body;
+  const {
+    email,
+    otp,
+    username,
+    password,
+    organizationName,
+    inviteToken,
+  } = req.body;
+  console.log("Signup payload:", req.body);
 
   try {
+    // 🔐 OTP verification
     const otpRecord = await Otp.findOne({ email }).sort({ createdAt: -1 });
-    if (!otpRecord) return res.status(400).json({ error: "OTP expired or not found" });
-    if (otpRecord.otp !== otp) return res.status(400).json({ error: "Invalid OTP" });
+    if (!otpRecord || otpRecord.otp !== otp) {
+      return res.status(400).json({ error: "Invalid or expired OTP" });
+    }
 
+    let organization;
+    let role = "admin";
+
+    // =========================
+    // INVITE FLOW
+    // =========================
+    if (inviteToken) {
+      const invite = await OrganizationInvite.findOne({
+        inviteToken,
+        expiresAt: { $gt: new Date() },
+      }).populate("organizationId");
+
+      if (!invite) {
+        return res.status(400).json({ error: "Invalid or expired invite" });
+      }
+
+      // Optional but recommended
+      if (invite.email && invite.email !== email) {
+        return res
+          .status(400)
+          .json({ error: "Invite email mismatch" });
+      }
+
+      organization = invite.organizationId;
+      role = invite.role || "user";
+
+      // Multi-use support
+      invite.usedCount += 1;
+      await invite.save();
+    }
+
+    // =========================
+    // OWNER SIGNUP FLOW
+    // =========================
+    if (!inviteToken) {
+      organization = await Organization.create({
+        name: organizationName || `${username}'s Organization`,
+      });
+    }
+
+    // 🔒 Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword, role: "user",onboardingCompleted : false });
-    await newUser.save();
 
-    await Notification.create({
-      title: "Welcome!",
-      message: `Account created successfully.`,
-      userId: newUser._id
+    // 👤 Create user
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      role,
+      organizationId: organization._id,
+      onboardingCompleted: false,
     });
 
-    const io = req.app.get("io");
-    io.to(newUser._id.toString()).emit("newNotification", {
-      title: "Welcome!",
-      message: "Account created successfully."
-    });
+    // Link org creator ONLY for owner signup
+    if (!inviteToken) {
+      organization.createdBy = newUser._id;
+      await organization.save();
+
+      // Trial subscription only once per org
+      await Subscription.create({
+        organizationId: organization._id,
+        plan: "trial",
+        status: "trialing",
+        expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      });
+    }
 
     await Otp.deleteMany({ email });
-const token = jwt.sign(
-  {
-    id: newUser._id,
-    email: newUser.email,
-    role: newUser.role,
-    username: newUser.username,
-    onboardingCompleted: false
-  },
-  process.env.JWT_SECRET,
-  { expiresIn: "3h" }
-);
-res.status(201).json({
-  success: true,
-  token,
-  user: {
-    id: newUser._id,
-    email: newUser.email,
-    username: newUser.username,
-    role: newUser.role,
-    onboardingCompleted: false
-  }
-});
 
-  } catch (error) {
-    console.error("Error verifying OTP:", error);
-    res.status(500).json({ error: "Failed to verify OTP" });
+    // 🎟 JWT
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+        role: newUser.role,
+        organizationId: organization._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "3h" }
+    );
+
+    return res.status(201).json({
+      success: true,
+      token,
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        role: newUser.role,
+        organizationId: organization._id,
+      },
+    });
+  } catch (err) {
+    console.error("Signup Error:", err);
+    res.status(500).json({ error: "Signup failed" });
   }
 };
+
 
 /* --------------------------------- LOGIN ---------------------------------- */
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -141,30 +204,44 @@ const login = async (req, res) => {
       });
     }
 
+    // 🛑 Organization check (except super-admin)
+    if (user.role !== "super-admin" && !user.organizationId) {
+      return res.status(403).json({
+        success: false,
+        error: "User is not associated with any organization",
+      });
+    }
+
+    // ✅ JWT payload MUST include organizationId
     const token = jwt.sign(
       {
         id: user._id,
         email: user.email,
         role: user.role,
         username: user.username,
+        organizationId: user.organizationId || null,
       },
       process.env.JWT_SECRET,
       { expiresIn: "3h" }
     );
 
-    user.lastActive = new Date();
-    await user.save();
-    await Notification.create({
-       title: "Login Successful",
-        message: "You have successfully logged in.", 
-        userId: user._id, 
-      });
-     const io = req.app.get("io"); 
-     io.to(user._id.toString()).emit("newNotification", 
-      { title: "Login Successful", 
-        message: "You have successfully logged in.", 
+    await User.updateOne(
+      { _id: user._id },
+      { lastActive: new Date() }
+    );
 
-      });
+    await Notification.create({
+      title: "Login Successful",
+      message: "You have successfully logged in.",
+      userId: user._id,
+    });
+
+    const io = req.app.get("io");
+    io.to(user._id.toString()).emit("newNotification", {
+      title: "Login Successful",
+      message: "You have successfully logged in.",
+    });
+
     return res.status(200).json({
       success: true,
       token,
@@ -173,10 +250,10 @@ const login = async (req, res) => {
         email: user.email,
         username: user.username,
         role: user.role,
-        onboardingCompleted: user.onboardingCompleted
-      }
+        organizationId: user.organizationId || null,
+        onboardingCompleted: user.onboardingCompleted,
+      },
     });
-
   } catch (error) {
     console.error("Login Error:", error);
     return res.status(500).json({
@@ -185,6 +262,8 @@ const login = async (req, res) => {
     });
   }
 };
+
+
 /* ----------------------------- FORGOT PASSWORD ---------------------------- */
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -198,7 +277,7 @@ const forgotPassword = async (req, res) => {
     user.resetTokenExpiry = Date.now() + 3600000;
     await user.save();
 
-    const resetLink = `https://asset-manager-new.vercel.app/user/reset/${token}`;
+    const resetLink = `https://asset-manager-new-frontend.onrender.com/user/reset/${token}`;
 
     const html = `
       <div style="font-family:sans-serif;padding:10px;">
@@ -358,3 +437,4 @@ module.exports = {
   getUserData,
   completeOnboarding
 };
+  

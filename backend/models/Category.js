@@ -11,6 +11,12 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
       index: true
+    },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+      index: true
     }
   },
   { timestamps: true }
@@ -26,14 +32,9 @@ categorySchema.pre("validate", function (next) {
   next();
 });
 
-/* ================= UNIQUE ACTIVE CATEGORY ================= */
-/**
- * Ensures:
- * - Only ONE active category per name
- * - Allows re-creating a category if the old one is inactive
- */
+/* ================= UNIQUE PER ORGANIZATION (ACTIVE ONLY) ================= */
 categorySchema.index(
-  { name: 1 },
+  { organizationId: 1, name: 1 },
   {
     unique: true,
     partialFilterExpression: { isActive: true }

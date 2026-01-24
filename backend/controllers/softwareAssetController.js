@@ -7,215 +7,195 @@ const Location = require("../models/Location");
 const sendNotification = require("../utils/notify");
 const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
 
+/* ======================================================
+   GENERATE SOFTWARE CODE (ORG-SCOPED)
+====================================================== */
+const generateSoftwareCode = async (organizationId) => {
+  const lastAsset = await SoftwareAsset.findOne({
+    organizationId,
+    assetCode: { $regex: /^SW-\d+$/ }
+  })
+    .sort({ createdAt: -1 })
+    .select("assetCode")
+    .lean();
 
+  let nextNumber = 1;
+
+  if (lastAsset?.assetCode) {
+    nextNumber = parseInt(lastAsset.assetCode.split("-")[1], 10) + 1;
+  }
+
+  return `SW-${String(nextNumber).padStart(3, "0")}`;
+};
+
+/* ======================================================
+   BULK UPLOAD SOFTWARE
+====================================================== */
 const bulkUploadSoftware = async (req, res) => {
   try {
-    console.log("🔥 Software Bulk upload request received.");
+    const userId = req.user?.id;
+    const organizationId = req.user?.organizationId;
 
-    const { assets, mode } = req.body;
-    const parsedAssets = JSON.parse(assets);
+    if (!userId || !organizationId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
 
-    const categories = await Category.find({});
-    const units = await Unit.find({});
-    const locations = await Location.find({});
-    const statuses = await Status.find({});
+    const { assets, mode = "strict" } = req.body;
+    const parsedAssets = Array.isArray(assets) ? assets : JSON.parse(assets);
 
-    const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c._id]));
-    const unitMap = new Map(units.map(u => [u.name.toLowerCase(), u._id]));
-    const locationMap = new Map(locations.map(l => [l.name.toLowerCase(), l._id]));
-    const statusMap = new Map(statuses.map(s => [s.name.toLowerCase(), s._id]));
+    const [categories, units, locations, statuses] = await Promise.all([
+      Category.find({ organizationId }),
+      Unit.find({ organizationId }),
+      Location.find({ organizationId }),
+      Status.find({ organizationId })
+    ]);
+
+    const normalize = v => v?.toString().trim().toLowerCase();
+
+    const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
+    const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
+    const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
+    const statusMap = new Map(statuses.map(s => [normalize(s.name), s._id]));
 
     let validAssets = [];
     let invalidRows = [];
-    const normalize = (v) => v?.trim().toLowerCase();
-    
+
     for (const [index, asset] of parsedAssets.entries()) {
-      const catKey = normalize(asset.assetCategory);
-      const unitKey = normalize(asset.associateUnit);
-      const locKey = normalize(asset.locationName);
-      const statusKey = normalize(asset.assetStatus);
+      try {
+        const catKey = normalize(asset.assetCategory);
+        const unitKey = normalize(asset.associateUnit);
+        const locKey = normalize(asset.locationName);
+        const statusKey = normalize(asset.assetStatus);
 
-      let categoryId = categoryMap.get(catKey);
-      let unitId = unitMap.get(unitKey);
-      let locationId = locationMap.get(locKey);
-      let statusId = statusMap.get(statusKey);
+        let categoryId = categoryMap.get(catKey);
+        let unitId = unitMap.get(unitKey);
+        let locationId = locationMap.get(locKey);
+        let statusId = statusMap.get(statusKey);
 
-      // ---------- STRICT MODE ----------
-      if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
-        invalidRows.push({
-          row: index + 2,
-          reason: "Missing reference data",
-          asset
-        });
-        continue;
-      }
+        if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
+          invalidRows.push({ row: index + 2, reason: "Missing reference data", asset });
+          continue;
+        }
 
-      // ---------- CATEGORY ----------
-      if (!categoryId && catKey) {
-        const category = await Category.findOneAndUpdate(
-          { name: new RegExp(`^${asset.assetCategory}$`, "i") },
-          { name: asset.assetCategory },
-          { upsert: true, new: true }
-        );
-        categoryId = category._id;
-        categoryMap.set(catKey, categoryId);
-      }
+        const upsertRef = async (Model, name, map) => {
+          if (!name) return null;
+          const doc = await Model.findOneAndUpdate(
+            { name: new RegExp(`^${name}$`, "i"), organizationId },
+            { name, organizationId, isActive: true },
+            { upsert: true, new: true }
+          );
+          map.set(normalize(name), doc._id);
+          return doc._id;
+        };
 
-      // ---------- UNIT ----------
-      if (!unitId && unitKey) {
-        const unit = await Unit.findOneAndUpdate(
-          { name: new RegExp(`^${asset.associateUnit}$`, "i") },
-          { name: asset.associateUnit },
-          { upsert: true, new: true }
-        );
-        unitId = unit._id;
-        unitMap.set(unitKey, unitId);
-      }
+        if (!categoryId) categoryId = await upsertRef(Category, asset.assetCategory, categoryMap);
+        if (!unitId) unitId = await upsertRef(Unit, asset.associateUnit, unitMap);
+        if (!locationId) locationId = await upsertRef(Location, asset.locationName, locationMap);
+        if (!statusId) statusId = await upsertRef(Status, asset.assetStatus, statusMap);
 
-      // ---------- LOCATION ----------
-      if (!locationId && locKey) {
-        const location = await Location.findOneAndUpdate(
-          { name: new RegExp(`^${asset.locationName}$`, "i") },
-          { name: asset.locationName },
-          { upsert: true, new: true }
-        );
-        locationId = location._id;
-        locationMap.set(locKey, locationId);
-      }
+        const quantity = Number(asset.assetQuantity || 1);
+        if (quantity <= 0) throw new Error("Invalid license quantity");
 
-      // ---------- STATUS ----------
-      if (!statusId && statusKey) {
-        const status = await Status.findOneAndUpdate(
-          { name: new RegExp(`^${asset.assetStatus}$`, "i") },
-          { name: asset.assetStatus },
-          { upsert: true, new: true }
-        );
-        statusId = status._id;
-        statusMap.set(statusKey, statusId);
-      }
+        const amount = Number(asset.assetCost || 0);
+        const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
 
-      // ---------- LICENSE RULES ----------
-      const totalLicenses = Number(asset.assetQuantity || 1);
+        validAssets.push({
+          organizationId,
+          assetCode: await generateSoftwareCode(organizationId),
 
-      if (totalLicenses < 0) {
-        invalidRows.push({
-          row: index + 2,
-          reason: "Invalid license quantity",
-          asset
-        });
-        continue;
-      }
-const assetCode = await generateSoftwareCode(); // backend util
-      const amount = Number(asset.assetCost || 0);
-      const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
+          assetName: asset.assetName,
+          assetCategory: categoryId,
+          associateUnit: unitId,
+          locationName: locationId,
+          assetStatus: statusId,
 
-      const baseAmount = convertToBase(amount, currency);
-      // ---------- FINAL PUSH ----------
-      validAssets.push({
-        assetCode,
-        assetName: asset.assetName,
-        assetCategory: categoryId,
-        assetSpecification: asset.assetSpecification,
-        purchaseFrom: asset.purchaseFrom,
-        associateUnit: unitId,
+          assetSpecification: asset.assetSpecification,
+          purchaseFrom: asset.purchaseFrom,
 
-        locationName: locationId,
-        locationAddress: asset.locationAddress,
+          licenseKey: asset.licenseKey,
+          licenseType: asset.licenseType,
+          licenseModel: asset.licenseModel,
+          licenseMetric: asset.licenseMetric,
+          licenseUse: asset.licenseUse,
 
-        licenseKey: asset.licenseKey,
-        licenseType: asset.licenseType,
-        licenseModel: asset.licenseModel,
-        licenseMetric: asset.licenseMetric,
-        licenseUse: asset.licenseUse,
+          DOP: asset.DOP,
+          DOE: asset.DOE,
+          assetLifetime: asset.assetLifetime,
 
-        DOP: asset.DOP,
-        DOE: asset.DOE,
-        assetLifetime: asset.assetLifetime,
+          assetQuantity: quantity,
+          inUse: 0,
+          licensesAssigned: 0,
 
-        assetStatus: statusId,
-
-        assetQuantity: totalLicenses,
-        inUse: 0, // 🔒 enforced
-
-         assetCost: {
+          assetCost: {
             amount,
             currency,
-            baseAmount,
+            baseAmount: convertToBase(amount, currency)
           },
 
-        assignedUsers: [], // 🔒 empty on creation
-        linkedDevices: [],
-      });
+          auditHistory: [
+            { date: new Date(), notes: `Bulk uploaded by user ${userId}` }
+          ],
+
+          createdBy: userId
+        });
+      } catch (err) {
+        invalidRows.push({ row: index + 2, reason: err.message, asset });
+      }
     }
 
     if (validAssets.length) {
       await SoftwareAsset.insertMany(validAssets, { ordered: false });
     }
-      await sendNotification({
-    req,
-    userId: req.user.id,
-    title: "Software Assets Uploaded",
-    message: `${validAssets.length} software assets uploaded successfully.`,
-    type: "success",
-    redirectUrl: "/inventory",
-  });
-    return res.status(200).json({
+
+    await sendNotification({
+      req,
+      userId,
+      title: "Software Assets Uploaded",
+      message: `${validAssets.length} software assets uploaded successfully.`,
+      type: "success",
+      redirectUrl: "/inventory"
+    });
+
+    res.json({
       success: true,
       inserted: validAssets.length,
       skipped: invalidRows.length,
-      invalidRows,
+      invalidRows
     });
-
-  } catch (err) {
-    console.error("❌ Software Bulk Upload Error:", err);
-    return res.status(500).json({
-      success: false,
-      message: err.message
-    });
+  } catch (error) {
+    console.error("Bulk Upload Error:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// Create a new software asset
+/* ======================================================
+   CREATE SOFTWARE ASSET
+====================================================== */
 const createSoftwareAsset = async (req, res) => {
   try {
-    const userId = req.user?.id;
-    if (!userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
-    }
+    const { id: userId, organizationId } = req.user;
 
-    // ✅ Generate asset code
-    const assetCode = await generateSoftwareCode();
-
-    // ✅ Validate asset cost
     if (!req.body.assetCost?.amount || !req.body.assetCost?.currency) {
       return res.status(400).json({
         success: false,
-        message: "Asset cost amount and currency are required",
+        message: "Asset cost amount and currency are required"
       });
     }
 
     const { amount, currency } = req.body.assetCost;
 
-    const assetCost = {
-      amount: Number(amount),
-      currency: currency.toUpperCase(),
-      baseAmount: convertToBase(
-        Number(amount),
-        currency.toUpperCase()
-      ),
-    };
-
-    const payload = {
+    const asset = await SoftwareAsset.create({
       ...req.body,
-      assetCode,               // 🔥 FIX
-      assetCost,
+      organizationId,
+      assetCode: await generateSoftwareCode(organizationId),
+      assetCost: {
+        amount: Number(amount),
+        currency: currency.toUpperCase(),
+        baseAmount: convertToBase(Number(amount), currency)
+      },
       licensesAssigned: 0,
-      auditHistory: [
-        { date: new Date(), notes: `Created by user ${userId}` },
-      ],
-    };
-
-    const asset = await SoftwareAsset.create(payload);
+      auditHistory: [{ date: new Date(), notes: `Created by user ${userId}` }]
+    });
 
     await sendNotification({
       req,
@@ -223,7 +203,7 @@ const createSoftwareAsset = async (req, res) => {
       title: "Software Asset Added",
       message: `Software "${asset.assetName}" was added successfully.`,
       type: "success",
-      redirectUrl: "/inventory",
+      redirectUrl: "/inventory"
     });
 
     res.status(201).json({ success: true, data: asset });
@@ -233,169 +213,113 @@ const createSoftwareAsset = async (req, res) => {
   }
 };
 
-// Get all software assets
+/* ======================================================
+   GET SOFTWARE ASSETS (ORG-SCOPED)
+====================================================== */
 const getSoftwareAssets = async (req, res) => {
   try {
-    // 1️⃣ Fetch all software assets
-    const assets = await SoftwareAsset.find()
+    const organizationId = req.user.organizationId;
+
+    const assets = await SoftwareAsset.find({ organizationId })
       .sort({ createdAt: -1 })
       .lean();
 
-    // 2️⃣ Fetch active assignments for software assets
     const assignments = await AssetAssignment.find({
+      organizationId,
       assetType: "software",
-      status: "active",
+      status: "active"
     })
       .populate("assignedTo", "name")
       .lean();
 
-    // 3️⃣ Group assignments by assetId
     const assignmentMap = {};
 
-    for (const assign of assignments) {
-      const assetId = String(assign.assetId);
-
-      if (!assignmentMap[assetId]) {
-        assignmentMap[assetId] = {
-          inUse: 0,
-          assignedDepartments: [],
-        };
-      }
-
-      assignmentMap[assetId].inUse += assign.quantity;
-
-      assignmentMap[assetId].assignedDepartments.push({
-        department: assign.assignedTo,
-        quantity: assign.quantity,
+    for (const a of assignments) {
+      const id = String(a.assetId);
+      assignmentMap[id] ??= { inUse: 0, assignedDepartments: [] };
+      assignmentMap[id].inUse += a.quantity;
+      assignmentMap[id].assignedDepartments.push({
+        department: a.assignedTo,
+        quantity: a.quantity
       });
     }
 
-    // 4️⃣ Merge assignment data into assets
-    const enrichedAssets = assets.map((asset) => {
-      const assignmentData = assignmentMap[String(asset._id)];
-
-      return {
-        ...asset,
-        inUse: assignmentData?.inUse || 0,
-        assignedDepartments: assignmentData?.assignedDepartments || [],
-      };
-    });
-
-    return res.json({
+    res.json({
       success: true,
-      data: enrichedAssets,
+      data: assets.map(asset => ({
+        ...asset,
+        inUse: assignmentMap[asset._id]?.inUse || 0,
+        assignedDepartments: assignmentMap[asset._id]?.assignedDepartments || []
+      }))
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-// Update software asset
-const updateSoftwareAsset = async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    const existing = await SoftwareAsset.findById(req.params.id);
-    if (!existing) {
-      return res.status(404).json({ success: false, message: "Not found" });
-    }
-
-    let updatedCost = existing.assetCost;
-
-    if (req.body.assetCost) {
-      const { amount, currency } = req.body.assetCost;
-
-      updatedCost = {
-        amount: Number(amount),
-        currency: currency.toUpperCase(),
-        baseAmount: convertToBase(
-          Number(amount),
-          currency.toUpperCase()
-        ),
-      };
-    }
-
-    const updatedState = {
-      ...existing.toObject(),
-      ...req.body,
-      assetCost: updatedCost,
-      auditHistory: [
-        ...(existing.auditHistory || []),
-        { date: new Date(), notes: `Updated by user ${userId}` },
-      ],
-    };
-
-    const asset = await SoftwareAsset.findByIdAndUpdate(
-      req.params.id,
-      updatedState,
-      { new: true, runValidators: true }
-    );
-
-    await sendNotification({
-      req,
-      userId,
-      title: "Software Asset Updated",
-      message: `Software "${asset.assetName}" was updated.`,
-      type: "info",
-      redirectUrl: "/inventory",
-    });
-
-    res.json({ success: true, data: asset });
-  } catch (error) {
-    console.error("Update Software Asset Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
-// Delete software asset
-const deleteSoftwareAsset = async (req, res) => {
+/* ======================================================
+   UPDATE / DELETE (ORG-SAFE)
+====================================================== */
+const updateSoftwareAsset = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const { organizationId, id: userId } = req.user;
 
-    const asset = await SoftwareAsset.findByIdAndDelete(req.params.id);
+    const asset = await SoftwareAsset.findOne({
+      _id: req.params.id,
+      organizationId
+    });
+
     if (!asset) {
       return res.status(404).json({ success: false, message: "Not found" });
     }
 
-await sendNotification({
-  req,
-  userId,
-  title: "Software Asset Deleted",
-  message: `Software "${asset.assetName}" was deleted.`,
-  type: "warning",
-  redirectUrl: "/inventory",
-});
+    if (req.body.assetCost) {
+      const { amount, currency } = req.body.assetCost;
+      asset.assetCost = {
+        amount: Number(amount),
+        currency: currency.toUpperCase(),
+        baseAmount: convertToBase(Number(amount), currency)
+      };
+    }
+
+    Object.assign(asset, req.body);
+
+    asset.auditHistory.push({
+      date: new Date(),
+      notes: `Updated by user ${userId}`
+    });
+
+    await asset.save();
+
+    res.json({ success: true, data: asset });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const deleteSoftwareAsset = async (req, res) => {
+  try {
+    const { organizationId } = req.user;
+
+    const asset = await SoftwareAsset.findOneAndDelete({
+      _id: req.params.id,
+      organizationId
+    });
+
+    if (!asset) {
+      return res.status(404).json({ success: false, message: "Not found" });
+    }
 
     res.json({ success: true, message: "Deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-const generateSoftwareCode = async () => {
-  const lastAsset = await SoftwareAsset
-    .findOne({ assetCode: { $regex: /^SW-\d+$/ } })
-    .sort({ createdAt: -1 })
-    .select("assetCode")
-    .lean();
-
-  let nextNumber = 1;
-
-  if (lastAsset?.assetCode) {
-    const lastNumber = parseInt(lastAsset.assetCode.split("-")[1], 10);
-    nextNumber = lastNumber + 1;
-  }
-
-  return `SW-${String(nextNumber).padStart(3, "0")}`;
-};
-
 
 module.exports = {
   bulkUploadSoftware,
   createSoftwareAsset,
   getSoftwareAssets,
   updateSoftwareAsset,
-  deleteSoftwareAsset,
+  deleteSoftwareAsset
 };

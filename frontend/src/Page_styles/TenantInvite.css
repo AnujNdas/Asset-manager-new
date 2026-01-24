@@ -1,0 +1,33 @@
+.invite-form-card,
+.invite-table-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+button.danger {
+  background: #e53935;
+  color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}

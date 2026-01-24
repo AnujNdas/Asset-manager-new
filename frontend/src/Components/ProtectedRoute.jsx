@@ -1,9 +1,8 @@
 // src/components/ProtectedRoute.jsx
-import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-const ProtectedRoute = ({ children, allowedRoles }) => {
+const ProtectedRoute = ({ allowedRoles }) => {
   const authRaw = localStorage.getItem("auth");
 
   if (!authRaw) {
@@ -31,12 +30,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/user/login" replace />;
   }
 
-  // Optional role-based access
   if (allowedRoles && !allowedRoles.includes(decoded.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  return children;
+  // ✅ THIS IS THE KEY LINE
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

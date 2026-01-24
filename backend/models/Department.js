@@ -11,12 +11,18 @@ const departmentSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
       index: true
-    }
+    },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+      index: true,
+    },
   },
   { timestamps: true }
 );
 
-// Normalize before validation
+/* ================= NORMALIZE NAME ================= */
 departmentSchema.pre("validate", function (next) {
   if (this.name) {
     this.name =
@@ -25,8 +31,10 @@ departmentSchema.pre("validate", function (next) {
   }
   next();
 });
+
+/* ================= UNIQUE PER ORGANIZATION (ACTIVE ONLY) ================= */
 departmentSchema.index(
-  { name: 1 },
+  { organizationId: 1, name: 1 },
   {
     unique: true,
     partialFilterExpression: { isActive: true }

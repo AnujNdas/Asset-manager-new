@@ -7,7 +7,12 @@ const AssetAssignmentSchema = new mongoose.Schema(
       enum: ["hardware", "software"],
       required: true,
     },
-
+          organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+      index: true,
+    },
     assetId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

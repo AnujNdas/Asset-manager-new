@@ -1,6 +1,6 @@
 const express = require("express");
-const path = require("path");
 const authenticateToken = require("../Middleware/Authentication-token");
+const tenantMiddleware = require("../Middleware/tenantMiddleware");
 
 const {
   addAsset,
@@ -10,36 +10,49 @@ const {
   bulkUpload,
 } = require("../controllers/assetControllers");
 
-
-
 const router = express.Router();
 
 const multer = require("multer");
 const uploadBulk = multer({ dest: "uploads/bulk/" });
 
-
-// ➤ ADD ASSET (NO IMAGE NOW)
+// ➤ ADD ASSET
 router.post(
   "/",
-  authenticateToken(),
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
   addAsset
 );
 
-// ➤ UPDATE ASSET (NO IMAGE NOW)
+// ➤ UPDATE ASSET
 router.put(
   "/:id",
-  authenticateToken(),
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
   updateAsset
 );
 
-router.get("/", authenticateToken(), getAllAssets);
+// ➤ GET ASSETS
+router.get(
+  "/",
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  getAllAssets
+);
 
-router.delete("/:id", authenticateToken(), deleteAsset);
+// ➤ DELETE ASSET
+router.delete(
+  "/:id",
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  deleteAsset
+);
 
-// ➤ BULK UPLOAD (ONLY EXCEL NOW)
+// ➤ BULK UPLOAD
 router.post(
   "/bulk-upload",
-  uploadBulk.fields([{ name: "excel" }]), authenticateToken(),
+  authenticateToken(["admin"]),
+  tenantMiddleware,
+  uploadBulk.fields([{ name: "excel" }]),
   bulkUpload
 );
 

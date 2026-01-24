@@ -11,20 +11,17 @@ const authenticateToken = (roles = []) => {
     const token = authHeader.split(" ")[1];
 
     try {
-const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-console.log("JWT decoded payload:", decoded);
+      req.user = {
+        id: decoded.id,
+        email: decoded.email,
+        role: decoded.role,
+        username: decoded.username,
+        organizationId: decoded.organizationId || null, // 🔑 REQUIRED
+      };
 
-req.user = {
-  id: decoded.id,
-  email: decoded.email,
-  role: decoded.role,
-  username: decoded.username,
-};
-
-console.log("req.user.id:", req.user.id);
-
-      // ✅ Role-based access
+      // 🔒 Role-based access
       if (roles.length && !roles.includes(req.user.role)) {
         return res.status(403).json({ error: "Forbidden: Access denied" });
       }

@@ -5,15 +5,15 @@ const { createLocation , getLocations , deleteLocation , updateLocation ,restore
 const router = express.Router();
 
 // Route to create a location
-router.post('/', authenticateToken(["admin", "super-admin"]), createLocation);
+router.post('/', authenticateToken(["admin", "user"]), createLocation);
 
 // Route to get all locations
-router.get('/', getLocations);
+router.get('/', authenticateToken(["admin", "user"]), getLocations);
 
 //Route to update locations 
-router.put('/:id' , authenticateToken(["admin", "super-admin"]), updateLocation )
+router.put('/:id' , authenticateToken(["admin", "user"]), updateLocation )
 // Route to delete locations
-router.delete('/:id', authenticateToken(["admin", "super-admin"]), deleteLocation);
-router.patch("/:id/restore", authenticateToken(["admin", "super-admin"]), restoreLocation);
+router.delete('/:id', authenticateToken(["admin", "user"]), deleteLocation);
+router.patch("/:id/restore", authenticateToken(["admin", "user"]), restoreLocation);
 module.exports = router;
 

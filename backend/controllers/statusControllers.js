@@ -1,10 +1,12 @@
 const Status = require("../models/Status");
 const sendNotification = require("../utils/notify");
+
 /* ============================
    Create / Restore Status
 ============================ */
 const createStatus = async (req, res) => {
   try {
+    const { organizationId, id: userId } = req.user;
     let { name } = req.body;
 
     if (!name || !name.trim()) {
@@ -14,10 +16,11 @@ const createStatus = async (req, res) => {
     name = name.trim();
 
     const existing = await Status.findOne({
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${name}$`, $options: "i" },
+      organizationId
     });
 
-    // 🔁 Restore if soft deleted
+    // 🔁 Restore if inactive
     if (existing) {
       if (!existing.isActive) {
         existing.isActive = true;
@@ -25,7 +28,7 @@ const createStatus = async (req, res) => {
 
         await sendNotification({
           req,
-          userId: req.user.id,
+          userId,
           title: "Status Restored",
           message: `Status "${existing.name}" has been restored.`,
           type: "success"
@@ -40,18 +43,21 @@ const createStatus = async (req, res) => {
       return res.status(409).json({ message: "Status already exists" });
     }
 
-    const newStatus = await Status.create({ name });
+    const newStatus = await Status.create({
+      name,
+      organizationId,
+      isActive: true
+    });
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Status Created",
       message: `Status "${newStatus.name}" was created successfully.`,
       type: "success"
     });
 
     res.status(201).json(newStatus);
-
   } catch (error) {
     console.error("Error creating status:", error);
     res.status(500).json({ message: "Error creating status" });
@@ -63,6 +69,7 @@ const createStatus = async (req, res) => {
 ============================ */
 const updateStatus = async (req, res) => {
   try {
+    const { organizationId, id: userId } = req.user;
     const { id } = req.params;
     let { name } = req.body;
 
@@ -72,18 +79,19 @@ const updateStatus = async (req, res) => {
 
     name = name.trim();
 
-    const exists = await Status.findOne({
+    const duplicate = await Status.findOne({
       _id: { $ne: id },
       name: { $regex: `^${name}$`, $options: "i" },
+      organizationId,
       isActive: true
     });
 
-    if (exists) {
+    if (duplicate) {
       return res.status(409).json({ message: "Status already exists" });
     }
 
-    const updatedStatus = await Status.findByIdAndUpdate(
-      id,
+    const updatedStatus = await Status.findOneAndUpdate(
+      { _id: id, organizationId, isActive: true },
       { name },
       { new: true, runValidators: true }
     );
@@ -94,7 +102,7 @@ const updateStatus = async (req, res) => {
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Status Updated",
       message: `Status renamed to "${updatedStatus.name}".`,
       type: "info"
@@ -104,22 +112,21 @@ const updateStatus = async (req, res) => {
       message: "Status updated successfully",
       updatedStatus
     });
-
   } catch (error) {
     console.error("Error updating status:", error);
     res.status(500).json({ message: "Error updating status" });
   }
 };
 
-
 /* ============================
-   Get Active Statuses
+   Get Statuses (ORG-SCOPED)
 ============================ */
 const getStatuses = async (req, res) => {
   try {
-    const statuses = await Status.find().sort({
-      name: 1
-    });
+    const { organizationId } = req.user;
+
+    const statuses = await Status.find({ organizationId })
+      .sort({ name: 1 });
 
     res.status(200).json(statuses);
   } catch (error) {
@@ -128,15 +135,19 @@ const getStatuses = async (req, res) => {
   }
 };
 
-
 /* ============================
    Soft Delete Status
 ============================ */
 const deleteStatus = async (req, res) => {
   try {
+    const { organizationId, id: userId } = req.user;
     const { id } = req.params;
 
-    const status = await Status.findById(id);
+    const status = await Status.findOne({
+      _id: id,
+      organizationId,
+      isActive: true
+    });
 
     if (!status) {
       return res.status(404).json({ message: "Status not found" });
@@ -147,7 +158,7 @@ const deleteStatus = async (req, res) => {
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Status Deactivated",
       message: `Status "${status.name}" has been deactivated.`,
       type: "warning"
@@ -157,25 +168,28 @@ const deleteStatus = async (req, res) => {
       message: "Status deleted successfully",
       status
     });
-
   } catch (error) {
     console.error("Error deleting status:", error);
     res.status(500).json({ message: "Error deleting status" });
   }
 };
 
-
 /* ============================
-   Restore Status (Optional)
+   Restore Status
 ============================ */
 const restoreStatus = async (req, res) => {
   try {
+    const { organizationId, id: userId } = req.user;
     const { id } = req.params;
 
-    const status = await Status.findById(id);
+    const status = await Status.findOne({
+      _id: id,
+      organizationId,
+      isActive: false
+    });
 
     if (!status) {
-      return res.status(404).json({ message: "Status not found" });
+      return res.status(404).json({ message: "Status not found or already active" });
     }
 
     status.isActive = true;
@@ -183,7 +197,7 @@ const restoreStatus = async (req, res) => {
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Status Restored",
       message: `Status "${status.name}" has been restored.`,
       type: "success"
@@ -193,13 +207,11 @@ const restoreStatus = async (req, res) => {
       message: "Status restored successfully",
       status
     });
-
   } catch (error) {
     console.error("Error restoring status:", error);
     res.status(500).json({ message: "Error restoring status" });
   }
 };
-
 
 module.exports = {
   createStatus,

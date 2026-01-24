@@ -2,19 +2,28 @@ const mongoose = require("mongoose");
 const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
+const sendNotification = require("../utils/notify");
 
-
+/* ============================
+   In-Stock Category Summary
+============================ */
 const getInStockCategorySummary = async (req, res) => {
   try {
-    /* ================= HARDWARE ================= */
+    if (!req.user?.organizationId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const orgId = new mongoose.Types.ObjectId(req.user.organizationId);
+
     const hardware = await Asset.aggregate([
+      { $match: { organizationId: orgId } },
       {
         $lookup: {
           from: "categories",
           localField: "assetCategory",
           foreignField: "_id",
-          as: "category",
-        },
+          as: "category"
+        }
       },
       { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
       {
@@ -22,8 +31,8 @@ const getInStockCategorySummary = async (req, res) => {
           categoryId: "$assetCategory",
           categoryName: { $ifNull: ["$category.name", "Unknown Category"] },
           isActive: { $ifNull: ["$category.isActive", false] },
-          available: { $subtract: ["$assetQuantity", "$inUse"] },
-        },
+          available: { $subtract: ["$assetQuantity", "$inUse"] }
+        }
       },
       { $match: { available: { $gt: 0 } } },
       {
@@ -31,20 +40,20 @@ const getInStockCategorySummary = async (req, res) => {
           _id: "$categoryId",
           categoryName: { $first: "$categoryName" },
           isActive: { $first: "$isActive" },
-          hardwareCount: { $sum: "$available" },
-        },
-      },
+          hardwareCount: { $sum: "$available" }
+        }
+      }
     ]);
 
-    /* ================= SOFTWARE ================= */
     const software = await SoftwareAsset.aggregate([
+      { $match: { organizationId: orgId } },
       {
         $lookup: {
           from: "categories",
           localField: "assetCategory",
           foreignField: "_id",
-          as: "category",
-        },
+          as: "category"
+        }
       },
       { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
       {
@@ -52,8 +61,8 @@ const getInStockCategorySummary = async (req, res) => {
           categoryId: "$assetCategory",
           categoryName: { $ifNull: ["$category.name", "Unknown Category"] },
           isActive: { $ifNull: ["$category.isActive", false] },
-          available: { $subtract: ["$assetQuantity", "$inUse"] },
-        },
+          available: { $subtract: ["$assetQuantity", "$inUse"] }
+        }
       },
       { $match: { available: { $gt: 0 } } },
       {
@@ -61,25 +70,24 @@ const getInStockCategorySummary = async (req, res) => {
           _id: "$categoryId",
           categoryName: { $first: "$categoryName" },
           isActive: { $first: "$isActive" },
-          softwareCount: { $sum: "$available" },
-        },
-      },
+          softwareCount: { $sum: "$available" }
+        }
+      }
     ]);
 
-    /* ================= MERGE ================= */
     const map = {};
 
-    hardware.forEach((h) => {
+    hardware.forEach(h => {
       map[h._id.toString()] = {
         category: h._id,
         categoryName: h.categoryName,
         isActive: h.isActive,
         hardwareCount: h.hardwareCount,
-        softwareCount: 0,
+        softwareCount: 0
       };
     });
 
-    software.forEach((s) => {
+    software.forEach(s => {
       const key = s._id.toString();
       if (!map[key]) {
         map[key] = {
@@ -87,17 +95,16 @@ const getInStockCategorySummary = async (req, res) => {
           categoryName: s.categoryName,
           isActive: s.isActive,
           hardwareCount: 0,
-          softwareCount: s.softwareCount,
+          softwareCount: s.softwareCount
         };
       } else {
         map[key].softwareCount = s.softwareCount;
-        map[key].isActive = map[key].isActive && s.isActive;
       }
     });
 
-    const result = Object.values(map).map((i) => ({
+    const result = Object.values(map).map(i => ({
       ...i,
-      totalInStock: i.hardwareCount + i.softwareCount,
+      totalInStock: i.hardwareCount + i.softwareCount
     }));
 
     res.json({ success: true, data: result });
@@ -105,10 +112,18 @@ const getInStockCategorySummary = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/* ============================
+   Assign Assets From Stock
+============================ */
 const assignAssetsFromStock = async (req, res) => {
+  if (!req.user?.organizationId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const orgId = req.user.organizationId;
   const session = await mongoose.startSession();
   session.startTransaction();
-  let transactionCommitted = false;
 
   try {
     const { assignments } = req.body;
@@ -119,23 +134,18 @@ const assignAssetsFromStock = async (req, res) => {
     const createdAssignments = [];
 
     for (const item of assignments) {
-      const {
-        assetType,
-        assetId,
-        assetModel,
-        assignedTo,
-        assignedToType,
-        quantity,
-      } = item;
+      const { assetType, assetId, assetModel, assignedTo, assignedToType, quantity } = item;
 
       let asset;
 
       if (assetType === "hardware") {
-        asset = await Asset.findById(assetId).session(session);
-        if (!asset) throw new Error("Hardware asset not found");
+        asset = await Asset.findOne({
+          _id: assetId,
+          organizationId: orgId
+        }).session(session);
 
-        if (asset.assetQuantity - asset.inUse < quantity) {
-          throw new Error(`Insufficient stock for ${asset.assetName}`);
+        if (!asset || asset.assetQuantity - asset.inUse < quantity) {
+          throw new Error("Insufficient hardware stock");
         }
 
         asset.inUse += quantity;
@@ -143,11 +153,13 @@ const assignAssetsFromStock = async (req, res) => {
       }
 
       if (assetType === "software") {
-        asset = await SoftwareAsset.findById(assetId).session(session);
-        if (!asset) throw new Error("Software asset not found");
+        asset = await SoftwareAsset.findOne({
+          _id: assetId,
+          organizationId: orgId
+        }).session(session);
 
-        if (asset.assetQuantity - asset.inUse < quantity) {
-          throw new Error(`Insufficient licenses for ${asset.assetName}`);
+        if (!asset || asset.assetQuantity - asset.inUse < quantity) {
+          throw new Error("Insufficient software licenses");
         }
 
         asset.inUse += quantity;
@@ -156,13 +168,14 @@ const assignAssetsFromStock = async (req, res) => {
 
       const [assignment] = await AssetAssignment.create(
         [{
+          organizationId: orgId,
           assetType,
           assetId,
           assetModel,
           assignedToType,
           assignedTo,
           quantity,
-          status: "active",
+          status: "active"
         }],
         { session }
       );
@@ -171,74 +184,60 @@ const assignAssetsFromStock = async (req, res) => {
     }
 
     await session.commitTransaction();
-    transactionCommitted = true;
     session.endSession();
 
-    // 🔔 Notification (isolated & safe)
-    try {
-      await sendNotification({
-        req,
-        userId: req.user.id,
-        title: "Assets Assigned",
-        message: `${createdAssignments.length} asset(s) assigned successfully.`,
-        redirectUrl: "/assignments",
-        type: "info",
-      });
-    } catch (err) {
-      console.error("Notification failed:", err.message);
-    }
-
-    return res.status(201).json({
-      success: true,
-      message: "Assets assigned successfully",
-      data: createdAssignments,
+    await sendNotification({
+      req,
+      userId: req.user.id,
+      title: "Assets Assigned",
+      message: `${createdAssignments.length} asset(s) assigned successfully.`,
+      redirectUrl: "/assignments",
+      type: "info"
     });
 
+    res.status(201).json({ success: true, data: createdAssignments });
   } catch (error) {
-    if (!transactionCommitted) {
-      await session.abortTransaction();
-    }
+    await session.abortTransaction();
     session.endSession();
-
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
+/* ============================
+   Return Asset
+============================ */
 const returnAsset = async (req, res) => {
+  if (!req.user?.organizationId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const orgId = req.user.organizationId;
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const { assignmentId } = req.params;
-
-    const assignment = await AssetAssignment.findById(assignmentId).session(session);
+    const assignment = await AssetAssignment.findOne({
+      _id: req.params.assignmentId,
+      organizationId: orgId
+    }).session(session);
 
     if (!assignment || assignment.status === "returned") {
       throw new Error("Invalid or already returned assignment");
     }
 
-    if (assignment.assetType === "hardware") {
-      const asset = await Asset.findById(assignment.assetId).session(session);
-      if (!asset || asset.inUse < assignment.quantity) {
-        throw new Error("Invalid hardware stock state");
-      }
+    const Model = assignment.assetType === "hardware" ? Asset : SoftwareAsset;
 
-      asset.inUse -= assignment.quantity;
-      await asset.save({ session });
+    const asset = await Model.findOne({
+      _id: assignment.assetId,
+      organizationId: orgId
+    }).session(session);
+
+    if (!asset || asset.inUse < assignment.quantity) {
+      throw new Error("Invalid stock state");
     }
 
-    if (assignment.assetType === "software") {
-      const asset = await SoftwareAsset.findById(assignment.assetId).session(session);
-      if (!asset || asset.licensesAssigned < assignment.quantity) {
-        throw new Error("Invalid license state");
-      }
-
-      asset.licensesAssigned -= assignment.quantity;
-      await asset.save({ session });
-    }
+    asset.inUse -= assignment.quantity;
+    await asset.save({ session });
 
     assignment.status = "returned";
     assignment.returnedAt = new Date();
@@ -247,58 +246,61 @@ const returnAsset = async (req, res) => {
     await session.commitTransaction();
     session.endSession();
 
-    res.json({
-      success: true,
-      message: "Asset returned successfully",
-    });
+    res.json({ success: true, message: "Asset returned successfully" });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
+
+/* ============================
+   In-Stock Assets By Category
+============================ */
 const getInStockAssetsByCategory = async (req, res) => {
   try {
-    const { category } = req.params;
+    if (!req.user?.organizationId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const orgId = req.user.organizationId;
+    const category = req.params.category;
 
     const hardwareAssets = await Asset.find({
+      organizationId: orgId,
       assetCategory: category,
-      $expr: { $gt: ["$assetQuantity", "$inUse"] },
-    }).select("assetName assetQuantity inUse");
+      $expr: { $gt: ["$assetQuantity", "$inUse"] }
+    });
 
     const softwareAssets = await SoftwareAsset.find({
+      organizationId: orgId,
       assetCategory: category,
-      $expr: { $gt: ["$assetQuantity", "$inUse"] },
-    }).select("assetName assetQuantity inUse");
+      $expr: { $gt: ["$assetQuantity", "$inUse"] }
+    });
 
-    const response = [
-      ...hardwareAssets.map((a) => ({
-        _id: a._id,
-        name: a.assetName,
-        assetType: "hardware",
-        assetModel: "Asset",
-        available: a.assetQuantity - a.inUse,
-      })),
-      ...softwareAssets.map((s) => ({
-        _id: s._id,
-        name: s.assetName,
-        assetType: "software",
-        assetModel: "SoftwareAsset",
-        available: s.assetQuantity - s.inUse,
-      })),
-    ];
-
-    res.json({ success: true, data: response });
+    res.json({
+      success: true,
+      data: [
+        ...hardwareAssets.map(a => ({
+          _id: a._id,
+          name: a.assetName,
+          assetType: "hardware",
+          assetModel: "Asset",
+          available: a.assetQuantity - a.inUse
+        })),
+        ...softwareAssets.map(s => ({
+          _id: s._id,
+          name: s.assetName,
+          assetType: "software",
+          assetModel: "SoftwareAsset",
+          available: s.assetQuantity - s.inUse
+        }))
+      ]
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
 
 module.exports = {
   getInStockCategorySummary,
@@ -306,4 +308,3 @@ module.exports = {
   assignAssetsFromStock,
   returnAsset
 };
-

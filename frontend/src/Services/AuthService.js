@@ -14,7 +14,8 @@ const verifyOtpAndSignup = async (email, username, password, otp) => {
         email,
         username,
         password,
-        otp
+        otp,
+        inviteToken,
     });
     return response.data;
 };

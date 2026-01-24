@@ -10,7 +10,11 @@ const SoftwareAssetSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
-
+            organizationId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Organization",
+          index: true,
+        },
     assetSpecification: { type: String },
     purchaseFrom: { type: String },
 

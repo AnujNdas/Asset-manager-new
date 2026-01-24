@@ -10,10 +10,10 @@ const {
 const authenticateToken = require("../Middleware/Authentication-token");
 const router = express.Router();
 
-router.post("/", authenticateToken(["admin", "super-admin"]), createUnit);
-router.get("/", getUnits);
-router.put("/:id", authenticateToken(["admin", "super-admin"]), updateUnit);
-router.delete("/:id", authenticateToken(["admin", "super-admin"]), deleteUnit);
-router.patch("/:id/restore", authenticateToken(["admin", "super-admin"]), restoreUnit);
+router.post("/", authenticateToken(["admin", "user"]), createUnit);
+router.get("/", authenticateToken(["admin", "user"]), getUnits);
+router.put("/:id", authenticateToken(["admin", "user"]), updateUnit);
+router.delete("/:id", authenticateToken(["admin", "user"]), deleteUnit);
+router.patch("/:id/restore", authenticateToken(["admin", "user"]), restoreUnit);
 
 module.exports = router;

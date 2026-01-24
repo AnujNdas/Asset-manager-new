@@ -4,6 +4,13 @@ const sendNotification = require("../utils/notify");
 /* ================= CREATE CATEGORY ================= */
 const createCategory = async (req, res) => {
   try {
+    const userId = req.user?.id;
+    const organizationId = req.user?.organizationId;
+
+    if (!userId || !organizationId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     let { name } = req.body;
 
     if (!name || !name.trim()) {
@@ -13,54 +20,52 @@ const createCategory = async (req, res) => {
     name = name.trim();
 
     const existing = await Category.findOne({
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${name}$`, $options: "i" },
+      organizationId,
     });
 
+    // ---------- RESTORE ----------
     if (existing) {
       if (!existing.isActive) {
         existing.isActive = true;
         await existing.save();
 
-        // 🔔 Notification (restore)
-        try {
-          await sendNotification({
-            userId: req.user.id,
-            title: "Category Restored",
-            message: `Category "${existing.name}" has been restored.`,
-            type: "info",
-            redirectUrl: "/categories",
-            io: req.app.get("io"),
-          });
-        } catch (err) {
-          console.error("Notification failed:", err.message);
-        }
+        await sendNotification({
+          req,
+          userId,
+          title: "Category Restored",
+          message: `Category "${existing.name}" has been restored.`,
+          type: "info",
+          redirectUrl: "/categories",
+        });
 
         return res.status(200).json({
           message: "Category restored successfully",
-          category: existing
+          category: existing,
         });
       }
 
       return res.status(409).json({
-        error: "Category already exists"
+        error: "Category already exists",
       });
     }
 
-    const newCategory = await Category.create({ name });
+    // ---------- CREATE ----------
+    const newCategory = await Category.create({
+      name,
+      organizationId,
+      isActive: true,
+      createdBy: userId,
+    });
 
-    // 🔔 Notification (create)
-    try {
-      await sendNotification({
-        userId: req.user.id,
-        title: "Category Created",
-        message: `Category "${newCategory.name}" has been created.`,
-        type: "success",
-        redirectUrl: "/categories",
-        io: req.app.get("io"),
-      });
-    } catch (err) {
-      console.error("Notification failed:", err.message);
-    }
+    await sendNotification({
+      req,
+      userId,
+      title: "Category Created",
+      message: `Category "${newCategory.name}" has been created.`,
+      type: "success",
+      redirectUrl: "/categories",
+    });
 
     res.status(201).json(newCategory);
   } catch (error) {
@@ -72,7 +77,17 @@ const createCategory = async (req, res) => {
 /* ================= GET CATEGORIES ================= */
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find().sort({ name: 1 });
+    const organizationId = req.user?.organizationId;
+
+    if (!organizationId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const categories = await Category.find({
+      organizationId,
+      isActive: true,
+    }).sort({ name: 1 });
+
     res.status(200).json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -84,7 +99,14 @@ const getCategories = async (req, res) => {
 const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    const organizationId = req.user?.organizationId;
+    const userId = req.user?.id;
+
     let { name } = req.body;
+
+    if (!organizationId || !userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     if (!name || !name.trim()) {
       return res.status(400).json({ error: "Category name is required" });
@@ -95,42 +117,38 @@ const updateCategory = async (req, res) => {
     const exists = await Category.findOne({
       _id: { $ne: id },
       name: { $regex: `^${name}$`, $options: "i" },
-      isActive: true
+      organizationId,
+      isActive: true,
     });
 
     if (exists) {
       return res.status(409).json({
-        error: "Category with this name already exists"
+        error: "Category with this name already exists",
       });
     }
 
     const updatedCategory = await Category.findOneAndUpdate(
-      { _id: id, isActive: true },
+      { _id: id, organizationId, isActive: true },
       { name },
       { new: true, runValidators: true }
     );
 
     if (!updatedCategory) {
-      return res.status(404).json({ error: "Category not found or inactive" });
+      return res.status(404).json({ error: "Category not found" });
     }
 
-    // 🔔 Notification (update)
-    try {
-      await sendNotification({
-        userId: req.user.id,
-        title: "Category Updated",
-        message: `Category renamed to "${updatedCategory.name}".`,
-        type: "info",
-        redirectUrl: "/categories",
-        io: req.app.get("io"),
-      });
-    } catch (err) {
-      console.error("Notification failed:", err.message);
-    }
+    await sendNotification({
+      req,
+      userId,
+      title: "Category Updated",
+      message: `Category renamed to "${updatedCategory.name}".`,
+      type: "info",
+      redirectUrl: "/categories",
+    });
 
     res.status(200).json({
       message: "Category updated successfully",
-      updatedCategory
+      updatedCategory,
     });
   } catch (error) {
     console.error("Error updating category:", error);
@@ -142,9 +160,15 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    const organizationId = req.user?.organizationId;
+    const userId = req.user?.id;
+
+    if (!organizationId || !userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const category = await Category.findOneAndUpdate(
-      { _id: id, isActive: true },
+      { _id: id, organizationId, isActive: true },
       { isActive: false },
       { new: true }
     );
@@ -153,23 +177,18 @@ const deleteCategory = async (req, res) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    // 🔔 Notification (delete)
-    try {
-      await sendNotification({
-        userId: req.user.id,
-        title: "Category Deactivated",
-        message: `Category "${category.name}" has been deactivated.`,
-        type: "warning",
-        redirectUrl: "/categories",
-        io: req.app.get("io"),
-      });
-    } catch (err) {
-      console.error("Notification failed:", err.message);
-    }
+    await sendNotification({
+      req,
+      userId,
+      title: "Category Deactivated",
+      message: `Category "${category.name}" has been deactivated.`,
+      type: "warning",
+      redirectUrl: "/categories",
+    });
 
     res.status(200).json({
       message: "Category deleted successfully",
-      category
+      category,
     });
   } catch (error) {
     console.error("Error deleting category:", error);
@@ -181,34 +200,37 @@ const deleteCategory = async (req, res) => {
 const restoreCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    const organizationId = req.user?.organizationId;
+    const userId = req.user?.id;
+
+    if (!organizationId || !userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const category = await Category.findOneAndUpdate(
-      { _id: id, isActive: false },
+      { _id: id, organizationId, isActive: false },
       { isActive: true },
       { new: true }
     );
 
     if (!category) {
-      return res.status(404).json({ error: "Category not found or already active" });
+      return res.status(404).json({
+        error: "Category not found or already active",
+      });
     }
 
-    // 🔔 Notification (restore)
-    try {
-      await sendNotification({
-        userId: req.user.id,
-        title: "Category Restored",
-        message: `Category "${category.name}" has been restored.`,
-        type: "info",
-        redirectUrl: "/categories",
-        io: req.app.get("io"),
-      });
-    } catch (err) {
-      console.error("Notification failed:", err.message);
-    }
+    await sendNotification({
+      req,
+      userId,
+      title: "Category Restored",
+      message: `Category "${category.name}" has been restored.`,
+      type: "info",
+      redirectUrl: "/categories",
+    });
 
     res.status(200).json({
       message: "Category restored successfully",
-      category
+      category,
     });
   } catch (error) {
     console.error("Error restoring category:", error);
@@ -221,5 +243,5 @@ module.exports = {
   getCategories,
   updateCategory,
   deleteCategory,
-  restoreCategory
+  restoreCategory,
 };

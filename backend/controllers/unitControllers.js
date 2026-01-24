@@ -1,11 +1,17 @@
 const Unit = require("../models/Unit");
 const sendNotification = require("../utils/notify");
+
 /* ============================
    Create / Restore Unit
 ============================ */
 const createUnit = async (req, res) => {
   try {
+    const { organizationId, id: userId } = req.user;
     let { name } = req.body;
+
+    if (!organizationId) {
+      return res.status(401).json({ message: "Organization not found" });
+    }
 
     if (!name || !name.trim()) {
       return res.status(400).json({ message: "Unit name is required" });
@@ -14,7 +20,8 @@ const createUnit = async (req, res) => {
     name = name.trim();
 
     const existing = await Unit.findOne({
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${name}$`, $options: "i" },
+      organizationId
     });
 
     // 🔁 Restore if soft deleted
@@ -25,7 +32,7 @@ const createUnit = async (req, res) => {
 
         await sendNotification({
           req,
-          userId: req.user.id,
+          userId,
           title: "Unit Restored",
           message: `Unit "${existing.name}" has been restored.`,
           type: "success"
@@ -40,11 +47,15 @@ const createUnit = async (req, res) => {
       return res.status(409).json({ message: "Unit already exists" });
     }
 
-    const newUnit = await Unit.create({ name });
+    const newUnit = await Unit.create({
+      name,
+      organizationId,
+      isActive: true
+    });
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Unit Created",
       message: `Unit "${newUnit.name}" was created successfully.`,
       type: "success"
@@ -64,7 +75,12 @@ const createUnit = async (req, res) => {
 const updateUnit = async (req, res) => {
   try {
     const { id } = req.params;
+    const { organizationId, id: userId } = req.user;
     let { name } = req.body;
+
+    if (!organizationId) {
+      return res.status(401).json({ message: "Organization not found" });
+    }
 
     if (!name || !name.trim()) {
       return res.status(400).json({ message: "Unit name is required" });
@@ -75,6 +91,7 @@ const updateUnit = async (req, res) => {
     const exists = await Unit.findOne({
       _id: { $ne: id },
       name: { $regex: `^${name}$`, $options: "i" },
+      organizationId,
       isActive: true
     });
 
@@ -82,8 +99,8 @@ const updateUnit = async (req, res) => {
       return res.status(409).json({ message: "Unit already exists" });
     }
 
-    const updatedUnit = await Unit.findByIdAndUpdate(
-      id,
+    const updatedUnit = await Unit.findOneAndUpdate(
+      { _id: id, organizationId },
       { name },
       { new: true, runValidators: true }
     );
@@ -94,7 +111,7 @@ const updateUnit = async (req, res) => {
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Unit Updated",
       message: `Unit renamed to "${updatedUnit.name}".`,
       type: "info"
@@ -112,21 +129,28 @@ const updateUnit = async (req, res) => {
 };
 
 /* ============================
-   Get Active Units
+   Get Units (Org Scoped)
 ============================ */
 const getUnits = async (req, res) => {
   try {
-    const units = await Unit.find().sort({
-      name: 1
-    });
+    const { organizationId } = req.user;
+
+    if (!organizationId) {
+      return res.status(401).json({ message: "Organization not found" });
+    }
+
+    const units = await Unit.find({
+      organizationId,
+      isActive: true
+    }).sort({ name: 1 });
 
     res.status(200).json(units);
+
   } catch (error) {
     console.error("Error fetching units:", error);
-    res.status(500).json({ error: "Error fetching units" });
+    res.status(500).json({ message: "Error fetching units" });
   }
 };
-;
 
 /* ============================
    Soft Delete Unit
@@ -134,8 +158,12 @@ const getUnits = async (req, res) => {
 const deleteUnit = async (req, res) => {
   try {
     const { id } = req.params;
+    const { organizationId, id: userId } = req.user;
 
-    const unit = await Unit.findById(id);
+    const unit = await Unit.findOne({
+      _id: id,
+      organizationId
+    });
 
     if (!unit) {
       return res.status(404).json({ message: "Unit not found" });
@@ -146,7 +174,7 @@ const deleteUnit = async (req, res) => {
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Unit Deactivated",
       message: `Unit "${unit.name}" has been deactivated.`,
       type: "warning"
@@ -163,15 +191,18 @@ const deleteUnit = async (req, res) => {
   }
 };
 
-
 /* ============================
    Restore Unit
 ============================ */
 const restoreUnit = async (req, res) => {
   try {
     const { id } = req.params;
+    const { organizationId, id: userId } = req.user;
 
-    const unit = await Unit.findById(id);
+    const unit = await Unit.findOne({
+      _id: id,
+      organizationId
+    });
 
     if (!unit) {
       return res.status(404).json({ message: "Unit not found" });
@@ -182,7 +213,7 @@ const restoreUnit = async (req, res) => {
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Unit Restored",
       message: `Unit "${unit.name}" has been restored.`,
       type: "success"
@@ -198,7 +229,6 @@ const restoreUnit = async (req, res) => {
     res.status(500).json({ message: "Error restoring unit" });
   }
 };
-
 
 module.exports = {
   createUnit,

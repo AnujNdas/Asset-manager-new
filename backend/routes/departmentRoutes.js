@@ -8,9 +8,9 @@ const {
   restoreDepartment
 } = require("../controllers/departmentController");
 const authenticateToken = require("../Middleware/Authentication-token");
-router.get("/", getDepartments);
-router.post("/", authenticateToken(["admin", "super-admin"]), createDepartment);
-router.put("/:id", authenticateToken(["admin", "super-admin"]), updateDepartment);
-router.delete("/:id", authenticateToken(["admin", "super-admin"]), deleteDepartment);
-router.patch("/:id/restore", authenticateToken(["admin", "super-admin"]), restoreDepartment);
+router.get("/", authenticateToken(["admin", "user"]), getDepartments);
+router.post("/", authenticateToken(["admin", "user"]), createDepartment);
+router.put("/:id", authenticateToken(["admin", "user"]), updateDepartment);
+router.delete("/:id", authenticateToken(["admin", "user"]), deleteDepartment);
+router.patch("/:id/restore", authenticateToken(["admin", "user"]), restoreDepartment);
 module.exports = router;

@@ -1,0 +1,260 @@
+/* ============================
+   HELP & SUPPORT PAGE
+============================ */
+
+.help-container {
+  padding: 14px;
+  max-width: 1100px;
+  margin: auto;
+  color: #1f2937;
+}
+
+/* HEADER */
+.help-header {
+  margin-bottom: 24px;
+}
+
+.help-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.help-header p {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ============================
+   NAV TABS
+============================ */
+
+.help-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.help-nav button {
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.help-nav button:hover {
+  color: #111827;
+}
+
+.help-nav button.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  font-weight: 500;
+}
+
+/* ============================
+   ACCORDION
+============================ */
+
+.accordion-section {
+  margin-top: 12px;
+}
+
+.accordion-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.accordion-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: #f9fafb;
+  cursor: pointer;
+}
+
+.accordion-title h4 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.accordion-title span {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.accordion-content {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #374151;
+  background: #ffffff;
+  line-height: 1.6;
+}
+
+/* Ordered list inside docs */
+.accordion-content li {
+  margin-left: 16px;
+  padding: 4px 0;
+}
+
+/* ============================
+   FORMS (Ticket & Contact)
+============================ */
+
+.help-form-section {
+  /* max-width: 520px; */
+  margin-top: 12px;
+}
+
+.help-form-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.help-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.help-form input,
+.help-form select,
+.help-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  outline: none;
+}
+
+.help-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.help-form input:focus,
+.help-form select:focus,
+.help-form textarea:focus {
+  border-color: #2563eb;
+}
+
+/* Buttons */
+.help-form button {
+  background: #2563eb;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.help-form button:hover {
+  background: #1d4ed8;
+}
+
+.help-form button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Form messages */
+.form-error {
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.form-success {
+  color: #16a34a;
+  font-size: 13px;
+}
+
+/* ============================
+   MY TICKETS
+============================ */
+
+.my-tickets {
+  margin-top: 40px;
+}
+
+.my-tickets h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.empty-state {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.ticket-list {
+  list-style: none;
+  padding: 0;
+}
+
+.ticket {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.ticket strong {
+  font-size: 14px;
+}
+
+.ticket span {
+  font-size: 12px;
+  color: #6b7280;
+  margin-left: 8px;
+}
+
+.ticket p {
+  font-size: 13px;
+  margin: 6px 0;
+  color: #374151;
+}
+
+.ticket-status {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Status colors */
+.ticket.open .ticket-status {
+  color: #2563eb;
+}
+
+.ticket.in-progress .ticket-status {
+  color: #d97706;
+}
+
+.ticket.closed .ticket-status {
+  color: #16a34a;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 768px) {
+  .help-nav {
+    flex-wrap: wrap;
+  }
+
+  .help-container {
+    padding: 16px;
+  }
+}

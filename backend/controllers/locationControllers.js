@@ -1,20 +1,40 @@
 const Location = require("../models/Location");
 const sendNotification = require("../utils/notify");
+
+/* ============================
+   Helpers
+============================ */
+const escapeRegex = (text) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 /* ============================
    Create Location
 ============================ */
 const createLocation = async (req, res) => {
   try {
+    const { id: userId, organizationId } = req.user || {};
+
+    if (!userId || !organizationId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
     let { name } = req.body;
 
     if (!name || !name.trim()) {
-      return res.status(400).json({ message: "Location name is required" });
+      return res.status(400).json({
+        success: false,
+        message: "Location name is required"
+      });
     }
 
     name = name.trim();
 
     const existing = await Location.findOne({
-      name: { $regex: `^${name}$`, $options: "i" }
+      name: { $regex: `^${escapeRegex(name)}$`, $options: "i" },
+      organizationId
     });
 
     // Restore if inactive
@@ -25,35 +45,48 @@ const createLocation = async (req, res) => {
 
         await sendNotification({
           req,
-          userId: req.user.id,
+          userId,
           title: "Location Restored",
           message: `Location "${existing.name}" has been restored.`,
           type: "success"
         });
 
         return res.status(200).json({
-          message: "Location restored successfully",
-          location: existing
+          success: true,
+          data: existing
         });
       }
 
-      return res.status(409).json({ message: "Location already exists" });
+      return res.status(409).json({
+        success: false,
+        message: "Location already exists"
+      });
     }
 
-    const newLocation = await Location.create({ name });
+    const newLocation = await Location.create({
+      name,
+      organizationId,
+      isActive: true
+    });
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Location Created",
       message: `Location "${newLocation.name}" was created successfully.`,
       type: "success"
     });
 
-    res.status(201).json(newLocation);
+    return res.status(201).json({
+      success: true,
+      data: newLocation
+    });
   } catch (error) {
-    console.error("Error creating location:", error);
-    res.status(500).json({ message: "Error creating location" });
+    console.error("Create Location Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error creating location"
+    });
   }
 };
 
@@ -62,67 +95,103 @@ const createLocation = async (req, res) => {
 ============================ */
 const updateLocation = async (req, res) => {
   try {
+    const { id: userId, organizationId } = req.user || {};
     const { id } = req.params;
     let { name } = req.body;
 
+    if (!userId || !organizationId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
     if (!name || !name.trim()) {
-      return res.status(400).json({ message: "Location name is required" });
+      return res.status(400).json({
+        success: false,
+        message: "Location name is required"
+      });
     }
 
     name = name.trim();
 
     const exists = await Location.findOne({
       _id: { $ne: id },
-      name: { $regex: `^${name}$`, $options: "i" },
+      name: { $regex: `^${escapeRegex(name)}$`, $options: "i" },
+      organizationId,
       isActive: true
     });
 
     if (exists) {
-      return res.status(409).json({ message: "Location already exists" });
+      return res.status(409).json({
+        success: false,
+        message: "Location already exists"
+      });
     }
 
     const updatedLocation = await Location.findOneAndUpdate(
-      { _id: id, isActive: true },
+      { _id: id, organizationId, isActive: true },
       { name },
       { new: true, runValidators: true }
     );
 
     if (!updatedLocation) {
-      return res.status(404).json({ message: "Location not found or inactive" });
+      return res.status(404).json({
+        success: false,
+        message: "Location not found"
+      });
     }
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Location Updated",
       message: `Location renamed to "${updatedLocation.name}".`,
       type: "info"
     });
 
-    res.status(200).json({
-      message: "Location updated successfully",
-      updatedLocation
+    return res.status(200).json({
+      success: true,
+      data: updatedLocation
     });
   } catch (error) {
-    console.error("Error updating location:", error);
-    res.status(500).json({ message: "Error updating location" });
+    console.error("Update Location Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error updating location"
+    });
   }
 };
-
 
 /* ============================
    Get Active Locations
 ============================ */
 const getLocations = async (req, res) => {
   try {
-    const locations = await Location.find().sort({
-      name: 1
-    });
+    const { organizationId } = req.user || {};
 
-    res.status(200).json(locations);
+    if (!organizationId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
+    const locations = await Location.find({
+      organizationId,
+      isActive: true
+    }).sort({ name: 1 });
+
+    return res.status(200).json({
+      success: true,
+      data: locations
+    });
   } catch (error) {
-    console.error("Error fetching locations:", error);
-    res.status(500).json({ error: "Error fetching locations" });
+    console.error("Get Locations Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching locations"
+    });
   }
 };
 
@@ -131,71 +200,102 @@ const getLocations = async (req, res) => {
 ============================ */
 const deleteLocation = async (req, res) => {
   try {
+    const { id: userId, organizationId } = req.user || {};
     const { id } = req.params;
 
-    const deletedLocation = await Location.findByIdAndUpdate(
-      id,
+    if (!userId || !organizationId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
+    const deletedLocation = await Location.findOneAndUpdate(
+      { _id: id, organizationId },
       { isActive: false },
       { new: true }
     );
 
     if (!deletedLocation) {
-      return res.status(404).json({ message: "Location not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Location not found"
+      });
     }
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Location Deactivated",
       message: `Location "${deletedLocation.name}" has been deactivated.`,
       type: "warning"
     });
 
-    res.status(200).json({
-      message: "Location deleted successfully",
-      deletedLocation
+    return res.status(200).json({
+      success: true,
+      data: deletedLocation
     });
   } catch (error) {
-    console.error("Error deleting location:", error);
-    res.status(500).json({ message: "Error deleting location" });
+    console.error("Delete Location Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error deleting location"
+    });
   }
 };
 
 /* ============================
-   Restore Location (Optional)
+   Restore Location
 ============================ */
 const restoreLocation = async (req, res) => {
   try {
+    const { id: userId, organizationId } = req.user || {};
     const { id } = req.params;
 
-    const restored = await Location.findByIdAndUpdate(
-      id,
+    if (!userId || !organizationId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
+    const restoredLocation = await Location.findOneAndUpdate(
+      { _id: id, organizationId },
       { isActive: true },
       { new: true }
     );
 
-    if (!restored) {
-      return res.status(404).json({ message: "Location not found" });
+    if (!restoredLocation) {
+      return res.status(404).json({
+        success: false,
+        message: "Location not found"
+      });
     }
 
     await sendNotification({
       req,
-      userId: req.user.id,
+      userId,
       title: "Location Restored",
-      message: `Location "${restored.name}" has been restored.`,
+      message: `Location "${restoredLocation.name}" has been restored.`,
       type: "success"
     });
 
-    res.status(200).json({
-      message: "Location restored successfully",
-      restored
+    return res.status(200).json({
+      success: true,
+      data: restoredLocation
     });
   } catch (error) {
-    console.error("Error restoring location:", error);
-    res.status(500).json({ message: "Error restoring location" });
+    console.error("Restore Location Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error restoring location"
+    });
   }
 };
 
+/* ============================
+   Exports
+============================ */
 module.exports = {
   createLocation,
   updateLocation,

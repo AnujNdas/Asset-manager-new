@@ -13,15 +13,58 @@ import { useCurrency } from "../Context/CurrencyContext";
 import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
 
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie,
-  ResponsiveContainer, Cell, Legend, LineChart, Line
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  Legend,
+  CartesianGrid
 } from "recharts";
 
 import Loader from "../Components/Loader";
 import "../Page_styles/AdminDashboard.css";
 
-const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#22C55E", "#F59E0B"];
+const LOCATION_COLORS = [
+  "#3B82F6",
+  "#6366F1",
+  "#8B5CF6",
+  "#22C55E",
+  "#F59E0B"
+];
 
+const BAR_COLORS = {
+  hardware: "#3B82F6",
+  software: "#8B5CF6",
+  total: "#0F172A"
+};
+
+/* -------------------- TOOLTIP -------------------- */
+const CustomTooltip = ({ active, payload, label, currency }) => {
+  if (!active || !payload?.length) return null;
+    return (
+    <div
+      style={{
+        background: "#0F172A",
+        padding: "5px 10px",
+        borderRadius: "8px",
+        color: "#F8FAFC",
+        fontSize: "12px",
+        boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
+      }}
+    >
+      <strong style={{ display: "block", marginBottom: 6 }}>{label}</strong>
+      {payload.map((p, i) => (
+        <div key={i} style={{ color: "#E5E7EB" }}>
+          {p.name}: {CURRENCY_SYMBOLS[currency]}{" "}
+          {p.value.toLocaleString()}
+        </div>
+      ))}
+    </div>
+  );
+};
 const Dashboard = () => {
   const navigate = useNavigate();
   const { currency } = useCurrency();
@@ -29,9 +72,9 @@ const Dashboard = () => {
   const [statsData, setStatsData] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
   const [expiringAssets, setExpiringAssets] = useState({
-  expiringHardware: [],
-  expiringSoftware: []
-});
+    expiringHardware: [],
+    expiringSoftware: []
+  });
 
   const [activeUsers, setActiveUsers] = useState([]);
   const [locationList, setLocationList] = useState([]);
@@ -43,6 +86,7 @@ const Dashboard = () => {
   const getLocationName = (id) => {
     const loc = locationList.find((l) => l._id === id);
     return loc ? loc.name : "Unknown";
+
   };
 const HorizontalLegend = ({ payload }) => {
   return (
@@ -84,38 +128,45 @@ const HorizontalLegend = ({ payload }) => {
 
   useEffect(() => {
     const load = async () => {
-      try {
-        const stats = await getAdminStats();
-        const locs = await getTopLocations();
-        const exp = await getExpiringAssets();
-        const users = await getActiveUsers();
-        const allLocs = await getLocations();
-        const valuation = await getMonthlyValuation();
-        console.log("EXPIRING ASSETS RESPONSE:", exp);
-        setStatsData(stats);
-        setTopLocations(locs);
-        setExpiringAssets(exp);
-        setActiveUsers(users);
-        setLocationList(allLocs);
-        setValuationData(valuation);
+  try {
+    const stats = await getAdminStats();
+    const locs = await getTopLocations();
+    const exp = await getExpiringAssets();
+    const users = await getActiveUsers();
+    const allLocs = await getLocations();
+    const valuation = await getMonthlyValuation();
 
-      // ✅ SIGNAL LOADER TO COMPLETE
-      setApiDone(true);
-     // small delay for smooth UX
-      setTimeout(() => setLoading(false), 400);
-      } catch (err) {
-        console.error("Dashboard load error:", err);
-        setLoading(false); // only here
-      }
-    };
 
-    load();
+    // ✅ FIXED
+    setStatsData(stats?.data || stats);
+    setTopLocations(locs?.data || locs);
+    setExpiringAssets(exp?.data || exp);
+    setActiveUsers(users?.data || users);
+    setLocationList(allLocs?.data || allLocs);
+    setValuationData(valuation?.data || valuation);
+    console.log("Valuation Data:", valuation?.data || valuation);
+    console.log("All Locations:", allLocs?.data || allLocs);
+    console.log("Top Locations:", locs?.data || locs);
+    console.log("Stats Data:", stats?.data || stats);
+    console.log("Expiring Assets:", exp?.data || exp);
+    console.log("Active Users:", users?.data || users); 
+
+    setApiDone(true);
+    setTimeout(() => setLoading(false), 400);
+  } catch (err) {
+    console.error("Dashboard load error:", err);
+    setLoading(false);
+  }
+};
+
+
+    load(); 
   }, []);
 
   if (loading) return <Loader type="dashboard" apiDone={apiDone} />;
 
   const locChartData = topLocations.map((loc) => ({
-    name: getLocationName(loc._id),
+    name: loc.name,
     value: loc.count,
   }));
 const valuationChartData =
@@ -217,122 +268,128 @@ const softwareValuationView = convertFromBase(
 </div>
 
 
-      {/* CHARTS GRID */}
-      <div className="charts-grid">
+<div className="charts-grid">
 
-        {/* TOP LOCATIONS BAR CHART */}
-<div className="chart-card">
-  <h2>Top 5 Locations With Most Assets</h2>
+        {/* TOP LOCATIONS */}
+        <div className="chart-card">
+          <h2>Top Locations by Asset Count</h2>
 
-  <ResponsiveContainer width="100%" height={200}>
-    <BarChart
-      data={locChartData}
-      layout="vertical"
-      margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-    >
-      <XAxis
-        type="number"
-        tick={{ fontSize: 11 }}
-        axisLine={true}
-        tickLine={true}
-      />
+          <ResponsiveContainer width="100%" height={140}>
+            <BarChart
+              data={locChartData}
+              layout="vertical"
+              margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#E5E7EB"
+              />
 
-      <YAxis
-        type="category"
-        dataKey="name"
-        width={70}                 // 🔥 KEY FIX
-        tick={{ fontSize: 11 }}
-        axisLine={true}
-        tickLine={true}
-      />
+              <XAxis
+                type="number"
+                tick={{ fontSize: 11, fill: "#475569" }}
+                axisLine={false}
+                tickLine={false}
+              />
 
-      <Tooltip />
+              <YAxis
+                type="category"
+                dataKey="name"
+                width={90}
+                tick={{ fontSize: 11, fill: "#475569" }}
+                axisLine={false}
+                tickLine={false}
+              />
 
-      <Bar
-        dataKey="value"
-        barSize={18}               // thicker bars
-        radius={0}                 // squared ends
-      >
-        {locChartData.map((_, index) => (
-          <Cell
-            key={index}
-            fill={[
-              "#4988C4",
-              "#1D546D",
-              "#0F2854",
-              "#5C9BCF",
-              "#2E6F95",
-            ][index % 5]}
-          />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-</div>
+              <Tooltip
+                content={
+                  <CustomTooltip currency={currency} />
+                }
+              />
 
+              <Bar
+                dataKey="value"
+                barSize={14}
+                radius={[4, 4, 4, 4]}
+                isAnimationActive
+                animationDuration={700}
+              >
+                {locChartData.map((_, i) => (
+                  <Cell
+                    key={i}
+                    fill={LOCATION_COLORS[i % LOCATION_COLORS.length]}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
+        {/* MONTHLY VALUATION */}
+        <div className="chart-card">
+          <h2>Monthly Asset Valuation</h2>
 
-        {/* MONTHLY VALUATION CHART */}
-<div className="chart-card">
-  <h2>Monthly Asset Valuation Trend</h2>
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart
+              data={valuationChartData}
+              layout="vertical"
+              margin={{ top: 10, right: 40, left: 20, bottom: 10 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#E5E7EB"
+              />
 
-  <ResponsiveContainer width="100%" height={220}>
-    <BarChart
-      data={valuationChartData}
-      layout="vertical"
-      margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
-    >
-      <XAxis
-        type="number"
-        tick={{ fontSize: 11 }}
-        axisLine={true}
-        tickLine={true}
-      />
+              <XAxis
+                type="number"
+                tick={{ fontSize: 11, fill: "#475569" }}
+                axisLine={false}
+                tickLine={false}
+              />
 
-      <YAxis
-        type="category"
-        dataKey="month"
-        width={65}                 // 🔥 critical
-        tick={{ fontSize: 11 }}
-        axisLine={true}
-        tickLine={true}
-      />
+              <YAxis
+                type="category"
+                dataKey="month"
+                width={70}
+                tick={{ fontSize: 11, fill: "#475569" }}
+                axisLine={false}
+                tickLine={false}
+              />
 
-      <Tooltip
-  formatter={(value) => [`${currency} ${value.toLocaleString()}`, "Value"]}
-/>
+              <Tooltip
+                content={
+                  <CustomTooltip currency={currency} />
+                }
+              />
 
+              <Legend content={<HorizontalLegend />} />
 
- <Legend content={<HorizontalLegend />} />
-
-      <Bar
-        dataKey="hardware"
-        name="Hardware"
-        fill="#4988C4"
-        barSize={20}
-        radius={0}
-      />
-      <Bar
-        dataKey="software"
-        name="Software"
-        fill="#1D546D"
-        barSize={20}
-        radius={0}
-      />
-      <Bar
-        dataKey="total"
-        name="Total"
-        fill="#0F2854"
-        barSize={20}
-        radius={0}
-      />
-    </BarChart>
-  </ResponsiveContainer>
-</div>
-
-
-
-
+              <Bar
+                dataKey="hardware"
+                name="Hardware"
+                fill={BAR_COLORS.hardware}
+                barSize={14}
+                radius={[4, 4, 4, 4]}
+              />
+              <Bar
+                dataKey="software"
+                name="Software"
+                fill={BAR_COLORS.software}
+                barSize={14}
+                radius={[4, 4, 4, 4]}
+              />
+              <Bar
+                dataKey="total"
+                name="Total"
+                fill={BAR_COLORS.total}
+                barSize={14}
+                radius={[4, 4, 4, 4]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* BOTTOM GRID */}

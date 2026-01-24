@@ -1,5 +1,5 @@
 const express = require("express");
-const { sendOtp, verifyOtpAndSignup, login, getUserData, changePassword ,forgotPassword , resetPassword } = require("../controllers/authControllers");
+const { sendOtp, verifyOtpAndSignup,completeOnboarding, login, getUserData, changePassword ,forgotPassword , resetPassword } = require("../controllers/authControllers");
 const authenticateToken = require("../Middleware/Authentication-token");
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.get("/user", authenticateToken(), getUserData);
 router.put("/change-password", authenticateToken(), changePassword);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
+router.post("/complete-onboarding", completeOnboarding);
 
 module.exports = router;
 

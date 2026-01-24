@@ -1,0 +1,158 @@
+/* ================================
+   SUPER ADMIN DASHBOARD
+================================ */
+
+/* Page Title */
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #0f172a; /* slate-900 */
+}
+
+/* Card Grid */
+.sa-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Card */
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 22px;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover Effect */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 16px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Label */
+.card p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b; /* slate-500 */
+}
+
+/* Card Value */
+.card h2 {
+  margin-top: 8px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #020617; /* slate-950 */
+}
+.section-title {
+  margin: 32px 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.card.success {
+  border-left: 4px solid #16a34a;
+}
+
+.card.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.card.danger {
+  border-left: 4px solid #dc2626;
+}
+
+/* ================================
+   RESPONSIVE ADJUSTMENTS
+================================ */
+.section-title {
+  margin: 32px 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card.info {
+  border-left: 4px solid #3b82f6;
+}
+
+.card.success {
+  border-left: 4px solid #16a34a;
+}
+
+.card.danger {
+  border-left: 4px solid #dc2626;
+}
+
+/* Revenue Chart */
+.revenue-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 700px;
+}
+
+.revenue-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.revenue-row .label {
+  width: 80px;
+  font-size: 14px;
+}
+
+.bar-wrapper {
+  flex: 1;
+  background: #f1f5f9;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  background: #2563eb;
+}
+
+.revenue-row .value {
+  width: 80px;
+  text-align: right;
+  font-weight: 600;
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .card h2 {
+    font-size: 1.75rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .sa-cards {
+    gap: 16px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .card h2 {
+    font-size: 1.6rem;
+  }
+}

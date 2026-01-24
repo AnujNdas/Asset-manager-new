@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
+import HelpSupport from "../Inner_sections/Help-Support";
 
 const Menubar = ({ username, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -77,7 +78,9 @@ const Menubar = ({ username, toggleSidebar }) => {
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
   };
-
+  const handleHelpClick = () => {
+    navigate("/setting/help&support");
+  }
   return (
     <div className="menubar-container">
       <div className="menubar">
@@ -87,6 +90,7 @@ const Menubar = ({ username, toggleSidebar }) => {
               <span>System</span>
             </div> 
         <div className="control-panel">
+          <button onClick={handleHelpClick}><FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} /></button>
           <NotificationButton />
 
           {/* HELP ICON */}

@@ -9,7 +9,12 @@ const assetSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
-
+          organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+      index: true,
+    },
     barcodeNumber: { type: String },
 
     assetName: { type: String, required: true },

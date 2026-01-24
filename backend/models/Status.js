@@ -1,4 +1,3 @@
-// models/status.js
 const mongoose = require("mongoose");
 
 const statusSchema = new mongoose.Schema(
@@ -12,7 +11,13 @@ const statusSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
       index: true
-    }
+    },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+      index: true,
+    },
   },
   { timestamps: true }
 );
@@ -27,9 +32,9 @@ statusSchema.pre("validate", function (next) {
   next();
 });
 
-/* ================= UNIQUE ACTIVE STATUS ================= */
+/* ================= UNIQUE PER ORGANIZATION (ACTIVE ONLY) ================= */
 statusSchema.index(
-  { name: 1 },
+  { organizationId: 1, name: 1 },
   {
     unique: true,
     partialFilterExpression: { isActive: true }

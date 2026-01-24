@@ -27,7 +27,9 @@ const assignmentRoutes = require("./routes/assignmentRoutes");
 const userRoute = require("./routes/userRoutes");
 const departmentRoutes = require("./routes/departmentRoutes");
 const subscriptionRoutes = require("./routes/subscriptionRoutes");
-
+const inviteRoutes = require("./routes/inviteRoutes")
+const superAdminRoutes = require("./routes/superAdminRoutes");
+const supportRoutes = require("./routes/supportRoutes");
 
 // ✅ Import User model for Super Admin seeding
 const User = require("./models/User");
@@ -89,6 +91,9 @@ app.use("/api/user-data", userRoute);
 app.use("/api/assignment", assignmentRoutes);
 app.use("/api/department", departmentRoutes);
 app.use("/api/subscription", subscriptionRoutes);
+app.use("/api/invites", inviteRoutes);
+app.use("/api/super-admin", superAdminRoutes);
+app.use("/api/support", supportRoutes);
 // ❗ Catch unknown routes (VERY IMPORTANT)
 app.all("*", (req, res, next) => {
   const error = new Error(`Cannot find ${req.originalUrl}`);

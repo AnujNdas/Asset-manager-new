@@ -325,4 +325,25 @@ export const returnAssignedAsset = async (assignmentId) => {
   );
   return response.data;
 };
+export const createInvite = async (data) => {
+  const response = await axiosInstance.post("/invites", data);
+  return response.data;
+};
 
+export const getInvites = async () => {
+
+  const response = await axiosInstance.get("/invites");
+  return response.data;
+}
+export const revokeInvite = async (id) => {
+  const response = await axiosInstance.delete(`/invites/${id}`);
+  return response.data;
+}
+export const createSupportTicket = async (data) => {
+  const response = await axiosInstance.post("/support/tickets", data);
+  return response.data;
+}
+export const getMySupportTickets = async () => {
+  const response = await axiosInstance.get("/support/tickets/my");
+  return response.data;
+}
