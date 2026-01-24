@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import TenantLayout from "../layouts/TenantLayout";
+import TenantLayout from "../layout/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
 
 import Dashboard from "../Pages/AdminDashboard";
