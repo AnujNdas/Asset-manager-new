@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import '../Page_styles/Login.css';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom';
+import image from '../Images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import AuthService from '../Services/AuthService';
 import Swal from 'sweetalert2';
@@ -46,11 +48,17 @@ const handlelogin = async (e) => {
     setLoading(false);
 
     // ✅ SINGLE, CORRECT REDIRECT
-    if (!response.user.onboardingCompleted) {
-      navigate("/onboarding");
-    } else {
-      navigate("/");
-    }
+const role = response.user.role;
+
+if (role === "super-admin") {
+  navigate("/super-admin/dashboard");
+} else if (!response.user.onboardingCompleted) {
+  navigate("/onboarding");
+} else {
+  console.log("Navigating to /");
+  navigate("/");
+}
+
 
   } catch (error) {
     console.error("Login error:", error);

@@ -25,6 +25,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   let decoded;
   try {
     decoded = jwtDecode(token);
+    console.log("Decoded token:", decoded);
   } catch {
     localStorage.clear();
     return <Navigate to="/user/login" replace />;
