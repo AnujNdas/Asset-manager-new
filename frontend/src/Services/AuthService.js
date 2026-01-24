@@ -9,7 +9,7 @@ const sendOtp = async (email) => {
 };
 
 // ✅ Verify OTP and Signup in one step
-const verifyOtpAndSignup = async (email, username, password, otp) => {
+const verifyOtpAndSignup = async (email, username, password, otp, inviteToken) => {
     const response = await axios.post(`${API_URL}/verify-otp-signup`, {
         email,
         username,
