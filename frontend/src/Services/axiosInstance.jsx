@@ -47,10 +47,10 @@ axiosInstance.interceptors.response.use(
     const currentPath = window.location.pathname;
 
     // 🔐 Auth handling (ONBOARDING SAFE)
-if (status === 401 || status === 403) {
-  localStorage.removeItem("auth");
-  window.location.href = "/user/login";
-}
+// if (status === 401 || status === 403) {
+//   localStorage.removeItem("auth");
+//   window.location.href = "/user/login";
+// }
 // if (status === 401 || status === 403) {
 //   console.warn("Auth error:", error.response?.data);
 //   // DO NOT redirect yet
