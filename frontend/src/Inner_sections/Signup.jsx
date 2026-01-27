@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import '../Page_styles/Login.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate , useSearchParams } from 'react-router-dom';
 import image from '../Images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -14,6 +14,14 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+useEffect(() => {
+  const invite = searchParams.get("invite");
+  if (invite) {
+    localStorage.setItem("inviteToken", invite);
+  }
+}, [searchParams]);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -47,12 +55,14 @@ const Signup = () => {
         if (otp) {
           try {
             // ✅ Step 3: Verify OTP & Signup in one step
-            const verifyRes = await AuthService.verifyOtpAndSignup(
-              email,
-              username,
-              password,
-              otp
-            );
+        const verifyRes = await AuthService.verifyOtpAndSignup(
+          email,
+          username,
+          password,
+          otp,
+          localStorage.getItem("inviteToken")
+        );
+
             console.log("VERIFY RESPONSE:", verifyRes);
 
 if (verifyRes.success && verifyRes.user) {
@@ -71,6 +81,7 @@ if (verifyRes.success && verifyRes.user) {
   })
 );
 
+localStorage.removeItem("inviteToken");
 
 
   if (!verifyRes.user.onboardingCompleted) {
