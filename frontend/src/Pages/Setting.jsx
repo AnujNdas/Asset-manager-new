@@ -100,7 +100,7 @@ const Setting = () => {
   const tabs = [
     { path: "profile", label: "Profile", icon: FaUser },
     { path: "security", label: "Security", icon: FaLock },
-    ...(userData?.role === "super-admin"
+    ...(userData?.role === "admin"
       ? [{ path: "teamInvites", label: "Team Invites", icon: FaLock }]
       : []),
     { path: "notification", label: "Notifications", icon: FaBell },

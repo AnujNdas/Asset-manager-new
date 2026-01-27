@@ -8,7 +8,7 @@
 
 .category-card {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 14px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -68,10 +68,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #ffffff;
+  /* background: #ffffff; */
   padding: 6px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  /* border: 1px solid #e5e7eb; */
   max-width: 420px;
   width: 100%;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -175,12 +175,12 @@
 }
 
 /* ===== Accessibility ===== */
-.mode-btn:focus-visible,
+/* .mode-btn:focus-visible,
 .mode-dropdown div:focus-visible,
 .category_search_input:focus-visible {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
-}
+} */
 
 /* 🌿 Pagination */
 .pagination {
@@ -492,10 +492,10 @@
 }
 
 /* Focus state */
-.category_search_input:focus {
+/* .category_search_input:focus {
   border-color: #4f46e5;
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
-}
+} */
 
 /* Tablet and small laptops */
 @media (max-width: 1024px) {

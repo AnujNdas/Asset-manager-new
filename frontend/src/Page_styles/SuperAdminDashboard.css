@@ -54,7 +54,6 @@ h1 {
   color: #020617; /* slate-950 */
 }
 .section-title {
-  margin: 32px 0 12px;
   font-size: 18px;
   font-weight: 600;
   color: #333;
@@ -76,7 +75,6 @@ h1 {
    RESPONSIVE ADJUSTMENTS
 ================================ */
 .section-title {
-  margin: 32px 0 12px;
   font-size: 18px;
   font-weight: 600;
 }
