@@ -33,7 +33,7 @@ body {
   width: 100%;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow: auto;
 
   /* Page background behind card */
   background: #c2c2c2;
@@ -61,7 +61,7 @@ body {
   padding: 24px 28px;
 
   display: grid;
-  gap: 16px;
+  /* gap: 16px; */
 
   color: var(--text);
 }
