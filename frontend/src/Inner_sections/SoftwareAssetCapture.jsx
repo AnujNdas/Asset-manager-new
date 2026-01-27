@@ -67,21 +67,28 @@ export default function SoftwareAssetCapture() {
   const [licenseFiles, setLicenseFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [s, c, u, l] = await Promise.all([getStatuses(), getCategories(), getUnits(), getLocations()]);
-        setStatuses(s || []);
-        setCategories(c || []);
-        setUnits(u || []);
-        setLocations(l || []);
-      } catch (err) {
-        console.error(err);
-        Swal.fire("Error", "Failed to load dropdown data", "error");
-      }
-    })();
-  }, []);
+useEffect(() => {
+  (async () => {
+    try {
+      const [u, l, c, s] = await Promise.all([
+        getUnits(),
+        getLocations(),
+        getCategories(),
+        getStatuses(),
+      ]);
 
+      setUnits(Array.isArray(u) ? u : []);
+      setLocations(Array.isArray(l?.data) ? l.data : []);
+      setCategories(Array.isArray(c) ? c : []);
+      setStatuses(Array.isArray(s) ? s : []);
+
+      console.log("LOCATION RESPONSE:", l);
+    } catch (e) {
+      console.error(e);
+      Swal.fire("Error", "Failed to load classifications", "error");
+    }
+  })();
+}, []);
 const handleChange = (e) => {
   const { name, value, type, checked } = e.target;
 
