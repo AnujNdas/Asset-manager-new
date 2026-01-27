@@ -14,7 +14,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-  },
+  },// 🔹 Organization relationship
+organizationId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Organization",
+  index: true,
+},
+
 role: {
   type: String,
   enum: ["super-admin", "admin", "user"], // ✅ added "super-admin"
