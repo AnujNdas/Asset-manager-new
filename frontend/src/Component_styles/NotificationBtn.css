@@ -30,13 +30,13 @@
 /* Badge */
 .notification-badge {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 5px;
-  background: #ef4444; /* red */
-  color: #fff;
+  top: -5px;
+  left: 20px;
+  min-width: 6px;
+  height: 12px;
+  padding: 8px 5px;
+  background: #ff0000; /* red */
+  color: #ffffff;
   font-size: 10px;
   font-weight: 600;
   border-radius: 999px;

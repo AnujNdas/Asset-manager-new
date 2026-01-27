@@ -15,6 +15,7 @@ import {
   FaCogs,
   FaUsers,
   FaBell,
+  FaQuestion,
 } from "react-icons/fa";
 
 import axiosInstance from "../Services/axiosInstance";
@@ -102,7 +103,7 @@ const Setting = () => {
     { path: "teamInvites", label: "Team Invites", icon: FaLock },
     { path: "notification", label: "Notifications", icon: FaBell },
     { path: "subscription", label: "Subscription", icon: FaCogs },
-    { path: "help&support", label: "Help & Support", icon: FaCogs },
+    { path: "help&support", label: "Help & Support", icon: FaQuestion },
     ...(userData?.role === "super-admin"
       ? [{ path: "users", label: "User Management", icon: FaUsers }]
       : []),

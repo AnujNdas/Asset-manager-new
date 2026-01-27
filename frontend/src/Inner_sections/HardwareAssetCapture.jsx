@@ -1,291 +1,470 @@
+// src/Pages/AssetCapture.jsx
 import React, { useState, useEffect } from "react";
-import * as XLSX from "xlsx";
-import Swal from "sweetalert2";
-import "../Page_styles/MisReport.css";
-import Pagination from "../Components/Pagination";
-import Loader from "../Components/Loader";
-import CurrencyFilter from "../Components/CurrencyFilter";
-import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
+import { useNavigate } from "react-router-dom";
 import {
-  getStatuses,
   getUnits,
   getLocations,
   getCategories,
-  getSoftwareAssets,
-  getCoreLicenses,
-  getHardwareAssets,
+  getStatuses,
+  createHardwareAsset
 } from "../Services/ApiServices";
+import Swal from "sweetalert2";
+import "../Page_styles/HardwareCapture.css";
+import { FiSave } from "react-icons/fi";
 
-const MisReport = () => {
-  const { currency } = useCurrency();
-  const [activeTab, setActiveTab] = useState("hardware");
+export const SUPPORTED_CURRENCIES = [
+  { code: "INR", label: "Indian Rupee", symbol: "₹" },
+  { code: "USD", label: "US Dollar", symbol: "$" },
+  { code: "EUR", label: "Euro", symbol: "€" },
+  { code: "GBP", label: "British Pound", symbol: "£" },
+  { code: "JPY", label: "Japanese Yen", symbol: "¥" },
+  { code: "AUD", label: "Australian Dollar", symbol: "A$" },
+  { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
+  { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
+  { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
+  { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
+  { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
+  { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
+  { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
+  { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
+  { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
+  { code: "SEK", label: "Swedish Krona", symbol: "kr" },
+  { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
+];
+const AssetCapture = () => {
+  // src/constants/currencies.js
 
-  // Shared filters
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedUnit, setSelectedUnit] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [apiDone, setApiDone] = useState(false);
-  
-  // Data
-  const [hardware, setHardware] = useState([]);
-  const [software, setSoftware] = useState([]);
-  const [licenses, setLicenses] = useState([]);
-  
-  // Lookup Data
-  const [statuses, setStatuses] = useState([]);
+
+  const navigate = useNavigate();
+
+  const defaultFormData = {
+    assetCategory: "",
+    barcodeNumber: "",
+    assetName: "",
+    associateUnit: "",
+    locationName: "",
+    locationAddress: "", // ✅ NEW
+    assetSpecification: "",
+    assetStatus: "",
+    DOP: "",
+    DOE: "",
+    assetLifetime: "",
+    purchaseFrom: "",
+    modelNo: "",
+    PMD: "",
+     assetCost: {
+    amount: "",
+    currency: "INR",
+  },
+    assetQuantity: "",
+  };
+
+  const [formData, setFormData] = useState(defaultFormData);
   const [units, setUnits] = useState([]);
   const [locations, setLocations] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
 
 useEffect(() => {
   (async () => {
     try {
-      const [s, u, l, c, sw, ha, lic] = await Promise.all([
-        getStatuses(),
+      const [u, l, c, s] = await Promise.all([
         getUnits(),
         getLocations(),
         getCategories(),
-        getSoftwareAssets(),
-        getHardwareAssets(),
-        getCoreLicenses(),
+        getStatuses(),
       ]);
 
-      setStatuses(s);
-      setUnits(u);
+      setUnits(Array.isArray(u) ? u : []);
       setLocations(Array.isArray(l?.data) ? l.data : []);
-      setCategories(c);
+      setCategories(Array.isArray(c) ? c : []);
+      setStatuses(Array.isArray(s) ? s : []);
 
-      setSoftware(sw?.data || sw);
-      setHardware(ha?.data || ha);
-      setLicenses(lic?.data || lic);
-
-      setApiDone(true);
-      setTimeout(() => setLoading(false), 400);
-    } catch (err) {
-      console.error("Error fetching filters/data:", err);
-      setLoading(false);
+      console.log("LOCATION RESPONSE:", l);
+    } catch (e) {
+      console.error(e);
+      Swal.fire("Error", "Failed to load classifications", "error");
     }
   })();
 }, []);
 
 
-  // Reset Page When Filter or Tab Changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab, selectedLocation, selectedUnit, selectedStatus, selectedCategory, startDate]);
 
-  const formatDate = (date) => {
-    if (!date) return "";
-    const d = new Date(date);
-    return d.toISOString().split("T")[0];
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  setFormData((prev) => {
+    let updated = { ...prev };
+
+    // ✅ Handle assetCost nested fields
+    if (name.startsWith("assetCost.")) {
+      const field = name.split(".")[1];
+
+      updated.assetCost = {
+        ...prev.assetCost,
+        [field]:
+          field === "amount" ? Number(value) || "" : value,
+      };
+    } else {
+      updated[name] = value;
+    }
+
+    // ✅ Auto-calculate lifetime
+    if (name === "DOP" || name === "DOE") {
+      const { DOP, DOE } = updated;
+
+      if (DOP && DOE) {
+        const start = new Date(DOP);
+        const end = new Date(DOE);
+        const days = Math.floor(
+          (end - start) / (1000 * 60 * 60 * 24)
+        );
+
+        updated.assetLifetime =
+          Number.isFinite(days) && days >= 0
+            ? `${days} days`
+            : "Invalid";
+      } else {
+        updated.assetLifetime = "";
+      }
+    }
+
+    return updated;
+  });
+};
+
+  const validateRequired = () => {
+    const required = [
+      "assetName",
+      "assetCategory",
+      "associateUnit",
+      "locationName",
+      "locationAddress", // ✅ NEW
+      "assetStatus",
+      "assetCost",
+      "assetQuantity",
+    ];
+
+    const missing = required.filter((k) => !formData[k]);
+    if (missing.length) {
+      Swal.fire("Missing fields", "Please fill in all required fields.", "error");
+      return false;
+    }
+    return true;
   };
 
-  // -------- Hardware Filter Logic -------- //
-  const filteredHardware = hardware.filter((a) =>
-    (selectedLocation ? a.locationName === selectedLocation : true) &&
-    (selectedUnit ? a.associateUnit === selectedUnit : true) &&
-    (selectedStatus ? a.assetStatus === selectedStatus : true) &&
-    (startDate ? formatDate(a.DOP) >= startDate : true)
-  );
+const handleAddAsset = async (e) => {
+  e.preventDefault();
+  if (!validateRequired()) return;
 
-  // -------- Software Filter Logic -------- //
-  const filteredSoftware = software.filter((a) =>
-    (selectedLocation ? a.locationName === selectedLocation : true) &&
-    (selectedCategory ? a.category === selectedCategory : true) &&
-    (selectedStatus ? a.complianceStatus === selectedStatus : true) &&
-    (startDate ? formatDate(a.purchaseDate) >= startDate : true)
-  );
+  setIsSubmitting(true);
 
-  const currentData = activeTab === "hardware" ? filteredHardware : filteredSoftware;
-  const totalPages = Math.ceil(currentData.length / itemsPerPage);
+  try {
+    await createHardwareAsset(formData);
 
-  const paginate = (data) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return data.slice(startIndex, startIndex + itemsPerPage);
-  };
+    await Swal.fire("Success", "Asset added successfully!", "success");
+    navigate("/inventory");
+  } catch (err) {
+    Swal.fire(
+      "Error",
+      err.userMessage || err.response?.data?.message || "Failed to add asset.",
+      "error"
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
-  const exportData = () => {
-    const ws = XLSX.utils.json_to_sheet(currentData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, activeTab);
-    XLSX.writeFile(wb, `${activeTab}_report.xlsx`);
-  };
-  if (loading) {
+
   return (
-      <Loader type="mis" apiDone={apiDone} />
-  );
-}
-
-  return (
-    <div className="mis-content">
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2 className="classify_heading">Asset Management Report</h2>
-        <button onClick={exportData} className="misbutton">
-          Export {activeTab} Excel
-        </button>
+    <div className="asset-wrapper">
+      <div className="asset-header">
+        <h2>Hardware Capture</h2>
       </div>
 
-      {/* Tabs */}
-      <header>
-        <div className="navs">
-          <button
-            className={activeTab === "hardware" ? "active-tab" : ""}
-            onClick={() => setActiveTab("hardware")}
-          >
-            Hardware
-          </button>
+      <form className="asset-form" onSubmit={handleAddAsset}>
+        {/* Basic */}
+        <div className="section">
+          <h3 className="section-title">Basic Details</h3>
 
-          <button
-            className={activeTab === "software" ? "active-tab" : ""}
-            onClick={() => setActiveTab("software")}
-          >
-            Software
-          </button>
+          <div className="grid-2">
+
+            {/* Asset Name */}
+            <div className="input-group">
+              <label>
+                Asset Name <span>*</span>
+              </label>
+              <input
+                type="text"
+                name="assetName"
+                value={formData.assetName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Category */}
+            <div className="input-group">
+              <label>
+                Category <span>*</span>
+              </label>
+              <select
+                name="assetCategory"
+                value={formData.assetCategory}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Category</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Barcode Number */}
+          {/* <div className="input-group">
+            <label>Barcode Number</label>
+            <input
+              type="text"
+              name="barcodeNumber"
+              value={formData.barcodeNumber}
+              onChange={handleChange}
+              placeholder="Enter barcode"
+            />
+          </div> */}
+
+          {/* Specification */}
+          <div className="input-group">
+            <label>Specification</label>
+            <input
+              type="text"
+              name="assetSpecification"
+              value={formData.assetSpecification}
+              onChange={handleChange}
+            />
+          </div>
         </div>
-      </header>
 
-      {/* Filters */}
-      <div className="filters">
-        {activeTab === "hardware" && (
-          <>
-            <select onChange={(e) => setSelectedLocation(e.target.value)}>
-              <option value="">All Locations</option>
-              {locations.map((l) => (
-                <option key={l._id} value={l._id}>{l.name}</option>
-              ))}
-            </select>
+        {/* Location */}
+        <div className="section">
+          <h3 className="section-title">Location & Management</h3>
 
-            <select onChange={(e) => setSelectedUnit(e.target.value)}>
-              <option value="">All Units</option>
-              {units.map((u) => (
-                <option key={u._id} value={u._id}>{u.name}</option>
-              ))}
-            </select>
+          <div className="grid-2">
+            {/* Location */}
+            <div className="input-group">
+              <label>
+                Location <span>*</span>
+              </label>
+              <select
+                name="locationName"
+                value={formData.locationName}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Location</option>
+                {locations.map((l) => (
+                  <option key={l._id} value={l._id}>
+                    {l.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Location Address */}
+<div className="input-group">
+  <label>
+    Location Address <span>*</span>
+  </label>
+  <input
+    type="text"
+    name="locationAddress"
+    value={formData.locationAddress}
+    onChange={handleChange}
+    placeholder="Building, floor, room, address"
+    required
+  />
+</div>
 
-            <select onChange={(e) => setSelectedStatus(e.target.value)}>
-              <option value="">All Statuses</option>
+
+          {/* Status */}
+          <div className="input-group">
+            <label>
+              Status <span>*</span>
+            </label>
+            <select
+              name="assetStatus"
+              value={formData.assetStatus}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Status</option>
               {statuses.map((s) => (
-                <option key={s._id} value={s._id}>{s.name}</option>
+                <option key={s._id} value={s._id}>
+                  {s.name}
+                </option>
               ))}
             </select>
+          </div>
 
-            <input type="date" onChange={(e) => setStartDate(e.target.value)} />
-          </>
-        )}
+          {/* PMD */}
+          {/* <div className="input-group">
+            <label>PMD</label>
+            <input
+              type="text"
+              name="PMD"
+              value={formData.PMD}
+              onChange={handleChange}
+              placeholder="Enter PMD"
+            />
+          </div> */}
+        </div>
 
-        {activeTab === "software" && (
-          <>
-            <select onChange={(e) => setSelectedCategory(e.target.value)}>
-              <option value="">All Categories</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>{c.name}</option>
-              ))}
-            </select>
 
-            <select onChange={(e) => setSelectedLocation(e.target.value)}>
-              <option value="">All Locations</option>
-              {locations.map((l) => (
-                <option key={l._id} value={l._id}>{l.name}</option>
-              ))}
-            </select>
+          </div>
+        {/* Cost & Quantity */}
+        <div className="section">
+          <h3 className="section-title">Cost & Quantity</h3>
 
-            <select onChange={(e) => setSelectedStatus(e.target.value)}>
-              <option value="">All Statuses</option>
-              {statuses.map((s) => (
-                <option key={s._id} value={s._id}>{s.name}</option>
-              ))}
-            </select>
+          <div className="grid-2">
+            {/* Cost */}
 
-            <input type="date" onChange={(e) => setStartDate(e.target.value)} />
-          </>
-        )}
-      </div>
+<div className="input-group">
+  <label> Currency</label>
 
-      {/* TABLE */}
-      <table className="mis-table">
-        <thead>
-          <tr>
-            {activeTab === "hardware" && (
-              <>
-                <th>Name</th>
-                <th>Spec</th>
-                <th>Unit</th>
-                <th>Status</th>
-                <th>Location</th>
-                <th>Maintainence</th>
-                <th>Total Cost</th>
-              </>
-            )}
+    <select
+      name="assetCost.currency"
+      value={formData.assetCost.currency}
+      onChange={handleChange}
+      required
+    >
+      {SUPPORTED_CURRENCIES.map((c) => (
+        <option key={c.code} value={c.code}>
+          {c.code} — {c.label} ({c.symbol})
+        </option>
+      ))}
+    </select>
 
-            {activeTab === "software" && (
-              <>
-                <th>Name</th>
-                <th>Version</th>
-                <th>Publisher</th>
-                <th>Status</th>
-                <th>Category</th>
-                <th>Expiry</th>
-                <th>Total Cost</th>
-              </>
-            )}
-          </tr>
-        </thead>
+</div>
+<div className="input-group">
+  <label>Asset Cost</label>
+    <input
+      type="number"
+      name="assetCost.amount"
+      value={formData.assetCost.amount}
+      onChange={handleChange}
+      min="0"
+      step="0.01"
+      placeholder="Unit cost"
+      required
+    />
 
-        <tbody>
-          {paginate(currentData).map((row, i) => (
-            <tr key={i}>
-              {activeTab === "hardware" && (
-                <>
-                  <td>{row.assetName}</td>
-                  <td>{row.assetSpecification}</td>
-                  <td>{units.find((u) => u._id === row.associateUnit)?.name}</td>
-                  <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
-                  <td>{locations.find((l) => l._id === row.locationName)?.name}</td>
-                  <td>{row.DOE}</td>
-                  <td>{CURRENCY_SYMBOLS[currency]}{" "}
-                  {convertFromBase(
-                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
-                    currency
-                  ).toLocaleString()}</td>
-                </>
-              )}
+</div>
 
-              {activeTab === "software" && (
-                <>
-                  <td>{row.assetName}</td>
-                  <td>{row.assetSpecification}</td>
-                  <td>{row.purchaseFrom}</td>
-                  <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
-                  <td>{categories.find((c) => c._id === row.assetCategory)?.name}</td>
-                <td>{row.DOE}</td>
-                <td>{CURRENCY_SYMBOLS[currency]}{" "}
-                  {convertFromBase(
-                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
-                    currency
-                  ).toLocaleString()}</td>
-                </>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            {/* Quantity */}
+            <div className="input-group">
+              <label>
+                Quantity <span>*</span>
+              </label>
+              <input
+                type="number"
+                name="assetQuantity"
+                value={formData.assetQuantity}
+                onChange={handleChange}
+                required
+              />
+            </div>
+                        {/* Associate Unit */}
+            <div className="input-group">
+              <label>
+                Associate Unit <span>*</span>
+              </label>
+              <select
+                name="associateUnit"
+                value={formData.associateUnit}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Unit</option>
+                {units.map((u) => (
+                  <option key={u._id} value={u._id}>
+                    {u.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+        {/* Dates */}
+        <div className="section">
+          <h3 className="section-title">Dates</h3>
+
+          <div className="grid-3">
+            <div className="input-group">
+              <label>Date of Purchase</label> 
+              <input
+                type="date"
+                name="DOP"
+                value={formData.DOP}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Date of Expiry</label>
+              <input
+                type="date"
+                name="DOE"
+                value={formData.DOE}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Lifetime</label>
+              <input
+                type="text"
+                name="assetLifetime"
+                value={formData.assetLifetime}
+                placeholder="Auto Calculated"
+                disabled
+              />
+            </div>
+          </div>
+                     <div className="grid-2">
+          <div className="input-group">
+            <label>Purchased From</label>
+            <input
+              type="text"
+              name="purchaseFrom"
+              value={formData.purchaseFrom}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="input-group">
+                        <label>Model No.</label>
+            <input
+              type="text"
+              name="modelNo"
+              value={formData.modelNo}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+</div>
+        {/* Submit */}
+        <button className="submit-btn" type="submit" disabled={isSubmitting}>
+          <FiSave />
+          {isSubmitting ? " Saving..." : " Save Hardware Asset"}
+        </button>
+      </form>
     </div>
   );
 };
 
-export default MisReport;
+export default AssetCapture;

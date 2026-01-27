@@ -90,7 +90,7 @@ const Menubar = ({ username, toggleSidebar }) => {
               <span>System</span>
             </div> 
         <div className="control-panel">
-          <button onClick={handleHelpClick}><FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} /></button>
+          <button onClick={handleHelpClick} style={{border : "none",background: "transparent"}}><FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} /></button>
           <NotificationButton />
 
           {/* HELP ICON */}
