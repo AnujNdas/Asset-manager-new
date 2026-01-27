@@ -68,10 +68,10 @@ const handleAssign = (asset) => {
 
       setAssets(assetsRes?.data ?? assetsRes ?? []);
       console.log('Fetched software assets:', assetsRes);
-      setCategories(catRes ?? []);
-      setStatuses(statRes ?? []);
-      setUnits(unitRes ?? []);
-      setLocations(locRes ?? []);
+      setCategories(catRes?.data ?? catRes ?? []);
+setStatuses(statRes?.data ?? statRes ?? []);
+setUnits(unitRes?.data ?? unitRes ?? []);
+setLocations(locRes?.data ?? locRes ?? []);
 
       setApiDone(true);
       setTimeout(() => setLoading(false), 400);
@@ -82,12 +82,19 @@ const handleAssign = (asset) => {
   };
 
   /* ================= HELPERS ================= */
-  const getName = (list, value) => {
-    if (!value) return "N/A";
-    const id = typeof value === "object" ? value._id : value;
-    const found = list.find((i) => String(i._id) === String(id));
-    return found ? found.name : "N/A";
-  };
+const getName = (list, value) => {
+  if (!value) return "N/A";
+  if (!Array.isArray(list)) return "N/A";
+
+  const id = typeof value === "object" ? value._id : value;
+
+  const found = list.find(
+    (i) => String(i._id) === String(id)
+  );
+
+  return found ? found.name : "N/A";
+};
+
 
   const getInStock = (asset) =>
     Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);

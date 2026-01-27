@@ -62,11 +62,12 @@ const fetchAll = async () => {
       ]);
 
     setAssets(assetsRes?.data ?? assetsRes ?? []);
-    console.log('Fetched assets:', assetsRes);
-    setCategories(catsRes ?? []);
-    setLocations(locsRes ?? []);
-    setUnits(unitsRes ?? []);
-    setStatuses(statusesRes ?? []);
+
+setCategories(catsRes?.data ?? catsRes ?? []);
+setLocations(locsRes?.data ?? locsRes ?? []);
+setUnits(unitsRes?.data ?? unitsRes ?? []);
+setStatuses(statusesRes?.data ?? statusesRes ?? []);
+
 
     // ✅ SIGNAL LOADER COMPLETION
     setApiDone(true);
@@ -90,12 +91,19 @@ const isOutOfStock = (asset) =>
   const currentAssets = assets.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(assets.length / assetsPerPage);
 
-  const getName = (list, value) => {
-    if (!value) return "N/A";
-    const id = typeof value === "object" ? value._id : value;
-    const found = list.find((item) => String(item._id) === String(id));
-    return found ? found.name : "N/A";
-  };
+const getName = (list, value) => {
+  if (!value) return "N/A";
+  if (!Array.isArray(list)) return "N/A";
+
+  const id = typeof value === "object" ? value._id : value;
+
+  const found = list.find(
+    (item) => String(item._id) === String(id)
+  );
+
+  return found ? found.name : "N/A";
+};
+
 
   const handleDelete = async (id) => {
     const resp = await Swal.fire({

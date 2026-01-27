@@ -100,11 +100,13 @@ const Setting = () => {
   const tabs = [
     { path: "profile", label: "Profile", icon: FaUser },
     { path: "security", label: "Security", icon: FaLock },
-    { path: "teamInvites", label: "Team Invites", icon: FaLock },
+    ...(userData?.role === "super-admin"
+      ? [{ path: "teamInvites", label: "Team Invites", icon: FaLock }]
+      : []),
     { path: "notification", label: "Notifications", icon: FaBell },
     { path: "subscription", label: "Subscription", icon: FaCogs },
     { path: "help&support", label: "Help & Support", icon: FaQuestion },
-    ...(userData?.role === "super-admin"
+    ...(userData?.role === "  admin"
       ? [{ path: "users", label: "User Management", icon: FaUsers }]
       : []),
   ];
@@ -138,7 +140,7 @@ const Setting = () => {
             <Route path="subscription" element={<Subscription />} />
             <Route path="teamInvites" element={<TeamInvites />} />
             <Route path="help&support" element={<HelpSupport />} />
-            {userData?.role === "super-admin" && (
+            {userData?.role === "admin" && (
               <Route path="users" element={<UserManagement />} />
             )}
           </Routes>
