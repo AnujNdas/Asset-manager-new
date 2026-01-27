@@ -34,7 +34,7 @@ const MisReport = () => {
   const [hardware, setHardware] = useState([]);
   const [software, setSoftware] = useState([]);
   const [licenses, setLicenses] = useState([]);
-
+  
   // Lookup Data
   const [statuses, setStatuses] = useState([]);
   const [units, setUnits] = useState([]);
@@ -45,37 +45,37 @@ const MisReport = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [s, u, l, c, sw, ha, lic] = await Promise.all([
-          getStatuses(),
-          getUnits(),
-          getLocations(),
-          getCategories(),
-          getSoftwareAssets(),
-          getHardwareAssets(),
-          getCoreLicenses(),
-        ]);
+useEffect(() => {
+  (async () => {
+    try {
+      const [s, u, l, c, sw, ha, lic] = await Promise.all([
+        getStatuses(),
+        getUnits(),
+        getLocations(),
+        getCategories(),
+        getSoftwareAssets(),
+        getHardwareAssets(),
+        getCoreLicenses(),
+      ]);
 
-        setStatuses(s);
-        setUnits(u);
-        setLocations(l);
-        setCategories(c);
-        setSoftware(sw?.data || sw);
-        setHardware(ha?.data || ha);
-        setLicenses(lic?.data || lic);
-        setApiDone(true);
-        // ✅ allow progress to hit 100%
-    setTimeout(() => {
+      setStatuses(s);
+      setUnits(u);
+      setLocations(Array.isArray(l?.data) ? l.data : []);
+      setCategories(c);
+
+      setSoftware(sw?.data || sw);
+      setHardware(ha?.data || ha);
+      setLicenses(lic?.data || lic);
+
+      setApiDone(true);
+      setTimeout(() => setLoading(false), 400);
+    } catch (err) {
+      console.error("Error fetching filters/data:", err);
       setLoading(false);
-    }, 400);
-      } catch (err) {
-        console.error("Error fetching filters/data:", err);
-      setLoading(false);
-      }
-    })();
-  }, []);
+    }
+  })();
+}, []);
+
 
   // Reset Page When Filter or Tab Changes
   useEffect(() => {

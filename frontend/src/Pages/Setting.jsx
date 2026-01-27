@@ -22,10 +22,11 @@ import axiosInstance from "../Services/axiosInstance";
 // Lazy load inner sections
 const MyProfile = lazy(() => import("../Inner_sections/MyProfile"));
 const Security = lazy(() => import("../Inner_sections/Security"));
+const TeamInvites = lazy(() => import("../Inner_sections/TeamInvites"));
 const Notification = lazy(() => import("../Inner_sections/Notification"));
 const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
 const Subscription = lazy(() => import("../Inner_sections/Subscription"));
-
+const HelpSupport = lazy(() => import("../Inner_sections/Help-Support"));
 const Setting = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -98,8 +99,10 @@ const Setting = () => {
   const tabs = [
     { path: "profile", label: "Profile", icon: FaUser },
     { path: "security", label: "Security", icon: FaLock },
+    { path: "teamInvites", label: "Team Invites", icon: FaLock },
     { path: "notification", label: "Notifications", icon: FaBell },
     { path: "subscription", label: "Subscription", icon: FaCogs },
+    { path: "help&support", label: "Help & Support", icon: FaCogs },
     ...(userData?.role === "super-admin"
       ? [{ path: "users", label: "User Management", icon: FaUsers }]
       : []),
@@ -132,6 +135,8 @@ const Setting = () => {
             <Route path="security" element={<Security />} />
             <Route path="notification" element={<Notification />} />
             <Route path="subscription" element={<Subscription />} />
+            <Route path="teamInvites" element={<TeamInvites />} />
+            <Route path="help&support" element={<HelpSupport />} />
             {userData?.role === "super-admin" && (
               <Route path="users" element={<UserManagement />} />
             )}

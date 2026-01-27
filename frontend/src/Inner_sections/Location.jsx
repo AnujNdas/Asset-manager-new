@@ -42,17 +42,23 @@ const Location = () => {
     fetchLocations();
   }, []);
 
-  const fetchLocations = async () => {
-    setLoading(true);
-    try {
-      const data = await getLocations();
-      setLocations([...data].reverse());
-      setApiDone(true);
-      setTimeout(() => setLoading(false), 400);
-    } catch {
-      setLoading(false);
-    }
-  };
+const fetchLocations = async () => {
+  setLoading(true);
+  try {
+    const res = await getLocations();
+
+    console.log("Locations response:", res);
+
+    setLocations([...res.data].reverse());
+
+    setApiDone(true);
+    setTimeout(() => setLoading(false), 400);
+  } catch (err) {
+    console.error("Error fetching locations:", err);
+    setLoading(false);
+  }
+};
+
 
   // SEARCH FILTER (only active in search mode)
   const filteredLocations =
@@ -332,3 +338,4 @@ const handleRestore = async (id, name) => {
 };
 
 export default Location;
+  
