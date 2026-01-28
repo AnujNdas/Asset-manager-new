@@ -8,9 +8,9 @@ const NotificationPage = () => {
   return (
     <div className="notification-container">
       <div className="notification-header">
-        <h1>
+        {/* <h1>
            Notifications
-        </h1>
+        </h1> */}
         <button onClick={markAllAsRead} className="mark-read-btn">
           <FaCheck /> Mark All as Read
         </button>

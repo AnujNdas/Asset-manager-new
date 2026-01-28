@@ -61,6 +61,34 @@ const HelpSupport = () => {
         "Choose employee",
         "Confirm assignment"
       ]
+    },
+    {
+      title: "How to add classifications",
+      steps: [
+        "Go to Classifications tab",
+        "Select Add From Search Dropdown",
+        "Type the Name",
+        "Click Enter"
+      ]
+    },
+    {
+      title: "How to add a user (only Admin)",
+      steps: [
+        "Go to Team Invite Under Settings",
+        "Click on Generate Invite Link",
+        "Share it to the user",
+        "Ask Them to signup Through the link"
+      ]
+    },
+    {
+      title: "How to import multiple assets via excel",
+      steps: [
+        "Go to Import Page under AssetCapture",
+        "Select the asset type from Dropdown",
+        "Read the Instructions Carefully",
+        "Check the format of excel sheet",
+        "click Import and upload the file"
+      ]
     }
   ];
 

@@ -95,7 +95,6 @@
   padding: 10px;
 
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 
   /* Subtle entrance animation */
   animation: fadeIn 0.3s ease-in-out;

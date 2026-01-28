@@ -105,7 +105,7 @@ useEffect(() => {
   // -----------------------------
   return (
     <div className="profile-container">
-      <h2 className="profile-title">My Profile</h2>
+      {/* <h2 className="profile-title">My Profile</h2> */}
 
       {/* Avatar Section */}
       {/* Avatar Section */}

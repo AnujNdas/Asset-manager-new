@@ -18,7 +18,8 @@
   flex-direction: column;
   gap: 10px;
   justify-content: center;
-  height: 90%;
+  height: 80%;
+  width: 350px;
   box-shadow: 0px 8px 24px rgba(0,0,0,0.15);
   animation: fadeIn 0.4s ease-in-out;
 }

@@ -17,7 +17,7 @@ const TeamInvites = () => {
 
   return (
     <div className="settings-container">
-      <h2>Team Invitations</h2>
+      {/* <h2>Team Invitations</h2> */}
 
       <InviteForm onCreated={loadInvites} />
       <InviteTable invites={invites} onRevoke={loadInvites} />
