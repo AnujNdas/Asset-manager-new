@@ -47,10 +47,10 @@ const HelpSupport = () => {
     {
       title: "How to add a new asset",
       steps: [
-        "Go to Assets page",
+        "Go to Assets page",    
         "Click Add Asset",
         "Fill asset details",
-        "Save changes"
+        "Navigated to the inventory"
       ]
     },
     {
@@ -145,25 +145,36 @@ const HelpSupport = () => {
       )}
 
       {/* DOCUMENTATION SECTION */}
-      {activeTab === "docs" && (
-        <section className="accordion-section">
-          {docs.map((doc, index) => (
-            <div key={index} className="accordion-item">
-              <div className="accordion-title" onClick={() => toggleAccordion(index)}>
-                <h4>{doc.title}</h4>
-                <span>{openIndex === index ? "-" : "+"}</span>
+     {activeTab === "docs" && (
+  <section className="accordion-section">
+    {docs.map((doc, index) => (
+      <div key={index} className="accordion-item">
+        <div
+          className="accordion-title"
+          onClick={() => toggleAccordion(index)}
+        >
+          <h4>{doc.title}</h4>
+          <span>{openIndex === index ? "-" : "+"}</span>
+        </div>
+
+        {openIndex === index && (
+          <div className="workflow">
+            {doc.steps.map((step, i) => (
+              <div key={i} className="workflow-step">
+                <span className="step-text">{step}</span>
+
+                {i !== doc.steps.length - 1 && (
+                  <span className="step-arrow">→</span>
+                )}
               </div>
-              {openIndex === index && (
-                <ol className="accordion-content">
-                  {doc.steps.map((step, i) => (
-                    <li key={i}>{step}</li>
-                  ))}
-                </ol>
-              )}
-            </div>
-          ))}
-        </section>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
+    ))}
+  </section>
+)}
+
 
       {/* RAISE TICKET */}
       {activeTab === "ticket" && (

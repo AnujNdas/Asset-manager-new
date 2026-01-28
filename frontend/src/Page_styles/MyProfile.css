@@ -134,49 +134,51 @@
   align-items: center;
 }
 
-/* Avatar container */
 .avatar-wrapper {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
+  min-width: 120px;
+  min-height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f1f1f1;
+  border: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Avatar image */
 .profile-avatar {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #2563eb;
-  background-color: #f3f4f6;
+  border-radius: 50%;
 }
 
-/* Edit icon button */
+/* Edit button */
 .avatar-edit-btn {
   position: absolute;
   bottom: 6px;
   right: 6px;
-  width: 34px;
-  height: 34px;
-  background: #2563eb;
-  color: #ffffff;
+  background: #111827;
+  color: #fff;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .avatar-edit-btn:hover {
-  background: #1d4ed8;
-  transform: scale(1.08);
-}
-
-.avatar-edit-btn:active {
-  transform: scale(0.95);
+  transform: scale(1.1);
+  background: #2563eb;
 }
 
 /* =========================
@@ -210,6 +212,18 @@
   .profile-section input,
   .profile-section select {
     margin-bottom: 16px;
+  }
+  .avatar-wrapper {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+    min-height: 90px;
+  }
+
+  .avatar-edit-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
   }
 }
 

@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import axiosInstance from "../Services/axiosInstance";
 import Loader from "../Components/Loader";
 import "../Page_styles/MyProfile.css";
-
+import profile from "../Images/default_profile.png";
 const MyProfile = () => {
   const navigate = useNavigate();
 
@@ -110,27 +110,31 @@ useEffect(() => {
       {/* Avatar Section */}
       {/* Avatar Section */}
 <div className="profile-avatar-section">
-  <div className="avatar-wrapper">
-    <img
-      src={user?.avatar?.url || "/default-avatar.png"}
-      alt="Profile"
-      className="profile-avatar"
-    />
+<div className="avatar-wrapper">
+  <img
+    src={user?.avatar?.url || profile}
+    alt="Profile"
+    className="profile-avatar"
+    onError={(e) => {
+      e.currentTarget.src = "/default-avatar.png";
+    }}
+  />
 
-    {/* Hidden file input */}
-    <input
-      type="file"
-      accept="image/*"
-      id="avatarUpload"
-      hidden
-      onChange={(e) => setAvatarFile(e.target.files[0])}
-    />
+  {/* Hidden file input */}
+  <input
+    type="file"
+    accept="image/*"
+    id="avatarUpload"
+    hidden
+    onChange={(e) => setAvatarFile(e.target.files[0])}
+  />
 
-    {/* Edit button */}
-    <label htmlFor="avatarUpload" className="avatar-edit-btn">
-      ✏️
-    </label>
-  </div>
+  {/* Edit button */}
+  <label htmlFor="avatarUpload" className="avatar-edit-btn">
+    ✏️
+  </label>
+</div>
+
 
   <small>Upload a square image for best results</small>
 </div>
