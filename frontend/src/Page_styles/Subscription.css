@@ -1,12 +1,12 @@
 .subscription-page {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0px;
+  padding: 32px 16px 64px;
 }
 
 .subscription-page h2 {
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 8px;
 }
@@ -14,19 +14,21 @@
 .subscription-page p {
   text-align: center;
   color: #6b7280;
-  margin: 5px;
+  max-width: 600px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
 }
 .billing-toggle {
-  display: flex;
-  width: 100%;
-  justify-content: center;
+  display: inline-flex;
+  margin: 0 auto;
   background: #f3f4f6;
   border-radius: 999px;
-  padding: 4px;
+  padding: 6px;
+  gap: 6px;
 }
 
 .billing-toggle button {
-  padding: 8px 12px;
+  padding: 10px 18px;
   border-radius: 999px;
   border: none;
   background: transparent;
@@ -38,57 +40,65 @@
 
 .billing-toggle button.active {
   background: #111827;
-  color: #fff;
+  color: #ffffff;
 }
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-top: 18px;
-  margin-bottom: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+  margin-top: 32px;
 }
 .plan-card {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 8px 14px;
+  border-radius: 18px;
+  padding: 24px;
   border: 1px solid #e5e7eb;
   cursor: pointer;
   transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 
 .plan-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   border-color: #6366f1;
-  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.15);
 }
+
 .plan-card.active {
   border: 2px solid #6366f1;
-  box-shadow: 0 14px 35px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 18px 45px rgba(99, 102, 241, 0.25);
 }
-.plan-card h3 {
-  font-size: 20px;
+.plan-card .badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #6366f1;
+  color: #ffffff;
+  padding: 6px 12px;
+  font-size: 12px;
   font-weight: 700;
+  border-radius: 999px;
+}
+
+.plan-card h3 {
+  font-size: 22px;
+  font-weight: 800;
   margin-bottom: 6px;
 }
 
-.plan-card .subtext {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 20px;
-}
 .plan-price {
   display: flex;
   align-items: baseline;
   gap: 6px;
-  margin-bottom: 24px;
+  margin: 16px 0 20px;
 }
 
 .plan-price .amount {
-  font-size: 36px;
-  font-weight: 800;
+  font-size: 40px;
+  font-weight: 900;
   color: #111827;
 }
 
@@ -96,19 +106,29 @@
   font-size: 14px;
   color: #6b7280;
 }
+.plan-limits {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 600;
+}
+
 .plan-features {
   list-style: none;
   padding: 0;
-  margin: 0px;
+  margin: 0;
   flex-grow: 1;
 }
 
 .plan-features li {
   font-size: 14px;
   color: #374151;
-  padding-left: 24px;
-  /* margin-bottom: 12px; */
+  padding-left: 26px;
+  margin-bottom: 10px;
   position: relative;
+  line-height: 1.5;
 }
 
 .plan-features li::before {
@@ -116,24 +136,32 @@
   position: absolute;
   left: 0;
   color: #22c55e;
-  font-weight: 700;
+  font-weight: 800;
 }
+
 .btn {
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-weight: 700;
   border: none;
   cursor: pointer;
   transition: all 0.25s ease;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .btn.primary {
   background: #6366f1;
-  color: #fff;
+  color: #ffffff;
 }
 
 .btn.primary:hover {
   background: #4f46e5;
+}
+
+.btn.secondary {
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .btn.current {
@@ -143,16 +171,23 @@
 }
 .subscription-page .proceed {
   display: block;
-  margin: 0 auto;
-  padding: 14px 36px;
+  margin: 40px auto 0;
+  padding: 16px 40px;
   font-size: 16px;
+  border-radius: 14px;
 }
 @media (max-width: 640px) {
-  .subscription-page {
-    padding: 24px 16px 60px;
+  .subscription-page h2 {
+    font-size: 24px;
   }
 
   .plan-price .amount {
     font-size: 32px;
   }
+
+  .plan-limits {
+    flex-direction: column;
+    gap: 6px;
+  }
 }
+
