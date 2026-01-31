@@ -261,7 +261,7 @@ const loadMyTickets = async () => {
       <input
         type="text"
         name="name"
-        placeholder="Your Name"
+        placeholder="Name"
         value={contactData.name}
         onChange={handleContactChange}
       />
@@ -269,14 +269,14 @@ const loadMyTickets = async () => {
       <input
         type="email"
         name="email"
-        placeholder="Your Email"
+        placeholder="Email"
         value={contactData.email}
         onChange={handleContactChange}
       />
 
       <textarea
         name="message"
-        placeholder="Your Message"
+        placeholder="Message"
         value={contactData.message}
         onChange={handleContactChange}
       />
