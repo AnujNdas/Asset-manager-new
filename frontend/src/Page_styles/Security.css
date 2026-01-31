@@ -64,6 +64,7 @@
 .input-container2 p {
   flex: 1;
   font-size: 14px;
+  margin: 0;
 }
 
 /* Input fields */

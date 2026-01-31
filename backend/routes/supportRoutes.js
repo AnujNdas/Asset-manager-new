@@ -5,7 +5,8 @@ const {
   createTicket,
   getMyTickets,
   getAllTickets,
-  updateTicketStatus
+  updateTicketStatus,
+  contactSupport
 } = require("../controllers/supportController");
 
 const authenticateToken = require("../Middleware/Authentication-token");
@@ -17,6 +18,15 @@ router.post(
   "/tickets",
   authenticateToken(["user", "admin"]),
   createTicket
+);
+/**
+ * CONTACT SUPPORT (Email Only)
+ * User & Admin
+ */
+router.post(
+  "/contact",
+  authenticateToken(["user", "admin"]),
+  contactSupport
 );
 
 router.get(

@@ -33,7 +33,7 @@ const initialForm = {
   associateUnit: "",
   locationName: "",
   locationAddress: "",
-
+  type : "",
   // License
   licenseKey: "",
   licenseType: "",
@@ -125,7 +125,7 @@ const buildJsonPayload = () => ({
   assetCategory: formData.assetCategory,
   assetSpecification: formData.assetSpecification,
   purchaseFrom: formData.purchaseFrom,
-
+  type: formData.type,
   associateUnit: formData.associateUnit,
   locationName: formData.locationName,
   locationAddress: formData.locationAddress,
@@ -182,7 +182,7 @@ useEffect(() => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  if (!formData.assetName || !formData.assetCategory) {
+  if (!formData.assetName || !formData.assetCategory || !formData.associateUnit || !formData.type) {
     Swal.fire("Validation", "Please fill required fields", "warning");
     return;
   }
@@ -244,6 +244,24 @@ const handleSubmit = async (e) => {
               </select>
             </div>
           </div>
+          <div className="grid-2">
+  <div className="input-group">
+    <label>
+      Software Type <span style={{ color: "#e11d48" }}>*</span>
+    </label>
+    <select
+      name="type"
+      value={formData.type}
+      onChange={handleChange}
+      required
+    >
+      <option value="">Select Type</option>
+      <option value="monthly">Monthly Subscription</option>
+      <option value="yearly">Yearly Subscription</option>
+      <option value="one_time">One-Time Purchase</option>
+    </select>
+  </div>
+</div>
 
           <div className="grid-2">
             <div className="input-group">
@@ -360,15 +378,38 @@ const handleSubmit = async (e) => {
 </div>
 
   <div className="input-group">
-    <label>Cost Per License</label>
-    <input
-      type="number"
-      name="assetCost.amount"
-      value={formData.assetCost.amount}
-      onChange={handleChange}
-      placeholder="Unit cost"
-    />
+<label>
+  Total License Cost <span style={{ color: "#e11d48" }}>*</span>
+</label>
+<input
+  type="number"
+  name="assetCost.amount"
+  value={formData.assetCost.amount}
+  onChange={handleChange}
+  min="0"
+  step="0.01"
+  placeholder="Total cost for all licenses"
+  required
+/>
+<small className="helper-text">
+  Example: 10 licenses × $20 = $200 (enter 200)
+</small>
+
   </div>
+  <div className="input-group">
+  <label>Cost Per License (auto)</label>
+  <input
+    value={
+      formData.assetQuantity && formData.assetCost.amount
+        ? (formData.assetCost.amount / formData.assetQuantity).toFixed(2)
+        : ""
+    }
+    readOnly
+    placeholder="Auto calculated"
+    style={{ backgroundColor: "#f9fafb" }}
+  />
+</div>
+
 </div>
 
             <div className="input-group">

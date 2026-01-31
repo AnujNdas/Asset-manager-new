@@ -119,6 +119,7 @@ Swal.fire({
     {
       assetName: "",
       assetCategory: "",
+      type: "one_time",          // 🔴 REQUIRED
       assetSpecification: "",
       purchaseFrom: "",
       associateUnit: "",
@@ -127,15 +128,17 @@ Swal.fire({
       assetStatus: "",
       DOP: "",
       DOE: "",
-      assetCost: "",        // number
-      assetCurrency: "INR", // default
+      assetCost: "",             // TOTAL COST
+      assetCurrency: "INR",
       assetQuantity: "",
     },
   ],
+
   software: [
     {
       assetName: "",
       assetCategory: "",
+      type: "monthly",           // 🔴 REQUIRED
       assetSpecification: "",
       purchaseFrom: "",
       associateUnit: "",
@@ -149,8 +152,8 @@ Swal.fire({
       assetStatus: "",
       DOP: "",
       DOE: "",
-      assetCost: "",        // number
-      assetCurrency: "INR", // default
+      assetCost: "",             // TOTAL COST
+      assetCurrency: "INR",
       assetQuantity: "",
     },
   ],
@@ -307,6 +310,11 @@ Swal.fire({
           >
             <FiDownload /> Template
           </button>
+          <p className="bulk-hint">
+  <b>Hardware type:</b> one_time, maintenance <br />
+  <b>Software type:</b> monthly, yearly, one_time
+</p>
+
         </div>
       </div>
     </div>

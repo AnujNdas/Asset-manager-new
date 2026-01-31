@@ -52,6 +52,7 @@ const AssetCapture = () => {
     purchaseFrom: "",
     modelNo: "",
     PMD: "",
+    type: "",
      assetCost: {
     amount: "",
     currency: "INR",
@@ -142,6 +143,7 @@ const handleChange = (e) => {
       "assetCategory",
       "associateUnit",
       "locationName",
+      "type", // ✅ ADD
       "locationAddress", // ✅ NEW
       "assetStatus",
       "assetCost",
@@ -249,6 +251,23 @@ const handleAddAsset = async (e) => {
               onChange={handleChange}
             />
           </div>
+          {/* Hardware Type */}
+<div className="input-group">
+  <label>
+    Hardware Type <span>*</span>
+  </label>
+  <select
+    name="type"
+    value={formData.type}
+    onChange={handleChange}
+    required
+  >
+    <option value="">Select Type</option>
+    <option value="one_time">One-Time Purchase</option>
+    <option value="maintenance">Maintenance / AMC</option>
+  </select>
+</div>
+
         </div>
 
         {/* Location */}
@@ -351,17 +370,23 @@ const handleAddAsset = async (e) => {
 
 </div>
 <div className="input-group">
-  <label>Asset Cost</label>
-    <input
-      type="number"
-      name="assetCost.amount"
-      value={formData.assetCost.amount}
-      onChange={handleChange}
-      min="0"
-      step="0.01"
-      placeholder="Unit cost"
-      required
-    />
+<label>
+  Total Asset Cost <span>*</span>
+</label>
+<input
+  type="number"
+  name="assetCost.amount"
+  value={formData.assetCost.amount}
+  onChange={handleChange}
+  min="0"
+  step="0.01"
+  placeholder="Total cost for all units"
+  required
+/>
+<small className="helper-text" style={{color : "red"}}>
+  Example: 5 units × ₹10,000 = ₹50,000 (enter 50000)
+</small>
+
 
 </div>
 

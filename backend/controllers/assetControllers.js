@@ -145,15 +145,37 @@ const bulkUpload = async (req, res, next) => {
           continue;
         }
 
-        const amount = Number(asset.assetCost || 0);
-        const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
-        const baseAmount = convertToBase(amount, currency);
+        const totalAmount = Number(asset.assetCost || 0);
+
+if (totalAmount < 0) {
+  invalidRows.push({
+    row: index + 2,
+    reason: "Invalid total cost",
+    asset,
+  });
+  continue;
+}
+
+const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
+const baseAmount = convertToBase(totalAmount, currency);
+
+        // ---------- TYPE VALIDATION ----------
+        const assetType = asset.type?.toLowerCase();
+
+        if (!["one_time", "maintenance"].includes(assetType)) {
+          invalidRows.push({
+            row: index + 2,
+            reason: "Invalid or missing asset type (one_time | maintenance)",
+            asset,
+          });
+          continue;
+        }
 
         // ---------- FINAL ASSET ----------
         validAssets.push({
           organizationId,
           assetCode: await generateHardwareCode(),
-
+          type: assetType, // ✅ ADD THIS
           assetCategory: categoryId,
           barcodeNumber: asset.barcodeNumber,
           assetName: asset.assetName,
@@ -170,11 +192,12 @@ const bulkUpload = async (req, res, next) => {
           assetLifetime: asset.assetLifetime,
           purchaseFrom: asset.purchaseFrom,
 
-          assetCost: {
-            amount,
-            currency,
-            baseAmount,
-          },
+assetCost: {
+  amount: totalAmount,
+  currency,
+  baseAmount,
+}
+,
 
           assetQuantity: totalQty,
           inUse: 0,
@@ -237,6 +260,13 @@ const addAsset = async (req, res, next) => {
         message: "Organization context missing",
       });
     }
+    const { type } = req.body;
+
+    if (!["one_time", "maintenance"].includes(type)) {
+      return res.status(400).json({
+        message: "Invalid asset type. Allowed: one_time, maintenance",
+      });
+    }
 
     const assetQuantity = Number(req.body.assetQuantity || 1);
     const inUse = Number(req.body.inUse || 0);
@@ -254,12 +284,17 @@ const addAsset = async (req, res, next) => {
       });
     }
 
-    const { amount, currency } = req.body.assetCost;
+const totalAmount = Number(req.body.assetCost.amount);
+const currency = req.body.assetCost.currency.toUpperCase();
 
-    const baseAmount = convertToBase(
-      Number(amount),
-      currency.toUpperCase()
-    );
+if (quantity <= 0) {
+  return res.status(400).json({ message: "Invalid quantity" });
+}
+
+const baseAmount = convertToBase(totalAmount, currency);
+
+
+
 
     // 🔑 Backend controlled code
     const assetCode = req.body.assetCode || await generateHardwareCode();
@@ -269,16 +304,15 @@ const addAsset = async (req, res, next) => {
 
       organizationId, // ✅ TENANT LOCK
       createdBy: userId,
-
+      type,
       assetCode,
       assetQuantity,
       inUse,
-
       assetCost: {
-        amount: Number(amount),
-        currency: currency.toUpperCase(),
-        baseAmount,
-      },
+        amount: totalAmount,       // ✅ TOTAL ONLY
+        currency,
+        baseAmount
+      }
     });
 
     const savedAsset = await newAsset.save();
@@ -330,19 +364,26 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
 
       if (req.body.assetCost) {
         const { amount, currency } = req.body.assetCost;
-                updatedCost = {
-          amount: Number(amount),
-          currency: currency.toUpperCase(),
-          baseAmount: convertToBase(
-            Number(amount),
-            currency.toUpperCase()
-          ),
-        };
+                const totalAmount = Number(amount);
+
+updatedCost = {
+  amount: totalAmount,
+  currency: currency.toUpperCase(),
+  baseAmount: convertToBase(totalAmount, currency)
+};
+
       }
     if (inUse > assetQuantity) {
       return res.status(400).json({
         message: "In-use quantity cannot exceed total quantity",
       });
+    }
+    if (req.body.type) {
+      if (!["one_time", "maintenance"].includes(req.body.type)) {
+        return res.status(400).json({
+          message: "Invalid asset type. Allowed: one_time, maintenance",
+        });
+      }
     }
 
     const updatedAsset = await Asset.findByIdAndUpdate(

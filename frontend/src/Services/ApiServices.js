@@ -347,3 +347,7 @@ export const getMySupportTickets = async () => {
   const response = await axiosInstance.get("/support/tickets/my");
   return response.data;
 }
+export const contactSupport = async (data) => {
+  const response = await axiosInstance.post("/support/contact", data);
+  return response.data;
+};

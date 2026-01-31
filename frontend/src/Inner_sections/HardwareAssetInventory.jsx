@@ -142,11 +142,11 @@ setEditForm({
   purchaseFrom: asset.purchaseFrom || "",
   assetLifetime: asset.assetLifetime || "",
 
-  assetCost: {
-  amount: asset.assetCost?.amount ?? "",
-  currency: asset.assetCost?.currency ?? "INR",
-  baseAmount: asset.assetCost?.baseAmount ?? 0,
+assetCost: {
+  amount: asset.assetCost?.amount || 0,
+  currency: asset.assetCost?.currency || "USD",
 },
+
 
   assetQuantity: asset.assetQuantity || 1,
   inUse: asset.inUse || 0,
@@ -350,28 +350,34 @@ const handleEditChange = (e) => {
                 <div className="card-info2">
                   <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
   <p style={{ color: "red" }}>
-  <strong>Cost:</strong>{" "}
-  {CURRENCY_SYMBOLS[currency]}{" "}
+<strong>Total Cost:</strong>{" "}
+{CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
   asset.assetCost?.baseAmount ?? 0,
   currency
 ).toLocaleString()}
+
 </p>
 
-<p>
+{/* <p>
   <strong>Base Cost (INR):</strong>{" "}
   {asset.assetCost?.baseAmount
     ? `₹${asset.assetCost.baseAmount.toLocaleString("en-IN")}`
     : "N/A"}
-</p>
+</p> */}
 
 <p>
-  <strong>Total Value (INR):</strong>{" "}
-{CURRENCY_SYMBOLS[currency]}{" "}
-{convertFromBase(
-  (asset.assetCost?.baseAmount ?? 0) * (asset.assetQuantity ?? 0),
-  currency
-).toLocaleString()}
+  <p>
+  <strong>Unit Cost:</strong>{" "}
+  {CURRENCY_SYMBOLS[currency]}{" "}
+  {asset.assetQuantity
+    ? convertFromBase(
+        asset.assetCost?.baseAmount / asset.assetQuantity,
+        currency
+      ).toLocaleString()
+    : "N/A"}
+</p>
+
 
 </p>
 
@@ -490,7 +496,8 @@ const handleEditChange = (e) => {
             </p>
           </div>
          <div>
-  <label>Asset Cost</label>
+  <label>Total Cost</label>
+
   <p>
   {CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
@@ -500,23 +507,26 @@ const handleEditChange = (e) => {
   </p>
 </div>
 
-<div>
+{/* <div>
   <label>Base Cost (INR)</label>
   <p>
     ₹{selectedAsset.assetCost?.baseAmount?.toLocaleString("en-IN")}
   </p>
-</div>
-
+</div> */}
 <div>
-  <label>Total Value</label>
+  <label>Unit Cost</label>
   <p>
-  {CURRENCY_SYMBOLS[currency]}{" "}
-  {convertFromBase(
-    selectedAsset.assetCost?.baseAmount * selectedAsset.assetQuantity,
-    currency
-  ).toLocaleString()}
+    {CURRENCY_SYMBOLS[currency]}{" "}
+    {selectedAsset.assetQuantity
+      ? convertFromBase(
+          selectedAsset.assetCost.baseAmount /
+            selectedAsset.assetQuantity,
+          currency
+        ).toLocaleString()
+      : "N/A"}
   </p>
 </div>
+
 
 <div>
   <label>In Use</label>
@@ -677,11 +687,17 @@ const handleEditChange = (e) => {
 <input
   type="number"
   name="assetCost.amount"
-  placeholder="Unit Cost"
+  placeholder="Total Asset Cost"
   className="asset-edit-input"
   value={editForm.assetCost?.amount || ""}
   onChange={handleEditChange}
+  min="0"
+  step="0.01"
 />
+<small className="helper-text">
+  Enter total cost for all units combined
+</small>
+
 
 
 <input

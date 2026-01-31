@@ -1,4 +1,37 @@
 const SupportTicket = require("../models/SupportTicket");
+const sendMail = require("../utils/mailer");
+
+/**
+ * CONTACT SUPPORT (Email Only)
+ */
+const contactSupport = async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        message: "Name, email and message are required"
+      });
+    }
+
+    await sendMail({
+      to: process.env.SUPPORT_ADMIN_EMAIL,
+      subject: "New Contact Support Message",
+      html: `
+        <h3>New Support Message</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `
+    });
+
+    res.json({ message: "Message sent successfully" });
+  } catch (error) {
+    console.error("Contact support error:", error);
+    res.status(500).json({ message: "Failed to send message" });
+  }
+};
 
 /**
  * CREATE SUPPORT TICKET (User/Admin)
@@ -98,5 +131,6 @@ module.exports = {
   createTicket,
   getMyTickets,
   getAllTickets,
-  updateTicketStatus
+  updateTicketStatus,
+  contactSupport
 }

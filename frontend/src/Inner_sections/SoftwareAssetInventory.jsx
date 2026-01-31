@@ -152,8 +152,8 @@ const getName = (list, value) => {
       assetLifetime: asset.assetLifetime || "",
       assetCost: {
   amount: asset.assetCost?.amount || 0,
-  currency: asset.assetCost?.currency || "INR",
-  baseAmount: asset.assetCost?.baseAmount || 0,
+  currency: asset.assetCost?.currency || "USD",
+
 },
 
       assetQuantity: asset.assetQuantity || 1,
@@ -175,12 +175,16 @@ const isOutOfStock = (asset) =>
   const handleEditSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...editForm,
-      assetCost: Number(editForm.assetCost),
-      assetQuantity: Number(editForm.assetQuantity),
-      inUse: Number(editForm.inUse),
-    };
+const payload = {
+  ...editForm,
+  assetCost: {
+    amount: Number(editForm.assetCost.amount),
+    currency: editForm.assetCost.currency,
+  },
+  assetQuantity: Number(editForm.assetQuantity),
+  inUse: Number(editForm.inUse),
+};
+
 
     const updated = await updateSoftwareAsset(editingAsset._id, payload);
     const newAsset = updated?.data ?? updated;
@@ -274,31 +278,42 @@ const renderDepartmentBadges = (asset) => {
 
               <div className="card-info2">
                 <p><strong>Version:</strong> {asset.assetSpecification}</p>
-                  <p style={{ color: "red" }}>
-                  <strong>Cost:</strong>{" "}
+<p style={{ color: "red" }}>
+  <strong>Total Cost:</strong>{" "}
+  {CURRENCY_SYMBOLS[currency]}{" "}
+  {convertFromBase(
+    asset.assetCost?.baseAmount ?? 0,
+    currency
+  ).toLocaleString()}
+</p>
+
+<p>
+  <strong>Unit Cost:</strong>{" "}
+  {asset.assetQuantity
+    ? `${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
+        asset.assetCost?.baseAmount / asset.assetQuantity,
+        currency
+      ).toLocaleString()}`
+    : "N/A"}
+</p>
+
+                  
+                  {/* <p>
+                    <strong>Base Cost (INR):</strong>{" "}
+                    {asset.assetCost?.baseAmount
+                      ? `₹${asset.assetCost.baseAmount.toLocaleString("en-IN")}`
+                      : "N/A"}
+                  </p> */}
+                  
+                  {/* <p>
+                    <strong>Total Value (INR):</strong>{" "}
                   {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(
-                  asset.assetCost?.baseAmount ?? 0,
-                  currency
-                ).toLocaleString()}
-                </p>
-                
-                <p>
-                  <strong>Base Cost (INR):</strong>{" "}
-                  {asset.assetCost?.baseAmount
-                    ? `₹${asset.assetCost.baseAmount.toLocaleString("en-IN")}`
-                    : "N/A"}
-                </p>
-                
-                <p>
-                  <strong>Total Value (INR):</strong>{" "}
-                {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(
-                  (asset.assetCost?.baseAmount ?? 0) * (asset.assetQuantity ?? 0),
-                  currency
-                ).toLocaleString()}
-                
-                </p>
+                  {convertFromBase(
+                    (asset.assetCost?.baseAmount ?? 0) * (asset.assetQuantity ?? 0),
+                    currency
+                  ).toLocaleString()}
+                  
+                  </p> */}
 
                 <p><strong>Quantity:</strong> {asset.assetQuantity}</p>
                 <p><strong>In Use:</strong> {asset.inUse}</p>
@@ -436,14 +451,15 @@ const renderDepartmentBadges = (asset) => {
           </div>
 
           <div>
-            <label>Asset Cost</label>
-  <p>
+<label>Total Cost</label>
+<p>
   {CURRENCY_SYMBOLS[currency]}{" "}
-{convertFromBase(
-  selectedAsset.assetCost?.baseAmount ?? 0,
-  currency
-).toLocaleString()}
-  </p>
+  {convertFromBase(
+    selectedAsset.assetCost?.baseAmount ?? 0,
+    currency
+  ).toLocaleString()}
+</p>
+
 
           </div>
 
@@ -452,14 +468,17 @@ const renderDepartmentBadges = (asset) => {
             <p>{selectedAsset.assetQuantity}</p>
           </div>
           <div>
-            <label>Total Value</label>
-            <p>
-            {CURRENCY_SYMBOLS[currency]}{" "}
-            {convertFromBase(
-              selectedAsset.assetCost?.baseAmount * selectedAsset.assetQuantity,
-              currency
-            ).toLocaleString()}
-            </p>
+<label>Unit Cost</label>
+<p>
+  {CURRENCY_SYMBOLS[currency]}{" "}
+  {selectedAsset.assetQuantity
+    ? convertFromBase(
+        selectedAsset.assetCost.baseAmount / selectedAsset.assetQuantity,
+        currency
+      ).toLocaleString()
+    : "N/A"}
+</p>
+
           </div>
           <div>
             <label>In Use</label>
@@ -548,39 +567,43 @@ const renderDepartmentBadges = (asset) => {
 
           <input name="assetLifetime" value={editForm.assetLifetime} onChange={handleEditChange} placeholder="Lifetime" className="asset-edit-input"/>
 
-          <input
+<input
   type="number"
   name="assetCost.amount"
-  value={editForm.assetCost.amount}
+  placeholder="Total Software Cost"
+  className="asset-edit-input"
+  value={editForm.assetCost?.amount || ""}
   onChange={(e) =>
-    setEditForm({
-      ...editForm,
+    setEditForm((prev) => ({
+      ...prev,
       assetCost: {
-        ...editForm.assetCost,
+        ...prev.assetCost,
         amount: Number(e.target.value),
-        baseAmount: Number(e.target.value), // INR base
       },
-    })
+    }))
   }
-  placeholder="Cost Amount"
+  min="0"
+  step="0.01"
 />
 
 <select
-  value={editForm.assetCost.currency}
+  className="asset-edit-input"
+  value={editForm.assetCost?.currency || "USD"}
   onChange={(e) =>
-    setEditForm({
-      ...editForm,
+    setEditForm((prev) => ({
+      ...prev,
       assetCost: {
-        ...editForm.assetCost,
+        ...prev.assetCost,
         currency: e.target.value,
       },
-    })
+    }))
   }
 >
-  <option value="INR">INR</option>
   <option value="USD">USD</option>
+  <option value="INR">INR</option>
   <option value="EUR">EUR</option>
 </select>
+
 
           <input type="number" name="assetQuantity" value={editForm.assetQuantity} onChange={handleEditChange} placeholder="Quantity" className="asset-edit-input"/>
           <input type="number" name="inUse" value={editForm.inUse} onChange={handleEditChange} placeholder="In Use" className="asset-edit-input"/>

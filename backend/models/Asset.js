@@ -16,7 +16,11 @@ const assetSchema = new mongoose.Schema(
       index: true,
     },
     barcodeNumber: { type: String },
-
+        type: {
+      type: String,
+      enum: ["one_time", "maintenance"],
+      required: true,
+    },
     assetName: { type: String, required: true },
 
     associateUnit: {

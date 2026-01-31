@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../Page_styles/HelpSupport.css";
 import {
   createSupportTicket,
-  getMySupportTickets
+  getMySupportTickets,
+  contactSupport 
 } from "../Services/ApiServices";
 
 const HelpSupport = () => {
@@ -129,18 +130,42 @@ const HelpSupport = () => {
   };
 
   /* LOAD TICKETS */
-  const loadMyTickets = async () => {
-    try {
-      const res = await getMySupportTickets();
-      setTickets(res.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+const loadMyTickets = async () => {
+  try {
+    const res = await getMySupportTickets();
+    console.log("My tickets:", res);
+    setTickets(res || []);
+  } catch (err) {
+    console.error(err);
+  }
+};
+  
 
   useEffect(() => {
     loadMyTickets();
   }, []);
+  const handleContactSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setMessage("");
+
+  if (!contactData.name || !contactData.email || !contactData.message) {
+    setError("All fields are required.");
+    return;
+  }
+
+  try {
+    setLoading(true);
+    await contactSupport(contactData);
+    setMessage("Message sent successfully. Our team will contact you.");
+    setContactData({ name: "", email: "", message: "" });
+  } catch (err) {
+    console.error(err);
+    setError("Failed to send message.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="help-container">
@@ -228,17 +253,44 @@ const HelpSupport = () => {
       )}
 
       {/* CONTACT SUPPORT */}
-      {activeTab === "contact" && (
-        <section className="help-form-section">
-          <h2>Contact Support</h2>
-          <form className="help-form">
-            <input type="text" name="name" placeholder="Your Name" value={contactData.name} onChange={handleContactChange} />
-            <input type="email" name="email" placeholder="Your Email" value={contactData.email} onChange={handleContactChange} />
-            <textarea name="message" placeholder="Your Message" value={contactData.message} onChange={handleContactChange} />
-            <button type="button">Send Message</button>
-          </form>
-        </section>
-      )}
+{activeTab === "contact" && (
+  <section className="help-form-section">
+    <h2>Contact Support</h2>
+
+    <form className="help-form" onSubmit={handleContactSubmit}>
+      <input
+        type="text"
+        name="name"
+        placeholder="Your Name"
+        value={contactData.name}
+        onChange={handleContactChange}
+      />
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Your Email"
+        value={contactData.email}
+        onChange={handleContactChange}
+      />
+
+      <textarea
+        name="message"
+        placeholder="Your Message"
+        value={contactData.message}
+        onChange={handleContactChange}
+      />
+
+      {error && <p className="form-error">{error}</p>}
+      {message && <p className="form-success">{message}</p>}
+
+      <button type="submit" disabled={loading}>
+        {loading ? "Sending..." : "Send Message"}
+      </button>
+    </form>
+  </section>
+)}
+
 
       {/* MY TICKETS */}
       <section className="my-tickets">

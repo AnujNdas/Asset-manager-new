@@ -93,16 +93,33 @@ const bulkUploadSoftware = async (req, res) => {
         if (!locationId) locationId = await upsertRef(Location, asset.locationName, locationMap);
         if (!statusId) statusId = await upsertRef(Status, asset.assetStatus, statusMap);
 
-        const quantity = Number(asset.assetQuantity || 1);
-        if (quantity <= 0) throw new Error("Invalid license quantity");
+const quantity = Number(asset.assetQuantity || 1);
+if (quantity <= 0) throw new Error("Invalid license quantity");
 
-        const amount = Number(asset.assetCost || 0);
-        const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
+const totalAmount = Number(asset.assetCost || 0);
+if (totalAmount < 0) {
+  throw new Error("Invalid total cost");
+}
+
+const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
+const baseAmount = convertToBase(totalAmount, currency);
+
+        // ---------- SOFTWARE TYPE VALIDATION ----------
+const softwareType = asset.type?.toLowerCase();
+
+if (!["monthly", "yearly", "one_time"].includes(softwareType)) {
+  invalidRows.push({
+    row: index + 2,
+    reason: "Invalid or missing software type (monthly | yearly | one_time)",
+    asset
+  });
+  continue;
+}
 
         validAssets.push({
           organizationId,
           assetCode: await generateSoftwareCode(organizationId),
-
+          type: softwareType, // ✅ ADD THIS
           assetName: asset.assetName,
           assetCategory: categoryId,
           associateUnit: unitId,
@@ -126,11 +143,12 @@ const bulkUploadSoftware = async (req, res) => {
           inUse: 0,
           licensesAssigned: 0,
 
-          assetCost: {
-            amount,
-            currency,
-            baseAmount: convertToBase(amount, currency)
-          },
+assetCost: {
+  amount: totalAmount,          // ✅ TOTAL COST
+  currency,
+  baseAmount
+}
+,
 
           auditHistory: [
             { date: new Date(), notes: `Bulk uploaded by user ${userId}` }
@@ -182,17 +200,36 @@ const createSoftwareAsset = async (req, res) => {
       });
     }
 
-    const { amount, currency } = req.body.assetCost;
+    const totalAmount = Number(req.body.assetCost.amount);
+const currency = req.body.assetCost.currency.toUpperCase();
+
+if (totalAmount < 0) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid total cost"
+  });
+}
+
+    const { type } = req.body;
+
+if (!["monthly", "yearly", "one_time"].includes(type)) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid software type. Allowed: monthly, yearly, one_time"
+  });
+}
 
     const asset = await SoftwareAsset.create({
       ...req.body,
       organizationId,
+      type,
       assetCode: await generateSoftwareCode(organizationId),
-      assetCost: {
-        amount: Number(amount),
-        currency: currency.toUpperCase(),
-        baseAmount: convertToBase(Number(amount), currency)
-      },
+assetCost: {
+  amount: totalAmount,           // ✅ TOTAL
+  currency,
+  baseAmount: convertToBase(totalAmount, currency)
+}
+,
       licensesAssigned: 0,
       auditHistory: [{ date: new Date(), notes: `Created by user ${userId}` }]
     });
@@ -273,14 +310,32 @@ const updateSoftwareAsset = async (req, res) => {
       return res.status(404).json({ success: false, message: "Not found" });
     }
 
-    if (req.body.assetCost) {
-      const { amount, currency } = req.body.assetCost;
-      asset.assetCost = {
-        amount: Number(amount),
-        currency: currency.toUpperCase(),
-        baseAmount: convertToBase(Number(amount), currency)
-      };
-    }
+if (req.body.assetCost) {
+  const totalAmount = Number(req.body.assetCost.amount);
+  const currency = req.body.assetCost.currency.toUpperCase();
+
+  if (totalAmount < 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid total cost"
+    });
+  }
+
+  asset.assetCost = {
+    amount: totalAmount,          // ✅ TOTAL
+    currency,
+    baseAmount: convertToBase(totalAmount, currency)
+  };
+}
+
+    if (req.body.type) {
+  if (!["monthly", "yearly", "one_time"].includes(req.body.type)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid software type. Allowed: monthly, yearly, one_time"
+    });
+  }
+}
 
     Object.assign(asset, req.body);
 

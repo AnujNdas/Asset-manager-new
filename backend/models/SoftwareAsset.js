@@ -17,7 +17,11 @@ const SoftwareAssetSchema = new mongoose.Schema(
         },
     assetSpecification: { type: String },
     purchaseFrom: { type: String },
-
+            type: {
+      type: String,
+      enum: ["monthly", "yearly", "one_time"],
+      required: true,
+    },
     associateUnit: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Unit",
