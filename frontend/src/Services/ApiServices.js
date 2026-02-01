@@ -263,11 +263,24 @@ export const getUserDashboard = async () => {
   const response = await axiosInstance.get("/user-data/dashboard");
   return response.data;
 };
-export const getTopLocations = async () =>
-  axiosInstance.get("/admin/top-locations").then((res) => res.data);
 
-export const getExpiringAssets = async () =>
-  axiosInstance.get("/admin/expiring-assets").then((res) => res.data);
+export const getMonthlySubscription = async () =>
+  axiosInstance.get("/admin/software/monthly-subscriptions").then((res) => res.data);
+export const getDistribution = async () =>
+  axiosInstance.get("/admin/software/distribution").then((res) => res.data);
+
+export const getSoftwareLicenseUtilization = async () => {
+  const { data } = await axiosInstance.get(
+    "/admin/software/license-utilization"
+  );
+  return data;
+};
+export const getUpcomingSoftwareExpiry = async () => {
+  const { data } = await axiosInstance.get(
+    "/admin/software/upcoming-expiry"
+  );
+  return data;
+};
 
 export const getRecentAssets = async () =>
   axiosInstance.get("/admin/recent-assets").then((res) => res.data);

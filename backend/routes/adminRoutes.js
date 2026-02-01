@@ -84,173 +84,6 @@ router.get(
     }
   }
 );
-
-/* ======================================================
-   👥 USERS
-====================================================== */
-router.get("/users", authenticateToken(["admin", "user"]), async (req, res) => {
-  const organizationId = req.user.organizationId;
-  const users = await User.find({ organizationId }, "-password");
-  res.json(users);
-});
-
-router.put(
-  "/users/:id/role",
-  authenticateToken(["admin", "user"]),
-  async (req, res) => {
-    try {
-      const { role } = req.body;
-      if (!["user", "admin"].includes(role)) {
-        return res.status(400).json({ message: "Invalid role" });
-      }
-
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: req.params.id, organizationId: req.user.organizationId },
-        { role },
-        { new: true }
-      ).select("-password");
-
-      if (!updatedUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      res.json(updatedUser);
-    } catch {
-      res.status(500).json({ message: "Failed to update role" });
-    }
-  }
-);
-
-/* ======================================================
-   📦 TOP LOCATIONS (FIXED)
-====================================================== */
-router.get(
-  "/top-locations",
-  authenticateToken(["admin", "user"]),
-  async (req, res) => {
-    try {
-      const organizationId = new mongoose.Types.ObjectId(
-        req.user.organizationId
-      );
-
-      const locations = await HardwareAsset.aggregate([
-        /* ---------- HARDWARE ---------- */
-        {
-          $match: {
-            organizationId,
-            locationName: { $ne: null }
-          }
-        },
-        {
-          $group: {
-            _id: "$locationName",
-            count: { $sum: "$assetQuantity" } // optional: counts quantity
-          }
-        },
-
-        /* ---------- SOFTWARE ---------- */
-        {
-          $unionWith: {
-            coll: "softwareassets",
-            pipeline: [
-              {
-                $match: {
-                  organizationId,
-                  locationName: { $ne: null }
-                }
-              },
-              {
-                $group: {
-                  _id: "$locationName",
-                  count: { $sum: 1 }
-                }
-              }
-            ]
-          }
-        },
-
-        /* ---------- MERGE ---------- */
-        {
-          $group: {
-            _id: "$_id",
-            count: { $sum: "$count" }
-          }
-        },
-
-        /* ---------- LOOKUP LOCATION NAME ---------- */
-        {
-          $lookup: {
-            from: "locations",
-            localField: "_id",
-            foreignField: "_id",
-            as: "location"
-          }
-        },
-        { $unwind: "$location" },
-
-        {
-          $project: {
-            _id: 0,
-            locationId: "$_id",
-            name: "$location.name",
-            count: 1
-          }
-        },
-
-        { $sort: { count: -1 } },
-        { $limit: 5 }
-      ]);
-
-      res.json(locations);
-    } catch (error) {
-      console.error("Top locations error:", error);
-      res.status(500).json({ error: "Failed to fetch top locations" });
-    }
-  }
-);
-
-
-
-
-/* ======================================================
-   ⏳ EXPIRING ASSETS (UNCHANGED)
-====================================================== */
-router.get("/expiring-assets", authenticateToken(["admin", "user"]), async (req, res) => {
-  try {
-    const organizationId = req.user.organizationId;
-    const today = new Date();
-    const threeMonthsLater = new Date();
-    threeMonthsLater.setMonth(today.getMonth() + 3);
-
-    const expiringHardware = await HardwareAsset.find({
-      organizationId,
-      DOE: { $gte: today, $lte: threeMonthsLater },
-    });
-
-    const expiringSoftware = await SoftwareAsset.find({
-      organizationId,
-      licenseExpiry: { $gte: today, $lte: threeMonthsLater },
-    });
-
-    res.json({
-      expiringHardware: expiringHardware.map(h => ({
-        _id: h._id,
-        name: h.hardwareName,
-        expiry: h.DOE,
-        type: "Hardware",
-      })),
-      expiringSoftware: expiringSoftware.map(s => ({
-        _id: s._id,
-        name: s.name,
-        expiry: s.licenseExpiry,
-        type: "Software",
-      })),
-    });
-  } catch {
-    res.status(500).json({ error: "Failed to fetch expiring assets" });
-  }
-});
-
 /* ======================================================
    📈 VALUATION TREND (FIXED)
 ====================================================== */
@@ -372,5 +205,207 @@ router.get("/active-users", authenticateToken(["admin", "user"]), async (req, re
     res.status(500).json({ error: "Failed to fetch active users" });
   }
 });
+router.get(
+  "/software/monthly-subscriptions",
+  authenticateToken(["admin", "user"]),
+  async (req, res) => {
+    try {
+      const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
+      const today = new Date();
+
+      const softwares = await SoftwareAsset.find({
+        organizationId,
+        licenseType: "subscription",
+        DOE: { $gte: today },
+      });
+
+      let totalMonthlySpend = 0;
+
+      const data = softwares.map(s => {
+        const yearlyCost =
+          (s.assetCost?.baseAmount || 0) * (s.assetQuantity || 1);
+
+        const monthlyCost = Number((yearlyCost / 12).toFixed(2));
+        totalMonthlySpend += monthlyCost;
+
+        return {
+          name: s.assetName,
+          monthlyCost,
+        };
+      });
+
+      res.json({
+        labels: data.map(d => d.name),
+        monthlyCost: data.map(d => d.monthlyCost),
+        currency: softwares[0]?.assetCost?.currency || "EUR",
+        totalMonthlySpend: Number(totalMonthlySpend.toFixed(2)),
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "Failed to fetch monthly software subscriptions",
+      });
+    }
+  }
+);
+/* ======================================================
+   ⏰ UPCOMING SOFTWARE LICENSE EXPIRY
+====================================================== */
+router.get(
+  "/software/upcoming-expiry",
+  authenticateToken(["admin", "user"]),
+  async (req, res) => {
+    try {
+      const organizationId = new mongoose.Types.ObjectId(
+        req.user.organizationId
+      );
+
+      const today = new Date();
+      const in30 = new Date();
+      const in60 = new Date();
+      const in90 = new Date();
+
+      in30.setDate(today.getDate() + 30);
+      in60.setDate(today.getDate() + 60);
+      in90.setDate(today.getDate() + 90);
+
+      const softwares = await SoftwareAsset.find({
+        organizationId,
+        DOE: { $gte: today, $lte: in90 },
+      }).sort({ DOE: 1 });
+
+      const data = softwares.map(s => {
+        const daysLeft = Math.ceil(
+          (new Date(s.DOE) - today) / (1000 * 60 * 60 * 24)
+        );
+
+        return {
+          name: s.assetName,
+          expiryDate: s.DOE,
+          daysLeft,
+          quantity: s.assetQuantity,
+          cost: s.assetCost?.baseAmount || 0,
+          currency: s.assetCost?.currency || "USD",
+          urgency:
+            daysLeft <= 30
+              ? "critical"
+              : daysLeft <= 60
+              ? "warning"
+              : "normal",
+        };
+      });
+
+      res.json({
+        critical: data.filter(d => d.daysLeft <= 30),
+        warning: data.filter(d => d.daysLeft > 30 && d.daysLeft <= 60),
+        normal: data.filter(d => d.daysLeft > 60),
+        totalExpiring: data.length,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "Failed to fetch upcoming software expiry",
+      });
+    }
+  }
+);
+
+/* ======================================================
+   📊 SOFTWARE LICENSE UTILIZATION
+====================================================== */
+router.get(
+  "/software/license-utilization",
+  authenticateToken(["admin", "user"]),
+  async (req, res) => {
+    try {
+      const organizationId = new mongoose.Types.ObjectId(
+        req.user.organizationId
+      );
+
+      const result = await SoftwareAsset.aggregate([
+        { $match: { organizationId } },
+        {
+          $project: {
+            assetName: 1,
+            totalLicenses: { $ifNull: ["$assetQuantity", 0] },
+            inUse: { $ifNull: ["$inUse", 0] },
+          },
+        },
+        {
+          $addFields: {
+            available: {
+              $subtract: ["$totalLicenses", "$inUse"],
+            },
+            utilizationPercent: {
+              $cond: [
+                { $eq: ["$totalLicenses", 0] },
+                0,
+                {
+                  $multiply: [
+                    { $divide: ["$inUse", "$totalLicenses"] },
+                    100,
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ]);
+
+      res.json({
+        labels: result.map(r => r.assetName),
+        totalLicenses: result.map(r => r.totalLicenses),
+        inUse: result.map(r => r.inUse),
+        available: result.map(r => r.available),
+        utilization: result.map(r =>
+          Number(r.utilizationPercent.toFixed(2))
+        ),
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "Failed to fetch software license utilization",
+      });
+    }
+  }
+);
+
+router.get(
+  "/software/distribution",
+  authenticateToken(["admin", "user"]),
+  async (req, res) => {
+    try {
+      const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
+
+      const result = await SoftwareAsset.aggregate([
+        { $match: { organizationId } },
+        {
+          $group: {
+            _id: "$assetName",
+            count: { $sum: "$assetQuantity" },
+          },
+        },
+        { $sort: { count: -1 } },
+      ]);
+
+      const totalLicenses = result.reduce(
+        (sum, r) => sum + r.count,
+        0
+      );
+
+      res.json({
+        labels: result.map(r => r._id),
+        values: result.map(r => r.count),
+        totalLicenses,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "Failed to fetch software distribution",
+      });
+    }
+  }
+);
+
 
 module.exports = router;

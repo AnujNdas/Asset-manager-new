@@ -1,369 +1,212 @@
-/* =========================================================
-   ADMIN DASHBOARD LAYOUT
-   Optimized for mobile-first, fluid grids, and charts
-   ========================================================= */
 .admin-dashboard {
-  padding: 8px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  height: 100%;
+  padding: 10px;
+  font-family: Inter, system-ui, sans-serif;
 }
-.admin-dashboard h2{
-   font-size : 20px
-}
+
+/* HEADER */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding : 8px;
+  margin-bottom: 10px;
 }
 
-/* =========================================================
-   STATS CARDS (TOP ROW)
-   ========================================================= */
-.stats-grid {
+/* TOP */
+.top-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr 3fr;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+
+/* KPI */
+.kpi-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .stat-card {
-  background: white;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  transition: transform 0.2s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-3px);
-}
-
-.stat-1,
-.stat-2 {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 8px 0px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
 }
 
-.stat-card h2 {
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0;
-}
-
 .stat-card p {
-  margin: 4px 0 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: #6b7280;
-  font-size: 13px;
-   font-weight : 600;
-}
-
-/* Accent borders */
-.purple { border-left: 5px solid #6366F1; }
-.violet { border-left: 5px solid #8B5CF6; }
-.pink   { border-left: 5px solid #EC4899; }
-.green  { border-left: 5px solid #22C55E; }
-
-/* =========================================================
-   CHARTS GRID (BAR / LINE / PIE)
-   ========================================================= */
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.chart-card {
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+  text-align: center;
   width: 100%;
-  overflow-x: auto;
-}
-
-/* Chart title */
-.chart-card h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-/* =========================================================
-   PANELS & LISTS (BOTTOM SECTION)
-   ========================================================= */
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 22px;
-}
-/* Panel Wrapper */
-.expiring-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Grid layout (2 columns) */
-.expiring-grid {
-  display: flex;
-  gap: 20px;
-  margin-top: 12px;
-}
-
-/* Each column */
-.expiring-column {
-  flex: 1;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 14px;
-  border: 1px solid #e5e7eb;
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-/* Header with totals */
-.expiring-column h3 {
-  margin-bottom: 12px;
-  font-size: 15px;
   font-weight: 600;
 }
 
-/* List styling */
-.expiring-column ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.stat-card h3 {
+  text-align: center;
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  width: 100%;
 }
-
-.expiring-column li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #374151;
-}
-
-/* Empty text */
-.empty-state {
-  color: #6b7280;
-  font-size: 14px;
-  margin-top: 6px;
-}
-
-/* Dot for color indicator */
-.dot {
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 8px;
-}
-
-.dot.red {
-  background-color: #ef4444;
-}
-
-/* Scrollbar */
-.expiring-column::-webkit-scrollbar {
-  width: 6px;
-}
-
-.expiring-column::-webkit-scrollbar-thumb {
-  background: #bfbfbf;
-  border-radius: 6px;
-}
-
-/* Responsive: Stack columns on small screens */
-@media (max-width: 600px) {
-  .expiring-grid {
-    flex-direction: column;
-  }
-}
-
-/* PANELS */
+/* CHARTS */
+.chart-card,
 .panel-card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-
-  /* NEW: Fixed height + scroll */
-  height: 320px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;          /* Firefox */
-  scrollbar-color: #c5c5c5 #f5f5f5; 
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid #eef1f6;
 }
 
-/* Scrollbar styling for Chrome/Edge */
-.panel-card::-webkit-scrollbar {
-  width: 6px;
+.valuation-card {
+  height: 100%;
 }
 
-.panel-card::-webkit-scrollbar-thumb {
-  background: #b5b5b5;
-  border-radius: 8px;
+/* MIDDLE GRID */
+.three-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
-.panel-card::-webkit-scrollbar-track {
-  background: #f1f1f1;
+/* UTILIZATION */
+/* SOFTWARE LICENSE UTILIZATION */
+.utilization-row {
+  background: #0b1220;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
 }
 
-/* Full-width cards (like charts panel) */
-.panel-card.full {
-  grid-column: span 2;
-  height: 360px; /* slightly taller for charts, optional */
+.utilization-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #e5e7eb;
+  margin-bottom: 8px;
 }
 
-.panel-card h3 {
-  font-size: 17px;
-  font-weight: 600;
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #1f2937;
+  border-radius: 999px;
+  overflow: hidden;
 }
 
-/* List Styling */
-.list {
-  margin-top: 12px;
+.progress-fill {
+  display: block; /* 🔑 critical */
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #6366f1);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+
+.expiry-summary {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 12px;
 }
 
-.list li {
+.expiry {
+  background: #111827;
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-align: center;
+  color: #e5e7eb;
+}
+
+.expiry span {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.expiry strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.chart_box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.chart_box {
+  padding: 14px;
+}
+
+.pie-layout {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pie-chart {
+  flex: 0 0 200px;
+}
+
+.pie-legend {
+  flex: 1;
   gap: 8px;
-  padding: 8px 0;
-  font-size: 14px;
-  color: #374151;
-  border-bottom: 1px solid #f2f2f2;
 }
 
-.list li:last-child {
-  border-bottom: none;
+.legend-item {
+  background: #f8fafc;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 12px;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  background: #dc2626;
-  border-radius: 50%;
-}
-
-.date {
-  margin-left: auto;
-  color: #6B7280;
-  font-size: 13px;
-}
-/* Active Users List */
-.active-users-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* User Row */
-.active-user-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  border-radius: 10px;
-  background: #f9fafb;
-  transition: background 0.2s ease;
-}
-
-.active-user-item:hover {
-  background: #f1f5f9;
-}
-
-/* Avatar */
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* Meta Info */
-.user-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.user-meta .username {
-  font-size: 14px;
+.legend-value {
   font-weight: 600;
   color: #111827;
 }
 
-.user-meta .email {
-  font-size: 12px;
-  color: #2563eb;
+
+/* SUBS */
+.subscription-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
 }
 
-.user-meta .last-active {
-  font-size: 11px;
-  color: #6b7280;
+/* FULL */
+.full-width {
+  width: 100%;
 }
 
-/* =========================================================
-   RESPONSIVE BREAKPOINTS
-   ========================================================= */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
-  .admin-dashboard {
-    padding: 18px;
-  }
-}
-
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .chart-card {
-    padding: 14px;
-  }
-
-  .grid-2 {
+  .top-section,
+  .three-grid {
     grid-template-columns: 1fr;
   }
-
-  .panel-card {
-    height: 280px;
-  }
-
-  .panel-card.full {
-    height: 300px;
-  }
-
 }
 
-@media (max-width: 480px) {
-  .admin-dashboard {
-    padding: 14px;
-  }
-   .admin-dashboard h2{
-      font-size : 14px;
-   }
-  .stat-card {
-    padding: 12px;
+/* Responsive fallback */
+@media (max-width: 640px) {
+  .pie-layout {
+    flex-direction: column;
   }
 
-  .chart-card {
-    padding: 12px;
-  }
-
-  .stats-grid,
-  .charts-grid {
-    gap: 12px;
+  .pie-legend {
+    width: 100%;
   }
 }

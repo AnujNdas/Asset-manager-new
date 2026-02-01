@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   getAdminStats,
-  getTopLocations,
-  getExpiringAssets,
-  getActiveUsers,
-  getLocations,
-  getMonthlyValuation
+  getDistribution,
+  getMonthlySubscription,
+  getMonthlyValuation,
+  getSoftwareLicenseUtilization,
+  getUpcomingSoftwareExpiry
 } from "../Services/ApiServices";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
@@ -21,7 +21,10 @@ import {
   ResponsiveContainer,
   Cell,
   Legend,
-  CartesianGrid
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Legend as PieLegend
 } from "recharts";
 
 import Loader from "../Components/Loader";
@@ -70,13 +73,11 @@ const Dashboard = () => {
   const { currency } = useCurrency();
 
   const [statsData, setStatsData] = useState(null);
-  const [topLocations, setTopLocations] = useState([]);
-  const [expiringAssets, setExpiringAssets] = useState({
-    expiringHardware: [],
-    expiringSoftware: []
-  });
+  const [monthlySubscription, setMonthlySubscription] = useState(null);
+  const [softwareDistribution, setSoftwareDistribution] = useState(null);
+  const [licenseUtilization, setLicenseUtilization] = useState(null);
+const [upcomingExpiry, setUpcomingExpiry] = useState(null);
 
-  const [activeUsers, setActiveUsers] = useState([]);
   const [locationList, setLocationList] = useState([]);
   const [valuationData, setValuationData] = useState([]);
 
@@ -130,27 +131,23 @@ const HorizontalLegend = ({ payload }) => {
     const load = async () => {
   try {
     const stats = await getAdminStats();
-    const locs = await getTopLocations();
-    const exp = await getExpiringAssets();
-    const users = await getActiveUsers();
-    const allLocs = await getLocations();
     const valuation = await getMonthlyValuation();
-
-
-    // ✅ FIXED
+    const monthlySub = await getMonthlySubscription();
+    const distribution = await getDistribution();
+    const utilization = await getSoftwareLicenseUtilization();
+    const expiry = await getUpcomingSoftwareExpiry();
     setStatsData(stats?.data || stats);
-    setTopLocations(locs?.data || locs);
-    setExpiringAssets(exp?.data || exp);
-    setActiveUsers(users?.data || users);
-    setLocationList(allLocs?.data || allLocs);
     setValuationData(valuation?.data || valuation);
-    console.log("Valuation Data:", valuation?.data || valuation);
-    console.log("All Locations:", allLocs?.data || allLocs);
-    console.log("Top Locations:", locs?.data || locs);
-    console.log("Stats Data:", stats?.data || stats);
-    console.log("Expiring Assets:", exp?.data || exp);
-    console.log("Active Users:", users?.data || users); 
-
+    setMonthlySubscription(monthlySub);
+    setSoftwareDistribution(distribution);
+    setLicenseUtilization(utilization);
+    setUpcomingExpiry(expiry);
+    console.log("Dashboard data loaded:", {
+      stats,
+      valuation,
+      monthlySub,
+      distribution,
+    });
     setApiDone(true);
     setTimeout(() => setLoading(false), 400);
   } catch (err) {
@@ -165,10 +162,6 @@ const HorizontalLegend = ({ payload }) => {
 
   if (loading) return <Loader type="dashboard" apiDone={apiDone} />;
 
-  const locChartData = topLocations.map((loc) => ({
-    name: loc.name,
-    value: loc.count,
-  }));
 const valuationChartData =
   valuationData?.labels?.map((label, index) => ({
     month: label,
@@ -187,11 +180,6 @@ const valuationChartData =
   })) || [];
 
 
-
-
-const hardwareList = expiringAssets?.expiringHardware ?? [];
-const softwareList = expiringAssets?.expiringSoftware ?? [];
-
 const totalValuationView = convertFromBase(
   statsData?.totalValuation ?? 0,
   currency
@@ -207,275 +195,194 @@ const softwareValuationView = convertFromBase(
   currency
 );
 
+return (
+  <div className="admin-dashboard">
+    <div className="dashboard-header">
+      <h2>Admin Dashboard</h2>
+      <CurrencyFilter />
+    </div>
+
+    {/* TOP SECTION */}
+    <div className="top-section">
+      {/* KPI 2x2 */}
+      <div className="kpi-2x2">
+        <div className="stat-card green">
+          <p>Total Valuation</p>
+          <h3>
+            {CURRENCY_SYMBOLS[currency]}{" "}
+            {totalValuationView.toLocaleString()}
+          </h3>
+        </div>
+
+        <div
+          className="stat-card purple"
+          onClick={() => navigate("/inventory?tab=hardware")}
+        >
+          <p>Hardware Assets</p>
+          <h3>{statsData?.hardwareCount ?? 0}</h3>
+          <p>{hardwareValuationView.toLocaleString()} {CURRENCY_SYMBOLS[currency]}</p>
+        </div>
+
+        <div
+          className="stat-card violet"
+          onClick={() => navigate("/inventory?tab=software")}
+          >
+          <p>Software Assets</p>
+          <h3>{statsData?.softwareCount ?? 0}</h3>
+          <p>{softwareValuationView.toLocaleString()} {CURRENCY_SYMBOLS[currency]}</p>
+        </div>
+
+        <div
+          className="stat-card pink"
+          onClick={() => navigate("/setting/users")}
+        >
+          <p>Total Users</p>
+          <h3>{statsData?.usersCount ?? 0}</h3>
+        </div>
+      </div>
+
+      {/* VALUATION CHART */}
+      <div className="chart-card valuation-card">
+        <h2>Monthly Asset Valuation</h2>
+
+        <ResponsiveContainer width="100%" height={260}>
+          <BarChart
+            data={valuationChartData}
+            layout="vertical"
+            margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis type="number" />
+            <YAxis type="category" dataKey="month" width={70} />
+            <Tooltip content={<CustomTooltip currency={currency} />} />
+            <Legend content={<HorizontalLegend />} />
+            <Bar dataKey="hardware" fill={BAR_COLORS.hardware} />
+            <Bar dataKey="software" fill={BAR_COLORS.software} />
+            <Bar dataKey="total" fill={BAR_COLORS.total} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+
+    {/* MIDDLE ROW */}
+    <div className="three-grid">
+            <div className="chart_box">
+  <h2>Software Distribution</h2>
+
+  <div className="pie-layout">
+    {/* Pie Chart */}
+    <div className="pie-chart">
+      <ResponsiveContainer width="100%" height={220}>
+        <PieChart>
+          <Pie
+            data={softwareDistribution?.labels?.map((l, i) => ({
+              name: l,
+              value: softwareDistribution.values[i]
+            }))}
+            dataKey="value"
+            innerRadius={45}
+            outerRadius={85}
+            paddingAngle={2}
+          >
+            {softwareDistribution?.labels?.map((_, i) => (
+              <Cell key={i} fill={LOCATION_COLORS[i % 5]} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+
+    {/* Custom Legend */}
+    <div className="pie-legend">
+      {softwareDistribution?.labels?.map((label, i) => (
+        <div key={i} className="legend-item">
+          <span
+            className="legend-color"
+            style={{ backgroundColor: LOCATION_COLORS[i % 5] }}
+          />
+          <span className="legend-label">{label}</span>
+          <span className="legend-value">
+            {softwareDistribution.values[i]}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+      <div className="panel-card">
+        <h2>Software License Utilization</h2>
+        {licenseUtilization?.labels?.map((name, index) => {
+  const used = licenseUtilization.inUse[index];
+  const total = licenseUtilization.totalLicenses[index];
+
+  const percent = total > 0 ? (used / total) * 100 : 0;
+  console.log(name, used, total, percent);
+  const color =
+  percent > 80 ? "#22c55e" :
+  percent > 40 ? "#38bdf8" :
+  "#f59e0b";
+
+
   return (
-    <div className="admin-dashboard">
-      <div className="dashboard-header">
-  <h2>Admin Dashboard</h2>
-  <CurrencyFilter />
-</div>
-      {/* TOP STATS */}
-     <div className="stats-grid">
-
-  {/* Total Valuation */}
-  <div className="stat-card green">
-    <div className="stat-1">
-    <p>Total Asset Valuation</p>
-    <p>Hardware + Software</p>
-  </div>
-      <div className="stat-2">
-    <h2>
-  {CURRENCY_SYMBOLS[currency]} {totalValuationView.toLocaleString()}
-</h2>
-
-  </div>
-  </div>
-  {/* Hardware */}
-  <div className="stat-card purple" onClick={() => navigate("/inventory?tab=hardware")}>
-    <div className="stat-1">
-    <h2>{statsData?.hardwareCount ?? 0}</h2>
-    <p>Hardware Assets</p>
-      </div>
-    <div className="stat-2">
-    <h2>
-  {CURRENCY_SYMBOLS[currency]} {hardwareValuationView.toLocaleString()}
-</h2>
-
-    <p>Total Valuation</p>
-      </div>
-  </div>
-
-  {/* Software */}
-  <div className="stat-card violet" onClick={() => navigate("/inventory?tab=software")}>
-    <div className="stat-1">
-    <h2>{statsData?.softwareCount ?? 0}</h2>
-    <p>Software Assets</p>
-  </div>
-      <div className="stat-2">
-    <h2>
-  {CURRENCY_SYMBOLS[currency]} {softwareValuationView.toLocaleString()}
-</h2>
-
-    <p>Total Valuation</p>
-  </div>
-  </div>
-
-  {/* Users */}
-  <div className="stat-card pink" onClick={() => navigate("/setting/users")}>
-    <h2>{statsData?.usersCount ?? 0}</h2>
-    <p>Total Users</p>
-  </div>
-
-</div>
-
-
-<div className="charts-grid">
-
-        {/* TOP LOCATIONS */}
-        <div className="chart-card">
-          <h2>Top Locations by Asset Count</h2>
-
-          <ResponsiveContainer width="100%" height={140}>
-            <BarChart
-              data={locChartData}
-              layout="vertical"
-              margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={false}
-                stroke="#E5E7EB"
-              />
-
-              <XAxis
-                type="number"
-                tick={{ fontSize: 11, fill: "#475569" }}
-                axisLine={false}
-                tickLine={false}
-              />
-
-              <YAxis
-                type="category"
-                dataKey="name"
-                width={90}
-                tick={{ fontSize: 11, fill: "#475569" }}
-                axisLine={false}
-                tickLine={false}
-              />
-
-              <Tooltip
-                content={
-                  <CustomTooltip currency={currency} />
-                }
-              />
-
-              <Bar
-                dataKey="value"
-                barSize={14}
-                radius={[4, 4, 4, 4]}
-                isAnimationActive
-                animationDuration={700}
-              >
-                {locChartData.map((_, i) => (
-                  <Cell
-                    key={i}
-                    fill={LOCATION_COLORS[i % LOCATION_COLORS.length]}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* MONTHLY VALUATION */}
-        <div className="chart-card">
-          <h2>Monthly Asset Valuation</h2>
-
-          <ResponsiveContainer width="100%" height={160}>
-            <BarChart
-              data={valuationChartData}
-              layout="vertical"
-              margin={{ top: 10, right: 40, left: 20, bottom: 10 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={false}
-                stroke="#E5E7EB"
-              />
-
-              <XAxis
-                type="number"
-                tick={{ fontSize: 11, fill: "#475569" }}
-                axisLine={false}
-                tickLine={false}
-              />
-
-              <YAxis
-                type="category"
-                dataKey="month"
-                width={70}
-                tick={{ fontSize: 11, fill: "#475569" }}
-                axisLine={false}
-                tickLine={false}
-              />
-
-              <Tooltip
-                content={
-                  <CustomTooltip currency={currency} />
-                }
-              />
-
-              <Legend content={<HorizontalLegend />} />
-
-              <Bar
-                dataKey="hardware"
-                name="Hardware"
-                fill={BAR_COLORS.hardware}
-                barSize={14}
-                radius={[4, 4, 4, 4]}
-              />
-              <Bar
-                dataKey="software"
-                name="Software"
-                fill={BAR_COLORS.software}
-                barSize={14}
-                radius={[4, 4, 4, 4]}
-              />
-              <Bar
-                dataKey="total"
-                name="Total"
-                fill={BAR_COLORS.total}
-                barSize={14}
-                radius={[4, 4, 4, 4]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+    <div key={name} className="utilization-row">
+      <div className="utilization-header">
+        <span>{name}</span>
+        <span>{used}/{total}</span>
       </div>
 
-      {/* BOTTOM GRID */}
-      <div className="grid-2">
-
-        {/* ACTIVE USERS */}
-{/* ACTIVE USERS */}
-<div className="panel-card">
-  <h2>Most Active Users</h2>
-
-  <ul className="active-users-list">
-    {activeUsers?.map((u) => (
-      <li key={u._id} className="active-user-item">
-        <img
-          src={`https://robohash.org/${u.username || "guest"}?set=set2&size=50x50`}
-          alt="avatar"
-          className="avatar"
+      <div className="progress-bar">
+        <div
+          className="progress-fill"
+          style={{ width: `${percent}%` , backgroundColor: color }}
         />
-
-        <div className="user-meta">
-          <strong className="username">{u.username}</strong>
-          <span className="email">{u.email}</span>
-          <small className="last-active">
-            Last active: {new Date(u.updatedAt).toLocaleString()}
-          </small>
-        </div>
-      </li>
-    ))}
-  </ul>
-</div>
-
-
-        {/* EXPIRING ASSETS */}
-<div className="panel-card expiring-panel">
-  <h2>Assets Requiring Attention</h2>
-
-  <div className="expiring-grid">
-
-    {/* Hardware */}
-    <div className="expiring-column">
-      <h3>Hardware ({hardwareList.length})</h3>
-
-      <ul>
-        {hardwareList.length > 0 ? (
-          hardwareList.map((item) => (
-            <li key={item._id}>
-              <span className="dot red"></span>
-              {item.name ?? "Unnamed Hardware"} — 
-              Warranty ends on {new Date(item.expiry).toLocaleDateString()}
-            </li>
-          ))
-        ) : (
-          <p className="empty-state">No hardware requiring attention</p>
-        )}
-      </ul>
-    </div>
-
-    {/* Software */}
-    <div className="expiring-column">
-      <h3>Software ({softwareList.length})</h3>
-
-      <ul>
-        {softwareList.length > 0 ? (
-          softwareList.map((item) => (
-            <li key={item._id}>
-              <span className="dot red"></span>
-              {item.name ?? "Unnamed Software"} — 
-              Expires on {new Date(item.expiry).toLocaleDateString()}
-            </li>
-          ))
-        ) : (
-          <p className="empty-state">No software expiring soon</p>
-        )}
-      </ul>
-    </div>
-
-  </div>
-</div>
-
-
-
-
       </div>
-
     </div>
   );
+})}
+
+      </div>
+
+      <div className="panel-card">
+        <h2>Upcoming License Expiry</h2>
+        <div className="expiry-summary">
+          <div className="expiry critical">
+            <strong>{upcomingExpiry?.critical?.length ?? 0}</strong>
+            <span>30 Days</span>
+          </div>
+          <div className="expiry warning">
+            <strong>{upcomingExpiry?.warning?.length ?? 0}</strong>
+            <span>60 Days</span>
+          </div>
+          <div className="expiry normal">
+            <strong>{upcomingExpiry?.normal?.length ?? 0}</strong>
+            <span>90 Days</span>
+          </div>
+        </div>
+      </div>
+
+      {/* <div className="panel-card">
+        <h2>Monthly Subscriptions</h2>
+        {monthlySubscription?.labels?.map((name, i) => (
+          <div key={name} className="subscription-item">
+            <span>{name}</span>
+            <span>
+              {CURRENCY_SYMBOLS[currency]}{" "}
+              {convertFromBase(
+                monthlySubscription.monthlyCost[i],
+                currency
+              ).toLocaleString()}
+            </span>
+          </div>
+        ))}
+      </div> */}
+
+
+    </div>
+
+  </div>
+);
+
 };
 
 export default Dashboard;
