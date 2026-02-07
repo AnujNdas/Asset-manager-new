@@ -30,7 +30,7 @@
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
-  padding: 10px;
+  padding: 20px;
   margin-bottom: 20px;
 
   /* Subtle card elevation */
@@ -64,7 +64,7 @@
 .input-container2 p {
   flex: 1;
   font-size: 14px;
-  margin: 0;
+  margin: 0%;
 }
 
 /* Input fields */
@@ -157,6 +157,70 @@
   font-size: 13px;
   color: #666;
   margin: 4px 0 0;
+}
+/* ================= DANGER ZONE ================= */
+
+.danger-zone {
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px solid #ff4d4f;
+  border-radius: 10px;
+  background: #fff5f5;
+}
+
+.danger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.danger-header h3 {
+  color: #d32f2f;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.danger-badge {
+  background: #ff4d4f;
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.danger-description {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.danger-description strong {
+  color: #b71c1c;
+}
+
+.danger-actions {
+  margin-top: 20px;
+}
+
+.reset-system-btn {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.reset-system-btn:hover {
+  background: #b71c1c;
+}
+
+.reset-system-btn:active {
+  transform: scale(0.98);
 }
 
 /* =======================

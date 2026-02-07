@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import axiosInstance from './axiosInstance';
 const API_URL = `${process.env.REACT_APP_API_URL}/api/auth`;
 
 // ✅ Send OTP
@@ -26,11 +26,11 @@ const login = async (email, password) => {
     return response.data;
 };
 const getResetPreview = async () => {
-  const response = await axios.get("/auth/reset-preview");
+  const response = await axiosInstance.get("/auth/reset-preview");
   return response.data; 
 }
 const ResetSystemData = async (password) => {
-  const response = await axios.post("/auth/reset-system-data", { password });
+  const response = await axiosInstance.post("/auth/reset-system-data", { password });
   return response.data; 
 } 
 export default { sendOtp, verifyOtpAndSignup, login, getResetPreview , ResetSystemData};
