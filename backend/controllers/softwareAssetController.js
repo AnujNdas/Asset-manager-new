@@ -92,7 +92,6 @@ const bulkUploadSoftware = async (req, res) => {
         if (!unitId) unitId = await upsertRef(Unit, asset.associateUnit, unitMap);
         if (!locationId) locationId = await upsertRef(Location, asset.locationName, locationMap);
         if (!statusId) statusId = await upsertRef(Status, asset.assetStatus, statusMap);
-
 const quantity = Number(asset.assetQuantity || 1);
 if (quantity <= 0) throw new Error("Invalid license quantity");
 
@@ -102,7 +101,9 @@ if (totalAmount < 0) {
 }
 
 const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
-const baseAmount = convertToBase(totalAmount, currency);
+
+const unitAmount = totalAmount / quantity;
+const baseTotalAmount = convertToBase(totalAmount, currency);
 
         // ---------- SOFTWARE TYPE VALIDATION ----------
 const softwareType = asset.type?.toLowerCase();
@@ -144,11 +145,12 @@ if (!["monthly", "yearly", "one_time"].includes(softwareType)) {
           licensesAssigned: 0,
 
 assetCost: {
-  amount: totalAmount,          // ✅ TOTAL COST
-  currency,
-  baseAmount
-}
-,
+  totalAmount,
+  unitAmount,
+  baseTotalAmount,
+  currency
+},
+
 
           auditHistory: [
             { date: new Date(), notes: `Bulk uploaded by user ${userId}` }
@@ -200,7 +202,15 @@ const createSoftwareAsset = async (req, res) => {
       });
     }
 
-    const totalAmount = Number(req.body.assetCost.amount);
+const quantity = Number(req.body.assetQuantity || 1);
+if (quantity <= 0) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid license quantity"
+  });
+}
+
+const totalAmount = Number(req.body.assetCost.amount);
 const currency = req.body.assetCost.currency.toUpperCase();
 
 if (totalAmount < 0) {
@@ -209,6 +219,10 @@ if (totalAmount < 0) {
     message: "Invalid total cost"
   });
 }
+
+const unitAmount = totalAmount / quantity;
+const baseTotalAmount = convertToBase(totalAmount, currency);
+
 
     const { type } = req.body;
 
@@ -225,11 +239,12 @@ if (!["monthly", "yearly", "one_time"].includes(type)) {
       type,
       assetCode: await generateSoftwareCode(organizationId),
 assetCost: {
-  amount: totalAmount,           // ✅ TOTAL
-  currency,
-  baseAmount: convertToBase(totalAmount, currency)
-}
-,
+  totalAmount,
+  unitAmount,
+  baseTotalAmount,
+  currency
+},
+
       licensesAssigned: 0,
       auditHistory: [{ date: new Date(), notes: `Created by user ${userId}` }]
     });
@@ -311,7 +326,18 @@ const updateSoftwareAsset = async (req, res) => {
     }
 
 if (req.body.assetCost) {
-  const totalAmount = Number(req.body.assetCost.amount);
+  const quantity = Number(
+    req.body.assetQuantity ?? asset.assetQuantity ?? 1
+  );
+
+  if (quantity <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid license quantity"
+    });
+  }
+
+  const totalAmount = Number(req.body.assetCost.totalAmount);
   const currency = req.body.assetCost.currency.toUpperCase();
 
   if (totalAmount < 0) {
@@ -322,11 +348,13 @@ if (req.body.assetCost) {
   }
 
   asset.assetCost = {
-    amount: totalAmount,          // ✅ TOTAL
-    currency,
-    baseAmount: convertToBase(totalAmount, currency)
+    totalAmount,
+    unitAmount: totalAmount / quantity,
+    baseTotalAmount: convertToBase(totalAmount, currency),
+    currency
   };
 }
+
 
     if (req.body.type) {
   if (!["monthly", "yearly", "one_time"].includes(req.body.type)) {

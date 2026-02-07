@@ -143,7 +143,7 @@ setEditForm({
   assetLifetime: asset.assetLifetime || "",
 
 assetCost: {
-  amount: asset.assetCost?.amount || 0,
+  totalAmount: asset.assetCost?.totalAmount || 0,
   currency: asset.assetCost?.currency || "USD",
 },
 
@@ -160,10 +160,11 @@ const handleEditSubmit = async (e) => {
   try {
     const payload = {
       ...editForm,
-        assetCost: {
-    amount: Number(editForm.assetCost.amount),
-    currency: editForm.assetCost.currency,
-  },
+assetCost: {
+  totalAmount: Number(editForm.assetCost.totalAmount),
+  currency: editForm.assetCost.currency,
+},
+
       assetQuantity: Number(editForm.assetQuantity),
       inUse: Number(editForm.inUse),
     };
@@ -353,9 +354,10 @@ const handleEditChange = (e) => {
 <strong>Total Cost:</strong>{" "}
 {CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
-  asset.assetCost?.baseAmount ?? 0,
+  asset.assetCost?.baseTotalAmount ?? 0,
   currency
-).toLocaleString()}
+)
+.toLocaleString()}
 
 </p>
 
@@ -372,9 +374,12 @@ const handleEditChange = (e) => {
   {CURRENCY_SYMBOLS[currency]}{" "}
   {asset.assetQuantity
     ? convertFromBase(
-        asset.assetCost?.baseAmount / asset.assetQuantity,
-        currency
-      ).toLocaleString()
+  asset.assetCost?.baseTotalAmount
+    ? asset.assetCost.baseTotalAmount / asset.assetQuantity
+    : 0,
+  currency
+)
+.toLocaleString()
     : "N/A"}
 </p>
 
@@ -501,9 +506,10 @@ const handleEditChange = (e) => {
   <p>
   {CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
-  selectedAsset.assetCost?.baseAmount ?? 0,
+  selectedAsset.assetCost?.baseTotalAmount ?? 0,
   currency
-).toLocaleString()}
+)
+.toLocaleString()}
   </p>
 </div>
 
@@ -519,10 +525,14 @@ const handleEditChange = (e) => {
     {CURRENCY_SYMBOLS[currency]}{" "}
     {selectedAsset.assetQuantity
       ? convertFromBase(
-          selectedAsset.assetCost.baseAmount /
-            selectedAsset.assetQuantity,
-          currency
-        ).toLocaleString()
+  selectedAsset.assetCost?.baseTotalAmount
+    ? selectedAsset.assetCost.baseTotalAmount / selectedAsset.assetQuantity
+    : 0,
+  currency
+)
+
+
+.toLocaleString()
       : "N/A"}
   </p>
 </div>
@@ -686,10 +696,11 @@ const handleEditChange = (e) => {
 
 <input
   type="number"
-  name="assetCost.amount"
   placeholder="Total Asset Cost"
   className="asset-edit-input"
-  value={editForm.assetCost?.amount || ""}
+  name="assetCost.totalAmount"
+value={editForm.assetCost?.totalAmount}
+
   onChange={handleEditChange}
   min="0"
   step="0.01"

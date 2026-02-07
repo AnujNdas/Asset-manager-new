@@ -44,9 +44,10 @@ export const CURRENCY_SYMBOLS = {
   QAR: "QR",
   NZD: "NZ$"
 };
-export const convertFromBase = (amount, targetCurrency = "USD") => {
-  if (!amount || !RATES[targetCurrency]) return 0;
+export const convertFromBase = (amountInINR, targetCurrency = "INR") => {
+  if (!amountInINR || !RATES[targetCurrency]) return 0;
 
-  const amountInINR = amount * RATES.USD;
   return +(amountInINR / RATES[targetCurrency]).toFixed(2);
 };
+
+

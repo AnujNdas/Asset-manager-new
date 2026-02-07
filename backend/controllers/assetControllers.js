@@ -147,6 +147,7 @@ const bulkUpload = async (req, res, next) => {
 
         const totalAmount = Number(asset.assetCost || 0);
 
+
 if (totalAmount < 0) {
   invalidRows.push({
     row: index + 2,
@@ -156,8 +157,19 @@ if (totalAmount < 0) {
   continue;
 }
 
+if (totalQty <= 0) {
+  invalidRows.push({
+    row: index + 2,
+    reason: "Invalid asset quantity",
+    asset,
+  });
+  continue;
+}
+
 const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
-const baseAmount = convertToBase(totalAmount, currency);
+const unitAmount = totalAmount / totalQty;
+const baseTotalAmount = convertToBase(totalAmount, currency);
+
 
         // ---------- TYPE VALIDATION ----------
         const assetType = asset.type?.toLowerCase();
@@ -192,12 +204,12 @@ const baseAmount = convertToBase(totalAmount, currency);
           assetLifetime: asset.assetLifetime,
           purchaseFrom: asset.purchaseFrom,
 
-assetCost: {
-  amount: totalAmount,
-  currency,
-  baseAmount,
-}
-,
+          assetCost: {
+            totalAmount,
+            unitAmount,
+            baseTotalAmount,
+            currency,
+          },
 
           assetQuantity: totalQty,
           inUse: 0,
@@ -287,33 +299,39 @@ const addAsset = async (req, res, next) => {
 const totalAmount = Number(req.body.assetCost.amount);
 const currency = req.body.assetCost.currency.toUpperCase();
 
-if (quantity <= 0) {
+if (assetQuantity <= 0) {
   return res.status(400).json({ message: "Invalid quantity" });
 }
-
-const baseAmount = convertToBase(totalAmount, currency);
-
-
 
 
     // 🔑 Backend controlled code
     const assetCode = req.body.assetCode || await generateHardwareCode();
 
-    const newAsset = new Asset({
-      ...req.body,
+if (totalAmount <= 0) {
+  return res.status(400).json({ message: "Invalid total amount" });
+}
 
-      organizationId, // ✅ TENANT LOCK
-      createdBy: userId,
-      type,
-      assetCode,
-      assetQuantity,
-      inUse,
-      assetCost: {
-        amount: totalAmount,       // ✅ TOTAL ONLY
-        currency,
-        baseAmount
-      }
-    });
+const unitAmount = totalAmount / assetQuantity;
+const baseTotalAmount = convertToBase(totalAmount, currency);
+
+const newAsset = new Asset({
+  ...req.body,
+
+  organizationId,
+  createdBy: userId,
+  type,
+  assetCode,
+  assetQuantity,
+  inUse,
+
+  assetCost: {
+    totalAmount,
+    unitAmount,
+    baseTotalAmount,
+    currency
+  }
+});
+
 
     const savedAsset = await newAsset.save();
 
@@ -359,20 +377,38 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
       req.body.assetQuantity ?? existingAsset.assetQuantity;
     const inUse =
       req.body.inUse ?? existingAsset.inUse;
+let updatedCost = existingAsset.assetCost;
 
-      let updatedCost = existingAsset.assetCost;
+if (req.body.assetCost) {
+  const { amount, currency } = req.body.assetCost;
 
-      if (req.body.assetCost) {
-        const { amount, currency } = req.body.assetCost;
-                const totalAmount = Number(amount);
+  const totalAmount = Number(amount);
+  const finalCurrency = currency
+    ? currency.toUpperCase()
+    : existingAsset.assetCost.currency;
 
-updatedCost = {
-  amount: totalAmount,
-  currency: currency.toUpperCase(),
-  baseAmount: convertToBase(totalAmount, currency)
-};
+  const finalQuantity =
+    req.body.assetQuantity ?? existingAsset.assetQuantity;
 
-      }
+  if (totalAmount <= 0) {
+    return res.status(400).json({ message: "Invalid total amount" });
+  }
+
+  if (finalQuantity <= 0) {
+    return res.status(400).json({ message: "Invalid quantity" });
+  }
+
+  const unitAmount = totalAmount / finalQuantity;
+  const baseTotalAmount = convertToBase(totalAmount, finalCurrency);
+
+  updatedCost = {
+    totalAmount,
+    unitAmount,
+    baseTotalAmount,
+    currency: finalCurrency
+  };
+}
+
     if (inUse > assetQuantity) {
       return res.status(400).json({
         message: "In-use quantity cannot exceed total quantity",

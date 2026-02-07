@@ -150,11 +150,13 @@ const getName = (list, value) => {
       DOP: asset.DOP || "",
       DOE: asset.DOE || "",
       assetLifetime: asset.assetLifetime || "",
-      assetCost: {
-  amount: asset.assetCost?.amount || 0,
+assetCost: {
+  totalAmount: asset.assetCost?.totalAmount || 0,
+  unitAmount: asset.assetCost?.unitAmount || 0,
   currency: asset.assetCost?.currency || "USD",
-
+  baseTotalAmount: asset.assetCost?.baseTotalAmount || 0,
 },
+
 
       assetQuantity: asset.assetQuantity || 1,
       inUse: asset.inUse || 0,
@@ -178,7 +180,8 @@ const isOutOfStock = (asset) =>
 const payload = {
   ...editForm,
   assetCost: {
-    amount: Number(editForm.assetCost.amount),
+    totalAmount: Number(editForm.assetCost.totalAmount),
+    unitAmount: Number(editForm.assetCost.unitAmount),
     currency: editForm.assetCost.currency,
   },
   assetQuantity: Number(editForm.assetQuantity),
@@ -282,20 +285,22 @@ const renderDepartmentBadges = (asset) => {
   <strong>Total Cost:</strong>{" "}
   {CURRENCY_SYMBOLS[currency]}{" "}
   {convertFromBase(
-    asset.assetCost?.baseAmount ?? 0,
-    currency
-  ).toLocaleString()}
+  asset.assetCost?.baseTotalAmount ?? 0,
+  currency
+)
+.toLocaleString()}
 </p>
 
 <p>
   <strong>Unit Cost:</strong>{" "}
-  {asset.assetQuantity
-    ? `${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-        asset.assetCost?.baseAmount / asset.assetQuantity,
-        currency
-      ).toLocaleString()}`
-    : "N/A"}
+  {CURRENCY_SYMBOLS[currency]}{" "}
+  {convertFromBase(
+    asset.assetCost?.baseTotalAmount / asset.assetQuantity,
+    currency
+  ).toLocaleString()}
 </p>
+
+
 
                   
                   {/* <p>
@@ -455,9 +460,10 @@ const renderDepartmentBadges = (asset) => {
 <p>
   {CURRENCY_SYMBOLS[currency]}{" "}
   {convertFromBase(
-    selectedAsset.assetCost?.baseAmount ?? 0,
-    currency
-  ).toLocaleString()}
+  selectedAsset.assetCost?.baseTotalAmount ?? 0,
+  currency
+)
+.toLocaleString()}
 </p>
 
 
@@ -469,15 +475,14 @@ const renderDepartmentBadges = (asset) => {
           </div>
           <div>
 <label>Unit Cost</label>
-<p>
+<p> 
   {CURRENCY_SYMBOLS[currency]}{" "}
-  {selectedAsset.assetQuantity
-    ? convertFromBase(
-        selectedAsset.assetCost.baseAmount / selectedAsset.assetQuantity,
-        currency
-      ).toLocaleString()
-    : "N/A"}
+  {convertFromBase(
+    selectedAsset.assetCost?.baseTotalAmount / selectedAsset.assetQuantity,
+    currency
+  ).toLocaleString()}
 </p>
+
 
           </div>
           <div>
@@ -569,21 +574,24 @@ const renderDepartmentBadges = (asset) => {
 
 <input
   type="number"
-  name="assetCost.amount"
   placeholder="Total Software Cost"
   className="asset-edit-input"
-  value={editForm.assetCost?.amount || ""}
+  value={editForm.assetCost?.totalAmount || ""}
   onChange={(e) =>
-    setEditForm((prev) => ({
-      ...prev,
-      assetCost: {
-        ...prev.assetCost,
-        amount: Number(e.target.value),
-      },
-    }))
+    setEditForm((prev) => {
+      const total = Number(e.target.value);
+      const qty = Number(prev.assetQuantity || 1);
+
+      return {
+        ...prev,
+        assetCost: {
+          ...prev.assetCost,
+          totalAmount: total,
+          unitAmount: qty ? total / qty : 0,
+        },
+      };
+    })
   }
-  min="0"
-  step="0.01"
 />
 
 <select

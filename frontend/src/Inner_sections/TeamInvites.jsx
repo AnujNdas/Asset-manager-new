@@ -18,9 +18,10 @@ const TeamInvites = () => {
   return (
     <div className="settings-container">
       {/* <h2>Team Invitations</h2> */}
-
+    <div className="invite-box">
       <InviteForm onCreated={loadInvites} />
       <InviteTable invites={invites} onRevoke={loadInvites} />
+      </div>
     </div>
   );
 };

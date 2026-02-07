@@ -25,6 +25,13 @@ const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/login`, { email, password });
     return response.data;
 };
-
-export default { sendOtp, verifyOtpAndSignup, login };
+const getResetPreview = async () => {
+  const response = await axios.get("/auth/reset-preview");
+  return response.data; 
+}
+const ResetSystemData = async (password) => {
+  const response = await axios.post("/auth/reset-system-data", { password });
+  return response.data; 
+} 
+export default { sendOtp, verifyOtpAndSignup, login, getResetPreview , ResetSystemData};
 

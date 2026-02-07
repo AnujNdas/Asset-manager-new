@@ -5,6 +5,15 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 const Otp = require("../models/Otp");
 const crypto = require("crypto");
 const User = require("../models/User");
+const Asset = require("../models/Asset");
+const AssetAssignment = require("../models/AssetAssignment");
+const SupportTicket = require("../models/SupportTicket");
+const SoftwareAsset = require("../models/SoftwareAsset");
+const Category = require("../models/Category");
+const Location = require("../models/Location");
+const Status = require("../models/Status");
+const Unit = require("../models/Unit");
+const Department = require("../models/Department");
 const Notification = require("../models/Notification");
 const Organization = require("../models/Organization");
 const Subscription = require("../models/Subscription");
@@ -426,12 +435,165 @@ const completeOnboarding = async (req, res) => {
     res.status(500).json({ error: "Failed to complete onboarding" });
   }
 };
+const resetSystemData = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { password } = req.body;
 
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
+
+    const user = await User.findById(userId).select("+password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    if (!["owner", "admin", "super-admin"].includes(user.role)) {
+      return res.status(403).json({ message: "Unauthorized action" });
+    }
+
+    const organizationId = user.organizationId;
+    if (!organizationId) {
+      return res.status(400).json({
+        message: "User is not associated with any organization"
+      });
+    }
+
+    await Promise.all([
+      Asset.deleteMany({ organizationId }),
+      AssetAssignment.deleteMany({ organizationId }),
+      SupportTicket.deleteMany({ organizationId }),
+      SoftwareAsset.deleteMany({ organizationId }),
+      Category.deleteMany({ organizationId }),
+      Location.deleteMany({ organizationId }),
+      Status.deleteMany({ organizationId }),
+      Unit.deleteMany({ organizationId }),
+      Department.deleteMany({ organizationId }),
+    ]);
+
+    // 📝 AUDIT LOG
+    await ActivityLog.create({
+      organizationId,
+      userId,
+      action: "SYSTEM_RESET",
+      description: "Organization data reset",
+      ipAddress: req.ip
+    });
+
+    // 🔔 NOTIFICATION
+    const notification = await Notification.create({
+      title: "Organization Data Reset",
+      message:
+        "All operational data for your organization has been reset successfully.",
+      userId,
+      organizationId,
+      type: "security"
+    });
+
+    // ⚡ REAL-TIME EMIT
+    const io = req.app.get("io");
+    if (io) {
+      io.to(userId.toString()).emit("newNotification", {
+        title: notification.title,
+        message: notification.message,
+        type: "security"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Organization data reset successfully"
+    });
+  } catch (error) {
+    console.error("RESET ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to reset organization data"
+    });
+  }
+};
+
+/* ------------------------ RESET PREVIEW (SAFE) --------------------------- */
+const resetPreview = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // 🔍 Fetch user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 🛑 Authorization
+    if (!["owner", "admin", "super-admin"].includes(user.role)) {
+      return res.status(403).json({ message: "Unauthorized action" });
+    }
+
+    const organizationId = user.organizationId;
+    if (!organizationId) {
+      return res.status(400).json({
+        message: "User is not associated with any organization"
+      });
+    }
+
+    // 📊 COUNT DATA (NO DELETE)
+    const [
+      assets,
+      assignments,
+      tickets,
+      softwareAssets,
+      categories,
+      locations,
+      statuses,
+      units,
+      departments
+    ] = await Promise.all([
+      Asset.countDocuments({ organizationId }),
+      AssetAssignment.countDocuments({ organizationId }),
+      SupportTicket.countDocuments({ organizationId }),
+      SoftwareAsset.countDocuments({ organizationId }),
+      Category.countDocuments({ organizationId }),
+      Location.countDocuments({ organizationId }),
+      Status.countDocuments({ organizationId }),
+      Unit.countDocuments({ organizationId }),
+      Department.countDocuments({ organizationId })
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      preview: {
+        assets,
+        assignments,
+        tickets,
+        softwareAssets,
+        categories,
+        locations,
+        statuses,
+        units,
+        departments
+      }
+    });
+  } catch (error) {
+    console.error("RESET PREVIEW ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch reset preview"
+    });
+  }
+};
 module.exports = {
   sendOtp,
   verifyOtpAndSignup,
   login,
   forgotPassword,
+  resetPreview,
+  resetSystemData,
   resetPassword,
   changePassword,
   getUserData,

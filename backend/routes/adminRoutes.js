@@ -32,40 +32,47 @@ router.get(
       const usersCount = await User.countDocuments({ organizationId });
 
       // Hardware valuation
-      const hardwareValuationAgg = await HardwareAsset.aggregate([
-        { $match: { organizationId: new mongoose.Types.ObjectId(organizationId) } },
-        {
-          $project: {
-            total: {
-              $multiply: [
-                { $ifNull: ["$assetCost.baseAmount", 0] },
-                { $ifNull: ["$assetQuantity", 1] },
-              ],
-            },
-          },
+const hardwareValuationAgg = await HardwareAsset.aggregate([
+  {
+    $match: {
+      organizationId: new mongoose.Types.ObjectId(organizationId),
+    },
+  },
+  {
+    $group: {
+      _id: null,
+      sum: {
+        $sum: {
+          $ifNull: ["$assetCost.baseTotalAmount", 0],
         },
-        { $group: { _id: null, sum: { $sum: "$total" } } },
-      ]);
+      },
+    },
+  },
+]);
 
-      const hardwareValuation = hardwareValuationAgg[0]?.sum || 0;
+const hardwareValuation = hardwareValuationAgg[0]?.sum || 0;
 
-      // Software valuation
-      const softwareValuationAgg = await SoftwareAsset.aggregate([
-        { $match: { organizationId: new mongoose.Types.ObjectId(organizationId) } },
-        {
-          $project: {
-            total: {
-              $multiply: [
-                { $ifNull: ["$assetCost.baseAmount", 0] },
-                { $ifNull: ["$assetQuantity", 1] },
-              ],
-            },
-          },
+
+const softwareValuationAgg = await SoftwareAsset.aggregate([
+  {
+    $match: {
+      organizationId: new mongoose.Types.ObjectId(organizationId),
+    },
+  },
+  {
+    $group: {
+      _id: null,
+      sum: {
+        $sum: {
+          $ifNull: ["$assetCost.baseTotalAmount", 0],
         },
-        { $group: { _id: null, sum: { $sum: "$total" } } },
-      ]);
+      },
+    },
+  },
+]);
 
-      const softwareValuation = softwareValuationAgg[0]?.sum || 0;
+const softwareValuation = softwareValuationAgg[0]?.sum || 0;
+
 
       res.json({
         hardwareCount,
@@ -91,48 +98,45 @@ router.get("/valuation-trend", authenticateToken(["admin", "user"]), async (req,
   try {
     const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
 
-    const hardware = await HardwareAsset.aggregate([
-      { $match: { organizationId } },
-      {
-        $addFields: {
-          totalCost: {
-            $multiply: [
-              { $ifNull: ["$assetCost.baseAmount", 0] },
-              { $ifNull: ["$assetQuantity", 1] },
-            ],
-          },
+const hardware = await HardwareAsset.aggregate([
+  { $match: { organizationId } },
+  {
+    $group: {
+      _id: {
+        year: { $year: "$createdAt" },
+        month: { $month: "$createdAt" },
+      },
+      valuation: {
+        $sum: {
+          $ifNull: ["$assetCost.baseTotalAmount", 0],
         },
       },
-      {
-        $group: {
-          _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
-          valuation: { $sum: "$totalCost" },
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { "_id.year": 1, "_id.month": 1 } },
-    ]);
+      count: { $sum: 1 },
+    },
+  },
+  { $sort: { "_id.year": 1, "_id.month": 1 } },
+]);
+
 
     const software = await SoftwareAsset.aggregate([
-      { $match: { organizationId } },
-      {
-        $addFields: {
-          totalCost: {
-            $multiply: [
-              { $ifNull: ["$assetCost.baseAmount", 0] },
-              { $ifNull: ["$assetQuantity", 1] },
-            ],
-          },
+  { $match: { organizationId } },
+  {
+    $group: {
+      _id: {
+        year: { $year: "$createdAt" },
+        month: { $month: "$createdAt" },
+      },
+      valuation: {
+        $sum: {
+          $ifNull: ["$assetCost.baseTotalAmount", 0],
         },
       },
-      {
-        $group: {
-          _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
-          valuation: { $sum: "$totalCost" },
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+      count: { $sum: 1 },
+    },
+  },
+  { $sort: { "_id.year": 1, "_id.month": 1 } },
+]);
+
 
     const map = new Map();
 

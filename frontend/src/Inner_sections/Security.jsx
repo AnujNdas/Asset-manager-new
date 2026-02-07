@@ -3,12 +3,129 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import "../Page_styles/Security.css"
 import Swal from "sweetalert2"
-
+import AuthService from '../Services/AuthService'
 const Security = () => {
   const navigate = useNavigate()
     const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
+const handleResetData = async () => {
+  try {
+    // STEP 1: RESET keyword confirmation
+    const { value: confirmText } = await Swal.fire({
+      title: "Confirm System Reset",
+      html: `
+        <p style="font-size:14px;">
+          This will permanently delete all organization data.
+        </p>
+        <p style="margin-top:10px;">
+          Type <b>RESET</b> to continue.
+        </p>
+      `,
+      input: "text",
+      inputPlaceholder: "Type RESET",
+      showCancelButton: true,
+      confirmButtonText: "Continue",
+      confirmButtonColor: "#d32f2f",
+      cancelButtonColor: "#9e9e9e",
+      preConfirm: (value) => {
+        if (value !== "RESET") {
+          Swal.showValidationMessage("You must type RESET exactly");
+        }
+        return value;
+      }
+    });
+
+    if (!confirmText) return;
+
+    // STEP 2: FETCH RESET PREVIEW
+    const previewRes = await AuthService.getResetPreview();
+    console.log("Reset Preview:", previewRes);
+    await Swal.fire({
+      title: "Reset Preview",
+      icon: "warning",
+      html: `
+        <ul style="text-align:left;font-size:14px;">
+          <li><b>Assets:</b> ${previewRes.preview.assets}</li>
+          <li><b>Assignments:</b> ${previewRes.preview.assignments}</li>
+          <li><b>Support Tickets:</b> ${previewRes.preview.tickets}</li>
+          <li><b>Software Assets:</b> ${previewRes.preview.softwareAssets}</li>
+          <li><b>Categories:</b> ${previewRes.preview.categories}</li>
+          <li><b>Locations:</b> ${previewRes.preview.locations}</li>
+          <li><b>Status:</b> ${previewRes.preview.statuses}</li>
+          <li><b>Units:</b> ${previewRes.preview.units}</li>
+          <li><b>Units:</b> ${previewRes.preview.units}</li>
+          <li><b>Departments:</b> ${previewRes.preview.departments}</li>
+        </ul>
+        <p style="margin-top:10px;color:#d32f2f;">
+          This action cannot be undone.
+        </p>
+      `,
+      confirmButtonText: "Continue",
+      confirmButtonColor: "#d32f2f",
+      showCancelButton: true
+    });
+
+    // STEP 3: PASSWORD VERIFICATION
+    const { value: password } = await Swal.fire({
+      title: "Verify Your Password",
+      input: "password",
+      inputPlaceholder: "Enter your current password",
+      inputAttributes: {
+        autocapitalize: "off",
+        autocorrect: "off"
+      },
+      showCancelButton: true,
+      confirmButtonText: "Reset Now",
+      confirmButtonColor: "#d32f2f",
+      cancelButtonColor: "#9e9e9e",
+      preConfirm: (value) => {
+        if (!value) {
+          Swal.showValidationMessage("Password is required");
+        }
+        return value;
+      }
+    });
+
+    if (!password) return;
+
+    // STEP 4: EXECUTE RESET
+    Swal.fire({
+      title: "Resetting...",
+      text: "Please wait while we reset your organization data.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    await AuthService.ResetSystemData(password);
+
+    // STEP 5: SUCCESS
+    await Swal.fire({
+      title: "Reset Completed",
+      text: "All organization data has been reset successfully.",
+      icon: "success",
+      confirmButtonColor: "#2e7d32"
+    });
+
+    // OPTIONAL: reload or redirect
+    window.location.reload();
+
+  } catch (error) {
+    console.error("RESET FAILED:", error);
+
+    Swal.fire({
+      title: "Reset Failed",
+      text:
+        error?.response?.data?.message ||
+        "Something went wrong while resetting the system.",
+      icon: "error",
+      confirmButtonColor: "#d32f2f"
+    });
+  }
+};
+
 
   const handleChangePassword = async () => {
     try {
@@ -46,7 +163,7 @@ const Security = () => {
   };
   return (
     <div className='Security-container'>
-      {/* <div className="classify_heading">Security</div> */}
+      <div className="classify_heading">Security</div>
       <div className="change-password">
         <div className="box-head">
           <div className="title-p">
@@ -79,18 +196,31 @@ const Security = () => {
           {message && <p className="response-message">{message}</p>}
       </div>
       
-      <div className="login-activity">
-        <div className="title-login">
-          Login Activity
-        </div>
-        <div className="login-device">
-          <div className="device-logo"></div>
-          <div className="device-data">
-            <h4> Windows</h4>
-            <p> Last active today at 12:34pm </p>
-          </div>
-        </div>
-      </div>
+{/* ================= DANGER ZONE ================= */}
+<div className="danger-zone">
+  <div className="danger-header">
+    <h3>Danger Zone</h3>
+    <span className="danger-badge">Critical</span>
+  </div>
+
+  <p className="danger-description">
+    Resetting the system will permanently remove all operational data such as
+    assets, assignments, tickets, logs, and notifications.
+    <br />
+    <strong>This action cannot be undone.</strong>
+  </p>
+
+  <div className="danger-actions">
+    <button
+      className="reset-system-btn"
+      type="button"
+      onClick={handleResetData}  // backend later
+    >
+      Reset System Data
+    </button>
+  </div>
+</div>
+
 
     </div>
   )
