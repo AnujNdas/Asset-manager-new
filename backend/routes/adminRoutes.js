@@ -410,6 +410,97 @@ router.get(
     }
   }
 );
+router.get(
+  "/users",
+  authenticateToken(["admin", "super-admin"]),
+  async (req, res) => {
+    try {
+      const organizationId = req.user?.organizationId;
+
+      if (!organizationId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const users = await User.find({
+        organizationId: new mongoose.Types.ObjectId(organizationId),
+      })
+        .select("-password") // never send password
+        .sort({ createdAt: -1 });
+
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  }
+);
+
+
+
+/**
+ * =====================================================
+ * 🔄 UPDATE USER ROLE
+ * =====================================================
+ */
+router.put(
+  "/users/:id/role",
+  authenticateToken(["admin", "super-admin"]),
+  async (req, res) => {
+    try {
+      const adminUser = req.user;
+      const targetUserId = req.params.id;
+      const { role } = req.body;
+
+      if (!role || !["user", "admin"].includes(role)) {
+        return res.status(400).json({
+          error: "Invalid role. Allowed roles: user, admin",
+        });
+      }
+
+      const user = await User.findById(targetUserId);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // 🔒 Organization protection (multi-tenant safety)
+      if (
+        user.organizationId.toString() !==
+        adminUser.organizationId.toString()
+      ) {
+        return res.status(403).json({
+          error: "You cannot modify users from another organization",
+        });
+      }
+
+      // 🔒 Prevent modifying super admin
+      if (user.role === "super-admin") {
+        return res.status(403).json({
+          error: "Super Admin role cannot be modified",
+        });
+      }
+
+      user.role = role;
+      await user.save();
+
+      res.json({
+        message: "User role updated successfully",
+      });
+    } catch (error) {
+      console.error("Error updating role:", error);
+
+      if (error.code === 11000) {
+        return res.status(409).json({
+          error: "Duplicate key error",
+        });
+      }
+
+      res.status(500).json({
+        error: "Failed to update role",
+      });
+    }
+  }
+);
 
 
 module.exports = router;
