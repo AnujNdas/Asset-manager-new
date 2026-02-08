@@ -1,99 +1,184 @@
-.user-management {
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* =====================================================
+   MODERN SAAS CSS — UserManagement.css
+   ===================================================== */
+
+.saas-user-page {
+  padding: 10px;
+  /* background: #f6f8fb; */
+  /* min-height: 100vh; */
+  font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
 }
 
-.user-management h2 {
-  margin-bottom: 15px;
-  font-size: 20px;
+/* Header */
+.saas-user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
 }
 
-/* Desktop Table */
-.user-table {
+.saas-user-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.saas-user-header p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Search */
+.saas-user-search input {
+  width: 280px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.saas-user-search input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+/* Card */
+.saas-user-card {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  border: 1px solid #eef0f4;
+  overflow: hidden;
+}
+
+/* Table */
+.saas-user-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.user-table th,
-.user-table td {
-  border: 1px solid #ddd;
-  padding: 12px 10px;
+.saas-user-table thead {
+  background: #f9fafb;
+}
+
+.saas-user-table th {
   text-align: left;
-}
-
-.user-table th {
-  background-color: #f4f4f4;
+  padding: 16px 20px;
+  font-size: 13px;
   font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
-.user-table tr:hover {
-  background-color: #f9f9f9;
+.saas-user-table td {
+  padding: 16px 20px;
+  border-top: 1px solid #f1f3f7;
+  font-size: 14px;
+  color: #374151;
 }
 
-.user-table select {
-  padding: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+.saas-user-table tbody tr:hover {
+  background: #fafbff;
 }
 
-/* Role badges */
-.role-badge {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  color: #fff;
+.user-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Role Pills */
+.role-pill {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 600;
 }
 
 .role-user {
-  background-color: #4caf50; /* green */
+  background: #0099ff;
+  color: #ffffff;
 }
 
 .role-admin {
-  background-color: #2196f3; /* blue */
+  background: #ff0000;
+  color: #ffffff;
 }
 
 .role-super-admin {
-  background-color: #f44336; /* red */
+  background: #dcfce7;
+  color: #166534;
 }
 
-/* Responsive Cards for Mobile */
-@media (max-width: 768px) {
-  .user-table {
-    display: block;
+/* Select */
+.saas-user-table select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  font-size: 13px;
+}
+
+.saas-user-table select:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.protected-label {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.table-center {
+  text-align: center;
+  padding: 30px;
+  color: #9ca3af;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 900px) {
+  .saas-user-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .user-table thead {
+  .saas-user-search input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .saas-user-page {
+    padding: 16px;
+  }
+
+  .saas-user-table thead {
     display: none;
   }
-  .user-management {
-    padding : 10px;
-  }
-  .user-table tr {
+
+  .saas-user-table,
+  .saas-user-table tbody,
+  .saas-user-table tr,
+  .saas-user-table td {
     display: block;
-    margin-bottom: 15px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    padding: 15px;
+    width: 100%;
   }
 
-  .user-table td {
-    display: flex;
-    justify-content: space-between;
+  .saas-user-table tr {
+    padding: 16px;
+    border-bottom: 1px solid #f1f3f7;
+  }
+
+  .saas-user-table td {
     padding: 8px 0;
     border: none;
-    border-bottom: 1px solid #eee;
-  }
-
-  .user-table td:last-child {
-    border-bottom: none;
-  }
-
-  .user-table td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #555;
   }
 }
