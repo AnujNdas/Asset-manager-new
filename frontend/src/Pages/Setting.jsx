@@ -106,7 +106,7 @@ const Setting = () => {
     { path: "notification", label: "Notifications", icon: FaBell },
     { path: "subscription", label: "Subscription", icon: FaCogs },
     { path: "help&support", label: "Help & Support", icon: FaQuestion },
-    ...(userData?.role === "  admin"
+    ...(userData?.role === "admin"
       ? [{ path: "users", label: "User Management", icon: FaUsers }]
       : []),
   ];
