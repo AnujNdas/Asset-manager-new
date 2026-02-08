@@ -369,7 +369,6 @@ const handleEditChange = (e) => {
 </p> */}
 
 <p>
-  <p>
   <strong>Unit Cost:</strong>{" "}
   {CURRENCY_SYMBOLS[currency]}{" "}
   {asset.assetQuantity
@@ -381,7 +380,6 @@ const handleEditChange = (e) => {
 )
 .toLocaleString()
     : "N/A"}
-</p>
 
 
 </p>
@@ -595,6 +593,8 @@ const handleEditChange = (e) => {
         </h3>
 
         <form className="asset-edit-grid" onSubmit={handleEditSubmit}>
+          <div>
+          <label>Asset Name</label>
           <input
             name="assetName"
             placeholder="Asset Name"
@@ -602,7 +602,9 @@ const handleEditChange = (e) => {
             value={editForm.assetName || ""}
             onChange={handleEditChange}
           />
-
+          </div>
+          <div>
+          <label>Specification</label>
           <input
             name="assetSpecification"
             placeholder="Specification"
@@ -610,7 +612,9 @@ const handleEditChange = (e) => {
             value={editForm.assetSpecification || ""}
             onChange={handleEditChange}
           />
-
+          </div>
+          <div>
+            <label>Category</label>
           <select
             name="assetCategory"
             className="asset-edit-input"
@@ -622,7 +626,9 @@ const handleEditChange = (e) => {
               <option key={c._id} value={c._id}>{c.name}</option>
             ))}
           </select>
-
+            </div>
+            <div>
+            <label>Location</label>
           <select
             name="locationName"
             className="asset-edit-input"
@@ -634,7 +640,9 @@ const handleEditChange = (e) => {
               <option key={l._id} value={l._id}>{l.name}</option>
             ))}
           </select>
-
+          </div>
+            <div>
+              <label>Unit</label>
           <select
             name="associateUnit"
             className="asset-edit-input"
@@ -646,7 +654,9 @@ const handleEditChange = (e) => {
               <option key={u._id} value={u._id}>{u.name}</option>
             ))}
           </select>
-
+            </div>
+            <div>
+              <label>Status</label>
           <select
             name="assetStatus"
             className="asset-edit-input"
@@ -658,7 +668,9 @@ const handleEditChange = (e) => {
               <option key={s._id} value={s._id}>{s.name}</option>
             ))}
           </select>
-
+            </div>
+            <div>
+              <label>Date Of Purchase</label>
           <input
             type="date"
             name="DOP"
@@ -666,7 +678,9 @@ const handleEditChange = (e) => {
             value={editForm.DOP || ""}
             onChange={handleEditChange}
           />
-
+          </div>
+          <div>
+            <label>Date Of Expiry</label>
           <input
             type="date"
             name="DOE"
@@ -674,7 +688,9 @@ const handleEditChange = (e) => {
             value={editForm.DOE || ""}
             onChange={handleEditChange}
           />
-
+          </div>
+          <div>
+            <label>Purchase From</label>
           <input
             name="purchaseFrom"
             placeholder="Purchase From"
@@ -682,6 +698,9 @@ const handleEditChange = (e) => {
             value={editForm.purchaseFrom || ""}
             onChange={handleEditChange}
           />
+          </div>
+          <div>
+            <label>Currency</label>
 <select
   name="assetCost.currency"
   className="asset-edit-input"
@@ -693,7 +712,9 @@ const handleEditChange = (e) => {
   <option value="EUR">EUR</option>
   <option value="GBP">GBP</option>
 </select>
-
+</div>
+<div>
+  <label>Total Cost</label>
 <input
   type="number"
   placeholder="Total Asset Cost"
@@ -708,9 +729,10 @@ value={editForm.assetCost?.totalAmount}
 <small className="helper-text">
   Enter total cost for all units combined
 </small>
+</div>
 
-
-
+<div>
+  <label>Quantity</label>
 <input
   type="number"
   name="assetQuantity"
@@ -719,6 +741,9 @@ value={editForm.assetCost?.totalAmount}
   value={editForm.assetQuantity || ""}
   onChange={handleEditChange}
 />
+</div>
+<div>
+  <label> In use</label>
           <input
   type="number"
   name="inUse"
@@ -727,7 +752,9 @@ value={editForm.assetCost?.totalAmount}
   value={editForm.inUse || 0}
   onChange={handleEditChange}
 />
-
+</div>
+<div>
+  <label>Asset Lifetime</label>
 
           <input
             name="assetLifetime"
@@ -736,7 +763,7 @@ value={editForm.assetCost?.totalAmount}
             value={editForm.assetLifetime || ""}
             onChange={handleEditChange}
           />
-
+</div>
           <div className="asset-edit-actions">
             <button type="submit" className="asset-edit-save-btn">Save</button>
             <button
@@ -752,7 +779,6 @@ value={editForm.assetCost?.totalAmount}
     </motion.div>
   )}
 </AnimatePresence>
-
 
 
     </div>

@@ -166,19 +166,40 @@ const assignAssetsFromStock = async (req, res) => {
         await asset.save({ session });
       }
 
-      const [assignment] = await AssetAssignment.create(
-        [{
-          organizationId: orgId,
-          assetType,
-          assetId,
-          assetModel,
-          assignedToType,
-          assignedTo,
-          quantity,
-          status: "active"
-        }],
-        { session }
-      );
+const existingAssignment = await AssetAssignment.findOne({
+  organizationId: orgId,
+  assetId,
+  assetType,
+  assignedTo,
+  assignedToType,
+  status: "active"
+}).session(session);
+
+let assignment;
+
+if (existingAssignment) {
+  // 🔹 Same department → increase quantity
+  existingAssignment.quantity += quantity;
+  await existingAssignment.save({ session });
+
+  assignment = existingAssignment;
+} else {
+  // 🔹 First time assignment
+  [assignment] = await AssetAssignment.create(
+    [{
+      organizationId: orgId,
+      assetType,
+      assetId,
+      assetModel,
+      assignedToType,
+      assignedTo,
+      quantity,
+      status: "active"
+    }],
+    { session }
+  );
+}
+
 
       createdAssignments.push(assignment);
     }

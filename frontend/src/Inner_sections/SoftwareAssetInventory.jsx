@@ -536,42 +536,68 @@ const renderDepartmentBadges = (asset) => {
         </h3>
 
         <form className="asset-edit-grid" onSubmit={handleEditSubmit}>
-
+          <div>
+            <label>Asset Code</label>
           <input name="assetCode" value={editForm.assetCode} onChange={handleEditChange} placeholder="Asset Code" className="asset-edit-input"/>
-
+          </div>
+          <div>
+            <label>Software Name</label>
           <input name="assetName" value={editForm.assetName} onChange={handleEditChange} placeholder="Software Name" className="asset-edit-input"/>
-
+          </div>
+            <div>
+            <label>Version</label>
           <input name="assetSpecification" value={editForm.assetSpecification} onChange={handleEditChange} placeholder="Version" className="asset-edit-input"/>
-
+            </div>
+          <div>
+            <label>Publisher</label>
           <input name="purchaseFrom" value={editForm.purchaseFrom} onChange={handleEditChange} placeholder="Publisher" className="asset-edit-input"/>
-
+          </div>
+            <div>
+            <label>Category</label>
           <select name="assetCategory" className="asset-edit-input" value={editForm.assetCategory} onChange={handleEditChange}>
             <option value="">Select Category</option>
             {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
           </select>
-
+            </div>
+          <div>
+              <label>Unit</label>
           <select name="associateUnit" className="asset-edit-input" value={editForm.associateUnit} onChange={handleEditChange}>
             <option value="">Select Unit</option>
             {units.map(u => <option key={u._id} value={u._id}>{u.name}</option>)}
           </select>
-
+          </div>
+        <div>
+          <label>Location</label>
           <select name="locationName" className="asset-edit-input" value={editForm.locationName} onChange={handleEditChange}>
             <option value="">Select Location</option>
             {locations.map(l => <option key={l._id} value={l._id}>{l.name}</option>)}
           </select>
-
+        </div>
+        <div>
+          <label>Location Address</label>
           <input name="locationAddress" value={editForm.locationAddress} onChange={handleEditChange} placeholder="Location Address" className="asset-edit-input"/>
-
+        </div>
+        <div>
+          <label>Asset Status</label>
           <select name="assetStatus" className="asset-edit-input" value={editForm.assetStatus} onChange={handleEditChange}>
             <option value="">Select Status</option>
             {statuses.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
           </select>
-
+          </div>  
+        <div>
+          <label>Purchase Date</label>
           <input type="date" name="DOP" value={editForm.DOP} onChange={handleEditChange} className="asset-edit-input"/>
+        </div>
+        <div>
+          <label>Expiry Date</label>
           <input type="date" name="DOE" value={editForm.DOE} onChange={handleEditChange} className="asset-edit-input"/>
-
+        </div>
+        <div>
+          <label>Asset Lifetime</label>
           <input name="assetLifetime" value={editForm.assetLifetime} onChange={handleEditChange} placeholder="Lifetime" className="asset-edit-input"/>
-
+        </div>
+<div>
+  <label>Total Cost</label>
 <input
   type="number"
   placeholder="Total Software Cost"
@@ -593,7 +619,9 @@ const renderDepartmentBadges = (asset) => {
     })
   }
 />
-
+</div>
+<div>
+  <label>Currency</label>
 <select
   className="asset-edit-input"
   value={editForm.assetCost?.currency || "USD"}
@@ -611,16 +639,35 @@ const renderDepartmentBadges = (asset) => {
   <option value="INR">INR</option>
   <option value="EUR">EUR</option>
 </select>
-
-
+</div>
+<div>
+  <label>Quantity</label>
           <input type="number" name="assetQuantity" value={editForm.assetQuantity} onChange={handleEditChange} placeholder="Quantity" className="asset-edit-input"/>
+</div>
+<div>
+  <label>In Use</label>
           <input type="number" name="inUse" value={editForm.inUse} onChange={handleEditChange} placeholder="In Use" className="asset-edit-input"/>
-
+</div>
+<div>
+  <label>License Key</label>
           <input name="licenseKey" value={editForm.licenseKey} onChange={handleEditChange} placeholder="License Key" className="asset-edit-input"/>
+</div>
+<div>
+  <label>License Type</label>
           <input name="licenseType" value={editForm.licenseType} onChange={handleEditChange} placeholder="License Type" className="asset-edit-input"/>
+</div>
+<div>
+  <label>License Model</label>
           <input name="licenseModel" value={editForm.licenseModel} onChange={handleEditChange} placeholder="License Model" className="asset-edit-input"/>
+</div>
+<div>
+  <label>License Metric</label>
           <input name="licenseMetric" value={editForm.licenseMetric} onChange={handleEditChange} placeholder="License Metric" className="asset-edit-input"/>
+</div>
+<div>
+  <label>License Use</label>
           <input name="licenseUse" value={editForm.licenseUse} onChange={handleEditChange} placeholder="License Use" className="asset-edit-input"/>
+</div>
 
           <div className="asset-edit-actions">
             <button type="submit" className="asset-edit-save-btn">Save</button>
