@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const HardwareAsset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const CoreCompanyLicense = require("../models/CoreCompanyLicense");
+const AssetAssignment = require("../models/AssetAssignment");
 const User = require("../models/User");
 const authenticateToken = require("../Middleware/Authentication-token");
 
@@ -501,6 +502,177 @@ router.put(
     }
   }
 );
+router.get(
+  "/maintenance-due",
+  authenticateToken(["admin", "user"]), async (req, res) => {
+  try {
+    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
 
+    const today = new Date();
+    const next30Days = new Date();
+    next30Days.setDate(today.getDate() + 30);
 
+    const assets = await HardwareAsset.aggregate([
+      {
+        $match: {
+          organizationId,
+          DOE: { $ne: null, $ne: "" }
+        }
+      },
+      {
+        $addFields: {
+          DOEDate: { $toDate: "$DOE" }
+        }
+      },
+      {
+        $facet: {
+          overdue: [
+            { $match: { DOEDate: { $lt: today } } },
+            {
+              $addFields: {
+                daysOverdue: {
+                  $floor: {
+                    $divide: [
+                      { $subtract: [today, "$DOEDate"] },
+                      1000 * 60 * 60 * 24
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          upcoming: [
+            {
+              $match: {
+                DOEDate: { $gte: today, $lte: next30Days }
+              }
+            },
+            {
+              $addFields: {
+                daysLeft: {
+                  $ceil: {
+                    $divide: [
+                      { $subtract: ["$DOEDate", today] },
+                      1000 * 60 * 60 * 24
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]);
+
+    res.json({ success: true, data: assets[0] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+router.get(
+  "/cost-metrics",
+  authenticateToken(["admin", "user"]), async (req, res) => {
+  try {
+    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
+
+    const metrics = await SoftwareAsset.aggregate([
+      { $match: { organizationId } },
+
+      {
+        $group: {
+          _id: "$type",
+          totalQuantity: { $sum: "$assetQuantity" },
+          totalCost: { $sum: "$assetCost.baseTotalAmount" },
+          avgUnitCost: { $avg: "$assetCost.unitAmount" },
+          currency: { $first: "$assetCost.currency" }
+        }
+      },
+
+      {
+        $project: {
+          _id: 0,
+          type: "$_id",
+          totalQuantity: 1,
+          totalCost: 1,
+          avgCostPerLicense: { $round: ["$avgUnitCost", 2] },
+          currency: 1
+        }
+      }
+    ]);
+
+    res.json({ success: true, data: metrics });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+router.get(
+  "/asset-distribution",
+  authenticateToken(["admin", "user"]), async (req, res) => {
+  try {
+    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
+
+    const data = await AssetAssignment.aggregate([
+      {
+        $match: {
+          organizationId,
+          assignedToType: "Department",
+          status: "active"
+        }
+      },
+
+      {
+        $group: {
+          _id: {
+            departmentId: "$assignedTo",
+            assetType: "$assetType"
+          },
+          total: { $sum: "$quantity" }
+        }
+      },
+
+      {
+        $group: {
+          _id: "$_id.departmentId",
+          hardware: {
+            $sum: {
+              $cond: [{ $eq: ["$_id.assetType", "hardware"] }, "$total", 0]
+            }
+          },
+          software: {
+            $sum: {
+              $cond: [{ $eq: ["$_id.assetType", "software"] }, "$total", 0]
+            }
+          }
+        }
+      },
+
+      {
+        $lookup: {
+          from: "departments",
+          localField: "_id",
+          foreignField: "_id",
+          as: "department"
+        }
+      },
+
+      { $unwind: "$department" },
+
+      {
+        $project: {
+          departmentId: "$_id",
+          departmentName: "$department.name",
+          hardware: 1,
+          software: 1,
+          totalAssets: { $add: ["$hardware", "$software"] }
+        }
+      }
+    ]);
+
+    res.json({ success: true, data });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 module.exports = router;

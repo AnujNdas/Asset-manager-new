@@ -282,6 +282,27 @@ export const getUpcomingSoftwareExpiry = async () => {
   return data;
 };
 
+export const getHardwareMaintenanceDue = async () => {
+  const res = await axiosInstance.get("/admin/maintenance-due");
+  return {
+    overdue: res.data?.data?.overdue || [],
+    upcoming: res.data?.data?.upcoming || []
+  };
+};
+
+export const getSoftwareCostMetrics = async () => {
+  try {
+    const res = await axiosInstance.get("/admin/cost-metrics");
+    return res.data;
+  } catch (error) {
+    throw error?.response?.data || error.message;
+  }
+};
+export const getDepartmentAssetDistribution = async () => {
+  const res = await axiosInstance.get("/admin/asset-distribution");
+  return res.data?.data || [];
+};
+
 export const getRecentAssets = async () =>
   axiosInstance.get("/admin/recent-assets").then((res) => res.data);
 

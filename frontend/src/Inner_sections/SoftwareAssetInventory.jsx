@@ -434,11 +434,11 @@ const renderDepartmentBadges = (asset) => {
             <label>License Key</label>
             <p>{selectedAsset.licenseKey || "—"}</p>
           </div>
-
+{/* 
           <div>
             <label>License Type</label>
             <p>{selectedAsset.licenseType || "—"}</p>
-          </div>
+          </div> */}
 
           <div>
             <label>License Model</label>

@@ -21,36 +21,28 @@ const BulkUpload = ({ type, userRole }) => {
 useEffect(() => {
   if (!mode) return;
 
-  const modeContent =
+const modeContent =
     mode === "strict"
       ? {
           title: "Strict Import Mode Enabled",
           html: `
-            <div style="text-align:left; line-height:1.6;">
-              <p>
-                You are importing assets in <b>Strict Mode</b>. This mode ensures
-                data consistency and prevents unintended changes to your system.
-              </p>
-              <ul>
-                <li>
-                  All classification fields such as <b>Category, Location, Unit,
-                  and Status</b> must already exist in the system.
-                </li>
-                <li>
-                  If an uploaded row contains a classification value that does not
-                  exist, that row will be <b>skipped automatically</b>.
-                </li>
-                <li>
-                  This mode is ideal when you want full control and predictable
-                  imports.
-                </li>
-              </ul>
-              <p style="margin-top:10px;">
-                Tip: You can review or download existing classifications from the
-                <b>Classification</b> section before importing.
-              </p>
-            </div>
-          `,
+<div class="swal-content">
+  <p>
+    You are importing assets in <b>Strict Mode</b>. This mode ensures data consistency and prevents unintended system changes.
+  </p>
+
+  <ul>
+    <li>All classifications (<b>Category, Location, Unit, Status</b>) must already exist.</li>
+    <li>If a classification does not exist → that row will be <b>skipped automatically</b>.</li>
+    <li>Best for controlled, predictable imports.</li>
+  </ul>
+
+  <p>
+    Tip: Review classifications from the <b>Classification</b> section before importing.
+  </p>
+</div>
+`
+,
           icon: "info",
         }
       : {
@@ -87,8 +79,7 @@ Swal.fire({
   html: modeContent.html,
   icon: modeContent.icon,
 
-  width: "min(90%, 520px)",
-  height : "80%",
+  width: "520px",
 
   confirmButtonText: "Got it",
   confirmButtonColor: "#2563eb",
@@ -98,8 +89,11 @@ Swal.fire({
 
   customClass: {
     popup: "responsive-swal",
-  },
+    htmlContainer: "swal-html-fix"
+  }
 });
+
+
 
 }, [mode]);
 

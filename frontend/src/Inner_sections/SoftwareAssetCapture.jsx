@@ -308,10 +308,10 @@ const handleSubmit = async (e) => {
               <input name="licenseKey" value={formData.licenseKey} onChange={handleChange} />
             </div>
 
-            <div className="input-group">
+            {/* <div className="input-group">
               <label>License Type</label>
               <input name="licenseType" value={formData.licenseType} onChange={handleChange} placeholder="Perpetual / Subscription" />
-            </div>
+            </div> */}
           </div>
 
           <div className="grid-2">

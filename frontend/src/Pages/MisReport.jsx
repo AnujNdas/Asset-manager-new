@@ -138,14 +138,14 @@ useEffect(() => {
         <div className="navs">
           <button
             className={activeTab === "hardware" ? "active-tab" : ""}
-            onClick={() => setActiveTab("hardware")}
+            onClick={() => setActiveTab("Hardware")}
           >
             Hardware
           </button>
 
           <button
             className={activeTab === "software" ? "active-tab" : ""}
-            onClick={() => setActiveTab("software")}
+            onClick={() => setActiveTab("Software")}
           >
             Software
           </button>

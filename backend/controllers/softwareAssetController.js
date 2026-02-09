@@ -325,56 +325,69 @@ const updateSoftwareAsset = async (req, res) => {
       return res.status(404).json({ success: false, message: "Not found" });
     }
 
-if (req.body.assetCost) {
-  const quantity = Number(
-    req.body.assetQuantity ?? asset.assetQuantity ?? 1
-  );
+    // ✅ Extract assetCost safely
+    const costInput = req.body.assetCost;
+    delete req.body.assetCost;
 
-  if (quantity <= 0) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid license quantity"
-    });
-  }
-
-  const totalAmount = Number(req.body.assetCost.totalAmount);
-  const currency = req.body.assetCost.currency.toUpperCase();
-
-  if (totalAmount < 0) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid total cost"
-    });
-  }
-
-  asset.assetCost = {
-    totalAmount,
-    unitAmount: totalAmount / quantity,
-    baseTotalAmount: convertToBase(totalAmount, currency),
-    currency
-  };
-}
-
-
+    // ✅ Validate type if provided
     if (req.body.type) {
-  if (!["monthly", "yearly", "one_time"].includes(req.body.type)) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid software type. Allowed: monthly, yearly, one_time"
-    });
-  }
-}
+      if (!["monthly", "yearly", "one_time"].includes(req.body.type)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid software type. Allowed: monthly, yearly, one_time"
+        });
+      }
+    }
 
+    // ✅ Assign normal fields FIRST (safe fields only)
     Object.assign(asset, req.body);
 
+    // ✅ Handle asset cost AFTER assign (so it can't be overwritten)
+    if (costInput) {
+      const quantity = Number(
+        req.body.assetQuantity ?? asset.assetQuantity ?? 1
+      );
+
+      if (quantity <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid license quantity"
+        });
+      }
+
+      const totalAmount = Number(costInput.totalAmount);
+      const currency = costInput.currency.toUpperCase();
+
+      if (totalAmount < 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid total cost"
+        });
+      }
+
+      asset.assetCost = {
+        totalAmount,
+        unitAmount: totalAmount / quantity,
+        baseTotalAmount: convertToBase(totalAmount, currency),
+        currency
+      };
+    }
+
+    // ✅ Audit history safe guard
+    if (!Array.isArray(asset.auditHistory)) {
+      asset.auditHistory = [];
+    }
+
     asset.auditHistory.push({
-      date: new Date(),
-      notes: `Updated by user ${userId}`
+      userId,
+      action: "UPDATE",
+      notes: "Asset updated"
     });
 
     await asset.save();
 
     res.json({ success: true, data: asset });
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
