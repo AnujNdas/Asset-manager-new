@@ -5,7 +5,7 @@ import {
   getMySupportTickets,
   contactSupport 
 } from "../Services/ApiServices";
-import Tickets from "./Tickets";
+import Tickets from "./Ticket";
 import { jwtDecode } from "jwt-decode";
 const HelpSupport = () => {
   const [activeTab, setActiveTab] = useState("faqs");
