@@ -1,6 +1,6 @@
 const SupportTicket = require("../models/SupportTicket");
 const sendMail = require("../utils/mailer");
-
+const User = require("../models/User"); // IMPORTANT
 /**
  * CONTACT SUPPORT (Email Only)
  */
@@ -83,50 +83,55 @@ const getMyTickets = async (req, res) => {
  * GET ALL TICKETS (Admin)
  */
 const getAllTickets = async (req, res) => {
-  try {
-    const tickets = await SupportTicket.find({
-      organizationId: req.user.organizationId
-    })
-      .populate("userId", "username email")
-      .sort({ createdAt: -1 });
+  const query = req.user.role === "superadmin"
+    ? {}
+    : { organizationId: req.user.organizationId };
 
-    res.json(tickets);
-  } catch (error) {
-    console.error("Get all tickets error:", error);
-    res.status(500).json({ message: "Failed to fetch all tickets" });
-  }
+  const tickets = await SupportTicket.find(query)
+    .populate("userId", "username email")
+    .populate("assignedAdmin", "username")
+    .sort({ createdAt: -1 });
+
+  res.json(tickets);
 };
 
 /**
  * UPDATE TICKET STATUS (Admin)
  */
 const updateTicketStatus = async (req, res) => {
-  try {
-    const { status, adminRemark, priority } = req.body;
+  const { status, message, priority } = req.body;
 
-    const ticket = await SupportTicket.findOneAndUpdate(
-      {
-        _id: req.params.id,
-        organizationId: req.user.organizationId
-      },
-      {
-        status,
-        adminRemark,
-        priority
-      },
-      { new: true }
-    );
+  const update = {
+    status,
+    priority
+  };
 
-    if (!ticket) {
-      return res.status(404).json({ message: "Ticket not found" });
-    }
-
-    res.json(ticket);
-  } catch (error) {
-    console.error("Update ticket error:", error);
-    res.status(500).json({ message: "Failed to update ticket" });
+  if (status === "Resolved") {
+    update.resolvedAt = new Date();
   }
+
+  if (message) {
+    update.$push = {
+      adminReplies: {
+        message,
+        repliedBy: req.user.id
+      }
+    };
+  }
+
+  const ticket = await SupportTicket.findByIdAndUpdate(
+    req.params.id,
+    update,
+    { new: true }
+  );
+
+  if (!ticket) {
+    return res.status(404).json({ message: "Ticket not found" });
+  }
+
+  res.json(ticket);
 };
+
 module.exports = {
   createTicket,
   getMyTickets,

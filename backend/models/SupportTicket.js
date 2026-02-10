@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const supportTicketSchema = new mongoose.Schema(
   {
     subject: {
@@ -21,7 +20,7 @@ const supportTicketSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Open", "In Progress", "Resolved"],
+      enum: ["Open", "In Progress", "Resolved", "Closed"],
       default: "Open"
     },
 
@@ -40,15 +39,35 @@ const supportTicketSchema = new mongoose.Schema(
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
-      required: true
+      required: true,
+      index: true
     },
 
-    adminRemark: {
-      type: String,
-      default: ""
+    assignedAdmin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null
+    },
+
+    adminReplies: [
+      {
+        message: String,
+        repliedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User"
+        },
+        repliedAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
+
+    resolvedAt: {
+      type: Date
     }
   },
   { timestamps: true }
 );
-
 module.exports = mongoose.model("SupportTicket", supportTicketSchema);
+// mongoose.model("SupportTicket", supportTicketSchema);

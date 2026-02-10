@@ -381,6 +381,15 @@ export const getMySupportTickets = async () => {
   const response = await axiosInstance.get("/support/tickets/my");
   return response.data;
 }
+export const getAllSupportTickets = async () => {
+  const response = await axiosInstance.get("/support/tickets");
+  return response.data;
+}
+// UPDATE SUPPORT TICKET (ORG ADMIN)
+export const updateSupportTicket = async (ticketId, payload) => {
+  const res = await axiosInstance.patch(`/tickets/${ticketId}`, payload);
+  return res.data;
+};
 export const contactSupport = async (data) => {
   const response = await axiosInstance.post("/support/contact", data);
   return response.data;

@@ -5,7 +5,8 @@ import {
   getMySupportTickets,
   contactSupport 
 } from "../Services/ApiServices";
-
+import Tickets from "./Tickets";
+import { jwtDecode } from "jwt-decode";
 const HelpSupport = () => {
   const [activeTab, setActiveTab] = useState("faqs");
   const [openIndex, setOpenIndex] = useState(null);
@@ -21,7 +22,7 @@ const HelpSupport = () => {
     email: "",
     message: ""
   });
-
+  const [userData, setUserData] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -92,6 +93,18 @@ const HelpSupport = () => {
       ]
     }
   ];
+useEffect(() => {
+  const storedAuth = localStorage.getItem("auth");
+
+  if (storedAuth) {
+    const parsed = JSON.parse(storedAuth);
+
+    if (parsed.token) {
+      const decoded = jwtDecode(parsed.token);
+      setUserData(decoded); // contains role
+    }
+  }
+}, []);
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -178,7 +191,22 @@ const loadMyTickets = async () => {
       <nav className="help-nav">
         <button onClick={() => setActiveTab("faqs")} className={activeTab === "faqs" ? "active" : ""}>FAQs</button>
         <button onClick={() => setActiveTab("docs")} className={activeTab === "docs" ? "active" : ""}>Documentation</button>
-        <button onClick={() => setActiveTab("ticket")} className={activeTab === "ticket" ? "active" : ""}>Raise Ticket</button>
+{userData?.role === "admin" ? (
+  <button
+    onClick={() => setActiveTab("adminTickets")}
+    className={activeTab === "adminTickets" ? "active" : ""}
+  >
+    Tickets
+  </button>
+) : (
+  <button
+    onClick={() => setActiveTab("ticket")}
+    className={activeTab === "ticket" ? "active" : ""}
+  >
+    Raise Ticket
+  </button>
+)}
+
         <button onClick={() => setActiveTab("contact")} className={activeTab === "contact" ? "active" : ""}>Contact Support</button>
       </nav>
 
@@ -230,7 +258,7 @@ const loadMyTickets = async () => {
 
 
       {/* RAISE TICKET */}
-      {activeTab === "ticket" && (
+      {userData?.role !== "admin" && activeTab === "ticket" && (
         <section className="help-form-section">
           <h2>Submit a Support Request</h2>
           <form className="help-form" onSubmit={handleSubmit}>
@@ -251,6 +279,9 @@ const loadMyTickets = async () => {
           </form>
         </section>
       )}
+{userData?.role === "admin" && activeTab === "adminTickets" && (
+  <Tickets />
+)}
 
       {/* CONTACT SUPPORT */}
 {activeTab === "contact" && (
@@ -261,7 +292,7 @@ const loadMyTickets = async () => {
       <input
         type="text"
         name="name"
-        placeholder="Name"
+        placeholder="Your Name"
         value={contactData.name}
         onChange={handleContactChange}
       />
@@ -269,14 +300,14 @@ const loadMyTickets = async () => {
       <input
         type="email"
         name="email"
-        placeholder="Email"
+        placeholder="Your Email"
         value={contactData.email}
         onChange={handleContactChange}
       />
 
       <textarea
         name="message"
-        placeholder="Message"
+        placeholder="Your Message"
         value={contactData.message}
         onChange={handleContactChange}
       />
