@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const costSchema = require("./CostSchema");
+const costSchema = require("./Costschema");
 const assetSchema = new mongoose.Schema(
   {
     assetCode: { type: String, required: true },
@@ -9,18 +9,9 @@ const assetSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
-          organizationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
-      required: true,
-      index: true,
-    },
+
     barcodeNumber: { type: String },
-        type: {
-      type: String,
-      enum: ["one_time", "maintenance"],
-      required: true,
-    },
+
     assetName: { type: String, required: true },
 
     associateUnit: {
@@ -34,11 +25,21 @@ const assetSchema = new mongoose.Schema(
       ref: "Location",
       required: true,
     },
-
+    type: {
+      type: String,
+      enum: ["one_time", "maintenance"],
+      required: true,
+    },
     locationAddress: {
       type: String,
       required: true,
       trim: true,
+    },
+      organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+      index: true,
     },
 
     assetSpecification: { type: String, required: true },
@@ -55,14 +56,25 @@ const assetSchema = new mongoose.Schema(
 
     purchaseFrom: { type: String, required: true },
     modelNo: { type: String, unique: true },
-    PMD: { type: String },
 
+    PMD: { type: String },
+    maintenanceTerm: {
+  type: String,
+  trim: true
+},
+
+insurance: {
+  insuranceId: { type: String, trim: true },
+  insuranceName: { type: String, trim: true },
+  purchaseDate: { type: Date },
+  expiryDate: { type: Date }
+}
+,
     assetCost: {
       type: costSchema,
       required: true,
       min: 0,
     },
-
 
     assetQuantity: {
       type: Number,

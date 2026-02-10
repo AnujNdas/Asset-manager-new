@@ -4,7 +4,7 @@
 ========================================================= */
 .asset-wrapper {
   margin: auto;
-  padding: 8px 20px;
+  padding: 10px;
   /* max-width intentionally omitted for fluid layouts */
 }
 
@@ -14,7 +14,6 @@
 .asset-header h2 {
   font-size: 20px;
   font-weight: 600;
-  padding : 8px 0;
 }
 
 .asset-header p {
@@ -163,6 +162,17 @@
 /* Hover state */
 .submit-btn:hover {
   background: #4338ca;
+}
+.checkbox-group {
+  margin-bottom: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 /* =========================================================

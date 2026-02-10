@@ -13,8 +13,8 @@ import "../Page_styles/HardwareCapture.css";
 import { FiSave } from "react-icons/fi";
 
 export const SUPPORTED_CURRENCIES = [
-  { code: "INR", label: "Indian Rupee", symbol: "₹" },
   { code: "USD", label: "US Dollar", symbol: "$" },
+  { code: "INR", label: "Indian Rupee", symbol: "₹" },
   { code: "EUR", label: "Euro", symbol: "€" },
   { code: "GBP", label: "British Pound", symbol: "£" },
   { code: "JPY", label: "Japanese Yen", symbol: "¥" },
@@ -37,28 +37,40 @@ const AssetCapture = () => {
 
   const navigate = useNavigate();
 
-  const defaultFormData = {
-    assetCategory: "",
-    barcodeNumber: "",
-    assetName: "",
-    associateUnit: "",
-    locationName: "",
-    locationAddress: "", // ✅ NEW
-    assetSpecification: "",
-    assetStatus: "",
-    DOP: "",
-    DOE: "",
-    assetLifetime: "",
-    purchaseFrom: "",
-    modelNo: "",
-    PMD: "",
-    type: "",
-     assetCost: {
+ const defaultFormData = {
+  assetCategory: "",
+  barcodeNumber: "",
+  assetName: "",
+  associateUnit: "",
+  locationName: "",
+  locationAddress: "",
+  assetSpecification: "",
+  assetStatus: "",
+  DOP: "",
+  DOE: "",
+  assetLifetime: "",
+  purchaseFrom: "",
+  modelNo: "",
+  PMD: "",
+  type: "",
+  maintenanceTerm: "",
+
+  assetCost: {
     amount: "",
-    currency: "INR",
+    currency: "USD",
   },
-    assetQuantity: "",
-  };
+
+  assetQuantity: "",
+
+  // ✅ NEW
+  insurance: {
+    insuranceId: "",
+    insuranceName: "",
+    purchaseDate: "",
+    expiryDate: "",
+  },
+};
+
 
   const [formData, setFormData] = useState(defaultFormData);
   const [units, setUnits] = useState([]);
@@ -66,6 +78,7 @@ const AssetCapture = () => {
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showInsurance, setShowInsurance] = useState(false);
 
 
 useEffect(() => {
@@ -100,34 +113,38 @@ const handleChange = (e) => {
   setFormData((prev) => {
     let updated = { ...prev };
 
-    // ✅ Handle assetCost nested fields
+    // ✅ assetCost nested
     if (name.startsWith("assetCost.")) {
       const field = name.split(".")[1];
-
       updated.assetCost = {
         ...prev.assetCost,
-        [field]:
-          field === "amount" ? Number(value) || "" : value,
+        [field]: field === "amount" ? Number(value) || "" : value,
       };
-    } else {
+    }
+
+    // ✅ insurance nested
+    else if (name.startsWith("insurance.")) {
+      const field = name.split(".")[1];
+      updated.insurance = {
+        ...prev.insurance,
+        [field]: value,
+      };
+    }
+
+    // normal fields
+    else {
       updated[name] = value;
     }
 
-    // ✅ Auto-calculate lifetime
+    // ✅ Auto-calc lifetime
     if (name === "DOP" || name === "DOE") {
       const { DOP, DOE } = updated;
-
       if (DOP && DOE) {
         const start = new Date(DOP);
         const end = new Date(DOE);
-        const days = Math.floor(
-          (end - start) / (1000 * 60 * 60 * 24)
-        );
-
+        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
         updated.assetLifetime =
-          Number.isFinite(days) && days >= 0
-            ? `${days} days`
-            : "Invalid";
+          Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
       } else {
         updated.assetLifetime = "";
       }
@@ -136,6 +153,7 @@ const handleChange = (e) => {
     return updated;
   });
 };
+
 
   const validateRequired = () => {
     const required = [
@@ -267,6 +285,18 @@ const handleAddAsset = async (e) => {
     <option value="maintenance">Maintenance / AMC</option>
   </select>
 </div>
+{formData.type === "maintenance" && (
+  <div className="input-group">
+    <label>Maintenance Term</label>
+    <input
+      type="text"
+      name="maintenanceTerm"
+      value={formData.maintenanceTerm}
+      onChange={handleChange}
+      placeholder="e.g. 12 months / 1 year"
+    />
+  </div>
+)}
 
         </div>
 
@@ -482,6 +512,85 @@ const handleAddAsset = async (e) => {
           </div>
         </div>
 </div>
+<div className="input-group checkbox-group">
+  <label className="checkbox-label">
+    <input
+      type="checkbox"
+      checked={showInsurance}
+      onChange={(e) => {
+  const checked = e.target.checked;
+  setShowInsurance(checked);
+
+  if (!checked) {
+    setFormData(prev => ({
+      ...prev,
+      insurance: {
+        insuranceId: "",
+        insuranceName: "",
+        purchaseDate: "",
+        expiryDate: "",
+      }
+    }));
+  }
+}}
+
+    />
+    Add Insurance Details
+  </label>
+</div>
+
+{/* Insurance */}
+{showInsurance && (
+  <div className="section">
+    <h3 className="section-title">Insurance Details</h3>
+
+    <div className="grid-2">
+      <div className="input-group">
+        <label>Insurance Name</label>
+        <input
+          type="text"
+          name="insurance.insuranceName"
+          value={formData.insurance.insuranceName}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="input-group">
+        <label>Insurance ID</label>
+        <input
+          type="text"
+          name="insurance.insuranceId"
+          value={formData.insurance.insuranceId}
+          onChange={handleChange}
+        />
+      </div>
+    </div>
+
+    <div className="grid-2">
+      <div className="input-group">
+        <label>Purchase Date</label>
+        <input
+          type="date"
+          name="insurance.purchaseDate"
+          value={formData.insurance.purchaseDate}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="input-group">
+        <label>Expiry Date</label>
+        <input
+          type="date"
+          name="insurance.expiryDate"
+          value={formData.insurance.expiryDate}
+          onChange={handleChange}
+        />
+      </div>
+    </div>
+  </div>
+)}
+
+
         {/* Submit */}
         <button className="submit-btn" type="submit" disabled={isSubmitting}>
           <FiSave />

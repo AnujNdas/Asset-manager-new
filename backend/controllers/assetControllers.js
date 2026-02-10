@@ -10,6 +10,30 @@ const Category = require("../models/Category");
 const Unit = require("../models/Unit");
 const Location = require("../models/Location");
 const Status = require("../models/Status");
+const buildInsurance = (incoming, existing = {}) => {
+  if (!incoming) return existing;
+
+  const insurance = {
+    insuranceId: incoming.insuranceId ?? existing.insuranceId,
+    insuranceName: incoming.insuranceName ?? existing.insuranceName,
+    purchaseDate: incoming.purchaseDate
+      ? new Date(incoming.purchaseDate)
+      : existing.purchaseDate,
+    expiryDate: incoming.expiryDate
+      ? new Date(incoming.expiryDate)
+      : existing.expiryDate,
+  };
+
+  if (
+    insurance.purchaseDate &&
+    insurance.expiryDate &&
+    insurance.expiryDate < insurance.purchaseDate
+  ) {
+    throw new Error("Insurance expiry cannot be before purchase date");
+  }
+
+  return insurance;
+};
 
 
 // =======================================================================
@@ -323,6 +347,7 @@ const newAsset = new Asset({
   assetCode,
   assetQuantity,
   inUse,
+  insurance: buildInsurance(req.body.insurance),
 
   assetCost: {
     totalAmount,
@@ -378,11 +403,11 @@ console.log("REQ HEADERS:", req.headers["content-type"]);
     const inUse =
       req.body.inUse ?? existingAsset.inUse;
 let updatedCost = existingAsset.assetCost;
-
 if (req.body.assetCost) {
-  const { amount, currency } = req.body.assetCost;
+  const { totalAmount, currency } = req.body.assetCost;
 
-  const totalAmount = Number(amount);
+  const parsedTotalAmount = Number(totalAmount);
+
   const finalCurrency = currency
     ? currency.toUpperCase()
     : existingAsset.assetCost.currency;
@@ -390,7 +415,7 @@ if (req.body.assetCost) {
   const finalQuantity =
     req.body.assetQuantity ?? existingAsset.assetQuantity;
 
-  if (totalAmount <= 0) {
+  if (parsedTotalAmount <= 0 || isNaN(parsedTotalAmount)) {
     return res.status(400).json({ message: "Invalid total amount" });
   }
 
@@ -398,16 +423,17 @@ if (req.body.assetCost) {
     return res.status(400).json({ message: "Invalid quantity" });
   }
 
-  const unitAmount = totalAmount / finalQuantity;
-  const baseTotalAmount = convertToBase(totalAmount, finalCurrency);
+  const unitAmount = parsedTotalAmount / finalQuantity;
+  const baseTotalAmount = convertToBase(parsedTotalAmount, finalCurrency);
 
   updatedCost = {
-    totalAmount,
+    totalAmount: parsedTotalAmount,
     unitAmount,
     baseTotalAmount,
     currency: finalCurrency
   };
 }
+
 
     if (inUse > assetQuantity) {
       return res.status(400).json({
@@ -421,19 +447,28 @@ if (req.body.assetCost) {
         });
       }
     }
+    let updatedInsurance = existingAsset.insurance;
 
-    const updatedAsset = await Asset.findByIdAndUpdate(
-      id,
-      {
-        ...req.body,
-        assetCode: existingAsset.assetCode,
-        barcodeNumber: existingAsset.barcodeNumber,
-        assetCost: updatedCost,
-        assetQuantity,
-        inUse,
-      },
-      { new: true }
-    );
+if (req.body.insurance) {
+  updatedInsurance = buildInsurance(
+    req.body.insurance,
+    existingAsset.insurance
+  );
+}
+
+const updatedAsset = await Asset.findByIdAndUpdate(
+  id,
+  {
+    ...req.body,
+    assetCode: existingAsset.assetCode,
+    barcodeNumber: existingAsset.barcodeNumber,
+    assetCost: updatedCost,
+    assetQuantity,
+    inUse,
+    insurance: updatedInsurance
+  },
+  { new: true }
+);
 
 await sendNotification({
   req,
