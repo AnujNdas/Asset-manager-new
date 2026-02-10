@@ -504,71 +504,92 @@ router.put(
 );
 router.get(
   "/maintenance-due",
-  authenticateToken(["admin", "user"]), async (req, res) => {
-  try {
-    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
+  authenticateToken(["admin", "user"]),
+  async (req, res) => {
+    try {
+      const organizationId = new mongoose.Types.ObjectId(
+        req.user.organizationId
+      );
 
-    const today = new Date();
-    const next30Days = new Date();
-    next30Days.setDate(today.getDate() + 30);
+      const today = new Date();
+      const next30Days = new Date();
+      next30Days.setDate(today.getDate() + 30);
 
-    const assets = await HardwareAsset.aggregate([
-      {
-        $match: {
-          organizationId,
-          DOE: { $ne: null, $ne: "" }
-        }
-      },
-      {
-        $addFields: {
-          DOEDate: { $toDate: "$DOE" }
-        }
-      },
-      {
-        $facet: {
-          overdue: [
-            { $match: { DOEDate: { $lt: today } } },
-            {
-              $addFields: {
-                daysOverdue: {
-                  $floor: {
-                    $divide: [
-                      { $subtract: [today, "$DOEDate"] },
-                      1000 * 60 * 60 * 24
-                    ]
+      const assets = await HardwareAsset.aggregate([
+        {
+          $match: {
+            organizationId,
+            DOE: { $exists: true, $nin: [null, ""] }
+          }
+        },
+
+        // ✅ SAFE DATE CONVERSION
+        {
+          $addFields: {
+            DOEDate: {
+              $convert: {
+                input: "$DOE",
+                to: "date",
+                onError: null,
+                onNull: null
+              }
+            }
+          }
+        },
+
+        // Remove failed conversions
+        {
+          $match: { DOEDate: { $ne: null } }
+        },
+
+        {
+          $facet: {
+            overdue: [
+              { $match: { DOEDate: { $lt: today } } },
+              {
+                $addFields: {
+                  daysOverdue: {
+                    $floor: {
+                      $divide: [
+                        { $subtract: [today, "$DOEDate"] },
+                        86400000
+                      ]
+                    }
                   }
                 }
               }
-            }
-          ],
-          upcoming: [
-            {
-              $match: {
-                DOEDate: { $gte: today, $lte: next30Days }
-              }
-            },
-            {
-              $addFields: {
-                daysLeft: {
-                  $ceil: {
-                    $divide: [
-                      { $subtract: ["$DOEDate", today] },
-                      1000 * 60 * 60 * 24
-                    ]
+            ],
+
+            upcoming: [
+              {
+                $match: {
+                  DOEDate: { $gte: today, $lte: next30Days }
+                }
+              },
+              {
+                $addFields: {
+                  daysLeft: {
+                    $ceil: {
+                      $divide: [
+                        { $subtract: ["$DOEDate", today] },
+                        86400000
+                      ]
+                    }
                   }
                 }
               }
-            }
-          ]
+            ]
+          }
         }
-      }
-    ]);
+      ]);
 
-    res.json({ success: true, data: assets[0] });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+      res.json({ success: true, data: assets[0] });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
   }
-});
+);
+
 router.get(
   "/cost-metrics",
   authenticateToken(["admin", "user"]), async (req, res) => {
