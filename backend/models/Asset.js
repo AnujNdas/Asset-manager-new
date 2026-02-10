@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const costSchema = require("./CostSchema");
+const costSchema = require("./Costschema");
 const assetSchema = new mongoose.Schema(
   {
     assetCode: { type: String, required: true },
@@ -70,6 +70,11 @@ insurance: {
   expiryDate: { type: Date }
 }
 ,
+warranty: {
+  warrantyId: { type: String, trim: true },
+  expiryDate: { type: Date }
+},
+
     assetCost: {
       type: costSchema,
       required: true,
@@ -97,6 +102,22 @@ insurance: {
 
 assetSchema.virtual("inStock").get(function () {
   return this.assetQuantity - this.inUse;
+});
+assetSchema.virtual("warrantyLifetime").get(function () {
+  if (!this.DOP || !this.warranty?.expiryDate) return null;
+
+  const dop = new Date(this.DOP);
+  const expiry = new Date(this.warranty.expiryDate);
+
+  let years = expiry.getFullYear() - dop.getFullYear();
+  let months = expiry.getMonth() - dop.getMonth();
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  return `${years} Years ${months} Months`;
 });
 
 module.exports = mongoose.model("Asset", assetSchema);

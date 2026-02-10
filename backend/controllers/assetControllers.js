@@ -34,6 +34,25 @@ const buildInsurance = (incoming, existing = {}) => {
 
   return insurance;
 };
+const buildWarranty = (incoming, existing = {}, dop) => {
+  if (!incoming) return existing;
+
+  const warranty = {
+    warrantyId: incoming.warrantyId ?? existing.warrantyId,
+    expiryDate: incoming.expiryDate
+      ? new Date(incoming.expiryDate)
+      : existing.expiryDate,
+  };
+
+  if (dop && warranty.expiryDate) {
+    const dopDate = new Date(dop);
+    if (warranty.expiryDate < dopDate) {
+      throw new Error("Warranty expiry cannot be before purchase date (DOP)");
+    }
+  }
+
+  return warranty;
+};
 
 
 // =======================================================================
@@ -206,43 +225,59 @@ const baseTotalAmount = convertToBase(totalAmount, currency);
           });
           continue;
         }
+        // ---------- WARRANTY BUILD ----------
+let warrantyData = undefined;
+
+if (asset.warrantyId || asset.warrantyExpiryDate) {
+  warrantyData = buildWarranty(
+    {
+      warrantyId: asset.warrantyId,
+      expiryDate: asset.warrantyExpiryDate,
+    },
+    asset.DOP
+  );
+}
 
         // ---------- FINAL ASSET ----------
-        validAssets.push({
-          organizationId,
-          assetCode: await generateHardwareCode(),
-          type: assetType, // ✅ ADD THIS
-          assetCategory: categoryId,
-          barcodeNumber: asset.barcodeNumber,
-          assetName: asset.assetName,
-          associateUnit: unitId,
+validAssets.push({
+  organizationId,
+  assetCode: await generateHardwareCode(),
+  type: assetType,
+  assetCategory: categoryId,
+  barcodeNumber: asset.barcodeNumber,
+  assetName: asset.assetName,
+  associateUnit: unitId,
 
-          locationName: locationId,
-          locationAddress: asset.locationAddress,
+  locationName: locationId,
+  locationAddress: asset.locationAddress,
 
-          assetSpecification: asset.assetSpecification,
-          assetStatus: statusId,
+  assetSpecification: asset.assetSpecification,
+  assetStatus: statusId,
 
-          DOP: asset.DOP,
-          DOE: asset.DOE,
-          assetLifetime: asset.assetLifetime,
-          purchaseFrom: asset.purchaseFrom,
+  DOP: asset.DOP,
+  DOE: asset.DOE,
+  assetLifetime: asset.assetLifetime,
+  purchaseFrom: asset.purchaseFrom,
 
-          assetCost: {
-            totalAmount,
-            unitAmount,
-            baseTotalAmount,
-            currency,
-          },
+  // ⭐ ADD HERE
+  warranty: warrantyData,
 
-          assetQuantity: totalQty,
-          inUse: 0,
+  assetCost: {
+    totalAmount,
+    unitAmount,
+    baseTotalAmount,
+    currency,
+  },
 
-          createdBy: userId,
-          auditHistory: [
-            { date: new Date(), notes: `Bulk uploaded by user ${userId}` },
-          ],
-        });
+  assetQuantity: totalQty,
+  inUse: 0,
+
+  createdBy: userId,
+  auditHistory: [
+    { date: new Date(), notes: `Bulk uploaded by user ${userId}` },
+  ],
+});
+
       } catch (rowError) {
         invalidRows.push({
           row: index + 2,
@@ -340,14 +375,19 @@ const baseTotalAmount = convertToBase(totalAmount, currency);
 
 const newAsset = new Asset({
   ...req.body,
-
   organizationId,
   createdBy: userId,
   type,
   assetCode,
   assetQuantity,
   inUse,
+
   insurance: buildInsurance(req.body.insurance),
+  warranty: buildWarranty(
+    req.body.warranty,
+    {},
+    req.body.DOP
+  ),
 
   assetCost: {
     totalAmount,
@@ -356,6 +396,7 @@ const newAsset = new Asset({
     currency
   }
 });
+
 
 
     const savedAsset = await newAsset.save();
@@ -455,7 +496,15 @@ if (req.body.insurance) {
     existingAsset.insurance
   );
 }
+let updatedWarranty = existingAsset.warranty;
 
+if (req.body.warranty) {
+  updatedWarranty = buildWarranty(
+    req.body.warranty,
+    existingAsset.warranty,
+    req.body.DOP ?? existingAsset.DOP
+  );
+}
 const updatedAsset = await Asset.findByIdAndUpdate(
   id,
   {
@@ -465,10 +514,12 @@ const updatedAsset = await Asset.findByIdAndUpdate(
     assetCost: updatedCost,
     assetQuantity,
     inUse,
-    insurance: updatedInsurance
+    insurance: updatedInsurance,
+    warranty: updatedWarranty
   },
   { new: true }
 );
+
 
 await sendNotification({
   req,

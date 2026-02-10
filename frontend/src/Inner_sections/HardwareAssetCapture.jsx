@@ -69,8 +69,16 @@ const AssetCapture = () => {
     purchaseDate: "",
     expiryDate: "",
   },
+  // ✅ WARRANTY
+warranty: {
+  warrantyId: "",
+  expiryDate: "",
+  lifetime: "",
+},
+
 };
 
+  const [showWarranty, setShowWarranty] = useState(false);
 
   const [formData, setFormData] = useState(defaultFormData);
   const [units, setUnits] = useState([]);
@@ -123,18 +131,30 @@ const handleChange = (e) => {
     }
 
     // ✅ insurance nested
-    else if (name.startsWith("insurance.")) {
-      const field = name.split(".")[1];
-      updated.insurance = {
-        ...prev.insurance,
-        [field]: value,
-      };
-    }
+// ✅ insurance nested
+else if (name.startsWith("insurance.")) {
+  const field = name.split(".")[1];
+  updated.insurance = {
+    ...prev.insurance,
+    [field]: value,
+  };
+}
 
-    // normal fields
-    else {
-      updated[name] = value;
-    }
+// ✅ warranty nested  ✅ FIX
+else if (name.startsWith("warranty.")) {
+  const field = name.split(".")[1];
+  updated.warranty = {
+    ...prev.warranty,
+    [field]: value,
+  };
+}
+
+// normal fields
+else {
+  updated[name] = value;
+}
+
+
 
     // ✅ Auto-calc lifetime
     if (name === "DOP" || name === "DOE") {
@@ -149,6 +169,22 @@ const handleChange = (e) => {
         updated.assetLifetime = "";
       }
     }
+    // ✅ Auto-calc warranty lifetime
+if (name === "DOP" || name === "warranty.expiryDate") {
+  const { DOP } = updated;
+  const warrantyExpiry = updated.warranty?.expiryDate;
+
+  if (DOP && warrantyExpiry) {
+    const start = new Date(DOP);
+    const end = new Date(warrantyExpiry);
+    const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+
+    updated.warranty.lifetime =
+      Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
+  } else if (updated.warranty) {
+    updated.warranty.lifetime = "";
+  }
+}
 
     return updated;
   });
@@ -285,18 +321,6 @@ const handleAddAsset = async (e) => {
     <option value="maintenance">Maintenance / AMC</option>
   </select>
 </div>
-{formData.type === "maintenance" && (
-  <div className="input-group">
-    <label>Maintenance Term</label>
-    <input
-      type="text"
-      name="maintenanceTerm"
-      value={formData.maintenanceTerm}
-      onChange={handleChange}
-      placeholder="e.g. 12 months / 1 year"
-    />
-  </div>
-)}
 
         </div>
 
@@ -469,9 +493,21 @@ const handleAddAsset = async (e) => {
                 onChange={handleChange}
               />
             </div>
+                {formData.type === "maintenance" && (
+  <div className="input-group">
+    <label>Maintenance Term</label>
+    <input
+      type="text"
+      name="maintenanceTerm"
+      value={formData.maintenanceTerm}
+      onChange={handleChange}
+      placeholder="e.g. 12 months / 1 year"
+    />
+  </div>
+)}
 
             <div className="input-group">
-              <label>Date of Expiry</label>
+              <label>Next Maintainence Date</label>
               <input
                 type="date"
                 name="DOE"
@@ -481,7 +517,7 @@ const handleAddAsset = async (e) => {
             </div>
 
             <div className="input-group">
-              <label>Lifetime</label>
+              <label>Days Before Maintainance</label>
               <input
                 type="text"
                 name="assetLifetime"
@@ -490,7 +526,73 @@ const handleAddAsset = async (e) => {
                 disabled
               />
             </div>
+
           </div>
+            <div className="input-group">
+  <label className="checkbox-label">
+    <input
+      type="checkbox"
+      checked={showWarranty}
+      onChange={(e) => {
+        const checked = e.target.checked;
+        setShowWarranty(checked);
+
+        if (!checked) {
+          setFormData(prev => ({
+            ...prev,
+            warranty: {
+              warrantyId: "",
+              expiryDate: "",
+              lifetime: "",
+            },
+          }));
+        }
+      }}
+    />
+    Add Warranty Details
+  </label>
+  {showWarranty && (
+  <div className="section">
+    <h3 className="section-title">Warranty Details</h3>
+
+    <div className="grid-2">
+      <div className="input-group">
+        <label>Warranty ID</label>
+        <input
+          type="text"
+          name="warranty.warrantyId"
+          value={formData.warranty.warrantyId}
+          onChange={handleChange}
+          placeholder="Warranty / AMC reference"
+        />
+      </div>
+
+      <div className="input-group">
+        <label>Warranty Expiry Date</label>
+        <input
+          type="date"
+          name="warranty.expiryDate"
+          value={formData.warranty.expiryDate}
+          onChange={handleChange}
+        />
+      </div>
+    </div>
+
+    <div className="grid-2">
+      <div className="input-group">
+        <label>Warranty Lifetime</label>
+        <input
+          type="text"
+          value={formData.warranty.lifetime}
+          placeholder="Auto Calculated"
+          disabled
+        />
+      </div>
+    </div>
+  </div>
+)}
+
+</div>
                      <div className="grid-2">
           <div className="input-group">
             <label>Purchased From</label>
