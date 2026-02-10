@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../Page_styles/Tickets.css";
+import "../Page_styles/Ticket.css";
 import {
   getAllSupportTickets,
   updateSupportTicket
