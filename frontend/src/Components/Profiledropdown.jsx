@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 import "../Page_styles/Profiledropdown.css";
 import { useNavigate } from "react-router-dom";
-
+import profile from "../Images/profile.png";
 const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -98,9 +98,7 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
           <button className="user-info" onClick={handleProfileClick}>
 <img
   src={
-    user?.avatar?.url
-      ? user.avatar.url
-      : "/default-avatar.png"
+    user?.avatar?.url || profile
   }
   alt="avatar"
   className="avatar"

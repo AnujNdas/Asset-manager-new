@@ -103,3 +103,9 @@ export const getGAAnalytics = async () => {
   return res.data.data;
 };
 
+export const getLoginActivity = async () => {
+  const res = await axiosInstance.get(
+    "/super-admin/login-activity",
+  );
+  return res.data;
+};

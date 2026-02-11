@@ -1,6 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const axios = require("axios");
+const LoginActivity = require("../models/LoginActivity");
+const { getClientIp } = require("../utils/ipUtils");
 
 const Otp = require("../models/Otp");
 const crypto = require("crypto");
@@ -196,7 +199,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email }).lean();
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
@@ -221,7 +224,35 @@ const login = async (req, res) => {
       });
     }
 
-    // ✅ JWT payload MUST include organizationId
+    // ✅ Capture Client IP
+    const ip = getClientIp(req);
+
+    // ✅ Get Geo Location from IP
+    let locationData = {};
+    try {
+      const geo = await axios.get(`http://ip-api.com/json/${ip}`);
+      locationData = {
+        country: geo.data.country,
+        region: geo.data.regionName,
+        city: geo.data.city,
+        lat: geo.data.lat,
+        lon: geo.data.lon,
+        isp: geo.data.isp,
+      };
+    } catch (geoError) {
+      console.error("Geo lookup failed:", geoError.message);
+    }
+
+    // ✅ Save Login Activity
+    await LoginActivity.create({
+      userId: user._id,
+      organizationId: user.organizationId || null,
+      ipAddress: ip,
+      userAgent: req.headers["user-agent"],
+      ...locationData,
+    });
+
+    // ✅ Generate JWT
     const token = jwt.sign(
       {
         id: user._id,
@@ -263,6 +294,7 @@ const login = async (req, res) => {
         onboardingCompleted: user.onboardingCompleted,
       },
     });
+
   } catch (error) {
     console.error("Login Error:", error);
     return res.status(500).json({

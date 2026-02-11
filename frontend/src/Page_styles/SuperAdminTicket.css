@@ -1,0 +1,109 @@
+
+/* ================= CSS ================= */
+
+/* SuperAdminTickets.css */
+.sa-ticket-container {
+  padding: 24px;
+}
+
+.sa-ticket-header {
+  margin-bottom: 20px;
+}
+
+.sa-ticket-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Filters */
+.sa-ticket-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.sa-ticket-filters input,
+.sa-ticket-filters select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  min-width: 220px;
+}
+
+/* Table */
+.sa-ticket-table-wrapper {
+  overflow-x: auto;
+}
+
+.sa-ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sa-ticket-table th,
+.sa-ticket-table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.sa-ticket-table th {
+  background: #f5f6fa;
+  font-weight: 600;
+}
+
+/* Status */
+.status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.open {
+  background: #ffecec;
+}
+
+.status.in-progress {
+  background: #fff6e5;
+}
+
+.status.resolved {
+  background: #e8fff0;
+}
+
+/* Priority */
+.priority {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.priority.high {
+  background: #ffe5e5;
+}
+
+.priority.medium {
+  background: #fff5e0;
+}
+
+.priority.low {
+  background: #e6f7ff;
+}
+
+/* States */
+.sa-loading {
+  text-align: center;
+  padding: 40px;
+}
+
+.sa-empty {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+}
