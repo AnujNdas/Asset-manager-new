@@ -7,6 +7,26 @@ const Location = require("../models/Location");
 const sendNotification = require("../utils/notify");
 const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
 
+const calculateCycles = (type, startDate, endDate) => {
+  if (type === "one_time") return 1;
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (isNaN(start) || isNaN(end) || end <= start) {
+    throw new Error("Invalid DOP / DOE");
+  }
+
+  const months =
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth());
+
+  if (type === "monthly") return months || 1;
+  if (type === "yearly") return Math.floor(months / 12) || 1;
+
+  return 1;
+};
+
 /* ======================================================
    GENERATE SOFTWARE CODE (ORG-SCOPED)
 ====================================================== */
@@ -103,6 +123,12 @@ if (totalAmount < 0) {
 const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
 
 const unitAmount = totalAmount / quantity;
+const cycles = calculateCycles(softwareType, asset.DOP, asset.DOE);
+
+const overallTotal = totalAmount * cycles;
+const overallUnitAmount = overallTotal / quantity;
+const baseOverallTotal = convertToBase(overallTotal, currency);
+
 const baseTotalAmount = convertToBase(totalAmount, currency);
 
         // ---------- SOFTWARE TYPE VALIDATION ----------
@@ -148,6 +174,12 @@ assetCost: {
   totalAmount,
   unitAmount,
   baseTotalAmount,
+  currency
+},
+overallCost: {
+  totalAmount: overallTotal,
+  unitAmount: overallUnitAmount,
+  baseTotalAmount: baseOverallTotal,
   currency
 },
 
@@ -220,18 +252,23 @@ if (totalAmount < 0) {
   });
 }
 
-const unitAmount = totalAmount / quantity;
-const baseTotalAmount = convertToBase(totalAmount, currency);
-
-
-    const { type } = req.body;
+const { type, DOP, DOE } = req.body;
 
 if (!["monthly", "yearly", "one_time"].includes(type)) {
   return res.status(400).json({
     success: false,
-    message: "Invalid software type. Allowed: monthly, yearly, one_time"
+    message: "Invalid software type"
   });
 }
+
+const cycles = calculateCycles(type, DOP, DOE);
+
+const overallTotal = totalAmount * cycles;
+const overallUnitAmount = overallTotal / quantity;
+
+const baseTotalAmount = convertToBase(totalAmount, currency);
+const baseOverallTotal = convertToBase(overallTotal, currency);
+
 
     const asset = await SoftwareAsset.create({
       ...req.body,
@@ -240,10 +277,18 @@ if (!["monthly", "yearly", "one_time"].includes(type)) {
       assetCode: await generateSoftwareCode(organizationId),
 assetCost: {
   totalAmount,
-  unitAmount,
+  unitAmount: totalAmount / quantity,
   baseTotalAmount,
   currency
 },
+
+overallCost: {
+  totalAmount: overallTotal,
+  unitAmount: overallUnitAmount,
+  baseTotalAmount: baseOverallTotal,
+  currency
+},
+
 
       licensesAssigned: 0,
       auditHistory: [{ date: new Date(), notes: `Created by user ${userId}` }]
@@ -372,6 +417,21 @@ const updateSoftwareAsset = async (req, res) => {
         currency
       };
     }
+    const cycles = calculateCycles(
+  asset.type,
+  asset.DOP,
+  asset.DOE
+);
+
+const overallTotal = asset.assetCost.totalAmount * cycles;
+const overallUnitAmount = overallTotal / asset.assetQuantity;
+
+asset.overallCost = {
+  totalAmount: overallTotal,
+  unitAmount: overallUnitAmount,
+  baseTotalAmount: convertToBase(overallTotal, asset.assetCost.currency),
+  currency: asset.assetCost.currency
+};
 
     // ✅ Audit history safe guard
     if (!Array.isArray(asset.auditHistory)) {

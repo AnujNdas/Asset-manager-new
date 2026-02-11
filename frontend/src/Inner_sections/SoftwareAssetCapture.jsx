@@ -48,7 +48,7 @@ const initialForm = {
   assetQuantity: "",
   assetCost: {
   amount: "",
-  currency: "INR",
+  currency: "USD",
 },
 assetStatus: "",
 
@@ -131,7 +131,6 @@ const buildJsonPayload = () => ({
   locationAddress: formData.locationAddress,
 
   licenseKey: formData.licenseKey,
-  licenseType: formData.licenseType,
   licenseModel: formData.licenseModel,
   licenseMetric: formData.licenseMetric,
   licenseUse: formData.licenseUse,
@@ -169,6 +168,27 @@ const calculateAssetLifetime = (start, end) => {
   if (years > 0) return `${years} year(s)`;
   return `${months} month(s)`;
 };
+const calculateCycles = (type, startDate, endDate) => {
+  if (!type) return 0;
+  if (type === "one_time") return 1;
+
+  if (!startDate || !endDate) return 0;
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (end <= start) return 0;
+
+  const months =
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth());
+
+  if (type === "monthly") return months || 1;
+  if (type === "yearly") return Math.floor(months / 12) || 1;
+
+  return 1;
+};
+
 useEffect(() => {
   const lifetime = calculateAssetLifetime(formData.DOP, formData.DOE);
 
@@ -204,6 +224,21 @@ const handleSubmit = async (e) => {
   }
 };
 
+  const cycles = calculateCycles(
+  formData.type,
+  formData.DOP,
+  formData.DOE
+);
+
+const overallTotalPreview =
+  formData.assetCost.amount && cycles
+    ? (formData.assetCost.amount * cycles).toFixed(2)
+    : "";
+
+const overallUnitPreview =
+  overallTotalPreview && formData.assetQuantity
+    ? (overallTotalPreview / formData.assetQuantity).toFixed(2)
+    : "";
 
   // Small helper UI components to match hardware layout
   const SectionTitle = ({ children }) => <h3 className="section-title">{children}</h3>;
@@ -307,8 +342,8 @@ const handleSubmit = async (e) => {
               <label>License Key</label>
               <input name="licenseKey" value={formData.licenseKey} onChange={handleChange} />
             </div>
-
-            {/* <div className="input-group">
+{/* 
+            <div className="input-group">
               <label>License Type</label>
               <input name="licenseType" value={formData.licenseType} onChange={handleChange} placeholder="Perpetual / Subscription" />
             </div> */}
@@ -346,11 +381,11 @@ const handleSubmit = async (e) => {
           </div>
 
           <div className="grid-2">
-
+{/* 
             <div className="input-group">
               <label>License Use</label>
               <input name="licenseUse" value={formData.licenseUse} onChange={handleChange} />
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -409,6 +444,36 @@ const handleSubmit = async (e) => {
     style={{ backgroundColor: "#f9fafb" }}
   />
 </div>
+<div className="input-group">
+  <label>Billing Cycles (auto)</label>
+  <input
+    value={cycles || ""}
+    readOnly
+    placeholder="Calculated from duration"
+    style={{ backgroundColor: "#f9fafb" }}
+  />
+</div>
+
+<div className="input-group">
+  <label>Overall Lifecycle Cost (auto)</label>
+  <input
+    value={overallTotalPreview}
+    readOnly
+    placeholder="Total cost for full duration"
+    style={{ backgroundColor: "#f9fafb" }}
+  />
+</div>
+
+<div className="input-group">
+  <label>Overall Cost Per License (auto)</label>
+  <input
+    value={overallUnitPreview}
+    readOnly
+    placeholder="Lifecycle cost per license"
+    style={{ backgroundColor: "#f9fafb" }}
+  />
+</div>
+
 
 </div>
 

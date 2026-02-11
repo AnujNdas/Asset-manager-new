@@ -123,6 +123,8 @@ useEffect(() => {
       <Loader type="mis" apiDone={apiDone} />
   );
 }
+const getInStock = (asset) =>
+  Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
 
   return (
     <div className="mis-content">
@@ -139,14 +141,14 @@ useEffect(() => {
         <div className="navs">
           <button
             className={activeTab === "hardware" ? "active-tab" : ""}
-            onClick={() => setActiveTab("Hardware")}
+            onClick={() => setActiveTab("hardware")}
           >
             Hardware
           </button>
 
           <button
             className={activeTab === "software" ? "active-tab" : ""}
-            onClick={() => setActiveTab("Software")}
+            onClick={() => setActiveTab("software")}
           >
             Software
           </button>
@@ -219,7 +221,9 @@ useEffect(() => {
                 <th>Name</th>
                 <th>Spec</th>
                 <th>Unit</th>
-                <th>Status</th>
+                {/* <th>Status</th> */}
+<th>In Use</th>
+<th>In Stock</th>
                 <th>Location</th>
                 <th>Maintainence</th>
                 <th>Total Cost</th>
@@ -231,7 +235,9 @@ useEffect(() => {
                 <th>Name</th>
                 <th>Version</th>
                 <th>Publisher</th>
-                <th>Status</th>
+                <th>In Use</th>
+                <th>In Stock</th>
+                {/* <th>Status</th> */}
                 <th>Category</th>
                 <th>Expiry</th>
                 <th>Total Cost</th>
@@ -248,12 +254,14 @@ useEffect(() => {
                   <td>{row.assetName}</td>
                   <td>{row.assetSpecification}</td>
                   <td>{units.find((u) => u._id === row.associateUnit)?.name}</td>
-                  <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
+                  {/* <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td> */}
+                  <td>{row.inUse}</td>
+                  <td>{getInStock(row)}</td>
                   <td>{locations.find((l) => l._id === row.locationName)?.name}</td>
                   <td>{row.DOE}</td>
                   <td>{CURRENCY_SYMBOLS[currency]}{" "}
                   {convertFromBase(
-                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
+                    row.assetCost?.baseTotalAmount ?? 0,
                     currency
                   ).toLocaleString()}</td>
                 </>
