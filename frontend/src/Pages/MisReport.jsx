@@ -272,7 +272,9 @@ const getInStock = (asset) =>
                   <td>{row.assetName}</td>
                   <td>{row.assetSpecification}</td>
                   <td>{row.purchaseFrom}</td>
-                  <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td>
+                <td>{row.inUse}</td>
+                <td>{getInStock(row)}</td>
+                  {/* <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td> */}
                   <td>{categories.find((c) => c._id === row.assetCategory)?.name}</td>
                 <td>{row.DOE}</td>
                 <td>{CURRENCY_SYMBOLS[currency]}{" "}
