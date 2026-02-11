@@ -6,7 +6,7 @@ const authenticateToken = require("../Middleware/Authentication-token");
 const { getOverview } = require("../controllers/superAdmin/dashboardController");
 const { getAllOrganizations, createOrganization , getOrganizationById ,toggleOrganizationStatus , getOrganizationUsers  } = require("../controllers/superAdmin/organizationController");
 const {getSettings, updateSettings} = require("../controllers/superAdmin/settingController");
-const { getGAAnalytics } = require("../controllers/superAdmin/gaAnalysisController");
+// const { getGAAnalytics } = require("../controllers/superAdmin/gaAnalysisController");
 const { getLoginActivity } = require("../controllers/superAdmin/loginActivityController");
 
 
@@ -23,11 +23,11 @@ router.patch("/organizations/:id/status", authenticateToken(["super-admin"]), to
 /* ================= SETTINGS ================= */
 router.get("/settings", authenticateToken(["super-admin"]), getSettings);
 router.put("/settings", authenticateToken(["super-admin"]), updateSettings);
-router.get(
-  "/analytics/ga",
-  authenticateToken(["super-admin"]),
-  getGAAnalytics
-);
+// router.get(
+//   "/analytics/ga",
+//   authenticateToken(["super-admin"]),
+//   getGAAnalytics
+// );
 router.get(
   "/login-activity",
   authenticateToken(["super-admin"]),
