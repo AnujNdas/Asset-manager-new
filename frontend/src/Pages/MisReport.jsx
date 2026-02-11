@@ -279,7 +279,7 @@ const getInStock = (asset) =>
                 <td>{row.DOE}</td>
                 <td>{CURRENCY_SYMBOLS[currency]}{" "}
                   {convertFromBase(
-                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
+                    row.assetCost?.baseTotalAmount ?? 0,
                     currency
                   ).toLocaleString()}</td>
                 </>
