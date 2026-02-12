@@ -305,22 +305,7 @@ const handleAddAsset = async (e) => {
               onChange={handleChange}
             />
           </div>
-          {/* Hardware Type */}
-<div className="input-group">
-  <label>
-    Hardware Type <span>*</span>
-  </label>
-  <select
-    name="type"
-    value={formData.type}
-    onChange={handleChange}
-    required
-  >
-    <option value="">Select Type</option>
-    <option value="one_time">One-Time Purchase</option>
-    <option value="maintenance">Maintenance / AMC</option>
-  </select>
-</div>
+
 
         </div>
 
@@ -383,6 +368,22 @@ const handleAddAsset = async (e) => {
               ))}
             </select>
           </div>
+                    {/* Hardware Type */}
+<div className="input-group">
+  <label>
+    Hardware Type <span style={{ color : "#ff0000"}}>*</span>
+  </label>
+  <select
+    name="type"
+    value={formData.type}
+    onChange={handleChange}
+    required
+  >
+    <option value="">Select Type</option>
+    <option value="one_time">One-Time Purchase</option>
+    <option value="maintenance">Maintenance / AMC</option>
+  </select>
+</div>
 
           {/* PMD */}
           {/* <div className="input-group">
@@ -425,7 +426,7 @@ const handleAddAsset = async (e) => {
 </div>
 <div className="input-group">
 <label>
-  Total Asset Cost <span>*</span>
+  Total Asset Cost <span style={{ color : "#ff0000"}}>( Cost of all units )</span>
 </label>
 <input
   type="number"
@@ -517,7 +518,7 @@ const handleAddAsset = async (e) => {
             </div>
 
             <div className="input-group">
-              <label>Days Before Maintainance</label>
+              <label>Days Before Maintainance <span style={{ color: "#ff0000" }}>(auto)</span></label>
               <input
                 type="text"
                 name="assetLifetime"
@@ -580,7 +581,7 @@ const handleAddAsset = async (e) => {
 
     <div className="grid-2">
       <div className="input-group">
-        <label>Warranty Lifetime</label>
+        <label>Warranty Lifetime <span style={{ color: "#ff0000" }}>(auto)</span></label>
         <input
           type="text"
           value={formData.warranty.lifetime}

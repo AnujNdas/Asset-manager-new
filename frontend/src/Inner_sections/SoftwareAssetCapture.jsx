@@ -280,22 +280,7 @@ const overallUnitPreview =
             </div>
           </div>
           <div className="grid-2">
-  <div className="input-group">
-    <label>
-      Software Type <span style={{ color: "#e11d48" }}>*</span>
-    </label>
-    <select
-      name="type"
-      value={formData.type}
-      onChange={handleChange}
-      required
-    >
-      <option value="">Select Type</option>
-      <option value="monthly">Monthly Subscription</option>
-      <option value="yearly">Yearly Subscription</option>
-      <option value="one_time">One-Time Purchase</option>
-    </select>
-  </div>
+
 </div>
 
           <div className="grid-2">
@@ -378,6 +363,22 @@ const overallUnitPreview =
               <label>Total Licenses</label>
               <input type="number" name="assetQuantity" value={formData.assetQuantity} onChange={handleChange} />
             </div> 
+                        <div className="input-group">
+          <label>
+            Software Type <span style={{ color: "#e11d48" }}>*</span>
+          </label>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Type</option>
+            <option value="monthly">Monthly Subscription</option>
+            <option value="yearly">Yearly Subscription</option>
+            <option value="one_time">One-Time Purchase</option>
+          </select>
+        </div>
           </div>
 
           <div className="grid-2">
@@ -414,7 +415,7 @@ const overallUnitPreview =
 
   <div className="input-group">
 <label>
-  Total License Cost <span style={{ color: "#e11d48" }}>*</span>
+  Total License Cost <span style={{ color: "#ff0000" }}>( According to Software Type)</span>
 </label>
 <input
   type="number"
@@ -432,7 +433,7 @@ const overallUnitPreview =
 
   </div>
   <div className="input-group">
-  <label>Cost Per License (auto)</label>
+  <label>Cost Per License <span style={{ color: "#ff0000" }}>(auto)</span></label>
   <input
     value={
       formData.assetQuantity && formData.assetCost.amount
@@ -445,7 +446,7 @@ const overallUnitPreview =
   />
 </div>
 <div className="input-group">
-  <label>Billing Cycles (auto)</label>
+  <label>Billing Cycles <span style={{ color: "#ff0000" }}>(auto)</span></label>
   <input
     value={cycles || ""}
     readOnly
@@ -455,7 +456,7 @@ const overallUnitPreview =
 </div>
 
 <div className="input-group">
-  <label>Overall Lifecycle Cost (auto)</label>
+  <label>Overall Lifecycle Cost <span style={{ color: "#ff0000" }}>(auto)</span></label>
   <input
     value={overallTotalPreview}
     readOnly
@@ -465,7 +466,7 @@ const overallUnitPreview =
 </div>
 
 <div className="input-group">
-  <label>Overall Cost Per License (auto)</label>
+  <label>Overall Cost Per License <span style={{ color: "#ff0000" }}>(auto)</span></label>
   <input
     value={overallUnitPreview}
     readOnly
@@ -484,7 +485,7 @@ const overallUnitPreview =
                 {statuses.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
               </select>
             </div>
-            <div className="input-group">
+            {/* <div className="input-group">
   <label>Asset Lifetime</label>
   <input
     value={formData.assetLifetime}
@@ -492,7 +493,7 @@ const overallUnitPreview =
     placeholder="Auto-calculated"
     style={{ backgroundColor: "#f9fafb" }}
   />
-</div>
+</div> */}
 
           {/* <div className="grid-2">
             <div className="input-group">

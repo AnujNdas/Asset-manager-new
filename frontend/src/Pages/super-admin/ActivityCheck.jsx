@@ -95,12 +95,12 @@ export default function LoginActivity() {
     />
 
     {filtered
-      .filter((log) => log.lat && log.lon)
+      .filter((log) => log.latitude && log.longitude)
 
       .map((log) => (
         <Marker
           key={log._id}
-          position={[log.lat, log.lon]}
+          position={[log.latitude, log.longitude]}
 
         >
           <Popup>

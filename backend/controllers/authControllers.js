@@ -229,19 +229,29 @@ const login = async (req, res) => {
 
     // ✅ Get Geo Location from IP
     let locationData = {};
-    try {
-      const geo = await axios.get(`http://ip-api.com/json/${ip}`);
-      locationData = {
-        country: geo.data.country,
-        region: geo.data.regionName,
-        city: geo.data.city,
-        lat: geo.data.lat,
-        lon: geo.data.lon,
-        isp: geo.data.isp,
-      };
-    } catch (geoError) {
-      console.error("Geo lookup failed:", geoError.message);
-    }
+
+try {
+  const geo = await axios.get(`http://ip-api.com/json/${ip}`);
+
+  const lat = Number(geo.data.lat);
+  const lon = Number(geo.data.lon);
+
+  locationData = {
+    country: geo.data.country,
+    region: geo.data.regionName,
+    city: geo.data.city,
+    isp: geo.data.isp,
+  };
+
+  // Only add coordinates if valid
+  if (!isNaN(lat) && !isNaN(lon)) {
+    locationData.latitude = lat;
+    locationData.longitude = lon;
+  }
+
+} catch (geoError) {
+  console.error("Geo lookup failed:", geoError.message);
+}
 
     // ✅ Save Login Activity
     await LoginActivity.create({
