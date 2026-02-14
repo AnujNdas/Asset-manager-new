@@ -1,113 +1,128 @@
-/* Full page background */
-.auth-wrapper {
-  min-height: 100vh;
-  width: 100%;
-  background: #f3f4f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* padding: 40px; */
-}
+  /* Full page background */
+  .auth-wrapper {
+    min-height: 100vh;
+    width: 100%;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 40px; */
+  }
 
-/* Main card */
-.auth-container {
-  width: 100%;
-  /* max-width: 100%; */
-  height: 100dvh;
-  background: #ffffff;
-  /* border-radius: 20px; */
-  display: flex;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-}
-
-/* LEFT PANEL */
-.auth-left {
-  flex: 1;
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.auth-header h2 {
-  font-weight: 600;
-  color: #000000;
-  font-size: 20px;
-}
-
-.auth-content {
-  max-width: 380px;
-  width: 100%;
-}
-
-/* RIGHT PANEL */
-.auth-right {
-  flex: 1;
-  background: linear-gradient(135deg, #4f46e5, #3b82f6);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px;
-}
-
-.right-content {
-  max-width: 400px;
-}
-.dash-image {
-  margin-top: 20px;
-  width: 100%;
-  height: 220px;
-background-image: url("../../public/images/Dashboard.webp");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 10px;
-}
-
-.right-content h1 {
-  font-size: 32px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #ffffff;
-}
-
-.right-content p {
-  opacity: 0.9;
-}
-
-/* Tabs */
-.tab-buttons {
-  display: flex;
-  margin-bottom: 30px;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  background: transparent;
-  font-weight: 600;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-}
-
-.tab-btn.active {
-  border-bottom: 2px solid #4f46e5;
-  color: #ffffff;
-  background: linear-gradient(135deg, #4f46e5, #3b82f6);
-}
-
-@media (max-width: 900px) {
+  /* Main card */
   .auth-container {
-    flex-direction: column;
-    height: auto;
+    width: 100%;
+    /* max-width: 100%; */
+    height: 100dvh;
+    background: #ffffff;
+    /* border-radius: 20px; */
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
   }
 
-  .auth-right {
-    display: none;
+  /* LEFT PANEL */
+  .auth-left {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
   }
-}
+
+  .auth-header h2 {
+    font-weight: 600;
+    color: #000000;
+    font-size: 20px;
+  }
+
+  .auth-content {
+    max-width: 380px;
+    width: 100%;
+  }
+
+  /* RIGHT PANEL */
+  .auth-right {
+    flex: 1;
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+  }
+
+  .right-content {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .dash-image {
+    margin-top: 20px;
+    width: 100%;
+    height: 220px;
+  background-image: url("../../public/images/Dashboard.webp");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+  }
+  .dash-logo {
+    width: 100px;
+    height: 100px;
+    background-image: url("../../public/images/logo.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+  }
+  .right-content h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 0px;
+    text-align: center;
+  }
+
+  .right-content p {
+    opacity: 0.9;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Tabs */
+  .tab-buttons {
+    display: flex;
+    margin-bottom: 30px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+
+  .tab-btn.active {
+    border-bottom: 2px solid #4f46e5;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+  }
+
+  @media (max-width: 900px) {
+    .auth-container {
+      flex-direction: column;
+      height: auto;
+    }
+
+    .auth-right {
+      display: none;
+    }
+  }

@@ -15,6 +15,7 @@ import {
   FaCogs,
   FaUsers,
   FaBell,
+  FaEnvelope,
   FaQuestion,
 } from "react-icons/fa";
 
@@ -101,7 +102,7 @@ const Setting = () => {
     { path: "profile", label: "Profile", icon: FaUser },
     { path: "security", label: "Security", icon: FaLock },
     ...(userData?.role === "admin"
-      ? [{ path: "teamInvites", label: "Team Invites", icon: FaLock }]
+      ? [{ path: "teamInvites", label: "Team Invites", icon: FaEnvelope }]
       : []),
     { path: "notification", label: "Notifications", icon: FaBell },
     { path: "subscription", label: "Subscription", icon: FaCogs },

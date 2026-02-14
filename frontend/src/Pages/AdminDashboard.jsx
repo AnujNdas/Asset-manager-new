@@ -199,7 +199,12 @@ const COLORS = [
                 display: "inline-block",
               }}
             />
-            <span>{entry.value}</span>
+            <span>
+  {entry.value
+    ? entry.value.charAt(0).toUpperCase() + entry.value.slice(1)
+    : ""}
+</span>
+
           </div>
         ))}
       </div>

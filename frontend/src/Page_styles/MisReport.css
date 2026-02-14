@@ -206,11 +206,6 @@ select:focus-visible {
     padding: 14px;
     gap: 14px;
   }
-
-  .misbutton {
-    width: 100%;
-  }
-
   .navs {
     flex-wrap: nowrap;
     overflow-x: auto;

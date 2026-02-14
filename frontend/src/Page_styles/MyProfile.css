@@ -247,7 +247,7 @@
 @media (max-width: 480px) {
   .profile-avatar-section {
     flex-direction: column;
-    align-items: flex-start;
+    /* align-items: flex-start; */
   }
 
   .profile-avatar {
