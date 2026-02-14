@@ -1,6 +1,5 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import "../Page_styles/User.css";
-
 const User = ({ removeUser }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -11,29 +10,58 @@ const User = ({ removeUser }) => {
   };
 
   return (
-    <div className="user-overlay">
-      <div className="user-card">
-        <div className="tab-buttons">
-          <button
-            onClick={() => navigate("/user/login")}
-            className={`tab-btn ${location.pathname.includes("login") ? "active" : ""}`}
-          >
-            Login
-          </button>
-          <button
-            onClick={() => navigate("/user/signup")}
-            className={`tab-btn ${location.pathname.includes("signup") ? "active" : ""}`}
-          >
-            Signup
-          </button>
+  <div className="auth-wrapper">
+    <div className="auth-container">
+
+      {/* LEFT SIDE */}
+      <div className="auth-left">
+        <div className="auth-header">
+          <h2>Asset Management System</h2>
         </div>
 
-        <div className="auth-section">
-          <Outlet /> {/* Login or Signup will render here */}
+        <div className="auth-content">
+          <div className="tab-buttons">
+            <button
+              onClick={() => navigate("/user/login")}
+              className={`tab-btn ${
+                location.pathname.includes("login") ? "active" : ""
+              }`}
+            >
+              Login
+            </button>
+
+            <button
+              onClick={() => navigate("/user/signup")}
+              className={`tab-btn ${
+                location.pathname.includes("signup") ? "active" : ""
+              }`}
+            >
+              Signup
+            </button>
+          </div>
+
+          <div className="auth-section">
+            <Outlet />
+          </div>
         </div>
       </div>
+
+      {/* RIGHT SIDE */}
+      <div className="auth-right">
+        <div className="right-content">
+          <h1>Complete Asset Management (Software & Hardware)</h1>
+          <p>
+            Log in to access your CRM dashboard and manage your team.
+          </p>
+          <div className="dash-image">
+          </div>
+        </div>
+      </div>
+
     </div>
-  );
+  </div>
+);
+
 };
 
 export default User;

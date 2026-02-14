@@ -104,7 +104,16 @@
     "#22C55E",
     "#F59E0B"
   ];
-
+const COLORS = [
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+  "#ff8042",
+  "#0088FE",
+  "#FFBB28",
+  "#FF4444",
+  "#00C49F",
+];
   const BAR_COLORS = {
     hardware: "#3B82F6",
     software: "#8B5CF6",
@@ -591,48 +600,33 @@
 <div className="chart-card">
   <h2>Assets by Department</h2>
 
-  <ResponsiveContainer width="100%" height={260}>
-    <ScatterChart
-      margin={{ top: 10, right: 30, left: 40, bottom: 10 }}
-    >
-      <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-
-      <XAxis
-        type="number"
-        dataKey="value"
-        name="Assets"
-      />
-
-      <YAxis
-        type="category"
-        dataKey="department"
-        width={70}
-      />
-
+  <ResponsiveContainer width="100%" height={300}>
+    <PieChart>
       <Tooltip
-        formatter={(val) => val?.toLocaleString?.() || 0}
+        formatter={(value) => value?.toLocaleString?.() || 0}
       />
-
       <Legend />
 
-      <Scatter
-        name="Hardware"
-        data={(departmentAssets || []).map(d => ({
-          department: d.departmentName,
-          value: d.hardware || 0
+      <Pie
+        data={(departmentAssets || []).map((d) => ({
+          name: d.departmentName,
+          value: (d.hardware || 0) + (d.software || 0),
         }))}
-        fill="#ff0000"
-      />
-
-      <Scatter
-        name="Software"
-        data={(departmentAssets || []).map(d => ({
-          department: d.departmentName,
-          value: d.software || 0
-        }))}
-        fill="#0022ff"
-      />
-    </ScatterChart>
+        dataKey="value"
+        nameKey="name"
+        cx="50%"
+        cy="50%"
+        outerRadius={100}
+        label
+      >
+        {(departmentAssets || []).map((_, index) => (
+          <Cell
+            key={`cell-${index}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Pie>
+    </PieChart>
   </ResponsiveContainer>
 </div>
 
