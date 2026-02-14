@@ -49,6 +49,9 @@ const User = ({ removeUser }) => {
       {/* RIGHT SIDE */}
       <div className="auth-right">
         <div className="right-content">
+          <div className="dash-logo">
+            
+          </div>
           <h1>Complete Asset Management (Software & Hardware)</h1>
           <p>
             Log in to access your CRM dashboard and manage your team.
