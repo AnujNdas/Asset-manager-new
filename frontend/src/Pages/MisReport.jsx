@@ -213,19 +213,23 @@ const getInStock = (asset) =>
       </div>
 
       {/* TABLE */}
-      <table className="mis-table">
+{/* TABLE */}
+<div className="table-wrapper">
+  <table className="mis-table">
+
         <thead>
           <tr>
             {activeTab === "hardware" && (
               <>
                 <th>Name</th>
-                <th>Spec</th>
                 <th>Unit</th>
                 {/* <th>Status</th> */}
 <th>In Use</th>
 <th>In Stock</th>
                 <th>Location</th>
-                <th>Maintainence</th>
+<th className="hide-md">Spec</th>
+<th className="hide-lg">Maintainence</th>
+
                 <th>Total Cost</th>
               </>
             )}
@@ -234,12 +238,13 @@ const getInStock = (asset) =>
               <>
                 <th>Name</th>
                 <th>Version</th>
-                <th>Publisher</th>
                 <th>In Use</th>
                 <th>In Stock</th>
                 {/* <th>Status</th> */}
                 <th>Category</th>
-                <th>Expiry</th>
+<th className="hide-md">Publisher</th>
+<th className="hide-lg">Expiry</th>
+
                 <th>Total Cost</th>
               </>
             )}
@@ -252,13 +257,14 @@ const getInStock = (asset) =>
               {activeTab === "hardware" && (
                 <>
                   <td>{row.assetName}</td>
-                  <td>{row.assetSpecification}</td>
                   <td>{units.find((u) => u._id === row.associateUnit)?.name}</td>
                   {/* <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td> */}
                   <td>{row.inUse}</td>
                   <td>{getInStock(row)}</td>
                   <td>{locations.find((l) => l._id === row.locationName)?.name}</td>
-                  <td>{row.DOE}</td>
+<td className="hide-md">{row.assetSpecification}</td>
+<td className="hide-lg">{row.DOE}</td>
+
                   <td>{CURRENCY_SYMBOLS[currency]}{" "}
                   {convertFromBase(
                     row.assetCost?.baseTotalAmount ?? 0,
@@ -271,15 +277,15 @@ const getInStock = (asset) =>
                 <>
                   <td>{row.assetName}</td>
                   <td>{row.assetSpecification}</td>
-                  <td>{row.purchaseFrom}</td>
                 <td>{row.inUse}</td>
                 <td>{getInStock(row)}</td>
                   {/* <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td> */}
                   <td>{categories.find((c) => c._id === row.assetCategory)?.name}</td>
-                <td>{row.DOE}</td>
+                  <td className="hide-md">{row.purchaseFrom}</td>
+                <td className="hide-lg">{row.DOE}</td>
                 <td>{CURRENCY_SYMBOLS[currency]}{" "}
                   {convertFromBase(
-                    row.assetCost?.baseTotalAmount ?? 0,
+                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
                     currency
                   ).toLocaleString()}</td>
                 </>
@@ -288,6 +294,7 @@ const getInStock = (asset) =>
           ))}
         </tbody>
       </table>
+      </div>
 
       {/* Pagination */}
       <Pagination

@@ -32,7 +32,9 @@
 }
 
 .auth-header h2 {
-  font-weight: 700;
+  font-weight: 600;
+  color: #000000;
+  font-size: 20px;
 }
 
 .auth-content {
@@ -94,7 +96,8 @@ background-image: url("../../public/images/Dashboard.webp");
 
 .tab-btn.active {
   border-bottom: 2px solid #4f46e5;
-  color: #4f46e5;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4f46e5, #3b82f6);
 }
 
 @media (max-width: 900px) {
