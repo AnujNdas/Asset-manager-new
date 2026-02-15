@@ -1,0 +1,199 @@
+/* ===== Layout ===== */
+
+.page-container {
+  padding: 32px;
+  /* background: #f8fafc; */
+  /* min-height: 100vh; */
+  font-family: "Inter", sans-serif;
+}
+
+.page-container h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #1e293b;
+}
+
+/* ===== Table Card ===== */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* Header */
+.table thead {
+  background: #f1f5f9;
+}
+
+.table th {
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Rows */
+.table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #334155;
+  border-top: 1px solid #f1f5f9;
+}
+
+.table tbody tr:hover {
+  background: #f8fafc;
+  transition: 0.2s ease;
+}
+
+/* ===== Buttons ===== */
+
+button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* Primary */
+.depart-button {
+  background: #ff0000;
+  color: white;
+}
+
+.depart-button:hover {
+  background: #1d4ed8;
+}
+
+/* Cancel */
+.cancel-btn {
+  background: #fb0400;
+  color: #334155;
+}
+
+.cancel-btn:hover {
+  background: #cbd5e1;
+}
+
+/* ===== Modal ===== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 16px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.25s ease;
+}
+
+.modal h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+/* Select */
+
+.modal select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  margin-bottom: 20px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.modal select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Modal actions */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table tr {
+    margin-bottom: 16px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+
+  .table td {
+    border: none;
+    padding: 8px 0;
+    font-size: 14px;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+}
+
+/* ===== Animation ===== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

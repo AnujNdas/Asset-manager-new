@@ -8,6 +8,7 @@ const CoreCompanyLicense = require("../models/CoreCompanyLicense");
 const AssetAssignment = require("../models/AssetAssignment");
 const User = require("../models/User");
 const authenticateToken = require("../Middleware/Authentication-token");
+const Department = require("../models/Department");
 
 /* ======================================================
    📊 STATS (WORKING – LEFT AS IS)
@@ -425,7 +426,8 @@ router.get(
       const users = await User.find({
         organizationId: new mongoose.Types.ObjectId(organizationId),
       })
-        .select("-password") // never send password
+        .populate("departmentId", "name")   // ✅ ADD THIS
+        .select("-password")
         .sort({ createdAt: -1 });
 
       res.json(users);
@@ -435,7 +437,6 @@ router.get(
     }
   }
 );
-
 
 
 /**
@@ -696,4 +697,92 @@ router.get(
     res.status(500).json({ success: false, message: error.message });
   }
 });
+router.put(
+  "/users/:id/department",
+  authenticateToken(["admin", "super-admin"]),
+  async (req, res) => {
+    try {
+      const adminUser = req.user;
+      const targetUserId = req.params.id;
+      const { departmentId } = req.body;
+
+      // 1️⃣ Validate departmentId
+      if (!departmentId || !mongoose.Types.ObjectId.isValid(departmentId)) {
+        return res.status(400).json({
+          error: "Valid departmentId is required",
+        });
+      }
+
+      // 2️⃣ Find target user
+      const user = await User.findById(targetUserId);
+
+      if (!user) {
+        return res.status(404).json({
+          error: "User not found",
+        });
+      }
+
+      // 3️⃣ Multi-tenant protection
+      if (
+        user.organizationId.toString() !==
+        adminUser.organizationId.toString()
+      ) {
+        return res.status(403).json({
+          error: "You cannot modify users from another organization",
+        });
+      }
+
+      // 4️⃣ Prevent modifying super-admin department
+      if (user.role === "super-admin") {
+        return res.status(403).json({
+          error: "Cannot modify super-admin department",
+        });
+      }
+
+      // 5️⃣ Validate department belongs to same organization
+      const department = await Department.findOne({
+        _id: departmentId,
+        organizationId: adminUser.organizationId,
+        isActive: true,
+      });
+
+      if (!department) {
+        return res.status(400).json({
+          error: "Invalid or inactive department",
+        });
+      }
+
+      // 6️⃣ OPTIONAL SAFETY RULE
+      // Block department change if user has active asset assignments
+      const activeAssignments = await AssetAssignment.exists({
+        assignedToType: "User",
+        assignedTo: user._id,
+        status: "active",
+      });
+
+      if (activeAssignments) {
+        return res.status(400).json({
+          error:
+            "Cannot change department while user has active asset assignments",
+        });
+      }
+
+      // 7️⃣ Assign department
+      user.departmentId = departmentId;
+      await user.save();
+
+      res.json({
+        message: "Department assigned successfully",
+        userId: user._id,
+        departmentId,
+      });
+
+    } catch (error) {
+      console.error("Department assignment error:", error);
+      res.status(500).json({
+        error: "Failed to assign department",
+      });
+    }
+  }
+);
 module.exports = router;

@@ -302,7 +302,13 @@ export const getDepartmentAssetDistribution = async () => {
   const res = await axiosInstance.get("/admin/asset-distribution");
   return res.data?.data || [];
 };
-
+export const assignUserToDepartment = async (userId, departmentId) => {
+  const res = await axiosInstance.put(
+    `/admin/users/${userId}/department`,
+    { departmentId }
+  );
+  return res.data;
+};
 export const getRecentAssets = async () =>
   axiosInstance.get("/admin/recent-assets").then((res) => res.data);
 

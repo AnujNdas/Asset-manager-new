@@ -15,8 +15,9 @@ import {
   FaCogs,
   FaUsers,
   FaBell,
-  FaEnvelope,
   FaQuestion,
+  FaEnvelope,
+  FaMousePointer,
 } from "react-icons/fa";
 
 import axiosInstance from "../Services/axiosInstance";
@@ -29,6 +30,7 @@ const Notification = lazy(() => import("../Inner_sections/Notification"));
 const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
 const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 const HelpSupport = lazy(() => import("../Inner_sections/Help-Support"));
+const SetUser = lazy(() => import("../Inner_sections/SetUser"));
 const Setting = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -110,6 +112,9 @@ const Setting = () => {
     ...(userData?.role === "admin"
       ? [{ path: "users", label: "User Management", icon: FaUsers }]
       : []),
+    ...(userData?.role === "admin"
+      ? [{ path: "setuser", label: "Set User Department", icon: FaMousePointer }]
+      : []),
   ];
 
   return (
@@ -141,6 +146,7 @@ const Setting = () => {
             <Route path="subscription" element={<Subscription />} />
             <Route path="teamInvites" element={<TeamInvites />} />
             <Route path="help&support" element={<HelpSupport />} />
+            <Route path="setuser" element={<SetUser />} />
             {userData?.role === "admin" && (
               <Route path="users" element={<UserManagement />} />
             )}
