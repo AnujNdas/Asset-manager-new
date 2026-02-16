@@ -309,6 +309,15 @@ export const assignUserToDepartment = async (userId, departmentId) => {
   );
   return res.data;
 };
+export const getUsersByDepartment = async (departmentId) => {
+  if (!departmentId) {
+    throw new Error("Department ID is required");
+  }
+
+  const response = await axiosInstance.get(`/assignment/department/${departmentId}`);
+
+  return response.data;
+};
 export const getRecentAssets = async () =>
   axiosInstance.get("/admin/recent-assets").then((res) => res.data);
 

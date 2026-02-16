@@ -587,7 +587,7 @@ const getAllAssets = async (req, res, next) => {
       });
     }
 
-    // 1️⃣ Fetch only this organization's assets
+    // 1️⃣ Fetch assets
     const assets = await Asset.find({ organizationId }).lean();
 
     if (!assets.length) {
@@ -596,47 +596,80 @@ const getAllAssets = async (req, res, next) => {
 
     const assetIds = assets.map(a => a._id);
 
-    // 2️⃣ Fetch only assignments for this organization & these assets
-    const assignments = await AssetAssignment.find({
-      organizationId,
-      assetType: "hardware",
-      status: "active",
-      assetId: { $in: assetIds },
-    })
-      .populate("assignedTo", "name")
-      .lean();
+    // 2️⃣ Fetch active hardware assignments
+const assignments = await AssetAssignment.find({
+  organizationId,
+  assetType: "hardware",
+  status: "active",
+  assetId: { $in: assetIds },
+})
+  .populate("departmentId", "name")
+  .populate("userId", "name email")
+  .lean();
 
-    // 3️⃣ Group assignments by assetId
-    const assignmentMap = {};
 
-    for (const assign of assignments) {
-      const assetId = String(assign.assetId);
+    // 3️⃣ Build assignment summary map
+const assignmentMap = {};
 
-      if (!assignmentMap[assetId]) {
-        assignmentMap[assetId] = {
-          inUse: 0,
-          assignedDepartments: [],
-        };
-      }
+for (const assign of assignments) {
+  const assetId = String(assign.assetId);
 
-      assignmentMap[assetId].inUse += assign.quantity;
+  if (!assignmentMap[assetId]) {
+    assignmentMap[assetId] = {
+      inUse: 0,
+      departmentMap: {},
+      assignmentRecords: [],
+    };
+  }
 
-      assignmentMap[assetId].assignedDepartments.push({
-        department: assign.assignedTo,
-        quantity: assign.quantity,
-      });
-    }
+  assignmentMap[assetId].inUse += assign.quantity;
 
-    // 4️⃣ Merge assignment data into assets
-    const enrichedAssets = assets.map(asset => {
-      const assignmentData = assignmentMap[String(asset._id)];
+  // Department summary
+  const deptId = String(assign.departmentId._id);
 
-      return {
-        ...asset,
-        inUse: assignmentData?.inUse || 0,
-        assignedDepartments: assignmentData?.assignedDepartments || [],
-      };
-    });
+  if (!assignmentMap[assetId].departmentMap[deptId]) {
+    assignmentMap[assetId].departmentMap[deptId] = {
+      department: assign.departmentId,
+      quantity: 0,
+    };
+  }
+
+  assignmentMap[assetId].departmentMap[deptId].quantity += assign.quantity;
+
+  // 🔥 FULL assignment record for modal
+  assignmentMap[assetId].assignmentRecords.push({
+    _id: assign._id,
+    user: assign.userId,
+    department: assign.departmentId,
+    assignLocation: assign.assignLocation,
+    quantity: assign.quantity,
+    assignedAt: assign.assignedAt,
+  });
+}
+
+
+    // 4️⃣ Convert departmentMap → assignedDepartments array
+Object.keys(assignmentMap).forEach(assetId => {
+  assignmentMap[assetId].assignedDepartments = Object.values(
+    assignmentMap[assetId].departmentMap
+  );
+
+  delete assignmentMap[assetId].departmentMap;
+});
+
+
+    // 5️⃣ Merge into assets
+const enrichedAssets = assets.map(asset => {
+  const assignmentData = assignmentMap[String(asset._id)];
+
+  return {
+    ...asset,
+    inUse: assignmentData?.inUse || 0,
+    assignedDepartments: assignmentData?.assignedDepartments || [],
+    assignmentRecords: assignmentData?.assignmentRecords || [], // 🔥 NEW
+  };
+});
+
 
     return res.status(200).json(enrichedAssets);
   } catch (error) {

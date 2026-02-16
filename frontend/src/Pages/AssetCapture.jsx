@@ -4,13 +4,25 @@ import SoftwareAssetCapture from "../Inner_sections/SoftwareAssetCapture";
 import CoreCompanyLicenseCapture from "../Inner_sections/CoreCompanyLicenseCapture";
 import BulkUpload from "../Components/BulkUpload";
 import "../Page_styles/Tabs.css";
+import {jwtDecode} from "jwt-decode";
 
 const AssetCapture = () => {
   const [activeTab, setActiveTab] = useState("hardware");
   const [importType, setImportType] = useState("hardware");
 
-  const role = localStorage.getItem("role");
-  const userRole = role || "user";
+
+const token = localStorage.getItem("auth");
+
+let userRole = "user";
+
+if (token) {
+  try {
+    const decoded = jwtDecode(token);
+    userRole = decoded.role;
+  } catch (err) {
+    console.error("Invalid token");
+  }
+}
 
   return (
     <div className="capture-container">

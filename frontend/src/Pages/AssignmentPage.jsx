@@ -1,43 +1,42 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
-import "../Page_styles/AssignmentPage.css";
-import Pagination from "../Components/Pagination";
 import Swal from "sweetalert2";
+import "../Page_styles/AssignmentPage.css";
 import {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
   assignAssetsFromStock,
   getDepartments,
+  getUsersByDepartment
 } from "../Services/ApiServices";
 
-const PAGE_SIZE = 8;
-
 const AssignmentPage = () => {
-  const location = useLocation();
-  const preselect = location.state; // { categoryId, assetId, assetType }
-
-  const [currentPage, setCurrentPage] = useState(1);
+  const [step, setStep] = useState(1);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [assets, setAssets] = useState([]);
+  const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [assignments, setAssignments] = useState({});
   const [loading, setLoading] = useState(false);
-  const [categorySearch, setCategorySearch] = useState("");
 
-  /* =========================
+  const [wizardData, setWizardData] = useState({
+    category: null,
+    assets: [],
+    selectedAssets: {},
+    department: "",
+    user: ""
+  });
+
+  /* =============================
      INITIAL LOAD
-  ========================== */
+  ============================== */
   useEffect(() => {
-    fetchCategorySummary();
+    fetchCategories();
     fetchDepartments();
   }, []);
 
-  const fetchCategorySummary = async () => {
+  const fetchCategories = async () => {
     try {
       const res = await getInStockCategorySummary();
       setCategories(res.data || []);
+      console.log("Fetched categories:", res.data);
     } catch {
       Swal.fire("Error", "Failed to load categories", "error");
     }
@@ -46,122 +45,144 @@ const AssignmentPage = () => {
   const fetchDepartments = async () => {
     try {
       const res = await getDepartments();
-      const list = Array.isArray(res)
-        ? res
-        : Array.isArray(res?.data)
-        ? res.data
-        : [];
-      setDepartments(list);
+      setDepartments(res.data || res || []);
     } catch {
       Swal.fire("Error", "Failed to load departments", "error");
-      setDepartments([]);
     }
   };
 
-  /* =========================
-     AUTO-OPEN CATEGORY FROM INVENTORY
-  ========================== */
-  useEffect(() => {
-    if (!preselect?.categoryId || !categories.length) return;
+const fetchUsers = async (departmentId) => {
+  try {
+    const res = await getUsersByDepartment(departmentId);
+    console.log("Users response:", res.data);
 
-    const cat = categories.find(
-      (c) => String(c.category) === String(preselect.categoryId)
-    );
+    setUsers(res.data || []);
 
-    if (cat) {
-      openCategory(cat);
+  } catch (err) {
+    console.error(err);
+    setUsers([]);
+    Swal.fire("Error", "Failed to load users", "error");
+  }
+};
+
+
+  /* =============================
+     STEP NAVIGATION VALIDATION
+  ============================== */
+  const goNext = () => {
+    if (step === 1 && !wizardData.category)
+      return Swal.fire("Select a category first");
+
+    if (step === 2) {
+      const hasSelection = Object.values(wizardData.selectedAssets)
+        .some(a => a.quantity > 0);
+      if (!hasSelection)
+        return Swal.fire("Select at least one asset");
     }
-  }, [categories]);
 
-  /* =========================
-     SEARCH + PAGINATION
-  ========================== */
-  const filteredCategories = useMemo(() => {
-    return categories.filter((cat) =>
-      (cat.categoryName || cat.category)
-        .toLowerCase()
-        .includes(categorySearch.toLowerCase())
-    );
-  }, [categories, categorySearch]);
+    if (step === 3 && !wizardData.department)
+      return Swal.fire("Select department");
 
-  const totalPages = Math.ceil(filteredCategories.length / PAGE_SIZE);
+    if (step === 4 && !wizardData.user)
+      return Swal.fire("Select user");
 
-  const paginatedCategories = useMemo(() => {
-    const start = (currentPage - 1) * PAGE_SIZE;
-    return filteredCategories.slice(start, start + PAGE_SIZE);
-  }, [filteredCategories, currentPage]);
+    setStep(prev => prev + 1);
+  };
 
-  /* =========================
-     CATEGORY MODAL
-  ========================== */
-  const openCategory = async (categoryObj) => {
-    setSelectedCategory(categoryObj);
-    setAssignments({});
-    setSelectedDepartment("");
+  const goBack = () => setStep(prev => prev - 1);
 
+  /* =============================
+     STEP 1 — CATEGORY
+  ============================== */
+  const handleCategorySelect = async (category) => {
     try {
-      const res = await getInStockAssetsByCategory(categoryObj.category);
-      const assetList = res.data || [];
-      setAssets(assetList);
-
-      // ✅ Pre-select asset when coming from Inventory
-      if (preselect?.assetId) {
-        const match = assetList.find(
-          (a) => String(a._id) === String(preselect.assetId)
-        );
-        if (match) {
-          setAssignments({ [match._id]: 1 });
-        }
-      }
+      const res = await getInStockAssetsByCategory(category.category);
+      setWizardData(prev => ({
+        ...prev,
+        category,
+        assets: res.data || [],
+        selectedAssets: {}
+      }));
+      setStep(2);
     } catch {
       Swal.fire("Error", "Failed to load assets", "error");
     }
   };
 
-  const closeModal = () => {
-    setSelectedCategory(null);
-    setAssets([]);
-    setAssignments({});
-  };
-
+  /* =============================
+     STEP 2 — ASSETS
+  ============================== */
   const handleQtyChange = (assetId, value, max) => {
     const qty = Math.max(0, Math.min(Number(value), max));
-    setAssignments((prev) => ({ ...prev, [assetId]: qty }));
+
+    setWizardData(prev => ({
+      ...prev,
+      selectedAssets: {
+        ...prev.selectedAssets,
+        [assetId]: {
+          ...prev.selectedAssets[assetId],
+          quantity: qty,
+          location: prev.selectedAssets[assetId]?.location || ""
+        }
+      }
+    }));
   };
 
-  /* =========================
-     SUBMIT ASSIGNMENT
-  ========================== */
-  const submitAssignments = async () => {
-    if (!selectedDepartment) {
-      Swal.fire("Warning", "Please select a department", "warning");
-      return;
-    }
+  /* =============================
+     STEP 3 — DEPARTMENT
+  ============================== */
+  const handleDepartmentSelect = (depId) => {
+    setWizardData(prev => ({
+      ...prev,
+      department: depId,
+      user: ""
+    }));
+    fetchUsers(depId);
+  };
 
-    const payload = assets
-      .filter((a) => assignments[a._id] > 0)
-      .map((a) => ({
-        assetId: a._id,
-        assetType: a.assetType,
-        assetModel: a.assetType === "software" ? "SoftwareAsset" : "Asset",
-        assignedToType: "Department",
-        assignedTo: selectedDepartment,
-        quantity: assignments[a._id],
-      }));
+  /* =============================
+     STEP 5 — LOCATION
+  ============================== */
+  const handleLocationChange = (assetId, value) => {
+    setWizardData(prev => ({
+      ...prev,
+      selectedAssets: {
+        ...prev.selectedAssets,
+        [assetId]: {
+          ...prev.selectedAssets[assetId],
+          location: value
+        }
+      }
+    }));
+  };
 
-    if (!payload.length) {
-      Swal.fire("Info", "No assets selected", "info");
-      return;
-    }
+  /* =============================
+     FINAL SUBMIT
+  ============================== */
+  const handleSubmit = async () => {
+    const selected = Object.entries(wizardData.selectedAssets)
+      .filter(([_, val]) => val.quantity > 0);
+
+    if (selected.some(([_, val]) => !val.location.trim()))
+      return Swal.fire("All selected assets require location");
+
+    const payload = selected.map(([assetId, val]) => {
+      const asset = wizardData.assets.find(a => a._id === assetId);
+      return {
+        assetId,
+        assetType: asset.assetType,
+        departmentId: wizardData.department,
+        userId: wizardData.user,
+        assignLocation: val.location,
+        quantity: val.quantity
+      };
+    });
 
     try {
       setLoading(true);
       await assignAssetsFromStock({ assignments: payload });
-
       Swal.fire("Success", "Assets assigned successfully", "success");
-
-      closeModal();
-      fetchCategorySummary();
+      resetWizard();
     } catch {
       Swal.fire("Error", "Assignment failed", "error");
     } finally {
@@ -169,141 +190,177 @@ const AssignmentPage = () => {
     }
   };
 
-  /* =========================
-     RENDER
-  ========================== */
+  const resetWizard = () => {
+    setStep(1);
+    setWizardData({
+      category: null,
+      assets: [],
+      selectedAssets: {},
+      department: "",
+      user: ""
+    });
+  };
+
+  /* =============================
+     RENDER STEPS
+  ============================== */
+
   return (
-    <div className="assignment-page">
-      <div className="page-header">
-        <h1>Asset Assignment</h1>
-        <p>Assign in-stock assets to departments</p>
-      </div>
+    <div className="wizard-container">
 
-      <div className="category-search">
-        <input
-          type="text"
-          placeholder="Search category..."
-          value={categorySearch}
-          onChange={(e) => {
-            setCategorySearch(e.target.value);
-            setCurrentPage(1);
-          }}
-        />
-      </div>
+      <WizardStepper step={step} />
 
-      <div className="stock-grid">
-        {paginatedCategories.map((cat) => (
-          <div
-            key={cat.category}
-            className="asset-card"
-            onClick={() => openCategory(cat)}
-          >
-            <h3>
-              {cat.categoryName || cat.category}
-              {!cat.isActive && (
-                <span className="inactive-tag">Deactivated</span>
-              )}
-            </h3>
-
-            <span>{cat.totalInStock} in stock</span>
-
-            <div className="counts">
-              <p>Hardware: {cat.hardwareCount}</p>
-              <p>Software: {cat.softwareCount}</p>
+      {step === 1 && (
+        <div className="grid">
+          {categories.map(cat => (
+            <div
+              key={cat.category}
+              className="card"
+              onClick={() => handleCategorySelect(cat)}
+            >
+              <h3>{cat.categoryName}</h3>
+              <p>{cat.totalInStock} in stock</p>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
-      )}
-
-      {selectedCategory && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-header">
-              <h2>{selectedCategory.categoryName}</h2>
-              <button onClick={closeModal}>✕</button>
-            </div>
-
-            <div className="modal-controls">
-              <select
-                value={selectedDepartment}
-                onChange={(e) => setSelectedDepartment(e.target.value)}
-              >
-                <option value="">Select Department</option>
-                {departments.map((dep) => (
-                  <option key={dep._id} value={dep._id}>
-                    {dep.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="modal-body">
-              <table className="asset-table">
-                <thead>
-                  <tr>
-                    <th>Asset Name</th>
-                    <th>Type</th>
-                    <th>Available</th>
-                    <th>Assign Qty</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {assets.map((asset) => {
-                    const locked =
-                      preselect?.assetId &&
-                      String(asset._id) !== String(preselect.assetId);
-
-                    return (
-                      <tr
-                        key={asset._id}
-                        className={locked ? "disabled-row" : ""}
-                      >
-                        <td>{asset.name}</td>
-                        <td>{asset.assetType}</td>
-                        <td>{asset.available}</td>
-                        <td>
-                          <input
-                            type="number"
-                            min="0"
-                            max={asset.available}
-                            disabled={locked}
-                            value={assignments[asset._id] || ""}
-                            onChange={(e) =>
-                              handleQtyChange(
-                                asset._id,
-                                e.target.value,
-                                asset.available
-                              )
-                            }
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="modal-footer">
-              <button
-                className="assign-btn"
-                disabled={loading}
-                onClick={submitAssignments}
-              >
-                {loading ? "Assigning..." : "Assign Assets"}
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       )}
+
+      {step === 2 && (
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Available</th>
+                <th>Qty</th>
+              </tr>
+            </thead>
+            <tbody>
+              {wizardData.assets.map(asset => (
+                <tr key={asset._id}>
+                  <td>{asset.name}</td>
+                  <td>{asset.assetType}</td>
+                  <td>{asset.available}</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      max={asset.available}
+                      value={
+                        wizardData.selectedAssets[asset._id]?.quantity || ""
+                      }
+                      onChange={(e) =>
+                        handleQtyChange(
+                          asset._id,
+                          e.target.value,
+                          asset.available
+                        )
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {step === 3 && (
+        <select
+          className="select-box"
+          value={wizardData.department}
+          onChange={(e) => handleDepartmentSelect(e.target.value)}
+        >
+          <option value="">Select Department</option>
+          {departments.map(dep => (
+            <option key={dep._id} value={dep._id}>
+              {dep.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+{step === 4 && (
+  <select
+    className="select-box"
+    value={wizardData.user}
+    onChange={(e) =>
+      setWizardData(prev => ({ ...prev, user: e.target.value }))
+    }
+  >
+    <option value="">Select User</option>
+    {users.map(user => (
+      <option key={user._id} value={user._id}>
+        {user.email}
+      </option>
+    ))}
+  </select>
+)}
+
+
+      {step === 5 && (
+        <div className="review">
+          {Object.entries(wizardData.selectedAssets)
+            .filter(([_, val]) => val.quantity > 0)
+            .map(([assetId, val]) => {
+              const asset = wizardData.assets.find(a => a._id === assetId);
+              return (
+                <div key={assetId} className="review-card">
+                  <h4>{asset.name}</h4>
+                  <p>Quantity: {val.quantity}</p>
+                  <input
+                    type="text"
+                    placeholder="Enter location"
+                    value={val.location}
+                    onChange={(e) =>
+                      handleLocationChange(assetId, e.target.value)
+                    }
+                  />
+                </div>
+              );
+            })}
+        </div>
+      )}
+
+      <div className="wizard-footer">
+        {step > 1 && (
+          <button className="secondary-btn" onClick={goBack}>
+            Back
+          </button>
+        )}
+        {step < 5 ? (
+          <button className="primary-btn" onClick={goNext}>
+            Next
+          </button>
+        ) : (
+          <button
+            className="primary-btn"
+            disabled={loading}
+            onClick={handleSubmit}
+          >
+            {loading ? "Assigning..." : "Confirm Assignment"}
+          </button>
+        )}
+      </div>
+
+    </div>
+  );
+};
+
+const WizardStepper = ({ step }) => {
+  const steps = ["Category", "Assets", "Department", "User", "Review"];
+  return (
+    <div className="stepper">
+      {steps.map((label, index) => (
+        <div
+          key={index}
+          className={`step ${step >= index + 1 ? "active" : ""}`}
+        >
+          <div className="circle">{index + 1}</div>
+          <span>{label}</span>
+        </div>
+      ))}
     </div>
   );
 };

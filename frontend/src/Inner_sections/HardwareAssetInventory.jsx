@@ -24,6 +24,7 @@ const HardwareAssetList = () => {
   const [locations, setLocations] = useState([]);
   const [units, setUnits] = useState([]);
   const [statuses, setStatuses] = useState([]);
+  const [selectedAssignmentAsset, setSelectedAssignmentAsset] = useState(null);
 
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [editingAsset, setEditingAsset] = useState(null);
@@ -32,7 +33,7 @@ const HardwareAssetList = () => {
   const [apiDone, setApiDone] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const assetsPerPage = 8;
+  const assetsPerPage = 6;
 
   const navigate = useNavigate();
   const { currency } = useCurrency();
@@ -185,17 +186,22 @@ assetCost: {
 };
 
 const renderDepartmentBadges = (asset) => {
-  if (!asset.assignedDepartments || asset.assignedDepartments.length === 0) {
+  if (!asset.assignedDepartments?.length) {
     return <span className="dept-muted">Not Assigned</span>;
   }
 
   return asset.assignedDepartments.map((item) => (
-    <span key={item.department._id} className="dept-badge">
+    <span
+      key={item.department._id}
+      className="dept-badge clickable"
+      onClick={() => setSelectedAssignmentAsset(asset)}
+    >
       {item.department.name}
       {item.quantity ? ` (${item.quantity})` : ""}
     </span>
   ));
 };
+
 
 const getInStock = (asset) =>
   Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
@@ -381,14 +387,11 @@ const handleEditChange = (e) => {
 .toLocaleString()
     : "N/A"}
 
-
 </p>
-
-                  <p><strong>In Use:</strong> {asset.inUse || "0"}</p>
-                  <div className="dept-badge-wrapper">
-                    {renderDepartmentBadges(asset)}
-                  </div>
-
+  <p><strong>In Use:</strong> {asset.inUse || "0"}</p>
+    <div className="dept-badge-wrapper">
+        {renderDepartmentBadges(asset)}
+          </div>
                   <p>
                       <strong>Stock:</strong>{" "}
                     {getInStock(asset) > 0 ? (
@@ -779,6 +782,54 @@ value={editForm.assetCost?.totalAmount}
     </motion.div>
   )}
 </AnimatePresence>
+<AnimatePresence>
+  {selectedAssignmentAsset && (
+    <motion.div
+      className="asset-view-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setSelectedAssignmentAsset(null)}
+    >
+      <motion.div
+        className="asset-view-modal"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3>Assignment Details</h3>
+
+        {selectedAssignmentAsset.assignmentRecords?.length ? (
+          selectedAssignmentAsset.assignmentRecords.map((record) => (
+            <div key={record._id} className="assignment-row">
+              <p><strong>User:</strong> {record.user?.name}</p>
+              <p><strong>Email:</strong> {record.user?.email}</p>
+              <p><strong>Department:</strong> {record.department?.name}</p>
+              <p><strong>Location:</strong> {record.assignLocation}</p>
+              <p><strong>Quantity:</strong> {record.quantity}</p>
+              <p>
+                <strong>Assigned At:</strong>{" "}
+                {new Date(record.assignedAt).toLocaleDateString()}
+              </p>
+              <hr />
+            </div>
+          ))
+        ) : (
+          <p>No active assignments</p>
+        )}
+
+        <button
+          className="asset-view-close-btn"
+          onClick={() => setSelectedAssignmentAsset(null)}
+        >
+          Close
+        </button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
 
     </div>

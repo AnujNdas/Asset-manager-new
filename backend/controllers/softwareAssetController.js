@@ -317,42 +317,108 @@ const getSoftwareAssets = async (req, res) => {
   try {
     const organizationId = req.user.organizationId;
 
+    if (!organizationId) {
+      return res.status(403).json({
+        success: false,
+        message: "Organization context missing"
+      });
+    }
+
+    // 1️⃣ Fetch software assets
     const assets = await SoftwareAsset.find({ organizationId })
       .sort({ createdAt: -1 })
       .lean();
 
+    if (!assets.length) {
+      return res.json({ success: true, data: [] });
+    }
+
+    const assetIds = assets.map(a => a._id);
+
+    // 2️⃣ Fetch active software assignments
     const assignments = await AssetAssignment.find({
       organizationId,
       assetType: "software",
-      status: "active"
+      status: "active",
+      assetId: { $in: assetIds }
     })
-      .populate("assignedTo", "name")
+      .populate("departmentId", "name")
+      .populate("userId", "name email")
       .lean();
 
     const assignmentMap = {};
 
-    for (const a of assignments) {
-      const id = String(a.assetId);
-      assignmentMap[id] ??= { inUse: 0, assignedDepartments: [] };
-      assignmentMap[id].inUse += a.quantity;
-      assignmentMap[id].assignedDepartments.push({
-        department: a.assignedTo,
-        quantity: a.quantity
+    for (const assign of assignments) {
+      const assetId = String(assign.assetId);
+
+      if (!assignmentMap[assetId]) {
+        assignmentMap[assetId] = {
+          inUse: 0,
+          departmentMap: {},
+          assignmentRecords: []
+        };
+      }
+
+      // 🔹 Total in use
+      assignmentMap[assetId].inUse += assign.quantity;
+
+      // 🔹 Department aggregation
+      const deptId = String(assign.departmentId._id);
+
+      if (!assignmentMap[assetId].departmentMap[deptId]) {
+        assignmentMap[assetId].departmentMap[deptId] = {
+          department: assign.departmentId,
+          quantity: 0
+        };
+      }
+
+      assignmentMap[assetId].departmentMap[deptId].quantity += assign.quantity;
+
+      // 🔥 Full assignment record (for modal)
+      assignmentMap[assetId].assignmentRecords.push({
+        _id: assign._id,
+        user: assign.userId,
+        department: assign.departmentId,
+        assignLocation: assign.assignLocation,
+        quantity: assign.quantity,
+        assignedAt: assign.assignedAt
       });
     }
 
+    // Convert departmentMap → assignedDepartments
+    Object.keys(assignmentMap).forEach(assetId => {
+      assignmentMap[assetId].assignedDepartments = Object.values(
+        assignmentMap[assetId].departmentMap
+      );
+      delete assignmentMap[assetId].departmentMap;
+    });
+
+    // 3️⃣ Merge assignment data into assets
+    const enrichedAssets = assets.map(asset => {
+      const assignmentData = assignmentMap[String(asset._id)];
+
+      return {
+        ...asset,
+        inUse: assignmentData?.inUse || 0,
+        assignedDepartments: assignmentData?.assignedDepartments || [],
+        assignmentRecords: assignmentData?.assignmentRecords || []
+      };
+    });
+
     res.json({
       success: true,
-      data: assets.map(asset => ({
-        ...asset,
-        inUse: assignmentMap[asset._id]?.inUse || 0,
-        assignedDepartments: assignmentMap[asset._id]?.assignedDepartments || []
-      }))
+      data: enrichedAssets
     });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("GET SOFTWARE ASSETS ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
+
 
 /* ======================================================
    UPDATE / DELETE (ORG-SAFE)

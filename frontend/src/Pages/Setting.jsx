@@ -110,10 +110,10 @@ const Setting = () => {
     { path: "subscription", label: "Subscription", icon: FaCogs },
     { path: "help&support", label: "Help & Support", icon: FaQuestion },
     ...(userData?.role === "admin"
-      ? [{ path: "users", label: "User Management", icon: FaUsers }]
+      ? [{ path: "users", label: "Manage User", icon: FaUsers }]
       : []),
     ...(userData?.role === "admin"
-      ? [{ path: "setuser", label: "Set User Department", icon: FaMousePointer }]
+      ? [{ path: "setuser", label: "Set User", icon: FaMousePointer }]
       : []),
   ];
 
