@@ -10,7 +10,7 @@ import Classification from "../Pages/Classification";
 import MisReport from "../Pages/MisReport";
 import AssignmentPage from "../Pages/AssignmentPage";
 import Onboarding from "../Pages/OnBoarding";
-import Checkout from "../Pages/Checkout";
+// import Checkout from "../Pages/Checkout";
 import EmployeePage from "../Pages/Employee";
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
@@ -24,7 +24,7 @@ const TenantRoutes = ({ profileUser }) => (
       {/* <Route path="/scanner" element={<AssetScanner />} /> */}
       <Route path="/assignment" element={<AssignmentPage />} />
       <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/checkout" element={<Checkout />} />
+      {/* <Route path="/checkout" element={<Checkout />} /> */}
       <Route path="/employee" element={<EmployeePage />} />
     </Route>
   </Route>
