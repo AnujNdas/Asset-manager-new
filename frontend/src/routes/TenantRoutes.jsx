@@ -22,7 +22,7 @@ const TenantRoutes = ({ profileUser }) => (
       <Route path="/setting/*" element={<Setting />} />
       <Route path="/classification/*" element={<Classification />} />
       <Route path="/misreport" element={<MisReport />} />
-      <Route path="/scanner" element={<AssetScanner />} />
+      {/* <Route path="/scanner" element={<AssetScanner />} /> */}
       <Route path="/assignment" element={<AssignmentPage />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/checkout" element={<Checkout />} />
