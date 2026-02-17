@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const costSchema = require("./Costschema");
+const costSchema = require("./CostSchema");
 
 const SoftwareAssetSchema = new mongoose.Schema(
   {
