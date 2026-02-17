@@ -343,7 +343,7 @@ const getSoftwareAssets = async (req, res) => {
       assetId: { $in: assetIds }
     })
       .populate("departmentId", "name")
-      .populate("userId", "name email")
+      .populate("employeeId", "name employeeCode email") // ✅ FIXED
       .lean();
 
     const assignmentMap = {};
@@ -363,21 +363,23 @@ const getSoftwareAssets = async (req, res) => {
       assignmentMap[assetId].inUse += assign.quantity;
 
       // 🔹 Department aggregation
-      const deptId = String(assign.departmentId._id);
+      if (assign.departmentId) {
+        const deptId = String(assign.departmentId._id);
 
-      if (!assignmentMap[assetId].departmentMap[deptId]) {
-        assignmentMap[assetId].departmentMap[deptId] = {
-          department: assign.departmentId,
-          quantity: 0
-        };
+        if (!assignmentMap[assetId].departmentMap[deptId]) {
+          assignmentMap[assetId].departmentMap[deptId] = {
+            department: assign.departmentId,
+            quantity: 0
+          };
+        }
+
+        assignmentMap[assetId].departmentMap[deptId].quantity += assign.quantity;
       }
-
-      assignmentMap[assetId].departmentMap[deptId].quantity += assign.quantity;
 
       // 🔥 Full assignment record (for modal)
       assignmentMap[assetId].assignmentRecords.push({
         _id: assign._id,
-        user: assign.userId,
+        employee: assign.employeeId, // ✅ FIXED
         department: assign.departmentId,
         assignLocation: assign.assignLocation,
         quantity: assign.quantity,
@@ -418,7 +420,6 @@ const getSoftwareAssets = async (req, res) => {
     });
   }
 };
-
 
 /* ======================================================
    UPDATE / DELETE (ORG-SAFE)

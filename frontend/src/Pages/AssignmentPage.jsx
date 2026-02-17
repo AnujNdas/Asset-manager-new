@@ -6,13 +6,13 @@ import {
   getInStockAssetsByCategory,
   assignAssetsFromStock,
   getDepartments,
-  getUsersByDepartment
+  getEmployeesByDepartment
 } from "../Services/ApiServices";
 
 const AssignmentPage = () => {
   const [step, setStep] = useState(1);
   const [categories, setCategories] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ const AssignmentPage = () => {
     assets: [],
     selectedAssets: {},
     department: "",
-    user: ""
+    employee: ""
   });
 
   /* =============================
@@ -53,15 +53,15 @@ const AssignmentPage = () => {
 
 const fetchUsers = async (departmentId) => {
   try {
-    const res = await getUsersByDepartment(departmentId);
-    console.log("Users response:", res.data);
+    const res = await getEmployeesByDepartment(departmentId);
+    console.log("Employees response:", res.data);
 
-    setUsers(res.data || []);
+    setEmployees(res.data || []);
 
   } catch (err) {
     console.error(err);
-    setUsers([]);
-    Swal.fire("Error", "Failed to load users", "error");
+    setEmployees([]);
+    Swal.fire("Error", "Failed to load employees", "error");
   }
 };
 
@@ -83,8 +83,8 @@ const fetchUsers = async (departmentId) => {
     if (step === 3 && !wizardData.department)
       return Swal.fire("Select department");
 
-    if (step === 4 && !wizardData.user)
-      return Swal.fire("Select user");
+    if (step === 4 && !wizardData.employee)
+  return Swal.fire("Select employee");
 
     setStep(prev => prev + 1);
   };
@@ -172,7 +172,8 @@ const fetchUsers = async (departmentId) => {
         assetId,
         assetType: asset.assetType,
         departmentId: wizardData.department,
-        userId: wizardData.user,
+        employeeId: wizardData.employee,
+
         assignLocation: val.location,
         quantity: val.quantity
       };
@@ -180,7 +181,9 @@ const fetchUsers = async (departmentId) => {
 
     try {
       setLoading(true);
+      console.log("Assignment payload:", payload);
       await assignAssetsFromStock({ assignments: payload });
+
       Swal.fire("Success", "Assets assigned successfully", "success");
       resetWizard();
     } catch {
@@ -284,17 +287,18 @@ const fetchUsers = async (departmentId) => {
 {step === 4 && (
   <select
     className="select-box"
-    value={wizardData.user}
+    value={wizardData.employee}
     onChange={(e) =>
-      setWizardData(prev => ({ ...prev, user: e.target.value }))
+      setWizardData(prev => ({ ...prev, employee: e.target.value }))
     }
   >
-    <option value="">Select User</option>
-    {users.map(user => (
-      <option key={user._id} value={user._id}>
-        {user.email}
-      </option>
-    ))}
+    <option value="">Select Employee</option>
+{employees.map(employee => (
+  <option key={employee._id} value={employee._id}>
+    {employee.name} ({employee.employeeCode})
+  </option>
+))}
+
   </select>
 )}
 

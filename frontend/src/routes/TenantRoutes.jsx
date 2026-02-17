@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import TenantLayout from "../layout/TenantLayout";
+import TenantLayout from "../layouts/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
 
 import Dashboard from "../Pages/AdminDashboard";
@@ -8,10 +8,11 @@ import Inventory from "../Pages/Inventory";
 import Setting from "../Pages/Setting";
 import Classification from "../Pages/Classification";
 import MisReport from "../Pages/MisReport";
-import AssetScanner from "../Pages/Scanner";
+import AssetScanner from "../Pages/AssetScanner";
 import AssignmentPage from "../Pages/AssignmentPage";
 import Onboarding from "../Pages/OnBoarding";
-
+import Checkout from "../Pages/Checkout";
+import EmployeePage from "../Pages/Employee";
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
@@ -24,6 +25,8 @@ const TenantRoutes = ({ profileUser }) => (
       <Route path="/scanner" element={<AssetScanner />} />
       <Route path="/assignment" element={<AssignmentPage />} />
       <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/employee" element={<EmployeePage />} />
     </Route>
   </Route>
 );

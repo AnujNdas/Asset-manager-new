@@ -309,7 +309,7 @@ export const assignUserToDepartment = async (userId, departmentId) => {
   );
   return res.data;
 };
-export const getUsersByDepartment = async (departmentId) => {
+export const getEmployeesByDepartment = async (departmentId) => {
   if (!departmentId) {
     throw new Error("Department ID is required");
   }
@@ -408,4 +408,15 @@ export const updateSupportTicket = async (ticketId, payload) => {
 export const contactSupport = async (data) => {
   const response = await axiosInstance.post("/support/contact", data);
   return response.data;
+};
+export const getEmployees = async (departmentId = "") => {
+  const res = await axiosInstance.get("/employees", {
+    params: departmentId ? { departmentId } : {}
+  });
+  return res.data;
+};
+
+export const createEmployee = async (payload) => {
+  const res = await axiosInstance.post("/employees", payload);
+  return res.data;
 };

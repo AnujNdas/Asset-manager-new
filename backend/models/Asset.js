@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const costSchema = require("./CostSchema");
+const costSchema = require("./Costschema");
 const assetSchema = new mongoose.Schema(
   {
     assetCode: { type: String, required: true },
@@ -50,12 +50,12 @@ const assetSchema = new mongoose.Schema(
       required: true,
     },
 
-    DOP: { type: String, required: true },
-    DOE: { type: String, required: true },
+    DOP: { type: Date, required: true },
+    DOE: { type: Date, required: true },
     assetLifetime: { type: String, required: true },
 
     purchaseFrom: { type: String, required: true },
-    modelNo: { type: String, unique: true },
+    modelNo: { type: String},
 
     PMD: { type: String },
     maintenanceTerm: {
@@ -98,6 +98,15 @@ warranty: {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
+);
+assetSchema.index({ organizationId: 1, DOE: 1 });
+assetSchema.index({ organizationId: 1, type: 1 });
+assetSchema.index({ organizationId: 1, assetCategory: 1 });
+assetSchema.index({ organizationId: 1, locationName: 1 });
+assetSchema.index({ organizationId: 1, assetStatus: 1 });
+assetSchema.index(
+  { organizationId: 1, modelNo: 1 },
+  { unique: true, sparse: true }
 );
 
 assetSchema.virtual("inStock").get(function () {

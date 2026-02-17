@@ -803,8 +803,8 @@ value={editForm.assetCost?.totalAmount}
         {selectedAssignmentAsset.assignmentRecords?.length ? (
           selectedAssignmentAsset.assignmentRecords.map((record) => (
             <div key={record._id} className="assignment-row">
-              <p><strong>User:</strong> {record.user?.name}</p>
-              <p><strong>Email:</strong> {record.user?.email}</p>
+              <p><strong>Employee:</strong> {record.employee?.name}</p>
+              <p><strong>Email:</strong> {record.employee?.email}</p>
               <p><strong>Department:</strong> {record.department?.name}</p>
               <p><strong>Location:</strong> {record.assignLocation}</p>
               <p><strong>Quantity:</strong> {record.quantity}</p>
@@ -829,6 +829,7 @@ value={editForm.assetCost?.totalAmount}
     </motion.div>
   )}
 </AnimatePresence>
+
 
 
 

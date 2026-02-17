@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const assignmentSchema = new mongoose.Schema(
   {
     organizationId: {
@@ -14,12 +15,12 @@ const assignmentSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-assetModel: {
-  type: String,
-  required: true,
-  enum: ["Asset", "SoftwareAsset"],
-},
 
+    assetModel: {
+      type: String,
+      required: true,
+      enum: ["Asset", "SoftwareAsset"],
+    },
 
     assetType: {
       type: String,
@@ -27,7 +28,7 @@ assetModel: {
       required: true,
     },
 
-    /* 🔹 Always Assigned To Department + User */
+    /* 🔹 Ownership Context */
 
     departmentId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,14 +37,14 @@ assetModel: {
       index: true,
     },
 
-    userId: {
+    employeeId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Employee",
       required: true,
       index: true,
     },
 
-    /* 🔹 Exact Physical Placement (Hardcoded Text) */
+    /* 🔹 Physical Placement */
 
     assignLocation: {
       type: String,
@@ -64,9 +65,11 @@ assetModel: {
       index: true,
     },
 
+    /* 🔹 Audit Fields */
+
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User", // admin / manager
       required: true,
     },
 
@@ -88,11 +91,13 @@ assetModel: {
   },
   { timestamps: true }
 );
+
+/* 🔹 Strong compound index */
 assignmentSchema.index({
   organizationId: 1,
   assetId: 1,
-  userId: 1,
-  departmentId: 1,
-  status: 1
+  employeeId: 1,
+  status: 1,
 });
+
 module.exports = mongoose.model("AssetAssignment", assignmentSchema);

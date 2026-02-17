@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const costSchema = require("./CostSchema");
+const costSchema = require("./Costschema");
 
 const SoftwareAssetSchema = new mongoose.Schema(
   {
@@ -115,6 +115,31 @@ const SoftwareAssetSchema = new mongoose.Schema(
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
+);
+// ===== PERFORMANCE INDEXES =====
+
+// Expiry queries
+SoftwareAssetSchema.index({ organizationId: 1, DOE: 1 });
+
+// Cost metrics grouping
+SoftwareAssetSchema.index({ organizationId: 1, type: 1 });
+
+// Distribution grouping
+SoftwareAssetSchema.index({ organizationId: 1, assetName: 1 });
+
+// Category filtering
+SoftwareAssetSchema.index({ organizationId: 1, assetCategory: 1 });
+
+// Status filtering
+SoftwareAssetSchema.index({ organizationId: 1, assetStatus: 1 });
+
+// Location filtering
+SoftwareAssetSchema.index({ organizationId: 1, locationName: 1 });
+
+// Unique asset code per organization
+SoftwareAssetSchema.index(
+  { organizationId: 1, assetCode: 1 },
+  { unique: true }
 );
 
 SoftwareAssetSchema.virtual("inStock").get(function () {

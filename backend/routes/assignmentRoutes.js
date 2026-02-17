@@ -4,7 +4,7 @@ const {
   getInStockAssetsByCategory,
   assignAssetsFromStock,
   returnAsset,
-  getUsersByDepartment
+  getEmployeesByDepartment
 } = require("../controllers/assignmentController");
 const authenticateToken = require("../Middleware/Authentication-token");
 const router = express.Router();
@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/instock/category-summary",authenticateToken(["admin","user"]), getInStockCategorySummary);
 router.get("/instock/assets/:category",authenticateToken(["admin","user"]), getInStockAssetsByCategory);
 router.post("/instock/assign", authenticateToken(["admin","user"]), assignAssetsFromStock);
-router.get("/department/:departmentId", authenticateToken(["admin","user"]), getUsersByDepartment);
+router.get("/department/:departmentId", authenticateToken(["admin","user"]), getEmployeesByDepartment);
 
 // ---- RETURN ASSIGNED ASSET ----
 router.put("/return/:assignmentId", returnAsset);

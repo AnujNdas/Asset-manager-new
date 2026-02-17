@@ -30,7 +30,7 @@ const Notification = lazy(() => import("../Inner_sections/Notification"));
 const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
 const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 const HelpSupport = lazy(() => import("../Inner_sections/Help-Support"));
-const SetUser = lazy(() => import("../Inner_sections/SetUser"));
+// const SetUser = lazy(() => import("../Inner_sections/SetUser"));
 const Setting = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -112,9 +112,9 @@ const Setting = () => {
     ...(userData?.role === "admin"
       ? [{ path: "users", label: "Manage User", icon: FaUsers }]
       : []),
-    ...(userData?.role === "admin"
-      ? [{ path: "setuser", label: "Set User", icon: FaMousePointer }]
-      : []),
+    // ...(userData?.role === "admin"
+    //   ? [{ path: "setuser", label: "Set User", icon: FaMousePointer }]
+    //   : []),
   ];
 
   return (
@@ -146,7 +146,7 @@ const Setting = () => {
             <Route path="subscription" element={<Subscription />} />
             <Route path="teamInvites" element={<TeamInvites />} />
             <Route path="help&support" element={<HelpSupport />} />
-            <Route path="setuser" element={<SetUser />} />
+            {/* <Route path="setuser" element={<SetUser />} /> */}
             {userData?.role === "admin" && (
               <Route path="users" element={<UserManagement />} />
             )}
