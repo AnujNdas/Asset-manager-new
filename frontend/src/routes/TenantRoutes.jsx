@@ -8,7 +8,6 @@ import Inventory from "../Pages/Inventory";
 import Setting from "../Pages/Setting";
 import Classification from "../Pages/Classification";
 import MisReport from "../Pages/MisReport";
-import AssetScanner from "../Pages/AssetScanner";
 import AssignmentPage from "../Pages/AssignmentPage";
 import Onboarding from "../Pages/OnBoarding";
 import Checkout from "../Pages/Checkout";
