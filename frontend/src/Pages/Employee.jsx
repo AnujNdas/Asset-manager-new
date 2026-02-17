@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import EmployeeTable from "../Components/employees/EmployeeTable";
-import EmployeeModal from "../Components/employees/EmployeeModal";
+import EmployeeTable from "../Components/employee/EmployeeTable";
+import EmployeeModal from "../Components/employee/EmployeeModal";
 import { getEmployees, getDepartments  } from "../Services/ApiServices";
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
