@@ -12,7 +12,7 @@ import AssetScanner from "../Pages/Scanner";
 import AssignmentPage from "../Pages/AssignmentPage";
 import Onboarding from "../Pages/OnBoarding";
 import EmployeePage from "../Pages/Employee";
-import Subscription from "../Pages/Subscription";
+import Subscription from "../Inner_sections/Subscription";
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
