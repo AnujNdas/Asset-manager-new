@@ -28,7 +28,7 @@ const Security = lazy(() => import("../Inner_sections/Security"));
 const TeamInvites = lazy(() => import("../Inner_sections/TeamInvites"));
 const Notification = lazy(() => import("../Inner_sections/Notification"));
 const UserManagement = lazy(() => import("../Inner_sections/UserManagement"));
-const Subscription = lazy(() => import("../Inner_sections/Subscription"));
+// const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 const HelpSupport = lazy(() => import("../Inner_sections/Help-Support"));
 // const SetUser = lazy(() => import("../Inner_sections/SetUser"));
 const Setting = () => {
@@ -107,7 +107,7 @@ const Setting = () => {
       ? [{ path: "teamInvites", label: "Team Invites", icon: FaEnvelope }]
       : []),
     { path: "notification", label: "Notifications", icon: FaBell },
-    { path: "subscription", label: "Subscription", icon: FaCogs },
+    // { path: "subscription", label: "Subscription", icon: FaCogs },
     { path: "help&support", label: "Help & Support", icon: FaQuestion },
     ...(userData?.role === "admin"
       ? [{ path: "users", label: "Manage User", icon: FaUsers }]
@@ -143,7 +143,7 @@ const Setting = () => {
             <Route path="profile" element={<MyProfile />} />
             <Route path="security" element={<Security />} />
             <Route path="notification" element={<Notification />} />
-            <Route path="subscription" element={<Subscription />} />
+            {/* <Route path="subscription" element={<Subscription />} /> */}
             <Route path="teamInvites" element={<TeamInvites />} />
             <Route path="help&support" element={<HelpSupport />} />
             {/* <Route path="setuser" element={<SetUser />} /> */}
