@@ -88,16 +88,22 @@ useEffect(() => {
                 </NavLink>
               </li>
             )} */}
-            <li>
-              <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
-                <span className="tab-text">Settings</span>
-              </NavLink>
-            </li>
                         <li>
               <NavLink to="/employee" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faUser} style={{ width: "25%" }} />
                 <span className="tab-text">Employee</span>
+              </NavLink>
+            </li>
+                        <li>
+              <NavLink to="/subscription" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                <FontAwesomeIcon icon={faCreditCard} style={{ width: "25%" }} />
+                <span className="tab-text">Subscription</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/setting" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
+                <span className="tab-text">Settings</span>
               </NavLink>
             </li>
           </ul>

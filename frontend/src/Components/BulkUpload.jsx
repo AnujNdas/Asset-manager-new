@@ -14,14 +14,17 @@ const BulkUpload = ({ type, userRole }) => {
   const [dragOverExcel, setDragOverExcel] = useState(false);
   const [isValidExcel, setIsValidExcel] = useState(false);
   const [uploading, setUploading] = useState(false);
+  useEffect(() => {
+  console.log("UserRole:", userRole);
+}, [userRole]);
 
   useEffect(() => {
-    if (userRole === "super-admin") setMode("auto");
+    if (userRole === "admin") setMode("auto");
   }, [userRole]);
 useEffect(() => {
   if (!mode) return;
 
-const modeContent =
+  const modeContent =
     mode === "strict"
       ? {
           title: "Strict Import Mode Enabled",
@@ -94,7 +97,6 @@ Swal.fire({
 });
 
 
-
 }, [mode]);
 
   /* ---------- HELPERS ---------- */
@@ -105,28 +107,39 @@ Swal.fire({
     if (diff <= 0) return "0 years";
     return `${Math.ceil(diff / (1000 * 60 * 60 * 24 * 365))} years`;
   };
+const calculateWarrantyLifetime = (DOP, warrantyExpiryDate) => {
+  if (!DOP || !warrantyExpiryDate) return "";
+  const diff = new Date(warrantyExpiryDate) - new Date(DOP);
+  if (diff <= 0) return "0 years";
+  return `${Math.ceil(diff / (1000 * 60 * 60 * 24 * 365))} years`;
+};
 
   /* ---------- TEMPLATES ---------- */
 
  const templates = {
-  hardware: [
-    {
-      assetName: "",
-      assetCategory: "",
-      type: "one_time",          // 🔴 REQUIRED
-      assetSpecification: "",
-      purchaseFrom: "",
-      associateUnit: "",
-      locationName: "",
-      locationAddress: "",
-      assetStatus: "",
-      DOP: "",
-      DOE: "",
-      assetCost: "",             // TOTAL COST
-      assetCurrency: "INR",
-      assetQuantity: "",
-    },
-  ],
+hardware: [
+  {
+    assetName: "",
+    assetCategory: "",
+    type: "one_time",          // REQUIRED
+    assetSpecification: "",
+    purchaseFrom: "",
+    associateUnit: "",
+    locationName: "",
+    locationAddress: "",
+    assetStatus: "",
+    DOP: "",
+    DOE: "",
+    assetCost: "",
+    assetCurrency: "INR",
+    assetQuantity: "",
+
+    // ⭐ WARRANTY (NEW)
+    warrantyId: "",
+    warrantyExpiryDate: "",
+    warrantyLifetime: "",      // auto-calculated
+  },
+],
 
   software: [
     {
@@ -211,9 +224,18 @@ Swal.fire({
         );
 
         // Only calculate derived fields
-        for (const row of sheet) {
-          row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE);
-        }
+for (const row of sheet) {
+  row.assetLifetime = calculateAssetLifetime(row.DOP, row.DOE);
+
+  // ⭐ WARRANTY AUTO CALC (HARDWARE ONLY)
+  if (type === "hardware") {
+    row.warrantyLifetime = calculateWarrantyLifetime(
+      row.DOP,
+      row.warrantyExpiryDate
+    );
+  }
+}
+
 
         const payload = {
           assets: JSON.stringify(sheet),
@@ -304,10 +326,12 @@ Swal.fire({
           >
             <FiDownload /> Template
           </button>
-          <p className="bulk-hint">
+<p className="bulk-hint">
   <b>Hardware type:</b> one_time, maintenance <br />
+  <b>Warranty:</b> warrantyId, warrantyExpiryDate (optional) <br />
   <b>Software type:</b> monthly, yearly, one_time
 </p>
+
 
         </div>
       </div>

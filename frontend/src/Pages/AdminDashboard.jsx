@@ -337,65 +337,60 @@ const COLORS = [
 <div className="chart-card valuation-card">
   <h2>Monthly Asset Valuation</h2>
 
-  <ResponsiveContainer width="100%" height={260}>
-    <AreaChart
-      data={valuationChartData}
-      margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
-    >
-      <defs>
-        <linearGradient id="hardwareWave" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={BAR_COLORS.hardware} stopOpacity={0.6} />
-          <stop offset="100%" stopColor={BAR_COLORS.hardware} stopOpacity={0.05} />
-        </linearGradient>
+<ResponsiveContainer width="100%" height={260}>
+  <BarChart
+    layout="vertical"
+    data={valuationChartData}
+    margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+    barCategoryGap="25%"
+  >
+    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
 
-        <linearGradient id="softwareWave" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={BAR_COLORS.software} stopOpacity={0.6} />
-          <stop offset="100%" stopColor={BAR_COLORS.software} stopOpacity={0.05} />
-        </linearGradient>
+    {/* Number axis (valuation) */}
+    <XAxis
+      type="number"
+      tickLine={false}
+      axisLine={false}
+    />
 
-        <linearGradient id="totalWave" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={BAR_COLORS.total} stopOpacity={0.6} />
-          <stop offset="100%" stopColor={BAR_COLORS.total} stopOpacity={0.05} />
-        </linearGradient>
-      </defs>
+    {/* Category axis (time labels) */}
+    <YAxis
+      type="category"
+      dataKey="month"   // Change to "label" if you switched to dynamic interval
+      tickLine={false}
+      axisLine={false}
+      width={80}
+    />
 
-      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-      <XAxis dataKey="month" />
-      <YAxis />
-      <Tooltip content={<CustomTooltip currency={currency} />} />
-      <Legend content={<HorizontalLegend />} />
+    <Tooltip content={<CustomTooltip currency={currency} />} />
+    <Legend content={<HorizontalLegend />} />
 
-     <Area
-  type="natural"
-  dataKey="hardware"
-  stroke={BAR_COLORS.hardware}
-  fill="url(#hardwareWave)"
-  strokeWidth={2}
-  dot={false}
-    animationDuration={1400}
-  animationEasing="ease-in-out"
-/>
+    {/* Hardware */}
+    <Bar
+      dataKey="hardware"
+      fill={BAR_COLORS.hardware}
+      radius={[0, 6, 6, 0]}
+      barSize={14}
+    />
 
-<Area
-  type="natural"
-  dataKey="software"
-  stroke={BAR_COLORS.software}
-  fill="url(#softwareWave)"
-  strokeWidth={2}
-  dot={false}
-/>
+    {/* Software */}
+    <Bar
+      dataKey="software"
+      fill={BAR_COLORS.software}
+      radius={[0, 6, 6, 0]}
+      barSize={14}
+    />
 
-<Area
-  type="natural"
-  dataKey="total"
-  stroke={BAR_COLORS.total}
-  fill="url(#totalWave)"
-  strokeWidth={3}
-  dot={false}
-/>
+    {/* Total */}
+    <Bar
+      dataKey="total"
+      fill={BAR_COLORS.total}
+      radius={[0, 6, 6, 0]}
+      barSize={14}
+    />
+  </BarChart>
+</ResponsiveContainer>
 
-    </AreaChart>
-  </ResponsiveContainer>
 </div>
 
       </div>

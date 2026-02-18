@@ -12,6 +12,7 @@ import AssetScanner from "../Pages/Scanner";
 import AssignmentPage from "../Pages/AssignmentPage";
 import Onboarding from "../Pages/OnBoarding";
 import EmployeePage from "../Pages/Employee";
+import Subscription from "../Pages/Subscription";
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
@@ -25,6 +26,7 @@ const TenantRoutes = ({ profileUser }) => (
       <Route path="/assignment" element={<AssignmentPage />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/employee" element={<EmployeePage />} />
+      <Route path="/subscription" element={<Subscription />} />
     </Route>
   </Route>
 );

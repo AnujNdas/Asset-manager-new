@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { NotificationProvider } from './Context/NotificationContext';
-import { ProgressProvider } from "./Components/ProgressBar";
+// import { ProgressProvider } from "./Components/ProgressBar";
 import { CurrencyProvider } from './Context/CurrencyContext'; 
 import AnalyticsTracker from './Components/AnalyticsTracker';
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,13 +14,13 @@ root.render(
   <BrowserRouter>
     <React.StrictMode>
       <AnalyticsTracker />
-      <ProgressProvider>
+      {/* <ProgressProvider> */}
         <NotificationProvider>
           <CurrencyProvider>
           <App />
           </CurrencyProvider>
         </NotificationProvider>
-       </ProgressProvider> 
+       {/* </ProgressProvider>  */}
     </React.StrictMode>
   </BrowserRouter>
 );

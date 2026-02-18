@@ -9,7 +9,6 @@ const AssetAssignment = require("../models/AssetAssignment");
 const User = require("../models/User");
 const authenticateToken = require("../Middleware/Authentication-token");
 const Department = require("../models/Department");
-
 /* ======================================================
    📊 STATS (WORKING – LEFT AS IS)
 ====================================================== */
@@ -18,63 +17,66 @@ router.get(
   authenticateToken(["admin", "user"]),
   async (req, res) => {
     try {
-      const organizationId = req.user.organizationId;
+      const organizationId = new mongoose.Types.ObjectId(
+        req.user.organizationId
+      );
 
-      const hardwareCount = await HardwareAsset.countDocuments({ organizationId });
-      const softwareCount = await SoftwareAsset.countDocuments({ organizationId });
-      const coreLicensesCount = await CoreCompanyLicense.countDocuments({ organizationId });
-      const activeLicenses = await CoreCompanyLicense.countDocuments({
-        organizationId,
-        status: "Active",
-      });
-      const expiredLicenses = await CoreCompanyLicense.countDocuments({
-        organizationId,
-        status: "Expired",
-      });
-      const usersCount = await User.countDocuments({ organizationId });
+      const [
+        hardwareCount,
+        softwareCount,
+        coreLicensesCount,
+        activeLicenses,
+        expiredLicenses,
+        usersCount,
+        hardwareValuationAgg,
+        softwareValuationAgg,
+      ] = await Promise.all([
+        HardwareAsset.countDocuments({ organizationId }),
+        SoftwareAsset.countDocuments({ organizationId }),
+        CoreCompanyLicense.countDocuments({ organizationId }),
+        CoreCompanyLicense.countDocuments({
+          organizationId,
+          status: "Active",
+        }),
+        CoreCompanyLicense.countDocuments({
+          organizationId,
+          status: "Expired",
+        }),
+        User.countDocuments({ organizationId }),
 
-      // Hardware valuation
-const hardwareValuationAgg = await HardwareAsset.aggregate([
-  {
-    $match: {
-      organizationId: new mongoose.Types.ObjectId(organizationId),
-    },
-  },
-  {
-    $group: {
-      _id: null,
-      sum: {
-        $sum: {
-          $ifNull: ["$assetCost.baseTotalAmount", 0],
-        },
-      },
-    },
-  },
-]);
+        // Hardware valuation
+        HardwareAsset.aggregate([
+          { $match: { organizationId } },
+          {
+            $group: {
+              _id: null,
+              total: {
+                $sum: {
+                  $ifNull: ["$assetCost.baseTotalAmount", 0],
+                },
+              },
+            },
+          },
+        ]),
 
-const hardwareValuation = hardwareValuationAgg[0]?.sum || 0;
+        // Software valuation
+        SoftwareAsset.aggregate([
+          { $match: { organizationId } },
+          {
+            $group: {
+              _id: null,
+              total: {
+                $sum: {
+                  $ifNull: ["$assetCost.baseTotalAmount", 0],
+                },
+              },
+            },
+          },
+        ]),
+      ]);
 
-
-const softwareValuationAgg = await SoftwareAsset.aggregate([
-  {
-    $match: {
-      organizationId: new mongoose.Types.ObjectId(organizationId),
-    },
-  },
-  {
-    $group: {
-      _id: null,
-      sum: {
-        $sum: {
-          $ifNull: ["$assetCost.baseTotalAmount", 0],
-        },
-      },
-    },
-  },
-]);
-
-const softwareValuation = softwareValuationAgg[0]?.sum || 0;
-
+      const hardwareValuation = hardwareValuationAgg[0]?.total || 0;
+      const softwareValuation = softwareValuationAgg[0]?.total || 0;
 
       res.json({
         hardwareCount,
@@ -88,11 +90,12 @@ const softwareValuation = softwareValuationAgg[0]?.sum || 0;
         totalValuation: hardwareValuation + softwareValuation,
       });
     } catch (error) {
-      console.error(error);
+      console.error("Stats error:", error);
       res.status(500).json({ error: "Failed to fetch stats" });
     }
   }
 );
+
 /* ======================================================
    📈 VALUATION TREND (FIXED)
 ====================================================== */
@@ -190,6 +193,8 @@ const hardware = await HardwareAsset.aggregate([
   }
 });
 
+
+
 /* ======================================================
    👤 ACTIVE USERS (WORKING – LEFT AS IS)
 ====================================================== */
@@ -267,48 +272,63 @@ router.get(
       );
 
       const today = new Date();
-      const in30 = new Date();
-      const in60 = new Date();
       const in90 = new Date();
-
-      in30.setDate(today.getDate() + 30);
-      in60.setDate(today.getDate() + 60);
       in90.setDate(today.getDate() + 90);
 
-      const softwares = await SoftwareAsset.find({
-        organizationId,
-        DOE: { $gte: today, $lte: in90 },
-      }).sort({ DOE: 1 });
+      const softwares = await SoftwareAsset.find(
+        {
+          organizationId,
+          DOE: { $gte: today, $lte: in90 },
+        },
+        {
+          assetName: 1,
+          DOE: 1,
+          assetQuantity: 1,
+          "assetCost.baseAmount": 1,
+          "assetCost.currency": 1,
+        }
+      )
+        .sort({ DOE: 1 })
+        .lean();
 
-      const data = softwares.map(s => {
+      const critical = [];
+      const warning = [];
+      const normal = [];
+
+      for (const s of softwares) {
         const daysLeft = Math.ceil(
-          (new Date(s.DOE) - today) / (1000 * 60 * 60 * 24)
+          (new Date(s.DOE) - today) / 86400000
         );
 
-        return {
+        const item = {
           name: s.assetName,
           expiryDate: s.DOE,
           daysLeft,
-          quantity: s.assetQuantity,
+          quantity: s.assetQuantity || 0,
           cost: s.assetCost?.baseAmount || 0,
           currency: s.assetCost?.currency || "USD",
-          urgency:
-            daysLeft <= 30
-              ? "critical"
-              : daysLeft <= 60
-              ? "warning"
-              : "normal",
         };
-      });
+
+        if (daysLeft <= 30) {
+          item.urgency = "critical";
+          critical.push(item);
+        } else if (daysLeft <= 60) {
+          item.urgency = "warning";
+          warning.push(item);
+        } else {
+          item.urgency = "normal";
+          normal.push(item);
+        }
+      }
 
       res.json({
-        critical: data.filter(d => d.daysLeft <= 30),
-        warning: data.filter(d => d.daysLeft > 30 && d.daysLeft <= 60),
-        normal: data.filter(d => d.daysLeft > 60),
-        totalExpiring: data.length,
+        critical,
+        warning,
+        normal,
+        totalExpiring: softwares.length,
       });
     } catch (error) {
-      console.error(error);
+      console.error("Upcoming expiry error:", error);
       res.status(500).json({
         error: "Failed to fetch upcoming software expiry",
       });
@@ -328,47 +348,43 @@ router.get(
         req.user.organizationId
       );
 
-      const result = await SoftwareAsset.aggregate([
-        { $match: { organizationId } },
+      const softwares = await SoftwareAsset.find(
+        { organizationId },
         {
-          $project: {
-            assetName: 1,
-            totalLicenses: { $ifNull: ["$assetQuantity", 0] },
-            inUse: { $ifNull: ["$inUse", 0] },
-          },
-        },
-        {
-          $addFields: {
-            available: {
-              $subtract: ["$totalLicenses", "$inUse"],
-            },
-            utilizationPercent: {
-              $cond: [
-                { $eq: ["$totalLicenses", 0] },
-                0,
-                {
-                  $multiply: [
-                    { $divide: ["$inUse", "$totalLicenses"] },
-                    100,
-                  ],
-                },
-              ],
-            },
-          },
-        },
-      ]);
+          assetName: 1,
+          assetQuantity: 1,
+          inUse: 1,
+        }
+      ).lean();
+
+      const labels = [];
+      const totalLicenses = [];
+      const inUseArr = [];
+      const available = [];
+      const utilization = [];
+
+      for (const s of softwares) {
+        const total = s.assetQuantity || 0;
+        const used = s.inUse || 0;
+        const avail = total - used;
+        const percent = total === 0 ? 0 : (used / total) * 100;
+
+        labels.push(s.assetName);
+        totalLicenses.push(total);
+        inUseArr.push(used);
+        available.push(avail);
+        utilization.push(Number(percent.toFixed(2)));
+      }
 
       res.json({
-        labels: result.map(r => r.assetName),
-        totalLicenses: result.map(r => r.totalLicenses),
-        inUse: result.map(r => r.inUse),
-        available: result.map(r => r.available),
-        utilization: result.map(r =>
-          Number(r.utilizationPercent.toFixed(2))
-        ),
+        labels,
+        totalLicenses,
+        inUse: inUseArr,
+        available,
+        utilization,
       });
     } catch (error) {
-      console.error(error);
+      console.error("License utilization error:", error);
       res.status(500).json({
         error: "Failed to fetch software license utilization",
       });
@@ -437,6 +453,7 @@ router.get(
     }
   }
 );
+
 
 
 /**
@@ -516,43 +533,23 @@ router.get(
       const next30Days = new Date();
       next30Days.setDate(today.getDate() + 30);
 
-      const assets = await HardwareAsset.aggregate([
+      const result = await HardwareAsset.aggregate([
         {
           $match: {
             organizationId,
-            DOE: { $exists: true, $nin: [null, ""] }
+            DOE: { $exists: true, $ne: null }
           }
         },
-
-        // ✅ SAFE DATE CONVERSION
-        {
-          $addFields: {
-            DOEDate: {
-              $convert: {
-                input: "$DOE",
-                to: "date",
-                onError: null,
-                onNull: null
-              }
-            }
-          }
-        },
-
-        // Remove failed conversions
-        {
-          $match: { DOEDate: { $ne: null } }
-        },
-
         {
           $facet: {
             overdue: [
-              { $match: { DOEDate: { $lt: today } } },
+              { $match: { DOE: { $lt: today } } },
               {
                 $addFields: {
                   daysOverdue: {
                     $floor: {
                       $divide: [
-                        { $subtract: [today, "$DOEDate"] },
+                        { $subtract: [today, "$DOE"] },
                         86400000
                       ]
                     }
@@ -560,11 +557,10 @@ router.get(
                 }
               }
             ],
-
             upcoming: [
               {
                 $match: {
-                  DOEDate: { $gte: today, $lte: next30Days }
+                  DOE: { $gte: today, $lte: next30Days }
                 }
               },
               {
@@ -572,7 +568,7 @@ router.get(
                   daysLeft: {
                     $ceil: {
                       $divide: [
-                        { $subtract: ["$DOEDate", today] },
+                        { $subtract: ["$DOE", today] },
                         86400000
                       ]
                     }
@@ -584,7 +580,7 @@ router.get(
         }
       ]);
 
-      res.json({ success: true, data: assets[0] });
+      res.json({ success: true, data: result[0] });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -634,62 +630,71 @@ router.get(
   try {
     const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
 
-    const data = await AssetAssignment.aggregate([
-      {
-        $match: {
-          organizationId,
-          assignedToType: "Department",
-          status: "active"
+const data = await AssetAssignment.aggregate([
+  {
+    $match: {
+      organizationId,
+      assignedToType: "Department",
+      status: "active"
+    }
+  },
+
+  {
+    $project: {
+      assignedTo: 1,
+      assetType: 1,
+      quantity: { $ifNull: ["$quantity", 0] }
+    }
+  },
+
+  {
+    $group: {
+      _id: {
+        departmentId: "$assignedTo",
+        assetType: "$assetType"
+      },
+      total: { $sum: "$quantity" }
+    }
+  },
+
+  {
+    $group: {
+      _id: "$_id.departmentId",
+      hardware: {
+        $sum: {
+          $cond: [{ $eq: ["$_id.assetType", "hardware"] }, "$total", 0]
         }
       },
-
-      {
-        $group: {
-          _id: {
-            departmentId: "$assignedTo",
-            assetType: "$assetType"
-          },
-          total: { $sum: "$quantity" }
-        }
-      },
-
-      {
-        $group: {
-          _id: "$_id.departmentId",
-          hardware: {
-            $sum: {
-              $cond: [{ $eq: ["$_id.assetType", "hardware"] }, "$total", 0]
-            }
-          },
-          software: {
-            $sum: {
-              $cond: [{ $eq: ["$_id.assetType", "software"] }, "$total", 0]
-            }
-          }
-        }
-      },
-
-      {
-        $lookup: {
-          from: "departments",
-          localField: "_id",
-          foreignField: "_id",
-          as: "department"
-        }
-      },
-
-      { $unwind: "$department" },
-
-      {
-        $project: {
-          departmentId: "$_id",
-          departmentName: "$department.name",
-          hardware: 1,
-          software: 1,
-          totalAssets: { $add: ["$hardware", "$software"] }
+      software: {
+        $sum: {
+          $cond: [{ $eq: ["$_id.assetType", "software"] }, "$total", 0]
         }
       }
-    ]);
+    }
+  },
+
+  {
+    $lookup: {
+      from: "departments",
+      localField: "_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+
+  { $unwind: "$department" },
+
+  {
+    $project: {
+      departmentId: "$_id",
+      departmentName: "$department.name",
+      hardware: 1,
+      software: 1,
+      totalAssets: { $add: ["$hardware", "$software"] }
+    }
+  }
+]);
+
 
     res.json({ success: true, data });
 
