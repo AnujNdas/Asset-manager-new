@@ -15,6 +15,9 @@ const User = ({ removeUser }) => {
 
       {/* LEFT SIDE */}
       <div className="auth-left">
+                  <div className="dash-logo">
+            
+          </div>
         <div className="auth-header">
           <h2>Asset Management System</h2>
         </div>
@@ -49,12 +52,10 @@ const User = ({ removeUser }) => {
       {/* RIGHT SIDE */}
       <div className="auth-right">
         <div className="right-content">
-          <div className="dash-logo">
-            
-          </div>
-          <h1>Complete Asset Management (Software & Hardware)</h1>
+
+          <h1>Complete Asset Management Software <br/>(Hardware & Software)</h1>
           <p>
-            Log in to access your CRM dashboard and manage your team.
+            Log in to access your AMS dashboard and manage your team.
           </p>
           <div className="dash-image">
           </div>

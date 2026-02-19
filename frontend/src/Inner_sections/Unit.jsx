@@ -186,37 +186,37 @@ const Unit = () => {
     <div className="classification_card">
       <div className="card_header">
         <h3 className="category_title">Unit</h3>
+<form onSubmit={handleAction} className="category_form mode-input">
 
-        <form onSubmit={handleAction} className="category_form mode-input">
-          <div className="mode-selector">
-            <button
-              type="button"
-              className="mode-btn"
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              <FontAwesomeIcon icon={mode === "search" ? faSearch : faPlus} />
-              <FontAwesomeIcon icon={faChevronDown} />
-            </button>
+  <div className="mode-buttons">
+    <button
+      type="button"
+      className={`mode-btn ${mode === "search" ? "active-mode" : ""}`}
+      onClick={() => setMode("search")}
+    >
+      <FontAwesomeIcon icon={faSearch} /> Search
+    </button>
 
-            {showDropdown && (
-              <div className="mode-dropdown">
-                <div onClick={() => { setMode("search"); setShowDropdown(false); }}>
-                  <FontAwesomeIcon icon={faSearch} /> Search
-                </div>
-                <div onClick={() => { setMode("add"); setShowDropdown(false); }}>
-                  <FontAwesomeIcon icon={faPlus} /> Add
-                </div>
-              </div>
-            )}
-          </div>
+    <button
+      type="button"
+      className={`mode-btn ${mode === "add" ? "active-mode" : ""}`}
+      onClick={() => setMode("add")}
+    >
+      <FontAwesomeIcon icon={faPlus} /> Add
+    </button>
+  </div>
 
-          <input
-            className="category_search_input"
-            placeholder={mode === "search" ? "Search unit..." : "Add new unit..."}
-            value={inputValue}
-            onChange={(e) => setInputValue(capitalize(e.target.value))}
-          />
-        </form>
+  <input
+    className="category_search_input"
+    placeholder={
+      mode === "search" ? "Search unit..." : "Add new unit..."
+    }
+    value={inputValue}
+    onChange={(e) => setInputValue(capitalize(e.target.value))}
+  />
+
+</form>
+
       </div>
 
       {/* LIST */}

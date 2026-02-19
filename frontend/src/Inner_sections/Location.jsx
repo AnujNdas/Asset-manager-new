@@ -182,51 +182,36 @@ const handleRestore = async (id, name) => {
 
         {/* INPUT WITH MODE DROPDOWN */}
         <form onSubmit={handleAction} className="category_form mode-input">
-          <div className="mode-selector">
-            <button
-              type="button"
-              className="mode-btn"
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              <FontAwesomeIcon icon={mode === "search" ? faSearch : faPlus} />
-              <FontAwesomeIcon icon={faChevronDown} />
-            </button>
 
-            {showDropdown && (
-              <div className="mode-dropdown">
-                <div
-                  onClick={() => {
-                    setMode("search");
-                    setShowDropdown(false);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faSearch} /> Search
-                </div>
+  <div className="mode-buttons">
+    <button
+      type="button"
+      className={`mode-btn ${mode === "search" ? "active-mode" : ""}`}
+      onClick={() => setMode("search")}
+    >
+      <FontAwesomeIcon icon={faSearch} /> Search
+    </button>
 
-                <div
-                  onClick={() => {
-                    setMode("add");
-                    setShowDropdown(false);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlus} /> Add
-                </div>
-              </div>
-            )}
-          </div>
+    <button
+      type="button"
+      className={`mode-btn ${mode === "add" ? "active-mode" : ""}`}
+      onClick={() => setMode("add")}
+    >
+      <FontAwesomeIcon icon={faPlus} /> Add
+    </button>
+  </div>
 
-          <input
-            type="text"
-            className="category_search_input"
-            placeholder={
-              mode === "search"
-                ? "Search location..."
-                : "Add new location..."
-            }
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-        </form>
+  <input
+    className="category_search_input"
+    placeholder={
+      mode === "search" ? "Search unit..." : "Add new unit..."
+    }
+    value={inputValue}
+    onChange={(e) => setInputValue(capitalize(e.target.value))}
+  />
+
+</form>
+
       </div>
 
       <div className="category-grid">
@@ -338,4 +323,3 @@ const handleRestore = async (id, name) => {
 };
 
 export default Location;
-  

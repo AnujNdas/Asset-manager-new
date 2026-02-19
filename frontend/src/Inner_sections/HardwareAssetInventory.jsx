@@ -128,57 +128,66 @@ const getName = (list, value) => {
   };
 
   // Normalize fields for editing
-    const startEdit = (asset) => {
-      setEditingAsset(asset);
-setEditForm({
-  assetName: assets.assetName || "",
-  assetCode: assets.assetCode || "",
-  barcodeNumber: assets.barcodeNumber || "",
-  modelNo: assets.modelNo || "",
-  type: assets.type || "one_time",
-  locationAddress: assets.locationAddress || "",
-  assetSpecification: assets.assetSpecification || "",
-  maintenanceTerm: assets.maintenanceTerm || "",
-  PMD: assets.PMD || "",
+const startEdit = (asset) => {
+  setEditingAsset(asset);
 
-  assetCategory: assets.assetCategory?._id || assets.assetCategory || "",
-  locationName: assets.locationName?._id || assets.locationName || "",
-  associateUnit: assets.associateUnit?._id || assets.associateUnit || "",
-  assetStatus: assets.assetStatus?._id || assets.assetStatus || "",
+  setEditForm({
+    assetName: asset.assetName || "",
+    assetCode: asset.assetCode || "",
+    barcodeNumber: asset.barcodeNumber || "",
+    modelNo: asset.modelNo || "",
+    type: asset.type || "one_time",
+    locationAddress: asset.locationAddress || "",
+    assetSpecification: asset.assetSpecification || "",
+    maintenanceTerm: asset.maintenanceTerm || "",
+    PMD: asset.PMD || "",
 
-  DOP: assets.DOP ? new Date(assets.DOP).toISOString().split("T")[0] : "",
-  DOE: assets.DOE ? new Date(assets.DOE).toISOString().split("T")[0] : "",
+    assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
+    locationName: asset.locationName?._id || asset.locationName || "",
+    associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
+    assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
 
-  purchaseFrom: assets.purchaseFrom || "",
-  assetLifetime: assets.assetLifetime || "",
-
-  assetCost: {
-    totalAmount: assets.assetCost?.totalAmount || 0,
-    currency: assets.assetCost?.currency || "INR",
-  },
-
-  insurance: {
-    insuranceId: assets.insurance?.insuranceId || "",
-    insuranceName: assets.insurance?.insuranceName || "",
-    purchaseDate: assets.insurance?.purchaseDate
-      ? new Date(assets.insurance.purchaseDate).toISOString().split("T")[0]
+    DOP: asset.DOP
+      ? new Date(asset.DOP).toISOString().slice(0, 10)
       : "",
-    expiryDate: assets.insurance?.expiryDate
-      ? new Date(assets.insurance.expiryDate).toISOString().split("T")[0]
-      : "",
-  },
 
-  warranty: {
-    warrantyId: assets.warranty?.warrantyId || "",
-    expiryDate: assets.warranty?.expiryDate
-      ? new Date(assets.warranty.expiryDate).toISOString().split("T")[0]
+    DOE: asset.DOE
+      ? new Date(asset.DOE).toISOString().slice(0, 10)
       : "",
-  },
 
-  assetQuantity: assets.assetQuantity || 1,
-  inUse: assets.inUse || 0,
-});
-    };
+    purchaseFrom: asset.purchaseFrom || "",
+    assetLifetime: asset.assetLifetime || "",
+
+    assetCost: {
+      totalAmount: asset.assetCost?.totalAmount ?? 0,
+      currency: asset.assetCost?.currency ?? "INR",
+    },
+
+    // ✅ INSURANCE (Fully Integrated)
+    insurance: {
+      insuranceId: asset.insurance?.insuranceId ?? "",
+      insuranceName: asset.insurance?.insuranceName ?? "",
+      purchaseDate: asset.insurance?.purchaseDate
+        ? new Date(asset.insurance.purchaseDate).toISOString().slice(0, 10)
+        : "",
+      expiryDate: asset.insurance?.expiryDate
+        ? new Date(asset.insurance.expiryDate).toISOString().slice(0, 10)
+        : "",
+    },
+
+    // ✅ WARRANTY
+    warranty: {
+      warrantyId: asset.warranty?.warrantyId ?? "",
+      expiryDate: asset.warranty?.expiryDate
+        ? new Date(asset.warranty.expiryDate).toISOString().slice(0, 10)
+        : "",
+    },
+
+    assetQuantity: asset.assetQuantity ?? 1,
+    inUse: asset.inUse ?? 0,
+  });
+};
+
 
 const handleEditSubmit = async (e) => {
   e.preventDefault();
@@ -643,250 +652,307 @@ if (name.startsWith("warranty.")) {
           Edit Asset — {editingAsset.assetName || editingAsset.assetCode}
         </h3>
 
-        <form className="asset-edit-grid" onSubmit={handleEditSubmit}>
-          <div>
-          <label>Asset Name</label>
-          <input
-            name="assetName"
-            placeholder="Asset Name"
-            className="asset-edit-input"
-            value={editForm.assetName || ""}
-            onChange={handleEditChange}
-          />
-          </div>
-          <div>
-          <label>Specification</label>
-          <input
-            name="assetSpecification"
-            placeholder="Specification"
-            className="asset-edit-input"
-            value={editForm.assetSpecification || ""}
-            onChange={handleEditChange}
-          />
-          </div>
-          <div>
-            <label>Category</label>
-          <select
-            name="assetCategory"
-            className="asset-edit-input"
-            value={editForm.assetCategory || ""}
-            onChange={handleEditChange}
-          >
-            <option value="">Select Category</option>
-            {categories.map((c) => (
-              <option key={c._id} value={c._id}>{c.name}</option>
-            ))}
-          </select>
-            </div>
-            <div>
-            <label>Location</label>
-          <select
-            name="locationName"
-            className="asset-edit-input"
-            value={editForm.locationName || ""}
-            onChange={handleEditChange}
-          >
-            <option value="">Select Location</option>
-            {locations.map((l) => (
-              <option key={l._id} value={l._id}>{l.name}</option>
-            ))}
-          </select>
-          </div>
-            <div>
-              <label>Unit</label>
-          <select
-            name="associateUnit"
-            className="asset-edit-input"
-            value={editForm.associateUnit || ""}
-            onChange={handleEditChange}
-          >
-            <option value="">Select Unit</option>
-            {units.map((u) => (
-              <option key={u._id} value={u._id}>{u.name}</option>
-            ))}
-          </select>
-            </div>
-            <div>
-              <label>Status</label>
-          <select
-            name="assetStatus"
-            className="asset-edit-input"
-            value={editForm.assetStatus || ""}
-            onChange={handleEditChange}
-          >
-            <option value="">Select Status</option>
-            {statuses.map((s) => (
-              <option key={s._id} value={s._id}>{s.name}</option>
-            ))}
-          </select>
-            </div>
-            <div>
-              <label>Date Of Purchase</label>
-          <input
-            type="date"
-            name="DOP"
-            className="asset-edit-input"
-            value={editForm.DOP || ""}
-            onChange={handleEditChange}
-          />
-          </div>
-          <div>
-            <label>Date Of Expiry</label>
-          <input
-            type="date"
-            name="DOE"
-            className="asset-edit-input"
-            value={editForm.DOE || ""}
-            onChange={handleEditChange}
-          />
-          </div>
-          <div>
-            <label>Purchase From</label>
-          <input
-            name="purchaseFrom"
-            placeholder="Purchase From"
-            className="asset-edit-input"
-            value={editForm.purchaseFrom || ""}
-            onChange={handleEditChange}
-          />
-          </div>
-          <div>
-            <label>Currency</label>
-<select
-  name="assetCost.currency"
-  className="asset-edit-input"
-  value={editForm.assetCost?.currency || "INR"}
-  onChange={handleEditChange}
->
-  <option value="INR">INR</option>
-  <option value="USD">USD</option>
-  <option value="EUR">EUR</option>
-  <option value="GBP">GBP</option>
-</select>
-</div>
-<div>
-  <label>Total Cost</label>
-<input
-  type="number"
-  placeholder="Total Asset Cost"
-  className="asset-edit-input"
-  name="assetCost.totalAmount"
-value={editForm.assetCost?.totalAmount}
+       <form className="asset-edit-form" onSubmit={handleEditSubmit}>
 
-  onChange={handleEditChange}
-  min="0"
-  step="0.01"
-/>
-<small className="helper-text">
-  Enter total cost for all units combined
-</small>
-</div>
+  {/* ================= BASIC INFO ================= */}
+  <div className="form-section">
+    <h4 className="section-title">Basic Information</h4>
 
-<div>
-  <label>Quantity</label>
-<input
-  type="number"
-  name="assetQuantity"
-  placeholder="Asset Quantity"
-  className="asset-edit-input"
-  value={editForm.assetQuantity || ""}
-  onChange={handleEditChange}
-/>
-</div>
-<div>
-  <label>Asset Type</label>
-  <select
-    name="type"
-    className="asset-edit-input"
-    value={editForm.type}
-    onChange={handleEditChange}
-  >
-    <option value="one_time">One Time</option>
-    <option value="maintenance">Maintenance</option>
-  </select>
-</div>
-<div>
-  <label>Warranty ID</label>
-  <input
-    name="warranty.warrantyId"
-    className="asset-edit-input"
-    value={editForm.warranty?.warrantyId || ""}
-    onChange={handleEditChange}
-    placeholder="Warranty Reference ID"
-  />
-</div>
-<div>
-  <label>Warranty Expiry Date</label>
-  <input
-    type="date"
-    name="warranty.expiryDate"
-    className="asset-edit-input"
-    value={editForm.warranty?.expiryDate || ""}
-    onChange={handleEditChange}
-  />
-</div>
+    <div className="asset-edit-grid">
+      <div>
+        <label>Asset Name</label>
+        <input
+          name="assetName"
+          className="asset-edit-input"
+          value={editForm.assetName || ""}
+          onChange={handleEditChange}
+        />
+      </div>
 
-<div>
-  <label>Location Address</label>
-  <input
-    name="locationAddress"
-    className="asset-edit-input"
-    value={editForm.locationAddress}
-    onChange={handleEditChange}
-  />
-</div>
-<div>
-  <label>Model No</label>
-  <input
-    name="modelNo"
-    className="asset-edit-input"
-    value={editForm.modelNo}
-    onChange={handleEditChange}
-  />
-</div>
-<div>
-  <label>Maintenance Term</label>
-  <input
-    name="maintenanceTerm"
-    className="asset-edit-input"
-    value={editForm.maintenanceTerm}
-    onChange={handleEditChange}
-  />
-</div>
+      <div>
+        <label>Specification</label>
+        <input
+          name="assetSpecification"
+          className="asset-edit-input"
+          value={editForm.assetSpecification || ""}
+          onChange={handleEditChange}
+        />
+      </div>
 
-<div>
-  <label> In use</label>
-          <input
-  type="number"
-  name="inUse"
-  placeholder="Assets In Use"
-  className="asset-edit-input"
-  value={editForm.inUse || 0}
-  onChange={handleEditChange}
-/>
-</div>
-<div>
-  <label>Asset Lifetime</label>
+      <div>
+        <label>Model No</label>
+        <input
+          name="modelNo"
+          className="asset-edit-input"
+          value={editForm.modelNo || ""}
+          onChange={handleEditChange}
+        />
+      </div>
 
-          <input
-            name="assetLifetime"
-            placeholder="Asset Lifetime"
-            className="asset-edit-input"
-            value={editForm.assetLifetime || ""}
-            onChange={handleEditChange}
-          />
-</div>
-          <div className="asset-edit-actions">
-            <button type="submit" className="asset-edit-save-btn">Save</button>
-            <button
-              type="button"
-              className="asset-edit-cancel-btn"
-              onClick={() => setEditingAsset(null)}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+      <div>
+        <label>Location Address</label>
+        <input
+          name="locationAddress"
+          className="asset-edit-input"
+          value={editForm.locationAddress || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* ================= CLASSIFICATION ================= */}
+  <div className="form-section">
+    <h4 className="section-title">Classification</h4>
+
+    <div className="asset-edit-grid">
+      <div>
+        <label>Category</label>
+        <select
+          name="assetCategory"
+          className="asset-edit-input"
+          value={editForm.assetCategory || ""}
+          onChange={handleEditChange}
+        >
+          <option value="">Select Category</option>
+          {categories.map((c) => (
+            <option key={c._id} value={c._id}>{c.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label>Location</label>
+        <select
+          name="locationName"
+          className="asset-edit-input"
+          value={editForm.locationName || ""}
+          onChange={handleEditChange}
+        >
+          <option value="">Select Location</option>
+          {locations.map((l) => (
+            <option key={l._id} value={l._id}>{l.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label>Unit</label>
+        <select
+          name="associateUnit"
+          className="asset-edit-input"
+          value={editForm.associateUnit || ""}
+          onChange={handleEditChange}
+        >
+          <option value="">Select Unit</option>
+          {units.map((u) => (
+            <option key={u._id} value={u._id}>{u.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select
+          name="assetStatus"
+          className="asset-edit-input"
+          value={editForm.assetStatus || ""}
+          onChange={handleEditChange}
+        >
+          <option value="">Select Status</option>
+          {statuses.map((s) => (
+            <option key={s._id} value={s._id}>{s.name}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  {/* ================= PURCHASE & COST ================= */}
+  <div className="form-section">
+    <h4 className="section-title">Purchase & Cost</h4>
+
+    <div className="asset-edit-grid">
+      <div>
+        <label>Date Of Purchase</label>
+        <input
+          type="date"
+          name="DOP"
+          className="asset-edit-input"
+          value={editForm.DOP || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>Date Of Expiry</label>
+        <input
+          type="date"
+          name="DOE"
+          className="asset-edit-input"
+          value={editForm.DOE || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>Purchase From</label>
+        <input
+          name="purchaseFrom"
+          className="asset-edit-input"
+          value={editForm.purchaseFrom || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>Currency</label>
+        <select
+          name="assetCost.currency"
+          className="asset-edit-input"
+          value={editForm.assetCost?.currency || "INR"}
+          onChange={handleEditChange}
+        >
+          <option value="INR">INR</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Total Cost</label>
+        <input
+          type="number"
+          name="assetCost.totalAmount"
+          className="asset-edit-input"
+          value={editForm.assetCost?.totalAmount}
+          onChange={handleEditChange}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* ================= STOCK ================= */}
+  <div className="form-section">
+    <h4 className="section-title">Stock & Usage</h4>
+
+    <div className="asset-edit-grid">
+      <div>
+        <label>Quantity</label>
+        <input
+          type="number"
+          name="assetQuantity"
+          className="asset-edit-input"
+          value={editForm.assetQuantity || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>In Use</label>
+        <input
+          type="number"
+          name="inUse"
+          className="asset-edit-input"
+          value={editForm.inUse || 0}
+          onChange={handleEditChange}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* ================= WARRANTY ================= */}
+  <div className="form-section">
+    <h4 className="section-title">Warranty</h4>
+
+    <div className="asset-edit-grid">
+      <div>
+        <label>Warranty ID</label>
+        <input
+          name="warranty.warrantyId"
+          className="asset-edit-input"
+          value={editForm.warranty?.warrantyId || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>Warranty Expiry</label>
+        <input
+          type="date"
+          name="warranty.expiryDate"
+          className="asset-edit-input"
+          value={editForm.warranty?.expiryDate || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* ================= INSURANCE ================= */}
+  <div className="form-section">
+    <h4 className="section-title">Insurance</h4>
+
+    <div className="asset-edit-grid">
+      <div>
+        <label>Insurance ID</label>
+        <input
+          name="insurance.insuranceId"
+          className="asset-edit-input"
+          value={editForm.insurance?.insuranceId || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>Insurance Name</label>
+        <input
+          name="insurance.insuranceName"
+          className="asset-edit-input"
+          value={editForm.insurance?.insuranceName || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>Purchase Date</label>
+        <input
+          type="date"
+          name="insurance.purchaseDate"
+          className="asset-edit-input"
+          value={editForm.insurance?.purchaseDate || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+
+      <div>
+        <label>Expiry Date</label>
+        <input
+          type="date"
+          name="insurance.expiryDate"
+          className="asset-edit-input"
+          value={editForm.insurance?.expiryDate || ""}
+          onChange={handleEditChange}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* ================= ACTIONS ================= */}
+  <div className="asset-edit-actions">
+    <button type="submit" className="asset-edit-save-btn">Save</button>
+    <button
+      type="button"
+      className="asset-edit-cancel-btn"
+      onClick={() => setEditingAsset(null)}
+    >
+      Cancel
+    </button>
+  </div>
+
+</form>
+
       </motion.div>
     </motion.div>
   )}

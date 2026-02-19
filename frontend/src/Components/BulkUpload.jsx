@@ -143,12 +143,12 @@ hardware: [
 
   software: [
     {
-      assetName: "",
-      assetCategory: "",
+      SoftwareName: "",
+      Category: "",
       type: "monthly",           // 🔴 REQUIRED
-      assetSpecification: "",
-      purchaseFrom: "",
-      associateUnit: "",
+      Version: "",
+      Publisher: "",
+      Unit: "",
       locationName: "",
       locationAddress: "",
       licenseKey: "",
@@ -156,7 +156,7 @@ hardware: [
       licenseModel: "",
       licenseMetric: "",
       licenseUse: "",
-      assetStatus: "",
+      Status: "",
       DOP: "",
       DOE: "",
       assetCost: "",             // TOTAL COST
