@@ -161,7 +161,7 @@ const COLORS = [
     const [apiDone, setApiDone] = useState(false);
     const [hardwareMaintenance, setHardwareMaintenance] = useState(null);
   const [softwareCostMetrics, setSoftwareCostMetrics] = useState(null);
-  const [departmentAssets, setDepartmentAssets] = useState(null);
+  const [departmentAssets, setDepartmentAssets] = useState([]);
 
     const getLocationName = (id) => {
       const loc = locationList.find((l) => l._id === id);
@@ -226,7 +226,9 @@ const COLORS = [
 
       setHardwareMaintenance(maintenance);
       setSoftwareCostMetrics(softwareCost?.data || softwareCost);
-      setDepartmentAssets(deptAssets);
+            setDepartmentAssets(
+  Array.isArray(deptAssets) ? deptAssets : deptAssets?.data || []
+);
 
       setStatsData(stats?.data || stats);
       setValuationData(valuation?.data || valuation);
@@ -286,7 +288,10 @@ const COLORS = [
     statsData?.softwareValuation ?? 0,
     currency
   );
-
+const pieData = (departmentAssets || []).map((d) => ({
+  name: d.departmentName,
+  value: d.totalAssets,
+}));
   return (
     <div className="admin-dashboard">
       <div className="dashboard-header">
@@ -300,10 +305,10 @@ const COLORS = [
         <div className="kpi-2x2">
           <div className="stat-card green">
             <p>Total Valuation</p>
-            <h3>
+            <p>
               {CURRENCY_SYMBOLS[currency]}{" "}
               {totalValuationView.toLocaleString()}
-            </h3>
+            </p>
           </div>
 
           <div
@@ -596,30 +601,25 @@ const COLORS = [
 </div>
 
 
-
 <div className="chart-card">
-  <h2>Assets by Department</h2>
+  <h2>Assets Distribution</h2>
 
   <ResponsiveContainer width="100%" height={300}>
     <PieChart>
-      <Tooltip
-        formatter={(value) => value?.toLocaleString?.() || 0}
-      />
-      <Legend />
+      <Tooltip formatter={(value) => value?.toLocaleString?.() || 0} />
+      <Legend verticalAlign="bottom" height={36} />
 
-      <Pie
-        data={(departmentAssets || []).map((d) => ({
-          name: d.departmentName,
-          value: (d.hardware || 0) + (d.software || 0),
-        }))}
-        dataKey="value"
-        nameKey="name"
-        cx="50%"
-        cy="50%"
-        outerRadius={100}
-        label
-      >
-        {(departmentAssets || []).map((_, index) => (
+<Pie
+  data={pieData}
+  dataKey="value"
+  nameKey="name"
+  cx="50%"
+  cy="50%"
+  outerRadius={110}
+  paddingAngle={2}
+>
+
+        {pieData.map((_, index) => (
           <Cell
             key={`cell-${index}`}
             fill={COLORS[index % COLORS.length]}
@@ -629,7 +629,6 @@ const COLORS = [
     </PieChart>
   </ResponsiveContainer>
 </div>
-
 
 
         {/* <div className="panel-card">

@@ -128,33 +128,58 @@ const getName = (list, value) => {
   };
 
   // Normalize fields for editing
-  const startEdit = (asset) => {
-    setEditingAsset(asset);
+    const startEdit = (asset) => {
+      setEditingAsset(asset);
 setEditForm({
-  assetName: asset.assetName || "",
-  assetCode: asset.assetCode || "",
-  assetSpecification: asset.assetSpecification || "",
-  assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
-  locationName: asset.locationName?._id || asset.locationName || "",
-  associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
-  assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
-  DOP: asset.DOP ? new Date(asset.DOP).toISOString().split("T")[0] : "",
-  DOE: asset.DOE ? new Date(asset.DOE).toISOString().split("T")[0] : "",
-  purchaseFrom: asset.purchaseFrom || "",
-  assetLifetime: asset.assetLifetime || "",
+  assetName: assets.assetName || "",
+  assetCode: assets.assetCode || "",
+  barcodeNumber: assets.barcodeNumber || "",
+  modelNo: assets.modelNo || "",
+  type: assets.type || "one_time",
+  locationAddress: assets.locationAddress || "",
+  assetSpecification: assets.assetSpecification || "",
+  maintenanceTerm: assets.maintenanceTerm || "",
+  PMD: assets.PMD || "",
 
-assetCost: {
-  totalAmount: asset.assetCost?.totalAmount || 0,
-  currency: asset.assetCost?.currency || "USD",
-},
+  assetCategory: assets.assetCategory?._id || assets.assetCategory || "",
+  locationName: assets.locationName?._id || assets.locationName || "",
+  associateUnit: assets.associateUnit?._id || assets.associateUnit || "",
+  assetStatus: assets.assetStatus?._id || assets.assetStatus || "",
 
+  DOP: assets.DOP ? new Date(assets.DOP).toISOString().split("T")[0] : "",
+  DOE: assets.DOE ? new Date(assets.DOE).toISOString().split("T")[0] : "",
 
-  assetQuantity: asset.assetQuantity || 1,
-  inUse: asset.inUse || 0,
+  purchaseFrom: assets.purchaseFrom || "",
+  assetLifetime: assets.assetLifetime || "",
+
+  assetCost: {
+    totalAmount: assets.assetCost?.totalAmount || 0,
+    currency: assets.assetCost?.currency || "INR",
+  },
+
+  insurance: {
+    insuranceId: assets.insurance?.insuranceId || "",
+    insuranceName: assets.insurance?.insuranceName || "",
+    purchaseDate: assets.insurance?.purchaseDate
+      ? new Date(assets.insurance.purchaseDate).toISOString().split("T")[0]
+      : "",
+    expiryDate: assets.insurance?.expiryDate
+      ? new Date(assets.insurance.expiryDate).toISOString().split("T")[0]
+      : "",
+  },
+
+  warranty: {
+    warrantyId: assets.warranty?.warrantyId || "",
+    expiryDate: assets.warranty?.expiryDate
+      ? new Date(assets.warranty.expiryDate).toISOString().split("T")[0]
+      : "",
+  },
+
+  assetQuantity: assets.assetQuantity || 1,
+  inUse: assets.inUse || 0,
 });
+    };
 
-
-  };
 const handleEditSubmit = async (e) => {
   e.preventDefault();
 
@@ -232,6 +257,29 @@ const handleEditChange = (e) => {
     setEditForm((prev) => ({ ...prev, inUse: inUseVal }));
     return;
   }
+  if (name.startsWith("insurance.")) {
+  const field = name.split(".")[1];
+  setEditForm(prev => ({
+    ...prev,
+    insurance: {
+      ...prev.insurance,
+      [field]: value,
+    },
+  }));
+  return;
+}
+
+if (name.startsWith("warranty.")) {
+  const field = name.split(".")[1];
+  setEditForm(prev => ({
+    ...prev,
+    warranty: {
+      ...prev.warranty,
+      [field]: value,
+    },
+  }));
+  return;
+}
 
   setEditForm((prev) => ({ ...prev, [name]: value }));
 };
@@ -745,6 +793,67 @@ value={editForm.assetCost?.totalAmount}
   onChange={handleEditChange}
 />
 </div>
+<div>
+  <label>Asset Type</label>
+  <select
+    name="type"
+    className="asset-edit-input"
+    value={editForm.type}
+    onChange={handleEditChange}
+  >
+    <option value="one_time">One Time</option>
+    <option value="maintenance">Maintenance</option>
+  </select>
+</div>
+<div>
+  <label>Warranty ID</label>
+  <input
+    name="warranty.warrantyId"
+    className="asset-edit-input"
+    value={editForm.warranty?.warrantyId || ""}
+    onChange={handleEditChange}
+    placeholder="Warranty Reference ID"
+  />
+</div>
+<div>
+  <label>Warranty Expiry Date</label>
+  <input
+    type="date"
+    name="warranty.expiryDate"
+    className="asset-edit-input"
+    value={editForm.warranty?.expiryDate || ""}
+    onChange={handleEditChange}
+  />
+</div>
+
+<div>
+  <label>Location Address</label>
+  <input
+    name="locationAddress"
+    className="asset-edit-input"
+    value={editForm.locationAddress}
+    onChange={handleEditChange}
+  />
+</div>
+<div>
+  <label>Model No</label>
+  <input
+    name="modelNo"
+    className="asset-edit-input"
+    value={editForm.modelNo}
+    onChange={handleEditChange}
+  />
+</div>
+<div>
+  <label>Maintenance Term</label>
+  <input
+    name="maintenanceTerm"
+    className="asset-edit-input"
+    value={editForm.maintenanceTerm}
+    onChange={handleEditChange}
+  />
+</div>
+
 <div>
   <label> In use</label>
           <input

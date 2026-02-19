@@ -1,7 +1,7 @@
 .subscription-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 16px 64px;
+  padding: 10px;
 }
 
 .subscription-page h2 {
@@ -9,21 +9,24 @@
   font-weight: 800;
   text-align: center;
   margin-bottom: 8px;
+  color: #2463eb;
 }
 
 .subscription-page p {
   text-align: center;
-  color: #6b7280;
+  color: #000000;
   max-width: 600px;
-  margin: 0 auto 24px;
+  margin: 0 auto;
   line-height: 1.6;
 }
 .billing-toggle {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
   background: #f3f4f6;
   border-radius: 999px;
   padding: 6px;
+  width: 100%;
   gap: 6px;
 }
 
@@ -39,19 +42,20 @@
 }
 
 .billing-toggle button.active {
-  background: #111827;
+  background: #2463eb;
   color: #ffffff;
+  border: none;
 }
 .plans-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 28px;
-  margin-top: 32px;
+  margin-top: 12px;
 }
 .plan-card {
   background: #ffffff;
   border-radius: 18px;
-  padding: 24px;
+  padding: 14px;
   border: 1px solid #e5e7eb;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -87,11 +91,14 @@
   font-size: 22px;
   font-weight: 800;
   margin-bottom: 6px;
+  text-align: center;
+  color: #2463eb;
 }
 
 .plan-price {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 6px;
   margin: 16px 0 20px;
 }
@@ -120,9 +127,13 @@
   padding: 0;
   margin: 0;
   flex-grow: 1;
+  display: flex;
+  gap: 5px;
 }
 
 .plan-features li {
+  display: flex;
+  justify-content: flex-start;
   font-size: 14px;
   color: #374151;
   padding-left: 26px;
