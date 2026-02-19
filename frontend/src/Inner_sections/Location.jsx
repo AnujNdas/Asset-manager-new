@@ -37,6 +37,8 @@ const Location = () => {
   // Edit Modal
   const [editingLocation, setEditingLocation] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
+    const capitalize = (v) =>
+    v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
 
   useEffect(() => {
     fetchLocations();
