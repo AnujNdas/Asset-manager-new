@@ -628,35 +628,25 @@ router.get(
   "/asset-distribution",
   authenticateToken(["admin", "user"]), async (req, res) => {
   try {
+    console.log(req.user);
     const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
 
 const data = await AssetAssignment.aggregate([
   {
     $match: {
       organizationId,
-      assignedToType: "Department",
-      status: "active"
+      status: { $regex: /^active$/i }
     }
   },
-
-  {
-    $project: {
-      assignedTo: 1,
-      assetType: 1,
-      quantity: { $ifNull: ["$quantity", 0] }
-    }
-  },
-
   {
     $group: {
       _id: {
-        departmentId: "$assignedTo",
-        assetType: "$assetType"
+        departmentId: "$departmentId",
+        assetType: { $toLower: "$assetType" }
       },
-      total: { $sum: "$quantity" }
+      total: { $sum: { $ifNull: ["$quantity", 0] } }
     }
   },
-
   {
     $group: {
       _id: "$_id.departmentId",
@@ -672,7 +662,6 @@ const data = await AssetAssignment.aggregate([
       }
     }
   },
-
   {
     $lookup: {
       from: "departments",
@@ -681,9 +670,12 @@ const data = await AssetAssignment.aggregate([
       as: "department"
     }
   },
-
-  { $unwind: "$department" },
-
+  {
+    $unwind: {
+      path: "$department",
+      preserveNullAndEmptyArrays: true
+    }
+  },
   {
     $project: {
       departmentId: "$_id",
@@ -694,8 +686,7 @@ const data = await AssetAssignment.aggregate([
     }
   }
 ]);
-
-
+console.log("Asset distribution data:", data);
     res.json({ success: true, data });
 
   } catch (error) {
