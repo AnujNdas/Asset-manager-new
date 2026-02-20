@@ -165,6 +165,9 @@ localStorage.removeItem("inviteToken");
               {loading ? "Processing..." : "Sign Up"}
             </button>
           </div>
+                    <p className="tiny-note">
+            By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "blue", cursor : "pointer", textAlign : "center" , justifyContent : "center", padding : "0px"}} target="_blank">Terms & Privacy Policy.</a> 
+          </p>
         </form>
       </div>
     </div>

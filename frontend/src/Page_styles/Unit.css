@@ -8,7 +8,7 @@
 
 .category-card {
   background: #ffffff;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 14px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -50,7 +50,8 @@
   align-items: center;
   margin-bottom: 18px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 5px;
+  position: relative;
 }
 
 .category_title {
@@ -68,10 +69,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  /* background: #ffffff; */
+  background: #ffffff;
   padding: 6px;
   border-radius: 12px;
-  /* border: 1px solid #e5e7eb; */
+  border: 1px solid #e5e7eb;
   max-width: 420px;
   width: 100%;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -481,7 +482,7 @@
 }
 /* Search input */
 .category_search_input {
-  width: 260px;
+  /* width: 260px; */
   max-width: 100%;
   padding: 10px 14px;
   border-radius: 8px;
@@ -509,7 +510,7 @@
 @media (max-width: 768px) {
   .category_search_input {
     width: 100%;
-    margin-top: 8px;
+    /* margin-top: 8px; */
   }
 }
 

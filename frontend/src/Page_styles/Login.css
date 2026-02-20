@@ -24,6 +24,7 @@ body {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto,
                "Helvetica Neue", Arial;
 
+
 }
 
 /* =========================================================
@@ -33,7 +34,7 @@ body {
   width: 100%;
   display: grid;
   place-items: center;
-  overflow: auto;
+  overflow: hidden;
 
   /* Page background behind card */
   /* background: #c2c2c2; */
@@ -44,13 +45,13 @@ body {
   width: 100%;
   max-width: 900px;
 
-  background: #fff;
-  border-radius: 20px;
+  /* background: #fff; */
+  /* border-radius: 20px; */
 
   display: grid;
   overflow: hidden;
 
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); */
 }
 
 /* =========================================================
@@ -58,7 +59,7 @@ body {
 ========================================================= */
 .form-panel {
   background: #fff;
-  padding: 10px 25px;
+  padding: 5px 18px;
 
   display: grid;
   /* gap: 16px; */
@@ -80,12 +81,13 @@ body {
 
 .form-header h2 {
   font-size: clamp(16px, 2vw, 22px);
-  margin-top: 6px;
+  margin: 0;
 }
 
 .form-sub {
   font-size: clamp(12px, 1.2vw, 14px);
   color: var(--muted);
+  margin: 0;
 }
 
 /* =========================================================
@@ -147,6 +149,7 @@ body {
 .field {
   display: grid;
   gap: 8px;
+  margin: 0;
 }
 
 .field-label {
@@ -250,6 +253,7 @@ body {
   font-size: 12px;
   color: var(--muted);
   text-align: center;
+  margin: 0;
 }
 
 /* =========================================================
@@ -281,7 +285,7 @@ body {
   }
 
   .form-panel {
-    padding: 20px;
+    padding: 10px;
   }
 }
 
@@ -290,7 +294,6 @@ body {
   .auth-card {
     max-width: 720px;
     grid-template-columns: 1fr;
-    overflow: auto;
   }
 
   .form-panel {
@@ -305,8 +308,8 @@ body {
 /* Phones */
 @media (max-width: 600px) {
   .form-panel {
-    padding: 18px 14px;
-    gap: 14px;
+    padding: 8px 14px;
+    gap: 10px;
   }
 
   .form-logo {

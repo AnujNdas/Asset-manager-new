@@ -24,59 +24,82 @@ const BulkUpload = ({ type, userRole }) => {
 useEffect(() => {
   if (!mode) return;
 
-  const modeContent =
-    mode === "strict"
-      ? {
-          title: "Strict Import Mode Enabled",
-          html: `
-<div class="swal-content">
-  <p>
-    You are importing assets in <b>Strict Mode</b>. This mode ensures data consistency and prevents unintended system changes.
+const modeContent =
+  mode === "strict"
+    ? {
+        title: "Strict Import Mode",
+        html: `
+<div style="text-align:left; font-size:14px; line-height:1.6; padding:5px 10px;">
+
+  <p style="margin-bottom:12px;">
+    You are importing assets using <strong>Strict Mode</strong>.
+    This mode enforces validation rules to maintain system consistency.
   </p>
 
-  <ul>
-    <li>All classifications (<b>Category, Location, Unit, Status</b>) must already exist.</li>
-    <li>If a classification does not exist → that row will be <b>skipped automatically</b>.</li>
-    <li>Best for controlled, predictable imports.</li>
-  </ul>
+  <div style="margin-bottom:12px;">
+    <div style="font-weight:600; margin-bottom:6px;">What will happen:</div>
+    <ul style="padding-left:18px; margin:0;">
+      <li style="margin-bottom:6px;">
+        All classifications (<strong>Category, Location, Unit, Status</strong>) must already exist.
+      </li>
+      <li style="margin-bottom:6px;">
+        Rows with missing classifications will be <strong>skipped automatically</strong>.
+      </li>
+      <li>
+        No new classifications will be created.
+      </li>
+    </ul>
+  </div>
 
-  <p>
-    Tip: Review classifications from the <b>Classification</b> section before importing.
+  <div style="background:#f8f9fa; padding:8px 10px; border-radius:6px;">
+    <strong>Recommended for:</strong> Controlled environments where data structure must remain unchanged.
+  </div>
+
+  <p style="margin-top:12px; font-size:13px; color:#6c757d;">
+    Tip: Review existing classifications in the <strong>Classification</strong> section before importing.
   </p>
+
 </div>
-`
-,
-          icon: "info",
-        }
-      : {
-          title: "Auto Import Mode Enabled",
-          html: `
-            <div style="text-align:left; line-height:1.6;">
-              <p>
-                You are importing assets in <b>Auto Mode</b>. This mode prioritizes
-                speed and flexibility during bulk imports.
-              </p>
-              <ul>
-                <li>
-                  Added classification values such as <b>Category, Location,
-                  Unit, or Status</b> will be created automatically.
-                </li>
-                <li>
-                  New classifications will be added permanently to the system.
-                </li>
-                <li>
-                  This process cannot be reversed, so accuracy is important.
-                </li>
-              </ul>
-              <p style="margin-top:10px;">
-                Recommended for large imports where classifications are still
-                evolving or incomplete.
-              </p>
-            </div>
-          `,
-          icon: "warning",
-        };
+        `,
+        icon: "info",
+      }
+    : {
+        title: "Auto Import Mode",
+        html: `
+<div style="text-align:center; font-size:14px; line-height:1.6; padding:0px 10px;">
 
+  <p style="margin-bottom:12px; text-align:center;">
+    You are importing assets using <strong>Auto Mode</strong>.
+    This mode prioritizes speed and flexibility during bulk imports.
+  </p>
+
+  <div style="margin-bottom:12px;">
+    <div style="font-weight:600; margin-bottom:6px;">What will happen:</div>
+    <ul style="margin:0; display:flex; flex-direction:column; gap:6px; list-style-type: bullet; padding-left: 20px;">
+      <li style="margin-bottom:6px;text-align:left;">
+        1. New classifications (Category, Location, Unit, Status) will be created automatically.
+      </li>
+      <li style="margin-bottom:6px;text-align:left;">
+        2. Newly created classifications will be permanently stored.
+      </li>
+      <li style="margin-bottom:6px;text-align:center;">
+        3. This action cannot be reversed.
+      </li>
+    </ul>
+  </div>
+
+  <div style="background:#fff3cd; padding:8px 10px; border-radius:6px;">
+    <strong>Recommended for:</strong> Large imports where classifications are evolving.
+  </div>
+
+  <p style="margin-top:12px; font-size:13px; color:#6c757d;">
+    Please verify your file carefully before proceeding.
+  </p>
+
+</div>
+        `,
+        icon: "warning",
+      };
 Swal.fire({
   title: modeContent.title,
   html: modeContent.html,

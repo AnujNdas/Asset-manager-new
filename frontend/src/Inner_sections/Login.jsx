@@ -137,7 +137,7 @@ if (role === "super-admin") {
           </div>
 
           <p className="tiny-note">
-            By continuing, you agree to our Terms & Privacy Policy.
+            By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "blue", cursor : "pointer", textAlign : "center" , justifyContent : "center"}} target="_blank">Terms & Privacy Policy.</a> 
           </p>
         </form>
       </div>
