@@ -829,7 +829,12 @@
 }
 
 .dept-badge {
-  background: #ff0000;
+    background: linear-gradient(
+    135deg,
+    var(--brand),
+    #6b8cff 60%,
+    var(--brand-2)
+  );
   color: #ffffff;
   font-size: 12px;
   font-weight: 600;

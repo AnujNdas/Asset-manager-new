@@ -1,24 +1,27 @@
 import { useCurrency } from "../Context/CurrencyContext";
 import "../Component_styles/CurrencyFilter.css";
-const currencies = [
-  "INR",
-  "USD",
-  "EUR",
-  "GBP",
-  "JPY",
-  "AUD",
-  "CAD",
-  "CHF",
-  "CNY",
-  "HKD",
-  "SGD",
-  "AED",
-  "SAR",
-  "SEK",
-  "KWD",
-  "QAR",
-  "NZD"
-];
+
+export const CURRENCY_SYMBOLS = {
+  INR: "₹",
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  JPY: "¥",
+  AUD: "A$",
+  CAD: "C$",
+  CHF: "CHF",
+  CNY: "¥",
+  HKD: "HK$",
+  SGD: "S$",
+  AED: "د.إ",
+  SAR: "﷼",
+  SEK: "kr",
+  KWD: "د.ك",
+  QAR: "ر.ق",
+  NZD: "NZ$",
+};
+
+const currencies = Object.keys(CURRENCY_SYMBOLS);
 
 const CurrencyFilter = () => {
   const { currency, setCurrency } = useCurrency();
@@ -29,9 +32,9 @@ const CurrencyFilter = () => {
       onChange={(e) => setCurrency(e.target.value)}
       className="currency-filter"
     >
-      {currencies.map(c => (
+      {currencies.map((c) => (
         <option key={c} value={c}>
-          {c}
+          {CURRENCY_SYMBOLS[c]}-{c}
         </option>
       ))}
     </select>

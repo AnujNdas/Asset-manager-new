@@ -33,7 +33,7 @@ const HardwareAssetList = () => {
   const [apiDone, setApiDone] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const assetsPerPage = 8;
+  const assetsPerPage = 6;
 
   const navigate = useNavigate();
   const { currency } = useCurrency();
@@ -128,66 +128,57 @@ const getName = (list, value) => {
   };
 
   // Normalize fields for editing
-const startEdit = (asset) => {
-  setEditingAsset(asset);
+    const startEdit = (asset) => {
+      setEditingAsset(asset);
+setEditForm({
+  assetName: asset.assetName || "",
+  assetCode: asset.assetCode || "",
+  barcodeNumber: asset.barcodeNumber || "",
+  modelNo: asset.modelNo || "",
+  type: asset.type || "one_time",
+  locationAddress: asset.locationAddress || "",
+  assetSpecification: asset.assetSpecification || "",
+  maintenanceTerm: asset.maintenanceTerm || "",
+  PMD: asset.PMD || "",
 
-  setEditForm({
-    assetName: asset.assetName || "",
-    assetCode: asset.assetCode || "",
-    barcodeNumber: asset.barcodeNumber || "",
-    modelNo: asset.modelNo || "",
-    type: asset.type || "one_time",
-    locationAddress: asset.locationAddress || "",
-    assetSpecification: asset.assetSpecification || "",
-    maintenanceTerm: asset.maintenanceTerm || "",
-    PMD: asset.PMD || "",
+  assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
+  locationName: asset.locationName?._id || asset.locationName || "",
+  associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
+  assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
 
-    assetCategory: asset.assetCategory?._id || asset.assetCategory || "",
-    locationName: asset.locationName?._id || asset.locationName || "",
-    associateUnit: asset.associateUnit?._id || asset.associateUnit || "",
-    assetStatus: asset.assetStatus?._id || asset.assetStatus || "",
+  DOP: asset.DOP ? new Date(asset.DOP).toISOString().split("T")[0] : "",
+  DOE: asset.DOE ? new Date(asset.DOE).toISOString().split("T")[0] : "",
 
-    DOP: asset.DOP
-      ? new Date(asset.DOP).toISOString().slice(0, 10)
+  purchaseFrom: asset.purchaseFrom || "",
+  assetLifetime: asset.assetLifetime || "",
+
+  assetCost: {
+    totalAmount: asset.assetCost?.totalAmount || 0,
+    currency: asset.assetCost?.currency || "INR",
+  },
+
+  insurance: {
+    insuranceId: asset.insurance?.insuranceId || "",
+    insuranceName: asset.insurance?.insuranceName || "",
+    purchaseDate: asset.insurance?.purchaseDate
+      ? new Date(asset.insurance.purchaseDate).toISOString().split("T")[0]
       : "",
-
-    DOE: asset.DOE
-      ? new Date(asset.DOE).toISOString().slice(0, 10)
+    expiryDate: asset.insurance?.expiryDate
+      ? new Date(asset.insurance.expiryDate).toISOString().split("T")[0]
       : "",
+  },
 
-    purchaseFrom: asset.purchaseFrom || "",
-    assetLifetime: asset.assetLifetime || "",
+  warranty: {
+    warrantyId: asset.warranty?.warrantyId || "",
+    expiryDate: asset.warranty?.expiryDate
+      ? new Date(asset.warranty.expiryDate).toISOString().split("T")[0]
+      : "",
+  },
 
-    assetCost: {
-      totalAmount: asset.assetCost?.totalAmount ?? 0,
-      currency: asset.assetCost?.currency ?? "INR",
-    },
-
-    // ✅ INSURANCE (Fully Integrated)
-    insurance: {
-      insuranceId: asset.insurance?.insuranceId ?? "",
-      insuranceName: asset.insurance?.insuranceName ?? "",
-      purchaseDate: asset.insurance?.purchaseDate
-        ? new Date(asset.insurance.purchaseDate).toISOString().slice(0, 10)
-        : "",
-      expiryDate: asset.insurance?.expiryDate
-        ? new Date(asset.insurance.expiryDate).toISOString().slice(0, 10)
-        : "",
-    },
-
-    // ✅ WARRANTY
-    warranty: {
-      warrantyId: asset.warranty?.warrantyId ?? "",
-      expiryDate: asset.warranty?.expiryDate
-        ? new Date(asset.warranty.expiryDate).toISOString().slice(0, 10)
-        : "",
-    },
-
-    assetQuantity: asset.assetQuantity ?? 1,
-    inUse: asset.inUse ?? 0,
-  });
-};
-
+  assetQuantity: asset.assetQuantity || 1,
+  inUse: asset.inUse || 0,
+});
+    };
 
 const handleEditSubmit = async (e) => {
   e.preventDefault();
@@ -379,7 +370,12 @@ if (name.startsWith("warranty.")) {
   };
 
   if (loading) return <Loader type="inventory" apiDone={apiDone} />;
-
+const Field = ({ label, value }) => (
+  <div>
+    <label>{label}</label>
+    <p>{value || "N/A"}</p>
+  </div>
+);
   return (
     <div className="inventory-container">
       <div className="dashboard-header">
@@ -493,139 +489,191 @@ if (name.startsWith("warranty.")) {
       onClick={() => setSelectedAsset(null)}
     >
       <motion.div
-        className="asset-view-modal"
-        initial={{ scale: 0.95 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0.95 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="asset-view-header">
-          <h3 className="asset-view-title">
-            {selectedAsset.assetName || selectedAsset.assetCode}
-          </h3>
+  className="asset-view-modal"
+  initial={{ scale: 0.95 }}
+  animate={{ scale: 1 }}
+  exit={{ scale: 0.95 }}
+  onClick={(e) => e.stopPropagation()}
+>
+  {/* ================= HEADER ================= */}
+  <div className="asset-view-header">
+    <div>
+      <h3 className="asset-view-title">
+        {selectedAsset.assetName || selectedAsset.assetCode}
+      </h3>
+      <p className="asset-view-subtitle">
+        {selectedAsset.assetCode}
+      </p>
+    </div>
 
-          <div className="asset-view-badges">
-            <span className="asset-view-badge category">
-              {getName(categories, selectedAsset.assetCategory)}
-            </span>
-            <span className="asset-view-badge status">
-              {getName(statuses, selectedAsset.assetStatus)}
-            </span>
-          </div>
-        </div>
+    <div className="asset-view-badges">
+      <span className="asset-view-badge category">
+        {getName(categories, selectedAsset.assetCategory) || "N/A"}
+      </span>
+      <span className="asset-view-badge status">
+        {getName(statuses, selectedAsset.assetStatus) || "N/A"}
+      </span>
+    </div>
+  </div>
 
-        <h4 className="asset-view-section-title">Asset Details</h4>
+  {/* ================= BASIC INFO ================= */}
+  <h4 className="asset-view-section-title">Basic Information</h4>
+  <div className="asset-view-grid">
+    <Field label="Type" value={selectedAsset.type} />
+    <Field label="Model No" value={selectedAsset.modelNo} />
+    <Field label="Barcode" value={selectedAsset.barcodeNumber} />
+    <Field
+      label="Location"
+      value={getName(locations, selectedAsset.locationName)}
+    />
+    <Field label="Location Address" value={selectedAsset.locationAddress} />
+    <Field
+      label="Unit"
+      value={getName(units, selectedAsset.associateUnit)}
+    />
+    <Field label="Purchase From" value={selectedAsset.purchaseFrom} />
+    <Field label="Specification" value={selectedAsset.assetSpecification} />
+  </div>
 
-        <div className="asset-view-grid">
-          <div>
-            <label>Asset Code</label>
-            <p>{selectedAsset.assetCode || "—"}</p>
-          </div>
+  {/* ================= FINANCIAL DETAILS ================= */}
+  <h4 className="asset-view-section-title">Financial Details</h4>
+  <div className="asset-view-grid">
+    <Field
+      label="Original Currency"
+      value={selectedAsset.assetCost?.currency}
+    />
+    <Field
+      label="Original Total"
+      value={
+        selectedAsset.assetCost?.totalAmount
+          ? `${selectedAsset.assetCost.currency} ${selectedAsset.assetCost.totalAmount.toLocaleString()}`
+          : null
+      }
+    />
+    <Field
+      label="Original Unit Cost"
+      value={
+        selectedAsset.assetCost?.unitAmount
+          ? `${selectedAsset.assetCost.currency} ${selectedAsset.assetCost.unitAmount.toLocaleString()}`
+          : null
+      }
+    />
+    <Field
+      label="Base Total"
+      value={
+        selectedAsset.assetCost?.baseTotalAmount
+          ? `₹ ${selectedAsset.assetCost.baseTotalAmount.toLocaleString()}`
+          : null
+      }
+    />
+  </div>
 
-          <div>
-            <label>Specification</label>
-            <p>{selectedAsset.assetSpecification || "—"}</p>
-          </div>
+  {/* ================= INVENTORY ================= */}
+  <h4 className="asset-view-section-title">Inventory</h4>
+  <div className="asset-view-grid">
+    <Field label="Quantity" value={selectedAsset.assetQuantity} />
+    <Field label="In Use" value={selectedAsset.inUse} />
+    <Field label="In Stock" value={selectedAsset.inStock} />
+  </div>
 
-          <div>
-            <label>Location</label>
-            <p>{getName(locations, selectedAsset.locationName)}</p>
-          </div>
+  {/* ================= MAINTENANCE & WARRANTY ================= */}
+  <h4 className="asset-view-section-title">Maintenance & Warranty</h4>
+  <div className="asset-view-grid">
+    <Field
+      label="Purchase Date"
+      value={
+        selectedAsset.DOP
+          ? new Date(selectedAsset.DOP).toLocaleDateString()
+          : null
+      }
+    />
+    <Field
+      label="Expiry Date"
+      value={
+        selectedAsset.DOE
+          ? new Date(selectedAsset.DOE).toLocaleDateString()
+          : null
+      }
+    />
+    <Field label="Asset Lifetime" value={selectedAsset.assetLifetime} />
+    <Field label="PMD" value={selectedAsset.PMD} />
+    <Field label="Maintenance Term" value={selectedAsset.maintenanceTerm} />
+    <Field
+      label="Warranty ID"
+      value={selectedAsset.warranty?.warrantyId}
+    />
+    <Field
+      label="Warranty Expiry"
+      value={
+        selectedAsset.warranty?.expiryDate
+          ? new Date(selectedAsset.warranty.expiryDate).toLocaleDateString()
+          : null
+      }
+    />
+    <Field
+      label="Warranty Lifetime"
+      value={selectedAsset.warrantyLifetime}
+    />
+  </div>
 
-          <div>
-            <label>Unit</label>
-            <p>{getName(units, selectedAsset.associateUnit)}</p>
-          </div>
-          <div>
-            <label>Category</label>
-            <p>{getName(categories, selectedAsset.assetCategory)}</p>
-          </div>
+  {/* ================= INSURANCE ================= */}
+  <h4 className="asset-view-section-title">Insurance</h4>
+  <div className="asset-view-grid">
+    <Field
+      label="Insurance ID"
+      value={selectedAsset.insurance?.insuranceId}
+    />
+    <Field
+      label="Insurance Name"
+      value={selectedAsset.insurance?.insuranceName}
+    />
+    <Field
+      label="Purchase Date"
+      value={
+        selectedAsset.insurance?.purchaseDate
+          ? new Date(selectedAsset.insurance.purchaseDate).toLocaleDateString()
+          : null
+      }
+    />
+    <Field
+      label="Expiry Date"
+      value={
+        selectedAsset.insurance?.expiryDate
+          ? new Date(selectedAsset.insurance.expiryDate).toLocaleDateString()
+          : null
+      }
+    />
+  </div>
 
-          <div>
-            <label>Purchase Date</label>
-            <p>
-              {selectedAsset.DOP
-                ? new Date(selectedAsset.DOP).toLocaleDateString()
-                : "N/A"}
-            </p>
-          </div>
+  {/* ================= AUDIT ================= */}
+  <h4 className="asset-view-section-title">Audit Information</h4>
+  <div className="asset-view-grid">
+    <Field label="Asset ID" value={selectedAsset._id} />
+    <Field
+      label="Created At"
+      value={
+        selectedAsset.createdAt
+          ? new Date(selectedAsset.createdAt).toLocaleString()
+          : null
+      }
+    />
+    <Field
+      label="Last Updated"
+      value={
+        selectedAsset.updatedAt
+          ? new Date(selectedAsset.updatedAt).toLocaleString()
+          : null
+      }
+    />
+  </div>
 
-          <div>
-            <label>Expiry Date</label>
-            <p>
-              {selectedAsset.DOE
-                ? new Date(selectedAsset.DOE).toLocaleDateString()
-                : "N/A"}
-            </p>
-          </div>
-         <div>
-  <label>Total Cost</label>
-
-  <p>
-  {CURRENCY_SYMBOLS[currency]}{" "}
-{convertFromBase(
-  selectedAsset.assetCost?.baseTotalAmount ?? 0,
-  currency
-)
-.toLocaleString()}
-  </p>
-</div>
-
-{/* <div>
-  <label>Base Cost (INR)</label>
-  <p>
-    ₹{selectedAsset.assetCost?.baseAmount?.toLocaleString("en-IN")}
-  </p>
-</div> */}
-<div>
-  <label>Unit Cost</label>
-  <p>
-    {CURRENCY_SYMBOLS[currency]}{" "}
-    {selectedAsset.assetQuantity
-      ? convertFromBase(
-  selectedAsset.assetCost?.baseTotalAmount
-    ? selectedAsset.assetCost.baseTotalAmount / selectedAsset.assetQuantity
-    : 0,
-  currency
-)
-
-
-.toLocaleString()
-      : "N/A"}
-  </p>
-</div>
-
-
-<div>
-  <label>In Use</label>
-  <p>{selectedAsset.inUse || 0}</p>
-</div>
-
-<div>
-  <label>In Stock</label>
-  <p>{getInStock(selectedAsset)}</p>
-</div>
-
-
-
-          <div>
-            <label>Purchase From</label>
-            <p>{selectedAsset.purchaseFrom || "N/A"}</p>
-          </div>
-
-          <div>
-            <label>Lifetime</label>
-            <p>{selectedAsset.assetLifetime || "N/A"}</p>
-          </div>
-        </div>
-
-        <button
-          className="asset-view-close-btn"
-          onClick={() => setSelectedAsset(null)}
-        >
-          Close
-        </button>
-      </motion.div>
+  <button
+    className="asset-view-close-btn"
+    onClick={() => setSelectedAsset(null)}
+  >
+    Close
+  </button>
+</motion.div>
     </motion.div>
   )}
 </AnimatePresence>

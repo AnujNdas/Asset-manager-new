@@ -32,7 +32,7 @@ const SoftwareAssetList = () => {
   const [apiDone, setApiDone] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const assetsPerPage = 8;
+  const assetsPerPage = 6;
 
 const navigate = useNavigate();
   const { currency } = useCurrency();
@@ -181,12 +181,12 @@ const payload = {
   ...editForm,
   assetCost: {
     totalAmount: Number(editForm.assetCost.totalAmount),
-    unitAmount: Number(editForm.assetCost.unitAmount),
     currency: editForm.assetCost.currency,
   },
   assetQuantity: Number(editForm.assetQuantity),
   inUse: Number(editForm.inUse),
 };
+
 
 
     const updated = await updateSoftwareAsset(editingAsset._id, payload);
@@ -258,7 +258,12 @@ const renderDepartmentBadges = (asset) => {
     );
   };
   if (loading) return <Loader type="inventory" apiDone={apiDone} />;
-
+  const Field = ({ label, value }) => (
+  <div>
+    <label>{label}</label>
+    <p>{value || "N/A"}</p>
+  </div>
+);
   return (
     <div className="inventory-container">
       <div className="dashboard-header">
@@ -373,10 +378,16 @@ const renderDepartmentBadges = (asset) => {
         exit={{ scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* ================= HEADER ================= */}
         <div className="asset-view-header">
-          <h3 className="asset-view-title">
-            {selectedAsset.assetName}
-          </h3>
+          <div>
+            <h3 className="asset-view-title">
+              {selectedAsset.assetName}
+            </h3>
+            <p className="asset-view-subtitle">
+              {selectedAsset.assetCode}
+            </p>
+          </div>
 
           <div className="asset-view-badges">
             <span className="asset-view-badge category">
@@ -388,118 +399,147 @@ const renderDepartmentBadges = (asset) => {
           </div>
         </div>
 
-        <h4 className="asset-view-section-title">Software Details</h4>
-
+        {/* ================= BASIC INFORMATION ================= */}
+        <h4 className="asset-view-section-title">Basic Information</h4>
         <div className="asset-view-grid">
-          <div>
-            <label>Asset Code</label>
-            <p>{selectedAsset.assetCode}</p>
-          </div>
-
-          <div>
-            <label>Version</label>
-            <p>{selectedAsset.assetSpecification}</p>
-          </div>
-
-          <div>
-            <label>Publisher</label>
-            <p>{selectedAsset.purchaseFrom}</p>
-          </div>
-
-          <div>
-            <label>Installed Location</label>
-            <p>{getName(locations, selectedAsset.locationName)}</p>
-          </div>
-
-          <div>
-            <label>Unit</label>
-            <p>{getName(units, selectedAsset.associateUnit)}</p>
-          </div>
-          <div>
-            <label>Category</label>
-            <p>{getName(categories, selectedAsset.assetCategory)}</p>
-          </div>
-
-          <div>
-            <label>Purchase Date</label>
-            <p>{selectedAsset.DOP || "—"}</p>
-          </div>
-
-          <div>
-            <label>Expiry Date</label>
-            <p>{selectedAsset.DOE || "—"}</p>
-          </div>
-
-          <div>
-            <label>License Key</label>
-            <p>{selectedAsset.licenseKey || "—"}</p>
-          </div>
-{/* 
-          <div>
-            <label>License Type</label>
-            <p>{selectedAsset.licenseType || "—"}</p>
-          </div> */}
-
-          <div>
-            <label>License Model</label>
-            <p>{selectedAsset.licenseModel || "—"}</p>
-          </div>
-
-          <div>
-            <label>License Metric</label>
-            <p>{selectedAsset.licenseMetric || "—"}</p>
-          </div>
-
-          <div>
-            <label>License Use</label>
-            <p>{selectedAsset.licenseUse || "—"}</p>
-          </div>
-
-          <div>
-<label>Total Cost</label>
-<p>
-  {CURRENCY_SYMBOLS[currency]}{" "}
-  {convertFromBase(
-  selectedAsset.assetCost?.baseTotalAmount ?? 0,
-  currency
-)
-.toLocaleString()}
-</p>
-
-
-          </div>
-
-          <div>
-            <label>Quantity</label>
-            <p>{selectedAsset.assetQuantity}</p>
-          </div>
-          <div>
-<label>Unit Cost</label>
-<p> 
-  {CURRENCY_SYMBOLS[currency]}{" "}
-  {convertFromBase(
-    selectedAsset.assetCost?.baseTotalAmount / selectedAsset.assetQuantity,
-    currency
-  ).toLocaleString()}
-</p>
-
-
-          </div>
-          <div>
-            <label>In Use</label>
-            <p>{selectedAsset.inUse}</p>
-          </div>
-
-          <div>
-            <label>In Stock</label>
-            <p>{getInStock(selectedAsset)}</p>
-          </div>
-
-          <div>
-            <label>Lifetime</label>
-            <p>{selectedAsset.assetLifetime || "—"}</p>
-          </div>
+          <Field label="License Type" value={selectedAsset.licenseType} />
+          <Field label="License Model" value={selectedAsset.licenseModel} />
+          <Field label="License Metric" value={selectedAsset.licenseMetric} />
+          <Field label="License Use" value={selectedAsset.licenseUse} />
+          <Field label="Version" value={selectedAsset.assetSpecification} />
+          <Field label="Publisher" value={selectedAsset.purchaseFrom} />
+          <Field label="Billing Type" value={selectedAsset.type} />
+          <Field
+            label="Installed Location"
+            value={getName(locations, selectedAsset.locationName)}
+          />
+          <Field label="Location Address" value={selectedAsset.locationAddress} />
+          <Field
+            label="Unit"
+            value={getName(units, selectedAsset.associateUnit)}
+          />
         </div>
+
+        {/* ================= FINANCIAL DETAILS ================= */}
+        <h4 className="asset-view-section-title">Financial Details</h4>
+        <div className="asset-view-grid">
+          <Field
+            label="Billing Currency"
+            value={selectedAsset.assetCost?.currency}
+          />
+
+          <Field
+            label="Billing Cost (Per Cycle)"
+            value={
+              selectedAsset.assetCost?.totalAmount
+                ? `${selectedAsset.assetCost.currency} ${selectedAsset.assetCost.totalAmount.toLocaleString()}`
+                : null
+            }
+          />
+
+          <Field
+            label="Overall Contract Cost"
+            value={
+              selectedAsset.overallCost?.totalAmount
+                ? `${selectedAsset.overallCost.currency} ${selectedAsset.overallCost.totalAmount.toLocaleString()}`
+                : null
+            }
+          />
+
+          <Field
+            label="Base Billing Cost"
+            value={
+              selectedAsset.assetCost?.baseTotalAmount
+                ? `₹ ${selectedAsset.assetCost.baseTotalAmount.toLocaleString()}`
+                : null
+            }
+          />
+
+          <Field
+            label="Base Overall Cost"
+            value={
+              selectedAsset.overallCost?.baseTotalAmount
+                ? `₹ ${selectedAsset.overallCost.baseTotalAmount.toLocaleString()}`
+                : null
+            }
+          />
+        </div>
+
+        {/* ================= LICENSE & DURATION ================= */}
+        <h4 className="asset-view-section-title">License Duration</h4>
+        <div className="asset-view-grid">
+          <Field
+            label="Purchase Date"
+            value={
+              selectedAsset.DOP
+                ? new Date(selectedAsset.DOP).toLocaleDateString()
+                : null
+            }
+          />
+
+          <Field
+            label="Expiry Date"
+            value={
+              selectedAsset.DOE
+                ? new Date(selectedAsset.DOE).toLocaleDateString()
+                : "One Time License"
+            }
+          />
+
+          <Field
+            label="Lifetime"
+            value={selectedAsset.assetLifetime}
+          />
+        </div>
+
+        {/* ================= DISTRIBUTION ================= */}
+        <h4 className="asset-view-section-title">Distribution</h4>
+        <div className="asset-view-grid">
+          <Field label="Total Licenses" value={selectedAsset.assetQuantity} />
+          <Field label="In Use" value={selectedAsset.inUse} />
+          <Field label="Available" value={selectedAsset.inStock} />
+        </div>
+
+        {/* ================= AUDIT ================= */}
+        <h4 className="asset-view-section-title">Audit Information</h4>
+        <div className="asset-view-grid">
+          <Field label="Asset ID" value={selectedAsset._id} />
+          <Field label="Organization ID" value={selectedAsset.organizationId} />
+
+          <Field
+            label="Created At"
+            value={
+              selectedAsset.createdAt
+                ? new Date(selectedAsset.createdAt).toLocaleString()
+                : null
+            }
+          />
+
+          <Field
+            label="Last Updated"
+            value={
+              selectedAsset.updatedAt
+                ? new Date(selectedAsset.updatedAt).toLocaleString()
+                : null
+            }
+          />
+        </div>
+
+        {/* ================= AUDIT HISTORY ================= */}
+        {selectedAsset.auditHistory?.length > 0 && (
+          <>
+            <h4 className="asset-view-section-title">Audit History</h4>
+            <div className="asset-view-audit">
+              {selectedAsset.auditHistory.slice(-5).reverse().map((log, i) => (
+                <div key={i} className="audit-entry">
+                  <strong>{log.action}</strong> —
+                  {new Date(log.date).toLocaleString()}
+                  {log.notes && <p>{log.notes}</p>}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
         <button
           className="asset-view-close-btn"
@@ -652,10 +692,10 @@ const renderDepartmentBadges = (asset) => {
   <label>License Key</label>
           <input name="licenseKey" value={editForm.licenseKey} onChange={handleEditChange} placeholder="License Key" className="asset-edit-input"/>
 </div>
-<div>
+{/* <div>
   <label>License Type</label>
           <input name="licenseType" value={editForm.licenseType} onChange={handleEditChange} placeholder="License Type" className="asset-edit-input"/>
-</div>
+</div> */}
 <div>
   <label>License Model</label>
           <input name="licenseModel" value={editForm.licenseModel} onChange={handleEditChange} placeholder="License Model" className="asset-edit-input"/>

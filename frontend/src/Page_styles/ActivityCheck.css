@@ -101,7 +101,12 @@
 }
 
 .badge {
-  background: #2563eb;
+    background: linear-gradient(
+    135deg,
+    var(--brand),
+    #6b8cff 60%,
+    var(--brand-2)
+  );
   color: white;
   padding: 5px 10px;
   border-radius: 20px;
