@@ -104,7 +104,7 @@ const Setting = () => {
     { path: "profile", label: "Profile", icon: FaUser },
     { path: "security", label: "Security", icon: FaLock },
     ...(userData?.role === "admin"
-      ? [{ path: "teamInvites", label: "Team Invites", icon: FaEnvelope }]
+      ? [{ path: "teamInvites", label: "User Invites", icon: FaEnvelope }]
       : []),
       ...(userData?.role === "admin"
         ? [{ path: "users", label: "Manage User", icon: FaUsers }]

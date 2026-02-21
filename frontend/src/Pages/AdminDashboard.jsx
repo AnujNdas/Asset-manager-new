@@ -369,11 +369,24 @@ const pieData = (departmentAssets || []).map((d) => ({
 
     <Tooltip content={<CustomTooltip currency={currency} />} />
     <Legend content={<HorizontalLegend />} />
+    <linearGradient id="hardwareValuation" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%" stopColor="#1E3A8A" />
+  <stop offset="100%" stopColor="#60A5FA" />
+</linearGradient>
 
+<linearGradient id="softwareValuation" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%" stopColor="#5B21B6" />
+  <stop offset="100%" stopColor="#A78BFA" />
+</linearGradient>
+
+<linearGradient id="totalValuation" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0%" stopColor="#065F46" />
+  <stop offset="100%" stopColor="#34D399" />
+</linearGradient>
     {/* Hardware */}
     <Bar
       dataKey="hardware"
-      fill={BAR_COLORS.hardware}
+      fill="url(#hardwareValuation)"
       radius={[0, 6, 6, 0]}
       barSize={14}
     />
@@ -381,7 +394,7 @@ const pieData = (departmentAssets || []).map((d) => ({
     {/* Software */}
     <Bar
       dataKey="software"
-      fill={BAR_COLORS.software}
+      fill="url(#softwareValuation)"
       radius={[0, 6, 6, 0]}
       barSize={14}
     />
@@ -389,7 +402,7 @@ const pieData = (departmentAssets || []).map((d) => ({
     {/* Total */}
     <Bar
       dataKey="total"
-      fill={BAR_COLORS.total}
+      fill="url(#totalValuation)"
       radius={[0, 6, 6, 0]}
       barSize={14}
     />

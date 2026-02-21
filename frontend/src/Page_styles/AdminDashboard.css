@@ -340,6 +340,8 @@
 .pie-legend {
   flex: 1;
   gap: 8px;
+  height: 230px;
+  overflow: auto;
 }
 
 .legend-item {
