@@ -32,7 +32,7 @@ const SoftwareAssetList = () => {
   const [apiDone, setApiDone] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const assetsPerPage = 6;
+  const assetsPerPage = 8;
 
 const navigate = useNavigate();
   const { currency } = useCurrency();
