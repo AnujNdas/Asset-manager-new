@@ -49,12 +49,12 @@ const fetchDepartments = async () => {
   return (
     <div className="employee-page">
       <div className="employee-header">
-        <h2>Employees</h2>
+        <h2>Team</h2>
 
         <div className="employee-actions">
           <input
             type="text"
-            placeholder="Search employee..."
+            placeholder="Search team member..."
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
@@ -72,7 +72,7 @@ const fetchDepartments = async () => {
           </select>
 
           <button onClick={() => setShowModal(true)}>
-            + Add Employee
+            + Add Team Member
           </button>
         </div>
       </div>

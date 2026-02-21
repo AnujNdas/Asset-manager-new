@@ -106,12 +106,12 @@ const Setting = () => {
     ...(userData?.role === "admin"
       ? [{ path: "teamInvites", label: "Team Invites", icon: FaEnvelope }]
       : []),
+      ...(userData?.role === "admin"
+        ? [{ path: "users", label: "Manage User", icon: FaUsers }]
+        : []),
     { path: "notification", label: "Notifications", icon: FaBell },
     // { path: "subscription", label: "Subscription", icon: FaCogs },
     { path: "help&support", label: "Help & Support", icon: FaQuestion },
-    ...(userData?.role === "admin"
-      ? [{ path: "users", label: "Manage User", icon: FaUsers }]
-      : []),
     // ...(userData?.role === "admin"
     //   ? [{ path: "setuser", label: "Set User", icon: FaMousePointer }]
     //   : []),

@@ -92,7 +92,7 @@ useEffect(() => {
                         <li>
               <NavLink to="/employee" onClick={closeSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                 <FontAwesomeIcon icon={faUser} style={{ width: "25%" }} />
-                <span className="tab-text">Employee</span>
+                <span className="tab-text">Team</span>
               </NavLink>
             </li>
                         <li>
