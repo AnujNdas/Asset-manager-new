@@ -5,13 +5,13 @@ const AnalyticsTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (window.gtag) {
-      window.gtag("config", "G-5RLZ4G1GMX", {
-        page_path: location.pathname + location.search,
-      });
-      console.log("Page tracked:", location.pathname);
-    }
-  }, [location]);
+    if (!window.gtag) return;
+
+    window.gtag("event", "page_view", {
+      page_path: location.pathname + location.search,
+    });
+
+  }, [location.pathname, location.search]);
 
   return null;
 };
