@@ -53,7 +53,7 @@ const User = ({ removeUser }) => {
       <div className="auth-right">
         <div className="right-content">
 
-          <h1>Complete Asset Management Software <br/>(Hardware & Software)</h1>
+          <h1>Complete Asset Management <br/>(Hardware & Software)</h1>
           <p>
             Log in to access your AMS dashboard and manage your team.
           </p>

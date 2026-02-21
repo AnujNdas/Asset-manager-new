@@ -17,7 +17,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Socialfly - Business Growth & Management System
+            Socialfly - Business & Management System
           </a>
         </div>
       </div>
