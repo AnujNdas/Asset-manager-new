@@ -57,166 +57,316 @@ const bulkUploadSoftware = async (req, res) => {
     const organizationId = req.user?.organizationId;
 
     if (!userId || !organizationId) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
     }
 
     const { assets, mode = "strict" } = req.body;
-    const parsedAssets = Array.isArray(assets) ? assets : JSON.parse(assets);
+    const parsedAssets = Array.isArray(assets)
+      ? assets
+      : JSON.parse(assets || "[]");
 
-    const [categories, units, locations, statuses] = await Promise.all([
-      Category.find({ organizationId }),
-      Unit.find({ organizationId }),
-      Location.find({ organizationId }),
-      Status.find({ organizationId })
-    ]);
+    if (!parsedAssets.length) {
+      return res.status(400).json({
+        success: false,
+        message: "No assets provided"
+      });
+    }
 
-    const normalize = v => v?.toString().trim().toLowerCase();
+    /* --------------------------------------------------
+       Utilities
+    -------------------------------------------------- */
 
-    const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
-    const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
-    const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
-    const statusMap = new Map(statuses.map(s => [normalize(s.name), s._id]));
+    const normalize = (v) =>
+      v?.toString().trim().toLowerCase();
 
+    const excelToDate = (value) => {
+      if (!value) return null;
+      if (typeof value === "number") {
+        return new Date((value - 25569) * 86400 * 1000);
+      }
+      return new Date(value);
+    };
+
+    const validateSoftwareType = (type) => {
+      const t = type?.toLowerCase();
+      if (!["monthly", "yearly", "one_time"].includes(t)) {
+        throw new Error(
+          "Invalid or missing software type (monthly | yearly | one_time)"
+        );
+      }
+      return t;
+    };
+
+    /* --------------------------------------------------
+       Preload Reference Data (Single DB Hit)
+    -------------------------------------------------- */
+
+    const [categories, units, locations, statuses] =
+      await Promise.all([
+        Category.find({ organizationId }).lean(),
+        Unit.find({ organizationId }).lean(),
+        Location.find({ organizationId }).lean(),
+        Status.find({ organizationId }).lean()
+      ]);
+
+    const categoryMap = new Map(
+      categories.map((c) => [normalize(c.name), c._id])
+    );
+
+    const unitMap = new Map(
+      units.map((u) => [normalize(u.name), u._id])
+    );
+
+    const locationMap = new Map(
+      locations.map((l) => [normalize(l.name), l._id])
+    );
+
+    const statusMap = new Map(
+      statuses.map((s) => [normalize(s.name), s._id])
+    );
+
+    /* --------------------------------------------------
+       Safe Reference Upsert (No Duplicate Crash)
+    -------------------------------------------------- */
+
+    const upsertReference = async (Model, name, map) => {
+      if (!name) return null;
+
+      const key = normalize(name);
+      if (map.has(key)) return map.get(key);
+
+      const doc = await Model.findOneAndUpdate(
+        { name: new RegExp(`^${name}$`, "i"), organizationId },
+        {
+          $setOnInsert: {
+            name,
+            organizationId,
+            isActive: true
+          }
+        },
+        { upsert: true, new: true }
+      );
+
+      map.set(key, doc._id);
+      return doc._id;
+    };
+
+    /* --------------------------------------------------
+       Processing Loop
+    -------------------------------------------------- */
+    /* --------------------------------------------------
+   Generate Starting Asset Code (Bulk Safe)
+-------------------------------------------------- */
+
+const lastAsset = await SoftwareAsset.findOne({
+  organizationId,
+  assetCode: { $regex: /^SW-\d+$/ }
+})
+  .sort({ createdAt: -1 })
+  .select("assetCode")
+  .lean();
+
+let nextNumber = 1;
+
+if (lastAsset?.assetCode) {
+  nextNumber = parseInt(lastAsset.assetCode.split("-")[1], 10) + 1;
+}
     let validAssets = [];
     let invalidRows = [];
 
     for (const [index, asset] of parsedAssets.entries()) {
       try {
-        const catKey = normalize(asset.assetCategory);
-        const unitKey = normalize(asset.associateUnit);
-        const locKey = normalize(asset.locationName);
-        const statusKey = normalize(asset.assetStatus);
+        /* ----------------------------
+           1. Field Mapping (Excel → DB)
+        ---------------------------- */
 
-        let categoryId = categoryMap.get(catKey);
-        let unitId = unitMap.get(unitKey);
-        let locationId = locationMap.get(locKey);
-        let statusId = statusMap.get(statusKey);
+        const softwareType = validateSoftwareType(asset.type);
 
-        if (mode === "strict" && (!categoryId || !unitId || !locationId || !statusId)) {
-          invalidRows.push({ row: index + 2, reason: "Missing reference data", asset });
-          continue;
+        const categoryName = asset.Category;
+        const unitName = asset.Unit;
+        const locationName = asset.locationName;
+        const statusName = asset.Status;
+
+        let categoryId = categoryMap.get(normalize(categoryName));
+        let unitId = unitMap.get(normalize(unitName));
+        let locationId = locationMap.get(normalize(locationName));
+        let statusId = statusMap.get(normalize(statusName));
+
+        if (mode === "strict" &&
+          (!categoryId || !unitId || !locationId || !statusId)
+        ) {
+          throw new Error("Missing reference data");
         }
 
-        const upsertRef = async (Model, name, map) => {
-          if (!name) return null;
-          const doc = await Model.findOneAndUpdate(
-            { name: new RegExp(`^${name}$`, "i"), organizationId },
-            { name, organizationId, isActive: true },
-            { upsert: true, new: true }
+        if (!categoryId)
+          categoryId = await upsertReference(
+            Category,
+            categoryName,
+            categoryMap
           );
-          map.set(normalize(name), doc._id);
-          return doc._id;
-        };
 
-        if (!categoryId) categoryId = await upsertRef(Category, asset.assetCategory, categoryMap);
-        if (!unitId) unitId = await upsertRef(Unit, asset.associateUnit, unitMap);
-        if (!locationId) locationId = await upsertRef(Location, asset.locationName, locationMap);
-        if (!statusId) statusId = await upsertRef(Status, asset.assetStatus, statusMap);
-const quantity = Number(asset.assetQuantity || 1);
-if (quantity <= 0) throw new Error("Invalid license quantity");
+        if (!unitId)
+          unitId = await upsertReference(
+            Unit,
+            unitName,
+            unitMap
+          );
 
-const totalAmount = Number(asset.assetCost || 0);
-if (totalAmount < 0) {
-  throw new Error("Invalid total cost");
-}
+        if (!locationId)
+          locationId = await upsertReference(
+            Location,
+            locationName,
+            locationMap
+          );
 
-const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
+        if (!statusId)
+          statusId = await upsertReference(
+            Status,
+            statusName,
+            statusMap
+          );
 
-const unitAmount = totalAmount / quantity;
-const cycles = calculateCycles(softwareType, asset.DOP, asset.DOE);
+        /* ----------------------------
+           2. Quantity & Cost Validation
+        ---------------------------- */
 
-const overallTotal = totalAmount * cycles;
-const overallUnitAmount = overallTotal / quantity;
-const baseOverallTotal = convertToBase(overallTotal, currency);
+        const quantity = Number(asset.assetQuantity || 1);
+        if (quantity <= 0)
+          throw new Error("Invalid license quantity");
 
-const baseTotalAmount = convertToBase(totalAmount, currency);
+        const totalAmount = Number(asset.assetCost || 0);
+        if (totalAmount < 0)
+          throw new Error("Invalid total cost");
 
-        // ---------- SOFTWARE TYPE VALIDATION ----------
-const softwareType = asset.type?.toLowerCase();
+        const currency =
+          (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
 
-if (!["monthly", "yearly", "one_time"].includes(softwareType)) {
-  invalidRows.push({
-    row: index + 2,
-    reason: "Invalid or missing software type (monthly | yearly | one_time)",
-    asset
-  });
-  continue;
-}
+        const unitAmount = totalAmount / quantity;
+
+        /* ----------------------------
+           3. Date Handling
+        ---------------------------- */
+
+        const DOP = excelToDate(asset.DateOfPurchase);
+        const DOE = excelToDate(asset.DateOfExpiry);
+
+        const cycles = calculateCycles(
+          softwareType,
+          DOP,
+          DOE
+        );
+
+        const overallTotal = totalAmount * cycles;
+        const overallUnitAmount = overallTotal / quantity;
+
+        const baseTotalAmount = convertToBase(
+          totalAmount,
+          currency
+        );
+
+        const baseOverallTotal = convertToBase(
+          overallTotal,
+          currency
+        );
+
+        /* ----------------------------
+           4. Build Asset
+        ---------------------------- */
 
         validAssets.push({
           organizationId,
           assetCode: await generateSoftwareCode(organizationId),
-          type: softwareType, // ✅ ADD THIS
-          assetName: asset.assetName,
+
+          type: softwareType,
+          assetName: asset.SoftwareName,
+
           assetCategory: categoryId,
           associateUnit: unitId,
           locationName: locationId,
           assetStatus: statusId,
-
-          assetSpecification: asset.assetSpecification,
-          purchaseFrom: asset.purchaseFrom,
 
           licenseKey: asset.licenseKey,
           licenseType: asset.licenseType,
           licenseModel: asset.licenseModel,
           licenseMetric: asset.licenseMetric,
           licenseUse: asset.licenseUse,
-
-          DOP: asset.DOP,
-          DOE: asset.DOE,
-          assetLifetime: asset.assetLifetime,
+          locationAddress: asset.locationAddress?.trim(),
+          DOP,
+          DOE,
+          assetLifetime: asset.assetLifetime || null,
 
           assetQuantity: quantity,
           inUse: 0,
           licensesAssigned: 0,
 
-assetCost: {
-  totalAmount,
-  unitAmount,
-  baseTotalAmount,
-  currency
-},
-overallCost: {
-  totalAmount: overallTotal,
-  unitAmount: overallUnitAmount,
-  baseTotalAmount: baseOverallTotal,
-  currency
-},
+          assetCost: {
+            totalAmount,
+            unitAmount,
+            baseTotalAmount,
+            currency
+          },
 
+          overallCost: {
+            totalAmount: overallTotal,
+            unitAmount: overallUnitAmount,
+            baseTotalAmount: baseOverallTotal,
+            currency
+          },
 
           auditHistory: [
-            { date: new Date(), notes: `Bulk uploaded by user ${userId}` }
+            {
+              date: new Date(),
+              notes: `Bulk uploaded by user ${userId}`
+            }
           ],
 
           createdBy: userId
         });
+
       } catch (err) {
-        invalidRows.push({ row: index + 2, reason: err.message, asset });
+        invalidRows.push({
+          row: index + 2,
+          reason: err.message,
+          asset
+        });
       }
     }
 
+    /* --------------------------------------------------
+       Bulk Insert (Ordered False = Continue On Error)
+    -------------------------------------------------- */
+
+    let insertedCount = 0;
+
     if (validAssets.length) {
-      await SoftwareAsset.insertMany(validAssets, { ordered: false });
+      const result = await SoftwareAsset.insertMany(validAssets, {
+        ordered: true,
+        runValidators: true
+      });
+
+      insertedCount = result.length;
     }
 
-    await sendNotification({
-      req,
-      userId,
-      title: "Software Assets Uploaded",
-      message: `${validAssets.length} software assets uploaded successfully.`,
-      type: "success",
-      redirectUrl: "/inventory"
-    });
+    /* --------------------------------------------------
+       Response
+    -------------------------------------------------- */
 
-    res.json({
+    return res.json({
       success: true,
-      inserted: validAssets.length,
+      inserted: insertedCount,
       skipped: invalidRows.length,
       invalidRows
     });
+
   } catch (error) {
     console.error("Bulk Upload Error:", error);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 
