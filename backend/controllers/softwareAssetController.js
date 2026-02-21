@@ -90,15 +90,17 @@ const bulkUploadSoftware = async (req, res) => {
       return new Date(value);
     };
 
-    const validateSoftwareType = (type) => {
-      const t = type?.toLowerCase();
-      if (!["monthly", "yearly", "one_time"].includes(t)) {
-        throw new Error(
-          "Invalid or missing software type (monthly | yearly | one_time)"
-        );
-      }
-      return t;
-    };
+const validateSoftwareType = (type) => {
+  const t = type?.toString().trim().toLowerCase();
+
+  if (!["monthly", "yearly", "one_time"].includes(t)) {
+    throw new Error(
+      "Invalid or missing software type (monthly | yearly | one_time)"
+    );
+  }
+
+  return t;
+};
 
     /* --------------------------------------------------
        Preload Reference Data (Single DB Hit)
