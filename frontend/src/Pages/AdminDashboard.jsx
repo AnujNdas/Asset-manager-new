@@ -367,7 +367,7 @@ const pieData = (departmentAssets || []).map((d) => ({
     {/* Category axis (time labels) */}
     <YAxis
       type="category"
-      dataKey="month"  // Change to "label" if you switched to dynamic interval
+      dataKey="label"  // Change to "label" if you switched to dynamic interval
       tickLine={false}
       axisLine={false}
       width={80}
