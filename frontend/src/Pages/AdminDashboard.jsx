@@ -363,10 +363,10 @@ const pieData = (departmentAssets || []).map((d) => ({
     {/* Category axis (time labels) */}
     <YAxis
       type="category"
-      dataKey="month"  // Change to "label" if you switched to dynamic interval
-      tickLine={false}
-      axisLine={false}
-      width={80}
+      dataKey="label"  // Change to "label" if you switched to dynamic interval
+      tickLine={true}
+      axisLine={true}
+      width={50}
     />
 
     <Tooltip content={<CustomTooltip currency={currency} />} />
