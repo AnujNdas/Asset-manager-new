@@ -278,7 +278,7 @@ const HorizontalLegend = ({ payload }) => {
         currency
       ),
     })) || [];
-
+console.log("Valuation Chart Data:", valuationChartData);
 
   const totalValuationView = convertFromBase(
     statsData?.totalValuation ?? 0,
