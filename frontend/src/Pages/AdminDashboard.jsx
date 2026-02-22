@@ -262,22 +262,22 @@ const HorizontalLegend = ({ payload }) => {
 
     if (loading) return <Loader type="dashboard" apiDone={apiDone} />;
 
-  const valuationChartData =
-    valuationData?.labels?.map((label, index) => ({
-      month: label,
-      hardware: convertFromBase(
-        valuationData?.hardwareValuation?.[index] ?? 0,
-        currency
-      ),
-      software: convertFromBase(
-        valuationData?.softwareValuation?.[index] ?? 0,
-        currency
-      ),
-      total: convertFromBase(
-        valuationData?.totalValuation?.[index] ?? 0,
-        currency
-      ),
-    })) || [];
+const valuationChartData =
+  valuationData?.valuation?.labels?.map((label, index) => ({
+    month: label,
+    hardware: convertFromBase(
+      valuationData?.valuation?.hardwareValuation?.[index] ?? 0,
+      currency
+    ),
+    software: convertFromBase(
+      valuationData?.valuation?.softwareValuation?.[index] ?? 0,
+      currency
+    ),
+    total: convertFromBase(
+      valuationData?.valuation?.totalValuation?.[index] ?? 0,
+      currency
+    ),
+  })) || [];
 console.log("Valuation Chart Data:", valuationChartData);
 
   const totalValuationView = convertFromBase(
