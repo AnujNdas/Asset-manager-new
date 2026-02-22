@@ -203,14 +203,10 @@ const HorizontalLegend = ({ payload }) => {
               width: 12,
               height: 12,
               borderRadius: "50%",
-              backgroundColor:
-                LEGEND_COLORS[entry.dataKey] || "#94A3B8",
+              backgroundColor: entry.color, // ✅ correct
             }}
           />
-          <span>
-            {entry.value?.charAt(0).toUpperCase() +
-              entry.value?.slice(1)}
-          </span>
+          <span>{entry.value}</span>
         </div>
       ))}
     </div>
@@ -367,7 +363,7 @@ const pieData = (departmentAssets || []).map((d) => ({
     {/* Category axis (time labels) */}
     <YAxis
       type="category"
-      dataKey="label"  // Change to "label" if you switched to dynamic interval
+      dataKey="month"  // Change to "label" if you switched to dynamic interval
       tickLine={false}
       axisLine={false}
       width={80}
