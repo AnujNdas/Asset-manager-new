@@ -155,7 +155,7 @@ const COLORS = [
   const [upcomingExpiry, setUpcomingExpiry] = useState(null);
 
     const [locationList, setLocationList] = useState([]);
-    const [valuationData, setValuationData] = useState([]);
+    const [valuationData, setValuationData] = useState(null);
 
     const [loading, setLoading] = useState(true);
     const [apiDone, setApiDone] = useState(false);
@@ -259,18 +259,18 @@ const HorizontalLegend = ({ payload }) => {
     if (loading) return <Loader type="dashboard" apiDone={apiDone} />;
 
 const valuationChartData =
-  valuationData?.valuation?.labels?.map((label, index) => ({
+  valuationData?.labels?.map((label, index) => ({
     month: label,
     hardware: convertFromBase(
-      valuationData?.valuation?.hardwareValuation?.[index] ?? 0,
+      valuationData?.hardwareValuation?.[index] ?? 0,
       currency
     ),
     software: convertFromBase(
-      valuationData?.valuation?.softwareValuation?.[index] ?? 0,
+      valuationData?.softwareValuation?.[index] ?? 0,
       currency
     ),
     total: convertFromBase(
-      valuationData?.valuation?.totalValuation?.[index] ?? 0,
+      valuationData?.totalValuation?.[index] ?? 0,
       currency
     ),
   })) || [];
