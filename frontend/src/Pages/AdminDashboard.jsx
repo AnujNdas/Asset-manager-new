@@ -168,48 +168,54 @@ const COLORS = [
       return loc ? loc.name : "Unknown";
 
     };
-  const HorizontalLegend = ({ payload }) => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "14px",
-          fontSize: "11px",
-          marginTop: "4px",
-          color: "#334155",
-        }}
-      >
-        {payload.map((entry, index) => (
-          <div
-            key={`legend-${index}`}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              fontWeight: 500,
-            }}
-          >
-            <span
-              style={{
-                width: 10,
-                height: 10,
-                backgroundColor: entry.color,
-                display: "inline-block",
-              }}
-            />
-            <span>
-  {entry.value
-    ? entry.value.charAt(0).toUpperCase() + entry.value.slice(1)
-    : ""}
-</span>
+const LEGEND_COLORS = {
+  hardware: "#1E3A8A",
+  software: "#5B21B6",
+  total: "#065F46"
+};
 
-          </div>
-        ))}
-      </div>
-    );
-  };
+const HorizontalLegend = ({ payload }) => {
+  if (!payload) return null;
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "16px",
+        fontSize: "12px",
+        marginTop: "6px",
+      }}
+    >
+      {payload.map((entry, index) => (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            fontWeight: 500,
+          }}
+        >
+          <span
+            style={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              backgroundColor:
+                LEGEND_COLORS[entry.dataKey] || "#94A3B8",
+            }}
+          />
+          <span>
+            {entry.value?.charAt(0).toUpperCase() +
+              entry.value?.slice(1)}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
     useEffect(() => {
       const load = async () => {
@@ -361,7 +367,7 @@ const pieData = (departmentAssets || []).map((d) => ({
     {/* Category axis (time labels) */}
     <YAxis
       type="category"
-      dataKey="label"  // Change to "label" if you switched to dynamic interval
+      dataKey="month"  // Change to "label" if you switched to dynamic interval
       tickLine={false}
       axisLine={false}
       width={80}
