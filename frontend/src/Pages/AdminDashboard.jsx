@@ -356,19 +356,18 @@ const pieData = (departmentAssets || []).map((d) => ({
     {/* Number axis (valuation) */}
     <XAxis
       type="number"
-      tickLine={false}
-      axisLine={false}
+      tickLine={true}
+      axisLine={true}
     />
 
     {/* Category axis (time labels) */}
     <YAxis
       type="category"
-      dataKey="label"  // Change to "label" if you switched to dynamic interval
+      dataKey="month"  // Change to "label" if you switched to dynamic interval
       tickLine={true}
       axisLine={true}
       width={50}
     />
-
     <Tooltip content={<CustomTooltip currency={currency} />} />
     <Legend content={<HorizontalLegend />} />
  <defs>
