@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import "../Page_styles/AssignmentPage.css";
+import Pagination from "../Components/Pagination";
+
 import {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
@@ -15,6 +17,24 @@ const AssignmentPage = () => {
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  /* =============================
+     PAGINATION STATE
+  ============================== */
+  const [currentPage, setCurrentPage] = useState(1);
+  const categoriesPerPage = 8;
+
+  const totalPages = Math.ceil(categories.length / categoriesPerPage);
+
+  const paginatedCategories = useMemo(() => {
+    const startIndex = (currentPage - 1) * categoriesPerPage;
+    return categories.slice(startIndex, startIndex + categoriesPerPage);
+  }, [categories, currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const [wizardData, setWizardData] = useState({
     category: null,
@@ -35,8 +55,9 @@ const AssignmentPage = () => {
   const fetchCategories = async () => {
     try {
       const res = await getInStockCategorySummary();
-      setCategories(res.data || []);
-      console.log("Fetched categories:", res.data);
+      const data = res.data || [];
+      setCategories(data);
+      setCurrentPage(1); // reset pagination
     } catch {
       Swal.fire("Error", "Failed to load categories", "error");
     }
@@ -51,20 +72,16 @@ const AssignmentPage = () => {
     }
   };
 
-const fetchUsers = async (departmentId) => {
-  try {
-    const res = await getEmployeesByDepartment(departmentId);
-    console.log("Employees response:", res.data);
-
-    setEmployees(res.data || []);
-
-  } catch (err) {
-    console.error(err);
-    setEmployees([]);
-    Swal.fire("Error", "Failed to load employees", "error");
-  }
-};
-
+  const fetchUsers = async (departmentId) => {
+    try {
+      const res = await getEmployeesByDepartment(departmentId);
+      setEmployees(res.data || []);
+    } catch (err) {
+      console.error(err);
+      setEmployees([]);
+      Swal.fire("Error", "Failed to load employees", "error");
+    }
+  };
 
   /* =============================
      STEP NAVIGATION VALIDATION
@@ -84,7 +101,7 @@ const fetchUsers = async (departmentId) => {
       return Swal.fire("Select department");
 
     if (step === 4 && !wizardData.employee)
-  return Swal.fire("Select employee");
+      return Swal.fire("Select employee");
 
     setStep(prev => prev + 1);
   };
@@ -135,7 +152,7 @@ const fetchUsers = async (departmentId) => {
     setWizardData(prev => ({
       ...prev,
       department: depId,
-      user: ""
+      employee: ""
     }));
     fetchUsers(depId);
   };
@@ -173,7 +190,6 @@ const fetchUsers = async (departmentId) => {
         assetType: asset.assetType,
         departmentId: wizardData.department,
         employeeId: wizardData.employee,
-
         assignLocation: val.location,
         quantity: val.quantity
       };
@@ -181,9 +197,7 @@ const fetchUsers = async (departmentId) => {
 
     try {
       setLoading(true);
-      console.log("Assignment payload:", payload);
       await assignAssetsFromStock({ assignments: payload });
-
       Swal.fire("Success", "Assets assigned successfully", "success");
       resetWizard();
     } catch {
@@ -195,17 +209,18 @@ const fetchUsers = async (departmentId) => {
 
   const resetWizard = () => {
     setStep(1);
+    setCurrentPage(1);
     setWizardData({
       category: null,
       assets: [],
       selectedAssets: {},
       department: "",
-      user: ""
+      employee: ""
     });
   };
 
   /* =============================
-     RENDER STEPS
+     RENDER
   ============================== */
 
   return (
@@ -214,18 +229,26 @@ const fetchUsers = async (departmentId) => {
       <WizardStepper step={step} />
 
       {step === 1 && (
-        <div className="grid">
-          {categories.map(cat => (
-            <div
-              key={cat.category}
-              className="card"
-              onClick={() => handleCategorySelect(cat)}
-            >
-              <h3>{cat.categoryName}</h3>
-              <p>{cat.totalInStock} in stock</p>
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="grid">
+            {paginatedCategories.map(cat => (
+              <div
+                key={cat.category}
+                className="card"
+                onClick={() => handleCategorySelect(cat)}
+              >
+                <h3>{cat.categoryName}</h3>
+                <p>{cat.totalInStock} in stock</p>
+              </div>
+            ))}
+          </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
 
       {step === 2 && (
@@ -250,9 +273,7 @@ const fetchUsers = async (departmentId) => {
                       type="number"
                       min="0"
                       max={asset.available}
-                      value={
-                        wizardData.selectedAssets[asset._id]?.quantity || ""
-                      }
+                      value={wizardData.selectedAssets[asset._id]?.quantity || ""}
                       onChange={(e) =>
                         handleQtyChange(
                           asset._id,
@@ -284,24 +305,22 @@ const fetchUsers = async (departmentId) => {
         </select>
       )}
 
-{step === 4 && (
-  <select
-    className="select-box"
-    value={wizardData.employee}
-    onChange={(e) =>
-      setWizardData(prev => ({ ...prev, employee: e.target.value }))
-    }
-  >
-    <option value="">Select Employee</option>
-{employees.map(employee => (
-  <option key={employee._id} value={employee._id}>
-    {employee.name} ({employee.employeeCode})
-  </option>
-))}
-
-  </select>
-)}
-
+      {step === 4 && (
+        <select
+          className="select-box"
+          value={wizardData.employee}
+          onChange={(e) =>
+            setWizardData(prev => ({ ...prev, employee: e.target.value }))
+          }
+        >
+          <option value="">Select Employee</option>
+          {employees.map(employee => (
+            <option key={employee._id} value={employee._id}>
+              {employee.name} ({employee.employeeCode})
+            </option>
+          ))}
+        </select>
+      )}
 
       {step === 5 && (
         <div className="review">
@@ -333,6 +352,7 @@ const fetchUsers = async (departmentId) => {
             Back
           </button>
         )}
+
         {step < 5 ? (
           <button className="primary-btn" onClick={goNext}>
             Next
@@ -354,6 +374,7 @@ const fetchUsers = async (departmentId) => {
 
 const WizardStepper = ({ step }) => {
   const steps = ["Category", "Assets", "Department", "User", "Review"];
+
   return (
     <div className="stepper">
       {steps.map((label, index) => (

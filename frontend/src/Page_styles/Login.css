@@ -218,12 +218,7 @@ body {
   font-weight: 600;
   color: #fff;
 
-  background: linear-gradient(
-    135deg,
-    var(--brand),
-    #6b8cff 60%,
-    var(--brand-2)
-  );
+  background: #2563eb;
 
   box-shadow: 0 8px 22px rgba(79, 70, 229, 0.35);
   cursor: pointer;

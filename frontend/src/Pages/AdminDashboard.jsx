@@ -206,7 +206,7 @@ const HorizontalLegend = ({ payload }) => {
               backgroundColor: entry.color, // ✅ correct
             }}
           />
-          <span>{entry.value}</span>
+          <span>{entry.value.charAt(0).toUpperCase() + entry.value.slice(1)}</span>
         </div>
       ))}
     </div>

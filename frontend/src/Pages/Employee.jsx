@@ -71,7 +71,7 @@ const fetchDepartments = async () => {
             ))}
           </select>
 
-          <button onClick={() => setShowModal(true)}>
+          <button onClick={() => setShowModal(true)} className="submit-btn">
             + Add Team Member
           </button>
         </div>

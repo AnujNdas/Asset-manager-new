@@ -152,7 +152,7 @@ body {
 
 /* ==== Buttons ==== */
 .misbutton {
-  background: var(--primary);
+  background: #2563eb;
   color: #fff;
   border: none;
   padding: 10px 16px;

@@ -112,6 +112,7 @@
     font-weight: 600;
     cursor: pointer;
     border-bottom: 2px solid transparent;
+    border-radius: 10px;
   }
 
   .tab-btn.active {

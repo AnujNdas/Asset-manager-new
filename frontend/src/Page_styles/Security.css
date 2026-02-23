@@ -93,7 +93,7 @@
 }
 
 .change-button button {
-  background-color: #2346ed;
+  background-color: #2563eb;
   color: #fff;
   padding: 10px 18px;
   border: none;
@@ -165,7 +165,7 @@
   padding: 20px;
   border: 1px solid #ff4d4f;
   border-radius: 10px;
-  background: #fff5f5;
+  background: #ffeded;
 }
 
 .danger-header {
