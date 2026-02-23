@@ -22,7 +22,7 @@ const AssignmentPage = () => {
      PAGINATION STATE
   ============================== */
   const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 8;
+  const categoriesPerPage = 16;
 
   const totalPages = Math.ceil(categories.length / categoriesPerPage);
 

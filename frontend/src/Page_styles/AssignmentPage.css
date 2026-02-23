@@ -150,7 +150,7 @@ select {
   border: 1px solid var(--border);
   transition: all 0.2s ease;
   font-size: 14px;
-  width: 100%;
+  /* width: 100%; */
 }
 
 input:focus,

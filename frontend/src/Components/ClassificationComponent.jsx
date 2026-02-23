@@ -153,13 +153,13 @@ const fetchItems = async () => {
         placeholder={`Search ${title.toLowerCase()}...`}
       />
 
-      <button
+      {/* <button
         type="button"
         className="search-btn"
         onClick={() => setCurrentPage(1)}
       >
         <FontAwesomeIcon icon={faSearch} />
-      </button>
+      </button> */}
     </div>
   </div>
 
