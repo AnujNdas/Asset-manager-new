@@ -238,7 +238,14 @@ const AssignmentPage = () => {
                 onClick={() => handleCategorySelect(cat)}
               >
                 <h3>{cat.categoryName}</h3>
-                <p>{cat.totalInStock} in stock</p>
+                <p
+  style={{
+    color: cat.totalInStock < 5 ? "#dc2626" : "#16a34a",
+    fontWeight: 600,
+  }}
+>
+  {cat.totalInStock} in stock
+</p>
               </div>
             ))}
           </div>

@@ -14,28 +14,26 @@ const TenantLayout = ({ profileUser }) => {
   const closeSidebar = () => setIsSidebarOpen(false);
 
   return (
-    <div className="app-wrapper">
-      <button className="toggle-btn" onClick={toggleSidebar}>☰</button>
+   <div className="app-wrapper">
+  <button className="toggle-btn" onClick={toggleSidebar}>☰</button>
 
-      <section
-        className={`first-container ${isSidebarOpen ? "open" : ""}`}
-        onClick={closeSidebar}
-      >
-        <Sidebar />
-      </section>
+  <Sidebar 
+    isOpen={isSidebarOpen}
+    closeSidebar={closeSidebar}
+  />
 
-      <section className={`second-container ${isUserPage ? "blurred" : ""}`}>
-        <Menubar username={profileUser} />
-      </section>
+  <section className="second-container">
+    <Menubar username={profileUser} />
+  </section>
 
-      <section className={`third-container ${isUserPage ? "blurred" : ""}`}>
-        <Outlet />
-      </section>
+  <section className="third-container">
+    <Outlet />
+  </section>
 
-      <section className={`fourth-container ${isUserPage ? "blurred" : ""}`}>
-        <Footer />
-      </section>
-    </div>
+  <section className="fourth-container">
+    <Footer />
+  </section>
+</div>
   );
 };
 

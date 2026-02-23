@@ -24,6 +24,7 @@
   align-items: center;
   margin-bottom: 40px;
   position: relative;
+  margin-top: 10px;
 }
 
 .stepper::before {
@@ -93,7 +94,12 @@
   border: 1px solid transparent;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
-
+.card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2563eb;
+}
 .card:hover {
   transform: translateY(-4px);
   border-color: var(--primary);
@@ -170,7 +176,7 @@ select:focus {
   /* overflow: auto; */
   justify-content: flex-end;
   gap: 12px;
-  /* margin-top: 30px; */
+  margin-top: 30px;
 }
 
 /* ===== Buttons ===== */

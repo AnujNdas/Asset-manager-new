@@ -92,7 +92,7 @@ a:hover {
   content: "";
   position: absolute;
   bottom: 0;
-  /* left: 10%; */
+  left: 0;
   width: 100%;
   height: 2px;
   background: linear-gradient(90deg, #4f46e5, transparent);
@@ -201,22 +201,59 @@ a:hover {
   display: flex;
   justify-content: center;
 }
+/* Backdrop overlay */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+}
 
-/* ---------------- MOBILE RESPONSIVE ---------------- */
-@media screen and (max-width: 768px) {
+/* Sidebar positioning for mobile */
+/* @media (max-width: 767px) {
   .sidebar-container {
-    width: 200px;
     position: fixed;
-    left: 200px;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: 100;
+    top: 0;
+    left: -260px;  
+    height: 100%;
+    width: 260px;
+    transition: left 0.3s ease;
+    z-index: 999;
+  }
+
+  .sidebar-container.open {
+    left: 0;   
+  }
+} */
+/* ---------------- MOBILE RESPONSIVE ---------------- */
+/* Backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 998;
+}
+
+/* Mobile drawer */
+@media (max-width: 769px) {
+  .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 200px;
+    height: 100vh;
+    background: #fff;
+    transition: left 0.3s ease;
+    z-index: 999;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
   }
 
   .sidebar-container.open {
-    transform: translateX(0);
+    left: 0;
   }
   .title-text {
     font-size : 12px;
@@ -227,7 +264,7 @@ a:hover {
 
   .sidebar-heading {
     justify-content: flex-end;
-    /* padding: 0 15px; */
+    padding: 0 15px;
     margin-bottom: 10px;
   }
 
@@ -237,12 +274,13 @@ a:hover {
   }
 
   ul {
-    gap: 10px;
+    gap: 12px;
   }
 
   li {
     font-size: 0.95rem;
-    padding: 6px 0;
+    border-bottom: 1px solid #ebebeb;
+    /* padding: 6px 0; */
   }
 
   a {
@@ -254,6 +292,12 @@ a:hover {
 
 /* Tablet (hide text, show icons only) */
 @media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar-container{
+    width: 80px;
+  }
+   .sidebar {
+    padding: 10px;
+  }
   .tab-text {
     display: none;
   }
@@ -265,5 +309,10 @@ a:hover {
   }
   .logo {
     width: 100%;
+  }
+}
+@media (min-width: 1025px) {
+  .sidebar-container {
+    width: 14%;
   }
 }
