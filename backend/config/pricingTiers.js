@@ -68,7 +68,7 @@ module.exports = [
       "Complete Lifecycle Tracking",
       "SaaS Usage & License Tracking",
       // "Invoice Upload & Management",
-      "QR Code & Barcode Labeling",
+      // "QR Code & Barcode Labeling",
       "Role-Based Access (RBAC)",
       "Check-in / Check-out Tracking",
       "SAML / SSO Security",

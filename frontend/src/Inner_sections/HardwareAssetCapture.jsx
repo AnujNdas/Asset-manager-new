@@ -529,7 +529,29 @@ const handleAddAsset = async (e) => {
             </div>
 
           </div>
-            <div className="input-group">
+           
+                     <div className="grid-2">
+          <div className="input-group">
+            <label>Purchased From</label>
+            <input
+              type="text"
+              name="purchaseFrom"
+              value={formData.purchaseFrom}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="input-group">
+                        <label>Model No.</label>
+            <input
+              type="text"
+              name="modelNo"
+              value={formData.modelNo}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+</div>
+ <div className="input-group">
   <label className="checkbox-label">
     <input
       type="checkbox"
@@ -593,27 +615,6 @@ const handleAddAsset = async (e) => {
   </div>
 )}
 
-</div>
-                     <div className="grid-2">
-          <div className="input-group">
-            <label>Purchased From</label>
-            <input
-              type="text"
-              name="purchaseFrom"
-              value={formData.purchaseFrom}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="input-group">
-                        <label>Model No.</label>
-            <input
-              type="text"
-              name="modelNo"
-              value={formData.modelNo}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 </div>
 <div className="input-group checkbox-group">
   <label className="checkbox-label">
