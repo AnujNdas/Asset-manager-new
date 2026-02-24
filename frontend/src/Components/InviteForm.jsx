@@ -46,7 +46,12 @@ const InviteForm = ({ onCreated }) => {
         title: "Copied!",
         text: "Invite link copied to clipboard",
         timer: 1500,
-        showConfirmButton: false,
+        showConfirmButton: true,
+          customClass: {
+            confirmButton: "my-confirm-btn",
+            cancelButton: "my-cancel-btn"
+          },
+
       });
     } catch (err) {
       Swal.fire({

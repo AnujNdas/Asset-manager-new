@@ -41,7 +41,11 @@ const handlelogin = async (e) => {
       title: "Success",
       text: "Login successful",
       icon: "success",
-      confirmButtonText: "OK"
+      confirmButtonText: "OK",
+        customClass: {
+    confirmButton: "my-confirm-btn",
+    cancelButton: "my-cancel-btn"
+  },
     });
 
     setApiDone(true);

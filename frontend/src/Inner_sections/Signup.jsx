@@ -45,6 +45,11 @@ useEffect(() => {
           inputPlaceholder: "Enter 6-digit OTP",
           showCancelButton: true,
           confirmButtonText: "Verify OTP",
+            customClass: {
+            confirmButton: "my-confirm-btn",
+            cancelButton: "my-cancel-btn"
+          },
+
           inputValidator: (value) => {
             if (!value || value.length !== 6) {
               return "Please enter a valid 6-digit OTP";
@@ -71,7 +76,12 @@ if (verifyRes.success && verifyRes.user) {
     text: "Let’s complete your profile to get started.",
     icon: "success",
     confirmButtonText: "Continue",
-    allowOutsideClick: false
+    allowOutsideClick: false,
+    customClass: {
+    confirmButton: "my-confirm-btn",
+    cancelButton: "my-cancel-btn"
+  },
+
   });
   localStorage.setItem(
   "auth",

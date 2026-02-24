@@ -93,7 +93,11 @@ const fetchItems = async () => {
         icon: "success",
         title: `${title} Added`,
         timer: 1200,
-        showConfirmButton: false
+        showConfirmButton: true,
+        customClass: {
+          confirmButton: "my-confirm-btn",
+          cancelButton: "my-cancel-btn"
+        }
       });
     } catch (err) {
       Swal.fire("Error", "Already exists", "error");

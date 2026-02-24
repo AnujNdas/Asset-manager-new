@@ -115,8 +115,10 @@ Swal.fire({
 
   customClass: {
     popup: "responsive-swal",
-    htmlContainer: "swal-html-fix"
-  }
+    htmlContainer: "swal-html-fix",
+    confirmButton: "my-confirm-btn",
+    cancelButton: "my-cancel-btn"
+  } 
 });
 
 

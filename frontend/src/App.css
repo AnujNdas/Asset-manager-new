@@ -116,7 +116,21 @@
   z-index: 9999 !important;
 }
 
+.my-confirm-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+}
 
+.my-cancel-btn {
+  background-color: #f87171;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+}
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
