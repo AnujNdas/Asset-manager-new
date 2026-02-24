@@ -197,12 +197,6 @@
   cursor: pointer;
 }
 
-.pagination button.active {
-  background: #2563eb;
-  color: #fff;
-  border-color: #2563eb;
-}
-
 .pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;

@@ -2,15 +2,15 @@ import { useCurrency } from "../Context/CurrencyContext";
 import "../Component_styles/CurrencyFilter.css";
 
 export const CURRENCY_SYMBOLS = {
-  INR: "₹",
   USD: "$",
   EUR: "€",
   GBP: "£",
   JPY: "¥",
+  CNY: "¥",
   AUD: "A$",
   CAD: "C$",
+  INR: "₹",
   CHF: "CHF",
-  CNY: "¥",
   HKD: "HK$",
   SGD: "S$",
   AED: "د.إ",

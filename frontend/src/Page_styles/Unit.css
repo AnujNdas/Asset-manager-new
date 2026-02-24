@@ -201,13 +201,6 @@
   transition: background 0.2s ease;
   min-width: 34px;
 }
-
-.pagination button.active,
-.pagination button:hover {
-  background: #3085d6;
-  color: white;
-  border-color: #3085d6;
-}
 .delete-category-btn {
   padding: 5px 12px;
   background: #ff4d4f;
