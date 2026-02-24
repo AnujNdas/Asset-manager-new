@@ -49,7 +49,7 @@ const fetchDepartments = async () => {
   return (
     <div className="employee-page">
       <div className="employee-header">
-        <h2>Team</h2>
+        <h2>Teams</h2>
 
         <div className="employee-actions">
           <input
