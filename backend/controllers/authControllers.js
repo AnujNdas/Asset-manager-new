@@ -3,8 +3,9 @@ const jwt = require("jsonwebtoken");
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const axios = require("axios");
 const LoginActivity = require("../models/LoginActivity");
+const ActivityLog = require("../models/ActivityLog");
 const { getClientIp } = require("../utils/ipUtils");
-
+const mongoose = require("mongoose");
 const Otp = require("../models/Otp");
 const crypto = require("crypto");
 const User = require("../models/User");
@@ -21,8 +22,9 @@ const Notification = require("../models/Notification");
 const Organization = require("../models/Organization");
 const Subscription = require("../models/Subscription");
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const SENDER_EMAIL = "vaultifly@gmail.com";
+const SENDER_EMAIL = "Socialfly@gmail.com";
 const OrganizationInvite = require("../models/OrganizationInvite");
+const seedOrganizationDefaults = require("../services/seedOrganizationDefaults");
 /* ---------------------------------- UTIL ---------------------------------- */
 async function sendBrevoEmail(to, subject, html) {
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -88,12 +90,17 @@ const verifyOtpAndSignup = async (req, res) => {
     organizationName,
     inviteToken,
   } = req.body;
-  console.log("Signup payload:", req.body);
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    // 🔐 OTP verification
+    // 🔐 OTP validation
     const otpRecord = await Otp.findOne({ email }).sort({ createdAt: -1 });
+
     if (!otpRecord || otpRecord.otp !== otp) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({ error: "Invalid or expired OTP" });
     }
 
@@ -107,66 +114,89 @@ const verifyOtpAndSignup = async (req, res) => {
       const invite = await OrganizationInvite.findOne({
         inviteToken,
         expiresAt: { $gt: new Date() },
-      }).populate("organizationId");
+      })
+        .populate("organizationId")
+        .session(session);
 
       if (!invite) {
-        return res.status(400).json({ error: "Invalid or expired invite" });
+        throw new Error("Invalid or expired invite");
       }
 
-      // Optional but recommended
       if (invite.email && invite.email !== email) {
-        return res
-          .status(400)
-          .json({ error: "Invite email mismatch" });
+        throw new Error("Invite email mismatch");
       }
 
       organization = invite.organizationId;
       role = invite.role || "user";
 
-      // Multi-use support
       invite.usedCount += 1;
-      await invite.save();
+      await invite.save({ session });
     }
 
     // =========================
     // OWNER SIGNUP FLOW
     // =========================
     if (!inviteToken) {
-      organization = await Organization.create({
-        name: organizationName || `${username}'s Organization`,
-      });
+      const orgDocs = await Organization.create(
+        [
+          {
+            name:
+              organizationName || `${username}'s Organization`,
+          },
+        ],
+        { session }
+      );
+
+      organization = orgDocs[0];
+
+      // 🔥 Seed defaults inside transaction
+      await seedOrganizationDefaults(organization._id, session);
     }
 
     // 🔒 Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 👤 Create user
-    const newUser = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-      role,
-      organizationId: organization._id,
-      onboardingCompleted: false,
-    });
+    const userDocs = await User.create(
+      [
+        {
+          username,
+          email,
+          password: hashedPassword,
+          role,
+          organizationId: organization._id,
+          onboardingCompleted: false,
+        },
+      ],
+      { session }
+    );
 
-    // Link org creator ONLY for owner signup
+    const newUser = userDocs[0];
+
+    // Owner-only operations
     if (!inviteToken) {
       organization.createdBy = newUser._id;
-      await organization.save();
+      await organization.save({ session });
 
-      // Trial subscription only once per org
-      await Subscription.create({
-        organizationId: organization._id,
-        plan: "trial",
-        status: "trialing",
-        expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-      });
+      await Subscription.create(
+        [
+          {
+            organizationId: organization._id,
+            plan: "trial",
+            status: "trialing",
+            expiresAt: new Date(
+              Date.now() + 14 * 24 * 60 * 60 * 1000
+            ),
+          },
+        ],
+        { session }
+      );
     }
 
-    await Otp.deleteMany({ email });
+    await Otp.deleteMany({ email }).session(session);
 
-    // 🎟 JWT
+    await session.commitTransaction();
+    session.endSession();
+
     const token = jwt.sign(
       {
         id: newUser._id,
@@ -188,8 +218,14 @@ const verifyOtpAndSignup = async (req, res) => {
       },
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     console.error("Signup Error:", err);
-    res.status(500).json({ error: "Signup failed" });
+
+    return res.status(500).json({
+      error: err.message || "Signup failed",
+    });
   }
 };
 
@@ -477,87 +513,109 @@ const completeOnboarding = async (req, res) => {
     res.status(500).json({ error: "Failed to complete onboarding" });
   }
 };
+
 const resetSystemData = async (req, res) => {
+  const session = await mongoose.startSession();
+
   try {
-    const userId = req.user.id;
-    const { password } = req.body;
+    await session.withTransaction(async () => {
+      const userId = req.user.id;
+      const { password } = req.body;
 
-    if (!password) {
-      return res.status(400).json({ message: "Password is required" });
-    }
+      if (!password) {
+        throw new Error("Password is required");
+      }
 
-    const user = await User.findById(userId).select("+password");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+      const user = await User.findById(userId)
+        .select("+password")
+        .session(session);
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
+      if (!user) throw new Error("User not found");
 
-    if (!["owner", "admin", "super-admin"].includes(user.role)) {
-      return res.status(403).json({ message: "Unauthorized action" });
-    }
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) throw new Error("Invalid password");
 
-    const organizationId = user.organizationId;
-    if (!organizationId) {
-      return res.status(400).json({
-        message: "User is not associated with any organization"
-      });
-    }
+      if (!["owner", "admin", "super-admin"].includes(user.role)) {
+        throw new Error("Unauthorized action");
+      }
 
-    await Promise.all([
-      Asset.deleteMany({ organizationId }),
-      AssetAssignment.deleteMany({ organizationId }),
-      SupportTicket.deleteMany({ organizationId }),
-      SoftwareAsset.deleteMany({ organizationId }),
-      Category.deleteMany({ organizationId }),
-      Location.deleteMany({ organizationId }),
-      Status.deleteMany({ organizationId }),
-      Unit.deleteMany({ organizationId }),
-      Department.deleteMany({ organizationId }),
-    ]);
+      const organizationId = user.organizationId;
+      if (!organizationId) {
+        throw new Error("User not associated with organization");
+      }
 
-    // 📝 AUDIT LOG
-    await ActivityLog.create({
-      organizationId,
-      userId,
-      action: "SYSTEM_RESET",
-      description: "Organization data reset",
-      ipAddress: req.ip
+      // DELETE OPERATIONAL DATA
+      await Promise.all([
+        Asset.deleteMany({ organizationId }).session(session),
+        AssetAssignment.deleteMany({ organizationId }).session(session),
+        SupportTicket.deleteMany({ organizationId }).session(session),
+        SoftwareAsset.deleteMany({ organizationId }).session(session),
+      ]);
+
+      // DELETE CUSTOM CLASSIFICATIONS
+      await Promise.all([
+        Category.deleteMany({ organizationId, isSystem: false }).session(session),
+        Location.deleteMany({ organizationId, isSystem: false }).session(session),
+        Status.deleteMany({ organizationId, isSystem: false }).session(session),
+        Unit.deleteMany({ organizationId, isSystem: false }).session(session),
+        Department.deleteMany({ organizationId, isSystem: false }).session(session),
+      ]);
+
+      // REACTIVATE SYSTEM DEFAULTS
+      await Promise.all([
+        Category.updateMany(
+          { organizationId, isSystem: true },
+          { isActive: true }
+        ).session(session),
+        Location.updateMany(
+          { organizationId, isSystem: true },
+          { isActive: true }
+        ).session(session),
+        Status.updateMany(
+          { organizationId, isSystem: true },
+          { isActive: true }
+        ).session(session),
+        Unit.updateMany(
+          { organizationId, isSystem: true },
+          { isActive: true }
+        ).session(session),
+        Department.updateMany(
+          { organizationId, isSystem: true },
+          { isActive: true }
+        ).session(session),
+      ]);
+
+      // AUDIT LOG
+      await ActivityLog.create(
+        [
+          {
+            organizationId,
+            userId,
+            action: "SYSTEM_RESET",
+            description: "Organization data reset",
+            ipAddress: req.ip,
+          },
+        ],
+        { session }
+      );
     });
 
-    // 🔔 NOTIFICATION
-    const notification = await Notification.create({
-      title: "Organization Data Reset",
-      message:
-        "All operational data for your organization has been reset successfully.",
-      userId,
-      organizationId,
-      type: "security"
-    });
-
-    // ⚡ REAL-TIME EMIT
-    const io = req.app.get("io");
-    if (io) {
-      io.to(userId.toString()).emit("newNotification", {
-        title: notification.title,
-        message: notification.message,
-        type: "security"
-      });
-    }
+    // Transaction committed successfully here
 
     return res.status(200).json({
       success: true,
-      message: "Organization data reset successfully"
+      message: "Organization data reset successfully",
     });
+
   } catch (error) {
     console.error("RESET ERROR:", error);
-    return res.status(500).json({
+
+    return res.status(400).json({
       success: false,
-      message: "Failed to reset organization data"
+      message: error.message || "Failed to reset organization data",
     });
+  } finally {
+    session.endSession();
   }
 };
 

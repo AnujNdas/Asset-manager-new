@@ -54,15 +54,15 @@ module.exports = [
     id: "tier_50_5000",
     name: "Omni",
     users: 50,
-    assets: 5000,
+    assets: "unlimited",
     priceMonthly: 80,
     priceYearly: 75,
     currency: "USD",
     popular: false,
 
     features: [
-      "2500 Hardware Assets",
-      "2500 Software Assets",
+      "unlimited Hardware Assets",
+      "unlimited Software Assets",
       "Unlimited Admin Users",
       "Multi-Location Management",
       "Complete Lifecycle Tracking",

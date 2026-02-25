@@ -12,6 +12,11 @@ const departmentSchema = new mongoose.Schema(
       default: true,
       index: true
     },
+        isSystem: {
+      type: Boolean,
+      default: false,
+      index: true
+    },
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
