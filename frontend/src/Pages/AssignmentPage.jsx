@@ -320,7 +320,7 @@ const AssignmentPage = () => {
             setWizardData(prev => ({ ...prev, employee: e.target.value }))
           }
         >
-          <option value="">Select Employee</option>
+          <option value="">Select Team Member</option>
           {employees.map(employee => (
             <option key={employee._id} value={employee._id}>
               {employee.name} ({employee.employeeCode})
@@ -380,7 +380,7 @@ const AssignmentPage = () => {
 };
 
 const WizardStepper = ({ step }) => {
-  const steps = ["Category", "Assets", "Department", "User", "Review"];
+  const steps = ["Category", "Assets", "Department", "Team Member", "Review"];
 
   return (
     <div className="stepper">

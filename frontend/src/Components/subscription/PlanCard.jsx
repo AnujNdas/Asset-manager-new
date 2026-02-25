@@ -18,7 +18,7 @@ const PlanCard = ({ tier, billing, selected, onSelect }) => {
       <div className="plan-price">
         <span className="amount">${price}</span>
         <span className="duration">
-          /{billing === "monthly" ? "mo" : "yr"}
+          /{billing === "monthly" ? "mo" : "mo"}
         </span>
       </div>
 

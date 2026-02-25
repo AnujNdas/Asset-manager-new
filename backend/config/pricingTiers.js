@@ -6,7 +6,7 @@ module.exports = [
     users: 10,
     assets: 1000,
     priceMonthly: 15,
-    priceYearly: 216,
+    priceYearly: 12,
     currency: "USD",
     popular: false,
 
@@ -29,7 +29,7 @@ module.exports = [
     users: 20,
     assets: 2000,
     priceMonthly: 30,
-    priceYearly: 432,
+    priceYearly: 25,
     currency: "USD",
     popular: true,
 
@@ -56,7 +56,7 @@ module.exports = [
     users: 50,
     assets: 5000,
     priceMonthly: 80,
-    priceYearly: 960,
+    priceYearly: 75,
     currency: "USD",
     popular: false,
 
