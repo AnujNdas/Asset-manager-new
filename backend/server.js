@@ -43,11 +43,7 @@ app.use((req, res, next) => {
 });
 app.post(
   "/api/webhooks/razorpay",
-  express.json({
-    verify: (req, res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
+  express.raw({ type: "application/json" }),
   require("./controllers/subscriptionController").handleWebhook
 );
 const allowedOrigins = [

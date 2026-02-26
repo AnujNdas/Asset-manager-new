@@ -131,6 +131,8 @@ const createCheckout = async (req, res) => {
    Razorpay Webhook Handler
 ------------------------------------------ */
 const handleWebhook = async (req, res) => {
+  console.log("Headers:", req.headers);
+console.log("Body type:", typeof req.body);
   try {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
@@ -138,7 +140,7 @@ const signature = req.headers["x-razorpay-signature"];
 
 const expectedSignature = crypto
   .createHmac("sha256", webhookSecret)
-  .update(req.rawBody) // ✅ USE RAW BODY
+  .update(req.body) // raw buffer
   .digest("hex");
 
 if (signature !== expectedSignature) {
