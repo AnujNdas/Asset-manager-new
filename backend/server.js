@@ -36,6 +36,16 @@ const User = require("./models/User");
 
 
 const app = express();
+app.set("trust proxy", true);
+app.post(
+  "/api/webhooks/razorpay",
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+  require("./controllers/subscriptionController").handleWebhook
+);
 const allowedOrigins = [
   "https://assets.socialflylive.com",
   "https://asset-manager-new.vercel.app",

@@ -1,62 +1,60 @@
 const mongoose = require("mongoose");
 
-const SubscriptionSchema = new mongoose.Schema(
+const subscriptionSchema = new mongoose.Schema(
   {
-    userId: {
+    organizationId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "Organization",
       required: true,
+      index: true,
     },
 
-    // 🔑 Tier reference (immutable)
-    tierId: {
+    // Internal plan reference
+    tier: {
       type: String,
-      required: true,
-    },
-
-    // 🔒 Snapshot of limits at purchase time
-    usersLimit: {
-      type: Number,
-      required: true,
-    },
-    assetsLimit: {
-      type: Number,
-      required: true,
+      enum: ["trial", "base", "grow", "omni"],
+      default: "trial",
     },
 
     billingCycle: {
       type: String,
-      enum: ["monthly", "yearly"],
-      required: true,
+      enum: ["monthly", "yearly", null],
+      default: null,
     },
 
-    // 🔒 Locked-in amount (important for audits)
-    amount: {
-      type: Number,
-      required: true,
-    },
-    currency: {
+    // Razorpay identifiers
+    razorpaySubscriptionId: {
       type: String,
-      default: "USD",
+      index: true,
     },
 
+    razorpayPlanId: String,
+
+    // Razorpay subscription status
     status: {
       type: String,
-      enum: ["inactive", "pending", "active", "cancelled"],
-      default: "inactive",
+      enum: [
+        "trialing",
+        "created",
+        "authenticated",
+        "active",
+        "paused",
+        "cancelled",
+        "completed",
+        "expired",
+      ],
+      default: "trialing",
     },
 
-    provider: {
-      type: String,
-      default: "lemonsqueezy",
+    currentStart: Date,
+    currentEnd: Date,
+
+    cancelAtPeriodEnd: {
+      type: Boolean,
+      default: false,
     },
-
-    providerSubscriptionId: String,
-    providerCustomerId: String,
-
-    currentPeriodEnd: Date,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Subscription", SubscriptionSchema);
+module.exports = mongoose.model("Subscription", subscriptionSchema);
