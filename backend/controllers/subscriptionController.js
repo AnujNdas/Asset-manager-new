@@ -131,32 +131,36 @@ const createCheckout = async (req, res) => {
    Razorpay Webhook Handler
 ------------------------------------------ */
 const handleWebhook = async (req, res) => {
-  console.log("Headers:", req.headers);
-console.log("Body type:", typeof req.body);
+  console.log("Is Buffer:", Buffer.isBuffer(req.body));
+
   try {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
+    const signature = req.headers["x-razorpay-signature"];
 
-const signature = req.headers["x-razorpay-signature"];
+    // 1️⃣ Verify signature using RAW buffer
+    const expectedSignature = crypto
+      .createHmac("sha256", webhookSecret)
+      .update(req.body)
+      .digest("hex");
 
-const expectedSignature = crypto
-  .createHmac("sha256", webhookSecret)
-  .update(req.body) // raw buffer
-  .digest("hex");
+    if (signature !== expectedSignature) {
+      console.log("❌ Signature mismatch");
+      return res.status(400).send("Invalid signature");
+    }
 
-if (signature !== expectedSignature) {
-  console.log("❌ Signature mismatch");
-  return res.status(400).send("Invalid signature");
-}
+    // 2️⃣ Parse JSON AFTER verification
+    const parsedBody = JSON.parse(req.body.toString());
 
-    const event = req.body.event;
-    const payload = req.body.payload;
+    const event = parsedBody.event;
+    const payload = parsedBody.payload;
+
+    console.log("✅ Webhook verified:", event);
 
     /* -----------------------------------------
        subscription.activated
     ------------------------------------------ */
     if (event === "subscription.activated") {
-      const subscriptionId =
-        payload.subscription.entity.id;
+      const subscriptionId = payload.subscription.entity.id;
 
       await Subscription.findOneAndUpdate(
         { razorpaySubscriptionId: subscriptionId },
@@ -176,14 +180,11 @@ if (signature !== expectedSignature) {
        subscription.cancelled
     ------------------------------------------ */
     if (event === "subscription.cancelled") {
-      const subscriptionId =
-        payload.subscription.entity.id;
+      const subscriptionId = payload.subscription.entity.id;
 
       await Subscription.findOneAndUpdate(
         { razorpaySubscriptionId: subscriptionId },
-        {
-          status: "cancelled",
-        }
+        { status: "cancelled" }
       );
     }
 
@@ -191,8 +192,7 @@ if (signature !== expectedSignature) {
        subscription.charged
     ------------------------------------------ */
     if (event === "subscription.charged") {
-      const subscriptionId =
-        payload.subscription.entity.id;
+      const subscriptionId = payload.subscription.entity.id;
 
       await Subscription.findOneAndUpdate(
         { razorpaySubscriptionId: subscriptionId },
