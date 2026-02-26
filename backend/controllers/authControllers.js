@@ -22,7 +22,7 @@ const Notification = require("../models/Notification");
 const Organization = require("../models/Organization");
 const Subscription = require("../models/Subscription");
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const SENDER_EMAIL = "socialfly@gmail.com";
+const SENDER_EMAIL = "socialflylive@gmail.com";
 const OrganizationInvite = require("../models/OrganizationInvite");
 const seedOrganizationDefaults = require("../services/seedOrganizationDefaults");
 /* ---------------------------------- UTIL ---------------------------------- */
