@@ -9,7 +9,7 @@ import Signup from "./Inner_sections/Signup";
 import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 import { Toaster } from "react-hot-toast";
-import Maintenance from "./pages/Maintenance";
+import Maintenance from "./Pages/Maintenance";
 import "./App.css";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
