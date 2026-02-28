@@ -200,11 +200,12 @@ const createCheckout = async (req, res) => {
     }
 
     // 🔥 Create Razorpay subscription
-    const razorpaySubscription =
-      await razorpay.subscriptions.create({
-        plan_id: planId,
-        customer_notify: 1,
-      });
+const razorpaySubscription =
+  await razorpay.subscriptions.create({
+    plan_id: planId,
+    customer_notify: 1,
+    total_count: billingCycle === "monthly" ? 60 : 5,
+  });
 
     // 📝 Update existing document
     subscription.razorpaySubscriptionId =
