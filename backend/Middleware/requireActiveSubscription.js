@@ -2,11 +2,11 @@ const Subscription = require("../models/Subscription");
 const pricingTiers = require("../config/pricingTiers");
 
 const requireActiveSubscription = async (req, res, next) => {
-    console.log(
-  `[SUB CHECK] Org: ${orgId}, Status: ${Subscription.status}`
-);
   try {
     const orgId = req.user.organizationId;
+    console.log(
+      `[SUB CHECK] Org: ${orgId}, Status: ${Subscription.status}`
+    );
 
     if (!orgId) {
       return res.status(403).json({

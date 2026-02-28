@@ -22,7 +22,7 @@ const [error, setError] = useState(null);
       const res = await getTiers();
       setTiers(res.tiers);
       console.log(res.tiers);
-      setSelectedTier(res.tiers[0]?.id);
+      setSelectedTier(res.tiers[0]?.key);
     };
     loadTiers();
   }, []);
@@ -106,10 +106,10 @@ const [error, setError] = useState(null);
       <div className="plans-grid">
         {tiers.map((tier) => (
           <PlanCard
-            key={tier.id}
+            key={tier.key}
             tier={tier}
             billing={billing}
-            selected={tier.id === selectedTier}
+            selected={tier.key === selectedTier}
             onSelect={setSelectedTier}
           />
         ))}
