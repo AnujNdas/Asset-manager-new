@@ -5,7 +5,7 @@ const requireActiveSubscription = async (req, res, next) => {
   try {
     const orgId = req.user.organizationId;
     console.log(
-      `[SUB CHECK] Org: ${orgId}, Status: ${Subscription.status}`
+      `[SUB CHECK] Org: ${orgId}`
     );
 
     if (!orgId) {
@@ -14,9 +14,9 @@ const requireActiveSubscription = async (req, res, next) => {
       });
     }
 
-    const subscription = await Subscription.findOne({
-      organizationId: orgId,
-    });
+ const subscription = await Subscription.findOne({
+  organizationId: new mongoose.Types.ObjectId(orgId),
+});
 
     if (!subscription) {
       return res.status(403).json({

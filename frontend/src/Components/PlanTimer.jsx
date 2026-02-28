@@ -33,7 +33,7 @@ const PlanTimer = () => {
 
   if (expired) return <div>Subscription Expired</div>;
   if (!subscription) return null;
-
+  
   return (
     <div>
       {subscription.isTrial ? "Trial ends in:" : "Renews in:"}

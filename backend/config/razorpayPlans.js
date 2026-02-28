@@ -2,12 +2,12 @@ const plans = {
   base: {
     monthly: {
       test: "plan_SKhqqkAt4aPUqs",
-      live: "REPLACE_WITH_LIVE_BASE_MONTHLY",
+      live: "plan_SKhXz6JtWNagJG",
       price: 15,
     },
     yearly: {
       test: "plan_SKhtv8Cs9wgqdY",
-      live: "REPLACE_WITH_LIVE_BASE_YEARLY",
+      live: "plan_SKheJxyeosL7LF",
       price: 144,
     },
   },
@@ -15,12 +15,12 @@ const plans = {
   grow: {
     monthly: {
       test: "plan_SKhs2rp6qvbN03",
-      live: "REPLACE_WITH_LIVE_GROW_MONTHLY",
+      live: "plan_SKhZQ2oQIS37Pe",
       price: 30,
     },
     yearly: {
       test: "plan_SKhuszhNt2e3zJ",
-      live: "REPLACE_WITH_LIVE_GROW_YEARLY",
+      live: "plan_SKhfW4xP5xSpRU",
       price: 300,
     },
   },
@@ -28,12 +28,12 @@ const plans = {
   omni: {
     monthly: {
       test: "plan_SKhss5EprTkNEO",
-      live: "REPLACE_WITH_LIVE_OMNI_MONTHLY",
+      live: "plan_SKhcMrvSeUCvfp",
       price: 80,
     },
     yearly: {
       test: "plan_SKhvuXApzWVu4z",
-      live: "REPLACE_WITH_LIVE_OMNI_YEARLY",
+      live: "plan_SKhgulpE5yZOQE",
       price: 900,
     },
   },
