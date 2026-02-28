@@ -8,11 +8,13 @@ import { NotificationProvider } from './Context/NotificationContext';
 // import { ProgressProvider } from "./Components/ProgressBar";
 import { CurrencyProvider } from './Context/CurrencyContext'; 
 import AnalyticsTracker from './Components/AnalyticsTracker';
+import { SubscriptionProvider } from "./Context/SubscriptionContext";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <BrowserRouter>
     <React.StrictMode>
+      <SubscriptionProvider>
       <AnalyticsTracker />
       {/* <ProgressProvider> */}
         <NotificationProvider>
@@ -21,6 +23,7 @@ root.render(
           </CurrencyProvider>
         </NotificationProvider>
        {/* </ProgressProvider>  */}
+       </SubscriptionProvider>
     </React.StrictMode>
   </BrowserRouter>
 );
