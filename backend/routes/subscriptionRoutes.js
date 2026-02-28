@@ -21,7 +21,7 @@ router.post(
   authenticateToken(),
   createCheckout
 );
-router.get("/me", requireActiveSubscription, (req, res) => {
+router.get("/me", authenticateToken(), requireActiveSubscription, (req, res) => {
   const now = new Date();
 
 const daysRemaining = req.subscription.currentEnd
