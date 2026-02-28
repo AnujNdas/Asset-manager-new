@@ -1,67 +1,64 @@
 .plan-timer {
-  position: relative;
-  display: inline-block;
-  padding: 14px 22px;
-  border-radius: 14px;
-  backdrop-filter: blur(10px);
-  background: rgba(20, 20, 30, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: "Segoe UI", sans-serif;
-  text-align: center;
-  min-width: 200px;
-  transition: all 0.3s ease;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 16px;
+  border-radius: 10px;
+  min-width: 180px;
+
+  font-family: "Inter", sans-serif;
+  background: #eff6ff; /* light blue base */
+  border: 1px solid #dbeafe;
+
+  transition: all 0.25s ease;
 }
 
-/* Glow Base */
-.plan-timer::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 16px;
-  z-index: -1;
-  filter: blur(12px);
-  opacity: 0.6;
-  transition: all 0.3s ease;
+/* Normal state (light #2563eb variant) */
+.plan-timer.normal {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.15);
 }
 
-/* Active Plan (Blue Glow) */
-.plan-timer.active::before {
-  background: linear-gradient(45deg, #00c6ff, #0072ff);
+/* Urgent state (< 2 days) */
+.plan-timer.urgent {
+  background: #fef2f2;
+  border-color: #fecaca;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.18);
 }
 
-/* Trial Plan (Golden Glow) */
-.plan-timer.trial::before {
-  background: linear-gradient(45deg, #ffb347, #ffcc33);
-}
-
-/* Expired Plan (Red Glow) */
-.plan-timer.expired::before {
-  background: linear-gradient(45deg, #ff4e50, #ff0000);
+/* Expired */
+.plan-timer.expired {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
 }
 
 .label {
-  display: block;
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: #bbb;
-  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+  margin-bottom: 3px;
   text-transform: uppercase;
 }
 
 .time {
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffffff;
-  letter-spacing: 1px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.plan-timer.urgent .time {
+  color: #dc2626;
+}
+
+.plan-timer.expired .time {
+  color: #b91c1c;
 }
 
 .expired-text {
-  color: #ff4e50;
-}
-
-/* Optional subtle pulse for urgency */
-.plan-timer.trial:hover,
-.plan-timer.active:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(0, 114, 255, 0.5);
+  font-weight: 600;
 }
