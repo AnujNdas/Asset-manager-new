@@ -12,7 +12,7 @@ const BillingToggle = ({ billing, setBilling }) => {
         className={billing === "yearly" ? "active" : ""}
         onClick={() => setBilling("yearly")}
       >
-        Yearly (Save 10%)
+        Yearly (Save 20%)
       </button>
     </div>
   );

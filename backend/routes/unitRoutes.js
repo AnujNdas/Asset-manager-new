@@ -1,5 +1,7 @@
 // routes/unitRoutes.js
 const express = require("express");
+const router = express.Router();
+
 const {
   createUnit,
   updateUnit,
@@ -7,13 +9,24 @@ const {
   deleteUnit,
   restoreUnit
 } = require("../controllers/unitControllers");
-const authenticateToken = require("../Middleware/Authentication-token");
-const router = express.Router();
 
-router.post("/", authenticateToken(["admin", "user"]), createUnit);
-router.get("/", authenticateToken(["admin", "user"]), getUnits);
-router.put("/:id", authenticateToken(["admin", "user"]), updateUnit);
-router.delete("/:id", authenticateToken(["admin", "user"]), deleteUnit);
-router.patch("/:id/restore", authenticateToken(["admin", "user"]), restoreUnit);
+const authenticateToken = require("../Middleware/Authentication-token");
+const tenantMiddleware = require("../Middleware/tenantMiddleware");
+const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
+
+/* ----------------------------------
+   GLOBAL PROTECTION FOR THIS ROUTER
+----------------------------------- */
+router.use(
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  requireActiveSubscription
+);
+
+router.post("/", createUnit);
+router.get("/", getUnits);
+router.put("/:id", updateUnit);
+router.delete("/:id", deleteUnit);
+router.patch("/:id/restore", restoreUnit);
 
 module.exports = router;

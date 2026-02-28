@@ -9,6 +9,7 @@ import Signup from "./Inner_sections/Signup";
 import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 import { Toaster } from "react-hot-toast";
+import Maintenance from "./pages/Maintenance";
 import "./App.css";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
@@ -17,6 +18,10 @@ const App = () => {
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) setProfileUser(storedUsername);
   }, []);
+  
+  if (process.env.REACT_APP_MAINTENANCE_MODE === "true") {
+  return <Maintenance />;
+}
 
   return (
     <>

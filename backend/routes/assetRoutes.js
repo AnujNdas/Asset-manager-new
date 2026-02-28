@@ -1,6 +1,7 @@
 const express = require("express");
 const authenticateToken = require("../Middleware/Authentication-token");
 const tenantMiddleware = require("../Middleware/tenantMiddleware");
+const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
 
 const {
   addAsset,
@@ -20,6 +21,7 @@ router.post(
   "/",
   authenticateToken(["admin", "user"]),
   tenantMiddleware,
+  requireActiveSubscription,
   addAsset
 );
 
@@ -28,6 +30,7 @@ router.put(
   "/:id",
   authenticateToken(["admin", "user"]),
   tenantMiddleware,
+  requireActiveSubscription,
   updateAsset
 );
 
@@ -36,6 +39,7 @@ router.get(
   "/",
   authenticateToken(["admin", "user"]),
   tenantMiddleware,
+  requireActiveSubscription,
   getAllAssets
 );
 
@@ -44,6 +48,7 @@ router.delete(
   "/:id",
   authenticateToken(["admin", "user"]),
   tenantMiddleware,
+  requireActiveSubscription,
   deleteAsset
 );
 
@@ -52,6 +57,7 @@ router.post(
   "/bulk-upload",
   authenticateToken(["admin"]),
   tenantMiddleware,
+  requireActiveSubscription,
   uploadBulk.fields([{ name: "excel" }]),
   bulkUpload
 );

@@ -1,19 +1,41 @@
 // routes/locationRoutes.js
-const express = require('express');
+const express = require("express");
 const authenticateToken = require("../Middleware/Authentication-token");
-const { createLocation , getLocations , deleteLocation , updateLocation ,restoreLocation }= require('../controllers/locationControllers');
+const tenantMiddleware = require("../Middleware/tenantMiddleware");
+const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
+
+const {
+  createLocation,
+  getLocations,
+  deleteLocation,
+  updateLocation,
+  restoreLocation
+} = require("../controllers/locationControllers");
+
 const router = express.Router();
 
+/* ----------------------------------
+   GLOBAL PROTECTION FOR THIS ROUTER
+----------------------------------- */
+router.use(
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  requireActiveSubscription
+);
+
 // Route to create a location
-router.post('/', authenticateToken(["admin", "user"]), createLocation);
+router.post("/", createLocation);
 
 // Route to get all locations
-router.get('/', authenticateToken(["admin", "user"]), getLocations);
+router.get("/", getLocations);
 
-//Route to update locations 
-router.put('/:id' , authenticateToken(["admin", "user"]), updateLocation )
-// Route to delete locations
-router.delete('/:id', authenticateToken(["admin", "user"]), deleteLocation);
-router.patch("/:id/restore", authenticateToken(["admin", "user"]), restoreLocation);
+// Route to update location
+router.put("/:id", updateLocation);
+
+// Route to delete location
+router.delete("/:id", deleteLocation);
+
+// Route to restore location
+router.patch("/:id/restore", restoreLocation);
+
 module.exports = router;
-

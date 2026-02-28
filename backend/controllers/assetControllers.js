@@ -229,13 +229,14 @@ const baseTotalAmount = convertToBase(totalAmount, currency);
 let warrantyData = undefined;
 
 if (asset.warrantyId || asset.warrantyExpiryDate) {
-  warrantyData = buildWarranty(
-    {
-      warrantyId: asset.warrantyId,
-      expiryDate: asset.warrantyExpiryDate,
-    },
-    asset.DOP
-  );
+warrantyData = buildWarranty(
+  {
+    warrantyId: asset.warrantyId,
+    expiryDate: asset.warrantyExpiryDate,
+  },
+  {},
+  asset.DateOfPurchase
+);
 }
 
         // ---------- FINAL ASSET ----------
@@ -254,8 +255,8 @@ validAssets.push({
   assetSpecification: asset.assetSpecification,
   assetStatus: statusId,
 
-  DOP: asset.DOP,
-  DOE: asset.DOE,
+ DOP: asset.DateOfPurchase ? new Date(asset.DateOfPurchase) : null,
+DOE: asset.DateOfExpiry ? new Date(asset.DateOfExpiry) : null,
   assetLifetime: asset.assetLifetime,
   purchaseFrom: asset.purchaseFrom,
 

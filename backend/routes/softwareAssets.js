@@ -7,25 +7,36 @@ const {
   getSoftwareAssets,
   updateSoftwareAsset,
   deleteSoftwareAsset,
-  bulkUploadSoftware // ✅ ADD THIS
+  bulkUploadSoftware
 } = require("../controllers/softwareAssetController");
 
 const authenticateToken = require("../Middleware/Authentication-token");
+const tenantMiddleware = require("../Middleware/tenantMiddleware");
+const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
 
-const upload = multer(); // for bulk upload (excel / csv)
 const uploadBulk = multer({ dest: "uploads/bulk/" });
+
+/* ----------------------------------
+   GLOBAL PROTECTION FOR THIS ROUTER
+----------------------------------- */
+router.use(
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  requireActiveSubscription
+);
+
 /* -------------------- CRUD -------------------- */
 
-router.post("/", authenticateToken(), createSoftwareAsset);
-router.get("/", authenticateToken(), getSoftwareAssets);
-router.put("/:id", authenticateToken(), updateSoftwareAsset);
-router.delete("/:id", authenticateToken(), deleteSoftwareAsset);
+router.post("/", createSoftwareAsset);
+router.get("/", getSoftwareAssets);
+router.put("/:id", updateSoftwareAsset);
+router.delete("/:id", deleteSoftwareAsset);
+
 /* -------------------- BULK UPLOAD -------------------- */
 
 router.post(
   "/bulk-upload",
-  authenticateToken(),
- uploadBulk.fields([{ name: "excel" }]),
+  uploadBulk.fields([{ name: "excel" }]),
   bulkUploadSoftware
 );
 

@@ -6,21 +6,35 @@ const {
   deleteCategory,
   restoreCategory
 } = require("../controllers/categoryControllers");
+
 const authenticateToken = require("../Middleware/Authentication-token");
+const tenantMiddleware = require("../Middleware/tenantMiddleware");
+const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
+
 const router = express.Router();
 
+/* ----------------------------------
+   GLOBAL PROTECTION FOR THIS ROUTER
+----------------------------------- */
+router.use(
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  requireActiveSubscription
+);
+
 /* ================= CREATE ================= */
-router.post("/", authenticateToken(["admin", "user"]), createCategory);
+router.post("/", createCategory);
+
 /* ================= READ (ACTIVE ONLY) ================= */
-router.get("/", authenticateToken(["admin", "user"]), getCategories);
+router.get("/", getCategories);
 
 /* ================= UPDATE ================= */
-router.put("/:id", authenticateToken(["admin", "user"]), updateCategory);
+router.put("/:id", updateCategory);
 
 /* ================= SOFT DELETE ================= */
-router.delete("/:id", authenticateToken(["admin", "user"]), deleteCategory);
+router.delete("/:id", deleteCategory);
 
 /* ================= RESTORE ================= */
-router.patch("/:id/restore", authenticateToken(["admin", "user"]), restoreCategory);
+router.patch("/:id/restore", restoreCategory);
 
 module.exports = router;

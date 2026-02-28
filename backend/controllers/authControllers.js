@@ -177,19 +177,25 @@ const verifyOtpAndSignup = async (req, res) => {
       organization.createdBy = newUser._id;
       await organization.save({ session });
 
-      await Subscription.create(
-        [
-          {
-            organizationId: organization._id,
-            plan: "trial",
-            status: "trialing",
-            expiresAt: new Date(
-              Date.now() + 14 * 24 * 60 * 60 * 1000
-            ),
-          },
-        ],
-        { session }
-      );
+const now = new Date();
+const trialEnd = new Date(
+  now.getTime() + 7 * 24 * 60 * 60 * 1000
+);
+
+await Subscription.create(
+  [
+    {
+      organizationId: organization._id,
+      tier: "trial",
+      billingCycle: null,
+      status: "trialing",
+      currentStart: now,
+      currentEnd: trialEnd,
+      cancelAtPeriodEnd: false,
+    },
+  ],
+  { session }
+);
     }
 
     await Otp.deleteMany({ email }).session(session);
@@ -522,9 +528,7 @@ const resetSystemData = async (req, res) => {
       const userId = req.user.id;
       const { password } = req.body;
 
-      if (!password) {
-        throw new Error("Password is required");
-      }
+      if (!password) throw new Error("Password is required");
 
       const user = await User.findById(userId)
         .select("+password")
@@ -544,63 +548,40 @@ const resetSystemData = async (req, res) => {
         throw new Error("User not associated with organization");
       }
 
-      // DELETE OPERATIONAL DATA
+      // 1️⃣ DELETE OPERATIONAL DATA
       await Promise.all([
-        Asset.deleteMany({ organizationId }).session(session),
-        AssetAssignment.deleteMany({ organizationId }).session(session),
-        SupportTicket.deleteMany({ organizationId }).session(session),
-        SoftwareAsset.deleteMany({ organizationId }).session(session),
+        Asset.deleteMany({ organizationId }, { session }),
+        AssetAssignment.deleteMany({ organizationId }, { session }),
+        SupportTicket.deleteMany({ organizationId }, { session }),
+        SoftwareAsset.deleteMany({ organizationId }, { session }),
       ]);
 
-      // DELETE CUSTOM CLASSIFICATIONS
+      // 2️⃣ DELETE ALL CLASSIFICATIONS
       await Promise.all([
-        Category.deleteMany({ organizationId, isSystem: false }).session(session),
-        Location.deleteMany({ organizationId, isSystem: false }).session(session),
-        Status.deleteMany({ organizationId, isSystem: false }).session(session),
-        Unit.deleteMany({ organizationId, isSystem: false }).session(session),
-        Department.deleteMany({ organizationId, isSystem: false }).session(session),
+        Category.deleteMany({ organizationId }, { session }),
+        Location.deleteMany({ organizationId }, { session }),
+        Status.deleteMany({ organizationId }, { session }),
+        Unit.deleteMany({ organizationId }, { session }),
+        Department.deleteMany({ organizationId }, { session }),
       ]);
 
-      // REACTIVATE SYSTEM DEFAULTS
-      await Promise.all([
-        Category.updateMany(
-          { organizationId, isSystem: true },
-          { isActive: true }
-        ).session(session),
-        Location.updateMany(
-          { organizationId, isSystem: true },
-          { isActive: true }
-        ).session(session),
-        Status.updateMany(
-          { organizationId, isSystem: true },
-          { isActive: true }
-        ).session(session),
-        Unit.updateMany(
-          { organizationId, isSystem: true },
-          { isActive: true }
-        ).session(session),
-        Department.updateMany(
-          { organizationId, isSystem: true },
-          { isActive: true }
-        ).session(session),
-      ]);
+      // 3️⃣ RESEED DEFAULTS
+      await seedOrganizationDefaults(organizationId, session);
 
-      // AUDIT LOG
+      // 4️⃣ AUDIT LOG
       await ActivityLog.create(
         [
           {
             organizationId,
             userId,
             action: "SYSTEM_RESET",
-            description: "Organization data reset",
+            description: "Organization factory reset",
             ipAddress: req.ip,
           },
         ],
         { session }
       );
     });
-
-    // Transaction committed successfully here
 
     return res.status(200).json({
       success: true,

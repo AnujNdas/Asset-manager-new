@@ -2,6 +2,7 @@
 module.exports = [
   {
     id: "tier_10_1000",
+    key: "base",
     name: "Base",
     users: 10,
     assets: 1000,
@@ -25,6 +26,7 @@ module.exports = [
 
   {
     id: "tier_20_2500",
+    key: "grow",
     name: "Grow",
     users: 20,
     assets: 2000,
@@ -52,6 +54,7 @@ module.exports = [
 
   {
     id: "tier_50_5000",
+    key: "omni",
     name: "Omni",
     users: 50,
     assets: "unlimited",
@@ -61,8 +64,8 @@ module.exports = [
     popular: false,
 
     features: [
-      "unlimited Hardware Assets",
-      "unlimited Software Assets",
+      "Unlimited Hardware Assets",
+      "Unlimited Software Assets",
       "Unlimited Admin Users",
       "Multi-Location Management",
       "Complete Lifecycle Tracking",

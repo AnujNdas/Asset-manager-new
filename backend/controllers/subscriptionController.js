@@ -74,16 +74,105 @@ const previewPrice = (req, res) => {
   });
 };
 
+const verifyPayment = async (req, res) => {
+  try {
+    const orgId = req.user.organizationId;
+
+    const {
+      razorpay_payment_id,
+      razorpay_subscription_id,
+      razorpay_signature,
+    } = req.body;
+
+    if (
+      !razorpay_payment_id ||
+      !razorpay_subscription_id ||
+      !razorpay_signature
+    ) {
+      return res.status(400).json({
+        message: "Missing verification parameters",
+      });
+    }
+
+    // 🔐 Generate signature
+    const generatedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(
+        `${razorpay_payment_id}|${razorpay_subscription_id}`
+      )
+      .digest("hex");
+
+    if (generatedSignature !== razorpay_signature) {
+      return res.status(400).json({
+        message: "Invalid payment signature",
+      });
+    }
+
+    // 🔎 Find subscription in DB
+    const subscription = await Subscription.findOne({
+      razorpaySubscriptionId: razorpay_subscription_id,
+      organizationId: orgId,
+    });
+
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    // 🚫 Prevent double activation
+    if (subscription.status === "active") {
+      return res.json({
+        message: "Subscription already active",
+      });
+    }
+
+    // 🟢 Activate subscription
+    subscription.status = "active";
+    subscription.currentStart = new Date();
+
+    const end = new Date();
+
+    if (subscription.billingCycle === "monthly") {
+      end.setMonth(end.getMonth() + 1);
+    } else {
+      end.setFullYear(end.getFullYear() + 1);
+    }
+
+    subscription.currentEnd = end;
+    subscription.lastPaymentId = razorpay_payment_id;
+
+    await subscription.save();
+
+    return res.json({
+      success: true,
+      message: "Subscription activated",
+    });
+  } catch (err) {
+    console.error("Payment verification failed:", err);
+    return res.status(500).json({
+      message: "Verification process failed",
+    });
+  }
+};
 /* -----------------------------------------
    Create Razorpay Subscription
 ------------------------------------------ */
 const createCheckout = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const orgId = req.user.organizationId;
     const { tierKey, billingCycle } = req.body;
 
     if (!tierKey || !billingCycle) {
       return res.status(400).json({ message: "Missing parameters" });
+    }
+
+    if (!["base", "grow", "omni"].includes(tierKey)) {
+      return res.status(400).json({ message: "Invalid tier" });
+    }
+
+    if (!["monthly", "yearly"].includes(billingCycle)) {
+      return res.status(400).json({ message: "Invalid billing cycle" });
     }
 
     const planId = getPlanId(tierKey, billingCycle);
@@ -92,26 +181,39 @@ const createCheckout = async (req, res) => {
       return res.status(400).json({ message: "Invalid plan selection" });
     }
 
-    const totalCount =
-      billingCycle === "monthly" ? 120 : 10;
+    // 🔎 Find existing org subscription (trial one)
+    const subscription = await Subscription.findOne({
+      organizationId: orgId,
+    });
 
-    // Create Razorpay subscription
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    if (subscription.status === "active") {
+      return res.status(400).json({
+        message: "Already on an active paid plan",
+      });
+    }
+
+    // 🔥 Create Razorpay subscription
     const razorpaySubscription =
       await razorpay.subscriptions.create({
         plan_id: planId,
-        total_count: totalCount,
         customer_notify: 1,
       });
 
-    // Store in DB as pending/created
-    const subscription = await Subscription.create({
-      userId,
-      tier: tierKey,
-      billingCycle,
-      razorpaySubscriptionId: razorpaySubscription.id,
-      razorpayPlanId: planId,
-      status: razorpaySubscription.status, // usually "created"
-    });
+    // 📝 Update existing document
+    subscription.razorpaySubscriptionId =
+      razorpaySubscription.id;
+    subscription.razorpayPlanId = planId;
+    subscription.tier = tierKey;
+    subscription.billingCycle = billingCycle;
+    subscription.status = "created";
+
+    await subscription.save();
 
     return res.json({
       success: true,
@@ -120,7 +222,7 @@ const createCheckout = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Razorpay subscription error:", err);
+    console.error("Subscription creation error:", err);
     return res.status(500).json({
       message: "Subscription creation failed",
     });
@@ -151,62 +253,73 @@ const handleWebhook = async (req, res) => {
     // 2️⃣ Parse JSON AFTER verification
     const parsedBody = JSON.parse(req.body.toString());
 
-    const event = parsedBody.event;
-    const payload = parsedBody.payload;
+const event = parsedBody.event;
+const entity = parsedBody.payload.subscription?.entity;
 
-    console.log("✅ Webhook verified:", event);
+if (!entity) {
+  return res.status(200).json({ received: true });
+}
 
-    /* -----------------------------------------
-       subscription.activated
-    ------------------------------------------ */
-    if (event === "subscription.activated") {
-      const subscriptionId = payload.subscription.entity.id;
+const subscriptionId = entity.id;
 
-      await Subscription.findOneAndUpdate(
-        { razorpaySubscriptionId: subscriptionId },
-        {
-          status: "active",
-          currentStart: new Date(
-            payload.subscription.entity.current_start * 1000
-          ),
-          currentEnd: new Date(
-            payload.subscription.entity.current_end * 1000
-          ),
-        }
-      );
-    }
+const subscription = await Subscription.findOne({
+  razorpaySubscriptionId: subscriptionId,
+});
 
-    /* -----------------------------------------
-       subscription.cancelled
-    ------------------------------------------ */
-    if (event === "subscription.cancelled") {
-      const subscriptionId = payload.subscription.entity.id;
+if (!subscription) {
+  console.log("Subscription not found in DB");
+  return res.status(200).json({ received: true });
+}
 
-      await Subscription.findOneAndUpdate(
-        { razorpaySubscriptionId: subscriptionId },
-        { status: "cancelled" }
-      );
-    }
+/* -----------------------------------------
+   ACTIVATION (First Payment Success)
+------------------------------------------ */
+if (event === "subscription.activated") {
+  subscription.status = "active";
+  subscription.currentStart = new Date(
+    entity.current_start * 1000
+  );
+  subscription.currentEnd = new Date(
+    entity.current_end * 1000
+  );
 
-    /* -----------------------------------------
-       subscription.charged
-    ------------------------------------------ */
-    if (event === "subscription.charged") {
-      const subscriptionId = payload.subscription.entity.id;
+  await subscription.save();
+  console.log("✅ Subscription activated");
+}
 
-      await Subscription.findOneAndUpdate(
-        { razorpaySubscriptionId: subscriptionId },
-        {
-          status: "active",
-          currentStart: new Date(
-            payload.subscription.entity.current_start * 1000
-          ),
-          currentEnd: new Date(
-            payload.subscription.entity.current_end * 1000
-          ),
-        }
-      );
-    }
+/* -----------------------------------------
+   RECURRING PAYMENT SUCCESS
+------------------------------------------ */
+if (event === "subscription.charged") {
+  subscription.status = "active";
+  subscription.currentStart = new Date(
+    entity.current_start * 1000
+  );
+  subscription.currentEnd = new Date(
+    entity.current_end * 1000
+  );
+
+  await subscription.save();
+  console.log("🔁 Subscription renewed");
+}
+
+/* -----------------------------------------
+   CANCELLATION
+------------------------------------------ */
+if (event === "subscription.cancelled") {
+  subscription.status = "cancelled";
+  await subscription.save();
+  console.log("❌ Subscription cancelled");
+}
+
+/* -----------------------------------------
+   PAYMENT FAILURE
+------------------------------------------ */
+if (event === "payment.failed") {
+  subscription.status = "past_due";
+  await subscription.save();
+  console.log("⚠️ Payment failed");
+}
 
     return res.status(200).json({ received: true });
 
@@ -221,4 +334,5 @@ module.exports = {
   previewPrice,
   createCheckout,
   handleWebhook,
+  verifyPayment,
 };

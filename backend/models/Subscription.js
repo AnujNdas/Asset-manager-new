@@ -31,20 +31,19 @@ const subscriptionSchema = new mongoose.Schema(
     razorpayPlanId: String,
 
     // Razorpay subscription status
-    status: {
-      type: String,
-      enum: [
-        "trialing",
-        "created",
-        "authenticated",
-        "active",
-        "paused",
-        "cancelled",
-        "completed",
-        "expired",
-      ],
-      default: "trialing",
-    },
+status: {
+  type: String,
+  enum: [
+    "trialing",
+    "created",
+    "active",
+    "paused",
+    "cancelled",
+    "expired",
+    "past_due",
+  ],
+  default: "trialing",
+},
 
     currentStart: Date,
     currentEnd: Date,
@@ -56,5 +55,8 @@ const subscriptionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+subscriptionSchema.index(
+  { organizationId: 1, status: 1 },
+  { partialFilterExpression: { status: "active" }, unique: true }
+);
 module.exports = mongoose.model("Subscription", subscriptionSchema);

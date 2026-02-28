@@ -1,14 +1,23 @@
 const express = require("express");
 const authenticateToken = require("../Middleware/Authentication-token");
-const { createInvite , revokeInvite , getInvites } = require("../controllers/inviteController");
+const tenantMiddleware = require("../Middleware/tenantMiddleware");
+const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
+
+const { createInvite, revokeInvite, getInvites } = require("../controllers/inviteController");
 
 const router = express.Router();
 
-router.post(
-  "/",
+/* ----------------------------------
+   PROTECTED: ADMIN + ACTIVE SUBSCRIPTION
+----------------------------------- */
+router.use(
   authenticateToken(["admin"]),
-  createInvite
+  tenantMiddleware,
+  requireActiveSubscription
 );
-router.get("/", authenticateToken(["admin"]), getInvites);
-router.delete("/:id", authenticateToken(["admin"]), revokeInvite);
+
+router.post("/", createInvite);
+router.get("/", getInvites);
+router.delete("/:id", revokeInvite);
+
 module.exports = router;
