@@ -4,7 +4,8 @@ const {
   previewPrice,
   createCheckout,
   handleWebhook,
-  getTiers
+  getTiers,
+  verifyPayment,
 } = require("../controllers/subscriptionController");
 const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
 const router = express.Router();
