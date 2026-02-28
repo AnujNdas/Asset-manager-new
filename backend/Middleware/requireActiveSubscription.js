@@ -1,6 +1,6 @@
 const Subscription = require("../models/Subscription");
 const pricingTiers = require("../config/pricingTiers");
-
+const mongoose = require("mongoose");
 const requireActiveSubscription = async (req, res, next) => {
   try {
     const orgId = req.user.organizationId;
