@@ -2,7 +2,7 @@ const express = require("express");
 const authenticateToken = require("../Middleware/Authentication-token");
 const {
   previewPrice,
-  createCheckout,
+  createCheckout, 
   handleWebhook,
   getTiers,
   verifyPayment,
@@ -24,13 +24,18 @@ router.post(
 router.get("/me", requireActiveSubscription, (req, res) => {
   const now = new Date();
 
-  const daysRemaining = req.subscription.currentEnd
-    ? Math.ceil(
+const daysRemaining = req.subscription.currentEnd
+  ? Math.max(
+      0,
+      Math.ceil(
         (req.subscription.currentEnd - now) /
           (1000 * 60 * 60 * 24)
       )
-    : null;
-
+    )
+  : null;
+  const timeRemainingMs = req.subscription.currentEnd
+  ? Math.max(0, req.subscription.currentEnd - now)
+  : null;
   res.json({
     tier: req.subscription.tier,
     effectiveTier: req.effectiveTier,
@@ -38,6 +43,7 @@ router.get("/me", requireActiveSubscription, (req, res) => {
     billingCycle: req.subscription.billingCycle,
     currentEnd: req.subscription.currentEnd,
     daysRemaining,
+    timeRemainingMs,
     limits: {
       users: req.tierConfig.users,
       assets: req.tierConfig.assets,

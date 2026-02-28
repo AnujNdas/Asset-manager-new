@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
-import HelpSupport from "../Inner_sections/Help-Support";
+import PlanTimer from "../Components/PlanTimer";
 
 const Menubar = ({ username, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -88,7 +88,8 @@ const Menubar = ({ username, toggleSidebar }) => {
               Asset
               <span>Management</span>
               <span>System</span>
-            </div> 
+            </div>
+            <PlanTimer /> 
         <div className="control-panel">
           <button onClick={handleHelpClick} style={{border : "none",background: "transparent"}}><FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} /></button>
           <NotificationButton />
