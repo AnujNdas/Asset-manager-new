@@ -223,7 +223,9 @@ const createCheckout = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Subscription creation error:", err);
+    console.error("Subscription creation error:");
+    console.error(err);
+    console.error(err.response?.data);
     return res.status(500).json({
       message: "Subscription creation failed",
     });
