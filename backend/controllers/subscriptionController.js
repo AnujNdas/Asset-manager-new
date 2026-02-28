@@ -24,6 +24,7 @@ const getTiers = (req, res) => {
     success: true,
     tiers: pricingTiers.map((tier) => ({
       id: tier.id,
+      key : tier.key,
       name: tier.name,
       users: tier.users,
       assets: tier.assets,
