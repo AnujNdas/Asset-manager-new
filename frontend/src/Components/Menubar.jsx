@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
-import PlanTimer from "../Components/PlanTimer";
+import PlanTimer from "./PlanTimer";
 
 const Menubar = ({ username, toggleSidebar }) => {
   const navigate = useNavigate();
