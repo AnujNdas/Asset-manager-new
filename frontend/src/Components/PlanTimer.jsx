@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSubscription } from "../Context/SubscriptionContext";
-import "./PlanTimer.css";
+import "../Component_styles/PlanTimer.css";
 
 const PlanTimer = () => {
   const { subscription, expired } = useSubscription();
