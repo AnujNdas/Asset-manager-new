@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getMySubscription } from "../api/subscription";
+import { getMySubscription } from "../ApiServices/Subscription";
 
 const SubscriptionContext = createContext();
 
