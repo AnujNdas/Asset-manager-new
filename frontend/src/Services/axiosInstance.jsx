@@ -51,10 +51,10 @@ axiosInstance.interceptors.response.use(
 //   localStorage.removeItem("auth");
 //   window.location.href = "/user/login";
 // }
-// if (status === 401 || status === 403) {
-//   console.warn("Auth error:", error.response?.data);
-//   // DO NOT redirect yet
-// }
+if (status === 401 || status === 403) {
+  console.warn("Auth error:", error.response?.data);
+  // DO NOT redirect yet
+}
 
 
     // 🔹 Normalize backend error message
