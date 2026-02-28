@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSubscription } from "../Context/SubscriptionContext";
+import "../Component_styles/PlanTimer.css";
 
 const PlanTimer = () => {
   const { subscription, expired } = useSubscription();
@@ -31,18 +32,32 @@ const PlanTimer = () => {
     return () => clearInterval(interval);
   }, [subscription]);
 
-  if (expired) return <div>Subscription Expired</div>;
   if (!subscription) return null;
-  
+
+  const statusClass = expired
+    ? "expired"
+    : subscription.isTrial
+    ? "trial"
+    : "active";
+
   return (
-    <div>
-      {subscription.isTrial ? "Trial ends in:" : "Renews in:"}
-      {timeLeft ? (
-        <h3>
-          {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-        </h3>
+    <div className={`plan-timer ${statusClass}`}>
+      {expired ? (
+        <span className="label">Subscription Expired</span>
       ) : (
-        <h3>Expired</h3>
+        <>
+          <span className="label">
+            {subscription.isTrial ? "Trial Ends In" : "Renews In"}
+          </span>
+
+          {timeLeft ? (
+            <div className="time">
+              {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+            </div>
+          ) : (
+            <div className="time expired-text">Expired</div>
+          )}
+        </>
       )}
     </div>
   );

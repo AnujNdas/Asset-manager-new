@@ -1,0 +1,67 @@
+.plan-timer {
+  position: relative;
+  display: inline-block;
+  padding: 14px 22px;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  background: rgba(20, 20, 30, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: "Segoe UI", sans-serif;
+  text-align: center;
+  min-width: 200px;
+  transition: all 0.3s ease;
+}
+
+/* Glow Base */
+.plan-timer::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 16px;
+  z-index: -1;
+  filter: blur(12px);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+/* Active Plan (Blue Glow) */
+.plan-timer.active::before {
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+}
+
+/* Trial Plan (Golden Glow) */
+.plan-timer.trial::before {
+  background: linear-gradient(45deg, #ffb347, #ffcc33);
+}
+
+/* Expired Plan (Red Glow) */
+.plan-timer.expired::before {
+  background: linear-gradient(45deg, #ff4e50, #ff0000);
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #bbb;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.time {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.expired-text {
+  color: #ff4e50;
+}
+
+/* Optional subtle pulse for urgency */
+.plan-timer.trial:hover,
+.plan-timer.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(0, 114, 255, 0.5);
+}
