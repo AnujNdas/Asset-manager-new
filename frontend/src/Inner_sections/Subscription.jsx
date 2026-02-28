@@ -106,11 +106,11 @@ const [error, setError] = useState(null);
       <div className="plans-grid">
         {tiers.map((tier) => (
           <PlanCard
-            key={tier.key}
+            key={tier.id}
             tier={tier}
             billing={billing}
             selected={tier.key === selectedTier}
-            onSelect={setSelectedTier}
+            onSelect={() => setSelectedTier(tier.key)}
           />
         ))}
       </div>
