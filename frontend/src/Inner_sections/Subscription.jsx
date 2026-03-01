@@ -6,7 +6,8 @@ import {
   previewPrice,
   createCheckout,
   verifyPayment,
-  getMySubscription
+  getMySubscription,
+  cancelAutoPay,
 } from "../Services/Subscription";
 import "../Page_styles/Subscription.css";
 
@@ -14,19 +15,34 @@ const Subscription = () => {
   const [tiers, setTiers] = useState([]);
   const [billing, setBilling] = useState("monthly");
   const [selectedTier, setSelectedTier] = useState(null);
+  const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(false);
-const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
+  const user = JSON.parse(localStorage.getItem("user")); // adjust if using context
+  const isAdmin = user?.role === "admin";
+
+  /* ----------------------------------
+     Load Tiers + Current Subscription
+  ---------------------------------- */
   useEffect(() => {
-    const loadTiers = async () => {
-      const res = await getTiers();
-      setTiers(res.tiers);
-      console.log(res.tiers);
-      setSelectedTier(res.tiers[0]?.key);
+    const init = async () => {
+      const tierRes = await getTiers();
+      setTiers(tierRes.tiers);
+      setSelectedTier(tierRes.tiers[0]?.key);
+
+      const subRes = await getMySubscription();
+      if (subRes?.subscription) {
+        setSubscription(subRes.subscription);
+      }
     };
-    loadTiers();
+
+    init();
   }, []);
 
+  /* ----------------------------------
+     Price Preview
+  ---------------------------------- */
   useEffect(() => {
     if (!selectedTier) return;
 
@@ -35,93 +51,137 @@ const [error, setError] = useState(null);
       billingCycle: billing,
     });
   }, [selectedTier, billing]);
+
+  /* ----------------------------------
+     Checkout
+  ---------------------------------- */
   const handleCheckout = async () => {
-  try {
-    setError(null);
-    setLoading(true);
+    try {
+      setError(null);
+      setLoading(true);
 
-    // 1️⃣ Create checkout session
-    const checkoutRes = await createCheckout({
-      tierKey: selectedTier,
-      billingCycle: billing,
-    });
+      const checkoutRes = await createCheckout({
+        tierKey: selectedTier,
+        billingCycle: billing,
+      });
 
-    const { subscriptionId, razorpayKey } = checkoutRes;
+      const { subscriptionId, razorpayKey } = checkoutRes;
 
-    if (!subscriptionId) {
-      throw new Error("Invalid checkout response");
-    }
-    if (!window.Razorpay) {
-  alert("Payment gateway not loaded.");
-  return;
-}
-    // 2️⃣ Configure Razorpay
-    const options = {
-      key: razorpayKey,
-      subscription_id: subscriptionId,
-      name: "Your App Name",
-      description: `${selectedTier.toUpperCase()} Plan`,
-      handler: async function (response) {
-        try {
-          // 3️⃣ Verify payment on backend
+      const options = {
+        key: razorpayKey,
+        subscription_id: subscriptionId,
+        name: "Your App Name",
+        description: `${selectedTier.toUpperCase()} Plan`,
+        handler: async function (response) {
           await verifyPayment(response);
-
-          // 4️⃣ Refresh subscription state
-          await getMySubscription();
-
-          alert("Payment successful. Subscription activated.");
-
-          window.location.reload();
-        } catch (err) {
-          console.error("Verification failed:", err);
-          alert("Payment verification failed.");
-        }
-      },
-      modal: {
-        ondismiss: function () {
-          setLoading(false);
+          const subRes = await getMySubscription();
+          setSubscription(subRes.subscription);
+          alert("Subscription activated.");
         },
-      },
-      theme: {
-        color: "#4f46e5",
-      },
-    };
+        modal: {
+          ondismiss: () => setLoading(false),
+        },
+      };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  } catch (err) {
-    console.error(err);
-    setError(err.userMessage || "Checkout failed");
-  } finally {
-    setLoading(false);
-  }
-};
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      setError(err.userMessage || "Checkout failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ----------------------------------
+     Cancel AutoPay
+  ---------------------------------- */
+  const handleCancelAutoPay = async () => {
+    if (!window.confirm("Cancel auto-renewal? Access remains until period ends.")) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await cancelAutoPay();
+      const subRes = await getMySubscription();
+      setSubscription(subRes.subscription);
+      alert("AutoPay cancelled. Plan remains active until expiry.");
+    } catch (err) {
+      alert("Failed to cancel AutoPay.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const activeTier = subscription?.tier;
+  const isActive = subscription?.status === "active";
+
   return (
     <div className="subscription-page">
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
 
+      {subscription && (
+        <div className="current-plan-box">
+          <strong>Current Plan:</strong>{" "}
+          {activeTier?.toUpperCase() || "None"}
+          <br />
+          <strong>Status:</strong> {subscription.status}
+          <br />
+          <strong>Valid Until:</strong>{" "}
+          {subscription.currentEnd
+            ? new Date(subscription.currentEnd).toLocaleDateString()
+            : "—"}
+          <br />
+          {subscription.cancelAtPeriodEnd && (
+            <span className="cancel-warning">
+              AutoPay cancelled. Ends at period expiry.
+            </span>
+          )}
+        </div>
+      )}
+
       <BillingToggle billing={billing} setBilling={setBilling} />
 
-<div className="plans-grid">
-  {tiers.map((tier) => (
-    <PlanCard
-      key={tier.key}
-      tier={tier}   // ✅ pass full object
-      billing={billing}
-      selected={tier.key === selectedTier}
-      onSelect={() => setSelectedTier(tier.key)}
-    />
-  ))}
-</div>
+      <div className="plans-grid">
+        {tiers.map((tier) => (
+          <PlanCard
+            key={tier.key}
+            tier={tier}
+            billing={billing}
+            selected={tier.key === selectedTier}
+            isActive={tier.key === activeTier}
+            isAdmin={isAdmin}
+            onSelect={() => setSelectedTier(tier.key)}
+          />
+        ))}
+      </div>
 
-<button
-  className="btn primary proceed"
-  onClick={handleCheckout}
-  disabled={loading}
->
-  {loading ? "Processing..." : "Proceed to Checkout"}
-</button>
+      {/* Checkout Button */}
+      {(!isActive || selectedTier !== activeTier) && (
+        <button
+          className="btn primary proceed"
+          onClick={handleCheckout}
+          disabled={loading}
+        >
+          {loading ? "Processing..." : "Proceed to Checkout"}
+        </button>
+      )}
+
+      {/* Cancel AutoPay - Admin Only */}
+      {isAdmin &&
+        isActive &&
+        !subscription?.cancelAtPeriodEnd && (
+          <button
+            className="btn danger cancel-autopay"
+            onClick={handleCancelAutoPay}
+            disabled={loading}
+          >
+            Cancel AutoPay
+          </button>
+        )}
+
+      {error && <p className="error">{error}</p>}
     </div>
   );
 };

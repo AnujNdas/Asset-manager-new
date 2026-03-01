@@ -6,6 +6,7 @@ const {
   handleWebhook,
   getTiers,
   verifyPayment,
+  cancelAutoPay,
 } = require("../controllers/subscriptionController");
 const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
 const router = express.Router();
@@ -56,6 +57,13 @@ router.post(
   authenticateToken(),
   verifyPayment
 );
+router.post(
+  "/cancel-auto-pay",
+  authenticateToken(),
+  requireActiveSubscription,
+  cancelAutoPay
+);
+
 router.post("/webhook", handleWebhook);
 
 module.exports = router;

@@ -6,25 +6,24 @@ const Subscription = require("../models/Subscription");
 
 const isProduction = process.env.NODE_ENV === "production";
 
-/* -----------------------------------------
+/* ------------------------------------------------
    Utility: Resolve Razorpay Plan ID
------------------------------------------- */
+------------------------------------------------ */
 function getPlanId(tierKey, billingCycle) {
   const plan = razorpayPlans[tierKey]?.[billingCycle];
   if (!plan) return null;
-
   return isProduction ? plan.live : plan.test;
 }
 
-/* -----------------------------------------
-   Get Pricing Tiers (UI)
------------------------------------------- */
+/* ------------------------------------------------
+   Get Pricing Tiers
+------------------------------------------------ */
 const getTiers = (req, res) => {
   return res.json({
     success: true,
     tiers: pricingTiers.map((tier) => ({
       id: tier.id,
-      key : tier.key,
+      key: tier.key,
       name: tier.name,
       users: tier.users,
       assets: tier.assets,
@@ -39,9 +38,9 @@ const getTiers = (req, res) => {
   });
 };
 
-/* -----------------------------------------
-   Preview Price (UI Confirmation)
------------------------------------------- */
+/* ------------------------------------------------
+   Preview Price
+------------------------------------------------ */
 const previewPrice = (req, res) => {
   const { tierId, billingCycle } = req.body;
 
@@ -52,11 +51,8 @@ const previewPrice = (req, res) => {
   }
 
   const tier = pricingTiers.find((t) => t.key === tierId);
-
   if (!tier) {
-    return res.status(400).json({
-      error: "Invalid tier selected",
-    });
+    return res.status(400).json({ error: "Invalid tier selected" });
   }
 
   const amount =
@@ -75,10 +71,74 @@ const previewPrice = (req, res) => {
   });
 };
 
-const verifyPayment = async (req, res) => {
+/* ------------------------------------------------
+   Create Razorpay Subscription
+------------------------------------------------ */
+const createCheckout = async (req, res) => {
   try {
     const orgId = req.user.organizationId;
+    const { tierKey, billingCycle } = req.body;
 
+    if (!tierKey || !billingCycle) {
+      return res.status(400).json({ message: "Missing parameters" });
+    }
+
+    const planId = getPlanId(tierKey, billingCycle);
+    if (!planId) {
+      return res.status(400).json({ message: "Invalid plan selection" });
+    }
+
+    const subscription = await Subscription.findOne({
+      organizationId: orgId,
+    });
+
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    if (subscription.status === "active") {
+      return res.status(400).json({
+        message: "Already on active plan",
+      });
+    }
+
+    const razorpaySubscription =
+      await razorpay.subscriptions.create({
+        plan_id: planId,
+        customer_notify: 1,
+        total_count: billingCycle === "monthly" ? 60 : 5,
+      });
+
+    subscription.razorpaySubscriptionId =
+      razorpaySubscription.id;
+    subscription.razorpayPlanId = planId;
+    subscription.tier = tierKey;
+    subscription.billingCycle = billingCycle;
+    subscription.status = "created"; // explicit lifecycle state
+
+    await subscription.save();
+
+    return res.json({
+      success: true,
+      subscriptionId: razorpaySubscription.id,
+      razorpayKey: process.env.RAZORPAY_KEY_ID,
+    });
+  } catch (err) {
+    console.error("Checkout error:", err);
+    return res.status(500).json({
+      message: "Subscription creation failed",
+    });
+  }
+};
+
+/* ------------------------------------------------
+   Verify Payment (ONLY verifies signature)
+   Activation handled by webhook
+------------------------------------------------ */
+const verifyPayment = async (req, res) => {
+  try {
     const {
       razorpay_payment_id,
       razorpay_subscription_id,
@@ -95,7 +155,6 @@ const verifyPayment = async (req, res) => {
       });
     }
 
-    // 🔐 Generate signature
     const generatedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(
@@ -109,80 +168,25 @@ const verifyPayment = async (req, res) => {
       });
     }
 
-    // 🔎 Find subscription in DB
-    const subscription = await Subscription.findOne({
-      razorpaySubscriptionId: razorpay_subscription_id,
-      organizationId: orgId,
-    });
-
-    if (!subscription) {
-      return res.status(404).json({
-        message: "Subscription not found",
-      });
-    }
-
-    // 🚫 Prevent double activation
-    if (subscription.status === "active") {
-      return res.json({
-        message: "Subscription already active",
-      });
-    }
-
-    // 🟢 Activate subscription
-    subscription.status = "active";
-    subscription.currentStart = new Date();
-
-    const end = new Date();
-
-    if (subscription.billingCycle === "monthly") {
-      end.setMonth(end.getMonth() + 1);
-    } else {
-      end.setFullYear(end.getFullYear() + 1);
-    }
-
-    subscription.currentEnd = end;
-    subscription.lastPaymentId = razorpay_payment_id;
-
-    await subscription.save();
-
     return res.json({
       success: true,
-      message: "Subscription activated",
+      message: "Payment verified. Awaiting activation.",
     });
   } catch (err) {
-    console.error("Payment verification failed:", err);
+    console.error("Verification failed:", err);
     return res.status(500).json({
       message: "Verification process failed",
     });
   }
 };
-/* -----------------------------------------
-   Create Razorpay Subscription
------------------------------------------- */
-const createCheckout = async (req, res) => {
+
+/* ------------------------------------------------
+   Cancel Auto Pay (Cancel at Period End)
+------------------------------------------------ */
+const cancelAutoPay = async (req, res) => {
   try {
     const orgId = req.user.organizationId;
-    const { tierKey, billingCycle } = req.body;
 
-    if (!tierKey || !billingCycle) {
-      return res.status(400).json({ message: "Missing parameters" });
-    }
-
-    if (!["base", "grow", "omni"].includes(tierKey)) {
-      return res.status(400).json({ message: "Invalid tier" });
-    }
-
-    if (!["monthly", "yearly"].includes(billingCycle)) {
-      return res.status(400).json({ message: "Invalid billing cycle" });
-    }
-
-    const planId = getPlanId(tierKey, billingCycle);
-
-    if (!planId) {
-      return res.status(400).json({ message: "Invalid plan selection" });
-    }
-
-    // 🔎 Find existing org subscription (trial one)
     const subscription = await Subscription.findOne({
       organizationId: orgId,
     });
@@ -193,137 +197,125 @@ const createCheckout = async (req, res) => {
       });
     }
 
-    if (subscription.status === "active") {
+    if (!subscription.razorpaySubscriptionId) {
       return res.status(400).json({
-        message: "Already on an active paid plan",
+        message: "No Razorpay subscription attached",
       });
     }
 
-    // 🔥 Create Razorpay subscription
-const razorpaySubscription =
-  await razorpay.subscriptions.create({
-    plan_id: planId,
-    customer_notify: 1,
-    total_count: billingCycle === "monthly" ? 60 : 5,
-  });
+    if (subscription.status === "cancelled") {
+      return res.json({
+        success: true,
+        message: "Subscription already cancelled",
+      });
+    }
 
-    // 📝 Update existing document
-    subscription.razorpaySubscriptionId =
-      razorpaySubscription.id;
-    subscription.razorpayPlanId = planId;
-    subscription.tier = tierKey;
-    subscription.billingCycle = billingCycle;
-    // subscription.status = "created";
+    if (!["active", "created"].includes(subscription.status)) {
+      return res.status(400).json({
+        message: "No cancellable subscription found",
+      });
+    }
 
+    if (subscription.cancelAtPeriodEnd) {
+      return res.json({
+        success: true,
+        message: "Auto-pay already scheduled for cancellation",
+      });
+    }
+
+    await razorpay.subscriptions.cancel(
+      subscription.razorpaySubscriptionId,
+      { cancel_at_cycle_end: 1 }
+    );
+
+    subscription.cancelAtPeriodEnd = true;
     await subscription.save();
 
     return res.json({
       success: true,
-      subscriptionId: razorpaySubscription.id,
-      razorpayKey: process.env.RAZORPAY_KEY_ID,
+      message:
+        "Auto-pay cancelled. Access valid until billing period ends.",
     });
-
   } catch (err) {
-    console.error("Subscription creation error:");
-    console.error(err);
-    console.error(err.response?.data);
+    console.error("Cancel auto-pay error:", err);
     return res.status(500).json({
-      message: "Subscription creation failed",
+      message: "Failed to cancel auto-pay",
     });
   }
 };
 
-/* -----------------------------------------
-   Razorpay Webhook Handler
------------------------------------------- */
+/* ------------------------------------------------
+   Razorpay Webhook (Single Source of Truth)
+------------------------------------------------ */
 const handleWebhook = async (req, res) => {
-  console.log("Is Buffer:", Buffer.isBuffer(req.body));
-
   try {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
     const signature = req.headers["x-razorpay-signature"];
 
-    // 1️⃣ Verify signature using RAW buffer
     const expectedSignature = crypto
       .createHmac("sha256", webhookSecret)
       .update(req.body)
       .digest("hex");
 
     if (signature !== expectedSignature) {
-      console.log("❌ Signature mismatch");
       return res.status(400).send("Invalid signature");
     }
 
-    // 2️⃣ Parse JSON AFTER verification
     const parsedBody = JSON.parse(req.body.toString());
+    const event = parsedBody.event;
+    const entity = parsedBody.payload.subscription?.entity;
 
-const event = parsedBody.event;
-const entity = parsedBody.payload.subscription?.entity;
+    if (!entity) {
+      return res.status(200).json({ received: true });
+    }
 
-if (!entity) {
-  return res.status(200).json({ received: true });
-}
+    const subscription = await Subscription.findOne({
+      razorpaySubscriptionId: entity.id,
+    });
 
-const subscriptionId = entity.id;
+    if (!subscription) {
+      return res.status(200).json({ received: true });
+    }
 
-const subscription = await Subscription.findOne({
-  razorpaySubscriptionId: subscriptionId,
-});
+    /* Activation */
+    if (event === "subscription.activated") {
+      subscription.status = "active";
+      subscription.currentStart = new Date(
+        entity.current_start * 1000
+      );
+      subscription.currentEnd = new Date(
+        entity.current_end * 1000
+      );
+      subscription.pastDueAt = null;
+      await subscription.save();
+    }
 
-if (!subscription) {
-  console.log("Subscription not found in DB");
-  return res.status(200).json({ received: true });
-}
+    /* Renewal */
+    if (event === "subscription.charged") {
+      subscription.status = "active";
+      subscription.currentStart = new Date(
+        entity.current_start * 1000
+      );
+      subscription.currentEnd = new Date(
+        entity.current_end * 1000
+      );
+      subscription.pastDueAt = null;
+      await subscription.save();
+    }
 
-/* -----------------------------------------
-   ACTIVATION (First Payment Success)
------------------------------------------- */
-if (event === "subscription.activated") {
-  subscription.status = "active";
-  subscription.currentStart = new Date(
-    entity.current_start * 1000
-  );
-  subscription.currentEnd = new Date(
-    entity.current_end * 1000
-  );
+    /* Cancellation */
+    if (event === "subscription.cancelled") {
+      subscription.status = "cancelled";
+      subscription.cancelAtPeriodEnd = false;
+      await subscription.save();
+    }
 
-  await subscription.save();
-  console.log("✅ Subscription activated");
-}
-
-/* -----------------------------------------
-   RECURRING PAYMENT SUCCESS
------------------------------------------- */
-if (event === "subscription.charged") {
-  subscription.status = "active";
-  subscription.currentStart = new Date(
-    entity.current_start * 1000
-  );
-  subscription.currentEnd = new Date(
-    entity.current_end * 1000
-  );
-
-  await subscription.save();
-  console.log("🔁 Subscription renewed");
-}
-
-/* -----------------------------------------
-   CANCELLATION
------------------------------------------- */
-if (event === "subscription.cancelled") {
-  subscription.status = "cancelled";
-  await subscription.save();
-  console.log("❌ Subscription cancelled");
-}
-
-/* -----------------------------------------
-   PAYMENT FAILURE
------------------------------------------- */
-if (event === "payment.failed") {
-  subscription.status = "past_due";
-  await subscription.save();
-  console.log("⚠️ Payment failed");
-}
+    /* Payment Failure */
+    if (event === "payment.failed") {
+      subscription.status = "past_due";
+      subscription.pastDueAt = new Date();
+      await subscription.save();
+    }
 
     return res.status(200).json({ received: true });
 
@@ -337,6 +329,7 @@ module.exports = {
   getTiers,
   previewPrice,
   createCheckout,
-  handleWebhook,
   verifyPayment,
+  cancelAutoPay,
+  handleWebhook,
 };

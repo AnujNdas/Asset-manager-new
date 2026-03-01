@@ -1,12 +1,10 @@
 const Subscription = require("../models/Subscription");
 const pricingTiers = require("../config/pricingTiers");
 const mongoose = require("mongoose");
+
 const requireActiveSubscription = async (req, res, next) => {
   try {
     const orgId = req.user.organizationId;
-    console.log(
-      `[SUB CHECK] Org: ${orgId}`
-    );
 
     if (!orgId) {
       return res.status(403).json({
@@ -14,9 +12,9 @@ const requireActiveSubscription = async (req, res, next) => {
       });
     }
 
- const subscription = await Subscription.findOne({
-  organizationId: new mongoose.Types.ObjectId(orgId),
-});
+    const subscription = await Subscription.findOne({
+      organizationId: new mongoose.Types.ObjectId(orgId),
+    });
 
     if (!subscription) {
       return res.status(403).json({
@@ -26,92 +24,122 @@ const requireActiveSubscription = async (req, res, next) => {
 
     const now = new Date();
 
-    /* ----------------------------
-       TRIAL EXPIRY CHECK
-    ----------------------------- */
-    if (subscription.status === "trialing" && subscription.trialEnd) {
-      if (subscription.trialEnd < now) {
-        subscription.status = "expired";
-        await subscription.save();
-
-        return res.status(402).json({
-  error: "subscription_required",
-  reason: "trial_expired",
-});
-      }
+    /* --------------------------------------------
+       1️⃣ TRIAL ACCESS
+    -------------------------------------------- */
+    if (
+      subscription.status === "trialing" &&
+      subscription.trialEnd &&
+      subscription.trialEnd > now
+    ) {
+      return allowAccess(subscription, "omni", req, res, next);
     }
 
-    /* ----------------------------
-       PAID PLAN EXPIRY CHECK
-    ----------------------------- */
+    /* --------------------------------------------
+       2️⃣ ACTIVE (VALID PERIOD)
+    -------------------------------------------- */
     if (
       subscription.status === "active" &&
       subscription.currentEnd &&
-      subscription.currentEnd < now
+      subscription.currentEnd > now
     ) {
-      subscription.status = "expired";
-      await subscription.save();
-
-      return res.status(402).json({
-  error: "subscription_required",
-  reason: "plan_expired",
-});
+      return allowAccess(
+        subscription,
+        subscription.tier,
+        req,
+        res,
+        next
+      );
     }
 
-    /* ----------------------------
-       GRACE PERIOD FOR FAILED PAYMENTS
-    ----------------------------- */
-    if (subscription.status === "past_due") {
-      const graceEnd = new Date(subscription.updatedAt);
+    /* --------------------------------------------
+       3️⃣ PAST DUE WITH 3-DAY GRACE
+    -------------------------------------------- */
+    if (
+      subscription.status === "past_due" &&
+      subscription.pastDueAt
+    ) {
+      const graceEnd = new Date(subscription.pastDueAt);
       graceEnd.setDate(graceEnd.getDate() + 3);
 
-      if (now >= graceEnd) {
-        return res.status(402).json({
-  error: "subscription_required",
-  reason: "payment_overdue",
-});
+      if (now < graceEnd) {
+        return allowAccess(
+          subscription,
+          subscription.tier,
+          req,
+          res,
+          next
+        );
       }
-    }
 
-    /* ----------------------------
-       STATUS VALIDATION
-    ----------------------------- */
-    if (!["active", "trialing", "past_due"].includes(subscription.status)) {
-      return res.status(403).json({
-        error: "No active subscription",
+      return res.status(402).json({
+        error: "subscription_required",
+        reason: "payment_overdue",
       });
     }
 
-    /* ----------------------------
-       EFFECTIVE TIER RESOLUTION
-    ----------------------------- */
-const effectiveTierName =
-  subscription.status === "trialing"
-    ? "omni"
-    : subscription.tier;
+    /* --------------------------------------------
+       4️⃣ TRIAL EXPIRED
+    -------------------------------------------- */
+    if (
+      subscription.status === "trialing" &&
+      subscription.trialEnd &&
+      subscription.trialEnd <= now
+    ) {
+      return res.status(402).json({
+        error: "subscription_required",
+        reason: "trial_expired",
+      });
+    }
 
-const tierConfig = pricingTiers.find(
-  (t) => t.key === effectiveTierName
-);
+    /* --------------------------------------------
+       5️⃣ PLAN EXPIRED (Hard Stop)
+    -------------------------------------------- */
+    if (
+      subscription.currentEnd &&
+      subscription.currentEnd <= now
+    ) {
+      return res.status(402).json({
+        error: "subscription_required",
+        reason: "plan_expired",
+      });
+    }
 
-if (!tierConfig) {
-  console.error("Invalid tier config:", effectiveTierName);
-  return res.status(500).json({
-    error: "Invalid subscription tier configuration",
-  });
-}
+    /* --------------------------------------------
+       6️⃣ EVERYTHING ELSE
+    -------------------------------------------- */
+    return res.status(402).json({
+      error: "subscription_required",
+      reason: "no_active_subscription",
+    });
 
-    req.subscription = subscription;
-    req.tierConfig = tierConfig;
-    req.effectiveTier = tierConfig.name;
-
-    next();
   } catch (err) {
-    console.error("Subscription check failed:", err.message);
+    console.error("Subscription check failed:", err);
     return res.status(500).json({
       error: "Subscription validation error",
     });
   }
 };
+
+/* --------------------------------------------
+   Access Resolver Helper
+-------------------------------------------- */
+function allowAccess(subscription, tierKey, req, res, next) {
+  const tierConfig = pricingTiers.find(
+    (t) => t.key === tierKey
+  );
+
+  if (!tierConfig) {
+    return res.status(500).json({
+      error: "Invalid subscription tier configuration",
+    });
+  }
+
+  req.subscription = subscription;
+  req.tierConfig = tierConfig;
+  req.effectiveTier = tierConfig.name;
+
+  return next();
+}
 
 module.exports = requireActiveSubscription;

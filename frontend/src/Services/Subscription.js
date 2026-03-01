@@ -48,3 +48,8 @@ export const getMySubscription = async () => {
   const res = await axiosInstance.get("/subscription/me");
   return res.data;
 };
+
+export const cancelAutoPay = async () => {
+  const res = await axiosInstance.post("/subscription/cancel-auto-pay");
+  return res.data;
+};

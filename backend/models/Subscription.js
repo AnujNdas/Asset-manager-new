@@ -52,6 +52,9 @@ status: {
       type: Boolean,
       default: false,
     },
+    pastDueAt: {
+  type: Date,
+}
   },
   { timestamps: true }
 );
