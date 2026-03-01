@@ -21,23 +21,24 @@ function getPlanId(tierKey, billingCycle) {
 const getTiers = (req, res) => {
   return res.json({
     success: true,
-    tiers: pricingTiers.map((tier) => ({
-      id: tier.id,
-      key: tier.key,
-      name: tier.name,
-      users: tier.users,
-      assets: tier.assets,
-      features: tier.features,
-      popular: tier.popular,
-      prices: {
-        monthly: tier.priceMonthly,
-        yearly: tier.priceYearly,
-      },
-      currency: "USD",
-    })),
+    tiers: pricingTiers
+      .filter((tier) => !tier.internal) // 🔥 hide internal tiers
+      .map((tier) => ({
+        id: tier.id,
+        key: tier.key,
+        name: tier.name,
+        users: tier.users,
+        assets: tier.assets,
+        features: tier.features,
+        popular: tier.popular,
+        prices: {
+          monthly: tier.priceMonthly,
+          yearly: tier.priceYearly,
+        },
+        currency: tier.currency,
+      })),
   });
 };
-
 /* ------------------------------------------------
    Preview Price
 ------------------------------------------------ */
@@ -51,8 +52,11 @@ const previewPrice = (req, res) => {
   }
 
   const tier = pricingTiers.find((t) => t.key === tierId);
-  if (!tier) {
-    return res.status(400).json({ error: "Invalid tier selected" });
+
+  if (!tier || tier.internal) {
+    return res.status(400).json({
+      error: "Invalid tier selected",
+    });
   }
 
   const amount =
@@ -66,11 +70,10 @@ const previewPrice = (req, res) => {
       tierId: tier.id,
       billingCycle,
       amount,
-      currency: "USD",
+      currency: tier.currency,
     },
   });
 };
-
 /* ------------------------------------------------
    Create Razorpay Subscription
 ------------------------------------------------ */

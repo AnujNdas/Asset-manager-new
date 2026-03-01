@@ -1,6 +1,21 @@
 // config/pricingTiers.js
 module.exports = [
   {
+  id: "tier_trial_internal",
+  key: "trial",
+  name: "Trial",
+  users: 10,              // match Base limits (recommended)
+  assets: 1000,
+  priceMonthly: 0,
+  priceYearly: 0,
+  currency: "USD",
+  popular: false,
+  internal: true,        // 🔥 important flag
+  features: [
+    "Full Base Plan Access (7 Days)",
+  ],
+},
+  {
     id: "tier_10_1000",
     key: "base",
     name: "Base",
