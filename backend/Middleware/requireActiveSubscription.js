@@ -85,23 +85,21 @@ const requireActiveSubscription = async (req, res, next) => {
     /* ----------------------------
        EFFECTIVE TIER RESOLUTION
     ----------------------------- */
-    const effectiveTierName =
-      subscription.status === "trialing"
-        ? "Omni"
-        : subscription.tier;
+const effectiveTierName =
+  subscription.status === "trialing"
+    ? "omni"
+    : subscription.tier;
 
-    const tierConfig = pricingTiers.find(
-      (t) =>
-        t.name.toLowerCase() ===
-        effectiveTierName.toLowerCase()
-    );
+const tierConfig = pricingTiers.find(
+  (t) => t.key === effectiveTierName
+);
 
-    if (!tierConfig) {
-      console.error("Invalid tier config:", effectiveTierName);
-      return res.status(500).json({
-        error: "Invalid subscription tier configuration",
-      });
-    }
+if (!tierConfig) {
+  console.error("Invalid tier config:", effectiveTierName);
+  return res.status(500).json({
+    error: "Invalid subscription tier configuration",
+  });
+}
 
     req.subscription = subscription;
     req.tierConfig = tierConfig;
