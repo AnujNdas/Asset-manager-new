@@ -77,21 +77,36 @@ const requireActiveSubscription = async (req, res, next) => {
         reason: "payment_overdue",
       });
     }
+/* --------------------------------------------
+   1️⃣ TRIAL ACCESS
+-------------------------------------------- */
+if (
+  subscription.status === "trialing" &&
+  subscription.currentEnd &&
+  subscription.currentEnd > now
+) {
+  return allowAccess(
+    subscription,
+    subscription.tier, // ← important fix
+    req,
+    res,
+    next
+  );
+}
 
-    /* --------------------------------------------
-       4️⃣ TRIAL EXPIRED
-    -------------------------------------------- */
-    if (
-      subscription.status === "trialing" &&
-      subscription.trialEnd &&
-      subscription.trialEnd <= now
-    ) {
-      return res.status(402).json({
-        error: "subscription_required",
-        reason: "trial_expired",
-      });
-    }
-
+/* --------------------------------------------
+   4️⃣ TRIAL EXPIRED
+-------------------------------------------- */
+if (
+  subscription.status === "trialing" &&
+  subscription.currentEnd &&
+  subscription.currentEnd <= now
+) {
+  return res.status(402).json({
+    error: "subscription_required",
+    reason: "trial_expired",
+  });
+}
     /* --------------------------------------------
        5️⃣ PLAN EXPIRED (Hard Stop)
     -------------------------------------------- */
