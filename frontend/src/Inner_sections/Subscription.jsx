@@ -103,17 +103,17 @@ const [error, setError] = useState(null);
 
       <BillingToggle billing={billing} setBilling={setBilling} />
 
-      <div className="plans-grid">
-        {tiers.map((tier) => (
-          <PlanCard
-            key={tier.key}
-            tier={tier.id}
-            billing={billing}
-            selected={tier.key === selectedTier}
-            onSelect={() => setSelectedTier(tier.key)}
-          />
-        ))}
-      </div>
+<div className="plans-grid">
+  {tiers.map((tier) => (
+    <PlanCard
+      key={tier.key}
+      tier={tier}   // ✅ pass full object
+      billing={billing}
+      selected={tier.key === selectedTier}
+      onSelect={() => setSelectedTier(tier.key)}
+    />
+  ))}
+</div>
 
 <button
   className="btn primary proceed"
