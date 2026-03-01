@@ -54,7 +54,13 @@ status: {
     },
     pastDueAt: {
   type: Date,
-}
+},
+pendingUpgrade: {
+  tier: String,
+  billingCycle: String,
+  razorpayPlanId: String,
+  razorpaySubscriptionId: String,
+},
   },
   { timestamps: true }
 );

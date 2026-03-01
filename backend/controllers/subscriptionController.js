@@ -101,9 +101,10 @@ const createCheckout = async (req, res) => {
       });
     }
 
-    if (subscription.status === "active") {
+    // Prevent duplicate pending upgrade
+    if (subscription.pendingUpgrade?.razorpaySubscriptionId) {
       return res.status(400).json({
-        message: "Already on active plan",
+        message: "Upgrade already in progress",
       });
     }
 
@@ -114,12 +115,13 @@ const createCheckout = async (req, res) => {
         total_count: billingCycle === "monthly" ? 60 : 5,
       });
 
-    subscription.razorpaySubscriptionId =
-      razorpaySubscription.id;
-    subscription.razorpayPlanId = planId;
-    subscription.tier = tierKey;
-    subscription.billingCycle = billingCycle;
-    subscription.status = "created"; // explicit lifecycle state
+    // 🔥 DO NOT TOUCH ACTIVE/TRIAL DATA
+    subscription.pendingUpgrade = {
+      tier: tierKey,
+      billingCycle,
+      razorpayPlanId: planId,
+      razorpaySubscriptionId: razorpaySubscription.id,
+    };
 
     await subscription.save();
 
@@ -128,6 +130,7 @@ const createCheckout = async (req, res) => {
       subscriptionId: razorpaySubscription.id,
       razorpayKey: process.env.RAZORPAY_KEY_ID,
     });
+
   } catch (err) {
     console.error("Checkout error:", err);
     return res.status(500).json({
@@ -135,7 +138,6 @@ const createCheckout = async (req, res) => {
     });
   }
 };
-
 /* ------------------------------------------------
    Verify Payment (ONLY verifies signature)
    Activation handled by webhook
