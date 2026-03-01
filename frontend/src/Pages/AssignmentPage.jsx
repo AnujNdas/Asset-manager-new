@@ -55,6 +55,7 @@ const AssignmentPage = () => {
   const fetchCategories = async () => {
     try {
       const res = await getInStockCategorySummary();
+      console.log("Category summary", res.data);
       const data = res.data || [];
       setCategories(data);
       setCurrentPage(1); // reset pagination
