@@ -51,7 +51,7 @@ const previewPrice = (req, res) => {
     });
   }
 
-  const tier = pricingTiers.find((t) => t.id === tierId);
+  const tier = pricingTiers.find((t) => t.key === tierId);
 
   if (!tier) {
     return res.status(400).json({
