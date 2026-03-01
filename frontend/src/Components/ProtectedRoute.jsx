@@ -31,10 +31,17 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/user/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(decoded.role)) {
-    return <Navigate to="/unauthorized" replace />;
-  }
-
+if (allowedRoles && !allowedRoles.includes(decoded.role)) {
+  return (
+    <Navigate
+      to="/unauthorized"
+      state={{
+        message: `Your role (${decoded.role}) is not allowed to access this page.`,
+      }}
+      replace
+    />
+  );
+}
   // ✅ THIS IS THE KEY LINE
   return <Outlet />;
 };

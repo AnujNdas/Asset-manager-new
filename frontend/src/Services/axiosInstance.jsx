@@ -44,24 +44,19 @@ axiosInstance.interceptors.response.use(
     progressController.stop();
 
     const status = error.response?.status;
-    const currentPath = window.location.pathname;
 
-    // 🔐 Auth handling (ONBOARDING SAFE)
-// if (status === 401 || status === 403) {
-//   localStorage.removeItem("auth");
-//   window.location.href = "/user/login";
-// }
-if (status === 401 || status === 403) {
-  console.warn("Auth error:", error.response?.data);
-  // DO NOT redirect yet
-}
-
-
-    // 🔹 Normalize backend error message
     error.userMessage =
       error.response?.data?.error ||
       error.response?.data?.message ||
       "Something went wrong. Please try again.";
+
+    if (status === 401 || status === 403) {
+      console.warn("Auth error:", error.userMessage);
+
+      window.location.href = `/unauthorized?message=${encodeURIComponent(
+        error.userMessage
+      )}`;
+    }
 
     return Promise.reject(error);
   }
