@@ -213,7 +213,7 @@ const razorpaySubscription =
     subscription.razorpayPlanId = planId;
     subscription.tier = tierKey;
     subscription.billingCycle = billingCycle;
-    subscription.status = "created";
+    // subscription.status = "created";
 
     await subscription.save();
 
