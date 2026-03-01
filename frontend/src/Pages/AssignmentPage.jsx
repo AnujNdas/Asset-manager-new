@@ -114,6 +114,7 @@ const AssignmentPage = () => {
   const handleCategorySelect = async (category) => {
     try {
       const res = await getInStockAssetsByCategory(category.category);
+      console.log("Assets for category", category.category, res.data);
       setWizardData(prev => ({
         ...prev,
         category,
