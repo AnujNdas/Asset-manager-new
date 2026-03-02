@@ -4,6 +4,32 @@ import "../Page_styles/AdminDashboard.css";
 import { useCurrency } from "../Context/CurrencyContext";
 import { convertFromBase, CURRENCY_SYMBOLS } from "../utils/currency"; // adjust path
 import CurrencyFilter from "../Components/CurrencyFilter";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  ZoomableGroup
+} from "react-simple-maps";
+import { scaleLinear } from "d3-scale";
+import {  useMemo } from "react";
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+
+countries.registerLocale(enLocale);
+
+const geoUrl =
+  "https://unpkg.com/world-atlas@2.0.2/countries-110m.json";
+
+const COUNTRY_NAME_MAP = {
+  USA: "United States of America",
+  "United states": "United States of America",
+  "United States": "United States of America",
+  "United kingdom": "United Kingdom",
+  UK: "United Kingdom"
+};
+
+
+
 const AdminDashboard = () => {
   const { currency } = useCurrency();
   console.log("AdminDashboard mounted");
@@ -114,13 +140,14 @@ useEffect(() => {
           currency={currency}
         />
 
-        <AnalyticsCard
-          title="Top Locations"
-          items={analytics.topLocations}
-          labelKey="name"
-          valueKey="total"
-        />
+
       </div>
+      <div className="section-grid">
+      <TopLocationsMap
+  title="Top Locations"
+  items={analytics.topLocations}
+/>
+</div>
     </div>
   );
 };
@@ -200,4 +227,201 @@ const AnalyticsCard = ({
     </div>
   );
 };
+const resolveCountryName = (raw) => {
+  if (!raw) return null;
 
+  const value = raw.trim();
+
+  // 1️⃣ Try ISO alpha-2 (US, ES, GB)
+  if (value.length === 2) {
+    const name = countries.getName(value.toUpperCase(), "en");
+    if (name) return name;
+  }
+
+  // 2️⃣ Try ISO alpha-3 (USA, ESP, GBR)
+  if (value.length === 3) {
+    const alpha2 = countries.alpha3ToAlpha2(value.toUpperCase());
+    if (alpha2) {
+      return countries.getName(alpha2, "en");
+    }
+  }
+
+  // 3️⃣ Try full country name match
+  const allCountries = countries.getNames("en");
+
+  const match = Object.values(allCountries).find(
+    country =>
+      country.toLowerCase() === value.toLowerCase()
+  );
+
+  if (match) return match;
+
+  return null; // Not a country
+};
+const TopLocationsMap = ({ title, items }) => {
+  const [tooltip, setTooltip] = useState(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+
+  /* ================= NORMALIZE LOCATION DATA ================= */
+
+const locationMap = useMemo(() => {
+  const map = {};
+
+  items.forEach(item => {
+    if (!item?.name) return;
+
+    const parts = item.name.split(",");
+
+    let detectedCountry = null;
+
+    for (let part of parts) {
+      const resolved = resolveCountryName(part);
+      if (resolved) {
+        detectedCountry = resolved;
+        break;
+      }
+    }
+
+    if (!detectedCountry) return; // Skip if no real country found
+
+    // Special case: Map expects full official name
+    if (detectedCountry === "United States") {
+      detectedCountry = "United States of America";
+    }
+
+    map[detectedCountry] =
+      (map[detectedCountry] || 0) + (item.total || 0);
+  });
+
+  return map;
+}, [items]);
+
+  const values = Object.values(locationMap);
+  const maxValue = values.length > 0 ? Math.max(...values) : 0;
+  const minValue = values.length > 0 ? Math.min(...values) : 0;
+
+  const colorScale = scaleLinear()
+    .domain([0, maxValue || 1])
+    .range(["#e8f0fe", "#1a73e8"]);
+
+  /* ================= HANDLERS ================= */
+
+  const handleMouseMove = e => {
+    setPosition({
+      x: e.clientX + 10,
+      y: e.clientY + 10
+    });
+  };
+
+  const zoomIn = () => setZoom(prev => Math.min(prev * 1.5, 4));
+  const zoomOut = () => setZoom(prev => Math.max(prev / 1.5, 1));
+  const resetZoom = () => setZoom(1);
+
+  /* ================= RENDER ================= */
+
+  return (
+    <div className="card">
+      <h3 className="card-heading">{title}</h3>
+
+      <div className="map-container">
+        {/* ================= MAP ================= */}
+        <div className="map-section" onMouseMove={handleMouseMove}>
+          <ComposableMap projectionConfig={{ scale: 150 }}>
+            <ZoomableGroup zoom={zoom} minZoom={1} maxZoom={4}>
+              <Geographies geography={geoUrl}>
+                {({ geographies }) =>
+                  geographies.map(geo => {
+                    const countryName = geo.properties.name;
+                    const value = locationMap[countryName] || 0;
+
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        fill={colorScale(value)}
+                        stroke="#DDD"
+                        onMouseEnter={() => {
+                          if (value > 0) {
+                            setTooltip({
+                              name: countryName,
+                              value
+                            });
+                          }
+                        }}
+                        onMouseLeave={() => setTooltip(null)}
+                        style={{
+                          default: { outline: "none" },
+                          hover: {
+                            fill: "#174ea6",
+                            outline: "none",
+                            cursor: value > 0 ? "pointer" : "default"
+                          },
+                          pressed: { outline: "none" }
+                        }}
+                      />
+                    );
+                  })
+                }
+              </Geographies>
+            </ZoomableGroup>
+          </ComposableMap>
+
+          {/* ================= TOOLTIP ================= */}
+          {tooltip && (
+            <div
+              className="map-tooltip"
+              style={{
+                position: "fixed",
+                top: position.y,
+                left: position.x
+              }}
+            >
+              <strong>{tooltip.name}</strong>
+              <br />
+              Total: {tooltip.value}
+            </div>
+          )}
+
+          {/* ================= ZOOM CONTROLS ================= */}
+          <div className="zoom-controls">
+            <button onClick={zoomIn}>+</button>
+            <button onClick={zoomOut}>−</button>
+            <button onClick={resetZoom}>Reset</button>
+          </div>
+        </div>
+
+        {/* ================= SIDE LIST ================= */}
+        <div className="map-data">
+          {values.length === 0 ? (
+            <p className="empty-text">No location data</p>
+          ) : (
+            Object.entries(locationMap)
+              .sort((a, b) => b[1] - a[1])
+              .map(([country, total], index) => (
+                <div key={index} className="list-row">
+                  <span>{country}</span>
+                  <span className="value-text">
+                    {total}
+                  </span>
+                </div>
+              ))
+          )}
+        </div>
+      </div>
+
+      {/* ================= COLOR LEGEND ================= */}
+      <div className="map-legend">
+        <span>{minValue}</span>
+        <div
+          className="legend-gradient"
+          style={{
+            background:
+              "linear-gradient(to right, #e8f0fe, #1a73e8)"
+          }}
+        />
+        <span>{maxValue}</span>
+      </div>
+    </div>
+  );
+};  
