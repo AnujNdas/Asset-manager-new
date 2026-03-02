@@ -10,6 +10,17 @@ const Unauthorized = () => {
     location.state?.message ||
     "You do not have permission to access this resource.";
 
+  const handleLogout = () => {
+    // Clear auth data
+    localStorage.removeItem("auth");
+
+    // Optional: clear everything if needed
+    // localStorage.clear();
+
+    // Redirect to login
+    navigate("/user/login", { replace: true });
+  };
+
   return (
     <div
       style={{
@@ -41,7 +52,7 @@ const Unauthorized = () => {
         </p>
 
         <button
-          onClick={() => navigate(-1)}
+          onClick={handleLogout}
           style={{
             marginTop: "25px",
             padding: "10px 20px",
@@ -52,7 +63,7 @@ const Unauthorized = () => {
             cursor: "pointer",
           }}
         >
-          Go Back
+          Login Again
         </button>
       </div>
     </div>
