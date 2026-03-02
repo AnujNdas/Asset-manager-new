@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getDashboardData } from "../../api/admin";
+import { getDashboardData } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
 
 const AdminDashboard = () => {
