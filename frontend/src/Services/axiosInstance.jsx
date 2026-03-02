@@ -50,7 +50,13 @@ axiosInstance.interceptors.response.use(
       error.response?.data?.message ||
       "Something went wrong. Please try again.";
 
-    if (status === 401 || status === 403) {
+    const currentPath = window.location.pathname;
+
+    // 🔥 Prevent redirect loop
+    if (
+      (status === 401 || status === 403) &&
+      currentPath !== "/unauthorized"
+    ) {
       console.warn("Auth error:", error.userMessage);
 
       window.location.href = `/unauthorized?message=${encodeURIComponent(
