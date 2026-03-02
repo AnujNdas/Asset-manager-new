@@ -6,11 +6,12 @@ const Hardware = require("../models/Asset");
 const Software = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 const User = require("../models/User");
+const Team = require("../models/Employee");
 const authenticateToken = require("../Middleware/Authentication-token");
 const Department = require("../models/Department");
-router.get("/dashboard", authenticateToken, async (req, res) => {
+router.get("/dashboard", authenticateToken(), async (req, res) => {
   try {
-    const organizationId = req.user.organizationId;
+    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
 
     const now = new Date();
     const next30Days = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
@@ -36,7 +37,7 @@ router.get("/dashboard", authenticateToken, async (req, res) => {
           $group: {
             _id: null,
             totalValue: { $sum: "$assetCost.baseTotalAmount" },
-            totalQuantity: { $sum: "$assetQuantity" }
+            totalQuantity: { $sum: 1 }
           }
         }
       ]),
@@ -48,7 +49,7 @@ router.get("/dashboard", authenticateToken, async (req, res) => {
           $group: {
             _id: null,
             totalValue: { $sum: "$assetCost.baseTotalAmount" },
-            totalQuantity: { $sum: "$assetQuantity" }
+            totalQuantity: { $sum: 1 }
           }
         }
       ]),

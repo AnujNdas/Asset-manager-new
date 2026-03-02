@@ -1,25 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { getDashboardData } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
-
+import { useCurrency } from "../Context/CurrencyContext";
+import { convertFromBase, CURRENCY_SYMBOLS } from "../utils/currency"; // adjust path
+import CurrencyFilter from "../Components/CurrencyFilter";
 const AdminDashboard = () => {
+  const { currency } = useCurrency();
+  console.log("AdminDashboard mounted");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        const res = await getDashboardData();
-        setData(res);
-      } catch (error) {
-        console.error("Dashboard error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  console.log("useEffect triggered");
 
-    fetchDashboard();
-  }, []);
+  const fetchDashboard = async () => {
+    console.log("Calling API...");
+
+    try {
+      const res = await getDashboardData();
+      console.log("Dashboard data:", res);
+      setData(res);
+    } catch (error) {
+      console.error("Dashboard error:", error);
+    } finally {
+      console.log("Finished API call");
+      setLoading(false);
+    }
+  };
+
+  fetchDashboard();
+}, []);
 
   if (loading) {
     return (
@@ -33,25 +43,37 @@ const AdminDashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Admin Dashboard</h1>
+      <div className="dashboard-header">
+  <h1 className="dashboard-title">Admin Dashboard</h1>
+  <CurrencyFilter />
+</div>
 
       {/* ================= TOP METRICS ================= */}
       <div className="metrics-grid">
         <MetricCard
           title="Total Valuation"
-          value={`₹ ${totals.overallValuation.toLocaleString()}`}
+          value={` ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
+  totals.overallValuation,
+  currency
+).toLocaleString()}${CURRENCY_SYMBOLS[currency]}`}
         />
 
         <MetricCard
           title="Software Assets"
           value={totals.softwareCount}
-          sub={`₹ ${totals.softwareValuation.toLocaleString()}`}
+          sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
+  totals.softwareValuation,
+  currency
+).toLocaleString()}`}
         />
 
         <MetricCard
           title="Hardware Assets"
           value={totals.hardwareCount}
-          sub={`₹ ${totals.hardwareValuation.toLocaleString()}`}
+          sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
+  totals.hardwareValuation,
+  currency
+).toLocaleString()}`}
         />
 
         <MetricCard
@@ -89,6 +111,7 @@ const AdminDashboard = () => {
           items={analytics.topAssets}
           labelKey="assetName"
           valueKey="assetCost.baseTotalAmount"
+          currency={currency}
         />
 
         <AnalyticsCard
@@ -144,7 +167,13 @@ const ListCard = ({ title, items, dateField }) => {
   );
 };
 
-const AnalyticsCard = ({ title, items, labelKey, valueKey }) => {
+const AnalyticsCard = ({
+  title,
+  items,
+  labelKey,
+  valueKey,
+  currency
+}) => {
   const getValue = (obj, path) =>
     path.split(".").reduce((o, key) => o?.[key], obj);
 
@@ -153,15 +182,22 @@ const AnalyticsCard = ({ title, items, labelKey, valueKey }) => {
       <h3 className="card-heading">{title}</h3>
 
       <div className="list">
-        {items.map((item, index) => (
-          <div key={index} className="list-row">
-            <span>{getValue(item, labelKey)}</span>
-            <span className="value-text">
-              {getValue(item, valueKey)?.toLocaleString()}
-            </span>
-          </div>
-        ))}
+        {items.map((item, index) => {
+          const rawValue = getValue(item, valueKey) || 0;
+          const converted = convertFromBase(rawValue, currency);
+
+          return (
+            <div key={index} className="list-row">
+              <span>{getValue(item, labelKey)}</span>
+              <span className="value-text">
+                {CURRENCY_SYMBOLS[currency]}{" "}
+                {converted.toLocaleString()}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
+
