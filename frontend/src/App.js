@@ -10,6 +10,7 @@ import ForgotPassword from "./Inner_sections/ForgetPass";
 import ResetPassword from "./Inner_sections/ResetPass";
 import { Toaster } from "react-hot-toast";
 import Maintenance from "./Pages/Maintainence";
+import Unauthorized from "./Pages/Unauthorized";
 import "./App.css";
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
@@ -28,7 +29,7 @@ const App = () => {
       <Routes>
         {TenantRoutes({ profileUser })}
         {SuperAdminRoutes()}
-
+        <Route path="/unauthorized" element={<Unauthorized />} />
         {/* Auth / User routes */}
         <Route path="/user" element={<User />}>
           <Route path="login" element={<Login setProfileUser={setProfileUser} />} />
