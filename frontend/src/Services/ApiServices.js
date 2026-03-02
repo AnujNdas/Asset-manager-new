@@ -253,6 +253,10 @@ export const getAllUsers = async () => {
   const response = await axiosInstance.get("/admin/users");
   return response.data;
 };
+export const getDashboardData = async () => {
+  const response = await axiosInstance.get("/admin/dashboard");
+  return response.data;
+};
 
 export const updateUserRole = async (userId, role) => {
   const response = await axiosInstance.put(`/admin/users/${userId}/role`, { role });
@@ -318,14 +322,7 @@ export const getEmployeesByDepartment = async (departmentId) => {
 
   return response.data;
 };
-export const getRecentAssets = async () =>
-  axiosInstance.get("/admin/recent-assets").then((res) => res.data);
 
-export const getActiveUsers = async () =>
-  axiosInstance.get("/admin/active-users").then((res) => res.data);
-
-export const getMonthlyValuation = async () =>
-  axiosInstance.get("/admin/valuation-trend").then(res => res.data);
 // ===============================
 // ----- ASSIGNMENT / STOCK API CALLS -----
 // ===============================

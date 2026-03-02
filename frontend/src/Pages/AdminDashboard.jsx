@@ -1,674 +1,167 @@
-  import React, { useEffect, useState } from "react";
-  import { useNavigate } from "react-router-dom";
-  import {
-    getAdminStats,
-    getDistribution,
-    getMonthlySubscription,
-    getMonthlyValuation,
-    getSoftwareLicenseUtilization,
-    getUpcomingSoftwareExpiry,
-    getHardwareMaintenanceDue,
-    getSoftwareCostMetrics,
-    getDepartmentAssetDistribution
-  } from "../Services/ApiServices";
-  import CurrencyFilter from "../Components/CurrencyFilter";
-  import { useCurrency } from "../Context/CurrencyContext";
-  import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
+import React, { useEffect, useState } from "react";
+import { getDashboardData } from "../../api/admin";
+import "../Page_styles/AdminDashboard.css";
 
-  import {
-    BarChart,
-    ScatterChart,
-    Scatter,
-    LineChart,
-    Line,
-    Bar,
-    XAxis,
-    AreaChart,
-    Area,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    Cell,
-    Legend,
-    CartesianGrid,
-    PieChart,
-    Pie,
-    Treemap,
-    Legend as PieLegend
-  } from "recharts";
+const AdminDashboard = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  import Loader from "../Components/Loader";
-  import "../Page_styles/AdminDashboard.css";
-  const CustomizedTreemap = ({
-    x,
-    y,
-    width,
-    height,
-    name,
-    size,
-    currency
-  }) => {
-    if (!size || width < 60 || height < 30) return null;
-
-    return (
-      <g>
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          fill="#8B5CF6"
-          rx={6}
-        />
-
-        <text
-          x={x + 8}
-          y={y + 18}
-          fill="#fff"
-          fontSize={12}
-          fontWeight={600}
-        >
-          {name || "Unknown"}
-        </text>
-
-        <text
-          x={x + 8}
-          y={y + 34}
-          fill="#E5E7EB"
-          fontSize={11}
-        >
-          {CURRENCY_SYMBOLS[currency]} {(size || 0).toLocaleString()}
-        </text>
-      </g>
-    );
-  };
-
-  const TreemapTooltip = ({ active, payload, currency }) => {
-    if (!active || !payload?.length) return null;
-
-    const { name, size, quantity } = payload[0].payload;
-
-    return (
-      <div className="chart-tooltip">
-        <strong>{name}</strong>
-        <div>Cost: {currency} {size.toLocaleString()}</div>
-        <div>Licenses: {quantity}</div>
-      </div>
-    );
-  };
-
-  const LOCATION_COLORS = [
-    "#3B82F6",
-    "#6366F1",
-    "#8B5CF6",
-    "#22C55E",
-    "#F59E0B"
-  ];
-const COLORS = [
-  "#8884d8",
-  "#82ca9d",
-  "#ffc658",
-  "#ff8042",
-  "#0088FE",
-  "#FFBB28",
-  "#FF4444",
-  "#00C49F",
-];
-  const BAR_COLORS = {
-    hardware: "#3B82F6",
-    software: "#8B5CF6",
-    total: "#0F172A"
-  };
-
-  /* -------------------- TOOLTIP -------------------- */
-  const CustomTooltip = ({ active, payload, label, currency }) => {
-    if (!active || !payload?.length) return null;
-      return (
-      <div
-        style={{
-          background: "#0F172A",
-          padding: "5px 10px",
-          borderRadius: "8px",
-          color: "#F8FAFC",
-          fontSize: "12px",
-          boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
-        }}
-      >
-        <strong style={{ display: "block", marginBottom: 6 }}>{label}</strong>
-        {payload.map((p, i) => (
-          <div key={i} style={{ color: "#E5E7EB" }}>
-            {p.name}: {CURRENCY_SYMBOLS[currency]}{" "}
-            {p.value.toLocaleString()}
-          </div>
-        ))}
-      </div>
-    );
-  };
-  const Dashboard = () => {
-    const navigate = useNavigate();
-    const { currency } = useCurrency();
-
-    const [statsData, setStatsData] = useState(null);
-    const [monthlySubscription, setMonthlySubscription] = useState(null);
-    const [softwareDistribution, setSoftwareDistribution] = useState(null);
-    const [licenseUtilization, setLicenseUtilization] = useState(null);
-  const [upcomingExpiry, setUpcomingExpiry] = useState(null);
-
-    const [locationList, setLocationList] = useState([]);
-    const [valuationData, setValuationData] = useState(null);
-
-    const [loading, setLoading] = useState(true);
-    const [apiDone, setApiDone] = useState(false);
-    const [hardwareMaintenance, setHardwareMaintenance] = useState(null);
-  const [softwareCostMetrics, setSoftwareCostMetrics] = useState(null);
-  const [departmentAssets, setDepartmentAssets] = useState([]);
-
-    const getLocationName = (id) => {
-      const loc = locationList.find((l) => l._id === id);
-      return loc ? loc.name : "Unknown";
-
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const res = await getDashboardData();
+        setData(res);
+      } catch (error) {
+        console.error("Dashboard error:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-const LEGEND_COLORS = {
-  hardware: "#1E3A8A",
-  software: "#5B21B6",
-  total: "#065F46"
-};
 
-const HorizontalLegend = ({ payload }) => {
-  if (!payload) return null;
+    fetchDashboard();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="dashboard-loader">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
+  const { totals, upcoming, analytics } = data;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "16px",
-        fontSize: "12px",
-        marginTop: "6px",
-      }}
-    >
-      {payload.map((entry, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontWeight: 500,
-          }}
-        >
-          <span
-            style={{
-              width: 12,
-              height: 12,
-              borderRadius: "50%",
-              backgroundColor: entry.color, // ✅ correct
-            }}
-          />
-          <span>{entry.value.charAt(0).toUpperCase() + entry.value.slice(1)}</span>
-        </div>
-      ))}
+    <div className="dashboard-container">
+      <h1 className="dashboard-title">Admin Dashboard</h1>
+
+      {/* ================= TOP METRICS ================= */}
+      <div className="metrics-grid">
+        <MetricCard
+          title="Total Valuation"
+          value={`₹ ${totals.overallValuation.toLocaleString()}`}
+        />
+
+        <MetricCard
+          title="Software Assets"
+          value={totals.softwareCount}
+          sub={`₹ ${totals.softwareValuation.toLocaleString()}`}
+        />
+
+        <MetricCard
+          title="Hardware Assets"
+          value={totals.hardwareCount}
+          sub={`₹ ${totals.hardwareValuation.toLocaleString()}`}
+        />
+
+        <MetricCard
+          title="Users / Teams"
+          value={`${totals.usersCount} / ${totals.teamsCount}`}
+        />
+      </div>
+
+      {/* ================= UPCOMING SECTION ================= */}
+      <div className="section-grid">
+        <ListCard
+          title="Upcoming Software Renewals (30 days)"
+          items={upcoming.softwareRenewals}
+          dateField="DOE"
+        />
+
+        <ListCard
+          title="Upcoming Hardware Warranty"
+          items={upcoming.hardwareWarranty}
+          dateField="warranty.expiryDate"
+        />
+      </div>
+
+      {/* ================= ANALYTICS SECTION ================= */}
+      <div className="section-grid">
+        <AnalyticsCard
+          title="Software Spend by Category"
+          items={analytics.spendByCategory}
+          labelKey="category"
+          valueKey="totalSpend"
+        />
+
+        <AnalyticsCard
+          title="Top IT Assets"
+          items={analytics.topAssets}
+          labelKey="assetName"
+          valueKey="assetCost.baseTotalAmount"
+        />
+
+        <AnalyticsCard
+          title="Top Locations"
+          items={analytics.topLocations}
+          labelKey="name"
+          valueKey="total"
+        />
+      </div>
     </div>
   );
 };
 
-    useEffect(() => {
-      const load = async () => {
-    try {
-      const stats = await getAdminStats();
-      const valuation = await getMonthlyValuation();
-      const monthlySub = await getMonthlySubscription();
-      const distribution = await getDistribution();
-      const utilization = await getSoftwareLicenseUtilization();
-      const expiry = await getUpcomingSoftwareExpiry();
-      const maintenance = await getHardwareMaintenanceDue();
-      const softwareCost = await getSoftwareCostMetrics();
-      const deptAssets = await getDepartmentAssetDistribution();
+export default AdminDashboard;
 
-      setHardwareMaintenance(maintenance);
-      setSoftwareCostMetrics(softwareCost?.data || softwareCost);
-            setDepartmentAssets(
-  Array.isArray(deptAssets) ? deptAssets : deptAssets?.data || []
+
+/* ================= SUB COMPONENTS ================= */
+
+const MetricCard = ({ title, value, sub }) => (
+  <div className="card metric-card">
+    <p className="card-title">{title}</p>
+    <h2 className="metric-value">{value}</h2>
+    {sub && <p className="metric-sub">{sub}</p>}
+  </div>
 );
 
-      setStatsData(stats?.data || stats);
-      setValuationData(valuation?.data || valuation);
-      setMonthlySubscription(monthlySub);
-      setSoftwareDistribution(distribution);
-      setLicenseUtilization(utilization);
-      setUpcomingExpiry(expiry);
-      console.log("Dashboard data loaded:", {
-        stats,
-        valuation,
-        monthlySub,
-        distribution,
-      });
-      setApiDone(true);
-      setTimeout(() => setLoading(false), 400);
-    } catch (err) {
-      console.error("Dashboard load error:", err);
-      setLoading(false);
+const ListCard = ({ title, items, dateField }) => {
+  const getDate = (item) => {
+    if (dateField.includes(".")) {
+      const keys = dateField.split(".");
+      return new Date(item[keys[0]][keys[1]]).toLocaleDateString();
     }
+    return new Date(item[dateField]).toLocaleDateString();
   };
 
-
-      load(); 
-    }, []);
-
-    if (loading) return <Loader type="dashboard" apiDone={apiDone} />;
-
-const valuationChartData =
-  valuationData?.labels?.map((label, index) => ({
-    month: label,
-    hardware: convertFromBase(
-      valuationData?.hardwareValuation?.[index] ?? 0,
-      currency
-    ),
-    software: convertFromBase(
-      valuationData?.softwareValuation?.[index] ?? 0,
-      currency
-    ),
-    total: convertFromBase(
-      valuationData?.totalValuation?.[index] ?? 0,
-      currency
-    ),
-  })) || [];
-console.log("Valuation Chart Data:", valuationChartData);
-
-  const totalValuationView = convertFromBase(
-    statsData?.totalValuation ?? 0,
-    currency
-  );
-
-  const hardwareValuationView = convertFromBase(
-    statsData?.hardwareValuation ?? 0,
-    currency
-  );
-
-  const softwareValuationView = convertFromBase(
-    statsData?.softwareValuation ?? 0,
-    currency
-  );
-const pieData = (departmentAssets || []).map((d) => ({
-  name: d.departmentName,
-  value: d.totalAssets,
-}));
   return (
-    <div className="admin-dashboard">
-      <div className="dashboard-header">
-        <h2>Admin Dashboard</h2>
-        <CurrencyFilter />
-      </div>
+    <div className="card">
+      <h3 className="card-heading">{title}</h3>
 
-      {/* TOP SECTION */}
-      <div className="top-section">
-        {/* KPI 2x2 */}
-        <div className="kpi-2x2">
-          <div className="stat-card green">
-            <p>Total Valuation</p>
-            <p>
-              {CURRENCY_SYMBOLS[currency]}{" "}
-              {totalValuationView.toLocaleString()}
-            </p>
-          </div>
-
-          <div
-            className="stat-card purple"
-            onClick={() => navigate("/inventory?tab=hardware")}
-          >
-            <p>Hardware Assets</p>
-            <h3>{statsData?.hardwareCount ?? 0}</h3>
-            <p>{hardwareValuationView.toLocaleString()} {CURRENCY_SYMBOLS[currency]}</p>
-          </div>
-
-          <div
-            className="stat-card violet"
-            onClick={() => navigate("/inventory?tab=software")}
-            >
-            <p>Software Assets</p>
-            <h3>{statsData?.softwareCount ?? 0}</h3>
-            <p>{softwareValuationView.toLocaleString()} {CURRENCY_SYMBOLS[currency]}</p>
-          </div>
-
-          <div
-            className="stat-card pink"
-            onClick={() => navigate("/setting/users")}
-          >
-            <p>Total Users</p>
-            <h3>{statsData?.usersCount ?? 0}</h3>
-          </div>
+      {items.length === 0 ? (
+        <p className="empty-text">No upcoming items</p>
+      ) : (
+        <div className="list">
+          {items.map((item, index) => (
+            <div key={index} className="list-row">
+              <span>{item.assetName}</span>
+              <span className="date-text">{getDate(item)}</span>
+            </div>
+          ))}
         </div>
+      )}
+    </div>
+  );
+};
 
-        {/* VALUATION CHART */}
-<div className="chart-card valuation-card">
-  <h2>Monthly Asset Valuation</h2>
+const AnalyticsCard = ({ title, items, labelKey, valueKey }) => {
+  const getValue = (obj, path) =>
+    path.split(".").reduce((o, key) => o?.[key], obj);
 
-<ResponsiveContainer width="100%" height={260}>
-  <BarChart
-    layout="vertical"
-    data={valuationChartData}
-    margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
-    barCategoryGap="25%"
-  >
-    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+  return (
+    <div className="card">
+      <h3 className="card-heading">{title}</h3>
 
-    {/* Number axis (valuation) */}
-    <XAxis
-      type="number"
-      tickLine={true}
-      axisLine={true}
-    />
-
-    {/* Category axis (time labels) */}
-    <YAxis
-      type="category"
-      dataKey="month"  // Change to "label" if you switched to dynamic interval
-      tickLine={true}
-      axisLine={true}
-      width={50}
-    />
-    <Tooltip content={<CustomTooltip currency={currency} />} />
-    <Legend content={<HorizontalLegend />} />
- <defs>
-      <linearGradient id="hardwareValuation" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#1E3A8A" />
-        <stop offset="100%" stopColor="#60A5FA" />
-      </linearGradient>
-
-      <linearGradient id="softwareValuation" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#5B21B6" />
-        <stop offset="100%" stopColor="#A78BFA" />
-      </linearGradient>
-
-      <linearGradient id="totalValuation" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#065F46" />
-        <stop offset="100%" stopColor="#34D399" />
-      </linearGradient>
-    </defs>
-    {/* Hardware */}
-    <Bar
-      dataKey="hardware"
-      fill="url(#hardwareValuation)"
-      radius={[0, 6, 6, 0]}
-      barSize={14}
-    />
-
-    {/* Software */}
-    <Bar
-      dataKey="software"
-      fill="url(#softwareValuation)"
-      radius={[0, 6, 6, 0]}
-      barSize={14}
-    />
-
-    {/* Total */}
-    <Bar
-      dataKey="total"
-      fill="url(#totalValuation)"
-      radius={[0, 6, 6, 0]}
-      barSize={14}
-    />
-  </BarChart>
-</ResponsiveContainer>
-
-</div>
-
-      </div>
-
-      {/* MIDDLE ROW */}
-      <div className="three-grid">
-              <div className="chart_box">
-    <h2>Software Distribution</h2>
-
-    <div className="pie-layout">
-      {/* Pie Chart */}
-      <div className="pie-chart">
-        <ResponsiveContainer width="100%" height={220}>
-          <PieChart>
-            <Pie
-              data={softwareDistribution?.labels?.map((l, i) => ({
-                name: l,
-                value: softwareDistribution.values[i]
-              }))}
-              dataKey="value"
-              innerRadius={45}
-              outerRadius={85}
-              paddingAngle={2}
-            >
-              {softwareDistribution?.labels?.map((_, i) => (
-                <Cell key={i} fill={LOCATION_COLORS[i % 5]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Custom Legend */}
-      <div className="pie-legend">
-        {softwareDistribution?.labels?.map((label, i) => (
-          <div key={i} className="legend-item">
-            <span
-              className="legend-color"
-              style={{ backgroundColor: LOCATION_COLORS[i % 5] }}
-            />
-            <span className="legend-label">{label}</span>
-            <span className="legend-value">
-              {softwareDistribution.values[i]}
+      <div className="list">
+        {items.map((item, index) => (
+          <div key={index} className="list-row">
+            <span>{getValue(item, labelKey)}</span>
+            <span className="value-text">
+              {getValue(item, valueKey)?.toLocaleString()}
             </span>
           </div>
         ))}
       </div>
     </div>
-  </div>
-<div className="panel-card">
-  <h2>Software License Utilization</h2>
-
-  {(licenseUtilization?.labels || []).map((name, index) => {
-
-    const used = Number(licenseUtilization?.inUse?.[index] ?? 0);
-    const total = Number(licenseUtilization?.totalLicenses?.[index] ?? 0);
-
-    const percent =
-      total > 0 && !isNaN(used)
-        ? Math.min((used / total) * 100, 100)
-        : 0;
-
-    const status =
-      percent >= 80 ? "high" :
-      percent >= 40 ? "medium" :
-      "low";
-
-    return (
-      <div key={name || index} className="util-card">
-
-        <div className="util-top">
-          <span className="util-name">{name || "Unknown"}</span>
-          <span className="util-count">{used}/{total}</span>
-        </div>
-
-        <div className="util-track">
-          <div
-            className={`util-fill util-${status}`}
-            style={{ width: `${percent}%` }}
-          />
-
-          <span className="util-percent">
-            {percent.toFixed(0)}%
-          </span>
-        </div>
-
-      </div>
-    );
-  })}
-</div>
-
-
-        <div className="panel-card">
-          <h2>Upcoming License Expiry</h2>
-          <div className="expiry-summary">
-            <div className="expiry critical">
-              <strong>{upcomingExpiry?.critical?.length ?? 0}</strong>
-              <span>30 Days</span>
-            </div>
-            <div className="expiry warning">
-              <strong>{upcomingExpiry?.warning?.length ?? 0}</strong>
-              <span>60 Days</span>
-            </div>
-            <div className="expiry normal">
-              <strong>{upcomingExpiry?.normal?.length ?? 0}</strong>
-              <span>90 Days</span>
-            </div>
-          </div>
-        </div>
-        <div className="panel-card">
-    <h2>Hardware Maintenance</h2>
-
-    {hardwareMaintenance?.data?.length === 0 && (
-      <p className="empty-state">No maintenance due 🎉</p>
-    )}
-
-  {[
-    ...(hardwareMaintenance?.overdue || []),
-    ...(hardwareMaintenance?.upcoming || [])
-  ]
-  .slice(0, 5)
-  .map(asset => (
-    <div key={asset._id} className="expiry-row">
-      <div>
-        <strong>{asset.assetName}</strong>
-        <p className="muted">{asset.locationAddress || "-"}</p>
-      </div>
-
-      <span
-        className={`badge ${
-          asset.daysOverdue
-            ? "critical"
-            : asset.daysLeft <= 7
-            ? "warning"
-            : "normal"
-        }`}
-      >
-        {asset.daysOverdue
-          ? `${asset.daysOverdue} overdue`
-          : `${asset.daysLeft} days`}
-      </span>
-    </div>
-  ))}
-
-  </div>
-<div className="chart-card">
-  <h2>Software Cost by Type</h2>
-
-  <ResponsiveContainer width="100%" height={260}>
-    <BarChart
-      data={(Array.isArray(softwareCostMetrics) ? softwareCostMetrics : [])
-        .filter(t => t.totalCost > 0)
-        .map(t => ({
-          type: t.type || "One-time",
-          cost: convertFromBase(t.totalCost, currency),
-          quantity: t.totalQuantity
-        }))
-      }
-      margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
-    >
-      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-
-      <XAxis dataKey="type" />
-
-      <YAxis
-        tickFormatter={(val) =>
-          `${CURRENCY_SYMBOLS[currency]}${(val / 1000).toFixed(0)}k`
-        }
-      />
-
-      <Tooltip
-        formatter={(value, name, props) => {
-          if (name === "Cost") {
-            return [
-              `${CURRENCY_SYMBOLS[currency]} ${value.toLocaleString()}`,
-              "Cost"
-            ];
-          }
-          return [value, "Licenses"];
-        }}
-      />
-
-      <Legend />
-
-      {/* Cost Bar */}
-      <Bar
-        dataKey="cost"
-        name="Cost"
-        radius={[6, 6, 0, 0]}
-        fill="#6366F1"
-      />
-
-      {/* Quantity Bar */}
-      <Bar
-        dataKey="quantity"
-        name="Licenses"
-        radius={[6, 6, 0, 0]}
-        fill="#22C55E"
-      />
-    </BarChart>
-  </ResponsiveContainer>
-</div>
-
-
-<div className="chart-card">
-  <h2>Assets Distribution</h2>
-
-  <ResponsiveContainer width="100%" height={300}>
-    <PieChart>
-      <Tooltip formatter={(value) => value?.toLocaleString?.() || 0} />
-      <Legend verticalAlign="bottom" height={36} />
-
-<Pie
-  data={pieData}
-  dataKey="value"
-  nameKey="name"
-  cx="50%"
-  cy="50%"
-  outerRadius={110}
-  paddingAngle={2}
->
-
-        {pieData.map((_, index) => (
-          <Cell
-            key={`cell-${index}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Pie>
-    </PieChart>
-  </ResponsiveContainer>
-</div>
-
-
-        {/* <div className="panel-card">
-          <h2>Monthly Subscriptions</h2>
-          {monthlySubscription?.labels?.map((name, i) => (
-            <div key={name} className="subscription-item">
-              <span>{name}</span>
-              <span>
-                {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(
-                  monthlySubscription.monthlyCost[i],
-                  currency
-                ).toLocaleString()}
-              </span>
-            </div>
-          ))}
-        </div> */}
-
-
-      </div>
-
-    </div>
   );
-
-  };
-
-  export default Dashboard;
+};
