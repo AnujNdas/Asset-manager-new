@@ -54,7 +54,19 @@ const buildWarranty = (incoming, existing = {}, dop) => {
   return warranty;
 };
 
+const calculateAssetLifetime = (dop, doe) => {
+  if (!dop || !doe) return "0 years";
 
+  const start = new Date(dop);
+  const end = new Date(doe);
+
+  if (end <= start) return "0 years";
+
+  const diff = end - start;
+  const years = Math.ceil(diff / (1000 * 60 * 60 * 24 * 365));
+
+  return `${years} years`;
+};
 // =======================================================================
 // BULK UPLOAD
 // =======================================================================
@@ -238,8 +250,11 @@ warrantyData = buildWarranty(
   asset.DateOfPurchase
 );
 }
+const dop = asset.DateOfPurchase ? new Date(asset.DateOfPurchase) : null;
+const doe = asset.DateOfExpiry ? new Date(asset.DateOfExpiry) : null;
+const assetLifetime = calculateAssetLifetime(dop, doe);
 
-        // ---------- FINAL ASSET ----------
+// ---------- FINAL ASSET ----------
 validAssets.push({
   organizationId,
   assetCode: await generateHardwareCode(),
@@ -248,16 +263,16 @@ validAssets.push({
   barcodeNumber: asset.barcodeNumber,
   assetName: asset.assetName,
   associateUnit: unitId,
-
+  
   locationName: locationId,
   locationAddress: asset.locationAddress,
-
+  
   assetSpecification: asset.assetSpecification,
   assetStatus: statusId,
-
- DOP: asset.DateOfPurchase ? new Date(asset.DateOfPurchase) : null,
-DOE: asset.DateOfExpiry ? new Date(asset.DateOfExpiry) : null,
-  assetLifetime: asset.assetLifetime,
+  
+  DOP: asset.DateOfPurchase ? new Date(asset.DateOfPurchase) : null,
+  DOE: asset.DateOfExpiry ? new Date(asset.DateOfExpiry) : null,
+  assetLifetime: calculateAssetLifetime(dop, doe),
   purchaseFrom: asset.purchaseFrom,
 
   // ⭐ ADD HERE
