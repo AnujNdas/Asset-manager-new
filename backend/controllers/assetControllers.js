@@ -289,10 +289,13 @@ DOE: asset.DateOfExpiry ? new Date(asset.DateOfExpiry) : null,
     }
 
     // ---------- INSERT ----------
-    if (validAssets.length > 0) {
-      await Asset.insertMany(validAssets, { ordered: false });
-    }
+if (validAssets.length > 0) {
+  const insertedDocs = await Asset.insertMany(validAssets);
+  console.log("Inserted docs count:", insertedDocs.length);
 
+  const totalCount = await Asset.countDocuments();
+  console.log("Total docs in Asset collection:", totalCount);
+}
     // ---------- NOTIFICATION ----------
     await sendNotification({
       req,
