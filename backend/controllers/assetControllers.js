@@ -249,6 +249,9 @@ const baseTotalAmount = convertToBase(totalAmount, currency);
           });
           continue;
         }
+        const dop = parseDate(asset.DateOfPurchase);
+        const doe = parseDate(asset.DateOfExpiry);
+        const assetLifetime = calculateAssetLifetime(dop, doe);
         // ---------- WARRANTY BUILD ----------
 let warrantyData = undefined;
 
@@ -262,9 +265,6 @@ warrantyData = buildWarranty(
   dop
 );
 }
-const dop = parseDate(asset.DateOfPurchase);
-const doe = parseDate(asset.DateOfExpiry);
-const assetLifetime = calculateAssetLifetime(dop, doe);
 
 // ---------- FINAL ASSET ----------
 validAssets.push({
