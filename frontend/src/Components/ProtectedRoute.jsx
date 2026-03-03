@@ -1,49 +1,61 @@
-// src/components/ProtectedRoute.jsx
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = ({ allowedRoles }) => {
+  const location = useLocation();
   const authRaw = localStorage.getItem("auth");
 
   if (!authRaw) {
     return <Navigate to="/user/login" replace />;
   }
 
-  let auth;
   try {
-    auth = JSON.parse(authRaw);
-  } catch {
+    const auth = JSON.parse(authRaw);
+    const token = auth?.token;
+
+    if (!token) {
+      localStorage.clear();
+      return <Navigate to="/user/login" replace />;
+    }
+
+    const decoded = jwtDecode(token);
+
+    // ✅ CHECK TOKEN EXPIRATION
+    const currentTime = Date.now() / 1000; // convert to seconds
+
+    if (decoded.exp && decoded.exp < currentTime) {
+      console.log("Token expired");
+
+      localStorage.removeItem("auth");
+
+      return (
+        <Navigate
+          to="/user/login"
+          state={{ message: "Session expired. Please login again." }}
+          replace
+        />
+      );
+    }
+
+    // ✅ ROLE VALIDATION (Only after expiration check)
+    if (allowedRoles && !allowedRoles.includes(decoded.role)) {
+      return (
+        <Navigate
+          to="/unauthorized"
+          state={{
+            message: `Your role (${decoded.role}) is not allowed to access this page.`,
+          }}
+          replace
+        />
+      );
+    }
+
+    return <Outlet />;
+  } catch (error) {
+    console.log("Invalid token", error);
     localStorage.clear();
     return <Navigate to="/user/login" replace />;
   }
-
-  const token = auth.token;
-  if (!token) {
-    return <Navigate to="/user/login" replace />;
-  }
-
-  let decoded;
-  try {
-    decoded = jwtDecode(token);
-    console.log("Decoded token:", decoded);
-  } catch {
-    localStorage.clear();
-    return <Navigate to="/user/login" replace />;
-  }
-
-if (allowedRoles && !allowedRoles.includes(decoded.role)) {
-  return (
-    <Navigate
-      to="/unauthorized"
-      state={{
-        message: `Your role (${decoded.role}) is not allowed to access this page.`,
-      }}
-      replace
-    />
-  );
-}
-  // ✅ THIS IS THE KEY LINE
-  return <Outlet />;
 };
 
 export default ProtectedRoute;
