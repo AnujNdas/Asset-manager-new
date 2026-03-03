@@ -103,25 +103,18 @@ useEffect(() => {
         />
 
         <MetricCard
-          title="Users / Teams"
+          title="Users / Team-members"
           value={`${totals.usersCount} / ${totals.teamsCount}`}
         />
       </div>
-
-      {/* ================= UPCOMING SECTION ================= */}
       <div className="section-grid">
-        <ListCard
-          title="Upcoming Software Renewals (30 days)"
-          items={upcoming.softwareRenewals}
-          dateField="DOE"
-        />
+      <TopLocationsMap
+  title="Top Locations"
+  items={analytics.topLocations}
+/>
+</div>
+      {/* ================= UPCOMING SECTION ================= */}
 
-        <ListCard
-          title="Upcoming Hardware Warranty"
-          items={upcoming.hardwareWarranty}
-          dateField="warranty.expiryDate"
-        />
-      </div>
 
       {/* ================= ANALYTICS SECTION ================= */}
       <div className="section-grid">
@@ -140,14 +133,40 @@ useEffect(() => {
           currency={currency}
         />
 
-
+          <DepartmentAnalyticsCard
+    title="Top Departments by Asset Allocation"
+    items={analytics.departmentAssignments}
+  />
       </div>
       <div className="section-grid">
-      <TopLocationsMap
-  title="Top Locations"
-  items={analytics.topLocations}
-/>
+  <ListCard
+    title="Upcoming Software Renewals (30 days)"
+    items={upcoming.softwareRenewals}
+    dateField="DOE"
+  />
+
+  <ListCard
+    title="Upcoming Hardware Warranty( 30Days)"
+    items={upcoming.hardwareWarranty}
+    dateField="warranty.expiryDate"
+  />
+
+  <ListCard
+    title="Upcoming Hardware Maintenance( 30Days)"
+    items={upcoming.hardwareMaintenance}
+    dateField="DOE"
+  />
+
+  <ListCard
+    title="Upcoming Hardware Insurance( 30Days)"
+    items={upcoming.hardwareInsurance}
+    dateField="insurance.expiryDate"
+  />
 </div>
+
+{/* <div className="section-grid">
+
+</div> */}
     </div>
   );
 };
@@ -224,6 +243,28 @@ const AnalyticsCard = ({
           );
         })}
       </div>
+    </div>
+  );
+};
+const DepartmentAnalyticsCard = ({ title, items }) => {
+  return (
+    <div className="card">
+      <h3 className="card-heading">{title}</h3>
+
+      {items.length === 0 ? (
+        <p className="empty-text">No department data</p>
+      ) : (
+        <div className="list">
+          {items.map((dept, index) => (
+            <div key={index} className="list-row">
+              <span>{dept.departmentName}</span>
+              <span className="value-text">
+                {dept.totalAssets}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

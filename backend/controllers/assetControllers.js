@@ -10,6 +10,18 @@ const Category = require("../models/Category");
 const Unit = require("../models/Unit");
 const Location = require("../models/Location");
 const Status = require("../models/Status");
+const parseDate = (value) => {
+  if (!value) return null;
+
+  // Excel number
+  if (!isNaN(value)) {
+    const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+    return new Date(excelEpoch.getTime() + Number(value) * 86400000);
+  }
+
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+};
 const buildInsurance = (incoming, existing = {}) => {
   if (!incoming) return existing;
 
@@ -244,14 +256,14 @@ if (asset.warrantyId || asset.warrantyExpiryDate) {
 warrantyData = buildWarranty(
   {
     warrantyId: asset.warrantyId,
-    expiryDate: asset.warrantyExpiryDate,
+    expiryDate: parseDate(asset.warrantyExpiryDate),
   },
   {},
-  asset.DateOfPurchase
+  dop
 );
 }
-const dop = asset.DateOfPurchase ? new Date(asset.DateOfPurchase) : null;
-const doe = asset.DateOfExpiry ? new Date(asset.DateOfExpiry) : null;
+const dop = parseDate(asset.DateOfPurchase);
+const doe = parseDate(asset.DateOfExpiry);
 const assetLifetime = calculateAssetLifetime(dop, doe);
 
 // ---------- FINAL ASSET ----------
@@ -269,9 +281,9 @@ validAssets.push({
   
   assetSpecification: asset.assetSpecification,
   assetStatus: statusId,
-  
-  DOP: asset.DateOfPurchase ? new Date(asset.DateOfPurchase) : null,
-  DOE: asset.DateOfExpiry ? new Date(asset.DateOfExpiry) : null,
+    
+  DOP: dop,
+  DOE: doe,
   assetLifetime: calculateAssetLifetime(dop, doe),
   purchaseFrom: asset.purchaseFrom,
 
@@ -391,9 +403,12 @@ if (totalAmount <= 0) {
 
 const unitAmount = totalAmount / assetQuantity;
 const baseTotalAmount = convertToBase(totalAmount, currency);
-
+const parsedDOP = parseDate(req.body.DOP);
+const parsedDOE = parseDate(req.body.DOE);
 const newAsset = new Asset({
   ...req.body,
+    DOP: parsedDOP,
+  DOE: parsedDOE,
   organizationId,
   createdBy: userId,
   type,
@@ -523,6 +538,13 @@ if (req.body.warranty) {
     existingAsset.warranty,
     req.body.DOP ?? existingAsset.DOP
   );
+}
+if (req.body.DOP !== undefined) {
+  req.body.DOP = parseDate(req.body.DOP);
+}
+
+if (req.body.DOE !== undefined) {
+  req.body.DOE = parseDate(req.body.DOE);
 }
 const updatedAsset = await Asset.findByIdAndUpdate(
   id,

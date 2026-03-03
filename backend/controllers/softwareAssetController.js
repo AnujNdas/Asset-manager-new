@@ -6,16 +6,31 @@ const AssetAssignment = require("../models/AssetAssignment");
 const Location = require("../models/Location");
 const sendNotification = require("../utils/notify");
 const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
+const parseDate = (value) => {
+  if (!value) return null;
 
+  // Excel serial
+  if (!isNaN(value)) {
+    const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+    return new Date(excelEpoch.getTime() + Number(value) * 86400000);
+  }
+
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+};
 const calculateCycles = (type, startDate, endDate) => {
   if (type === "one_time") return 1;
 
   const start = new Date(startDate);
   const end = new Date(endDate);
 
-  if (isNaN(start) || isNaN(end) || end <= start) {
-    throw new Error("Invalid DOP / DOE");
-  }
+if (!startDate || !endDate) {
+  throw new Error("DOP and DOE required");
+}
+
+if (isNaN(start.getTime()) || isNaN(end.getTime()) || end <= start) {
+  throw new Error("Invalid DOP / DOE");
+}
 
   const months =
     (end.getFullYear() - start.getFullYear()) * 12 +
@@ -81,14 +96,6 @@ const bulkUploadSoftware = async (req, res) => {
 
     const normalize = (v) =>
       v?.toString().trim().toLowerCase();
-
-    const excelToDate = (value) => {
-      if (!value) return null;
-      if (typeof value === "number") {
-        return new Date((value - 25569) * 86400 * 1000);
-      }
-      return new Date(value);
-    };
 
 const validateSoftwareType = (type) => {
   const t = type?.toString().trim().toLowerCase();
@@ -252,8 +259,8 @@ if (lastAsset?.assetCode) {
            3. Date Handling
         ---------------------------- */
 
-        const DOP = excelToDate(asset.DateOfPurchase);
-        const DOE = excelToDate(asset.DateOfExpiry);
+        const DOP = parseDate(asset.DateOfPurchase);
+const DOE = parseDate(asset.DateOfExpiry);
 
         const cycles = calculateCycles(
           softwareType,
@@ -298,7 +305,9 @@ if (lastAsset?.assetCode) {
           locationAddress: asset.locationAddress?.trim(),
           DOP,
           DOE,
-          assetLifetime: asset.assetLifetime || null,
+          assetLifetime: DOP && DOE
+  ? `${Math.ceil((DOE - DOP) / (1000 * 60 * 60 * 24 * 365))} years`
+  : null,
 
           assetQuantity: quantity,
           inUse: 0,
@@ -404,7 +413,7 @@ if (totalAmount < 0) {
   });
 }
 
-const { type, DOP, DOE } = req.body;
+const { type} = req.body;
 
 if (!["monthly", "yearly", "one_time"].includes(type)) {
   return res.status(400).json({
@@ -413,7 +422,17 @@ if (!["monthly", "yearly", "one_time"].includes(type)) {
   });
 }
 
-const cycles = calculateCycles(type, DOP, DOE);
+const parsedDOP = parseDate(req.body.DOP);
+const parsedDOE = parseDate(req.body.DOE);
+
+if (type !== "one_time" && (!parsedDOP || !parsedDOE)) {
+  return res.status(400).json({
+    success: false,
+    message: "DOP and DOE required for recurring software"
+  });
+}
+
+const cycles = calculateCycles(type, parsedDOP, parsedDOE);
 
 const overallTotal = totalAmount * cycles;
 const overallUnitAmount = overallTotal / quantity;
@@ -424,6 +443,8 @@ const baseOverallTotal = convertToBase(overallTotal, currency);
 
     const asset = await SoftwareAsset.create({
       ...req.body,
+DOP: parsedDOP,
+DOE: parsedDOE,
       organizationId,
       type,
       assetCode: await generateSoftwareCode(organizationId),
@@ -602,7 +623,13 @@ const updateSoftwareAsset = async (req, res) => {
         });
       }
     }
+    if (req.body.DOP !== undefined) {
+  req.body.DOP = parseDate(req.body.DOP);
+}
 
+if (req.body.DOE !== undefined) {
+  req.body.DOE = parseDate(req.body.DOE);
+}
     // ✅ Assign normal fields FIRST (safe fields only)
     Object.assign(asset, req.body);
 
@@ -636,11 +663,15 @@ const updateSoftwareAsset = async (req, res) => {
         currency
       };
     }
-    const cycles = calculateCycles(
-  asset.type,
-  asset.DOP,
-  asset.DOE
-);
+let cycles = 1;
+
+if (asset.type !== "one_time") {
+  if (!asset.DOP || !asset.DOE) {
+    throw new Error("DOP and DOE required for recurring software");
+  }
+
+  cycles = calculateCycles(asset.type, asset.DOP, asset.DOE);
+}
 
 const overallTotal = asset.assetCost.totalAmount * cycles;
 const overallUnitAmount = overallTotal / asset.assetQuantity;

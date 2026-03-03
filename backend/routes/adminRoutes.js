@@ -27,7 +27,10 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       topSoftware,
       topHardware,
       topSoftwareLocations,
-      topHardwareLocations
+      topHardwareLocations ,
+       upcomingMaintenance,
+  upcomingInsurance,
+  departmentAssignments
     ] = await Promise.all([
 
       // SOFTWARE TOTALS
@@ -176,7 +179,103 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
           }
         },
         { $unwind: "$location" }
-      ])
+      ]),
+            // UPCOMING HARDWARE MAINTENANCE
+Hardware.aggregate([
+  {
+    $match: {
+      organizationId,
+      "DOE": { $gte: now, $lte: next30Days }
+    }
+  },
+  {
+    $project: {
+      assetName: 1,
+      "DOE": 1,
+      "assetCost.baseTotalAmount": 1
+    }
+  },
+  { $sort: { "DOE": 1 } },
+  { $limit: 5 }
+]),
+// UPCOMING HARDWARE INSURANCE
+Hardware.aggregate([
+  {
+    $match: {
+      organizationId,
+      "insurance.expiryDate": { $gte: now, $lte: next30Days }
+    }
+  },
+  {
+    $project: {
+      assetName: 1,
+      "insurance.expiryDate": 1,
+      "assetCost.baseTotalAmount": 1
+    }
+  },
+  { $sort: { "insurance.expiryDate": 1 } },
+  { $limit: 5 }
+]),
+// DEPARTMENT ASSET ASSIGNMENTS (TOP 5)
+AssetAssignment.aggregate([
+  {
+    $match: {
+      organizationId,
+      status: "active"
+    }
+  },
+
+  // Join department
+  {
+    $lookup: {
+      from: "departments",
+      localField: "departmentId",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  { $unwind: "$department" },
+
+  // Join employee
+  {
+    $lookup: {
+      from: "users",
+      localField: "employeeId",
+      foreignField: "_id",
+      as: "employee"
+    }
+  },
+  { 
+    $unwind: { 
+      path: "$employee", 
+      preserveNullAndEmptyArrays: true 
+    } 
+  },
+
+  // Group by department
+  {
+    $group: {
+      _id: "$department._id",
+      departmentName: { $first: "$department.name" },
+      totalAssets: { $sum: "$quantity" },
+      assets: {
+        $push: {
+          assetId: "$assetId",
+          assetType: "$assetType",
+          quantity: "$quantity",
+          employee: "$employee.name",
+          assignedAt: "$assignedAt"
+        }
+      }
+    }
+  },
+
+  // Sort by total quantity descending
+  { $sort: { totalAssets: -1 } },
+
+  // 🔥 LIMIT TO TOP 5
+  { $limit: 5 }
+])
     ]);
 
     // Merge Top Assets
@@ -202,6 +301,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
     const softwareData = softwareStats[0] || { totalValue: 0, totalQuantity: 0 };
     const hardwareData = hardwareStats[0] || { totalValue: 0, totalQuantity: 0 };
 
+
     res.json({
       totals: {
         overallValuation:
@@ -215,7 +315,9 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       },
       upcoming: {
         softwareRenewals: upcomingSoftware,
-        hardwareWarranty: upcomingHardware
+        hardwareWarranty: upcomingHardware,
+        hardwareMaintenance: upcomingMaintenance,
+        hardwareInsurance: upcomingInsurance
       },
       analytics: {
         spendByCategory: softwareSpendByCategory.map(c => ({
@@ -223,7 +325,8 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
           totalSpend: c.totalSpend
         })),
         topAssets,
-        topLocations
+        topLocations,
+        departmentAssignments
       }
     });
 
