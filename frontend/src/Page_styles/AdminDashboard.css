@@ -36,7 +36,13 @@
 .section-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.section-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
   margin-bottom: 18px;
 }
 
@@ -345,7 +351,7 @@
 }
 
 .donut-total-value {
-  font-size: 18px;
+  font-size: 10px;
   font-weight: 600;
   color: #111;
 }

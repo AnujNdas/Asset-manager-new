@@ -87,7 +87,7 @@
 /* ===== Cards ===== */
 .card {
   background: var(--card-bg);
-  padding: 22px;
+  padding: 10px;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -95,7 +95,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 .card h3 {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
   color: #2563eb;

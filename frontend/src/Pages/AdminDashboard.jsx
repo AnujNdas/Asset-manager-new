@@ -153,7 +153,7 @@ useEffect(() => {
     items={analytics.departmentAssignments}
   />
       </div>
-<div className="section-grid">
+<div className="section-grid2">
 
   {/* SOFTWARE */}
 
