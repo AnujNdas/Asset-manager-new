@@ -236,30 +236,94 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       ]),
 
       // DEPARTMENT ASSIGNMENTS
-      AssetAssignment.aggregate([
-        { $match: { organizationId, status: "active" } },
-        {
-          $lookup: {
-            from: "departments",
-            localField: "departmentId",
-            foreignField: "_id",
-            as: "department"
-          }
-        },
-        { $unwind: "$department" },
-        {
-          $group: {
-            _id: "$department._id",
-            departmentName: { $first: "$department.name" },
-            totalAssets: { $sum: "$quantity" }
-          }
-        },
-        { $sort: { totalAssets: -1 } },
-        { $limit: 5 }
-      ])
-    ]);
+AssetAssignment.aggregate([
+  {
+    $match: {
+      organizationId,
+      status: "active"
+    }
+  },
 
-    // Merge Locations
+  // Join employee
+  {
+    $lookup: {
+      from: "employees",
+      localField: "employeeId",
+      foreignField: "_id",
+      as: "employee"
+    }
+  },
+  { $unwind: "$employee" },
+
+  // Join department
+  {
+    $lookup: {
+      from: "departments",
+      localField: "departmentId",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  { $unwind: "$department" },
+
+  {
+    $group: {
+      _id: "$employee._id",
+
+      employeeName: { $first: "$employee.name" },
+      employeeEmail: { $first: "$employee.email" },
+      departmentName: { $first: "$department.name" },
+
+      totalAssignedQuantity: { $sum: "$quantity" },
+
+      uniqueAssetsCount: { $addToSet: "$assetId" },
+
+      lastAssignedAt: { $max: "$assignedAt" },
+
+      softwareCount: {
+        $sum: {
+          $cond: [{ $eq: ["$assetType", "software"] }, "$quantity", 0]
+        }
+      },
+
+      hardwareCount: {
+        $sum: {
+          $cond: [{ $eq: ["$assetType", "hardware"] }, "$quantity", 0]
+        }
+      },
+
+      locations: { $push: "$assignLocation" }
+    }
+  },
+
+  {
+    $addFields: {
+      uniqueAssetsCount: { $size: "$uniqueAssetsCount" },
+
+      topLocation: {
+        $arrayElemAt: [
+          {
+            $slice: [
+              {
+                $reduce: {
+                  input: "$locations",
+                  initialValue: [],
+                  in: { $concatArrays: ["$$value", ["$$this"]] }
+                }
+              },
+              1
+            ]
+          },
+          0
+        ]
+      }
+    }
+  },
+
+  { $sort: { totalAssignedQuantity: -1 } },
+  { $limit: 10 }
+]),
+    ]);
     const mergedLocations = [...topSoftwareLocations, ...topHardwareLocations]
       .reduce((acc, item) => {
         const name = item.location.name;

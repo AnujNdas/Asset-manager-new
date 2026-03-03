@@ -144,6 +144,14 @@ useEffect(() => {
     dateField="DOE"
   />
 
+  {/* MAINTENANCE */}
+
+
+  <ListCard
+    title="Upcoming Hardware Maintenance (30 Days)"
+    items={upcoming.maintenance?.upcoming || []}
+    dateField="DOE"
+  />
   {/* WARRANTY */}
 
 
@@ -153,14 +161,6 @@ useEffect(() => {
     dateField="warranty.expiryDate"
   />
 
-  {/* MAINTENANCE */}
-
-
-  <ListCard
-    title="Upcoming Hardware Maintenance (30 Days)"
-    items={upcoming.maintenance?.upcoming || []}
-    dateField="DOE"
-  />
 
   {/* INSURANCE */}
 
@@ -171,14 +171,6 @@ useEffect(() => {
     dateField="insurance.expiryDate"
   />
 
-</div>
-      <div className="section-grid">
-      <TopLocationsMap
-  title="Top Locations"
-  items={analytics.topLocations}
-/>
-</div>
-<div className="section-grid">
   <ListCard
     title="Expired Hardware Insurance"
     items={upcoming.insurance?.expired || []}
@@ -200,9 +192,13 @@ useEffect(() => {
     dateField="DOE"
   />
 </div>
-{/* <div className="section-grid">
 
-</div> */}
+      <div className="section-grid">
+      <TopLocationsMap
+  title="Top Locations"
+  items={analytics.topLocations}
+/>
+</div>
     </div>
   );
 };
@@ -285,20 +281,37 @@ const AnalyticsCard = ({
   );
 };
 const DepartmentAnalyticsCard = ({ title, items }) => {
-  return (
+ return (
     <div className="card">
       <h3 className="card-heading">{title}</h3>
 
       {items.length === 0 ? (
-        <p className="empty-text">No department data</p>
+        <p className="empty-text">No employee data</p>
       ) : (
         <div className="list">
-          {items.map((dept, index) => (
+          {items.map((emp, index) => (
             <div key={index} className="list-row">
-              <span>{dept.departmentName}</span>
-              <span className="value-text">
-                {dept.totalAssets}
-              </span>
+              
+              {/* LEFT SECTION */}
+              <div className="left-section">
+                <div className="dept-name">
+                  {emp.departmentName}
+                </div>
+
+                <div className="employee-name">
+                  {emp.employeeName}
+                </div>
+
+                <div className="asset-split">
+                  🖥 {emp.hardwareCount} | 💻 {emp.softwareCount}
+                </div>
+              </div>
+
+              {/* RIGHT SECTION */}
+              <div className="total-count">
+                {emp.totalAssignedQuantity}
+              </div>
+
             </div>
           ))}
         </div>
