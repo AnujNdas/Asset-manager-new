@@ -10,7 +10,7 @@ const {
   defaultDepartments,
   defaultStatuses,
   defaultUnits,
-} = require("../utils/defaultData");
+} = require("../utils/default.js");
 const insertDefaults = async (Model, values, organizationId, session) => {
   const exists = await Model.exists({
     organizationId,
