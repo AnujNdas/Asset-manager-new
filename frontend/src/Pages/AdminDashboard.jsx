@@ -15,15 +15,23 @@ import {  useMemo } from "react";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
+  PieChart,
+  Pie,
   Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts";
+import "./SpendByCategoryDonutChart.css";
+
+const COLORS = [
+  "#2563eb",
+  "#3b82f6",
+  "#60a5fa",
+  "#93c5fd",
+  "#bfdbfe",
+];
+
 
 countries.registerLocale(enLocale);
 
@@ -123,7 +131,15 @@ useEffect(() => {
 
       {/* ================= ANALYTICS SECTION ================= */}
       <div className="section-grid">
-        <SpendByCategoryBarChart data={analytics.spendByCategory} />
+        <div className="analytics-card">
+  <h3 className="analytics-title">
+    Software Spend by Category (Top 5)
+  </h3>
+
+  <SpendByCategoryDonutChart
+    data={analytics.spendByCategory}
+  />
+</div>
 
         <AnalyticsCard
           title="Top IT Assets"
@@ -522,43 +538,62 @@ const locationMap = useMemo(() => {
     </div>
   );
 };  
-const SpendByCategoryBarChart = ({ data }) => {
+const SpendByCategoryDonutChart = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="chart-empty">
+      <div className="donut-empty">
         No spend data available
       </div>
     );
   }
 
+  const totalSpend = data.reduce(
+    (acc, item) => acc + item.totalSpend,
+    0
+  );
+
   return (
-    <div className="chart-wrapper">
+    <div className="donut-wrapper">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={data}
-          margin={{ top: 10, right: 20, left: 10, bottom: 50 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-
-          <XAxis
-            dataKey="category"
-            angle={-20}
-            textAnchor="end"
-            interval={0}
-          />
-
-          <YAxis />
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="totalSpend"
+            nameKey="category"
+            cx="50%"
+            cy="50%"
+            innerRadius={70}
+            outerRadius={110}
+            paddingAngle={3}
+            label
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
 
           <Tooltip
-            formatter={(value) => [`₹ ${value.toLocaleString()}`, "Spend"]}
+            formatter={(value) => [
+              `₹ ${value.toLocaleString()}`,
+              "Spend",
+            ]}
           />
 
-          <Bar
-            dataKey="totalSpend"
-            radius={[6, 6, 0, 0]}
-          />
-        </BarChart>
+          <Legend verticalAlign="bottom" height={36} />
+        </PieChart>
       </ResponsiveContainer>
+
+      {/* Center Text */}
+      <div className="donut-center">
+        <div className="donut-total-label">Total</div>
+        <div className="donut-total-value">
+          ₹ {totalSpend.toLocaleString()}
+        </div>
+      </div>
     </div>
   );
 };
+
