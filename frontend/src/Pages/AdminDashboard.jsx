@@ -81,7 +81,7 @@ useEffect(() => {
           value={` ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
   totals.overallValuation,
   currency
-).toLocaleString()}${CURRENCY_SYMBOLS[currency]}`}
+).toLocaleString()}`}
         />
 
         <MetricCard
@@ -138,32 +138,61 @@ useEffect(() => {
     items={analytics.departmentAssignments}
   />
       </div>
-      <div className="section-grid">
+<div className="section-grid">
+
+  {/* SOFTWARE */}
   <ListCard
-    title="Upcoming Software Renewals (30 days)"
-    items={upcoming.softwareRenewals}
+    title="Expired Software Renewals"
+    items={upcoming.software?.expired || []}
     dateField="DOE"
   />
 
   <ListCard
-    title="Upcoming Hardware Warranty( 30Days)"
-    items={upcoming.hardwareWarranty}
+    title="Upcoming Software Renewals (30 Days)"
+    items={upcoming.software?.upcoming || []}
+    dateField="DOE"
+  />
+
+  {/* WARRANTY */}
+  <ListCard
+    title="Expired Hardware Warranty"
+    items={upcoming.warranty?.expired || []}
     dateField="warranty.expiryDate"
   />
 
   <ListCard
-    title="Upcoming Hardware Maintenance( 30Days)"
-    items={upcoming.hardwareMaintenance}
+    title="Upcoming Hardware Warranty (30 Days)"
+    items={upcoming.warranty?.upcoming || []}
+    dateField="warranty.expiryDate"
+  />
+
+  {/* MAINTENANCE */}
+  <ListCard
+    title="Expired Hardware Maintenance"
+    items={upcoming.maintenance?.expired || []}
     dateField="DOE"
   />
 
   <ListCard
-    title="Upcoming Hardware Insurance( 30Days)"
-    items={upcoming.hardwareInsurance}
+    title="Upcoming Hardware Maintenance (30 Days)"
+    items={upcoming.maintenance?.upcoming || []}
+    dateField="DOE"
+  />
+
+  {/* INSURANCE */}
+  <ListCard
+    title="Expired Hardware Insurance"
+    items={upcoming.insurance?.expired || []}
     dateField="insurance.expiryDate"
   />
-</div>
 
+  <ListCard
+    title="Upcoming Hardware Insurance (30 Days)"
+    items={upcoming.insurance?.upcoming || []}
+    dateField="insurance.expiryDate"
+  />
+
+</div>
 {/* <div className="section-grid">
 
 </div> */}
@@ -188,9 +217,11 @@ const ListCard = ({ title, items, dateField }) => {
   const getDate = (item) => {
     if (dateField.includes(".")) {
       const keys = dateField.split(".");
-      return new Date(item[keys[0]][keys[1]]).toLocaleDateString();
+      const value = item?.[keys[0]]?.[keys[1]];
+return value ? new Date(value).toLocaleDateString() : "-";
     }
-    return new Date(item[dateField]).toLocaleDateString();
+    const value = item?.[dateField];
+return value ? new Date(value).toLocaleDateString() : "-";
   };
 
   return (
