@@ -237,14 +237,30 @@ const MetricCard = ({ title, value, sub }) => (
 );
 
 const ListCard = ({ title, items, dateField }) => {
-  const getDate = (item) => {
+  const getDateValue = (item) => {
     if (dateField.includes(".")) {
       const keys = dateField.split(".");
-      const value = item?.[keys[0]]?.[keys[1]];
-return value ? new Date(value).toLocaleDateString() : "-";
+      return item?.[keys[0]]?.[keys[1]];
     }
-    const value = item?.[dateField];
-return value ? new Date(value).toLocaleDateString() : "-";
+    return item?.[dateField];
+  };
+
+  const getFormattedDate = (item) => {
+    const value = getDateValue(item);
+    return value ? new Date(value).toLocaleDateString() : "-";
+  };
+
+  const getDaysLeft = (item) => {
+    const value = getDateValue(item);
+    if (!value) return null;
+
+    const today = new Date();
+    const target = new Date(value);
+
+    const diffTime = target - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays;
   };
 
   return (
@@ -255,12 +271,37 @@ return value ? new Date(value).toLocaleDateString() : "-";
         <p className="empty-text">No upcoming items</p>
       ) : (
         <div className="list">
-          {items.map((item, index) => (
-            <div key={index} className="list-row">
-              <span>{item.assetName}</span>
-              <span className="date-text">{getDate(item)}</span>
-            </div>
-          ))}
+          {items.map((item, index) => {
+            const daysLeft = getDaysLeft(item);
+            const isUrgent = daysLeft !== null && daysLeft < 10;
+
+            return (
+              <div key={index} className="list-row">
+                <div className="left-section">
+                  <span className="asset-name">
+                    {item.assetName}
+                  </span>
+                  <span className="date-text">
+                    {getFormattedDate(item)}
+                  </span>
+                </div>
+
+                {daysLeft !== null && (
+                  <div
+                    className={
+                      isUrgent
+                        ? "days-badge urgent"
+                        : "days-badge normal"
+                    }
+                  >
+                    {daysLeft > 0
+                      ? `${daysLeft} days left`
+                      : "Expired"}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -553,7 +594,7 @@ const SpendByCategoryDonutChart = ({ data }) => {
 
   return (
     <div className="donut-wrapper">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="90%" height="90%">
         <PieChart>
           <Pie
             data={data}

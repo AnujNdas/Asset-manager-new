@@ -357,7 +357,7 @@
 }
 .analytics-card {
   background: #ffffff;
-  padding: 20px;
+  padding: 10px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
@@ -365,7 +365,59 @@
 .analytics-title {
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
+}
+/* Layout */
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.asset-name {
+  font-weight: 500;
+}
+
+.date-text {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Badge Base */
+.days-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 90px;
+  text-align: center;
+}
+
+/* URGENT < 10 days */
+.days-badge.urgent {
+  background: #ffe5e5;
+  color: #d32f2f;
+  animation: blink 1s infinite;
+}
+
+/* NORMAL >= 10 days */
+.days-badge.normal {
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  color: white;
+}
+
+/* Blinking Animation */
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 /* Responsive */
 @media (max-width: 900px) {
