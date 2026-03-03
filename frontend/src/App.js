@@ -27,9 +27,6 @@ const App = () => {
   return (
     <>
       <Routes>
-        {TenantRoutes({ profileUser })}
-        {SuperAdminRoutes()}
-        <Route path="/unauthorized" element={<Unauthorized />} />
         {/* Auth / User routes */}
         <Route path="/user" element={<User />}>
           <Route path="login" element={<Login setProfileUser={setProfileUser} />} />
@@ -38,6 +35,9 @@ const App = () => {
           <Route path="reset/:token" element={<ResetPassword />} />
           
         </Route>
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        {TenantRoutes({ profileUser })}
+        {SuperAdminRoutes()}
       </Routes>
 
       <Toaster position="top-right" />
