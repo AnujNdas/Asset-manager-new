@@ -107,12 +107,7 @@ useEffect(() => {
           value={`${totals.usersCount} / ${totals.teamsCount}`}
         />
       </div>
-      <div className="section-grid">
-      <TopLocationsMap
-  title="Top Locations"
-  items={analytics.topLocations}
-/>
-</div>
+
       {/* ================= UPCOMING SECTION ================= */}
 
 
@@ -141,11 +136,7 @@ useEffect(() => {
 <div className="section-grid">
 
   {/* SOFTWARE */}
-  <ListCard
-    title="Expired Software Renewals"
-    items={upcoming.software?.expired || []}
-    dateField="DOE"
-  />
+
 
   <ListCard
     title="Upcoming Software Renewals (30 Days)"
@@ -154,11 +145,7 @@ useEffect(() => {
   />
 
   {/* WARRANTY */}
-  <ListCard
-    title="Expired Hardware Warranty"
-    items={upcoming.warranty?.expired || []}
-    dateField="warranty.expiryDate"
-  />
+
 
   <ListCard
     title="Upcoming Hardware Warranty (30 Days)"
@@ -167,11 +154,7 @@ useEffect(() => {
   />
 
   {/* MAINTENANCE */}
-  <ListCard
-    title="Expired Hardware Maintenance"
-    items={upcoming.maintenance?.expired || []}
-    dateField="DOE"
-  />
+
 
   <ListCard
     title="Upcoming Hardware Maintenance (30 Days)"
@@ -180,11 +163,7 @@ useEffect(() => {
   />
 
   {/* INSURANCE */}
-  <ListCard
-    title="Expired Hardware Insurance"
-    items={upcoming.insurance?.expired || []}
-    dateField="insurance.expiryDate"
-  />
+
 
   <ListCard
     title="Upcoming Hardware Insurance (30 Days)"
@@ -192,6 +171,34 @@ useEffect(() => {
     dateField="insurance.expiryDate"
   />
 
+</div>
+      <div className="section-grid">
+      <TopLocationsMap
+  title="Top Locations"
+  items={analytics.topLocations}
+/>
+</div>
+<div className="section-grid">
+  <ListCard
+    title="Expired Hardware Insurance"
+    items={upcoming.insurance?.expired || []}
+    dateField="insurance.expiryDate"
+  />
+    <ListCard
+    title="Expired Hardware Maintenance"
+    items={upcoming.maintenance?.expired || []}
+    dateField="DOE"
+  />
+    <ListCard
+    title="Expired Hardware Warranty"
+    items={upcoming.warranty?.expired || []}
+    dateField="warranty.expiryDate"
+  />
+    <ListCard
+    title="Expired Software Renewals"
+    items={upcoming.software?.expired || []}
+    dateField="DOE"
+  />
 </div>
 {/* <div className="section-grid">
 

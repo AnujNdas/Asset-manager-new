@@ -34,7 +34,6 @@ axiosInstance.interceptors.request.use(
 );
 
 
-
 axiosInstance.interceptors.response.use(
   (response) => {
     progressController.stop();
@@ -44,21 +43,28 @@ axiosInstance.interceptors.response.use(
     progressController.stop();
 
     const status = error.response?.status;
+    const currentPath = window.location.pathname;
 
     error.userMessage =
       error.response?.data?.error ||
       error.response?.data?.message ||
       "Something went wrong. Please try again.";
 
-    const currentPath = window.location.pathname;
+    // ✅ 401 → Session expired → Login
+    if (status === 401) {
+      console.warn("Session expired or invalid token");
 
-    // 🔥 Prevent redirect loop
-    if (
-      (status === 401 || status === 403) &&
-      currentPath !== "/unauthorized"
-    ) {
-      console.warn("Auth error:", error.userMessage);
+      localStorage.removeItem("auth");
 
+      if (currentPath !== "/user/login") {
+        window.location.href = "/user/login";
+      }
+
+      return Promise.reject(error);
+    }
+
+    // ✅ 403 → Authenticated but forbidden → Unauthorized
+    if (status === 403 && currentPath !== "/unauthorized") {
       window.location.href = `/unauthorized?message=${encodeURIComponent(
         error.userMessage
       )}`;
@@ -67,6 +73,5 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default axiosInstance;
