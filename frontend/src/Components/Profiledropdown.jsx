@@ -14,20 +14,17 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
   /**
    * 🔐 LOAD USER FROM AUTH STORE
    */
-  useEffect(() => {
-    if (!isVisible) return;
+useEffect(() => {
+  const authRaw = localStorage.getItem("auth");
+  if (!authRaw) return;
 
-    const authRaw = localStorage.getItem("auth");
-    if (!authRaw) return;
-
-    try {
-      const auth = JSON.parse(authRaw);
-      setUser(auth.user);
-    } catch (err) {
-      console.error("Invalid auth data");
-    }
-  }, [isVisible]);
-
+  try {
+    const auth = JSON.parse(authRaw);
+    setUser(auth.user);
+  } catch (err) {
+    console.error("Invalid auth data");
+  }
+}, []);
   /**
    * 🚪 LOGOUT HANDLER
    */
