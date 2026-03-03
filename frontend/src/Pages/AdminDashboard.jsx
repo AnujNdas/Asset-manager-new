@@ -171,7 +171,7 @@ useEffect(() => {
     dateField="insurance.expiryDate"
   />
 
-  <ListCard
+  {/* <ListCard
     title="Expired Hardware Insurance"
     items={upcoming.insurance?.expired || []}
     dateField="insurance.expiryDate"
@@ -190,7 +190,7 @@ useEffect(() => {
     title="Expired Software Renewals"
     items={upcoming.software?.expired || []}
     dateField="DOE"
-  />
+  /> */}
 </div>
 
       <div className="section-grid">
