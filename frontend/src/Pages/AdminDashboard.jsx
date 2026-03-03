@@ -22,7 +22,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import "./SpendByCategoryDonutChart.css";
 
 const COLORS = [
   "#2563eb",
@@ -313,7 +312,7 @@ const DepartmentAnalyticsCard = ({ title, items }) => {
           <table className="analytics-table">
             <thead>
               <tr>
-                <th>Department</th>
+                <th>Dept</th>
                 <th>Name</th>
                 <th>Assets (H | S)</th>
                 <th className="text-right">Total</th>
