@@ -14,6 +14,16 @@ import { scaleLinear } from "d3-scale";
 import {  useMemo } from "react";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 
 countries.registerLocale(enLocale);
 
@@ -113,12 +123,7 @@ useEffect(() => {
 
       {/* ================= ANALYTICS SECTION ================= */}
       <div className="section-grid">
-        <AnalyticsCard
-          title="Software Spend by Category"
-          items={analytics.spendByCategory}
-          labelKey="category"
-          valueKey="totalSpend"
-        />
+        <SpendByCategoryBarChart data={analytics.spendByCategory} />
 
         <AnalyticsCard
           title="Top IT Assets"
@@ -281,39 +286,39 @@ const AnalyticsCard = ({
   );
 };
 const DepartmentAnalyticsCard = ({ title, items }) => {
- return (
+  return (
     <div className="card">
       <h3 className="card-heading">{title}</h3>
 
       {items.length === 0 ? (
         <p className="empty-text">No employee data</p>
       ) : (
-        <div className="list">
-          {items.map((emp, index) => (
-            <div key={index} className="list-row">
-              
-              {/* LEFT SECTION */}
-              <div className="left-section">
-                <div className="dept-name">
-                  {emp.departmentName}
-                </div>
+        <div className="table-wrapper">
+          <table className="analytics-table">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Name</th>
+                <th>Assets (H | S)</th>
+                <th className="text-right">Total</th>
+              </tr>
+            </thead>
 
-                <div className="employee-name">
-                  {emp.employeeName}
-                </div>
-
-                <div className="asset-split">
-                  🖥 {emp.hardwareCount} | 💻 {emp.softwareCount}
-                </div>
-              </div>
-
-              {/* RIGHT SECTION */}
-              <div className="total-count">
-                {emp.totalAssignedQuantity}
-              </div>
-
-            </div>
-          ))}
+            <tbody>
+              {items.map((emp, index) => (
+                <tr key={index}>
+                  <td>{emp.departmentName}</td>
+                  <td>{emp.employeeName}</td>
+                  <td>
+                    {emp.hardwareCount} | {emp.softwareCount}
+                  </td>
+                  <td className="text-right">
+                    <strong>{emp.totalAssignedQuantity}</strong>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -517,3 +522,43 @@ const locationMap = useMemo(() => {
     </div>
   );
 };  
+const SpendByCategoryBarChart = ({ data }) => {
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-empty">
+        No spend data available
+      </div>
+    );
+  }
+
+  return (
+    <div className="chart-wrapper">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          margin={{ top: 10, right: 20, left: 10, bottom: 50 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+
+          <XAxis
+            dataKey="category"
+            angle={-20}
+            textAnchor="end"
+            interval={0}
+          />
+
+          <YAxis />
+
+          <Tooltip
+            formatter={(value) => [`₹ ${value.toLocaleString()}`, "Spend"]}
+          />
+
+          <Bar
+            dataKey="totalSpend"
+            radius={[6, 6, 0, 0]}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
