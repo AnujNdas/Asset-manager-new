@@ -9,7 +9,7 @@ import {
 } from "../Services/ApiServices";
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
-
+import Swal from "sweetalert2";
 const EmployeePage = () => {
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);

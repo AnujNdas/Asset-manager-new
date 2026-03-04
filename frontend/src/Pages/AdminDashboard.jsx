@@ -339,7 +339,7 @@ const AnalyticsCard = ({
   redirectTo
 }) => {
   const navigate = useNavigate();
-
+  const { currency, convertFromBase} = useCurrency();
   const getValue = (obj, path) =>
     path.split(".").reduce((o, key) => o?.[key], obj);
 
