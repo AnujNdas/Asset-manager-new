@@ -113,7 +113,7 @@ h1 {
 .bar-wrapper {
   flex: 1;
   background: #f1f5f9;
-  height: 10px;
+  /* height: 10px; */
   border-radius: 6px;
   overflow: hidden;
 }

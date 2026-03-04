@@ -593,54 +593,49 @@ const SpendByCategoryBarChart = ({ data }) => {
 
   return (
     <div className="bar-wrapper">
-      <ResponsiveContainer width="100%" height={400}>
-  <BarChart
-    data={data}
-    layout="vertical"
-    margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
-  >
-    <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+      <ResponsiveContainer width="100%" height={350}>
+        <BarChart
+          data={data}
+          layout="vertical"
+          margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
 
-    <XAxis
-      type="number"
-      tickFormatter={(value) =>
-        `₹ ${value.toLocaleString()}`
-      }
-    />
+          <XAxis
+            type="number"
+            tickFormatter={(value) => `₹ ${value.toLocaleString()}`}
+          />
 
-    <YAxis
-      type="category"
-      dataKey="category"
-      width={150}
-    />
+          <YAxis
+            type="category"
+            dataKey="category"
+            width={120}
+          />
 
-    <Tooltip
-      formatter={(value) => [
-        `₹ ${value.toLocaleString()}`,
-        "Spend",
-      ]}
-    />
+          <Tooltip
+            formatter={(value) => [
+              `₹ ${value.toLocaleString()}`,
+              "Spend",
+            ]}
+          />
 
-    <Legend
-      layout="horizontal"
-      verticalAlign="top"
-      align="center"
-    />
+          <Legend
+            layout="horizontal"
+            verticalAlign="top"
+            align="center"
+            wrapperStyle={{ paddingBottom: 10 }}
+          />
 
-    <Bar
-      dataKey="totalSpend"
-      radius={[0, 8, 8, 0]}
-      barSize={40}
-    >
-      {data.map((entry, index) => (
-        <Cell
-          key={`cell-${index}`}
-          fill={COLORS[index % COLORS.length]}
-        />
-      ))}
-    </Bar>
-  </BarChart>
-</ResponsiveContainer>
+          <Bar dataKey="totalSpend" radius={[0, 8, 8, 0]}>
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
 
       <div className="bar-total">
         Total Spend: ₹ {totalSpend.toLocaleString()}
