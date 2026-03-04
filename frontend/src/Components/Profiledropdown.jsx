@@ -5,6 +5,7 @@ import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 import "../Page_styles/Profiledropdown.css";
 import { useNavigate } from "react-router-dom";
 import profile from "../Images/profile.png";
+import axiosInstance from "../Services/axiosInstance";
 const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -15,16 +16,19 @@ const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
    * 🔐 LOAD USER FROM AUTH STORE
    */
 useEffect(() => {
-  const authRaw = localStorage.getItem("auth");
-  if (!authRaw) return;
+  const fetchUser = async () => {
+    try {
+      const res = await axiosInstance.get("/user/me");
+      setUser(res.data.user);
+    } catch (err) {
+      console.error("Failed to fetch user:", err);
+    }
+  };
 
-  try {
-    const auth = JSON.parse(authRaw);
-    setUser(auth.user);
-  } catch (err) {
-    console.error("Invalid auth data");
+  if (isVisible) {
+    fetchUser(); // fetch only when dropdown opens
   }
-}, []);
+}, [isVisible]);
   /**
    * 🚪 LOGOUT HANDLER
    */

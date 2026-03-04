@@ -10,7 +10,7 @@ const MyProfile = () => {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
+  const [avatarPreview, setAvatarPreview] = useState(null);
   const [user, setUser] = useState(null);
   const [avatarFile, setAvatarFile] = useState(null);
 
@@ -29,7 +29,13 @@ const MyProfile = () => {
     city: "",
     officeLocation: "",
   });
-
+  useEffect(() => {
+  return () => {
+    if (avatarPreview) {
+      URL.revokeObjectURL(avatarPreview);
+    }
+  };
+}, [avatarPreview]);
   // -----------------------------
   // Fetch user profile
   // -----------------------------
@@ -112,7 +118,7 @@ useEffect(() => {
 <div className="profile-avatar-section">
 <div className="avatar-wrapper">
   <img
-    src={user?.avatar?.url || profile}
+    src={avatarPreview || user?.avatar?.url || profile}
     alt="Profile"
     className="profile-avatar"
     onError={(e) => {
@@ -126,7 +132,13 @@ useEffect(() => {
     accept="image/*"
     id="avatarUpload"
     hidden
-    onChange={(e) => setAvatarFile(e.target.files[0])}
+    onChange={(e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setAvatarFile(file);
+  setAvatarPreview(URL.createObjectURL(file));
+}}
   />
 
   {/* Edit button */}

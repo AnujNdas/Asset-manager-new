@@ -691,7 +691,7 @@ const SpendByCategoryBarChart = ({ data }) => {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-
+{/* 
       <div
         style={{
           marginTop: 16,
@@ -702,7 +702,7 @@ const SpendByCategoryBarChart = ({ data }) => {
         }}
       >
         Total Spend: ₹ {totalSpend.toLocaleString()}
-      </div>
+      </div> */}
     </div>
   );
 };
