@@ -20,10 +20,11 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
   CartesianGrid,
+  Tooltip,
   Legend,
   Cell,
+  LabelList,
 } from "recharts";
 
 const COLORS = [
@@ -591,56 +592,119 @@ const SpendByCategoryBarChart = ({ data }) => {
     0
   );
 
+  const COLORS = [
+    "#2563eb",
+    "#16a34a",
+    "#f59e0b",
+    "#ef4444",
+    "#8b5cf6",
+  ];
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            background: "#ffffff",
+            padding: "12px 16px",
+            borderRadius: "10px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            border: "1px solid #f1f5f9",
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>
+            {payload[0].payload.category}
+          </div>
+          <div style={{ color: "#2563eb", fontWeight: 500 }}>
+            ₹ {payload[0].value.toLocaleString()}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="bar-wrapper">
-      <ResponsiveContainer width="100%" height={350}>
+    <div
+      style={{
+        width: "100%",
+        background: "#ffffff",
+        borderRadius: "16px",
+        padding: "24px",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
+      }}
+    >
+      <ResponsiveContainer width="100%" height={380}>
         <BarChart
           data={data}
-          layout="vertical"
-          margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+          margin={{ top: 20, right: 20, left: 0, bottom: 40 }}
         >
-          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+          <defs>
+            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="#2563eb" stopOpacity={0.7} />
+            </linearGradient>
+          </defs>
+
+          <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
 
           <XAxis
-            type="number"
-            tickFormatter={(value) => `₹ ${value.toLocaleString()}`}
+            dataKey="category"
+            tick={{ fontSize: 12 }}
+            interval={0}
+            angle={-15}
+            textAnchor="end"
           />
 
           <YAxis
-            type="category"
-            dataKey="category"
-            width={120}
+            tickFormatter={(value) => `₹${(value / 1000000).toFixed(1)}M`}
+            tick={{ fontSize: 12 }}
           />
 
-          <Tooltip
-            formatter={(value) => [
-              `₹ ${value.toLocaleString()}`,
-              "Spend",
-            ]}
-          />
+          <Tooltip content={<CustomTooltip />} />
 
           <Legend
-            layout="horizontal"
-            verticalAlign="top"
+            verticalAlign="bottom"
             align="center"
-            wrapperStyle={{ paddingBottom: 10 }}
+            layout="horizontal"
+            wrapperStyle={{
+              paddingTop: 20,
+              fontSize: 13,
+            }}
           />
 
-          <Bar dataKey="totalSpend" radius={[0, 8, 8, 0]}>
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
+          <Bar
+            dataKey="totalSpend"
+            name="Total Spend"
+            fill="url(#barGradient)"
+            radius={[8, 8, 0, 0]}
+            animationDuration={800}
+          >
+            <LabelList
+              dataKey="totalSpend"
+              position="top"
+              formatter={(value) =>
+                `₹${(value / 1000000).toFixed(1)}M`
+              }
+              style={{ fontSize: 11, fontWeight: 500 }}
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
 
-      <div className="bar-total">
+      <div
+        style={{
+          marginTop: 16,
+          textAlign: "right",
+          fontWeight: 600,
+          fontSize: 14,
+          color: "#1e293b",
+        }}
+      >
         Total Spend: ₹ {totalSpend.toLocaleString()}
       </div>
     </div>
   );
 };
+
 
