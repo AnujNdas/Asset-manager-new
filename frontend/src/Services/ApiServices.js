@@ -417,3 +417,11 @@ export const createEmployee = async (payload) => {
   const res = await axiosInstance.post("/employees", payload);
   return res.data;
 };
+export const updateEmployee = async (id, payload) => {
+  const res = await axiosInstance.put(`/employees/${id}`, payload);
+  return res.data;
+};
+export const deleteEmployee = async (id) => {
+  const res = await axiosInstance.delete(`/employees/${id}`);
+  return res.data;
+}

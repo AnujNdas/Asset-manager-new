@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import EmployeeTable from "../Components/employee/EmployeeTable";
 import EmployeeModal from "../Components/employee/EmployeeModal";
-import { getEmployees, getDepartments  } from "../Services/ApiServices";
+import { 
+  getEmployees, 
+  getDepartments,
+  updateEmployee,
+  deleteEmployee
+} from "../Services/ApiServices";
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
 
@@ -11,7 +16,22 @@ const EmployeePage = () => {
   const [departmentFilter, setDepartmentFilter] = useState("");
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState(null);
+  const handleDelete = async (id) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete this employee?");
+  if (!confirmDelete) return;
 
+  try {
+    await deleteEmployee(id);
+    fetchEmployees(); // refresh list
+  } catch (err) {
+    console.error("Delete failed:", err);
+  }
+};
+const handleEdit = (employee) => {
+  setEditingEmployee(employee);
+  setShowModal(true);
+};
 const fetchEmployees = async () => {
   try {
     const res = await getEmployees(departmentFilter);
@@ -77,14 +97,25 @@ const fetchDepartments = async () => {
         </div>
       </div>
 
-      <EmployeeTable employees={filteredEmployees} />
+    <EmployeeTable
+  employees={filteredEmployees}
+  onEdit={handleEdit}
+  onDelete={handleDelete}
+/>
 
       {showModal && (
-        <EmployeeModal
-          departments={departments}
-          onClose={() => setShowModal(false)}
-          onSuccess={fetchEmployees}
-        />
+<EmployeeModal
+  departments={departments}
+  employee={editingEmployee}   // pass employee for edit
+  onClose={() => {
+    setShowModal(false);
+    setEditingEmployee(null);
+  }}
+  onSuccess={() => {
+    fetchEmployees();
+    setEditingEmployee(null);
+  }}
+/>
       )}
     </div>
   );

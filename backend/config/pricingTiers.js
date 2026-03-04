@@ -27,8 +27,8 @@ module.exports = [
     popular: false,
 
     features: [
-      "Up to 500 Hardware Assets",
-      "Up to 500 Software Assets",
+      "Up to 1000 Hardware Assets",
+      "Up to 1000 Software Assets",
       "Up to 1 Admin User",
       "Multi-Location Management",
       "Complete Lifecycle Tracking",
@@ -55,8 +55,8 @@ module.exports = [
     popular: true,
 
     features: [
-      "Up to 1000 Hardware Assets",
-      "Up to 1000 Software Assets",
+      "Up to 2500 Hardware Assets",
+      "Up to 2500 Software Assets",
       "Up to 5 Admin Users",
       "Multi-Location Management",
       "Complete Lifecycle Tracking",

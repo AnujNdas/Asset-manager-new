@@ -42,8 +42,77 @@ const getEmployees = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+/**
+ * Update Employee
+ */
+const updateEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const organizationId = req.user.organizationId;
 
+    const employee = await Employee.findOneAndUpdate(
+      { _id: id, organizationId }, // prevent cross-org access
+      { ...req.body },
+      {
+        new: true,
+        runValidators: true
+      }
+    ).populate("departmentId", "name");
+
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: employee
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+/**
+ * Delete Employee
+ */
+const deleteEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const organizationId = req.user.organizationId;
+
+    const employee = await Employee.findOneAndDelete({
+      _id: id,
+      organizationId
+    });
+
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Employee deleted successfully"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 module.exports = {
   createEmployee,
-  getEmployees
+  getEmployees,
+  updateEmployee,
+  deleteEmployee
 };

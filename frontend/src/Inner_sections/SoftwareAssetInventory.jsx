@@ -15,7 +15,7 @@ import Loader from "../Components/Loader";
 import { useNavigate } from "react-router-dom";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
+import { CURRENCY_SYMBOLS } from "../utils/currency";
 
 const SoftwareAssetList = () => {
   const [assets, setAssets] = useState([]);
@@ -37,7 +37,7 @@ useEffect(() => {
   setCurrentPage(1);
 }, [searchTerm]);
 const navigate = useNavigate();
-  const { currency } = useCurrency();
+const { currency, convertFromBase, loadingRates } = useCurrency();
 const handleAssign = (asset) => {
   navigate("/assignment", {
     state: {
@@ -269,7 +269,8 @@ const currentAssets = filteredAssets.slice(indexOfFirst, indexOfLast);
       </div>
     );
   };
-  if (loading) return <Loader type="inventory" apiDone={apiDone} />;
+if (loading || loadingRates)
+  return <Loader type="inventory" apiDone={apiDone} />;
   const Field = ({ label, value }) => (
   <div>
     <label>{label}</label>
@@ -314,7 +315,6 @@ const currentAssets = filteredAssets.slice(indexOfFirst, indexOfLast);
   {CURRENCY_SYMBOLS[currency]}{" "}
   {convertFromBase(
   asset.assetCost?.baseTotalAmount ?? 0,
-  currency
 )
 .toLocaleString()}
 </p>
@@ -323,9 +323,10 @@ const currentAssets = filteredAssets.slice(indexOfFirst, indexOfLast);
   <strong>Unit Cost:</strong>{" "}
   {CURRENCY_SYMBOLS[currency]}{" "}
   {convertFromBase(
-    asset.assetCost?.baseTotalAmount / asset.assetQuantity,
-    currency
-  ).toLocaleString()}
+  asset.assetCost?.baseTotalAmount && asset.assetQuantity
+    ? asset.assetCost.baseTotalAmount / asset.assetQuantity
+    : 0
+).toLocaleString()}
 </p>
 
 

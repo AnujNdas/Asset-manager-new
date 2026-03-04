@@ -16,7 +16,7 @@ import Loader from "../Components/Loader";
 import { useNavigate } from "react-router-dom";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
+import { CURRENCY_SYMBOLS } from "../utils/currency";
 
 const HardwareAssetList = () => {
   const [assets, setAssets] = useState([]);
@@ -36,7 +36,7 @@ const HardwareAssetList = () => {
   const assetsPerPage = 8;
 
   const navigate = useNavigate();
-  const { currency } = useCurrency();
+const { currency, convertFromBase, loadingRates } = useCurrency();
 
   const handleAssign = (asset) => {
     navigate("/assignment", {
@@ -380,7 +380,8 @@ if (name.startsWith("warranty.")) {
     );
   };
 
-  if (loading) return <Loader type="inventory" apiDone={apiDone} />;
+if (loading || loadingRates)
+  return <Loader type="inventory" apiDone={apiDone} />;
 const Field = ({ label, value }) => (
   <div>
     <label>{label}</label>
@@ -439,7 +440,6 @@ const Field = ({ label, value }) => (
 {CURRENCY_SYMBOLS[currency]}{" "}
 {convertFromBase(
   asset.assetCost?.baseTotalAmount ?? 0,
-  currency
 )
 .toLocaleString()}
 
@@ -460,7 +460,6 @@ const Field = ({ label, value }) => (
   asset.assetCost?.baseTotalAmount
     ? asset.assetCost.baseTotalAmount / asset.assetQuantity
     : 0,
-  currency
 )
 .toLocaleString()
     : "N/A"}

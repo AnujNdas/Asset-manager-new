@@ -6,7 +6,7 @@ import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase , CURRENCY_SYMBOLS } from "../utils/currency";
+import { CURRENCY_SYMBOLS } from "../utils/currency";
 import {
   getStatuses,
   getUnits,
@@ -76,7 +76,17 @@ useEffect(() => {
   })();
 }, []);
 
+const formatDisplayDate = (date) => {
+  if (!date) return "-";
 
+  const d = new Date(date);
+
+  return d.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
   // Reset Page When Filter or Tab Changes
   useEffect(() => {
     setCurrentPage(1);
@@ -118,10 +128,8 @@ useEffect(() => {
     XLSX.utils.book_append_sheet(wb, ws, activeTab);
     XLSX.writeFile(wb, `${activeTab}_report.xlsx`);
   };
-  if (loading) {
-  return (
-      <Loader type="mis" apiDone={apiDone} />
-  );
+if (loading || loadingRates) {
+  return <Loader type="mis" apiDone={apiDone} />;
 }
 const getInStock = (asset) =>
   Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
@@ -263,12 +271,11 @@ const getInStock = (asset) =>
                   <td>{getInStock(row)}</td>
                   <td>{locations.find((l) => l._id === row.locationName)?.name}</td>
 <td className="hide-md">{row.assetSpecification}</td>
-<td className="hide-lg">{row.DOE}</td>
+<td className="hide-lg">{formatDisplayDate(row.DOE)}</td> 
 
                   <td>{CURRENCY_SYMBOLS[currency]}{" "}
                   {convertFromBase(
                     row.assetCost?.baseTotalAmount ?? 0,
-                    currency
                   ).toLocaleString()}</td>
                 </>
               )}
@@ -282,11 +289,10 @@ const getInStock = (asset) =>
                   {/* <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td> */}
                   <td>{categories.find((c) => c._id === row.assetCategory)?.name}</td>
                   <td className="hide-md">{row.purchaseFrom}</td>
-                <td className="hide-lg">{row.DOE}</td>
+                <td className="hide-lg">{formatDisplayDate(row.DOE)}</td>
                 <td>{CURRENCY_SYMBOLS[currency]}{" "}
                   {convertFromBase(
-                    (row.assetCost?.baseAmount ?? 0) * (row.assetQuantity ?? 0),
-                    currency
+                    (row.assetCost?.baseTotalAmount ?? 0) * (row.assetQuantity ?? 0),
                   ).toLocaleString()}</td>
                 </>
               )}

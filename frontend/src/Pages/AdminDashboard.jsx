@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getDashboardData } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
 import { useCurrency } from "../Context/CurrencyContext";
-import { convertFromBase, CURRENCY_SYMBOLS } from "../utils/currency"; // adjust path
+import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import {
   ComposableMap,
@@ -26,6 +26,8 @@ import {
   Cell,
   LabelList,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
+
 
 const COLORS = [
   "#2563eb",
@@ -52,7 +54,7 @@ const COUNTRY_NAME_MAP = {
 
 
 const AdminDashboard = () => {
-  const { currency } = useCurrency();
+const { currency, convertFromBase, loadingRates } = useCurrency();
   console.log("AdminDashboard mounted");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -78,7 +80,7 @@ useEffect(() => {
   fetchDashboard();
 }, []);
 
-  if (loading) {
+ if (loading || loadingRates) { 
     return (
       <div className="dashboard-loader">
         <div className="spinner"></div>
@@ -101,8 +103,8 @@ useEffect(() => {
           title="Total Valuation"
           value={` ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
   totals.overallValuation,
-  currency
 ).toLocaleString()}`}
+
         />
 
         <MetricCard
@@ -110,8 +112,8 @@ useEffect(() => {
           value={totals.softwareCount}
           sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
   totals.softwareValuation,
-  currency
 ).toLocaleString()}`}
+redirectTo="/inventory?software"
         />
 
         <MetricCard
@@ -119,13 +121,14 @@ useEffect(() => {
           value={totals.hardwareCount}
           sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
   totals.hardwareValuation,
-  currency
 ).toLocaleString()}`}
+redirectTo="/inventory?hardware"
         />
 
         <MetricCard
           title="Users / Team-members"
           value={`${totals.usersCount} / ${totals.teamsCount}`}
+          redirectTo="/setting/users"
         />
       </div>
 
@@ -150,6 +153,7 @@ useEffect(() => {
           labelKey="assetName"
           valueKey="assetCost.baseTotalAmount"
           currency={currency}
+          redirectTo="/inventory?software"
         />
 
           <DepartmentAnalyticsCard
@@ -166,6 +170,7 @@ useEffect(() => {
     title="Upcoming Software Renewals (30 Days)"
     items={upcoming.software?.upcoming || []}
     dateField="DOE"
+    redirectTo="/inventory?software"
   />
 
   {/* MAINTENANCE */}
@@ -175,6 +180,7 @@ useEffect(() => {
     title="Upcoming Hardware Maintenance (30 Days)"
     items={upcoming.maintenance?.upcoming || []}
     dateField="DOE"
+    redirectTo="/inventory?hardware"
   />
   {/* WARRANTY */}
 
@@ -183,6 +189,7 @@ useEffect(() => {
     title="Upcoming Hardware Warranty (30 Days)"
     items={upcoming.warranty?.upcoming || []}
     dateField="warranty.expiryDate"
+    redirectTo="/inventory?hardware"
   />
 
 
@@ -193,6 +200,7 @@ useEffect(() => {
     title="Upcoming Hardware Insurance (30 Days)"
     items={upcoming.insurance?.upcoming || []}
     dateField="insurance.expiryDate"
+    redirectTo="/inventory?hardware"
   />
 
   {/* <ListCard
@@ -232,15 +240,25 @@ export default AdminDashboard;
 
 /* ================= SUB COMPONENTS ================= */
 
-const MetricCard = ({ title, value, sub }) => (
-  <div className="card metric-card">
-    <p className="card-title">{title}</p>
-    <h2 className="metric-value">{value}</h2>
-    {sub && <p className="metric-sub">{sub}</p>}
-  </div>
-);
+const MetricCard = ({ title, value, sub, redirectTo }) => {
+  const navigate = useNavigate();
 
-const ListCard = ({ title, items, dateField }) => {
+  return (
+    <div
+      className="card metric-card clickable-card"
+      onClick={() => redirectTo && navigate(redirectTo)}
+      role="button"
+    >
+      <p className="card-title">{title}</p>
+      <h2 className="metric-value">{value}</h2>
+      {sub && <p className="metric-sub">{sub}</p>}
+    </div>
+  );
+};
+
+const ListCard = ({ title, items, dateField , redirectTo }) => {
+  const navigate = useNavigate();
+
   const getDateValue = (item) => {
     if (dateField.includes(".")) {
       const keys = dateField.split(".");
@@ -268,7 +286,8 @@ const ListCard = ({ title, items, dateField }) => {
   };
 
   return (
-    <div className="card">
+    <div className="card"
+    onClick={() => redirectTo && navigate(redirectTo)}>
       <h3 className="card-heading">{title}</h3>
 
       {items.length === 0 ? (
@@ -317,19 +336,24 @@ const AnalyticsCard = ({
   items,
   labelKey,
   valueKey,
-  currency
+  redirectTo
 }) => {
+  const navigate = useNavigate();
+
   const getValue = (obj, path) =>
     path.split(".").reduce((o, key) => o?.[key], obj);
 
   return (
-    <div className="card">
+    <div
+      className="card clickable-card"
+      onClick={() => redirectTo && navigate(redirectTo)}
+    >
       <h3 className="card-heading">{title}</h3>
 
       <div className="list">
         {items.map((item, index) => {
           const rawValue = getValue(item, valueKey) || 0;
-          const converted = convertFromBase(rawValue, currency);
+          const converted = convertFromBase(rawValue);
 
           return (
             <div key={index} className="list-row">
@@ -419,7 +443,7 @@ const TopLocationsMap = ({ title, items }) => {
   const [tooltip, setTooltip] = useState(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-
+  const navigate = useNavigate();
   /* ================= NORMALIZE LOCATION DATA ================= */
 
 const locationMap = useMemo(() => {
@@ -478,7 +502,9 @@ const locationMap = useMemo(() => {
   /* ================= RENDER ================= */
 
   return (
-    <div className="card">
+    <div className="card" 
+    onClick={() => navigate("/locations")}
+    >
       <h3 className="card-heading">{title}</h3>
 
       <div className="map-container">
@@ -583,6 +609,7 @@ const locationMap = useMemo(() => {
   );
 };  
 const SpendByCategoryBarChart = ({ data }) => {
+  const { currency, convertFromBase } = useCurrency();
   if (!data || data.length === 0) {
     return <div className="chart-empty">No spend data available</div>;
   }
@@ -616,7 +643,7 @@ const SpendByCategoryBarChart = ({ data }) => {
             {payload[0].payload.category}
           </div>
           <div style={{ color: "#2563eb", fontWeight: 500 }}>
-            ₹ {payload[0].value.toLocaleString()}
+           {CURRENCY_SYMBOLS[currency]} {payload[0].value.toLocaleString()}
           </div>
         </div>
       );
@@ -636,7 +663,10 @@ const SpendByCategoryBarChart = ({ data }) => {
     >
       <ResponsiveContainer width="100%" height={380}>
         <BarChart
-          data={data}
+          data={data.map(item => ({
+  ...item,
+  totalSpendConverted: convertFromBase(item.totalSpend)
+}))}
           margin={{ top: 20, right: 20, left: 0, bottom: 40 }}
         >
           <defs>
@@ -657,9 +687,10 @@ const SpendByCategoryBarChart = ({ data }) => {
           />
 
           <YAxis
-            tickFormatter={(value) => `₹${(value / 1000000).toFixed(1)}M`}
-            tick={{ fontSize: 12 }}
-          />
+  tickFormatter={(value) =>
+    `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+  }
+/>
 
           <Tooltip content={<CustomTooltip />} />
 
@@ -674,20 +705,19 @@ const SpendByCategoryBarChart = ({ data }) => {
           />
 
           <Bar
-            dataKey="totalSpend"
+            dataKey="totalSpendConverted"
             name="Total Spend"
             fill="url(#barGradient)"
             radius={[8, 8, 0, 0]}
             animationDuration={800}
           >
-            <LabelList
-              dataKey="totalSpend"
-              position="top"
-              formatter={(value) =>
-                `₹${(value / 1000000).toFixed(1)}M`
-              }
-              style={{ fontSize: 11, fontWeight: 500 }}
-            />
+<LabelList
+  dataKey="totalSpendConverted"
+  position="top"
+  formatter={(value) =>
+    `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+  }
+/>
           </Bar>
         </BarChart>
       </ResponsiveContainer>

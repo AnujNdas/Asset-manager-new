@@ -27,6 +27,10 @@ const EmployeeTable = ({ employees }) => {
                   {emp.status}
                 </span>
               </td>
+                    <td>
+        <button onClick={() => onEdit(emp)}>Edit</button>
+        <button onClick={() => onDelete(emp._id)}>Delete</button>
+      </td>
             </tr>
           ))}
         </tbody>
