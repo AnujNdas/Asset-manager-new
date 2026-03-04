@@ -17,16 +17,19 @@ const EmployeePage = () => {
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
-  const handleDelete = async (id) => {
-  const confirmDelete = window.confirm("Are you sure you want to delete this employee?");
-  if (!confirmDelete) return;
+const handleDelete = async (id) => {
+  const result = await Swal.fire({
+    title: "Delete Employee?",
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete"
+  });
 
-  try {
-    await deleteEmployee(id);
-    fetchEmployees(); // refresh list
-  } catch (err) {
-    console.error("Delete failed:", err);
-  }
+  if (!result.isConfirmed) return;
+
+  await deleteEmployee(id);
+  fetchEmployees();
 };
 const handleEdit = (employee) => {
   setEditingEmployee(employee);

@@ -18,7 +18,7 @@ import {
 } from "../Services/ApiServices";
 
 const MisReport = () => {
-  const { currency } = useCurrency();
+const { currency, convertFromBase, loadingRates } = useCurrency();
   const [activeTab, setActiveTab] = useState("hardware");
 
   // Shared filters
