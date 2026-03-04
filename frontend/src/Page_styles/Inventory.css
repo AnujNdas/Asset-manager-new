@@ -848,7 +848,26 @@
   cursor: not-allowed;
   pointer-events: none;
 }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
+.inventory-search-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  min-width: 220px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.inventory-search-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
   /* ========== RESPONSIVE ========== */
   @media (max-width: 500px) {
     .asset-edit-modal {

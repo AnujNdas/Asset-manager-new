@@ -25,7 +25,7 @@ const HardwareAssetList = () => {
   const [units, setUnits] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [selectedAssignmentAsset, setSelectedAssignmentAsset] = useState(null);
-
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [editingAsset, setEditingAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
@@ -89,8 +89,19 @@ const isOutOfStock = (asset) =>
 
   const indexOfLast = currentPage * assetsPerPage;
   const indexOfFirst = indexOfLast - assetsPerPage;
-  const currentAssets = assets.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(assets.length / assetsPerPage);
+const filteredAssets = assets.filter((asset) => {
+  const term = searchTerm.toLowerCase();
+
+  return (
+    asset.assetName?.toLowerCase().includes(term) ||
+    asset.assetCode?.toLowerCase().includes(term) ||
+    asset.modelNo?.toLowerCase().includes(term) ||
+    asset.barcodeNumber?.toLowerCase().includes(term)
+  );
+});
+
+const currentAssets = filteredAssets.slice(indexOfFirst, indexOfLast);
+const totalPages = Math.ceil(filteredAssets.length / assetsPerPage);
 
 const getName = (list, value) => {
   if (!value) return "N/A";
@@ -378,9 +389,23 @@ const Field = ({ label, value }) => (
 );
   return (
     <div className="inventory-container">
-      <div className="dashboard-header">
+<div className="dashboard-header">
   <h2 className="hardware-title">Hardware Inventory</h2>
-  <CurrencyFilter />
+
+  <div className="header-actions">
+    <input
+      type="text"
+      placeholder="Search Hardware..."
+      value={searchTerm}
+      onChange={(e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1); // reset page when searching
+      }}
+      className="inventory-search-input"
+    />
+
+    <CurrencyFilter />
+  </div>
 </div>
 
       <div className="inventory-grid">
@@ -588,7 +613,7 @@ const Field = ({ label, value }) => (
       }
     />
     <Field
-      label="Expiry Date"
+      label="Maintenance Date"
       value={
         selectedAsset.DOE
           ? new Date(selectedAsset.DOE).toLocaleDateString()
@@ -833,7 +858,7 @@ const Field = ({ label, value }) => (
       </div>
 
       <div>
-        <label>Date Of Expiry</label>
+        <label>Maintanence Date</label>
         <input
           type="date"
           name="DOE"

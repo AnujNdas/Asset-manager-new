@@ -23,7 +23,7 @@ const SoftwareAssetList = () => {
   const [statuses, setStatuses] = useState([]);
   const [units, setUnits] = useState([]);
   const [locations, setLocations] = useState([]);
-
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [editingAsset, setEditingAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
@@ -33,7 +33,9 @@ const SoftwareAssetList = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const assetsPerPage = 8;
-
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm]);
 const navigate = useNavigate();
   const { currency } = useCurrency();
 const handleAssign = (asset) => {
@@ -213,12 +215,22 @@ const renderDepartmentBadges = (asset) => {
 };
 
   /* ================= PAGINATION LOGIC (FIXED) ================= */
-  const totalPages = Math.ceil(assets.length / assetsPerPage);
+const filteredAssets = assets.filter((asset) => {
+  const term = searchTerm.toLowerCase();
 
-  const indexOfLast = currentPage * assetsPerPage;
-  const indexOfFirst = indexOfLast - assetsPerPage;
-  const currentAssets = assets.slice(indexOfFirst, indexOfLast);
+  return (
+    asset.assetName?.toLowerCase().includes(term) ||
+    asset.assetCode?.toLowerCase().includes(term) ||
+    asset.assetSpecification?.toLowerCase().includes(term) ||
+    asset.purchaseFrom?.toLowerCase().includes(term)
+  );
+});
 
+const totalPages = Math.ceil(filteredAssets.length / assetsPerPage);
+
+const indexOfLast = currentPage * assetsPerPage;
+const indexOfFirst = indexOfLast - assetsPerPage;
+const currentAssets = filteredAssets.slice(indexOfFirst, indexOfLast);
   /* Auto-fix page when deleting last item on page */
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -266,9 +278,20 @@ const renderDepartmentBadges = (asset) => {
 );
   return (
     <div className="inventory-container">
-      <div className="dashboard-header">
+<div className="dashboard-header">
   <h2 className="hardware-title">Software Inventory</h2>
-  <CurrencyFilter />
+
+  <div className="header-actions">
+    <input
+      type="text"
+      placeholder="Search software..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="inventory-search-input"
+    />
+
+    <CurrencyFilter />
+  </div>
 </div>
       <div className="inventory-grid">
         <AnimatePresence>
