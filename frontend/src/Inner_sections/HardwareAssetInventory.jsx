@@ -583,14 +583,14 @@ const Field = ({ label, value }) => (
           : null
       }
     />
-    <Field
+    {/* <Field
       label="Base Total"
       value={
         selectedAsset.assetCost?.baseTotalAmount
           ? `₹ ${selectedAsset.assetCost.baseTotalAmount.toLocaleString()}`
           : null
       }
-    />
+    /> */}
   </div>
 
   {/* ================= INVENTORY ================= */}

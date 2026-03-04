@@ -469,15 +469,15 @@ const currentAssets = filteredAssets.slice(indexOfFirst, indexOfLast);
             }
           />
 
-          <Field
+          {/* <Field
             label="Base Billing Cost"
             value={
               selectedAsset.assetCost?.baseTotalAmount
                 ? `₹ ${selectedAsset.assetCost.baseTotalAmount.toLocaleString()}`
                 : null
             }
-          />
-
+          /> */}
+{/* 
           <Field
             label="Base Overall Cost"
             value={
@@ -485,7 +485,7 @@ const currentAssets = filteredAssets.slice(indexOfFirst, indexOfLast);
                 ? `₹ ${selectedAsset.overallCost.baseTotalAmount.toLocaleString()}`
                 : null
             }
-          />
+          /> */}
         </div>
 
         {/* ================= LICENSE & DURATION ================= */}
