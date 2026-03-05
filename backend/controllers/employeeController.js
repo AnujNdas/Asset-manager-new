@@ -1,6 +1,6 @@
 const Employee = require("../models/Employee");
 const AssetAssignment = require("../models/AssetAssignment");
-
+const mongoose = require("mongoose");
 /**
  * Create Employee
  */
@@ -114,7 +114,7 @@ const deleteEmployee = async (req, res) => {
 
 const getEmployeeAssetSummary = async (req, res) => {
   try {
-    const organizationId = req.user.organizationId;
+    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
 
     const data = await AssetAssignment.aggregate([
       {
