@@ -1,7 +1,6 @@
   const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
-require("./cron/expiryScheduler");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const path = require("path");
@@ -37,6 +36,7 @@ const User = require("./models/User");
 
 
 const app = express();
+require("./cron/expiryScheduler");
 app.set("trust proxy", true);
 app.use((req, res, next) => {
   console.log("Incoming request:", req.method, req.url);
