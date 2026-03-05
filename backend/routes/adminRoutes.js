@@ -83,13 +83,28 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
         { $limit: 5 }
       ]),
 
-      // UPCOMING SOFTWARE (next 30 days)
-      Software.aggregate([
-        { $match: { organizationId, DOE: { $gte: now, $lte: next30Days } } },
-        { $project: { assetName: 1, DOE: 1, "assetCost.baseTotalAmount": 1 } },
-        { $sort: { DOE: 1 } },
-        { $limit: 5 }
-      ]),
+      // UPCOMING SOFTWARE 
+Software.aggregate([
+  { 
+    $match: { 
+      organizationId,
+      DOE: { $gte: now }   // only future expiries
+    } 
+  },
+  { 
+    $project: { 
+      assetName: 1, 
+      DOE: 1, 
+      "assetCost.baseTotalAmount": 1 
+    } 
+  },
+  { 
+    $sort: { DOE: 1 }      // earliest expiry first
+  },
+  { 
+    $limit: 5              // top 5 expiring soonest
+  }
+]),
 
       // ---------------- WARRANTY ----------------
 
@@ -108,19 +123,23 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       ]),
 
       // UPCOMING WARRANTY
-      Hardware.aggregate([
-        { $match: { organizationId, "warranty.expiryDate": { $gte: now, $lte: next30Days } } },
-        {
-          $project: {
-            assetName: 1,
-            "warranty.expiryDate": 1,
-            "assetCost.baseTotalAmount": 1
-          }
-        },
-        { $sort: { "warranty.expiryDate": 1 } },
-        { $limit: 5 }
-      ]),
-
+Hardware.aggregate([
+  {
+    $match: {
+      organizationId,
+      "warranty.expiryDate": { $gte: now }
+    }
+  },
+  {
+    $project: {
+      assetName: 1,
+      "warranty.expiryDate": 1,
+      "assetCost.baseTotalAmount": 1
+    }
+  },
+  { $sort: { "warranty.expiryDate": 1 } },
+  { $limit: 5 }
+]),
       // ---------------- MAINTENANCE ----------------
 
       // EXPIRED MAINTENANCE
@@ -132,12 +151,23 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       ]),
 
       // UPCOMING MAINTENANCE
-      Hardware.aggregate([
-        { $match: { organizationId, DOE: { $gte: now, $lte: next30Days } } },
-        { $project: { assetName: 1, DOE: 1, "assetCost.baseTotalAmount": 1 } },
-        { $sort: { DOE: 1 } },
-        { $limit: 5 }
-      ]),
+Hardware.aggregate([
+  {
+    $match: {
+      organizationId,
+      DOE: { $gte: now }
+    }
+  },
+  {
+    $project: {
+      assetName: 1,
+      DOE: 1,
+      "assetCost.baseTotalAmount": 1
+    }
+  },
+  { $sort: { DOE: 1 } },
+  { $limit: 5 }
+]),
 
       // ---------------- INSURANCE ----------------
 
@@ -156,18 +186,23 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       ]),
 
       // UPCOMING INSURANCE
-      Hardware.aggregate([
-        { $match: { organizationId, "insurance.expiryDate": { $gte: now, $lte: next30Days } } },
-        {
-          $project: {
-            assetName: 1,
-            "insurance.expiryDate": 1,
-            "assetCost.baseTotalAmount": 1
-          }
-        },
-        { $sort: { "insurance.expiryDate": 1 } },
-        { $limit: 5 }
-      ]),
+Hardware.aggregate([
+  {
+    $match: {
+      organizationId,
+      "insurance.expiryDate": { $gte: now }
+    }
+  },
+  {
+    $project: {
+      assetName: 1,
+      "insurance.expiryDate": 1,
+      "assetCost.baseTotalAmount": 1
+    }
+  },
+  { $sort: { "insurance.expiryDate": 1 } },
+  { $limit: 5 }
+]),
 
       // SOFTWARE SPEND BY CATEGORY
       Software.aggregate([
