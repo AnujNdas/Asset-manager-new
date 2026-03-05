@@ -18,6 +18,7 @@ const EmployeePage = () => {
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
+  const [employeeSummary, setEmployeeSummary] = useState([]);
 const handleDelete = async (id) => {
   const result = await Swal.fire({
     title: "Delete Employee?",
@@ -58,9 +59,9 @@ const fetchDepartments = async () => {
 const fetchEmployeeSummary = async () => {
   try {
     const res = await getEmployeeSummary();
-    console.log("Fetched Employee Summary:", res);
+    setEmployeeSummary(res.data);
   } catch (err) {
-    console.error("Fetch Employee Summary Error:", err);
+    console.error(err);
   }
 };
 
@@ -117,6 +118,74 @@ const fetchEmployeeSummary = async () => {
   onEdit={handleEdit}
   onDelete={handleDelete}
 />
+<div className="team-assets-section">
+  <h3>Team Asset Overview</h3>
+
+  <div className="team-asset-grid">
+    {employeeSummary.map((emp) => {
+
+      const hardwareCost = emp.hardwareAssets.reduce(
+        (sum, a) => sum + a.cost, 0
+      );
+
+      const softwareCost = emp.softwareAssets.reduce(
+        (sum, a) => sum + a.cost, 0
+      );
+
+      const totalCost = hardwareCost + softwareCost;
+
+      return (
+        <div key={emp._id} className="team-asset-card">
+
+          <div className="team-card-header">
+            <h4>{emp.employeeName}</h4>
+            <span>{emp.employeeCode}</span>
+            <p>{emp.department}</p>
+          </div>
+
+          <div className="asset-section">
+
+            <div>
+              <h5>Hardware</h5>
+              {emp.hardwareAssets.length === 0 ? (
+                <p>No hardware</p>
+              ) : (
+                emp.hardwareAssets.map((a, i) => (
+                  <div key={i} className="asset-item">
+                    <span>{a.name}</span>
+                    <span>Qty: {a.quantity}</span>
+                    <span>${a.cost}</span>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div>
+              <h5>Software</h5>
+              {emp.softwareAssets.length === 0 ? (
+                <p>No software</p>
+              ) : (
+                emp.softwareAssets.map((a, i) => (
+                  <div key={i} className="asset-item">
+                    <span>{a.name}</span>
+                    <span>Qty: {a.quantity}</span>
+                    <span>${a.cost}</span>
+                  </div>
+                ))
+              )}
+            </div>
+
+          </div>
+
+          <div className="total-cost">
+            Total Asset Value: ${totalCost}
+          </div>
+
+        </div>
+      );
+    })}
+  </div>
+</div>
 
       {showModal && (
 <EmployeeModal
