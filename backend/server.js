@@ -36,7 +36,7 @@ const User = require("./models/User");
 
 
 const app = express();
-require("./cron/expiryScheduler");
+require("./cron/expirySchedular");
 app.set("trust proxy", true);
 app.use((req, res, next) => {
   console.log("Incoming request:", req.method, req.url);
