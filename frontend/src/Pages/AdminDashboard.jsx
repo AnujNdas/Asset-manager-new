@@ -167,7 +167,7 @@ redirectTo="/inventory?hardware"
 
 
   <ListCard
-    title="Upcoming Software Renewals (30 Days)"
+    title="Upcoming Software Renewals"
     items={upcoming.software?.upcoming || []}
     dateField="DOE"
     redirectTo="/inventory?software"
@@ -177,7 +177,7 @@ redirectTo="/inventory?hardware"
 
 
   <ListCard
-    title="Upcoming Hardware Maintenance (30 Days)"
+    title="Upcoming Hardware Maintenance"
     items={upcoming.maintenance?.upcoming || []}
     dateField="DOE"
     redirectTo="/inventory?hardware"
@@ -186,7 +186,7 @@ redirectTo="/inventory?hardware"
 
 
   <ListCard
-    title="Upcoming Hardware Warranty (30 Days)"
+    title="Upcoming Hardware Warranty"
     items={upcoming.warranty?.upcoming || []}
     dateField="warranty.expiryDate"
     redirectTo="/inventory?hardware"
@@ -197,7 +197,7 @@ redirectTo="/inventory?hardware"
 
 
   <ListCard
-    title="Upcoming Hardware Insurance (30 Days)"
+    title="Upcoming Hardware Insurance"
     items={upcoming.insurance?.upcoming || []}
     dateField="insurance.expiryDate"
     redirectTo="/inventory?hardware"
