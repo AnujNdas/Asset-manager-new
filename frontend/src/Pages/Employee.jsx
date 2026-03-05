@@ -5,7 +5,8 @@ import {
   getEmployees, 
   getDepartments,
   updateEmployee,
-  deleteEmployee
+  deleteEmployee,
+  getEmployeeSummary
 } from "../Services/ApiServices";
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
@@ -54,6 +55,14 @@ const fetchDepartments = async () => {
     console.error("Fetch Departments Error:", err);
   }
 };
+const fetchEmployeeSummary = async () => {
+  try {
+    const res = await getEmployeeSummary();
+    console.log("Fetched Employee Summary:", res);
+  } catch (err) {
+    console.error("Fetch Employee Summary Error:", err);
+  }
+};
 
 
   useEffect(() => {
@@ -62,6 +71,9 @@ const fetchDepartments = async () => {
 
   useEffect(() => {
     fetchDepartments();
+  }, []);
+  useEffect(() => {
+    fetchEmployeeSummary();
   }, []);
 
   const filteredEmployees = employees.filter(emp =>

@@ -210,7 +210,11 @@ const fetchItems = async () => {
                   {startIndex + idx + 1}
                 </div>
 
-                <div className="category-name">{item.name}</div>
+                <div className="category-name">
+                  {item.name
+                    ?.toLowerCase()
+                    .replace(/\b\w/g, (char) => char.toUpperCase())}
+                </div>
 
                 <span
                   className={`status-badge ${

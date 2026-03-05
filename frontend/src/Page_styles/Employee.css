@@ -225,7 +225,38 @@
   background: var(--primary-light);
   box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
 }
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
 
+.edit-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.status.active {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status.inactive {
+  color: #dc2626;
+  font-weight: 600;
+}
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .employee-page {

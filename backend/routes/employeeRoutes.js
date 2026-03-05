@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { createEmployee, getEmployees , updateEmployee , deleteEmployee } = require("../controllers/employeeController");
+const { createEmployee, getEmployees , updateEmployee , deleteEmployee , getEmployeeAssetSummary } = require("../controllers/employeeController");
 
 const authentication = require("../Middleware/Authentication-token");
 const tenantMiddleware = require("../Middleware/tenantMiddleware");
@@ -20,4 +20,5 @@ router.post("/", createEmployee);
 router.get("/", getEmployees);
 router.put("/:id", updateEmployee);
 router.delete("/:id", deleteEmployee);
+router.get("/summary", getEmployeeAssetSummary);
 module.exports = router;

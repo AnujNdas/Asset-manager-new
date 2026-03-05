@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import "../Page_styles/AssignmentPage.css";
 import Pagination from "../Components/Pagination";
+import { useLocation } from "react-router-dom";
 
 import {
   getInStockCategorySummary,
@@ -12,6 +13,8 @@ import {
 } from "../Services/ApiServices";
 
 const AssignmentPage = () => {
+  const location = useLocation();
+const preselectedAsset = location.state;
   const [step, setStep] = useState(1);
   const [categories, setCategories] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -47,10 +50,14 @@ const AssignmentPage = () => {
   /* =============================
      INITIAL LOAD
   ============================== */
-  useEffect(() => {
-    fetchCategories();
-    fetchDepartments();
-  }, []);
+useEffect(() => {
+  fetchCategories();
+  fetchDepartments();
+
+  if (preselectedAsset?.categoryId) {
+    preselectAsset(preselectedAsset);
+  }
+}, []);
 
   const fetchCategories = async () => {
     try {
@@ -83,7 +90,36 @@ const AssignmentPage = () => {
       Swal.fire("Error", "Failed to load employees", "error");
     }
   };
+  const preselectAsset = async ({ categoryId, assetId }) => {
+  try {
+    const res = await getInStockAssetsByCategory(categoryId);
+    const assets = res.data || [];
 
+    const asset = assets.find(a => a._id === assetId);
+
+    if (!asset) return;
+
+    setWizardData({
+      category: {
+        category: categoryId,
+        categoryName: asset.assetCategoryName || asset.name
+      },
+      assets,
+      selectedAssets: {
+        [assetId]: {
+          quantity: 1,
+          location: ""
+        }
+      },
+      department: "",
+      employee: ""
+    });
+
+    setStep(2); // skip category step
+  } catch {
+    Swal.fire("Error", "Failed to load selected asset", "error");
+  }
+};
   /* =============================
      STEP NAVIGATION VALIDATION
   ============================== */

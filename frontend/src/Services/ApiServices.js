@@ -425,3 +425,7 @@ export const deleteEmployee = async (id) => {
   const res = await axiosInstance.delete(`/employees/${id}`);
   return res.data;
 }
+export const getEmployeeSummary = async (id) => {
+  const res = await axiosInstance.get(`/employees/summary`);
+  return res.data;
+}

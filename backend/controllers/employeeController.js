@@ -1,4 +1,5 @@
 const Employee = require("../models/Employee");
+const AssetAssignment = require("../models/AssetAssignment");
 
 /**
  * Create Employee
@@ -110,8 +111,155 @@ const deleteEmployee = async (req, res) => {
     });
   }
 };
+
+const getEmployeeAssetSummary = async (req, res) => {
+  try {
+    const organizationId = req.user.organizationId;
+
+    const data = await AssetAssignment.aggregate([
+      {
+        $match: {
+          organizationId,
+          status: "active"
+        }
+      },
+
+      // employee info
+      {
+        $lookup: {
+          from: "employees",
+          localField: "employeeId",
+          foreignField: "_id",
+          as: "employee"
+        }
+      },
+      { $unwind: "$employee" },
+
+      // department info
+      {
+        $lookup: {
+          from: "departments",
+          localField: "departmentId",
+          foreignField: "_id",
+          as: "department"
+        }
+      },
+      { $unwind: "$department" },
+
+      // hardware assets
+      {
+        $lookup: {
+          from: "assets",
+          localField: "assetId",
+          foreignField: "_id",
+          as: "hardwareAsset"
+        }
+      },
+
+      // software assets
+      {
+        $lookup: {
+          from: "softwareassets",
+          localField: "assetId",
+          foreignField: "_id",
+          as: "softwareAsset"
+        }
+      },
+
+      {
+        $addFields: {
+          asset: {
+            $cond: [
+              { $eq: ["$assetType", "hardware"] },
+              { $arrayElemAt: ["$hardwareAsset", 0] },
+              { $arrayElemAt: ["$softwareAsset", 0] }
+            ]
+          }
+        }
+      },
+
+      {
+        $project: {
+          employeeId: "$employee._id",
+          employeeName: "$employee.name",
+          employeeCode: "$employee.employeeCode",
+          department: "$department.name",
+
+          assetName: "$asset.assetName",
+          assetType: "$assetType",
+
+          quantity: "$quantity",
+          location: "$assignLocation",
+          status: "$status",
+
+          unitCost: "$asset.assetCost.unitAmount",
+          totalCost: {
+            $multiply: [
+              "$quantity",
+              "$asset.assetCost.unitAmount"
+            ]
+          }
+        }
+      },
+
+      {
+        $group: {
+          _id: "$employeeId",
+
+          employeeName: { $first: "$employeeName" },
+          employeeCode: { $first: "$employeeCode" },
+          department: { $first: "$department" },
+
+          hardwareAssets: {
+            $push: {
+              $cond: [
+                { $eq: ["$assetType", "hardware"] },
+                {
+                  name: "$assetName",
+                  quantity: "$quantity",
+                  cost: "$totalCost",
+                  location: "$location"
+                },
+                "$$REMOVE"
+              ]
+            }
+          },
+
+          softwareAssets: {
+            $push: {
+              $cond: [
+                { $eq: ["$assetType", "software"] },
+                {
+                  name: "$assetName",
+                  quantity: "$quantity",
+                  cost: "$totalCost",
+                  location: "$location"
+                },
+                "$$REMOVE"
+              ]
+            }
+          }
+        }
+      }
+    ]);
+
+    res.json({
+      success: true,
+      data
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+
 module.exports = {
   createEmployee,
+  getEmployeeAssetSummary,
   getEmployees,
   updateEmployee,
   deleteEmployee
