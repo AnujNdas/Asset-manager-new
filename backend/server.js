@@ -1,6 +1,7 @@
   const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
+require("./cron/expiryScheduler");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const path = require("path");
