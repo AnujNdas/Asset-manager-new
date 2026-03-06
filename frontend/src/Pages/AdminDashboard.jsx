@@ -478,7 +478,14 @@ const locationMap = useMemo(() => {
   return map;
 }, [items]);
 
-  const values = Object.values(locationMap);
+  const values = items
+  .sort((a, b) => b.total - a.total)
+  .map((item, index) => (
+    <div key={index} className="list-row">
+      <span>{item.name}</span>
+      <span className="value-text">{item.total}</span>
+    </div>
+  ));
   const maxValue = values.length > 0 ? Math.max(...values) : 0;
   const minValue = values.length > 0 ? Math.min(...values) : 0;
 
