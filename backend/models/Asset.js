@@ -86,7 +86,10 @@ warranty: {
       required: true,
       min: 0,
     },
-
+    expiryAlertSent: {
+      type: Boolean,
+      default: false
+    },
     inUse: {
       type: Number,
       default: 0,

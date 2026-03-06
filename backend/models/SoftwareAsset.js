@@ -54,7 +54,10 @@ const SoftwareAssetSchema = new mongoose.Schema(
       ref: "Status",
       required: true,
     },
-
+    expiryAlertSent: {
+      type: Boolean,
+      default: false
+    },
     assetQuantity: {
       type: Number,
       required: true,
