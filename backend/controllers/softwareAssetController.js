@@ -287,7 +287,7 @@ const DOE = parseDate(asset.DateOfExpiry);
 
         validAssets.push({
           organizationId,
-          assetCode: await generateSoftwareCode(organizationId),
+          assetCode: `SW-${nextNumber++}`,
 
           type: softwareType,
           assetName: asset.SoftwareName,

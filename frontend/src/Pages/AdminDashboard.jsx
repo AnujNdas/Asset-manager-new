@@ -139,7 +139,7 @@ redirectTo="/inventory?hardware"
       <div className="section-grid">
         <div className="analytics-card">
   <h3 className="analytics-title">
-    Software Spend by Category (Top 5)
+    Spend by Category (Top 5)
   </h3>
 
   <SpendByCategoryBarChart
