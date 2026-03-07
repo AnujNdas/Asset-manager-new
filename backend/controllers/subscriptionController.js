@@ -254,43 +254,68 @@ const cancelAutoPay = async (req, res) => {
 ------------------------------------------------ */
 const handleWebhook = async (req, res) => {
   try {
+    console.log("----- RAZORPAY WEBHOOK RECEIVED -----");
+
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
     const signature = req.headers["x-razorpay-signature"];
+
+    console.log("Webhook signature received:", signature);
 
     const expectedSignature = crypto
       .createHmac("sha256", webhookSecret)
       .update(req.body)
       .digest("hex");
 
+    console.log("Expected signature:", expectedSignature);
+
     if (signature !== expectedSignature) {
+      console.error("❌ Webhook signature mismatch");
       return res.status(400).send("Invalid signature");
     }
 
+    console.log("✅ Webhook signature verified");
+
     const parsedBody = JSON.parse(req.body.toString());
+
     const event = parsedBody.event;
     const entity = parsedBody.payload.subscription?.entity;
 
+    console.log("Webhook Event:", event);
+
     if (!entity) {
+      console.log("No subscription entity found in payload");
       return res.status(200).json({ received: true });
     }
+
+    console.log("Subscription ID from Razorpay:", entity.id);
 
     const subscription = await Subscription.findOne({
       razorpaySubscriptionId: entity.id,
     });
 
     if (!subscription) {
+      console.log("⚠️ Subscription not found in DB for:", entity.id);
       return res.status(200).json({ received: true });
     }
 
-    /* Activation */
+    console.log("Subscription found in DB:", subscription._id);
+
+    /* ---------------- Activation ---------------- */
+
     if (event === "subscription.activated") {
+      console.log("Subscription activated event received");
+
       if (subscription.pendingUpgrade) {
+        console.log("Applying pending upgrade:", subscription.pendingUpgrade);
+
         subscription.tier = subscription.pendingUpgrade.tier;
         subscription.billingCycle = subscription.pendingUpgrade.billingCycle;
         subscription.razorpaySubscriptionId =
           subscription.pendingUpgrade.razorpaySubscriptionId;
 
         subscription.pendingUpgrade = null;
+      } else {
+        console.log("No pending upgrade found");
       }
 
       subscription.status = "active";
@@ -299,43 +324,60 @@ const handleWebhook = async (req, res) => {
       subscription.pastDueAt = null;
 
       await subscription.save();
+
+      console.log("✅ Subscription activated and saved to DB");
     }
 
-    /* Renewal */
+    /* ---------------- Renewal ---------------- */
+
     if (event === "subscription.charged") {
+      console.log("Subscription renewal charge event");
+
       subscription.status = "active";
-      subscription.currentStart = new Date(
-        entity.current_start * 1000
-      );
-      subscription.currentEnd = new Date(
-        entity.current_end * 1000
-      );
+      subscription.currentStart = new Date(entity.current_start * 1000);
+      subscription.currentEnd = new Date(entity.current_end * 1000);
       subscription.pastDueAt = null;
+
       await subscription.save();
+
+      console.log("✅ Subscription renewed and DB updated");
     }
 
-    /* Cancellation */
+    /* ---------------- Cancellation ---------------- */
+
     if (event === "subscription.cancelled") {
+      console.log("Subscription cancelled event");
+
       subscription.status = "cancelled";
       subscription.cancelAtPeriodEnd = false;
+
       await subscription.save();
+
+      console.log("Subscription marked as cancelled in DB");
     }
 
-    /* Payment Failure */
+    /* ---------------- Payment Failure ---------------- */
+
     if (event === "payment.failed") {
+      console.log("Payment failed event received");
+
       subscription.status = "past_due";
       subscription.pastDueAt = new Date();
+
       await subscription.save();
+
+      console.log("Subscription marked as past_due");
     }
+
+    console.log("----- WEBHOOK PROCESSING COMPLETE -----");
 
     return res.status(200).json({ received: true });
 
   } catch (err) {
-    console.error("Webhook error:", err);
+    console.error("Webhook processing error:", err);
     return res.status(500).send("Webhook processing failed");
   }
 };
-
 module.exports = {
   getTiers,
   previewPrice,
