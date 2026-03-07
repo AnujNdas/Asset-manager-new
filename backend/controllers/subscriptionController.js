@@ -284,14 +284,20 @@ const handleWebhook = async (req, res) => {
 
     /* Activation */
     if (event === "subscription.activated") {
+      if (subscription.pendingUpgrade) {
+        subscription.tier = subscription.pendingUpgrade.tier;
+        subscription.billingCycle = subscription.pendingUpgrade.billingCycle;
+        subscription.razorpaySubscriptionId =
+          subscription.pendingUpgrade.razorpaySubscriptionId;
+
+        subscription.pendingUpgrade = null;
+      }
+
       subscription.status = "active";
-      subscription.currentStart = new Date(
-        entity.current_start * 1000
-      );
-      subscription.currentEnd = new Date(
-        entity.current_end * 1000
-      );
+      subscription.currentStart = new Date(entity.current_start * 1000);
+      subscription.currentEnd = new Date(entity.current_end * 1000);
       subscription.pastDueAt = null;
+
       await subscription.save();
     }
 

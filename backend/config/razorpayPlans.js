@@ -2,7 +2,7 @@ const plans = {
   base: {
     monthly: {
       test: "plan_SKhqqkAt4aPUqs",
-      live: "plan_SK3J7SpuXDqbgG",
+      live: "plan_SOJbnSVHVD2Jhw",
       price: 15,
     },
     yearly: {
