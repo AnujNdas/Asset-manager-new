@@ -2,7 +2,7 @@
 
 .dashboard-container {
   padding: 18px 20px;
-  background: #f5f7fb;
+  /* background: #f5f7fb; */
   min-height: 100vh;
   font-family: "Inter", "Segoe UI", sans-serif;
 }
@@ -385,8 +385,8 @@
 
 /* URGENT < 10 days */
 .days-badge.urgent {
-  background: #ffe5e5;
-  color: #d32f2f;
+  color: #ffffff;
+  background: #ff0000;
   animation: blink 1s infinite;
 }
 

@@ -508,7 +508,7 @@ const handleAddAsset = async (e) => {
 )}
 
             <div className="input-group">
-              <label>Next Maintainence Date</label>
+              <label>Next Maintenance Date</label>
               <input
                 type="date"
                 name="DOE"
@@ -518,7 +518,7 @@ const handleAddAsset = async (e) => {
             </div>
 
             <div className="input-group">
-              <label>Days Before Maintainance <span style={{ color: "#ff0000" }}>(auto)</span></label>
+              <label>Days Before Maintenance <span style={{ color: "#ff0000" }}>(auto)</span></label>
               <input
                 type="text"
                 name="assetLifetime"

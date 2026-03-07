@@ -306,7 +306,7 @@ if (name.startsWith("warranty.")) {
     const diffDays = Math.ceil(diffMS / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return <span className="badge badge-renew">Renewable</span>;
+      return <span className="badge badge-renew">Maintenence</span>;
     }
     if (diffDays <= 3) return <span className="badge badge-red">{diffDays} days left</span>;
     if (diffDays <= 14) return <span className="badge badge-yellow">{diffDays} days left</span>;
@@ -857,7 +857,7 @@ const Field = ({ label, value }) => (
       </div>
 
       <div>
-        <label>Maintanence Date</label>
+        <label>Maintenence Date</label>
         <input
           type="date"
           name="DOE"
@@ -921,7 +921,7 @@ const Field = ({ label, value }) => (
         />
       </div>
 
-      <div>
+      {/* <div>
         <label>In Use</label>
         <input
           type="number"
@@ -930,7 +930,7 @@ const Field = ({ label, value }) => (
           value={editForm.inUse || 0}
           onChange={handleEditChange}
         />
-      </div>
+      </div> */}
     </div>
   </div>
 
