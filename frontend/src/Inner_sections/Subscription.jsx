@@ -269,8 +269,7 @@ console.log("SUB DEBUG:", {
       ---------------------------------- */}
 
 {subscription &&
- isAdmin &&
- isActive &&
+ subscription.status === "active" &&
  !subscription.cancelAtPeriodEnd && (
   <button
     className="btn danger cancel-autopay"
