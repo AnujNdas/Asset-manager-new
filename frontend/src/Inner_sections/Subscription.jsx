@@ -145,32 +145,39 @@ const Subscription = () => {
       ---------------------------------- */}
 
       {subscription && (
-        <div className="current-plan-box">
+<div className="current-plan-box">
 
-          <strong>Current Plan:</strong> {activeTier?.toUpperCase() || "None"}
-          <br />
+  <div className="plan-item">
+    <span className="plan-label">Plan</span>
+    <span className="plan-value">
+      {activeTier?.toUpperCase() || "None"}
+    </span>
+  </div>
 
-          <strong>Status:</strong>{" "}
-<span className={`status-${subscription.status}`}>
-  {subscription.status}
-</span>
-          <br />
+  <div className="plan-item">
+    <span className="plan-label">Status</span>
+    <span className={`plan-value status-${subscription.status}`}>
+      {subscription.status}
+    </span>
+  </div>
 
-          <strong>Valid Until:</strong>{" "}
-          {subscription.currentEnd
-            ? new Date(subscription.currentEnd).toLocaleDateString()
-            : "—"}
+  <div className="plan-item">
+    <span className="plan-label">Valid Until</span>
+    <span className="plan-value">
+      {subscription.currentEnd
+        ? new Date(subscription.currentEnd).toLocaleDateString()
+        : "—"}
+    </span>
+  </div>
 
-          <br />
+</div>
+)}
 
-          {subscription.cancelAtPeriodEnd && (
-            <span className="cancel-warning">
-              AutoPay cancelled. Ends at period expiry.
-            </span>
-          )}
-
-        </div>
-      )}
+{subscription.cancelAtPeriodEnd && (
+  <div className="cancel-warning">
+    AutoPay cancelled. Ends at period expiry.
+  </div>
+)}
 
       {/* ----------------------------------
           BILLING TOGGLE

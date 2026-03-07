@@ -199,100 +199,78 @@
 }
 /* CURRENT PLAN CARD */
 
+/* CURRENT PLAN BAR */
+
 .current-plan-box {
-  width: 100%;
-  max-width: 520px;
-  margin: 25px auto;
-  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  background: #ffffff;
-  border-radius: 12px;
+  background: white;
   border: 1px solid #e6e6e6;
+  border-radius: 10px;
 
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  padding: 18px 22px;
+  margin-bottom: 30px;
 
-  font-size: 15px;
-  line-height: 1.8;
-
-  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
 }
 
-.current-plan-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+/* PLAN ITEMS */
+
+.plan-item {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
+.plan-label {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 2px;
+}
 
-/* LABELS */
-
-.current-plan-box strong {
-  color: #555;
+.plan-value {
+  font-size: 16px;
   font-weight: 600;
-  margin-right: 6px;
 }
 
+/* STATUS COLORS */
 
-/* PLAN NAME */
-
-.current-plan-box strong:first-child + * {
-  font-weight: 700;
-  color: #111;
-  letter-spacing: 0.4px;
-}
-
-
-/* STATUS */
-
-.current-plan-box .status-active {
+.status-active {
   color: #2e7d32;
-  font-weight: 600;
 }
 
-.current-plan-box .status-trial {
+.status-trialing {
   color: #1976d2;
-  font-weight: 600;
 }
 
-.current-plan-box .status-expired {
+.status-cancelled {
   color: #c62828;
-  font-weight: 600;
 }
 
-
-/* AUTOPAY WARNING */
+/* WARNING */
 
 .cancel-warning {
-  display: inline-block;
   margin-top: 8px;
-  padding: 6px 10px;
+  padding: 6px 12px;
 
   font-size: 13px;
-  font-weight: 500;
-
   color: #b26a00;
-  background: #fff7e6;
-  border: 1px solid #ffe0b2;
+
+  background: #fff4e5;
+  border: 1px solid #ffd699;
   border-radius: 6px;
 }
 
+/* MOBILE */
 
-/* RESPONSIVE */
-
-@media (max-width: 768px) {
-
-  .current-plan-box {
-    margin: 20px 10px;
-    padding: 18px;
-    font-size: 14px;
-  }
-
-}
-
-@media (max-width: 480px) {
+@media (max-width: 700px) {
 
   .current-plan-box {
-    padding: 16px;
-    border-radius: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
 }
