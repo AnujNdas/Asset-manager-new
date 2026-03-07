@@ -16,24 +16,36 @@ const Subscription = () => {
   const [billing, setBilling] = useState("monthly");
   const [selectedTier, setSelectedTier] = useState(null);
   const [subscription, setSubscription] = useState(null);
+  const [upgradeMode, setUpgradeMode] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem("user")); // adjust if using context
+  const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user?.role === "admin";
+
+  const activeTier = subscription?.tier;
+  const isActive = subscription?.status === "active";
 
   /* ----------------------------------
      Load Tiers + Current Subscription
   ---------------------------------- */
+
   useEffect(() => {
     const init = async () => {
-      const tierRes = await getTiers();
-      setTiers(tierRes.tiers);
-      setSelectedTier(tierRes.tiers[0]?.key);
+      try {
+        const tierRes = await getTiers();
+        setTiers(tierRes.tiers);
 
-      const subRes = await getMySubscription();
-      if (subRes) {
-        setSubscription(subRes);
+        const subRes = await getMySubscription();
+
+        if (subRes) {
+          setSubscription(subRes);
+        } else {
+          setSelectedTier(tierRes.tiers[0]?.key);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
@@ -43,6 +55,7 @@ const Subscription = () => {
   /* ----------------------------------
      Price Preview
   ---------------------------------- */
+
   useEffect(() => {
     if (!selectedTier) return;
 
@@ -55,6 +68,7 @@ const Subscription = () => {
   /* ----------------------------------
      Checkout
   ---------------------------------- */
+
   const handleCheckout = async () => {
     try {
       setError(null);
@@ -74,8 +88,11 @@ const Subscription = () => {
         description: `${selectedTier.toUpperCase()} Plan`,
         handler: async function (response) {
           await verifyPayment(response);
+
           const subRes = await getMySubscription();
           setSubscription(subRes);
+
+          setUpgradeMode(false);
           alert("Subscription activated.");
         },
         modal: {
@@ -95,6 +112,7 @@ const Subscription = () => {
   /* ----------------------------------
      Cancel AutoPay
   ---------------------------------- */
+
   const handleCancelAutoPay = async () => {
     if (!window.confirm("Cancel auto-renewal? Access remains until period ends.")) {
       return;
@@ -102,9 +120,12 @@ const Subscription = () => {
 
     try {
       setLoading(true);
+
       await cancelAutoPay();
+
       const subRes = await getMySubscription();
       setSubscription(subRes);
+
       alert("AutoPay cancelled. Plan remains active until expiry.");
     } catch (err) {
       alert("Failed to cancel AutoPay.");
@@ -113,52 +134,109 @@ const Subscription = () => {
     }
   };
 
-  const activeTier = subscription?.tier;
-  const isActive = subscription?.status === "active";
-
   return (
     <div className="subscription-page">
+
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
 
+      {/* ----------------------------------
+          CURRENT PLAN INFO
+      ---------------------------------- */}
+
       {subscription && (
         <div className="current-plan-box">
-          <strong>Current Plan:</strong>{" "}
-          {activeTier?.toUpperCase() || "None"}
+
+          <strong>Current Plan:</strong> {activeTier?.toUpperCase() || "None"}
           <br />
+
           <strong>Status:</strong> {subscription.status}
           <br />
+
           <strong>Valid Until:</strong>{" "}
           {subscription.currentEnd
             ? new Date(subscription.currentEnd).toLocaleDateString()
             : "—"}
+
           <br />
+
           {subscription.cancelAtPeriodEnd && (
             <span className="cancel-warning">
               AutoPay cancelled. Ends at period expiry.
             </span>
           )}
+
         </div>
       )}
 
-      <BillingToggle billing={billing} setBilling={setBilling} />
+      {/* ----------------------------------
+          BILLING TOGGLE
+      ---------------------------------- */}
 
-      <div className="plans-grid">
-        {tiers.map((tier) => (
-          <PlanCard
-            key={tier.key}
-            tier={tier}
-            billing={billing}
-            selected={tier.key === selectedTier}
-            isActive={tier.key === activeTier}
-            isAdmin={isAdmin}
-            onSelect={() => setSelectedTier(tier.key)}
-          />
-        ))}
-      </div>
+      {(!isActive || upgradeMode) && (
+        <BillingToggle billing={billing} setBilling={setBilling} />
+      )}
 
-      {/* Checkout Button */}
-      {(!isActive || selectedTier !== activeTier) && (
+      {/* ----------------------------------
+          SHOW CURRENT PLAN ONLY
+      ---------------------------------- */}
+
+      {isActive && !upgradeMode && (
+        <div className="current-plan-view">
+
+          {tiers
+            .filter((tier) => tier.key === activeTier)
+            .map((tier) => (
+              <PlanCard
+                key={tier.key}
+                tier={tier}
+                billing={subscription.billingCycle}
+                selected={true}
+                isActive={true}
+                isAdmin={isAdmin}
+              />
+            ))}
+
+          <button
+            className="btn upgrade-btn"
+            onClick={() => {
+              setUpgradeMode(true);
+              setSelectedTier(null);
+            }}
+          >
+            Upgrade Plan
+          </button>
+
+        </div>
+      )}
+
+      {/* ----------------------------------
+          SHOW ALL PLANS
+      ---------------------------------- */}
+
+      {(!isActive || upgradeMode) && (
+        <div className="plans-grid">
+
+          {tiers.map((tier) => (
+            <PlanCard
+              key={tier.key}
+              tier={tier}
+              billing={billing}
+              selected={tier.key === selectedTier}
+              isActive={tier.key === activeTier}
+              isAdmin={isAdmin}
+              onSelect={() => setSelectedTier(tier.key)}
+            />
+          ))}
+
+        </div>
+      )}
+
+      {/* ----------------------------------
+          CHECKOUT BUTTON
+      ---------------------------------- */}
+
+      {selectedTier && selectedTier !== activeTier && (
         <button
           className="btn primary proceed"
           onClick={handleCheckout}
@@ -168,20 +246,22 @@ const Subscription = () => {
         </button>
       )}
 
-      {/* Cancel AutoPay - Admin Only */}
-      {isAdmin &&
-        isActive &&
-        !subscription?.cancelAtPeriodEnd && (
-          <button
-            className="btn danger cancel-autopay"
-            onClick={handleCancelAutoPay}
-            disabled={loading}
-          >
-            Cancel AutoPay
-          </button>
-        )}
+      {/* ----------------------------------
+          CANCEL AUTOPAY
+      ---------------------------------- */}
+
+      {isAdmin && isActive && !subscription?.cancelAtPeriodEnd && (
+        <button
+          className="btn danger cancel-autopay"
+          onClick={handleCancelAutoPay}
+          disabled={loading}
+        >
+          Cancel AutoPay
+        </button>
+      )}
 
       {error && <p className="error">{error}</p>}
+
     </div>
   );
 };
