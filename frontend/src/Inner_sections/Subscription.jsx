@@ -133,7 +133,14 @@ const Subscription = () => {
       setLoading(false);
     }
   };
-
+console.log("SUB DEBUG:", {
+  subscription,
+  role: user?.role,
+  isAdmin,
+  status: subscription?.status,
+  isActive,
+  cancelAtPeriodEnd: subscription?.cancelAtPeriodEnd
+});
   return (
     <div className="subscription-page">
 
