@@ -290,7 +290,10 @@ const handleWebhook = async (req, res) => {
     console.log("Subscription ID from Razorpay:", entity.id);
 
     const subscription = await Subscription.findOne({
-      razorpaySubscriptionId: entity.id,
+      $or: [
+        { razorpaySubscriptionId: entity.id },
+        { "pendingUpgrade.razorpaySubscriptionId": entity.id }
+      ]
     });
 
     if (!subscription) {

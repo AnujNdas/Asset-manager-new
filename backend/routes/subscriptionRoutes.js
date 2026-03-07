@@ -10,7 +10,8 @@ const {
 } = require("../controllers/subscriptionController");
 const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
 const router = express.Router();
-
+const Subscription = require("../models/Subscription");
+const razorpay = require("../config/razorpay");
 router.post(
   "/preview-price",
   authenticateToken(),
@@ -65,5 +66,26 @@ router.post(
 );
 
 router.post("/webhook", handleWebhook);
+router.get("/fix-sub", async (req, res) => {
+  const razorSub = await razorpay.subscriptions.fetch("sub_SOFVQ7JIryQYZO");
 
+  const subscription = await Subscription.findOne({
+    "pendingUpgrade.razorpaySubscriptionId": razorSub.id,
+  });
+
+  subscription.tier = subscription.pendingUpgrade.tier;
+  subscription.billingCycle = subscription.pendingUpgrade.billingCycle;
+  subscription.razorpaySubscriptionId =
+    subscription.pendingUpgrade.razorpaySubscriptionId;
+
+  subscription.status = "active";
+  subscription.currentStart = new Date(razorSub.current_start * 1000);
+  subscription.currentEnd = new Date(razorSub.current_end * 1000);
+
+  subscription.pendingUpgrade = null;
+
+  await subscription.save();
+
+  res.json({ success: true });
+});
 module.exports = router;
