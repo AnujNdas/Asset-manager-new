@@ -144,41 +144,42 @@ const Subscription = () => {
           CURRENT PLAN INFO
       ---------------------------------- */}
 
-      {subscription && (
-<div className="current-plan-box">
+     {subscription && (
+  <>
+    <div className="current-plan-box">
 
-  <div className="plan-item">
-    <span className="plan-label">Plan</span>
-    <span className="plan-value">
-      {activeTier?.toUpperCase() || "None"}
-    </span>
-  </div>
+      <div className="plan-item">
+        <span className="plan-label">Plan</span>
+        <span className="plan-value">
+          {activeTier?.toUpperCase() || "None"}
+        </span>
+      </div>
 
-  <div className="plan-item">
-    <span className="plan-label">Status</span>
-    <span className={`plan-value status-${subscription.status}`}>
-      {subscription.status}
-    </span>
-  </div>
+      <div className="plan-item">
+        <span className="plan-label">Status</span>
+        <span className={`plan-value status-${subscription.status}`}>
+          {subscription.status}
+        </span>
+      </div>
 
-  <div className="plan-item">
-    <span className="plan-label">Valid Until</span>
-    <span className="plan-value">
-      {subscription.currentEnd
-        ? new Date(subscription.currentEnd).toLocaleDateString()
-        : "—"}
-    </span>
-  </div>
+      <div className="plan-item">
+        <span className="plan-label">Valid Until</span>
+        <span className="plan-value">
+          {subscription.currentEnd
+            ? new Date(subscription.currentEnd).toLocaleDateString()
+            : "—"}
+        </span>
+      </div>
 
-</div>
+    </div>
+
+    {subscription.cancelAtPeriodEnd && (
+      <div className="cancel-warning">
+        AutoPay cancelled. Ends at period expiry.
+      </div>
+    )}
+  </>
 )}
-
-{subscription.cancelAtPeriodEnd && (
-  <div className="cancel-warning">
-    AutoPay cancelled. Ends at period expiry.
-  </div>
-)}
-
       {/* ----------------------------------
           BILLING TOGGLE
       ---------------------------------- */}
@@ -260,15 +261,18 @@ const Subscription = () => {
           CANCEL AUTOPAY
       ---------------------------------- */}
 
-      {isAdmin && isActive && !subscription?.cancelAtPeriodEnd && (
-        <button
-          className="btn danger cancel-autopay"
-          onClick={handleCancelAutoPay}
-          disabled={loading}
-        >
-          Cancel AutoPay
-        </button>
-      )}
+{subscription &&
+ isAdmin &&
+ isActive &&
+ !subscription.cancelAtPeriodEnd && (
+  <button
+    className="btn danger cancel-autopay"
+    onClick={handleCancelAutoPay}
+    disabled={loading}
+  >
+    Cancel AutoPay
+  </button>
+)}
 
       {error && <p className="error">{error}</p>}
 
