@@ -468,10 +468,10 @@
     font-size: 14px;
   }
 
-  .category-grid .grid {
+  /* .category-grid .grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 14px;
-  }
+  } */
 }
 /* Search input */
 .category_search_input {

@@ -446,82 +446,82 @@ const TopLocationsMap = ({ title, items }) => {
   const navigate = useNavigate();
   /* ================= NORMALIZE LOCATION DATA ================= */
 
-const locationMap = useMemo(() => {
-  const map = {};
+  const locationMap = useMemo(() => {
+    const map = {};
 
-  items.forEach(item => {
-    if (!item?.name) return;
+    items.forEach((item) => {
+      if (!item?.name) return;
 
-    const parts = item.name.split(",");
+      const parts = item.name.split(",");
 
-    let detectedCountry = null;
+      let detectedCountry = null;
 
-    for (let part of parts) {
-      const resolved = resolveCountryName(part);
-      if (resolved) {
-        detectedCountry = resolved;
-        break;
+      for (let part of parts) {
+        const resolved = resolveCountryName(part);
+        if (resolved) {
+          detectedCountry = resolved;
+          break;
+        }
       }
-    }
 
-    if (!detectedCountry) return; // Skip if no real country found
+      if (!detectedCountry) return;
 
-    // Special case: Map expects full official name
-    if (detectedCountry === "United States") {
-      detectedCountry = "United States of America";
-    }
+      if (detectedCountry === "United States") {
+        detectedCountry = "United States of America";
+      }
 
-    map[detectedCountry] =
-      (map[detectedCountry] || 0) + (item.total || 0);
-  });
+      map[detectedCountry] =
+        (map[detectedCountry] || 0) + (item.total || 0);
+    });
 
-  return map;
-}, [items]);
+    return map;
+  }, [items]);
 
-  const values = items
-  .sort((a, b) => b.total - a.total)
-  .map((item, index) => (
-    <div key={index} className="list-row">
-      <span>{item.name}</span>
-      <span className="value-text">{item.total}</span>
-    </div>
-  ));
-  const maxValue = values.length > 0 ? Math.max(...values) : 0;
-  const minValue = values.length > 0 ? Math.min(...values) : 0;
+  /* ================= LEGEND VALUES ================= */
+
+  const values = useMemo(() => Object.values(locationMap), [locationMap]);
+
+  const maxValue = values.length ? Math.max(...values) : 0;
+  const minValue = values.length ? Math.min(...values) : 0;
 
   const colorScale = scaleLinear()
     .domain([0, maxValue || 1])
     .range(["#e8f0fe", "#1a73e8"]);
 
+  /* ================= SORTED LIST DATA ================= */
+
+  const sortedItems = useMemo(() => {
+    return [...items].sort((a, b) => b.total - a.total);
+  }, [items]);
+
   /* ================= HANDLERS ================= */
 
-  const handleMouseMove = e => {
+  const handleMouseMove = (e) => {
     setPosition({
       x: e.clientX + 10,
-      y: e.clientY + 10
+      y: e.clientY + 10,
     });
   };
 
-  const zoomIn = () => setZoom(prev => Math.min(prev * 1.5, 4));
-  const zoomOut = () => setZoom(prev => Math.max(prev / 1.5, 1));
+  const zoomIn = () => setZoom((prev) => Math.min(prev * 1.5, 4));
+  const zoomOut = () => setZoom((prev) => Math.max(prev / 1.5, 1));
   const resetZoom = () => setZoom(1);
 
   /* ================= RENDER ================= */
 
   return (
-    <div className="card" 
-    onClick={() => navigate("/locations")}
-    >
+    <div className="card" onClick={() => navigate("/locations")}>
       <h3 className="card-heading">{title}</h3>
 
       <div className="map-container">
+
         {/* ================= MAP ================= */}
         <div className="map-section" onMouseMove={handleMouseMove}>
           <ComposableMap projectionConfig={{ scale: 150 }}>
             <ZoomableGroup zoom={zoom} minZoom={1} maxZoom={4}>
               <Geographies geography={geoUrl}>
                 {({ geographies }) =>
-                  geographies.map(geo => {
+                  geographies.map((geo) => {
                     const countryName = geo.properties.name;
                     const value = locationMap[countryName] || 0;
 
@@ -535,7 +535,7 @@ const locationMap = useMemo(() => {
                           if (value > 0) {
                             setTooltip({
                               name: countryName,
-                              value
+                              value,
                             });
                           }
                         }}
@@ -545,9 +545,9 @@ const locationMap = useMemo(() => {
                           hover: {
                             fill: "#174ea6",
                             outline: "none",
-                            cursor: value > 0 ? "pointer" : "default"
+                            cursor: value > 0 ? "pointer" : "default",
                           },
-                          pressed: { outline: "none" }
+                          pressed: { outline: "none" },
                         }}
                       />
                     );
@@ -564,7 +564,7 @@ const locationMap = useMemo(() => {
               style={{
                 position: "fixed",
                 top: position.y,
-                left: position.x
+                left: position.x,
               }}
             >
               <strong>{tooltip.name}</strong>
@@ -583,33 +583,32 @@ const locationMap = useMemo(() => {
 
         {/* ================= SIDE LIST ================= */}
         <div className="map-data">
-          {values.length === 0 ? (
+          {sortedItems.length === 0 ? (
             <p className="empty-text">No location data</p>
           ) : (
-            Object.entries(locationMap)
-              .sort((a, b) => b[1] - a[1])
-              .map(([country, total], index) => (
-                <div key={index} className="list-row">
-                  <span>{country}</span>
-                  <span className="value-text">
-                    {total}
-                  </span>
-                </div>
-              ))
+            sortedItems.map((item, index) => (
+              <div key={index} className="list-row">
+                <span>{item.name}</span>
+                <span className="value-text">{item.total}</span>
+              </div>
+            ))
           )}
         </div>
+
       </div>
 
       {/* ================= COLOR LEGEND ================= */}
       <div className="map-legend">
         <span>{minValue}</span>
+
         <div
           className="legend-gradient"
           style={{
             background:
-              "linear-gradient(to right, #e8f0fe, #1a73e8)"
+              "linear-gradient(to right, #e8f0fe, #1a73e8)",
           }}
         />
+
         <span>{maxValue}</span>
       </div>
     </div>

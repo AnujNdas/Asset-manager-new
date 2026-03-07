@@ -708,10 +708,10 @@ if (loading || loadingRates)
   <label>Quantity</label>
           <input type="number" name="assetQuantity" value={editForm.assetQuantity} onChange={handleEditChange} placeholder="Quantity" className="asset-edit-input"/>
 </div>
-<div>
+{/* <div>
   <label>In Use</label>
           <input type="number" name="inUse" value={editForm.inUse} onChange={handleEditChange} placeholder="In Use" className="asset-edit-input"/>
-</div>
+</div> */}
 <div>
   <label>License Key</label>
           <input name="licenseKey" value={editForm.licenseKey} onChange={handleEditChange} placeholder="License Key" className="asset-edit-input"/>
