@@ -32,8 +32,8 @@ const Subscription = () => {
       setSelectedTier(tierRes.tiers[0]?.key);
 
       const subRes = await getMySubscription();
-      if (subRes?.subscription) {
-        setSubscription(subRes.subscription);
+      if (subRes) {
+        setSubscription(subRes);
       }
     };
 
@@ -75,7 +75,7 @@ const Subscription = () => {
         handler: async function (response) {
           await verifyPayment(response);
           const subRes = await getMySubscription();
-          setSubscription(subRes.subscription);
+          setSubscription(subRes);
           alert("Subscription activated.");
         },
         modal: {
@@ -104,7 +104,7 @@ const Subscription = () => {
       setLoading(true);
       await cancelAutoPay();
       const subRes = await getMySubscription();
-      setSubscription(subRes.subscription);
+      setSubscription(subRes);
       alert("AutoPay cancelled. Plan remains active until expiry.");
     } catch (err) {
       alert("Failed to cancel AutoPay.");
