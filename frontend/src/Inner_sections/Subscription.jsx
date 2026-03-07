@@ -150,7 +150,10 @@ const Subscription = () => {
           <strong>Current Plan:</strong> {activeTier?.toUpperCase() || "None"}
           <br />
 
-          <strong>Status:</strong> {subscription.status}
+          <strong>Status:</strong>{" "}
+<span className={`status-${subscription.status}`}>
+  {subscription.status}
+</span>
           <br />
 
           <strong>Valid Until:</strong>{" "}

@@ -197,6 +197,105 @@
   border-radius:8px;
   cursor:pointer;
 }
+/* CURRENT PLAN CARD */
+
+.current-plan-box {
+  width: 100%;
+  max-width: 520px;
+  margin: 25px auto;
+  padding: 20px 24px;
+
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e6e6e6;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+
+  font-size: 15px;
+  line-height: 1.8;
+
+  transition: all 0.25s ease;
+}
+
+.current-plan-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+
+/* LABELS */
+
+.current-plan-box strong {
+  color: #555;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+
+/* PLAN NAME */
+
+.current-plan-box strong:first-child + * {
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 0.4px;
+}
+
+
+/* STATUS */
+
+.current-plan-box .status-active {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.current-plan-box .status-trial {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.current-plan-box .status-expired {
+  color: #c62828;
+  font-weight: 600;
+}
+
+
+/* AUTOPAY WARNING */
+
+.cancel-warning {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 10px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #b26a00;
+  background: #fff7e6;
+  border: 1px solid #ffe0b2;
+  border-radius: 6px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+  .current-plan-box {
+    margin: 20px 10px;
+    padding: 18px;
+    font-size: 14px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .current-plan-box {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+}
 @media (max-width: 640px) {
   .subscription-page h2 {
     font-size: 24px;
