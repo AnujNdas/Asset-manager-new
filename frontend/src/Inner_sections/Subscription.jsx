@@ -26,7 +26,7 @@ const Subscription = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = user?.role === "admin";
 
   const activeTier = subscription?.tier;
@@ -120,63 +120,62 @@ const Subscription = () => {
      HANDLE UPGRADE CLICK
   ------------------------- */
 
-  const handleUpgradeClick = async () => {
+const handleUpgradeClick = async () => {
+  try {
+    const sub = await loadSubscription();
 
-    try {
+    if (sub?.pendingUpgrade) {
 
-      const sub = await loadSubscription();
+      const pending = sub.pendingUpgrade;
 
-      if (sub?.pendingUpgrade) {
+      const pendingTier = tiers.find(
+        (t) => t.key === pending.tier
+      );
 
-        const pending = sub.pendingUpgrade;
+      const result = await Swal.fire({
+        title: "Pending Upgrade Found",
+        html: `
+          <p>You already started upgrading to 
+          <b>${pendingTier?.name || pending.tier}</b>.</p>
+          <p>Continue or cancel it?</p>
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Continue Upgrade",
+        cancelButtonText: "Cancel Upgrade"
+      });
 
-        const pendingTier = tiers.find(
-          (t) => t.key === pending.tier
-        );
-
-        const result = await Swal.fire({
-          title: "Pending Upgrade Found",
-          html: `
-            <p>You already started upgrading to 
-            <b>${pendingTier?.name || pending.tier}</b>.</p>
-            <p>Continue or cancel it?</p>
-          `,
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Continue Upgrade",
-          cancelButtonText: "Cancel Upgrade"
-        });
-
-        if (result.isConfirmed) {
-          reopenPendingCheckout(pending);
-          return;
-        }
-
-        if (result.dismiss === Swal.DismissReason.cancel) {
-
-          await removePendingUpgrade();
-
-          await loadSubscription();
-
-          setUpgradeMode(true);
-          setSelectedTier(null);
-
-          return;
-        }
+      if (result.isConfirmed) {
+        reopenPendingCheckout(pending);
+        return;
       }
 
-      /* No pending upgrade */
+      if (result.dismiss === Swal.DismissReason.cancel) {
 
-      setUpgradeMode(true);
-      setSelectedTier(null);
+        await removePendingUpgrade();
 
-    } catch (err) {
+        const refreshed = await loadSubscription();
 
-      console.error(err);
+        if (!refreshed?.pendingUpgrade) {
+          setUpgradeMode(true);
+          setSelectedTier(null);
+        }
 
+        return;
+      }
+
+      return;
     }
 
-  };
+    /* only allow upgrade if NO pending upgrade */
+
+    setUpgradeMode(true);
+    setSelectedTier(null);
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   /* -------------------------
      CHECKOUT
@@ -215,9 +214,13 @@ const Subscription = () => {
 
         },
 
-        modal: {
-          ondismiss: () => setLoading(false)
-        }
+       modal: {
+  ondismiss: async () => {
+    setLoading(false);
+    await removePendingUpgrade();
+    await loadSubscription();
+  }
+}
 
       };
 
@@ -450,7 +453,7 @@ const Subscription = () => {
 
       )}
 
-      {(upgradeMode || !isActive) && (
+      {(upgradeMode || !isActive) && !subscription?.pendingUpgrade && (
 
         <>
 
