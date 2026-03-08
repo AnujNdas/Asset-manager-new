@@ -30,9 +30,7 @@ const Subscription = () => {
   const activeTier = subscription?.tier;
   const isActive = subscription?.status === "active";
 
-  /* -----------------------------
-     LOAD DATA
-  ----------------------------- */
+  /* LOAD DATA */
 
   useEffect(() => {
 
@@ -61,9 +59,7 @@ const Subscription = () => {
 
   }, []);
 
-  /* -----------------------------
-     PRICE PREVIEW
-  ----------------------------- */
+  /* PRICE PREVIEW */
 
   useEffect(() => {
 
@@ -76,9 +72,7 @@ const Subscription = () => {
 
   }, [selectedTier, billing]);
 
-  /* -----------------------------
-     CHECKOUT
-  ----------------------------- */
+  /* CHECKOUT */
 
   const handleCheckout = async () => {
 
@@ -129,15 +123,11 @@ const Subscription = () => {
     }
   };
 
-  /* -----------------------------
-     CANCEL AUTOPAY
-  ----------------------------- */
+  /* CANCEL AUTOPAY */
 
   const handleCancelAutoPay = async () => {
 
-    if (!window.confirm("Cancel auto-renewal? Access remains until period ends.")) {
-      return;
-    }
+    if (!window.confirm("Cancel auto-renewal?")) return;
 
     try {
 
@@ -157,13 +147,12 @@ const Subscription = () => {
     } finally {
 
       setLoading(false);
+
     }
 
   };
 
-  /* -----------------------------
-     CURRENT PLAN SECTION
-  ----------------------------- */
+  /* CURRENT PLAN */
 
   const CurrentPlanSection = () => {
 
@@ -172,66 +161,62 @@ const Subscription = () => {
     const currentPlan = tiers.find((t) => t.key === activeTier);
 
     return (
-      <>
-        <div className="current-plan-box">
 
-          <div className="plan-item">
-            <span className="plan-label">Plan</span>
-            <span className="plan-value">
-              {activeTier?.toUpperCase()}
-            </span>
+      <div className="current-plan-wrapper">
+
+        {/* Banner Row */}
+
+        <div className="current-plan-banner">
+
+          <div className="banner-item">
+            <span>Plan</span>
+            <strong>{activeTier?.toUpperCase()}</strong>
           </div>
 
-          <div className="plan-item">
-            <span className="plan-label">Status</span>
-            <span className={`plan-value status-${subscription.status}`}>
-              {subscription.status}
-            </span>
+          <div className="banner-item">
+            <span>Status</span>
+            <strong>{subscription.status}</strong>
           </div>
 
-          <div className="plan-item">
-            <span className="plan-label">Valid Until</span>
-            <span className="plan-value">
+          <div className="banner-item">
+            <span>Valid Until</span>
+            <strong>
               {subscription.currentEnd
                 ? new Date(subscription.currentEnd).toLocaleDateString()
                 : "—"}
-            </span>
+            </strong>
+          </div>
+
+          <div className="banner-item">
+            <span>AutoPay</span>
+            <strong>
+              {subscription.cancelAtPeriodEnd ? "Disabled" : "Active"}
+            </strong>
           </div>
 
         </div>
 
-        {/* CURRENT PLAN CARD (shows features) */}
+        {/* Current Plan Features */}
 
         {currentPlan && (
 
-          <div className="current-plan-card">
-
-            <PlanCard
-              tier={currentPlan}
-              billing={subscription.billingCycle}
-              selected={true}
-              isActive={true}
-              isAdmin={isAdmin}
-            />
-
-          </div>
+          <PlanCard
+            tier={currentPlan}
+            billing={subscription.billingCycle}
+            selected={true}
+            isActive={true}
+            isAdmin={isAdmin}
+            hideSelect={true}
+          />
 
         )}
 
-        {subscription.cancelAtPeriodEnd && (
+      </div>
 
-          <div className="cancel-warning">
-            AutoPay cancelled. Ends at period expiry.
-          </div>
-
-        )}
-      </>
     );
   };
 
-  /* -----------------------------
-     PLAN LIST SECTION
-  ----------------------------- */
+  /* PLAN LIST */
 
   const PlanSelectionSection = () => {
 
@@ -240,6 +225,7 @@ const Subscription = () => {
       : tiers;
 
     return (
+
       <div className="plans-grid">
 
         {visiblePlans.map((tier) => (
@@ -249,7 +235,7 @@ const Subscription = () => {
             tier={tier}
             billing={billing}
             selected={tier.key === selectedTier}
-            isActive={tier.key === activeTier}
+            isActive={false}
             isAdmin={isAdmin}
             onSelect={() => setSelectedTier(tier.key)}
           />
@@ -257,7 +243,9 @@ const Subscription = () => {
         ))}
 
       </div>
+
     );
+
   };
 
   return (
@@ -267,105 +255,99 @@ const Subscription = () => {
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
 
-      {/* CURRENT PLAN */}
-
-      <CurrentPlanSection />
-
-      {/* BILLING TOGGLE */}
-
-      {(!isActive || upgradeMode) && (
-
-        <BillingToggle billing={billing} setBilling={setBilling} />
-
-      )}
-
-      {/* CURRENT PLAN ACTION */}
+      {/* CURRENT PLAN VIEW */}
 
       {isActive && !upgradeMode && (
 
-        <div className="current-plan-view">
+        <>
+          <CurrentPlanSection />
 
-          <button
-            className="btn upgrade-btn"
-            onClick={() => {
+          <div className="current-plan-actions">
 
-              const firstUpgrade = tiers.find(
-                (tier) => tier.key !== activeTier
-              );
+            <button
+              className="btn upgrade-btn"
+              onClick={() => {
 
-              setUpgradeMode(true);
-              setSelectedTier(firstUpgrade?.key || null);
+                const firstUpgrade = tiers.find(
+                  (tier) => tier.key !== activeTier
+                );
 
-            }}
-          >
-            Upgrade Plan
-          </button>
+                setUpgradeMode(true);
+                setSelectedTier(firstUpgrade?.key || null);
 
-        </div>
+              }}
+            >
+              Upgrade Plan
+            </button>
 
+            {!subscription.cancelAtPeriodEnd && (
+
+              <button
+                className="btn danger cancel-autopay"
+                onClick={handleCancelAutoPay}
+              >
+                Cancel AutoPay
+              </button>
+
+            )}
+
+          </div>
+
+        </>
       )}
 
-      {/* BACK BUTTON */}
+      {/* UPGRADE VIEW */}
 
-      {upgradeMode && (
+      {(upgradeMode || !isActive) && (
 
-        <div className="upgrade-controls">
+        <>
 
-          <button
-            className="btn secondary"
-            onClick={() => {
+          <div className="upgrade-controls">
 
-              setUpgradeMode(false);
-              setSelectedTier(null);
+            {upgradeMode && (
 
-            }}
-          >
-            ← Back to Current Plan
-          </button>
+              <button
+                className="btn secondary"
+                onClick={() => {
 
-        </div>
+                  setUpgradeMode(false);
+                  setSelectedTier(null);
+
+                }}
+              >
+                ← Back to Current Plan
+              </button>
+
+            )}
+
+          </div>
+
+          <BillingToggle billing={billing} setBilling={setBilling} />
+
+          <PlanSelectionSection />
+
+          {selectedTier && (
+
+            <button
+              className="btn primary proceed"
+              onClick={handleCheckout}
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "Proceed to Checkout"}
+            </button>
+
+          )}
+
+        </>
 
       )}
-
-      {/* PLAN LIST */}
-
-      {(!isActive || upgradeMode) && <PlanSelectionSection />}
-
-      {/* CHECKOUT */}
-
-      {selectedTier && selectedTier !== activeTier && (
-
-        <button
-          className="btn primary proceed"
-          onClick={handleCheckout}
-          disabled={loading}
-        >
-          {loading ? "Processing..." : "Proceed to Checkout"}
-        </button>
-
-      )}
-
-      {/* CANCEL AUTOPAY */}
-
-      {subscription &&
-        subscription.status === "active" &&
-        !subscription.cancelAtPeriodEnd && (
-
-          <button
-            className="btn danger cancel-autopay"
-            onClick={handleCancelAutoPay}
-            disabled={loading}
-          >
-            Cancel AutoPay
-          </button>
-
-        )}
 
       {error && <p className="error">{error}</p>}
 
     </div>
 
   );
+
 };
 
 export default Subscription;

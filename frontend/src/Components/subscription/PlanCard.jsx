@@ -1,6 +1,6 @@
 import React from "react";
 
-const PlanCard = ({ tier, billing, selected, onSelect ,  hideButton }) => {
+const PlanCard = ({ tier, billing, selected, onSelect , hideSelect }) => {
   if (!tier || !tier.prices) return null;
 
   const price =
@@ -28,9 +28,11 @@ const PlanCard = ({ tier, billing, selected, onSelect ,  hideButton }) => {
         ))}
       </ul>
 
-{!hideButton && ( 
-   <button onClick={onSelect}>Select Plan</button>
-)}
+      {!hideSelect && (
+        <button className="select-button">
+          {selected ? "Selected" : "Select Plan"}
+        </button>
+      )}
     </div>
   );
 };

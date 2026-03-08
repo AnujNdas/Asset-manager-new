@@ -278,71 +278,29 @@
    CURRENT PLAN FEATURES
 ========================= */
 
-.current-plan-view{
-  margin-top:25px;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
+.current-plan-banner{
+display:flex;
+gap:40px;
+background:#f8fafc;
+padding:18px 25px;
+border-radius:8px;
+margin-bottom:25px;
+justify-content:space-between;
 }
 
-/* Upgrade Button */
-
-.upgrade-btn{
-  align-self:flex-start;
-  padding:10px 18px;
-  border-radius:8px;
-  border:none;
-  background:#2563eb;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-  transition:.2s;
+.banner-item{
+display:flex;
+flex-direction:column;
+font-size:14px;
 }
 
-.upgrade-btn:hover{
-  background:#1e4fd8;
+.banner-item span{
+color:#64748b;
+font-size:13px;
 }
 
-/* =========================
-   RESPONSIVE DESIGN
-========================= */
-
-/* Tablet */
-
-@media (max-width:1024px){
-
-  .banner-grid{
-    grid-template-columns: repeat(3,1fr);
-  }
-
-}
-
-/* Mobile */
-
-@media (max-width:600px){
-
-  .banner-grid{
-    grid-template-columns: repeat(2,1fr);
-  }
-
-  .current-plan-banner{
-    padding:18px;
-  }
-
-}
-
-/* Small mobile */
-
-@media (max-width:420px){
-
-  .banner-grid{
-    grid-template-columns:1fr;
-  }
-
-  .value{
-    font-size:15px;
-  }
-
+.banner-item strong{
+font-size:16px;
 }
 @media (max-width: 640px) {
   .subscription-page h2 {
