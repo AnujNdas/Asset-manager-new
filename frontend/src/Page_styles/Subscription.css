@@ -201,76 +201,146 @@
 
 /* CURRENT PLAN BAR */
 
-.current-plan-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* =========================
+   ACTIVE PLAN BANNER
+========================= */
 
-  background: white;
-  border: 1px solid #e6e6e6;
-  border-radius: 10px;
-
-  padding: 18px 22px;
-  margin-bottom: 30px;
-
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+.current-plan-banner{
+  background:#ffffff;
+  border:1px solid #e8e8e8;
+  border-radius:12px;
+  padding:24px;
+  margin:25px 0;
+  box-shadow:0 4px 14px rgba(0,0,0,0.05);
 }
 
-/* PLAN ITEMS */
+/* Grid Layout */
 
-.plan-item {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
+.banner-grid{
+  display:grid;
+  grid-template-columns: repeat(5,1fr);
+  gap:20px;
 }
 
-.plan-label {
-  font-size: 12px;
-  color: #777;
-  margin-bottom: 2px;
+/* Each Info Block */
+
+.banner-grid div{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
 
-.plan-value {
-  font-size: 16px;
-  font-weight: 600;
+/* Labels */
+
+.label{
+  font-size:12px;
+  color:#777;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:.4px;
 }
 
-/* STATUS COLORS */
+/* Values */
 
-.status-active {
-  color: #2e7d32;
+.value{
+  font-size:16px;
+  font-weight:600;
+  color:#222;
 }
 
-.status-trialing {
-  color: #1976d2;
+/* Status Colors */
+
+.status-active{
+  color:#2ecc71;
 }
 
-.status-cancelled {
-  color: #c62828;
+.status-cancelled{
+  color:#e74c3c;
 }
 
-/* WARNING */
-
-.cancel-warning {
-  margin-top: 8px;
-  padding: 6px 12px;
-
-  font-size: 13px;
-  color: #b26a00;
-
-  background: #fff4e5;
-  border: 1px solid #ffd699;
-  border-radius: 6px;
+.status-past_due{
+  color:#f39c12;
 }
 
-/* MOBILE */
+/* Cancel warning */
 
-@media (max-width: 700px) {
+.cancel-warning{
+  margin-top:18px;
+  padding:12px 16px;
+  background:#fff4f4;
+  border:1px solid #ffd6d6;
+  border-radius:8px;
+  color:#d63031;
+  font-size:14px;
+}
 
-  .current-plan-box {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+/* =========================
+   CURRENT PLAN FEATURES
+========================= */
+
+.current-plan-view{
+  margin-top:25px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+/* Upgrade Button */
+
+.upgrade-btn{
+  align-self:flex-start;
+  padding:10px 18px;
+  border-radius:8px;
+  border:none;
+  background:#2563eb;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.upgrade-btn:hover{
+  background:#1e4fd8;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+/* Tablet */
+
+@media (max-width:1024px){
+
+  .banner-grid{
+    grid-template-columns: repeat(3,1fr);
+  }
+
+}
+
+/* Mobile */
+
+@media (max-width:600px){
+
+  .banner-grid{
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .current-plan-banner{
+    padding:18px;
+  }
+
+}
+
+/* Small mobile */
+
+@media (max-width:420px){
+
+  .banner-grid{
+    grid-template-columns:1fr;
+  }
+
+  .value{
+    font-size:15px;
   }
 
 }

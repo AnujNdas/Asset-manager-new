@@ -9,9 +9,11 @@ import {
   getMySubscription,
   cancelAutoPay,
 } from "../Services/Subscription";
+
 import "../Page_styles/Subscription.css";
 
 const Subscription = () => {
+
   const [tiers, setTiers] = useState([]);
   const [billing, setBilling] = useState("monthly");
   const [selectedTier, setSelectedTier] = useState(null);
@@ -27,13 +29,14 @@ const Subscription = () => {
   const activeTier = subscription?.tier;
   const isActive = subscription?.status === "active";
 
-  /* ----------------------------------
-     Load Tiers + Current Subscription
-  ---------------------------------- */
+  /* -----------------------------
+     INITIAL LOAD
+  ----------------------------- */
 
   useEffect(() => {
     const init = async () => {
       try {
+
         const tierRes = await getTiers();
         setTiers(tierRes.tiers);
 
@@ -44,6 +47,7 @@ const Subscription = () => {
         } else {
           setSelectedTier(tierRes.tiers[0]?.key);
         }
+
       } catch (err) {
         console.error(err);
       }
@@ -52,73 +56,90 @@ const Subscription = () => {
     init();
   }, []);
 
-  /* ----------------------------------
-     Price Preview
-  ---------------------------------- */
+  /* -----------------------------
+     PRICE PREVIEW
+  ----------------------------- */
 
   useEffect(() => {
     if (!selectedTier) return;
 
     previewPrice({
       tierId: selectedTier,
-      billingCycle: billing,
+      billingCycle: billing
     });
+
   }, [selectedTier, billing]);
 
-  /* ----------------------------------
-     Checkout
-  ---------------------------------- */
+  /* -----------------------------
+     CHECKOUT
+  ----------------------------- */
 
   const handleCheckout = async () => {
+
     try {
+
       setError(null);
       setLoading(true);
 
       const checkoutRes = await createCheckout({
         tierKey: selectedTier,
-        billingCycle: billing,
+        billingCycle: billing
       });
 
       const { subscriptionId, razorpayKey } = checkoutRes;
 
       const options = {
+
         key: razorpayKey,
         subscription_id: subscriptionId,
         name: "Your App Name",
         description: `${selectedTier.toUpperCase()} Plan`,
+
         handler: async function (response) {
+
           await verifyPayment(response);
 
           const subRes = await getMySubscription();
           setSubscription(subRes);
 
           setUpgradeMode(false);
-          alert("Subscription activated.");
+
+          alert("Subscription activated");
+
         },
+
         modal: {
-          ondismiss: () => setLoading(false),
-        },
+          ondismiss: () => setLoading(false)
+        }
+
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
+
     } catch (err) {
+
       setError(err.userMessage || "Checkout failed");
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
-  /* ----------------------------------
-     Cancel AutoPay
-  ---------------------------------- */
+  /* -----------------------------
+     CANCEL AUTOPAY
+  ----------------------------- */
 
   const handleCancelAutoPay = async () => {
-    if (!window.confirm("Cancel auto-renewal? Access remains until period ends.")) {
+
+    if (!window.confirm("Cancel auto renewal? Access continues until period end.")) {
       return;
     }
 
     try {
+
       setLoading(true);
 
       await cancelAutoPay();
@@ -126,93 +147,122 @@ const Subscription = () => {
       const subRes = await getMySubscription();
       setSubscription(subRes);
 
-      alert("AutoPay cancelled. Plan remains active until expiry.");
+      alert("AutoPay cancelled");
+
     } catch (err) {
-      alert("Failed to cancel AutoPay.");
+
+      alert("Failed to cancel AutoPay");
+
     } finally {
+
       setLoading(false);
+
     }
   };
-console.log("SUB DEBUG:", {
-  subscription,
-  role: user?.role,
-  isAdmin,
-  status: subscription?.status,
-  isActive,
-  cancelAtPeriodEnd: subscription?.cancelAtPeriodEnd
-});
+
+  /* -----------------------------
+     DEBUG
+  ----------------------------- */
+
+  console.log("SUB DEBUG:", {
+    subscription,
+    role: user?.role,
+    isAdmin,
+    status: subscription?.status,
+    isActive,
+    cancelAtPeriodEnd: subscription?.cancelAtPeriodEnd
+  });
+
   return (
+
     <div className="subscription-page">
 
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
 
-      {/* ----------------------------------
-          CURRENT PLAN INFO
-      ---------------------------------- */}
+      {/* =========================
+         ACTIVE PLAN BANNER
+      ========================= */}
 
-     {subscription && (
-  <>
-    <div className="current-plan-box">
+      {subscription && (
 
-      <div className="plan-item">
-        <span className="plan-label">Plan</span>
-        <span className="plan-value">
-          {activeTier?.toUpperCase() || "None"}
-        </span>
-      </div>
+        <div className="current-plan-banner">
 
-      <div className="plan-item">
-        <span className="plan-label">Status</span>
-        <span className={`plan-value status-${subscription.status}`}>
-          {subscription.status}
-        </span>
-      </div>
+          <div className="banner-grid">
 
-      <div className="plan-item">
-        <span className="plan-label">Valid Until</span>
-        <span className="plan-value">
-          {subscription.currentEnd
-            ? new Date(subscription.currentEnd).toLocaleDateString()
-            : "—"}
-        </span>
-      </div>
+            <div>
+              <span className="label">Plan</span>
+              <span className="value">
+                {activeTier?.toUpperCase()}
+              </span>
+            </div>
 
-    </div>
+            <div>
+              <span className="label">Status</span>
+              <span className={`value status-${subscription.status}`}>
+                {subscription.status}
+              </span>
+            </div>
 
-    {subscription.cancelAtPeriodEnd && (
-      <div className="cancel-warning">
-        AutoPay cancelled. Ends at period expiry.
-      </div>
-    )}
-  </>
-)}
-      {/* ----------------------------------
-          BILLING TOGGLE
-      ---------------------------------- */}
+            <div>
+              <span className="label">Billing</span>
+              <span className="value">
+                {subscription.billingCycle}
+              </span>
+            </div>
 
-      {(!isActive || upgradeMode) && (
-        <BillingToggle billing={billing} setBilling={setBilling} />
+            <div>
+              <span className="label">Valid Until</span>
+              <span className="value">
+                {subscription.currentEnd
+                  ? new Date(subscription.currentEnd).toLocaleDateString()
+                  : "—"}
+              </span>
+            </div>
+
+            <div>
+              <span className="label">AutoPay</span>
+              <span className="value">
+                {subscription.cancelAtPeriodEnd ? "Disabled" : "Enabled"}
+              </span>
+            </div>
+
+          </div>
+
+          {subscription.cancelAtPeriodEnd && (
+
+            <div className="cancel-warning">
+              AutoPay cancelled. Plan will end at period expiry.
+            </div>
+
+          )}
+
+        </div>
+
       )}
 
-      {/* ----------------------------------
-          SHOW CURRENT PLAN ONLY
-      ---------------------------------- */}
+      {/* =========================
+         CURRENT PLAN FEATURES
+      ========================= */}
 
       {isActive && !upgradeMode && (
+
         <div className="current-plan-view">
 
           {tiers
-            .filter((tier) => tier.key === activeTier)
-            .map((tier) => (
+            .filter(tier => tier.key === activeTier)
+            .map(tier => (
+
               <PlanCard
                 key={tier.key}
                 tier={tier}
                 billing={subscription.billingCycle}
-                selected={true}
+                selected={false}
                 isActive={true}
                 isAdmin={isAdmin}
+                hideButton={true}
               />
+
             ))}
 
           <button
@@ -226,16 +276,32 @@ console.log("SUB DEBUG:", {
           </button>
 
         </div>
+
       )}
 
-      {/* ----------------------------------
-          SHOW ALL PLANS
-      ---------------------------------- */}
+      {/* =========================
+         BILLING TOGGLE
+      ========================= */}
 
       {(!isActive || upgradeMode) && (
+
+        <BillingToggle
+          billing={billing}
+          setBilling={setBilling}
+        />
+
+      )}
+
+      {/* =========================
+         ALL PLANS
+      ========================= */}
+
+      {(!isActive || upgradeMode) && (
+
         <div className="plans-grid">
 
-          {tiers.map((tier) => (
+          {tiers.map(tier => (
+
             <PlanCard
               key={tier.key}
               tier={tier}
@@ -245,16 +311,19 @@ console.log("SUB DEBUG:", {
               isAdmin={isAdmin}
               onSelect={() => setSelectedTier(tier.key)}
             />
+
           ))}
 
         </div>
+
       )}
 
-      {/* ----------------------------------
-          CHECKOUT BUTTON
-      ---------------------------------- */}
+      {/* =========================
+         CHECKOUT
+      ========================= */}
 
       {selectedTier && selectedTier !== activeTier && (
+
         <button
           className="btn primary proceed"
           onClick={handleCheckout}
@@ -262,23 +331,26 @@ console.log("SUB DEBUG:", {
         >
           {loading ? "Processing..." : "Proceed to Checkout"}
         </button>
+
       )}
 
-      {/* ----------------------------------
-          CANCEL AUTOPAY
-      ---------------------------------- */}
+      {/* =========================
+         CANCEL AUTOPAY
+      ========================= */}
 
-{subscription &&
- subscription.status === "active" &&
- !subscription.cancelAtPeriodEnd && (
-  <button
-    className="btn danger cancel-autopay"
-    onClick={handleCancelAutoPay}
-    disabled={loading}
-  >
-    Cancel AutoPay
-  </button>
-)}
+      {subscription &&
+        subscription.status === "active" &&
+        !subscription.cancelAtPeriodEnd && (
+
+          <button
+            className="btn danger cancel-autopay"
+            onClick={handleCancelAutoPay}
+            disabled={loading}
+          >
+            Cancel AutoPay
+          </button>
+
+        )}
 
       {error && <p className="error">{error}</p>}
 
