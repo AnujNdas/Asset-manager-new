@@ -46,38 +46,7 @@ const Subscription = () => {
 
         if (subRes) {
           setSubscription(subRes);
-          if (subRes?.pendingUpgrade) {
-
-  const pending = subRes.pendingUpgrade;
-
-  const pendingTier = tierRes.tiers.find(
-    (t) => t.key === pending.tier
-  );
-
-  Swal.fire({
-    title: "Pending Upgrade Found",
-    html: `
-      <p>You started upgrading to <b>${pendingTier?.name || pending.tier}</b> plan.</p>
-      <p>Billing cycle: <b>${pending.billingCycle}</b></p>
-      <p>Do you want to continue this upgrade or choose another plan?</p>
-    `,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Continue Upgrade",
-    cancelButtonText: "Choose Another Plan",
-    reverseButtons: true,
-  }).then(async (result) => {
-
-    if (result.isConfirmed) {
-      reopenPendingCheckout(pending);
-    } else {
-      await removePendingUpgrade();
-      setUpgradeMode(true);
-    }
-
-  });
-}
-        } else {
+         } else {
           setSelectedTier(tierRes.tiers[0]?.key);
         }
 
@@ -108,7 +77,7 @@ const Subscription = () => {
 const reopenPendingCheckout = (pending) => {
 
   const options = {
-    key: process.env.REACT_APP_RAZORPAY_KEY,
+    key: pending.razorpayKey, // better
     subscription_id: pending.razorpaySubscriptionId,
     name: "Your App Name",
     description: `${pending.tier.toUpperCase()} Plan`,
@@ -128,6 +97,62 @@ const reopenPendingCheckout = (pending) => {
 
   const rzp = new window.Razorpay(options);
   rzp.open();
+
+};
+const handleUpgradeClick = async () => {
+
+  try {
+
+    const subRes = await getMySubscription();
+    setSubscription(subRes);
+
+    if (subRes?.pendingUpgrade) {
+
+      const pending = subRes.pendingUpgrade;
+
+      const pendingTier = tiers.find(
+        (t) => t.key === pending.tier
+      );
+
+      const result = await Swal.fire({
+        title: "Pending Upgrade Found",
+        html: `
+          <p>You already started upgrading to 
+          <b>${pendingTier?.name || pending.tier}</b>.</p>
+          <p>Do you want to continue or cancel it?</p>
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Continue Upgrade",
+        cancelButtonText: "Cancel Upgrade",
+      });
+
+      if (result.isConfirmed) {
+        reopenPendingCheckout(pending);
+        return;
+      }
+
+      if (result.dismiss === Swal.DismissReason.cancel) {
+
+        await removePendingUpgrade();
+
+        setUpgradeMode(true);
+        setSelectedTier(null);
+
+        return;
+      }
+
+    }
+
+    // No pending upgrade
+    setUpgradeMode(true);
+    setSelectedTier(null);
+
+  } catch (err) {
+
+    console.error(err);
+
+  }
 
 };
   const handleCheckout = async () => {
@@ -341,7 +366,7 @@ const reopenPendingCheckout = (pending) => {
 
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
-      {subscription?.pendingUpgrade && (
+{subscription?.pendingUpgrade && !upgradeMode && (
 
   <div className="pending-upgrade-banner">
 
@@ -389,21 +414,12 @@ const reopenPendingCheckout = (pending) => {
 
           <div className="current-plan-actions">
 
-            <button
-              className="btn upgrade-btn"
-              onClick={() => {
-
-                const firstUpgrade = tiers.find(
-                  (tier) => tier.key !== activeTier
-                );
-
-                setUpgradeMode(true);
-                setSelectedTier(firstUpgrade?.key || null);
-
-              }}
-            >
-              Upgrade Plan
-            </button>
+<button
+  className="btn upgrade-btn"
+  onClick={handleUpgradeClick}
+>
+  Upgrade Plan
+</button>
 
             {!subscription.cancelAtPeriodEnd && (
 
