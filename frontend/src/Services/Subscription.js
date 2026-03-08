@@ -53,3 +53,14 @@ export const cancelAutoPay = async () => {
   const res = await axiosInstance.post("/subscription/cancel-auto-pay");
   return res.data;
 };
+export const removePendingUpgrade = async () => {
+
+  const res = await axiosInstance.delete("/subscription/pending-upgrade");
+
+  if (!res.ok) {
+    throw new Error("Failed to remove pending upgrade");
+  }
+
+  return res.json();
+
+};

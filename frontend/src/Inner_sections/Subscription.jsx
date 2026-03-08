@@ -9,6 +9,7 @@ import {
   verifyPayment,
   getMySubscription,
   cancelAutoPay,
+  removePendingUpgrade
 } from "../Services/Subscription";
 
 import "../Page_styles/Subscription.css";
@@ -70,7 +71,7 @@ const Subscription = () => {
     if (result.isConfirmed) {
       reopenPendingCheckout(pending);
     } else {
-      await clearPendingUpgrade();
+      await removePendingUpgrade();
       setUpgradeMode(true);
     }
 
