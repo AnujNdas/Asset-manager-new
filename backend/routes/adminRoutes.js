@@ -303,11 +303,13 @@ AssetAssignment.aggregate([
 
   {
     $group: {
-      _id: "$employee._id",
+      _id: "$department._id",
 
+      departmentName: { $first: "$department.name" },
+
+      // keeping existing fields so response does not change
       employeeName: { $first: "$employee.name" },
       employeeEmail: { $first: "$employee.email" },
-      departmentName: { $first: "$department.name" },
 
       totalAssignedQuantity: { $sum: "$quantity" },
 
@@ -356,7 +358,8 @@ AssetAssignment.aggregate([
   },
 
   { $sort: { totalAssignedQuantity: -1 } },
-  { $limit: 10 }
+
+  { $limit: 5 }
 ]),
     ]);
     const mergedLocations = [...topSoftwareLocations, ...topHardwareLocations]

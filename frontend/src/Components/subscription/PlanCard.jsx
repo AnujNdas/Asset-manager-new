@@ -29,7 +29,7 @@ const PlanCard = ({ tier, billing, selected, onSelect , hideSelect }) => {
       </ul>
 
       {!hideSelect && (
-        <button className="select-button">
+        <button className="btn-primary">
           {selected ? "Selected" : "Select Plan"}
         </button>
       )}

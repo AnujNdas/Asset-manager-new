@@ -175,7 +175,7 @@ const Subscription = () => {
 
           <div className="banner-item">
             <span>Status</span>
-            <strong>{subscription.status}</strong>
+            <strong style={{ color: "green" }}>{subscription.status}</strong>
           </div>
 
           <div className="banner-item">
