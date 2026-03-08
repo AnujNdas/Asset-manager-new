@@ -381,6 +381,34 @@ const handleWebhook = async (req, res) => {
     return res.status(500).send("Webhook processing failed");
   }
 };
+// controllers/subscriptionController.js
+
+const clearPendingUpgrade = async (req, res) => {
+  try {
+
+    const organizationId = req.user.organizationId;
+
+    await Subscription.updateOne(
+      { organizationId },
+      { $unset: { pendingUpgrade: 1 } }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Pending upgrade removed",
+    });
+
+  } catch (error) {
+
+    console.error("Clear pending upgrade error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to clear pending upgrade",
+    });
+
+  }
+};
 module.exports = {
   getTiers,
   previewPrice,
@@ -388,4 +416,5 @@ module.exports = {
   verifyPayment,
   cancelAutoPay,
   handleWebhook,
+  clearPendingUpgrade
 };

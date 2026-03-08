@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BillingToggle from "../Components/subscription/BillingToggle";
 import PlanCard from "../Components/subscription/PlanCard";
-
+import Swal from "sweetalert2";
 import {
   getTiers,
   previewPrice,
@@ -45,6 +45,37 @@ const Subscription = () => {
 
         if (subRes) {
           setSubscription(subRes);
+          if (subRes?.pendingUpgrade) {
+
+  const pending = subRes.pendingUpgrade;
+
+  const pendingTier = tierRes.tiers.find(
+    (t) => t.key === pending.tier
+  );
+
+  Swal.fire({
+    title: "Pending Upgrade Found",
+    html: `
+      <p>You started upgrading to <b>${pendingTier?.name || pending.tier}</b> plan.</p>
+      <p>Billing cycle: <b>${pending.billingCycle}</b></p>
+      <p>Do you want to continue this upgrade or choose another plan?</p>
+    `,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Continue Upgrade",
+    cancelButtonText: "Choose Another Plan",
+    reverseButtons: true,
+  }).then(async (result) => {
+
+    if (result.isConfirmed) {
+      reopenPendingCheckout(pending);
+    } else {
+      await clearPendingUpgrade();
+      setUpgradeMode(true);
+    }
+
+  });
+}
         } else {
           setSelectedTier(tierRes.tiers[0]?.key);
         }
@@ -73,7 +104,31 @@ const Subscription = () => {
   }, [selectedTier, billing]);
 
   /* CHECKOUT */
+const reopenPendingCheckout = (pending) => {
 
+  const options = {
+    key: process.env.REACT_APP_RAZORPAY_KEY,
+    subscription_id: pending.razorpaySubscriptionId,
+    name: "Your App Name",
+    description: `${pending.tier.toUpperCase()} Plan`,
+    handler: async function (response) {
+
+      await verifyPayment(response);
+
+      const subRes = await getMySubscription();
+      setSubscription(subRes);
+
+      setUpgradeMode(false);
+
+      Swal.fire("Success", "Subscription activated.", "success");
+
+    },
+  };
+
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+
+};
   const handleCheckout = async () => {
 
     try {
@@ -198,19 +253,50 @@ const Subscription = () => {
 
         {/* Current Plan Features */}
 
-        {currentPlan && (
+{currentPlan && (
 
-          <PlanCard
-            tier={currentPlan}
-            billing={subscription.billingCycle}
-            selected={true}
-            isActive={true}
-            isAdmin={isAdmin}
-            hideSelect={true}
-          />
+  <div className="current-plan-details">
 
-        )}
+    <div className="plan-features">
 
+      <h3>Plan Features</h3>
+
+      <ul>
+        {currentPlan.features?.map((f, i) => (
+          <li key={i}>✓ {f}</li>
+        ))}
+      </ul>
+
+    </div>
+
+    <div className="plan-usage">
+
+      <h3>Usage</h3>
+
+      <div className="usage-grid">
+
+        <div className="usage-item">
+          <span>Assets Used</span>
+          <strong>120 / {currentPlan.assetLimit}</strong>
+        </div>
+
+        <div className="usage-item">
+          <span>Employees</span>
+          <strong>35 / {currentPlan.userLimit}</strong>
+        </div>
+
+        <div className="usage-item">
+          <span>Departments</span>
+          <strong>8 / {currentPlan.departmentLimit}</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
       </div>
 
     );
@@ -254,7 +340,45 @@ const Subscription = () => {
 
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
+      {subscription?.pendingUpgrade && (
 
+  <div className="pending-upgrade-banner">
+
+    Pending upgrade to{" "}
+    <strong>{subscription.pendingUpgrade.tier.toUpperCase()}</strong>
+
+    <div className="pending-actions">
+
+      <button
+        className="btn small"
+        onClick={() =>
+          reopenPendingCheckout(subscription.pendingUpgrade)
+        }
+      >
+        Continue
+      </button>
+
+      <button
+        className="btn small danger"
+        onClick={async () => {
+
+          await removePendingUpgrade();
+
+          const subRes = await getMySubscription();
+          setSubscription(subRes);
+
+          setUpgradeMode(true);
+
+        }}
+      >
+        Remove
+      </button>
+
+    </div>
+
+  </div>
+
+)}
       {/* CURRENT PLAN VIEW */}
 
       {isActive && !upgradeMode && (

@@ -7,6 +7,7 @@ const {
   getTiers,
   verifyPayment,
   cancelAutoPay,
+  clearPendingUpgrade
 } = require("../controllers/subscriptionController");
 const requireActiveSubscription = require("../Middleware/requireActiveSubscription");
 const router = express.Router();
@@ -88,4 +89,11 @@ router.get("/fix-sub", async (req, res) => {
 
   res.json({ success: true });
 });
+// routes/subscriptionRoutes.js
+
+router.delete(
+  "/pending-upgrade",
+  authenticateToken(),
+  clearPendingUpgrade
+);
 module.exports = router;
