@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import BillingToggle from "../Components/subscription/BillingToggle";
 import PlanCard from "../Components/subscription/PlanCard";
 import Swal from "sweetalert2";
+
 import {
   getTiers,
   previewPrice,
@@ -31,7 +32,19 @@ const Subscription = () => {
   const activeTier = subscription?.tier;
   const isActive = subscription?.status === "active";
 
-  /* LOAD DATA */
+  /* -------------------------
+     CENTRAL SUBSCRIPTION LOADER
+  ------------------------- */
+
+  const loadSubscription = async () => {
+    const sub = await getMySubscription();
+    setSubscription(sub);
+    return sub;
+  };
+
+  /* -------------------------
+     INITIAL LOAD
+  ------------------------- */
 
   useEffect(() => {
 
@@ -42,11 +55,9 @@ const Subscription = () => {
         const tierRes = await getTiers();
         setTiers(tierRes.tiers);
 
-        const subRes = await getMySubscription();
+        const sub = await loadSubscription();
 
-        if (subRes) {
-          setSubscription(subRes);
-         } else {
+        if (!sub) {
           setSelectedTier(tierRes.tiers[0]?.key);
         }
 
@@ -60,7 +71,9 @@ const Subscription = () => {
 
   }, []);
 
-  /* PRICE PREVIEW */
+  /* -------------------------
+     PRICE PREVIEW
+  ------------------------- */
 
   useEffect(() => {
 
@@ -68,93 +81,107 @@ const Subscription = () => {
 
     previewPrice({
       tierId: selectedTier,
-      billingCycle: billing,
+      billingCycle: billing
     });
 
   }, [selectedTier, billing]);
 
-  /* CHECKOUT */
-const reopenPendingCheckout = (pending) => {
+  /* -------------------------
+     REOPEN PENDING CHECKOUT
+  ------------------------- */
 
-  const options = {
-    key: pending.razorpayKey, // better
-    subscription_id: pending.razorpaySubscriptionId,
-    name: "Your App Name",
-    description: `${pending.tier.toUpperCase()} Plan`,
-    handler: async function (response) {
+  const reopenPendingCheckout = (pending) => {
 
-      await verifyPayment(response);
+    const options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY,
+      subscription_id: pending.razorpaySubscriptionId,
+      name: "Your App Name",
+      description: `${pending.tier.toUpperCase()} Plan`,
 
-      const subRes = await getMySubscription();
-      setSubscription(subRes);
+      handler: async function (response) {
 
-      setUpgradeMode(false);
+        await verifyPayment(response);
 
-      Swal.fire("Success", "Subscription activated.", "success");
+        await loadSubscription();
 
-    },
+        setUpgradeMode(false);
+
+        Swal.fire("Success", "Subscription activated.", "success");
+
+      }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
   };
 
-  const rzp = new window.Razorpay(options);
-  rzp.open();
+  /* -------------------------
+     HANDLE UPGRADE CLICK
+  ------------------------- */
 
-};
-const handleUpgradeClick = async () => {
+  const handleUpgradeClick = async () => {
 
-  try {
+    try {
 
-    const subRes = await getMySubscription();
-    setSubscription(subRes);
+      const sub = await loadSubscription();
 
-    if (subRes?.pendingUpgrade) {
+      if (sub?.pendingUpgrade) {
 
-      const pending = subRes.pendingUpgrade;
+        const pending = sub.pendingUpgrade;
 
-      const pendingTier = tiers.find(
-        (t) => t.key === pending.tier
-      );
+        const pendingTier = tiers.find(
+          (t) => t.key === pending.tier
+        );
 
-      const result = await Swal.fire({
-        title: "Pending Upgrade Found",
-        html: `
-          <p>You already started upgrading to 
-          <b>${pendingTier?.name || pending.tier}</b>.</p>
-          <p>Do you want to continue or cancel it?</p>
-        `,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Continue Upgrade",
-        cancelButtonText: "Cancel Upgrade",
-      });
+        const result = await Swal.fire({
+          title: "Pending Upgrade Found",
+          html: `
+            <p>You already started upgrading to 
+            <b>${pendingTier?.name || pending.tier}</b>.</p>
+            <p>Continue or cancel it?</p>
+          `,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Continue Upgrade",
+          cancelButtonText: "Cancel Upgrade"
+        });
 
-      if (result.isConfirmed) {
-        reopenPendingCheckout(pending);
-        return;
+        if (result.isConfirmed) {
+          reopenPendingCheckout(pending);
+          return;
+        }
+
+        if (result.dismiss === Swal.DismissReason.cancel) {
+
+          await removePendingUpgrade();
+
+          await loadSubscription();
+
+          setUpgradeMode(true);
+          setSelectedTier(null);
+
+          return;
+        }
       }
 
-      if (result.dismiss === Swal.DismissReason.cancel) {
+      /* No pending upgrade */
 
-        await removePendingUpgrade();
+      setUpgradeMode(true);
+      setSelectedTier(null);
 
-        setUpgradeMode(true);
-        setSelectedTier(null);
+    } catch (err) {
 
-        return;
-      }
+      console.error(err);
 
     }
 
-    // No pending upgrade
-    setUpgradeMode(true);
-    setSelectedTier(null);
+  };
 
-  } catch (err) {
+  /* -------------------------
+     CHECKOUT
+  ------------------------- */
 
-    console.error(err);
-
-  }
-
-};
   const handleCheckout = async () => {
 
     try {
@@ -164,31 +191,34 @@ const handleUpgradeClick = async () => {
 
       const checkoutRes = await createCheckout({
         tierKey: selectedTier,
-        billingCycle: billing,
+        billingCycle: billing
       });
 
       const { subscriptionId, razorpayKey } = checkoutRes;
 
       const options = {
+
         key: razorpayKey,
         subscription_id: subscriptionId,
         name: "Your App Name",
         description: `${selectedTier.toUpperCase()} Plan`,
+
         handler: async function (response) {
 
           await verifyPayment(response);
 
-          const subRes = await getMySubscription();
-          setSubscription(subRes);
+          await loadSubscription();
 
           setUpgradeMode(false);
 
-          alert("Subscription activated.");
+          Swal.fire("Success", "Subscription activated.", "success");
 
         },
+
         modal: {
-          ondismiss: () => setLoading(false),
-        },
+          ondismiss: () => setLoading(false)
+        }
+
       };
 
       const rzp = new window.Razorpay(options);
@@ -201,10 +231,14 @@ const handleUpgradeClick = async () => {
     } finally {
 
       setLoading(false);
+
     }
+
   };
 
-  /* CANCEL AUTOPAY */
+  /* -------------------------
+     CANCEL AUTOPAY
+  ------------------------- */
 
   const handleCancelAutoPay = async () => {
 
@@ -216,14 +250,13 @@ const handleUpgradeClick = async () => {
 
       await cancelAutoPay();
 
-      const subRes = await getMySubscription();
-      setSubscription(subRes);
+      await loadSubscription();
 
-      alert("AutoPay cancelled.");
+      Swal.fire("Cancelled", "AutoPay cancelled.", "success");
 
     } catch {
 
-      alert("Failed to cancel AutoPay.");
+      Swal.fire("Error", "Failed to cancel AutoPay.", "error");
 
     } finally {
 
@@ -233,7 +266,9 @@ const handleUpgradeClick = async () => {
 
   };
 
-  /* CURRENT PLAN */
+  /* -------------------------
+     CURRENT PLAN SECTION
+  ------------------------- */
 
   const CurrentPlanSection = () => {
 
@@ -244,8 +279,6 @@ const handleUpgradeClick = async () => {
     return (
 
       <div className="current-plan-wrapper">
-
-        {/* Banner Row */}
 
         <div className="current-plan-banner">
 
@@ -277,64 +310,41 @@ const handleUpgradeClick = async () => {
 
         </div>
 
-        {/* Current Plan Features */}
+        {currentPlan && (
 
-{currentPlan && (
+          <div className="current-plan-details">
 
-  <div className="current-plan-details">
+            <div className="plan-features">
 
-    <div className="plan-features">
+              <h3>Plan Features</h3>
 
-      <h3>Plan Features</h3>
+              <ul>
+                {currentPlan.features?.map((f, i) => (
+                  <li key={i}>✓ {f}</li>
+                ))}
+              </ul>
 
-      <ul>
-        {currentPlan.features?.map((f, i) => (
-          <li key={i}>✓ {f}</li>
-        ))}
-      </ul>
+            </div>
 
-    </div>
+          </div>
 
-    <div className="plan-usage">
+        )}
 
-      <h3>Usage</h3>
-
-      <div className="usage-grid">
-
-        <div className="usage-item">
-          <span>Assets Used</span>
-          <strong>120 / {currentPlan.assetLimit}</strong>
-        </div>
-
-        <div className="usage-item">
-          <span>Employees</span>
-          <strong>35 / {currentPlan.userLimit}</strong>
-        </div>
-
-        <div className="usage-item">
-          <span>Departments</span>
-          <strong>8 / {currentPlan.departmentLimit}</strong>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-)}
       </div>
 
     );
+
   };
 
-  /* PLAN LIST */
+  /* -------------------------
+     PLAN LIST
+  ------------------------- */
 
   const PlanSelectionSection = () => {
 
-    const visiblePlans = upgradeMode
-      ? tiers.filter((tier) => tier.key !== activeTier)
-      : tiers;
+    const visiblePlans = tiers.filter(
+      (tier) => tier.key !== activeTier
+    );
 
     return (
 
@@ -360,52 +370,55 @@ const handleUpgradeClick = async () => {
 
   };
 
+  /* -------------------------
+     RENDER
+  ------------------------- */
+
   return (
 
     <div className="subscription-page">
 
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
-{subscription?.pendingUpgrade && !upgradeMode && (
 
-  <div className="pending-upgrade-banner">
+      {subscription?.pendingUpgrade && !upgradeMode && (
 
-    Pending upgrade to{" "}
-    <strong>{subscription.pendingUpgrade.tier.toUpperCase()}</strong>
+        <div className="pending-upgrade-banner">
 
-    <div className="pending-actions">
+          Pending upgrade to{" "}
+          <strong>{subscription.pendingUpgrade.tier.toUpperCase()}</strong>
 
-      <button
-        className="btn small"
-        onClick={() =>
-          reopenPendingCheckout(subscription.pendingUpgrade)
-        }
-      >
-        Continue
-      </button>
+          <div className="pending-actions">
 
-      <button
-        className="btn small danger"
-        onClick={async () => {
+            <button
+              className="btn small"
+              onClick={() =>
+                reopenPendingCheckout(subscription.pendingUpgrade)
+              }
+            >
+              Continue
+            </button>
 
-          await removePendingUpgrade();
+            <button
+              className="btn small danger"
+              onClick={async () => {
 
-          const subRes = await getMySubscription();
-          setSubscription(subRes);
+                await removePendingUpgrade();
 
-          setUpgradeMode(true);
+                await loadSubscription();
 
-        }}
-      >
-        Remove
-      </button>
+                setUpgradeMode(true);
 
-    </div>
+              }}
+            >
+              Remove
+            </button>
 
-  </div>
+          </div>
 
-)}
-      {/* CURRENT PLAN VIEW */}
+        </div>
+
+      )}
 
       {isActive && !upgradeMode && (
 
@@ -414,12 +427,12 @@ const handleUpgradeClick = async () => {
 
           <div className="current-plan-actions">
 
-<button
-  className="btn upgrade-btn"
-  onClick={handleUpgradeClick}
->
-  Upgrade Plan
-</button>
+            <button
+              className="btn upgrade-btn"
+              onClick={handleUpgradeClick}
+            >
+              Upgrade Plan
+            </button>
 
             {!subscription.cancelAtPeriodEnd && (
 
@@ -433,35 +446,29 @@ const handleUpgradeClick = async () => {
             )}
 
           </div>
-
         </>
-      )}
 
-      {/* UPGRADE VIEW */}
+      )}
 
       {(upgradeMode || !isActive) && (
 
         <>
 
-          <div className="upgrade-controls">
+          {upgradeMode && (
 
-            {upgradeMode && (
+            <button
+              className="btn secondary"
+              onClick={() => {
 
-              <button
-                className="btn secondary"
-                onClick={() => {
+                setUpgradeMode(false);
+                setSelectedTier(null);
 
-                  setUpgradeMode(false);
-                  setSelectedTier(null);
+              }}
+            >
+              ← Back to Current Plan
+            </button>
 
-                }}
-              >
-                ← Back to Current Plan
-              </button>
-
-            )}
-
-          </div>
+          )}
 
           <BillingToggle billing={billing} setBilling={setBilling} />
 
