@@ -35,7 +35,9 @@ const Subscription = () => {
   ----------------------------- */
 
   useEffect(() => {
+
     const init = async () => {
+
       try {
 
         const tierRes = await getTiers();
@@ -52,9 +54,11 @@ const Subscription = () => {
       } catch (err) {
         console.error(err);
       }
+
     };
 
     init();
+
   }, []);
 
   /* -----------------------------
@@ -62,6 +66,7 @@ const Subscription = () => {
   ----------------------------- */
 
   useEffect(() => {
+
     if (!selectedTier) return;
 
     previewPrice({
@@ -104,6 +109,7 @@ const Subscription = () => {
           setUpgradeMode(false);
 
           alert("Subscription activated.");
+
         },
         modal: {
           ondismiss: () => setLoading(false),
@@ -152,6 +158,7 @@ const Subscription = () => {
 
       setLoading(false);
     }
+
   };
 
   /* -----------------------------
@@ -162,6 +169,8 @@ const Subscription = () => {
 
     if (!subscription) return null;
 
+    const currentPlan = tiers.find((t) => t.key === activeTier);
+
     return (
       <>
         <div className="current-plan-box">
@@ -169,7 +178,7 @@ const Subscription = () => {
           <div className="plan-item">
             <span className="plan-label">Plan</span>
             <span className="plan-value">
-              {activeTier?.toUpperCase() || "None"}
+              {activeTier?.toUpperCase()}
             </span>
           </div>
 
@@ -191,10 +200,30 @@ const Subscription = () => {
 
         </div>
 
+        {/* CURRENT PLAN CARD (shows features) */}
+
+        {currentPlan && (
+
+          <div className="current-plan-card">
+
+            <PlanCard
+              tier={currentPlan}
+              billing={subscription.billingCycle}
+              selected={true}
+              isActive={true}
+              isAdmin={isAdmin}
+            />
+
+          </div>
+
+        )}
+
         {subscription.cancelAtPeriodEnd && (
+
           <div className="cancel-warning">
             AutoPay cancelled. Ends at period expiry.
           </div>
+
         )}
       </>
     );
@@ -232,22 +261,25 @@ const Subscription = () => {
   };
 
   return (
+
     <div className="subscription-page">
 
       <h2>Subscription & Billing</h2>
       <p>Choose the plan that fits your business</p>
 
-      {/* CURRENT PLAN INFO */}
+      {/* CURRENT PLAN */}
 
       <CurrentPlanSection />
 
       {/* BILLING TOGGLE */}
 
       {(!isActive || upgradeMode) && (
+
         <BillingToggle billing={billing} setBilling={setBilling} />
+
       )}
 
-      {/* CURRENT PLAN ACTIONS */}
+      {/* CURRENT PLAN ACTION */}
 
       {isActive && !upgradeMode && (
 
@@ -256,8 +288,14 @@ const Subscription = () => {
           <button
             className="btn upgrade-btn"
             onClick={() => {
+
+              const firstUpgrade = tiers.find(
+                (tier) => tier.key !== activeTier
+              );
+
               setUpgradeMode(true);
-              setSelectedTier(null);
+              setSelectedTier(firstUpgrade?.key || null);
+
             }}
           >
             Upgrade Plan
@@ -276,8 +314,10 @@ const Subscription = () => {
           <button
             className="btn secondary"
             onClick={() => {
+
               setUpgradeMode(false);
               setSelectedTier(null);
+
             }}
           >
             ← Back to Current Plan
@@ -324,6 +364,7 @@ const Subscription = () => {
       {error && <p className="error">{error}</p>}
 
     </div>
+
   );
 };
 
