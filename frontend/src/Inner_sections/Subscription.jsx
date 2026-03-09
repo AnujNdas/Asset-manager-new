@@ -128,16 +128,11 @@ const loadSubscription = async () => {
 const handleUpgradeClick = async () => {
   try {
 
-    if (!subscriptionLoaded) {
-      console.log("Subscription not loaded yet");
-      return;
-    }
+    if (!subscriptionLoaded) return;
 
     const sub = await loadSubscription();
 
-    /* -------------------------
-       PENDING UPGRADE FOUND
-    ------------------------- */
+    setUpgradeMode(true); // user entered upgrade flow
 
     if (sub?.pendingUpgrade) {
 
@@ -160,37 +155,20 @@ const handleUpgradeClick = async () => {
         cancelButtonText: "Cancel Upgrade"
       });
 
-      /* CONTINUE CHECKOUT */
-
       if (result.isConfirmed) {
         reopenPendingCheckout(pending);
         return;
       }
 
-      /* CANCEL PENDING */
-
       if (result.dismiss === Swal.DismissReason.cancel) {
-
         await removePendingUpgrade();
-
-        const refreshed = await loadSubscription();
-
-        if (!refreshed?.pendingUpgrade) {
-          setUpgradeMode(true);
-          setSelectedTier(null);
-        }
-
-        return;
+        await loadSubscription();
+        setSelectedTier(null);
       }
 
       return;
     }
 
-    /* -------------------------
-       NO PENDING UPGRADE
-    ------------------------- */
-
-    setUpgradeMode(true);
     setSelectedTier(null);
 
   } catch (err) {
@@ -416,7 +394,7 @@ return (
        STATE 1: Pending Upgrade
     ------------------------- */}
 
-    {subscription?.pendingUpgrade && !upgradeMode && (
+    {subscription?.pendingUpgrade && upgradeMode && (
       <div className="pending-upgrade-banner">
 
         Pending upgrade to{" "}
@@ -436,9 +414,15 @@ return (
           <button
             className="btn small danger"
             onClick={async () => {
+
               await removePendingUpgrade();
-              await loadSubscription();
-              setUpgradeMode(true);
+
+              const refreshed = await loadSubscription();
+
+              if (!refreshed?.pendingUpgrade) {
+                setSelectedTier(null);
+              }
+
             }}
           >
             Remove
