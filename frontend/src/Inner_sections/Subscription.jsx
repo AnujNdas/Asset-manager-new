@@ -128,11 +128,16 @@ const loadSubscription = async () => {
 const handleUpgradeClick = async () => {
   try {
 
-    if (!subscriptionLoaded) return;
+    if (!subscriptionLoaded) {
+      console.log("Subscription not loaded yet");
+      return;
+    }
 
     const sub = await loadSubscription();
 
-    setUpgradeMode(true); // user entered upgrade flow
+    /* -------------------------
+       PENDING UPGRADE FOUND
+    ------------------------- */
 
     if (sub?.pendingUpgrade) {
 
@@ -155,20 +160,37 @@ const handleUpgradeClick = async () => {
         cancelButtonText: "Cancel Upgrade"
       });
 
+      /* CONTINUE CHECKOUT */
+
       if (result.isConfirmed) {
         reopenPendingCheckout(pending);
         return;
       }
 
+      /* CANCEL PENDING */
+
       if (result.dismiss === Swal.DismissReason.cancel) {
+
         await removePendingUpgrade();
-        await loadSubscription();
-        setSelectedTier(null);
+
+        const refreshed = await loadSubscription();
+
+        if (!refreshed?.pendingUpgrade) {
+          setUpgradeMode(true);
+          setSelectedTier(null);
+        }
+
+        return;
       }
 
       return;
     }
 
+    /* -------------------------
+       NO PENDING UPGRADE
+    ------------------------- */
+
+    setUpgradeMode(true);
     setSelectedTier(null);
 
   } catch (err) {
@@ -415,15 +437,16 @@ return (
             className="btn small danger"
             onClick={async () => {
 
-              await removePendingUpgrade();
+  await removePendingUpgrade();
 
-              const refreshed = await loadSubscription();
+  const refreshed = await loadSubscription();
 
-              if (!refreshed?.pendingUpgrade) {
-                setSelectedTier(null);
-              }
+  if (!refreshed?.pendingUpgrade) {
+    setUpgradeMode(true);
+    setSelectedTier(null);
+  }
 
-            }}
+}}
           >
             Remove
           </button>
@@ -437,7 +460,7 @@ return (
        STATE 2: Active Plan View
     ------------------------- */}
 
-    {!subscription?.pendingUpgrade && isActive && !upgradeMode && (
+    {isActive && !upgradeMode && (
       <>
         <CurrentPlanSection />
 
