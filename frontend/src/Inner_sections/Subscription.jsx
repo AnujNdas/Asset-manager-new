@@ -22,7 +22,7 @@ const Subscription = () => {
   const [selectedTier, setSelectedTier] = useState(null);
   const [subscription, setSubscription] = useState(null);
   const [upgradeMode, setUpgradeMode] = useState(false);
-
+  const [subscriptionLoaded, setSubscriptionLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -36,12 +36,18 @@ const user = JSON.parse(localStorage.getItem("user") || "{}");
      CENTRAL SUBSCRIPTION LOADER
   ------------------------- */
 
-  const loadSubscription = async () => {
-    const sub = await getMySubscription();
-    setSubscription(sub);
-    return sub;
-  };
+const loadSubscription = async () => {
+  console.log("Loading subscription...");
 
+  const sub = await getMySubscription();
+
+  console.log("Subscription result:", sub);
+
+  setSubscription(sub);
+  setSubscriptionLoaded(true);
+
+  return sub;
+};
   /* -------------------------
      INITIAL LOAD
   ------------------------- */
@@ -122,6 +128,11 @@ const user = JSON.parse(localStorage.getItem("user") || "{}");
 
 const handleUpgradeClick = async () => {
   try {
+      if (!subscriptionLoaded) {
+    console.log("Subscription not loaded yet");
+    return;
+  }
+
     const sub = await loadSubscription();
 
     if (sub?.pendingUpgrade) {
@@ -376,7 +387,15 @@ const handleUpgradeClick = async () => {
   /* -------------------------
      RENDER
   ------------------------- */
-
+    // 🔎 DEBUG LOGS
+  console.log("RENDER STATE");
+  console.log("subscriptionLoaded:", subscriptionLoaded);
+  console.log("subscription:", subscription);
+  console.log("pendingUpgrade:", subscription?.pendingUpgrade);
+  console.log("upgradeMode:", upgradeMode);
+  if (!subscriptionLoaded) {
+  return <div className="subscription-page">Loading subscription...</div>;
+}
   return (
 
     <div className="subscription-page">
