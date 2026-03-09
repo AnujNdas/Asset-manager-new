@@ -6,6 +6,8 @@ const AssetAssignment = require("../models/AssetAssignment");
 const Location = require("../models/Location");
 const sendNotification = require("../utils/notify");
 const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
+const pricingTiers = require("../config/pricingTiers");
+const Subscription = require("../models/Subscription");
 const parseDate = (value) => {
   if (!value) return null;
 
@@ -70,7 +72,29 @@ const bulkUploadSoftware = async (req, res) => {
   try {
     const userId = req.user?.id;
     const organizationId = req.user?.organizationId;
+    /* --------------------------------------------------
+   FETCH SUBSCRIPTION LIMIT
+-------------------------------------------------- */
 
+const subscription = await Subscription.findOne({ organizationId });
+
+if (!subscription) {
+  return res.status(403).json({
+    success: false,
+    message: "No active subscription found"
+  });
+}
+
+const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+if (!tier) {
+  return res.status(500).json({
+    success: false,
+    message: "Invalid subscription tier configuration"
+  });
+}
+
+const softwareLimit = tier.assets; // or tier.softwareAssets if you separate them
     if (!userId || !organizationId) {
       return res.status(401).json({
         success: false,
@@ -350,16 +374,47 @@ const DOE = parseDate(asset.DateOfExpiry);
        Bulk Insert (Ordered False = Continue On Error)
     -------------------------------------------------- */
 
-    let insertedCount = 0;
+/* --------------------------------------------------
+   PLAN LIMIT CHECK
+-------------------------------------------------- */
 
-    if (validAssets.length) {
-      const result = await SoftwareAsset.insertMany(validAssets, {
-        ordered: true,
-        runValidators: true
-      });
+const currentSoftwareCount = await SoftwareAsset.countDocuments({
+  organizationId
+});
 
-      insertedCount = result.length;
-    }
+if (softwareLimit !== "unlimited") {
+
+  const availableSlots = softwareLimit - currentSoftwareCount;
+
+  if (availableSlots <= 0) {
+    return res.status(403).json({
+      success: false,
+      code: "SOFTWARE_LIMIT_REACHED",
+      message: "Software asset limit reached for your subscription plan",
+      limit: softwareLimit,
+      current: currentSoftwareCount
+    });
+  }
+
+  if (validAssets.length > availableSlots) {
+    validAssets = validAssets.slice(0, availableSlots);
+  }
+}
+
+/* --------------------------------------------------
+   BULK INSERT
+-------------------------------------------------- */
+
+let insertedCount = 0;
+
+if (validAssets.length) {
+  const result = await SoftwareAsset.insertMany(validAssets, {
+    ordered: true,
+    runValidators: true
+  });
+
+  insertedCount = result.length;
+}
 
     /* --------------------------------------------------
        Response
@@ -387,7 +442,40 @@ const DOE = parseDate(asset.DateOfExpiry);
 const createSoftwareAsset = async (req, res) => {
   try {
     const { id: userId, organizationId } = req.user;
+    // 🔒 SUBSCRIPTION LIMIT CHECK
+const subscription = await Subscription.findOne({ organizationId });
 
+if (!subscription) {
+  return res.status(403).json({
+    success: false,
+    message: "No active subscription found"
+  });
+}
+
+const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+if (!tier) {
+  return res.status(500).json({
+    success: false,
+    message: "Invalid subscription tier configuration"
+  });
+}
+
+const currentSoftwareCount = await SoftwareAsset.countDocuments({
+  organizationId
+});
+
+const softwareLimit = tier.assets; // or tier.softwareAssets if you split them
+
+if (softwareLimit !== "unlimited" && currentSoftwareCount >= softwareLimit) {
+  return res.status(403).json({
+    success: false,
+    code: "SOFTWARE_LIMIT_REACHED",
+    message: "Software asset limit reached for your subscription plan",
+    limit: softwareLimit,
+    current: currentSoftwareCount
+  });
+}
     if (!req.body.assetCost?.amount || !req.body.assetCost?.currency) {
       return res.status(400).json({
         success: false,

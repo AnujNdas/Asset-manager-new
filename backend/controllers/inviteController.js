@@ -1,20 +1,72 @@
 const crypto = require("crypto");
 const OrganizationInvite = require("../models/OrganizationInvite");
 
+const pricingTiers = require("../config/pricingTiers");
+const Subscription = require("../models/Subscription");
+const User = require("../models/User");
+
 const createInvite = async (req, res) => {
   try {
     const { role = "user", email, maxUses, expiresInDays = 7 } = req.body;
+    const organizationId = req.user.organizationId;
+
+    /* -------------------------
+       ADMIN LIMIT ENFORCEMENT
+    ------------------------- */
+
+    if (role === "admin") {
+      const subscription = await Subscription.findOne({ organizationId });
+
+      if (!subscription) {
+        return res.status(403).json({
+          success: false,
+          message: "No active subscription found"
+        });
+      }
+
+      const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+      if (!tier) {
+        return res.status(500).json({
+          success: false,
+          message: "Invalid subscription tier configuration"
+        });
+      }
+
+      const adminLimit = tier.users;
+
+      if (adminLimit !== "unlimited") {
+        const adminCount = await User.countDocuments({
+          organizationId,
+          role: "admin"
+        });
+
+        if (adminCount >= adminLimit) {
+          return res.status(403).json({
+            success: false,
+            code: "ADMIN_LIMIT_REACHED",
+            message: "Admin user limit reached for your subscription plan",
+            limit: adminLimit,
+            current: adminCount
+          });
+        }
+      }
+    }
+
+    /* -------------------------
+       CREATE INVITE
+    ------------------------- */
 
     const inviteToken = crypto.randomBytes(32).toString("hex");
 
     const invite = await OrganizationInvite.create({
-      organizationId: req.user.organizationId,
+      organizationId,
       inviteToken,
       role,
       email,
       maxUses: maxUses || null,
       expiresAt: new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000),
-      createdBy: req.user.id,
+      createdBy: req.user.id
     });
 
     const inviteUrl = `${process.env.FRONTEND_URL}/user/signup?invite=${inviteToken}`;
@@ -22,8 +74,9 @@ const createInvite = async (req, res) => {
     return res.status(201).json({
       success: true,
       inviteUrl,
-      invite,
+      invite
     });
+
   } catch (err) {
     console.error("Invite creation error:", err);
     res.status(500).json({ error: "Failed to create invite" });

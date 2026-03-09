@@ -4,7 +4,8 @@ const AssetAssignment = require("../models/AssetAssignment");
 // const unzipper = require("unzipper");
 const sendNotification = require("../utils/notify");
 const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
-
+const pricingTiers = require("../config/pricingTiers");
+const Subscription = require("../models/Subscription");
 
 const Category = require("../models/Category");
 const Unit = require("../models/Unit");
@@ -89,7 +90,25 @@ const bulkUpload = async (req, res, next) => {
 
     const userId = req.user?.id;
     const organizationId = req.user?.organizationId;
+    const subscription = await Subscription.findOne({ organizationId });
 
+if (!subscription) {
+  return res.status(403).json({
+    success: false,
+    message: "No active subscription found"
+  });
+}
+
+const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+if (!tier) {
+  return res.status(500).json({
+    success: false,
+    message: "Invalid subscription tier configuration"
+  });
+}
+
+const assetLimit = tier.assets;
     if (!userId || !organizationId) {
       return res.status(401).json({
         success: false,
@@ -316,12 +335,36 @@ validAssets.push({
     }
 
     // ---------- INSERT ----------
+// ---------- PLAN LIMIT CHECK ----------
+const currentAssetCount = await Asset.countDocuments({ organizationId });
+
+if (assetLimit !== "unlimited") {
+
+  const availableSlots = assetLimit - currentAssetCount;
+
+  if (availableSlots <= 0) {
+    return res.status(403).json({
+      success: false,
+      code: "ASSET_LIMIT_REACHED",
+      message: "Asset limit reached for your subscription plan",
+      limit: assetLimit,
+      current: currentAssetCount
+    });
+  }
+
+  if (validAssets.length > availableSlots) {
+    // Trim upload to allowed size
+    validAssets = validAssets.slice(0, availableSlots);
+  }
+}
+
+// ---------- INSERT ----------
 if (validAssets.length > 0) {
   const insertedDocs = await Asset.insertMany(validAssets);
   console.log("Inserted docs count:", insertedDocs.length);
 
-  const totalCount = await Asset.countDocuments();
-  console.log("Total docs in Asset collection:", totalCount);
+  const totalCount = await Asset.countDocuments({ organizationId });
+  console.log("Total docs in org:", totalCount);
 }
     // ---------- NOTIFICATION ----------
     await sendNotification({
@@ -362,6 +405,39 @@ const addAsset = async (req, res, next) => {
         message: "Organization context missing",
       });
     }
+    // 🔒 SUBSCRIPTION LIMIT CHECK
+const subscription = await Subscription.findOne({
+  organizationId
+});
+
+if (!subscription) {
+  return res.status(403).json({
+    message: "No active subscription found"
+  });
+}
+
+const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+if (!tier) {
+  return res.status(500).json({
+    message: "Invalid subscription tier configuration"
+  });
+}
+
+const currentAssetCount = await Asset.countDocuments({
+  organizationId
+});
+
+const assetLimit = tier.assets;
+
+if (assetLimit !== "unlimited" && currentAssetCount >= assetLimit) {
+  return res.status(403).json({
+    code: "ASSET_LIMIT_REACHED",
+    message: "Asset limit reached for your subscription plan",
+    limit: assetLimit,
+    current: currentAssetCount
+  });
+}
     const { type } = req.body;
 
     if (!["one_time", "maintenance"].includes(type)) {
