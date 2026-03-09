@@ -301,57 +301,98 @@ const handleUpgradeClick = async () => {
     const currentPlan = tiers.find((t) => t.key === activeTier);
 
     return (
-  <div className="current-plan-wrapper">
+<div className="current-plan-insights">
 
-    <div className="current-plan-banner">
+  {/* Usage Limits */}
+  <div className="plan-usage-section">
 
-      <div className="banner-item">
-        <span className="banner-label">Plan</span>
-        <strong className="banner-value">
-          {activeTier?.toUpperCase()}
-        </strong>
+    <h3 className="section-title">Usage Limits</h3>
+
+    <div className="usage-grid">
+
+      <div className="usage-card">
+        <span className="usage-label">Hardware Assets</span>
+        <span className="usage-value">
+          {subscription.usage?.hardwareAssets || 0} / {subscription.limits?.hardwareAssets || "∞"}
+        </span>
+
+        <div className="usage-bar">
+          <div
+            className="usage-progress"
+            style={{
+              width: `${
+                subscription.limits?.hardwareAssets
+                  ? (subscription.usage?.hardwareAssets / subscription.limits.hardwareAssets) * 100
+                  : 0
+              }%`
+            }}
+          />
+        </div>
       </div>
 
-      <div className="banner-item">
-        <span className="banner-label">Status</span>
-        <strong className="banner-value status-active">
-          {subscription.status}
-        </strong>
+      <div className="usage-card">
+        <span className="usage-label">Software Assets</span>
+        <span className="usage-value">
+          {subscription.usage?.softwareAssets || 0} / {subscription.limits?.softwareAssets || "∞"}
+        </span>
+
+        <div className="usage-bar">
+          <div
+            className="usage-progress"
+            style={{
+              width: `${
+                subscription.limits?.softwareAssets
+                  ? (subscription.usage?.softwareAssets / subscription.limits.softwareAssets) * 100
+                  : 0
+              }%`
+            }}
+          />
+        </div>
       </div>
 
-      <div className="banner-item">
-        <span className="banner-label">Valid Until</span>
-        <strong className="banner-value">
-          {subscription.currentEnd
-            ? new Date(subscription.currentEnd).toLocaleDateString()
-            : "—"}
-        </strong>
-      </div>
+      <div className="usage-card">
+        <span className="usage-label">Admin Users</span>
+        <span className="usage-value">
+          {subscription.usage?.admins || 0} / {subscription.limits?.admins || "∞"}
+        </span>
 
-      <div className="banner-item">
-        <span className="banner-label">AutoPay</span>
-        <strong className="banner-value">
-          {subscription.cancelAtPeriodEnd ? "Disabled" : "Active"}
-        </strong>
+        <div className="usage-bar">
+          <div
+            className="usage-progress"
+            style={{
+              width: `${
+                subscription.limits?.admins
+                  ? (subscription.usage?.admins / subscription.limits.admins) * 100
+                  : 0
+              }%`
+            }}
+          />
+        </div>
       </div>
 
     </div>
 
-    {currentPlan && (
-      <div className="current-plan-details">
-
-        <h3 className="features-title">Plan Features</h3>
-
-        <ul className="plan-features">
-          {currentPlan.features?.map((f, i) => (
-            <li key={i}>✓ {f}</li>
-          ))}
-        </ul>
-
-      </div>
-    )}
-
   </div>
+
+
+  {/* Feature List */}
+  {currentPlan?.features && (
+    <div className="plan-features-section">
+
+      <h3 className="section-title">Included Features</h3>
+
+      <div className="feature-grid">
+        {currentPlan.features.map((feature, i) => (
+          <div key={i} className="feature-pill">
+            ✓ {feature}
+          </div>
+        ))}
+      </div>
+
+    </div>
+  )}
+
+</div>
 );
 
   };

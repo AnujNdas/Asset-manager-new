@@ -13,6 +13,9 @@ const requireActiveSubscription = require("../Middleware/requireActiveSubscripti
 const router = express.Router();
 const Subscription = require("../models/Subscription");
 const razorpay = require("../config/razorpay");
+const HardwareAsset = require("../models/Asset");
+const SoftwareAsset = require("../models/SoftwareAsset");
+const User = require("../models/User");
 router.post(
   "/preview-price",
   authenticateToken(),
@@ -24,39 +27,72 @@ router.post(
   authenticateToken(),
   createCheckout
 );
-router.get("/me", authenticateToken(), requireActiveSubscription, (req, res) => {
+router.get("/me", authenticateToken(), requireActiveSubscription, async (req, res) => {
+
   const now = new Date();
 
-const daysRemaining = req.subscription.currentEnd
-  ? Math.max(
-      0,
-      Math.ceil(
-        (req.subscription.currentEnd - now) /
+  const daysRemaining = req.subscription.currentEnd
+    ? Math.max(
+        0,
+        Math.ceil(
+          (req.subscription.currentEnd - now) /
           (1000 * 60 * 60 * 24)
+        )
       )
-    )
-  : null;
+    : null;
+
   const timeRemainingMs = req.subscription.currentEnd
-  ? Math.max(0, req.subscription.currentEnd - now)
-  : null;
+    ? Math.max(0, req.subscription.currentEnd - now)
+    : null;
+
+
+  /* -------------------------
+     USAGE CALCULATION
+  ------------------------- */
+
+  const hardwareCount = await HardwareAsset.countDocuments({
+    organizationId: req.subscription.organizationId
+  });
+
+  const softwareCount = await SoftwareAsset.countDocuments({
+    organizationId: req.subscription.organizationId
+  });
+
+  const adminCount = await User.countDocuments({
+    organizationId: req.subscription.organizationId,
+    role: "admin"
+  });
+
+
   res.json({
-  tier: req.subscription.tier,
-  effectiveTier: req.effectiveTier,
-  status: req.subscription.status,
-  billingCycle: req.subscription.billingCycle,
-  currentEnd: req.subscription.currentEnd,
-  daysRemaining,
-  timeRemainingMs,
 
-  pendingUpgrade: req.subscription.pendingUpgrade || null, // ← ADD THIS
+    tier: req.subscription.tier,
+    effectiveTier: req.effectiveTier,
+    status: req.subscription.status,
+    billingCycle: req.subscription.billingCycle,
+    currentEnd: req.subscription.currentEnd,
+    daysRemaining,
+    timeRemainingMs,
 
-  limits: {
-    users: req.tierConfig.users,
-    assets: req.tierConfig.assets,
-  },
+    pendingUpgrade: req.subscription.pendingUpgrade || null,
 
-  isTrial: req.subscription.status === "trialing",
-});
+    /* PLAN LIMITS */
+    limits: {
+      hardwareAssets: req.tierConfig.hardwareAssets,
+      softwareAssets: req.tierConfig.softwareAssets,
+      admins: req.tierConfig.admins
+    },
+
+    /* CURRENT USAGE */
+    usage: {
+      hardwareAssets: hardwareCount,
+      softwareAssets: softwareCount,
+      admins: adminCount
+    },
+
+    isTrial: req.subscription.status === "trialing"
+
+  });
 });
 router.post(
   "/verify-payment",
