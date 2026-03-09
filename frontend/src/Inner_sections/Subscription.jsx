@@ -301,62 +301,58 @@ const handleUpgradeClick = async () => {
     const currentPlan = tiers.find((t) => t.key === activeTier);
 
     return (
+  <div className="current-plan-wrapper">
 
-      <div className="current-plan-wrapper">
+    <div className="current-plan-banner">
 
-        <div className="current-plan-banner">
-
-          <div className="banner-item">
-            <span>Plan</span>
-            <strong>{activeTier?.toUpperCase()}</strong>
-          </div>
-
-          <div className="banner-item">
-            <span>Status</span>
-            <strong style={{ color: "green" }}>{subscription.status}</strong>
-          </div>
-
-          <div className="banner-item">
-            <span>Valid Until</span>
-            <strong>
-              {subscription.currentEnd
-                ? new Date(subscription.currentEnd).toLocaleDateString()
-                : "—"}
-            </strong>
-          </div>
-
-          <div className="banner-item">
-            <span>AutoPay</span>
-            <strong>
-              {subscription.cancelAtPeriodEnd ? "Disabled" : "Active"}
-            </strong>
-          </div>
-
-        </div>
-
-        {currentPlan && (
-
-          <div className="current-plan-details">
-
-            <div className="plan-features">
-
-              <h3>Plan Features</h3>
-
-              <ul>
-                {currentPlan.features?.map((f, i) => (
-                  <li key={i}>✓ {f}</li>
-                ))}
-              </ul>
-
-            </div>
-
-          </div>
-
-        )}
-
+      <div className="banner-item">
+        <span className="banner-label">Plan</span>
+        <strong className="banner-value">
+          {activeTier?.toUpperCase()}
+        </strong>
       </div>
 
-    );
+      <div className="banner-item">
+        <span className="banner-label">Status</span>
+        <strong className="banner-value status-active">
+          {subscription.status}
+        </strong>
+      </div>
+
+      <div className="banner-item">
+        <span className="banner-label">Valid Until</span>
+        <strong className="banner-value">
+          {subscription.currentEnd
+            ? new Date(subscription.currentEnd).toLocaleDateString()
+            : "—"}
+        </strong>
+      </div>
+
+      <div className="banner-item">
+        <span className="banner-label">AutoPay</span>
+        <strong className="banner-value">
+          {subscription.cancelAtPeriodEnd ? "Disabled" : "Active"}
+        </strong>
+      </div>
+
+    </div>
+
+    {currentPlan && (
+      <div className="current-plan-details">
+
+        <h3 className="features-title">Plan Features</h3>
+
+        <ul className="plan-features">
+          {currentPlan.features?.map((f, i) => (
+            <li key={i}>✓ {f}</li>
+          ))}
+        </ul>
+
+      </div>
+    )}
+
+  </div>
+);
 
   };
 
@@ -419,7 +415,7 @@ return (
        STATE 1: Pending Upgrade
     ------------------------- */}
 
-    {hasPendingUpgrade && upgradeMode && upgradeMode && (
+    {hasPendingUpgrade && upgradeMode && (
       <div className="pending-upgrade-banner">
 
         Pending upgrade to{" "}
@@ -525,7 +521,7 @@ return (
        STATE 4: No Subscription
     ------------------------- */}
 
-    {!!hasPendingUpgrade && !isActive && !upgradeMode && (
+{!hasPendingUpgrade && !isActive && !upgradeMode && (
       <>
         <BillingToggle billing={billing} setBilling={setBilling} />
         <PlanSelectionSection />
