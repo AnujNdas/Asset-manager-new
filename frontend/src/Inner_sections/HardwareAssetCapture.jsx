@@ -439,7 +439,7 @@ const handleAddAsset = async (e) => {
   required
 />
 <small className="helper-text" style={{color : "red"}}>
-  Example: 5 units × ₹10,000 = ₹50,000 (enter 50000)
+  Example: 5 units × $1,000 = $5,000 (enter 5000)
 </small>
 
 
