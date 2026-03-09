@@ -133,7 +133,7 @@ const handleUpgradeClick = async () => {
       return;
     }
 
-    const sub = await loadSubscription();
+    const sub = subscription;
 
     /* -------------------------
        PENDING UPGRADE FOUND
@@ -393,7 +393,9 @@ const handleUpgradeClick = async () => {
     );
 
   };
-
+  const hasPendingUpgrade =
+  subscription?.pendingUpgrade &&
+  Object.keys(subscription.pendingUpgrade).length > 0;
   /* -------------------------
      RENDER
   ------------------------- */
@@ -406,6 +408,7 @@ const handleUpgradeClick = async () => {
   if (!subscriptionLoaded) {
   return <div className="subscription-page">Loading subscription...</div>;
 }
+
 return (
   <div className="subscription-page">
 
@@ -416,8 +419,7 @@ return (
        STATE 1: Pending Upgrade
     ------------------------- */}
 
-    {subscription?.pendingUpgrade &&
-Object.keys(subscription.pendingUpgrade).length > 0 && upgradeMode && (
+    {hasPendingUpgrade && upgradeMode && upgradeMode && (
       <div className="pending-upgrade-banner">
 
         Pending upgrade to{" "}
@@ -491,7 +493,7 @@ Object.keys(subscription.pendingUpgrade).length > 0 && upgradeMode && (
        STATE 3: Upgrade Mode
     ------------------------- */}
 
-    {!subscription?.pendingUpgrade && upgradeMode && (
+    {!hasPendingUpgrade && upgradeMode && (
       <>
         <button
           className="btn secondary"
@@ -523,7 +525,7 @@ Object.keys(subscription.pendingUpgrade).length > 0 && upgradeMode && (
        STATE 4: No Subscription
     ------------------------- */}
 
-    {!subscription?.pendingUpgrade && !isActive && !upgradeMode && (
+    {!!hasPendingUpgrade && !isActive && !upgradeMode && (
       <>
         <BillingToggle billing={billing} setBilling={setBilling} />
         <PlanSelectionSection />
