@@ -40,19 +40,23 @@ const daysRemaining = req.subscription.currentEnd
   ? Math.max(0, req.subscription.currentEnd - now)
   : null;
   res.json({
-    tier: req.subscription.tier,
-    effectiveTier: req.effectiveTier,
-    status: req.subscription.status,
-    billingCycle: req.subscription.billingCycle,
-    currentEnd: req.subscription.currentEnd,
-    daysRemaining,
-    timeRemainingMs,
-    limits: {
-      users: req.tierConfig.users,
-      assets: req.tierConfig.assets,
-    },
-    isTrial: req.subscription.status === "trialing",
-  });
+  tier: req.subscription.tier,
+  effectiveTier: req.effectiveTier,
+  status: req.subscription.status,
+  billingCycle: req.subscription.billingCycle,
+  currentEnd: req.subscription.currentEnd,
+  daysRemaining,
+  timeRemainingMs,
+
+  pendingUpgrade: req.subscription.pendingUpgrade || null, // ← ADD THIS
+
+  limits: {
+    users: req.tierConfig.users,
+    assets: req.tierConfig.assets,
+  },
+
+  isTrial: req.subscription.status === "trialing",
+});
 });
 router.post(
   "/verify-payment",
