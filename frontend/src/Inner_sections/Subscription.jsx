@@ -415,7 +415,7 @@ return (
        STATE 1: Pending Upgrade
     ------------------------- */}
 
-    {hasPendingUpgrade && upgradeMode && (
+    {hasPendingUpgrade && (
       <div className="pending-upgrade-banner">
 
         Pending upgrade to{" "}
