@@ -78,9 +78,20 @@ router.get("/me", authenticateToken(), requireActiveSubscription, async (req, re
 
     /* PLAN LIMITS */
     limits: {
-      hardwareAssets: req.tierConfig.hardwareAssets,
-      softwareAssets: req.tierConfig.softwareAssets,
-      admins: req.tierConfig.admins
+      hardwareAssets:
+        req.tierConfig.hardwareAssets === "unlimited"
+          ? Infinity
+          : req.tierConfig.hardwareAssets,
+
+      softwareAssets:
+        req.tierConfig.softwareAssets === "unlimited"
+          ? Infinity
+          : req.tierConfig.softwareAssets,
+
+      admins:
+        req.tierConfig.admins === "unlimited"
+          ? Infinity
+          : req.tierConfig.admins
     },
 
     /* CURRENT USAGE */
