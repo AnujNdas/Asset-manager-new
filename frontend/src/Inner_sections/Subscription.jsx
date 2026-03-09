@@ -125,15 +125,19 @@ const loadSubscription = async () => {
   /* -------------------------
      HANDLE UPGRADE CLICK
   ------------------------- */
-
 const handleUpgradeClick = async () => {
   try {
-      if (!subscriptionLoaded) {
-    console.log("Subscription not loaded yet");
-    return;
-  }
+
+    if (!subscriptionLoaded) {
+      console.log("Subscription not loaded yet");
+      return;
+    }
 
     const sub = await loadSubscription();
+
+    /* -------------------------
+       PENDING UPGRADE FOUND
+    ------------------------- */
 
     if (sub?.pendingUpgrade) {
 
@@ -156,10 +160,14 @@ const handleUpgradeClick = async () => {
         cancelButtonText: "Cancel Upgrade"
       });
 
+      /* CONTINUE CHECKOUT */
+
       if (result.isConfirmed) {
         reopenPendingCheckout(pending);
         return;
       }
+
+      /* CANCEL PENDING */
 
       if (result.dismiss === Swal.DismissReason.cancel) {
 
@@ -178,7 +186,9 @@ const handleUpgradeClick = async () => {
       return;
     }
 
-    /* only allow upgrade if NO pending upgrade */
+    /* -------------------------
+       NO PENDING UPGRADE
+    ------------------------- */
 
     setUpgradeMode(true);
     setSelectedTier(null);
@@ -396,127 +406,136 @@ const handleUpgradeClick = async () => {
   if (!subscriptionLoaded) {
   return <div className="subscription-page">Loading subscription...</div>;
 }
-  return (
+return (
+  <div className="subscription-page">
 
-    <div className="subscription-page">
+    <h2>Subscription & Billing</h2>
+    <p>Choose the plan that fits your business</p>
 
-      <h2>Subscription & Billing</h2>
-      <p>Choose the plan that fits your business</p>
+    {/* -------------------------
+       STATE 1: Pending Upgrade
+    ------------------------- */}
 
-      {subscription?.pendingUpgrade && !upgradeMode && (
+    {subscription?.pendingUpgrade && !upgradeMode && (
+      <div className="pending-upgrade-banner">
 
-        <div className="pending-upgrade-banner">
+        Pending upgrade to{" "}
+        <strong>{subscription.pendingUpgrade.tier.toUpperCase()}</strong>
 
-          Pending upgrade to{" "}
-          <strong>{subscription.pendingUpgrade.tier.toUpperCase()}</strong>
+        <div className="pending-actions">
 
-          <div className="pending-actions">
+          <button
+            className="btn small"
+            onClick={() =>
+              reopenPendingCheckout(subscription.pendingUpgrade)
+            }
+          >
+            Continue
+          </button>
 
-            <button
-              className="btn small"
-              onClick={() =>
-                reopenPendingCheckout(subscription.pendingUpgrade)
-              }
-            >
-              Continue
-            </button>
-
-            <button
-              className="btn small danger"
-              onClick={async () => {
-
-                await removePendingUpgrade();
-
-                await loadSubscription();
-
-                setUpgradeMode(true);
-
-              }}
-            >
-              Remove
-            </button>
-
-          </div>
+          <button
+            className="btn small danger"
+            onClick={async () => {
+              await removePendingUpgrade();
+              await loadSubscription();
+              setUpgradeMode(true);
+            }}
+          >
+            Remove
+          </button>
 
         </div>
 
-      )}
+      </div>
+    )}
 
-      {isActive && !upgradeMode && (
+    {/* -------------------------
+       STATE 2: Active Plan View
+    ------------------------- */}
 
-        <>
-          <CurrentPlanSection />
+    {!subscription?.pendingUpgrade && isActive && !upgradeMode && (
+      <>
+        <CurrentPlanSection />
 
-          <div className="current-plan-actions">
+        <div className="current-plan-actions">
 
+          <button
+            className="btn upgrade-btn"
+            onClick={handleUpgradeClick}
+          >
+            Upgrade Plan
+          </button>
+
+          {!subscription.cancelAtPeriodEnd && (
             <button
-              className="btn upgrade-btn"
-              onClick={handleUpgradeClick}
+              className="btn danger cancel-autopay"
+              onClick={handleCancelAutoPay}
             >
-              Upgrade Plan
+              Cancel AutoPay
             </button>
-
-            {!subscription.cancelAtPeriodEnd && (
-
-              <button
-                className="btn danger cancel-autopay"
-                onClick={handleCancelAutoPay}
-              >
-                Cancel AutoPay
-              </button>
-
-            )}
-
-          </div>
-        </>
-
-      )}
-
-      {(upgradeMode || !isActive) && !subscription?.pendingUpgrade && (
-
-        <>
-
-          {upgradeMode && (
-
-            <button
-              className="btn secondary"
-              onClick={() => {
-
-                setUpgradeMode(false);
-                setSelectedTier(null);
-
-              }}
-            >
-              ← Back to Current Plan
-            </button>
-
           )}
 
-          <BillingToggle billing={billing} setBilling={setBilling} />
+        </div>
+      </>
+    )}
 
-          <PlanSelectionSection />
+    {/* -------------------------
+       STATE 3: Upgrade Mode
+    ------------------------- */}
 
-          {selectedTier && (
+    {!subscription?.pendingUpgrade && upgradeMode && (
+      <>
+        <button
+          className="btn secondary"
+          onClick={() => {
+            setUpgradeMode(false);
+            setSelectedTier(null);
+          }}
+        >
+          ← Back to Current Plan
+        </button>
 
-            <button
-              className="btn primary proceed"
-              onClick={handleCheckout}
-              disabled={loading}
-            >
-              {loading ? "Processing..." : "Proceed to Checkout"}
-            </button>
+        <BillingToggle billing={billing} setBilling={setBilling} />
 
-          )}
+        <PlanSelectionSection />
 
-        </>
+        {selectedTier && (
+          <button
+            className="btn primary proceed"
+            onClick={handleCheckout}
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Proceed to Checkout"}
+          </button>
+        )}
+      </>
+    )}
 
-      )}
+    {/* -------------------------
+       STATE 4: No Subscription
+    ------------------------- */}
 
-      {error && <p className="error">{error}</p>}
+    {!subscription?.pendingUpgrade && !isActive && !upgradeMode && (
+      <>
+        <BillingToggle billing={billing} setBilling={setBilling} />
+        <PlanSelectionSection />
 
-    </div>
+        {selectedTier && (
+          <button
+            className="btn primary proceed"
+            onClick={handleCheckout}
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Proceed to Checkout"}
+          </button>
+        )}
+      </>
+    )}
 
-  );
+    {error && <p className="error">{error}</p>}
+
+  </div>
+);
 
 };
 
