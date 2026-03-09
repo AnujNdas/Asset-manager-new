@@ -139,7 +139,7 @@ const handleUpgradeClick = async () => {
        PENDING UPGRADE FOUND
     ------------------------- */
 
-    if (sub?.pendingUpgrade) {
+    if (sub?.pendingUpgrade && Object.keys(sub.pendingUpgrade).length > 0) {
 
       const pending = sub.pendingUpgrade;
 
@@ -416,7 +416,8 @@ return (
        STATE 1: Pending Upgrade
     ------------------------- */}
 
-    {subscription?.pendingUpgrade && upgradeMode && (
+    {subscription?.pendingUpgrade &&
+Object.keys(subscription.pendingUpgrade).length > 0 && upgradeMode && (
       <div className="pending-upgrade-banner">
 
         Pending upgrade to{" "}
