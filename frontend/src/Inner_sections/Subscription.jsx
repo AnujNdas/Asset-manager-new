@@ -14,7 +14,23 @@ import {
 } from "../Services/Subscription";
 
 import "../Page_styles/Subscription.css";
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
 
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+
+    document.body.appendChild(script);
+  });
+};
 const Subscription = () => {
 
   const [tiers, setTiers] = useState([]);
@@ -96,8 +112,12 @@ const loadSubscription = async () => {
      REOPEN PENDING CHECKOUT
   ------------------------- */
 
-  const reopenPendingCheckout = (pending) => {
-
+  const reopenPendingCheckout = async (pending) => {
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        Swal.fire("Error", "Failed to load payment gateway.", "error");
+        return;
+      }
     const options = {
       key: process.env.REACT_APP_RAZORPAY_KEY,
       subscription_id: pending.razorpaySubscriptionId,
@@ -208,7 +228,11 @@ const handleUpgradeClick = async () => {
 
       setLoading(true);
       setError(null);
+      const scriptLoaded = await loadRazorpayScript();
 
+      if (!scriptLoaded) {
+        throw new Error("Failed to load Razorpay SDK");
+      }
       const checkoutRes = await createCheckout({
         tierKey: selectedTier,
         billingCycle: billing
