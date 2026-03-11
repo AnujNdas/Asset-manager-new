@@ -144,10 +144,10 @@ const showGuide = async () => {
       title: "status",
       image: "/guide/status.webp",
     },
-    {
-      title: "Warranty & Insurance",
-      image: "/guide/warranty.png",
-    }
+    // {
+    //   title: "Warranty & Insurance",
+    //   image: "/guide/warranty.png",
+    // }
   ];
 
   for (let i = 0; i < steps.length; i++) {
@@ -159,7 +159,7 @@ const showGuide = async () => {
         <div style="display:flex;flex-direction:column;align-items:center">
           <img src="${step.image}" 
                style="max-width:320px;margin-bottom:15px;border-radius:8px" />
-          <p style="font-size:14px">${step.text}</p>
+          <p style="font-size:14px">${step.text}</p>  
         </div>
       `,
       confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",

@@ -614,48 +614,24 @@ const TopLocationsMap = ({ title, items }) => {
     </div>
   );
 };  
+
 const SpendByCategoryBarChart = ({ data }) => {
   const { currency, convertFromBase } = useCurrency();
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 480);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (!data || data.length === 0) {
     return <div className="chart-empty">No spend data available</div>;
   }
-
-  const totalSpend = data.reduce(
-    (acc, item) => acc + item.totalSpend,
-    0
-  );
-
-  const COLORS = [
-    "#2563eb",
-    "#16a34a",
-    "#f59e0b",
-    "#ef4444",
-    "#8b5cf6",
-  ];
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div
-          style={{
-            background: "#ffffff",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-            border: "1px solid #f1f5f9",
-          }}
-        >
-          <div style={{ fontWeight: 600, marginBottom: 4 }}>
-            {payload[0].payload.category}
-          </div>
-          <div style={{ color: "#2563eb", fontWeight: 500 }}>
-           {CURRENCY_SYMBOLS[currency]} {payload[0].value.toLocaleString()}
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div
@@ -663,52 +639,50 @@ const SpendByCategoryBarChart = ({ data }) => {
         width: "100%",
         background: "#ffffff",
         borderRadius: "16px",
-        padding: "24px",
+        padding: isMobile ? "16px" : "24px",
         boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
       }}
     >
-      <ResponsiveContainer width="100%" height={380}>
+      <ResponsiveContainer width="100%" height={isMobile ? 300 : 380}>
         <BarChart
           data={data.map(item => ({
-  ...item,
-  totalSpendConverted: convertFromBase(item.totalSpend)
-}))}
-          margin={{ top: 20, right: 20, left: 0, bottom: 40 }}
+            ...item,
+            totalSpendConverted: convertFromBase(item.totalSpend)
+          }))}
+          margin={{
+            top: 20,
+            right: isMobile ? 10 : 20,
+            left: 0,
+            bottom: isMobile ? 20 : 40
+          }}
         >
-          <defs>
-            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
-              <stop offset="100%" stopColor="#2563eb" stopOpacity={0.7} />
-            </linearGradient>
-          </defs>
-
           <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
 
           <XAxis
             dataKey="category"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: isMobile ? 10 : 12 }}
             interval={0}
-            angle={-15}
-            textAnchor="end"
+            angle={isMobile ? 0 : -15}
+            textAnchor={isMobile ? "middle" : "end"}
           />
 
           <YAxis
-  tickFormatter={(value) =>
-    `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
-  }
-/>
+            tickFormatter={(value) =>
+              `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+            }
+            tick={{ fontSize: isMobile ? 10 : 12 }}
+          />
 
           <Tooltip content={<CustomTooltip />} />
 
-          <Legend
-            verticalAlign="bottom"
-            align="center"
-            layout="horizontal"
-            wrapperStyle={{
-              paddingTop: 20,
-              fontSize: 13,
-            }}
-          />
+          {!isMobile && (
+            <Legend
+              verticalAlign="bottom"
+              align="center"
+              layout="horizontal"
+              wrapperStyle={{ paddingTop: 20, fontSize: 13 }}
+            />
+          )}
 
           <Bar
             dataKey="totalSpendConverted"
@@ -717,28 +691,18 @@ const SpendByCategoryBarChart = ({ data }) => {
             radius={[8, 8, 0, 0]}
             animationDuration={800}
           >
-<LabelList
-  dataKey="totalSpendConverted"
-  position="top"
-  formatter={(value) =>
-    `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
-  }
-/>
+            {!isMobile && (
+              <LabelList
+                dataKey="totalSpendConverted"
+                position="top"
+                formatter={(value) =>
+                  `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+                }
+              />
+            )}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-{/* 
-      <div
-        style={{
-          marginTop: 16,
-          textAlign: "right",
-          fontWeight: 600,
-          fontSize: 14,
-          color: "#1e293b",
-        }}
-      >
-        Total Spend: ₹ {totalSpend.toLocaleString()}
-      </div> */}
     </div>
   );
 };
