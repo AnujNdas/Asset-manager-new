@@ -192,7 +192,7 @@ const fetchItems = async () => {
   </div>
 
   {/* ADD SECTION */}
-  <div className="input-group">
+  <div className="input-grouped">
     {/* <label className="input-label">
       <FontAwesomeIcon icon={faPlus} /> Add New {title}
     </label> */}

@@ -5,7 +5,7 @@
   flex-wrap: wrap;
 }
 
-.input-group {
+.input-grouped {
   flex: 1;
   min-width: 280px;
   display: flex;
