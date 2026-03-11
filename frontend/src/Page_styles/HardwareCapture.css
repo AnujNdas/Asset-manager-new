@@ -7,7 +7,10 @@
   padding: 10px;
   /* max-width intentionally omitted for fluid layouts */
 }
-
+.asset-header {
+  display: flex;
+  justify-content: space-between;
+}
 /* =========================================================
    PAGE HEADER
 ========================================================= */
