@@ -678,12 +678,12 @@ const SpendByCategoryBarChart = ({ data }) => {
   <BarChart
     data={chartData}
     layout={isMobile ? "vertical" : "horizontal"}
-    margin={{
-      top: 20,
-      right: isMobile ? 10 : 20,
-      left: isMobile ? 40 : 0,
-      bottom: isMobile ? 10 : 40,
-    }}
+      margin={{
+        top: 20,
+        right: isMobile ? 10 : 20,
+        left: isMobile ? 10 : 0,
+        bottom: isMobile ? 10 : 40,
+      }}
   >
     <defs>
       <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
@@ -699,19 +699,18 @@ const SpendByCategoryBarChart = ({ data }) => {
         {/* Horizontal chart axes */}
         <XAxis
           type="number"
-          width={220}
           tick={{ fontSize: 10 }}
           tickFormatter={(value) =>
             `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
           }
         />
 
-        <YAxis
-          type="category"
-          dataKey="category"
-          width={120}
-          tick={{ fontSize: 11 }}
-        />
+<YAxis
+  type="category"
+  dataKey="category"
+  width={90}
+  tick={{ fontSize: 11 }}
+/>
       </>
     ) : (
       <>
