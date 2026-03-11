@@ -304,7 +304,7 @@ const handleAddAsset = async (e) => {
         <h2>Hardware Capture</h2>
         <button
   onClick={showGuide}
-  style={{marginLeft: "auto" , backgroundColor : "#2563eb" , color : "#ffffff" , border : "none"}}
+  style={{marginLeft: "auto" , backgroundColor : "#2563eb" , color : "#ffffff" , border : "none" , padding : "2px 5px" , borderRadius : "10px"}}
 >
   Page Guide
 </button>
