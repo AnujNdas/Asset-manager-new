@@ -197,6 +197,10 @@
   .sidebar-toggle-btn {
     display: block;
   }
+  .menubar{
+    gap: 5px;
+    justify-content: space-around;
+  }
 }
 
 /* 📱 Extra small (max-width: 480px) → show only search icon */
@@ -208,6 +212,7 @@
     /* width: 100%; */
     justify-content: flex-end;
     padding : 4px 10px;
+    gap: 10px;
   }
   .search-btn {
     margin-left: 0;
