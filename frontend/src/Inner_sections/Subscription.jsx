@@ -539,7 +539,7 @@ return (
 
           {!subscription.cancelAtPeriodEnd && (
             <button
-              className="btn-danger cancel-autopay"
+              className="btn btn-danger cancel-autopay"
               onClick={handleCancelAutoPay}
             >
               Cancel AutoPay
