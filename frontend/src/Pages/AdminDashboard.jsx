@@ -617,7 +617,7 @@ const TopLocationsMap = ({ title, items }) => {
 
 const SpendByCategoryBarChart = ({ data }) => {
   const { currency, convertFromBase } = useCurrency();
-  
+
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
   useEffect(() => {
@@ -632,13 +632,19 @@ const SpendByCategoryBarChart = ({ data }) => {
   if (!data || data.length === 0) {
     return <div className="chart-empty">No spend data available</div>;
   }
-   const CustomTooltip = ({ active, payload }) => {
+
+  const chartData = data.map((item) => ({
+    ...item,
+    totalSpendConverted: convertFromBase(item.totalSpend),
+  }));
+
+  const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
         <div
           style={{
             background: "#ffffff",
-            padding: "12px 16px",
+            padding: "10px 14px",
             borderRadius: "10px",
             boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
             border: "1px solid #f1f5f9",
@@ -650,12 +656,14 @@ const SpendByCategoryBarChart = ({ data }) => {
 
           <div style={{ color: "#2563eb", fontWeight: 500 }}>
             {CURRENCY_SYMBOLS[currency]}{" "}
-            {payload[0].value.toLocaleString()}
+            {payload[0].payload.totalSpendConverted.toLocaleString()}
           </div>
         </div>
       );
     }
-  }
+    return null;
+  };
+
   return (
     <div
       style={{
@@ -666,19 +674,23 @@ const SpendByCategoryBarChart = ({ data }) => {
         boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
       }}
     >
-      <ResponsiveContainer width="100%" height={isMobile ? 300 : 380}>
+      <ResponsiveContainer width="100%" height={isMobile ? 280 : 380}>
         <BarChart
-          data={data.map(item => ({
-            ...item,
-            totalSpendConverted: convertFromBase(item.totalSpend)
-          }))}
+          data={chartData}
           margin={{
             top: 20,
             right: isMobile ? 10 : 20,
             left: 0,
-            bottom: isMobile ? 20 : 40
+            bottom: isMobile ? 20 : 40,
           }}
         >
+          <defs>
+            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="#2563eb" stopOpacity={0.7} />
+            </linearGradient>
+          </defs>
+
           <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
 
           <XAxis
@@ -690,10 +702,10 @@ const SpendByCategoryBarChart = ({ data }) => {
           />
 
           <YAxis
+            tick={{ fontSize: isMobile ? 10 : 12 }}
             tickFormatter={(value) =>
               `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
             }
-            tick={{ fontSize: isMobile ? 10 : 12 }}
           />
 
           <Tooltip content={<CustomTooltip />} />
@@ -703,7 +715,10 @@ const SpendByCategoryBarChart = ({ data }) => {
               verticalAlign="bottom"
               align="center"
               layout="horizontal"
-              wrapperStyle={{ paddingTop: 20, fontSize: 13 }}
+              wrapperStyle={{
+                paddingTop: 20,
+                fontSize: 13,
+              }}
             />
           )}
 
@@ -712,14 +727,15 @@ const SpendByCategoryBarChart = ({ data }) => {
             name="Total Spend"
             fill="url(#barGradient)"
             radius={[8, 8, 0, 0]}
-            animationDuration={800}
           >
             {!isMobile && (
               <LabelList
                 dataKey="totalSpendConverted"
                 position="top"
                 formatter={(value) =>
-                  `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+                  `${CURRENCY_SYMBOLS[currency]}${(
+                    value / 1000000
+                  ).toFixed(1)}M`
                 }
               />
             )}
