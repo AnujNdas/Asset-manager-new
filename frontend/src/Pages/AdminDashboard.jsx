@@ -25,7 +25,6 @@ import {
   Legend,
   Cell,
   LabelList,
-  CustomTooltip
 } from "recharts";
 import { useNavigate } from "react-router-dom";
 
@@ -618,7 +617,7 @@ const TopLocationsMap = ({ title, items }) => {
 
 const SpendByCategoryBarChart = ({ data }) => {
   const { currency, convertFromBase } = useCurrency();
-
+  
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
   useEffect(() => {
@@ -633,7 +632,30 @@ const SpendByCategoryBarChart = ({ data }) => {
   if (!data || data.length === 0) {
     return <div className="chart-empty">No spend data available</div>;
   }
+   const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            background: "#ffffff",
+            padding: "12px 16px",
+            borderRadius: "10px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            border: "1px solid #f1f5f9",
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>
+            {payload[0].payload.category}
+          </div>
 
+          <div style={{ color: "#2563eb", fontWeight: 500 }}>
+            {CURRENCY_SYMBOLS[currency]}{" "}
+            {payload[0].value.toLocaleString()}
+          </div>
+        </div>
+      );
+    }
+  }
   return (
     <div
       style={{
