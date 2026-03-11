@@ -699,6 +699,7 @@ const SpendByCategoryBarChart = ({ data }) => {
         {/* Horizontal chart axes */}
         <XAxis
           type="number"
+          width={220}
           tick={{ fontSize: 10 }}
           tickFormatter={(value) =>
             `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
