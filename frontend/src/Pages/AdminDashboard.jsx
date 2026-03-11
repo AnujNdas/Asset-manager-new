@@ -383,7 +383,7 @@ const DepartmentAnalyticsCard = ({ title, items }) => {
               <tr>
                 <th>Dept</th>
                 <th>Name</th>
-                <th>Assets (H | S)</th>
+                <th>Assets < br/> (H | S)</th>
                 <th className="text-right">Total</th>
               </tr>
             </thead>
@@ -670,78 +670,99 @@ const SpendByCategoryBarChart = ({ data }) => {
         width: "100%",
         background: "#ffffff",
         borderRadius: "16px",
-        padding: isMobile ? "16px" : "24px",
+        padding: isMobile ? "6px" : "24px",
         boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
       }}
     >
-      <ResponsiveContainer width="100%" height={isMobile ? 280 : 380}>
-        <BarChart
-          data={chartData}
-          margin={{
-            top: 20,
-            right: isMobile ? 10 : 20,
-            left: 0,
-            bottom: isMobile ? 20 : 40,
-          }}
-        >
-          <defs>
-            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
-              <stop offset="100%" stopColor="#2563eb" stopOpacity={0.7} />
-            </linearGradient>
-          </defs>
+      <ResponsiveContainer width="100%" height={isMobile ? chartData.length * 45 : 380}>
+  <BarChart
+    data={chartData}
+    layout={isMobile ? "vertical" : "horizontal"}
+    margin={{
+      top: 20,
+      right: isMobile ? 10 : 20,
+      left: isMobile ? 40 : 0,
+      bottom: isMobile ? 10 : 40,
+    }}
+  >
+    <defs>
+      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
+        <stop offset="100%" stopColor="#2563eb" stopOpacity={0.7} />
+      </linearGradient>
+    </defs>
 
-          <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+    <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
 
-          <XAxis
-            dataKey="category"
-            tick={{ fontSize: isMobile ? 10 : 12 }}
-            interval={0}
-            angle={isMobile ? 0 : -15}
-            textAnchor={isMobile ? "middle" : "end"}
-          />
+    {isMobile ? (
+      <>
+        {/* Horizontal chart axes */}
+        <XAxis
+          type="number"
+          tick={{ fontSize: 10 }}
+          tickFormatter={(value) =>
+            `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+          }
+        />
 
-          <YAxis
-            tick={{ fontSize: isMobile ? 10 : 12 }}
-            tickFormatter={(value) =>
-              `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
-            }
-          />
+        <YAxis
+          type="category"
+          dataKey="category"
+          width={120}
+          tick={{ fontSize: 11 }}
+        />
+      </>
+    ) : (
+      <>
+        {/* Desktop chart axes */}
+        <XAxis
+          dataKey="category"
+          tick={{ fontSize: 12 }}
+          interval={0}
+          angle={-15}
+          textAnchor="end"
+        />
 
-          <Tooltip content={<CustomTooltip />} />
+        <YAxis
+          tickFormatter={(value) =>
+            `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+          }
+        />
+      </>
+    )}
 
-          {!isMobile && (
-            <Legend
-              verticalAlign="bottom"
-              align="center"
-              layout="horizontal"
-              wrapperStyle={{
-                paddingTop: 20,
-                fontSize: 13,
-              }}
-            />
-          )}
+    <Tooltip content={<CustomTooltip />} />
 
-          <Bar
-            dataKey="totalSpendConverted"
-            name="Total Spend"
-            fill="url(#barGradient)"
-            radius={[8, 8, 0, 0]}
-          >
-            {!isMobile && (
-              <LabelList
-                dataKey="totalSpendConverted"
-                position="top"
-                formatter={(value) =>
-                  `${CURRENCY_SYMBOLS[currency]}${(
-                    value / 1000000
-                  ).toFixed(1)}M`
-                }
-              />
-            )}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    {!isMobile && (
+      <Legend
+        verticalAlign="bottom"
+        align="center"
+        layout="horizontal"
+        wrapperStyle={{
+          paddingTop: 20,
+          fontSize: 13,
+        }}
+      />
+    )}
+
+    <Bar
+      dataKey="totalSpendConverted"
+      name="Total Spend"
+      fill="url(#barGradient)"
+      radius={isMobile ? [0, 8, 8, 0] : [8, 8, 0, 0]}
+    >
+      {!isMobile && (
+        <LabelList
+          dataKey="totalSpendConverted"
+          position="top"
+          formatter={(value) =>
+            `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+          }
+        />
+      )}
+    </Bar>
+  </BarChart>
+</ResponsiveContainer>
     </div>
   );
 };
