@@ -25,6 +25,7 @@ import {
   Legend,
   Cell,
   LabelList,
+  CustomTooltip
 } from "recharts";
 import { useNavigate } from "react-router-dom";
 
