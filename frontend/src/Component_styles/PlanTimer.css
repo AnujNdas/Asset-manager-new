@@ -66,8 +66,11 @@
   .plan-timer {
     min-width: auto;
     padding: 6px 10px;
+    flex-direction: row;
   }
-
+  .label{
+    display: none;
+  }
   .time {
     font-size: 13px;
   }

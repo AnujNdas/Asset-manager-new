@@ -63,8 +63,7 @@ useEffect(() => {
 
           {timeLeft ? (
             <div className="time">
-              {isMobile
-                ? `${timeLeft.days}d`
+              {isMobile ? `${timeLeft.days} days left`
                 : `${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
             </div>
           ) : (

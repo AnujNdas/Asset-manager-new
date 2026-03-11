@@ -23,7 +23,16 @@ const Menubar = ({ username, toggleSidebar }) => {
   // A2HS states
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 480);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
   useEffect(() => {
     // 👉 Check if already installed
     const installedBefore = localStorage.getItem("pwaInstalled");
@@ -84,11 +93,17 @@ const Menubar = ({ username, toggleSidebar }) => {
   return (
     <div className="menubar-container">
       <div className="menubar">
-           <div className="title-text">
+        <div className="title-text">
+          {isMobile ? (
+            "AMS"
+          ) : (
+            <>
               Asset
               <span>Management</span>
               <span>System</span>
-            </div>
+            </>
+          )}
+        </div>
             <PlanTimer /> 
         <div className="control-panel">
           <button onClick={handleHelpClick} style={{border : "none",background: "transparent"}}><FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} /></button>
