@@ -5,7 +5,16 @@ import "../Component_styles/PlanTimer.css";
 const PlanTimer = () => {
   const { subscription, expired } = useSubscription();
   const [timeLeft, setTimeLeft] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 480);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
   useEffect(() => {
     if (!subscription?.currentEnd) return;
 
@@ -54,7 +63,9 @@ const PlanTimer = () => {
 
           {timeLeft ? (
             <div className="time">
-              {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+              {isMobile
+                ? `${timeLeft.days}d`
+                : `${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
             </div>
           ) : (
             <div className="time expired-text">Expired</div>

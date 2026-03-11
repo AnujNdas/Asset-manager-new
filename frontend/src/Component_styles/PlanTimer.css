@@ -62,3 +62,17 @@
 .expired-text {
   font-weight: 600;
 }
+@media (max-width: 480px) {
+  .plan-timer {
+    min-width: auto;
+    padding: 6px 10px;
+  }
+
+  .time {
+    font-size: 13px;
+  }
+
+  .label {
+    font-size: 10px;
+  }
+}
