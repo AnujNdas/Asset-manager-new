@@ -139,10 +139,12 @@ const showGuide = async () => {
     {
       title: "Cost & Quantity",
       image: "/guide/cost&quantity.webp",
+      text : "Put cost Values like this"
     },
     {
       title: "status",
       image: "/guide/status.webp",
+      text : "Always use Instock for status"
     },
     // {
     //   title: "Warranty & Insurance",

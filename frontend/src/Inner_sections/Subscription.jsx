@@ -121,7 +121,7 @@ const loadSubscription = async () => {
     const options = {
       key: process.env.REACT_APP_RAZORPAY_KEY,
       subscription_id: pending.razorpaySubscriptionId,
-      name: "Your App Name",
+      name: "Socialfly AMS",
       description: `${pending.tier.toUpperCase()} Plan`,
 
       handler: async function (response) {

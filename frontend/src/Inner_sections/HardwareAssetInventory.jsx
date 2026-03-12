@@ -434,7 +434,21 @@ const Field = ({ label, value }) => (
                 </div>
 
                 <div className="card-info2">
-                  <p><strong>Spec:</strong> {asset.assetSpecification || "N/A"}</p>
+                  <p>
+  <strong>Spec:</strong>{" "}
+  <span
+    style={{
+      display: "-webkit-box",
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: "vertical",
+      overflow: "hidden",
+      wordBreak: "break-word",
+      flex: 1
+    }}
+  >
+    {asset.assetSpecification || "N/A"}
+  </span>
+</p>
   <p style={{ color: "red" }}>
 <strong>Total Cost:</strong>{" "}
 {CURRENCY_SYMBOLS[currency]}{" "}
