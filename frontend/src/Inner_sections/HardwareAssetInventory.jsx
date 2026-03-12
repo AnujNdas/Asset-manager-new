@@ -443,7 +443,8 @@ const Field = ({ label, value }) => (
       WebkitBoxOrient: "vertical",
       overflow: "hidden",
       wordBreak: "break-word",
-      flex: 1
+      width : "50%"
+      // flex: 1
     }}
   >
     {asset.assetSpecification || "N/A"}
@@ -1065,7 +1066,7 @@ const Field = ({ label, value }) => (
           selectedAssignmentAsset.assignmentRecords.map((record) => (
             <div key={record._id} className="assignment-row">
               <p><strong>Employee:</strong> {record.employee?.name}</p>
-              <p><strong>Email:</strong> {record.employee?.email}</p>
+              {/* <p><strong>Email:</strong> {record.employee?.email}</p> */}
               <p><strong>Department:</strong> {record.department?.name}</p>
               <p><strong>Location:</strong> {record.assignLocation}</p>
               <p><strong>Quantity:</strong> {record.quantity}</p>
