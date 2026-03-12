@@ -63,6 +63,7 @@ const User = ({ removeUser }) => {
     alt="Dashboard preview"
     loading="eager"
     fetchpriority="high"
+    decoding="async"
   />
 </div>
         </div>
