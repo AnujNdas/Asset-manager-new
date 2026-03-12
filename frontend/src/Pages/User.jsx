@@ -58,7 +58,13 @@ const User = ({ removeUser }) => {
             Log in to access your AMS dashboard and manage your team.
           </p>
           <div className="dash-image">
-          </div>
+  <img
+    src="/images/Dashboard.webp"
+    alt="Dashboard preview"
+    loading="eager"
+    fetchpriority="high"
+  />
+</div>
         </div>
       </div>
 
