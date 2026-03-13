@@ -25,7 +25,7 @@ const preselectedAsset = location.state;
      PAGINATION STATE
   ============================== */
   const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 16;
+  const categoriesPerPage = 12;
 
   const totalPages = Math.ceil(categories.length / categoriesPerPage);
 

@@ -1,12 +1,13 @@
 import { Routes, Route } from "react-router-dom";
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState, lazy } from "react";
 
 import TenantRoutes from "./routes/TenantRoutes";
 import SuperAdminRoutes from "./routes/SuperAdminRoutes";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
 
-import User from "./Pages/User"
+import User from "./Pages/User";
+
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
 const ForgotPassword = lazy(() => import("./Inner_sections/ForgetPass"));
@@ -28,6 +29,7 @@ const App = () => {
 
   return (
     <>
+      <main>
         <Routes>
           <Route path="/user" element={<User />}>
             <Route
@@ -44,6 +46,7 @@ const App = () => {
           {TenantRoutes({ profileUser })}
           {SuperAdminRoutes()}
         </Routes>
+      </main>
 
       <Toaster position="top-right" />
     </>
