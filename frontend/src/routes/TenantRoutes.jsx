@@ -1,18 +1,21 @@
 import { Route } from "react-router-dom";
+import { lazy } from "react";
+
 import TenantLayout from "../layout/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
 
-import Dashboard from "../Pages/AdminDashboard";
-import AssetCapture from "../Pages/AssetCapture";
-import Inventory from "../Pages/Inventory";
-import Setting from "../Pages/Setting";
-import Classification from "../Pages/Classification";
-import MisReport from "../Pages/MisReport";
-import AssetScanner from "../Pages/Scanner";
-import AssignmentPage from "../Pages/AssignmentPage";
-import Onboarding from "../Pages/OnBoarding";
-import EmployeePage from "../Pages/Employee";
-import Subscription from "../Inner_sections/Subscription";
+const Dashboard = lazy(() => import("../Pages/AdminDashboard"));
+const AssetCapture = lazy(() => import("../Pages/AssetCapture"));
+const Inventory = lazy(() => import("../Pages/Inventory"));
+const Setting = lazy(() => import("../Pages/Setting"));
+const Classification = lazy(() => import("../Pages/Classification"));
+const MisReport = lazy(() => import("../Pages/MisReport"));
+const AssetScanner = lazy(() => import("../Pages/Scanner"));
+const AssignmentPage = lazy(() => import("../Pages/AssignmentPage"));
+const Onboarding = lazy(() => import("../Pages/OnBoarding"));
+const EmployeePage = lazy(() => import("../Pages/Employee"));
+const Subscription = lazy(() => import("../Inner_sections/Subscription"));
+
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
