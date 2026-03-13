@@ -308,7 +308,7 @@ useEffect(() => {
   return (
     <div className="wizard-container">
 
-      <WizardStepper step={step} />
+      <WizardStepper step={step} showGuide={showGuide}/>
 
       {step === 1 && (
         <>
@@ -461,7 +461,7 @@ useEffect(() => {
   );
 };
 
-const WizardStepper = ({ step }) => {
+const WizardStepper = ({ step , showGuide }) => {
   const steps = ["Category", "Assets", "Department", "Team Member", "Review"];
 
   return (
@@ -477,7 +477,7 @@ const WizardStepper = ({ step }) => {
         </div>
       ))}
     </div>
-                  <button
+      <button
         onClick={showGuide}
         style={{marginLeft: "auto" , backgroundColor : "#2563eb" , color : "#ffffff" , border : "none" , padding : "2px 5px" , borderRadius : "10px"}}
       >
