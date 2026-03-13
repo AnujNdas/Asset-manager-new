@@ -261,7 +261,7 @@ useEffect(() => {
      RENDER
   ============================== */
   useEffect(() => {
-    const guideSeen = localStorage.getItem("assetCaptureGuideSeen");
+    const guideSeen = localStorage.getItem("assignmentpageguideseen");
   
     if (!guideSeen) {
       showGuide();
@@ -302,7 +302,7 @@ useEffect(() => {
       }
     }
   
-    localStorage.setItem("assetCaptureGuideSeen", "true");
+    localStorage.setItem("assignmentpageguideseen", "true");
   };
   
   return (

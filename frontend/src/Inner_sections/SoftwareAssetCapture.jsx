@@ -243,7 +243,7 @@ const overallUnitPreview =
   // Small helper UI components to match hardware layout
   const SectionTitle = ({ children }) => <h3 className="section-title">{children}</h3>;
   useEffect(() => {
-    const guideSeen = localStorage.getItem("assetCaptureGuideSeen");
+    const guideSeen = localStorage.getItem("softwarecaptureguideseen");
   
     if (!guideSeen) {
       showGuide();
@@ -307,7 +307,7 @@ const overallUnitPreview =
       }
     }
   
-    localStorage.setItem("assetCaptureGuideSeen", "true");
+    localStorage.setItem("softwarecaptureguideseen", "true");
   };
   
   return (
