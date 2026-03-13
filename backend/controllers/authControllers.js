@@ -79,7 +79,12 @@ const sendOtp = async (req, res) => {
     res.status(500).json({ error: "Failed to send OTP" });
   }
 };
+const isStrongPassword = (password) => {
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
 
+  return strongPasswordRegex.test(password);
+};
 /* ------------------------- VERIFY OTP AND SIGNUP -------------------------- */
 const verifyOtpAndSignup = async (req, res) => {
   const {
@@ -153,6 +158,17 @@ const verifyOtpAndSignup = async (req, res) => {
       await seedOrganizationDefaults(organization._id, session);
     }
 
+    // 🔒 Validate strong password
+    if (!isStrongPassword(password)) {
+      await session.abortTransaction();
+      session.endSession();
+
+      return res.status(400).json({
+        error:
+          "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+      });
+    }
+    
     // 🔒 Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 

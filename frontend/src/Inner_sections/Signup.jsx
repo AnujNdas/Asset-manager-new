@@ -15,21 +15,31 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
+  const [passwordValid, setPasswordValid] = useState(true);
 useEffect(() => {
   const invite = searchParams.get("invite");
   if (invite) {
     localStorage.setItem("inviteToken", invite);
   }
 }, [searchParams]);
-
+  const strongPasswordRegex =
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (!username || !email || !password) {
-      Swal.fire("Error", "All fields are required", "error");
-      return;
-    }
+if (!username || !email || !password) {
+  Swal.fire("Error", "All fields are required", "error");
+  return;
+}
+
+if (!strongPasswordRegex.test(password)) {
+  Swal.fire(
+    "Weak Password",
+    "Password must contain at least 8 characters including uppercase, lowercase, number, and special character.",
+    "warning"
+  );
+  return;
+}
 
     setLoading(true);
 
@@ -166,7 +176,19 @@ localStorage.removeItem("inviteToken");
 
           <label className="field">
             <span className="field-label"><FontAwesomeIcon icon={faLock} /> Password</span>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Create a password" required />
+            <input type="password" value={password} onChange={(e) => {
+  const value = e.target.value;
+  setPassword(value);
+  setPasswordValid(strongPasswordRegex.test(value));
+}} placeholder="Create a password" required />
+{!passwordValid && password.length > 0 && (
+  <small className="password-error">
+    Weak password
+  </small>
+)}
+<small className="password-hint">
+Must contain 8+ characters, uppercase, lowercase, number and special character.
+</small>
           </label>
 
           <div className="form-actions">
