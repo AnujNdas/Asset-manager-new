@@ -12,6 +12,43 @@
   background : #f1f1f1;
   overflow : hidden
 }
+.guide-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #2563eb;
+  color: #fff;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.guide-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.guide-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.guide-btn:focus {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
 /* Font faces */
 @font-face {
   font-family: h1;

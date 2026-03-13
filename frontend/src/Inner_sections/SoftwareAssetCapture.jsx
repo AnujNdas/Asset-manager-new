@@ -314,12 +314,9 @@ const overallUnitPreview =
     <div className="asset-wrapper">
       <div className="asset-header">
         <h2>Software Capture</h2>
-          <button
-          onClick={showGuide}
-          style={{marginLeft: "auto" , backgroundColor : "#2563eb" , color : "#ffffff" , border : "none" , padding : "2px 5px" , borderRadius : "10px"}}
-        >
-          Page Guide
-          </button>
+<button onClick={showGuide} className="guide-btn">
+  📘 Page Guide
+</button>
       </div>
 
       <form className="asset-form" onSubmit={handleSubmit} encType="multipart/form-data">
