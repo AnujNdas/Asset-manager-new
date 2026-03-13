@@ -49,6 +49,11 @@
   outline: 2px solid #93c5fd;
   outline-offset: 2px;
 }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 /* Font faces */
 @font-face {
   font-family: h1;
