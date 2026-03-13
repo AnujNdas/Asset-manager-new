@@ -6,7 +6,7 @@ import SuperAdminRoutes from "./routes/SuperAdminRoutes";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
 
-const User = lazy(() => import("./Pages/User"));
+import User from "./Pages/User"
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
 const ForgotPassword = lazy(() => import("./Inner_sections/ForgetPass"));

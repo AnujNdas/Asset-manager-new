@@ -242,11 +242,84 @@ const overallUnitPreview =
 
   // Small helper UI components to match hardware layout
   const SectionTitle = ({ children }) => <h3 className="section-title">{children}</h3>;
-
+  useEffect(() => {
+    const guideSeen = localStorage.getItem("assetCaptureGuideSeen");
+  
+    if (!guideSeen) {
+      showGuide();
+    }
+  }, []);
+  const showGuide = async () => {
+    const steps = [
+      // {
+      //   title: "Asset Name",
+      //   image: "/guide/asset-name.png",
+      //   text: "Enter a clear and descriptive name for the hardware asset."
+      // },
+      // {
+      //   title: "Category Selection",
+      //   image: "/guide/category.png",
+      //   text: "Choose the correct category so assets are organized properly."
+      // },
+      // {
+      //   title: "Location Information",
+      //   image: "/guide/location.png",
+      //   text: "Specify where the asset is physically located."
+      // },
+      {
+        title: "Cost & Quantity",
+        image: "/guide/cost&quantity.webp",
+        text : "Put cost Values like this"
+      },
+      {
+        title: "status",
+        image: "/guide/status.webp",
+        text : "Always use Instock for status"
+      },
+      // {
+      //   title: "Warranty & Insurance",
+      //   image: "/guide/warranty.png",
+      // }
+    ];
+  
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+  
+      const result = await Swal.fire({
+        title: step.title,
+        html: `
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <img src="${step.image}" 
+                 style="max-width:320px;margin-bottom:15px;border-radius:8px" />
+            <p style="font-size:14px">${step.text}</p>  
+          </div>
+        `,
+        confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
+        showCancelButton: true,
+        cancelButtonText: "Skip",
+        confirmButtonColor: "#2563eb",
+        cancelButtonColor: "#9ca3af",
+        width: 500
+      });
+  
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        break;
+      }
+    }
+  
+    localStorage.setItem("assetCaptureGuideSeen", "true");
+  };
+  
   return (
     <div className="asset-wrapper">
       <div className="asset-header">
         <h2>Software Capture</h2>
+          <button
+          onClick={showGuide}
+          style={{marginLeft: "auto" , backgroundColor : "#2563eb" , color : "#ffffff" , border : "none" , padding : "2px 5px" , borderRadius : "10px"}}
+        >
+          Page Guide
+          </button>
       </div>
 
       <form className="asset-form" onSubmit={handleSubmit} encType="multipart/form-data">

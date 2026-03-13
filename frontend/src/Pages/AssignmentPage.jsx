@@ -260,7 +260,51 @@ useEffect(() => {
   /* =============================
      RENDER
   ============================== */
+  useEffect(() => {
+    const guideSeen = localStorage.getItem("assetCaptureGuideSeen");
+  
+    if (!guideSeen) {
+      showGuide();
+    }
+  }, []);
+  const showGuide = async () => {
+    const steps = [
+      {
+        title: "Team Creation",
+        image: "/guide/assignment.webp",
+        text : "Mandatory for assigning assets"
+      },
 
+    ];
+  
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+  
+      const result = await Swal.fire({
+        title: step.title,
+        html: `
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <img src="${step.image}" 
+                 style="max-width:320px;margin-bottom:15px;border-radius:8px" />
+            <p style="font-size:14px">${step.text}</p>  
+          </div>
+        `,
+        confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
+        showCancelButton: true,
+        cancelButtonText: "Skip",
+        confirmButtonColor: "#2563eb",
+        cancelButtonColor: "#9ca3af",
+        width: 500
+      });
+  
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        break;
+      }
+    }
+  
+    localStorage.setItem("assetCaptureGuideSeen", "true");
+  };
+  
   return (
     <div className="wizard-container">
 
@@ -421,6 +465,7 @@ const WizardStepper = ({ step }) => {
   const steps = ["Category", "Assets", "Department", "Team Member", "Review"];
 
   return (
+    <>
     <div className="stepper">
       {steps.map((label, index) => (
         <div
@@ -432,6 +477,13 @@ const WizardStepper = ({ step }) => {
         </div>
       ))}
     </div>
+                  <button
+        onClick={showGuide}
+        style={{marginLeft: "auto" , backgroundColor : "#2563eb" , color : "#ffffff" , border : "none" , padding : "2px 5px" , borderRadius : "10px"}}
+      >
+        Page Guide
+      </button>
+</>
   );
 };
 
