@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Route, Outlet } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 import TenantLayout from "../layout/TenantLayout";
@@ -19,10 +19,11 @@ const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
+
       <Route
         element={
           <Suspense fallback={<div className="page-loader">Loading...</div>}>
-            <></>
+            <Outlet />
           </Suspense>
         }
       >
@@ -38,6 +39,7 @@ const TenantRoutes = ({ profileUser }) => (
         <Route path="/employee" element={<EmployeePage />} />
         <Route path="/subscription" element={<Subscription />} />
       </Route>
+
     </Route>
   </Route>
 );
