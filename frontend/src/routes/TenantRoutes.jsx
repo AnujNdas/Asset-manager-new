@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 
 import TenantLayout from "../layout/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
@@ -19,17 +19,25 @@ const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/assetCapture" element={<AssetCapture />} />
-      <Route path="/inventory" element={<Inventory />} />
-      <Route path="/setting/*" element={<Setting />} />
-      <Route path="/classification/*" element={<Classification />} />
-      <Route path="/misreport" element={<MisReport />} />
-      <Route path="/scanner" element={<AssetScanner />} />
-      <Route path="/assignment" element={<AssignmentPage />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/employee" element={<EmployeePage />} />
-      <Route path="/subscription" element={<Subscription />} />
+      <Route
+        element={
+          <Suspense fallback={<div className="page-loader">Loading...</div>}>
+            <></>
+          </Suspense>
+        }
+      >
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/assetCapture" element={<AssetCapture />} />
+        <Route path="/inventory" element={<Inventory />} />
+        <Route path="/setting/*" element={<Setting />} />
+        <Route path="/classification/*" element={<Classification />} />
+        <Route path="/misreport" element={<MisReport />} />
+        <Route path="/scanner" element={<AssetScanner />} />
+        <Route path="/assignment" element={<AssignmentPage />} />
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/employee" element={<EmployeePage />} />
+        <Route path="/subscription" element={<Subscription />} />
+      </Route>
     </Route>
   </Route>
 );

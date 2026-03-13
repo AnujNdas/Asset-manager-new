@@ -28,7 +28,6 @@ const App = () => {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/user" element={<User />}>
             <Route
@@ -45,7 +44,6 @@ const App = () => {
           {TenantRoutes({ profileUser })}
           {SuperAdminRoutes()}
         </Routes>
-      </Suspense>
 
       <Toaster position="top-right" />
     </>
