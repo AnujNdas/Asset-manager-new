@@ -104,7 +104,9 @@ useEffect(() => {
             </>
           )}
         </div>
-            <PlanTimer /> 
+<div className="plan-timer-wrapper">
+  <PlanTimer />
+</div>
         <div className="control-panel">
           <button onClick={handleHelpClick} style={{border : "none",background: "transparent"}}><FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} /></button>
           <NotificationButton />

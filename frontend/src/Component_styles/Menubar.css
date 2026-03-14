@@ -48,11 +48,25 @@
 }
 
 /* Control Panel */
-.control-panel {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-shrink: 0;
+.control-panel{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+@media (max-width:480px){
+
+  .control-panel{
+    gap:12px;
+  }
+
+  .profile-button{
+    gap:4px;
+  }
+
+  .profile-button svg:last-child{
+    display:none; /* hide dropdown arrow */
+  }
 }
 
 .controls {
@@ -174,7 +188,27 @@
   opacity: 0;
   animation: hintShow 1.4s ease-out forwards;
 }
+.title-text{
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1f2937;
+  display: flex;
+  gap: 4px;
+}
 
+.title-text span{
+  color: #2563eb;
+}
+.plan-timer-wrapper{
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px){
+  .plan-timer-wrapper{
+    display: none;
+  }
+}
 @keyframes hintShow {
   0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
   100% { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -226,4 +260,13 @@
   .control-panel{
     gap: 5px;
   }
+}
+@media (max-width:480px){
+
+  .hint-text{
+    font-size:0.65rem;
+    padding:3px 6px;
+    bottom:35px;
+  }
+
 }
