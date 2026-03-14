@@ -61,23 +61,54 @@ export const NotificationProvider = ({ children }) => {
   }, [token, userId]);
 
   // 🔔 Toast handler
-  const showToast = (notification) => {
-    const { title, message, type } = notification;
+const showToast = (notification) => {
+  const { title, message, type } = notification;
 
-    switch (type) {
-      case "success":
-        toast.success(`${title}: ${message}`);
-        break;
-      case "error":
-        toast.error(`${title}: ${message}`);
-        break;
-      case "warning":
-        toast(`${title}: ${message}`, { icon: "⚠️" });
-        break;
-      default:
-        toast(`${title}: ${message}`);
-    }
+  const baseStyle = {
+    color: "#fff",
+    borderRadius: "8px",
+    padding: "12px 16px",
+    fontWeight: "500"
   };
+
+  switch (type) {
+    case "success":
+      toast.success(`${title}: ${message}`, {
+        style: {
+          ...baseStyle,
+          background: "#16a34a" // green
+        }
+      });
+      break;
+
+    case "error":
+      toast.error(`${title}: ${message}`, {
+        style: {
+          ...baseStyle,
+          background: "#2563eb" // blue
+        }
+      });
+      break;
+
+    case "warning":
+      toast(`${title}: ${message}`, {
+        icon: "⚠️",
+        style: {
+          ...baseStyle,
+          background: "#2563eb"
+        }
+      });
+      break;
+
+    default:
+      toast(`${title}: ${message}`, {
+        style: {
+          ...baseStyle,
+          background: "#2563eb"
+        }
+      });
+  }
+};
 
   // ✅ Mark all as read
   const markAllAsRead = async () => {

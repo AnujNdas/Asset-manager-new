@@ -42,7 +42,7 @@ const Subscription = () => {
   const [subscriptionLoaded, setSubscriptionLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const PLAN_ORDER = ["base", "grow", "omni"];
 const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = user?.role === "admin";
 
@@ -421,7 +421,17 @@ const handleUpgradeClick = async () => {
 );
 
   };
+const getRecommendedTier = () => {
+  if (!activeTier) return null;
 
+  const currentIndex = PLAN_ORDER.indexOf(activeTier);
+
+  if (currentIndex === -1) return null;
+
+  return PLAN_ORDER[currentIndex + 1] || null;
+};
+
+const recommendedTier = getRecommendedTier();
   /* -------------------------
      PLAN LIST
   ------------------------- */
@@ -445,6 +455,7 @@ const handleUpgradeClick = async () => {
             selected={tier.key === selectedTier}
             isActive={false}
             isAdmin={isAdmin}
+            isRecommended={tier.key === recommendedTier}
             onSelect={() => setSelectedTier(tier.key)}
           />
 
@@ -475,7 +486,11 @@ return (
   <div className="subscription-page">
 
     <h2>Subscription & Billing</h2>
-    <p>Choose the plan that fits your business</p>
+    <p>
+      {isActive
+        ? "Manage your current subscription and usage"
+        : "Choose the plan that fits your business"}
+    </p>
 
     {/* -------------------------
        STATE 1: Pending Upgrade

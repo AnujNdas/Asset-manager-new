@@ -1,6 +1,6 @@
 import React from "react";
 
-const PlanCard = ({ tier, billing, selected, onSelect , hideSelect }) => {
+const PlanCard = ({ tier, billing, selected, onSelect , hideSelect , isRecommended }) => {
   if (!tier || !tier.prices) return null;
 
   const price =
@@ -14,6 +14,11 @@ const PlanCard = ({ tier, billing, selected, onSelect , hideSelect }) => {
       onClick={() => onSelect(tier.id)}
     >
       <h3>{tier.name}</h3>
+            {isRecommended && (
+        <div className="recommended-badge">
+          Recommended
+        </div>
+      )}
 
       <div className="plan-price">
         <span className="amount">${price}</span>
