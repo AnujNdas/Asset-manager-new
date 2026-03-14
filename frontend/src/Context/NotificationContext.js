@@ -63,6 +63,7 @@ export const NotificationProvider = ({ children }) => {
   // 🔔 Toast handler
 const showToast = (notification) => {
   const { title, message, type } = notification;
+  console.log(notification)
 
   const baseStyle = {
     color: "#fff",
