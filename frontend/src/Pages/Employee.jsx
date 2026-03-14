@@ -11,7 +11,9 @@ import {
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
 import Swal from "sweetalert2";
+import Loader from "../Components/Loader";
 const EmployeePage = () => {
+  const [loading , setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [departmentFilter, setDepartmentFilter] = useState("");
@@ -65,23 +67,24 @@ const fetchEmployeeSummary = async () => {
   }
 };
 
+// run once
+useEffect(() => {
+  fetchDepartments();
+  fetchEmployeeSummary();
+  setLoading(false)
+}, []);
 
-  useEffect(() => {
-    fetchEmployees();
-  }, [departmentFilter]);
-
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
-  useEffect(() => {
-    fetchEmployeeSummary();
-  }, []);
+// run when filter changes
+useEffect(() => {
+  fetchEmployees();
+  setLoading(false)
+}, [departmentFilter]);
 
   const filteredEmployees = employees.filter(emp =>
     emp.name.toLowerCase().includes(search.toLowerCase()) ||
     emp.employeeCode.toLowerCase().includes(search.toLowerCase())
   );
-
+if (loading) return <Loader />
   return (
     <div className="employee-page">
       <div className="employee-header">

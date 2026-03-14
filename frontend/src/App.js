@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import "./App.css";
 
 import User from "./Pages/User";
+import Loader from "./Components/Loader";
 
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
@@ -14,7 +15,9 @@ const ForgotPassword = lazy(() => import("./Inner_sections/ForgetPass"));
 const ResetPassword = lazy(() => import("./Inner_sections/ResetPass"));
 const Maintenance = lazy(() => import("./Pages/Maintainence"));
 const Unauthorized = lazy(() => import("./Pages/Unauthorized"));
-
+const SuspenseWrapper = ({ children }) => (
+  <Suspense fallback={<Loader/>}>{children}</Suspense>
+);
 const App = () => {
   const [profileUser, setProfileUser] = useState(null);
 
@@ -31,17 +34,17 @@ const App = () => {
     <>
       <main>
         <Routes>
-          <Route path="/user" element={<User />}>
+          <Route path="/user" element={<SuspenseWrapper><User /></SuspenseWrapper>}>
             <Route
               path="login"
-              element={<Login setProfileUser={setProfileUser} />}
+              element={<SuspenseWrapper><Login setProfileUser={setProfileUser}/> </SuspenseWrapper>}
             />
-            <Route path="signup" element={<Signup />} />
-            <Route path="forgot" element={<ForgotPassword />} />
-            <Route path="reset/:token" element={<ResetPassword />} />
+            <Route path="signup" element={<SuspenseWrapper><Signup /></SuspenseWrapper>} />
+            <Route path="forgot" element={<SuspenseWrapper><ForgotPassword /></SuspenseWrapper>} />
+            <Route path="reset/:token" element={<SuspenseWrapper><ResetPassword /></SuspenseWrapper>} />
           </Route>
 
-          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/unauthorized" element={<SuspenseWrapper><Unauthorized /></SuspenseWrapper>} />
 
           {TenantRoutes({ profileUser })}
           {SuperAdminRoutes()}

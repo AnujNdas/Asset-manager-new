@@ -14,6 +14,7 @@ import {
 } from "../Services/Subscription";
 
 import "../Page_styles/Subscription.css";
+import Loader from "../Components/Loader";
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
     if (window.Razorpay) {
@@ -467,7 +468,7 @@ const handleUpgradeClick = async () => {
   console.log("pendingUpgrade:", subscription?.pendingUpgrade);
   console.log("upgradeMode:", upgradeMode);
   if (!subscriptionLoaded) {
-  return <div className="subscription-page">Loading subscription...</div>;
+  return <Loader/>;
 }
 
 return (
