@@ -245,7 +245,7 @@ const handleUpgradeClick = async () => {
 
         key: razorpayKey,
         subscription_id: subscriptionId,
-        name: "Your App Name",
+        name: "Socialfly AMS",
         description: `${selectedTier.toUpperCase()} Plan`,
 
         handler: async function (response) {

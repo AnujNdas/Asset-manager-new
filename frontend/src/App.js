@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useEffect, useState, lazy } from "react";
+import { useEffect, useState, lazy , Suspense } from "react";
 
 import TenantRoutes from "./routes/TenantRoutes";
 import SuperAdminRoutes from "./routes/SuperAdminRoutes";
