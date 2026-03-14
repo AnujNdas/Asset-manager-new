@@ -27,7 +27,7 @@ const Menubar = ({ username, toggleSidebar }) => {
 
 useEffect(() => {
   const handleResize = () => {
-    setIsMobile(window.innerWidth < 480);
+    setIsMobile(window.innerWidth < 768);
   };
 
   window.addEventListener("resize", handleResize);
