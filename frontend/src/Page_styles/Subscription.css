@@ -215,21 +215,22 @@
    ACTIVE PLAN BANNER
 ========================= */
 
-.current-plan-banner{
+/* .current-plan-banner{
   background:#ffffff;
   border:1px solid #e8e8e8;
   border-radius:12px;
   padding:24px;
   margin:25px 0;
   box-shadow:0 4px 14px rgba(0,0,0,0.05);
-}
+} */
 
 /* Grid Layout */
 
 .banner-grid{
-  display:grid;
-  grid-template-columns: repeat(5,1fr);
-  gap:20px;
+  display:flex;
+  justify-content: space-around;
+  width: 100%;
+  /* gap:20px; */
 }
 
 /* Each Info Block */

@@ -352,6 +352,13 @@ const handleUpgradeClick = async () => {
           {subscription.billingCycle || billing}
         </span>
       </div>
+        <div>
+          <span className="label">Days Remaining</span>
+          <span className="value">
+            {subscription?.daysRemaining ?? "-"} days
+          </span>
+        </div>
+
 
     </div>
 
