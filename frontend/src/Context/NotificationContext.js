@@ -32,6 +32,7 @@ export const NotificationProvider = ({ children }) => {
         ]);
 
         setNotifications(listRes.data || []);
+        console.log(listRes)
         setUnreadCount(countRes.data?.count || 0);
       } catch (err) {
         console.error("Notification fetch failed:", err);
