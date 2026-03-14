@@ -25,6 +25,7 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL = "socialflylive@gmail.com";
 const OrganizationInvite = require("../models/OrganizationInvite");
 const seedOrganizationDefaults = require("../services/seedOrganizationDefaults");
+const sendNotification = require("../utils/sendNotification");
 /* ---------------------------------- UTIL ---------------------------------- */
 async function sendBrevoEmail(to, subject, html) {
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -338,19 +339,13 @@ try {
       { lastActive: new Date() }
     );
 
-    await Notification.create({
-      title: "Login Successful",
-      message: "You have successfully logged in.",
-      userId: user._id,
-      type : "success"
-    });
-
-    const io = req.app.get("io");
-    io.to(user._id.toString()).emit("newNotification", {
-      title: "Login Successful",
-      message: "You have successfully logged in.",
-    });
-
+await sendNotification({
+  req,
+  userId: user._id,
+  title: "Login Successful",
+  message: "You have successfully logged in.",
+  type: "success"
+});
     return res.status(200).json({
       success: true,
       token,
@@ -437,19 +432,13 @@ const changePassword = async (req, res) => {
     user.password = hashedPassword;
     await user.save();
     
-    await Notification.create({
-      title: "Password Changed",
-      message: "Your password has been updated successfully.",
-      userId: user._id,
-      type : "info"
-    });
-    
-    if (req.io) {
-      req.io.to(user._id.toString()).emit("notification", {
-        title: "Password Changed",
-        message: "Your password has been updated successfully."
-      });
-    }
+await sendNotification({
+  req,
+  userId: user._id,
+  title: "Password changed successfully",
+  message: "Your Password has changed successfully ",
+  type: "success"
+});
     
     res.status(200).json({ message: "Password changed successfully." });
   } catch (error) {
@@ -476,18 +465,13 @@ const resetPassword = async (req, res) => {
 
     await user.save();
 
-    await Notification.create({
-      title: "Password Changed",
-      message: "Your password has been updated successfully.",
-      userId: user._id,
-    });
-
-    if (req.io) {
-      req.io.to(user._id.toString()).emit("notification", {
-        title: "Password Changed",
-        message: "Your password has been updated successfully.",
-      });
-    }
+await sendNotification({
+  req,
+  userId: user._id,
+  title: "Password reset Successfully",
+  message: "You have successfully Reset your Password.",
+  type: "success"
+});
 
     res.json({ message: "Password has been reset successfully" });
   } catch (err) {
