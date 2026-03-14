@@ -7,7 +7,6 @@ import {
   deleteCategory,
   restoreCategory,
 } from "../Services/ApiServices";
-
 const Category = () => {
   return (
     <ClassificationPage
@@ -17,6 +16,7 @@ const Category = () => {
       updateItem={updateCategory}
       deleteItem={deleteCategory}
       restoreItem={restoreCategory}
+      allowDelete={false}   // 🚀 Disable delete
     />
   );
 };

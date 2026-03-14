@@ -21,7 +21,7 @@ import {
 } from "react-icons/fa";
 
 import axiosInstance from "../Services/axiosInstance";
-
+import Loader from "../Components/Loader"
 // Lazy load inner sections
 const MyProfile = lazy(() => import("../Inner_sections/MyProfile"));
 const Security = lazy(() => import("../Inner_sections/Security"));
@@ -137,7 +137,7 @@ const Setting = () => {
 
       {/* Content */}
       <main className="settings">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loader/>}>
           <Routes>
             <Route path="/" element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<MyProfile />} />

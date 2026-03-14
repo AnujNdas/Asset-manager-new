@@ -244,3 +244,39 @@ select:focus-visible {
     font-size: 12px;
   }
 }
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .report-header {
+    gap: 10px;
+  }
+
+  .classify_heading {
+    font-size: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .report-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .misbutton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .classify_heading {
+    font-size: 18px;
+  }
+}

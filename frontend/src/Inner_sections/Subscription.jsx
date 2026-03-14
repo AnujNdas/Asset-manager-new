@@ -327,7 +327,35 @@ const handleUpgradeClick = async () => {
 
     return (
 <div className="current-plan-insights">
+      {/* Current Plan Banner */}
+  <div className="current-plan-banner">
 
+    <div className="banner-grid">
+
+      <div>
+        <span className="label">Plan</span>
+        <span className="value">
+          {currentPlan?.name || activeTier?.toUpperCase()}
+        </span>
+      </div>
+
+      <div>
+        <span className="label">Status</span>
+        <span className={`value status-${subscription.status}`}>
+          {subscription.status}
+        </span>
+      </div>
+
+      <div>
+        <span className="label">Billing</span>
+        <span className="value">
+          {subscription.billingCycle || billing}
+        </span>
+      </div>
+
+    </div>
+
+  </div>
   {/* Usage Limits */}
   <div className="plan-usage-section">
 

@@ -19,7 +19,8 @@ const ClassificationPage = ({
   createItem,
   updateItem,
   deleteItem,
-  restoreItem
+  restoreItem,
+  allowDelete = true   // NEW PROP
 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -263,14 +264,16 @@ const fetchItems = async () => {
                         <FontAwesomeIcon icon={faEdit} />
                       </button>
 
-                      <button
-                        className="btn-delete"
-                        onClick={() =>
-                          handleDelete(item._id, item.name)
-                        }
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
+                      {allowDelete && (
+                        <button
+                          className="btn-delete"
+                          onClick={() =>
+                            handleDelete(item._id, item.name)
+                          }
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      )}
                     </>
                   ) : (
                     <button

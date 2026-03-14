@@ -136,13 +136,13 @@ const getInStock = (asset) =>
 
   return (
     <div className="mis-content">
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2 className="classify_heading">Asset Management Report</h2>
-        <button onClick={exportData} className="misbutton">
-  Export {activeTab ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1) : ''} Excel
-</button>
+<div className="report-header">
+  <h2 className="classify_heading">Asset Management Report</h2>
 
-      </div>
+  <button onClick={exportData} className="misbutton">
+    Export {activeTab ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1) : ''} Excel
+  </button>
+</div>
 
       {/* Tabs */}
       <header>
