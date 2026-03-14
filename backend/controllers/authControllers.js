@@ -25,7 +25,7 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const SENDER_EMAIL = "socialflylive@gmail.com";
 const OrganizationInvite = require("../models/OrganizationInvite");
 const seedOrganizationDefaults = require("../services/seedOrganizationDefaults");
-const sendNotification = require("../utils/sendNotification");
+const sendNotification = require("../utils/notify");
 /* ---------------------------------- UTIL ---------------------------------- */
 async function sendBrevoEmail(to, subject, html) {
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
