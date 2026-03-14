@@ -15,9 +15,16 @@ const User = ({ removeUser }) => {
 
       {/* LEFT SIDE */}
       <div className="auth-left">
-                  <div className="dash-logo">
-            
-          </div>
+<div className="dash-logo">
+  <img
+    src="/images/logo.webp"
+    alt="Socialfly Logo"
+    width="100"
+    height="100"
+    loading="eager"
+    decoding="async"
+  />
+</div>
         <div className="auth-header">
           <h2>Asset Management System</h2>
         </div>

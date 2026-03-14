@@ -1,6 +1,6 @@
   /* Full page background */
   .auth-wrapper {
-    height: 100vh;
+    max-height: 100vh;
     width: 100%;
     background: #f3f4f6;
     display: flex;
@@ -17,7 +17,7 @@
     background: #ffffff;
     /* border-radius: 20px; */
     display: flex;
-    overflow: auto;
+    overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
   }
 
@@ -29,7 +29,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: auto;
+    overflow-y: auto;
     gap: 10px;
   }
 
@@ -43,6 +43,7 @@
   .auth-content {
     max-width: 380px;
     width: 100%;
+    min-height: 260px;
   }
 
   /* RIGHT PANEL */
@@ -70,23 +71,14 @@
   height: 220px;
   border-radius: 10px;
   overflow: hidden;
+  aspect-ratio: 16/9;
 }
 
-.dash-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+.dash-logo img{
+  width:100px;
+  height:100px;
+  object-fit:contain;
 }
-  .dash-logo {
-    width: 100px;
-    height: 100px;
-    background-image: url("../../public/images/logo.webp");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 10px;
-  }
   .right-content h1 {
     font-size: 24px;
     font-weight: 600;
