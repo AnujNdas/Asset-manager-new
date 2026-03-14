@@ -267,9 +267,10 @@
 @media (max-width:480px){
 
   .hint-text{
-    font-size:0.65rem;
+    font-size:8px;
     padding:3px 6px;
-    bottom:35px;
+    bottom:20px;
+    width: 100px;
   }
 
 }
