@@ -342,6 +342,7 @@ try {
       title: "Login Successful",
       message: "You have successfully logged in.",
       userId: user._id,
+      type : "success"
     });
 
     const io = req.app.get("io");
@@ -440,6 +441,7 @@ const changePassword = async (req, res) => {
       title: "Password Changed",
       message: "Your password has been updated successfully.",
       userId: user._id,
+      type : "info"
     });
     
     if (req.io) {
