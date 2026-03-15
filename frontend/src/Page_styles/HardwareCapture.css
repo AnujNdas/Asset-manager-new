@@ -79,14 +79,21 @@
 }
 
 /* Inputs & selects */
-.input-group input,
-.input-group select {
+.input-group input {
   padding: 10px;
   border: 1.5px solid #dcdcdc;
   border-radius: 8px !important;
   outline: none;
   transition: border-color 0.2s ease;
   width: 100%;
+}
+.input-group select {
+  padding: 10px;
+  border: 1.5px solid #dcdcdc;
+  border-radius: 8px !important;
+  outline: none;
+  transition: border-color 0.2s ease;
+  /* width: 100%; */
 }
 
 /* Focus state */

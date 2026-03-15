@@ -219,78 +219,87 @@ const fetchItems = async () => {
 </div>
       </div>
 
-      <div className="category-grid">
-        {currentItems.length === 0 ? (
-          <p>No {title.toLowerCase()} found</p>
-        ) : (
-          <div className="grid">
-            {currentItems.map((item, idx) => (
-              <div
-                key={item._id}
-                className={`category-card ${
-                  !item.isActive ? "inactive" : ""
+<div className="classification-table-wrapper">
+
+  {currentItems.length === 0 ? (
+    <p className="no-data">No {title.toLowerCase()} found</p>
+  ) : (
+    <table className="classification-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>{title} Name</th>
+          <th>Status</th>
+          <th className="actions-column">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {currentItems.map((item, idx) => (
+          <tr
+            key={item._id}
+            className={!item.isActive ? "row-inactive" : ""}
+          >
+            <td>{startIndex + idx + 1}</td>
+
+            <td className="name-cell">
+              {item.name
+                ?.toLowerCase()
+                .replace(/\b\w/g, (char) => char.toUpperCase())}
+            </td>
+
+            <td>
+              <span
+                className={`status-badge ${
+                  item.isActive
+                    ? "badge-active"
+                    : "badge-inactive"
                 }`}
               >
-                <div className="category-number">
-                  {startIndex + idx + 1}
-                </div>
+                {item.isActive ? "Active" : "Inactive"}
+              </span>
+            </td>
 
-                <div className="category-name">
-                  {item.name
-                    ?.toLowerCase()
-                    .replace(/\b\w/g, (char) => char.toUpperCase())}
-                </div>
+            <td className="table-actions">
+              {item.isActive ? (
+                <>
+                  <button
+                    className="btn-edit"
+                    onClick={() => {
+                      setEditingItem(item);
+                      setUpdatedName(item.name);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </button>
 
-                <span
-                  className={`status-badge ${
-                    item.isActive
-                      ? "badge-active"
-                      : "badge-inactive"
-                  }`}
-                >
-                  {item.isActive ? "Active" : "Inactive"}
-                </span>
-
-                <div className="category-actions">
-                  {item.isActive ? (
-                    <>
-                      <button
-                        className="btn-edit"
-                        onClick={() => {
-                          setEditingItem(item);
-                          setUpdatedName(item.name);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
-                      </button>
-
-                      {allowDelete && (
-                        <button
-                          className="btn-delete"
-                          onClick={() =>
-                            handleDelete(item._id, item.name)
-                          }
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                      )}
-                    </>
-                  ) : (
+                  {allowDelete && (
                     <button
-                      className="btn-restore"
+                      className="btn-delete"
                       onClick={() =>
-                        handleRestore(item._id)
+                        handleDelete(item._id, item.name)
                       }
                     >
-                      <FontAwesomeIcon icon={faRotateLeft} />
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                </>
+              ) : (
+                <button
+                  className="btn-restore"
+                  onClick={() => handleRestore(item._id)}
+                >
+                  <FontAwesomeIcon icon={faRotateLeft} />
+                </button>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+
+</div>
 
       {totalPages > 1 && (
         <Pagination
