@@ -33,31 +33,7 @@ const ClassificationPage = ({
   const [updatedName, setUpdatedName] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-const [itemsPerPage, setItemsPerPage] = useState(12);
-
-useEffect(() => {
-  const updateItemsPerPage = () => {
-    const width = window.innerWidth;
-
-    if (width < 500) {
-      setItemsPerPage(6); // 2 columns × 3 rows
-    } 
-    else if (width < 900) {
-      setItemsPerPage(9); // 3 columns × 3 rows
-    } 
-    else if (width < 1200) {
-      setItemsPerPage(8); // 4 columns × 2 rows
-    } 
-    else {
-      setItemsPerPage(12); // 6 columns × 2 rows
-    }
-  };
-
-  updateItemsPerPage();
-  window.addEventListener("resize", updateItemsPerPage);
-
-  return () => window.removeEventListener("resize", updateItemsPerPage);
-}, []);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchItems();
@@ -89,9 +65,11 @@ const fetchItems = async () => {
     item.name.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  useEffect(() => {
+useEffect(() => {
+  if (currentPage > totalPages) {
     setCurrentPage(1);
-  }, [searchValue]);
+  }
+}, [filteredItems]);
 
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -301,13 +279,11 @@ const fetchItems = async () => {
 
 </div>
 
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
-      )}
+<Pagination
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={setCurrentPage}
+/>
 
       {editingItem && (
         <div className="edit-modal">
