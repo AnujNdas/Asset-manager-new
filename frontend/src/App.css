@@ -57,30 +57,28 @@
 }
 /* Font faces */
 @font-face {
-  font-family: h1;
-  src: url('Poppins/Poppins-BoldItalic.ttf');
-}
-@font-face {
-  font-family: h2;
-  src: url('Poppins/Poppins-SemiBoldItalic.ttf');
-}
-@font-face {
-  font-family: h3;
-  src: url('Poppins/Poppins-MediumItalic.ttf');
-}
-@font-face {
-  font-family: h4;
-  src: url('Poppins/Poppins-LightItalic.ttf');
-}
-@font-face {
-  font-family: p;
-  src: url('Poppins/Poppins-Italic.ttf');
-}
-@font-face {
-  font-family: li;
-  src: url('Poppins/Poppins-ExtraLightItalic.ttf');
+  font-family: "Inter";
+  src: url("/fonts/inter-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
 .sidebar-toggle button:hover {
   opacity: 0.8;
 }
