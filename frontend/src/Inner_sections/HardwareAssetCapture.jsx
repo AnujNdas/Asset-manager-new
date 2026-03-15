@@ -619,7 +619,7 @@ const handleAddAsset = async (e) => {
           </div>
         </div>
 </div>
- <div className="input-group">
+ <div >
   <label className="checkbox-label">
     <input
       type="checkbox"
@@ -685,7 +685,7 @@ const handleAddAsset = async (e) => {
 )}
 
 </div>
-<div className="input-group checkbox-group">
+<div>
   <label className="checkbox-label">
     <input
       type="checkbox"
@@ -711,7 +711,7 @@ const handleAddAsset = async (e) => {
     />
     Add Insurance Details
   </label>
-</div>
+
 
 {/* Insurance */}
 {showInsurance && (
@@ -763,6 +763,7 @@ const handleAddAsset = async (e) => {
     </div>
   </div>
 )}
+</div>
 
 
         {/* Submit */}
