@@ -623,6 +623,7 @@ const handleAddAsset = async (e) => {
   <label className="checkbox-label">
     <input
       type="checkbox"
+      className="checkbox-input"
       checked={showWarranty}
       onChange={(e) => {
         const checked = e.target.checked;
@@ -688,6 +689,7 @@ const handleAddAsset = async (e) => {
   <label className="checkbox-label">
     <input
       type="checkbox"
+      className="checkbox-input"
       checked={showInsurance}
       onChange={(e) => {
   const checked = e.target.checked;
