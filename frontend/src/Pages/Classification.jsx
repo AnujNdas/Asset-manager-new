@@ -1,13 +1,13 @@
-import React, { useState } from "react";
 import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
 import "../Page_styles/Classification.css";
+import React, { useState, lazy, Suspense } from "react";
 
-import Unit from "../Inner_sections/Unit";
-import Category from "../Inner_sections/Category";
-import Location from "../Inner_sections/Location";
-import Status from "../Inner_sections/Status";
-import Department from "../Inner_sections/Department";
-
+const Unit = lazy(() => import("../Inner_sections/Unit"));
+const Category = lazy(() => import("../Inner_sections/Category"));
+const Location = lazy(() => import("../Inner_sections/Location"));
+const Status = lazy(() => import("../Inner_sections/Status"));
+const Department = lazy(() => import("../Inner_sections/Department"));
+import Loader from "../Components/Loader";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 
@@ -150,14 +150,16 @@ const Classification = () => {
 
       {/* CONTENT SECTION */}
       <div className="classify_items">
-        <Routes>
-          <Route path="/" element={<Navigate to="location" />} />
-          <Route path="/unit" element={<Unit />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/location" element={<Location />} />
-          <Route path="/status" element={<Status />} />
-          <Route path="/department" element={<Department />} />
-        </Routes>
+        <Suspense fallback={<Loader/>}>
+          <Routes>
+            <Route path="/" element={<Navigate to="location" />} />
+            <Route path="/unit" element={<Unit />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/location" element={<Location />} />
+            <Route path="/status" element={<Status />} />
+            <Route path="/department" element={<Department />} />
+          </Routes>
+        </Suspense>
       </div>
     </div>
   );
