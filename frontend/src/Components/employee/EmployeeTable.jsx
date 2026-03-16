@@ -33,7 +33,7 @@ const EmployeeTable = ({ employees, onEdit, onDelete }) => {
                 <td>{emp.phone || "-"}</td>
                 <td>
                   <span className={`status ${emp.status || "active"}`}>
-                    {emp.status || "Active"}
+                    {emp.status.charAt(0).toUpperCase() + emp.status.slice(1) || "Active"}
                   </span>
                 </td>
 

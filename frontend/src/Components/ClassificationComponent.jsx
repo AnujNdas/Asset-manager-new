@@ -138,9 +138,9 @@ useEffect(() => {
   return (
     <div className="classification_card">
       <div className="card_header">
+<div className="dual-input-container">
         <h3 className="category_title">{title}</h3>
 
-<div className="dual-input-container">
 
   {/* SEARCH SECTION */}
   <div className="input-group">
@@ -167,6 +167,8 @@ useEffect(() => {
   </div>
 
   {/* ADD SECTION */}
+
+</div>
   <div className="input-grouped">
     {/* <label className="input-label">
       <FontAwesomeIcon icon={faPlus} /> Add New {title}
@@ -189,8 +191,6 @@ useEffect(() => {
       </button>
     </div>
   </div>
-
-</div>
       </div>
 
 <div className="classification-table-wrapper">

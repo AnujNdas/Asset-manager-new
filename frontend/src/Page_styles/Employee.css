@@ -251,6 +251,10 @@
 .status.active {
   color: #16a34a;
   font-weight: 600;
+  padding: 5px 10px;
+  background-color: #b3ffcf;
+  border: 1px solid #16a34a;
+  border-radius: 15px;
 }
 
 .status.inactive {
