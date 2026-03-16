@@ -221,7 +221,8 @@
 }
 .category_search_input {
   flex: 1;
-  border: none;
+  border: 1px solid #a1a1a1;
+  border-radius: 10px;
   outline: none;
   padding: 10px 12px;
   font-size: 14px;
