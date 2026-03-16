@@ -219,6 +219,20 @@
   gap: 10px;
   position: relative;
 }
+.category_search_input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #111827;
+  background: transparent;
+}
+
+.category_search_input::placeholder {
+  color: #9ca3af;
+}
+
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
