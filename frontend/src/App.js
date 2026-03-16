@@ -8,7 +8,7 @@ import "./App.css";
 
 import User from "./Pages/User";
 import Loader from "./Components/Loader";
-
+import "./Component_styles/ClassificationComponent.css";
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
 const ForgotPassword = lazy(() => import("./Inner_sections/ForgetPass"));
