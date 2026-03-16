@@ -1,16 +1,9 @@
 import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
 import "../Page_styles/Classification.css";
 import React, { useState, lazy, Suspense } from "react";
-
-const Unit = lazy(() => import("../Inner_sections/Unit"));
-const Category = lazy(() => import("../Inner_sections/Category"));
-const Location = lazy(() => import("../Inner_sections/Location"));
-const Status = lazy(() => import("../Inner_sections/Status"));
-const Department = lazy(() => import("../Inner_sections/Department"));
 import Loader from "../Components/Loader";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
-
 import {
   getUnits,
   getLocations,
@@ -18,6 +11,13 @@ import {
   getStatuses,
   getDepartments
 } from "../Services/ApiServices";
+
+const Unit = lazy(() => import("../Inner_sections/Unit"));
+const Category = lazy(() => import("../Inner_sections/Category"));
+const Location = lazy(() => import("../Inner_sections/Location"));
+const Status = lazy(() => import("../Inner_sections/Status"));
+const Department = lazy(() => import("../Inner_sections/Department"));
+
 
 const tabs = [
   { name: "Location", key: "location", path: "/classification/location" },
