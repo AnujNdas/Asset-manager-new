@@ -3,10 +3,6 @@ import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
-  faSearch,
-  faEdit,
-  faTrash,
-  faRotateLeft,
   faSave,
   faTimes
 } from "@fortawesome/free-solid-svg-icons";
@@ -242,23 +238,23 @@ useEffect(() => {
               {item.isActive ? (
                 <>
                   <button
-                    className="btn-edit"
+                    className="edit-btn"
                     onClick={() => {
                       setEditingItem(item);
                       setUpdatedName(item.name);
                     }}
                   >
-                    <FontAwesomeIcon icon={faEdit} />
+                    Edit
                   </button>
 
                   {allowDelete && (
                     <button
-                      className="btn-delete"
+                      className="delete-btn"
                       onClick={() =>
                         handleDelete(item._id, item.name)
                       }
                     >
-                      <FontAwesomeIcon icon={faTrash} />
+                      Delete
                     </button>
                   )}
                 </>
@@ -267,7 +263,7 @@ useEffect(() => {
                   className="btn-restore"
                   onClick={() => handleRestore(item._id)}
                 >
-                  <FontAwesomeIcon icon={faRotateLeft} />
+                  Restore
                 </button>
               )}
             </td>

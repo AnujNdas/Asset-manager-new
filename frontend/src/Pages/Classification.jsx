@@ -1,168 +1,215 @@
-  import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
-  import "../Page_styles/Classification.css";
-  import React, { useState, lazy, Suspense } from "react";
-  import Loader from "../Components/Loader";
-  import * as XLSX from "xlsx";
-  import Swal from "sweetalert2";
-  import {
-    getUnits,
-    getLocations,
-    getCategories,
-    getStatuses,
-    getDepartments
-  } from "../Services/ApiServices";
+import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
+import "../Page_styles/Classification.css";
+import React, { useState, lazy, Suspense } from "react";
+import Loader from "../Components/Loader";
+import * as XLSX from "xlsx";
+import Swal from "sweetalert2";
+import {
+  getUnits,
+  getLocations,
+  getCategories,
+  getStatuses,
+  getDepartments,
+} from "../Services/ApiServices";
 
-  const Unit = lazy(() => import("../Inner_sections/Unit"));
-  const Category = lazy(() => import("../Inner_sections/Category"));
-  const Location = lazy(() => import("../Inner_sections/Location"));
-  const Status = lazy(() => import("../Inner_sections/Status"));
-  const Department = lazy(() => import("../Inner_sections/Department"));
+const Unit = lazy(() => import("../Inner_sections/Unit"));
+const Category = lazy(() => import("../Inner_sections/Category"));
+const Location = lazy(() => import("../Inner_sections/Location"));
+const Status = lazy(() => import("../Inner_sections/Status"));
+const Department = lazy(() => import("../Inner_sections/Department"));
 
+const tabs = [
+  { name: "Location", key: "location", path: "/classification/location" },
+  { name: "Unit", key: "unit", path: "/classification/unit" },
+  { name: "Category", key: "category", path: "/classification/category" },
+  { name: "Department", key: "department", path: "/classification/department" },
+  { name: "Status", key: "status", path: "/classification/status" },
+];
+const preloadMap = {
+  location: () => import("../Inner_sections/Location"),
+  unit: () => import("../Inner_sections/Unit"),
+  category: () => import("../Inner_sections/Category"),
+  department: () => import("../Inner_sections/Department"),
+  status: () => import("../Inner_sections/Status"),
+};
+const Classification = () => {
+  const location = useLocation();
+  const [exportOpen, setExportOpen] = useState(false);
+  React.useEffect(() => {
+    import("../Inner_sections/Location");
+  }, []);
+  // Determine active tab key
+  const activeTab =
+    tabs.find((t) => location.pathname.includes(t.key)) || tabs[0];
+  // EXPORT HANDLER
+  const handleExport = async (format) => {
+    try {
+      let data = [];
+      let fileName = "";
 
-  const tabs = [
-    { name: "Location", key: "location", path: "/classification/location" },
-    { name: "Unit", key: "unit", path: "/classification/unit" },
-    { name: "Category", key: "category", path: "/classification/category" },
-    { name: "Department", key: "department", path: "/classification/department" },
-    { name: "Status", key: "status", path: "/classification/status" },
-  ];
-
-  const Classification = () => {
-    const location = useLocation();
-    const [exportOpen, setExportOpen] = useState(false);
-
-    // Determine active tab key
-    const activeTab = tabs.find((t) => location.pathname.includes(t.key));
-
-    // EXPORT HANDLER
-    const handleExport = async (format) => {
-      try {
-        let data = [];
-        let fileName = "";
-
-        // Fetch only the active tab's data
-        switch (activeTab.key) {
-          case "location":
-            data = await getLocations();
-            fileName = "locations";
-            break;
-          case "unit":
-            data = await getUnits();
-            fileName = "units";
-            break;
-          case "category":
-            data = await getCategories();
-            fileName = "categories";
-            break;
-          case "status":
-            data = await getStatuses();
-            fileName = "statuses";
-            break;
-          case "department":
-            data = await getDepartments();
-            fileName = "departments";
-            break;
-          default:
-            return Swal.fire("Error", "Unknown tab selected!", "error");
-        }
-
-        // Export based on selected format
-        if (format === "csv") {
-          exportCSV(data, fileName);
-        } else if (format === "excel") {
-          exportExcel(data, fileName);
-        }
-
-        setExportOpen(false);
-      } catch (error) {
-        console.error(error);
-        Swal.fire("Error", "Failed to export data!", "error");
-      }
-    };
-
-    // CSV EXPORT
-    const exportCSV = (rows, fileName) => {
-      if (!rows.length) {
-        return Swal.fire("Empty", "No data to export!", "warning");
+      // Fetch only the active tab's data
+      switch (activeTab.key) {
+        case "location":
+          data = await getLocations();
+          fileName = "locations";
+          break;
+        case "unit":
+          data = await getUnits();
+          fileName = "units";
+          break;
+        case "category":
+          data = await getCategories();
+          fileName = "categories";
+          break;
+        case "status":
+          data = await getStatuses();
+          fileName = "statuses";
+          break;
+        case "department":
+          data = await getDepartments();
+          fileName = "departments";
+          break;
+        default:
+          return Swal.fire("Error", "Unknown tab selected!", "error");
       }
 
-      const headers = Object.keys(rows[0]).join(",");
-      const csvRows = rows.map((row) => Object.values(row).join(",")).join("\n");
+      // Export based on selected format
+      if (format === "csv") {
+        exportCSV(data, fileName);
+      } else if (format === "excel") {
+        exportExcel(data, fileName);
+      }
 
-      const csv = `${headers}\n${csvRows}`;
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `${fileName}.csv`;
-      link.click();
-    };
-
-    // EXCEL EXPORT
-    const exportExcel = (rows, fileName) => {
-      const sheet = XLSX.utils.json_to_sheet(rows);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, sheet, fileName);
-      XLSX.writeFile(workbook, `${fileName}.xlsx`);
-    };
-
-    return (
-      <div className="classification_container">
-        {/* HEADER WITH EXPORT BUTTON */}
-        <div className="classification_header">
-          <h2 className="classify_heading2">Classification</h2>
-
-  <div className="export-wrapper">
-    <button
-      className="export-btn"
-      onClick={() => setExportOpen((prev) => !prev)}
-      aria-haspopup="true"
-      aria-expanded={exportOpen}
-    >
-      Export
-      <span className={`export-caret ${exportOpen ? "open" : ""}`}>▾</span>
-    </button>
-
-    {exportOpen && (
-      <div className="export-dropdown">
-        <button onClick={() => handleExport("csv")}>Export as CSV</button>
-        <button onClick={() => handleExport("excel")}>Export as Excel</button>
-      </div>
-    )}
-  </div>
-
-        </div>
-
-        {/* TABS */}
-        <div className="tabs_container">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.name}
-              to={tab.path}
-              className={`tab ${
-                location.pathname === tab.path ? "active" : ""
-              }`}
-            >
-              <span className="tab-text2">{tab.name}</span>
-            </Link>
-          ))}
-        </div>
-
-        {/* CONTENT SECTION */}
-        <div className="classify_items">
-          <Suspense fallback={<Loader/>}>
-            <Routes>
-              <Route path="/" element={<Navigate to="location" />} />
-              <Route path="/unit" element={<Unit />} />
-              <Route path="/category" element={<Category />} />
-              <Route path="/location" element={<Location />} />
-              <Route path="/status" element={<Status />} />
-              <Route path="/department" element={<Department />} />
-            </Routes>
-          </Suspense>
-        </div>
-      </div>
-    );
+      setExportOpen(false);
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "Failed to export data!", "error");
+    }
   };
 
-  export default Classification;
+  // CSV EXPORT
+  const exportCSV = (rows, fileName) => {
+    if (!rows.length) {
+      return Swal.fire("Empty", "No data to export!", "warning");
+    }
+
+    const headers = Object.keys(rows[0]).join(",");
+    const csvRows = rows.map((row) => Object.values(row).join(",")).join("\n");
+
+    const csv = `${headers}\n${csvRows}`;
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${fileName}.csv`;
+    link.click();
+  };
+
+  // EXCEL EXPORT
+  const exportExcel = (rows, fileName) => {
+    const sheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, sheet, fileName);
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
+
+  return (
+    <div className="classification_container">
+      {/* HEADER WITH EXPORT BUTTON */}
+      <div className="classification_header">
+        <h2 className="classify_heading2">Classification</h2>
+
+        <div className="export-wrapper">
+          <button
+            className="export-btn"
+            onClick={() => setExportOpen((prev) => !prev)}
+            aria-haspopup="true"
+            aria-expanded={exportOpen}
+          >
+            Export
+            <span className={`export-caret ${exportOpen ? "open" : ""}`}>
+              ▾
+            </span>
+          </button>
+
+          {exportOpen && (
+            <div className="export-dropdown">
+              <button onClick={() => handleExport("csv")}>Export as CSV</button>
+              <button onClick={() => handleExport("excel")}>
+                Export as Excel
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div className="tabs_container">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.name}
+            to={tab.path}
+            onMouseEnter={preloadMap[tab.key]}
+            className={`tab ${location.pathname === tab.path ? "active" : ""}`}
+          >
+            <span className="tab-text2">{tab.name}</span>
+          </Link>
+        ))}
+      </div>
+
+      {/* CONTENT SECTION */}
+      <div className="classify_items">
+        <Routes>
+          <Route path="/" element={<Navigate to="location" />} />
+
+          <Route
+            path="/location"
+            element={
+              <Suspense fallback={<Loader />}>
+                <Location />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/unit"
+            element={
+              <Suspense fallback={<Loader />}>
+                <Unit />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/category"
+            element={
+              <Suspense fallback={<Loader />}>
+                <Category />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/status"
+            element={
+              <Suspense fallback={<Loader />}>
+                <Status />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/department"
+            element={
+              <Suspense fallback={<Loader />}>
+                <Department />
+              </Suspense>
+            }
+          />
+        </Routes>
+      </div>
+    </div>
+  );
+};
+
+export default Classification;
