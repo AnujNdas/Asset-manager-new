@@ -193,7 +193,32 @@
     box-shadow: 0 4px 8px rgba(0,123,255,0.2);
     font-weight: 600;
   }
+.edit-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
+.delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.card_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: relative;
+}
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */

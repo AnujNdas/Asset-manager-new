@@ -137,7 +137,10 @@
 .add-btn:active {
   transform: scale(0.98);
 }
-
+.card-header{
+  display: flex;
+  justify-content: space-between;
+}
 @media (max-width: 768px) {
   /* .dual-input-container {
     flex-direction: column;
