@@ -47,7 +47,7 @@
 .card_header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   margin-bottom: 18px;
   flex-wrap: wrap;
   gap: 5px;
