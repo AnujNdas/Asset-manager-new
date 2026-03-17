@@ -3,7 +3,6 @@ const Category = require("../models/Category");
 const Department = require("../models/Department");
 const Status = require("../models/Status");
 const Unit = require("../models/Unit");
-
 const {
   defaultLocations,
   defaultCategories,

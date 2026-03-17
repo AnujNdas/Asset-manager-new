@@ -1,4 +1,4 @@
-export const defaultLocations = [
+const defaultLocations = [
     { name : "United States" },
     { name : "New york city" },
 	{ name : "Canada" },
@@ -16,7 +16,7 @@ export const defaultLocations = [
 	{ name : "Spain" },
     { name : "Madrid" },
 ]
-export const defaultCategories = [
+const defaultCategories = [
     { name : "Accessories" },
     { name : "Desktop applications" },
     { name : "End-user device" },
@@ -32,7 +32,7 @@ export const defaultCategories = [
     { name : "Security & Safety" },
     { name : "User-End-Device" },
 ]
-export const defaultDepartments = [ 
+const defaultDepartments = [ 
     { name : "Sales" },
     { name : "Research & development" },
     { name : "Product management" },    
@@ -44,7 +44,7 @@ export const defaultDepartments = [
     { name : "Finance & accounting" },
     { name : "Customer support" },
 ]
-export const defaultStatuses = [            
+const defaultStatuses = [            
     { name : "Sold / Donated" },
     { name : "Missing / Stolen" },
     { name : "In Stock" },
@@ -52,7 +52,7 @@ export const defaultStatuses = [
     { name : "Disposed" },
     { name : "Active (In use)" },
 ]
-export const defaultUnits = [
+const defaultUnits = [
     { name : "User / seat" },
     { name : "Terabytes (TB)" },
     { name : "Piece" },
@@ -61,3 +61,5 @@ export const defaultUnits = [
     { name : "Cores / Sockets" },
     { name : "Concurrent user" },
 ]
+
+module.exports = { defaultUnits , defaultCategories , defaultDepartments , defaultLocations , defaultStatuses }
