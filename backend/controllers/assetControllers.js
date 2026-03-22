@@ -560,12 +560,15 @@ const assetCode = await generateHardwareCode(
   }
   const unitAmount = totalAmount / assetQuantity;
   const baseTotalAmount = convertToBase(totalAmount, currency);
-  const parsedDOP = parseDate(req.body.DOP);
-  if (!parsedDOP) {
-    return res.status(400).json({
-      message: "Valid purchase date is required"
-    });
-  }
+const parsedDOP = req.body.purchaseDetails?.purchaseDate
+  ? new Date(req.body.purchaseDetails.purchaseDate)
+  : null;
+
+if (!parsedDOP || isNaN(parsedDOP.getTime())) {
+  return res.status(400).json({
+    message: "Valid purchase date is required"
+  });
+}
   const parsedDOE = req.body.DOE ? parseDate(req.body.DOE) : null;
   const vendor = buildVendor(req.body.vendor);
   const maintenance = buildMaintenance(req.body.maintenance);
