@@ -7,15 +7,14 @@ import { getPendingInstances } from "../Services/ApiServices";
 import { useNavigate } from "react-router-dom";
 
 const InstanceAssets = () => {
-  const navigate = useNavigate();
   const [assets, setAssets] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
-
+  
   useEffect(() => {
     fetchAssets();
   }, [filter]);
-
+  
   const fetchAssets = async () => {
     try {
       setLoading(true);
@@ -28,7 +27,7 @@ const InstanceAssets = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="instance-page">
       {/* HEADER */}
@@ -38,7 +37,7 @@ const InstanceAssets = () => {
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-        >
+          >
           <option value="all">All</option>
           <option value="hardware">Hardware</option>
           <option value="software">Software</option>
@@ -61,6 +60,7 @@ const InstanceAssets = () => {
   );
 };
 const AssetCard = ({ asset }) => {
+  const navigate = useNavigate();
   const progress =
     (asset.createdInstances / asset.totalInstances) * 100;
 
