@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Page_styles/CreateInstance.css";
 import { useParams } from "react-router-dom";
-import { getLocations } from "../Services/ApiServices";
+import { getLocations , createAssetInstances , getAssetById } from "../Services/ApiServices";
 const CreateInstances = () => {
   const { assetId } = useParams();
 
@@ -41,16 +41,14 @@ const applyBulkValues = () => {
   try {
     setLoading(true);
 
-    const [assetRes, locationRes] = await Promise.all([
-      axios.get(`/api/assets/${assetId}`),
+    const [assetData, locationData] = await Promise.all([
+      getAssetById(assetId),
       getLocations()
     ]);
 
-    const assetData = assetRes.data;
-    console.log("ASSET DATA:", assetData);
-
     setAsset(assetData);
-    setLocations(locationRes.data);
+    setLocations(locationData);
+    console.log("ASSET DATA:", assetData);
 
     const pending = assetData.pendingInstances || 0;
 
@@ -59,7 +57,7 @@ const applyBulkValues = () => {
       serialNumber: "",
       condition: "new",
       location: "",
-      modelNo: assetData?.hardwareDetails?.modelNo || "",
+       modelNo: assetData?.modelNo || ""
     }));
 
     setInstances(rows);
@@ -166,7 +164,7 @@ const payload = instances.map((inst) => ({
     modelNo: inst.modelNo
   }
 }));
-      await axios.post("/api/assets/create-instances", {
+      await createAssetInstances({
         assetId,
         instances: payload
       });
