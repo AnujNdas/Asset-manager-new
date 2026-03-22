@@ -61,11 +61,14 @@ const InstanceAssets = () => {
 };
 const AssetCard = ({ asset }) => {
   const navigate = useNavigate();
-  const progress =
-    (asset.createdInstances / asset.totalInstances) * 100;
+const progress =
+  asset.assetQuantity > 0
+    ? (asset.instanceCount / asset.assetQuantity) * 100
+    : 0;
+const pendingInstances =
+  asset.assetQuantity - asset.instanceCount;
 
-  const isComplete = asset.pendingInstances === 0;
-
+const isComplete = pendingInstances === 0;
   return (
     <div className="asset-card">
       <div className="asset-card-header">
@@ -83,7 +86,7 @@ const AssetCard = ({ asset }) => {
         <div className="progress-top">
           <span>Instances</span>
           <span>
-            {asset.createdInstances}/{asset.totalInstances}
+            {asset.instanceCount}/{asset.assetQuantity}
           </span>
         </div>
 
@@ -96,10 +99,9 @@ const AssetCard = ({ asset }) => {
       </div>
 
       {/* STATUS */}
-      <p className="pending">
-        Pending: <strong>{asset.pendingInstances}</strong>
-      </p>
-
+<p className="pending">
+  Pending: <strong>{pendingInstances}</strong>
+</p>
       {/* BUTTON */}
       <button
         className={`create-btn ${isComplete ? "disabled" : ""}`}

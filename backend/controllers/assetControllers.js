@@ -873,7 +873,12 @@ const getAllAssets = async (req, res, next) => {
     }
 
     // 1️⃣ Fetch assets
-    const assets = await Asset.find(filter).lean();
+const assets = await Asset.find(filter)
+  .populate("assetCategory", "name")
+  .populate("assetStatus", "name")
+  .populate("associateUnit", "name")
+  .populate("locationName", "name")
+  .lean();
 
     if (!assets.length) {
       return res.status(200).json([]);
