@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Page_styles/AssetInstance.css";
-
+import { getPendingInstances } from "../Services/ApiServices";
 const InstanceAssets = () => {
   const [assets, setAssets] = useState([]);
   const [filter, setFilter] = useState("all");
@@ -16,11 +16,7 @@ const InstanceAssets = () => {
   const fetchAssets = async () => {
     try {
       setLoading(true);
-
-      const res = await axios.get("/api/assets/instance-pending", {
-        params: filter !== "all" ? { type: filter } : {},
-      });
-
+      const res = await getPendingInstances();
       setAssets(res.data);
       console.log("API RESPONSE:", res.data);
     } catch (err) {
