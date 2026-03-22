@@ -9,7 +9,8 @@ const {
   getAllAssets,
   updateAsset,
   bulkUpload,
-  createAssetInstance
+  createAssetInstance,
+  getAssetById
 } = require("../controllers/assetControllers");
 
 const router = express.Router();
@@ -43,7 +44,13 @@ router.get(
   requireActiveSubscription,
   getAllAssets
 );
-
+router.get(
+  "/:id",
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  requireActiveSubscription,
+  getAssetById
+);
 // ➤ DELETE ASSET
 router.delete(
   "/:id",

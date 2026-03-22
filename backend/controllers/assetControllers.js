@@ -993,7 +993,51 @@ const assets = await Asset.find(filter)
     return next(error);
   }
 };
+const getAssetById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const organizationId = req.user.organizationId;
 
+    if (!organizationId) {
+      return res.status(403).json({
+        message: "Organization context missing",
+      });
+    }
+
+    const asset = await Asset.findOne({
+      _id: id,
+      organizationId
+    })
+      .populate("assetCategory", "name")
+      .populate("locationName", "name")
+      .lean();
+
+    if (!asset) {
+      return res.status(404).json({
+        message: "Asset not found",
+      });
+    }
+
+    // 🔥 Instance count
+    const instanceCount = await AssetInstance.countDocuments({
+      assetId: id,
+      organizationId
+    });
+
+    const pendingInstances =
+      asset.assetQuantity - instanceCount;
+
+    return res.status(200).json({
+      ...asset,
+      instanceCount,
+      pendingInstances
+    });
+
+  } catch (error) {
+    console.error("🔥 GET ASSET BY ID ERROR:", error);
+    return next(error);
+  }
+};
 
 
 
@@ -1104,4 +1148,5 @@ if (totalAfter > totalAllowed) {
     getAllAssets,
     bulkUpload,
     createAssetInstance,
+    getAssetById
   };
