@@ -22,6 +22,7 @@ const InstanceAssets = () => {
       });
 
       setAssets(res.data);
+      console.log("API RESPONSE:", res.data);
     } catch (err) {
       console.error(err);
     } finally {
