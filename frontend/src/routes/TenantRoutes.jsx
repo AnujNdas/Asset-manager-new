@@ -40,7 +40,7 @@ const TenantRoutes = ({ profileUser }) => (
         <Route path="/employee" element={<EmployeePage />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/instance-assets" element={<AssetInstance />} />
-        <Route path="/create-instances/:id" element={<CreateInstance />} />  
+        <Route path="/create-instances/:assetId" element={<CreateInstance />} />  
       </Route>
 
     </Route>
