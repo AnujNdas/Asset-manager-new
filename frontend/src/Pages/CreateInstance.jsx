@@ -49,6 +49,7 @@ const applyBulkValues = () => {
     setAsset(assetData);
     setLocations(locationData);
     console.log("ASSET DATA:", assetData);
+    console.log("Location DATA:", locationData);
 
     const pending = assetData.pendingInstances || 0;
 
