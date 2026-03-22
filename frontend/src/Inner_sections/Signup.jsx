@@ -1,7 +1,7 @@
 import React, { useState , useEffect } from 'react';
 import '../Page_styles/Login.css';
 import { Link, useNavigate , useSearchParams } from 'react-router-dom';
-import image from '../Images/logo.png';
+// import image from '../Images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock, faPerson } from '@fortawesome/free-solid-svg-icons';

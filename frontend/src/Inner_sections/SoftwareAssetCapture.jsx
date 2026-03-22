@@ -1,656 +1,244 @@
 // src/Pages/SoftwareAssetCapture.jsx
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import "../Page_styles/HardwareCapture.css"; // reuse same CSS as hardware
-import { getStatuses, getCategories, createSoftwareAsset , getUnits , getLocations , generateSoftwareAssetCode } from "../Services/ApiServices";
-export const SUPPORTED_CURRENCIES = [
-  { code: "INR", label: "Indian Rupee", symbol: "₹" },
-  { code: "USD", label: "US Dollar", symbol: "$" },
-  { code: "EUR", label: "Euro", symbol: "€" },
-  { code: "GBP", label: "British Pound", symbol: "£" },
-  { code: "JPY", label: "Japanese Yen", symbol: "¥" },
-  { code: "AUD", label: "Australian Dollar", symbol: "A$" },
-  { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
-  { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
-  { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
-  { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
-  { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
-  { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
-  { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
-  { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
-  { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
-  { code: "SEK", label: "Swedish Krona", symbol: "kr" },
-  { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
-];
+import "../Page_styles/SoftwareCapture.css";
+import {
+  getStatuses,
+  getCategories,
+  createSoftwareAsset,
+  getUnits,
+  getLocations,
+} from "../Services/ApiServices";
+
 const initialForm = {
-  // Core
-  assetCode: "",
   assetName: "",
   assetCategory: "",
-  assetSpecification: "",
-  purchaseFrom: "",
-
   associateUnit: "",
   locationName: "",
   locationAddress: "",
-  type : "",
-  // License
+  type: "",
+
   licenseKey: "",
-  licenseType: "",
   licenseModel: "",
   licenseMetric: "",
-  licenseUse: "",
+
   DOP: "",
   DOE: "",
-  assetLifetime: "",
 
-  // Quantity & Cost
   assetQuantity: "",
   assetCost: {
-  amount: "",
-  currency: "USD",
-},
-assetStatus: "",
+    amount: "",
+    currency: "USD",
+  },
 
-
+  assetStatus: "",
 };
 
-
 export default function SoftwareAssetCapture() {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(initialForm);
-  const [tab, setTab] = useState(0); // not used visually but keep for quick nav if needed
+
   const [statuses, setStatuses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [units, setUnits] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [contractFiles, setContractFiles] = useState([]);
-  const [licenseFiles, setLicenseFiles] = useState([]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-useEffect(() => {
-  (async () => {
-    try {
+  useEffect(() => {
+    (async () => {
       const [u, l, c, s] = await Promise.all([
         getUnits(),
         getLocations(),
         getCategories(),
         getStatuses(),
       ]);
-
-      setUnits(Array.isArray(u) ? u : []);
-      setLocations(Array.isArray(l?.data) ? l.data : []);
-      setCategories(Array.isArray(c) ? c : []);
-      setStatuses(Array.isArray(s) ? s : []);
-
-      console.log("LOCATION RESPONSE:", l);
-    } catch (e) {
-      console.error(e);
-      Swal.fire("Error", "Failed to load classifications", "error");
-    }
-  })();
-}, []);
-const handleChange = (e) => {
-  const { name, value, type, checked } = e.target;
-
-  // assetCost fields
-  if (name.startsWith("assetCost.")) {
-    const field = name.split(".")[1];
-
-    setFormData((prev) => ({
-      ...prev,
-      assetCost: {
-        ...prev.assetCost,
-        [field]: field === "amount" ? Number(value) || "" : value,
-      },
-    }));
-    return;
-  }
-
-  if (type === "checkbox") {
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  } else {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-};
-
-  const resetForm = () => {
-    setFormData(initialForm);
-    setContractFiles([]);
-    setLicenseFiles([]);
-    setTab(0);
-  };
-
-const buildJsonPayload = () => ({
-  assetName: formData.assetName,
-  assetCategory: formData.assetCategory,
-  assetSpecification: formData.assetSpecification,
-  purchaseFrom: formData.purchaseFrom,
-  type: formData.type,
-  associateUnit: formData.associateUnit,
-  locationName: formData.locationName,
-  locationAddress: formData.locationAddress,
-
-  licenseKey: formData.licenseKey,
-  licenseModel: formData.licenseModel,
-  licenseMetric: formData.licenseMetric,
-  licenseUse: formData.licenseUse,
-
-  assetStatus: formData.assetStatus,
-
-  DOP: formData.DOP,
-  DOE: formData.DOE,
-  assetLifetime: formData.assetLifetime,
-
-  assetQuantity: Number(formData.assetQuantity),
-  assetCost: {
-  amount: Number(formData.assetCost.amount),
-  currency: formData.assetCost.currency,
-},
-
-});
-
-
-const calculateAssetLifetime = (start, end) => {
-  if (!start || !end) return "";
-
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-
-  if (endDate <= startDate) return "";
-
-  const diffMs = endDate - startDate;
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  const years = Math.floor(diffDays / 365);
-  const months = Math.floor((diffDays % 365) / 30);
-
-  if (years > 0 && months > 0) return `${years} year(s) ${months} month(s)`;
-  if (years > 0) return `${years} year(s)`;
-  return `${months} month(s)`;
-};
-const calculateCycles = (type, startDate, endDate) => {
-  if (!type) return 0;
-  if (type === "one_time") return 1;
-
-  if (!startDate || !endDate) return 0;
-
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  if (end <= start) return 0;
-
-  const months =
-    (end.getFullYear() - start.getFullYear()) * 12 +
-    (end.getMonth() - start.getMonth());
-
-  if (type === "monthly") return months || 1;
-  if (type === "yearly") return Math.floor(months / 12) || 1;
-
-  return 1;
-};
-
-useEffect(() => {
-  const lifetime = calculateAssetLifetime(formData.DOP, formData.DOE);
-
-  setFormData((prev) => ({
-    ...prev,
-    assetLifetime: lifetime,
-  }));
-}, [formData.DOP, formData.DOE]);
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  if (!formData.assetName || !formData.assetCategory || !formData.associateUnit || !formData.type) {
-    Swal.fire("Validation", "Please fill required fields", "warning");
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  try {
-    const payload = buildJsonPayload();
-
-    await createSoftwareAsset(payload);
-
-    Swal.fire("Success", "Software asset captured successfully!", "success");
-    resetForm();
-  } catch (err) {
-    console.error(err);
-    Swal.fire("Error", err.message || "Failed to capture asset", "error");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
-  const cycles = calculateCycles(
-  formData.type,
-  formData.DOP,
-  formData.DOE
-);
-
-const overallTotalPreview =
-  formData.assetCost.amount && cycles
-    ? (formData.assetCost.amount * cycles).toFixed(2)
-    : "";
-
-const overallUnitPreview =
-  overallTotalPreview && formData.assetQuantity
-    ? (overallTotalPreview / formData.assetQuantity).toFixed(2)
-    : "";
-
-  // Small helper UI components to match hardware layout
-  const SectionTitle = ({ children }) => <h3 className="section-title">{children}</h3>;
-  useEffect(() => {
-    const guideSeen = localStorage.getItem("softwarecaptureguideseen");
-  
-    if (!guideSeen) {
-      showGuide();
-    }
+      setUnits(u || []);
+      setLocations(l?.data || []);
+      setCategories(c || []);
+      setStatuses(s || []);
+    })();
   }, []);
-  const showGuide = async () => {
-    const steps = [
-      // {
-      //   title: "Asset Name",
-      //   image: "/guide/asset-name.png",
-      //   text: "Enter a clear and descriptive name for the hardware asset."
-      // },
-      // {
-      //   title: "Category Selection",
-      //   image: "/guide/category.png",
-      //   text: "Choose the correct category so assets are organized properly."
-      // },
-      // {
-      //   title: "Location Information",
-      //   image: "/guide/location.png",
-      //   text: "Specify where the asset is physically located."
-      // },
-      {
-        title: "Cost & Quantity",
-        image: "/guide/cost&quantity.webp",
-        text : "Put cost Values like this"
-      },
-      {
-        title: "status",
-        image: "/guide/status.webp",
-        text : "Always use Instock for status"
-      },
-      // {
-      //   title: "Warranty & Insurance",
-      //   image: "/guide/warranty.png",
-      // }
-    ];
-  
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
-  
-      const result = await Swal.fire({
-        title: step.title,
-        html: `
-          <div style="display:flex;flex-direction:column;align-items:center">
-            <img src="${step.image}" 
-                 style="max-width:320px;margin-bottom:15px;border-radius:8px" />
-            <p style="font-size:14px">${step.text}</p>  
-          </div>
-        `,
-        confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
-        showCancelButton: true,
-        cancelButtonText: "Skip",
-        confirmButtonColor: "#2563eb",
-        cancelButtonColor: "#9ca3af",
-        width: 500
-      });
-  
-      if (result.dismiss === Swal.DismissReason.cancel) {
-        break;
-      }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name.startsWith("assetCost.")) {
+      const field = name.split(".")[1];
+      setFormData((prev) => ({
+        ...prev,
+        assetCost: {
+          ...prev.assetCost,
+          [field]: field === "amount" ? Number(value) || "" : value,
+        },
+      }));
+      return;
     }
-  
-    localStorage.setItem("softwarecaptureguideseen", "true");
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
+
+  const nextStep = () => setStep((s) => s + 1);
+  const prevStep = () => setStep((s) => s - 1);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await createSoftwareAsset(formData);
+      Swal.fire("Success", "Asset created!", "success");
+    } catch (err) {
+      Swal.fire("Error", err.message, "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const progress = (step / 4) * 100;
   return (
-    <div className="asset-wrapper">
-      <div className="asset-header">
-        <h2>Software Capture</h2>
-<button onClick={showGuide} className="guide-btn">
-  📘 Page Guide
-</button>
-      </div>
+<div className="split-container">
 
-      <form className="asset-form" onSubmit={handleSubmit} encType="multipart/form-data">
-        {/* Basic Details */}
-        <div className="section">
-          <SectionTitle>Basic Details</SectionTitle>
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Software Name <span style={{ color: "#e11d48" }}>*</span></label>
-              <input name="assetName" value={formData.assetName} onChange={handleChange} placeholder="Software name" />
-            </div>
+  {/* LEFT INFO PANEL */}
+  <div className="left-panel">
+    <h2>Create Software Asset</h2>
+    <p className="description">
+      Add software licenses with proper tracking, cost visibility, and lifecycle management.
+    </p>
 
-            <div className="input-group">
-              <label>Version</label>
-              <input name="assetSpecification" value={formData.assetSpecification} onChange={handleChange} placeholder="1.0.0" />
-            </div>
-          </div>
+    <div className="info-box">
+      <h4>What we need</h4>
+      <ul>
+        <li>Basic software details</li>
+        <li>License information</li>
+        <li>Cost & quantity</li>
+        <li>Validity period</li>
+      </ul>
+    </div>
 
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Publisher</label>
-              <input name="purchaseFrom" value={formData.purchaseFrom} onChange={handleChange} placeholder="Publisher name" />
-            </div>
+    <div className="info-box">
+      <h4>Tips</h4>
+      <ul>
+        <li>Use correct license count</li>
+        <li>Match cost with billing cycle</li>
+        <li>Ensure expiry date is accurate</li>
+      </ul>
+    </div>
+  </div>
 
-            <div className="input-group">
-              <label>Category <span style={{ color: "#e11d48" }}>*</span></label>
-              <select name="assetCategory" value={formData.assetCategory} onChange={handleChange}>
-                <option value="">Select Category</option>
-                {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
-              </select>
-            </div>
-          </div>
-          <div className="grid-2">
+  {/* RIGHT FORM PANEL */}
+  <div className="right-panel">
 
-</div>
+    <div className="form-card">
 
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Unit <span style={{ color: "#e11d48" }}>*</span></label>
-              <select name="associateUnit" value={formData.associateUnit} onChange={handleChange}>
-                <option value="">Select Unit</option>
-                {units.map((u) => <option key={u._id} value={u._id}>{u.name}</option>)}
-              </select>
-            </div>
+      <h3>Software Details</h3>
 
-            <div className="input-group">
-              <label>Location</label>
-              <select name="locationName" value={formData.locationName} onChange={handleChange}>
-                <option value="">Select Location</option>
-                {locations.map((l) => <option key={l._id} value={l._id}>{l.name}</option>)}
-              </select>
-            </div>
-            <div className="input-group">
-              <label>Landmark</label>
-              <input name="locationAddress" value={formData.locationAddress} onChange={handleChange} placeholder="Landmark" />
-            </div>
-          </div>
-
-          {/* <div className="grid-2">
-            <div className="input-group">
-              <label>Asset Tag</label>
-              <input name="assetTag" value={formData.assetTag} onChange={handleChange} placeholder="e.g. LICS-0001" />
-            </div>
-
-            <div className="input-group">
-              <label>Software ID</label>
-              <input name="softwareID" value={formData.softwareID} onChange={handleChange} placeholder="internal id" />
-            </div>
-          </div> */}
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Software Name *</label>
+          <input name="assetName" onChange={handleChange} />
         </div>
 
-        {/* License Details */}
-        <div className="section">
-          <SectionTitle>License Details</SectionTitle>
-
-          <div className="grid-2">
-            <div className="input-group">
-              <label>License Key</label>
-              <input name="licenseKey" value={formData.licenseKey} onChange={handleChange} />
-            </div>
-{/* 
-            <div className="input-group">
-              <label>License Type</label>
-              <input name="licenseType" value={formData.licenseType} onChange={handleChange} placeholder="Perpetual / Subscription" />
-            </div> */}
-          </div>
-
-          <div className="grid-2">
-            <div className="input-group">
-              <label>License Model</label>
-              <input name="licenseModel" value={formData.licenseModel} onChange={handleChange} />
-            </div>
-
-            <div className="input-group">
-              <label>License Metric</label>
-              <input name="licenseMetric" value={formData.licenseMetric} onChange={handleChange} placeholder="Per User / Per Device" />
-            </div>
-          </div>
-
-          <div className="grid-2">
-            <div className="input-group">
-              <label>License Start Date</label>
-              <input type="date" name="DOP" value={formData.DOP} onChange={handleChange} />
-            </div>
-
-            <div className="input-group">
-              <label>License Expiry</label>
-              <input type="date" name="DOE" value={formData.DOE} onChange={handleChange} />
-            </div>
-          </div>
-
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Total Licenses</label>
-              <input type="number" name="assetQuantity" value={formData.assetQuantity} onChange={handleChange} />
-            </div> 
-                        <div className="input-group">
-          <label>
-            Software Type <span style={{ color: "#e11d48" }}>*</span>
-          </label>
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Type</option>
-            <option value="monthly">Monthly Subscription</option>
-            <option value="yearly">Yearly Subscription</option>
-            <option value="one_time">One-Time Purchase</option>
+        <div className="input-group">
+          <label>Category *</label>
+          <select name="assetCategory" onChange={handleChange}>
+            <option value="">Select</option>
+            {categories.map(c => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
           </select>
         </div>
-          </div>
+      </div>
 
-          <div className="grid-2">
-{/* 
-            <div className="input-group">
-              <label>License Use</label>
-              <input name="licenseUse" value={formData.licenseUse} onChange={handleChange} />
-            </div> */}
-          </div>
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Unit *</label>
+          <select name="associateUnit" onChange={handleChange}>
+            <option value="">Select</option>
+            {units.map(u => (
+              <option key={u._id} value={u._id}>{u.name}</option>
+            ))}
+          </select>
         </div>
 
-        {/* Financial & Contract */}
-        <div className="section">
-          <SectionTitle>Financial & Contract</SectionTitle>
-
-         <div className="grid-2">
-<div className="input-group">
-  <label> Currency</label>
-
-    <select
-      name="assetCost.currency"
-      value={formData.assetCost.currency}
-      onChange={handleChange}
-      required
-    >
-      {SUPPORTED_CURRENCIES.map((c) => (
-        <option key={c.code} value={c.code}>
-          {c.code} — {c.label} ({c.symbol})
-        </option>
-      ))}
-    </select>
-
-</div>
-
-  <div className="input-group">
-<label>
-  Total License Cost <span style={{ color: "#ff0000" }}>( According to Software Type)</span>
-</label>
-<input
-  type="number"
-  name="assetCost.amount"
-  value={formData.assetCost.amount}
-  onChange={handleChange}
-  min="0"
-  step="0.01"
-  placeholder="Total cost for all licenses"
-  required
-/>
-<small className="helper-text">
-  Example: 10 licenses × $20 = $200 (enter 200)
-</small>
-
-  </div>
-  <div className="input-group">
-  <label>Cost Per License <span style={{ color: "#ff0000" }}>(auto)</span></label>
-  <input
-    value={
-      formData.assetQuantity && formData.assetCost.amount
-        ? (formData.assetCost.amount / formData.assetQuantity).toFixed(2)
-        : ""
-    }
-    readOnly
-    placeholder="Auto calculated"
-    style={{ backgroundColor: "#f9fafb" }}
-  />
-</div>
-<div className="input-group">
-  <label>Billing Cycles <span style={{ color: "#ff0000" }}>(auto)</span></label>
-  <input
-    value={cycles || ""}
-    readOnly
-    placeholder="Calculated from duration"
-    style={{ backgroundColor: "#f9fafb" }}
-  />
-</div>
-
-<div className="input-group">
-  <label>Overall Lifecycle Cost <span style={{ color: "#ff0000" }}>(auto)</span></label>
-  <input
-    value={overallTotalPreview}
-    readOnly
-    placeholder="Total cost for full duration"
-    style={{ backgroundColor: "#f9fafb" }}
-  />
-</div>
-
-<div className="input-group">
-  <label>Overall Cost Per License <span style={{ color: "#ff0000" }}>(auto)</span></label>
-  <input
-    value={overallUnitPreview}
-    readOnly
-    placeholder="Lifecycle cost per license"
-    style={{ backgroundColor: "#f9fafb" }}
-  />
-</div>
-
-
-</div>
-
-            <div className="input-group">
-              <label>Status</label>
-              <select name="assetStatus" value={formData.assetStatus} onChange={handleChange}>
-                <option value="">Select Status</option>
-                {statuses.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
-              </select>
-            </div>
-            {/* <div className="input-group">
-  <label>Asset Lifetime</label>
-  <input
-    value={formData.assetLifetime}
-    readOnly
-    placeholder="Auto-calculated"
-    style={{ backgroundColor: "#f9fafb" }}
-  />
-</div> */}
-
-          {/* <div className="grid-2">
-            <div className="input-group">
-              <label>Currency</label>
-              <select name="currency" value={formData.currency} onChange={handleChange}>
-                <option>INR</option>
-                <option>USD</option>
-                <option>EUR</option>
-                <option>GBP</option>
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>Cost Center</label>
-              <input name="costCenter" value={formData.costCenter} onChange={handleChange} />
-            </div>
-          </div> */}
-{/* 
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Purchase Date</label>
-              <input type="date" name="purchaseDate" value={formData.purchaseDate} onChange={handleChange} />
-            </div>
-
-            <div className="input-group">
-              <label>Purchase Order</label>
-              <input name="purchaseOrder" value={formData.purchaseOrder} onChange={handleChange} />
-            </div>
-          </div> */}
-{/* 
-          <div className="input-group">
-            <label>Contract Term / Notes</label>
-            <input name="contractTerm" value={formData.contractTerm} onChange={handleChange} />
-          </div>
-
-          <div className="input-group">
-            <label>Support Vendor</label>
-            <input name="supportVendor" value={formData.supportVendor} onChange={handleChange} />
-          </div> */}
-
-          {/* <div className="grid-2">
-            <div className="input-group">
-              <label>Support Email</label>
-              <input name="supportEmail" value={formData.supportEmail} onChange={handleChange} />
-            </div>
-            <div className="input-group">
-              <label>Support Phone</label>
-              <input name="supportPhone" value={formData.supportPhone} onChange={handleChange} />
-            </div>
-          </div> */}
-
-          {/* <div className="input-group">
-            <label>Upload Contract Documents (multiple)</label>
-            <input type="file" multiple onChange={(e) => handleFiles(e, setContractFiles)} />
-            {contractFiles.length > 0 && (
-              <ul className="file-list">
-                {contractFiles.map((f, i) => <li key={i}>{f.name}</li>)}
-              </ul>
-            )}
-          </div>
-
-          <div className="input-group">
-            <label>Upload License Documents (multiple)</label>
-            <input type="file" multiple onChange={(e) => handleFiles(e, setLicenseFiles)} />
-            {licenseFiles.length > 0 && (
-              <ul className="file-list">
-                {licenseFiles.map((f, i) => <li key={i}>{f.name}</li>)}
-              </ul>
-            )}
-          </div> */}
+        <div className="input-group">
+          <label>Location</label>
+          <select name="locationName" onChange={handleChange}>
+            <option value="">Select</option>
+            {locations.map(l => (
+              <option key={l._id} value={l._id}>{l.name}</option>
+            ))}
+          </select>
         </div>
-        {/* Compliance & Risk */}
+      </div>
+
+      <h3>License Info</h3>
+
+      <div className="grid-2">
 
 
-          {/* <div className="left-actions">
-            <button type="button" className="btn-secondary" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-              Top
-            </button>
-            <button type="button" className="btn-secondary" onClick={() => resetForm()}>
-              Reset
-            </button>
-          </div> */}
+        <div className="input-group">
+          <label>Type *</label>
+          <select name="type" onChange={handleChange}>
+            <option value="">Select</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="one_time">One-Time</option>
+          </select>
+        </div>
+                <div className="input-group">
+          <label>Status</label>
+          <select name="assetStatus" onChange={handleChange}>
+            <option value="">Select</option>
+            {statuses.map(l => (
+              <option key={l._id} value={l._id}>{l.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
 
-            <button className="submit-btn" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save Software Asset"}
-            </button>
-      </form>
+      <h3>Financial</h3>
+
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Total Cost *</label>
+          <input type="number" name="assetCost.amount" onChange={handleChange} />
+        </div>
+
+        <div className="input-group">
+          <label>Quantity *</label>
+          <input type="number" name="assetQuantity" onChange={handleChange} />
+        </div>
+        <div className="input-group">
+          <label>Vendor</label>
+          <input
+            name="purchaseFrom"
+            value={formData.purchaseFrom}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+            <h3> Dates</h3>
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Start Date</label>
+          <input type="date" name="DOP" onChange={handleChange} />
+        </div>
+
+        <div className="input-group">
+          <label>Expiry Date</label>
+          <input type="date" name="DOE" onChange={handleChange} />
+        </div>
+      </div>
+
+      <button 
+  className="submit-btn" 
+  onClick={handleSubmit}
+  disabled={isSubmitting}
+>
+  {isSubmitting ? "Saving..." : "Save Asset"}
+</button>
+
     </div>
+  </div>
+</div>
   );
 }

@@ -1,10 +1,27 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-// Last Asset Code Schema
 const lastAssetCodeSchema = new mongoose.Schema({
-  lastCode: { type: Number, required: true },
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    index: true,
+  },
+  key: {
+    type: String,
+    default: "hardwareAsset",
+  },
+  sequence: {
+    type: Number,
+    default: 0,
+  },
+}, {
+  timestamps: true
 });
 
-const LastAssetCode = mongoose.model('LastAssetCode', lastAssetCodeSchema);
-module.exports = LastAssetCode;
+// 🔥 Critical: one counter per org
+lastAssetCodeSchema.index(
+  { organizationId: 1, key: 1 },
+  { unique: true }
+);
 
+module.exports = mongoose.model("LastAssetCode", lastAssetCodeSchema);

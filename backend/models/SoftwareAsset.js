@@ -3,7 +3,8 @@ const costSchema = require("./CostSchema");
 
 const SoftwareAssetSchema = new mongoose.Schema(
   {
-    assetCode: { type: String, required: true },
+    assetCode: { type: String, unique: true },
+
     assetName: { type: String, required: true },
 
     assetCategory: {
@@ -11,9 +12,6 @@ const SoftwareAssetSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
-
-    assetSpecification: { type: String },
-    purchaseFrom: { type: String },
 
     associateUnit: {
       type: mongoose.Schema.Types.ObjectId,
@@ -27,10 +25,22 @@ const SoftwareAssetSchema = new mongoose.Schema(
       required: true,
     },
 
-    locationAddress: {
-      type: String,
+    assetStatus: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Status",
       required: true,
-      trim: true,
+    },
+
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      index: true,
+    },
+
+    type: {
+      type: String,
+      enum: ["monthly", "yearly", "one_time"],
+      required: true,
     },
 
     licenseType: String,
@@ -38,26 +48,20 @@ const SoftwareAssetSchema = new mongoose.Schema(
     licenseMetric: String,
     licenseUse: String,
 
-    // ✅ Changed to Date
-    DOP: { type: Date, required: true },
-    DOE: {
-      type: Date,
-      required: function () {
-        return this.type !== "one_time";
+    purchaseDetails: {
+      purchaseDate: { type: Date, required: true },
+      vendor: {
+        name: String,
+        contact: String,
+        supportEmail: String,
       },
     },
 
-    assetLifetime: { type: String },
-
-    assetStatus: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Status",
+    assetCost: {
+      type: costSchema,
       required: true,
     },
-    expiryAlertSent: {
-      type: Boolean,
-      default: false
-    },
+
     assetQuantity: {
       type: Number,
       required: true,
@@ -67,83 +71,39 @@ const SoftwareAssetSchema = new mongoose.Schema(
     inUse: {
       type: Number,
       default: 0,
-      min: 0,
     },
 
-    organizationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
-      index: true,
+    financialTracking: {
+      monthlyCost: { type: Number, default: 0 },
+      yearlyCost: { type: Number, default: 0 },
+      totalCost: { type: Number, default: 0 },
     },
 
-    // Cost per billing cycle (for all licenses)
-    assetCost: {
-      type: costSchema,
-      required: true,
+    // Parent-level renewal config only
+    renewal: {
+      expiryDate: Date,
+      renewalTerm: {
+        type: String,
+        enum: ["6_month", "1_year", "2_year"],
+      },
     },
 
-    // ✅ NEW: Cost for full contract duration
-    overallCost: {
-      type: costSchema,
-      required: true,
-    },
-
-    type: {
-      type: String,
-      enum: ["monthly", "yearly", "one_time"],
-      required: true,
-    },
-
-    auditHistory: {
-      type: [
-        {
-          date: { type: Date, default: Date.now },
-          userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-          },
-          action: {
-            type: String,
-            enum: ["CREATE", "UPDATE", "DELETE", "ASSIGN", "UNASSIGN"],
-            default: "UPDATE",
-          },
-          notes: String,
-        },
-      ],
-      default: [],
-    },
+    auditHistory: [
+      {
+        date: { type: Date, default: Date.now },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        action: String,
+        notes: String,
+      },
+    ],
   },
-  {
-    timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
-  }
+  { timestamps: true }
 );
-// ===== PERFORMANCE INDEXES =====
 
-// Expiry queries
-SoftwareAssetSchema.index({ organizationId: 1, DOE: 1 });
-
-// Cost metrics grouping
-SoftwareAssetSchema.index({ organizationId: 1, type: 1 });
-
-// Distribution grouping
-SoftwareAssetSchema.index({ organizationId: 1, assetName: 1 });
-
-// Category filtering
+// indexes
 SoftwareAssetSchema.index({ organizationId: 1, assetCategory: 1 });
-
-// Status filtering
 SoftwareAssetSchema.index({ organizationId: 1, assetStatus: 1 });
-
-// Location filtering
 SoftwareAssetSchema.index({ organizationId: 1, locationName: 1 });
-
-// Unique asset code per organization
-SoftwareAssetSchema.index(
-  { organizationId: 1, assetCode: 1 },
-  { unique: true }
-);
 
 SoftwareAssetSchema.virtual("inStock").get(function () {
   return this.assetQuantity - this.inUse;

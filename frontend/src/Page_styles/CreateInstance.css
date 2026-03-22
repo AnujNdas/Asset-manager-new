@@ -1,0 +1,149 @@
+
+.instance-form-page {
+  padding: 20px;
+}
+
+/* ASSET INFO */
+.asset-info {
+  margin-bottom: 20px;
+}
+
+.asset-info span {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+/* TABLE */
+.instance-table {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* HEADER */
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1.5fr 0.5fr;
+  background: #f5f5f5;
+  padding: 10px;
+  font-weight: 600;
+}
+
+/* ROW */
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1.5fr 0.5fr;
+  padding: 10px;
+  border-top: 1px solid #eee;
+  align-items: center;
+}
+
+.table-row input,
+.table-row select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.table-row button {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ACTIONS */
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-actions button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-actions button:first-child {
+  background: #555;
+  color: white;
+}
+
+.form-actions button:last-child {
+  background: #1976d2;
+  color: white;
+}
+.input-error {
+  border: 1px solid #ff4d4f;
+  background-color: #fff1f0;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #ff4d4f;
+  margin-top: 2px;
+}
+.disabled-btn {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.bulk-controls {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #1e1e1e;
+  border-radius: 8px;
+}
+
+.bulk-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bulk-row select,
+.bulk-row input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+
+.bulk-row button {
+  padding: 8px 14px;
+  background: #4cafef;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.progress-container {
+  margin: 15px 0;
+}
+
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4cafef;
+  transition: width 0.3s ease;
+}
+
+.pending-text {
+  font-size: 13px;
+  margin-top: 5px;
+  color: #aaa;
+}

@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
 const costSchema = require("./CostSchema");
+
 const assetSchema = new mongoose.Schema(
   {
     assetCode: { type: String, required: true },
+
+    assetName: { type: String, required: true },
 
     assetCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
-
-    barcodeNumber: { type: String },
-
-    assetName: { type: String, required: true },
 
     associateUnit: {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,24 +24,6 @@ const assetSchema = new mongoose.Schema(
       ref: "Location",
       required: true,
     },
-    type: {
-      type: String,
-      enum: ["one_time", "maintenance"],
-      required: true,
-    },
-    locationAddress: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-      organizationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
-      required: true,
-      index: true,
-    },
-
-    assetSpecification: { type: String, required: true },
 
     assetStatus: {
       type: mongoose.Schema.Types.ObjectId,
@@ -50,86 +31,62 @@ const assetSchema = new mongoose.Schema(
       required: true,
     },
 
-    DOP: { type: Date, required: true },
-    DOE: { type: Date, required: true },
-    assetLifetime: { type: String, required: true },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+      index: true,
+    },
 
-    purchaseFrom: { type: String, required: true },
-    modelNo: { type: String},
+    type: {
+      type: String,
+      enum: ["one_time", "maintenance"],
+      required: true,
+    },
 
-    PMD: { type: String },
-    maintenanceTerm: {
-  type: String,
-  trim: true
-},
+    purchaseDetails: {
+      purchaseDate: { type: Date, required: true },
+      vendor: {
+        name: String,
+        contact: String,
+        supportEmail: String,
+      },
+    },
 
-insurance: {
-  insuranceId: { type: String, trim: true },
-  insuranceName: { type: String, trim: true },
-  purchaseDate: { type: Date },
-  expiryDate: { type: Date }
-}
-,
-warranty: {
-  warrantyId: { type: String, trim: true },
-  expiryDate: { type: Date }
-},
+    DOE: { type: Date },
 
     assetCost: {
       type: costSchema,
       required: true,
-      min: 0,
     },
 
     assetQuantity: {
       type: Number,
       required: true,
-      min: 0,
+      min: 1,
     },
-    expiryAlertSent: {
-      type: Boolean,
-      default: false
-    },
+
     inUse: {
       type: Number,
       default: 0,
-      min: 0,
+    },
+
+    financialTracking: {
+      monthlyCost: { type: Number, default: 0 },
+      yearlyCost: { type: Number, default: 0 },
+      maintenanceTotalCost: { type: Number, default: 0 },
     },
   },
-  {
-    timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
-  }
+  { timestamps: true }
 );
-assetSchema.index({ organizationId: 1, DOE: 1 });
-assetSchema.index({ organizationId: 1, type: 1 });
+
+// indexes
 assetSchema.index({ organizationId: 1, assetCategory: 1 });
 assetSchema.index({ organizationId: 1, locationName: 1 });
 assetSchema.index({ organizationId: 1, assetStatus: 1 });
-assetSchema.index(
-  { organizationId: 1, modelNo: 1 },
-  { unique: true, sparse: true }
-);
 
 assetSchema.virtual("inStock").get(function () {
   return this.assetQuantity - this.inUse;
-});
-assetSchema.virtual("warrantyLifetime").get(function () {
-  if (!this.DOP || !this.warranty?.expiryDate) return null;
-
-  const dop = new Date(this.DOP);
-  const expiry = new Date(this.warranty.expiryDate);
-
-  let years = expiry.getFullYear() - dop.getFullYear();
-  let months = expiry.getMonth() - dop.getMonth();
-
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-
-  return `${years} Years ${months} Months`;
 });
 
 module.exports = mongoose.model("Asset", assetSchema);

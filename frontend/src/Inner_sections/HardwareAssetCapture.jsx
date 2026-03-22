@@ -1,560 +1,493 @@
-// src/Pages/AssetCapture.jsx
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  getUnits,
-  getLocations,
-  getCategories,
-  getStatuses,
-  createHardwareAsset
-} from "../Services/ApiServices";
-import Swal from "sweetalert2";
-import "../Page_styles/HardwareCapture.css";
-import { FiSave } from "react-icons/fi";
+  // src/Pages/AssetCapture.jsx
+  import React, { useState, useEffect } from "react";
+  import { useNavigate } from "react-router-dom";
+  import {
+    getUnits,
+    getLocations,
+    getCategories,
+    getStatuses,
+    createHardwareAsset
+  } from "../Services/ApiServices";
+  import Swal from "sweetalert2";
+  import "../Page_styles/SoftwareCapture.css";
 
-export const SUPPORTED_CURRENCIES = [
-  { code: "USD", label: "US Dollar", symbol: "$" },
-  { code: "INR", label: "Indian Rupee", symbol: "₹" },
-  { code: "EUR", label: "Euro", symbol: "€" },
-  { code: "GBP", label: "British Pound", symbol: "£" },
-  { code: "JPY", label: "Japanese Yen", symbol: "¥" },
-  { code: "AUD", label: "Australian Dollar", symbol: "A$" },
-  { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
-  { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
-  { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
-  { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
-  { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
-  { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
-  { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
-  { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
-  { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
-  { code: "SEK", label: "Swedish Krona", symbol: "kr" },
-  { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
-];
-const AssetCapture = () => {
-  // src/constants/currencies.js
-
-
-  const navigate = useNavigate();
-
- const defaultFormData = {
-  assetCategory: "",
-  barcodeNumber: "",
-  assetName: "",
-  associateUnit: "",
-  locationName: "",
-  locationAddress: "",
-  assetSpecification: "",
-  assetStatus: "",
-  DOP: "",
-  DOE: "",
-  assetLifetime: "",
-  purchaseFrom: "",
-  modelNo: "",
-  PMD: "",
-  type: "",
-  maintenanceTerm: "",
-
-  assetCost: {
-    amount: "",
-    currency: "USD",
-  },
-
-  assetQuantity: "",
-
-  // ✅ NEW
-  insurance: {
-    insuranceId: "",
-    insuranceName: "",
-    purchaseDate: "",
-    expiryDate: "",
-  },
-  // ✅ WARRANTY
-warranty: {
-  warrantyId: "",
-  expiryDate: "",
-  lifetime: "",
-},
-
-};
-
-  const [showWarranty, setShowWarranty] = useState(false);
-
-  const [formData, setFormData] = useState(defaultFormData);
-  const [units, setUnits] = useState([]);
-  const [locations, setLocations] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [statuses, setStatuses] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showInsurance, setShowInsurance] = useState(false);
-
-
-useEffect(() => {
-  (async () => {
-    try {
-      const [u, l, c, s] = await Promise.all([
-        getUnits(),
-        getLocations(),
-        getCategories(),
-        getStatuses(),
-      ]);
-
-      setUnits(Array.isArray(u) ? u : []);
-      setLocations(Array.isArray(l?.data) ? l.data : []);
-      setCategories(Array.isArray(c) ? c : []);
-      setStatuses(Array.isArray(s) ? s : []);
-
-      console.log("LOCATION RESPONSE:", l);
-    } catch (e) {
-      console.error(e);
-      Swal.fire("Error", "Failed to load classifications", "error");
-    }
-  })();
-}, []);
-
-useEffect(() => {
-  const guideSeen = localStorage.getItem("assetCaptureGuideSeen");
-
-  if (!guideSeen) {
-    showGuide();
-  }
-}, []);
-const showGuide = async () => {
-  const steps = [
-    // {
-    //   title: "Asset Name",
-    //   image: "/guide/asset-name.png",
-    //   text: "Enter a clear and descriptive name for the hardware asset."
-    // },
-    // {
-    //   title: "Category Selection",
-    //   image: "/guide/category.png",
-    //   text: "Choose the correct category so assets are organized properly."
-    // },
-    // {
-    //   title: "Location Information",
-    //   image: "/guide/location.png",
-    //   text: "Specify where the asset is physically located."
-    // },
-    {
-      title: "Cost & Quantity",
-      image: "/guide/cost&quantity.webp",
-      text : "Put cost Values like this"
-    },
-    {
-      title: "status",
-      image: "/guide/status.webp",
-      text : "Always use Instock for status"
-    },
-    // {
-    //   title: "Warranty & Insurance",
-    //   image: "/guide/warranty.png",
-    // }
+  export const SUPPORTED_CURRENCIES = [
+    { code: "USD", label: "US Dollar", symbol: "$" },
+    { code: "INR", label: "Indian Rupee", symbol: "₹" },
+    { code: "EUR", label: "Euro", symbol: "€" },
+    { code: "GBP", label: "British Pound", symbol: "£" },
+    { code: "JPY", label: "Japanese Yen", symbol: "¥" },
+    { code: "AUD", label: "Australian Dollar", symbol: "A$" },
+    { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
+    { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
+    { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
+    { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
+    { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
+    { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
+    { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
+    { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
+    { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
+    { code: "SEK", label: "Swedish Krona", symbol: "kr" },
+    { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
   ];
+  const AssetCapture = () => {
+    // src/constants/currencies.js
 
-  for (let i = 0; i < steps.length; i++) {
-    const step = steps[i];
 
-    const result = await Swal.fire({
-      title: step.title,
-      html: `
-        <div style="display:flex;flex-direction:column;align-items:center">
-          <img src="${step.image}" 
-               style="max-width:320px;margin-bottom:15px;border-radius:8px" />
-          <p style="font-size:14px">${step.text}</p>  
-        </div>
-      `,
-      confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
-      showCancelButton: true,
-      cancelButtonText: "Skip",
-      confirmButtonColor: "#2563eb",
-      cancelButtonColor: "#9ca3af",
-      width: 500
-    });
+    const navigate = useNavigate();
 
-    if (result.dismiss === Swal.DismissReason.cancel) {
-      break;
-    }
-  }
+  const defaultFormData = {
+    assetCategory: "",
+    barcodeNumber: "",
+    assetName: "",
+    associateUnit: "",
+    locationName: "",
+    locationAddress: "",
+    assetSpecification: "",
+    assetStatus: "",
+    DOP: "",
+    DOE: "",
+    assetLifetime: "",
+    purchaseFrom: "",
+    modelNo: "",
+    PMD: "",
+    type: "",
+    maintenanceTerm: "",
 
-  localStorage.setItem("assetCaptureGuideSeen", "true");
-};
+    assetCost: {
+      amount: "",
+      currency: "USD",
+    },
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
+    assetQuantity: "",
 
-  setFormData((prev) => {
-    let updated = { ...prev };
+    // ✅ NEW
+    insurance: {
+      insuranceId: "",
+      insuranceName: "",
+      purchaseDate: "",
+      expiryDate: "",
+    },
+    // ✅ WARRANTY
+  warranty: {
+    warrantyId: "",
+    expiryDate: "",
+    lifetime: "",
+  },
 
-    // ✅ assetCost nested
-    if (name.startsWith("assetCost.")) {
-      const field = name.split(".")[1];
-      updated.assetCost = {
-        ...prev.assetCost,
-        [field]: field === "amount" ? Number(value) || "" : value,
-      };
-    }
-
-    // ✅ insurance nested
-// ✅ insurance nested
-else if (name.startsWith("insurance.")) {
-  const field = name.split(".")[1];
-  updated.insurance = {
-    ...prev.insurance,
-    [field]: value,
   };
-}
 
-// ✅ warranty nested  ✅ FIX
-else if (name.startsWith("warranty.")) {
-  const field = name.split(".")[1];
-  updated.warranty = {
-    ...prev.warranty,
-    [field]: value,
-  };
-}
+    const [showWarranty, setShowWarranty] = useState(false);
 
-// normal fields
-else {
-  updated[name] = value;
-}
+    const [formData, setFormData] = useState(defaultFormData);
+    const [units, setUnits] = useState([]);
+    const [locations, setLocations] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [statuses, setStatuses] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showInsurance, setShowInsurance] = useState(false);
 
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const [u, l, c, s] = await Promise.all([
+          getUnits(),
+          getLocations(),
+          getCategories(),
+          getStatuses(),
+        ]);
 
-    // ✅ Auto-calc lifetime
-    if (name === "DOP" || name === "DOE") {
-      const { DOP, DOE } = updated;
-      if (DOP && DOE) {
-        const start = new Date(DOP);
-        const end = new Date(DOE);
-        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-        updated.assetLifetime =
-          Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
-      } else {
-        updated.assetLifetime = "";
+        setUnits(Array.isArray(u) ? u : []);
+        setLocations(Array.isArray(l?.data) ? l.data : []);
+        setCategories(Array.isArray(c) ? c : []);
+        setStatuses(Array.isArray(s) ? s : []);
+
+        console.log("LOCATION RESPONSE:", l);
+      } catch (e) {
+        console.error(e);
+        Swal.fire("Error", "Failed to load classifications", "error");
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    const guideSeen = localStorage.getItem("assetCaptureGuideSeen");
+
+    if (!guideSeen) {
+      showGuide();
+    }
+  }, []);
+  const showGuide = async () => {
+    const steps = [
+      // {
+      //   title: "Asset Name",
+      //   image: "/guide/asset-name.png",
+      //   text: "Enter a clear and descriptive name for the hardware asset."
+      // },
+      // {
+      //   title: "Category Selection",
+      //   image: "/guide/category.png",
+      //   text: "Choose the correct category so assets are organized properly."
+      // },
+      // {
+      //   title: "Location Information",
+      //   image: "/guide/location.png",
+      //   text: "Specify where the asset is physically located."
+      // },
+      {
+        title: "Cost & Quantity",
+        image: "/guide/cost&quantity.webp",
+        text : "Put cost Values like this"
+      },
+      {
+        title: "status",
+        image: "/guide/status.webp",
+        text : "Always use Instock for status"
+      },
+      // {
+      //   title: "Warranty & Insurance",
+      //   image: "/guide/warranty.png",
+      // }
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+
+      const result = await Swal.fire({
+        title: step.title,
+        html: `
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <img src="${step.image}" 
+                style="max-width:320px;margin-bottom:15px;border-radius:8px" />
+            <p style="font-size:14px">${step.text}</p>  
+          </div>
+        `,
+        confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
+        showCancelButton: true,
+        cancelButtonText: "Skip",
+        confirmButtonColor: "#2563eb",
+        cancelButtonColor: "#9ca3af",
+        width: 500
+      });
+
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        break;
       }
     }
-    // ✅ Auto-calc warranty lifetime
-if (name === "DOP" || name === "warranty.expiryDate") {
-  const { DOP } = updated;
-  const warrantyExpiry = updated.warranty?.expiryDate;
 
-  if (DOP && warrantyExpiry) {
-    const start = new Date(DOP);
-    const end = new Date(warrantyExpiry);
-    const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+    localStorage.setItem("assetCaptureGuideSeen", "true");
+  };
 
-    updated.warranty.lifetime =
-      Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
-  } else if (updated.warranty) {
-    updated.warranty.lifetime = "";
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => {
+      let updated = { ...prev };
+
+      // ✅ assetCost nested
+      if (name.startsWith("assetCost.")) {
+        const field = name.split(".")[1];
+        updated.assetCost = {
+          ...prev.assetCost,
+          [field]: field === "amount" ? Number(value) || "" : value,
+        };
+      }
+
+      // ✅ insurance nested
+  // ✅ insurance nested
+  else if (name.startsWith("insurance.")) {
+    const field = name.split(".")[1];
+    updated.insurance = {
+      ...prev.insurance,
+      [field]: value,
+    };
   }
-}
 
-    return updated;
-  });
-};
+  // ✅ warranty nested  ✅ FIX
+  else if (name.startsWith("warranty.")) {
+    const field = name.split(".")[1];
+    updated.warranty = {
+      ...prev.warranty,
+      [field]: value,
+    };
+  }
+
+  // normal fields
+  else {
+    updated[name] = value;
+  }
+
+
+
+      // ✅ Auto-calc lifetime
+      if (name === "DOP" || name === "DOE") {
+        const { DOP, DOE } = updated;
+        if (DOP && DOE) {
+          const start = new Date(DOP);
+          const end = new Date(DOE);
+          const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+          updated.assetLifetime =
+            Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
+        } else {
+          updated.assetLifetime = "";
+        }
+      }
+      // ✅ Auto-calc warranty lifetime
+  if (name === "DOP" || name === "warranty.expiryDate") {
+    const { DOP } = updated;
+    const warrantyExpiry = updated.warranty?.expiryDate;
+
+    if (DOP && warrantyExpiry) {
+      const start = new Date(DOP);
+      const end = new Date(warrantyExpiry);
+      const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+
+      updated.warranty.lifetime =
+        Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
+    } else if (updated.warranty) {
+      updated.warranty.lifetime = "";
+    }
+  }
+
+      return updated;
+    });
+  };
 
 
   const validateRequired = () => {
-    const required = [
-      "assetName",
-      "assetCategory",
-      "associateUnit",
-      "locationName",
-      "type", // ✅ ADD
-      "locationAddress", // ✅ NEW
-      "assetStatus",
-      "assetCost",
-      "assetQuantity",
-    ];
+    const missing = [];
 
-    const missing = required.filter((k) => !formData[k]);
+    if (!formData.assetName) missing.push("Asset Name");
+    if (!formData.assetCategory) missing.push("Category");
+    if (!formData.associateUnit) missing.push("Unit");
+    if (!formData.locationName) missing.push("Location");
+    if (!formData.assetStatus) missing.push("Status");
+    if (!formData.type) missing.push("Type");
+    if (!formData.assetCost.amount) missing.push("Cost");
+    if (!formData.assetQuantity) missing.push("Quantity");
+
     if (missing.length) {
-      Swal.fire("Missing fields", "Please fill in all required fields.", "error");
+      Swal.fire("Missing fields", missing.join(", "), "error");
       return false;
     }
+
     return true;
   };
 
-const handleAddAsset = async (e) => {
-  e.preventDefault();
-  if (!validateRequired()) return;
+  const handleAddAsset = async (e) => {
+    e.preventDefault();
+    if (!validateRequired()) return;
 
-  setIsSubmitting(true);
+    setIsSubmitting(true);
 
-  try {
-    await createHardwareAsset(formData);
+    try {
+const payload = {
+  ...formData,
 
-    await Swal.fire("Success", "Asset added successfully!", "success");
-    navigate("/inventory");
-  } catch (err) {
-    Swal.fire(
-      "Error",
-      err.userMessage || err.response?.data?.message || "Failed to add asset.",
-      "error"
-    );
-  } finally {
-    setIsSubmitting(false);
-  }
+  purchaseDetails: {
+    purchaseDate: formData.DOP,
+    vendor: {
+      name: formData.purchaseFrom || null,
+    },
+  },
+
+  // REMOVE junk fields
+  DOP: undefined,
+  purchaseFrom: undefined,
 };
+
+      await createHardwareAsset(payload);
+
+      await Swal.fire("Success", "Asset added successfully!", "success");
+      navigate("/inventory");
+    } catch (err) {
+      Swal.fire(
+        "Error",
+        err.userMessage || err.response?.data?.message || "Failed to add asset.",
+        "error"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   return (
-    <div className="asset-wrapper">
-      <div className="asset-header">
-        <h2>Hardware Capture</h2>
-<button onClick={showGuide} className="guide-btn">
-  📘 Page Guide
-</button>
+    <div className="split-container">
+
+      {/* LEFT INFO PANEL */}
+      <div className="left-panel">
+        <h2>Create Hardware Asset</h2>
+        <p className="description">
+          Add physical assets with proper tracking, cost visibility, and lifecycle management.
+        </p>
+
+        <div className="info-box">
+          <h4>What we need</h4>
+          <ul>
+            <li>Basic asset details</li>
+            <li>Location & unit mapping</li>
+            <li>Cost & quantity</li>
+            <li>Lifecycle tracking</li>
+          </ul>
+        </div>
+
+        <div className="info-box">
+          <h4>Tips</h4>
+          <ul>
+            <li>Use correct quantity</li>
+            <li>Always set status as <b>In Stock</b></li>
+            <li>Enter accurate cost for reports</li>
+          </ul>
+        </div>
       </div>
 
-      <form className="asset-form" onSubmit={handleAddAsset}>
-        {/* Basic */}
-        <div className="section">
-          <h3 className="section-title">Basic Details</h3>
+      {/* RIGHT FORM PANEL */}
+      <div className="right-panel">
+        <div className="form-card">
+
+          <h3>Hardware Details</h3>
 
           <div className="grid-2">
-
-            {/* Asset Name */}
             <div className="input-group">
-              <label>
-                Asset Name <span>*</span>
-              </label>
+              <label>Asset Name *</label>
               <input
-                type="text"
                 name="assetName"
                 value={formData.assetName}
                 onChange={handleChange}
-                required
               />
             </div>
 
-            {/* Category */}
             <div className="input-group">
-              <label>
-                Category <span>*</span>
-              </label>
+              <label>Category *</label>
               <select
                 name="assetCategory"
                 value={formData.assetCategory}
                 onChange={handleChange}
-                required
               >
-                <option value="">Select Category</option>
-                {categories.map((c) => (
-                  <option key={c._id} value={c._id}>
-                    {c.name}
-                  </option>
+                <option value="">Select</option>
+                {categories.map(c => (
+                  <option key={c._id} value={c._id}>{c.name}</option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Barcode Number */}
-          {/* <div className="input-group">
-            <label>Barcode Number</label>
-            <input
-              type="text"
-              name="barcodeNumber"
-              value={formData.barcodeNumber}
-              onChange={handleChange}
-              placeholder="Enter barcode"
-            />
-          </div> */}
-
-          {/* Specification */}
-          <div className="input-group">
-            <label>Specification</label>
-            <input
-              type="text"
-              name="assetSpecification"
-              value={formData.assetSpecification}
-              onChange={handleChange}
-            />
-          </div>
 
 
-        </div>
 
-        {/* Location */}
-        <div className="section">
-          <h3 className="section-title">Location & Management</h3>
+          <h3>Location & Status</h3>
 
           <div className="grid-2">
-            {/* Location */}
             <div className="input-group">
-              <label>
-                Location <span>*</span>
-              </label>
+              <label>Unit *</label>
+              <select
+                name="associateUnit"
+                value={formData.associateUnit}
+                onChange={handleChange}
+              >
+                <option value="">Select</option>
+                {units.map(u => (
+                  <option key={u._id} value={u._id}>{u.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="input-group">
+              <label>Location *</label>
               <select
                 name="locationName"
                 value={formData.locationName}
                 onChange={handleChange}
-                required
               >
-                <option value="">Select Location</option>
-                {locations.map((l) => (
-                  <option key={l._id} value={l._id}>
-                    {l.name}
-                  </option>
+                <option value="">Select</option>
+                {locations.map(l => (
+                  <option key={l._id} value={l._id}>{l.name}</option>
                 ))}
               </select>
             </div>
-            {/* Location Address */}
-<div className="input-group">
-  <label>
-    Location Address <span>*</span>
-  </label>
-  <input
-    type="text"
-    name="locationAddress"
-    value={formData.locationAddress}
-    onChange={handleChange}
-    placeholder="Building, floor, room, address"
-    required
-  />
-</div>
-
-
-          {/* Status */}
-          <div className="input-group">
-            <label>
-              Status <span>*</span>
-            </label>
-            <select
-              name="assetStatus"
-              value={formData.assetStatus}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Status</option>
-              {statuses.map((s) => (
-                <option key={s._id} value={s._id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
           </div>
-                    {/* Hardware Type */}
-<div className="input-group">
-  <label>
-    Hardware Type <span style={{ color : "#ff0000"}}>*</span>
-  </label>
-  <select
-    name="type"
-    value={formData.type}
-    onChange={handleChange}
-    required
-  >
-    <option value="">Select Type</option>
-    <option value="one_time">One-Time Purchase</option>
-    <option value="maintenance">Maintenance / AMC</option>
-  </select>
-</div>
-
-          {/* PMD */}
-          {/* <div className="input-group">
-            <label>PMD</label>
-            <input
-              type="text"
-              name="PMD"
-              value={formData.PMD}
-              onChange={handleChange}
-              placeholder="Enter PMD"
-            />
-          </div> */}
-        </div>
-
-
-          </div>
-        {/* Cost & Quantity */}
-        <div className="section">
-          <h3 className="section-title">Cost & Quantity</h3>
 
           <div className="grid-2">
-            {/* Cost */}
 
-<div className="input-group">
-  <label> Currency</label>
-
-    <select
-      name="assetCost.currency"
-      value={formData.assetCost.currency}
-      onChange={handleChange}
-      required
-    >
-      {SUPPORTED_CURRENCIES.map((c) => (
-        <option key={c.code} value={c.code}>
-          {c.code} — {c.label} ({c.symbol})
-        </option>
-      ))}
-    </select>
-
-</div>
-<div className="input-group">
-<label>
-  Total Asset Cost <span style={{ color : "#ff0000"}}>( Cost of all units )</span>
-</label>
-<input
-  type="number"
-  name="assetCost.amount"
-  value={formData.assetCost.amount}
-  onChange={handleChange}
-  min="0"
-  step="0.01"
-  placeholder="Total cost for all units"
-  required
-/>
-<small className="helper-text" style={{color : "red"}}>
-  Example: 5 units × $1,000 = $5,000 (enter 5000)
-</small>
-
-
-</div>
-
-            {/* Quantity */}
             <div className="input-group">
-              <label>
-                Quantity <span>*</span>
-              </label>
+              <label>Status *</label>
+              <select
+                name="assetStatus"
+                value={formData.assetStatus}
+                onChange={handleChange}
+              >
+                <option value="">Select</option>
+                {statuses.map(s => (
+                  <option key={s._id} value={s._id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+          <div className="input-group">
+            <label>Type *</label>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+            >
+              <option value="">Select</option>
+              <option value="one_time">One-Time</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+          </div>
+          </div>
+
+
+          <h3>Financial</h3>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Currency</label>
+              <select
+                name="assetCost.currency"
+                value={formData.assetCost.currency}
+                onChange={handleChange}
+              >
+                {SUPPORTED_CURRENCIES.map(c => (
+                  <option key={c.code} value={c.code}>{c.code}</option>
+                ))}
+              </select>
+            </div>
+                        <div className="input-group">
+            <label>Vendor</label>
+            <input
+              name="purchaseFrom"
+              value={formData.purchaseFrom}
+              onChange={handleChange}
+            />
+          </div>
+            <div className="input-group">
+              <label>Total Cost *</label>
+              <input
+                type="number"
+                name="assetCost.amount"
+                value={formData.assetCost.amount}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Quantity *</label>
               <input
                 type="number"
                 name="assetQuantity"
                 value={formData.assetQuantity}
                 onChange={handleChange}
-                required
               />
             </div>
-                        {/* Associate Unit */}
-            <div className="input-group">
-              <label>
-                Associate Unit <span>*</span>
-              </label>
-              <select
-                name="associateUnit"
-                value={formData.associateUnit}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Unit</option>
-                {units.map((u) => (
-                  <option key={u._id} value={u._id}>
-                    {u.name}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
-        </div>
 
-        {/* Dates */}
-        <div className="section">
-          <h3 className="section-title">Dates</h3>
+          <h3>Lifecycle</h3>
 
-          <div className="grid-3">
+          <div className="grid-2">
             <div className="input-group">
-              <label>Date of Purchase</label> 
+              <label>Purchase Date</label>
               <input
                 type="date"
                 name="DOP"
@@ -562,21 +495,9 @@ const handleAddAsset = async (e) => {
                 onChange={handleChange}
               />
             </div>
-                {formData.type === "maintenance" && (
-  <div className="input-group">
-    <label>Maintenance Term</label>
-    <input
-      type="text"
-      name="maintenanceTerm"
-      value={formData.maintenanceTerm}
-      onChange={handleChange}
-      placeholder="e.g. 12 months / 1 year"
-    />
-  </div>
-)}
 
             <div className="input-group">
-              <label>Next Maintenance Date</label>
+              <label>Next Maintenance</label>
               <input
                 type="date"
                 name="DOE"
@@ -584,196 +505,16 @@ const handleAddAsset = async (e) => {
                 onChange={handleChange}
               />
             </div>
+          </div>
 
-            <div className="input-group">
-              <label>Days Before Maintenance <span style={{ color: "#ff0000" }}>(auto)</span></label>
-              <input
-                type="text"
-                name="assetLifetime"
-                value={formData.assetLifetime}
-                placeholder="Auto Calculated"
-                disabled
-              />
-            </div>
+          <button className="submit-btn" disabled={isSubmitting} onClick={handleAddAsset}>
+            {isSubmitting ? "Saving..." : "Save Asset"}
+          </button>
 
-          </div>
-           
-                     <div className="grid-2">
-          <div className="input-group">
-            <label>Purchased From</label>
-            <input
-              type="text"
-              name="purchaseFrom"
-              value={formData.purchaseFrom}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="input-group">
-                        <label>Model No.</label>
-            <input
-              type="text"
-              name="modelNo"
-              value={formData.modelNo}
-              onChange={handleChange}
-            />
-          </div>
         </div>
-</div>
- <div >
-  <label className="checkbox-label">
-    <input
-      type="checkbox"
-      className="checkbox-input"
-      checked={showWarranty}
-      onChange={(e) => {
-        const checked = e.target.checked;
-        setShowWarranty(checked);
-
-        if (!checked) {
-          setFormData(prev => ({
-            ...prev,
-            warranty: {
-              warrantyId: "",
-              expiryDate: "",
-              lifetime: "",
-            },
-          }));
-        }
-      }}
-    />
-    Add Warranty Details
-  </label>
-  {showWarranty && (
-  <div className="section">
-    <h3 className="section-title">Warranty Details</h3>
-
-    <div className="grid-2">
-      <div className="input-group">
-        <label>Warranty ID</label>
-        <input
-          type="text"
-          name="warranty.warrantyId"
-          value={formData.warranty.warrantyId}
-          onChange={handleChange}
-          placeholder="Warranty / AMC reference"
-        />
       </div>
-
-      <div className="input-group">
-        <label>Warranty Expiry Date</label>
-        <input
-          type="date"
-          name="warranty.expiryDate"
-          value={formData.warranty.expiryDate}
-          onChange={handleChange}
-        />
-      </div>
-    </div>
-
-    <div className="grid-2">
-      <div className="input-group">
-        <label>Warranty Lifetime <span style={{ color: "#ff0000" }}>(auto)</span></label>
-        <input
-          type="text"
-          value={formData.warranty.lifetime}
-          placeholder="Auto Calculated"
-          disabled
-        />
-      </div>
-    </div>
-  </div>
-)}
-
-</div>
-<div>
-  <label className="checkbox-label">
-    <input
-      type="checkbox"
-      className="checkbox-input"
-      checked={showInsurance}
-      onChange={(e) => {
-  const checked = e.target.checked;
-  setShowInsurance(checked);
-
-  if (!checked) {
-    setFormData(prev => ({
-      ...prev,
-      insurance: {
-        insuranceId: "",
-        insuranceName: "",
-        purchaseDate: "",
-        expiryDate: "",
-      }
-    }));
-  }
-}}
-
-    />
-    Add Insurance Details
-  </label>
-
-
-{/* Insurance */}
-{showInsurance && (
-  <div className="section">
-    <h3 className="section-title">Insurance Details</h3>
-
-    <div className="grid-2">
-      <div className="input-group">
-        <label>Insurance Name</label>
-        <input
-          type="text"
-          name="insurance.insuranceName"
-          value={formData.insurance.insuranceName}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="input-group">
-        <label>Insurance ID</label>
-        <input
-          type="text"
-          name="insurance.insuranceId"
-          value={formData.insurance.insuranceId}
-          onChange={handleChange}
-        />
-      </div>
-    </div>
-
-    <div className="grid-2">
-      <div className="input-group">
-        <label>Purchase Date</label>
-        <input
-          type="date"
-          name="insurance.purchaseDate"
-          value={formData.insurance.purchaseDate}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="input-group">
-        <label>Expiry Date</label>
-        <input
-          type="date"
-          name="insurance.expiryDate"
-          value={formData.insurance.expiryDate}
-          onChange={handleChange}
-        />
-      </div>
-    </div>
-  </div>
-)}
-</div>
-
-
-        {/* Submit */}
-        <button className="submit-btn" type="submit" disabled={isSubmitting}>
-          <FiSave />
-          {isSubmitting ? " Saving..." : " Save Hardware Asset"}
-        </button>
-      </form>
     </div>
   );
-};
+  };
 
-export default AssetCapture;
+  export default AssetCapture;

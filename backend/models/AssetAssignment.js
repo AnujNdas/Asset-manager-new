@@ -9,6 +9,8 @@ const assignmentSchema = new mongoose.Schema(
       index: true,
     },
 
+    /* 🔹 Asset Reference */
+
     assetId: {
       type: mongoose.Schema.Types.ObjectId,
       refPath: "assetModel",
@@ -28,6 +30,14 @@ const assignmentSchema = new mongoose.Schema(
       required: true,
     },
 
+    // 🔥 FUTURE READY (optional for now)
+    assetInstanceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AssetInstance",
+      default: null,
+      index: true,
+    },
+
     /* 🔹 Ownership Context */
 
     departmentId: {
@@ -44,19 +54,33 @@ const assignmentSchema = new mongoose.Schema(
       index: true,
     },
 
-    /* 🔹 Physical Placement */
+    /* 🔹 Location (FIXED) */
 
-    assignLocation: {
-      type: String,
+    locationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Location",
       required: true,
-      trim: true,
+      index: true,
     },
+
+    /* 🔹 Device Context (PDF REQUIREMENT) */
+
+    deviceInfo: {
+      assetTag: String,       // DELLIDEA001
+      serialNumber: String,
+      modelNumber: String,
+      deviceName: String
+    },
+
+    /* 🔹 Quantity (TEMP until instance model) */
 
     quantity: {
       type: Number,
       required: true,
       min: 1,
     },
+
+    /* 🔹 Status */
 
     status: {
       type: String,
@@ -65,11 +89,11 @@ const assignmentSchema = new mongoose.Schema(
       index: true,
     },
 
-    /* 🔹 Audit Fields */
+    /* 🔹 Assignment Lifecycle */
 
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // admin / manager
+      ref: "User",
       required: true,
     },
 
@@ -88,11 +112,32 @@ const assignmentSchema = new mongoose.Schema(
       ref: "User",
       default: null,
     },
+
+    /* 🔥 NEW: Reassignment Tracking */
+
+    reassignedFrom: {
+      employeeId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Employee",
+      },
+      departmentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Department",
+      },
+      date: Date,
+    },
+
+    /* 🔥 Metadata (AI-ready) */
+
+    metadata: {
+      type: mongoose.Schema.Types.Mixed
+    }
+
   },
   { timestamps: true }
 );
 
-/* 🔹 Strong compound index */
+/* 🔹 Optimized Index */
 assignmentSchema.index({
   organizationId: 1,
   assetId: 1,

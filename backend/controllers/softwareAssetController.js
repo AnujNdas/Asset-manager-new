@@ -8,6 +8,8 @@ const sendNotification = require("../utils/notify");
 const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
 const pricingTiers = require("../config/pricingTiers");
 const Subscription = require("../models/Subscription");
+const generateInstances = require("../utils/generateInstances");
+const AssetInstance = require("../models/AssetInstance");
 const parseDate = (value) => {
   if (!value) return null;
 
@@ -283,14 +285,10 @@ if (lastAsset?.assetCode) {
            3. Date Handling
         ---------------------------- */
 
-        const DOP = parseDate(asset.DateOfPurchase);
-const DOE = parseDate(asset.DateOfExpiry);
+        const purchaseDate = parseDate(asset.DateOfPurchase);
+        const expiryDate = parseDate(asset.DateOfExpiry);
 
-        const cycles = calculateCycles(
-          softwareType,
-          DOP,
-          DOE
-        );
+        const cycles = calculateCycles(softwareType, purchaseDate, expiryDate);
 
         const overallTotal = totalAmount * cycles;
         const overallUnitAmount = overallTotal / quantity;
@@ -321,16 +319,36 @@ const DOE = parseDate(asset.DateOfExpiry);
           locationName: locationId,
           assetStatus: statusId,
 
-          licenseKey: asset.licenseKey,
+          tracking: {
+  licenseTrackingId: asset.licenseKey
+},
           licenseType: asset.licenseType,
           licenseModel: asset.licenseModel,
           licenseMetric: asset.licenseMetric,
           licenseUse: asset.licenseUse,
           locationAddress: asset.locationAddress?.trim(),
-          DOP,
-          DOE,
-          assetLifetime: DOP && DOE
-  ? `${Math.ceil((DOE - DOP) / (1000 * 60 * 60 * 24 * 365))} years`
+purchaseDetails: {
+  purchaseDate,
+  vendor: {
+    name: asset.vendorName || "",
+    contact: asset.vendorContact || "",
+    supportEmail: asset.vendorEmail || ""
+  }
+},
+
+renewal: {
+  expiryDate,
+  renewalTerm: asset.renewalTerm,
+  nextRenewalDate: expiryDate,
+  renewalCost: {
+    totalAmount,
+    unitAmount,
+    baseTotalAmount,
+    currency
+  }
+},
+          assetLifetime: purchaseDate && expiryDate
+  ? `${Math.ceil((expiryDate - purchaseDate) / (1000 * 60 * 60 * 24 * 365))} years`
   : null,
 
           assetQuantity: quantity,
@@ -344,12 +362,11 @@ const DOE = parseDate(asset.DateOfExpiry);
             currency
           },
 
-          overallCost: {
-            totalAmount: overallTotal,
-            unitAmount: overallUnitAmount,
-            baseTotalAmount: baseOverallTotal,
-            currency
-          },
+financialTracking: {
+  monthlyCost: type === "monthly" ? totalAmount : 0,
+  yearlyCost: type === "yearly" ? totalAmount : 0,
+  totalCost: overallTotal,
+},
 
           auditHistory: [
             {
@@ -412,6 +429,16 @@ if (validAssets.length) {
     ordered: true,
     runValidators: true
   });
+await Promise.all(
+  result.map(asset =>
+    generateInstances({
+      asset,
+      quantity: asset.assetQuantity,
+      assetType: "software",
+      userId
+    })
+  )
+);
 
   insertedCount = result.length;
 }
@@ -510,17 +537,17 @@ if (!["monthly", "yearly", "one_time"].includes(type)) {
   });
 }
 
-const parsedDOP = parseDate(req.body.DOP);
-const parsedDOE = parseDate(req.body.DOE);
+const purchaseDate = parseDate(req.body.purchaseDate);
+const expiryDate = parseDate(req.body.expiryDate);
 
-if (type !== "one_time" && (!parsedDOP || !parsedDOE)) {
+if (type !== "one_time" && (!purchaseDate || !expiryDate)) {
   return res.status(400).json({
     success: false,
-    message: "DOP and DOE required for recurring software"
+    message: "Purchase date and expiry date required for recurring software"
   });
 }
 
-const cycles = calculateCycles(type, parsedDOP, parsedDOE);
+const cycles = calculateCycles(type, purchaseDate, expiryDate);
 
 const overallTotal = totalAmount * cycles;
 const overallUnitAmount = overallTotal / quantity;
@@ -531,8 +558,19 @@ const baseOverallTotal = convertToBase(overallTotal, currency);
 
     const asset = await SoftwareAsset.create({
       ...req.body,
-DOP: parsedDOP,
-DOE: parsedDOE,
+purchaseDetails: {
+  purchaseDate,
+  vendor: {
+    name: req.body.vendorName || "",
+    contact: req.body.vendorContact || "",
+    supportEmail: req.body.vendorEmail || ""
+  }
+},
+renewal: {
+  expiryDate,
+  renewalTerm: req.body.renewalTerm,
+  nextRenewalDate: expiryDate,
+},
       organizationId,
       type,
       assetCode: await generateSoftwareCode(organizationId),
@@ -542,19 +580,22 @@ assetCost: {
   baseTotalAmount,
   currency
 },
-
-overallCost: {
-  totalAmount: overallTotal,
-  unitAmount: overallUnitAmount,
-  baseTotalAmount: baseOverallTotal,
-  currency
+financialTracking: {
+  monthlyCost: type === "monthly" ? totalAmount : 0,
+  yearlyCost: type === "yearly" ? totalAmount : 0,
+  totalCost: overallTotal,
 },
 
 
       licensesAssigned: 0,
       auditHistory: [{ date: new Date(), notes: `Created by user ${userId}` }]
     });
-
+    await generateInstances({
+  asset,
+  quantity: asset.assetQuantity,
+  assetType: "software",
+  userId
+});
     await sendNotification({
       req,
       userId,
@@ -711,16 +752,33 @@ const updateSoftwareAsset = async (req, res) => {
         });
       }
     }
-    if (req.body.DOP !== undefined) {
-  req.body.DOP = parseDate(req.body.DOP);
+if (req.body.purchaseDate) {
+  asset.purchaseDetails.purchaseDate = parseDate(req.body.purchaseDate);
 }
 
-if (req.body.DOE !== undefined) {
-  req.body.DOE = parseDate(req.body.DOE);
+if (req.body.expiryDate) {
+  asset.renewal.expiryDate = parseDate(req.body.expiryDate);
 }
     // ✅ Assign normal fields FIRST (safe fields only)
     Object.assign(asset, req.body);
+    const oldQty = asset.assetQuantity;
+const newQty = req.body.assetQuantity ?? oldQty;
 
+if (newQty > oldQty) {
+  await generateInstances({
+    asset,
+    quantity: newQty - oldQty,
+    assetType: "software",
+    userId
+  });
+}
+
+if (newQty < oldQty) {
+  await AssetInstance.deleteMany({
+    assetId: asset._id,
+    status: "in_stock"
+  }).limit(oldQty - newQty);
+}
     // ✅ Handle asset cost AFTER assign (so it can't be overwritten)
     if (costInput) {
       const quantity = Number(
@@ -733,7 +791,7 @@ if (req.body.DOE !== undefined) {
           message: "Invalid license quantity"
         });
       }
-
+      
       const totalAmount = Number(costInput.totalAmount);
       const currency = costInput.currency.toUpperCase();
 
@@ -754,22 +812,21 @@ if (req.body.DOE !== undefined) {
 let cycles = 1;
 
 if (asset.type !== "one_time") {
-  if (!asset.DOP || !asset.DOE) {
-    throw new Error("DOP and DOE required for recurring software");
+  const purchaseDate = asset.purchaseDetails?.purchaseDate;
+  const expiryDate = asset.renewal?.expiryDate;
+
+  if (!purchaseDate || !expiryDate) {
+    throw new Error("Purchase date and expiry date required");
   }
 
-  cycles = calculateCycles(asset.type, asset.DOP, asset.DOE);
+  cycles = calculateCycles(asset.type, purchaseDate, expiryDate);
 }
 
 const overallTotal = asset.assetCost.totalAmount * cycles;
 const overallUnitAmount = overallTotal / asset.assetQuantity;
 
-asset.overallCost = {
-  totalAmount: overallTotal,
-  unitAmount: overallUnitAmount,
-  baseTotalAmount: convertToBase(overallTotal, asset.assetCost.currency),
-  currency: asset.assetCost.currency
-};
+asset.financialTracking.totalCost =
+  asset.assetCost.totalAmount * cycles;
 
     // ✅ Audit history safe guard
     if (!Array.isArray(asset.auditHistory)) {
@@ -803,7 +860,14 @@ const deleteSoftwareAsset = async (req, res) => {
     if (!asset) {
       return res.status(404).json({ success: false, message: "Not found" });
     }
+const toDelete = await AssetInstance.find({
+  assetId: asset._id,
+  status: "in_stock"
+}).limit(oldQty - newQty);
 
+const ids = toDelete.map(i => i._id);
+
+await AssetInstance.deleteMany({ _id: { $in: ids } });
     res.json({ success: true, message: "Deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

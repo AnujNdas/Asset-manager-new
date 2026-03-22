@@ -49,7 +49,14 @@ async function sendBrevoEmail(to, subject, html) {
     throw new Error(`Brevo API failed: ${response.status}`);
   }
 }
-
+const generateOrgCode = (name) => {
+  return name
+    .split(" ")
+    .map(word => word[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 4); // limit length
+};
 /* ------------------------------- SEND OTP --------------------------------- */
 const sendOtp = async (req, res) => {
   const { email } = req.body;
@@ -143,12 +150,14 @@ const verifyOtpAndSignup = async (req, res) => {
     // OWNER SIGNUP FLOW
     // =========================
     if (!inviteToken) {
+      const orgCode = generateOrgCode(req.body.name);
       const orgDocs = await Organization.create(
         [
           {
             name:
               organizationName || `${username}'s Organization`,
-          },
+              orgCode,
+            },
         ],
         { session }
       );

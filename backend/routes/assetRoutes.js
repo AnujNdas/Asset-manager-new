@@ -9,6 +9,7 @@ const {
   getAllAssets,
   updateAsset,
   bulkUpload,
+  createAssetInstance
 } = require("../controllers/assetControllers");
 
 const router = express.Router();
@@ -60,6 +61,13 @@ router.post(
   requireActiveSubscription,
   uploadBulk.fields([{ name: "excel" }]),
   bulkUpload
+);
+router.post(
+  "/create-instances",
+  authenticateToken(["admin"]),
+  tenantMiddleware,
+  requireActiveSubscription,
+  createAssetInstance
 );
 
 module.exports = router;

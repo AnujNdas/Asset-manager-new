@@ -141,28 +141,29 @@ const assignAssetsFromStock = async (req, res) => {
         assetId,
         departmentId,
         employeeId,
-        assignLocation,
-        quantity
+        locationId,
+        quantity,
+        deviceInfo = {}
       } = item;
 
       /* =============================
-         STEP 1: BASIC VALIDATION
+         VALIDATION
       ============================== */
 
       if (!assetType || !assetId || !departmentId || !employeeId || !quantity) {
         throw new Error("Missing required assignment fields");
       }
 
+      if (!locationId) {
+        throw new Error("Location is required");
+      }
+
       if (quantity <= 0) {
         throw new Error("Quantity must be greater than zero");
       }
 
-      if (!assignLocation || assignLocation.trim() === "") {
-        throw new Error("Assign location is required");
-      }
-
       /* =============================
-         STEP 2: VALIDATE DEPARTMENT
+         VALIDATE DEPARTMENT + EMPLOYEE
       ============================== */
 
       const Department = mongoose.model("Department");
@@ -173,12 +174,8 @@ const assignAssetsFromStock = async (req, res) => {
       }).session(session);
 
       if (!department) {
-        throw new Error("Department not found in organization");
+        throw new Error("Department not found");
       }
-
-      /* =============================
-         STEP 3: VALIDATE EMPLOYEE BELONGS TO DEPARTMENT
-      ============================== */
 
       const employee = await Employee.findOne({
         _id: employeeId,
@@ -187,17 +184,15 @@ const assignAssetsFromStock = async (req, res) => {
       }).session(session);
 
       if (!employee) {
-        throw new Error("Employee does not belong to selected department");
+        throw new Error("Employee not valid for department");
       }
 
       /* =============================
-         STEP 4: FETCH ASSET & CHECK STOCK
+         FETCH ASSET & CHECK STOCK
       ============================== */
 
       const Model =
-        assetType === "hardware"
-          ? Asset
-          : SoftwareAsset;
+        assetType === "hardware" ? Asset : SoftwareAsset;
 
       const asset = await Model.findOneAndUpdate(
         {
@@ -215,25 +210,27 @@ const assignAssetsFromStock = async (req, res) => {
       );
 
       if (!asset) {
-        throw new Error("Insufficient stock available");
+        throw new Error("Insufficient stock");
       }
 
       /* =============================
-         STEP 5: MERGE OR CREATE ASSIGNMENT
+         SAFE MERGE CHECK (IMPORTANT)
       ============================== */
 
       const existingAssignment = await AssetAssignment.findOne({
         organizationId: orgId,
         assetId,
         employeeId,
-        status: "active"
+        departmentId,
+        locationId,
+        status: "active",
+        "deviceInfo.assetTag": deviceInfo.assetTag || null
       }).session(session);
 
       let assignment;
 
       if (existingAssignment) {
         existingAssignment.quantity += quantity;
-        existingAssignment.assignLocation = assignLocation;
         await existingAssignment.save({ session });
         assignment = existingAssignment;
       } else {
@@ -245,8 +242,9 @@ const assignAssetsFromStock = async (req, res) => {
             assetModel: Model.modelName,
             departmentId,
             employeeId,
-            assignLocation,
+            locationId,
             quantity,
+            deviceInfo,
             status: "active",
             assignedBy: req.user.id
           }],
@@ -458,11 +456,68 @@ const getEmployeesByDepartment = async (req, res) => {
     });
   }
 };
+const reassignAsset = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
+  try {
+    const { assignmentId } = req.params;
+    const { newEmployeeId, newDepartmentId, newLocationId } = req.body;
+
+    const oldAssignment = await AssetAssignment.findById(assignmentId).session(session);
+
+    if (!oldAssignment || oldAssignment.status !== "active") {
+      throw new Error("Invalid assignment");
+    }
+
+    // mark old as transferred
+    oldAssignment.status = "transferred";
+    await oldAssignment.save({ session });
+
+    // create new assignment
+    const newAssignment = await AssetAssignment.create([{
+      organizationId: oldAssignment.organizationId,
+      assetId: oldAssignment.assetId,
+      assetModel: oldAssignment.assetModel,
+      assetType: oldAssignment.assetType,
+      departmentId: newDepartmentId,
+      employeeId: newEmployeeId,
+      locationId: newLocationId,
+      quantity: oldAssignment.quantity,
+      deviceInfo: oldAssignment.deviceInfo,
+      status: "active",
+      assignedBy: req.user.id,
+      reassignedFrom: {
+        employeeId: oldAssignment.employeeId,
+        departmentId: oldAssignment.departmentId,
+        date: new Date()
+      }
+    }], { session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.json({
+      success: true,
+      message: "Asset reassigned successfully",
+      data: newAssignment
+    });
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 module.exports = {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
   assignAssetsFromStock,
   returnAsset,
-  getEmployeesByDepartment
+  getEmployeesByDepartment,
+  reassignAsset
 };

@@ -1,4 +1,3 @@
-// models/Organization.js
 const mongoose = require("mongoose");
 
 const organizationSchema = new mongoose.Schema(
@@ -6,6 +5,14 @@ const organizationSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+    },
+
+    orgCode: {
+      type: String,
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
     },
 
     createdBy: {

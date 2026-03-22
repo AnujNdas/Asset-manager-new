@@ -15,6 +15,7 @@ const AssignmentPage = lazy(() => import("../Pages/AssignmentPage"));
 const Onboarding = lazy(() => import("../Pages/OnBoarding"));
 const EmployeePage = lazy(() => import("../Pages/Employee"));
 const Subscription = lazy(() => import("../Inner_sections/Subscription"));
+const AssetInstance = lazy(() => import("../Pages/AssetInstance"));
 
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
@@ -38,6 +39,7 @@ const TenantRoutes = ({ profileUser }) => (
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/employee" element={<EmployeePage />} />
         <Route path="/subscription" element={<Subscription />} />
+        <Route path="/instance-assets" element={<AssetInstance />} />
       </Route>
 
     </Route>

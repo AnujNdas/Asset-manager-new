@@ -1,0 +1,137 @@
+/* ===== LAYOUT ===== */
+.split-container {
+  display: flex;
+  overflow: auto;
+  width: 95%;
+  margin: auto;
+  border-radius: 10px;
+}
+
+/* ===== LEFT PANEL ===== */
+.left-panel {
+  flex: 0.5;
+  background: #2563eb;
+  color: white;
+  padding: 20px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.left-panel h2 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  /* color: #050505; */
+}
+
+.description {
+  opacity: 0.9;
+  margin-bottom: 25px;
+  font-size: 12px;
+}
+
+.info-box {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.info-box h4 {
+  margin-bottom: 8px;
+}
+
+/* ===== RIGHT PANEL ===== */
+.right-panel {
+  flex: 2;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 10px;
+  background: #f8fafc;
+}
+
+/* ===== PROGRESS ===== */
+.progress-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 999px;
+}
+
+/* ===== FORM ===== */
+.form-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.form-card h3 {
+  margin: 20px 0 10px;
+  color: #111827;
+  font-size: 18px;
+}
+
+/* ===== GRID ===== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* ===== INPUT ===== */
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #6b7280;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* ===== BUTTON ===== */
+.submit-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .split-container {
+    flex-direction: column;
+  }
+
+  .left-panel {
+    padding: 20px;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
