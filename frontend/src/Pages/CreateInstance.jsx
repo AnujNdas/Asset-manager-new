@@ -47,6 +47,7 @@ const applyBulkValues = () => {
     ]);
 
     const assetData = assetRes.data;
+    console.log("ASSET DATA:", assetData);
 
     setAsset(assetData);
     setLocations(locationRes.data);
