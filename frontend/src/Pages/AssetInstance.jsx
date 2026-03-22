@@ -4,7 +4,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Page_styles/AssetInstance.css";
 import { getPendingInstances } from "../Services/ApiServices";
+import { useNavigate } from "react-router-dom";
+
 const InstanceAssets = () => {
+  const navigate = useNavigate();
   const [assets, setAssets] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
@@ -101,9 +104,7 @@ const AssetCard = ({ asset }) => {
       <button
         className={`create-btn ${isComplete ? "disabled" : ""}`}
         disabled={isComplete}
-        onClick={() =>
-          (window.location.href = `/create-instances/${asset._id}`)
-        }
+        onClick={() => navigate(`/create-instances/${asset._id}`)}
       >
         {isComplete ? "Completed" : "Create Instances"}
       </button>
