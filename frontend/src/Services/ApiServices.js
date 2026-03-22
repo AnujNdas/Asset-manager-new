@@ -156,7 +156,7 @@ export const getHardwareAssets = async () => {
   const response = await axiosInstance.get("/assets");
   return response.data;
 };
-export const getPendingInstances = async () => {
+export const getPendingInstances = async (filter) => {
   const response = await axiosInstance.get("/assets/instance-pending", {
         params: filter !== "all" ? { type: filter } : {},
       });
