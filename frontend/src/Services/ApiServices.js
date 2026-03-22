@@ -157,9 +157,13 @@ export const getHardwareAssets = async () => {
   return response.data;
 };
 export const getPendingInstances = async (filter) => {
-  const response = await axiosInstance.get("/assets/instance-pending", {
-        params: filter !== "all" ? { type: filter } : {},
-      });
+  const response = await axiosInstance.get("/assets", {
+    params: {
+      ...(filter !== "all" && { type: filter }),
+      instanceStatus: "missing",
+    },
+  });
+
   return response.data;
 };
 // ----- ASSET CODE GENERATION -----
