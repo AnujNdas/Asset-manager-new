@@ -47,7 +47,7 @@ const applyBulkValues = () => {
     ]);
 
     setAsset(assetData);
-    setLocations(locationData);
+    setLocations(locationData.data);
     console.log("ASSET DATA:", assetData);
     console.log("Location DATA:", locationData);
 
@@ -220,11 +220,13 @@ const payload = instances.map((inst) => ({
       }
     >
       <option value="">Select Location</option>
-      {locations.map((loc) => (
-        <option key={loc._id} value={loc._id}>
-          {loc.name}
-        </option>
-      ))}
+{Array.isArray(locations) &&
+  locations.map((loc) => (
+    <option key={loc._id} value={loc._id}>
+      {loc.name}
+    </option>
+  ))
+}
     </select>
 
     {/* CONDITION */}
