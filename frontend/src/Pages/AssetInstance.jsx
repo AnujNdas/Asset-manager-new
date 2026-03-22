@@ -18,7 +18,7 @@ const InstanceAssets = () => {
       setLoading(true);
       const res = await getPendingInstances(filter);
       setAssets(res.data);
-      console.log("API RESPONSE:", res.data);
+      console.log("API RESPONSE:", res);
     } catch (err) {
       console.error(err);
     } finally {
