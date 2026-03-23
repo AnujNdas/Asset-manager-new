@@ -1116,37 +1116,91 @@ const createAssetInstance = async (req, res, next) => {
     }
 
     // ✅ Create instances
-    const newInstances = instances.map((inst, index) => ({
-      organizationId,
-      assetId,
+   const newInstances = instances.map((inst, index) => ({
+  organizationId,
+  assetId,
 
-      assetType: asset.assetType,
-      assetTypeRef: asset.assetType === "hardware" ? "Asset" : "SoftwareAsset",
+  assetType: asset.assetType,
+  assetTypeRef: asset.assetType === "hardware" ? "Asset" : "SoftwareAsset",
 
-      instanceCode: `${asset.assetCode}-${Date.now()}-${index}`,
+  instanceCode: `${asset.assetCode}-${String(existingCount + index + 1).padStart(3, "0")}`,
 
-      uniqueIdentifier: inst.serialNumber || undefined,
+  // 🔥 CORE
+  uniqueIdentifier: inst.serialNumber || undefined,
+  status: "in_stock",
+  condition: inst.condition || "new",
+  location: inst.location,
 
-      status: "in_stock",
+  // 🔥 HARDWARE
+  hardwareDetails: {
+    modelNo: inst.hardwareDetails?.modelNo || "",
+    specifications: inst.hardwareDetails?.specifications || ""
+  },
 
-      condition: inst.condition || "new",
+  // 🔥 WARRANTY
+  warranty: inst.warranty?.expiryDate
+    ? {
+        expiryDate: inst.warranty.expiryDate,
+        status:
+          new Date(inst.warranty.expiryDate) < new Date()
+            ? "expired"
+            : "active"
+      }
+    : undefined,
 
-      location: inst.location,
+  // 🔥 INSURANCE
+  insurance: inst.insurance
+    ? {
+        provider: inst.insurance.provider || "",
+        policyId: inst.insurance.policyId || "",
+        expiryDate: inst.insurance.expiryDate || null
+      }
+    : undefined,
 
-      hardwareDetails: {
-        modelNo: inst.hardwareDetails?.modelNo || ""
-      },
+  // 🔥 COST TRACKING
+  costTracking: {
+    maintenanceCost: Number(inst.costTracking?.maintenanceCost) || 0,
+    warrantyRenewalCost: Number(inst.costTracking?.warrantyRenewalCost) || 0,
+    insuranceCost: Number(inst.costTracking?.insuranceCost) || 0
+  },
 
-      lifecycle: [
-        {
-          action: "created",
-          notes: "Manually created"
+  // 🔥 INSTALLATION
+  installationDate: inst.installationDate || null,
+
+  // 🔥 SOFTWARE
+  softwareDetails:
+    asset.assetType === "software"
+      ? {
+          expiryDate: inst.softwareDetails?.expiryDate || null,
+          seats: Number(inst.softwareDetails?.seats) || 0
         }
-      ],
+      : undefined,
 
-      createdBy: userId
-    }));
+  // 🔥 LIFECYCLE
+  lifecycle: [
+    {
+      action: "CREATED",
+      notes: "Manually created",
+      date: new Date()
+    }
+  ],
 
+  createdBy: userId
+}));
+const serials = instances
+  .map(i => i.serialNumber)
+  .filter(Boolean);
+
+const existingSerials = await AssetInstance.find({
+  organizationId,
+  uniqueIdentifier: { $in: serials }
+});
+
+if (existingSerials.length > 0) {
+  return res.status(400).json({
+    message: "Duplicate serial numbers detected"
+  });
+}
     const saved = await AssetInstance.insertMany(newInstances);
 
     return res.status(201).json(saved);
