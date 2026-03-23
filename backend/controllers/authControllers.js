@@ -50,12 +50,16 @@ async function sendBrevoEmail(to, subject, html) {
   }
 }
 const generateOrgCode = (name) => {
+  if (!name || typeof name !== "string") {
+    return `ORG-${Date.now()}`;
+  }
+
   return name
+    .trim()
     .split(" ")
-    .map(word => word[0])
+    .map(word => word[0]?.toUpperCase() || "")
     .join("")
-    .toUpperCase()
-    .slice(0, 4); // limit length
+    .slice(0, 5) + "-" + Math.floor(Math.random() * 1000);
 };
 /* ------------------------------- SEND OTP --------------------------------- */
 const sendOtp = async (req, res) => {
@@ -94,172 +98,174 @@ const isStrongPassword = (password) => {
   return strongPasswordRegex.test(password);
 };
 /* ------------------------- VERIFY OTP AND SIGNUP -------------------------- */
-const verifyOtpAndSignup = async (req, res) => {
-  const {
-    email,
-    otp,
-    username,
-    password,
-    organizationName,
-    inviteToken,
-  } = req.body;
+  const verifyOtpAndSignup = async (req, res) => {
+    const {
+      email,
+      otp,
+      username,
+      password,
+      organizationName,
+      inviteToken,
+    } = req.body;
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-  try {
-    // 🔐 OTP validation
-    const otpRecord = await Otp.findOne({ email }).sort({ createdAt: -1 });
+    try {
+      // 🔐 OTP validation
+      const otpRecord = await Otp.findOne({ email }).sort({ createdAt: -1 });
 
-    if (!otpRecord || otpRecord.otp !== otp) {
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(400).json({ error: "Invalid or expired OTP" });
-    }
-
-    let organization;
-    let role = "admin";
-
-    // =========================
-    // INVITE FLOW
-    // =========================
-    if (inviteToken) {
-      const invite = await OrganizationInvite.findOne({
-        inviteToken,
-        expiresAt: { $gt: new Date() },
-      })
-        .populate("organizationId")
-        .session(session);
-
-      if (!invite) {
-        throw new Error("Invalid or expired invite");
+      if (!otpRecord || otpRecord.otp !== otp) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(400).json({ error: "Invalid or expired OTP" });
       }
 
-      if (invite.email && invite.email !== email) {
-        throw new Error("Invite email mismatch");
+      let organization;
+      let role = "admin";
+
+      // =========================
+      // INVITE FLOW
+      // =========================
+      if (inviteToken) {
+        const invite = await OrganizationInvite.findOne({
+          inviteToken,
+          expiresAt: { $gt: new Date() },
+        })
+          .populate("organizationId")
+          .session(session);
+
+        if (!invite) {
+          throw new Error("Invalid or expired invite");
+        }
+
+        if (invite.email && invite.email !== email) {
+          throw new Error("Invite email mismatch");
+        }
+
+        organization = invite.organizationId;
+        role = invite.role || "user";
+
+        invite.usedCount += 1;
+        await invite.save({ session });
       }
 
-      organization = invite.organizationId;
-      role = invite.role || "user";
+      // =========================
+      // OWNER SIGNUP FLOW
+      // =========================
+      if (!inviteToken) {
+        const orgCode = generateOrgCode(
+  organizationName || `${username}'s Organization`
+);
+        const orgDocs = await Organization.create(
+          [
+            {
+              name:
+                organizationName || `${username}'s Organization`,
+                orgCode,
+              },
+          ],
+          { session }
+        );
 
-      invite.usedCount += 1;
-      await invite.save({ session });
-    }
+        organization = orgDocs[0];
 
-    // =========================
-    // OWNER SIGNUP FLOW
-    // =========================
-    if (!inviteToken) {
-      const orgCode = generateOrgCode(req.body.name);
-      const orgDocs = await Organization.create(
+        // 🔥 Seed defaults inside transaction
+        await seedOrganizationDefaults(organization._id, session);
+      }
+
+      // 🔒 Validate strong password
+      if (!isStrongPassword(password)) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return res.status(400).json({
+          error:
+            "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+        });
+      }
+      
+      // 🔒 Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const userDocs = await User.create(
         [
           {
-            name:
-              organizationName || `${username}'s Organization`,
-              orgCode,
-            },
+            username,
+            email,
+            password: hashedPassword,
+            role,
+            organizationId: organization._id,
+            onboardingCompleted: false,
+          },
         ],
         { session }
       );
 
-      organization = orgDocs[0];
+      const newUser = userDocs[0];
 
-      // 🔥 Seed defaults inside transaction
-      await seedOrganizationDefaults(organization._id, session);
-    }
+      // Owner-only operations
+      if (!inviteToken) {
+        organization.createdBy = newUser._id;
+        await organization.save({ session });
 
-    // 🔒 Validate strong password
-    if (!isStrongPassword(password)) {
+  const now = new Date();
+  const trialEnd = new Date(
+    now.getTime() + 7 * 24 * 60 * 60 * 1000
+  );
+
+  await Subscription.create(
+    [
+      {
+        organizationId: organization._id,
+        tier: "trial",
+        billingCycle: null,
+        status: "trialing",
+        currentStart: now,
+        currentEnd: trialEnd,
+        cancelAtPeriodEnd: false,
+      },
+    ],
+    { session }
+  );
+      }
+
+      await Otp.deleteMany({ email }).session(session);
+
+      await session.commitTransaction();
+      session.endSession();
+
+      const token = jwt.sign(
+        {
+          id: newUser._id,
+          role: newUser.role,
+          organizationId: organization._id,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "3h" }
+      );
+
+      return res.status(201).json({
+        success: true,
+        token,
+        user: {
+          id: newUser._id,
+          email: newUser.email,
+          role: newUser.role,
+          organizationId: organization._id,
+        },
+      });
+    } catch (err) {
       await session.abortTransaction();
       session.endSession();
 
-      return res.status(400).json({
-        error:
-          "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+      console.error("Signup Error:", err);
+
+      return res.status(500).json({
+        error: err.message || "Signup failed",
       });
     }
-    
-    // 🔒 Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const userDocs = await User.create(
-      [
-        {
-          username,
-          email,
-          password: hashedPassword,
-          role,
-          organizationId: organization._id,
-          onboardingCompleted: false,
-        },
-      ],
-      { session }
-    );
-
-    const newUser = userDocs[0];
-
-    // Owner-only operations
-    if (!inviteToken) {
-      organization.createdBy = newUser._id;
-      await organization.save({ session });
-
-const now = new Date();
-const trialEnd = new Date(
-  now.getTime() + 7 * 24 * 60 * 60 * 1000
-);
-
-await Subscription.create(
-  [
-    {
-      organizationId: organization._id,
-      tier: "trial",
-      billingCycle: null,
-      status: "trialing",
-      currentStart: now,
-      currentEnd: trialEnd,
-      cancelAtPeriodEnd: false,
-    },
-  ],
-  { session }
-);
-    }
-
-    await Otp.deleteMany({ email }).session(session);
-
-    await session.commitTransaction();
-    session.endSession();
-
-    const token = jwt.sign(
-      {
-        id: newUser._id,
-        role: newUser.role,
-        organizationId: organization._id,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "3h" }
-    );
-
-    return res.status(201).json({
-      success: true,
-      token,
-      user: {
-        id: newUser._id,
-        email: newUser.email,
-        role: newUser.role,
-        organizationId: organization._id,
-      },
-    });
-  } catch (err) {
-    await session.abortTransaction();
-    session.endSession();
-
-    console.error("Signup Error:", err);
-
-    return res.status(500).json({
-      error: err.message || "Signup failed",
-    });
-  }
-};
+  };
 
 
 /* --------------------------------- LOGIN ---------------------------------- */
