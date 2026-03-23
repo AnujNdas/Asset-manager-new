@@ -41,9 +41,10 @@
 
 .progress-bar {
   height: 6px;
-  background: #1e293b;
+  background: #ffffff;
   border-radius: 999px;
   overflow: hidden;
+  border: 1px solid #828282;
 }
 
 .progress-fill {
@@ -55,15 +56,16 @@
 /* ===== ASSET INFO CARD ===== */
 .asset-info {
   background: var(--card);
-  border: 1px solid var(--border);
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 20px;
+  box-shadow: 0 2px 6px #0000000a;
 }
 
 .asset-info h3 {
   font-size: 16px;
   margin-bottom: 4px;
+  color: #2563eb;
 }
 
 .asset-info p {
@@ -74,9 +76,10 @@
 /* ===== TABLE WRAPPER ===== */
 .instance-table {
   background: var(--card);
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   border-radius: 12px;
   overflow: hidden;
+    box-shadow: 0 2px 6px #0000000a;
 }
 
 /* ===== HEADER ===== */
@@ -87,8 +90,8 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--muted);
-  background: #020617;
-  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+  /* border-bottom: 1px solid var(--border); */
 }
 
 /* ===== ROW ===== */
@@ -103,7 +106,7 @@
 }
 
 .table-row:hover {
-  background: #020617;
+  background: #e4e4e4;
 }
 
 /* ===== INPUTS ===== */
@@ -111,10 +114,10 @@
 .table-row select,
 .expand-panel input,
 .expand-panel textarea {
+  box-shadow: 0 2px 6px #0000000a;
   width: 100%;
   padding: 8px 10px;
-  background: #020617;
-  border: 1px solid var(--border);
+  background: #ffffff;
   border-radius: 6px;
   color: var(--text);
   font-size: 13px;
@@ -146,7 +149,7 @@
 
 /* ===== EXPAND PANEL ===== */
 .expand-panel {
-  background: #020617;
+  background: #ffffff;
   padding: 14px;
   border-bottom: 1px solid var(--border);
   animation: fadeIn 0.25s ease;
@@ -217,7 +220,43 @@
   color: var(--danger);
   margin-top: 2px;
 }
+.bulk-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
 
+.bulk-panel h4 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
+.bulk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.bulk-grid input,
+.bulk-grid select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: var(--text);
+}
+
+.bulk-grid button {
+  grid-column: span 2;
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .table-header,

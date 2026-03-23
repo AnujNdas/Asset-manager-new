@@ -18,7 +18,22 @@ const CreateInstances = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [bulkValues, setBulkValues] = useState({
+  location: "",
+  condition: "",
+  modelNo: "",
+  specifications: "",
 
+  warrantyDate: "",
+  installationDate: "",
+
+  insurancePolicyId: "",
+  insuranceExpiry: "",
+
+  maintenanceCost: "",
+  warrantyRenewalCost: "",
+  insuranceCost: ""
+});
   const total = asset?.assetQuantity || 0;
   const pending = asset?.pendingInstances || 0;
   const created = total - pending;
@@ -73,7 +88,32 @@ const CreateInstances = () => {
     updated[index][field] = value;
     setInstances(updated);
   };
+  const applyBulkValues = () => {
+  const updated = instances.map((inst) => ({
+    ...inst,
+    location: bulkValues.location || inst.location,
+    condition: bulkValues.condition || inst.condition,
+    modelNo: bulkValues.modelNo || inst.modelNo,
+    specifications: bulkValues.specifications || inst.specifications,
 
+    warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
+    installationDate: bulkValues.installationDate || inst.installationDate,
+
+    insurancePolicyId:
+      bulkValues.insurancePolicyId || inst.insurancePolicyId,
+    insuranceExpiry:
+      bulkValues.insuranceExpiry || inst.insuranceExpiry,
+
+    maintenanceCost:
+      bulkValues.maintenanceCost || inst.maintenanceCost,
+    warrantyRenewalCost:
+      bulkValues.warrantyRenewalCost || inst.warrantyRenewalCost,
+    insuranceCost:
+      bulkValues.insuranceCost || inst.insuranceCost
+  }));
+
+  setInstances(updated);
+};
   const toggleExpand = (index) => {
     setExpandedRow(expandedRow === index ? null : index);
   };
@@ -174,7 +214,134 @@ const CreateInstances = () => {
           <p>{asset.assetCode}</p>
         </div>
       )}
+      {/* BULK APPLY */}
+<div className="bulk-panel">
+  <h4>Bulk Apply</h4>
 
+  <div className="bulk-grid">
+
+    <select
+      value={bulkValues.location}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, location: e.target.value })
+      }
+    >
+      <option value="">Location</option>
+      {locations.map((loc) => (
+        <option key={loc._id} value={loc._id}>
+          {loc.name}
+        </option>
+      ))}
+    </select>
+
+    <select
+      value={bulkValues.condition}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, condition: e.target.value })
+      }
+    >
+      <option value="">Condition</option>
+      <option value="new">New</option>
+      <option value="used">Used</option>
+      <option value="damaged">Damaged</option>
+    </select>
+
+    <input
+      placeholder="Model No"
+      value={bulkValues.modelNo}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, modelNo: e.target.value })
+      }
+    />
+
+    <input
+      placeholder="Specifications"
+      value={bulkValues.specifications}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, specifications: e.target.value })
+      }
+    />
+
+    <input
+      type="date"
+      value={bulkValues.warrantyDate}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, warrantyDate: e.target.value })
+      }
+    />
+
+    <input
+      type="date"
+      value={bulkValues.installationDate}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, installationDate: e.target.value })
+      }
+    />
+
+    <input
+      placeholder="Insurance Policy"
+      value={bulkValues.insurancePolicyId}
+      onChange={(e) =>
+        setBulkValues({
+          ...bulkValues,
+          insurancePolicyId: e.target.value
+        })
+      }
+    />
+
+    <input
+      type="date"
+      value={bulkValues.insuranceExpiry}
+      onChange={(e) =>
+        setBulkValues({
+          ...bulkValues,
+          insuranceExpiry: e.target.value
+        })
+      }
+    />
+
+    <input
+      type="number"
+      placeholder="Maintenance Cost"
+      value={bulkValues.maintenanceCost}
+      onChange={(e) =>
+        setBulkValues({
+          ...bulkValues,
+          maintenanceCost: e.target.value
+        })
+      }
+    />
+
+    <input
+      type="number"
+      placeholder="Warranty Renewal"
+      value={bulkValues.warrantyRenewalCost}
+      onChange={(e) =>
+        setBulkValues({
+          ...bulkValues,
+          warrantyRenewalCost: e.target.value
+        })
+      }
+    />
+
+    <input
+      type="number"
+      placeholder="Insurance Cost"
+      value={bulkValues.insuranceCost}
+      onChange={(e) =>
+        setBulkValues({
+          ...bulkValues,
+          insuranceCost: e.target.value
+        })
+      }
+    />
+
+    <button onClick={applyBulkValues}>
+      Apply to All
+    </button>
+
+  </div>
+</div>
       {/* TABLE */}
       <div className="instance-table">
 
