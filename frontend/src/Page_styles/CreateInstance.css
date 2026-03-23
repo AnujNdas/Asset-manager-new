@@ -1,103 +1,72 @@
-
+/* PAGE */
 .instance-form-page {
-  padding: 20px;
+  padding: 24px;
+  background: #0f172a; /* dark SaaS bg */
+  min-height: 100vh;
+  color: #e5e7eb;
+  font-family: "Inter", sans-serif;
+}
+
+/* CARD STYLE (Reusable SaaS pattern) */
+.asset-info,
+.bulk-controls,
+.instance-table,
+.progress-container {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  margin-bottom: 20px;
 }
 
 /* ASSET INFO */
-.asset-info {
-  margin-bottom: 20px;
-}
-
-.asset-info span {
-  color: #d32f2f;
-  font-weight: 500;
-}
-
-/* TABLE */
-.instance-table {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-/* HEADER */
-.table-header {
-  display: grid;
-  grid-template-columns: 2fr 1fr 2fr 1.5fr 0.5fr;
-  background: #f5f5f5;
-  padding: 10px;
+.asset-info h3 {
+  font-size: 18px;
   font-weight: 600;
 }
 
-/* ROW */
-.table-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 2fr 1.5fr 0.5fr;
-  padding: 10px;
-  border-top: 1px solid #eee;
-  align-items: center;
+.asset-info p {
+  font-size: 13px;
+  color: #9ca3af;
 }
 
-.table-row input,
-.table-row select {
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.asset-info span {
+  color: #f87171;
+  font-weight: 500;
 }
 
-.table-row button {
-  background: #e53935;
-  color: white;
-  border: none;
-  padding: 6px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* ACTIONS */
-.form-actions {
-  margin-top: 20px;
+/* PROGRESS */
+.progress-top {
   display: flex;
   justify-content: space-between;
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 6px;
 }
 
-.form-actions button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.progress-bar {
+  height: 8px;
+  background: #1f2937;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.form-actions button:first-child {
-  background: #555;
-  color: white;
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+  border-radius: 20px;
+  transition: width 0.4s ease;
 }
 
-.form-actions button:last-child {
-  background: #1976d2;
-  color: white;
-}
-.input-error {
-  border: 1px solid #ff4d4f;
-  background-color: #fff1f0;
-}
-
-.error-text {
+.pending-text {
   font-size: 12px;
-  color: #ff4d4f;
-  margin-top: 2px;
-}
-.disabled-btn {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.bulk-controls {
-  margin-bottom: 20px;
-  padding: 15px;
-  /* background: #1e1e1e; */
-  border-radius: 8px;
+  color: #9ca3af;
+  margin-top: 6px;
 }
 
+/* BULK CONTROLS */
 .bulk-row {
   display: flex;
   gap: 10px;
@@ -106,44 +75,173 @@
 
 .bulk-row select,
 .bulk-row input {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  transition: 0.2s;
+}
+
+.bulk-row select:focus,
+.bulk-row input:focus {
+  border-color: #3b82f6;
+  outline: none;
 }
 
 .bulk-row button {
-  padding: 8px 14px;
-  background: #4cafef;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
   border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.bulk-row button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* TABLE */
+.instance-table {
+  overflow-x: auto;
+}
+
+/* HEADER */
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1.5fr 1.5fr 0.6fr;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #9ca3af;
+  border-bottom: 1px solid #1f2937;
+}
+
+/* ROW */
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1.5fr 1.5fr 0.6fr;
+  padding: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.table-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* INPUTS */
+.table-row input,
+.table-row select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  transition: 0.2s;
+}
+
+.table-row input:focus,
+.table-row select:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+/* DELETE BUTTON */
+.table-row button {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 6px;
   border-radius: 6px;
   cursor: pointer;
-}
-.progress-container {
-  margin: 15px 0;
+  transition: 0.2s;
 }
 
-.progress-top {
+.table-row button:hover {
+  background: #dc2626;
+}
+
+/* ACTION BUTTONS */
+.form-actions {
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 5px;
+  gap: 10px;
 }
 
-.progress-bar {
-  height: 8px;
-  background: #333;
-  border-radius: 10px;
-  overflow: hidden;
+.form-actions button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.progress-fill {
-  height: 100%;
-  background: #4cafef;
-  transition: width 0.3s ease;
+.form-actions button:first-child {
+  background: #374151;
+  color: white;
 }
 
-.pending-text {
-  font-size: 13px;
-  margin-top: 5px;
-  color: #aaa;
+.form-actions button:first-child:hover {
+  background: #4b5563;
+}
+
+.form-actions button:last-child {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.form-actions button:last-child:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(34, 197, 94, 0.3);
+}
+
+/* ERROR */
+.input-error {
+  border: 1px solid #f87171 !important;
+  background-color: rgba(248, 113, 113, 0.1);
+}
+
+.error-text {
+  font-size: 11px;
+  color: #f87171;
+  margin-top: 3px;
+}
+
+/* DISABLED */
+.disabled-btn {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .instance-form-page {
+    padding: 14px;
+  }
+
+  .bulk-row {
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
 }

@@ -319,8 +319,8 @@ const payload = instances.map((inst) => ({
           <span>Condition</span>
           <span>Location</span>
           <span>Model No</span>
-          <span>Action</span>
           <span>Warranty</span>
+          <span>Action</span>
 
 {asset?.assetType === "software" && (
   <>
