@@ -1,92 +1,92 @@
-const mongoose = require("mongoose");
-const costSchema = require("./CostSchema");
+  const mongoose = require("mongoose");
+  const costSchema = require("./CostSchema");
 
-const assetSchema = new mongoose.Schema(
-  {
-    assetCode: { type: String, required: true },
+  const assetSchema = new mongoose.Schema(
+    {
+      assetCode: { type: String, required: true },
 
-    assetName: { type: String, required: true },
+      assetName: { type: String, required: true },
 
-    assetCategory: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
+      assetCategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true,
+      },
 
-    associateUnit: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Unit",
-      required: true,
-    },
+      associateUnit: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Unit",
+        required: true,
+      },
 
-    locationName: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Location",
-      required: true,
-    },
+      locationName: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Location",
+        required: true,
+      },
 
-    assetStatus: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Status",
-      required: true,
-    },
+      assetStatus: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Status",
+        required: true,
+      },
 
-    organizationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
-      required: true,
-      index: true,
-    },
+      organizationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Organization",
+        required: true,
+        index: true,
+      },
 
-    type: {
-      type: String,
-      enum: ["one_time", "maintenance"],
-      required: true,
-    },
+      type: {
+        type: String,
+        enum: ["one_time", "maintenance"],
+        required: true,
+      },
 
-    purchaseDetails: {
-      purchaseDate: { type: Date, required: true },
-      vendor: {
-        name: String,
-        contact: String,
-        supportEmail: String,
+      purchaseDetails: {
+        purchaseDate: { type: Date, required: true },
+        vendor: {
+          name: String,
+          contact: String,
+          supportEmail: String,
+        },
+      },
+
+      DOE: { type: Date },
+
+      assetCost: {
+        type: costSchema,
+        required: true,
+      },
+
+      assetQuantity: {
+        type: Number,
+        required: true,
+        min: 1,
+      },
+
+      inUse: {
+        type: Number,
+        default: 0,
+      },
+
+      financialTracking: {
+        monthlyCost: { type: Number, default: 0 },
+        yearlyCost: { type: Number, default: 0 },
+        maintenanceTotalCost: { type: Number, default: 0 },
       },
     },
+    { timestamps: true }
+  );
 
-    DOE: { type: Date },
+  // indexes
+  assetSchema.index({ organizationId: 1, assetCategory: 1 });
+  assetSchema.index({ organizationId: 1, locationName: 1 });
+  assetSchema.index({ organizationId: 1, assetStatus: 1 });
 
-    assetCost: {
-      type: costSchema,
-      required: true,
-    },
+  assetSchema.virtual("inStock").get(function () {
+    return this.assetQuantity - this.inUse;
+  });
 
-    assetQuantity: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
-
-    inUse: {
-      type: Number,
-      default: 0,
-    },
-
-    financialTracking: {
-      monthlyCost: { type: Number, default: 0 },
-      yearlyCost: { type: Number, default: 0 },
-      maintenanceTotalCost: { type: Number, default: 0 },
-    },
-  },
-  { timestamps: true }
-);
-
-// indexes
-assetSchema.index({ organizationId: 1, assetCategory: 1 });
-assetSchema.index({ organizationId: 1, locationName: 1 });
-assetSchema.index({ organizationId: 1, assetStatus: 1 });
-
-assetSchema.virtual("inStock").get(function () {
-  return this.assetQuantity - this.inUse;
-});
-
-module.exports = mongoose.model("Asset", assetSchema);
+  module.exports = mongoose.model("Asset", assetSchema);
