@@ -13,10 +13,13 @@ const CreateInstances = () => {
   const [instances, setInstances] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [bulkValues, setBulkValues] = useState({
+const [bulkValues, setBulkValues] = useState({
   location: "",
   condition: "",
-  modelNo: ""
+  modelNo: "",
+  warrantyDate: "",
+  softwareExpiry: "",
+  seats: ""
 });
 const total = asset?.assetQuantity || 0;
 const pending = asset?.pendingInstances || 0;
@@ -28,7 +31,10 @@ const applyBulkValues = () => {
     ...inst,
     location: bulkValues.location || inst.location,
     condition: bulkValues.condition || inst.condition,
-    modelNo: bulkValues.modelNo || inst.modelNo
+    modelNo: bulkValues.modelNo || inst.modelNo,
+    warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
+    softwareExpiry: bulkValues.softwareExpiry || inst.softwareExpiry,
+    seats: bulkValues.seats || inst.seats
   }));
 
   setInstances(updated);
@@ -148,7 +154,7 @@ const validate = () => {
   // SUBMIT
   const handleSubmit = async () => {
     if (!validate()) {
-  const firstErrorIndex = Object.keys(errors)[0];
+  const firstErrorIndex = parseInt(Object.keys(errors)[0]);
   const element = document.querySelectorAll(".table-row")[firstErrorIndex];
   element?.scrollIntoView({ behavior: "smooth", block: "center" });
   return;
@@ -161,9 +167,22 @@ const payload = instances.map((inst) => ({
   serialNumber: inst.serialNumber,
   condition: inst.condition,
   location: inst.location,
+
   hardwareDetails: {
     modelNo: inst.modelNo
-  }
+  },
+
+  warranty: inst.warrantyDate
+    ? { expiryDate: inst.warrantyDate }
+    : undefined,
+
+  softwareDetails:
+    asset?.assetType === "software"
+      ? {
+          expiryDate: inst.softwareExpiry,
+          seats: Number(inst.seats) || 0
+        }
+      : undefined
 }));
       await createAssetInstances({
         assetId,
@@ -251,6 +270,35 @@ const payload = instances.map((inst) => ({
         setBulkValues({ ...bulkValues, modelNo: e.target.value })
       }
     />
+    <input
+  type="date"
+  value={bulkValues.warrantyDate}
+  onChange={(e) =>
+    setBulkValues({ ...bulkValues, warrantyDate: e.target.value })
+  }
+/>
+
+{asset?.assetType === "software" && (
+  <>
+    <input
+      type="date"
+      placeholder="License Expiry"
+      value={bulkValues.softwareExpiry}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, softwareExpiry: e.target.value })
+      }
+    />
+
+    <input
+      type="number"
+      placeholder="Seats"
+      value={bulkValues.seats}
+      onChange={(e) =>
+        setBulkValues({ ...bulkValues, seats: e.target.value })
+      }
+    />
+  </>
+)}
 
     {/* APPLY BUTTON */}
     <button onClick={applyBulkValues}>
@@ -266,6 +314,14 @@ const payload = instances.map((inst) => ({
           <span>Location</span>
           <span>Model No</span>
           <span>Action</span>
+          <span>Warranty</span>
+
+{asset?.assetType === "software" && (
+  <>
+    <span>License Expiry</span>
+    <span>Seats</span>
+  </>
+)}
         </div>
 
         {instances.map((inst, index) => (
@@ -334,6 +390,33 @@ const payload = instances.map((inst) => ({
             <button onClick={() => removeRow(index)}>✕</button>
           </div>
         ))}
+        <input
+  type="date"
+  value={inst.warrantyDate || ""}
+  onChange={(e) =>
+    handleChange(index, "warrantyDate", e.target.value)
+  }
+/>
+{asset?.assetType === "software" && (
+  <>
+    <input
+      type="date"
+      value={inst.softwareExpiry || ""}
+      onChange={(e) =>
+        handleChange(index, "softwareExpiry", e.target.value)
+      }
+    />
+
+    <input
+      type="number"
+      placeholder="Seats"
+      value={inst.seats || ""}
+      onChange={(e) =>
+        handleChange(index, "seats", e.target.value)
+      }
+    />
+  </>
+)}
       </div>
         
       {/* ACTIONS */}

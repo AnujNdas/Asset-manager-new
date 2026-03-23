@@ -1091,48 +1091,63 @@ const createAssetInstance = async (req, res, next) => {
       organizationId
     });
 
-const newInstances = instances.map((inst, index) => ({
-  organizationId,
-  assetId,
-  assetType: "hardware",
-  assetTypeRef: "Asset",
+    // ✅ Quantity validation
+    const totalAllowed = asset.assetQuantity;
+    const totalAfter = existingCount + instances.length;
 
-  instanceCode: `${asset.assetCode}-${String(existingCount + index + 1).padStart(2, "0")}`,
-
-  // ✅ Core fields
-  uniqueIdentifier: inst.serialNumber || undefined,
-
-  status: inst.status || "in_stock",
-
-  location: inst.location,
-
-  // ✅ Hardware details (FIXED)
-  hardwareDetails: {
-    modelNo: inst.hardwareDetails?.modelNo || ""
-  },
-
-  // ✅ Lifecycle tracking
-  lifecycle: [
-    {
-      action: "CREATED",
-      notes: "Manually created"
+    if (totalAfter > totalAllowed) {
+      return res.status(400).json({
+        message: "Cannot create more instances than asset quantity"
+      });
     }
-  ],
 
-  createdBy: userId
-}));
-const totalAllowed = asset.assetQuantity;
-const totalAfter = existingCount + instances.length;
+    // ✅ Validate locations
+    const locationIds = instances.map(i => i.location).filter(Boolean);
 
-if (totalAfter > totalAllowed) {
-  return res.status(400).json({
-    message: "Cannot create more instances than asset quantity"
-  });
-}
+    const validLocations = await Location.find({
+      _id: { $in: locationIds },
+      organizationId
+    });
+
+    if (validLocations.length !== locationIds.length) {
+      return res.status(400).json({
+        message: "Invalid location(s)"
+      });
+    }
+
+    // ✅ Create instances
+    const newInstances = instances.map((inst, index) => ({
+      organizationId,
+      assetId,
+
+      assetType: asset.assetType,
+      assetTypeRef: asset.assetType === "hardware" ? "Asset" : "SoftwareAsset",
+
+      instanceCode: `${asset.assetCode}-${Date.now()}-${index}`,
+
+      uniqueIdentifier: inst.serialNumber || undefined,
+
+      status: "in_stock",
+
+      condition: inst.condition || "new",
+
+      location: inst.location,
+
+      hardwareDetails: {
+        modelNo: inst.hardwareDetails?.modelNo || ""
+      },
+
+      lifecycle: [
+        {
+          action: "created",
+          notes: "Manually created"
+        }
+      ],
+
+      createdBy: userId
+    }));
+
     const saved = await AssetInstance.insertMany(newInstances);
-    await Asset.findByIdAndUpdate(assetId, {
-            $inc: { assetQuantity: newInstances.length }
-          });
 
     return res.status(201).json(saved);
 

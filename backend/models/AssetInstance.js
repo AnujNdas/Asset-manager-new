@@ -56,7 +56,11 @@ const assetInstanceSchema = new mongoose.Schema(
       },
       assignedAt: Date
     },
-
+    condition: {
+        type: String,
+        enum: ["new", "used", "damaged"],
+        default: "new"
+      },
     location: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Location"
@@ -103,7 +107,10 @@ assetInstanceSchema.index(
   { organizationId: 1, instanceCode: 1 },
   { unique: true }
 );
-
+assetInstanceSchema.index(
+  { organizationId: 1, uniqueIdentifier: 1 },
+  { unique: true, sparse: true }
+);
 // 🔥 Fast lookup for assignments
 assetInstanceSchema.index({ organizationId: 1, status: 1 });
 
