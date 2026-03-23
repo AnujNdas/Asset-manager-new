@@ -60,12 +60,15 @@ const applyBulkValues = () => {
     const pending = assetData.pendingInstances || 0;
 
     // ✅ Generate rows safely
-    const rows = Array.from({ length: pending }, (_, i) => ({
-      serialNumber: "",
-      condition: "new",
-      location: "",
-       modelNo: assetData?.modelNo || ""
-    }));
+const rows = Array.from({ length: pending }, () => ({
+  serialNumber: "",
+  condition: "new",
+  location: "",
+  modelNo: assetData?.hardwareDetails?.modelNo || "",
+  warrantyDate: "",
+  softwareExpiry: "",
+  seats: ""
+}));
 
     setInstances(rows);
 
@@ -103,12 +106,15 @@ const addRow = () => {
 
   setInstances([
     ...instances,
-    {
-      serialNumber: "",
-      condition: "new",
-      location: "",
-      modelNo: asset?.hardwareDetails?.modelNo || "",
-    }
+{
+  serialNumber: "",
+  condition: "new",
+  location: "",
+  modelNo: asset?.hardwareDetails?.modelNo || "",
+  warrantyDate: "",
+  softwareExpiry: "",
+  seats: ""
+}
   ]);
 };
   // REMOVE ROW
@@ -323,73 +329,108 @@ const payload = instances.map((inst) => ({
   </>
 )}
         </div>
-
-        {instances.map((inst, index) => (
-          <div className="table-row" key={index}>
-<div>
-  <input
-    type="text"
-    placeholder="Serial Number"
-    value={inst.serialNumber}
-    onChange={(e) =>
-      handleChange(index, "serialNumber", e.target.value)
-    }
-    className={errors[index]?.serialNumber ? "input-error" : ""}
-  />
-  {errors[index]?.serialNumber && (
-    <div className="error-text">
-      {errors[index].serialNumber}
+{instances.map((inst, index) => (
+  <div className="table-row" key={index}>
+    
+    {/* SERIAL */}
+    <div>
+      <input
+        type="text"
+        placeholder="Serial Number"
+        value={inst.serialNumber}
+        onChange={(e) =>
+          handleChange(index, "serialNumber", e.target.value)
+        }
+        className={errors[index]?.serialNumber ? "input-error" : ""}
+      />
+      {errors[index]?.serialNumber && (
+        <div className="error-text">
+          {errors[index].serialNumber}
+        </div>
+      )}
     </div>
-  )}
-</div>
 
-            <select
-              value={inst.condition}
-              onChange={(e) =>
-                handleChange(index, "condition", e.target.value)
-              }
-            >
-              <option value="new">New</option>
-              <option value="used">Used</option>
-              <option value="damaged">Damaged</option>
-            </select>
+    {/* CONDITION */}
+    <select
+      value={inst.condition}
+      onChange={(e) =>
+        handleChange(index, "condition", e.target.value)
+      }
+    >
+      <option value="new">New</option>
+      <option value="used">Used</option>
+      <option value="damaged">Damaged</option>
+    </select>
 
-            {/* LOCATION DROPDOWN */}
-<div>
-  <select
-    value={inst.location}
-    onChange={(e) =>
-      handleChange(index, "location", e.target.value)
-    }
-    className={errors[index]?.location ? "input-error" : ""}
-  >
-    <option value="">Select Location</option>
-    {locations.map((loc) => (
-      <option key={loc._id} value={loc._id}>
-        {loc.name}
-      </option>
-    ))}
-  </select>
-
-  {errors[index]?.location && (
-    <div className="error-text">
-      {errors[index].location}
-    </div>
-  )}
-</div>
-
-            <input
-              type="text"
-              placeholder="Model No"
-              value={inst.modelNo}
-              onChange={(e) =>
-                handleChange(index, "modelNo", e.target.value)
-              }
-            />
-
-            <button onClick={() => removeRow(index)}>✕</button>
-          </div>
+    {/* LOCATION */}
+    <div>
+      <select
+        value={inst.location}
+        onChange={(e) =>
+          handleChange(index, "location", e.target.value)
+        }
+        className={errors[index]?.location ? "input-error" : ""}
+      >
+        <option value="">Select Location</option>
+        {locations.map((loc) => (
+          <option key={loc._id} value={loc._id}>
+            {loc.name}
+          </option>
         ))}
+      </select>
+
+      {errors[index]?.location && (
+        <div className="error-text">
+          {errors[index].location}
+        </div>
+      )}
+    </div>
+
+    {/* MODEL */}
+    <input
+      type="text"
+      placeholder="Model No"
+      value={inst.modelNo}
+      onChange={(e) =>
+        handleChange(index, "modelNo", e.target.value)
+      }
+    />
+
+    {/* WARRANTY */}
+    <input
+      type="date"
+      value={inst.warrantyDate || ""}
+      onChange={(e) =>
+        handleChange(index, "warrantyDate", e.target.value)
+      }
+    />
+
+    {/* SOFTWARE FIELDS */}
+    {asset?.assetType === "software" && (
+      <>
+        <input
+          type="date"
+          value={inst.softwareExpiry || ""}
+          onChange={(e) =>
+            handleChange(index, "softwareExpiry", e.target.value)
+          }
+        />
+
+        <input
+          type="number"
+          placeholder="Seats"
+          value={inst.seats || ""}
+          onChange={(e) =>
+            handleChange(index, "seats", e.target.value)
+          }
+        />
+      </>
+    )}
+
+    {/* ACTION */}
+    <button onClick={() => removeRow(index)}>✕</button>
+  </div>
+))}
         <input
   type="date"
   value={inst.warrantyDate || ""}
