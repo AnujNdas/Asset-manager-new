@@ -426,38 +426,12 @@ const payload = instances.map((inst) => ({
         />
       </>
     )}
-
+    
     {/* ACTION */}
     <button onClick={() => removeRow(index)}>✕</button>
   </div>
 ))}
-        <input
-  type="date"
-  value={inst.warrantyDate || ""}
-  onChange={(e) =>
-    handleChange(index, "warrantyDate", e.target.value)
-  }
-/>
-{asset?.assetType === "software" && (
-  <>
-    <input
-      type="date"
-      value={inst.softwareExpiry || ""}
-      onChange={(e) =>
-        handleChange(index, "softwareExpiry", e.target.value)
-      }
-    />
-
-    <input
-      type="number"
-      placeholder="Seats"
-      value={inst.seats || ""}
-      onChange={(e) =>
-        handleChange(index, "seats", e.target.value)
-      }
-    />
-  </>
-)}
+        
       </div>
         
       {/* ACTIONS */}
