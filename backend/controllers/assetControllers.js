@@ -1084,11 +1084,18 @@ const createAssetInstance = async (req, res, next) => {
       return res.status(400).json({ message: "No instances provided" });
     }
 
-    const asset = await Asset.findById(assetId);
+    let asset = await Asset.findById(assetId);
 
-    if (!asset) {
-      return res.status(404).json({ message: "Asset not found" });
-    }
+let assetTypeRef = "Asset";
+
+if (!asset) {
+  asset = await SoftwareAsset.findById(assetId);
+  assetTypeRef = "SoftwareAsset";
+}
+
+if (!asset) {
+  return res.status(404).json({ message: "Asset not found" });
+}
 
     // 🔥 Quantity validation
     const existingCount = await AssetInstance.countDocuments({
@@ -1152,8 +1159,12 @@ const createAssetInstance = async (req, res, next) => {
         organizationId,
         assetId,
 
-        assetType: asset.assetType,
-        assetTypeRef: asset.assetType === "hardware" ? "Asset" : "SoftwareAsset",
+        assetTypeRef,
+
+        assetType:
+          assetTypeRef === "SoftwareAsset"
+            ? "software"
+            : "hardware",
 
         instanceCode: `${asset.assetCode}-${Date.now()}-${index}`,
 
@@ -1190,7 +1201,7 @@ const createAssetInstance = async (req, res, next) => {
         installationDate: inst.installationDate || null,
 
         softwareDetails:
-          asset.assetType === "software"
+          assetTypeRef === "SoftwareAsset"
             ? {
                 expiryDate: inst.softwareDetails?.expiryDate || null,
                 seats: Number(inst.softwareDetails?.seats) || 0
