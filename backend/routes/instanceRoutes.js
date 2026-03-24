@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-
+const mongoose = require("mongoose")
 // 🔐 Middlewares
 const authenticateToken = require("../Middleware/Authentication-token");
 const tenantMiddleware = require("../Middleware/tenantMiddleware");
@@ -31,11 +31,16 @@ const getPendingInstances = async (req, res) => {
     // =========================
     // 🔹 1. INSTANCE COUNT MAP
     // =========================
+
 const instanceCounts = await AssetInstance.aggregate([
-  { $match: { organizationId } },
+  {
+    $match: {
+      organizationId: new mongoose.Types.ObjectId(organizationId)
+    }
+  },
   {
     $group: {
-      _id: { $toString: "$assetId" }, // 🔥 normalize here
+      _id: { $toString: "$assetId" },
       count: { $sum: 1 }
     }
   }
