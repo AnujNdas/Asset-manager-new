@@ -14,7 +14,7 @@ const InstanceAssets = () => {
   useEffect(() => {
     fetchAssets();
   }, [filter]);
-  
+    
   const fetchAssets = async () => {
     try {
       setLoading(true);

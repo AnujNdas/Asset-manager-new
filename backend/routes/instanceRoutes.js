@@ -31,21 +31,22 @@ const getPendingInstances = async (req, res) => {
     // =========================
     // 🔹 1. INSTANCE COUNT MAP
     // =========================
-    const instanceCounts = await AssetInstance.aggregate([
-      { $match: { organizationId } },
-      {
-        $group: {
-          _id: "$assetId",
-          count: { $sum: 1 }
-        }
-      }
-    ]);
+const instanceCounts = await AssetInstance.aggregate([
+  { $match: { organizationId } },
+  {
+    $group: {
+      _id: { $toString: "$assetId" }, // 🔥 normalize here
+      count: { $sum: 1 }
+    }
+  }
+]);
 
     const instanceMap = {};
     instanceCounts.forEach(i => {
       instanceMap[String(i._id)] = i.count;
     });
-
+    console.log("INSTANCE COUNTS:", instanceCounts);
+    console.log("MAP:", instanceMap);
     let hardware = [];
     let software = [];
 
