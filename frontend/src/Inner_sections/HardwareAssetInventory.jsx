@@ -9,11 +9,9 @@ import {
   getLocations,
   getUnits,
   getStatuses,
-  getAssetInstances // ✅ NEW API
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
-import { useNavigate } from "react-router-dom";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 
@@ -24,13 +22,15 @@ const HardwareAssetList = () => {
   const [units, setUnits] = useState([]);
   const [statuses, setStatuses] = useState([]);
 
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
-  const [instances, setInstances] = useState([]);
 
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [apiDone, setApiDone] = useState(false);
 
-  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const assetsPerPage = 8;
+
   const { currency, convertFromBase, loadingRates } = useCurrency();
 
   useEffect(() => {
@@ -54,139 +54,165 @@ const HardwareAssetList = () => {
       setUnits(unitsRes?.data ?? unitsRes ?? []);
       setStatuses(statusesRes?.data ?? statusesRes ?? []);
 
-      setLoading(false);
+      setApiDone(true);
+      setTimeout(() => setLoading(false), 400);
     } catch (err) {
-      Swal.fire("Error", err.message, "error");
+      Swal.fire("Error", err.message || "Failed to load data", "error");
       setLoading(false);
     }
   };
 
-  // 🔹 Load instances when viewing asset
-  const handleView = async (asset) => {
+  const handleDelete = async (id) => {
+    const resp = await Swal.fire({
+      title: "Delete asset?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      confirmButtonColor: "#d33",
+    });
+
+    if (!resp.isConfirmed) return;
+
     try {
-      setSelectedAsset(asset);
-      const res = await getAssetInstances(asset._id);
-      setInstances(res?.data ?? res ?? []);
+      await deleteHardwareAsset(id);
+      setAssets((prev) => prev.filter((a) => a._id !== id));
+      Swal.fire("Deleted", "Asset removed.", "success");
     } catch (err) {
-      Swal.fire("Error", "Failed to load instances", "error");
+      Swal.fire("Error", err.message || "Failed to delete asset", "error");
     }
   };
 
   const getName = (list, value) => {
-    if (!value) return "N/A";
+    if (!value || !Array.isArray(list)) return "N/A";
     const id = typeof value === "object" ? value._id : value;
     const found = list.find((item) => String(item._id) === String(id));
     return found ? found.name : "N/A";
   };
 
-  const getStock = (asset) =>
-    Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
+  const filteredAssets = assets.filter((asset) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      asset.assetName?.toLowerCase().includes(term) ||
+      asset.assetCode?.toLowerCase().includes(term)
+    );
+  });
 
-  const filteredAssets = assets.filter((a) =>
-    a.assetName?.toLowerCase().includes(searchTerm.toLowerCase())
+  const indexOfLast = currentPage * assetsPerPage;
+  const currentAssets = filteredAssets.slice(
+    indexOfLast - assetsPerPage,
+    indexOfLast
   );
 
-  if (loading || loadingRates) return <Loader />;
+  if (loading || loadingRates)
+    return <Loader type="inventory" apiDone={apiDone} />;
 
   return (
     <div className="inventory-container">
-
-      {/* 🔹 HEADER */}
+      {/* HEADER */}
       <div className="dashboard-header">
-        <h2>Hardware Inventory</h2>
+        <h2 className="hardware-title">Hardware Inventory</h2>
 
-        <input
-          type="text"
-          placeholder="Search..."
-          className="inventory-search-input"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="header-actions">
+          <input
+            type="text"
+            placeholder="Search Hardware..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="inventory-search-input"
+          />
+        </div>
       </div>
 
-      {/* 🔹 GRID */}
+      {/* CARDS */}
       <div className="inventory-grid">
-        {filteredAssets.map((asset) => (
-          <div key={asset._id} className="inventory-card">
-
-            {/* TOP */}
-            <div className="card-header">
+        <AnimatePresence>
+          {currentAssets.map((asset) => (
+            <motion.div
+              key={asset._id}
+              className="inventory-card"
+              layout
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
               <h3>{asset.assetName}</h3>
-              <span className="badge">
-                {getName(statuses, asset.assetStatus)}
-              </span>
-            </div>
-
-            {/* BASIC INFO */}
-            <div className="card-info">
-              <p><strong>Code:</strong> {asset.assetCode}</p>
-              <p><strong>Category:</strong> {getName(categories, asset.assetCategory)}</p>
-              <p><strong>Location:</strong> {getName(locations, asset.locationName)}</p>
-              <p><strong>Unit:</strong> {getName(units, asset.associateUnit)}</p>
 
               <p>
                 <strong>Total Cost:</strong>{" "}
                 {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(asset.assetCost?.baseTotalAmount || 0).toLocaleString()}
+                {convertFromBase(
+                  asset.assetCost?.baseTotalAmount ?? 0
+                ).toLocaleString()}
               </p>
-
-              <p><strong>Qty:</strong> {asset.assetQuantity}</p>
-              <p><strong>In Use:</strong> {asset.inUse}</p>
 
               <p>
-                <strong>Stock:</strong>{" "}
-                {getStock(asset) > 0 ? (
-                  <span className="stock-green">{getStock(asset)} Available</span>
-                ) : (
-                  <span className="stock-red">Out of Stock</span>
-                )}
+                <strong>Quantity:</strong> {asset.assetQuantity}
               </p>
-            </div>
 
-            {/* ACTIONS */}
-            <div className="card-actions">
-              <button onClick={() => handleView(asset)}>View More</button>
-              <button onClick={() => navigate("/assignment")}>Assign</button>
-            </div>
+              <div className="card-actions">
+                <button
+                  className="btn-view"
+                  onClick={() => setSelectedAsset(asset)}
+                >
+                  View Instances
+                </button>
 
-          </div>
-        ))}
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(asset._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
-      {/* 🔥 VIEW MODAL WITH INSTANCES */}
+      {/* ================= INSTANCE VIEW MODAL ================= */}
       <AnimatePresence>
         {selectedAsset && (
           <motion.div
             className="asset-view-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setSelectedAsset(null)}
           >
             <motion.div
-              className="asset-view-modal large"
+              className="asset-view-modal"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* 🔹 ASSET SUMMARY */}
-              <h3>{selectedAsset.assetName}</h3>
+              <h3>
+                Instances — {selectedAsset.assetName}
+              </h3>
 
-              <div className="asset-summary">
-                <p><strong>Code:</strong> {selectedAsset.assetCode}</p>
-                <p><strong>Total Qty:</strong> {selectedAsset.assetQuantity}</p>
-                <p><strong>In Use:</strong> {selectedAsset.inUse}</p>
-                <p><strong>Stock:</strong> {getStock(selectedAsset)}</p>
-              </div>
-
-              {/* 🔥 INSTANCES */}
-              <h4 className="section-title">Instances</h4>
-
-              <div className="instance-grid">
-                {instances.map((inst) => (
+              {/* 🔥 CORE CHANGE: INSTANCE LOOP */}
+              {selectedAsset.instances?.length ? (
+                selectedAsset.instances.map((inst) => (
                   <div key={inst._id} className="instance-card">
-
-                    <h4>{inst.uniqueIdentifier}</h4>
-
+                    <p><strong>Code:</strong> {inst.instanceCode}</p>
+                    <p><strong>Identifier:</strong> {inst.uniqueIdentifier}</p>
                     <p><strong>Status:</strong> {inst.status}</p>
                     <p><strong>Condition:</strong> {inst.condition}</p>
 
-                    <p><strong>Model:</strong> {inst.hardwareDetails?.modelNo}</p>
+                    <p>
+                      <strong>Location:</strong>{" "}
+                      {getName(locations, inst.location)}
+                    </p>
+
+                    <p>
+                      <strong>Model:</strong>{" "}
+                      {inst.hardwareDetails?.modelNo}
+                    </p>
+
+                    <p>
+                      <strong>Specs:</strong>{" "}
+                      {inst.hardwareDetails?.specifications}
+                    </p>
 
                     <p>
                       <strong>Warranty:</strong>{" "}
@@ -197,17 +223,22 @@ const HardwareAssetList = () => {
 
                     <p>
                       <strong>Insurance:</strong>{" "}
-                      {inst.insurance?.policyId || "N/A"}
+                      {inst.insurance?.policyId}
                     </p>
 
                     <p>
-                      <strong>Maintenance Cost:</strong>{" "}
-                      {inst.costTracking?.maintenanceCost || 0}
+                      <strong>Installed:</strong>{" "}
+                      {inst.installationDate
+                        ? new Date(inst.installationDate).toLocaleDateString()
+                        : "N/A"}
                     </p>
 
+                    <hr />
                   </div>
-                ))}
-              </div>
+                ))
+              ) : (
+                <p>No instances found</p>
+              )}
 
               <button
                 className="asset-view-close-btn"
@@ -215,12 +246,10 @@ const HardwareAssetList = () => {
               >
                 Close
               </button>
-
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 };
