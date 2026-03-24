@@ -943,35 +943,42 @@ const assets = await Asset.find(filter)
     });
 
     // 4️⃣ 🔥 Fetch INSTANCE COUNTS
-    const instanceCounts = await AssetInstance.aggregate([
-      {
-        $match: { organizationId }
-      },
-      {
-        $group: {
-          _id: "$assetId",
-          count: { $sum: 1 }
-        }
-      }
-    ]);
+// 4️⃣ 🔥 FETCH ALL INSTANCES (NOT COUNT)
+const instances = await AssetInstance.find({
+  organizationId,
+  assetId: { $in: assetIds }
+})
+  .populate("location", "name")
+  .lean();
 
-    const instanceMap = {};
-    instanceCounts.forEach(item => {
-      instanceMap[String(item._id)] = item.count;
-    });
+// 5️⃣ GROUP INSTANCES BY ASSET
+const instanceMap = {};
 
+instances.forEach(inst => {
+  const key = String(inst.assetId);
+
+  if (!instanceMap[key]) {
+    instanceMap[key] = [];
+  }
+
+  instanceMap[key].push(inst);
+});
     // 5️⃣ Merge everything
-    let enrichedAssets = assets.map(asset => {
-      const assignmentData = assignmentMap[String(asset._id)];
+let enrichedAssets = assets.map(asset => {
+  const assignmentData = assignmentMap[String(asset._id)];
+  const assetInstances = instanceMap[String(asset._id)] || [];
 
-      return {
-        ...asset,
-        inUse: assignmentData?.inUse || 0,
-        assignedDepartments: assignmentData?.assignedDepartments || [],
-        assignmentRecords: assignmentData?.assignmentRecords || [],
-        instanceCount: instanceMap[String(asset._id)] || 0
-      };
-    });
+  return {
+    ...asset,
+    inUse: assignmentData?.inUse || 0,
+    assignedDepartments: assignmentData?.assignedDepartments || [],
+    assignmentRecords: assignmentData?.assignmentRecords || [],
+
+    // 🔥 NEW
+    instances: assetInstances,
+    instanceCount: assetInstances.length
+  };
+});
 
     // 6️⃣ 🔥 INSTANCE FILTERING
     if (instanceStatus === "missing") {

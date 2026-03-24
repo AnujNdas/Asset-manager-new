@@ -14,7 +14,7 @@ const InstanceAssets = () => {
   useEffect(() => {
     fetchAssets();
   }, [filter]);
-    
+
   const fetchAssets = async () => {
     try {
       setLoading(true);
@@ -33,7 +33,7 @@ const InstanceAssets = () => {
     <div className="instance-page">
       {/* HEADER */}
       <div className="instance-header">
-        <h2>Create Asset Instances</h2>
+        <h2>Instances Dashboard</h2>
 
         <select
           value={filter}
