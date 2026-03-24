@@ -108,7 +108,7 @@ app.use("/api/super-admin", superAdminRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/employees", employeeRoutes);
 
-app.use("/instance-assets", instanceRoutes);
+app.use("/api/instance-assets", instanceRoutes);
 // ❗ Catch unknown routes (VERY IMPORTANT)
 app.all("*", (req, res, next) => {
   const error = new Error(`Cannot find ${req.originalUrl}`);
