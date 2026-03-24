@@ -102,7 +102,13 @@ export default function SoftwareAssetCapture() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      await createSoftwareAsset(formData);
+const payload = {
+  ...formData,
+  purchaseDate: formData.DOP,
+  expiryDate: formData.DOE,
+  vendorName: formData.purchaseFrom
+};
+      await createSoftwareAsset(payload);
       Swal.fire("Success", "Asset created!", "success");
     } catch (err) {
       Swal.fire("Error", err.message, "error");

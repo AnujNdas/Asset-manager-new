@@ -1173,10 +1173,13 @@ if (!asset) {
         condition: inst.condition || "new",
         location: inst.location,
 
-        hardwareDetails: {
-          modelNo: inst.hardwareDetails?.modelNo || "",
-          specifications: inst.hardwareDetails?.specifications || ""
-        },
+hardwareDetails:
+  assetTypeRef === "Asset"
+    ? {
+        modelNo: inst.hardwareDetails?.modelNo || "",
+        specifications: inst.hardwareDetails?.specifications || ""
+      }
+    : undefined,
 
         warranty: inst.warranty?.expiryDate
           ? {
@@ -1200,13 +1203,24 @@ if (!asset) {
 
         installationDate: inst.installationDate || null,
 
-        softwareDetails:
-          assetTypeRef === "SoftwareAsset"
-            ? {
-                expiryDate: inst.softwareDetails?.expiryDate || null,
-                seats: Number(inst.softwareDetails?.seats) || 0
-              }
-            : undefined,
+softwareDetails:
+  assetTypeRef === "SoftwareAsset"
+    ? {
+        licenseKey: inst.softwareDetails?.licenseKey || "",
+        licenseNumber: inst.softwareDetails?.licenseNumber || "",
+        vendor: inst.softwareDetails?.vendor || "",
+
+        purchaseDate: inst.softwareDetails?.purchaseDate || null,
+        renewalDate: inst.softwareDetails?.renewalDate || null,
+        lastUsedDate: inst.softwareDetails?.lastUsedDate || null,
+
+        assignedTo: {
+          employeeId: inst.softwareDetails?.assignedTo?.employeeId || null,
+          deviceName: inst.softwareDetails?.assignedTo?.deviceName || "",
+          departmentId: inst.softwareDetails?.assignedTo?.departmentId || null
+        }
+      }
+    : undefined,
 
         lifecycle: [
           {

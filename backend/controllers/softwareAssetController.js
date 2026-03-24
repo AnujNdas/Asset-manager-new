@@ -586,16 +586,8 @@ financialTracking: {
   totalCost: overallTotal,
 },
 
-
-      licensesAssigned: 0,
       auditHistory: [{ date: new Date(), notes: `Created by user ${userId}` }]
     });
-    await generateInstances({
-  asset,
-  quantity: asset.assetQuantity,
-  assetType: "software",
-  userId
-});
     await sendNotification({
       req,
       userId,

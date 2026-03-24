@@ -94,10 +94,21 @@ const assetInstanceSchema = new mongoose.Schema(
   },
 
   /* 🔥 SOFTWARE (if applicable) */
-  softwareDetails: {
-    expiryDate: Date,
-    seats: Number
-  },
+softwareDetails: {
+  licenseKey: String,
+  licenseNumber: String,
+  vendor: String,
+
+  purchaseDate: Date,
+  renewalDate: Date,
+  lastUsedDate: Date,
+
+  assignedTo: {
+    employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+    deviceName: String,
+    departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" }
+  }
+},
 
   /* 🔥 LIFECYCLE */
   lifecycle: [

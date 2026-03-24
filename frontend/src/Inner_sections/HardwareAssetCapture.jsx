@@ -38,19 +38,13 @@
 
   const defaultFormData = {
     assetCategory: "",
-    barcodeNumber: "",
     assetName: "",
     associateUnit: "",
     locationName: "",
-    locationAddress: "",
-    assetSpecification: "",
     assetStatus: "",
-    DOP: "",
     DOE: "",
     assetLifetime: "",
     purchaseFrom: "",
-    modelNo: "",
-    PMD: "",
     type: "",
     maintenanceTerm: "",
 
@@ -60,20 +54,6 @@
     },
 
     assetQuantity: "",
-
-    // ✅ NEW
-    insurance: {
-      insuranceId: "",
-      insuranceName: "",
-      purchaseDate: "",
-      expiryDate: "",
-    },
-    // ✅ WARRANTY
-  warranty: {
-    warrantyId: "",
-    expiryDate: "",
-    lifetime: "",
-  },
 
   };
 

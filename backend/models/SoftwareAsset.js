@@ -43,11 +43,6 @@ const SoftwareAssetSchema = new mongoose.Schema(
       required: true,
     },
 
-    licenseType: String,
-    licenseModel: String,
-    licenseMetric: String,
-    licenseUse: String,
-
     purchaseDetails: {
       purchaseDate: { type: Date, required: true },
       vendor: {
@@ -72,7 +67,7 @@ const SoftwareAssetSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
+    DOE: { type: Date },
     financialTracking: {
       monthlyCost: { type: Number, default: 0 },
       yearlyCost: { type: Number, default: 0 },
