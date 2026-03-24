@@ -9,7 +9,25 @@ import {
   getUnits,
   getLocations,
 } from "../Services/ApiServices";
-
+  export const SUPPORTED_CURRENCIES = [
+    { code: "USD", label: "US Dollar", symbol: "$" },
+    { code: "INR", label: "Indian Rupee", symbol: "₹" },
+    { code: "EUR", label: "Euro", symbol: "€" },
+    { code: "GBP", label: "British Pound", symbol: "£" },
+    { code: "JPY", label: "Japanese Yen", symbol: "¥" },
+    { code: "AUD", label: "Australian Dollar", symbol: "A$" },
+    { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
+    { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
+    { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
+    { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
+    { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
+    { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
+    { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
+    { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
+    { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
+    { code: "SEK", label: "Swedish Krona", symbol: "kr" },
+    { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
+  ];
 const initialForm = {
   assetName: "",
   assetCategory: "",
@@ -198,6 +216,18 @@ export default function SoftwareAssetCapture() {
       <h3>Financial</h3>
 
       <div className="grid-2">
+                    <div className="input-group">
+                      <label>Currency</label>
+                      <select
+                        name="assetCost.currency"
+                        value={formData.assetCost.currency}
+                        onChange={handleChange}
+                      >
+                        {SUPPORTED_CURRENCIES.map(c => (
+                          <option key={c.code} value={c.code}>{c.code}</option>
+                        ))}
+                      </select>
+                    </div>
         <div className="input-group">
           <label>Total Cost *</label>
           <input type="number" name="assetCost.amount" onChange={handleChange} />
