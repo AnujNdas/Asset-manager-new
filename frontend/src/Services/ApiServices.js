@@ -167,7 +167,7 @@ export const getPendingInstances = async (filter) => {
 };
 // GET SINGLE ASSET
 export const getAssetById = async (assetId) => {
-  const response = await axiosInstance.get(`/assets/${assetId}`);
+  const response = await axiosInstance.get(`/instance-assets/${assetId}`);
   return response.data;
 };
 

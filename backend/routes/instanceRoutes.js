@@ -115,10 +115,72 @@ const getPendingInstances = async (req, res) => {
     });
   }
 };
+const getAssetById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const organizationId = req.user.organizationId;
 
+    if (!organizationId) {
+      return res.status(403).json({
+        message: "Organization context missing",
+      });
+    }
+
+    // 🔥 Try hardware first
+    let asset = await Asset.findOne({
+      _id: id,
+      organizationId
+    })
+      .populate("assetCategory", "name")
+      .populate("locationName", "name")
+      .lean();
+
+    let assetType = "hardware";
+
+    // 🔥 If not found → try software
+    if (!asset) {
+      asset = await SoftwareAsset.findOne({
+        _id: id,
+        organizationId
+      })
+        .populate("assetCategory", "name")
+        .populate("locationName", "name")
+        .lean();
+
+      assetType = "software";
+    }
+
+    if (!asset) {
+      return res.status(404).json({
+        message: "Asset not found",
+      });
+    }
+
+    // 🔥 Instance count (shared collection)
+    const instanceCount = await AssetInstance.countDocuments({
+      assetId: id,
+      organizationId
+    });
+
+    const pendingInstances =
+      asset.assetQuantity - instanceCount;
+
+    return res.status(200).json({
+      ...asset,
+      assetType,
+      instanceCount,
+      pendingInstances
+    });
+
+  } catch (error) {
+    console.error("🔥 GET ASSET BY ID ERROR:", error);
+    return next(error);
+  }
+};
 // =======================================================
 // 🔌 ROUTES
 // =======================================================
 router.get("/pending", getPendingInstances);
+router.get("/:id", getAssetById);
 
 module.exports = router;

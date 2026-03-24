@@ -107,7 +107,6 @@ app.use("/api/invites", inviteRoutes);
 app.use("/api/super-admin", superAdminRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/employees", employeeRoutes);
-
 app.use("/api/instance-assets", instanceRoutes);
 // ❗ Catch unknown routes (VERY IMPORTANT)
 app.all("*", (req, res, next) => {
