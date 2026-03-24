@@ -157,11 +157,10 @@ export const getHardwareAssets = async () => {
   return response.data;
 };
 export const getPendingInstances = async (filter) => {
-  const response = await axiosInstance.get("/assets", {
+  const response = await axiosInstance.get("/instance-assets/pending", {
     params: {
-      ...(filter !== "all" && { type: filter }),
-      instanceStatus: "missing",
-    },
+      type: filter
+    }
   });
 
   return response.data;

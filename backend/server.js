@@ -20,6 +20,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const statusRoutes = require("./routes/statusRoutes");
 const nodemailer = require("nodemailer");
 const updateRoutes = require("./routes/updateRoutes");
+const instanceRoutes = require("./routes/instanceRoutes");
 const softwareAssetRoutes = require("./routes/softwareAssets");
 const companyLicenseRoutes = require("./routes/coreCompanyLicenses");
 const adminRoutes = require("./routes/adminRoutes");
@@ -106,6 +107,8 @@ app.use("/api/invites", inviteRoutes);
 app.use("/api/super-admin", superAdminRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/employees", employeeRoutes);
+
+app.use("/instance-assets", instanceRoutes);
 // ❗ Catch unknown routes (VERY IMPORTANT)
 app.all("*", (req, res, next) => {
   const error = new Error(`Cannot find ${req.originalUrl}`);
