@@ -11,6 +11,7 @@
   const Location = require("../models/Location");
   const Organization = require("../models/Organization");
   const Status = require("../models/Status");
+  const SoftwareAsset = require("../models/SoftwareAsset");
   const AssetInstance = require("../models/AssetInstance");
 
 
