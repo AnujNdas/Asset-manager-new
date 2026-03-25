@@ -47,7 +47,7 @@ const HardwareAssetList = () => {
           getUnits(),
           getStatuses(),
         ]);
-
+        console.log(assetsRes);
       setAssets(assetsRes?.data ?? assetsRes ?? []);
       setCategories(catsRes?.data ?? catsRes ?? []);
       setLocations(locsRes?.data ?? locsRes ?? []);
