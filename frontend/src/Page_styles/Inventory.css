@@ -14,6 +14,7 @@
 }
 .tabs{
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .hardware-title {
@@ -140,7 +141,7 @@
 
 /* MODAL BOX */
 .asset-view-modal {
-  background: #111827;
+  background: #ffffff;
   padding: 20px;
   border-radius: 16px;
   width: 90%;
