@@ -137,7 +137,12 @@ assetInstanceSchema.index(
 );
 assetInstanceSchema.index(
   { organizationId: 1, uniqueIdentifier: 1 },
-  { unique: true, sparse: true }
+  {
+    unique: true,
+    partialFilterExpression: {
+      uniqueIdentifier: { $exists: true, $ne: null }
+    }
+  }
 );
 // 🔥 Fast lookup for assignments
 assetInstanceSchema.index({ organizationId: 1, status: 1 });
