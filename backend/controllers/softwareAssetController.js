@@ -618,7 +618,7 @@ const getSoftwareAssets = async (req, res) => {
       });
     }
 
-    // 1️⃣ Fetch software assets
+    // ================= 1️⃣ FETCH SOFTWARE ASSETS =================
     const assets = await SoftwareAsset.find({ organizationId })
       .sort({ createdAt: -1 })
       .lean();
@@ -629,7 +629,7 @@ const getSoftwareAssets = async (req, res) => {
 
     const assetIds = assets.map(a => a._id);
 
-    // 2️⃣ Fetch active software assignments
+    // ================= 2️⃣ FETCH ASSIGNMENTS =================
     const assignments = await AssetAssignment.find({
       organizationId,
       assetType: "software",
@@ -637,43 +637,43 @@ const getSoftwareAssets = async (req, res) => {
       assetId: { $in: assetIds }
     })
       .populate("departmentId", "name")
-      .populate("employeeId", "name employeeCode email") // ✅ FIXED
+      .populate("employeeId", "name employeeCode email")
       .lean();
 
     const assignmentMap = {};
 
     for (const assign of assignments) {
-      const assetId = String(assign.assetId);
+      const id = String(assign.assetId);
 
-      if (!assignmentMap[assetId]) {
-        assignmentMap[assetId] = {
+      if (!assignmentMap[id]) {
+        assignmentMap[id] = {
           inUse: 0,
           departmentMap: {},
           assignmentRecords: []
         };
       }
 
-      // 🔹 Total in use
-      assignmentMap[assetId].inUse += assign.quantity;
+      // 🔹 total usage
+      assignmentMap[id].inUse += assign.quantity;
 
-      // 🔹 Department aggregation
+      // 🔹 department aggregation
       if (assign.departmentId) {
         const deptId = String(assign.departmentId._id);
 
-        if (!assignmentMap[assetId].departmentMap[deptId]) {
-          assignmentMap[assetId].departmentMap[deptId] = {
+        if (!assignmentMap[id].departmentMap[deptId]) {
+          assignmentMap[id].departmentMap[deptId] = {
             department: assign.departmentId,
             quantity: 0
           };
         }
 
-        assignmentMap[assetId].departmentMap[deptId].quantity += assign.quantity;
+        assignmentMap[id].departmentMap[deptId].quantity += assign.quantity;
       }
 
-      // 🔥 Full assignment record (for modal)
-      assignmentMap[assetId].assignmentRecords.push({
+      // 🔹 assignment records (for modal)
+      assignmentMap[id].assignmentRecords.push({
         _id: assign._id,
-        employee: assign.employeeId, // ✅ FIXED
+        employee: assign.employeeId,
         department: assign.departmentId,
         assignLocation: assign.assignLocation,
         quantity: assign.quantity,
@@ -681,26 +681,51 @@ const getSoftwareAssets = async (req, res) => {
       });
     }
 
-    // Convert departmentMap → assignedDepartments
-    Object.keys(assignmentMap).forEach(assetId => {
-      assignmentMap[assetId].assignedDepartments = Object.values(
-        assignmentMap[assetId].departmentMap
+    // convert departmentMap → array
+    Object.keys(assignmentMap).forEach(id => {
+      assignmentMap[id].assignedDepartments = Object.values(
+        assignmentMap[id].departmentMap
       );
-      delete assignmentMap[assetId].departmentMap;
+      delete assignmentMap[id].departmentMap;
     });
 
-    // 3️⃣ Merge assignment data into assets
+    // ================= 3️⃣ FETCH INSTANCES =================
+    const instances = await AssetInstance.find({
+      organizationId,
+      assetType: "software",
+      assetId: { $in: assetIds }
+    }).lean();
+
+    const instanceMap = {};
+
+    for (const inst of instances) {
+      const id = String(inst.assetId);
+
+      if (!instanceMap[id]) instanceMap[id] = [];
+      instanceMap[id].push(inst);
+    }
+
+    // ================= 4️⃣ MERGE EVERYTHING =================
     const enrichedAssets = assets.map(asset => {
-      const assignmentData = assignmentMap[String(asset._id)];
+      const id = String(asset._id);
+
+      const assignmentData = assignmentMap[id] || {};
+      const assetInstances = instanceMap[id] || [];
 
       return {
         ...asset,
-        inUse: assignmentData?.inUse || 0,
-        assignedDepartments: assignmentData?.assignedDepartments || [],
-        assignmentRecords: assignmentData?.assignmentRecords || []
+
+        // 🔹 assignment data
+        inUse: assignmentData.inUse || 0,
+        assignedDepartments: assignmentData.assignedDepartments || [],
+        assignmentRecords: assignmentData.assignmentRecords || [],
+
+        // 🔥 INSTANCE DATA
+        instances: assetInstances
       };
     });
 
+    // ================= 5️⃣ RESPONSE =================
     res.json({
       success: true,
       data: enrichedAssets
@@ -708,6 +733,7 @@ const getSoftwareAssets = async (req, res) => {
 
   } catch (error) {
     console.error("GET SOFTWARE ASSETS ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: error.message
