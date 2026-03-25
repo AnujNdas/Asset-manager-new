@@ -138,7 +138,10 @@ const HardwareAssetList = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <h3>{asset.assetName}</h3>
+              <div className="card-header">
+                <h3>{asset.assetName}</h3>
+                <span>{asset.assetStatus.name}</span>
+              </div>
 
               <p>
                 <strong>Total Cost:</strong>{" "}
@@ -147,9 +150,22 @@ const HardwareAssetList = () => {
                   asset.assetCost?.baseTotalAmount ?? 0
                 ).toLocaleString()}
               </p>
+              <p>
+                <strong>Unit Cost:</strong>{" "}
+                {CURRENCY_SYMBOLS[currency]}{" "}
+                {convertFromBase(
+                  asset.assetCost?.unitAmount ?? 0
+                ).toLocaleString()}
+              </p>
 
               <p>
                 <strong>Quantity:</strong> {asset.assetQuantity}
+              </p>
+              <p>
+                <strong>Purchase Date:</strong> {asset.purchaseDetails.purchaseDate}
+              </p>
+              <p>
+                <strong>Type : </strong> {asset.type}
               </p>
 
               <div className="card-actions">
