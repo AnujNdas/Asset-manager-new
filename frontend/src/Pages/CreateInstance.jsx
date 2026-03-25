@@ -158,44 +158,61 @@ const CreateInstances = () => {
     try {
       setLoading(true);
 
-      const payload = instances.map((inst) => {
-        const base = {
-          serialNumber: inst.serialNumber,
-          condition: inst.condition,
-          location: inst.location,
+const payload = instances.map((inst) => {
+  if (isSoftware) {
+    return {
+      location: inst.location,
 
-          assetDetails: {
-            identifier: inst.modelNo,
-            description: inst.specifications
-          }
-        };
+      softwareDetails: {
+        licenseKey: inst.modelNo || "", // map from UI
+        licenseNumber: inst.modelNo || "",
+        vendor: "",
 
-        if (isHardware) {
-          base.warranty = inst.warrantyDate
-            ? { expiryDate: inst.warrantyDate }
-            : undefined;
+        purchaseDate: null,
+        renewalDate: null,
+        lastUsedDate: null,
 
-          base.installationDate =
-            inst.installationDate || undefined;
-
-          base.insurance = inst.insuranceExpiry
-            ? {
-                policyId: inst.insurancePolicyId,
-                expiryDate: inst.insuranceExpiry
-              }
-            : undefined;
-
-          base.costTracking = {
-            maintenanceCost:
-              Number(inst.maintenanceCost) || 0,
-            warrantyRenewalCost:
-              Number(inst.warrantyRenewalCost) || 0,
-            insuranceCost: Number(inst.insuranceCost) || 0
-          };
+        assignedTo: {
+          employeeId: null,
+          deviceName: "",
+          departmentId: null
         }
+      }
+    };
+  }
 
-        return base;
-      });
+  // ✅ Hardware
+  return {
+    serialNumber: inst.serialNumber,
+    condition: inst.condition,
+    location: inst.location,
+
+    hardwareDetails: {
+      modelNo: inst.modelNo,
+      specifications: inst.specifications
+    },
+
+    warranty: inst.warrantyDate
+      ? { expiryDate: inst.warrantyDate }
+      : undefined,
+
+    installationDate: inst.installationDate || undefined,
+
+    insurance: inst.insuranceExpiry
+      ? {
+          policyId: inst.insurancePolicyId,
+          expiryDate: inst.insuranceExpiry
+        }
+      : undefined,
+
+    costTracking: {
+      maintenanceCost: Number(inst.maintenanceCost) || 0,
+      warrantyRenewalCost:
+        Number(inst.warrantyRenewalCost) || 0,
+      insuranceCost: Number(inst.insuranceCost) || 0
+    }
+  };
+});
 
       await createAssetInstances({
         assetId,

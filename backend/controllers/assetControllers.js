@@ -1246,6 +1246,7 @@ softwareDetails:
     return res.status(201).json(saved);
 
   } catch (err) {
+  console.error("ERROR:", err.response?.data || err.message);
     return next(err);
   }
 };
