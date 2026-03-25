@@ -61,7 +61,14 @@ const HardwareAssetList = () => {
       setLoading(false);
     }
   };
-
+const formatDate = (date) => {
+  if (!date) return "N/A";
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};  
   const handleDelete = async (id) => {
     const resp = await Swal.fire({
       title: "Delete asset?",
@@ -161,11 +168,15 @@ const HardwareAssetList = () => {
               <p>
                 <strong>Quantity:</strong> {asset.assetQuantity}
               </p>
-              <p>
-                <strong>Purchase Date:</strong> {asset.purchaseDetails.purchaseDate}
-              </p>
+<p>
+  <strong>Purchase Date:</strong>{" "}
+  {formatDate(asset.purchaseDetails?.purchaseDate)}
+</p>
               <p>
                 <strong>Type : </strong> {asset.type}
+              </p>
+              <p>
+                <strong>Location : </strong> {asset.locationName?.name}
               </p>
 
               <div className="card-actions">
