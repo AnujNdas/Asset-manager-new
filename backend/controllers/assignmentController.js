@@ -195,10 +195,6 @@ const assignAssetInstance = async (req, res) => {
          VALIDATION
       ============================== */
 
-      if (!mongoose.Types.ObjectId.isValid(locationId)) {
-        throw new Error("Invalid location selected");
-      }
-
       const instance = await mongoose.model("AssetInstance").findOne({
         _id: assetInstanceId,
         assetId,
