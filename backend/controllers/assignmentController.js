@@ -3,6 +3,7 @@ const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 const sendNotification = require("../utils/notify");
+const AssetInstance = require("../models/AssetInstance");
 const Employee = require("../models/Employee");
 
 /* ============================
@@ -114,6 +115,28 @@ const getInStockCategorySummary = async (req, res) => {
   }
 };
 
+const getInstancesByAsset = async (req, res) => {
+  try {
+    const { assetId } = req.params;
+
+    const instances = await AssetInstance.find({
+      assetId,
+      status: "available", // only free instances
+    })
+      .select("instanceCode uniqueIdentifier status")
+      .lean();
+
+    res.json({
+      success: true,
+      data: instances,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 /* ============================
    Assign Assets From Stock
 ============================ */
@@ -483,5 +506,6 @@ module.exports = {
   assignAssetInstance,
   returnAssetInstance,
   getEmployeesByDepartment,
-  reassignAssetInstance
+  reassignAssetInstance,
+  getInstancesByAsset
 };

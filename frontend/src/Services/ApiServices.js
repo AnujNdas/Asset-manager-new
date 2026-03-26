@@ -401,6 +401,10 @@ export const reassignAssetInstance = async (assignmentId, payload) => {
   );
   return response.data;
 };
+export const getInstancesByAsset = async (assetId) => {
+  const res = await axiosInstance.get(`/instances/${assetId}`);
+  return res.data;
+};
 export const createInvite = async (data) => {
   const response = await axiosInstance.post("/invites", data);
   return response.data;

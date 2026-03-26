@@ -8,7 +8,8 @@ import {
   getInStockAssetsByCategory,
   assignAssetsFromStock,
   getDepartments,
-  getEmployeesByDepartment
+  getEmployeesByDepartment,
+  getInstancesByAsset
 } from "../Services/ApiServices";
 
 const steps = [
@@ -83,14 +84,19 @@ const AssignmentPage = () => {
     }
   }, [assetTypeFilter, assets]);
 
-  const selectAsset = (asset) => {
-    setSelectedAsset(asset);
+const selectAsset = async (asset) => {
+  setSelectedAsset(asset);
 
-    // 🔥 IMPORTANT: instances should come from asset.instances
-    setInstances(asset.instances || []);
-    setSelectedInstances([]);
-    setStep(2);
-  };
+  try {
+    const res = await getInstancesByAsset(asset._id);
+    setInstances(res.data || []);
+  } catch (err) {
+    Swal.fire("Error", "Failed to load instances", "error");
+  }
+
+  setSelectedInstances([]);
+  setStep(2);
+};
 
   /* ================= STEP 3 ================= */
   const toggleInstance = (instance) => {
@@ -166,166 +172,132 @@ const AssignmentPage = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="assignment-layout">
+  <div className="assignment-container">
 
-      {/* ===== SIDEBAR STEPS ===== */}
-      <div className="assignment-sidebar">
-        {steps.map((s, i) => (
-          <div
-            key={i}
-            className={`step-item ${step === i ? "active" : ""}`}
-          >
-            <span>{i + 1}</span>
-            <p>{s}</p>
+    {/* HEADER */}
+    <div className="assignment-header">
+      <h2>Asset Assignment</h2>
+      <p>Assign asset instances to employees</p>
+    </div>
+
+    {/* STEPS */}
+    <div className="steps">
+      {steps.map((s, i) => (
+        <div key={i} className={`step ${step === i ? "active" : ""}`}>
+          {i + 1}. {s}
+        </div>
+      ))}
+    </div>
+
+    {/* CONTENT */}
+    <div className="content">
+
+      {/* STEP 1 */}
+      {step === 0 && (
+        <div className="grid">
+          {categories.map(cat => (
+            <div key={cat.category} className="card" onClick={() => selectCategory(cat)}>
+              <h3>{cat.categoryName}</h3>
+              <p>{cat.totalInStock} available</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* STEP 2 */}
+      {step === 1 && (
+        <>
+          <div className="filter">
+            <button onClick={() => setAssetTypeFilter("all")}>All</button>
+            <button onClick={() => setAssetTypeFilter("hardware")}>Hardware</button>
+            <button onClick={() => setAssetTypeFilter("software")}>Software</button>
           </div>
-        ))}
-      </div>
 
-      {/* ===== MAIN CONTENT ===== */}
-      <div className="assignment-content">
-
-        {/* STEP 1 */}
-        {step === 0 && (
           <div className="grid">
-            {categories.map(cat => (
-              <div
-                key={cat.category}
-                className="card"
-                onClick={() => selectCategory(cat)}
-              >
-                <h3>{cat.categoryName}</h3>
-                <p>{cat.totalInStock} available</p>
+            {filteredAssets.map(asset => (
+              <div key={asset._id} className="card" onClick={() => selectAsset(asset)}>
+                <h3>{asset.name}</h3>
+                <p>{asset.available} available</p>
+                <span>{asset.assetType}</span>
               </div>
             ))}
           </div>
-        )}
+        </>
+      )}
 
-        {/* STEP 2 */}
-        {step === 1 && (
-          <>
-            <div className="filter-bar">
-              <button onClick={() => setAssetTypeFilter("all")}>All</button>
-              <button onClick={() => setAssetTypeFilter("hardware")}>Hardware</button>
-              <button onClick={() => setAssetTypeFilter("software")}>Software</button>
-            </div>
-
-            <div className="grid">
-              {filteredAssets.map(asset => (
-                <div
-                  key={asset._id}
-                  className="card"
-                  onClick={() => selectAsset(asset)}
-                >
-                  <h3>{asset.name}</h3>
-                  <p>{asset.available} available</p>
-                  <span>{asset.assetType}</span>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* STEP 3 - INSTANCES */}
-        {step === 2 && (
-          <div className="instance-grid">
-            {instances.length === 0 && <p>No instances available</p>}
-
-            {instances.map(inst => (
+      {/* STEP 3 */}
+      {step === 2 && (
+        <div className="instance-grid">
+          {instances.length === 0 ? (
+            <p>No instances found</p>
+          ) : (
+            instances.map(inst => (
               <div
                 key={inst._id}
-                className={`instance-card ${
-                  selectedInstances.find(i => i._id === inst._id)
-                    ? "selected"
-                    : ""
-                }`}
+                className={`instance ${selectedInstances.some(i => i._id === inst._id) ? "selected" : ""}`}
                 onClick={() => toggleInstance(inst)}
               >
                 <h4>{inst.instanceCode}</h4>
                 <p>{inst.uniqueIdentifier}</p>
                 <span>{inst.status}</span>
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* STEP 4 - ASSIGN */}
-        {step === 3 && (
-          <div className="form-grid">
-
-            <select onChange={(e) => handleDepartment(e.target.value)}>
-              <option>Select Department</option>
-              {departments.map(d => (
-                <option key={d._id} value={d._id}>{d.name}</option>
-              ))}
-            </select>
-
-            <select
-              onChange={(e) =>
-                setAssignmentData(p => ({ ...p, employee: e.target.value }))
-              }
-            >
-              <option>Select Employee</option>
-              {employees.map(e => (
-                <option key={e._id} value={e._id}>
-                  {e.name}
-                </option>
-              ))}
-            </select>
-
-            <input
-              placeholder="Location ID"
-              onChange={(e) =>
-                setAssignmentData(p => ({ ...p, location: e.target.value }))
-              }
-            />
-
-            <input
-              placeholder="Device Name"
-              onChange={(e) =>
-                setAssignmentData(p => ({ ...p, deviceName: e.target.value }))
-              }
-            />
-
-            <input
-              placeholder="Asset Tag"
-              onChange={(e) =>
-                setAssignmentData(p => ({ ...p, deviceTag: e.target.value }))
-              }
-            />
-          </div>
-        )}
-
-        {/* STEP 5 - REVIEW */}
-        {step === 4 && (
-          <div className="review-box">
-            <h3>Review Assignment</h3>
-
-            <p>Asset: {selectedAsset?.name}</p>
-            <p>Instances: {selectedInstances.length}</p>
-            <p>Department: {assignmentData.department}</p>
-            <p>Employee: {assignmentData.employee}</p>
-
-            <button onClick={handleSubmit} disabled={loading}>
-              {loading ? "Assigning..." : "Confirm Assignment"}
-            </button>
-          </div>
-        )}
-
-        {/* FOOTER */}
-        <div className="footer">
-          {step > 0 && (
-            <button onClick={() => setStep(step - 1)}>Back</button>
-          )}
-
-          {step < 4 && (
-            <button onClick={() => setStep(step + 1)}>
-              Next
-            </button>
+            ))
           )}
         </div>
-      </div>
+      )}
+
+      {/* STEP 4 */}
+      {step === 3 && (
+        <div className="form">
+          <select onChange={(e) => handleDepartment(e.target.value)}>
+            <option>Select Department</option>
+            {departments.map(d => (
+              <option key={d._id} value={d._id}>{d.name}</option>
+            ))}
+          </select>
+
+          <select onChange={(e) =>
+            setAssignmentData(p => ({ ...p, employee: e.target.value }))
+          }>
+            <option>Select Employee</option>
+            {employees.map(e => (
+              <option key={e._id} value={e._id}>{e.name}</option>
+            ))}
+          </select>
+
+          <input placeholder="Location ID"
+            onChange={(e) => setAssignmentData(p => ({ ...p, location: e.target.value }))} />
+
+          <input placeholder="Device Name"
+            onChange={(e) => setAssignmentData(p => ({ ...p, deviceName: e.target.value }))} />
+
+          <input placeholder="Asset Tag"
+            onChange={(e) => setAssignmentData(p => ({ ...p, deviceTag: e.target.value }))} />
+        </div>
+      )}
+
+      {/* STEP 5 */}
+      {step === 4 && (
+        <div className="review">
+          <h3>Review</h3>
+          <p><b>Asset:</b> {selectedAsset?.name}</p>
+          <p><b>Instances:</b> {selectedInstances.length}</p>
+          <button onClick={handleSubmit}>
+            {loading ? "Assigning..." : "Confirm"}
+          </button>
+        </div>
+      )}
+
     </div>
-  );
+
+    {/* FOOTER */}
+    <div className="footer">
+      {step > 0 && <button onClick={() => setStep(step - 1)}>Back</button>}
+      {step < 4 && <button onClick={() => setStep(step + 1)}>Next</button>}
+    </div>
+
+  </div>
+);
 };
 
 export default AssignmentPage;

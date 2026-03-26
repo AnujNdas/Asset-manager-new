@@ -5,7 +5,8 @@ const {
   assignAssetInstance,      // ✅ NEW
   returnAssetInstance,      // ✅ NEW
   reassignAssetInstance,    // ✅ NEW
-  getEmployeesByDepartment
+  getEmployeesByDepartment,
+  getInstancesByAsset
 } = require("../controllers/assignmentController");
 
 const authenticateToken = require("../Middleware/Authentication-token");
@@ -33,6 +34,7 @@ router.get("/instock/assets/:category", getInStockAssetsByCategory);
 
 router.get("/department/:departmentId", getEmployeesByDepartment);
 
+router.get("/instances/:assetId", getInstancesByAsset);
 /* ==================================
    INSTANCE-BASED ASSIGNMENT
 ================================== */
@@ -45,5 +47,4 @@ router.put("/return/:assignmentId", returnAssetInstance);
 
 // 🔥 Reassign instance
 router.put("/reassign/:assignmentId", reassignAssetInstance);
-
 module.exports = router;
