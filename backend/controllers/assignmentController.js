@@ -191,7 +191,13 @@ const assignAssetInstance = async (req, res) => {
         deviceInfo = {}
       } = item;
 
-      /* VALIDATION */
+      /* =============================
+         VALIDATION
+      ============================== */
+
+      if (!mongoose.Types.ObjectId.isValid(locationId)) {
+        throw new Error("Invalid location selected");
+      }
 
       const instance = await mongoose.model("AssetInstance").findOne({
         _id: assetInstanceId,
@@ -208,12 +214,14 @@ const assignAssetInstance = async (req, res) => {
 
       if (exists) throw new Error("Instance already assigned");
 
-      /* UPDATE INSTANCE */
+      /* =============================
+         UPDATE INSTANCE
+      ============================== */
 
       instance.status = "assigned";
-      instance.assignedTo = employeeId;
-      instance.departmentId = departmentId;
-      instance.location = locationId;
+      instance.assignedTo = new mongoose.Types.ObjectId(employeeId);
+      instance.departmentId = new mongoose.Types.ObjectId(departmentId);
+      instance.location = locationId; // plain string
 
       instance.lifecycle.push({
         action: "ASSIGNED",
@@ -223,7 +231,9 @@ const assignAssetInstance = async (req, res) => {
 
       await instance.save({ session });
 
-      /* CREATE ASSIGNMENT */
+      /* =============================
+         CREATE ASSIGNMENT
+      ============================== */
 
       const [assignment] = await AssetAssignment.create([{
         organizationId: req.user.organizationId,
@@ -240,7 +250,9 @@ const assignAssetInstance = async (req, res) => {
         assignedBy: req.user.id
       }], { session });
 
-      /* UPDATE ASSET */
+      /* =============================
+         UPDATE ASSET STOCK
+      ============================== */
 
       const Model =
         assetType === "hardware" ? Asset : SoftwareAsset;

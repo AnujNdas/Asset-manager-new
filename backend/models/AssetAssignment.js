@@ -54,10 +54,10 @@ const assignmentSchema = new mongoose.Schema(
       required: true,
     },
 
-    locationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Location",
+    location: {
+      type: String,
       required: true,
+      trim: true
     },
 
     /* 🔹 Device Info (Optional) */

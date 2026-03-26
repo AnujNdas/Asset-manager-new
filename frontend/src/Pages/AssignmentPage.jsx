@@ -266,7 +266,7 @@ const selectAsset = async (asset) => {
             ))}
           </select>
 
-          <input placeholder="Location ID"
+          <input placeholder="Assign Location"
             onChange={(e) => setAssignmentData(p => ({ ...p, location: e.target.value }))} />
 
           <input placeholder="Device Name"
