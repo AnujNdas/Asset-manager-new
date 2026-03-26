@@ -186,7 +186,26 @@
   color: #fff;
   cursor: pointer;
 }
+.assignment-box {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border-left: 3px solid #2563eb;
+  border-radius: 6px;
+}
 
+.instance-card {
+  background: white;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+  transition: 0.2s;
+}
+
+.instance-card:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .inventory-grid {

@@ -28,9 +28,6 @@ const HardwareAssetList = () => {
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const assetsPerPage = 8;
-
   const { currency, convertFromBase, loadingRates } = useCurrency();
 
   useEffect(() => {
@@ -47,7 +44,7 @@ const HardwareAssetList = () => {
           getUnits(),
           getStatuses(),
         ]);
-        console.log(assetsRes);
+
       setAssets(assetsRes?.data ?? assetsRes ?? []);
       setCategories(catsRes?.data ?? catsRes ?? []);
       setLocations(locsRes?.data ?? locsRes ?? []);
@@ -61,22 +58,18 @@ const HardwareAssetList = () => {
       setLoading(false);
     }
   };
-const formatDate = (date) => {
-  if (!date) return "N/A";
-  return new Date(date).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};  
+
+  const formatDate = (date) => {
+    if (!date) return "N/A";
+    return new Date(date).toLocaleDateString("en-IN");
+  };
+
   const handleDelete = async (id) => {
     const resp = await Swal.fire({
       title: "Delete asset?",
-      text: "This action cannot be undone.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Delete",
-      confirmButtonColor: "#d33",
     });
 
     if (!resp.isConfirmed) return;
@@ -86,15 +79,8 @@ const formatDate = (date) => {
       setAssets((prev) => prev.filter((a) => a._id !== id));
       Swal.fire("Deleted", "Asset removed.", "success");
     } catch (err) {
-      Swal.fire("Error", err.message || "Failed to delete asset", "error");
+      Swal.fire("Error", err.message || "Failed", "error");
     }
-  };
-
-  const getName = (list, value) => {
-    if (!value || !Array.isArray(list)) return "N/A";
-    const id = typeof value === "object" ? value._id : value;
-    const found = list.find((item) => String(item._id) === String(id));
-    return found ? found.name : "N/A";
   };
 
   const filteredAssets = assets.filter((asset) => {
@@ -105,92 +91,53 @@ const formatDate = (date) => {
     );
   });
 
-  const indexOfLast = currentPage * assetsPerPage;
-  const currentAssets = filteredAssets.slice(
-    indexOfLast - assetsPerPage,
-    indexOfLast
-  );
-
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
 
   return (
     <div className="inventory-container">
+
       {/* HEADER */}
       <div className="dashboard-header">
-        <h2 className="hardware-title">Hardware Inventory</h2>
+        <h2>Hardware Inventory</h2>
 
-        <div className="header-actions">
-          <input
-            type="text"
-            placeholder="Search Hardware..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="inventory-search-input"
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="inventory-search-input"
+        />
       </div>
 
-      {/* CARDS */}
+      {/* GRID */}
       <div className="inventory-grid">
         <AnimatePresence>
-          {currentAssets.map((asset) => (
+          {filteredAssets.map((asset) => (
             <motion.div
               key={asset._id}
               className="inventory-card"
-              layout
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="card-header">
-                <h3>{asset.assetName}</h3>
-                <span>{asset.assetStatus.name}</span>
-              </div>
+              <h3>{asset.assetName}</h3>
 
               <p>
-                <strong>Total Cost:</strong>{" "}
-                {CURRENCY_SYMBOLS[currency]}{" "}
+                Cost: {CURRENCY_SYMBOLS[currency]}{" "}
                 {convertFromBase(
                   asset.assetCost?.baseTotalAmount ?? 0
                 ).toLocaleString()}
               </p>
-              <p>
-                <strong>Unit Cost:</strong>{" "}
-                {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(
-                  asset.assetCost?.unitAmount ?? 0
-                ).toLocaleString()}
-              </p>
 
-              <p>
-                <strong>Quantity:</strong> {asset.assetQuantity}
-              </p>
-<p>
-  <strong>Purchase Date:</strong>{" "}
-  {formatDate(asset.purchaseDetails?.purchaseDate)}
-</p>
-              <p>
-                <strong>Type : </strong> {asset.type}
-              </p>
-              <p>
-                <strong>Location : </strong> {asset.locationName?.name}
-              </p>
+              <p>Qty: {asset.assetQuantity}</p>
+              <p>Date: {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
 
               <div className="card-actions">
-                <button
-                  className="btn-view"
-                  onClick={() => setSelectedAsset(asset)}
-                >
-                  View Instances
+                <button onClick={() => setSelectedAsset(asset)}>
+                  View
                 </button>
 
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(asset._id)}
-                >
+                <button onClick={() => handleDelete(asset._id)}>
                   Delete
                 </button>
               </div>
@@ -199,7 +146,7 @@ const formatDate = (date) => {
         </AnimatePresence>
       </div>
 
-      {/* ================= INSTANCE VIEW MODAL ================= */}
+      {/* MODAL */}
       <AnimatePresence>
         {selectedAsset && (
           <motion.div
@@ -213,59 +160,91 @@ const formatDate = (date) => {
               className="asset-view-modal"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3>
-                Instances — {selectedAsset.assetName}
-              </h3>
+              <h3>Instances — {selectedAsset.assetName}</h3>
 
-              {/* 🔥 CORE CHANGE: INSTANCE LOOP */}
-              {selectedAsset.instances?.length ? (
-                selectedAsset.instances.map((inst) => (
-                  <div key={inst._id} className="instance-card">
-                    <p><strong>Code:</strong> {inst.instanceCode}</p>
-                    <p><strong>Identifier:</strong> {inst.uniqueIdentifier}</p>
-                    <p><strong>Status:</strong> {inst.status}</p>
-                    <p><strong>Condition:</strong> {inst.condition}</p>
+              {/* 🔥 DATA PREP */}
+              {(() => {
+                const instances = selectedAsset.instances || [];
 
-                    <p>
-                      <strong>Location:</strong>{" "}
-                      {getName(locations, inst.location)}
-                    </p>
+                const assignmentMap = {};
+                selectedAsset.assignmentRecords?.forEach((a) => {
+                  assignmentMap[String(a.assetInstanceId)] = a;
+                });
 
-                    <p>
-                      <strong>Model:</strong>{" "}
-                      {inst.hardwareDetails?.modelNo}
-                    </p>
+                const assignedOnly = instances.filter(
+                  (i) => i.status === "assigned"
+                );
 
-                    <p>
-                      <strong>Specs:</strong>{" "}
-                      {inst.hardwareDetails?.specifications}
-                    </p>
+                const availableOnly = instances.filter(
+                  (i) => i.status === "in_stock"
+                );
 
-                    <p>
-                      <strong>Warranty:</strong>{" "}
-                      {inst.warranty?.expiryDate
-                        ? new Date(inst.warranty.expiryDate).toLocaleDateString()
-                        : "N/A"}
-                    </p>
+                return (
+                  <>
+                    {/* AVAILABLE */}
+                    <h4>Available</h4>
+                    {availableOnly.length === 0 ? (
+                      <p>No available instances</p>
+                    ) : (
+                      availableOnly.map((inst) => (
+                        <div key={inst._id} className="instance-card">
+                          <p><b>{inst.instanceCode}</b></p>
+                          <p>{inst.uniqueIdentifier}</p>
+                          <span style={{ color: "green" }}>
+                            Available
+                          </span>
+                        </div>
+                      ))
+                    )}
 
-                    <p>
-                      <strong>Insurance:</strong>{" "}
-                      {inst.insurance?.policyId}
-                    </p>
+                    {/* ASSIGNED */}
+                    <h4 style={{ marginTop: 20 }}>Assigned</h4>
+                    {assignedOnly.length === 0 ? (
+                      <p>No assigned instances</p>
+                    ) : (
+                      assignedOnly.map((inst) => {
+                        const assignment =
+                          assignmentMap[String(inst._id)];
 
-                    <p>
-                      <strong>Installed:</strong>{" "}
-                      {inst.installationDate
-                        ? new Date(inst.installationDate).toLocaleDateString()
-                        : "N/A"}
-                    </p>
+                        return (
+                          <div
+                            key={inst._id}
+                            className="instance-card assignment"
+                          >
+                            <p><b>{inst.instanceCode}</b></p>
+                            <p>{inst.uniqueIdentifier}</p>
 
-                    <hr />
-                  </div>
-                ))
-              ) : (
-                <p>No instances found</p>
-              )}
+                            <span style={{ color: "red" }}>
+                              Assigned
+                            </span>
+
+                            {assignment && (
+                              <div className="assignment-box">
+                                <p>
+                                  <b>Employee:</b>{" "}
+                                  {assignment.employee?.name}
+                                </p>
+                                <p>
+                                  <b>Department:</b>{" "}
+                                  {assignment.department?.name}
+                                </p>
+                                <p>
+                                  <b>Location:</b>{" "}
+                                  {assignment.location}
+                                </p>
+                                <p>
+                                  <b>Device:</b>{" "}
+                                  {assignment.deviceInfo?.deviceName}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </>
+                );
+              })()}
 
               <button
                 className="asset-view-close-btn"
