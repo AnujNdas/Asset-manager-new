@@ -90,6 +90,7 @@ const selectAsset = async (asset) => {
   try {
     const res = await getInstancesByAsset(asset._id);
     setInstances(res.data || []);
+    console.log(res)
   } catch (err) {
     Swal.fire("Error", "Failed to load instances", "error");
   }
