@@ -66,6 +66,7 @@ const AssignmentPage = () => {
   const selectCategory = async (cat) => {
     setSelectedCategory(cat);
     const res = await getInStockAssetsByCategory(cat.category);
+    console.log(res)
     setAssets(res.data || []);
     setFilteredAssets(res.data || []);
     setStep(1);
