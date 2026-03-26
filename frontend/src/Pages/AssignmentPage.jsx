@@ -132,7 +132,7 @@ const selectAsset = async (asset) => {
       assetInstanceId: inst._id,
       departmentId: assignmentData.department,
       employeeId: assignmentData.employee,
-      locationId: assignmentData.location,
+      location: assignmentData.location,
       deviceInfo: {
         deviceName: assignmentData.deviceName,
         assetTag: assignmentData.deviceTag

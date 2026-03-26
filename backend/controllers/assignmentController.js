@@ -187,7 +187,7 @@ const assignAssetInstance = async (req, res) => {
         assetInstanceId,
         departmentId,
         employeeId,
-        locationId,
+        location,
         deviceInfo = {}
       } = item;
 
@@ -209,7 +209,9 @@ const assignAssetInstance = async (req, res) => {
       }).session(session);
 
       if (exists) throw new Error("Instance already assigned");
-
+      if (!location || !location.trim()) {
+          throw new Error("Location is required");
+        }
       /* =============================
          UPDATE INSTANCE
       ============================== */
@@ -217,7 +219,7 @@ const assignAssetInstance = async (req, res) => {
       instance.status = "assigned";
       instance.assignedTo = new mongoose.Types.ObjectId(employeeId);
       instance.departmentId = new mongoose.Types.ObjectId(departmentId);
-      instance.location = locationId; // plain string
+      instance.location = location; // plain string
 
       instance.lifecycle.push({
         action: "ASSIGNED",
@@ -239,7 +241,7 @@ const assignAssetInstance = async (req, res) => {
         assetModel: assetType === "hardware" ? "Asset" : "SoftwareAsset",
         departmentId,
         employeeId,
-        locationId,
+        location,
         deviceInfo,
         quantity: 1,
         status: "active",
