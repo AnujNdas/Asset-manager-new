@@ -20,8 +20,8 @@ const assignmentSchema = new mongoose.Schema(
 
     assetModel: {
       type: String,
-      required: true,
       enum: ["Asset", "SoftwareAsset"],
+      required: true,
     },
 
     assetType: {
@@ -30,54 +30,43 @@ const assignmentSchema = new mongoose.Schema(
       required: true,
     },
 
-    // 🔥 FUTURE READY (optional for now)
+    /* 🔥 CORE CHANGE: Instance Required */
+
     assetInstanceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AssetInstance",
-      default: null,
+      required: true,
+      unique: true, // 🔥 prevents double assignment
       index: true,
     },
 
-    /* 🔹 Ownership Context */
+    /* 🔹 Ownership */
 
     departmentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Department",
       required: true,
-      index: true,
     },
 
     employeeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Employee",
       required: true,
-      index: true,
     },
-
-    /* 🔹 Location (FIXED) */
 
     locationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Location",
       required: true,
-      index: true,
     },
 
-    /* 🔹 Device Context (PDF REQUIREMENT) */
+    /* 🔹 Device Info (Optional) */
 
     deviceInfo: {
-      assetTag: String,       // DELLIDEA001
+      assetTag: String,
       serialNumber: String,
       modelNumber: String,
-      deviceName: String
-    },
-
-    /* 🔹 Quantity (TEMP until instance model) */
-
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1,
+      deviceName: String,
     },
 
     /* 🔹 Status */
@@ -89,7 +78,7 @@ const assignmentSchema = new mongoose.Schema(
       index: true,
     },
 
-    /* 🔹 Assignment Lifecycle */
+    /* 🔹 Lifecycle */
 
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -102,41 +91,29 @@ const assignmentSchema = new mongoose.Schema(
       default: Date.now,
     },
 
-    returnedAt: {
-      type: Date,
-      default: null,
-    },
+    returnedAt: Date,
 
     returnedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default: null,
     },
 
-    /* 🔥 NEW: Reassignment Tracking */
+    /* 🔥 Reassignment */
 
     reassignedFrom: {
-      employeeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee",
-      },
-      departmentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Department",
-      },
+      employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+      departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
       date: Date,
     },
 
-    /* 🔥 Metadata (AI-ready) */
-
-    metadata: {
-      type: mongoose.Schema.Types.Mixed
-    }
-
+    metadata: mongoose.Schema.Types.Mixed,
   },
   { timestamps: true }
 );
-
+assignmentSchema.index(
+  { assetInstanceId: 1, status: 1 },
+  { unique: true, partialFilterExpression: { status: "active" } }
+);
 /* 🔹 Optimized Index */
 assignmentSchema.index({
   organizationId: 1,

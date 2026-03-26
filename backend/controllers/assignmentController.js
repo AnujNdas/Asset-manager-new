@@ -117,151 +117,110 @@ const getInStockCategorySummary = async (req, res) => {
 /* ============================
    Assign Assets From Stock
 ============================ */
-const assignAssetsFromStock = async (req, res) => {
+const assignAssetInstance = async (req, res) => {
   if (!req.user?.organizationId) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const orgId = req.user.organizationId;
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const { assignments } = req.body;
+    const {
+      assetType,
+      assetId,
+      assetInstanceId, // 🔥 REQUIRED NOW
+      departmentId,
+      employeeId,
+      locationId
+    } = req.body;
 
-    if (!Array.isArray(assignments) || assignments.length === 0) {
-      throw new Error("No assignments provided");
+    if (!assetInstanceId) {
+      throw new Error("Instance ID is required");
     }
 
-    const createdAssignments = [];
+    /* =============================
+       VALIDATE EMPLOYEE + DEPT
+    ============================== */
 
-    for (const item of assignments) {
-      const {
-        assetType,
-        assetId,
-        departmentId,
-        employeeId,
-        locationId,
-        quantity,
-        deviceInfo = {}
-      } = item;
+    const Department = mongoose.model("Department");
 
-      /* =============================
-         VALIDATION
-      ============================== */
+    const department = await Department.findOne({
+      _id: departmentId,
+      organizationId: req.user.organizationId
+    }).session(session);
 
-      if (!assetType || !assetId || !departmentId || !employeeId || !quantity) {
-        throw new Error("Missing required assignment fields");
-      }
+    if (!department) throw new Error("Department not found");
 
-      if (!locationId) {
-        throw new Error("Location is required");
-      }
+    const employee = await Employee.findOne({
+      _id: employeeId,
+      departmentId,
+      organizationId: req.user.organizationId
+    }).session(session);
 
-      if (quantity <= 0) {
-        throw new Error("Quantity must be greater than zero");
-      }
+    if (!employee) throw new Error("Invalid employee");
 
-      /* =============================
-         VALIDATE DEPARTMENT + EMPLOYEE
-      ============================== */
+    /* =============================
+       CHECK INSTANCE AVAILABILITY
+    ============================== */
 
-      const Department = mongoose.model("Department");
+    const instance = await mongoose.model("AssetInstance").findOne({
+      _id: assetInstanceId,
+      assetId,
+      status: "available"
+    }).session(session);
 
-      const department = await Department.findOne({
-        _id: departmentId,
-        organizationId: orgId
-      }).session(session);
-
-      if (!department) {
-        throw new Error("Department not found");
-      }
-
-      const employee = await Employee.findOne({
-        _id: employeeId,
-        departmentId,
-        organizationId: orgId
-      }).session(session);
-
-      if (!employee) {
-        throw new Error("Employee not valid for department");
-      }
-
-      /* =============================
-         FETCH ASSET & CHECK STOCK
-      ============================== */
-
-      const Model =
-        assetType === "hardware" ? Asset : SoftwareAsset;
-
-      const asset = await Model.findOneAndUpdate(
-        {
-          _id: assetId,
-          organizationId: orgId,
-          $expr: {
-            $gte: [
-              { $subtract: ["$assetQuantity", "$inUse"] },
-              quantity
-            ]
-          }
-        },
-        { $inc: { inUse: quantity } },
-        { new: true, session }
-      );
-
-      if (!asset) {
-        throw new Error("Insufficient stock");
-      }
-
-      /* =============================
-         SAFE MERGE CHECK (IMPORTANT)
-      ============================== */
-
-      const existingAssignment = await AssetAssignment.findOne({
-        organizationId: orgId,
-        assetId,
-        employeeId,
-        departmentId,
-        locationId,
-        status: "active",
-        "deviceInfo.assetTag": deviceInfo.assetTag || null
-      }).session(session);
-
-      let assignment;
-
-      if (existingAssignment) {
-        existingAssignment.quantity += quantity;
-        await existingAssignment.save({ session });
-        assignment = existingAssignment;
-      } else {
-        [assignment] = await AssetAssignment.create(
-          [{
-            organizationId: orgId,
-            assetType,
-            assetId,
-            assetModel: Model.modelName,
-            departmentId,
-            employeeId,
-            locationId,
-            quantity,
-            deviceInfo,
-            status: "active",
-            assignedBy: req.user.id
-          }],
-          { session }
-        );
-      }
-
-      createdAssignments.push(assignment);
+    if (!instance) {
+      throw new Error("Instance not available");
     }
+
+    /* =============================
+       MARK INSTANCE ASSIGNED
+    ============================== */
+
+    instance.status = "assigned";
+    instance.assignedTo = employeeId;
+    instance.departmentId = departmentId;
+    await instance.save({ session });
+
+    /* =============================
+       CREATE ASSIGNMENT
+    ============================== */
+
+    const assignment = await AssetAssignment.create([{
+      organizationId: req.user.organizationId,
+      assetId,
+      assetInstanceId, // 🔥 KEY CHANGE
+      assetType,
+      assetModel: assetType === "hardware" ? "Asset" : "SoftwareAsset",
+      departmentId,
+      employeeId,
+      locationId,
+      quantity: 1, // still required for compatibility
+      status: "active",
+      assignedBy: req.user.id
+    }], { session });
+
+    /* =============================
+       UPDATE inUse (OPTIONAL)
+    ============================== */
+
+    const Model =
+      assetType === "hardware" ? Asset : SoftwareAsset;
+
+    await Model.findByIdAndUpdate(
+      assetId,
+      { $inc: { inUse: 1 } },
+      { session }
+    );
 
     await session.commitTransaction();
     session.endSession();
 
     res.status(201).json({
       success: true,
-      message: "Assets assigned successfully",
-      data: createdAssignments
+      message: "Instance assigned successfully",
+      data: assignment
     });
 
   } catch (error) {
@@ -277,38 +236,38 @@ const assignAssetsFromStock = async (req, res) => {
 
 
 
-
 /* ============================
    Return Asset
 ============================ */
-const returnAsset = async (req, res) => {
-  if (!req.user?.organizationId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const orgId = req.user.organizationId;
+const returnAssetInstance = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
     const { assignmentId } = req.params;
 
-    /* =============================
-       FETCH ACTIVE ASSIGNMENT ONLY
-    ============================== */
+    const assignment = await AssetAssignment.findById(assignmentId).session(session);
 
-    const assignment = await AssetAssignment.findOne({
-      _id: assignmentId,
-      organizationId: orgId,
-      status: "active"
-    }).session(session);
-
-    if (!assignment) {
-      throw new Error("Invalid or already returned assignment");
+    if (!assignment || assignment.status !== "active") {
+      throw new Error("Invalid assignment");
     }
 
     /* =============================
-       FETCH ASSET
+       UPDATE INSTANCE
+    ============================== */
+
+    const instance = await mongoose.model("AssetInstance").findById(
+      assignment.assetInstanceId
+    ).session(session);
+
+    if (!instance) throw new Error("Instance not found");
+
+    instance.status = "available";
+    instance.assignedTo = null;
+    await instance.save({ session });
+
+    /* =============================
+       UPDATE ASSET inUse
     ============================== */
 
     const Model =
@@ -316,33 +275,20 @@ const returnAsset = async (req, res) => {
         ? Asset
         : SoftwareAsset;
 
-    const asset = await Model.findOne({
-      _id: assignment.assetId,
-      organizationId: orgId
-    }).session(session);
-
-    if (!asset) {
-      throw new Error("Asset not found");
-    }
-
-    if (asset.inUse < assignment.quantity) {
-      throw new Error("Stock integrity violation");
-    }
+    await Model.findByIdAndUpdate(
+      assignment.assetId,
+      { $inc: { inUse: -1 } },
+      { session }
+    );
 
     /* =============================
-       UPDATE STOCK
-    ============================== */
-
-    asset.inUse -= assignment.quantity;
-    await asset.save({ session });
-
-    /* =============================
-       UPDATE ASSIGNMENT
+       CLOSE ASSIGNMENT
     ============================== */
 
     assignment.status = "returned";
     assignment.returnedAt = new Date();
-    assignment.returnedBy = req.user.id; // optional but recommended
+    assignment.returnedBy = req.user.id;
+
     await assignment.save({ session });
 
     await session.commitTransaction();
@@ -350,7 +296,7 @@ const returnAsset = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Asset returned successfully"
+      message: "Instance returned successfully"
     });
 
   } catch (error) {
@@ -456,7 +402,7 @@ const getEmployeesByDepartment = async (req, res) => {
     });
   }
 };
-const reassignAsset = async (req, res) => {
+const reassignAssetInstance = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -470,21 +416,39 @@ const reassignAsset = async (req, res) => {
       throw new Error("Invalid assignment");
     }
 
-    // mark old as transferred
+    /* =============================
+       UPDATE INSTANCE OWNER
+    ============================== */
+
+    const instance = await mongoose.model("AssetInstance").findById(
+      oldAssignment.assetInstanceId
+    ).session(session);
+
+    instance.assignedTo = newEmployeeId;
+    instance.departmentId = newDepartmentId;
+    await instance.save({ session });
+
+    /* =============================
+       CLOSE OLD ASSIGNMENT
+    ============================== */
+
     oldAssignment.status = "transferred";
     await oldAssignment.save({ session });
 
-    // create new assignment
+    /* =============================
+       CREATE NEW ASSIGNMENT
+    ============================== */
+
     const newAssignment = await AssetAssignment.create([{
       organizationId: oldAssignment.organizationId,
       assetId: oldAssignment.assetId,
-      assetModel: oldAssignment.assetModel,
+      assetInstanceId: oldAssignment.assetInstanceId,
       assetType: oldAssignment.assetType,
+      assetModel: oldAssignment.assetModel,
       departmentId: newDepartmentId,
       employeeId: newEmployeeId,
       locationId: newLocationId,
-      quantity: oldAssignment.quantity,
-      deviceInfo: oldAssignment.deviceInfo,
+      quantity: 1,
       status: "active",
       assignedBy: req.user.id,
       reassignedFrom: {
@@ -499,7 +463,7 @@ const reassignAsset = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Asset reassigned successfully",
+      message: "Instance reassigned successfully",
       data: newAssignment
     });
 
@@ -516,8 +480,8 @@ const reassignAsset = async (req, res) => {
 module.exports = {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
-  assignAssetsFromStock,
-  returnAsset,
+  assignAssetInstance,
+  returnAssetInstance,
   getEmployeesByDepartment,
-  reassignAsset
+  reassignAssetInstance
 };

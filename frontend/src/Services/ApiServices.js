@@ -381,7 +381,7 @@ export const assignAssetsFromStock = async (assignments) => {
    * }
    */
   const response = await axiosInstance.post(
-    "/assignment/instock/assign",
+    "/assignment/assign-instance",
     assignments
   );
   return response.data;
@@ -391,6 +391,13 @@ export const assignAssetsFromStock = async (assignments) => {
 export const returnAssignedAsset = async (assignmentId) => {
   const response = await axiosInstance.put(
     `/assignment/return/${assignmentId}`
+  );
+  return response.data;
+};
+export const reassignAssetInstance = async (assignmentId, payload) => {
+  const response = await axiosInstance.put(
+    `/assignment/reassign/${assignmentId}`,
+    payload
   );
   return response.data;
 };

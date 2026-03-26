@@ -2,8 +2,9 @@ const express = require("express");
 const {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
-  assignAssetsFromStock,
-  returnAsset,
+  assignAssetInstance,      // ✅ NEW
+  returnAssetInstance,      // ✅ NEW
+  reassignAssetInstance,    // ✅ NEW
   getEmployeesByDepartment
 } = require("../controllers/assignmentController");
 
@@ -16,23 +17,33 @@ const router = express.Router();
 /* ----------------------------------
    GLOBAL PROTECTION FOR THIS ROUTER
 ----------------------------------- */
-
 router.use(
   authenticateToken(["admin","user"]),
   tenantMiddleware,
   requireActiveSubscription
 );
 
-// ---- IN-STOCK ASSIGNMENT FLOW ----
+/* ==================================
+   IN-STOCK FLOW (UNCHANGED)
+================================== */
+
 router.get("/instock/category-summary", getInStockCategorySummary);
 
 router.get("/instock/assets/:category", getInStockAssetsByCategory);
 
-router.post("/instock/assign", assignAssetsFromStock);
-
 router.get("/department/:departmentId", getEmployeesByDepartment);
 
-// ---- RETURN ASSIGNED ASSET ----
-router.put("/return/:assignmentId", returnAsset);
+/* ==================================
+   INSTANCE-BASED ASSIGNMENT
+================================== */
+
+// 🔥 Assign SINGLE instance
+router.post("/assign-instance", assignAssetInstance);
+
+// 🔥 Return instance
+router.put("/return/:assignmentId", returnAssetInstance);
+
+// 🔥 Reassign instance
+router.put("/reassign/:assignmentId", reassignAssetInstance);
 
 module.exports = router;

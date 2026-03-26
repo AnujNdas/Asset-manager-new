@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+// ✅ src/Pages/AssignmentPage.jsx
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "../Page_styles/AssignmentPage.css";
-import Pagination from "../Components/Pagination";
-import { useLocation } from "react-router-dom";
 
 import {
   getInStockCategorySummary,
@@ -12,475 +11,319 @@ import {
   getEmployeesByDepartment
 } from "../Services/ApiServices";
 
+const steps = [
+  "Category",
+  "Assets",
+  "Instances",
+  "Assignment",
+  "Review"
+];
+
 const AssignmentPage = () => {
-  const location = useLocation();
-const preselectedAsset = location.state;
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
+
   const [categories, setCategories] = useState([]);
-  const [employees, setEmployees] = useState([]);
+  const [assets, setAssets] = useState([]);
+  const [filteredAssets, setFilteredAssets] = useState([]);
+  const [instances, setInstances] = useState([]);
+
   const [departments, setDepartments] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [employees, setEmployees] = useState([]);
 
-  /* =============================
-     PAGINATION STATE
-  ============================== */
-  const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 12;
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [selectedInstances, setSelectedInstances] = useState([]);
 
-  const totalPages = Math.ceil(categories.length / categoriesPerPage);
+  const [assetTypeFilter, setAssetTypeFilter] = useState("all");
 
-  const paginatedCategories = useMemo(() => {
-    const startIndex = (currentPage - 1) * categoriesPerPage;
-    return categories.slice(startIndex, startIndex + categoriesPerPage);
-  }, [categories, currentPage]);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const [wizardData, setWizardData] = useState({
-    category: null,
-    assets: [],
-    selectedAssets: {},
+  const [assignmentData, setAssignmentData] = useState({
     department: "",
-    employee: ""
+    employee: "",
+    location: "",
+    deviceName: "",
+    deviceTag: ""
   });
 
-  /* =============================
-     INITIAL LOAD
-  ============================== */
-useEffect(() => {
-  fetchCategories();
-  fetchDepartments();
+  const [loading, setLoading] = useState(false);
 
-  if (preselectedAsset?.categoryId) {
-    preselectAsset(preselectedAsset);
-  }
-}, []);
+  /* ================= LOAD ================= */
+  useEffect(() => {
+    fetchCategories();
+    fetchDepartments();
+  }, []);
 
   const fetchCategories = async () => {
-    try {
-      const res = await getInStockCategorySummary();
-      console.log("Category summary", res.data);
-      const data = res.data || [];
-      setCategories(data);
-      setCurrentPage(1); // reset pagination
-    } catch {
-      Swal.fire("Error", "Failed to load categories", "error");
-    }
+    const res = await getInStockCategorySummary();
+    setCategories(res.data || []);
   };
 
   const fetchDepartments = async () => {
-    try {
-      const res = await getDepartments();
-      setDepartments(res.data || res || []);
-    } catch {
-      Swal.fire("Error", "Failed to load departments", "error");
+    const res = await getDepartments();
+    setDepartments(res.data || res || []);
+  };
+
+  /* ================= STEP 1 ================= */
+  const selectCategory = async (cat) => {
+    setSelectedCategory(cat);
+    const res = await getInStockAssetsByCategory(cat.category);
+    setAssets(res.data || []);
+    setFilteredAssets(res.data || []);
+    setStep(1);
+  };
+
+  /* ================= STEP 2 ================= */
+  useEffect(() => {
+    if (assetTypeFilter === "all") {
+      setFilteredAssets(assets);
+    } else {
+      setFilteredAssets(
+        assets.filter(a => a.assetType === assetTypeFilter)
+      );
+    }
+  }, [assetTypeFilter, assets]);
+
+  const selectAsset = (asset) => {
+    setSelectedAsset(asset);
+
+    // 🔥 IMPORTANT: instances should come from asset.instances
+    setInstances(asset.instances || []);
+    setSelectedInstances([]);
+    setStep(2);
+  };
+
+  /* ================= STEP 3 ================= */
+  const toggleInstance = (instance) => {
+    const exists = selectedInstances.find(i => i._id === instance._id);
+
+    if (exists) {
+      setSelectedInstances(prev =>
+        prev.filter(i => i._id !== instance._id)
+      );
+    } else {
+      setSelectedInstances(prev => [...prev, instance]);
     }
   };
 
-  const fetchUsers = async (departmentId) => {
-    try {
-      const res = await getEmployeesByDepartment(departmentId);
-      setEmployees(res.data || []);
-    } catch (err) {
-      console.error(err);
-      setEmployees([]);
-      Swal.fire("Error", "Failed to load employees", "error");
-    }
-  };
-  const preselectAsset = async ({ categoryId, assetId }) => {
-  try {
-    const res = await getInStockAssetsByCategory(categoryId);
-    const assets = res.data || [];
+  /* ================= STEP 4 ================= */
+  const handleDepartment = async (depId) => {
+    setAssignmentData(prev => ({ ...prev, department: depId }));
 
-    const asset = assets.find(a => a._id === assetId);
-
-    if (!asset) return;
-
-    setWizardData({
-      category: {
-        category: categoryId,
-        categoryName: asset.assetCategoryName || asset.name
-      },
-      assets,
-      selectedAssets: {
-        [assetId]: {
-          quantity: 1,
-          location: ""
-        }
-      },
-      department: "",
-      employee: ""
-    });
-
-    setStep(2); // skip category step
-  } catch {
-    Swal.fire("Error", "Failed to load selected asset", "error");
-  }
-};
-  /* =============================
-     STEP NAVIGATION VALIDATION
-  ============================== */
-  const goNext = () => {
-    if (step === 1 && !wizardData.category)
-      return Swal.fire("Select a category first");
-
-    if (step === 2) {
-      const hasSelection = Object.values(wizardData.selectedAssets)
-        .some(a => a.quantity > 0);
-      if (!hasSelection)
-        return Swal.fire("Select at least one asset");
-    }
-
-    if (step === 3 && !wizardData.department)
-      return Swal.fire("Select department");
-
-    if (step === 4 && !wizardData.employee)
-      return Swal.fire("Select employee");
-
-    setStep(prev => prev + 1);
+    const res = await getEmployeesByDepartment(depId);
+    setEmployees(res.data || []);
   };
 
-  const goBack = () => setStep(prev => prev - 1);
-
-  /* =============================
-     STEP 1 — CATEGORY
-  ============================== */
-  const handleCategorySelect = async (category) => {
-    try {
-      const res = await getInStockAssetsByCategory(category.category);
-      console.log("Assets for category", category.category, res.data);
-      setWizardData(prev => ({
-        ...prev,
-        category,
-        assets: res.data || [],
-        selectedAssets: {}
-      }));
-      setStep(2);
-    } catch {
-      Swal.fire("Error", "Failed to load assets", "error");
-    }
-  };
-
-  /* =============================
-     STEP 2 — ASSETS
-  ============================== */
-  const handleQtyChange = (assetId, value, max) => {
-    const qty = Math.max(0, Math.min(Number(value), max));
-
-    setWizardData(prev => ({
-      ...prev,
-      selectedAssets: {
-        ...prev.selectedAssets,
-        [assetId]: {
-          ...prev.selectedAssets[assetId],
-          quantity: qty,
-          location: prev.selectedAssets[assetId]?.location || ""
-        }
-      }
-    }));
-  };
-
-  /* =============================
-     STEP 3 — DEPARTMENT
-  ============================== */
-  const handleDepartmentSelect = (depId) => {
-    setWizardData(prev => ({
-      ...prev,
-      department: depId,
-      employee: ""
-    }));
-    fetchUsers(depId);
-  };
-
-  /* =============================
-     STEP 5 — LOCATION
-  ============================== */
-  const handleLocationChange = (assetId, value) => {
-    setWizardData(prev => ({
-      ...prev,
-      selectedAssets: {
-        ...prev.selectedAssets,
-        [assetId]: {
-          ...prev.selectedAssets[assetId],
-          location: value
-        }
-      }
-    }));
-  };
-
-  /* =============================
-     FINAL SUBMIT
-  ============================== */
+  /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
-    const selected = Object.entries(wizardData.selectedAssets)
-      .filter(([_, val]) => val.quantity > 0);
+    if (!selectedInstances.length) {
+      return Swal.fire("Select at least one instance");
+    }
 
-    if (selected.some(([_, val]) => !val.location.trim()))
-      return Swal.fire("All selected assets require location");
-
-    const payload = selected.map(([assetId, val]) => {
-      const asset = wizardData.assets.find(a => a._id === assetId);
-      return {
-        assetId,
-        assetType: asset.assetType,
-        departmentId: wizardData.department,
-        employeeId: wizardData.employee,
-        assignLocation: val.location,
-        quantity: val.quantity
-      };
-    });
+    const payload = selectedInstances.map(inst => ({
+      assetId: selectedAsset._id,
+      assetType: selectedAsset.assetType,
+      assetInstanceId: inst._id,
+      departmentId: assignmentData.department,
+      employeeId: assignmentData.employee,
+      locationId: assignmentData.location,
+      deviceInfo: {
+        deviceName: assignmentData.deviceName,
+        assetTag: assignmentData.deviceTag
+      },
+      quantity: 1
+    }));
 
     try {
       setLoading(true);
-      await assignAssetsFromStock({ assignments: payload });
-      Swal.fire("Success", "Assets assigned successfully", "success");
-      resetWizard();
-    } catch {
-      Swal.fire("Error", "Assignment failed", "error");
+
+      await assignAssetsFromStock({
+        assignments: payload
+      });
+
+      Swal.fire("Success", "Instances assigned successfully", "success");
+
+      resetAll();
+    } catch (err) {
+      Swal.fire("Error", err.message || "Assignment failed", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const resetWizard = () => {
-    setStep(1);
-    setCurrentPage(1);
-    setWizardData({
-      category: null,
-      assets: [],
-      selectedAssets: {},
+  const resetAll = () => {
+    setStep(0);
+    setSelectedCategory(null);
+    setSelectedAsset(null);
+    setSelectedInstances([]);
+    setAssignmentData({
       department: "",
-      employee: ""
+      employee: "",
+      location: "",
+      deviceName: "",
+      deviceTag: ""
     });
   };
 
-  /* =============================
-     RENDER
-  ============================== */
-  useEffect(() => {
-    const guideSeen = localStorage.getItem("assignmentpageguideseen");
-  
-    if (!guideSeen) {
-      showGuide();
-    }
-  }, []);
-  const showGuide = async () => {
-    const steps = [
-      {
-        title: "Team Creation",
-        image: "/guide/assignment.webp",
-        text : "Mandatory for assigning assets"
-      },
-
-    ];
-  
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
-  
-      const result = await Swal.fire({
-        title: step.title,
-        html: `
-          <div style="display:flex;flex-direction:column;align-items:center">
-            <img src="${step.image}" 
-                 style="max-width:320px;margin-bottom:15px;border-radius:8px" />
-            <p style="font-size:14px">${step.text}</p>  
-          </div>
-        `,
-        confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
-        showCancelButton: true,
-        cancelButtonText: "Skip",
-        confirmButtonColor: "#2563eb",
-        cancelButtonColor: "#9ca3af",
-        width: 500
-      });
-  
-      if (result.dismiss === Swal.DismissReason.cancel) {
-        break;
-      }
-    }
-  
-    localStorage.setItem("assignmentpageguideseen", "true");
-  };
-  
+  /* ================= UI ================= */
   return (
-    <div className="wizard-container">
+    <div className="assignment-layout">
 
-      <WizardStepper step={step} showGuide={showGuide}/>
+      {/* ===== SIDEBAR STEPS ===== */}
+      <div className="assignment-sidebar">
+        {steps.map((s, i) => (
+          <div
+            key={i}
+            className={`step-item ${step === i ? "active" : ""}`}
+          >
+            <span>{i + 1}</span>
+            <p>{s}</p>
+          </div>
+        ))}
+      </div>
 
-      {step === 1 && (
-        <>
+      {/* ===== MAIN CONTENT ===== */}
+      <div className="assignment-content">
+
+        {/* STEP 1 */}
+        {step === 0 && (
           <div className="grid">
-            {paginatedCategories.map(cat => (
+            {categories.map(cat => (
               <div
                 key={cat.category}
                 className="card"
-                onClick={() => handleCategorySelect(cat)}
+                onClick={() => selectCategory(cat)}
               >
                 <h3>{cat.categoryName}</h3>
-                <p
-  style={{
-    color: cat.totalInStock < 5 ? "#dc2626" : "#16a34a",
-    fontWeight: 600,
-  }}
->
-  {cat.totalInStock} in stock
-</p>
+                <p>{cat.totalInStock} available</p>
               </div>
             ))}
           </div>
+        )}
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </>
-      )}
+        {/* STEP 2 */}
+        {step === 1 && (
+          <>
+            <div className="filter-bar">
+              <button onClick={() => setAssetTypeFilter("all")}>All</button>
+              <button onClick={() => setAssetTypeFilter("hardware")}>Hardware</button>
+              <button onClick={() => setAssetTypeFilter("software")}>Software</button>
+            </div>
 
-      {step === 2 && (
-        <div className="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Available</th>
-                <th>Qty</th>
-              </tr>
-            </thead>
-            <tbody>
-              {wizardData.assets.map(asset => (
-                <tr key={asset._id}>
-                  <td>{asset.name}</td>
-                  <td>{asset.assetType}</td>
-                  <td>{asset.available}</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      max={asset.available}
-                      value={wizardData.selectedAssets[asset._id]?.quantity || ""}
-                      onChange={(e) =>
-                        handleQtyChange(
-                          asset._id,
-                          e.target.value,
-                          asset.available
-                        )
-                      }
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {step === 3 && (
-        <select
-          className="select-box"
-          value={wizardData.department}
-          onChange={(e) => handleDepartmentSelect(e.target.value)}
-        >
-          <option value="">Select Department</option>
-          {departments.map(dep => (
-            <option key={dep._id} value={dep._id}>
-              {dep.name}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {step === 4 && (
-        <select
-          className="select-box"
-          value={wizardData.employee}
-          onChange={(e) =>
-            setWizardData(prev => ({ ...prev, employee: e.target.value }))
-          }
-        >
-          <option value="">Select Team Member</option>
-          {employees.map(employee => (
-            <option key={employee._id} value={employee._id}>
-              {employee.name} ({employee.employeeCode})
-            </option>
-          ))}
-        </select>
-      )}
-
-      {step === 5 && (
-        <div className="review">
-          {Object.entries(wizardData.selectedAssets)
-            .filter(([_, val]) => val.quantity > 0)
-            .map(([assetId, val]) => {
-              const asset = wizardData.assets.find(a => a._id === assetId);
-              return (
-                <div key={assetId} className="review-card">
-                  <h4>{asset.name}</h4>
-                  <p>Quantity: {val.quantity}</p>
-                  <input
-                    type="text"
-                    placeholder="Enter location"
-                    value={val.location}
-                    onChange={(e) =>
-                      handleLocationChange(assetId, e.target.value)
-                    }
-                  />
+            <div className="grid">
+              {filteredAssets.map(asset => (
+                <div
+                  key={asset._id}
+                  className="card"
+                  onClick={() => selectAsset(asset)}
+                >
+                  <h3>{asset.name}</h3>
+                  <p>{asset.available} available</p>
+                  <span>{asset.assetType}</span>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* STEP 3 - INSTANCES */}
+        {step === 2 && (
+          <div className="instance-grid">
+            {instances.length === 0 && <p>No instances available</p>}
+
+            {instances.map(inst => (
+              <div
+                key={inst._id}
+                className={`instance-card ${
+                  selectedInstances.find(i => i._id === inst._id)
+                    ? "selected"
+                    : ""
+                }`}
+                onClick={() => toggleInstance(inst)}
+              >
+                <h4>{inst.instanceCode}</h4>
+                <p>{inst.uniqueIdentifier}</p>
+                <span>{inst.status}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* STEP 4 - ASSIGN */}
+        {step === 3 && (
+          <div className="form-grid">
+
+            <select onChange={(e) => handleDepartment(e.target.value)}>
+              <option>Select Department</option>
+              {departments.map(d => (
+                <option key={d._id} value={d._id}>{d.name}</option>
+              ))}
+            </select>
+
+            <select
+              onChange={(e) =>
+                setAssignmentData(p => ({ ...p, employee: e.target.value }))
+              }
+            >
+              <option>Select Employee</option>
+              {employees.map(e => (
+                <option key={e._id} value={e._id}>
+                  {e.name}
+                </option>
+              ))}
+            </select>
+
+            <input
+              placeholder="Location ID"
+              onChange={(e) =>
+                setAssignmentData(p => ({ ...p, location: e.target.value }))
+              }
+            />
+
+            <input
+              placeholder="Device Name"
+              onChange={(e) =>
+                setAssignmentData(p => ({ ...p, deviceName: e.target.value }))
+              }
+            />
+
+            <input
+              placeholder="Asset Tag"
+              onChange={(e) =>
+                setAssignmentData(p => ({ ...p, deviceTag: e.target.value }))
+              }
+            />
+          </div>
+        )}
+
+        {/* STEP 5 - REVIEW */}
+        {step === 4 && (
+          <div className="review-box">
+            <h3>Review Assignment</h3>
+
+            <p>Asset: {selectedAsset?.name}</p>
+            <p>Instances: {selectedInstances.length}</p>
+            <p>Department: {assignmentData.department}</p>
+            <p>Employee: {assignmentData.employee}</p>
+
+            <button onClick={handleSubmit} disabled={loading}>
+              {loading ? "Assigning..." : "Confirm Assignment"}
+            </button>
+          </div>
+        )}
+
+        {/* FOOTER */}
+        <div className="footer">
+          {step > 0 && (
+            <button onClick={() => setStep(step - 1)}>Back</button>
+          )}
+
+          {step < 4 && (
+            <button onClick={() => setStep(step + 1)}>
+              Next
+            </button>
+          )}
         </div>
-      )}
-
-      <div className="wizard-footer">
-        {step > 1 && (
-          <button className="secondary-btn" onClick={goBack}>
-            Back
-          </button>
-        )}
-
-        {step < 5 ? (
-          <button className="primary-btn" onClick={goNext}>
-            Next
-          </button>
-        ) : (
-          <button
-            className="primary-btn"
-            disabled={loading}
-            onClick={handleSubmit}
-          >
-            {loading ? "Assigning..." : "Confirm Assignment"}
-          </button>
-        )}
       </div>
-
     </div>
-  );
-};
-
-const WizardStepper = ({ step , showGuide }) => {
-  const steps = ["Category", "Assets", "Department", "Team Member", "Review"];
-
-  return (
-    <>
-    <div className="stepper">
-      {steps.map((label, index) => (
-        <div
-          key={index}
-          className={`step ${step >= index + 1 ? "active" : ""}`}
-        >
-          <div className="circle">{index + 1}</div>
-          <span>{label}</span>
-        </div>
-      ))}
-    </div>
-<button onClick={showGuide} className="guide-btn">
-  📘 Page Guide
-</button>
-</>
   );
 };
 
