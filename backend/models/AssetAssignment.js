@@ -36,7 +36,6 @@ const assignmentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "AssetInstance",
       required: true,
-      unique: true, // 🔥 prevents double assignment
       index: true,
     },
 

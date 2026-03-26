@@ -47,10 +47,11 @@ status: {
     default: "new"
   },
 
-  location: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Location"
-  },
+location: {
+  type: String,
+  required: true,
+  trim: true
+},
 
   /* 🔥 ASSIGNMENT */
   assignedTo: {
