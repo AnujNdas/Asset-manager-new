@@ -356,12 +356,132 @@ const getEmployeesByDepartment = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+const reassignAssetInstance = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
+  try {
+    const { assignmentId } = req.params;
+    const { newEmployeeId, newDepartmentId, newLocationId } = req.body;
+
+    /* =============================
+       FETCH CURRENT ASSIGNMENT
+    ============================== */
+
+    const oldAssignment = await AssetAssignment.findById(assignmentId).session(session);
+
+    if (!oldAssignment || oldAssignment.status !== "active") {
+      throw new Error("Invalid or inactive assignment");
+    }
+
+    /* =============================
+       VALIDATE NEW EMPLOYEE
+    ============================== */
+
+    const Department = mongoose.model("Department");
+
+    const department = await Department.findOne({
+      _id: newDepartmentId,
+      organizationId: oldAssignment.organizationId
+    }).session(session);
+
+    if (!department) throw new Error("Department not found");
+
+    const employee = await mongoose.model("Employee").findOne({
+      _id: newEmployeeId,
+      departmentId: newDepartmentId,
+      organizationId: oldAssignment.organizationId
+    }).session(session);
+
+    if (!employee) throw new Error("Invalid employee for department");
+
+    /* =============================
+       FETCH INSTANCE
+    ============================== */
+
+    const instance = await mongoose.model("AssetInstance").findById(
+      oldAssignment.assetInstanceId
+    ).session(session);
+
+    if (!instance) throw new Error("Instance not found");
+
+    /* =============================
+       CLOSE OLD ASSIGNMENT
+    ============================== */
+
+    oldAssignment.status = "transferred";
+    oldAssignment.returnedAt = new Date();
+    oldAssignment.returnedBy = req.user.id;
+
+    await oldAssignment.save({ session });
+
+    /* =============================
+       UPDATE INSTANCE OWNER
+    ============================== */
+
+    instance.assignedTo = newEmployeeId;
+    instance.departmentId = newDepartmentId;
+    instance.location = newLocationId;
+
+    instance.lifecycle.push({
+      action: "REASSIGNED",
+      date: new Date(),
+      notes: `Reassigned from ${oldAssignment.employeeId} to ${newEmployeeId}`
+    });
+
+    await instance.save({ session });
+
+    /* =============================
+       CREATE NEW ASSIGNMENT
+    ============================== */
+
+    const [newAssignment] = await AssetAssignment.create([{
+      organizationId: oldAssignment.organizationId,
+      assetId: oldAssignment.assetId,
+      assetInstanceId: oldAssignment.assetInstanceId,
+      assetType: oldAssignment.assetType,
+      assetModel: oldAssignment.assetModel,
+
+      departmentId: newDepartmentId,
+      employeeId: newEmployeeId,
+      locationId: newLocationId,
+
+      quantity: 1,
+      status: "active",
+      assignedBy: req.user.id,
+
+      reassignedFrom: {
+        employeeId: oldAssignment.employeeId,
+        departmentId: oldAssignment.departmentId,
+        date: new Date()
+      }
+    }], { session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.json({
+      success: true,
+      message: "Asset reassigned successfully",
+      data: newAssignment
+    });
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 module.exports = {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
   getInstancesByAsset,
   assignAssetInstance,
   returnAssetInstance,
-  getEmployeesByDepartment
+  getEmployeesByDepartment,
+  reassignAssetInstance
 };
