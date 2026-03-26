@@ -35,12 +35,11 @@ const assetInstanceSchema = new mongoose.Schema(
     sparse: true
   },
 
-  status: {
-    type: String,
-    enum: ["in_stock", "assigned", "under_repair", "retired", "lost"],
-    default: "in_stock",
-    index: true
-  },
+status: {
+  type: String,
+  enum: ["in_stock", "assigned", "maintenance", "retired"],
+  default: "in_stock"
+},
 
   condition: {
     type: String,
