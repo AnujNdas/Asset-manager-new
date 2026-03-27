@@ -3,7 +3,6 @@ import { lazy, Suspense } from "react";
 
 import TenantLayout from "../layout/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
-import InstanceTracking from "../Pages/InstanceTracking";
 
 const Dashboard = lazy(() => import("../Pages/AdminDashboard"));
 const AssetCapture = lazy(() => import("../Pages/AssetCapture"));
