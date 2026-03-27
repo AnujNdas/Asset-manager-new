@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { upgradeInstanceAPI } from "../Services/ApiServices";
+import { upgradeInstance } from "../Services/ApiServices";
 
 const UpgradeModal = ({ instance, onClose, refresh }) => {
   const [form, setForm] = useState({
@@ -30,7 +30,7 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
         condition: form.condition || undefined
       };
 
-      await upgradeInstanceAPI(instance._id, payload);
+      await upgradeInstance(instance._id, payload);
 
       refresh();
       onClose();
