@@ -22,3 +22,4 @@ router.get("/:id/history", getInstanceHistory);
 
 // 🔥 FIXED (PUT, not GET)
 router.put("/:id/upgrade", upgradeInstance);
+module.exports = router;
