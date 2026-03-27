@@ -30,6 +30,7 @@ const InstanceTracking = () => {
         });
 
         setInstances(res.data);
+        console.log(res)
 
     } catch (err) {
         console.error(err);
