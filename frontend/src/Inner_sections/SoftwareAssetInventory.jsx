@@ -109,7 +109,11 @@ const SoftwareAssetList = () => {
     indexOfLast - assetsPerPage,
     indexOfLast
   );
+  const assignmentMap = {};
 
+selectedAsset?.assignmentRecords?.forEach(assign => {
+  assignmentMap[assign.assetInstanceId] = assign;
+});
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
 
@@ -235,38 +239,67 @@ const SoftwareAssetList = () => {
               <h4>Instances</h4>
 
               {selectedAsset.instances?.length ? (
-                selectedAsset.instances.map((inst) => (
-                  <div key={inst._id} className="instance-card">
-                    <p>
-                      <strong>Instance Code:</strong> {inst.instanceCode}
-                    </p>
+selectedAsset.instances.map((inst) => {
+  const assignment = assignmentMap[inst._id];
 
-                    <p>
-                      <strong>License Key:</strong>{" "}
-                      {inst.licenseKey || "N/A"}
-                    </p>
+  return (
+    <div key={inst._id} className="instance-card">
 
-                    <p>
-                      <strong>Status:</strong> {inst.status || "N/A"}
-                    </p>
+      {/* BASIC */}
+      <p><strong>Instance Code:</strong> {inst.instanceCode}</p>
 
-                    <p>
-                      <strong>Location:</strong>{" "}
-                      {getName(locations, inst.location)}
-                    </p>
+      <p>
+        <strong>License Key:</strong>{" "}
+        {inst.softwareDetails?.licenseKey || "N/A"}
+      </p>
 
-                    <p>
-                      <strong>Installed:</strong>{" "}
-                      {inst.installationDate
-                        ? new Date(
-                            inst.installationDate
-                          ).toLocaleDateString()
-                        : "N/A"}
-                    </p>
+      {/* STATUS */}
+      <p>
+        <strong>Status:</strong>{" "}
+        <span style={{
+          color: inst.status === "assigned" ? "#dc2626" : "#16a34a",
+          fontWeight: 600
+        }}>
+          {inst.status}
+        </span>
+      </p>
 
-                    <hr />
-                  </div>
-                ))
+      {/* LOCATION */}
+      <p>
+        <strong>Location:</strong> {inst.location || "N/A"}
+      </p>
+
+      {/* INSTALL DATE */}
+      <p>
+        <strong>Installed:</strong>{" "}
+        {inst.installationDate
+          ? new Date(inst.installationDate).toLocaleDateString()
+          : "N/A"}
+      </p>
+
+      {/* 🔥 ASSIGNMENT INFO */}
+      {assignment ? (
+        <div className="assignment-box">
+          <p><strong>Assigned To:</strong> {assignment.employee?.name}</p>
+          <p><strong>Department:</strong> {assignment.department?.name}</p>
+          <p><strong>Assigned Location:</strong> {assignment.location}</p>
+
+          <p><strong>Device:</strong> {assignment.deviceInfo?.deviceName}</p>
+          <p><strong>Asset Tag:</strong> {assignment.deviceInfo?.assetTag}</p>
+
+          <p>
+            <strong>Assigned On:</strong>{" "}
+            {new Date(assignment.assignedAt).toLocaleDateString()}
+          </p>
+        </div>
+      ) : (
+        <p style={{ color: "#6b7280" }}>Available (Not Assigned)</p>
+      )}
+
+      <hr />
+    </div>
+  );
+})
               ) : (
                 <p>No instances found</p>
               )}

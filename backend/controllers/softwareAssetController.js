@@ -671,14 +671,23 @@ const getSoftwareAssets = async (req, res) => {
       }
 
       // 🔹 assignment records (for modal)
-      assignmentMap[id].assignmentRecords.push({
-        _id: assign._id,
-        employee: assign.employeeId,
-        department: assign.departmentId,
-        assignLocation: assign.assignLocation,
-        quantity: assign.quantity,
-        assignedAt: assign.assignedAt
-      });
+assignmentMap[id].assignmentRecords.push({
+  _id: assign._id,
+
+  // 🔥 ADD THIS
+  assetInstanceId: assign.assetInstanceId,
+
+  employee: assign.employeeId,
+  department: assign.departmentId,
+
+  // 🔥 FIX NAME (you used wrong field)
+  location: assign.location,
+
+  deviceInfo: assign.deviceInfo,
+
+  quantity: assign.quantity,
+  assignedAt: assign.assignedAt
+});
     }
 
     // convert departmentMap → array
