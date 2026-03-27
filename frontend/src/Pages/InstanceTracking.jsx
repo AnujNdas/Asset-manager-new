@@ -1,7 +1,7 @@
 // src/Pages/InstanceTracking.jsx
 
 import React, { useEffect, useState } from "react";
-import "../styles/InstanceTracking.css";
+import "../Page_styles/InstanceTracking.css";
 
 import InstanceCard from "../Components/InstanceCard";
 import ReassignModal from "../Components/ReassignModal";
