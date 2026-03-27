@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../styles/Modal.css";
 
 import { upgradeInstanceAPI } from "../Services/ApiServices";
 

@@ -1,7 +1,6 @@
 // src/Components/InstanceCard.jsx
 
 import React from "react";
-import "../styles/InstanceCard.css";
 
 const InstanceCard = ({ instance, onReassign, onHistory , onUpgrade }) => {
   return (

@@ -1,7 +1,6 @@
 // src/Components/ReassignModal.jsx
 
 import React, { useEffect, useState } from "react";
-import "../styles/Modal.css";
 
 import {
   getEmployees,

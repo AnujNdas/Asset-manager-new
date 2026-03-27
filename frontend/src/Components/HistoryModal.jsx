@@ -1,7 +1,6 @@
 // src/Components/HistoryModal.jsx
 
 import React from "react";
-import "../styles/Modal.css";
 
 const HistoryModal = ({ instance, onClose }) => {
   const history = instance.lifecycle || [];
