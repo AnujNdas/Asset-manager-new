@@ -101,13 +101,17 @@ const HardwareAssetList = () => {
       <div className="dashboard-header">
         <h2>Hardware Inventory</h2>
 
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="inventory-search-input"
-        />
+        <div className="header-actions">
+          <input
+            type="text"
+            placeholder="Search software..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="inventory-search-input"
+          />
+
+          <CurrencyFilter />
+        </div>
       </div>
 
       {/* GRID */}

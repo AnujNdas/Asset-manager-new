@@ -54,11 +54,13 @@ location: {
 },
 
   /* 🔥 ASSIGNMENT */
-  assignedTo: {
-    employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
-    departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
-    assignedAt: Date
-  },
+assignedTo: {
+  employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  employeeName: String, // ✅ ADD THIS
+  departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
+  departmentName: String, // ✅ ADD THIS
+  assignedAt: Date
+},
 
   /* 🔥 HARDWARE DETAILS */
   hardwareDetails: {
@@ -102,23 +104,42 @@ softwareDetails: {
   purchaseDate: Date,
   renewalDate: Date,
   lastUsedDate: Date,
+assignedTo: {
+  employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  employeeName: String, // ✅ ADD THIS
+  departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
+  departmentName: String, // ✅ ADD THIS
+  assignedAt: Date
+},
 
-  assignedTo: {
-    employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
-    deviceName: String,
-    departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" }
-  }
 },
 
   /* 🔥 LIFECYCLE */
-  lifecycle: [
-    {
-      action: String,
-      date: { type: Date, default: Date.now },
-      notes: String
-    }
-  ],
+lifecycle: [
+  {
+    action: {
+      type: String,
+      enum: ["CREATED", "ASSIGNED", "REASSIGNED", "UNASSIGNED", "MAINTENANCE"]
+    },
 
+    from: {
+      employeeName: String,
+      departmentName: String
+    },
+
+    to: {
+      employeeName: String,
+      departmentName: String
+    },
+
+    date: {
+      type: Date,
+      default: Date.now
+    },
+
+    notes: String
+  }
+],
   /* 🔥 FLEXIBLE EXTENSION */
   meta: mongoose.Schema.Types.Mixed,
 

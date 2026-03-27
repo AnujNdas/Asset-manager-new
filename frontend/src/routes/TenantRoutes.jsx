@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 
 import TenantLayout from "../layout/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
+import InstanceTracking from "../Pages/InstanceTracking";
 
 const Dashboard = lazy(() => import("../Pages/AdminDashboard"));
 const AssetCapture = lazy(() => import("../Pages/AssetCapture"));
@@ -17,6 +18,7 @@ const EmployeePage = lazy(() => import("../Pages/Employee"));
 const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 const AssetInstance = lazy(() => import("../Pages/AssetInstance"));
 const CreateInstance = lazy(() => import("../Pages/CreateInstance"))
+const InstanceTracking = lazy(() => import("../Pages/InstanceTracking"))
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
@@ -41,6 +43,7 @@ const TenantRoutes = ({ profileUser }) => (
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/instance-assets" element={<AssetInstance />} />
         <Route path="/create-instances/:assetId" element={<CreateInstance />} />  
+        <Route path="/tracking" element={<InstanceTracking />} />  
       </Route>
 
     </Route>

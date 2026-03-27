@@ -217,16 +217,34 @@ const assignAssetInstance = async (req, res) => {
       ============================== */
 
       instance.status = "assigned";
-      instance.assignedTo = new mongoose.Types.ObjectId(employeeId);
-      instance.departmentId = new mongoose.Types.ObjectId(departmentId);
+      const employee = await mongoose.model("Employee").findById(employeeId).session(session);
+      const department = await mongoose.model("Department").findById(departmentId).session(session);
+
+      instance.assignedTo = {
+        employeeId: employee._id,
+        employeeName: employee.name,         // ✅ important for UI
+        departmentId: department._id,
+        departmentName: department.name,     // ✅ important for UI
+        assignedAt: new Date()
+      };
+
+      instance.location = location;
+      instance.status = "assigned";
       instance.location = location; // plain string
 
-      instance.lifecycle.push({
-        action: "ASSIGNED",
-        date: new Date(),
-        notes: `Assigned to ${employeeId}`
-      });
+instance.lifecycle.push({
+  action: "ASSIGNED",
 
+  from: null,
+
+  to: {
+    employeeName: employee.name,
+    departmentName: department.name
+  },
+
+  date: new Date(),
+  notes: "Initial assignment"
+});
       await instance.save({ session });
 
       /* =============================
@@ -429,16 +447,39 @@ const reassignAssetInstance = async (req, res) => {
        UPDATE INSTANCE OWNER
     ============================== */
 
-    instance.assignedTo = newEmployeeId;
-    instance.departmentId = newDepartmentId;
+const newEmployee = await mongoose.model("Employee").findById(newEmployeeId).session(session);
+const newDepartment = await mongoose.model("Department").findById(newDepartmentId).session(session);
+
+const oldAssignmentData = instance.assignedTo || {};
+
+instance.assignedTo = {
+  employeeId: newEmployee._id,
+  employeeName: newEmployee.name,
+  departmentId: newDepartment._id,
+  departmentName: newDepartment.name,
+  assignedAt: new Date()
+};
+
+instance.location = newLocationId;
+instance.status = "assigned";
     instance.location = newLocationId;
 
-    instance.lifecycle.push({
-      action: "REASSIGNED",
-      date: new Date(),
-      notes: `Reassigned from ${oldAssignment.employeeId} to ${newEmployeeId}`
-    });
+instance.lifecycle.push({
+  action: "REASSIGNED",
 
+  from: {
+    employeeName: oldAssignmentData.employeeName || null,
+    departmentName: oldAssignmentData.departmentName || null
+  },
+
+  to: {
+    employeeName: newEmployee.name,
+    departmentName: newDepartment.name
+  },
+
+  date: new Date(),
+  notes: "Reassigned via system"
+});
     await instance.save({ session });
 
     /* =============================

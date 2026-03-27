@@ -211,30 +211,6 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
               className="asset-view-modal"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3>{selectedAsset.assetName}</h3>
-
-              <p>
-                <strong>Code:</strong> {selectedAsset.assetCode}
-              </p>
-
-              <p>
-                <strong>Category:</strong>{" "}
-                {getName(categories, selectedAsset.assetCategory)}
-              </p>
-
-              <p>
-                <strong>Location:</strong>{" "}
-                {getName(locations, selectedAsset.locationName)}
-              </p>
-
-              <p>
-                <strong>Quantity:</strong> {selectedAsset.assetQuantity}
-              </p>
-
-              <p>
-                <strong>In Use:</strong> {selectedAsset.inUse}
-              </p>
-
               {/* ================= INSTANCES ================= */}
               <h4>Instances</h4>
 

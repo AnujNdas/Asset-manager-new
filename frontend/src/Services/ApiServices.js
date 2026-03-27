@@ -405,6 +405,34 @@ export const getInstancesByAsset = async (assetId) => {
   const res = await axiosInstance.get(`/assignment/instances/${assetId}`);
   return res.data;
 };
+export const getTrackedInstances = async ({
+  type = "all",
+  status = "all",
+  search = "",
+  page = 1,
+  limit = 10
+} = {}) => {
+  const response = await axiosInstance.get("/instances", {
+    params: { type, status, search, page, limit }
+  });
+
+  return response.data;
+};
+export const getInstanceHistory = async (instanceId) => {
+  const response = await axiosInstance.get(
+    `/instances/${instanceId}/history`
+  );
+
+  return response.data;
+};
+export const upgradeInstance = async (instanceId, payload) => {
+  const response = await axiosInstance.put(
+    `/instances/${instanceId}/upgrade`,
+    payload
+  );
+
+  return response.data;
+};
 export const createInvite = async (data) => {
   const response = await axiosInstance.post("/invites", data);
   return response.data;
