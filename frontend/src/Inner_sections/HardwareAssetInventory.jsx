@@ -14,6 +14,7 @@ import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
+import CurrencyFilter from "../Components/CurrencyFilter";
 
 const HardwareAssetList = () => {
   const [assets, setAssets] = useState([]);
