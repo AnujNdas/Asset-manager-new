@@ -82,7 +82,7 @@ const handleHistory = async (instance) => {
         </select>
 
         <span className="count">
-          {filteredInstances.length} items
+          {instances.length} items
         </span>
       </div>
 
