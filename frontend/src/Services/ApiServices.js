@@ -412,7 +412,7 @@ export const getTrackedInstances = async ({
   page = 1,
   limit = 10
 } = {}) => {
-  const response = await axiosInstance.get("/instances", {
+  const response = await axiosInstance.get("/tracking", {
     params: { type, status, search, page, limit }
   });
 
@@ -420,14 +420,14 @@ export const getTrackedInstances = async ({
 };
 export const getInstanceHistory = async (instanceId) => {
   const response = await axiosInstance.get(
-    `/instances/${instanceId}/history`
+    `/tracking/${instanceId}/history`
   );
 
   return response.data;
 };
 export const upgradeInstance = async (instanceId, payload) => {
   const response = await axiosInstance.put(
-    `/instances/${instanceId}/upgrade`,
+    `/tracking/${instanceId}/upgrade`,
     payload
   );
 
