@@ -49,7 +49,8 @@ const CreateInstances = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  const formatLocation = (loc) =>
+  loc.trim().replace(/\b\w/g, (c) => c.toUpperCase());
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -146,6 +147,9 @@ const CreateInstances = () => {
       if (Object.keys(rowErrors).length > 0) {
         newErrors[index] = rowErrors;
       }
+      if (!inst.location || !inst.location.trim()) {
+  rowErrors.location = "Location is required";
+}
     });
 
     setErrors(newErrors);
@@ -161,7 +165,7 @@ const CreateInstances = () => {
 const payload = instances.map((inst) => {
   if (isSoftware) {
     return {
-      location: inst.location,
+      location: formatLocation(inst.location),
 
       softwareDetails: {
         licenseKey: inst.modelNo || "", // map from UI
@@ -266,23 +270,17 @@ const payload = instances.map((inst) => {
         <h4>Bulk Apply</h4>
 
         <div className="bulk-grid">
-          <select
-            value={bulkValues.location}
-            onChange={(e) =>
-              setBulkValues({
-                ...bulkValues,
-                location: e.target.value
-              })
-            }
-          >
-            <option value="">Location</option>
-            {locations.map((loc) => (
-              <option key={loc._id} value={loc._id}>
-                {loc.name}
-              </option>
-            ))}
-          </select>
-
+          <input
+  type="text"
+  placeholder="Enter location"
+  value={bulkValues.location}
+  onChange={(e) =>
+    setBulkValues({
+      ...bulkValues,
+      location: e.target.value
+    })
+  }
+/>
           <select
             value={bulkValues.condition}
             onChange={(e) =>
@@ -450,23 +448,14 @@ const payload = instances.map((inst) => {
                 <option value="damaged">Damaged</option>
               </select>
 
-              <select
-                value={inst.location}
-                onChange={(e) =>
-                  handleChange(
-                    index,
-                    "location",
-                    e.target.value
-                  )
-                }
-              >
-                <option value="">Location</option>
-                {locations.map((loc) => (
-                  <option key={loc._id} value={loc._id}>
-                    {loc.name}
-                  </option>
-                ))}
-              </select>
+              <input
+  type="text"
+  placeholder="Enter location"
+  value={inst.location}
+  onChange={(e) =>
+    handleChange(index, "location", e.target.value)
+  }
+/>
 
               <input
                 value={inst.modelNo}
