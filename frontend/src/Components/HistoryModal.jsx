@@ -25,7 +25,7 @@ const HistoryModal = ({ instance, onClose }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal">
+      <div className="modal history-modal">
 
         {/* HEADER */}
         <h2>Asset History</h2>
