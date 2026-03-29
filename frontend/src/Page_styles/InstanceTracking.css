@@ -90,6 +90,8 @@
   padding: 20px;
   border-radius: 10px;
   width: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-actions {

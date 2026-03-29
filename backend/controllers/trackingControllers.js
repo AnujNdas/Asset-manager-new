@@ -9,23 +9,14 @@ const getTrackedInstances = async (req, res) => {
       organizationId: req.user.organizationId
     };
 
-    /* =============================
-       FILTER: TYPE
-    ============================== */
     if (type && type !== "all") {
       query.assetType = type;
     }
 
-    /* =============================
-       FILTER: STATUS (optional)
-    ============================== */
     if (status && status !== "all") {
       query.status = status;
     }
 
-    /* =============================
-       SEARCH (instanceCode / serial)
-    ============================== */
     if (search) {
       query.$or = [
         { instanceCode: { $regex: search, $options: "i" } },
@@ -33,16 +24,63 @@ const getTrackedInstances = async (req, res) => {
       ];
     }
 
+    /* =============================
+       FETCH INSTANCES
+    ============================== */
+
     const instances = await mongoose
       .model("AssetInstance")
       .find(query)
       .sort({ createdAt: -1 })
       .lean();
 
+    /* =============================
+       FETCH ACTIVE ASSIGNMENTS
+    ============================== */
+
+    const instanceIds = instances.map(i => i._id);
+
+    const assignments = await mongoose
+      .model("AssetAssignment")
+      .find({
+        assetInstanceId: { $in: instanceIds },
+        status: "active"
+      })
+      .populate("employeeId", "name employeeCode")
+      .populate("departmentId", "name")
+      .lean();
+
+    /* =============================
+       MAP ASSIGNMENTS → INSTANCES
+    ============================== */
+
+    const assignmentMap = {};
+
+    assignments.forEach((a) => {
+      assignmentMap[a.assetInstanceId.toString()] = a;
+    });
+
+    const enrichedInstances = instances.map((inst) => {
+      const assignment = assignmentMap[inst._id.toString()];
+
+      return {
+        ...inst,
+
+        assignedTo: assignment
+          ? {
+              employeeName: assignment.employeeId?.name,
+              employeeCode: assignment.employeeId?.employeeCode,
+              departmentName: assignment.departmentId?.name,
+              assignedAt: assignment.assignedAt
+            }
+          : null
+      };
+    });
+
     res.status(200).json({
       success: true,
-      count: instances.length,
-      data: instances
+      count: enrichedInstances.length,
+      data: enrichedInstances
     });
 
   } catch (error) {
@@ -52,6 +90,13 @@ const getTrackedInstances = async (req, res) => {
     });
   }
 };
+// Calculate Service Days Helper Function
+
+const calculateServiceDays = (createdAt) => {
+  const diff = Date.now() - new Date(createdAt).getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24)) + " Days";
+};
+
 // GET /instances/:id/history
 
 const getInstanceHistory = async (req, res) => {
@@ -63,6 +108,7 @@ const getInstanceHistory = async (req, res) => {
         _id: id,
         organizationId: req.user.organizationId
       })
+      .populate("assignedTo.employeeId", "name employeeCode")
       .lean();
 
     if (!instance) {
@@ -73,11 +119,35 @@ const getInstanceHistory = async (req, res) => {
     }
 
     const history = (instance.lifecycle || [])
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .map((item) => {
+
+        const warrantyDate = instance.warranty?.expiryDate || null;
+
+        return {
+          action: item.action,
+
+          warrantyDate,
+
+          maintenanceDate: null, // 🔥 you don’t store yet
+
+          location: instance.location,
+
+          assignedPerson:
+            instance.assignedTo?.employeeId?.name || "N/A",
+
+          activeService: calculateServiceDays(instance.createdAt),
+
+          score: "N/A", // 🔥 optional feature later
+
+          componentEvolution: item.notes || "No Update",
+
+          recordDate: item.date
+        };
+      });
 
     res.status(200).json({
       success: true,
-      count: history.length,
       data: history
     });
 

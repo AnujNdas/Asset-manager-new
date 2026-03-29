@@ -11,7 +11,7 @@ import {
   getTrackedInstances,
   getInstanceHistory
 } from "../Services/ApiServices";
-
+import Loader from "../Components/Loader";
 const InstanceTracking = () => {
   const [instances, setInstances] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +69,7 @@ const handleHistory = async (instance) => {
     console.error(err);
   }
 };
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
 
   return (
     <div className="instance-page">
