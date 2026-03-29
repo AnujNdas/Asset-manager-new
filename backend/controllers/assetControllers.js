@@ -1222,14 +1222,38 @@ softwareDetails:
       }
     : undefined,
 
-        lifecycle: [
-          {
-            action: "CREATED",
-            notes: "Manually created",
-            date: new Date()
-          }
-        ],
+       lifecycle: [
+  {
+    action: "CREATED",
 
+    from: null,
+
+    to: null,
+
+    snapshot: {
+      location: inst.location,
+
+      assignedTo: null,
+
+      warrantyExpiry: inst.warranty?.expiryDate || null,
+      insuranceExpiry: inst.insurance?.expiryDate || null,
+
+      condition: inst.condition || "new",
+
+      costTracking: {
+        maintenanceCost: Number(inst.costTracking?.maintenanceCost) || 0,
+        warrantyRenewalCost:
+          Number(inst.costTracking?.warrantyRenewalCost) || 0,
+        insuranceCost:
+          Number(inst.costTracking?.insuranceCost) || 0
+      }
+    },
+
+    date: new Date(),
+
+    notes: "Instance created"
+  }
+],
         createdBy: userId
       };
     });
