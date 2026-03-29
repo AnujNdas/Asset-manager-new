@@ -82,7 +82,7 @@
 .inventory-card p {
   font-size: 13px;
   margin: 4px 0;
-  color: #9ca3af;
+  color: #000000;
 }
 
 /* STRONG LABEL */
@@ -236,9 +236,9 @@
   font-weight: 500;
 }
 
-.badge.category { background: #eef; }
-.badge.status { background: #efe; }
-.badge.type { background: #ffe; }
+.badge.category { background: #2563eb; }
+.badge.status { background: #1e7f4f; }
+.badge.type { background: rgb(255, 59, 59); }
 
 .metrics {
   display: flex;
