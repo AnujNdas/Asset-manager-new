@@ -83,6 +83,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
 .modal {
@@ -90,6 +91,8 @@
   padding: 20px;
   border-radius: 10px;
   width: 400px;
+  height: auto;
+  margin: auto;
   display: flex;
   flex-direction: column;
 }
@@ -126,4 +129,39 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 6px;
+}
+.history-modal {
+  width: 90%;
+  max-width: 1100px;
+}
+
+.history-header,
+.history-row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+  padding: 10px;
+  align-items: center;
+}
+
+.history-header {
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+.history-body {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.history-row {
+  border-bottom: 1px solid #eee;
+}
+
+.history-row span {
+  font-size: 14px;
+}
+
+.history-row:hover {
+  background: #f5f5f5;
 }

@@ -1,33 +1,66 @@
-// src/Components/HistoryModal.jsx
-
-import React from "react";
+import React, { useEffect, useState } from "react";
+import "../styles/HistoryModal.css";
+import { getInstanceHistoryAPI } from "../Services/ApiServices";
 
 const HistoryModal = ({ instance, onClose }) => {
-  const history = instance.lifecycle || [];
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchHistory = async () => {
+    try {
+      const res = await getInstanceHistoryAPI(instance._id);
+      setHistory(res.data.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  if (loading) return <div className="modal">Loading...</div>;
 
   return (
     <div className="modal-overlay">
-      <div className="modal">
+      <div className="modal history-modal">
 
+        {/* HEADER */}
         <h2>Asset History</h2>
 
-        <div className="history-list">
+        {/* TABLE HEADER */}
+        <div className="history-header">
+          <span>Warranty Dates</span>
+          <span>Maintenance Dates</span>
+          <span>Location</span>
+          <span>Assigned Person</span>
+          <span>Active Service</span>
+          <span>Active Score</span>
+          <span>Component Evolution</span>
+          <span>Record Date</span>
+        </div>
+
+        {/* TABLE BODY */}
+        <div className="history-body">
           {history.map((item, index) => (
-            <div key={index} className="history-item">
-              <p className="action">{item.action}</p>
+            <div key={index} className="history-row">
 
-              <p>
-                {item.from?.employeeName || "-"} →{" "}
-                {item.to?.employeeName || "-"}
-              </p>
+              <span>{item.warrantyDate}</span>
+              <span>{item.maintenanceDate}</span>
+              <span>{item.location}</span>
+              <span>{item.assignedPerson}</span>
+              <span>{item.activeService}</span>
+              <span>{item.score}</span>
+              <span>{item.componentEvolution}</span>
+              <span>{item.recordDate}</span>
 
-              <span>
-                {new Date(item.date).toLocaleString()}
-              </span>
             </div>
           ))}
         </div>
 
+        {/* ACTION */}
         <div className="modal-actions">
           <button onClick={onClose}>Close</button>
         </div>

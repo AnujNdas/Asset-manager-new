@@ -11,6 +11,7 @@ import {
   getEmployeesByDepartment,
   getInstancesByAsset
 } from "../Services/ApiServices";
+import Loader from "../Components/Loader";
 
 const steps = [
   "Category",
@@ -170,7 +171,7 @@ const selectAsset = async (asset) => {
       deviceTag: ""
     });
   };
-
+  if (loading) return <Loader />;
   /* ================= UI ================= */
   return (
   <div className="assignment-container">

@@ -108,7 +108,6 @@ const getInstanceHistory = async (req, res) => {
         _id: id,
         organizationId: req.user.organizationId
       })
-      .populate("assignedTo.employeeId", "name employeeCode")
       .lean();
 
     if (!instance) {
@@ -118,36 +117,60 @@ const getInstanceHistory = async (req, res) => {
       });
     }
 
+    /* =============================
+       HELPERS
+    ============================== */
+
+    const formatDate = (date) => {
+      if (!date) return "-";
+      const d = new Date(date);
+      if (isNaN(d)) return "-";
+      return d.toLocaleDateString("en-GB"); // 11/05/2026
+    };
+
+    const getServiceDays = (startDate) => {
+      if (!startDate) return "-";
+      const diff = Date.now() - new Date(startDate).getTime();
+      return Math.floor(diff / (1000 * 60 * 60 * 24)) + " Days";
+    };
+
+    /* =============================
+       BUILD SNAPSHOT-BASED HISTORY
+    ============================== */
+
     const history = (instance.lifecycle || [])
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .map((item) => {
-
-        const warrantyDate = instance.warranty?.expiryDate || null;
+        const snap = item.snapshot || {};
 
         return {
           action: item.action,
 
-          warrantyDate,
+          warrantyDate: formatDate(snap.warrantyExpiry),
 
-          maintenanceDate: null, // 🔥 you don’t store yet
+          maintenanceDate:
+            item.action === "MAINTENANCE"
+              ? formatDate(item.date)
+              : "-",
 
-          location: instance.location,
+          location: snap.location || "-",
 
           assignedPerson:
-            instance.assignedTo?.employeeId?.name || "N/A",
+            snap.assignedTo?.employeeName || "-",
 
-          activeService: calculateServiceDays(instance.createdAt),
+          activeService: getServiceDays(instance.createdAt),
 
-          score: "N/A", // 🔥 optional feature later
+          score: "N/A", // plug scoring logic later
 
-          componentEvolution: item.notes || "No Update",
+          componentEvolution: item.notes || "-",
 
-          recordDate: item.date
+          recordDate: formatDate(item.date)
         };
       });
 
     res.status(200).json({
       success: true,
+      count: history.length,
       data: history
     });
 
@@ -229,16 +252,36 @@ const upgradeInstance = async (req, res) => {
        LIFECYCLE LOG
     ============================== */
 
-    instance.lifecycle.push({
-      action: "UPGRADE",
-      from: null,
-      to: {
-        employeeName: instance.assignedTo?.employeeName || null,
-        departmentName: instance.assignedTo?.departmentName || null
-      },
-      date: new Date(),
-      notes: "Upgrade applied"
-    });
+instance.lifecycle.push({
+  action: "UPGRADE",
+
+  from: null,
+  to: null,
+
+  snapshot: {
+    location: instance.location,
+
+    assignedTo: {
+      employeeName: instance.assignedTo?.employeeName,
+      departmentName: instance.assignedTo?.departmentName
+    },
+
+    warrantyExpiry: instance.warranty?.expiryDate || null,
+    insuranceExpiry: instance.insurance?.expiryDate || null,
+
+    condition: instance.condition,
+
+    costTracking: {
+      maintenanceCost: instance.costTracking?.maintenanceCost || 0,
+      warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
+      insuranceCost: instance.costTracking?.insuranceCost || 0
+    }
+  },
+
+  date: new Date(),
+
+  notes: "Asset upgraded"
+});
 
     await instance.save({ session });
 

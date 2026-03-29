@@ -228,7 +228,6 @@ const assignAssetInstance = async (req, res) => {
         assignedAt: new Date()
       };
 
-      instance.location = location;
       instance.status = "assigned";
       instance.location = location; // plain string
 
@@ -242,8 +241,29 @@ instance.lifecycle.push({
     departmentName: department.name
   },
 
+  snapshot: {
+    location: location,
+
+    assignedTo: {
+      employeeName: employee.name,
+      departmentName: department.name
+    },
+
+    warrantyExpiry: instance.warranty?.expiryDate || null,
+    insuranceExpiry: instance.insurance?.expiryDate || null,
+
+    condition: instance.condition,
+
+    costTracking: {
+      maintenanceCost: instance.costTracking?.maintenanceCost || 0,
+      warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
+      insuranceCost: instance.costTracking?.insuranceCost || 0
+    }
+  },
+
   date: new Date(),
-  notes: "Initial assignment"
+
+  notes: `Assigned to ${employee.name}`
 });
       await instance.save({ session });
 
@@ -462,7 +482,6 @@ instance.assignedTo = {
 
 instance.location = newLocationId;
 instance.status = "assigned";
-    instance.location = newLocationId;
 
 instance.lifecycle.push({
   action: "REASSIGNED",
@@ -477,8 +496,29 @@ instance.lifecycle.push({
     departmentName: newDepartment.name
   },
 
+  snapshot: {
+    location: newLocationId,
+
+    assignedTo: {
+      employeeName: newEmployee.name,
+      departmentName: newDepartment.name
+    },
+
+    warrantyExpiry: instance.warranty?.expiryDate || null,
+    insuranceExpiry: instance.insurance?.expiryDate || null,
+
+    condition: instance.condition,
+
+    costTracking: {
+      maintenanceCost: instance.costTracking?.maintenanceCost || 0,
+      warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
+      insuranceCost: instance.costTracking?.insuranceCost || 0
+    }
+  },
+
   date: new Date(),
-  notes: "Reassigned via system"
+
+  notes: `Reassigned to ${newEmployee.name}`
 });
     await instance.save({ session });
 

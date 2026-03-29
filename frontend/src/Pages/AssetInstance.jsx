@@ -5,6 +5,7 @@ import axios from "axios";
 import "../Page_styles/AssetInstance.css";
 import { getPendingInstances } from "../Services/ApiServices";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 const InstanceAssets = () => {
   const [assets, setAssets] = useState([]);
@@ -28,7 +29,7 @@ const InstanceAssets = () => {
       setLoading(false);
     }
   };
-  
+  if (loading) return <Loader / >;
   return (
     <div className="instance-page">
       {/* HEADER */}

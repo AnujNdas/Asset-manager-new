@@ -119,7 +119,7 @@ lifecycle: [
   {
     action: {
       type: String,
-      enum: ["CREATED", "ASSIGNED", "REASSIGNED", "UNASSIGNED", "MAINTENANCE"]
+      enum: ["CREATED", "ASSIGNED", "REASSIGNED", "UNASSIGNED", "MAINTENANCE", "UPGRADE"]
     },
 
     from: {
@@ -130,6 +130,26 @@ lifecycle: [
     to: {
       employeeName: String,
       departmentName: String
+    },
+
+    snapshot: {
+      location: String,
+
+      assignedTo: {
+        employeeName: String,
+        departmentName: String
+      },
+
+      warrantyExpiry: Date,
+      insuranceExpiry: Date,
+
+      condition: String,
+
+      costTracking: {
+        maintenanceCost: Number,
+        warrantyRenewalCost: Number,
+        insuranceCost: Number
+      }
     },
 
     date: {
