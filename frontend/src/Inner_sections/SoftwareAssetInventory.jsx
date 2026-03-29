@@ -49,7 +49,7 @@ const SoftwareAssetList = () => {
           getUnits(),
           getLocations(),
         ]);
-
+        console.log("ASSETS RESPONSE:", assetsRes);
       setAssets(assetsRes?.data ?? assetsRes ?? []);
       setCategories(catRes?.data ?? catRes ?? []);
       setStatuses(statRes?.data ?? statRes ?? []);

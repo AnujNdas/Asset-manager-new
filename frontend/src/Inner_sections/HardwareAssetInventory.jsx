@@ -45,6 +45,7 @@ const HardwareAssetList = () => {
           getUnits(),
           getStatuses(),
         ]);
+        console.log("ASSETS RESPONSE:", assetsRes);
 
       setAssets(assetsRes?.data ?? assetsRes ?? []);
       setCategories(catsRes?.data ?? catsRes ?? []);
