@@ -211,6 +211,81 @@
   flex-direction: row;
   gap: 10px;
 }
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.asset-code {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.badge-row {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge.category { background: #eef; }
+.badge.status { background: #efe; }
+.badge.type { background: #ffe; }
+
+.metrics {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.label {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.alert {
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  margin-top: 6px;
+}
+
+.alert.warning { background: #fff3cd; }
+.alert.danger { background: #f8d7da; }
+.alert.info { background: #d1ecf1; }
+
+.meta {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.date {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+.subscription-box {
+  background: #f9fafb;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+.badge.type.monthly {
+  background: #e0f2fe;
+}
+
+.badge.type.yearly {
+  background: #dcfce7;
+}
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .inventory-grid {

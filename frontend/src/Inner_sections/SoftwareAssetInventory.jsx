@@ -141,58 +141,137 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
         <AnimatePresence>
           {currentAssets.map((asset) => (
             <motion.div
-              key={asset._id}
-              className="inventory-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <div className="card-header">
-                <h3>{asset.assetName}</h3>
-                <span>{getName(statuses, asset.assetStatus)}</span>
-              </div>
+  key={asset._id}
+  className="inventory-card"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+>
+  {/* HEADER */}
+  <div className="card-header">
+    <h3>{asset.assetName}</h3>
+    <span className="asset-code">{asset.assetCode}</span>
+  </div>
 
-              <p>
-                <strong>Total Cost:</strong> {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(
-                  asset.assetCost?.baseTotalAmount ?? 0
-                ).toLocaleString()}
-              </p>
+  {/* BADGES */}
+  <div className="badge-row">
+    <span className="badge category">
+      {getName(categories, asset.assetCategory)}
+    </span>
 
-              <p>
-                <strong>Quantity:</strong> {asset.assetQuantity}
-              </p>
+    <span className="badge status">
+      {getName(statuses, asset.assetStatus)}
+    </span>
 
-              <p>
-                <strong>In Use:</strong> {asset.inUse}
-              </p>
+    <span className={`badge type ${asset.type}`}>
+      {asset.type}
+    </span>
+  </div>
 
-              <p>
-                <strong>Instances:</strong> {asset.instances?.length || 0}
-              </p>
+  {/* LOCATION */}
+  <p className="meta">
+    📍 {getName(locations, asset.locationName)}
+  </p>
 
-              <div className="card-actions">
-                <button
-                  className="btn-view"
-                  onClick={() => setSelectedAsset(asset)}
-                >
-                  View
-                </button>
+  {/* METRICS */}
+  <div className="metrics">
+    <div>
+      <p className="label">Cost</p>
+      <p>
+        {CURRENCY_SYMBOLS[currency]}{" "}
+        {convertFromBase(
+          asset.assetCost?.baseTotalAmount ?? 0
+        ).toLocaleString()}
+      </p>
+    </div>
 
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(asset._id)}
-                >
-                  Delete
-                </button>
+    <div>
+      <p className="label">Usage</p>
+      <p>
+        {asset.inUse}/{asset.assetQuantity}
+      </p>
+    </div>
 
-                <button
-                  className="btn-assign"
-                  onClick={() => handleAssign(asset)}
-                >
-                  Assign
-                </button>
-              </div>
-            </motion.div>
+    <div>
+      <p className="label">Instances</p>
+      <p>{asset.instances?.length || 0}</p>
+    </div>
+  </div>
+
+  {/* 🔥 SUBSCRIPTION INFO */}
+  <div className="subscription-box">
+    <p>
+      <strong>Plan:</strong> {asset.type}
+    </p>
+
+    <p>
+      <strong>Expiry:</strong>{" "}
+      {asset.renewal?.expiryDate
+        ? new Date(asset.renewal.expiryDate).toLocaleDateString()
+        : "N/A"}
+    </p>
+  </div>
+
+  {/* 🚨 ALERT SYSTEM */}
+  {(() => {
+    const expiry = asset.renewal?.expiryDate
+      ? new Date(asset.renewal.expiryDate)
+      : null;
+
+    const today = new Date();
+
+    const diffDays = expiry
+      ? Math.ceil((expiry - today) / (1000 * 60 * 60 * 24))
+      : null;
+
+    if (diffDays !== null && diffDays <= 7) {
+      return (
+        <div className="alert danger">
+          ⚠ Expiring in {diffDays} days
+        </div>
+      );
+    }
+
+    if (asset.inUse === asset.assetQuantity) {
+      return (
+        <div className="alert warning">
+          ⚠ All Licenses Used
+        </div>
+      );
+    }
+
+    if (asset.inUse === 0) {
+      return (
+        <div className="alert info">
+          ℹ No Active Usage
+        </div>
+      );
+    }
+
+    return null;
+  })()}
+
+  {/* FOOTER */}
+  <p className="date">
+    Purchased:{" "}
+    {asset.purchaseDetails?.purchaseDate
+      ? new Date(asset.purchaseDetails.purchaseDate).toLocaleDateString()
+      : "N/A"}
+  </p>
+
+  <div className="card-actions">
+    <button onClick={() => setSelectedAsset(asset)}>
+      View
+    </button>
+
+    <button onClick={() => handleDelete(asset._id)}>
+      Delete
+    </button>
+
+    <button onClick={() => handleAssign(asset)}>
+      Assign
+    </button>
+  </div>
+</motion.div>
           ))}
         </AnimatePresence>
       </div>

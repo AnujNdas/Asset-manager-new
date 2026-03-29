@@ -121,33 +121,96 @@ const HardwareAssetList = () => {
         <AnimatePresence>
           {filteredAssets.map((asset) => (
             <motion.div
-              key={asset._id}
-              className="inventory-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <h3>{asset.assetName}</h3>
+  key={asset._id}
+  className="inventory-card"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+>
+  {/* HEADER */}
+  <div className="card-header">
+    <h3>{asset.assetName}</h3>
+    <span className="asset-code">{asset.assetCode}</span>
+  </div>
 
-              <p>
-                Cost: {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(
-                  asset.assetCost?.baseTotalAmount ?? 0
-                ).toLocaleString()}
-              </p>
+  {/* CATEGORY */}
+  <div className="badge-row">
+    <span className="badge category">
+      {asset.assetCategory?.name}
+    </span>
 
-              <p>Qty: {asset.assetQuantity}</p>
-              <p>Date: {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
+    <span className="badge status">
+      {asset.assetStatus?.name}
+    </span>
 
-              <div className="card-actions">
-                <button onClick={() => setSelectedAsset(asset)}>
-                  View
-                </button>
+    <span className={`badge type ${asset.type}`}>
+      {asset.type}
+    </span>
+  </div>
 
-                <button onClick={() => handleDelete(asset._id)}>
-                  Delete
-                </button>
-              </div>
-            </motion.div>
+  {/* LOCATION */}
+  <p className="meta">
+    📍 {asset.locationName?.name}
+  </p>
+
+  {/* METRICS */}
+  <div className="metrics">
+    <div>
+      <p className="label">Cost</p>
+      <p>
+        {CURRENCY_SYMBOLS[currency]}{" "}
+        {convertFromBase(
+          asset.assetCost?.baseTotalAmount ?? 0
+        ).toLocaleString()}
+      </p>
+    </div>
+
+    <div>
+      <p className="label">Qty</p>
+      <p>
+        {asset.inUse}/{asset.assetQuantity}
+      </p>
+    </div>
+
+    <div>
+      <p className="label">Instances</p>
+      <p>{asset.instanceCount}</p>
+    </div>
+  </div>
+
+  {/* ALERTS */}
+  {asset.inUse === asset.assetQuantity && (
+    <div className="alert warning">
+      ⚠ Fully Assigned
+    </div>
+  )}
+
+  {asset.assetQuantity === 0 && (
+    <div className="alert danger">
+      ❌ Out of Stock
+    </div>
+  )}
+
+  {asset.type === "maintenance" && (
+    <div className="alert info">
+      🛠 Under Maintenance
+    </div>
+  )}
+
+  {/* FOOTER */}
+  <p className="date">
+    {formatDate(asset.purchaseDetails?.purchaseDate)}
+  </p>
+
+  <div className="card-actions">
+    <button onClick={() => setSelectedAsset(asset)}>
+      View
+    </button>
+
+    <button onClick={() => handleDelete(asset._id)}>
+      Delete
+    </button>
+  </div>
+</motion.div>
           ))}
         </AnimatePresence>
       </div>
