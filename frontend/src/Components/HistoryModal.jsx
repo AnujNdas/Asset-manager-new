@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../styles/HistoryModal.css";
 import { getInstanceHistoryAPI } from "../Services/ApiServices";
 
 const HistoryModal = ({ instance, onClose }) => {
