@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getInstanceHistoryAPI } from "../Services/ApiServices";
+import { getInstanceHistory } from "../Services/ApiServices";
 
 const HistoryModal = ({ instance, onClose }) => {
   const [history, setHistory] = useState([]);
@@ -7,7 +7,7 @@ const HistoryModal = ({ instance, onClose }) => {
 
   const fetchHistory = async () => {
     try {
-      const res = await getInstanceHistoryAPI(instance._id);
+      const res = await getInstanceHistory(instance._id);
       setHistory(res.data.data);
     } catch (err) {
       console.error(err);
