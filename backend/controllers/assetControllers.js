@@ -1140,22 +1140,14 @@ if (!asset) {
         message: "Serial already exists"
       });
     }
-
-    // 🔥 LOCATION VALIDATION
-    const locationIds = instances.map(i => i.location).filter(Boolean);
-    const uniqueLocationIds = [...new Set(locationIds)];
-
-    const validLocations = await Location.find({
-      _id: { $in: uniqueLocationIds },
-      organizationId
+    // 🔥 LOCATION VALIDATION (STRING)
+for (const inst of instances) {
+  if (!inst.location || !inst.location.trim()) {
+    return res.status(400).json({
+      message: "Location is required"
     });
-
-    if (validLocations.length !== uniqueLocationIds.length) {
-      return res.status(400).json({
-        message: "Invalid location(s)"
-      });
-    }
-
+  }
+}
     // 🔥 CREATE INSTANCES
     const newInstances = instances.map((inst, index) => {
       const today = new Date().setHours(0,0,0,0);
