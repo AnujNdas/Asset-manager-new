@@ -9,6 +9,7 @@ const HistoryModal = ({ instance, onClose }) => {
     try {
       const res = await getInstanceHistory(instance._id);
       setHistory(res.data.data);
+      console.log("HISTORY DATA:", res);
     } catch (err) {
       console.error(err);
     } finally {
