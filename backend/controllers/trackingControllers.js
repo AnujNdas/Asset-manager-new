@@ -138,35 +138,42 @@ const getInstanceHistory = async (req, res) => {
        BUILD SNAPSHOT-BASED HISTORY
     ============================== */
 
-    const history = (instance.lifecycle || [])
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .map((item) => {
-        const snap = item.snapshot || {};
+const history = (instance.lifecycle || [])
+  .sort((a, b) => new Date(b.date) - new Date(a.date))
+  .map((item) => {
+    const snap = item.snapshot || {};
 
-        return {
-          action: item.action,
+    return {
+      action: item.action,
 
-          warrantyDate: formatDate(snap.warrantyExpiry),
+      warrantyDate: formatDate(
+        snap.warrantyExpiry
+      ),
 
-          maintenanceDate:
-            item.action === "MAINTENANCE"
-              ? formatDate(item.date)
-              : "-",
+      maintenanceDate:
+        item.action === "MAINTENANCE"
+          ? formatDate(item.date)
+          : "-",
 
-          location: snap.location || "-",
+      location:
+        typeof snap.location === "object"
+          ? snap.location?.name
+          : snap.location || "-",
 
-          assignedPerson:
-            snap.assignedTo?.employeeName || "-",
+      assignedPerson:
+        snap.assignedTo?.employee?.name ||   // future-safe
+        snap.assignedTo?.employeeName ||     // current DB
+        "-",
 
-          activeService: getServiceDays(instance.createdAt),
+      activeService: getServiceDays(instance.createdAt),
 
-          score: "N/A", // plug scoring logic later
+      score: "N/A",
 
-          componentEvolution: item.notes || "-",
+      componentEvolution: item.notes || "-",
 
-          recordDate: formatDate(item.date)
-        };
-      });
+      recordDate: formatDate(item.date)
+    };
+  });
 
     res.status(200).json({
       success: true,

@@ -10,7 +10,7 @@ import UpgradeModal from "../Components/UpgradeModal";
 import {
   getTrackedInstances,
   getInstanceHistory
-} from "../Services/ApiServices";
+} from "../Services/ApiServices"; 
 import Loader from "../Components/Loader";
 const InstanceTracking = () => {
   const [instances, setInstances] = useState([]);
