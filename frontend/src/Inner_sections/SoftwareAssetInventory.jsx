@@ -116,7 +116,97 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 });
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
+  const renderSoftwareInstance = (inst, assignment) => {
+  const isAssigned = inst.status === "assigned";
 
+  return (
+    <div
+      key={inst._id}
+      className={`instance-card ${isAssigned ? "assignment" : ""}`}
+    >
+      {/* HEADER */}
+      <div className="instance-header">
+        <div>
+          <p className="instance-code">{inst.instanceCode}</p>
+          <p className="instance-id">
+            {inst.softwareDetails?.licenseNumber || "N/A"}
+          </p>
+        </div>
+
+        <span
+          className={`status-badge ${
+            isAssigned ? "assigned" : "available"
+          }`}
+        >
+          {isAssigned ? "Assigned" : "Available"}
+        </span>
+      </div>
+
+      {/* BASIC */}
+      <div className="instance-section">
+        <p><b>📍 Location:</b> {inst.location || "N/A"}</p>
+        <p><b>⚙ Condition:</b> {inst.condition}</p>
+        <p>
+          <b>📅 Installed:</b>{" "}
+          {inst.installationDate
+            ? new Date(inst.installationDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+      </div>
+
+      {/* LICENSE INFO */}
+      <div className="instance-section">
+        <p><b>🔑 License Key:</b> {inst.softwareDetails?.licenseKey}</p>
+        <p><b>🏢 Vendor:</b> {inst.softwareDetails?.vendor || "N/A"}</p>
+
+        <p>
+          <b>📅 Purchase:</b>{" "}
+          {inst.softwareDetails?.purchaseDate
+            ? new Date(inst.softwareDetails.purchaseDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+
+        <p>
+          <b>🔄 Renewal:</b>{" "}
+          {inst.softwareDetails?.renewalDate
+            ? new Date(inst.softwareDetails.renewalDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+      </div>
+
+      {/* WARRANTY (LIGHT) */}
+      <div className="instance-section">
+        <p><b>🛡 Warranty Status:</b> {inst.warranty?.status}</p>
+      </div>
+
+      {/* COST */}
+      <div className="instance-section cost-box">
+        <p><b>💰 Maintenance:</b> {inst.costTracking?.maintenanceCost}</p>
+        <p><b>🔄 Renewal Cost:</b> {inst.costTracking?.warrantyRenewalCost}</p>
+        <p><b>🛡 Insurance:</b> {inst.costTracking?.insuranceCost}</p>
+      </div>
+
+      {/* ASSIGNMENT */}
+      {isAssigned && assignment ? (
+        <div className="assignment-box">
+          <p><b>👤 Employee:</b> {assignment.employee?.name}</p>
+          <p><b>🏢 Department:</b> {assignment.department?.name}</p>
+          <p><b>📍 Location:</b> {assignment.location}</p>
+
+          <p><b>💻 Device:</b> {assignment.deviceInfo?.deviceName}</p>
+          <p><b>🏷 Asset Tag:</b> {assignment.deviceInfo?.assetTag}</p>
+
+          <p>
+            <b>📅 Assigned:</b>{" "}
+            {new Date(assignment.assignedAt).toLocaleDateString()}
+          </p>
+        </div>
+      ) : (
+        <p className="available-text">Available (Not Assigned)</p>
+      )}
+    </div>
+  );
+};
   return (
     <div className="inventory-container">
       {/* HEADER */}
@@ -291,80 +381,18 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
               onClick={(e) => e.stopPropagation()}
             >
               {/* ================= INSTANCES ================= */}
-              <h4>Instances</h4>
+               <h4>All Instances</h4>
 
-              {selectedAsset.instances?.length ? (
-selectedAsset.instances.map((inst) => {
-  const assignment = assignmentMap[inst._id];
-
-  return (
-    <div key={inst._id} className="instance-card">
-
-      {/* BASIC */}
-      <p><strong>Instance Code:</strong> {inst.instanceCode}</p>
-
-      <p>
-        <strong>License Key:</strong>{" "}
-        {inst.softwareDetails?.licenseKey || "N/A"}
-      </p>
-
-      {/* STATUS */}
-      <p>
-        <strong>Status:</strong>{" "}
-        <span style={{
-          color: inst.status === "assigned" ? "#dc2626" : "#16a34a",
-          fontWeight: 600
-        }}>
-          {inst.status}
-        </span>
-      </p>
-
-      {/* LOCATION */}
-      <p>
-        <strong>Location:</strong> {inst.location || "N/A"}
-      </p>
-
-      {/* INSTALL DATE */}
-      <p>
-        <strong>Installed:</strong>{" "}
-        {inst.installationDate
-          ? new Date(inst.installationDate).toLocaleDateString()
-          : "N/A"}
-      </p>
-
-      {/* 🔥 ASSIGNMENT INFO */}
-      {assignment ? (
-        <div className="assignment-box">
-          <p><strong>Assigned To:</strong> {assignment.employee?.name}</p>
-          <p><strong>Department:</strong> {assignment.department?.name}</p>
-          <p><strong>Assigned Location:</strong> {assignment.location}</p>
-
-          <p><strong>Device:</strong> {assignment.deviceInfo?.deviceName}</p>
-          <p><strong>Asset Tag:</strong> {assignment.deviceInfo?.assetTag}</p>
-
-          <p>
-            <strong>Assigned On:</strong>{" "}
-            {new Date(assignment.assignedAt).toLocaleDateString()}
-          </p>
-        </div>
-      ) : (
-        <p style={{ color: "#6b7280" }}>Available (Not Assigned)</p>
-      )}
-
-      <hr />
-    </div>
-  );
-})
-              ) : (
-                <p>No instances found</p>
-              )}
-
-              <button
-                className="asset-view-close-btn"
-                onClick={() => setSelectedAsset(null)}
-              >
-                Close
-              </button>
+{selectedAsset.instances?.length ? (
+  selectedAsset.instances.map((inst) =>
+    renderSoftwareInstance(
+      inst,
+      assignmentMap[inst._id]
+    )
+  )
+) : (
+  <p>No instances found</p>
+)}
             </motion.div>
           </motion.div>
         )}

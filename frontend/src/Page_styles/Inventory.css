@@ -344,6 +344,11 @@
   padding: 8px;
   border-radius: 6px;
 }
+.available-text {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .inventory-grid {
