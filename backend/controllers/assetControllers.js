@@ -925,14 +925,20 @@ const assets = await Asset.find(filter)
 
       assignmentMap[assetId].departmentMap[deptId].quantity += assign.quantity;
 
-      assignmentMap[assetId].assignmentRecords.push({
-        _id: assign._id,
-        employee: assign.employeeId,
-        department: assign.departmentId,
-        assignLocation: assign.assignLocation,
-        quantity: assign.quantity,
-        assignedAt: assign.assignedAt,
-      });
+assignmentMap[assetId].assignmentRecords.push({
+  _id: assign._id,
+
+  assetInstanceId: assign.assetInstanceId,   // ✅ CRITICAL FIX
+
+  employee: assign.employeeId,
+  department: assign.departmentId,
+
+  location: assign.location,                 // ✅ FIX NAME
+  deviceInfo: assign.deviceInfo,             // ✅ ADD THIS
+
+  quantity: assign.quantity,
+  assignedAt: assign.assignedAt,
+});
     }
 
     // Convert departmentMap → array
