@@ -95,7 +95,89 @@ const HardwareAssetList = () => {
 
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
+  const renderInstance = (inst, assignment) => {
+  const isAssigned = inst.status === "assigned";
 
+  return (
+    <div
+      key={inst._id}
+      className={`instance-card ${isAssigned ? "assignment" : ""}`}
+    >
+      {/* HEADER */}
+      <div className="instance-header">
+        <div>
+          <p className="instance-code">{inst.instanceCode}</p>
+          <p className="instance-id">{inst.uniqueIdentifier}</p>
+        </div>
+
+        <span
+          className={`status-badge ${
+            isAssigned ? "assigned" : "available"
+          }`}
+        >
+          {isAssigned ? "Assigned" : "Available"}
+        </span>
+      </div>
+
+      {/* BASIC INFO */}
+      <div className="instance-section">
+        <p><b>📍 Location:</b> {inst.location}</p>
+        <p><b>⚙ Condition:</b> {inst.condition}</p>
+        <p>
+          <b>📅 Installed:</b>{" "}
+          {inst.installationDate
+            ? new Date(inst.installationDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+      </div>
+
+      {/* TECHNICAL */}
+      <div className="instance-section">
+        <p><b>💻 Model:</b> {inst.hardwareDetails?.modelNo}</p>
+        <p><b>📝 Specs:</b> {inst.hardwareDetails?.specifications}</p>
+      </div>
+
+      {/* WARRANTY + INSURANCE */}
+      <div className="instance-section">
+        <p>
+          <b>🛡 Warranty:</b>{" "}
+          {inst.warranty?.expiryDate
+            ? new Date(inst.warranty.expiryDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+
+        <p>
+          <b>📄 Insurance:</b>{" "}
+          {inst.insurance?.policyId || "N/A"}
+        </p>
+
+        <p>
+          <b>📅 Insurance Exp:</b>{" "}
+          {inst.insurance?.expiryDate
+            ? new Date(inst.insurance.expiryDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+      </div>
+
+      {/* COST TRACKING */}
+      <div className="instance-section cost-box">
+        <p><b>💰 Maintenance:</b> {inst.costTracking?.maintenanceCost}</p>
+        <p><b>🔄 Warranty Renewal:</b> {inst.costTracking?.warrantyRenewalCost}</p>
+        <p><b>🛡 Insurance Cost:</b> {inst.costTracking?.insuranceCost}</p>
+      </div>
+
+      {/* ASSIGNMENT */}
+      {isAssigned && assignment && (
+        <div className="assignment-box">
+          <p><b>👤 Employee:</b> {assignment.employee?.name}</p>
+          <p><b>🏢 Department:</b> {assignment.department?.name}</p>
+          <p><b>📍 Assigned Location:</b> {assignment.location}</p>
+          <p><b>💻 Device:</b> {assignment.deviceInfo?.deviceName}</p>
+        </div>
+      )}
+    </div>
+  );
+};
   return (
     <div className="inventory-container">
 
@@ -239,78 +321,20 @@ const HardwareAssetList = () => {
                 selectedAsset.assignmentRecords?.forEach((a) => {
                   assignmentMap[String(a.assetInstanceId)] = a;
                 });
-
-                const assignedOnly = instances.filter(
-                  (i) => i.status === "assigned"
-                );
-
-                const availableOnly = instances.filter(
-                  (i) => i.status === "in_stock"
-                );
-
                 return (
                   <>
-                    {/* AVAILABLE */}
-                    <h4>Available</h4>
-                    {availableOnly.length === 0 ? (
-                      <p>No available instances</p>
-                    ) : (
-                      availableOnly.map((inst) => (
-                        <div key={inst._id} className="instance-card">
-                          <p><b>{inst.instanceCode}</b></p>
-                          <p>{inst.uniqueIdentifier}</p>
-                          <span style={{ color: "green" }}>
-                            Available
-                          </span>
-                        </div>
-                      ))
-                    )}
+<h4>All Instances</h4>
 
-                    {/* ASSIGNED */}
-                    <h4 style={{ marginTop: 20 }}>Assigned</h4>
-                    {assignedOnly.length === 0 ? (
-                      <p>No assigned instances</p>
-                    ) : (
-                      assignedOnly.map((inst) => {
-                        const assignment =
-                          assignmentMap[String(inst._id)];
-
-                        return (
-                          <div
-                            key={inst._id}
-                            className="instance-card assignment"
-                          >
-                            <p><b>{inst.instanceCode}</b></p>
-                            <p>{inst.uniqueIdentifier}</p>
-
-                            <span style={{ color: "red" }}>
-                              Assigned
-                            </span>
-
-                            {assignment && (
-                              <div className="assignment-box">
-                                <p>
-                                  <b>Employee:</b>{" "}
-                                  {assignment.employee?.name}
-                                </p>
-                                <p>
-                                  <b>Department:</b>{" "}
-                                  {assignment.department?.name}
-                                </p>
-                                <p>
-                                  <b>Location:</b>{" "}
-                                  {assignment.location}
-                                </p>
-                                <p>
-                                  <b>Device:</b>{" "}
-                                  {assignment.deviceInfo?.deviceName}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })
-                    )}
+{instances.length === 0 ? (
+  <p>No instances found</p>
+) : (
+  instances.map((inst) =>
+    renderInstance(
+      inst,
+      assignmentMap[String(inst._id)]
+    )
+  )
+)}
                   </>
                 );
               })()}

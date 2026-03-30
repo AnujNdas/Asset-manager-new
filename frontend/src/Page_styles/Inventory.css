@@ -287,6 +287,63 @@
 .badge.type.yearly {
   background: #dcfce7;
 }
+.instance-card {
+  background: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.instance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.instance-code {
+  font-weight: 600;
+}
+
+.instance-id {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge.assigned {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.status-badge.available {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.instance-section {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+.cost-box {
+  background: #f9fafb;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.assignment-box {
+  margin-top: 8px;
+  background: #fef3c7;
+  padding: 8px;
+  border-radius: 6px;
+}
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .inventory-grid {
