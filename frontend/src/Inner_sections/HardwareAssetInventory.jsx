@@ -167,14 +167,19 @@ const HardwareAssetList = () => {
       </div>
 
       {/* ASSIGNMENT */}
-      {isAssigned && assignment && (
-        <div className="assignment-box">
-          <p><b>👤 Employee:</b> {assignment.employee?.name}</p>
-          <p><b>🏢 Department:</b> {assignment.department?.name}</p>
-          <p><b>📍 Assigned Location:</b> {assignment.location}</p>
-          <p><b>💻 Device:</b> {assignment.deviceInfo?.deviceName}</p>
-        </div>
-      )}
+{isAssigned && (
+  <div className="assignment-box">
+    <p><b>👤 Employee:</b> {inst.assignedTo?.employeeName}</p>
+    <p><b>🏢 Department:</b> {inst.assignedTo?.departmentName}</p>
+
+    <p>
+      <b>📅 Assigned:</b>{" "}
+      {inst.assignedTo?.assignedAt
+        ? new Date(inst.assignedTo.assignedAt).toLocaleDateString()
+        : "N/A"}
+    </p>
+  </div>
+)}
     </div>
   );
 };
