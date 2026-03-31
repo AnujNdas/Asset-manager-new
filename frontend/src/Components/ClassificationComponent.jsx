@@ -39,6 +39,7 @@ const fetchItems = async () => {
   setLoading(true);
   try {
     const res = await getAll();
+    console.log(`Fetched ${title}:`, res);
 
     const data = res?.data ?? res;
 
