@@ -22,7 +22,13 @@ const categorySchema = new mongoose.Schema(
       ref: "Organization",
       required: true,
       index: true
-    }
+    },
+    categoryType: {
+  type: String,
+  enum: ["hardware", "software"],
+  required: true,
+  index: true
+},
   },
   { timestamps: true }
 );
@@ -39,7 +45,7 @@ categorySchema.pre("validate", function (next) {
 
 /* ================= UNIQUE PER ORGANIZATION (ACTIVE ONLY) ================= */
 categorySchema.index(
-  { organizationId: 1, name: 1 },
+  { organizationId: 1, name: 1, categoryType: 1 },
   {
     unique: true,
     partialFilterExpression: { isActive: true }
