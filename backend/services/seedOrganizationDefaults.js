@@ -11,21 +11,27 @@ const {
   defaultUnits,
 } = require("../utils/default.js");
 const insertDefaults = async (Model, values, organizationId, session) => {
-  const exists = await Model.exists({
-    organizationId,
-    isSystem: true,
-  });
+  for (const item of values) {
+    const exists = await Model.findOne({
+      name: item.name,
+      organizationId,
+      isSystem: true,
+    }).session(session);
 
-  if (exists) return;
-
-  const docs = values.map((item) => ({
-    name: item.name,
-    organizationId,
-    isSystem: true,
-    isActive: true,
-  }));
-
-  await Model.insertMany(docs, { session });
+    if (!exists) {
+      await Model.create(
+        [
+          {
+            ...item, // 🔥 includes categoryType if present
+            organizationId,
+            isSystem: true,
+            isActive: true,
+          },
+        ],
+        { session }
+      );
+    }
+  }
 };
 
 const seedOrganizationDefaults = async (organizationId, session) => {

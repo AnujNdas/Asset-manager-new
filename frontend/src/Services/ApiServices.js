@@ -70,9 +70,10 @@ export const restoreLocation = async(id) => {
 }
 
 // ----- CATEGORY API CALLS -----
-export const getCategories = async () => {
-  const response = await axiosInstance.get("/category");
-  return response.data;
+export const getCategories = async (type) => {
+  const url = type ? `/categories?type=${type}` : "/categories";
+  const res = await axiosInstance.get(url);
+  return res.data;
 };
 
 export const createCategory = async (categoryData) => {

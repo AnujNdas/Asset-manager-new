@@ -574,13 +574,13 @@ const resetSystemData = async (req, res) => {
       ]);
 
       // 2️⃣ DELETE ALL CLASSIFICATIONS
-      await Promise.all([
-        Category.deleteMany({ organizationId }, { session }),
-        Location.deleteMany({ organizationId }, { session }),
-        Status.deleteMany({ organizationId }, { session }),
-        Unit.deleteMany({ organizationId }, { session }),
-        Department.deleteMany({ organizationId }, { session }),
-      ]);
+await Promise.all([
+  Category.deleteMany({ organizationId, isSystem: false }, { session }),
+  Location.deleteMany({ organizationId, isSystem: false }, { session }),
+  Status.deleteMany({ organizationId, isSystem: false }, { session }),
+  Unit.deleteMany({ organizationId, isSystem: false }, { session }),
+  Department.deleteMany({ organizationId, isSystem: false }, { session }),
+]);
 
       // 3️⃣ RESEED DEFAULTS
       await seedOrganizationDefaults(organizationId, session);

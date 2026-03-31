@@ -74,7 +74,7 @@
         const [u, l, c, s] = await Promise.all([
           getUnits(),
           getLocations(),
-          getCategories(),
+          getCategories("hardware"),
           getStatuses(),
         ]);
 

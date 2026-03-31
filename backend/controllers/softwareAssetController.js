@@ -554,7 +554,24 @@ const overallUnitAmount = overallTotal / quantity;
 
 const baseTotalAmount = convertToBase(totalAmount, currency);
 const baseOverallTotal = convertToBase(overallTotal, currency);
+const category = await Category.findOne({
+  _id: req.body.assetCategory,
+  organizationId,
+  isActive: true,
+});
 
+if (!category) {
+  return res.status(400).json({
+    message: "Invalid category",
+  });
+}
+
+// 🔥 CORE RULE
+if (category.categoryType !== "software") {
+  return res.status(400).json({
+    message: "Selected category is not a software category",
+  });
+}
 
     const asset = await SoftwareAsset.create({
       ...req.body,

@@ -17,21 +17,30 @@ const defaultLocations = [
     { name : "Madrid" },
 ]
 const defaultCategories = [
-    { name : "Accessories" },
-    { name : "Desktop applications" },
-    { name : "End-user device" },
-    { name : "Enterprise systems" },
-    { name : "Licenses & entitlements" },
-    { name : "Operating systems" },
-    { name : "Saas" },
-    { name : "Machinery" },
-    { name : "Robotics" },
-    { name : "Equipment" },
-    { name : "Electronics" },
-    { name : "Servers & storage" },
-    { name : "Security & Safety" },
-    { name : "User-End-Device" },
-]
+  // HARDWARE (HAM)
+  { name: "User End Device", categoryType: "hardware" },
+  { name: "Transport", categoryType: "hardware" },
+  { name: "Security & Safety", categoryType: "hardware" },
+  { name: "Equipment", categoryType: "hardware" },
+  { name: "Machinery", categoryType: "hardware" },
+  { name: "Tools", categoryType: "hardware" },
+  { name: "Robotics", categoryType: "hardware" },
+  { name: "Electronics", categoryType: "hardware" },
+  { name: "Others", categoryType: "hardware" },
+
+  // SOFTWARE (SAM)
+  { name: "Operating System", categoryType: "software" },
+  { name: "SaaS", categoryType: "software" },
+  { name: "Server", categoryType: "software" },
+  { name: "Desktop Applications", categoryType: "software" },
+  { name: "Enterprise Systems", categoryType: "software" },
+  { name: "Digital Accessories", categoryType: "software" },
+  { name: "Storage (Cloud)", categoryType: "software" },
+  { name: "AI Models", categoryType: "software" },
+  { name: "Data & Infrastructure", categoryType: "software" },
+  { name: "Others", categoryType: "software" }
+];
+
 const defaultDepartments = [ 
     { name : "Sales" },
     { name : "Research & development" },

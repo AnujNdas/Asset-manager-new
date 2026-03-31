@@ -68,7 +68,7 @@ export default function SoftwareAssetCapture() {
       const [u, l, c, s] = await Promise.all([
         getUnits(),
         getLocations(),
-        getCategories(),
+        getCategories("software"),
         getStatuses(),
       ]);
       setUnits(u || []);

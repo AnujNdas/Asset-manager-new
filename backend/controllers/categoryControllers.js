@@ -83,10 +83,25 @@ const getCategories = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const categories = await Category.find({
+    const { type } = req.query; // 🔥 NEW
+
+    let filter = {
       organizationId,
       isActive: true,
-    }).sort({ name: 1 });
+    };
+
+    // ✅ Apply type filter ONLY if provided
+    if (type) {
+      if (!["hardware", "software"].includes(type)) {
+        return res.status(400).json({
+          error: "Invalid category type. Allowed: hardware, software",
+        });
+      }
+
+      filter.categoryType = type;
+    }
+
+    const categories = await Category.find(filter).sort({ name: 1 });
 
     res.status(200).json(categories);
   } catch (error) {

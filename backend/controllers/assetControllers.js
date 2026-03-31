@@ -548,7 +548,23 @@ if (!amount || amount <= 0 || !currency) {
     return res.status(400).json({ message: "Invalid quantity" });
   }
 
+  const category = await Category.findOne({
+  _id: req.body.assetCategory,
+  organizationId,
+  isActive: true,
+});
 
+if (!category) {
+  return res.status(400).json({
+    message: "Invalid category",
+  });
+}
+
+if (category.categoryType !== "hardware") {
+  return res.status(400).json({
+    message: "Category must belong to hardware",
+  });
+}
 const org = await Organization.findById(organizationId);
 
 const assetCode = await generateHardwareCode(
