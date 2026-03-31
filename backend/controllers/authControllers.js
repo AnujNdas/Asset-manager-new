@@ -583,7 +583,14 @@ await Promise.all([
 ]);
 
       // 3️⃣ RESEED DEFAULTS
-      await seedOrganizationDefaults(organizationId, session);
+const hasSystemCategories = await Category.exists({
+  organizationId,
+  isSystem: true,
+}).session(session);
+
+if (!hasSystemCategories) {
+  await seedOrganizationDefaults(organizationId, session);
+}
 
       // 4️⃣ AUDIT LOG
       await ActivityLog.create(
