@@ -71,7 +71,7 @@ export const restoreLocation = async(id) => {
 
 // ----- CATEGORY API CALLS -----
 export const getCategories = async (type) => {
-  const url = type ? `/categories?type=${type}` : "/categories";
+  const url = type ? `/category?type=${type}` : "/category";
   const res = await axiosInstance.get(url);
   return res.data;
 };
