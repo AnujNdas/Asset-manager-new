@@ -28,7 +28,8 @@ const SoftwareAssetList = () => {
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
-
+  const [editAsset, setEditAsset] = useState(null);
+  const [editForm, setEditForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const assetsPerPage = 8;
 
@@ -38,7 +39,30 @@ const SoftwareAssetList = () => {
   useEffect(() => {
     fetchAll();
   }, []);
+  const handleEditOpen = (asset) => {
+  setEditAsset(asset);
 
+  setEditForm({
+    assetName: asset.assetName,
+    assetCategory: asset.assetCategory?._id || asset.assetCategory,
+    associateUnit: asset.associateUnit?._id || asset.associateUnit,
+    locationName: asset.locationName?._id || asset.locationName,
+    assetStatus: asset.assetStatus?._id || asset.assetStatus,
+    type: asset.type,
+
+    assetQuantity: asset.assetQuantity,
+
+    assetCost: {
+      totalAmount: asset.assetCost?.totalAmount || 0,
+      currency: asset.assetCost?.currency || "USD",
+    },
+
+    purchaseDate: asset.purchaseDetails?.purchaseDate?.slice(0, 10),
+
+    // SOFTWARE ONLY
+    expiryDate: asset.renewal?.expiryDate?.slice(0, 10),
+  });
+};
   const fetchAll = async () => {
     try {
       const [assetsRes, catRes, statRes, unitRes, locRes] =
@@ -95,7 +119,34 @@ const SoftwareAssetList = () => {
       },
     });
   };
+  const handleEditSave = async () => {
+  try {
+    await updateSoftwareAsset(editAsset._id, {
+      assetName: editForm.assetName,
+      assetCategory: editForm.assetCategory,
+      associateUnit: editForm.associateUnit,
+      locationName: editForm.locationName,
+      assetStatus: editForm.assetStatus,
+      type: editForm.type,
 
+      assetQuantity: editForm.assetQuantity,
+
+      assetCost: {
+        totalAmount: editForm.assetCost.totalAmount,
+        currency: editForm.assetCost.currency,
+      },
+
+      purchaseDate: editForm.purchaseDate,
+      expiryDate: editForm.expiryDate,
+    });
+
+    Swal.fire("Updated", "Software updated", "success");
+    setEditAsset(null);
+    fetchAll();
+  } catch (err) {
+    Swal.fire("Error", err.message, "error");
+  }
+};
   const filteredAssets = assets.filter((asset) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -352,7 +403,9 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
     <button onClick={() => setSelectedAsset(asset)}>
       View
     </button>
-
+      <button onClick={() => handleEditOpen(asset)}>
+        Edit
+      </button>
     <button onClick={() => handleDelete(asset._id)}>
       Delete
     </button>
@@ -397,6 +450,126 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
           </motion.div>
         )}
       </AnimatePresence>
+      <AnimatePresence>
+  {editAsset && (
+    <motion.div
+      className="asset-view-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditAsset(null)}
+    >
+      <motion.div
+        className="asset-view-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3>Edit Asset</h3>
+
+        <div className="grid-2">
+
+          <div className="input-group">
+            <label>Name</label>
+            <input
+              value={editForm.assetName}
+              onChange={(e) =>
+                setEditForm({ ...editForm, assetName: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Quantity</label>
+            <input
+              type="number"
+              value={editForm.assetQuantity}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  assetQuantity: Number(e.target.value),
+                })
+              }
+            />
+            <p className="warning-text">
+              ⚠ Changing quantity will add/remove instances automatically.
+            </p>
+          </div>
+
+          <div className="input-group">
+            <label>Total Cost</label>
+            <input
+              type="number"
+              value={editForm.assetCost.totalAmount}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  assetCost: {
+                    ...editForm.assetCost,
+                    totalAmount: Number(e.target.value),
+                  },
+                })
+              }
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Currency</label>
+            <select
+              value={editForm.assetCost.currency}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  assetCost: {
+                    ...editForm.assetCost,
+                    currency: e.target.value,
+                  },
+                })
+              }
+            >
+              <option value="USD">USD</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
+
+          <div className="input-group">
+            <label>Purchase Date</label>
+            <input
+              type="date"
+              value={editForm.purchaseDate}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  purchaseDate: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          {/* SOFTWARE ONLY */}
+          {editForm.expiryDate !== undefined && (
+            <div className="input-group">
+              <label>Expiry Date</label>
+              <input
+                type="date"
+                value={editForm.expiryDate}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    expiryDate: e.target.value,
+                  })
+                }
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="modal-actions">
+          <button onClick={handleEditSave}>Save</button>
+          <button onClick={() => setEditAsset(null)}>Cancel</button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </div>
   );
 };

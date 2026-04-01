@@ -9,6 +9,7 @@ import {
   getLocations,
   getUnits,
   getStatuses,
+  updateHardwareAsset,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
@@ -22,7 +23,8 @@ const HardwareAssetList = () => {
   const [locations, setLocations] = useState([]);
   const [units, setUnits] = useState([]);
   const [statuses, setStatuses] = useState([]);
-
+  const [editAsset, setEditAsset] = useState(null);
+  const [editForm, setEditForm] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
 
@@ -34,7 +36,23 @@ const HardwareAssetList = () => {
   useEffect(() => {
     fetchAll();
   }, []);
-
+  useEffect(() => {
+  if (editAsset) {
+    setEditForm({
+      assetName: editAsset.assetName,
+      assetCategory: editAsset.assetCategory?._id,
+      associateUnit: editAsset.associateUnit?._id,
+      locationName: editAsset.locationName?._id,
+      assetStatus: editAsset.assetStatus?._id,
+      type: editAsset.type,
+      assetQuantity: editAsset.assetQuantity,
+      assetCost: {
+        totalAmount: editAsset.assetCost?.totalAmount,
+        currency: editAsset.assetCost?.currency,
+      },
+    });
+  }
+}, [editAsset]);
   const fetchAll = async () => {
     try {
       const [assetsRes, catsRes, locsRes, unitsRes, statusesRes] =
@@ -65,7 +83,18 @@ const HardwareAssetList = () => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN");
   };
+  const handleUpdate = async () => {
+  try {
+    await updateHardwareAsset(editAsset._id, editForm);
 
+    await Swal.fire("Success", "Asset updated", "success");
+
+    setEditAsset(null);
+    fetchAll();
+  } catch (err) {
+    Swal.fire("Error", err.message || "Failed", "error");
+  }
+};
   const handleDelete = async (id) => {
     const resp = await Swal.fire({
       title: "Delete asset?",
@@ -283,15 +312,23 @@ const HardwareAssetList = () => {
     {formatDate(asset.purchaseDetails?.purchaseDate)}
   </p>
 
-  <div className="card-actions">
-    <button onClick={() => setSelectedAsset(asset)}>
-      View
-    </button>
+<div className="card-actions">
+  <button onClick={() => setSelectedAsset(asset)}>
+    View
+  </button>
 
-    <button onClick={() => handleDelete(asset._id)}>
-      Delete
-    </button>
-  </div>
+  <button
+    onClick={() => {
+      setEditAsset(asset);
+    }}
+  >
+    Edit
+  </button>
+
+  <button onClick={() => handleDelete(asset._id)}>
+    Delete
+  </button>
+</div>
 </motion.div>
           ))}
         </AnimatePresence>
@@ -349,6 +386,99 @@ const HardwareAssetList = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <AnimatePresence>
+  {editAsset && (
+    <motion.div
+      className="asset-view-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditAsset(null)}
+    >
+      <motion.div
+        className="asset-view-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3>Edit Asset</h3>
+
+        <div className="grid-2">
+          <div className="input-group">
+            <label>Asset Name</label>
+            <input
+              value={editForm.assetName}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  assetName: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Category</label>
+            <select
+              value={editForm.assetCategory}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  assetCategory: e.target.value,
+                })
+              }
+            >
+              {categories.map(c => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid-2">
+          <div className="input-group">
+            <label>Total Cost</label>
+            <input
+              type="number"
+              value={editForm.assetCost?.totalAmount}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  assetCost: {
+                    ...editForm.assetCost,
+                    totalAmount: e.target.value,
+                  },
+                })
+              }
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Quantity</label>
+            <input
+              type="number"
+              value={editForm.assetQuantity}
+              onChange={(e) =>
+                setEditForm({
+                  ...editForm,
+                  assetQuantity: e.target.value,
+                })
+              }
+            />
+                <p className="warning-text">
+                  ⚠ Changing quantity will add/remove instances automatically.
+                </p>
+          </div>
+        </div>
+
+        <div className="modal-actions">
+          <button onClick={handleUpdate}>Save</button>
+          <button onClick={() => setEditAsset(null)}>Cancel</button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </div>
   );
 };

@@ -773,122 +773,192 @@ assignmentMap[id].assignmentRecords.push({
 const updateSoftwareAsset = async (req, res) => {
   try {
     const { organizationId, id: userId } = req.user;
+    const { id } = req.params;
 
     const asset = await SoftwareAsset.findOne({
-      _id: req.params.id,
-      organizationId
+      _id: id,
+      organizationId,
     });
 
     if (!asset) {
-      return res.status(404).json({ success: false, message: "Not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Asset not found",
+      });
     }
 
-    // ✅ Extract assetCost safely
-    const costInput = req.body.assetCost;
-    delete req.body.assetCost;
+    /* ================= CATEGORY VALIDATION ================= */
+    if (req.body.assetCategory) {
+      const category = await Category.findOne({
+        _id: req.body.assetCategory,
+        organizationId,
+        isActive: true,
+      });
 
-    // ✅ Validate type if provided
+      if (!category) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid category",
+        });
+      }
+
+      if (category.categoryType !== "software") {
+        return res.status(400).json({
+          success: false,
+          message: "Category must belong to software",
+        });
+      }
+    }
+
+    /* ================= TYPE VALIDATION ================= */
     if (req.body.type) {
       if (!["monthly", "yearly", "one_time"].includes(req.body.type)) {
         return res.status(400).json({
           success: false,
-          message: "Invalid software type. Allowed: monthly, yearly, one_time"
+          message: "Invalid software type",
         });
       }
     }
-if (req.body.purchaseDate) {
-  asset.purchaseDetails.purchaseDate = parseDate(req.body.purchaseDate);
-}
 
-if (req.body.expiryDate) {
-  asset.renewal.expiryDate = parseDate(req.body.expiryDate);
-}
-    // ✅ Assign normal fields FIRST (safe fields only)
-    Object.assign(asset, req.body);
+    /* ================= QUANTITY HANDLING ================= */
     const oldQty = asset.assetQuantity;
-const newQty = req.body.assetQuantity ?? oldQty;
+    const newQty = req.body.assetQuantity ?? oldQty;
 
-if (newQty > oldQty) {
-  await generateInstances({
-    asset,
-    quantity: newQty - oldQty,
-    assetType: "software",
-    userId
-  });
-}
+    if (newQty <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid quantity",
+      });
+    }
 
-if (newQty < oldQty) {
-  await AssetInstance.deleteMany({
-    assetId: asset._id,
-    status: "in_stock"
-  }).limit(oldQty - newQty);
-}
-    // ✅ Handle asset cost AFTER assign (so it can't be overwritten)
-    if (costInput) {
-      const quantity = Number(
-        req.body.assetQuantity ?? asset.assetQuantity ?? 1
+    /* ================= INSTANCE MANAGEMENT ================= */
+    if (newQty > oldQty) {
+      await generateInstances({
+        asset,
+        quantity: newQty - oldQty,
+        assetType: "software",
+        userId,
+      });
+    }
+
+    if (newQty < oldQty) {
+      const removable = await AssetInstance.find({
+        assetId: asset._id,
+        status: "in_stock",
+      }).limit(oldQty - newQty);
+
+      const ids = removable.map((i) => i._id);
+
+      await AssetInstance.deleteMany({ _id: { $in: ids } });
+    }
+
+    asset.assetQuantity = newQty;
+
+    /* ================= PURCHASE DETAILS ================= */
+    if (req.body.purchaseDetails?.purchaseDate) {
+      asset.purchaseDetails.purchaseDate = parseDate(
+        req.body.purchaseDetails.purchaseDate
       );
+    }
 
-      if (quantity <= 0) {
+    if (req.body.purchaseDetails?.vendor) {
+      asset.purchaseDetails.vendor = buildVendor(
+        req.body.purchaseDetails.vendor
+      );
+    }
+
+    /* ================= RENEWAL ================= */
+    if (req.body.renewal?.expiryDate) {
+      asset.renewal.expiryDate = parseDate(
+        req.body.renewal.expiryDate
+      );
+    }
+
+    if (req.body.renewal?.renewalTerm) {
+      asset.renewal.renewalTerm = req.body.renewal.renewalTerm;
+    }
+
+    /* ================= COST ================= */
+    if (req.body.assetCost) {
+      const { totalAmount, currency } = req.body.assetCost;
+
+      const parsedAmount = Number(totalAmount);
+
+      if (parsedAmount < 0) {
         return res.status(400).json({
           success: false,
-          message: "Invalid license quantity"
+          message: "Invalid cost",
         });
       }
-      
-      const totalAmount = Number(costInput.totalAmount);
-      const currency = costInput.currency.toUpperCase();
 
-      if (totalAmount < 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid total cost"
-        });
-      }
+      const finalCurrency = currency.toUpperCase();
 
       asset.assetCost = {
-        totalAmount,
-        unitAmount: totalAmount / quantity,
-        baseTotalAmount: convertToBase(totalAmount, currency),
-        currency
+        totalAmount: parsedAmount,
+        unitAmount: parsedAmount / newQty,
+        baseTotalAmount: convertToBase(parsedAmount, finalCurrency),
+        currency: finalCurrency,
       };
     }
-let cycles = 1;
 
-if (asset.type !== "one_time") {
-  const purchaseDate = asset.purchaseDetails?.purchaseDate;
-  const expiryDate = asset.renewal?.expiryDate;
+    /* ================= FINANCIAL TRACKING ================= */
+    let cycles = 1;
 
-  if (!purchaseDate || !expiryDate) {
-    throw new Error("Purchase date and expiry date required");
-  }
+    if (asset.type !== "one_time") {
+      const purchaseDate = asset.purchaseDetails?.purchaseDate;
+      const expiryDate = asset.renewal?.expiryDate;
 
-  cycles = calculateCycles(asset.type, purchaseDate, expiryDate);
-}
+      if (!purchaseDate || !expiryDate) {
+        return res.status(400).json({
+          success: false,
+          message: "Purchase & expiry date required",
+        });
+      }
 
-const overallTotal = asset.assetCost.totalAmount * cycles;
-const overallUnitAmount = overallTotal / asset.assetQuantity;
-
-asset.financialTracking.totalCost =
-  asset.assetCost.totalAmount * cycles;
-
-    // ✅ Audit history safe guard
-    if (!Array.isArray(asset.auditHistory)) {
-      asset.auditHistory = [];
+      cycles = calculateCycles(asset.type, purchaseDate, expiryDate);
     }
 
+    asset.financialTracking.totalCost =
+      asset.assetCost.totalAmount * cycles;
+
+    /* ================= SAFE FIELD UPDATE ================= */
+    const allowedFields = [
+      "assetName",
+      "assetCategory",
+      "associateUnit",
+      "locationName",
+      "assetStatus",
+      "type",
+      "DOE",
+    ];
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        asset[field] = req.body[field];
+      }
+    });
+
+    /* ================= AUDIT ================= */
     asset.auditHistory.push({
       userId,
       action: "UPDATE",
-      notes: "Asset updated"
+      notes: "Software asset updated",
     });
 
     await asset.save();
 
-    res.json({ success: true, data: asset });
+    return res.json({
+      success: true,
+      data: asset,
+    });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("🔥 UPDATE SOFTWARE ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

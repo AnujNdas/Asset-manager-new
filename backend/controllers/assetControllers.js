@@ -660,166 +660,140 @@ if (!parsedDOP || isNaN(parsedDOP.getTime())) {
   // UPDATE ASSET
   // =======================================================================
   // ================= UPDATE ASSET =================
-  const updateAsset = async (req, res ,next) => {
-    try {
-      const { id } = req.params;
-      const userId = req.user.id;
-      console.log("REQ BODY:", req.body);
-  console.log("REQ HEADERS:", req.headers["content-type"]);
+const updateAsset = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const organizationId = req.user.organizationId;
 
+    const existingAsset = await Asset.findOne({
+      _id: id,
+      organizationId,
+    });
 
-      const existingAsset = await Asset.findById(id);
-      if (!existingAsset) {
-        return res.status(404).json({ message: "Asset not found" });
+    if (!existingAsset) {
+      return res.status(404).json({ message: "Asset not found" });
+    }
+
+    /* ================= CATEGORY VALIDATION ================= */
+    if (req.body.assetCategory) {
+      const category = await Category.findOne({
+        _id: req.body.assetCategory,
+        organizationId,
+        isActive: true,
+      });
+
+      if (!category) {
+        return res.status(400).json({ message: "Invalid category" });
       }
 
-      const assetQuantity =
-        req.body.assetQuantity ?? existingAsset.assetQuantity;
-      const inUse =
-        req.body.inUse ?? existingAsset.inUse;
-  let updatedCost = existingAsset.assetCost;
-  if (req.body.assetCost) {
-    const { totalAmount, currency } = req.body.assetCost;
-
-    const parsedTotalAmount = Number(totalAmount);
-
-    const finalCurrency = currency
-      ? currency.toUpperCase()
-      : existingAsset.assetCost.currency;
-
-    const finalQuantity =
-      req.body.assetQuantity ?? existingAsset.assetQuantity;
-
-    if (parsedTotalAmount <= 0 || isNaN(parsedTotalAmount)) {
-      return res.status(400).json({ message: "Invalid total amount" });
-    }
-
-    if (finalQuantity <= 0) {
-      return res.status(400).json({ message: "Invalid quantity" });
-    }
-
-    const unitAmount = parsedTotalAmount / finalQuantity;
-    const baseTotalAmount = convertToBase(parsedTotalAmount, finalCurrency);
-
-    updatedCost = {
-      totalAmount: parsedTotalAmount,
-      unitAmount,
-      baseTotalAmount,
-      currency: finalCurrency
-    };
-  }
-
-
-      if (inUse > assetQuantity) {
+      if (category.categoryType !== "hardware") {
         return res.status(400).json({
-          message: "In-use quantity cannot exceed total quantity",
+          message: "Category must belong to hardware",
         });
       }
-      if (req.body.type) {
-        if (!["one_time", "maintenance"].includes(req.body.type)) {
-          return res.status(400).json({
-            message: "Invalid asset type. Allowed: one_time, maintenance",
-          });
-        }
-      }
-      let updatedInsurance = existingAsset.insurance;
-
-  if (req.body.insurance) {
-    updatedInsurance = buildInsurance(
-      req.body.insurance,
-      existingAsset.insurance
-    );
-  }
-  let updatedWarranty = existingAsset.warranty;
-
-  if (req.body.warranty) {
-    updatedWarranty = buildWarranty(
-      req.body.warranty,
-      existingAsset.warranty,
-      req.body.DOP ?? existingAsset.DOP
-    );
-  }
-  if (req.body.DOP !== undefined) {
-    req.body.DOP = parseDate(req.body.DOP);
-  }
-
-  if (req.body.DOE !== undefined) {
-    req.body.DOE = parseDate(req.body.DOE);
-  }
-const purchaseDetails = {
-  purchaseDate: req.body.purchaseDetails?.purchaseDate
-    ? parseDate(req.body.purchaseDetails.purchaseDate)
-    : existingAsset.purchaseDetails.purchaseDate,
-
-  vendor: req.body.vendor
-    ? buildVendor(req.body.vendor)
-    : existingAsset.purchaseDetails.vendor
-};
-  const maintenance = req.body.maintenance
-    ? buildMaintenance(req.body.maintenance)
-    : existingAsset.maintenance;
-
-  const tracking = req.body.tracking
-    ? buildTracking(req.body.tracking)
-    : existingAsset.tracking;
-
-  const insurance = req.body.insurance
-    ? buildInsurance(req.body.insurance, existingAsset.insurance)
-    : existingAsset.insurance;
-
-  const purchaseDate = purchaseDetails.purchaseDate;
-
-  const warranty = req.body.warranty
-  ? buildWarranty(req.body.warranty, existingAsset.warranty, purchaseDate)
-  : existingAsset.warranty;
-  const financialTracking = buildFinancialTracking(
-    updatedCost,
-    maintenance,
-    warranty,
-    insurance
-  );
-const updatedLifetime = calculateAssetLifetime(
-  purchaseDate,
-  req.body.DOE ?? existingAsset.DOE
-);
-  const updatedAsset = await Asset.findByIdAndUpdate(
-    id,
-    {
-      ...req.body,
-      assetCost: updatedCost,
-      assetQuantity,
-      inUse,
-
-      purchaseDetails,
-      maintenance,
-      tracking,
-      insurance,
-      warranty,
-      financialTracking,
-      assetLifetime: updatedLifetime,
-    },
-    { new: true }
-  );
-
-
-  await sendNotification({
-    req,
-    userId,
-    title: "Asset Updated",
-    message: `Asset "${updatedAsset.assetName}" was updated.`,
-    redirectUrl: "/inventory?tab=hardware",
-    type: "info",
-  });
-
-
-      return res.status(200).json(updatedAsset);
-    } catch (error) {
-      console.error("🔥 UPDATE ASSET ERROR:", error);
-      return next(error);
     }
-  };
 
+    /* ================= QUANTITY VALIDATION ================= */
+    const assetQuantity =
+      req.body.assetQuantity ?? existingAsset.assetQuantity;
 
+    const inUse = existingAsset.inUse;
+
+    if (inUse > assetQuantity) {
+      return res.status(400).json({
+        message: "In-use quantity cannot exceed total quantity",
+      });
+    }
+
+    /* ================= TYPE VALIDATION ================= */
+    if (req.body.type) {
+      if (!["one_time", "maintenance"].includes(req.body.type)) {
+        return res.status(400).json({
+          message: "Invalid asset type",
+        });
+      }
+    }
+
+    /* ================= COST HANDLING ================= */
+    let updatedCost = existingAsset.assetCost;
+
+    if (req.body.assetCost) {
+      const { totalAmount, currency } = req.body.assetCost;
+
+      const parsedAmount = Number(totalAmount);
+
+      if (!parsedAmount || parsedAmount <= 0) {
+        return res.status(400).json({ message: "Invalid amount" });
+      }
+
+      const finalCurrency = currency
+        ? currency.toUpperCase()
+        : existingAsset.assetCost.currency;
+
+      const unitAmount = parsedAmount / assetQuantity;
+      const baseTotalAmount = convertToBase(parsedAmount, finalCurrency);
+
+      updatedCost = {
+        totalAmount: parsedAmount,
+        unitAmount,
+        baseTotalAmount,
+        currency: finalCurrency,
+      };
+    }
+
+    /* ================= PURCHASE DETAILS ================= */
+    const purchaseDetails = {
+      purchaseDate: req.body.purchaseDetails?.purchaseDate
+        ? parseDate(req.body.purchaseDetails.purchaseDate)
+        : existingAsset.purchaseDetails.purchaseDate,
+
+      vendor: req.body.purchaseDetails?.vendor
+        ? buildVendor(req.body.purchaseDetails.vendor)
+        : existingAsset.purchaseDetails.vendor,
+    };
+
+    /* ================= LIFETIME ================= */
+    const DOE = req.body.DOE
+      ? parseDate(req.body.DOE)
+      : existingAsset.DOE;
+
+    const updatedLifetime = calculateAssetLifetime(
+      purchaseDetails.purchaseDate,
+      DOE
+    );
+
+    /* ================= UPDATE ================= */
+    const updatedAsset = await Asset.findByIdAndUpdate(
+      id,
+      {
+        ...req.body,
+        assetCost: updatedCost,
+        assetQuantity,
+        purchaseDetails,
+        DOE,
+        assetLifetime: updatedLifetime,
+      },
+      { new: true }
+    );
+
+    /* ================= NOTIFICATION ================= */
+    await sendNotification({
+      req,
+      userId,
+      title: "Asset Updated",
+      message: `Asset "${updatedAsset.assetName}" was updated.`,
+      redirectUrl: "/inventory?tab=hardware",
+      type: "info",
+    });
+
+    return res.status(200).json(updatedAsset);
+
+  } catch (error) {
+    console.error("🔥 UPDATE ASSET ERROR:", error);
+    return next(error);
+  }
+};
 
 
   // =======================================================================
