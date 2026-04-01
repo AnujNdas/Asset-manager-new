@@ -590,7 +590,8 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 
         {/* COST TRACKING */}
         <h4>Cost Tracking</h4>
-        <div className="grid-3">
+        <div className="grid-2">
+          <div className="input-group">
           <input
             type="number"
             placeholder="Maintenance"
@@ -602,7 +603,8 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
               })
             }
           />
-
+          </div>
+<div className="input-group">
           <input
             type="number"
             placeholder="Warranty Renewal"
@@ -614,7 +616,8 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
               })
             }
           />
-
+          </div>
+<div className="input-group">
           <input
             type="number"
             placeholder="Insurance"
@@ -626,6 +629,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
               })
             }
           />
+          </div>
         </div>
 
         {/* SOFTWARE ONLY */}
@@ -633,6 +637,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
           <>
             <h4>Software Details</h4>
             <div className="grid-2">
+              <div className="input-group">
               <input
                 placeholder="License Key"
                 value={instanceForm.licenseKey}
@@ -643,7 +648,8 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
                   })
                 }
               />
-
+</div>
+<div className="input-group">
               <input
                 placeholder="License Number"
                 value={instanceForm.licenseNumber}
@@ -654,6 +660,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
                   })
                 }
               />
+              </div>
             </div>
           </>
         )}

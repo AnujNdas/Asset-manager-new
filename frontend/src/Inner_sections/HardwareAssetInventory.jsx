@@ -218,7 +218,7 @@ const [instanceForm, setInstanceForm] = useState({});
         </div>
       )}
       <button
-  className="instance-edit-btn"
+  className="btn-edit"
   onClick={() => {
     setEditInstance(inst);
 
