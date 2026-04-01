@@ -10,6 +10,7 @@ import {
   getStatuses,
   getUnits,
   getLocations,
+  updateAssetInstance,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
