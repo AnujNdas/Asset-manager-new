@@ -314,7 +314,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
         <p className="available-text">Available (Not Assigned)</p>
       )}
       <div className="instance-actions">
-  <button onClick={() => handleInstanceEditOpen(inst)}>
+  <button onClick={() => handleInstanceEditOpen(inst)} className="btn-edit">
     Edit
   </button>
 </div>

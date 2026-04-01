@@ -285,6 +285,54 @@
   box-shadow: none;
   transform: none;
 }
+.btn-edit {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+
+  background: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  white-space: nowrap;
+}
+.btn-edit:hover {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(59, 130, 246, 0.25);
+}
+
+.btn-edit:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+@media (max-width: 768px) {
+  .btn-edit {
+    padding: 7px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-edit {
+    width: 100%; /* full width in mobile cards */
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
