@@ -644,8 +644,12 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
         </div>
 
         <div className="modal-actions">
-          <button onClick={handleEditSave}>Save</button>
-          <button onClick={() => setEditAsset(null)}>Cancel</button>
+          <button onClick={handleEditSave} className="btn-save">
+            Save
+          </button>
+          <button onClick={() => setEditAsset(null)} className="btn-cancel">
+            Cancel
+          </button>
         </div>
       </motion.div>
     </motion.div>

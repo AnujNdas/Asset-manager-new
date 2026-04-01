@@ -233,7 +233,58 @@
 .category_search_input::placeholder {
   color: #9ca3af;
 }
+/* BUTTON BASE */
+.btn-save,
+.btn-cancel {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  min-width: 110px;
+}
 
+/* SAVE BUTTON (Primary SaaS Blue) */
+.btn-save {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+}
+
+.btn-save:active {
+  transform: scale(0.97);
+}
+
+/* CANCEL BUTTON (Soft Neutral) */
+.btn-cancel {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.btn-cancel:active {
+  transform: scale(0.97);
+}
+
+/* DISABLED STATE */
+.btn-save:disabled,
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
 /* ========== RESPONSIVE ========== */
 
 /* Tablet & below */
