@@ -470,7 +470,122 @@ const HardwareAssetList = () => {
                 </p>
           </div>
         </div>
+              <div className="grid-2">
+  {/* UNIT */}
+  <div className="input-group">
+    <label>Unit</label>
+    <select
+      value={editForm.associateUnit}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          associateUnit: e.target.value,
+        })
+      }
+    >
+      {units.map(u => (
+        <option key={u._id} value={u._id}>
+          {u.name}
+        </option>
+      ))}
+    </select>
+  </div>
 
+  {/* LOCATION */}
+  <div className="input-group">
+    <label>Location</label>
+    <select
+      value={editForm.locationName}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          locationName: e.target.value,
+        })
+      }
+    >
+      {locations.map(l => (
+        <option key={l._id} value={l._id}>
+          {l.name}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
+<div className="grid-2">
+  {/* STATUS */}
+  <div className="input-group">
+    <label>Status</label>
+    <select
+      value={editForm.assetStatus}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          assetStatus: e.target.value,
+        })
+      }
+    >
+      {statuses.map(s => (
+        <option key={s._id} value={s._id}>
+          {s.name}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* TYPE */}
+  <div className="input-group">
+    <label>Type</label>
+    <select
+      value={editForm.type}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          type: e.target.value,
+        })
+      }
+    >
+      <option value="one_time">One-Time</option>
+      <option value="maintenance">Maintenance</option>
+    </select>
+  </div>
+</div>
+<div className="grid-2">
+  {/* CURRENCY */}
+  <div className="input-group">
+    <label>Currency</label>
+    <select
+      value={editForm.assetCost?.currency}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          assetCost: {
+            ...editForm.assetCost,
+            currency: e.target.value,
+          },
+        })
+      }
+    >
+      <option value="USD">USD</option>
+      <option value="INR">INR</option>
+      <option value="EUR">EUR</option>
+    </select>
+  </div>
+
+  {/* PURCHASE DATE */}
+  <div className="input-group">
+    <label>Purchase Date</label>
+    <input
+      type="date"
+      value={editForm.purchaseDate || ""}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          purchaseDate: e.target.value,
+        })
+      }
+    />
+  </div>
+</div>
         <div className="modal-actions">
           <button onClick={handleUpdate}>Save</button>
           <button onClick={() => setEditAsset(null)}>Cancel</button>

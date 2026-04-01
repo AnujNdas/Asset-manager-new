@@ -464,7 +464,88 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
         onClick={(e) => e.stopPropagation()}
       >
         <h3>Edit Asset</h3>
+<div className="grid-2">
+  {/* CATEGORY */}
+  <div className="input-group">
+    <label>Category</label>
+    <select
+      value={editForm.assetCategory}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          assetCategory: e.target.value,
+        })
+      }
+    >
+      {categories.map(c => (
+        <option key={c._id} value={c._id}>
+          {c.name}
+        </option>
+      ))}
+    </select>
+  </div>
 
+  {/* UNIT */}
+  <div className="input-group">
+    <label>Unit</label>
+    <select
+      value={editForm.associateUnit}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          associateUnit: e.target.value,
+        })
+      }
+    >
+      {units.map(u => (
+        <option key={u._id} value={u._id}>
+          {u.name}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
+<div className="grid-2">
+  {/* LOCATION */}
+  <div className="input-group">
+    <label>Location</label>
+    <select
+      value={editForm.locationName}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          locationName: e.target.value,
+        })
+      }
+    >
+      {locations.map(l => (
+        <option key={l._id} value={l._id}>
+          {l.name}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* STATUS */}
+  <div className="input-group">
+    <label>Status</label>
+    <select
+      value={editForm.assetStatus}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          assetStatus: e.target.value,
+        })
+      }
+    >
+      {statuses.map(s => (
+        <option key={s._id} value={s._id}>
+          {s.name}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
         <div className="grid-2">
 
           <div className="input-group">
