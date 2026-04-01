@@ -1263,7 +1263,155 @@ softwareDetails:
     return next(err);
   }
 };
+const updateAssetInstance = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const organizationId = req.user.organizationId;
 
+    const instance = await AssetInstance.findOne({
+      _id: id,
+      organizationId
+    });
+
+    if (!instance) {
+      return res.status(404).json({
+        message: "Instance not found"
+      });
+    }
+
+    /* ================= SERIAL VALIDATION ================= */
+    if (req.body.serialNumber) {
+      const exists = await AssetInstance.findOne({
+        organizationId,
+        uniqueIdentifier: req.body.serialNumber,
+        _id: { $ne: id }
+      });
+
+      if (exists) {
+        return res.status(400).json({
+          message: "Serial already exists"
+        });
+      }
+    }
+
+    /* ================= LOCATION VALIDATION ================= */
+    if (req.body.location !== undefined) {
+      if (!req.body.location.trim()) {
+        return res.status(400).json({
+          message: "Location cannot be empty"
+        });
+      }
+    }
+
+    /* ================= TRACK OLD VALUES ================= */
+    const oldSnapshot = {
+      location: instance.location,
+      condition: instance.condition,
+      assignedTo: instance.softwareDetails?.assignedTo || null,
+      warrantyExpiry: instance.warranty?.expiryDate || null,
+      insuranceExpiry: instance.insurance?.expiryDate || null
+    };
+
+    /* ================= BASIC UPDATES ================= */
+    if (req.body.location !== undefined) {
+      instance.location = req.body.location;
+    }
+
+    if (req.body.condition) {
+      instance.condition = req.body.condition;
+    }
+
+    if (req.body.installationDate !== undefined) {
+      instance.installationDate = req.body.installationDate;
+    }
+
+    /* ================= HARDWARE UPDATE ================= */
+    if (instance.assetType === "hardware" && req.body.hardwareDetails) {
+      instance.hardwareDetails = {
+        ...instance.hardwareDetails,
+        ...req.body.hardwareDetails
+      };
+    }
+
+    /* ================= SOFTWARE UPDATE ================= */
+    if (instance.assetType === "software" && req.body.softwareDetails) {
+      instance.softwareDetails = {
+        ...instance.softwareDetails,
+        ...req.body.softwareDetails
+      };
+    }
+
+    /* ================= WARRANTY ================= */
+    if (req.body.warranty) {
+      const expiry = req.body.warranty.expiryDate
+        ? new Date(req.body.warranty.expiryDate)
+        : null;
+
+      const today = new Date().setHours(0, 0, 0, 0);
+
+      instance.warranty = {
+        expiryDate: expiry,
+        status: expiry && expiry < today ? "expired" : "active"
+      };
+    }
+
+    /* ================= INSURANCE ================= */
+    if (req.body.insurance) {
+      instance.insurance = {
+        policyId: req.body.insurance.policyId || "",
+        expiryDate: req.body.insurance.expiryDate || null
+      };
+    }
+
+    /* ================= COST TRACKING ================= */
+    if (req.body.costTracking) {
+      instance.costTracking = {
+        maintenanceCost:
+          Number(req.body.costTracking.maintenanceCost) || 0,
+        warrantyRenewalCost:
+          Number(req.body.costTracking.warrantyRenewalCost) || 0,
+        insuranceCost:
+          Number(req.body.costTracking.insuranceCost) || 0
+      };
+    }
+
+    /* ================= SERIAL ================= */
+    if (req.body.serialNumber !== undefined) {
+      instance.uniqueIdentifier = req.body.serialNumber;
+    }
+
+    /* ================= LIFECYCLE TRACKING ================= */
+    instance.lifecycle.push({
+      action: "UPDATED",
+
+      from: oldSnapshot,
+
+      to: {
+        location: instance.location,
+        condition: instance.condition,
+        assignedTo: instance.softwareDetails?.assignedTo || null,
+        warrantyExpiry: instance.warranty?.expiryDate || null,
+        insuranceExpiry: instance.insurance?.expiryDate || null
+      },
+
+      date: new Date(),
+      notes: "Instance updated",
+      updatedBy: userId
+    });
+
+    await instance.save();
+
+    return res.status(200).json({
+      success: true,
+      data: instance
+    });
+
+  } catch (error) {
+    console.error("UPDATE INSTANCE ERROR:", error);
+    return next(error);
+  }
+};
   module.exports = {
     addAsset,
     updateAsset,
@@ -1271,5 +1419,6 @@ softwareDetails:
     getAllAssets,
     bulkUpload,
     createAssetInstance,
-    getAssetById
+    getAssetById,
+    updateAssetInstance
   };

@@ -180,6 +180,12 @@ export const createAssetInstances = async (data) => {
   );
   return response.data;
 };
+// src/Services/ApiServices.js
+
+export const updateAssetInstance = async (id, payload) => {
+  const res = await axiosInstance.put(`/assets/update-instances/${id}`, payload);
+  return res.data;
+};
 // ----- ASSET CODE GENERATION -----
 export const generateHardwareAssetCode = async () => {
   const response = await axiosInstance.get("/assets/asset-code");

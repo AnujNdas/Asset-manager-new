@@ -27,7 +27,8 @@ const HardwareAssetList = () => {
   const [editForm, setEditForm] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
-
+  const [editInstance, setEditInstance] = useState(null);
+const [instanceForm, setInstanceForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
 
@@ -113,7 +114,18 @@ const HardwareAssetList = () => {
       Swal.fire("Error", err.message || "Failed", "error");
     }
   };
+  const handleInstanceUpdate = async () => {
+  try {
+    await updateAssetInstance(editInstance._id, instanceForm);
 
+    Swal.fire("Updated", "Instance updated", "success");
+
+    setEditInstance(null);
+    fetchAll(); // refresh
+  } catch (err) {
+    Swal.fire("Error", err.message, "error");
+  }
+};
   const filteredAssets = assets.filter((asset) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -204,6 +216,41 @@ const HardwareAssetList = () => {
           <p><b>💻 Device:</b> {assignment.deviceInfo?.deviceName}</p>
         </div>
       )}
+      <button
+  className="instance-edit-btn"
+  onClick={() => {
+    setEditInstance(inst);
+
+    setInstanceForm({
+      location: inst.location,
+      condition: inst.condition,
+      installationDate: inst.installationDate?.slice(0, 10),
+
+      hardwareDetails: {
+        modelNo: inst.hardwareDetails?.modelNo || "",
+        specifications: inst.hardwareDetails?.specifications || "",
+      },
+
+      warranty: {
+        expiryDate: inst.warranty?.expiryDate?.slice(0, 10),
+      },
+
+      insurance: {
+        policyId: inst.insurance?.policyId || "",
+        expiryDate: inst.insurance?.expiryDate?.slice(0, 10),
+      },
+
+      costTracking: {
+        maintenanceCost: inst.costTracking?.maintenanceCost || 0,
+        warrantyRenewalCost:
+          inst.costTracking?.warrantyRenewalCost || 0,
+        insuranceCost: inst.costTracking?.insuranceCost || 0,
+      },
+    });
+  }}
+>
+  Edit
+</button>
     </div>
   );
 };
@@ -375,6 +422,139 @@ const HardwareAssetList = () => {
                   </>
                 );
               })()}
+              <AnimatePresence>
+  {editInstance && (
+    <motion.div
+      className="asset-view-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditInstance(null)}
+    >
+      <motion.div
+        className="asset-view-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3>Edit Instance</h3>
+
+        <div className="grid-2">
+          <div className="input-group">
+            <label>Location</label>
+            <input
+              value={instanceForm.location}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  location: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Condition</label>
+            <select
+              value={instanceForm.condition}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  condition: e.target.value,
+                })
+              }
+            >
+              <option value="new">New</option>
+              <option value="good">Good</option>
+              <option value="damaged">Damaged</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="grid-2">
+          <div className="input-group">
+            <label>Model No</label>
+            <input
+              value={instanceForm.hardwareDetails?.modelNo}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  hardwareDetails: {
+                    ...instanceForm.hardwareDetails,
+                    modelNo: e.target.value,
+                  },
+                })
+              }
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Specifications</label>
+            <input
+              value={instanceForm.hardwareDetails?.specifications}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  hardwareDetails: {
+                    ...instanceForm.hardwareDetails,
+                    specifications: e.target.value,
+                  },
+                })
+              }
+            />
+          </div>
+        </div>
+
+        <div className="grid-2">
+          <div className="input-group">
+            <label>Warranty Expiry</label>
+            <input
+              type="date"
+              value={instanceForm.warranty?.expiryDate || ""}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  warranty: {
+                    expiryDate: e.target.value,
+                  },
+                })
+              }
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Insurance Policy</label>
+            <input
+              value={instanceForm.insurance?.policyId}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  insurance: {
+                    ...instanceForm.insurance,
+                    policyId: e.target.value,
+                  },
+                })
+              }
+            />
+          </div>
+        </div>
+
+        <div className="modal-actions">
+          <button
+            className="btn-save"
+            onClick={handleInstanceUpdate}
+          >
+            Save
+          </button>
+          <button
+            className="btn-cancel"
+            onClick={() => setEditInstance(null)}
+          >
+            Cancel
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
               <button
                 className="asset-view-close-btn"
@@ -587,8 +767,8 @@ const HardwareAssetList = () => {
   </div>
 </div>
         <div className="modal-actions">
-          <button onClick={handleUpdate}>Save</button>
-          <button onClick={() => setEditAsset(null)}>Cancel</button>
+          <button onClick={handleUpdate} className="btn-save">Save</button>
+          <button onClick={() => setEditAsset(null)} className="btn-cancel">Cancel</button>
         </div>
       </motion.div>
     </motion.div>

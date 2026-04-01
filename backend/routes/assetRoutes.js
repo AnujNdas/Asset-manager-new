@@ -10,7 +10,8 @@ const {
   updateAsset,
   bulkUpload,
   createAssetInstance,
-  getAssetById
+  getAssetById,
+  updateAssetInstance
 } = require("../controllers/assetControllers");
 
 const router = express.Router();
@@ -75,6 +76,13 @@ router.post(
   tenantMiddleware,
   requireActiveSubscription,
   createAssetInstance
+);
+router.put(
+  "/update-instances/:id",
+  authenticateToken(["admin"]),
+  tenantMiddleware,
+  requireActiveSubscription,
+  updateAssetInstance
 );
 
 module.exports = router;

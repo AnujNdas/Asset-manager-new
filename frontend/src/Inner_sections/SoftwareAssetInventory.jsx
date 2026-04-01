@@ -30,6 +30,8 @@ const SoftwareAssetList = () => {
   const [apiDone, setApiDone] = useState(false);
   const [editAsset, setEditAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [editInstance, setEditInstance] = useState(null);
+const [instanceForm, setInstanceForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const assetsPerPage = 8;
 
@@ -62,6 +64,61 @@ const SoftwareAssetList = () => {
     // SOFTWARE ONLY
     expiryDate: asset.renewal?.expiryDate?.slice(0, 10),
   });
+};
+const handleInstanceEditOpen = (inst) => {
+  setEditInstance(inst);
+
+  setInstanceForm({
+    condition: inst.condition,
+    location: inst.location,
+    installationDate: inst.installationDate?.slice(0, 10),
+
+    // COST
+    maintenanceCost: inst.costTracking?.maintenanceCost || 0,
+    warrantyRenewalCost: inst.costTracking?.warrantyRenewalCost || 0,
+    insuranceCost: inst.costTracking?.insuranceCost || 0,
+
+    // WARRANTY
+    warrantyExpiry: inst.warranty?.expiryDate?.slice(0, 10),
+
+    // SOFTWARE ONLY
+    licenseKey: inst.softwareDetails?.licenseKey || "",
+    licenseNumber: inst.softwareDetails?.licenseNumber || "",
+    vendor: inst.softwareDetails?.vendor || "",
+  });
+};
+const handleInstanceUpdate = async () => {
+  try {
+    await updateAssetInstance(editInstance._id, {
+      condition: instanceForm.condition,
+      location: instanceForm.location,
+      installationDate: instanceForm.installationDate,
+
+      warranty: {
+        expiryDate: instanceForm.warrantyExpiry,
+      },
+
+      costTracking: {
+        maintenanceCost: instanceForm.maintenanceCost,
+        warrantyRenewalCost: instanceForm.warrantyRenewalCost,
+        insuranceCost: instanceForm.insuranceCost,
+      },
+
+      softwareDetails: editInstance.softwareDetails
+        ? {
+            licenseKey: instanceForm.licenseKey,
+            licenseNumber: instanceForm.licenseNumber,
+            vendor: instanceForm.vendor,
+          }
+        : undefined,
+    });
+
+    Swal.fire("Updated", "Instance updated", "success");
+    setEditInstance(null);
+    fetchAll();
+  } catch (err) {
+    Swal.fire("Error", err.message, "error");
+  }
 };
   const fetchAll = async () => {
     try {
@@ -255,6 +312,11 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
       ) : (
         <p className="available-text">Available (Not Assigned)</p>
       )}
+      <div className="instance-actions">
+  <button onClick={() => handleInstanceEditOpen(inst)}>
+    Edit
+  </button>
+</div>
     </div>
   );
 };
@@ -446,6 +508,170 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 ) : (
   <p>No instances found</p>
 )}
+<AnimatePresence>
+  {editInstance && (
+    <motion.div
+      className="asset-view-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setEditInstance(null)}
+    >
+      <motion.div
+        className="asset-view-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3>Edit Instance</h3>
+
+        <div className="grid-2">
+          {/* CONDITION */}
+          <div className="input-group">
+            <label>Condition</label>
+            <select
+              value={instanceForm.condition}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  condition: e.target.value,
+                })
+              }
+            >
+              <option value="new">New</option>
+              <option value="good">Good</option>
+              <option value="damaged">Damaged</option>
+            </select>
+          </div>
+
+          {/* LOCATION */}
+          <div className="input-group">
+            <label>Location</label>
+            <input
+              value={instanceForm.location}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  location: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          {/* INSTALL DATE */}
+          <div className="input-group">
+            <label>Installation Date</label>
+            <input
+              type="date"
+              value={instanceForm.installationDate}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  installationDate: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          {/* WARRANTY */}
+          <div className="input-group">
+            <label>Warranty Expiry</label>
+            <input
+              type="date"
+              value={instanceForm.warrantyExpiry}
+              onChange={(e) =>
+                setInstanceForm({
+                  ...instanceForm,
+                  warrantyExpiry: e.target.value,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        {/* COST TRACKING */}
+        <h4>Cost Tracking</h4>
+        <div className="grid-3">
+          <input
+            type="number"
+            placeholder="Maintenance"
+            value={instanceForm.maintenanceCost}
+            onChange={(e) =>
+              setInstanceForm({
+                ...instanceForm,
+                maintenanceCost: Number(e.target.value),
+              })
+            }
+          />
+
+          <input
+            type="number"
+            placeholder="Warranty Renewal"
+            value={instanceForm.warrantyRenewalCost}
+            onChange={(e) =>
+              setInstanceForm({
+                ...instanceForm,
+                warrantyRenewalCost: Number(e.target.value),
+              })
+            }
+          />
+
+          <input
+            type="number"
+            placeholder="Insurance"
+            value={instanceForm.insuranceCost}
+            onChange={(e) =>
+              setInstanceForm({
+                ...instanceForm,
+                insuranceCost: Number(e.target.value),
+              })
+            }
+          />
+        </div>
+
+        {/* SOFTWARE ONLY */}
+        {editInstance.softwareDetails && (
+          <>
+            <h4>Software Details</h4>
+            <div className="grid-2">
+              <input
+                placeholder="License Key"
+                value={instanceForm.licenseKey}
+                onChange={(e) =>
+                  setInstanceForm({
+                    ...instanceForm,
+                    licenseKey: e.target.value,
+                  })
+                }
+              />
+
+              <input
+                placeholder="License Number"
+                value={instanceForm.licenseNumber}
+                onChange={(e) =>
+                  setInstanceForm({
+                    ...instanceForm,
+                    licenseNumber: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </>
+        )}
+
+        <div className="modal-actions">
+          <button className="btn-save" onClick={handleInstanceUpdate}>
+            Save
+          </button>
+          <button
+            className="btn-cancel"
+            onClick={() => setEditInstance(null)}
+          >
+            Cancel
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
             </motion.div>
           </motion.div>
         )}
