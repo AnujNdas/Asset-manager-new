@@ -9,6 +9,7 @@ import {
   getLocations,
   getUnits,
   getStatuses,
+  updateAssetInstance,
   updateHardwareAsset,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
