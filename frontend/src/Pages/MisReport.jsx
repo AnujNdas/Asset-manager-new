@@ -49,7 +49,7 @@ const MisReport = () => {
         console.log("Hardware API:", ha);
         console.log("Software API:", sw);
         setHardware(ha?.data || ha || []);
-        setSoftware(sw?.data || sw || []);
+        setSoftware(Array.isArray(sw) ? sw : sw?.data || []);
         setCategories(cat || []);
         setLocations(loc?.data || []);
 
@@ -85,7 +85,18 @@ const MisReport = () => {
     inStock: a.assetQuantity - a.inUse,
     cost: a.assetCost?.baseTotalAmount || 0,
   }));
-
+  const softwareSummary = software.map((a) => ({
+  assetName: a.assetName,
+  category: getCategoryName(a.assetCategory),
+  location:
+    typeof a.locationName === "object"
+      ? a.locationName?.name
+      : locations.find((l) => l._id === a.locationName)?.name,
+  inUse: a.inUse,
+  total: a.assetQuantity,
+  inStock: a.assetQuantity - a.inUse,
+  cost: a.assetCost?.baseTotalAmount || 0,
+}));
   // 🔷 Hardware Instances
   const hardwareInstances = hardware.flatMap((asset) => {
     const assignmentMap = {};
@@ -141,7 +152,7 @@ const MisReport = () => {
   } else {
     currentData =
       viewMode === "summary"
-        ? software
+        ? softwareSummary
         : softwareInstances;
   }
 
