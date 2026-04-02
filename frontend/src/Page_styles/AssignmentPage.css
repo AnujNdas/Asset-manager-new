@@ -220,13 +220,13 @@
 }
 
 /* ===== FOOTER BUTTONS ===== */
-.footer {
-  margin-top: 24px;
+.footer2 {
+  /* margin-top: 24px; */
   display: flex;
   justify-content: space-between;
 }
 
-.footer button {
+.footer2 button {
   padding: 10px 18px;
   border-radius: 8px;
   border: none;
@@ -235,16 +235,16 @@
   transition: 0.2s;
 }
 
-.footer button:first-child {
+.footer2 button:first-child {
   background: #e5e7eb;
 }
 
-.footer button:last-child {
+.footer2 button:last-child {
   background: var(--primary);
   color: white;
 }
 
-.footer button:hover {
+.footer2 button:hover {
   transform: translateY(-2px);
   opacity: 0.9;
 }

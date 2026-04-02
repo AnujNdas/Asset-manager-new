@@ -293,7 +293,7 @@ const selectAsset = async (asset) => {
     </div>
 
     {/* FOOTER */}
-    <div className="footer">
+    <div className="footer2">
       {step > 0 && <button onClick={() => setStep(step - 1)}>Back</button>}
       {step < 4 && <button onClick={() => setStep(step + 1)}>Next</button>}
     </div>
