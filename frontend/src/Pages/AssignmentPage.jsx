@@ -210,9 +210,9 @@ const selectAsset = async (asset) => {
       {step === 1 && (
         <>
           <div className="filter">
-            <button onClick={() => setAssetTypeFilter("all")}>All</button>
-            <button onClick={() => setAssetTypeFilter("hardware")}>Hardware</button>
-            <button onClick={() => setAssetTypeFilter("software")}>Software</button>
+            <button onClick={() => setAssetTypeFilter("all")} className={assetTypeFilter === "all" ? "active" : ""}>All</button>
+            <button onClick={() => setAssetTypeFilter("hardware")} className={assetTypeFilter === "hardware" ? "active" : ""}>Hardware</button>
+            <button onClick={() => setAssetTypeFilter("software")} className={assetTypeFilter === "software" ? "active" : ""}>Software</button>
           </div>
 
           <div className="grid">
