@@ -1,308 +1,343 @@
-import React, { useState, useEffect } from "react";
+// ✅ src/Pages/MisReport.jsx
+
+import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import Swal from "sweetalert2";
 import "../Page_styles/MisReport.css";
-import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
+import Pagination from "../Components/Pagination";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
+
 import {
   getStatuses,
   getUnits,
   getLocations,
   getCategories,
   getSoftwareAssets,
-  getCoreLicenses,
   getHardwareAssets,
 } from "../Services/ApiServices";
 
 const MisReport = () => {
-const { currency, convertFromBase, loadingRates } = useCurrency();
-  const [activeTab, setActiveTab] = useState("hardware");
+  const { currency, convertFromBase, loadingRates } = useCurrency();
 
-  // Shared filters
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedUnit, setSelectedUnit] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [apiDone, setApiDone] = useState(false);
-  
-  // Data
+  const [activeTab, setActiveTab] = useState("hardware");
+  const [viewMode, setViewMode] = useState("summary");
+
   const [hardware, setHardware] = useState([]);
   const [software, setSoftware] = useState([]);
-  const [licenses, setLicenses] = useState([]);
-  
-  // Lookup Data
-  const [statuses, setStatuses] = useState([]);
-  const [units, setUnits] = useState([]);
-  const [locations, setLocations] = useState([]);
-  const [categories, setCategories] = useState([]);
 
-  // Pagination
+  const [categories, setCategories] = useState([]);
+  const [locations, setLocations] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [apiDone, setApiDone] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-useEffect(() => {
-  (async () => {
-    try {
-      const [s, u, l, c, sw, ha, lic] = await Promise.all([
-        getStatuses(),
-        getUnits(),
-        getLocations(),
-        getCategories(),
-        getSoftwareAssets(),
-        getHardwareAssets(),
-        getCoreLicenses(),
-      ]);
-      console.log("Fetched Data:", { sw, ha});
-      setStatuses(s);
-      setUnits(u);
-      setLocations(Array.isArray(l?.data) ? l.data : []);
-      setCategories(c);
+  // ================= FETCH =================
+  useEffect(() => {
+    (async () => {
+      try {
+        const [ha, sw, cat, loc] = await Promise.all([
+          getHardwareAssets(),
+          getSoftwareAssets(),
+          getCategories(),
+          getLocations(),
+        ]);
 
-      setSoftware(sw?.data || sw);
-      setHardware(ha?.data || ha);
-      setLicenses(lic?.data || lic);
+        setHardware(ha?.data || ha || []);
+        setSoftware(sw?.data || sw || []);
+        setCategories(cat || []);
+        setLocations(loc?.data || []);
 
-      setApiDone(true);
-      setTimeout(() => setLoading(false), 400);
-    } catch (err) {
-      console.error("Error fetching filters/data:", err);
-      setLoading(false);
-    }
-  })();
-}, []);
+        setApiDone(true);
+        setTimeout(() => setLoading(false), 400);
+      } catch (err) {
+        console.error(err);
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-const formatDisplayDate = (date) => {
-  if (!date) return "-";
-
-  const d = new Date(date);
-
-  return d.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
-  // Reset Page When Filter or Tab Changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeTab, selectedLocation, selectedUnit, selectedStatus, selectedCategory, startDate]);
+  }, [activeTab, viewMode]);
 
-  const formatDate = (date) => {
-    if (!date) return "";
-    const d = new Date(date);
-    return d.toISOString().split("T")[0];
-  };
+  // ================= HELPERS =================
+  const formatDate = (d) =>
+    d ? new Date(d).toLocaleDateString("en-IN") : "-";
 
-  // -------- Hardware Filter Logic -------- //
-  const filteredHardware = hardware.filter((a) =>
-    (selectedLocation ? a.locationName === selectedLocation : true) &&
-    (selectedUnit ? a.associateUnit === selectedUnit : true) &&
-    (selectedStatus ? a.assetStatus === selectedStatus : true) &&
-    (startDate ? formatDate(a.DOP) >= startDate : true)
+  const getCategoryName = (id) =>
+    categories.find((c) => c._id === id)?.name || "-";
+
+  // ================= NORMALIZATION =================
+
+  // 🔷 Hardware Summary
+  const hardwareSummary = hardware.map((a) => ({
+    assetName: a.assetName,
+    category: a.assetCategory?.name,
+    location: a.locationName?.name,
+    inUse: a.inUse,
+    total: a.assetQuantity,
+    inStock: a.assetQuantity - a.inUse,
+    cost: a.assetCost?.baseTotalAmount || 0,
+  }));
+
+  // 🔷 Hardware Instances
+  const hardwareInstances = hardware.flatMap((asset) => {
+    const assignmentMap = {};
+    asset.assignmentRecords?.forEach((a) => {
+      assignmentMap[String(a.assetInstanceId)] = a;
+    });
+
+    return (asset.instances || []).map((inst) => ({
+      assetName: asset.assetName,
+      instanceCode: inst.instanceCode,
+      model: inst.hardwareDetails?.modelNo,
+      status: inst.status,
+      condition: inst.condition,
+      location: inst.location,
+      warranty: inst.warranty?.expiryDate,
+      assignedTo:
+        assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
+      department:
+        assignmentMap[String(inst._id)]?.department?.name || "-",
+      cost: asset.assetCost?.baseTotalAmount || 0,
+    }));
+  });
+
+  // 🔷 Software Instances
+  const softwareInstances = software.flatMap((asset) => {
+    const assignmentMap = {};
+    asset.assignmentRecords?.forEach((a) => {
+      assignmentMap[String(a.assetInstanceId)] = a;
+    });
+
+    return (asset.instances || []).map((inst) => ({
+      assetName: asset.assetName,
+      instanceCode: inst.instanceCode,
+      licenseKey: inst.softwareDetails?.licenseKey,
+      vendor: inst.softwareDetails?.vendor,
+      status: inst.status,
+      location: inst.location,
+      expiry: inst.softwareDetails?.renewalDate,
+      assignedTo:
+        assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
+      cost: asset.assetCost?.baseTotalAmount || 0,
+    }));
+  });
+
+  // ================= DATA SWITCH =================
+  let currentData = [];
+
+  if (activeTab === "hardware") {
+    currentData =
+      viewMode === "summary"
+        ? hardwareSummary
+        : hardwareInstances;
+  } else {
+    currentData =
+      viewMode === "summary"
+        ? software
+        : softwareInstances;
+  }
+
+  // ================= PAGINATION =================
+  const paginated = currentData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
-  // -------- Software Filter Logic -------- //
-  const filteredSoftware = software.filter((a) =>
-    (selectedLocation ? a.locationName === selectedLocation : true) &&
-    (selectedCategory ? a.category === selectedCategory : true) &&
-    (selectedStatus ? a.complianceStatus === selectedStatus : true) &&
-    (startDate ? formatDate(a.purchaseDate) >= startDate : true)
-  );
-
-  const currentData = activeTab === "hardware" ? filteredHardware : filteredSoftware;
   const totalPages = Math.ceil(currentData.length / itemsPerPage);
 
-  const paginate = (data) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return data.slice(startIndex, startIndex + itemsPerPage);
-  };
-
+  // ================= EXPORT =================
   const exportData = () => {
-    const ws = XLSX.utils.json_to_sheet(currentData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, activeTab);
-    XLSX.writeFile(wb, `${activeTab}_report.xlsx`);
-  };
-if (loading || loadingRates) {
-  return <Loader type="mis" apiDone={apiDone} />;
-}
-const getInStock = (asset) =>
-  Number(asset.assetQuantity || 0) - Number(asset.inUse || 0);
+    const rows = currentData.map((row) => {
+      if (viewMode === "instance") {
+        return {
+          Asset: row.assetName,
+          Instance: row.instanceCode,
+          Status: row.status,
+          Assigned: row.assignedTo,
+          Location: row.location,
+          Cost: convertFromBase(row.cost),
+        };
+      }
 
+      return {
+        Asset: row.assetName,
+        Category: row.category,
+        InUse: row.inUse,
+        Stock: row.inStock,
+        Location: row.location,
+        Cost: convertFromBase(row.cost),
+      };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      wb,
+      ws,
+      `${activeTab}_${viewMode}`
+    );
+
+    XLSX.writeFile(
+      wb,
+      `${activeTab}_${viewMode}_MIS.xlsx`
+    );
+  };
+
+  if (loading || loadingRates)
+    return <Loader type="mis" apiDone={apiDone} />;
+
+  // ================= UI =================
   return (
     <div className="mis-content">
-<div className="report-header">
-  <h2 className="classify_heading">Asset Management Report</h2>
 
-  <button onClick={exportData} className="misbutton">
-    Export {activeTab ? activeTab.charAt(0).toUpperCase() + activeTab.slice(1) : ''} Excel
-  </button>
-</div>
-
-      {/* Tabs */}
-      <header>
-        <div className="navs">
-          <button
-            className={activeTab === "hardware" ? "active-tab" : ""}
-            onClick={() => setActiveTab("hardware")}
-          >
-            Hardware
-          </button>
-
-          <button
-            className={activeTab === "software" ? "active-tab" : ""}
-            onClick={() => setActiveTab("software")}
-          >
-            Software
+      {/* HEADER */}
+      <div className="report-header">
+        <h2>Asset MIS Report</h2>
+        <div className="header-actions">
+          <CurrencyFilter />
+          <button onClick={exportData} className="misbutton">
+            Export Excel
           </button>
         </div>
-      </header>
+      </div>
 
-      {/* Filters */}
-      <div className="filters">
-        {activeTab === "hardware" && (
-          <>
-            <select onChange={(e) => setSelectedLocation(e.target.value)}>
-              <option value="">All Locations</option>
-              {locations.map((l) => (
-                <option key={l._id} value={l._id}>{l.name}</option>
-              ))}
-            </select>
+      {/* MAIN TABS */}
+      <div className="navs">
+        <button
+          className={activeTab === "hardware" ? "active-tab" : ""}
+          onClick={() => setActiveTab("hardware")}
+        >
+          Hardware
+        </button>
+        <button
+          className={activeTab === "software" ? "active-tab" : ""}
+          onClick={() => setActiveTab("software")}
+        >
+          Software
+        </button>
+      </div>
 
-            <select onChange={(e) => setSelectedUnit(e.target.value)}>
-              <option value="">All Units</option>
-              {units.map((u) => (
-                <option key={u._id} value={u._id}>{u.name}</option>
-              ))}
-            </select>
-
-            <select onChange={(e) => setSelectedStatus(e.target.value)}>
-              <option value="">All Statuses</option>
-              {statuses.map((s) => (
-                <option key={s._id} value={s._id}>{s.name}</option>
-              ))}
-            </select>
-
-            <input type="date" onChange={(e) => setStartDate(e.target.value)} />
-          </>
-        )}
-
-        {activeTab === "software" && (
-          <>
-            <select onChange={(e) => setSelectedCategory(e.target.value)}>
-              <option value="">All Categories</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>{c.name}</option>
-              ))}
-            </select>
-
-            <select onChange={(e) => setSelectedLocation(e.target.value)}>
-              <option value="">All Locations</option>
-              {locations.map((l) => (
-                <option key={l._id} value={l._id}>{l.name}</option>
-              ))}
-            </select>
-
-            <select onChange={(e) => setSelectedStatus(e.target.value)}>
-              <option value="">All Statuses</option>
-              {statuses.map((s) => (
-                <option key={s._id} value={s._id}>{s.name}</option>
-              ))}
-            </select>
-
-            <input type="date" onChange={(e) => setStartDate(e.target.value)} />
-          </>
-        )}
+      {/* SUB TABS */}
+      <div className="sub-tabs">
+        <button
+          className={viewMode === "summary" ? "active-tab" : ""}
+          onClick={() => setViewMode("summary")}
+        >
+          Summary
+        </button>
+        <button
+          className={viewMode === "instance" ? "active-tab" : ""}
+          onClick={() => setViewMode("instance")}
+        >
+          Instances
+        </button>
       </div>
 
       {/* TABLE */}
-{/* TABLE */}
-<div className="table-wrapper">
-  <table className="mis-table">
+      <div className="table-wrapper">
+        <table className="mis-table">
+          <thead>
+            <tr>
 
-        <thead>
-          <tr>
-            {activeTab === "hardware" && (
-              <>
-                <th>Name</th>
-                <th>Unit</th>
-                {/* <th>Status</th> */}
-<th>In Use</th>
-<th>In Stock</th>
-                <th>Location</th>
-<th className="hide-md">Spec</th>
-<th className="hide-lg">Maintainence</th>
-
-                <th>Total Cost</th>
-              </>
-            )}
-
-            {activeTab === "software" && (
-              <>
-                <th>Name</th>
-                <th>Version</th>
-                <th>In Use</th>
-                <th>In Stock</th>
-                {/* <th>Status</th> */}
-                <th>Category</th>
-<th className="hide-md">Publisher</th>
-<th className="hide-lg">Expiry</th>
-
-                <th>Total Cost</th>
-              </>
-            )}
-          </tr>
-        </thead>
-
-        <tbody>
-          {paginate(currentData).map((row, i) => (
-            <tr key={i}>
-              {activeTab === "hardware" && (
+              {/* HARDWARE */}
+              {activeTab === "hardware" && viewMode === "summary" && (
                 <>
-                  <td>{row.assetName}</td>
-                  <td>{units.find((u) => u._id === row.associateUnit)?.name}</td>
-                  {/* <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td> */}
-                  <td>{row.inUse}</td>
-                  <td>{getInStock(row)}</td>
-                  <td>{locations.find((l) => l._id === row.locationName)?.name}</td>
-<td className="hide-md">{row.assetSpecification}</td>
-<td className="hide-lg">{formatDisplayDate(row.DOE)}</td> 
-
-                  <td>{CURRENCY_SYMBOLS[currency]}{" "}
-                  {convertFromBase(
-                    row.assetCost?.baseTotalAmount ?? 0,
-                  ).toLocaleString()}</td>
+                  <th>Asset</th>
+                  <th>Category</th>
+                  <th>In Use</th>
+                  <th>Stock</th>
+                  <th>Location</th>
+                  <th>Cost</th>
                 </>
               )}
 
-              {activeTab === "software" && (
+              {activeTab === "hardware" && viewMode === "instance" && (
                 <>
-                  <td>{row.assetName}</td>
-                  <td>{row.assetSpecification}</td>
-                <td>{row.inUse}</td>
-                <td>{getInStock(row)}</td>
-                  {/* <td>{statuses.find((s) => s._id === row.assetStatus)?.name}</td> */}
-                  <td>{categories.find((c) => c._id === row.assetCategory)?.name}</td>
-                  <td className="hide-md">{row.purchaseFrom}</td>
-                <td className="hide-lg">{formatDisplayDate(row.DOE)}</td>
-                <td>{CURRENCY_SYMBOLS[currency]}{" "}
-                  {convertFromBase(
-                    (row.assetCost?.baseTotalAmount ?? 0) * (row.assetQuantity ?? 0),
-                  ).toLocaleString()}</td>
+                  <th>Instance</th>
+                  <th>Asset</th>
+                  <th>Model</th>
+                  <th>Status</th>
+                  <th>Condition</th>
+                  <th>Assigned</th>
+                  <th>Department</th>
+                  <th>Warranty</th>
+                </>
+              )}
+
+              {/* SOFTWARE */}
+              {activeTab === "software" && viewMode === "instance" && (
+                <>
+                  <th>Asset</th>
+                  <th>License</th>
+                  <th>Vendor</th>
+                  <th>Status</th>
+                  <th>Assigned</th>
+                  <th>Expiry</th>
                 </>
               )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {paginated.map((row, i) => (
+              <tr key={i}>
+
+                {/* HARDWARE SUMMARY */}
+                {activeTab === "hardware" && viewMode === "summary" && (
+                  <>
+                    <td>{row.assetName}</td>
+                    <td>{row.category}</td>
+                    <td>{row.inUse}</td>
+                    <td>{row.inStock}</td>
+                    <td>{row.location}</td>
+                    <td>
+                      {CURRENCY_SYMBOLS[currency]}{" "}
+                      {convertFromBase(row.cost).toLocaleString()}
+                    </td>
+                  </>
+                )}
+
+                {/* HARDWARE INSTANCE */}
+                {activeTab === "hardware" && viewMode === "instance" && (
+                  <>
+                    <td>{row.instanceCode}</td>
+                    <td>{row.assetName}</td>
+                    <td>{row.model}</td>
+                    <td>{row.status}</td>
+                    <td>{row.condition}</td>
+                    <td>{row.assignedTo}</td>
+                    <td>{row.department}</td>
+                    <td>{formatDate(row.warranty)}</td>
+                  </>
+                )}
+
+                {/* SOFTWARE INSTANCE */}
+                {activeTab === "software" && viewMode === "instance" && (
+                  <>
+                    <td>{row.assetName}</td>
+                    <td>{row.licenseKey}</td>
+                    <td>{row.vendor}</td>
+                    <td>{row.status}</td>
+                    <td>{row.assignedTo}</td>
+                    <td>{formatDate(row.expiry)}</td>
+                  </>
+                )}
+
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* Pagination */}
+      {/* PAGINATION */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
