@@ -46,7 +46,8 @@ const MisReport = () => {
           getCategories(),
           getLocations(),
         ]);
-
+        console.log("Hardware API:", ha);
+        console.log("Software API:", sw);
         setHardware(ha?.data || ha || []);
         setSoftware(sw?.data || sw || []);
         setCategories(cat || []);
