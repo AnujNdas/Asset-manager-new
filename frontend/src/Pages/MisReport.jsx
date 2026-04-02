@@ -57,7 +57,7 @@ useEffect(() => {
         getHardwareAssets(),
         getCoreLicenses(),
       ]);
-
+      console.log("Fetched Data:", { sw, ha});
       setStatuses(s);
       setUnits(u);
       setLocations(Array.isArray(l?.data) ? l.data : []);
