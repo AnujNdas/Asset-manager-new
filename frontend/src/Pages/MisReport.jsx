@@ -283,6 +283,16 @@ const MisReport = () => {
                   <th>Warranty</th>
                 </>
               )}
+                {activeTab === "software" && viewMode === "summary" && (
+  <>
+    <th>Asset</th>
+    <th>Category</th>
+    <th>In Use</th>
+    <th>Stock</th>
+    <th>Location</th>
+    <th>Cost</th>
+  </>
+)}
 
               {/* SOFTWARE */}
               {activeTab === "software" && viewMode === "instance" && (
@@ -330,7 +340,19 @@ const MisReport = () => {
                     <td>{formatDate(row.warranty)}</td>
                   </>
                 )}
-
+                {activeTab === "software" && viewMode === "summary" && (
+  <>
+    <td>{row.assetName}</td>
+    <td>{row.category}</td>
+    <td>{row.inUse}</td>
+    <td>{row.inStock}</td>
+    <td>{row.location}</td>
+    <td>
+      {CURRENCY_SYMBOLS[currency]}{" "}
+      {convertFromBase(row.cost).toLocaleString()}
+    </td>
+  </>
+)}
                 {/* SOFTWARE INSTANCE */}
                 {activeTab === "software" && viewMode === "instance" && (
                   <>
