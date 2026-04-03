@@ -32,7 +32,13 @@ const MisReport = () => {
 
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
-
+  const [filters, setFilters] = useState({
+    category: "all",
+    location: "all",
+    status: "all",
+    purchaseFrom: "",
+    purchaseTo: ""
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
@@ -84,6 +90,7 @@ const MisReport = () => {
     total: a.assetQuantity,
     inStock: a.assetQuantity - a.inUse,
     cost: a.assetCost?.baseTotalAmount || 0,
+    purchaseDate: a.purchaseDetails.purchaseDate || null,
   }));
   const softwareSummary = software.map((a) => ({
   assetName: a.assetName,
@@ -96,6 +103,7 @@ const MisReport = () => {
   total: a.assetQuantity,
   inStock: a.assetQuantity - a.inUse,
   cost: a.assetCost?.baseTotalAmount || 0,
+  purchaseDate: a.purchaseDetails.purchaseDate || null,
 }));
   // 🔷 Hardware Instances
   const hardwareInstances = hardware.flatMap((asset) => {
@@ -142,20 +150,42 @@ const MisReport = () => {
   });
 
   // ================= DATA SWITCH =================
-  let currentData = [];
+  let currentData = baseData.filter((row) => {
+  // CATEGORY
+  const categoryMatch =
+    filters.category === "all" ||
+    row.category === filters.category;
 
-  if (activeTab === "hardware") {
-    currentData =
-      viewMode === "summary"
-        ? hardwareSummary
-        : hardwareInstances;
-  } else {
-    currentData =
-      viewMode === "summary"
-        ? softwareSummary
-        : softwareInstances;
-  }
+  // LOCATION
+  const locationMatch =
+    filters.location === "all" ||
+    row.location === filters.location;
 
+  // STATUS
+  const statusMatch =
+    viewMode !== "instance" ||
+    filters.status === "all" ||
+    row.status === filters.status;
+
+  // PURCHASE DATE RANGE
+  const rowDate = row.purchaseDate
+    ? new Date(row.purchaseDate)
+    : null;
+
+  const fromDate = filters.purchaseFrom
+    ? new Date(filters.purchaseFrom)
+    : null;
+
+  const toDate = filters.purchaseTo
+    ? new Date(filters.purchaseTo)
+    : null;
+
+  const dateMatch =
+    (!fromDate || (rowDate && rowDate >= fromDate)) &&
+    (!toDate || (rowDate && rowDate <= toDate));
+
+  return categoryMatch && locationMatch && statusMatch && dateMatch;
+});
   // ================= PAGINATION =================
   const paginated = currentData.slice(
     (currentPage - 1) * itemsPerPage,
@@ -255,6 +285,62 @@ const MisReport = () => {
 
       {/* TABLE */}
       <div className="table-wrapper">
+        <div className="mis-filters">
+
+  {/* CATEGORY */}
+  <select
+    onChange={(e) =>
+      setFilters(p => ({ ...p, category: e.target.value }))
+    }
+  >
+    <option value="all">All Categories</option>
+    {categories.map(c => (
+      <option key={c._id} value={c.name}>{c.name}</option>
+    ))}
+  </select>
+
+  {/* LOCATION */}
+  <select
+    onChange={(e) =>
+      setFilters(p => ({ ...p, location: e.target.value }))
+    }
+  >
+    <option value="all">All Locations</option>
+    {locations.map(l => (
+      <option key={l._id} value={l.name}>{l.name}</option>
+    ))}
+  </select>
+
+  {/* STATUS (ONLY INSTANCE MODE) */}
+  {viewMode === "instance" && (
+    <select
+      onChange={(e) =>
+        setFilters(p => ({ ...p, status: e.target.value }))
+      }
+    >
+      <option value="all">All Status</option>
+      <option value="in-use">In Use</option>
+      <option value="available">Available</option>
+      <option value="maintenance">Maintenance</option>
+    </select>
+  )}
+
+  {/* PURCHASE DATE RANGE */}
+  <input
+    type="date"
+    onChange={(e) =>
+      setFilters(p => ({ ...p, purchaseFrom: e.target.value }))
+    }
+  />
+
+  <input
+    type="date"
+    onChange={(e) =>
+      setFilters(p => ({ ...p, purchaseTo: e.target.value }))
+    }
+  />
+
+</div>
         <table className="mis-table">
           <thead>
             <tr>
