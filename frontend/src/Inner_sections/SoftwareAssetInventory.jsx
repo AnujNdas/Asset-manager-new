@@ -98,6 +98,10 @@ const getRemainingDays = (date) => {
 
   return diff > 0 ? diff : "Expired";
 };
+  const formatDate = (date) => {
+    if (!date) return "N/A";
+    return new Date(date).toLocaleDateString("en-IN");
+  };
 const handleInstanceUpdate = async () => {
   try {
     await updateAssetInstance(editInstance._id, {
