@@ -1381,25 +1381,6 @@ const updateAssetInstance = async (req, res, next) => {
       instance.uniqueIdentifier = req.body.serialNumber;
     }
 
-    /* ================= LIFECYCLE TRACKING ================= */
-    instance.lifecycle.push({
-      action: "UPDATED",
-
-      from: oldSnapshot,
-
-      to: {
-        location: instance.location,
-        condition: instance.condition,
-        assignedTo: instance.softwareDetails?.assignedTo || null,
-        warrantyExpiry: instance.warranty?.expiryDate || null,
-        insuranceExpiry: instance.insurance?.expiryDate || null
-      },
-
-      date: new Date(),
-      notes: "Instance updated",
-      updatedBy: userId
-    });
-
     await instance.save();
 
     return res.status(200).json({

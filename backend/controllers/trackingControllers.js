@@ -213,83 +213,107 @@ const upgradeInstance = async (req, res) => {
       })
       .session(session);
 
-    if (!instance) throw new Error("Instance not found");
-
-    /* =============================
-       COST UPDATES
-    ============================== */
-
-    if (maintenanceCost) {
-      instance.costTracking.maintenanceCost =
-        (instance.costTracking.maintenanceCost || 0) + maintenanceCost;
-    }
-
-    if (warrantyRenewalCost) {
-      instance.costTracking.warrantyRenewalCost =
-        (instance.costTracking.warrantyRenewalCost || 0) + warrantyRenewalCost;
-    }
-
-    if (insuranceCost) {
-      instance.costTracking.insuranceCost =
-        (instance.costTracking.insuranceCost || 0) + insuranceCost;
+    if (!instance) {
+      throw new Error("Instance not found");
     }
 
     /* =============================
-       WARRANTY / INSURANCE
+       🟡 BEFORE SNAPSHOT (IMPORTANT)
     ============================== */
+    const beforeSnapshot = {
+      warrantyExpiry: instance.warranty?.expiryDate || null,
+      insuranceExpiry: instance.insurance?.expiryDate || null,
+      condition: instance.condition,
+      costTracking: {
+        maintenanceCost: instance.costTracking?.maintenanceCost || 0,
+        warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
+        insuranceCost: instance.costTracking?.insuranceCost || 0
+      }
+    };
 
+    /* =============================
+       🟢 COST UPDATES (INCREMENTAL)
+    ============================== */
+    if (maintenanceCost !== undefined) {
+      instance.costTracking.maintenanceCost = Number(maintenanceCost);
+    }
+
+    if (warrantyRenewalCost !== undefined) {
+      instance.costTracking.warrantyRenewalCost = Number(warrantyRenewalCost);
+    }
+
+    if (insuranceCost !== undefined) {
+      instance.costTracking.insuranceCost = Number(insuranceCost);
+    }
+
+    /* =============================
+       🟢 WARRANTY UPDATE
+    ============================== */
     if (newWarrantyExpiry) {
-      instance.warranty.expiryDate = newWarrantyExpiry;
-      instance.warranty.status = "active";
-    }
+      const expiry = new Date(newWarrantyExpiry);
+      const today = new Date().setHours(0, 0, 0, 0);
 
-    if (newInsuranceExpiry) {
-      instance.insurance.expiryDate = newInsuranceExpiry;
+      instance.warranty = {
+        expiryDate: expiry,
+        status: expiry < today ? "expired" : "active"
+      };
     }
 
     /* =============================
-       CONDITION
+       🟢 INSURANCE UPDATE
     ============================== */
+    if (newInsuranceExpiry) {
+      instance.insurance = {
+        ...instance.insurance,
+        expiryDate: newInsuranceExpiry
+      };
+    }
 
+    /* =============================
+       🟢 CONDITION UPDATE
+    ============================== */
     if (condition) {
       instance.condition = condition;
     }
 
     /* =============================
-       LIFECYCLE LOG
+       🔵 AFTER SNAPSHOT
     ============================== */
+    const afterSnapshot = {
+      warrantyExpiry: instance.warranty?.expiryDate || null,
+      insuranceExpiry: instance.insurance?.expiryDate || null,
+      condition: instance.condition,
+      costTracking: {
+        maintenanceCost: instance.costTracking?.maintenanceCost || 0,
+        warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
+        insuranceCost: instance.costTracking?.insuranceCost || 0
+      }
+    };
 
-instance.lifecycle.push({
-  action: "UPGRADE",
+    /* =============================
+       🟣 LIFECYCLE ENTRY (ONLY HERE)
+    ============================== */
+    instance.lifecycle.push({
+      action: "UPGRADE",
 
-  from: null,
-  to: null,
+      from: beforeSnapshot,
+      to: afterSnapshot,
 
-  snapshot: {
-    location: instance.location,
+      snapshot: {
+        location: instance.location,
+        assignedTo: {
+          employeeName: instance.assignedTo?.employeeName,
+          departmentName: instance.assignedTo?.departmentName
+        }
+      },
 
-    assignedTo: {
-      employeeName: instance.assignedTo?.employeeName,
-      departmentName: instance.assignedTo?.departmentName
-    },
+      date: new Date(),
+      notes: "Asset upgraded"
+    });
 
-    warrantyExpiry: instance.warranty?.expiryDate || null,
-    insuranceExpiry: instance.insurance?.expiryDate || null,
-
-    condition: instance.condition,
-
-    costTracking: {
-      maintenanceCost: instance.costTracking?.maintenanceCost || 0,
-      warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
-      insuranceCost: instance.costTracking?.insuranceCost || 0
-    }
-  },
-
-  date: new Date(),
-
-  notes: "Asset upgraded"
-});
-
+    /* =============================
+       💾 SAVE
+    ============================== */
     await instance.save({ session });
 
     await session.commitTransaction();

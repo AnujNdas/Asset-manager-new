@@ -3,14 +3,18 @@ import React, { useState } from "react";
 import { upgradeInstance } from "../Services/ApiServices";
 
 const UpgradeModal = ({ instance, onClose, refresh }) => {
-  const [form, setForm] = useState({
-    maintenanceCost: "",
-    warrantyRenewalCost: "",
-    insuranceCost: "",
-    newWarrantyExpiry: "",
-    newInsuranceExpiry: "",
-    condition: ""
-  });
+const [form, setForm] = useState({
+  maintenanceCost: instance?.costTracking?.maintenanceCost || "",
+  warrantyRenewalCost: instance?.costTracking?.warrantyRenewalCost || "",
+  insuranceCost: instance?.costTracking?.insuranceCost || "",
+  newWarrantyExpiry: instance?.warranty?.expiryDate
+    ? instance.warranty.expiryDate.split("T")[0]
+    : "",
+  newInsuranceExpiry: instance?.insurance?.expiryDate
+    ? instance.insurance.expiryDate.split("T")[0]
+    : "",
+  condition: instance?.condition || ""
+});
 
   const handleChange = (e) => {
     setForm({
@@ -50,21 +54,21 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
         <input
           type="number"
           name="maintenanceCost"
-          placeholder="Maintenance Cost"
+          value={form.maintenanceCost}
           onChange={handleChange}
         />
 
         <input
           type="number"
           name="warrantyRenewalCost"
-          placeholder="Warranty Renewal Cost"
+          value={form.warrantyRenewalCost}
           onChange={handleChange}
         />
 
         <input
           type="number"
           name="insuranceCost"
-          placeholder="Insurance Cost"
+          value={form.insuranceCost}
           onChange={handleChange}
         />
 
@@ -73,6 +77,7 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
         <input
           type="date"
           name="newWarrantyExpiry"
+          value={form.newWarrantyExpiry}
           onChange={handleChange}
         />
 
@@ -80,11 +85,12 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
         <input
           type="date"
           name="newInsuranceExpiry"
+          value={form.newInsuranceExpiry}
           onChange={handleChange}
         />
 
         {/* CONDITION */}
-        <select name="condition" onChange={handleChange}>
+        <select name="condition" value={form.condition} onChange={handleChange}>
           <option value="">Select Condition</option>
           <option value="new">New</option>
           <option value="used">Used</option>
