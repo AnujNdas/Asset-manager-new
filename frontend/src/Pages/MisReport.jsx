@@ -10,8 +10,6 @@ import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 
 import {
-  getStatuses,
-  getUnits,
   getLocations,
   getCategories,
   getSoftwareAssets,
@@ -32,13 +30,14 @@ const MisReport = () => {
 
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
+
   const [filters, setFilters] = useState({
     category: "all",
     location: "all",
-    status: "all",
     purchaseFrom: "",
     purchaseTo: ""
   });
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
@@ -52,8 +51,7 @@ const MisReport = () => {
           getCategories(),
           getLocations(),
         ]);
-        console.log("Hardware API:", ha);
-        console.log("Software API:", sw);
+
         setHardware(ha?.data || ha || []);
         setSoftware(Array.isArray(sw) ? sw : sw?.data || []);
         setCategories(cat || []);
@@ -81,7 +79,6 @@ const MisReport = () => {
 
   // ================= NORMALIZATION =================
 
-  // 🔷 Hardware Summary
   const hardwareSummary = hardware.map((a) => ({
     assetName: a.assetName,
     category: a.assetCategory?.name,
@@ -90,22 +87,23 @@ const MisReport = () => {
     total: a.assetQuantity,
     inStock: a.assetQuantity - a.inUse,
     cost: a.assetCost?.baseTotalAmount || 0,
-    purchaseDate: a.purchaseDetails.purchaseDate || null,
+    purchaseDate: a.purchaseDetails?.purchaseDate || null,
   }));
+
   const softwareSummary = software.map((a) => ({
-  assetName: a.assetName,
-  category: getCategoryName(a.assetCategory),
-  location:
-    typeof a.locationName === "object"
-      ? a.locationName?.name
-      : locations.find((l) => l._id === a.locationName)?.name,
-  inUse: a.inUse,
-  total: a.assetQuantity,
-  inStock: a.assetQuantity - a.inUse,
-  cost: a.assetCost?.baseTotalAmount || 0,
-  purchaseDate: a.purchaseDetails.purchaseDate || null,
-}));
-  // 🔷 Hardware Instances
+    assetName: a.assetName,
+    category: getCategoryName(a.assetCategory),
+    location:
+      typeof a.locationName === "object"
+        ? a.locationName?.name
+        : locations.find((l) => l._id === a.locationName)?.name,
+    inUse: a.inUse,
+    total: a.assetQuantity,
+    inStock: a.assetQuantity - a.inUse,
+    cost: a.assetCost?.baseTotalAmount || 0,
+    purchaseDate: a.purchaseDetails?.purchaseDate || null,
+  }));
+
   const hardwareInstances = hardware.flatMap((asset) => {
     const assignmentMap = {};
     asset.assignmentRecords?.forEach((a) => {
@@ -128,7 +126,6 @@ const MisReport = () => {
     }));
   });
 
-  // 🔷 Software Instances
   const softwareInstances = software.flatMap((asset) => {
     const assignmentMap = {};
     asset.assignmentRecords?.forEach((a) => {
@@ -150,58 +147,47 @@ const MisReport = () => {
   });
 
   // ================= DATA SWITCH =================
-  /* ================= DATA SWITCH ================= */
-let baseData = [];
-
-if (activeTab === "hardware") {
-  baseData =
-    viewMode === "summary"
-      ? hardwareSummary
-      : hardwareInstances;
-} else {
-  baseData =
-    viewMode === "summary"
+  let baseData =
+    activeTab === "hardware"
+      ? viewMode === "summary"
+        ? hardwareSummary
+        : hardwareInstances
+      : viewMode === "summary"
       ? softwareSummary
       : softwareInstances;
-}
 
-/* ================= FILTER LOGIC ================= */
-let currentData = baseData.filter((row) => {
-  // CATEGORY
-  const categoryMatch =
-    filters.category === "all" ||
-    row.category === filters.category;
+  // ================= FILTER (ONLY SUMMARY) =================
+  let currentData =
+    viewMode === "summary"
+      ? baseData.filter((row) => {
+          const categoryMatch =
+            filters.category === "all" ||
+            row.category === filters.category;
 
-  // LOCATION
-  const locationMatch =
-    filters.location === "all" ||
-    row.location === filters.location;
+          const locationMatch =
+            filters.location === "all" ||
+            row.location === filters.location;
 
-  // STATUS (only for instance)
-  const statusMatch =
-    viewMode !== "instance" ||
-    filters.status === "all" ||
-    row.status === filters.status;
+          const rowDate = row.purchaseDate
+            ? new Date(row.purchaseDate)
+            : null;
 
-  // PURCHASE DATE RANGE
-  const rowDate = row.purchaseDate
-    ? new Date(row.purchaseDate)
-    : null;
+          const fromDate = filters.purchaseFrom
+            ? new Date(filters.purchaseFrom)
+            : null;
 
-  const fromDate = filters.purchaseFrom
-    ? new Date(filters.purchaseFrom)
-    : null;
+          const toDate = filters.purchaseTo
+            ? new Date(filters.purchaseTo)
+            : null;
 
-  const toDate = filters.purchaseTo
-    ? new Date(filters.purchaseTo)
-    : null;
+          const dateMatch =
+            (!fromDate || (rowDate && rowDate >= fromDate)) &&
+            (!toDate || (rowDate && rowDate <= toDate));
 
-  const dateMatch =
-    (!fromDate || (rowDate && rowDate >= fromDate)) &&
-    (!toDate || (rowDate && rowDate <= toDate));
+          return categoryMatch && locationMatch && dateMatch;
+        })
+      : baseData;
 
-  return categoryMatch && locationMatch && statusMatch && dateMatch;
-});
   // ================= PAGINATION =================
   const paginated = currentData.slice(
     (currentPage - 1) * itemsPerPage,
@@ -299,8 +285,43 @@ let currentData = baseData.filter((row) => {
         </button>
       </div>
 
+      {/* FILTERS (ONLY SUMMARY) */}
+      {viewMode === "summary" && (
+        <div className="mis-filters">
+          <select onChange={(e) =>
+            setFilters(p => ({ ...p, category: e.target.value }))
+          }>
+            <option value="all">All Categories</option>
+            {categories.map(c => (
+              <option key={c._id} value={c.name}>{c.name}</option>
+            ))}
+          </select>
+
+          <select onChange={(e) =>
+            setFilters(p => ({ ...p, location: e.target.value }))
+          }>
+            <option value="all">All Locations</option>
+            {locations.map(l => (
+              <option key={l._id} value={l.name}>{l.name}</option>
+            ))}
+          </select>
+
+          <input type="date"
+            onChange={(e) =>
+              setFilters(p => ({ ...p, purchaseFrom: e.target.value }))
+            }
+          />
+
+          <input type="date"
+            onChange={(e) =>
+              setFilters(p => ({ ...p, purchaseTo: e.target.value }))
+            }
+          />
+        </div>
+      )}
+
       {/* TABLE */}
-      <div className="table-wrapper">
+   <div className="table-wrapper">
         <div className="mis-filters">
 
   {/* CATEGORY */}
@@ -473,7 +494,6 @@ let currentData = baseData.filter((row) => {
         </table>
       </div>
 
-      {/* PAGINATION */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -484,3 +504,5 @@ let currentData = baseData.filter((row) => {
 };
 
 export default MisReport;
+
+   

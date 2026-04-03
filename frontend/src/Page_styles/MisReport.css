@@ -249,6 +249,7 @@ select:focus-visible {
   flex-wrap: wrap;
   margin: 15px 0;
   align-items: center;
+  padding-left: 10px;
 }
 
 .mis-filters select,
