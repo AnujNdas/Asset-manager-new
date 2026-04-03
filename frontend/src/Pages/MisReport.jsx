@@ -322,62 +322,7 @@ const MisReport = () => {
 
       {/* TABLE */}
    <div className="table-wrapper">
-        <div className="mis-filters">
 
-  {/* CATEGORY */}
-  <select
-    onChange={(e) =>
-      setFilters(p => ({ ...p, category: e.target.value }))
-    }
-  >
-    <option value="all">All Categories</option>
-    {categories.map(c => (
-      <option key={c._id} value={c.name}>{c.name}</option>
-    ))}
-  </select>
-
-  {/* LOCATION */}
-  <select
-    onChange={(e) =>
-      setFilters(p => ({ ...p, location: e.target.value }))
-    }
-  >
-    <option value="all">All Locations</option>
-    {locations.map(l => (
-      <option key={l._id} value={l.name}>{l.name}</option>
-    ))}
-  </select>
-
-  {/* STATUS (ONLY INSTANCE MODE) */}
-  {viewMode === "instance" && (
-    <select
-      onChange={(e) =>
-        setFilters(p => ({ ...p, status: e.target.value }))
-      }
-    >
-      <option value="all">All Status</option>
-      <option value="in-use">In Use</option>
-      <option value="available">Available</option>
-      <option value="maintenance">Maintenance</option>
-    </select>
-  )}
-
-  {/* PURCHASE DATE RANGE */}
-  <input
-    type="date"
-    onChange={(e) =>
-      setFilters(p => ({ ...p, purchaseFrom: e.target.value }))
-    }
-  />
-
-  <input
-    type="date"
-    onChange={(e) =>
-      setFilters(p => ({ ...p, purchaseTo: e.target.value }))
-    }
-  />
-
-</div>
         <table className="mis-table">
           <thead>
             <tr>
