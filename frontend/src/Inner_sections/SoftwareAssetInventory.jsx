@@ -88,6 +88,16 @@ const handleInstanceEditOpen = (inst) => {
     vendor: inst.softwareDetails?.vendor || "",
   });
 };
+const getRemainingDays = (date) => {
+  if (!date) return "-";
+
+  const today = new Date();
+  const target = new Date(date);
+
+  const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+  return diff > 0 ? diff : "Expired";
+};
 const handleInstanceUpdate = async () => {
   try {
     await updateAssetInstance(editInstance._id, {
@@ -350,79 +360,90 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
 >
-  {/* HEADER */}
+  {/* 🔷 HEADER */}
   <div className="card-header">
-    <h3>{asset.assetName}</h3>
-    <span className="asset-code">{asset.assetCode}</span>
+    <div>
+      <h3>{asset.assetName}</h3>
+      <p className="asset-code">{asset.assetCode}</p>
+    </div>
+
+    <div className="expiry">
+      ⏳ {getRemainingDays(asset.renewal?.expiryDate)} days left
+    </div>
   </div>
 
-  {/* BADGES */}
-  <div className="badge-row">
-    <span className="badge category">
+  {/* 🔷 BADGE GRID */}
+  <div className="badge-grid">
+    <span className="badge">
       {getName(categories, asset.assetCategory)}
+    </span>
+
+    <span className="badge">
+      {getName(locations, asset.locationName)}
+    </span>
+
+    <span className="badge">
+      {getName(units, asset.associateUnit)}
     </span>
 
     <span className="badge status">
       {getName(statuses, asset.assetStatus)}
     </span>
-
-    <span className={`badge type ${asset.type}`}>
-      {asset.type}
-    </span>
   </div>
 
-  {/* LOCATION */}
-  <p className="meta">
-    📍 {getName(locations, asset.locationName)}
-  </p>
-
-  {/* METRICS */}
-  <div className="metrics">
+  {/* 🔷 FINANCIAL */}
+  <div className="financial">
     <div>
-      <p className="label">Cost</p>
+      <p className="label">Total Cost</p>
       <p>
         {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(
-          asset.assetCost?.baseTotalAmount ?? 0
-        ).toLocaleString()}
+        {convertFromBase(asset.assetCost?.baseTotalAmount || 0)}
       </p>
     </div>
 
     <div>
-      <p className="label">Usage</p>
+      <p className="label">Unit Cost</p>
       <p>
-        {asset.inUse}/{asset.assetQuantity}
+        {CURRENCY_SYMBOLS[currency]}{" "}
+        {convertFromBase(asset.assetCost?.unitAmount || 0)}
       </p>
     </div>
-
-    <div>
-      <p className="label">Instances</p>
-      <p>{asset.instances?.length || 0}</p>
-    </div>
   </div>
 
-  {/* 🔥 SUBSCRIPTION INFO */}
-  <div className="subscription-box">
+  {/* 🔷 DATES */}
+  <div className="dates">
     <p>
-      <strong>Plan:</strong> {asset.type}
+      📅 {formatDate(asset.purchaseDetails?.purchaseDate)}
     </p>
 
     <p>
-      <strong>Expiry:</strong>{" "}
-      {asset.renewal?.expiryDate
-        ? new Date(asset.renewal.expiryDate).toLocaleDateString()
-        : "N/A"}
+      ⏰ {formatDate(asset.renewal?.expiryDate)}
     </p>
   </div>
 
-  {/* 🚨 ALERT SYSTEM */}
+  {/* 🔷 META */}
+  <div className="meta-grid">
+    <p>
+      💻 {asset.inUse}/{asset.assetQuantity} used
+    </p>
+
+    <p>
+      🏢 {asset.purchaseDetails?.vendor?.name || "N/A"}
+    </p>
+  </div>
+
+  {/* 🔷 PLAN */}
+  <div className="plan-box">
+    📦 {asset.type} plan
+  </div>
+
+  {/* 🔷 ALERT SYSTEM */}
   {(() => {
     const expiry = asset.renewal?.expiryDate
       ? new Date(asset.renewal.expiryDate)
       : null;
 
     const today = new Date();
-
     const diffDays = expiry
       ? Math.ceil((expiry - today) / (1000 * 60 * 60 * 24))
       : null;
@@ -454,21 +475,16 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
     return null;
   })()}
 
-  {/* FOOTER */}
-  <p className="date">
-    Purchased:{" "}
-    {asset.purchaseDetails?.purchaseDate
-      ? new Date(asset.purchaseDetails.purchaseDate).toLocaleDateString()
-      : "N/A"}
-  </p>
-
+  {/* 🔷 ACTIONS */}
   <div className="card-actions">
     <button onClick={() => setSelectedAsset(asset)}>
       View
     </button>
-      <button onClick={() => handleEditOpen(asset)}>
-        Edit
-      </button>
+
+    <button onClick={() => handleEditOpen(asset)}>
+      Edit
+    </button>
+
     <button onClick={() => handleDelete(asset._id)}>
       Delete
     </button>

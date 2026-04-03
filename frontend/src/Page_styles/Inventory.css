@@ -198,7 +198,7 @@
 }
 
 .badge {
-  background: #f1f5f9;
+  background: #2563eb;
   padding: 6px;
   border-radius: 8px;
   font-size: 12px;
@@ -206,8 +206,8 @@
 }
 
 .badge.status {
-  background: #e0f2fe;
-  color: #0284c7;
+  background: #00ff2a;
+  color: #ffffff;
 }
 
 /* FINANCIAL */
@@ -240,8 +240,17 @@
   padding: 6px;
   border-radius: 8px;
   font-size: 12px;
+  margin-bottom: 8px;
 }
-
+.plan-box {
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 6px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
 .alert.warning { background: #fff3cd; }
 .alert.danger { background: #f8d7da; }
 .alert.info { background: #d1ecf1; }

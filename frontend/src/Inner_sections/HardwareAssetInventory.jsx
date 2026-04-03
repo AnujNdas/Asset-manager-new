@@ -360,9 +360,9 @@ const [instanceForm, setInstanceForm] = useState({});
 
   {/* 🔷 ACTIONS */}
   <div className="card-actions">
-    <button onClick={() => setSelectedAsset(asset)}>View</button>
-    <button onClick={() => setEditAsset(asset)}>Edit</button>
-    <button onClick={() => handleDelete(asset._id)}>Delete</button>
+    <button onClick={() => setSelectedAsset(asset)} className="btn-save">View</button>
+    <button onClick={() => setEditAsset(asset)} className="btn-edit">Edit</button>
+    <button onClick={() => handleDelete(asset._id)} className="btn-delete">Delete</button>
   </div>
 </motion.div>
           ))}
