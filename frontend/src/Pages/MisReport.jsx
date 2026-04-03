@@ -150,7 +150,23 @@ const MisReport = () => {
   });
 
   // ================= DATA SWITCH =================
-  let currentData = baseData.filter((row) => {
+  /* ================= DATA SWITCH ================= */
+let baseData = [];
+
+if (activeTab === "hardware") {
+  baseData =
+    viewMode === "summary"
+      ? hardwareSummary
+      : hardwareInstances;
+} else {
+  baseData =
+    viewMode === "summary"
+      ? softwareSummary
+      : softwareInstances;
+}
+
+/* ================= FILTER LOGIC ================= */
+let currentData = baseData.filter((row) => {
   // CATEGORY
   const categoryMatch =
     filters.category === "all" ||
@@ -161,7 +177,7 @@ const MisReport = () => {
     filters.location === "all" ||
     row.location === filters.location;
 
-  // STATUS
+  // STATUS (only for instance)
   const statusMatch =
     viewMode !== "instance" ||
     filters.status === "all" ||
