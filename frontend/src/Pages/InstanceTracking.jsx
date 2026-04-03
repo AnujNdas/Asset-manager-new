@@ -12,6 +12,7 @@ import {
   getInstanceHistory
 } from "../Services/ApiServices"; 
 import Loader from "../Components/Loader";
+import Swal from "sweetalert2";
 const InstanceTracking = () => {
   const [instances, setInstances] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,22 +23,39 @@ const InstanceTracking = () => {
   const [showReassign, setShowReassign] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
     const fetchInstances = async (type = filterType) => {
-    try {
-        setLoading(true);
+  try {
+    setLoading(true);
 
-        const res = await getTrackedInstances({
-        type
-        });
+    const res = await getTrackedInstances({ type });
 
-        setInstances(res.data);
-        console.log(res)
+    const data = res.data || [];
 
-    } catch (err) {
-        console.error(err);
-    } finally {
-        setLoading(false);
+    setInstances(data);
+
+    // 🟡 Optional: No data alert
+    if (data.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "No Data",
+        text: "No instances found for selected filter",
+        timer: 1500,
+        showConfirmButton: false
+      });
     }
-    };
+
+  } catch (err) {
+    console.error(err);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to load instances"
+    });
+
+  } finally {
+    setLoading(false);
+  }
+};
 
 useEffect(() => {
   fetchInstances("all");
@@ -47,11 +65,19 @@ useEffect(() => {
   setFilterType(value);
   fetchInstances(value);
 };
-  const handleReassign = (instance) => {
-    setSelectedInstance(instance);
-    setShowReassign(true);
-  };
-  const handleUpgrade = (instance) => {
+const handleReassign = (instance) => {
+  if (!instance) {
+    return Swal.fire("Error", "Invalid instance selected", "error");
+  }
+
+  setSelectedInstance(instance);
+  setShowReassign(true);
+};
+const handleUpgrade = (instance) => {
+  if (!instance) {
+    return Swal.fire("Error", "Invalid instance selected", "error");
+  }
+
   setSelectedInstance(instance);
   setShowUpgrade(true);
 };
@@ -61,12 +87,19 @@ const handleHistory = async (instance) => {
 
     setSelectedInstance({
       ...instance,
-      lifecycle: res.data // 🔥 real backend history
+      lifecycle: res.data
     });
 
     setShowHistory(true);
+
   } catch (err) {
     console.error(err);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to load history"
+    });
   }
 };
   if (loading) return <Loader />;
