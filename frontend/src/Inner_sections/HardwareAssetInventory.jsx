@@ -80,7 +80,16 @@ const [instanceForm, setInstanceForm] = useState({});
       setLoading(false);
     }
   };
+  const getRemainingDays = (expiryDate) => {
+  if (!expiryDate) return "-";
 
+  const today = new Date();
+  const expiry = new Date(expiryDate);
+
+  const diff = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+
+  return diff > 0 ? diff : "Expired";
+};
   const formatDate = (date) => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN");
@@ -285,98 +294,76 @@ const [instanceForm, setInstanceForm] = useState({});
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
 >
-  {/* HEADER */}
+  {/* 🔷 HEADER */}
   <div className="card-header">
-    <h3>{asset.assetName}</h3>
-    <span className="asset-code">{asset.assetCode}</span>
-  </div>
-
-  {/* CATEGORY */}
-  <div className="badge-row">
-    <span className="badge category">
-      {asset.assetCategory?.name}
-    </span>
-
-    <span className="badge status">
-      {asset.assetStatus?.name}
-    </span>
-
-    <span className={`badge type ${asset.type}`}>
-      {asset.type}
-    </span>
-  </div>
-
-  {/* LOCATION */}
-  <p className="meta">
-    📍 {asset.locationName?.name}
-  </p>
-
-  {/* METRICS */}
-  <div className="metrics">
     <div>
-      <p className="label">Cost</p>
+      <h3>{asset.assetName}</h3>
+      <p className="asset-code">{asset.assetCode}</p>
+    </div>
+
+    <div className="expiry">
+      ⏳ {getRemainingDays(asset.DOE)} days left
+    </div>
+  </div>
+
+  {/* 🔷 BADGE GRID */}
+  <div className="badge-grid">
+    <span className="badge">{asset.assetCategory?.name}</span>
+    <span className="badge">{asset.locationName?.name}</span>
+    <span className="badge">{asset.associateUnit?.name}</span>
+    <span className="badge status">{asset.assetStatus?.name}</span>
+  </div>
+
+  {/* 🔷 FINANCIAL */}
+  <div className="financial">
+    <div>
+      <p className="label">Total Cost</p>
       <p>
         {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(
-          asset.assetCost?.baseTotalAmount ?? 0
-        ).toLocaleString()}
+        {convertFromBase(asset.assetCost?.baseTotalAmount || 0)}
       </p>
     </div>
 
     <div>
-      <p className="label">Qty</p>
+      <p className="label">Unit Cost</p>
       <p>
-        {asset.inUse}/{asset.assetQuantity}
+        {CURRENCY_SYMBOLS[currency]}{" "}
+        {convertFromBase(asset.assetCost?.unitAmount || 0)}
       </p>
-    </div>
-
-    <div>
-      <p className="label">Instances</p>
-      <p>{asset.instanceCount}</p>
     </div>
   </div>
 
-  {/* ALERTS */}
+  {/* 🔷 DATES */}
+  <div className="dates">
+    <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
+    <p>⏰ {formatDate(asset.DOE)}</p>
+  </div>
+
+  {/* 🔷 META */}
+  <div className="meta-grid">
+    <p>📦 {asset.instanceCount} instances</p>
+    <p>🏢 {asset.purchaseDetails?.vendor?.name || "N/A"}</p>
+  </div>
+
+  {/* 🔷 ALERTS */}
   {asset.inUse === asset.assetQuantity && (
-    <div className="alert warning">
-      ⚠ Fully Assigned
-    </div>
+    <div className="alert warning">⚠ Fully Assigned</div>
   )}
 
   {asset.assetQuantity === 0 && (
-    <div className="alert danger">
-      ❌ Out of Stock
-    </div>
+    <div className="alert danger">❌ Out of Stock</div>
   )}
 
   {asset.type === "maintenance" && (
-    <div className="alert info">
-      🛠 Under Maintenance
-    </div>
+    <div className="alert info">🛠 Under Maintenance</div>
   )}
 
-  {/* FOOTER */}
-  <p className="date">
-    {formatDate(asset.purchaseDetails?.purchaseDate)}
-  </p>
-
-<div className="card-actions">
-  <button onClick={() => setSelectedAsset(asset)}>
-    View
-  </button>
-
-  <button
-    onClick={() => {
-      setEditAsset(asset);
-    }}
-  >
-    Edit
-  </button>
-
-  <button onClick={() => handleDelete(asset._id)}>
-    Delete
-  </button>
-</div>
+  {/* 🔷 ACTIONS */}
+  <div className="card-actions">
+    <button onClick={() => setSelectedAsset(asset)}>View</button>
+    <button onClick={() => setEditAsset(asset)}>Edit</button>
+    <button onClick={() => handleDelete(asset._id)}>Delete</button>
+  </div>
 </motion.div>
           ))}
         </AnimatePresence>
