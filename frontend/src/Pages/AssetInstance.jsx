@@ -82,8 +82,6 @@
       </div>
     );
   };
-  import { useRef, useEffect } from "react";
-
 const AssetCard = ({ asset, isSelected }) => {
   const navigate = useNavigate();
   const cardRef = useRef();
