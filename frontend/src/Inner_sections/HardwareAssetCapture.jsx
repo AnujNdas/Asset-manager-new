@@ -281,7 +281,7 @@ const payload = {
       const assetId = createdAsset._id;
 
       await Swal.fire("Success", "Asset added successfully!", "success");
-      navigate("/instances", {
+      navigate("/instance-assets", {
         state: { selectedAssetId: assetId }
       });
     } catch (err) {
