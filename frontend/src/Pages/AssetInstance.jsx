@@ -6,29 +6,47 @@ import "../Page_styles/AssetInstance.css";
 import { getPendingInstances } from "../Services/ApiServices";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Components/Loader";
+import { useLocation } from "react-router-dom";
+import { useRef, useEffect } from "react";
 
+const cardRef = useRef();
+
+useEffect(() => {
+  if (isSelected && cardRef.current) {
+    cardRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+}, [isSelected]);
 const InstanceAssets = () => {
   const [assets, setAssets] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
-  
+  const [selectedId, setSelectedId] = useState(null);
+  const location = useLocation();
+const selectedAssetId = location.state?.selectedAssetId;
   useEffect(() => {
     fetchAssets();
   }, [filter]);
 
-  const fetchAssets = async () => {
-    try {
-      setLoading(true);
-      const res = await getPendingInstances(filter);
-      console.log("API RESPONSE:", res);
-      setAssets(res);
-      console.log("API RESPONSE:", res);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+const fetchAssets = async () => {
+  try {
+    setLoading(true);
+    const res = await getPendingInstances(filter);
+    setAssets(res);
+
+    // 🎯 Set selected asset if passed
+    if (selectedAssetId) {
+      setSelectedId(selectedAssetId);
     }
-  };
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
   if (loading) return <Loader / >;
   return (
     <div className="instance-page">
@@ -53,15 +71,19 @@ const InstanceAssets = () => {
         <p className="empty">No assets pending instance creation</p>
       ) : (
         <div className="asset-grid">
-          {assets.map((asset) => (
-            <AssetCard key={asset._id} asset={asset} />
-          ))}
+{assets.map((asset) => (
+  <AssetCard
+    key={asset._id}
+    asset={asset}
+    isSelected={asset._id === selectedId}
+  />
+))}
         </div>
       )}
     </div>
   );
 };
-const AssetCard = ({ asset }) => {
+const AssetCard = ({ asset, isSelected }) => {
   const navigate = useNavigate();
 const progress =
   asset.assetQuantity > 0
@@ -72,7 +94,10 @@ const pendingInstances =
 
 const isComplete = pendingInstances === 0;
   return (
-    <div className="asset-card">
+    <div
+  ref={cardRef}
+  className={`asset-card ${isSelected ? "highlight" : ""}`}
+>
       <div className="asset-card-header">
         <h3>{asset.assetName}</h3>
         <span className="asset-code">{asset.assetCode}</span>

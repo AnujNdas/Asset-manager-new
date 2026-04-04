@@ -277,10 +277,13 @@ const payload = {
   purchaseFrom: undefined,
 };
 
-      await createHardwareAsset(payload);
+      const createdAsset = await createHardwareAsset(payload);
+      const assetId = createdAsset._id;
 
       await Swal.fire("Success", "Asset added successfully!", "success");
-      navigate("/inventory");
+      navigate("/instances", {
+        state: { selectedAssetId: assetId }
+      });
     } catch (err) {
       Swal.fire(
         "Error",

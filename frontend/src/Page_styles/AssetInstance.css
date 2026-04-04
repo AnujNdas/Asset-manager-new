@@ -122,3 +122,9 @@
   text-align: center;
   color: #888;
 }
+.asset-card.highlight {
+  border: 2px solid #2563eb;
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
