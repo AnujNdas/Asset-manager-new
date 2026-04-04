@@ -1,6 +1,6 @@
 /* ================= GLOBAL ================= */
 .inventory-container {
-  padding: 20px;
+  padding: 10px;
 }
 
 /* HEADER */
@@ -8,9 +8,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
   gap: 10px;
+}
+.dashboard-header h2 {
+  font-size: 20px;
+  font-weight: 600;
 }
 .tabs{
   display: flex;
@@ -164,7 +168,7 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  /* gap: 12px; */
   transition: 0.3s;
 }
 
@@ -195,6 +199,8 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 6px;
+    border-bottom : 1px solid #a3a3a3;
+    padding: 5px;
 }
 
 .badge {
@@ -214,6 +220,7 @@
 .financial {
   display: flex;
   justify-content: space-between;
+  border-bottom : 1px solid #a3a3a3;
 }
 
 .label {
@@ -226,6 +233,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 12px;
+    border-bottom : 1px solid #a3a3a3;
 }
 
 /* META */
@@ -233,6 +241,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 12px;
+  border-bottom : 1px solid #a3a3a3;
 }
 
 /* ALERTS */
