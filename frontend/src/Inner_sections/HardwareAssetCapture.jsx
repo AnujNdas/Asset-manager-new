@@ -77,7 +77,7 @@
           getCategories("hardware"),
           getStatuses(),
         ]);
-
+        console.log("category RESPONSE:", c);
         setUnits(Array.isArray(u) ? u : []);
         setLocations(Array.isArray(l?.data) ? l.data : []);
         setCategories(Array.isArray(c) ? c : []);
