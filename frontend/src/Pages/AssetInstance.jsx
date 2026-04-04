@@ -8,16 +8,6 @@
   import Loader from "../Components/Loader";
   import { useLocation } from "react-router-dom";
 
-  const cardRef = useRef();
-
-  useEffect(() => {
-    if (isSelected && cardRef.current) {
-      cardRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  }, [isSelected]);
   const InstanceAssets = () => {
     const [assets, setAssets] = useState([]);
     const [filter, setFilter] = useState("all");
