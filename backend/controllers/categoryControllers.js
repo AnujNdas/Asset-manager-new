@@ -1,6 +1,6 @@
 const Category = require("../models/Category");
 const sendNotification = require("../utils/notify");
-
+const mongoose = require("mongoose");
 /* ================= CREATE CATEGORY ================= */
 const createCategory = async (req, res) => {
   try {
@@ -75,33 +75,35 @@ const createCategory = async (req, res) => {
 };
 
 /* ================= GET CATEGORIES ================= */
+
+
 const getCategories = async (req, res) => {
   try {
-    const organizationId = req.user?.organizationId;
+    const orgId = req.user?.organizationId;
 
-    if (!organizationId) {
+    if (!orgId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { type } = req.query; // 🔥 NEW
+    // ✅ FORCE ObjectId conversion
+    const organizationId = new mongoose.Types.ObjectId(orgId);
+
+    const { type } = req.query;
 
     let filter = {
       organizationId,
       isActive: true,
     };
 
-    // ✅ Apply type filter ONLY if provided
     if (type) {
-      if (!["hardware", "software"].includes(type)) {
-        return res.status(400).json({
-          error: "Invalid category type. Allowed: hardware, software",
-        });
-      }
-
       filter.categoryType = type;
     }
 
+    console.log("FINAL FILTER:", filter);
+
     const categories = await Category.find(filter).sort({ name: 1 });
+
+    console.log("RESULT:", categories);
 
     res.status(200).json(categories);
   } catch (error) {
