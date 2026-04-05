@@ -90,7 +90,7 @@ const [bulkValues, setBulkValues] = useState({
     maintenanceCost: "",
     warrantyRenewalCost: "",
     insuranceCost: "",
-
+    renewalCost: "",
     // software
     renewalDate: "",
     vendor: ""
@@ -215,7 +215,7 @@ const payload = instances.map((inst) => {
   return {
     serialNumber: inst.serialNumber || undefined,
     condition: inst.condition || "new",
-    location: normalizeLocation(inst.location),
+    location: formatLocation(inst.location),
 
     hardware: {
       modelNo: inst.modelNo || "",
@@ -298,20 +298,17 @@ const payload = instances.map((inst) => {
         <h4>Bulk Apply</h4>
 
         <div className="bulk-grid">
-<div className="input-group">
-  <input
-    type="text"
-    placeholder="Enter location"
-    value={inst.location}
-    onChange={(e) =>
-      handleChange(index, "location", e.target.value)
-    }
-  />
-
-  {errors[index]?.location && (
-    <span className="error">{errors[index].location}</span>
-  )}
-</div>  
+<input
+  type="text"
+  placeholder="Enter location"
+  value={bulkValues.location}
+  onChange={(e) =>
+    setBulkValues({
+      ...bulkValues,
+      location: e.target.value
+    })
+  }
+/> 
           <select
             value={bulkValues.condition}
             onChange={(e) =>
@@ -337,7 +334,17 @@ const payload = instances.map((inst) => {
               })
             }
           />
-
+          <input
+  type="number"
+  placeholder="Purchase Cost"
+  value={bulkValues.purchaseCost}
+  onChange={(e) =>
+    setBulkValues({
+      ...bulkValues,
+      purchaseCost: e.target.value
+    })
+  }
+/>
           <input
             placeholder={fieldLabels.specifications}
             value={bulkValues.specifications}
@@ -479,14 +486,20 @@ const payload = instances.map((inst) => {
                 <option value="damaged">Damaged</option>
               </select>
 
-              <input
-  type="text"
-  placeholder="Enter location"
-  value={inst.location}
-  onChange={(e) =>
-    handleChange(index, "location", e.target.value)
-  }
-/>
+<div className="input-group">
+  <input
+    type="text"
+    placeholder="Enter location"
+    value={inst.location}
+    onChange={(e) =>
+      handleChange(index, "location", e.target.value)
+    }
+  />
+
+  {errors[index]?.location && (
+    <span className="error">{errors[index].location}</span>
+  )}
+</div>
 
               <input
                 value={inst.modelNo}
