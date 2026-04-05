@@ -187,7 +187,7 @@ const [bulkValues, setBulkValues] = useState({
 const payload = instances.map((inst) => {
   if (isSoftware) {
     return {
-      location: normalizeLocation(inst.location),
+      location: formatLocation(inst.location),
 
       software: {
         licenseKey: inst.modelNo || "",

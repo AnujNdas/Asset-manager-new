@@ -154,7 +154,6 @@ const defaultFormData = {
 
     setFormData((prev) => {
       let updated = { ...prev };
-      if (!formData.DOP) missing.push("Purchase Date");
       // ✅ Auto-calc lifetime
       if (name === "DOP" || name === "DOE") {
         const { DOP, DOE } = updated;
@@ -200,6 +199,7 @@ const defaultFormData = {
     if (!formData.assetStatus) missing.push("Status");
     if (!formData.type) missing.push("Type");
     if (!formData.assetQuantity) missing.push("Quantity");
+    if (!formData.DOP) missing.push("Purchase Date");
 
     if (missing.length) {
       Swal.fire("Missing fields", missing.join(", "), "error");
