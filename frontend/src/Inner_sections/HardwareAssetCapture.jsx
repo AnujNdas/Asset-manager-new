@@ -149,45 +149,54 @@ const defaultFormData = {
     localStorage.setItem("assetCaptureGuideSeen", "true");
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+ const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    setFormData((prev) => {
-      let updated = { ...prev };
-      // ✅ Auto-calc lifetime
-      if (name === "DOP" || name === "DOE") {
-        const { DOP, DOE } = updated;
-        if (DOP && DOE) {
-          const start = new Date(DOP);
-          const end = new Date(DOE);
-          const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-          updated.assetLifetime =
-            Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
-        } else {
-          updated.assetLifetime = "";
-        }
+  setFormData((prev) => {
+    let updated = {
+      ...prev,
+      [name]: value   // ✅ THIS LINE FIXES EVERYTHING
+    };
+
+    // ✅ Auto-calc lifetime
+    if (name === "DOP" || name === "DOE") {
+      const { DOP, DOE } = updated;
+      if (DOP && DOE) {
+        const start = new Date(DOP);
+        const end = new Date(DOE);
+        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+        updated.assetLifetime =
+          Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
+      } else {
+        updated.assetLifetime = "";
       }
-      // ✅ Auto-calc warranty lifetime
-  if (name === "DOP" || name === "warranty.expiryDate") {
-    const { DOP } = updated;
-    const warrantyExpiry = updated.warranty?.expiryDate;
-
-    if (DOP && warrantyExpiry) {
-      const start = new Date(DOP);
-      const end = new Date(warrantyExpiry);
-      const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-
-      updated.warranty.lifetime =
-        Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
-    } else if (updated.warranty) {
-      updated.warranty.lifetime = "";
     }
-  }
 
-      return updated;
-    });
-  };
+    // ✅ Auto-calc warranty lifetime (safe version)
+    if (name === "DOP" || name === "warranty.expiryDate") {
+      const warrantyExpiry = updated.warranty?.expiryDate;
 
+      if (updated.DOP && warrantyExpiry) {
+        const start = new Date(updated.DOP);
+        const end = new Date(warrantyExpiry);
+        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+
+        updated.warranty = {
+          ...updated.warranty,
+          lifetime:
+            Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid"
+        };
+      } else if (updated.warranty) {
+        updated.warranty = {
+          ...updated.warranty,
+          lifetime: ""
+        };
+      }
+    }
+
+    return updated;
+  });
+};
 
   const validateRequired = () => {
     const missing = [];
