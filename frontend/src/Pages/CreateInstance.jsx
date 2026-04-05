@@ -22,20 +22,30 @@ const CreateInstances = () => {
 const [bulkValues, setBulkValues] = useState({
   location: "",
   condition: "",
-  modelNo: "",
-  specifications: "",
 
+  // shared
   purchaseCost: "",
   currency: "INR",
   vendor: "",
 
+  // hardware
+  modelNo: "",
+  specifications: "",
   warrantyDate: "",
   installationDate: "",
   insurancePolicyId: "",
   insuranceExpiry: "",
   maintenanceCost: "",
   warrantyRenewalCost: "",
-  insuranceCost: ""
+  insuranceCost: "",
+
+  // ✅ software
+  licenseKey: "",
+  licenseNumber: "",
+  purchaseDate: "",
+  renewalDate: "",
+  lastUsedDate: "",
+  renewalCost: ""
 });
 
   const isHardware = asset?.assetType === "hardware";
@@ -139,12 +149,17 @@ const [bulkValues, setBulkValues] = useState({
       insuranceCost:
         bulkValues.insuranceCost || inst.insuranceCost
     }),
-    ...(isSoftware && {
+...(isSoftware && {
+  licenseKey: bulkValues.licenseKey || inst.licenseKey,
+  licenseNumber: bulkValues.licenseNumber || inst.licenseNumber,
   vendor: bulkValues.vendor || inst.vendor,
-  renewalDate: bulkValues.renewalDate || inst.renewalDate,
+
   purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
   installationDate:
     bulkValues.installationDate || inst.installationDate,
+  renewalDate: bulkValues.renewalDate || inst.renewalDate,
+  lastUsedDate: bulkValues.lastUsedDate || inst.lastUsedDate,
+
   renewalCost: bulkValues.renewalCost || inst.renewalCost
 })
   }));
@@ -367,6 +382,7 @@ const payload = instances.map((inst) => {
 
           {isHardware && (
             <>
+            <label>Warranty Date</label>
               <input
                 type="date"
                 value={bulkValues.warrantyDate}
@@ -377,7 +393,7 @@ const payload = instances.map((inst) => {
                   })
                 }
               />
-
+              <label>Installation Date</label>
               <input
                 type="date"
                 value={bulkValues.installationDate}
@@ -399,7 +415,7 @@ const payload = instances.map((inst) => {
                   })
                 }
               />
-
+              <label>Insurance Expiry</label>
               <input
                 type="date"
                 value={bulkValues.insuranceExpiry}
@@ -448,7 +464,84 @@ const payload = instances.map((inst) => {
               />
             </>
           )}
+          {isSoftware && (
+  <>
+    <div className="form-group">
+      <label>License Key</label>
+      <input
+        value={bulkValues.licenseKey}
+        onChange={(e) =>
+          setBulkValues({ ...bulkValues, licenseKey: e.target.value })
+        }
+      />
+    </div>
 
+    <div className="form-group">
+      <label>License Number</label>
+      <input
+        value={bulkValues.licenseNumber}
+        onChange={(e) =>
+          setBulkValues({ ...bulkValues, licenseNumber: e.target.value })
+        }
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Purchase Date</label>
+      <input
+        type="date"
+        value={bulkValues.purchaseDate}
+        onChange={(e) =>
+          setBulkValues({ ...bulkValues, purchaseDate: e.target.value })
+        }
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Installation Date</label>
+      <input
+        type="date"
+        value={bulkValues.installationDate}
+        onChange={(e) =>
+          setBulkValues({ ...bulkValues, installationDate: e.target.value })
+        }
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Renewal Date</label>
+      <input
+        type="date"
+        value={bulkValues.renewalDate}
+        onChange={(e) =>
+          setBulkValues({ ...bulkValues, renewalDate: e.target.value })
+        }
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Last Used Date</label>
+      <input
+        type="date"
+        value={bulkValues.lastUsedDate}
+        onChange={(e) =>
+          setBulkValues({ ...bulkValues, lastUsedDate: e.target.value })
+        }
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Renewal Cost</label>
+      <input
+        type="number"
+        value={bulkValues.renewalCost}
+        onChange={(e) =>
+          setBulkValues({ ...bulkValues, renewalCost: e.target.value })
+        }
+      />
+    </div>
+  </>
+)}
           <button onClick={applyBulkValues}>
             Apply to All
           </button>
@@ -544,6 +637,7 @@ const payload = instances.map((inst) => {
                 {isHardware && (
                   <>
                     <div className="grid-3">
+                      <label>Warranty Date</label>
                       <input  
                         type="date"
                         value={inst.warrantyDate}
@@ -599,7 +693,7 @@ const payload = instances.map((inst) => {
                           )
                         }
                       />
-
+                      <label>Insurance Expiry</label>
                       <input
                         type="date"
                         value={inst.insuranceExpiry}
@@ -684,6 +778,7 @@ const payload = instances.map((inst) => {
     </div>
 
     <div className="grid-3">
+      <label>Purchase Date</label>
       <input
         type="date"
         value={inst.purchaseDate}
