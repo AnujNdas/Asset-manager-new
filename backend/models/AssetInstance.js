@@ -1,45 +1,51 @@
 const mongoose = require("mongoose");
-
+const costSchema = require("./CostSchema");
 const assetInstanceSchema = new mongoose.Schema(
-  {
-    organizationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
-      required: true,
-      index: true
-    },
+{
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Organization",
+    required: true
+  },
 
-    assetId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      refPath: "assetTypeRef"
-    },
+  assetId: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: "assetTypeRef",
+    required: true
+  },
 
-    assetTypeRef: {
-      type: String,
-      required: true,
-      enum: ["Asset", "SoftwareAsset"]
-    },
-
-    assetType: {
-      type: String,
-      enum: ["hardware", "software"],
-      required: true
-    },
-
-     instanceCode: { type: String, required: true },
-
-  uniqueIdentifier: { // serial / IMEI
+  assetTypeRef: {
     type: String,
-    trim: true,
+    enum: ["Asset", "SoftwareAsset"],
+    required: true
+  },
+
+  assetType: {
+    type: String,
+    enum: ["hardware", "software"],
+    required: true
+  },
+
+  /* 🔹 BASIC UI FIELDS */
+  instanceCode: { type: String, required: true },
+
+  deviceName: String, // 👉 Assigned Device Name
+
+  serialNumber: {
+    type: String, // 👉 Device Serial Number
     sparse: true
   },
 
-status: {
-  type: String,
-  enum: ["in_stock", "assigned", "maintenance", "retired"],
-  default: "in_stock"
-},
+  location: {
+    type: String,
+    required: true
+  },
+
+  status: {
+    type: String,
+    enum: ["in_stock", "in_use", "maintenance", "retired"],
+    default: "in_stock"
+  },
 
   condition: {
     type: String,
@@ -47,145 +53,74 @@ status: {
     default: "new"
   },
 
-location: {
-  type: String,
-  required: true,
-  trim: true
-},
+  notes: String,
 
-  /* 🔥 ASSIGNMENT */
+  /* 🔹 ASSIGNMENT (COMMON) */
 assignedTo: {
   employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
-  employeeName: String, // ✅ ADD THIS
-  departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
-  departmentName: String, // ✅ ADD THIS
-  assignedAt: Date
+  employeeName: String
 },
 
-  /* 🔥 HARDWARE DETAILS */
-  hardwareDetails: {
-    modelNo: String,
-    specifications: String // 👉 "i5 13th Gen, 8GB RAM..."
-  },
+  /* 🔹 HARDWARE SECTION (UI BLOCK) */
+hardware: {
+  modelNo: String,
+  specifications: String,
 
-  /* 🔥 WARRANTY */
-  warranty: {
-    expiryDate: Date,
-    status: {
-      type: String,
-      enum: ["active", "expired"],
-      default: "active"
-    }
-  },
+  purchaseDate: Date,        // ✅ UI
+  installationDate: Date,    // ✅ UI
+  vendor: String,            // ✅ UI
 
-  /* 🔥 INSURANCE */
-  insurance: {
-    provider: String,
-    policyId: String,
-    expiryDate: Date
-  },
+  warrantyExpiry: Date,
+  insuranceExpiry: Date,
+  insuranceId: String,       // ✅ UI
 
-  /* 🔥 INSTALLATION */
-  installationDate: Date,
-
-  /* 🔥 COST TRACKING (INSTANCE LEVEL) */
-  costTracking: {
+  nextMaintenanceDate: Date,
+  purchaseCost: costSchema,   // 🔥 NEW
+  costs: {
     maintenanceCost: Number,
     warrantyRenewalCost: Number,
     insuranceCost: Number
-  },
+  }
+},
 
-  /* 🔥 SOFTWARE (if applicable) */
-softwareDetails: {
+  /* 🔹 SOFTWARE SECTION (UI BLOCK) */
+software: {
   licenseKey: String,
   licenseNumber: String,
   vendor: String,
 
   purchaseDate: Date,
+  installationDate: Date,   // ✅ UI
   renewalDate: Date,
   lastUsedDate: Date,
-assignedTo: {
-  employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
-  employeeName: String, // ✅ ADD THIS
-  departmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
-  departmentName: String, // ✅ ADD THIS
-  assignedAt: Date
-},
-
-},
-
-  /* 🔥 LIFECYCLE */
-lifecycle: [
-  {
-    action: {
-      type: String,
-      enum: ["CREATED", "ASSIGNED", "REASSIGNED", "UNASSIGNED", "MAINTENANCE", "UPGRADE"]
-    },
-
-    from: {
-      employeeName: String,
-      departmentName: String
-    },
-
-    to: {
-      employeeName: String,
-      departmentName: String
-    },
-
-    snapshot: {
-      location: String,
-
-      assignedTo: {
-        employeeName: String,
-        departmentName: String
-      },
-
-      warrantyExpiry: Date,
-      insuranceExpiry: Date,
-
-      condition: String,
-
-      costTracking: {
-        maintenanceCost: Number,
-        warrantyRenewalCost: Number,
-        insuranceCost: Number
-      }
-    },
-
-    date: {
-      type: Date,
-      default: Date.now
-    },
-
-    notes: String
+  purchaseCost: costSchema,   // 🔥 NEW
+  costs: {
+    renewalCost: Number     // ✅ UI
   }
-],
-  /* 🔥 FLEXIBLE EXTENSION */
-  meta: mongoose.Schema.Types.Mixed,
+},
+
+  /* 🔹 UI DERIVED FIELD (IMPORTANT) */
+  licenseAssignedTo: {
+    type: String // 👉 shown in UI ("Licences Assigned To")
+  },
+
+  /* 🔹 LIFECYCLE (KEEP AS IS - GOOD DESIGN) */
+  lifecycle: [
+    {
+      action: String,
+      from: Object,
+      to: Object,
+      date: { type: Date, default: Date.now },
+      notes: String
+    }
+  ],
 
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   }
-  },
-  { timestamps: true }
-);
 
-// 🔥 Ensure unique instanceCode per org
-assetInstanceSchema.index(
-  { organizationId: 1, instanceCode: 1 },
-  { unique: true }
+},
+{ timestamps: true }
 );
-assetInstanceSchema.index(
-  { organizationId: 1, uniqueIdentifier: 1 },
-  {
-    unique: true,
-    partialFilterExpression: {
-      uniqueIdentifier: { $exists: true, $ne: null }
-    }
-  }
-);
-// 🔥 Fast lookup for assignments
-assetInstanceSchema.index({ organizationId: 1, status: 1 });
-
 module.exports = mongoose.model("AssetInstance", assetInstanceSchema);

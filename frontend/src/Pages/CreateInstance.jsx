@@ -19,19 +19,24 @@ const CreateInstances = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const [bulkValues, setBulkValues] = useState({
-    location: "",
-    condition: "",
-    modelNo: "",
-    specifications: "",
-    warrantyDate: "",
-    installationDate: "",
-    insurancePolicyId: "",
-    insuranceExpiry: "",
-    maintenanceCost: "",
-    warrantyRenewalCost: "",
-    insuranceCost: ""
-  });
+const [bulkValues, setBulkValues] = useState({
+  location: "",
+  condition: "",
+  modelNo: "",
+  specifications: "",
+
+  purchaseCost: "",
+  currency: "INR",
+  vendor: "",
+
+  warrantyDate: "",
+  installationDate: "",
+  insurancePolicyId: "",
+  insuranceExpiry: "",
+  maintenanceCost: "",
+  warrantyRenewalCost: "",
+  insuranceCost: ""
+});
 
   const isHardware = asset?.assetType === "hardware";
   const isSoftware = asset?.assetType === "software";
@@ -63,23 +68,34 @@ const CreateInstances = () => {
       setAsset(assetData);
       setLocations(locationData.data);
 
-      const rows = Array.from(
-        { length: assetData.pendingInstances || 0 },
-        () => ({
-          serialNumber: "",
-          condition: "new",
-          location: "",
-          modelNo: "",
-          specifications: "",
-          warrantyDate: "",
-          installationDate: "",
-          insurancePolicyId: "",
-          insuranceExpiry: "",
-          maintenanceCost: "",
-          warrantyRenewalCost: "",
-          insuranceCost: ""
-        })
-      );
+     const rows = Array.from(
+  { length: assetData.pendingInstances || 0 },
+  () => ({
+    serialNumber: "",
+    condition: "new",
+    location: "",
+
+    modelNo: "",
+    specifications: "",
+
+    // 🔥 NEW
+    purchaseCost: "",
+    currency: "INR",
+
+    warrantyDate: "",
+    installationDate: "",
+    insurancePolicyId: "",
+    insuranceExpiry: "",
+
+    maintenanceCost: "",
+    warrantyRenewalCost: "",
+    insuranceCost: "",
+
+    // software
+    renewalDate: "",
+    vendor: ""
+  })
+);
 
       setInstances(rows);
     } catch (err) {
@@ -96,65 +112,71 @@ const CreateInstances = () => {
   };
 
   const applyBulkValues = () => {
-    const updated = instances.map((inst) => ({
-      ...inst,
-      location: bulkValues.location || inst.location,
-      condition: bulkValues.condition || inst.condition,
-      modelNo: bulkValues.modelNo || inst.modelNo,
-      specifications: bulkValues.specifications || inst.specifications,
+  const updated = instances.map((inst) => ({
+    ...inst,
+    location: bulkValues.location || inst.location,
+    condition: bulkValues.condition || inst.condition,
+    modelNo: bulkValues.modelNo || inst.modelNo,
+    specifications: bulkValues.specifications || inst.specifications,
 
-      ...(isHardware && {
-        warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
-        installationDate:
-          bulkValues.installationDate || inst.installationDate,
-        insurancePolicyId:
-          bulkValues.insurancePolicyId || inst.insurancePolicyId,
-        insuranceExpiry:
-          bulkValues.insuranceExpiry || inst.insuranceExpiry,
-        maintenanceCost:
-          bulkValues.maintenanceCost || inst.maintenanceCost,
-        warrantyRenewalCost:
-          bulkValues.warrantyRenewalCost ||
-          inst.warrantyRenewalCost,
-        insuranceCost:
-          bulkValues.insuranceCost || inst.insuranceCost
-      })
-    }));
+    purchaseCost: bulkValues.purchaseCost || inst.purchaseCost,
+    currency: bulkValues.currency || inst.currency,
+    vendor: bulkValues.vendor || inst.vendor,
 
-    setInstances(updated);
-  };
+    ...(isHardware && {
+      warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
+      installationDate:
+        bulkValues.installationDate || inst.installationDate,
+      insurancePolicyId:
+        bulkValues.insurancePolicyId || inst.insurancePolicyId,
+      insuranceExpiry:
+        bulkValues.insuranceExpiry || inst.insuranceExpiry,
+      maintenanceCost:
+        bulkValues.maintenanceCost || inst.maintenanceCost,
+      warrantyRenewalCost:
+        bulkValues.warrantyRenewalCost ||
+        inst.warrantyRenewalCost,
+      insuranceCost:
+        bulkValues.insuranceCost || inst.insuranceCost
+    })
+  }));
 
+  setInstances(updated);
+};
   const toggleExpand = (index) => {
     setExpandedRow(expandedRow === index ? null : index);
   };
 
-  const validate = () => {
-    const newErrors = {};
-    const serials = new Set();
+ const validate = () => {
+  const newErrors = {};
+  const serials = new Set();
 
-    instances.forEach((inst, index) => {
-      const rowErrors = {};
+  instances.forEach((inst, index) => {
+    const rowErrors = {};
 
-      if (!inst.location) rowErrors.location = "Required";
+    if (!inst.location || !inst.location.trim()) {
+      rowErrors.location = "Location is required";
+    }
 
-      if (inst.serialNumber) {
-        if (serials.has(inst.serialNumber)) {
-          rowErrors.serialNumber = "Duplicate";
-        }
-        serials.add(inst.serialNumber);
+    if (!inst.purchaseCost) {
+      rowErrors.purchaseCost = "Cost required";
+    }
+
+    if (inst.serialNumber) {
+      if (serials.has(inst.serialNumber)) {
+        rowErrors.serialNumber = "Duplicate";
       }
+      serials.add(inst.serialNumber);
+    }
 
-      if (Object.keys(rowErrors).length > 0) {
-        newErrors[index] = rowErrors;
-      }
-      if (!inst.location || !inst.location.trim()) {
-  rowErrors.location = "Location is required";
-}
-    });
+    if (Object.keys(rowErrors).length > 0) {
+      newErrors[index] = rowErrors;
+    }
+  });
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
   const handleSubmit = async () => {
     if (!validate()) return;
@@ -165,55 +187,61 @@ const CreateInstances = () => {
 const payload = instances.map((inst) => {
   if (isSoftware) {
     return {
-      location: formatLocation(inst.location),
+      location: normalizeLocation(inst.location),
 
-      softwareDetails: {
-        licenseKey: inst.modelNo || "", // map from UI
+      software: {
+        licenseKey: inst.modelNo || "",
         licenseNumber: inst.modelNo || "",
-        vendor: "",
+        vendor: inst.vendor || "",
 
         purchaseDate: null,
-        renewalDate: null,
-        lastUsedDate: null,
+        installationDate: null,
+        renewalDate: inst.renewalDate || null,
 
-        assignedTo: {
-          employeeId: null,
-          deviceName: "",
-          departmentId: null
+        purchaseCost: inst.purchaseCost
+          ? {
+              amount: Number(inst.purchaseCost),
+              currency: inst.currency || "INR"
+            }
+          : null,
+
+        costs: {
+          renewalCost: Number(inst.renewalCost) || 0
         }
       }
     };
   }
 
-  // ✅ Hardware
   return {
-    serialNumber: inst.serialNumber,
-    condition: inst.condition,
-    location: inst.location,
+    serialNumber: inst.serialNumber || undefined,
+    condition: inst.condition || "new",
+    location: normalizeLocation(inst.location),
 
-    hardwareDetails: {
-      modelNo: inst.modelNo,
-      specifications: inst.specifications
-    },
+    hardware: {
+      modelNo: inst.modelNo || "",
+      specifications: inst.specifications || "",
 
-    warranty: inst.warrantyDate
-      ? { expiryDate: inst.warrantyDate }
-      : undefined,
+      purchaseDate: null,
+      installationDate: inst.installationDate || null,
+      vendor: inst.vendor || "",
 
-    installationDate: inst.installationDate || undefined,
+      warrantyExpiry: inst.warrantyDate || null,
+      insuranceExpiry: inst.insuranceExpiry || null,
+      insuranceId: inst.insurancePolicyId || "",
 
-    insurance: inst.insuranceExpiry
-      ? {
-          policyId: inst.insurancePolicyId,
-          expiryDate: inst.insuranceExpiry
-        }
-      : undefined,
+      purchaseCost: inst.purchaseCost
+        ? {
+            amount: Number(inst.purchaseCost),
+            currency: inst.currency || "INR"
+          }
+        : null,
 
-    costTracking: {
-      maintenanceCost: Number(inst.maintenanceCost) || 0,
-      warrantyRenewalCost:
-        Number(inst.warrantyRenewalCost) || 0,
-      insuranceCost: Number(inst.insuranceCost) || 0
+      costs: {
+        maintenanceCost: Number(inst.maintenanceCost) || 0,
+        warrantyRenewalCost:
+          Number(inst.warrantyRenewalCost) || 0,
+        insuranceCost: Number(inst.insuranceCost) || 0
+      }
     }
   };
 });
@@ -270,17 +298,20 @@ const payload = instances.map((inst) => {
         <h4>Bulk Apply</h4>
 
         <div className="bulk-grid">
-          <input
-  type="text"
-  placeholder="Enter location"
-  value={bulkValues.location}
-  onChange={(e) =>
-    setBulkValues({
-      ...bulkValues,
-      location: e.target.value
-    })
-  }
-/>
+<div className="input-group">
+  <input
+    type="text"
+    placeholder="Enter location"
+    value={inst.location}
+    onChange={(e) =>
+      handleChange(index, "location", e.target.value)
+    }
+  />
+
+  {errors[index]?.location && (
+    <span className="error">{errors[index].location}</span>
+  )}
+</div>  
           <select
             value={bulkValues.condition}
             onChange={(e) =>
@@ -491,7 +522,7 @@ const payload = instances.map((inst) => {
                 {isHardware && (
                   <>
                     <div className="grid-3">
-                      <input
+                      <input  
                         type="date"
                         value={inst.warrantyDate}
                         onChange={(e) =>
@@ -502,7 +533,27 @@ const payload = instances.map((inst) => {
                           )
                         }
                       />
+                    <input
+  type="number"
+  placeholder="Purchase Cost"
+  value={inst.purchaseCost}
+  onChange={(e) =>
+    handleChange(index, "purchaseCost", e.target.value)
+  }
+/>
+{errors[index]?.purchaseCost && (
+  <span className="error">{errors[index].purchaseCost}</span>
+)}
 
+<select
+  value={inst.currency}
+  onChange={(e) =>
+    handleChange(index, "currency", e.target.value)
+  }
+>
+  <option value="INR">INR</option>
+  <option value="USD">USD</option>
+</select>
                       <input
                         type="date"
                         value={inst.installationDate}

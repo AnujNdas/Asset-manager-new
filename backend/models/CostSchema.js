@@ -1,6 +1,8 @@
 // shared/costSchema.js
 const mongoose = require("mongoose");
 
+const mongoose = require("mongoose");
+
 const SUPPORTED_CURRENCIES = [
   "INR","USD","EUR","GBP","JPY",
   "AUD","CAD","CHF","CNY","HKD","SGD",
@@ -9,13 +11,7 @@ const SUPPORTED_CURRENCIES = [
 
 const costSchema = new mongoose.Schema(
   {
-    totalAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-
-    unitAmount: {
+    amount: {
       type: Number,
       required: true,
       min: 0,
@@ -28,11 +24,11 @@ const costSchema = new mongoose.Schema(
       enum: SUPPORTED_CURRENCIES,
     },
 
-    baseTotalAmount: {
+    // optional for future scaling
+    baseAmount: {
       type: Number,
-      required: true,
-      min: 0,
-    },
+      min: 0
+    }
   },
   { _id: false }
 );

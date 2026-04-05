@@ -58,16 +58,6 @@ const assignmentSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-
-    /* 🔹 Device Info (Optional) */
-
-    deviceInfo: {
-      assetTag: String,
-      serialNumber: String,
-      modelNumber: String,
-      deviceName: String,
-    },
-
     /* 🔹 Status */
 
     status: {
@@ -76,7 +66,10 @@ const assignmentSchema = new mongoose.Schema(
       default: "active",
       index: true,
     },
-
+    assignedDeviceInstanceId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "AssetInstance"
+},
     /* 🔹 Lifecycle */
 
     assignedBy: {

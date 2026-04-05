@@ -55,10 +55,6 @@
 
       DOE: { type: Date },
 
-      assetCost: {
-        type: costSchema,
-        required: true,
-      },
 
       assetQuantity: {
         type: Number,
@@ -71,11 +67,12 @@
         default: 0,
       },
 
-      financialTracking: {
-        monthlyCost: { type: Number, default: 0 },
-        yearlyCost: { type: Number, default: 0 },
-        maintenanceTotalCost: { type: Number, default: 0 },
-      },
+financialTracking: {
+  totalAssetCost: { type: Number, default: 0 },   // 🔥 sum of all instances
+  monthlyCost: { type: Number, default: 0 },
+  yearlyCost: { type: Number, default: 0 },
+  maintenanceTotalCost: { type: Number, default: 0 },
+},
     },
     { timestamps: true }
   );

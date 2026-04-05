@@ -188,14 +188,14 @@ const assignAssetInstance = async (req, res) => {
         departmentId,
         employeeId,
         location,
-        deviceInfo = {}
+        assignedDeviceInstanceId // 🔥 NEW
       } = item;
 
       /* =============================
          VALIDATION
       ============================== */
 
-      const instance = await mongoose.model("AssetInstance").findOne({
+      const instance = await AssetInstance.findOne({
         _id: assetInstanceId,
         assetId,
         status: "in_stock"
@@ -209,66 +209,57 @@ const assignAssetInstance = async (req, res) => {
       }).session(session);
 
       if (exists) throw new Error("Instance already assigned");
-      if (!location || !location.trim()) {
-          throw new Error("Location is required");
-        }
+
+      if (!location) {
+        throw new Error("Location is required");
+      }
+
+      const employee = await Employee.findById(employeeId).session(session);
+      const department = await Department.findById(departmentId).session(session);
+
+      if (!employee || !department) {
+        throw new Error("Invalid employee or department");
+      }
+
       /* =============================
-         UPDATE INSTANCE
+         UPDATE INSTANCE (SNAPSHOT ONLY)
       ============================== */
 
-      instance.status = "assigned";
-      const employee = await mongoose.model("Employee").findById(employeeId).session(session);
-      const department = await mongoose.model("Department").findById(departmentId).session(session);
+      instance.status = "in_use";
 
       instance.assignedTo = {
         employeeId: employee._id,
-        employeeName: employee.name,         // ✅ important for UI
-        departmentId: department._id,
-        departmentName: department.name,     // ✅ important for UI
-        assignedAt: new Date()
+        employeeName: employee.name
       };
 
-      instance.status = "assigned";
-      instance.location = location; // plain string
+      instance.location = location;
 
-instance.lifecycle.push({
-  action: "ASSIGNED",
+      /* =============================
+         LIFECYCLE LOG
+      ============================== */
 
-  from: null,
+      instance.lifecycle.push({
+        action: "ASSIGNED",
+        from: null,
+        to: {
+          employeeName: employee.name,
+          departmentName: department.name
+        },
+        snapshot: {
+          location,
+          assignedTo: {
+            employeeName: employee.name
+          },
+          condition: instance.condition
+        },
+        date: new Date(),
+        notes: `Assigned to ${employee.name}`
+      });
 
-  to: {
-    employeeName: employee.name,
-    departmentName: department.name
-  },
-
-  snapshot: {
-    location: location,
-
-    assignedTo: {
-      employeeName: employee.name,
-      departmentName: department.name
-    },
-
-    warrantyExpiry: instance.warranty?.expiryDate || null,
-    insuranceExpiry: instance.insurance?.expiryDate || null,
-
-    condition: instance.condition,
-
-    costTracking: {
-      maintenanceCost: instance.costTracking?.maintenanceCost || 0,
-      warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
-      insuranceCost: instance.costTracking?.insuranceCost || 0
-    }
-  },
-
-  date: new Date(),
-
-  notes: `Assigned to ${employee.name}`
-});
       await instance.save({ session });
 
       /* =============================
-         CREATE ASSIGNMENT
+         CREATE ASSIGNMENT (SOURCE OF TRUTH)
       ============================== */
 
       const [assignment] = await AssetAssignment.create([{
@@ -277,11 +268,14 @@ instance.lifecycle.push({
         assetInstanceId,
         assetType,
         assetModel: assetType === "hardware" ? "Asset" : "SoftwareAsset",
-        departmentId,
+
         employeeId,
+        departmentId,
         location,
-        deviceInfo,
-        quantity: 1,
+
+        // 🔥 NEW LINK (software → device)
+        assignedDeviceInstanceId: assignedDeviceInstanceId || null,
+
         status: "active",
         assignedBy: req.user.id
       }], { session });
@@ -290,8 +284,7 @@ instance.lifecycle.push({
          UPDATE ASSET STOCK
       ============================== */
 
-      const Model =
-        assetType === "hardware" ? Asset : SoftwareAsset;
+      const Model = assetType === "hardware" ? Asset : SoftwareAsset;
 
       await Model.findByIdAndUpdate(
         assetId,
@@ -338,19 +331,60 @@ const returnAssetInstance = async (req, res) => {
       throw new Error("Invalid assignment");
     }
 
-    const instance = await mongoose.model("AssetInstance").findById(
+    const instance = await AssetInstance.findById(
       assignment.assetInstanceId
     ).session(session);
+
+    if (!instance) {
+      throw new Error("Asset instance not found");
+    }
+
+    /* =============================
+       CAPTURE CURRENT STATE (IMPORTANT)
+    ============================== */
+
+    const previousAssignedTo = instance.assignedTo;
+
+    /* =============================
+       UPDATE INSTANCE
+    ============================== */
 
     instance.status = "in_stock";
     instance.assignedTo = null;
 
+    /* =============================
+       LIFECYCLE LOG (CORRECT FORMAT)
+    ============================== */
+
     instance.lifecycle.push({
       action: "RETURNED",
-      date: new Date()
+
+      from: {
+        employeeName: previousAssignedTo?.employeeName || null
+      },
+
+      to: null,
+
+      snapshot: {
+        location: instance.location,
+
+        assignedTo: {
+          employeeName: previousAssignedTo?.employeeName || null
+        },
+
+        condition: instance.condition
+      },
+
+      date: new Date(),
+
+      notes: `Returned by ${req.user.id}`
     });
 
     await instance.save({ session });
+
+    /* =============================
+       UPDATE ASSET STOCK
+    ============================== */
 
     const Model =
       assignment.assetType === "hardware" ? Asset : SoftwareAsset;
@@ -360,6 +394,10 @@ const returnAssetInstance = async (req, res) => {
       { $inc: { inUse: -1 } },
       { session }
     );
+
+    /* =============================
+       UPDATE ASSIGNMENT
+    ============================== */
 
     assignment.status = "returned";
     assignment.returnedAt = new Date();

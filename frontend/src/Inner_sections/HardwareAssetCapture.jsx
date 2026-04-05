@@ -36,28 +36,19 @@
 
     const navigate = useNavigate();
 
-  const defaultFormData = {
-    assetCategory: "",
-    assetName: "",
-    associateUnit: "",
-    locationName: "",
-    assetStatus: "",
-    DOE: "",
-    assetLifetime: "",
-    purchaseFrom: "",
-    type: "",
-    maintenanceTerm: "",
+const defaultFormData = {
+  assetCategory: "",
+  assetName: "",
+  associateUnit: "",
+  locationName: "",
+  assetStatus: "",
+  DOE: "",
+  purchaseFrom: "",
+  type: "",
+  assetQuantity: "",
+  DOP: "", // 🔥 required now
+};
 
-    assetCost: {
-      amount: "",
-      currency: "USD",
-    },
-
-    assetQuantity: "",
-
-  };
-
-    const [showWarranty, setShowWarranty] = useState(false);
 
     const [formData, setFormData] = useState(defaultFormData);
     const [units, setUnits] = useState([]);
@@ -65,7 +56,6 @@
     const [categories, setCategories] = useState([]);
     const [statuses, setStatuses] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showInsurance, setShowInsurance] = useState(false);
 
 
   useEffect(() => {
@@ -164,42 +154,7 @@
 
     setFormData((prev) => {
       let updated = { ...prev };
-
-      // ✅ assetCost nested
-      if (name.startsWith("assetCost.")) {
-        const field = name.split(".")[1];
-        updated.assetCost = {
-          ...prev.assetCost,
-          [field]: field === "amount" ? Number(value) || "" : value,
-        };
-      }
-
-      // ✅ insurance nested
-  // ✅ insurance nested
-  else if (name.startsWith("insurance.")) {
-    const field = name.split(".")[1];
-    updated.insurance = {
-      ...prev.insurance,
-      [field]: value,
-    };
-  }
-
-  // ✅ warranty nested  ✅ FIX
-  else if (name.startsWith("warranty.")) {
-    const field = name.split(".")[1];
-    updated.warranty = {
-      ...prev.warranty,
-      [field]: value,
-    };
-  }
-
-  // normal fields
-  else {
-    updated[name] = value;
-  }
-
-
-
+      if (!formData.DOP) missing.push("Purchase Date");
       // ✅ Auto-calc lifetime
       if (name === "DOP" || name === "DOE") {
         const { DOP, DOE } = updated;
@@ -244,7 +199,6 @@
     if (!formData.locationName) missing.push("Location");
     if (!formData.assetStatus) missing.push("Status");
     if (!formData.type) missing.push("Type");
-    if (!formData.assetCost.amount) missing.push("Cost");
     if (!formData.assetQuantity) missing.push("Quantity");
 
     if (missing.length) {
@@ -263,18 +217,22 @@
 
     try {
 const payload = {
-  ...formData,
+  assetName: formData.assetName,
+  assetCategory: formData.assetCategory,
+  associateUnit: formData.associateUnit,
+  locationName: formData.locationName,
+  assetStatus: formData.assetStatus,
+  type: formData.type,
+  assetQuantity: Number(formData.assetQuantity),
+
+  DOE: formData.DOE || null,
 
   purchaseDetails: {
     purchaseDate: formData.DOP,
     vendor: {
-      name: formData.purchaseFrom || null,
+      name: formData.purchaseFrom || "",
     },
   },
-
-  // REMOVE junk fields
-  DOP: undefined,
-  purchaseFrom: undefined,
 };
 
       const createdAsset = await createHardwareAsset(payload);
@@ -311,8 +269,7 @@ const payload = {
           <ul>
             <li>Basic asset details</li>
             <li>Location & unit mapping</li>
-            <li>Cost & quantity</li>
-            <li>Lifecycle tracking</li>
+            <li>Lifecycle tracking & Quantity</li>
           </ul>
         </div>
 
@@ -419,25 +376,7 @@ const payload = {
               <option value="maintenance">Maintenance</option>
             </select>
           </div>
-          </div>
-
-
-          <h3>Financial</h3>
-
-          <div className="grid-2">
-            <div className="input-group">
-              <label>Currency</label>
-              <select
-                name="assetCost.currency"
-                value={formData.assetCost.currency}
-                onChange={handleChange}
-              >
-                {SUPPORTED_CURRENCIES.map(c => (
-                  <option key={c.code} value={c.code}>{c.code}</option>
-                ))}
-              </select>
-            </div>
-                        <div className="input-group">
+                                  <div className="input-group">
             <label>Vendor</label>
             <input
               name="purchaseFrom"
@@ -445,17 +384,7 @@ const payload = {
               onChange={handleChange}
             />
           </div>
-            <div className="input-group">
-              <label>Total Cost *</label>
-              <input
-                type="number"
-                name="assetCost.amount"
-                value={formData.assetCost.amount}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="input-group">
+                      <div className="input-group">
               <label>Quantity *</label>
               <input
                 type="number"

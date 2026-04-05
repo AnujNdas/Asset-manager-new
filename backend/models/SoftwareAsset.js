@@ -51,12 +51,6 @@ const SoftwareAssetSchema = new mongoose.Schema(
         supportEmail: String,
       },
     },
-
-    assetCost: {
-      type: costSchema,
-      required: true,
-    },
-
     assetQuantity: {
       type: Number,
       required: true,
@@ -68,11 +62,11 @@ const SoftwareAssetSchema = new mongoose.Schema(
       default: 0,
     },
     DOE: { type: Date },
-    financialTracking: {
-      monthlyCost: { type: Number, default: 0 },
-      yearlyCost: { type: Number, default: 0 },
-      totalCost: { type: Number, default: 0 },
-    },
+financialTracking: {
+  totalCost: { type: Number, default: 0 },        // 🔥 from instances
+  monthlyCost: { type: Number, default: 0 },      // derived later
+  yearlyCost: { type: Number, default: 0 }
+},
 
     // Parent-level renewal config only
     renewal: {
