@@ -42,7 +42,7 @@ const [bulkValues, setBulkValues] = useState({
   const isSoftware = asset?.assetType === "software";
 
   const fieldLabels = {
-    modelNo: isHardware ? "Model No" : "License No",
+    modelNo: isHardware ? "Model No" : "License Key",
     specifications: isHardware ? "Specifications" : "Version & Details"
   };
 
@@ -138,7 +138,15 @@ const [bulkValues, setBulkValues] = useState({
         inst.warrantyRenewalCost,
       insuranceCost:
         bulkValues.insuranceCost || inst.insuranceCost
-    })
+    }),
+    ...(isSoftware && {
+  vendor: bulkValues.vendor || inst.vendor,
+  renewalDate: bulkValues.renewalDate || inst.renewalDate,
+  purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
+  installationDate:
+    bulkValues.installationDate || inst.installationDate,
+  renewalCost: bulkValues.renewalCost || inst.renewalCost
+})
   }));
 
   setInstances(updated);
@@ -190,25 +198,26 @@ const payload = instances.map((inst) => {
       location: formatLocation(inst.location),
 
       software: {
-        licenseKey: inst.modelNo || "",
-        licenseNumber: inst.modelNo || "",
-        vendor: inst.vendor || "",
+  licenseKey: inst.licenseKey || "",
+  licenseNumber: inst.licenseNumber || "",
+  vendor: inst.vendor || "",
 
-        purchaseDate: null,
-        installationDate: null,
-        renewalDate: inst.renewalDate || null,
+  purchaseDate: inst.purchaseDate || null,
+  installationDate: inst.installationDate || null,
+  renewalDate: inst.renewalDate || null,
+  lastUsedDate: inst.lastUsedDate || null,
 
-        purchaseCost: inst.purchaseCost
-          ? {
-              amount: Number(inst.purchaseCost),
-              currency: inst.currency || "INR"
-            }
-          : null,
-
-        costs: {
-          renewalCost: Number(inst.renewalCost) || 0
-        }
+  purchaseCost: inst.purchaseCost
+    ? {
+        amount: Number(inst.purchaseCost),
+        currency: inst.currency || "INR"
       }
+    : null,
+
+  costs: {
+    renewalCost: Number(inst.renewalCost) || 0
+  }
+}
     };
   }
 
@@ -646,6 +655,89 @@ const payload = instances.map((inst) => {
                     </div>
                   </>
                 )}
+                {isSoftware && (
+  <>
+    <div className="grid-3">
+      <input
+        placeholder="License Key"
+        value={inst.licenseKey || ""}
+        onChange={(e) =>
+          handleChange(index, "licenseKey", e.target.value)
+        }
+      />
+
+      <input
+        placeholder="License Number"
+        value={inst.licenseNumber || ""}
+        onChange={(e) =>
+          handleChange(index, "licenseNumber", e.target.value)
+        }
+      />
+
+      <input
+        placeholder="Vendor"
+        value={inst.vendor}
+        onChange={(e) =>
+          handleChange(index, "vendor", e.target.value)
+        }
+      />
+    </div>
+
+    <div className="grid-3">
+      <input
+        type="date"
+        value={inst.purchaseDate}
+        onChange={(e) =>
+          handleChange(index, "purchaseDate", e.target.value)
+        }
+      />
+
+      <input
+        type="date"
+        value={inst.installationDate}
+        onChange={(e) =>
+          handleChange(index, "installationDate", e.target.value)
+        }
+      />
+
+      <input
+        type="date"
+        value={inst.renewalDate}
+        onChange={(e) =>
+          handleChange(index, "renewalDate", e.target.value)
+        }
+      />
+    </div>
+
+    <div className="grid-3">
+      <input
+        type="date"
+        value={inst.lastUsedDate}
+        onChange={(e) =>
+          handleChange(index, "lastUsedDate", e.target.value)
+        }
+      />
+
+      <input
+        type="number"
+        placeholder="Purchase Cost"
+        value={inst.purchaseCost}
+        onChange={(e) =>
+          handleChange(index, "purchaseCost", e.target.value)
+        }
+      />
+
+      <input
+        type="number"
+        placeholder="Renewal Cost"
+        value={inst.renewalCost}
+        onChange={(e) =>
+          handleChange(index, "renewalCost", e.target.value)
+        }
+      />
+    </div>
+  </>
+)}
               </div>
             )}
           </div>
