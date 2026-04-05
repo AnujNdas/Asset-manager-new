@@ -490,8 +490,8 @@ const createSoftwareAsset = async (req, res) => {
       });
     }
 
-    const purchaseDate = parseDate(req.body.purchaseDate);
-    const expiryDate = parseDate(req.body.expiryDate);
+const purchaseDate = parseDate(req.body.purchaseDetails?.purchaseDate);
+const expiryDate = parseDate(req.body.DOE);
 
     const category = await Category.findOne({
       _id: req.body.assetCategory,
@@ -510,11 +510,11 @@ const createSoftwareAsset = async (req, res) => {
 
       purchaseDetails: {
         purchaseDate,
-        vendor: {
-          name: req.body.vendorName || "",
-          contact: req.body.vendorContact || "",
-          supportEmail: req.body.vendorEmail || ""
-        }
+vendor: {
+  name: req.body.purchaseDetails?.vendor?.name || "",
+  contact: req.body.purchaseDetails?.vendor?.contact || "",
+  supportEmail: req.body.purchaseDetails?.vendor?.supportEmail || ""
+}
       },
 
       renewal: {

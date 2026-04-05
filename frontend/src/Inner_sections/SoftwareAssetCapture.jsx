@@ -73,7 +73,23 @@
         setStatuses(s || []);
       })();
     }, []);
+    const validateRequired = () => {
+  const missing = [];
 
+  if (!formData.assetName) missing.push("Software Name");
+  if (!formData.assetCategory) missing.push("Category");
+  if (!formData.associateUnit) missing.push("Unit");
+  if (!formData.type) missing.push("Type");
+  if (!formData.assetQuantity) missing.push("Quantity");
+  if (!formData.DOP) missing.push("Start Date"); // 🔥 IMPORTANT
+
+  if (missing.length) {
+    Swal.fire("Missing fields", missing.join(", "), "error");
+    return false;
+  }
+
+  return true;
+};
     const handleChange = (e) => {
       const { name, value } = e.target;
 
@@ -84,6 +100,7 @@
     const prevStep = () => setStep((s) => s - 1);
 
     const handleSubmit = async () => {
+        if (!validateRequired()) return; // 🔥 ADD THIS
       setIsSubmitting(true);
       try {
 const payload = {
@@ -99,7 +116,7 @@ const payload = {
   DOE: formData.DOE || null,
 
   purchaseDetails: {
-    purchaseDate: formData.DOP,
+    purchaseDate: formData.DOP || null,
     vendor: {
       name: formData.purchaseFrom || null,
     },
