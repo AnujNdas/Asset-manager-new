@@ -1,7 +1,6 @@
 // shared/costSchema.js
 const mongoose = require("mongoose");
 
-const mongoose = require("mongoose");
 
 const SUPPORTED_CURRENCIES = [
   "INR","USD","EUR","GBP","JPY",
