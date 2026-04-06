@@ -3,7 +3,7 @@ const Asset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 const Employee = require("../models/Employee");
-
+const AssetInstance = require("../models/AssetInstance");
 /* ============================
    GET IN-STOCK CATEGORY SUMMARY
 ============================ */
