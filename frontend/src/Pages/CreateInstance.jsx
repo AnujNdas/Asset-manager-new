@@ -88,25 +88,29 @@ const [bulkValues, setBulkValues] = useState({
     modelNo: "",
     specifications: "",
 
-    // 🔥 NEW
     purchaseCost: "",
     currency: "INR",
 
+    // hardware
     warrantyDate: "",
     installationDate: "",
     insurancePolicyId: "",
     insuranceExpiry: "",
-
     maintenanceCost: "",
     warrantyRenewalCost: "",
     insuranceCost: "",
-    renewalCost: "",
-    // software
+
+    // ✅ software (FULL INIT)
+    licenseKey: "",
+    licenseNumber: "",
+    vendor: "",
+    purchaseDate: "",
+    installationDate: "",
     renewalDate: "",
-    vendor: ""
+    lastUsedDate: "",
+    renewalCost: ""
   })
 );
-
       setInstances(rows);
     } catch (err) {
       console.error(err);
@@ -466,7 +470,7 @@ const payload = instances.map((inst) => {
           )}
           {isSoftware && (
   <>
-    <div className="form-group">
+    {/* <div className="form-group">
       <label>License Key</label>
       <input
         value={bulkValues.licenseKey}
@@ -474,7 +478,7 @@ const payload = instances.map((inst) => {
           setBulkValues({ ...bulkValues, licenseKey: e.target.value })
         }
       />
-    </div>
+    </div> */}
 
     <div className="form-group">
       <label>License Number</label>
@@ -604,15 +608,15 @@ const payload = instances.map((inst) => {
 </div>
 
               <input
-                value={inst.modelNo}
                 placeholder={fieldLabels.modelNo}
-                onChange={(e) =>
-                  handleChange(
-                    index,
-                    "modelNo",
-                    e.target.value
-                  )
-                }
+value={isSoftware ? inst.licenseKey : inst.modelNo}
+onChange={(e) =>
+  handleChange(
+    index,
+    isSoftware ? "licenseKey" : "modelNo",
+    e.target.value
+  )
+}
               />
 
               <button onClick={() => toggleExpand(index)}>
@@ -752,27 +756,12 @@ const payload = instances.map((inst) => {
                 {isSoftware && (
   <>
     <div className="grid-3">
-      <input
-        placeholder="License Key"
-        value={inst.licenseKey || ""}
-        onChange={(e) =>
-          handleChange(index, "licenseKey", e.target.value)
-        }
-      />
 
       <input
         placeholder="License Number"
         value={inst.licenseNumber || ""}
         onChange={(e) =>
           handleChange(index, "licenseNumber", e.target.value)
-        }
-      />
-
-      <input
-        placeholder="Vendor"
-        value={inst.vendor}
-        onChange={(e) =>
-          handleChange(index, "vendor", e.target.value)
         }
       />
     </div>
