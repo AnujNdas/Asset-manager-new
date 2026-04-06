@@ -543,6 +543,118 @@
 
   margin-top: 20px;
 }
+.instance-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  background: #fff;
+  transition: 0.3s;
+}
+
+.instance-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.instance-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.instance-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.instance-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.status-pill.available {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.status-pill.assigned {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.instance-block {
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.instance-block p {
+  display: flex;
+  justify-content: space-between;
+  margin: 3px 0;
+}
+
+.instance-block span {
+  color: #6b7280;
+}
+
+.assignment-box {
+  background: #f9fafb;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.label {
+  font-size: 11px;
+  color: #888;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.clean-card {
+  padding: 16px;
+  border-radius: 16px;
+  background: #111;
+  border: 1px solid #222;
+  transition: 0.3s;
+}
+
+.clean-card:hover {
+  border-color: #444;
+}
+
+.expiry-box {
+  text-align: right;
+}
+
+.usage-box {
+  margin-top: 10px;
+  padding: 8px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.plan-box {
+  margin-top: 8px;
+  font-size: 12px;
+  text-align: center;
+  background: #222;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.available-box {
+  margin-top: 10px;
+  padding: 6px;
+  text-align: center;
+  background: #1f2937;
+  border-radius: 8px;
+}
 @media (max-width: 768px) {
   .asset-view-modal {
     max-width: 95%;

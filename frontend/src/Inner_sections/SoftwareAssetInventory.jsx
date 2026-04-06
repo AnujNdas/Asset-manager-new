@@ -243,96 +243,61 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
   const isAssigned = inst.status === "assigned";
 
   return (
-    <div
-      key={inst._id}
-      className={`instance-card ${isAssigned ? "assignment" : ""}`}
-    >
-      {/* HEADER */}
-      <div className="instance-header">
-        <div>
-          <p className="instance-code">{inst.instanceCode}</p>
-          <p className="instance-id">
-            {inst.softwareDetails?.licenseNumber || "N/A"}
-          </p>
-        </div>
-
-        <span
-          className={`status-badge ${
-            isAssigned ? "assigned" : "available"
-          }`}
-        >
-          {isAssigned ? "Assigned" : "Available"}
-        </span>
-      </div>
-
-      {/* BASIC */}
-      <div className="instance-section">
-        <p><b>📍 Location:</b> {inst.location || "N/A"}</p>
-        <p><b>⚙ Condition:</b> {inst.condition}</p>
-        <p>
-          <b>📅 Installed:</b>{" "}
-          {inst.installationDate
-            ? new Date(inst.installationDate).toLocaleDateString()
-            : "N/A"}
-        </p>
-      </div>
-
-      {/* LICENSE INFO */}
-      <div className="instance-section">
-        <p><b>🔑 License Key:</b> {inst.softwareDetails?.licenseKey}</p>
-        <p><b>🏢 Vendor:</b> {inst.softwareDetails?.vendor || "N/A"}</p>
-
-        <p>
-          <b>📅 Purchase:</b>{" "}
-          {inst.softwareDetails?.purchaseDate
-            ? new Date(inst.softwareDetails.purchaseDate).toLocaleDateString()
-            : "N/A"}
-        </p>
-
-        <p>
-          <b>🔄 Renewal:</b>{" "}
-          {inst.softwareDetails?.renewalDate
-            ? new Date(inst.softwareDetails.renewalDate).toLocaleDateString()
-            : "N/A"}
-        </p>
-      </div>
-
-      {/* WARRANTY (LIGHT) */}
-      <div className="instance-section">
-        <p><b>🛡 Warranty Status:</b> {inst.warranty?.status}</p>
-      </div>
-
-      {/* COST */}
-      <div className="instance-section cost-box">
-        <p><b>💰 Maintenance:</b> {inst.costTracking?.maintenanceCost}</p>
-        <p><b>🔄 Renewal Cost:</b> {inst.costTracking?.warrantyRenewalCost}</p>
-        <p><b>🛡 Insurance:</b> {inst.costTracking?.insuranceCost}</p>
-      </div>
-
-      {/* ASSIGNMENT */}
-      {isAssigned && assignment ? (
-        <div className="assignment-box">
-          <p><b>👤 Employee:</b> {assignment.employee?.name}</p>
-          <p><b>🏢 Department:</b> {assignment.department?.name}</p>
-          <p><b>📍 Location:</b> {assignment.location}</p>
-
-          <p><b>💻 Device:</b> {assignment.deviceInfo?.deviceName}</p>
-          <p><b>🏷 Asset Tag:</b> {assignment.deviceInfo?.assetTag}</p>
-
-          <p>
-            <b>📅 Assigned:</b>{" "}
-            {new Date(assignment.assignedAt).toLocaleDateString()}
-          </p>
-        </div>
-      ) : (
-        <p className="available-text">Available (Not Assigned)</p>
-      )}
-      <div className="instance-actions">
-  <button onClick={() => handleInstanceEditOpen(inst)} className="btn-edit">
-    Edit
-  </button>
-</div>
+   <div className={`instance-card ${isAssigned ? "assigned" : ""}`}>
+  
+  {/* HEADER */}
+  <div className="instance-header">
+    <div>
+      <p className="instance-code">{inst.instanceCode}</p>
+      <p className="instance-id">
+        {inst.softwareDetails?.licenseNumber || "N/A"}
+      </p>
     </div>
+
+    <span className="status-badge">
+      {isAssigned ? "Assigned" : "Available"}
+    </span>
+  </div>
+
+  {/* BASIC */}
+  <div className="instance-section">
+    <p><span className="label">Location</span> {inst.location}</p>
+    <p><span className="label">Condition</span> {inst.condition}</p>
+    <p>
+      <span className="label">Installed</span>{" "}
+      {formatDate(inst.installationDate)}
+    </p>
+  </div>
+
+  {/* LICENSE */}
+  <div className="instance-section">
+    <p><span className="label">License Key</span> {inst.softwareDetails?.licenseKey}</p>
+    <p><span className="label">Vendor</span> {inst.softwareDetails?.vendor}</p>
+  </div>
+
+  {/* COST */}
+  <div className="instance-section cost-box">
+    <p><span className="label">Maintenance</span> {inst.costTracking?.maintenanceCost}</p>
+    <p><span className="label">Renewal</span> {inst.costTracking?.warrantyRenewalCost}</p>
+  </div>
+
+  {/* ASSIGNMENT */}
+  {isAssigned && assignment ? (
+    <div className="assignment-box">
+      <p><span className="label">Employee</span> {assignment.employee?.name}</p>
+      <p><span className="label">Department</span> {assignment.department?.name}</p>
+      <p><span className="label">Location</span> {assignment.location}</p>
+    </div>
+  ) : (
+    <div className="available-box">Available</div>
+  )}
+
+  <div className="instance-actions">
+    <button onClick={() => handleInstanceEditOpen(inst)}>
+      Edit
+    </button>
+  </div>
+</div>
   );
 };
   return (

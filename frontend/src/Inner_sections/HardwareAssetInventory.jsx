@@ -146,121 +146,113 @@ const [instanceForm, setInstanceForm] = useState({});
 
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
-  const renderInstance = (inst, assignment) => {
+ const renderInstance = (inst, assignment) => {
   const isAssigned = inst.status === "assigned";
 
+  const hw = inst.hardware || {};
+
   return (
-    <div
-      key={inst._id}
-      className={`instance-card ${isAssigned ? "assignment" : ""}`}
-    >
+    <div className={`instance-card ${isAssigned ? "assigned-card" : ""}`}>
+      
       {/* HEADER */}
       <div className="instance-header">
         <div>
-          <p className="instance-code">{inst.instanceCode}</p>
-          <p className="instance-id">{inst.uniqueIdentifier}</p>
+          <p className="instance-title">{inst.instanceCode}</p>
+          <p className="instance-sub">{inst.serialNumber || "No Serial"}</p>
         </div>
 
-        <span
-          className={`status-badge ${
-            isAssigned ? "assigned" : "available"
-          }`}
-        >
+        <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
           {isAssigned ? "Assigned" : "Available"}
         </span>
       </div>
 
       {/* BASIC INFO */}
-      <div className="instance-section">
-        <p><b>📍 Location:</b> {inst.location}</p>
-        <p><b>⚙ Condition:</b> {inst.condition}</p>
+      <div className="instance-block">
+        <p><span>Location</span>{inst.location || "N/A"}</p>
+        <p><span>Condition</span>{inst.condition}</p>
         <p>
-          <b>📅 Installed:</b>{" "}
-          {inst.installationDate
-            ? new Date(inst.installationDate).toLocaleDateString()
+          <span>Installed</span>
+          {hw.installationDate
+            ? new Date(hw.installationDate).toLocaleDateString()
             : "N/A"}
         </p>
       </div>
 
-      {/* TECHNICAL */}
-      <div className="instance-section">
-        <p><b>💻 Model:</b> {inst.hardwareDetails?.modelNo}</p>
-        <p><b>📝 Specs:</b> {inst.hardwareDetails?.specifications}</p>
+      {/* TECH DETAILS */}
+      <div className="instance-block">
+        <p><span>Model</span>{hw.modelNo || "N/A"}</p>
+        <p><span>Specs</span>{hw.specifications || "N/A"}</p>
       </div>
 
-      {/* WARRANTY + INSURANCE */}
-      <div className="instance-section">
+      {/* WARRANTY */}
+      <div className="instance-block">
         <p>
-          <b>🛡 Warranty:</b>{" "}
-          {inst.warranty?.expiryDate
-            ? new Date(inst.warranty.expiryDate).toLocaleDateString()
+          <span>Warranty Expiry</span>
+          {hw.warrantyExpiry
+            ? new Date(hw.warrantyExpiry).toLocaleDateString()
             : "N/A"}
         </p>
 
-        <p>
-          <b>📄 Insurance:</b>{" "}
-          {inst.insurance?.policyId || "N/A"}
-        </p>
+        <p><span>Insurance ID</span>{hw.insuranceId || "N/A"}</p>
 
         <p>
-          <b>📅 Insurance Exp:</b>{" "}
-          {inst.insurance?.expiryDate
-            ? new Date(inst.insurance.expiryDate).toLocaleDateString()
+          <span>Insurance Expiry</span>
+          {hw.insuranceExpiry
+            ? new Date(hw.insuranceExpiry).toLocaleDateString()
             : "N/A"}
         </p>
       </div>
 
-      {/* COST TRACKING */}
-      <div className="instance-section cost-box">
-        <p><b>💰 Maintenance:</b> {inst.costTracking?.maintenanceCost}</p>
-        <p><b>🔄 Warranty Renewal:</b> {inst.costTracking?.warrantyRenewalCost}</p>
-        <p><b>🛡 Insurance Cost:</b> {inst.costTracking?.insuranceCost}</p>
+      {/* COST */}
+      <div className="instance-block cost">
+        <p><span>Maintenance</span>{hw.costs?.maintenanceCost || 0}</p>
+        <p><span>Warranty Renewal</span>{hw.costs?.warrantyRenewalCost || 0}</p>
+        <p><span>Insurance Cost</span>{hw.costs?.insuranceCost || 0}</p>
       </div>
 
       {/* ASSIGNMENT */}
       {isAssigned && assignment && (
         <div className="assignment-box">
-          <p><b>👤 Employee:</b> {assignment.employee?.name}</p>
-          <p><b>🏢 Department:</b> {assignment.department?.name}</p>
-          <p><b>📍 Assigned Location:</b> {assignment.location}</p>
-          <p><b>💻 Device:</b> {assignment.deviceInfo?.deviceName}</p>
+          <p><span>Employee</span>{assignment.employee?.name}</p>
+          <p><span>Department</span>{assignment.department?.name}</p>
+          <p><span>Assigned Location</span>{assignment.location}</p>
+          <p><span>Device</span>{assignment.deviceInfo?.deviceName || "N/A"}</p>
         </div>
       )}
+
       <button
-  className="btn-edit"
-  onClick={() => {
-    setEditInstance(inst);
+        className="btn-edit"
+        onClick={() => {
+          setEditInstance(inst);
 
-    setInstanceForm({
-      location: inst.location,
-      condition: inst.condition,
-      installationDate: inst.installationDate?.slice(0, 10),
+          setInstanceForm({
+            location: inst.location,
+            condition: inst.condition,
 
-      hardwareDetails: {
-        modelNo: inst.hardwareDetails?.modelNo || "",
-        specifications: inst.hardwareDetails?.specifications || "",
-      },
+            installationDate: hw.installationDate?.slice(0, 10),
 
-      warranty: {
-        expiryDate: inst.warranty?.expiryDate?.slice(0, 10),
-      },
+            hardware: {
+              modelNo: hw.modelNo || "",
+              specifications: hw.specifications || "",
+            },
 
-      insurance: {
-        policyId: inst.insurance?.policyId || "",
-        expiryDate: inst.insurance?.expiryDate?.slice(0, 10),
-      },
+            warrantyExpiry: hw.warrantyExpiry?.slice(0, 10),
 
-      costTracking: {
-        maintenanceCost: inst.costTracking?.maintenanceCost || 0,
-        warrantyRenewalCost:
-          inst.costTracking?.warrantyRenewalCost || 0,
-        insuranceCost: inst.costTracking?.insuranceCost || 0,
-      },
-    });
-  }}
->
-  Edit
-</button>
+            insurance: {
+              policyId: hw.insuranceId || "",
+              expiryDate: hw.insanceExpiry?.slice(0, 10),
+            },
+
+            costs: {
+              maintenanceCost: hw.costs?.maintenanceCost || 0,
+              warrantyRenewalCost: hw.costs?.warrantyRenewalCost || 0,
+              insuranceCost: hw.costs?.insuranceCost || 0,
+            },
+          });
+        }}
+      >
+        Edit Instance
+      </button>
     </div>
   );
 };
