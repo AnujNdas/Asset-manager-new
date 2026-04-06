@@ -68,7 +68,6 @@ hardware: {
 
   purchaseDate: Date,        // ✅ UI
   installationDate: Date,    // ✅ UI
-  vendor: String,            // ✅ UI
 
   warrantyExpiry: Date,
   insuranceExpiry: Date,
@@ -87,7 +86,6 @@ hardware: {
 software: {
   licenseKey: String,
   licenseNumber: String,
-  vendor: String,
 
   purchaseDate: Date,
   installationDate: Date,   // ✅ UI

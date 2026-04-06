@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const AssetInstance = require("./AssetInstance");
 const assignmentSchema = new mongoose.Schema(
   {
     organizationId: {
