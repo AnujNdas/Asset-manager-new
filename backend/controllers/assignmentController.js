@@ -4,6 +4,7 @@ const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetAssignment = require("../models/AssetAssignment");
 const Employee = require("../models/Employee");
 const AssetInstance = require("../models/AssetInstance");
+const Department = require("../models/Department");
 /* ============================
    GET IN-STOCK CATEGORY SUMMARY
 ============================ */
