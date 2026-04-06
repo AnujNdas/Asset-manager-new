@@ -815,7 +815,7 @@ const getAllAssets = async (req, res, next) => {
 
     const { type, search, instanceStatus } = req.query;
 
-    // 🔍 Build base filter
+    /* ================= FILTER ================= */
     let filter = { organizationId };
 
     if (type) {
@@ -825,143 +825,134 @@ const getAllAssets = async (req, res, next) => {
     if (search) {
       filter.$or = [
         { assetName: { $regex: search, $options: "i" } },
-        { assetCode: { $regex: search, $options: "i" } },
-        { modelNo: { $regex: search, $options: "i" } }
+        { assetCode: { $regex: search, $options: "i" } }
       ];
     }
 
-    // 1️⃣ Fetch assets
-const assets = await Asset.find(filter)
-  .populate("assetCategory", "name")
-  .populate("assetStatus", "name")
-  .populate("associateUnit", "name")
-  .populate("locationName", "name")
-  .lean();
+    /* ================= ASSETS ================= */
+    const assets = await Asset.find(filter)
+      .populate("assetCategory", "name")
+      .populate("assetStatus", "name")
+      .populate("associateUnit", "name")
+      .populate("locationName", "name")
+      .lean();
 
-    if (!assets.length) {
-      return res.status(200).json([]);
-    }
+    if (!assets.length) return res.status(200).json([]);
 
     const assetIds = assets.map(a => a._id);
 
-    // 2️⃣ Fetch assignments
+    /* ================= ASSIGNMENTS ================= */
     const assignments = await AssetAssignment.find({
       organizationId,
-      assetType: "hardware",
-      status: "active",
       assetId: { $in: assetIds },
+      status: "active",
     })
       .populate("departmentId", "name")
       .populate("employeeId", "name employeeCode")
       .lean();
 
-    // 3️⃣ Build assignment map
+    /* ================= ASSIGNMENT MAP ================= */
     const assignmentMap = {};
 
-    for (const assign of assignments) {
-      const assetId = String(assign.assetId);
+    assignments.forEach(assign => {
+      const key = String(assign.assetId);
 
-      if (!assignmentMap[assetId]) {
-        assignmentMap[assetId] = {
+      if (!assignmentMap[key]) {
+        assignmentMap[key] = {
           inUse: 0,
-          departmentMap: {},
-          assignmentRecords: [],
+          assignedDepartments: {},
+          assignmentRecords: []
         };
       }
 
-      assignmentMap[assetId].inUse += assign.quantity;
+      // ✅ each assignment = 1 instance
+      assignmentMap[key].inUse += 1;
 
-      const deptId = String(assign.departmentId._id);
+      const deptId = String(assign.departmentId?._id || "unknown");
 
-      if (!assignmentMap[assetId].departmentMap[deptId]) {
-        assignmentMap[assetId].departmentMap[deptId] = {
+      if (!assignmentMap[key].assignedDepartments[deptId]) {
+        assignmentMap[key].assignedDepartments[deptId] = {
           department: assign.departmentId,
-          quantity: 0,
+          quantity: 0
         };
       }
 
-      assignmentMap[assetId].departmentMap[deptId].quantity += assign.quantity;
+      assignmentMap[key].assignedDepartments[deptId].quantity += 1;
 
-assignmentMap[assetId].assignmentRecords.push({
-  _id: assign._id,
-
-  assetInstanceId: assign.assetInstanceId,   // ✅ CRITICAL FIX
-
-  employee: assign.employeeId,
-  department: assign.departmentId,
-
-  location: assign.location,                 // ✅ FIX NAME
-  deviceInfo: assign.deviceInfo,             // ✅ ADD THIS
-
-  quantity: assign.quantity,
-  assignedAt: assign.assignedAt,
-});
-    }
-
-    // Convert departmentMap → array
-    Object.keys(assignmentMap).forEach(assetId => {
-      assignmentMap[assetId].assignedDepartments = Object.values(
-        assignmentMap[assetId].departmentMap
-      );
-      delete assignmentMap[assetId].departmentMap;
+      assignmentMap[key].assignmentRecords.push({
+        _id: assign._id,
+        assetInstanceId: assign.assetInstanceId,
+        employee: assign.employeeId,
+        department: assign.departmentId,
+        location: assign.location,
+        deviceInfo: assign.deviceInfo,
+        assignedAt: assign.assignedAt
+      });
     });
 
-    // 4️⃣ 🔥 Fetch INSTANCE COUNTS
-// 4️⃣ 🔥 FETCH ALL INSTANCES (NOT COUNT)
-const instances = await AssetInstance.find({
-  organizationId,
-  assetId: { $in: assetIds }
-})
-  .populate("location", "name")
-  .lean();
+    /* ================= INSTANCES ================= */
+    const instances = await AssetInstance.find({
+      organizationId,
+      assetId: { $in: assetIds }
+    }).lean();
 
-// 5️⃣ GROUP INSTANCES BY ASSET
-const instanceMap = {};
+    const instanceMap = {};
 
-instances.forEach(inst => {
-  const key = String(inst.assetId);
+    instances.forEach(inst => {
+      const key = String(inst.assetId);
 
-  if (!instanceMap[key]) {
-    instanceMap[key] = [];
-  }
+      if (!instanceMap[key]) {
+        instanceMap[key] = [];
+      }
 
-  instanceMap[key].push(inst);
-});
-    // 5️⃣ Merge everything
-let enrichedAssets = assets.map(asset => {
-  const assignmentData = assignmentMap[String(asset._id)];
-  const assetInstances = instanceMap[String(asset._id)] || [];
+      instanceMap[key].push(inst);
+    });
 
-  return {
-    ...asset,
-    inUse: assignmentData?.inUse || 0,
-    assignedDepartments: assignmentData?.assignedDepartments || [],
-    assignmentRecords: assignmentData?.assignmentRecords || [],
+    /* ================= MERGE ================= */
+    let enrichedAssets = assets.map(asset => {
+      const key = String(asset._id);
 
-    // 🔥 NEW
-    instances: assetInstances,
-    instanceCount: assetInstances.length
-  };
-});
+      const assignmentData = assignmentMap[key] || {};
+      const assetInstances = instanceMap[key] || [];
 
-    // 6️⃣ 🔥 INSTANCE FILTERING
+      return {
+        ...asset,
+
+        // usage
+        inUse: assignmentData.inUse || 0,
+
+        // department grouping
+        assignedDepartments: Object.values(
+          assignmentData.assignedDepartments || {}
+        ),
+
+        // records
+        assignmentRecords: assignmentData.assignmentRecords || [],
+
+        // instances
+        instances: assetInstances,
+        instanceCount: assetInstances.length
+      };
+    });
+
+    /* ================= INSTANCE FILTER ================= */
     if (instanceStatus === "missing") {
-      enrichedAssets = enrichedAssets.filter(asset =>
-        asset.instanceCount < asset.assetQuantity
+      enrichedAssets = enrichedAssets.filter(
+        a => a.instanceCount < a.assetQuantity
       );
     }
 
     if (instanceStatus === "complete") {
-      enrichedAssets = enrichedAssets.filter(asset =>
-        asset.instanceCount >= asset.assetQuantity
+      enrichedAssets = enrichedAssets.filter(
+        a => a.instanceCount >= a.assetQuantity
       );
     }
 
     return res.status(200).json(enrichedAssets);
 
   } catch (error) {
-    console.error("🔥 GET ASSETS ERROR:", error);
-    return next(error);
+    console.error("GET ASSETS ERROR:", error);
+    next(error);
   }
 };
 const getAssetById = async (req, res, next) => {

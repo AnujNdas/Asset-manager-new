@@ -568,7 +568,7 @@ const getSoftwareAssets = async (req, res) => {
       });
     }
 
-    // ================= 1️⃣ FETCH SOFTWARE ASSETS =================
+    /* ================= 1️⃣ FETCH SOFTWARE ASSETS ================= */
     const assets = await SoftwareAsset.find({ organizationId })
       .sort({ createdAt: -1 })
       .lean();
@@ -579,10 +579,9 @@ const getSoftwareAssets = async (req, res) => {
 
     const assetIds = assets.map(a => a._id);
 
-    // ================= 2️⃣ FETCH ASSIGNMENTS =================
+    /* ================= 2️⃣ FETCH ASSIGNMENTS ================= */
     const assignments = await AssetAssignment.find({
       organizationId,
-      assetType: "software",
       status: "active",
       assetId: { $in: assetIds }
     })
@@ -592,7 +591,7 @@ const getSoftwareAssets = async (req, res) => {
 
     const assignmentMap = {};
 
-    for (const assign of assignments) {
+    assignments.forEach(assign => {
       const id = String(assign.assetId);
 
       if (!assignmentMap[id]) {
@@ -603,10 +602,9 @@ const getSoftwareAssets = async (req, res) => {
         };
       }
 
-      // 🔹 total usage
-      assignmentMap[id].inUse += assign.quantity;
+      // ✅ FIXED: instance-based counting
+      assignmentMap[id].inUse += 1;
 
-      // 🔹 department aggregation
       if (assign.departmentId) {
         const deptId = String(assign.departmentId._id);
 
@@ -617,28 +615,20 @@ const getSoftwareAssets = async (req, res) => {
           };
         }
 
-        assignmentMap[id].departmentMap[deptId].quantity += assign.quantity;
+        // ✅ FIXED
+        assignmentMap[id].departmentMap[deptId].quantity += 1;
       }
 
-      // 🔹 assignment records (for modal)
-assignmentMap[id].assignmentRecords.push({
-  _id: assign._id,
-
-  // 🔥 ADD THIS
-  assetInstanceId: assign.assetInstanceId,
-
-  employee: assign.employeeId,
-  department: assign.departmentId,
-
-  // 🔥 FIX NAME (you used wrong field)
-  location: assign.location,
-
-  deviceInfo: assign.deviceInfo,
-
-  quantity: assign.quantity,
-  assignedAt: assign.assignedAt
-});
-    }
+      assignmentMap[id].assignmentRecords.push({
+        _id: assign._id,
+        assetInstanceId: assign.assetInstanceId,
+        employee: assign.employeeId,
+        department: assign.departmentId,
+        location: assign.location,
+        deviceInfo: assign.deviceInfo,
+        assignedAt: assign.assignedAt
+      });
+    });
 
     // convert departmentMap → array
     Object.keys(assignmentMap).forEach(id => {
@@ -648,23 +638,29 @@ assignmentMap[id].assignmentRecords.push({
       delete assignmentMap[id].departmentMap;
     });
 
-    // ================= 3️⃣ FETCH INSTANCES =================
+    /* ================= 3️⃣ FETCH INSTANCES ================= */
     const instances = await AssetInstance.find({
       organizationId,
-      assetType: "software",
       assetId: { $in: assetIds }
     }).lean();
 
     const instanceMap = {};
 
-    for (const inst of instances) {
+    instances.forEach(inst => {
       const id = String(inst.assetId);
 
       if (!instanceMap[id]) instanceMap[id] = [];
-      instanceMap[id].push(inst);
-    }
 
-    // ================= 4️⃣ MERGE EVERYTHING =================
+      // ✅ OPTIONAL NORMALIZATION (VERY USEFUL)
+      instanceMap[id].push({
+        ...inst,
+        licenseKey: inst.software?.licenseKey || "",
+        licenseNumber: inst.software?.licenseNumber || "",
+        purchaseCost: inst.software?.purchaseCost?.amount || 0
+      });
+    });
+
+    /* ================= 4️⃣ MERGE ================= */
     const enrichedAssets = assets.map(asset => {
       const id = String(asset._id);
 
@@ -674,17 +670,24 @@ assignmentMap[id].assignmentRecords.push({
       return {
         ...asset,
 
-        // 🔹 assignment data
+        // usage
         inUse: assignmentData.inUse || 0,
-        assignedDepartments: assignmentData.assignedDepartments || [],
-        assignmentRecords: assignmentData.assignmentRecords || [],
 
-        // 🔥 INSTANCE DATA
-        instances: assetInstances
+        // department summary
+        assignedDepartments:
+          assignmentData.assignedDepartments || [],
+
+        // detailed records
+        assignmentRecords:
+          assignmentData.assignmentRecords || [],
+
+        // instances
+        instances: assetInstances,
+        instanceCount: assetInstances.length
       };
     });
 
-    // ================= 5️⃣ RESPONSE =================
+    /* ================= 5️⃣ RESPONSE ================= */
     res.json({
       success: true,
       data: enrichedAssets
