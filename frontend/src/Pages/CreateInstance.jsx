@@ -352,7 +352,7 @@ const payload = instances.map((inst) => {
             <option value="damaged">Damaged</option>
           </select>
 
-          <input
+          {/* <input
             placeholder={fieldLabels.modelNo}
             value={bulkValues.modelNo}
             onChange={(e) =>
@@ -361,7 +361,7 @@ const payload = instances.map((inst) => {
                 modelNo: e.target.value
               })
             }
-          />
+          /> */}
           <input
   type="number"
   placeholder="Purchase Cost"
