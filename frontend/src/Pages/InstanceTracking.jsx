@@ -27,6 +27,7 @@ const InstanceTracking = () => {
     setLoading(true);
 
     const res = await getTrackedInstances({ type });
+    console.log("Fetched instances:", res.data);
 
     const data = res.data || [];
 
