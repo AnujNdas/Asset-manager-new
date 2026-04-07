@@ -189,7 +189,7 @@ const assignAssetInstance = async (req, res) => {
         departmentId,
         employeeId,
         location,
-        assignedDeviceInstanceId // 🔥 NEW
+        deviceInfo // ✅ NEW (from frontend)
       } = item;
 
       /* =============================
@@ -223,7 +223,7 @@ const assignAssetInstance = async (req, res) => {
       }
 
       /* =============================
-         UPDATE INSTANCE (SNAPSHOT ONLY)
+         UPDATE INSTANCE (SNAPSHOT)
       ============================== */
 
       instance.status = "in_use";
@@ -251,7 +251,8 @@ const assignAssetInstance = async (req, res) => {
           assignedTo: {
             employeeName: employee.name
           },
-          condition: instance.condition
+          condition: instance.condition,
+          deviceInfo // ✅ snapshot device info too
         },
         date: new Date(),
         notes: `Assigned to ${employee.name}`
@@ -274,8 +275,11 @@ const assignAssetInstance = async (req, res) => {
         departmentId,
         location,
 
-        // 🔥 NEW LINK (software → device)
-        assignedDeviceInstanceId: assignedDeviceInstanceId || null,
+        deviceInfo: {
+          deviceName: deviceInfo?.deviceName || "",
+          serialNumber: deviceInfo?.serialNumber || "",
+          model: deviceInfo?.model || ""
+        },
 
         status: "active",
         assignedBy: req.user.id

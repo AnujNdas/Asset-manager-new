@@ -66,10 +66,6 @@ const assignmentSchema = new mongoose.Schema(
       default: "active",
       index: true,
     },
-    assignedDeviceInstanceId: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "AssetInstance"
-},
     /* 🔹 Lifecycle */
 
     assignedBy: {
@@ -82,7 +78,11 @@ const assignmentSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-
+    deviceInfo: {
+      deviceName: { type: String, required: true },
+      serialNumber: { type: String, required: true },
+      model: { type: String }
+    },
     returnedAt: Date,
 
     returnedBy: {
