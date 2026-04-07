@@ -665,6 +665,7 @@ onChange={(e) =>
                 {isHardware && (
                   <>
                     <div className="grid-3">
+                      <div>
                       <label>Warranty Date</label>
                       <input  
                         type="date"
@@ -677,6 +678,7 @@ onChange={(e) =>
                           )
                         }
                       />
+                      </div>
                     <input
   type="number"
   placeholder="Purchase Cost"
@@ -699,6 +701,9 @@ onChange={(e) =>
     <option key={cur} value={cur}>{cur}</option>
   ))}
 </select>
+<div>
+                      <label>Installation Date</label>
+
                       <input
                         type="date"
                         value={inst.installationDate}
@@ -710,6 +715,7 @@ onChange={(e) =>
                           )
                         }
                       />
+                      </div>
 
                       <input
                         placeholder="Insurance Policy"
@@ -722,6 +728,7 @@ onChange={(e) =>
                           )
                         }
                       />
+                      <div>
                       <label>Insurance Expiry</label>
                       <input
                         type="date"
@@ -734,6 +741,7 @@ onChange={(e) =>
                           )
                         }
                       />
+                      </div>
                     </div>
 
                     <div className="grid-3">
@@ -792,6 +800,7 @@ onChange={(e) =>
     </div>
 
     <div className="grid-3">
+      <div>
       <label>Purchase Date</label>
       <input
         type="date"
@@ -800,32 +809,40 @@ onChange={(e) =>
           handleChange(index, "purchaseDate", e.target.value)
         }
       />
-
+      </div>
+        <div>
+                      <label>Installation Date</label>
       <input
         type="date"
         value={inst.installationDate}
         onChange={(e) =>
           handleChange(index, "installationDate", e.target.value)
         }
-      />
-
+        />
+        </div>
+        <div>
+                      <label>Renewal Date</label>
       <input
         type="date"
         value={inst.renewalDate}
         onChange={(e) =>
           handleChange(index, "renewalDate", e.target.value)
         }
-      />
+        />
+        </div>
     </div>
 
     <div className="grid-3">
+      <div>
+      <label>Last Used Date</label>
       <input
         type="date"
         value={inst.lastUsedDate}
         onChange={(e) =>
           handleChange(index, "lastUsedDate", e.target.value)
         }
-      />
+        />
+        </div>
 
       <input
         type="number"
