@@ -306,9 +306,9 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
       {/* ASSIGNMENT */}
       {isAssigned && (
         <div className="assignment-box">
-          <p><span>Employee</span>{assignment.employee?.name}</p>
-          <p><span>Department</span>{assignment.department?.name}</p>
-          <p><span>Location</span>{assignment.location}</p>
+          <p><span>Employee :- </span>{assignment.employee?.name}</p>
+          <p><span>Department :-</span>{assignment.department?.name}</p>
+          <p><span>Location :-</span>{assignment.location}</p>
         </div>
       )}
 

@@ -213,10 +213,10 @@ const [instanceForm, setInstanceForm] = useState({});
       {/* ASSIGNMENT */}
       {isAssigned && assignment && (
         <div className="assignment-box">
-          <p><span>Employee</span>{assignment.employee?.name}</p>
-          <p><span>Department</span>{assignment.department?.name}</p>
-          <p><span>Assigned Location</span>{assignment.location}</p>
-          <p><span>Device</span>{assignment.deviceInfo?.deviceName || "N/A"}</p>
+          <p><span>Employee :-</span>{assignment.employee?.name}</p>
+          <p><span>Department :-</span>{assignment.department?.name}</p>
+          <p><span>Assigned Location :-</span>{assignment.location}</p>
+          <p><span>Device :-</span>{assignment.deviceInfo?.deviceName || "N/A"}</p>
         </div>
       )}
 

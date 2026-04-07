@@ -38,13 +38,14 @@ const AssignmentPage = () => {
 
   const [assetTypeFilter, setAssetTypeFilter] = useState("all");
 
-  const [assignmentData, setAssignmentData] = useState({
-    department: "",
-    employee: "",
-    location: "",
-    deviceName: "",
-    deviceTag: ""
-  });
+const [assignmentData, setAssignmentData] = useState({
+  department: "",
+  employee: "",
+  location: "",
+  deviceName: "",
+  serialNumber: "",   // ✅ NEW
+  model: ""           // ✅ NEW
+});
 
   const [loading, setLoading] = useState(false);
 
@@ -126,20 +127,23 @@ const selectAsset = async (asset) => {
     if (!selectedInstances.length) {
       return Swal.fire("Select at least one instance");
     }
+    if (!assignmentData.deviceName || !assignmentData.serialNumber) {
+  return Swal.fire("Device info required");
+}
+const payload = selectedInstances.map(inst => ({
+  assetId: selectedAsset._id,
+  assetType: selectedAsset.assetType,
+  assetInstanceId: inst._id,
+  departmentId: assignmentData.department,
+  employeeId: assignmentData.employee,
+  location: assignmentData.location,
 
-    const payload = selectedInstances.map(inst => ({
-      assetId: selectedAsset._id,
-      assetType: selectedAsset.assetType,
-      assetInstanceId: inst._id,
-      departmentId: assignmentData.department,
-      employeeId: assignmentData.employee,
-      location: assignmentData.location,
-      deviceInfo: {
-        deviceName: assignmentData.deviceName,
-        assetTag: assignmentData.deviceTag
-      },
-      quantity: 1
-    }));
+  deviceInfo: {
+    deviceName: assignmentData.deviceName,
+    serialNumber: assignmentData.serialNumber,
+    model: assignmentData.model
+  }
+}));
 
     try {
       setLoading(true);
@@ -163,13 +167,14 @@ const selectAsset = async (asset) => {
     setSelectedCategory(null);
     setSelectedAsset(null);
     setSelectedInstances([]);
-    setAssignmentData({
-      department: "",
-      employee: "",
-      location: "",
-      deviceName: "",
-      deviceTag: ""
-    });
+setAssignmentData({
+  department: "",
+  employee: "",
+  location: "",
+  deviceName: "",
+  serialNumber: "",
+  model: ""
+});
   };
   if (loading) return <Loader />;
   /* ================= UI ================= */
@@ -270,11 +275,29 @@ const selectAsset = async (asset) => {
           <input placeholder="Assign Location"
             onChange={(e) => setAssignmentData(p => ({ ...p, location: e.target.value }))} />
 
-          <input placeholder="Device Name"
-            onChange={(e) => setAssignmentData(p => ({ ...p, deviceName: e.target.value }))} />
+<input
+  placeholder="Device Name"
+  value={assignmentData.deviceName}
+  onChange={(e) =>
+    setAssignmentData(p => ({ ...p, deviceName: e.target.value }))
+  }
+/>
 
-          <input placeholder="Asset Tag"
-            onChange={(e) => setAssignmentData(p => ({ ...p, deviceTag: e.target.value }))} />
+<input
+  placeholder="Serial Number"
+  value={assignmentData.serialNumber}
+  onChange={(e) =>
+    setAssignmentData(p => ({ ...p, serialNumber: e.target.value }))
+  }
+/>
+
+<input
+  placeholder="Model"
+  value={assignmentData.model}
+  onChange={(e) =>
+    setAssignmentData(p => ({ ...p, model: e.target.value }))
+  }
+/>
         </div>
       )}
 
