@@ -853,6 +853,7 @@ onChange={(e) =>
         }
       />
       <select
+      className="dropdown-select"
   value={inst.currency}
   onChange={(e) =>
     handleChange(index, "currency", e.target.value)

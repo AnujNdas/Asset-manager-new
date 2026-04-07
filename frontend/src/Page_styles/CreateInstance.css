@@ -252,7 +252,14 @@
   color: var(--text);
   box-shadow: var(--shadow-sm);
 }
-
+.dropdown-select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
 .bulk-grid button {
   grid-column: span 2;
   background: linear-gradient(135deg, var(--primary), var(--primary-light));

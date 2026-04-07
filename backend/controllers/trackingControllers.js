@@ -34,11 +34,11 @@ const getTrackedInstances = async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
+    const instanceIds = instances.map(i => i._id);
+
     /* =============================
        FETCH ACTIVE ASSIGNMENTS
     ============================== */
-
-    const instanceIds = instances.map(i => i._id);
 
     const assignments = await mongoose
       .model("AssetAssignment")
@@ -51,7 +51,7 @@ const getTrackedInstances = async (req, res) => {
       .lean();
 
     /* =============================
-       MAP ASSIGNMENTS → INSTANCES
+       MAP ASSIGNMENTS
     ============================== */
 
     const assignmentMap = {};
@@ -60,18 +60,32 @@ const getTrackedInstances = async (req, res) => {
       assignmentMap[a.assetInstanceId.toString()] = a;
     });
 
+    /* =============================
+       ENRICH INSTANCES
+    ============================== */
+
     const enrichedInstances = instances.map((inst) => {
       const assignment = assignmentMap[inst._id.toString()];
 
       return {
         ...inst,
 
-        assignedTo: assignment
+        assignment: assignment
           ? {
-              employeeName: assignment.employeeId?.name,
-              employeeCode: assignment.employeeId?.employeeCode,
-              departmentName: assignment.departmentId?.name,
-              assignedAt: assignment.assignedAt
+              employee: {
+                name: assignment.employeeId?.name,
+                code: assignment.employeeId?.employeeCode
+              },
+              department: assignment.departmentId?.name,
+              location: assignment.location,
+              assignedAt: assignment.assignedAt,
+
+              // ✅ NEW: DEVICE INFO FROM USER INPUT
+              deviceInfo: {
+                deviceName: assignment.deviceInfo?.deviceName || null,
+                assetTag: assignment.deviceInfo?.assetTag || null,
+                serialNumber: assignment.deviceInfo?.serialNumber || null
+              }
             }
           : null
       };
@@ -118,6 +132,19 @@ const getInstanceHistory = async (req, res) => {
     }
 
     /* =============================
+       FETCH ASSIGNMENTS (NEW)
+    ============================== */
+
+    const assignments = await mongoose.model("AssetAssignment")
+      .find({
+        assetInstanceId: id
+      })
+      .populate("employeeId", "name")
+      .populate("departmentId", "name")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    /* =============================
        HELPERS
     ============================== */
 
@@ -125,7 +152,7 @@ const getInstanceHistory = async (req, res) => {
       if (!date) return "-";
       const d = new Date(date);
       if (isNaN(d)) return "-";
-      return d.toLocaleDateString("en-GB"); // 11/05/2026
+      return d.toLocaleDateString("en-GB");
     };
 
     const getServiceDays = (startDate) => {
@@ -135,45 +162,78 @@ const getInstanceHistory = async (req, res) => {
     };
 
     /* =============================
-       BUILD SNAPSHOT-BASED HISTORY
+       MAP LIFECYCLE
     ============================== */
 
-const history = (instance.lifecycle || [])
-  .sort((a, b) => new Date(b.date) - new Date(a.date))
-  .map((item) => {
-    const snap = item.snapshot || {};
+    const lifecycleHistory = (instance.lifecycle || []).map((item) => {
+      const snap = item.snapshot || {};
 
-    return {
-      action: item.action,
+      return {
+        type: "lifecycle",
 
-      warrantyDate: formatDate(
-        snap.warrantyExpiry
-      ),
+        action: item.action,
+        recordDate: formatDate(item.date),
 
-      maintenanceDate:
-        item.action === "MAINTENANCE"
-          ? formatDate(item.date)
-          : "-",
+        location:
+          typeof snap.location === "object"
+            ? snap.location?.name
+            : snap.location || "-",
 
-      location:
-        typeof snap.location === "object"
-          ? snap.location?.name
-          : snap.location || "-",
+        condition: snap.condition || "-",
 
-      assignedPerson:
-        snap.assignedTo?.employee?.name ||   // future-safe
-        snap.assignedTo?.employeeName ||     // current DB
-        "-",
+        notes: item.notes || "-",
 
-      activeService: getServiceDays(instance.createdAt),
+        /* 🔧 HARDWARE SAFE */
+        warrantyDate: formatDate(snap.warrantyExpiry),
 
-      score: "N/A",
+        /* 🔧 SOFTWARE SAFE */
+        licenseNumber: snap.licenseNumber || "-",
 
-      componentEvolution: item.notes || "-",
+        /* ASSIGNED PERSON (fallback safe) */
+        assignedPerson:
+          snap.assignedTo?.employee?.name ||
+          snap.assignedTo?.employeeName ||
+          "-",
 
-      recordDate: formatDate(item.date)
-    };
-  });
+        activeService: getServiceDays(instance.createdAt)
+      };
+    });
+
+    /* =============================
+       MAP ASSIGNMENTS (NEW SOURCE)
+    ============================== */
+
+    const assignmentHistory = assignments.map((a) => ({
+      type: "assignment",
+
+      action: a.status.toUpperCase(), // active / returned / transferred
+
+      recordDate: formatDate(a.assignedAt),
+
+      location: a.location || "-",
+
+      assignedPerson: a.employeeId?.name || "-",
+      department: a.departmentId?.name || "-",
+
+      /* 🔥 DEVICE INFO (NEW CORE FEATURE) */
+      deviceName: a.deviceInfo?.deviceName || "-",
+      deviceTag: a.deviceInfo?.assetTag || "-",
+
+      status: a.status,
+
+      returnedAt: formatDate(a.returnedAt)
+    }));
+
+    /* =============================
+       MERGE + SORT
+    ============================== */
+
+    const history = [...lifecycleHistory, ...assignmentHistory]
+      .sort((a, b) => {
+        const d1 = new Date(a.recordDate.split("/").reverse().join("-"));
+        const d2 = new Date(b.recordDate.split("/").reverse().join("-"));
+        return d2 - d1;
+      });
 
     res.status(200).json({
       success: true,
@@ -201,8 +261,13 @@ const upgradeInstance = async (req, res) => {
       maintenanceCost,
       warrantyRenewalCost,
       insuranceCost,
+      renewalCost, // ✅ software
+      currency = "INR", // ✅ NEW
+
       newWarrantyExpiry,
       newInsuranceExpiry,
+      newRenewalDate, // ✅ software
+
       condition
     } = req.body;
 
@@ -217,61 +282,104 @@ const upgradeInstance = async (req, res) => {
       throw new Error("Instance not found");
     }
 
+    const isHardware = !!instance.hardware;
+    const isSoftware = !!instance.software;
+
     /* =============================
-       🟡 BEFORE SNAPSHOT (IMPORTANT)
+       🟡 BEFORE SNAPSHOT
     ============================== */
+
     const beforeSnapshot = {
-      warrantyExpiry: instance.warranty?.expiryDate || null,
-      insuranceExpiry: instance.insurance?.expiryDate || null,
       condition: instance.condition,
-      costTracking: {
-        maintenanceCost: instance.costTracking?.maintenanceCost || 0,
-        warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
-        insuranceCost: instance.costTracking?.insuranceCost || 0
+
+      warrantyExpiry:
+        instance.hardware?.warrantyExpiry || null,
+
+      insuranceExpiry:
+        instance.hardware?.insuranceExpiry || null,
+
+      renewalDate:
+        instance.software?.renewalDate || null,
+
+      costs: {
+        maintenanceCost:
+          instance.hardware?.costs?.maintenanceCost || 0,
+
+        warrantyRenewalCost:
+          instance.hardware?.costs?.warrantyRenewalCost || 0,
+
+        insuranceCost:
+          instance.hardware?.costs?.insuranceCost || 0,
+
+        renewalCost:
+          instance.software?.costs?.renewalCost || 0
       }
     };
 
     /* =============================
-       🟢 COST UPDATES (INCREMENTAL)
+       🟢 COST UPDATES (WITH CURRENCY)
     ============================== */
-    if (maintenanceCost !== undefined) {
-      instance.costTracking.maintenanceCost = Number(maintenanceCost);
+
+    if (isHardware) {
+      instance.hardware.costs = instance.hardware.costs || {};
+
+      if (maintenanceCost !== undefined) {
+        instance.hardware.costs.maintenanceCost = {
+          amount: Number(maintenanceCost),
+          currency
+        };
+      }
+
+      if (warrantyRenewalCost !== undefined) {
+        instance.hardware.costs.warrantyRenewalCost = {
+          amount: Number(warrantyRenewalCost),
+          currency
+        };
+      }
+
+      if (insuranceCost !== undefined) {
+        instance.hardware.costs.insuranceCost = {
+          amount: Number(insuranceCost),
+          currency
+        };
+      }
     }
 
-    if (warrantyRenewalCost !== undefined) {
-      instance.costTracking.warrantyRenewalCost = Number(warrantyRenewalCost);
-    }
+    if (isSoftware) {
+      instance.software.costs = instance.software.costs || {};
 
-    if (insuranceCost !== undefined) {
-      instance.costTracking.insuranceCost = Number(insuranceCost);
+      if (renewalCost !== undefined) {
+        instance.software.costs.renewalCost = {
+          amount: Number(renewalCost),
+          currency
+        };
+      }
     }
 
     /* =============================
-       🟢 WARRANTY UPDATE
+       🟢 DATE UPDATES
     ============================== */
-    if (newWarrantyExpiry) {
-      const expiry = new Date(newWarrantyExpiry);
-      const today = new Date().setHours(0, 0, 0, 0);
 
-      instance.warranty = {
-        expiryDate: expiry,
-        status: expiry < today ? "expired" : "active"
-      };
+    if (isHardware) {
+      if (newWarrantyExpiry) {
+        instance.hardware.warrantyExpiry = newWarrantyExpiry;
+      }
+
+      if (newInsuranceExpiry) {
+        instance.hardware.insuranceExpiry = newInsuranceExpiry;
+      }
+    }
+
+    if (isSoftware) {
+      if (newRenewalDate) {
+        instance.software.renewalDate = newRenewalDate;
+      }
     }
 
     /* =============================
-       🟢 INSURANCE UPDATE
+       🟢 CONDITION
     ============================== */
-    if (newInsuranceExpiry) {
-      instance.insurance = {
-        ...instance.insurance,
-        expiryDate: newInsuranceExpiry
-      };
-    }
 
-    /* =============================
-       🟢 CONDITION UPDATE
-    ============================== */
     if (condition) {
       instance.condition = condition;
     }
@@ -279,20 +387,38 @@ const upgradeInstance = async (req, res) => {
     /* =============================
        🔵 AFTER SNAPSHOT
     ============================== */
+
     const afterSnapshot = {
-      warrantyExpiry: instance.warranty?.expiryDate || null,
-      insuranceExpiry: instance.insurance?.expiryDate || null,
       condition: instance.condition,
-      costTracking: {
-        maintenanceCost: instance.costTracking?.maintenanceCost || 0,
-        warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
-        insuranceCost: instance.costTracking?.insuranceCost || 0
+
+      warrantyExpiry:
+        instance.hardware?.warrantyExpiry || null,
+
+      insuranceExpiry:
+        instance.hardware?.insuranceExpiry || null,
+
+      renewalDate:
+        instance.software?.renewalDate || null,
+
+      costs: {
+        maintenanceCost:
+          instance.hardware?.costs?.maintenanceCost || 0,
+
+        warrantyRenewalCost:
+          instance.hardware?.costs?.warrantyRenewalCost || 0,
+
+        insuranceCost:
+          instance.hardware?.costs?.insuranceCost || 0,
+
+        renewalCost:
+          instance.software?.costs?.renewalCost || 0
       }
     };
 
     /* =============================
-       🟣 LIFECYCLE ENTRY (ONLY HERE)
+       🟣 LIFECYCLE ENTRY
     ============================== */
+
     instance.lifecycle.push({
       action: "UPGRADE",
 
@@ -301,10 +427,14 @@ const upgradeInstance = async (req, res) => {
 
       snapshot: {
         location: instance.location,
+
         assignedTo: {
           employeeName: instance.assignedTo?.employeeName,
           departmentName: instance.assignedTo?.departmentName
-        }
+        },
+
+        /* 🔥 ADD COST SNAPSHOT */
+        costs: afterSnapshot.costs
       },
 
       date: new Date(),
@@ -314,6 +444,7 @@ const upgradeInstance = async (req, res) => {
     /* =============================
        💾 SAVE
     ============================== */
+
     await instance.save({ session });
 
     await session.commitTransaction();
