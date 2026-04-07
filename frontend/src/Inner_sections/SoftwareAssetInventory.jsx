@@ -239,65 +239,87 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 });
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
-  const renderSoftwareInstance = (inst, assignment) => {
-  const isAssigned = inst.status === "in_use";
+ const renderSoftwareInstance = (inst, assignment) => {
+  // ✅ SAME LOGIC AS HARDWARE (source of truth)
+  const isAssigned = !!assignment;
+
+  const sw = inst.software || {};
 
   return (
-   <div className={`instance-card ${isAssigned ? "assigned" : ""}`}>
-  
-  {/* HEADER */}
-  <div className="instance-header">
-    <div>
-      <p className="instance-code">{inst.instanceCode}</p>
-      <p className="instance-id">
-        {inst.software?.licenseNumber || "N/A"}
-      </p>
+    <div className={`instance-card ${isAssigned ? "assigned-card" : ""}`}>
+
+      {/* HEADER */}
+      <div className="instance-header">
+        <div>
+          <p className="instance-title">{inst.instanceCode}</p>
+          <p className="instance-sub">
+            {sw.licenseNumber || "No License"}
+          </p>
+        </div>
+
+        <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
+          {isAssigned ? "Assigned" : "Available"}
+        </span>
+      </div>
+
+      {/* BASIC INFO */}
+      <div className="instance-block">
+        <p><span>Location</span>{inst.location || "N/A"}</p>
+        <p><span>Condition</span>{inst.condition}</p>
+        <p>
+          <span>Installed</span>
+          {sw.installationDate
+            ? new Date(sw.installationDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+      </div>
+
+      {/* LICENSE DETAILS */}
+      <div className="instance-block">
+        <p><span>License Key</span>{sw.licenseKey || "N/A"}</p>
+        <p><span>Vendor</span>{sw.vendor || "N/A"}</p>
+      </div>
+
+      {/* COST */}
+      <div className="instance-block cost">
+        <p><span>Purchase Cost</span>{sw.purchaseCost?.amount || 0}</p>
+        <p><span>Renewal Cost</span>{sw.costs?.renewalCost || 0}</p>
+      </div>
+
+      {/* VALIDITY */}
+      <div className="instance-block">
+        <p>
+          <span>Expiry</span>
+          {sw.renewalDate
+            ? new Date(sw.renewalDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+
+        <p>
+          <span>Last Used</span>
+          {sw.lastUsedDate
+            ? new Date(sw.lastUsedDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+      </div>
+
+      {/* ASSIGNMENT */}
+      {isAssigned && (
+        <div className="assignment-box">
+          <p><span>Employee</span>{assignment.employee?.name}</p>
+          <p><span>Department</span>{assignment.department?.name}</p>
+          <p><span>Location</span>{assignment.location}</p>
+        </div>
+      )}
+
+      {/* ACTION */}
+      <button
+        className="btn-edit"
+        onClick={() => handleInstanceEditOpen(inst)}
+      >
+        Edit Instance
+      </button>
     </div>
-
-    <span className="status-badge">
-      {isAssigned ? "Assigned" : "Available"}
-    </span>
-  </div>
-
-  {/* BASIC */}
-  <div className="instance-section">
-    <p><span className="label">Location</span> {inst.location}</p>
-    <p><span className="label">Condition</span> {inst.condition}</p>
-    <p>
-      <span className="label">Installed</span>{" "}
-      {formatDate(inst.installationDate)}
-    </p>
-  </div>
-
-  {/* LICENSE */}
-  <div className="instance-section">
-    <p><span className="label">License Key</span> {inst.software?.licenseKey}</p>
-    <p><span className="label">Vendor</span> {inst.software?.vendor}</p>
-  </div>
-
-  {/* COST */}
-  <div className="instance-section cost-box">
-    <p><span className="label">Maintenance</span> {inst.costTracking?.maintenanceCost}</p>
-    <p><span className="label">Renewal</span> {inst.costTracking?.warrantyRenewalCost}</p>
-  </div>
-
-  {/* ASSIGNMENT */}
-  {isAssigned && assignment ? (
-    <div className="assignment-box">
-      <p><span className="label">Employee</span> {assignment.employee?.name}</p>
-      <p><span className="label">Department</span> {assignment.department?.name}</p>
-      <p><span className="label">Location</span> {assignment.location}</p>
-    </div>
-  ) : (
-    <div className="available-box">Available</div>
-  )}
-
-  <div className="instance-actions">
-    <button onClick={() => handleInstanceEditOpen(inst)}>
-      Edit
-    </button>
-  </div>
-</div>
   );
 };
   return (
