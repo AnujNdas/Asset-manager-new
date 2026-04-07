@@ -8,7 +8,18 @@ import {
   createAssetInstances,
   getAssetById
 } from "../Services/ApiServices";
-
+const currencyOptions = [
+  "INR",
+  "USD",
+  "EUR",
+  "GBP",
+  "JPY",
+  "AUD",
+  "CAD",
+  "SGD",
+  "AED",
+  "CNY"
+];
 const CreateInstances = () => {
   const { assetId } = useParams();
 
@@ -351,7 +362,7 @@ const payload = instances.map((inst) => {
             <option value="used">Used</option>
             <option value="damaged">Damaged</option>
           </select>
-
+            
           {/* <input
             placeholder={fieldLabels.modelNo}
             value={bulkValues.modelNo}
@@ -373,6 +384,19 @@ const payload = instances.map((inst) => {
     })
   }
 />
+<select
+  value={bulkValues.currency}
+  onChange={(e) =>
+    setBulkValues({
+      ...bulkValues,
+      currency: e.target.value
+    })
+  }
+>
+  {currencyOptions.map(cur => (
+    <option key={cur} value={cur}>{cur}</option>
+  ))}
+</select>
           <input
             placeholder={fieldLabels.specifications}
             value={bulkValues.specifications}
@@ -671,8 +695,9 @@ onChange={(e) =>
     handleChange(index, "currency", e.target.value)
   }
 >
-  <option value="INR">INR</option>
-  <option value="USD">USD</option>
+  {currencyOptions.map(cur => (
+    <option key={cur} value={cur}>{cur}</option>
+  ))}
 </select>
                       <input
                         type="date"
@@ -810,6 +835,16 @@ onChange={(e) =>
           handleChange(index, "purchaseCost", e.target.value)
         }
       />
+      <select
+  value={inst.currency}
+  onChange={(e) =>
+    handleChange(index, "currency", e.target.value)
+  }
+>
+  {currencyOptions.map(cur => (
+    <option key={cur} value={cur}>{cur}</option>
+  ))}
+</select>
 
       <input
         type="number"
