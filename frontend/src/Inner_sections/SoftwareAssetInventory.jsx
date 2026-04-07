@@ -383,7 +383,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
   </div>
 
   {/* 🔷 FINANCIAL */}
-  <div className="financial">
+  {/* <div className="financial">
     <div>
       <p className="label">Total Cost</p>
       <p>
@@ -399,28 +399,38 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
         {convertFromBase(asset.assetCost?.unitAmount || 0)}
       </p>
     </div>
-  </div>
+  </div> */}
 
   {/* 🔷 DATES */}
   <div className="dates">
+    <div>
+      <p className="label"> Purchase Date</p>
     <p>
       📅 {formatDate(asset.purchaseDetails?.purchaseDate)}
     </p>
-
+    </div>
+    <div>
+    <p className="label"> Maintanence Date</p>
     <p>
       ⏰ {formatDate(asset.renewal?.expiryDate)}
     </p>
+    </div>
   </div>
 
   {/* 🔷 META */}
   <div className="meta-grid">
+    <div>
+      <p className="label">Usage</p>
     <p>
       💻 {asset.inUse}/{asset.assetQuantity} used
     </p>
-
+    </div>
+    <div>
+      <p className="label">Vendor</p>
     <p>
       🏢 {asset.purchaseDetails?.vendor?.name || "N/A"}
     </p>
+    </div>
   </div>
 
   {/* 🔷 PLAN */}
@@ -468,19 +478,19 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 
   {/* 🔷 ACTIONS */}
   <div className="card-actions">
-    <button onClick={() => setSelectedAsset(asset)}>
+    <button onClick={() => setSelectedAsset(asset)} className="btn-save">
       View
     </button>
 
-    <button onClick={() => handleEditOpen(asset)}>
+    <button onClick={() => handleEditOpen(asset)} className="btn-edit">
       Edit
     </button>
 
-    <button onClick={() => handleDelete(asset._id)}>
+    <button onClick={() => handleDelete(asset._id)} className="btn-delete">
       Delete
     </button>
 
-    <button onClick={() => handleAssign(asset)}>
+    <button onClick={() => handleAssign(asset)} className="btn-assign">
       Assign
     </button>
   </div>

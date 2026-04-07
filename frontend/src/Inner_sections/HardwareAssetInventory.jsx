@@ -307,7 +307,7 @@ const [instanceForm, setInstanceForm] = useState({});
   </div>
 
   {/* 🔷 FINANCIAL */}
-  <div className="financial">
+  {/* <div className="financial">
     <div>
       <p className="label">Total Cost</p>
       <p>
@@ -323,18 +323,30 @@ const [instanceForm, setInstanceForm] = useState({});
         {convertFromBase(asset.assetCost?.unitAmount || 0)}
       </p>
     </div>
-  </div>
+  </div> */}
 
   {/* 🔷 DATES */}
   <div className="dates">
+    <div>
+    <p className="label"> Purchase Date</p>
     <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
+    </div>
+    <div>
+    <p className="label"> Maintanence Date</p>
     <p>⏰ {formatDate(asset.DOE)}</p>
+    </div>
   </div>
 
   {/* 🔷 META */}
   <div className="meta-grid">
+    <div>
+      <p className="label">Instance Count</p>
     <p>📦 {asset.instanceCount} instances</p>
+    </div>
+    <div>
+      <p className="label">Vendor</p>
     <p>🏢 {asset.purchaseDetails?.vendor?.name || "N/A"}</p>
+    </div>
   </div>
 
   {/* 🔷 ALERTS */}
