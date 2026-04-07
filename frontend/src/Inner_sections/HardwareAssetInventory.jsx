@@ -147,7 +147,7 @@ const [instanceForm, setInstanceForm] = useState({});
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
  const renderInstance = (inst, assignment) => {
-  const isAssigned = inst.status === "assigned";
+  const isAssigned = !!assignment;
 
   const hw = inst.hardware || {};
 

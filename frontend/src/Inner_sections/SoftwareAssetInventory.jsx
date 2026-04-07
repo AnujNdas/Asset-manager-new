@@ -83,9 +83,9 @@ const handleInstanceEditOpen = (inst) => {
     warrantyExpiry: inst.warranty?.expiryDate?.slice(0, 10),
 
     // SOFTWARE ONLY
-    licenseKey: inst.softwareDetails?.licenseKey || "",
-    licenseNumber: inst.softwareDetails?.licenseNumber || "",
-    vendor: inst.softwareDetails?.vendor || "",
+    licenseKey: inst.software?.licenseKey || "",
+    licenseNumber: inst.software?.licenseNumber || "",
+    vendor: inst.software?.vendor || "",
   });
 };
 const getRemainingDays = (date) => {
@@ -119,7 +119,7 @@ const handleInstanceUpdate = async () => {
         insuranceCost: instanceForm.insuranceCost,
       },
 
-      softwareDetails: editInstance.softwareDetails
+      software: editInstance.software
         ? {
             licenseKey: instanceForm.licenseKey,
             licenseNumber: instanceForm.licenseNumber,
@@ -240,7 +240,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
   const renderSoftwareInstance = (inst, assignment) => {
-  const isAssigned = inst.status === "assigned";
+  const isAssigned = inst.status === "in_use";
 
   return (
    <div className={`instance-card ${isAssigned ? "assigned" : ""}`}>
@@ -250,7 +250,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
     <div>
       <p className="instance-code">{inst.instanceCode}</p>
       <p className="instance-id">
-        {inst.softwareDetails?.licenseNumber || "N/A"}
+        {inst.software?.licenseNumber || "N/A"}
       </p>
     </div>
 
@@ -271,8 +271,8 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 
   {/* LICENSE */}
   <div className="instance-section">
-    <p><span className="label">License Key</span> {inst.softwareDetails?.licenseKey}</p>
-    <p><span className="label">Vendor</span> {inst.softwareDetails?.vendor}</p>
+    <p><span className="label">License Key</span> {inst.software?.licenseKey}</p>
+    <p><span className="label">Vendor</span> {inst.software?.vendor}</p>
   </div>
 
   {/* COST */}
@@ -618,7 +618,7 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
         </div>
 
         {/* SOFTWARE ONLY */}
-        {editInstance.softwareDetails && (
+        {editInstance.software && (
           <>
             <h4>Software Details</h4>
             <div className="grid-2">
