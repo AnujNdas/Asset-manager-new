@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCategories } from "../Services/ApiServices";
-import "../Components_styles/CategoryViewer.css";
+import "../Component_styles/CategoryViewer.css";
 
 const CategoryViewer = () => {
   const [categories, setCategories] = useState([]);
