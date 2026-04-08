@@ -258,16 +258,27 @@ const upgradeInstance = async (req, res) => {
     const { id } = req.params;
 
     const {
+      currency = "INR",
+
+      // 🔹 Hardware Costs
       maintenanceCost,
       warrantyRenewalCost,
       insuranceCost,
-      renewalCost, // ✅ software
-      currency = "INR", // ✅ NEW
 
+      // 🔹 Software Cost
+      renewalCost,
+
+      // 🔹 Hardware Dates
       newWarrantyExpiry,
       newInsuranceExpiry,
-      newRenewalDate, // ✅ software
+      newMaintenanceDate,
+      newInstallationDate,
 
+      // 🔹 Software Dates
+      newRenewalDate,
+      newLastUsedDate,
+
+      // 🔹 Common
       condition
     } = req.body;
 
@@ -278,12 +289,18 @@ const upgradeInstance = async (req, res) => {
       })
       .session(session);
 
-    if (!instance) {
-      throw new Error("Instance not found");
-    }
+    if (!instance) throw new Error("Instance not found");
 
     const isHardware = !!instance.hardware;
     const isSoftware = !!instance.software;
+
+    /* =============================
+       🟡 HELPER
+    ============================== */
+    const formatCost = (value) => ({
+      amount: Number(value) || 0,
+      currency
+    });
 
     /* =============================
        🟡 BEFORE SNAPSHOT
@@ -292,75 +309,54 @@ const upgradeInstance = async (req, res) => {
     const beforeSnapshot = {
       condition: instance.condition,
 
-      warrantyExpiry:
-        instance.hardware?.warrantyExpiry || null,
+      dates: {
+        warrantyExpiry: instance.hardware?.warrantyExpiry || null,
+        insuranceExpiry: instance.hardware?.insuranceExpiry || null,
+        maintenanceDate: instance.hardware?.nextMaintenanceDate || null,
+        installationDate:
+          instance.hardware?.installationDate ||
+          instance.software?.installationDate ||
+          null,
 
-      insuranceExpiry:
-        instance.hardware?.insuranceExpiry || null,
-
-      renewalDate:
-        instance.software?.renewalDate || null,
+        renewalDate: instance.software?.renewalDate || null,
+        lastUsedDate: instance.software?.lastUsedDate || null
+      },
 
       costs: {
-        maintenanceCost:
-          instance.hardware?.costs?.maintenanceCost || 0,
-
+        maintenanceCost: instance.hardware?.costs?.maintenanceCost || null,
         warrantyRenewalCost:
-          instance.hardware?.costs?.warrantyRenewalCost || 0,
-
-        insuranceCost:
-          instance.hardware?.costs?.insuranceCost || 0,
-
-        renewalCost:
-          instance.software?.costs?.renewalCost || 0
+          instance.hardware?.costs?.warrantyRenewalCost || null,
+        insuranceCost: instance.hardware?.costs?.insuranceCost || null,
+        renewalCost: instance.software?.costs?.renewalCost || null
       }
     };
 
     /* =============================
-       🟢 COST UPDATES (WITH CURRENCY)
+       🟢 APPLY UPDATES
     ============================== */
 
+    // ✅ CONDITION
+    if (condition) instance.condition = condition;
+
+    /* ---------- HARDWARE ---------- */
     if (isHardware) {
+      instance.hardware = instance.hardware || {};
       instance.hardware.costs = instance.hardware.costs || {};
 
+      // 💰 Costs
       if (maintenanceCost !== undefined) {
-        instance.hardware.costs.maintenanceCost = {
-          amount: Number(maintenanceCost),
-          currency
-        };
+        instance.hardware.costs.maintenanceCost = formatCost(maintenanceCost);
       }
 
       if (warrantyRenewalCost !== undefined) {
-        instance.hardware.costs.warrantyRenewalCost = {
-          amount: Number(warrantyRenewalCost),
-          currency
-        };
+        instance.hardware.costs.warrantyRenewalCost = formatCost(warrantyRenewalCost);
       }
 
       if (insuranceCost !== undefined) {
-        instance.hardware.costs.insuranceCost = {
-          amount: Number(insuranceCost),
-          currency
-        };
+        instance.hardware.costs.insuranceCost = formatCost(insuranceCost);
       }
-    }
 
-    if (isSoftware) {
-      instance.software.costs = instance.software.costs || {};
-
-      if (renewalCost !== undefined) {
-        instance.software.costs.renewalCost = {
-          amount: Number(renewalCost),
-          currency
-        };
-      }
-    }
-
-    /* =============================
-       🟢 DATE UPDATES
-    ============================== */
-
-    if (isHardware) {
+      // 📅 Dates
       if (newWarrantyExpiry) {
         instance.hardware.warrantyExpiry = newWarrantyExpiry;
       }
@@ -368,20 +364,38 @@ const upgradeInstance = async (req, res) => {
       if (newInsuranceExpiry) {
         instance.hardware.insuranceExpiry = newInsuranceExpiry;
       }
-    }
 
-    if (isSoftware) {
-      if (newRenewalDate) {
-        instance.software.renewalDate = newRenewalDate;
+      if (newMaintenanceDate) {
+        instance.hardware.nextMaintenanceDate = newMaintenanceDate;
+      }
+
+      if (newInstallationDate) {
+        instance.hardware.installationDate = newInstallationDate;
       }
     }
 
-    /* =============================
-       🟢 CONDITION
-    ============================== */
+    /* ---------- SOFTWARE ---------- */
+    if (isSoftware) {
+      instance.software = instance.software || {};
+      instance.software.costs = instance.software.costs || {};
 
-    if (condition) {
-      instance.condition = condition;
+      // 💰 Cost
+      if (renewalCost !== undefined) {
+        instance.software.costs.renewalCost = formatCost(renewalCost);
+      }
+
+      // 📅 Dates
+      if (newRenewalDate) {
+        instance.software.renewalDate = newRenewalDate;
+      }
+
+      if (newLastUsedDate) {
+        instance.software.lastUsedDate = newLastUsedDate;
+      }
+
+      if (newInstallationDate) {
+        instance.software.installationDate = newInstallationDate;
+      }
     }
 
     /* =============================
@@ -391,27 +405,25 @@ const upgradeInstance = async (req, res) => {
     const afterSnapshot = {
       condition: instance.condition,
 
-      warrantyExpiry:
-        instance.hardware?.warrantyExpiry || null,
+      dates: {
+        warrantyExpiry: instance.hardware?.warrantyExpiry || null,
+        insuranceExpiry: instance.hardware?.insuranceExpiry || null,
+        maintenanceDate: instance.hardware?.nextMaintenanceDate || null,
+        installationDate:
+          instance.hardware?.installationDate ||
+          instance.software?.installationDate ||
+          null,
 
-      insuranceExpiry:
-        instance.hardware?.insuranceExpiry || null,
-
-      renewalDate:
-        instance.software?.renewalDate || null,
+        renewalDate: instance.software?.renewalDate || null,
+        lastUsedDate: instance.software?.lastUsedDate || null
+      },
 
       costs: {
-        maintenanceCost:
-          instance.hardware?.costs?.maintenanceCost || 0,
-
+        maintenanceCost: instance.hardware?.costs?.maintenanceCost || null,
         warrantyRenewalCost:
-          instance.hardware?.costs?.warrantyRenewalCost || 0,
-
-        insuranceCost:
-          instance.hardware?.costs?.insuranceCost || 0,
-
-        renewalCost:
-          instance.software?.costs?.renewalCost || 0
+          instance.hardware?.costs?.warrantyRenewalCost || null,
+        insuranceCost: instance.hardware?.costs?.insuranceCost || null,
+        renewalCost: instance.software?.costs?.renewalCost || null
       }
     };
 
@@ -433,8 +445,8 @@ const upgradeInstance = async (req, res) => {
           departmentName: instance.assignedTo?.departmentName
         },
 
-        /* 🔥 ADD COST SNAPSHOT */
-        costs: afterSnapshot.costs
+        costs: afterSnapshot.costs,
+        dates: afterSnapshot.dates
       },
 
       date: new Date(),
