@@ -55,10 +55,6 @@ const [instanceForm, setInstanceForm] = useState({});
 
     assetQuantity: asset.assetQuantity,
 
-    assetCost: {
-      totalAmount: asset.assetCost?.totalAmount || 0,
-      currency: asset.assetCost?.currency || "USD",
-    },
 
     purchaseDate: asset.purchaseDetails?.purchaseDate?.slice(0, 10),
 
@@ -72,15 +68,6 @@ const handleInstanceEditOpen = (inst) => {
   setInstanceForm({
     condition: inst.condition,
     location: inst.location,
-    installationDate: inst.installationDate?.slice(0, 10),
-
-    // COST
-    maintenanceCost: inst.costTracking?.maintenanceCost || 0,
-    warrantyRenewalCost: inst.costTracking?.warrantyRenewalCost || 0,
-    insuranceCost: inst.costTracking?.insuranceCost || 0,
-
-    // WARRANTY
-    warrantyExpiry: inst.warranty?.expiryDate?.slice(0, 10),
 
     // SOFTWARE ONLY
     licenseKey: inst.software?.licenseKey || "",
@@ -202,11 +189,6 @@ const handleInstanceUpdate = async () => {
       type: editForm.type,
 
       assetQuantity: editForm.assetQuantity,
-
-      assetCost: {
-        totalAmount: editForm.assetCost.totalAmount,
-        currency: editForm.assetCost.currency,
-      },
 
       purchaseDate: editForm.purchaseDate,
       expiryDate: editForm.expiryDate,
@@ -528,136 +510,115 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 )}
 <AnimatePresence>
   {editInstance && (
+  <motion.div
+    className="asset-view-overlay"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    onClick={() => setEditInstance(null)}
+  >
     <motion.div
-      className="asset-view-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={() => setEditInstance(null)}
+      className="asset-view-modal"
+      onClick={(e) => e.stopPropagation()}
     >
-      <motion.div
-        className="asset-view-modal"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3>Edit Instance</h3>
+      <h3>Edit Instance</h3>
 
-        <div className="grid-2">
-          {/* CONDITION */}
-          <div className="input-group">
-            <label>Condition</label>
-            <select
-              value={instanceForm.condition}
-              onChange={(e) =>
-                setInstanceForm({
-                  ...instanceForm,
-                  condition: e.target.value,
-                })
-              }
-            >
-              <option value="new">New</option>
-              <option value="good">Good</option>
-              <option value="damaged">Damaged</option>
-            </select>
-          </div>
+      <div className="grid-2">
 
-          {/* LOCATION */}
-          <div className="input-group">
-            <label>Location</label>
-            <input
-              value={instanceForm.location}
-              onChange={(e) =>
-                setInstanceForm({
-                  ...instanceForm,
-                  location: e.target.value,
-                })
-              }
-            />
-          </div>
-
-          {/* INSTALL DATE */}
-          <div className="input-group">
-            <label>Installation Date</label>
-            <input
-              type="date"
-              value={instanceForm.installationDate}
-              onChange={(e) =>
-                setInstanceForm({
-                  ...instanceForm,
-                  installationDate: e.target.value,
-                })
-              }
-            />
-          </div>
-
-          {/* WARRANTY */}
-          <div className="input-group">
-            <label>Warranty Expiry</label>
-            <input
-              type="date"
-              value={instanceForm.warrantyExpiry}
-              onChange={(e) =>
-                setInstanceForm({
-                  ...instanceForm,
-                  warrantyExpiry: e.target.value,
-                })
-              }
-            />
-          </div>
+        {/* CONDITION */}
+        <div className="input-group">
+          <label>Condition</label>
+          <select
+            value={instanceForm.condition}
+            onChange={(e) =>
+              setInstanceForm({
+                ...instanceForm,
+                condition: e.target.value,
+              })
+            }
+          >
+            <option value="new">New</option>
+            <option value="good">Good</option>
+            <option value="damaged">Damaged</option>
+          </select>
         </div>
 
-        {/* COST TRACKING */}
-        <h4>Cost Tracking</h4>
-        <div className="grid-2">
-          <div className="input-group">
+        {/* LOCATION */}
+        <div className="input-group">
+          <label>Location</label>
           <input
-            type="number"
-            placeholder="Maintenance"
-            value={instanceForm.maintenanceCost}
+            value={instanceForm.location}
             onChange={(e) =>
               setInstanceForm({
                 ...instanceForm,
-                maintenanceCost: Number(e.target.value),
+                location: e.target.value,
               })
             }
           />
-          </div>
-<div className="input-group">
-          <input
-            type="number"
-            placeholder="Warranty Renewal"
-            value={instanceForm.warrantyRenewalCost}
-            onChange={(e) =>
-              setInstanceForm({
-                ...instanceForm,
-                warrantyRenewalCost: Number(e.target.value),
-              })
-            }
-          />
-          </div>
-<div className="input-group">
-          <input
-            type="number"
-            placeholder="Insurance"
-            value={instanceForm.insuranceCost}
-            onChange={(e) =>
-              setInstanceForm({
-                ...instanceForm,
-                insuranceCost: Number(e.target.value),
-              })
-            }
-          />
-          </div>
         </div>
 
-        {/* SOFTWARE ONLY */}
-        {editInstance.software && (
-          <>
-            <h4>Software Details</h4>
-            <div className="grid-2">
-              <div className="input-group">
+        {/* INSTALLATION DATE (Allowed basic field) */}
+        <div className="input-group">
+          <label>Installation Date</label>
+          <input
+            type="date"
+            value={instanceForm.installationDate || ""}
+            onChange={(e) =>
+              setInstanceForm({
+                ...instanceForm,
+                installationDate: e.target.value,
+              })
+            }
+          />
+        </div>
+
+      </div>
+
+      {/* HARDWARE ONLY */}
+      {editInstance.assetType === "hardware" && (
+        <>
+          <h4>Hardware Details</h4>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Model No</label>
               <input
-                placeholder="License Key"
-                value={instanceForm.licenseKey}
+                value={instanceForm.modelNo || ""}
+                onChange={(e) =>
+                  setInstanceForm({
+                    ...instanceForm,
+                    modelNo: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Specifications</label>
+              <input
+                value={instanceForm.specifications || ""}
+                onChange={(e) =>
+                  setInstanceForm({
+                    ...instanceForm,
+                    specifications: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* SOFTWARE ONLY */}
+      {editInstance.assetType === "software" && (
+        <>
+          <h4>Software Details</h4>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>License Key</label>
+              <input
+                value={instanceForm.licenseKey || ""}
                 onChange={(e) =>
                   setInstanceForm({
                     ...instanceForm,
@@ -665,11 +626,12 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
                   })
                 }
               />
-</div>
-<div className="input-group">
+            </div>
+
+            <div className="input-group">
+              <label>License Number</label>
               <input
-                placeholder="License Number"
-                value={instanceForm.licenseNumber}
+                value={instanceForm.licenseNumber || ""}
                 onChange={(e) =>
                   setInstanceForm({
                     ...instanceForm,
@@ -677,25 +639,25 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
                   })
                 }
               />
-              </div>
             </div>
-          </>
-        )}
+          </div>
+        </>
+      )}
 
-        <div className="modal-actions">
-          <button className="btn-save" onClick={handleInstanceUpdate}>
-            Save
-          </button>
-          <button
-            className="btn-cancel"
-            onClick={() => setEditInstance(null)}
-          >
-            Cancel
-          </button>
-        </div>
-      </motion.div>
+      <div className="modal-actions">
+        <button className="btn-save" onClick={handleInstanceUpdate}>
+          Save
+        </button>
+        <button
+          className="btn-cancel"
+          onClick={() => setEditInstance(null)}
+        >
+          Cancel
+        </button>
+      </div>
     </motion.div>
-  )}
+  </motion.div>
+)}
 </AnimatePresence>
             </motion.div>
           </motion.div>
@@ -703,208 +665,182 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
       </AnimatePresence>
       <AnimatePresence>
   {editAsset && (
+  <motion.div
+    className="asset-view-overlay"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    onClick={() => setEditAsset(null)}
+  >
     <motion.div
-      className="asset-view-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={() => setEditAsset(null)}
+      className="asset-view-modal"
+      onClick={(e) => e.stopPropagation()}
     >
-      <motion.div
-        className="asset-view-modal"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3>Edit Asset</h3>
-<div className="grid-2">
-  {/* CATEGORY */}
-  <div className="input-group">
-    <label>Category</label>
-    <select
-      value={editForm.assetCategory}
-      onChange={(e) =>
-        setEditForm({
-          ...editForm,
-          assetCategory: e.target.value,
-        })
-      }
-    >
-      {categories.map(c => (
-        <option key={c._id} value={c._id}>
-          {c.name}
-        </option>
-      ))}
-    </select>
-  </div>
+      <h3>Edit Asset</h3>
 
-  {/* UNIT */}
-  <div className="input-group">
-    <label>Unit</label>
-    <select
-      value={editForm.associateUnit}
-      onChange={(e) =>
-        setEditForm({
-          ...editForm,
-          associateUnit: e.target.value,
-        })
-      }
-    >
-      {units.map(u => (
-        <option key={u._id} value={u._id}>
-          {u.name}
-        </option>
-      ))}
-    </select>
-  </div>
-</div>
-<div className="grid-2">
-  {/* LOCATION */}
-  <div className="input-group">
-    <label>Location</label>
-    <select
-      value={editForm.locationName}
-      onChange={(e) =>
-        setEditForm({
-          ...editForm,
-          locationName: e.target.value,
-        })
-      }
-    >
-      {locations.map(l => (
-        <option key={l._id} value={l._id}>
-          {l.name}
-        </option>
-      ))}
-    </select>
-  </div>
+      {/* CATEGORY + UNIT */}
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Category</label>
+          <select
+            value={editForm.assetCategory}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                assetCategory: e.target.value,
+              })
+            }
+          >
+            {categories.map(c => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-  {/* STATUS */}
-  <div className="input-group">
-    <label>Status</label>
-    <select
-      value={editForm.assetStatus}
-      onChange={(e) =>
-        setEditForm({
-          ...editForm,
-          assetStatus: e.target.value,
-        })
-      }
-    >
-      {statuses.map(s => (
-        <option key={s._id} value={s._id}>
-          {s.name}
-        </option>
-      ))}
-    </select>
-  </div>
-</div>
-        <div className="grid-2">
+        <div className="input-group">
+          <label>Unit</label>
+          <select
+            value={editForm.associateUnit}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                associateUnit: e.target.value,
+              })
+            }
+          >
+            {units.map(u => (
+              <option key={u._id} value={u._id}>
+                {u.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
+      {/* LOCATION + STATUS */}
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Location</label>
+          <select
+            value={editForm.locationName}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                locationName: e.target.value,
+              })
+            }
+          >
+            {locations.map(l => (
+              <option key={l._id} value={l._id}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="input-group">
+          <label>Status</label>
+          <select
+            value={editForm.assetStatus}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                assetStatus: e.target.value,
+              })
+            }
+          >
+            {statuses.map(s => (
+              <option key={s._id} value={s._id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* NAME + QUANTITY */}
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Name</label>
+          <input
+            value={editForm.assetName}
+            onChange={(e) =>
+              setEditForm({ ...editForm, assetName: e.target.value })
+            }
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Quantity</label>
+          <input
+            type="number"
+            value={editForm.assetQuantity}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                assetQuantity: Number(e.target.value),
+              })
+            }
+          />
+          <p className="warning-text">
+            ⚠ Changing quantity will add/remove instances automatically.
+          </p>
+        </div>
+      </div>
+
+      {/* PURCHASE DATE */}
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Purchase Date</label>
+          <input
+            type="date"
+            value={editForm.purchaseDate || ""}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                purchaseDate: e.target.value,
+              })
+            }
+          />
+        </div>
+
+        {/* SOFTWARE ONLY */}
+        {editForm.expiryDate !== undefined && (
           <div className="input-group">
-            <label>Name</label>
-            <input
-              value={editForm.assetName}
-              onChange={(e) =>
-                setEditForm({ ...editForm, assetName: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Quantity</label>
-            <input
-              type="number"
-              value={editForm.assetQuantity}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  assetQuantity: Number(e.target.value),
-                })
-              }
-            />
-            <p className="warning-text">
-              ⚠ Changing quantity will add/remove instances automatically.
-            </p>
-          </div>
-
-          <div className="input-group">
-            <label>Total Cost</label>
-            <input
-              type="number"
-              value={editForm.assetCost.totalAmount}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  assetCost: {
-                    ...editForm.assetCost,
-                    totalAmount: Number(e.target.value),
-                  },
-                })
-              }
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Currency</label>
-            <select
-              value={editForm.assetCost.currency}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  assetCost: {
-                    ...editForm.assetCost,
-                    currency: e.target.value,
-                  },
-                })
-              }
-            >
-              <option value="USD">USD</option>
-              <option value="INR">INR</option>
-            </select>
-          </div>
-
-          <div className="input-group">
-            <label>Purchase Date</label>
+            <label>Expiry Date</label>
             <input
               type="date"
-              value={editForm.purchaseDate}
+              value={editForm.expiryDate || ""}
               onChange={(e) =>
                 setEditForm({
                   ...editForm,
-                  purchaseDate: e.target.value,
+                  expiryDate: e.target.value,
                 })
               }
             />
           </div>
+        )}
+      </div>
 
-          {/* SOFTWARE ONLY */}
-          {editForm.expiryDate !== undefined && (
-            <div className="input-group">
-              <label>Expiry Date</label>
-              <input
-                type="date"
-                value={editForm.expiryDate}
-                onChange={(e) =>
-                  setEditForm({
-                    ...editForm,
-                    expiryDate: e.target.value,
-                  })
-                }
-              />
-            </div>
-          )}
-        </div>
+      {/* INFO */}
+      <p className="info-text">
+        💡 Cost and financial data are managed at instance level.
+      </p>
 
-        <div className="modal-actions">
-          <button onClick={handleEditSave} className="btn-save">
-            Save
-          </button>
-          <button onClick={() => setEditAsset(null)} className="btn-cancel">
-            Cancel
-          </button>
-        </div>
-      </motion.div>
+      {/* ACTIONS */}
+      <div className="modal-actions">
+        <button onClick={handleEditSave} className="btn-save">
+          Save
+        </button>
+        <button onClick={() => setEditAsset(null)} className="btn-cancel">
+          Cancel
+        </button>
+      </div>
     </motion.div>
-  )}
+  </motion.div>
+)}
 </AnimatePresence>
     </div>
   );

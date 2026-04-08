@@ -665,9 +665,7 @@ const updateAsset = async (req, res, next) => {
     const assetQuantity =
       req.body.assetQuantity ?? existingAsset.assetQuantity;
 
-    const inUse = existingAsset.inUse;
-
-    if (inUse > assetQuantity) {
+    if (existingAsset.inUse > assetQuantity) {
       return res.status(400).json({
         message: "In-use quantity cannot exceed total quantity",
       });
@@ -682,42 +680,15 @@ const updateAsset = async (req, res, next) => {
       }
     }
 
-    /* ================= COST HANDLING ================= */
-    let updatedCost = existingAsset.assetCost;
-
-    if (req.body.assetCost) {
-      const { totalAmount, currency } = req.body.assetCost;
-
-      const parsedAmount = Number(totalAmount);
-
-      if (!parsedAmount || parsedAmount <= 0) {
-        return res.status(400).json({ message: "Invalid amount" });
-      }
-
-      const finalCurrency = currency
-        ? currency.toUpperCase()
-        : existingAsset.assetCost.currency;
-
-      const unitAmount = parsedAmount / assetQuantity;
-      const baseTotalAmount = convertToBase(parsedAmount, finalCurrency);
-
-      updatedCost = {
-        totalAmount: parsedAmount,
-        unitAmount,
-        baseTotalAmount,
-        currency: finalCurrency,
-      };
-    }
-
     /* ================= PURCHASE DETAILS ================= */
     const purchaseDetails = {
       purchaseDate: req.body.purchaseDetails?.purchaseDate
         ? parseDate(req.body.purchaseDetails.purchaseDate)
-        : existingAsset.purchaseDetails.purchaseDate,
+        : existingAsset.purchaseDetails?.purchaseDate,
 
       vendor: req.body.purchaseDetails?.vendor
         ? buildVendor(req.body.purchaseDetails.vendor)
-        : existingAsset.purchaseDetails.vendor,
+        : existingAsset.purchaseDetails?.vendor,
     };
 
     /* ================= LIFETIME ================= */
@@ -730,17 +701,21 @@ const updateAsset = async (req, res, next) => {
       DOE
     );
 
-    /* ================= UPDATE ================= */
+    /* ================= CLEAN UPDATE PAYLOAD ================= */
+    const updatePayload = {
+      assetName: req.body.assetName ?? existingAsset.assetName,
+      assetCode: req.body.assetCode ?? existingAsset.assetCode,
+      assetCategory: req.body.assetCategory ?? existingAsset.assetCategory,
+      assetQuantity,
+      type: req.body.type ?? existingAsset.type,
+      purchaseDetails,
+      DOE,
+      assetLifetime: updatedLifetime,
+    };
+
     const updatedAsset = await Asset.findByIdAndUpdate(
       id,
-      {
-        ...req.body,
-        assetCost: updatedCost,
-        assetQuantity,
-        purchaseDetails,
-        DOE,
-        assetLifetime: updatedLifetime,
-      },
+      updatePayload,
       { new: true }
     );
 
@@ -761,7 +736,6 @@ const updateAsset = async (req, res, next) => {
     return next(error);
   }
 };
-
 
   // =======================================================================
   // DELETE ASSET
@@ -1245,7 +1219,6 @@ const createAssetInstance = async (req, res, next) => {
 const updateAssetInstance = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user.id;
     const organizationId = req.user.organizationId;
 
     const instance = await AssetInstance.findOne({
@@ -1255,6 +1228,7 @@ const updateAssetInstance = async (req, res, next) => {
 
     if (!instance) {
       return res.status(404).json({
+        success: false,
         message: "Instance not found"
       });
     }
@@ -1269,6 +1243,7 @@ const updateAssetInstance = async (req, res, next) => {
 
       if (exists) {
         return res.status(400).json({
+          success: false,
           message: "Serial already exists"
         });
       }
@@ -1278,87 +1253,57 @@ const updateAssetInstance = async (req, res, next) => {
     if (req.body.location !== undefined) {
       if (!req.body.location.trim()) {
         return res.status(400).json({
+          success: false,
           message: "Location cannot be empty"
         });
       }
     }
 
-    /* ================= TRACK OLD VALUES ================= */
-    const oldSnapshot = {
+    /* ================= SNAPSHOT BEFORE ================= */
+    const beforeSnapshot = {
       location: instance.location,
       condition: instance.condition,
-      assignedTo: instance.softwareDetails?.assignedTo || null,
-      warrantyExpiry: instance.warranty?.expiryDate || null,
-      insuranceExpiry: instance.insurance?.expiryDate || null
+      serialNumber: instance.uniqueIdentifier
     };
 
-    /* ================= BASIC UPDATES ================= */
+    /* ================= ALLOWED UPDATES ONLY ================= */
+
     if (req.body.location !== undefined) {
-      instance.location = req.body.location;
+      instance.location = req.body.location.trim();
     }
 
     if (req.body.condition) {
       instance.condition = req.body.condition;
     }
 
-    if (req.body.installationDate !== undefined) {
-      instance.installationDate = req.body.installationDate;
-    }
-
-    /* ================= HARDWARE UPDATE ================= */
-    if (instance.assetType === "hardware" && req.body.hardwareDetails) {
-      instance.hardwareDetails = {
-        ...instance.hardwareDetails,
-        ...req.body.hardwareDetails
-      };
-    }
-
-    /* ================= SOFTWARE UPDATE ================= */
-    if (instance.assetType === "software" && req.body.softwareDetails) {
-      instance.softwareDetails = {
-        ...instance.softwareDetails,
-        ...req.body.softwareDetails
-      };
-    }
-
-    /* ================= WARRANTY ================= */
-    if (req.body.warranty) {
-      const expiry = req.body.warranty.expiryDate
-        ? new Date(req.body.warranty.expiryDate)
-        : null;
-
-      const today = new Date().setHours(0, 0, 0, 0);
-
-      instance.warranty = {
-        expiryDate: expiry,
-        status: expiry && expiry < today ? "expired" : "active"
-      };
-    }
-
-    /* ================= INSURANCE ================= */
-    if (req.body.insurance) {
-      instance.insurance = {
-        policyId: req.body.insurance.policyId || "",
-        expiryDate: req.body.insurance.expiryDate || null
-      };
-    }
-
-    /* ================= COST TRACKING ================= */
-    if (req.body.costTracking) {
-      instance.costTracking = {
-        maintenanceCost:
-          Number(req.body.costTracking.maintenanceCost) || 0,
-        warrantyRenewalCost:
-          Number(req.body.costTracking.warrantyRenewalCost) || 0,
-        insuranceCost:
-          Number(req.body.costTracking.insuranceCost) || 0
-      };
-    }
-
-    /* ================= SERIAL ================= */
     if (req.body.serialNumber !== undefined) {
       instance.uniqueIdentifier = req.body.serialNumber;
     }
+
+    /* ================= SNAPSHOT AFTER ================= */
+    const afterSnapshot = {
+      location: instance.location,
+      condition: instance.condition,
+      serialNumber: instance.uniqueIdentifier
+    };
+
+    /* ================= LIFECYCLE LOG ================= */
+    instance.lifecycle.push({
+      action: "UPDATE",
+
+      from: beforeSnapshot,
+      to: afterSnapshot,
+
+      snapshot: {
+        location: instance.location,
+        assignedTo: {
+          employeeName: instance.assignedTo?.employeeName || null
+        }
+      },
+
+      date: new Date(),
+      notes: "Basic instance details updated"
+    });
 
     await instance.save();
 

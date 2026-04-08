@@ -803,7 +803,7 @@ const updateSoftwareAsset = async (req, res) => {
       );
     }
 
-    /* ================= RENEWAL ================= */
+    /* ================= RENEWAL METADATA ================= */
     if (req.body.renewal?.expiryDate) {
       asset.renewal.expiryDate = parseDate(
         req.body.renewal.expiryDate
@@ -813,49 +813,6 @@ const updateSoftwareAsset = async (req, res) => {
     if (req.body.renewal?.renewalTerm) {
       asset.renewal.renewalTerm = req.body.renewal.renewalTerm;
     }
-
-    /* ================= COST ================= */
-    if (req.body.assetCost) {
-      const { totalAmount, currency } = req.body.assetCost;
-
-      const parsedAmount = Number(totalAmount);
-
-      if (parsedAmount < 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid cost",
-        });
-      }
-
-      const finalCurrency = currency.toUpperCase();
-
-      asset.assetCost = {
-        totalAmount: parsedAmount,
-        unitAmount: parsedAmount / newQty,
-        baseTotalAmount: convertToBase(parsedAmount, finalCurrency),
-        currency: finalCurrency,
-      };
-    }
-
-    /* ================= FINANCIAL TRACKING ================= */
-    let cycles = 1;
-
-    if (asset.type !== "one_time") {
-      const purchaseDate = asset.purchaseDetails?.purchaseDate;
-      const expiryDate = asset.renewal?.expiryDate;
-
-      if (!purchaseDate || !expiryDate) {
-        return res.status(400).json({
-          success: false,
-          message: "Purchase & expiry date required",
-        });
-      }
-
-      cycles = calculateCycles(asset.type, purchaseDate, expiryDate);
-    }
-
-    asset.financialTracking.totalCost =
-      asset.assetCost.totalAmount * cycles;
 
     /* ================= SAFE FIELD UPDATE ================= */
     const allowedFields = [
@@ -879,6 +836,7 @@ const updateSoftwareAsset = async (req, res) => {
       userId,
       action: "UPDATE",
       notes: "Software asset updated",
+      date: new Date()
     });
 
     await asset.save();
@@ -897,7 +855,6 @@ const updateSoftwareAsset = async (req, res) => {
     });
   }
 };
-
 const deleteSoftwareAsset = async (req, res) => {
   try {
     const { organizationId } = req.user;
