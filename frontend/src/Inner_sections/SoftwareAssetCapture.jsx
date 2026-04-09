@@ -1,5 +1,6 @@
   // src/Pages/SoftwareAssetCapture.jsx
   import React, { useState, useEffect } from "react";
+  import { useNavigate } from "react-router-dom";
   import Swal from "sweetalert2";
   import "../Page_styles/SoftwareCapture.css";
   import {
