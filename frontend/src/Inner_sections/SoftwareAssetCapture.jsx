@@ -50,6 +50,7 @@
   };
 
   export default function SoftwareAssetCapture() {
+    const  navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState(initialForm);
 
