@@ -99,37 +99,54 @@
     const nextStep = () => setStep((s) => s + 1);
     const prevStep = () => setStep((s) => s - 1);
 
-    const handleSubmit = async () => {
-        if (!validateRequired()) return; // 🔥 ADD THIS
-      setIsSubmitting(true);
-      try {
-const payload = {
-  assetName: formData.assetName,
-  assetCategory: formData.assetCategory,
-  associateUnit: formData.associateUnit,
-  locationName: formData.locationName,
-  assetStatus: formData.assetStatus,
-  type: formData.type,
+const handleSubmit = async () => {
+  if (!validateRequired()) return;
 
-  assetQuantity: Number(formData.assetQuantity),
+  setIsSubmitting(true);
 
-  DOE: formData.DOE || null,
+  try {
+    const payload = {
+      assetName: formData.assetName,
+      assetCategory: formData.assetCategory,
+      associateUnit: formData.associateUnit,
+      locationName: formData.locationName,
+      assetStatus: formData.assetStatus,
+      type: formData.type,
+      assetQuantity: Number(formData.assetQuantity),
 
-  purchaseDetails: {
-    purchaseDate: formData.DOP || null,
-    vendor: {
-      name: formData.purchaseFrom || null,
-    },
-  },
-};
-        await createSoftwareAsset(payload);
-        Swal.fire("Success", "Asset created!", "success");
-      } catch (err) {
-        Swal.fire("Error", err.message, "error");
-      } finally {
-        setIsSubmitting(false);
-      }
+      DOE: formData.DOE || null,
+
+      purchaseDetails: {
+        purchaseDate: formData.DOP || null,
+        vendor: {
+          name: formData.purchaseFrom || "",
+        },
+      },
     };
+
+    // ✅ CAPTURE RESPONSE
+    const createdAsset = await createSoftwareAsset(payload);
+
+    // ⚠️ depends on your API response shape
+    const assetId = createdAsset?._id || createdAsset?.data?._id;
+
+    await Swal.fire("Success", "Asset created!", "success");
+
+    // ✅ NAVIGATE SAME AS HARDWARE
+    navigate("/instance-assets", {
+      state: { selectedAssetId: assetId }
+    });
+
+  } catch (err) {
+    Swal.fire(
+      "Error",
+      err.userMessage || err.response?.data?.message || "Failed to create asset.",
+      "error"
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
     const progress = (step / 4) * 100;
     return (

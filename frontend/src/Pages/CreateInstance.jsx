@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import {
   getLocations,
   createAssetInstances,
-  getAssetById
+  getAssetById,
 } from "../Services/ApiServices";
 const currencyOptions = [
   "INR",
@@ -18,7 +18,7 @@ const currencyOptions = [
   "CAD",
   "SGD",
   "AED",
-  "CNY"
+  "CNY",
 ];
 const CreateInstances = () => {
   const { assetId } = useParams();
@@ -30,41 +30,41 @@ const CreateInstances = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-const [bulkValues, setBulkValues] = useState({
-  location: "",
-  condition: "",
+  const [bulkValues, setBulkValues] = useState({
+    location: "",
+    condition: "",
 
-  // shared
-  purchaseCost: "",
-  currency: "INR",
-  vendor: "",
+    // shared
+    purchaseCost: "",
+    currency: "INR",
+    vendor: "",
 
-  // hardware
-  modelNo: "",
-  specifications: "",
-  warrantyDate: "",
-  installationDate: "",
-  insurancePolicyId: "",
-  insuranceExpiry: "",
-  maintenanceCost: "",
-  warrantyRenewalCost: "",
-  insuranceCost: "",
+    // hardware
+    modelNo: "",
+    specifications: "",
+    warrantyDate: "",
+    installationDate: "",
+    insurancePolicyId: "",
+    insuranceExpiry: "",
+    maintenanceCost: "",
+    warrantyRenewalCost: "",
+    insuranceCost: "",
 
-  // ✅ software
-  licenseKey: "",
-  licenseNumber: "",
-  purchaseDate: "",
-  renewalDate: "",
-  lastUsedDate: "",
-  renewalCost: ""
-});
+    // ✅ software
+    licenseKey: "",
+    licenseNumber: "",
+    purchaseDate: "",
+    renewalDate: "",
+    lastUsedDate: "",
+    renewalCost: "",
+  });
 
   const isHardware = asset?.assetType === "hardware";
   const isSoftware = asset?.assetType === "software";
 
   const fieldLabels = {
     modelNo: isHardware ? "Model No" : "License Key",
-    specifications: isHardware ? "Specifications" : "Version & Details"
+    specifications: isHardware ? "Specifications" : "Version & Details",
   };
 
   const total = asset?.assetQuantity || 0;
@@ -76,52 +76,62 @@ const [bulkValues, setBulkValues] = useState({
     fetchData();
   }, []);
   const formatLocation = (loc) =>
-  loc.trim().replace(/\b\w/g, (c) => c.toUpperCase());
+    loc.trim().replace(/\b\w/g, (c) => c.toUpperCase());
   const fetchData = async () => {
     try {
       setLoading(true);
 
       const [assetData, locationData] = await Promise.all([
         getAssetById(assetId),
-        getLocations()
+        getLocations(),
       ]);
 
       setAsset(assetData);
+      const assetDOE = assetData?.DOE ? assetData.DOE.split("T")[0] : null;
+
+      const assetPurchaseDate = assetData?.purchaseDetails?.purchaseDate
+        ? assetData.purchaseDetails.purchaseDate.split("T")[0]
+        : null;
+      setAsset({
+        ...assetData,
+        assetDOE,
+        assetPurchaseDate,
+      });
       setLocations(locationData.data);
 
-     const rows = Array.from(
-  { length: assetData.pendingInstances || 0 },
-  () => ({
-    serialNumber: "",
-    condition: "new",
-    location: "",
+      const rows = Array.from(
+        { length: assetData.pendingInstances || 0 },
+        () => ({
+          serialNumber: "",
+          condition: "new",
+          location: "",
 
-    modelNo: "",
-    specifications: "",
+          modelNo: "",
+          specifications: "",
 
-    purchaseCost: "",
-    currency: "INR",
+          purchaseCost: "",
+          currency: "INR",
 
-    // hardware
-    warrantyDate: "",
-    installationDate: "",
-    insurancePolicyId: "",
-    insuranceExpiry: "",
-    maintenanceCost: "",
-    warrantyRenewalCost: "",
-    insuranceCost: "",
+          // hardware
+          warrantyDate: "",
+          installationDate: "",
+          insurancePolicyId: "",
+          insuranceExpiry: "",
+          maintenanceCost: "",
+          warrantyRenewalCost: "",
+          insuranceCost: "",
 
-    // ✅ software (FULL INIT)
-    licenseKey: "",
-    licenseNumber: "",
-    vendor: "",
-    purchaseDate: "",
-    installationDate: "",
-    renewalDate: "",
-    lastUsedDate: "",
-    renewalCost: ""
-  })
-);
+          // ✅ software (FULL INIT)
+          licenseKey: "",
+          licenseNumber: "",
+          vendor: "",
+          purchaseDate: "",
+          installationDate: "",
+          renewalDate: "",
+          lastUsedDate: "",
+          renewalCost: "",
+        }),
+      );
       setInstances(rows);
     } catch (err) {
       console.error(err);
@@ -137,84 +147,97 @@ const [bulkValues, setBulkValues] = useState({
   };
 
   const applyBulkValues = () => {
-  const updated = instances.map((inst) => ({
-    ...inst,
-    location: bulkValues.location || inst.location,
-    condition: bulkValues.condition || inst.condition,
-    modelNo: bulkValues.modelNo || inst.modelNo,
-    specifications: bulkValues.specifications || inst.specifications,
+    const updated = instances.map((inst) => ({
+      ...inst,
+      location: bulkValues.location || inst.location,
+      condition: bulkValues.condition || inst.condition,
+      modelNo: bulkValues.modelNo || inst.modelNo,
+      specifications: bulkValues.specifications || inst.specifications,
 
-    purchaseCost: bulkValues.purchaseCost || inst.purchaseCost,
-    currency: bulkValues.currency || inst.currency,
-    vendor: bulkValues.vendor || inst.vendor,
+      purchaseCost: bulkValues.purchaseCost || inst.purchaseCost,
+      currency: bulkValues.currency || inst.currency,
+      vendor: bulkValues.vendor || inst.vendor,
 
-    ...(isHardware && {
-      warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
-      installationDate:
-        bulkValues.installationDate || inst.installationDate,
-      insurancePolicyId:
-        bulkValues.insurancePolicyId || inst.insurancePolicyId,
-      insuranceExpiry:
-        bulkValues.insuranceExpiry || inst.insuranceExpiry,
-      maintenanceCost:
-        bulkValues.maintenanceCost || inst.maintenanceCost,
-      warrantyRenewalCost:
-        bulkValues.warrantyRenewalCost ||
-        inst.warrantyRenewalCost,
-      insuranceCost:
-        bulkValues.insuranceCost || inst.insuranceCost
-    }),
-...(isSoftware && {
-  licenseKey: bulkValues.licenseKey || inst.licenseKey,
-  licenseNumber: bulkValues.licenseNumber || inst.licenseNumber,
-  vendor: bulkValues.vendor || inst.vendor,
+      ...(isHardware && {
+        warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
+        installationDate: bulkValues.installationDate || inst.installationDate,
+        insurancePolicyId:
+          bulkValues.insurancePolicyId || inst.insurancePolicyId,
+        insuranceExpiry: bulkValues.insuranceExpiry || inst.insuranceExpiry,
+        maintenanceCost: bulkValues.maintenanceCost || inst.maintenanceCost,
+        warrantyRenewalCost:
+          bulkValues.warrantyRenewalCost || inst.warrantyRenewalCost,
+        insuranceCost: bulkValues.insuranceCost || inst.insuranceCost,
+      }),
+      ...(isSoftware && {
+        licenseKey: bulkValues.licenseKey || inst.licenseKey,
+        licenseNumber: bulkValues.licenseNumber || inst.licenseNumber,
+        vendor: bulkValues.vendor || inst.vendor,
 
-  purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
-  installationDate:
-    bulkValues.installationDate || inst.installationDate,
-  renewalDate: bulkValues.renewalDate || inst.renewalDate,
-  lastUsedDate: bulkValues.lastUsedDate || inst.lastUsedDate,
+        purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
+        installationDate: bulkValues.installationDate || inst.installationDate,
+        renewalDate: bulkValues.renewalDate || inst.renewalDate,
+        lastUsedDate: bulkValues.lastUsedDate || inst.lastUsedDate,
 
-  renewalCost: bulkValues.renewalCost || inst.renewalCost
-})
-  }));
+        renewalCost: bulkValues.renewalCost || inst.renewalCost,
+      }),
+    }));
 
-  setInstances(updated);
-};
+    setInstances(updated);
+  };
   const toggleExpand = (index) => {
     setExpandedRow(expandedRow === index ? null : index);
   };
 
- const validate = () => {
-  const newErrors = {};
-  const serials = new Set();
+  const validate = () => {
+    const newErrors = {};
+    const serials = new Set();
 
-  instances.forEach((inst, index) => {
-    const rowErrors = {};
+    instances.forEach((inst, index) => {
+      const rowErrors = {};
 
-    if (!inst.location || !inst.location.trim()) {
-      rowErrors.location = "Location is required";
-    }
-
-    if (!inst.purchaseCost) {
-      rowErrors.purchaseCost = "Cost required";
-    }
-
-    if (inst.serialNumber) {
-      if (serials.has(inst.serialNumber)) {
-        rowErrors.serialNumber = "Duplicate";
+      if (!inst.location || !inst.location.trim()) {
+        rowErrors.location = "Location is required";
       }
-      serials.add(inst.serialNumber);
-    }
 
-    if (Object.keys(rowErrors).length > 0) {
-      newErrors[index] = rowErrors;
-    }
-  });
+      if (!inst.purchaseCost) {
+        rowErrors.purchaseCost = "Cost required";
+      }
 
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+      if (inst.serialNumber) {
+        if (serials.has(inst.serialNumber)) {
+          rowErrors.serialNumber = "Duplicate";
+        }
+        serials.add(inst.serialNumber);
+      }
+      if (asset?.assetDOE) {
+        if (inst.renewalDate && inst.renewalDate > asset.assetDOE) {
+          rowErrors.renewalDate = "Exceeds asset expiry";
+        }
+
+        if (inst.warrantyDate && inst.warrantyDate > asset.assetDOE) {
+          rowErrors.warrantyDate = "Exceeds asset expiry";
+        }
+
+        if (inst.insuranceExpiry && inst.insuranceExpiry > asset.assetDOE) {
+          rowErrors.insuranceExpiry = "Exceeds asset expiry";
+        }
+
+        if (Object.keys(rowErrors).length > 0) {
+          newErrors[index] = rowErrors;
+        }
+      }
+
+      if (asset?.assetPurchaseDate) {
+        if (inst.purchaseDate && inst.purchaseDate < asset.assetPurchaseDate) {
+          rowErrors.purchaseDate = "Before asset purchase date";
+        }
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async () => {
     if (!validate()) return;
@@ -222,72 +245,71 @@ const [bulkValues, setBulkValues] = useState({
     try {
       setLoading(true);
 
-const payload = instances.map((inst) => {
-  if (isSoftware) {
-    return {
-      location: formatLocation(inst.location),
+      const payload = instances.map((inst) => {
+        if (isSoftware) {
+          return {
+            location: formatLocation(inst.location),
 
-      software: {
-  licenseKey: inst.licenseKey || "",
-  licenseNumber: inst.licenseNumber || "",
-  vendor: inst.vendor || "",
+            software: {
+              licenseKey: inst.licenseKey || "",
+              licenseNumber: inst.licenseNumber || "",
+              vendor: inst.vendor || "",
 
-  purchaseDate: inst.purchaseDate || null,
-  installationDate: inst.installationDate || null,
-  renewalDate: inst.renewalDate || null,
-  lastUsedDate: inst.lastUsedDate || null,
+              purchaseDate: inst.purchaseDate || null,
+              installationDate: inst.installationDate || null,
+              renewalDate: inst.renewalDate || null,
+              lastUsedDate: inst.lastUsedDate || null,
 
-  purchaseCost: inst.purchaseCost
-    ? {
-        amount: Number(inst.purchaseCost),
-        currency: inst.currency || "INR"
-      }
-    : null,
+              purchaseCost: inst.purchaseCost
+                ? {
+                    amount: Number(inst.purchaseCost),
+                    currency: inst.currency || "INR",
+                  }
+                : null,
 
-  costs: {
-    renewalCost: Number(inst.renewalCost) || 0
-  }
-}
-    };
-  }
+              costs: {
+                renewalCost: Number(inst.renewalCost) || 0,
+              },
+            },
+          };
+        }
 
-  return {
-    serialNumber: inst.serialNumber || undefined,
-    condition: inst.condition || "new",
-    location: formatLocation(inst.location),
+        return {
+          serialNumber: inst.serialNumber || undefined,
+          condition: inst.condition || "new",
+          location: formatLocation(inst.location),
 
-    hardware: {
-      modelNo: inst.modelNo || "",
-      specifications: inst.specifications || "",
+          hardware: {
+            modelNo: inst.modelNo || "",
+            specifications: inst.specifications || "",
 
-      purchaseDate: null,
-      installationDate: inst.installationDate || null,
-      vendor: inst.vendor || "",
+            purchaseDate: null,
+            installationDate: inst.installationDate || null,
+            vendor: inst.vendor || "",
 
-      warrantyExpiry: inst.warrantyDate || null,
-      insuranceExpiry: inst.insuranceExpiry || null,
-      insuranceId: inst.insurancePolicyId || "",
+            warrantyExpiry: inst.warrantyDate || null,
+            insuranceExpiry: inst.insuranceExpiry || null,
+            insuranceId: inst.insurancePolicyId || "",
 
-      purchaseCost: inst.purchaseCost
-        ? {
-            amount: Number(inst.purchaseCost),
-            currency: inst.currency || "INR"
-          }
-        : null,
+            purchaseCost: inst.purchaseCost
+              ? {
+                  amount: Number(inst.purchaseCost),
+                  currency: inst.currency || "INR",
+                }
+              : null,
 
-      costs: {
-        maintenanceCost: Number(inst.maintenanceCost) || 0,
-        warrantyRenewalCost:
-          Number(inst.warrantyRenewalCost) || 0,
-        insuranceCost: Number(inst.insuranceCost) || 0
-      }
-    }
-  };
-});
+            costs: {
+              maintenanceCost: Number(inst.maintenanceCost) || 0,
+              warrantyRenewalCost: Number(inst.warrantyRenewalCost) || 0,
+              insuranceCost: Number(inst.insuranceCost) || 0,
+            },
+          },
+        };
+      });
 
       await createAssetInstances({
         assetId,
-        instances: payload
+        instances: payload,
       });
 
       alert("Instances created successfully");
@@ -312,10 +334,7 @@ const payload = instances.map((inst) => {
           </span>
         </div>
         <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{ width: `${progress}%` }}
-          />
+          <div className="progress-fill" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
@@ -324,9 +343,7 @@ const payload = instances.map((inst) => {
         <div className="asset-info">
           <h3>
             {asset.assetName}{" "}
-            <span className="type-badge">
-              {asset.assetType.toUpperCase()}
-            </span>
+            <span className="type-badge">{asset.assetType.toUpperCase()}</span>
           </h3>
           <p>{asset.assetCode}</p>
         </div>
@@ -337,23 +354,23 @@ const payload = instances.map((inst) => {
         <h4>Bulk Apply</h4>
 
         <div className="bulk-grid">
-<input
-  type="text"
-  placeholder="Enter location"
-  value={bulkValues.location}
-  onChange={(e) =>
-    setBulkValues({
-      ...bulkValues,
-      location: e.target.value
-    })
-  }
-/> 
+          <input
+            type="text"
+            placeholder="Enter location"
+            value={bulkValues.location}
+            onChange={(e) =>
+              setBulkValues({
+                ...bulkValues,
+                location: e.target.value,
+              })
+            }
+          />
           <select
             value={bulkValues.condition}
             onChange={(e) =>
               setBulkValues({
                 ...bulkValues,
-                condition: e.target.value
+                condition: e.target.value,
               })
             }
           >
@@ -362,7 +379,7 @@ const payload = instances.map((inst) => {
             <option value="used">Used</option>
             <option value="damaged">Damaged</option>
           </select>
-            
+
           {/* <input
             placeholder={fieldLabels.modelNo}
             value={bulkValues.modelNo}
@@ -374,50 +391,53 @@ const payload = instances.map((inst) => {
             }
           /> */}
           <input
-  type="number"
-  placeholder="Purchase Cost"
-  value={bulkValues.purchaseCost}
-  onChange={(e) =>
-    setBulkValues({
-      ...bulkValues,
-      purchaseCost: e.target.value
-    })
-  }
-/>
-<select
-  value={bulkValues.currency}
-  onChange={(e) =>
-    setBulkValues({
-      ...bulkValues,
-      currency: e.target.value
-    })
-  }
->
-  {currencyOptions.map(cur => (
-    <option key={cur} value={cur}>{cur}</option>
-  ))}
-</select>
+            type="number"
+            placeholder="Purchase Cost"
+            value={bulkValues.purchaseCost}
+            onChange={(e) =>
+              setBulkValues({
+                ...bulkValues,
+                purchaseCost: e.target.value,
+              })
+            }
+          />
+          <select
+            value={bulkValues.currency}
+            onChange={(e) =>
+              setBulkValues({
+                ...bulkValues,
+                currency: e.target.value,
+              })
+            }
+          >
+            {currencyOptions.map((cur) => (
+              <option key={cur} value={cur}>
+                {cur}
+              </option>
+            ))}
+          </select>
           <input
             placeholder={fieldLabels.specifications}
             value={bulkValues.specifications}
             onChange={(e) =>
               setBulkValues({
                 ...bulkValues,
-                specifications: e.target.value
+                specifications: e.target.value,
               })
             }
           />
 
           {isHardware && (
             <>
-            <label>Warranty Date</label>
+              <label>Warranty Date</label>
               <input
                 type="date"
                 value={bulkValues.warrantyDate}
+                max={asset?.assetDOE || undefined}
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
-                    warrantyDate: e.target.value
+                    warrantyDate: e.target.value,
                   })
                 }
               />
@@ -425,10 +445,12 @@ const payload = instances.map((inst) => {
               <input
                 type="date"
                 value={bulkValues.installationDate}
+                min={asset?.assetDOP || undefined}
+                max={asset?.assetDOE || undefined}
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
-                    installationDate: e.target.value
+                    installationDate: e.target.value,
                   })
                 }
               />
@@ -439,7 +461,7 @@ const payload = instances.map((inst) => {
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
-                    insurancePolicyId: e.target.value
+                    insurancePolicyId: e.target.value,
                   })
                 }
               />
@@ -447,10 +469,11 @@ const payload = instances.map((inst) => {
               <input
                 type="date"
                 value={bulkValues.insuranceExpiry}
+                max={asset?.assetDOE || undefined}
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
-                    insuranceExpiry: e.target.value
+                    insuranceExpiry: e.target.value,
                   })
                 }
               />
@@ -462,7 +485,7 @@ const payload = instances.map((inst) => {
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
-                    maintenanceCost: e.target.value
+                    maintenanceCost: e.target.value,
                   })
                 }
               />
@@ -471,10 +494,11 @@ const payload = instances.map((inst) => {
                 type="number"
                 placeholder="Warranty Renewal"
                 value={bulkValues.warrantyRenewalCost}
+                max={asset?.assetDOE || undefined}
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
-                    warrantyRenewalCost: e.target.value
+                    warrantyRenewalCost: e.target.value,
                   })
                 }
               />
@@ -486,15 +510,15 @@ const payload = instances.map((inst) => {
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
-                    insuranceCost: e.target.value
+                    insuranceCost: e.target.value,
                   })
                 }
               />
             </>
           )}
           {isSoftware && (
-  <>
-    {/* <div className="form-group">
+            <>
+              {/* <div className="form-group">
       <label>License Key</label>
       <input
         value={bulkValues.licenseKey}
@@ -504,75 +528,96 @@ const payload = instances.map((inst) => {
       />
     </div> */}
 
-    <div className="form-group">
-      <label>License Number</label>
-      <input
-        value={bulkValues.licenseNumber}
-        onChange={(e) =>
-          setBulkValues({ ...bulkValues, licenseNumber: e.target.value })
-        }
-      />
-    </div>
+              <div className="form-group">
+                <label>License Number</label>
+                <input
+                  value={bulkValues.licenseNumber}
+                  onChange={(e) =>
+                    setBulkValues({
+                      ...bulkValues,
+                      licenseNumber: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-    <div className="form-group">
-      <label>Purchase Date</label>
-      <input
-        type="date"
-        value={bulkValues.purchaseDate}
-        onChange={(e) =>
-          setBulkValues({ ...bulkValues, purchaseDate: e.target.value })
-        }
-      />
-    </div>
+              <div className="form-group">
+                <label>Purchase Date</label>
+                <input
+                  type="date"
+                  value={bulkValues.purchaseDate}
+                  min={asset?.assetDOP || undefined}
+                  max={asset?.assetDOE || undefined}
+                  onChange={(e) =>
+                    setBulkValues({
+                      ...bulkValues,
+                      purchaseDate: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-    <div className="form-group">
-      <label>Installation Date</label>
-      <input
-        type="date"
-        value={bulkValues.installationDate}
-        onChange={(e) =>
-          setBulkValues({ ...bulkValues, installationDate: e.target.value })
-        }
-      />
-    </div>
+              <div className="form-group">
+                <label>Installation Date</label>
+                <input
+                  type="date"
+                  value={bulkValues.installationDate}
+                  max={asset?.assetDOE || undefined}
+                  onChange={(e) =>
+                    setBulkValues({
+                      ...bulkValues,
+                      installationDate: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-    <div className="form-group">
-      <label>Renewal Date</label>
-      <input
-        type="date"
-        value={bulkValues.renewalDate}
-        onChange={(e) =>
-          setBulkValues({ ...bulkValues, renewalDate: e.target.value })
-        }
-      />
-    </div>
+              <div className="form-group">
+                <label>Renewal Date</label>
+                <input
+                  type="date"
+                  value={bulkValues.renewalDate}
+                  max={asset?.assetDOE || undefined}
+                  onChange={(e) =>
+                    setBulkValues({
+                      ...bulkValues,
+                      renewalDate: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-    <div className="form-group">
-      <label>Last Used Date</label>
-      <input
-        type="date"
-        value={bulkValues.lastUsedDate}
-        onChange={(e) =>
-          setBulkValues({ ...bulkValues, lastUsedDate: e.target.value })
-        }
-      />
-    </div>
+              <div className="form-group">
+                <label>Last Used Date</label>
+                <input
+                  type="date"
+                  value={bulkValues.lastUsedDate}
+                  max={asset?.assetDOE || undefined}
+                  onChange={(e) =>
+                    setBulkValues({
+                      ...bulkValues,
+                      lastUsedDate: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-    <div className="form-group">
-      <label>Renewal Cost</label>
-      <input
-        type="number"
-        value={bulkValues.renewalCost}
-        onChange={(e) =>
-          setBulkValues({ ...bulkValues, renewalCost: e.target.value })
-        }
-      />
-    </div>
-  </>
-)}
-          <button onClick={applyBulkValues}>
-            Apply to All
-          </button>
+              <div className="form-group">
+                <label>Renewal Cost</label>
+                <input
+                  type="number"
+                  value={bulkValues.renewalCost}
+                  onChange={(e) =>
+                    setBulkValues({
+                      ...bulkValues,
+                      renewalCost: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            </>
+          )}
+          <button onClick={applyBulkValues}>Apply to All</button>
         </div>
       </div>
 
@@ -593,22 +638,14 @@ const payload = instances.map((inst) => {
                 value={inst.serialNumber}
                 placeholder="Serial"
                 onChange={(e) =>
-                  handleChange(
-                    index,
-                    "serialNumber",
-                    e.target.value
-                  )
+                  handleChange(index, "serialNumber", e.target.value)
                 }
               />
 
               <select
                 value={inst.condition}
                 onChange={(e) =>
-                  handleChange(
-                    index,
-                    "condition",
-                    e.target.value
-                  )
+                  handleChange(index, "condition", e.target.value)
                 }
               >
                 <option value="new">New</option>
@@ -616,31 +653,31 @@ const payload = instances.map((inst) => {
                 <option value="damaged">Damaged</option>
               </select>
 
-<div className="input-group">
-  <input
-    type="text"
-    placeholder="Enter location"
-    value={inst.location}
-    onChange={(e) =>
-      handleChange(index, "location", e.target.value)
-    }
-  />
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="Enter location"
+                  value={inst.location}
+                  onChange={(e) =>
+                    handleChange(index, "location", e.target.value)
+                  }
+                />
 
-  {errors[index]?.location && (
-    <span className="error">{errors[index].location}</span>
-  )}
-</div>
+                {errors[index]?.location && (
+                  <span className="error">{errors[index].location}</span>
+                )}
+              </div>
 
               <input
                 placeholder={fieldLabels.modelNo}
-value={isSoftware ? inst.licenseKey : inst.modelNo}
-onChange={(e) =>
-  handleChange(
-    index,
-    isSoftware ? "licenseKey" : "modelNo",
-    e.target.value
-  )
-}
+                value={isSoftware ? inst.licenseKey : inst.modelNo}
+                onChange={(e) =>
+                  handleChange(
+                    index,
+                    isSoftware ? "licenseKey" : "modelNo",
+                    e.target.value,
+                  )
+                }
               />
 
               <button onClick={() => toggleExpand(index)}>
@@ -650,15 +687,16 @@ onChange={(e) =>
 
             {expandedRow === index && (
               <div className="expand-panel">
+                {(asset?.assetPurchaseDate || asset?.assetDOE) && (
+    <p className="hint">
+      Dates must be between {asset?.assetPurchaseDate || "—"} and {asset?.assetDOE || "—"}
+    </p>
+  )}
                 <textarea
                   placeholder={fieldLabels.specifications}
                   value={inst.specifications}
                   onChange={(e) =>
-                    handleChange(
-                      index,
-                      "specifications",
-                      e.target.value
-                    )
+                    handleChange(index, "specifications", e.target.value)
                   }
                 />
 
@@ -666,55 +704,59 @@ onChange={(e) =>
                   <>
                     <div className="grid-3">
                       <div>
-                      <label>Warranty Date</label>
-                      <input  
-                        type="date"
-                        value={inst.warrantyDate}
-                        onChange={(e) =>
-                          handleChange(
-                            index,
-                            "warrantyDate",
-                            e.target.value
-                          )
-                        }
-                      />
+                        <label>Warranty Date</label>
+                        <input
+                          type="date"
+                          value={inst.warrantyDate}
+                          max={asset?.assetDOE || undefined}
+                          onChange={(e) =>
+                            handleChange(index, "warrantyDate", e.target.value)
+                          }
+                        />
+                        {errors[index]?.warrantyDate && (
+                          <span className="error">{errors[index].warrantyDate}</span>
+                        )}
                       </div>
-                    <input
-  type="number"
-  placeholder="Purchase Cost"
-  value={inst.purchaseCost}
-  onChange={(e) =>
-    handleChange(index, "purchaseCost", e.target.value)
-  }
-/>
-{errors[index]?.purchaseCost && (
-  <span className="error">{errors[index].purchaseCost}</span>
-)}
-
-<select
-  value={inst.currency}
-  onChange={(e) =>
-    handleChange(index, "currency", e.target.value)
-  }
->
-  {currencyOptions.map(cur => (
-    <option key={cur} value={cur}>{cur}</option>
-  ))}
-</select>
-<div>
-                      <label>Installation Date</label>
-
                       <input
-                        type="date"
-                        value={inst.installationDate}
+                        type="number"
+                        placeholder="Purchase Cost"
+                        value={inst.purchaseCost}
                         onChange={(e) =>
-                          handleChange(
-                            index,
-                            "installationDate",
-                            e.target.value
-                          )
+                          handleChange(index, "purchaseCost", e.target.value)
                         }
                       />
+                      {errors[index]?.purchaseCost && (
+                        <span className="error">
+                          {errors[index].purchaseCost}
+                        </span>
+                      )}
+
+                      <select
+                        value={inst.currency}
+                        onChange={(e) =>
+                          handleChange(index, "currency", e.target.value)
+                        }
+                      >
+                        {currencyOptions.map((cur) => (
+                          <option key={cur} value={cur}>
+                            {cur}
+                          </option>
+                        ))}
+                      </select>
+                      <div>
+                        <label>Installation Date</label>
+
+                        <input
+                          type="date"
+                          value={inst.installationDate}
+                          onChange={(e) =>
+                            handleChange(
+                              index,
+                              "installationDate",
+                              e.target.value,
+                            )
+                          }
+                        />
                       </div>
 
                       <input
@@ -724,23 +766,27 @@ onChange={(e) =>
                           handleChange(
                             index,
                             "insurancePolicyId",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                       />
                       <div>
-                      <label>Insurance Expiry</label>
-                      <input
-                        type="date"
-                        value={inst.insuranceExpiry}
-                        onChange={(e) =>
-                          handleChange(
-                            index,
-                            "insuranceExpiry",
-                            e.target.value
-                          )
-                        }
-                      />
+                        <label>Insurance Expiry</label>
+                        <input
+                          type="date"
+                          value={inst.insuranceExpiry}
+                          max={asset?.assetDOE || undefined}
+                          onChange={(e) =>
+                            handleChange(
+                              index,
+                              "insuranceExpiry",
+                              e.target.value,
+                            )
+                          }
+                        />
+                        {errors[index]?.insuranceExpiry && (
+                          <span className="error">{errors[index].insuranceExpiry}</span>
+                        )}
                       </div>
                     </div>
 
@@ -750,11 +796,7 @@ onChange={(e) =>
                         placeholder="Maintenance Cost"
                         value={inst.maintenanceCost}
                         onChange={(e) =>
-                          handleChange(
-                            index,
-                            "maintenanceCost",
-                            e.target.value
-                          )
+                          handleChange(index, "maintenanceCost", e.target.value)
                         }
                       />
 
@@ -766,7 +808,7 @@ onChange={(e) =>
                           handleChange(
                             index,
                             "warrantyRenewalCost",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                       />
@@ -776,105 +818,116 @@ onChange={(e) =>
                         placeholder="Insurance Cost"
                         value={inst.insuranceCost}
                         onChange={(e) =>
-                          handleChange(
-                            index,
-                            "insuranceCost",
-                            e.target.value
-                          )
+                          handleChange(index, "insuranceCost", e.target.value)
                         }
                       />
                     </div>
                   </>
                 )}
                 {isSoftware && (
-  <>
-    <div className="grid-3">
+                  <>
+                    <div className="grid-3">
+                      <input
+                        placeholder="License Number"
+                        value={inst.licenseNumber || ""}
+                        onChange={(e) =>
+                          handleChange(index, "licenseNumber", e.target.value)
+                        }
+                      />
+                    </div>
 
-      <input
-        placeholder="License Number"
-        value={inst.licenseNumber || ""}
-        onChange={(e) =>
-          handleChange(index, "licenseNumber", e.target.value)
-        }
-      />
-    </div>
-
-    <div className="grid-3">
-      <div>
-      <label>Purchase Date</label>
-      <input
-        type="date"
-        value={inst.purchaseDate}
-        onChange={(e) =>
-          handleChange(index, "purchaseDate", e.target.value)
-        }
-      />
-      </div>
-        <div>
-                      <label>Installation Date</label>
-      <input
-        type="date"
-        value={inst.installationDate}
-        onChange={(e) =>
-          handleChange(index, "installationDate", e.target.value)
-        }
-        />
-        </div>
-        <div>
-                      <label>Renewal Date</label>
-      <input
-        type="date"
-        value={inst.renewalDate}
-        onChange={(e) =>
-          handleChange(index, "renewalDate", e.target.value)
-        }
-        />
-        </div>
-    </div>
-
-    <div className="grid-3">
-      <div>
-      <label>Last Used Date</label>
-      <input
-        type="date"
-        value={inst.lastUsedDate}
-        onChange={(e) =>
-          handleChange(index, "lastUsedDate", e.target.value)
-        }
-        />
-        </div>
-
-      <input
-        type="number"
-        placeholder="Purchase Cost"
-        value={inst.purchaseCost}
-        onChange={(e) =>
-          handleChange(index, "purchaseCost", e.target.value)
-        }
-      />
-      <select
-      className="dropdown-select"
-  value={inst.currency}
-  onChange={(e) =>
-    handleChange(index, "currency", e.target.value)
-  }
->
-  {currencyOptions.map(cur => (
-    <option key={cur} value={cur}>{cur}</option>
-  ))}
-</select>
-
-      <input
-        type="number"
-        placeholder="Renewal Cost"
-        value={inst.renewalCost}
-        onChange={(e) =>
-          handleChange(index, "renewalCost", e.target.value)
-        }
-      />
-    </div>
-  </>
+                    <div className="grid-3">
+                      <div>
+                        <label>Purchase Date</label>
+                        <input
+                          type="date"
+                          value={inst.purchaseDate}
+                          min={asset?.assetPurchaseDate || undefined}
+                          max={asset?.assetDOE || undefined}
+                          onChange={(e) =>
+                            handleChange(index, "purchaseDate", e.target.value)
+                          }
+                        />
+                        {errors[index]?.purchaseDate && (
+                          <span className="error">{errors[index].purchaseDate}</span>
+                        )}
+                      </div>
+                      <div>
+                        <label>Installation Date</label>
+                        <input
+                          type="date"
+                          value={inst.installationDate}
+                          onChange={(e) =>
+                            handleChange(
+                              index,
+                              "installationDate",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label>Renewal Date</label>
+                        <input
+                          type="date"
+                          value={inst.renewalDate}
+                          max={asset?.assetDOE || undefined}
+                          min={asset?.assetPurchaseDate || undefined}
+                          onChange={(e) =>
+                            handleChange(index, "renewalDate", e.target.value)
+                          }
+                        />
+                        {errors[index]?.renewalDate && (
+  <span className="error">{errors[index].renewalDate}</span>
 )}
+                      </div>
+                    </div>
+
+                    <div className="grid-3">
+                      <div>
+                        <label>Last Used Date</label>
+                        <input
+                          type="date"
+                          value={inst.lastUsedDate}
+                          onChange={(e) =>
+                            handleChange(index, "lastUsedDate", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <input
+                        type="number"
+                        placeholder="Purchase Cost"
+                        value={inst.purchaseCost}
+                        onChange={(e) =>
+                          handleChange(index, "purchaseCost", e.target.value)
+                        }
+                      />
+                      <select
+                        className="dropdown-select"
+                        value={inst.currency}
+                        onChange={(e) =>
+                          handleChange(index, "currency", e.target.value)
+                        }
+                      >
+                        {currencyOptions.map((cur) => (
+                          <option key={cur} value={cur}>
+                            {cur}
+                          </option>
+                        ))}
+                      </select>
+
+                      <input
+                        type="number"
+                        placeholder="Renewal Cost"
+                        value={inst.renewalCost}
+                        onChange={(e) =>
+                          handleChange(index, "renewalCost", e.target.value)
+                        }
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
