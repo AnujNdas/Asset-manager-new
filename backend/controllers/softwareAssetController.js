@@ -10,6 +10,7 @@ const pricingTiers = require("../config/pricingTiers");
 const Subscription = require("../models/Subscription");
 const generateInstances = require("../utils/generateInstances");
 const AssetInstance = require("../models/AssetInstance");
+const Counter = require("../models/Counter");
 const parseDate = (value) => {
   if (!value) return null;
 
@@ -49,23 +50,29 @@ if (isNaN(start.getTime()) || isNaN(end.getTime()) || end <= start) {
 /* ======================================================
    GENERATE SOFTWARE CODE (ORG-SCOPED)
 ====================================================== */
+// utils/generateSoftwareCode.js
+
+
+
 const generateSoftwareCode = async (organizationId) => {
-  const lastAsset = await SoftwareAsset.findOne({
-    organizationId,
-    assetCode: { $regex: /^SW-\d+$/ }
-  })
-    .sort({ createdAt: -1 })
-    .select("assetCode")
-    .lean();
+  const counter = await Counter.findOneAndUpdate(
+    {
+      name: "softwareAsset",
+      organizationId,
+    },
+    {
+      $inc: { seq: 1 },
+    },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
 
-  let nextNumber = 1;
-
-  if (lastAsset?.assetCode) {
-    nextNumber = parseInt(lastAsset.assetCode.split("-")[1], 10) + 1;
-  }
-
-  return `SW-${String(nextNumber).padStart(3, "0")}`;
+  return `SW-${String(counter.seq).padStart(3, "0")}`;
 };
+
+module.exports = generateSoftwareCode;
 
 /* ======================================================
    BULK UPLOAD SOFTWARE
