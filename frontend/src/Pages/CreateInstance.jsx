@@ -633,7 +633,9 @@ const CreateInstances = () => {
 
         {instances.map((inst, index) => (
           <div key={index}>
+            <h2> Instance {index + 1} </h2>
             <div className="table-row">
+
               <input
                 value={inst.serialNumber}
                 placeholder="Serial"
@@ -688,7 +690,7 @@ const CreateInstances = () => {
             {expandedRow === index && (
               <div className="expand-panel">
                 {(asset?.assetPurchaseDate || asset?.assetDOE) && (
-    <p className="hint">
+    <p className="hint" style={{color : "red",}}>
       Dates must be between {asset?.assetPurchaseDate || "—"} and {asset?.assetDOE || "—"}
     </p>
   )}
