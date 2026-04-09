@@ -571,7 +571,7 @@ if (!parsedDOP || isNaN(parsedDOP.getTime())) {
   });
 }
   const parsedDOE = req.body.DOE ? parseDate(req.body.DOE) : null;
-  const vendor = buildVendor(req.body.vendor);
+  const vendor = buildVendor(req.body.purchaseDetails?.vendor);
 
 
 const newAsset = new Asset({
@@ -1009,213 +1009,213 @@ const generateBulkAssetCodes = async (organizationId, count, orgCode = "ORG") =>
   } 
   return codes;
 };
-const createAssetInstance = async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const organizationId = req.user.organizationId;
+  const createAssetInstance = async (req, res, next) => {
+    try {
+      const userId = req.user.id;
+      const organizationId = req.user.organizationId;
 
-    const { assetId, instances } = req.body;
+      const { assetId, instances } = req.body;
 
-    if (!instances || instances.length === 0) {
-      return res.status(400).json({ message: "No instances provided" });
-    }
-
-    // 🔍 Detect asset type
-    let asset = await Asset.findById(assetId);
-    let assetTypeRef = "Asset";
-
-    if (!asset) {
-      asset = await SoftwareAsset.findById(assetId);
-      assetTypeRef = "SoftwareAsset";
-    }
-
-    if (!asset) {
-      return res.status(404).json({ message: "Asset not found" });
-    }
-
-    const assetType =
-      assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
-
-    // 🔥 Quantity validation
-    const existingCount = await AssetInstance.countDocuments({
-      assetId,
-      organizationId
-    });
-
-    if (existingCount + instances.length > asset.assetQuantity) {
-      return res.status(400).json({
-        message: "Exceeds asset quantity"
-      });
-    }
-
-    // 🔥 SERIAL VALIDATION
-    const serials = instances
-      .map((i) => i.serialNumber)
-      .filter(Boolean);
-
-    if (new Set(serials).size !== serials.length) {
-      return res.status(400).json({
-        message: "Duplicate serials in request"
-      });
-    }
-
-    const existingSerials = await AssetInstance.find({
-      organizationId,
-      serialNumber: { $in: serials }
-    });
-
-    if (existingSerials.length > 0) {
-      return res.status(400).json({
-        message: "Serial already exists"
-      });
-    }
-
-    // 🔥 CREATE INSTANCES
-    const newInstances = instances.map((inst, index) => ({
-      organizationId,
-      assetId,
-      assetTypeRef,
-      assetType,
-
-      instanceCode: `${asset.assetCode}-${Date.now()}-${index}`,
-
-      deviceName: inst.deviceName || "",
-      serialNumber: inst.serialNumber || undefined,
-
-      location: inst.location, // must be ObjectId
-
-      status: "in_stock",
-      condition: inst.condition || "new",
-
-      // 🔹 HARDWARE BLOCK
-      hardware:
-        assetType === "hardware"
-          ? {
-              modelNo: inst.hardware?.modelNo || "",
-              specifications: inst.hardware?.specifications || "",
-
-              purchaseDate: inst.hardware?.purchaseDate || null,
-              installationDate:
-                inst.hardware?.installationDate || null,
-              vendor: inst.hardware?.vendor || "",
-
-              warrantyExpiry:
-                inst.hardware?.warrantyExpiry || null,
-              insuranceExpiry:
-                inst.hardware?.insuranceExpiry || null,
-              insuranceId: inst.hardware?.insuranceId || "",
-
-              nextMaintenanceDate:
-                inst.hardware?.nextMaintenanceDate || null,
-
-              // 🔥 COST AT INSTANCE LEVEL
-              purchaseCost: inst.hardware?.purchaseCost || null,
-
-              costs: {
-                maintenanceCost:
-                  Number(inst.hardware?.costs?.maintenanceCost) || 0,
-                warrantyRenewalCost:
-                  Number(
-                    inst.hardware?.costs?.warrantyRenewalCost
-                  ) || 0,
-                insuranceCost:
-                  Number(inst.hardware?.costs?.insuranceCost) || 0
-              }
-            }
-          : undefined,
-
-      // 🔹 SOFTWARE BLOCK
-      software:
-        assetType === "software"
-          ? {
-              licenseKey: inst.software?.licenseKey || "",
-              licenseNumber:
-                inst.software?.licenseNumber || "",
-              vendor: inst.software?.vendor || "",
-
-              purchaseDate: inst.software?.purchaseDate || null,
-              installationDate:
-                inst.software?.installationDate || null,
-              renewalDate: inst.software?.renewalDate || null,
-              lastUsedDate:
-                inst.software?.lastUsedDate || null,
-
-              // 🔥 COST AT INSTANCE LEVEL
-              purchaseCost: inst.software?.purchaseCost || null,
-
-              costs: {
-                renewalCost:
-                  Number(inst.software?.costs?.renewalCost) || 0
-              }
-            }
-          : undefined,
-
-      lifecycle: [
-        {
-          action: "CREATED",
-          date: new Date(),
-          notes: "Instance created",
-          from: null,
-          to: {
-            location: inst.location,
-            condition: inst.condition || "new"
-          }
-        }
-      ],
-
-      createdBy: userId
-    }));
-
-    const saved = await AssetInstance.insertMany(newInstances);
-
-    // 🔥 AGGREGATE TOTAL COST FROM INSTANCES
-    const aggregation = await AssetInstance.aggregate([
-      {
-        $match: {
-          assetId: asset._id,
-          organizationId
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          totalCost: {
-            $sum: {
-              $cond: [
-                { $eq: ["$assetType", "hardware"] },
-                {
-                  $ifNull: [
-                    "$hardware.purchaseCost.amount",
-                    0
-                  ]
-                },
-                {
-                  $ifNull: [
-                    "$software.purchaseCost.amount",
-                    0
-                  ]
-                }
-              ]
-            }
-          }
-        }
+      if (!instances || instances.length === 0) {
+        return res.status(400).json({ message: "No instances provided" });
       }
-    ]);
 
-    const totalCost = aggregation[0]?.totalCost || 0;
+      // 🔍 Detect asset type
+      let asset = await Asset.findById(assetId);
+      let assetTypeRef = "Asset";
 
-    // 🔥 UPDATE PARENT ASSET
-    await (assetType === "hardware" ? Asset : SoftwareAsset)
-      .findByIdAndUpdate(asset._id, {
-        "financialTracking.totalAssetCost": totalCost
+      if (!asset) {
+        asset = await SoftwareAsset.findById(assetId);
+        assetTypeRef = "SoftwareAsset";
+      }
+
+      if (!asset) {
+        return res.status(404).json({ message: "Asset not found" });
+      }
+
+      const assetType =
+        assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
+
+      // 🔥 Quantity validation
+      const existingCount = await AssetInstance.countDocuments({
+        assetId,
+        organizationId
       });
 
-    return res.status(201).json(saved);
-  } catch (err) {
-    console.error("ERROR:", err.message);
-    return next(err);
-  }
-};
+      if (existingCount + instances.length > asset.assetQuantity) {
+        return res.status(400).json({
+          message: "Exceeds asset quantity"
+        });
+      }
+
+      // 🔥 SERIAL VALIDATION
+      const serials = instances
+        .map((i) => i.serialNumber)
+        .filter(Boolean);
+
+      if (new Set(serials).size !== serials.length) {
+        return res.status(400).json({
+          message: "Duplicate serials in request"
+        });
+      }
+
+      const existingSerials = await AssetInstance.find({
+        organizationId,
+        serialNumber: { $in: serials }
+      });
+
+      if (existingSerials.length > 0) {
+        return res.status(400).json({
+          message: "Serial already exists"
+        });
+      }
+
+      // 🔥 CREATE INSTANCES
+      const newInstances = instances.map((inst, index) => ({
+        organizationId,
+        assetId,
+        assetTypeRef,
+        assetType,
+
+        instanceCode: `${asset.assetCode}-${Date.now()}-${index}`,
+
+        deviceName: inst.deviceName || "",
+        serialNumber: inst.serialNumber || undefined,
+
+        location: inst.location, // must be ObjectId
+
+        status: "in_stock",
+        condition: inst.condition || "new",
+
+        // 🔹 HARDWARE BLOCK
+        hardware:
+          assetType === "hardware"
+            ? {
+                modelNo: inst.hardware?.modelNo || "",
+                specifications: inst.hardware?.specifications || "",
+
+                purchaseDate: inst.hardware?.purchaseDate || null,
+                installationDate:
+                  inst.hardware?.installationDate || null,
+                vendor: inst.hardware?.vendor || "",
+
+                warrantyExpiry:
+                  inst.hardware?.warrantyExpiry || null,
+                insuranceExpiry:
+                  inst.hardware?.insuranceExpiry || null,
+                insuranceId: inst.hardware?.insuranceId || "",
+
+                nextMaintenanceDate:
+                  inst.hardware?.nextMaintenanceDate || null,
+
+                // 🔥 COST AT INSTANCE LEVEL
+                purchaseCost: inst.hardware?.purchaseCost || null,
+
+                costs: {
+                  maintenanceCost:
+                    Number(inst.hardware?.costs?.maintenanceCost) || 0,
+                  warrantyRenewalCost:
+                    Number(
+                      inst.hardware?.costs?.warrantyRenewalCost
+                    ) || 0,
+                  insuranceCost:
+                    Number(inst.hardware?.costs?.insuranceCost) || 0
+                }
+              }
+            : undefined,
+
+        // 🔹 SOFTWARE BLOCK
+        software:
+          assetType === "software"
+            ? {
+                licenseKey: inst.software?.licenseKey || "",
+                licenseNumber:
+                  inst.software?.licenseNumber || "",
+                vendor: inst.software?.vendor || "",
+
+                purchaseDate: inst.software?.purchaseDate || null,
+                installationDate:
+                  inst.software?.installationDate || null,
+                renewalDate: inst.software?.renewalDate || null,
+                lastUsedDate:
+                  inst.software?.lastUsedDate || null,
+
+                // 🔥 COST AT INSTANCE LEVEL
+                purchaseCost: inst.software?.purchaseCost || null,
+
+                costs: {
+                  renewalCost:
+                    Number(inst.software?.costs?.renewalCost) || 0
+                }
+              }
+            : undefined,
+
+        lifecycle: [
+          {
+            action: "CREATED",
+            date: new Date(),
+            notes: "Instance created",
+            from: null,
+            to: {
+              location: inst.location,
+              condition: inst.condition || "new"
+            }
+          }
+        ],
+
+        createdBy: userId
+      }));
+
+      const saved = await AssetInstance.insertMany(newInstances);
+
+      // 🔥 AGGREGATE TOTAL COST FROM INSTANCES
+      const aggregation = await AssetInstance.aggregate([
+        {
+          $match: {
+            assetId: asset._id,
+            organizationId
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalCost: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$assetType", "hardware"] },
+                  {
+                    $ifNull: [
+                      "$hardware.purchaseCost.amount",
+                      0
+                    ]
+                  },
+                  {
+                    $ifNull: [
+                      "$software.purchaseCost.amount",
+                      0
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]);
+
+      const totalCost = aggregation[0]?.totalCost || 0;
+
+      // 🔥 UPDATE PARENT ASSET
+      await (assetType === "hardware" ? Asset : SoftwareAsset)
+        .findByIdAndUpdate(asset._id, {
+          "financialTracking.totalAssetCost": totalCost
+        });
+
+      return res.status(201).json(saved);
+    } catch (err) {
+      console.error("ERROR:", err.message);
+      return next(err);
+    }
+  };
 const updateAssetInstance = async (req, res, next) => {
   try {
     const { id } = req.params;
