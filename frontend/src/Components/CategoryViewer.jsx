@@ -14,7 +14,7 @@ const CategoryViewer = () => {
     try {
       const res = await getCategories();
       console.log("API Response:", res);
-      setCategories(res?.data || []);
+      setCategories(Array.isArray(res) ? res : res?.data || []);
     } catch (err) {
       console.error("Error fetching categories", err);
     }
