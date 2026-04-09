@@ -633,7 +633,7 @@ const CreateInstances = () => {
 
         {instances.map((inst, index) => (
           <div key={index}>
-            <h2> Instance {index + 1} </h2>
+            <h2 style={{ color : "#2563eb", fontSize : "12px" , padding : "5px"}}> Instance {index + 1} </h2>
             <div className="table-row">
 
               <input
