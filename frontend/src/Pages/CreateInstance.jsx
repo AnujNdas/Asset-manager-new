@@ -354,9 +354,9 @@ const CreateInstances = () => {
         <h4>Bulk Apply</h4>
 
         <div className="bulk-grid">
+          <div className="form-group">
+            <label>Location</label>
           <input
-            type="text"
-            placeholder="Enter location"
             value={bulkValues.location}
             onChange={(e) =>
               setBulkValues({
@@ -365,6 +365,9 @@ const CreateInstances = () => {
               })
             }
           />
+          </div>
+          <div className="form-group">
+            <label>Condition</label>
           <select
             value={bulkValues.condition}
             onChange={(e) =>
@@ -379,17 +382,10 @@ const CreateInstances = () => {
             <option value="used">Used</option>
             <option value="damaged">Damaged</option>
           </select>
+          </div>
 
-          {/* <input
-            placeholder={fieldLabels.modelNo}
-            value={bulkValues.modelNo}
-            onChange={(e) =>
-              setBulkValues({
-                ...bulkValues,
-                modelNo: e.target.value
-              })
-            }
-          /> */}
+          <div className="form-group">
+            <label>Purchase Cost</label>
           <input
             type="number"
             placeholder="Purchase Cost"
@@ -401,7 +397,25 @@ const CreateInstances = () => {
               })
             }
           />
-          <select
+          </div>
+
+         
+          <div className="form-group">
+            <label>Specification</label>
+          <input
+            placeholder={fieldLabels.specifications}
+            value={bulkValues.specifications}
+            onChange={(e) =>
+              setBulkValues({
+                ...bulkValues,
+                specifications: e.target.value,
+              })
+            }
+          />
+          </div>
+            <div className="form-group">
+              <label>Currency</label>
+           <select
             value={bulkValues.currency}
             onChange={(e) =>
               setBulkValues({
@@ -416,19 +430,12 @@ const CreateInstances = () => {
               </option>
             ))}
           </select>
-          <input
-            placeholder={fieldLabels.specifications}
-            value={bulkValues.specifications}
-            onChange={(e) =>
-              setBulkValues({
-                ...bulkValues,
-                specifications: e.target.value,
-              })
-            }
-          />
+          </div>
 
           {isHardware && (
             <>
+                          <div className="form-group">
+            
               <label>Warranty Date</label>
               <input
                 type="date"
@@ -441,6 +448,8 @@ const CreateInstances = () => {
                   })
                 }
               />
+              </div>
+                            <div className="form-group">
               <label>Installation Date</label>
               <input
                 type="date"
@@ -454,7 +463,9 @@ const CreateInstances = () => {
                   })
                 }
               />
-
+              </div>
+                            <div className="form-group">
+                              <label>Insurance Policy ID</label>
               <input
                 placeholder="Insurance Policy"
                 value={bulkValues.insurancePolicyId}
@@ -465,6 +476,8 @@ const CreateInstances = () => {
                   })
                 }
               />
+              </div>
+                            <div className="form-group">
               <label>Insurance Expiry</label>
               <input
                 type="date"
@@ -477,7 +490,9 @@ const CreateInstances = () => {
                   })
                 }
               />
-
+              </div>
+              <div className="form-group">
+                <label>Maintenance Cost</label>
               <input
                 type="number"
                 placeholder="Maintenance Cost"
@@ -489,7 +504,9 @@ const CreateInstances = () => {
                   })
                 }
               />
-
+              </div>
+              <div className="form-group">
+                <label>Warranty Renewal Cost</label>
               <input
                 type="number"
                 placeholder="Warranty Renewal"
@@ -502,7 +519,9 @@ const CreateInstances = () => {
                   })
                 }
               />
-
+              </div>
+              <div className="form-group">
+              <label>Insurance Cost</label>
               <input
                 type="number"
                 placeholder="Insurance Cost"
@@ -514,6 +533,7 @@ const CreateInstances = () => {
                   })
                 }
               />
+              </div>
             </>
           )}
           {isSoftware && (
@@ -633,9 +653,11 @@ const CreateInstances = () => {
 
         {instances.map((inst, index) => (
           <div key={index}>
-            <h2 style={{ color : "#2563eb", fontSize : "12px" , padding : "5px"}}> Instance {index + 1} </h2>
+            <h2 style={{ color: "#2563eb", fontSize: "12px", padding: "5px" }}>
+              {" "}
+              Instance {index + 1}{" "}
+            </h2>
             <div className="table-row">
-
               <input
                 value={inst.serialNumber}
                 placeholder="Serial"
@@ -690,10 +712,11 @@ const CreateInstances = () => {
             {expandedRow === index && (
               <div className="expand-panel">
                 {(asset?.assetPurchaseDate || asset?.assetDOE) && (
-    <p className="hint" style={{color : "red",}}>
-      Dates must be between {asset?.assetPurchaseDate || "—"} and {asset?.assetDOE || "—"}
-    </p>
-  )}
+                  <p className="hint" style={{ color: "red" }}>
+                    Dates must be between {asset?.assetPurchaseDate || "—"} and{" "}
+                    {asset?.assetDOE || "—"}
+                  </p>
+                )}
                 <textarea
                   placeholder={fieldLabels.specifications}
                   value={inst.specifications}
@@ -716,12 +739,15 @@ const CreateInstances = () => {
                           }
                         />
                         {errors[index]?.warrantyDate && (
-                          <span className="error">{errors[index].warrantyDate}</span>
+                          <span className="error">
+                            {errors[index].warrantyDate}
+                          </span>
                         )}
                       </div>
+                      <div>
+                        <label>Purchase Cost</label>
                       <input
                         type="number"
-                        placeholder="Purchase Cost"
                         value={inst.purchaseCost}
                         onChange={(e) =>
                           handleChange(index, "purchaseCost", e.target.value)
@@ -732,7 +758,9 @@ const CreateInstances = () => {
                           {errors[index].purchaseCost}
                         </span>
                       )}
-
+                      </div>
+                      <div>
+                        <label>Currency</label>
                       <select
                         value={inst.currency}
                         onChange={(e) =>
@@ -745,6 +773,7 @@ const CreateInstances = () => {
                           </option>
                         ))}
                       </select>
+                      </div>
                       <div>
                         <label>Installation Date</label>
 
@@ -760,9 +789,9 @@ const CreateInstances = () => {
                           }
                         />
                       </div>
-
+                          <div>
+                            <label>Insurance Id</label>
                       <input
-                        placeholder="Insurance Policy"
                         value={inst.insurancePolicyId}
                         onChange={(e) =>
                           handleChange(
@@ -772,12 +801,12 @@ const CreateInstances = () => {
                           )
                         }
                       />
+                          </div>
                       <div>
                         <label>Insurance Expiry</label>
                         <input
                           type="date"
                           value={inst.insuranceExpiry}
-                          max={asset?.assetDOE || undefined}
                           onChange={(e) =>
                             handleChange(
                               index,
@@ -786,25 +815,24 @@ const CreateInstances = () => {
                             )
                           }
                         />
-                        {errors[index]?.insuranceExpiry && (
-                          <span className="error">{errors[index].insuranceExpiry}</span>
-                        )}
                       </div>
                     </div>
 
                     <div className="grid-3">
+                      <div>
+                        <label>Maintenance Cost</label>
                       <input
                         type="number"
-                        placeholder="Maintenance Cost"
                         value={inst.maintenanceCost}
                         onChange={(e) =>
                           handleChange(index, "maintenanceCost", e.target.value)
                         }
                       />
-
+                      </div>
+                      <div>
+                        <label>Warranty Renewal Cost</label>
                       <input
                         type="number"
-                        placeholder="Warranty Renewal"
                         value={inst.warrantyRenewalCost}
                         onChange={(e) =>
                           handleChange(
@@ -814,21 +842,25 @@ const CreateInstances = () => {
                           )
                         }
                       />
-
+                      </div>
+                        <div>
+                          <label>Insurance Cost</label>
                       <input
                         type="number"
-                        placeholder="Insurance Cost"
                         value={inst.insuranceCost}
                         onChange={(e) =>
                           handleChange(index, "insuranceCost", e.target.value)
                         }
                       />
+                        </div>
                     </div>
                   </>
                 )}
                 {isSoftware && (
                   <>
                     <div className="grid-3">
+                      <div>
+                        <label>License Number</label>
                       <input
                         placeholder="License Number"
                         value={inst.licenseNumber || ""}
@@ -836,6 +868,7 @@ const CreateInstances = () => {
                           handleChange(index, "licenseNumber", e.target.value)
                         }
                       />
+                      </div>
                     </div>
 
                     <div className="grid-3">
@@ -851,7 +884,9 @@ const CreateInstances = () => {
                           }
                         />
                         {errors[index]?.purchaseDate && (
-                          <span className="error">{errors[index].purchaseDate}</span>
+                          <span className="error">
+                            {errors[index].purchaseDate}
+                          </span>
                         )}
                       </div>
                       <div>
@@ -880,8 +915,10 @@ const CreateInstances = () => {
                           }
                         />
                         {errors[index]?.renewalDate && (
-  <span className="error">{errors[index].renewalDate}</span>
-)}
+                          <span className="error">
+                            {errors[index].renewalDate}
+                          </span>
+                        )}
                       </div>
                     </div>
 

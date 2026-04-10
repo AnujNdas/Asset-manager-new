@@ -1009,6 +1009,27 @@ const generateBulkAssetCodes = async (organizationId, count, orgCode = "ORG") =>
   } 
   return codes;
 };
+const calculateInsuranceExpiry = (purchaseDate, term) => {
+  if (!purchaseDate || !term) return null;
+
+  const date = new Date(purchaseDate);
+
+  switch (term) {
+    case "6_months":
+      date.setMonth(date.getMonth() + 6);
+      break;
+    case "1_year":
+      date.setFullYear(date.getFullYear() + 1);
+      break;
+    case "3_years":
+      date.setFullYear(date.getFullYear() + 3);
+      break;
+    default:
+      return null;
+  }
+
+  return date;
+};
   const createAssetInstance = async (req, res, next) => {
     try {
       const userId = req.user.id;
@@ -1088,40 +1109,59 @@ const generateBulkAssetCodes = async (organizationId, count, orgCode = "ORG") =>
         condition: inst.condition || "new",
 
         // 🔹 HARDWARE BLOCK
-        hardware:
-          assetType === "hardware"
-            ? {
-                modelNo: inst.hardware?.modelNo || "",
-                specifications: inst.hardware?.specifications || "",
+       hardware:
+  assetType === "hardware"
+    ? (() => {
+        const purchaseDate =
+          inst.hardware?.insurancePurchaseDate || null;
 
-                purchaseDate: inst.hardware?.purchaseDate || null,
-                installationDate:
-                  inst.hardware?.installationDate || null,
-                vendor: inst.hardware?.vendor || "",
+        const term =
+          inst.hardware?.insuranceTerm || "1_year";
 
-                warrantyExpiry:
-                  inst.hardware?.warrantyExpiry || null,
-                insuranceExpiry:
-                  inst.hardware?.insuranceExpiry || null,
-                insuranceId: inst.hardware?.insuranceId || "",
+        return {
+          modelNo: inst.hardware?.modelNo || "",
+          specifications: inst.hardware?.specifications || "",
 
-                nextMaintenanceDate:
-                  inst.hardware?.nextMaintenanceDate || null,
+          purchaseDate: inst.hardware?.purchaseDate || null,
+          installationDate:
+            inst.hardware?.installationDate || null,
+          vendor: inst.hardware?.vendor || "",
 
-                // 🔥 COST AT INSTANCE LEVEL
-                purchaseCost: inst.hardware?.purchaseCost || null,
+          warrantyPurchaseDate:
+            inst.hardware?.warrantyPurchaseDate ||
+            inst.hardware?.purchaseDate || null, // fallback
 
-                costs: {
-                  maintenanceCost:
-                    Number(inst.hardware?.costs?.maintenanceCost) || 0,
-                  warrantyRenewalCost:
-                    Number(
-                      inst.hardware?.costs?.warrantyRenewalCost
-                    ) || 0,
-                  insuranceCost:
-                    Number(inst.hardware?.costs?.insuranceCost) || 0
-                }
-              }
+          warrantyExpiry:
+            inst.hardware?.warrantyExpiry || null,
+
+          insuranceId: inst.hardware?.insuranceId || "",
+
+          insurancePurchaseDate: purchaseDate,
+          insuranceTerm: term,
+
+          // 🔥 AUTO CALCULATED
+          insuranceExpiry: calculateInsuranceExpiry(
+            purchaseDate,
+            term
+          ),
+
+          nextMaintenanceDate:
+            inst.hardware?.nextMaintenanceDate || null,
+
+          purchaseCost: inst.hardware?.purchaseCost || null,
+
+          costs: {
+            maintenanceCost:
+              Number(inst.hardware?.costs?.maintenanceCost) || 0,
+            warrantyRenewalCost:
+              Number(
+                inst.hardware?.costs?.warrantyRenewalCost
+              ) || 0,
+            insuranceCost:
+              Number(inst.hardware?.costs?.insuranceCost) || 0
+          }
+        };
+      })()
             : undefined,
 
         // 🔹 SOFTWARE BLOCK

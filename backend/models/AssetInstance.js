@@ -68,10 +68,17 @@ hardware: {
 
   purchaseDate: Date,        // ✅ UI
   installationDate: Date,    // ✅ UI
-
+  WarrantyPurchaseDate: Date,
   warrantyExpiry: Date,
+  insurancePurchaseDate: Date,
   insuranceExpiry: Date,
   insuranceId: String,       // ✅ UI
+    // ✅ NEW FIELD
+  insuranceTerm: {
+    type: String,
+    enum: ["6_months", "1_year", "3_years"],
+    default: "1_year"
+  },
 
   nextMaintenanceDate: Date,
   purchaseCost: costSchema,   // 🔥 NEW
