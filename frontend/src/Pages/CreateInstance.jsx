@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import "../Page_styles/CreateInstance.css";
-import { useParams } from "react-router-dom";
+import { useParams , useNavigate } from "react-router-dom";
 import {
   getLocations,
   createAssetInstances,
@@ -22,7 +22,7 @@ const currencyOptions = [
 ];
 const CreateInstances = () => {
   const { assetId } = useParams();
-
+  const navigate = useNavigate();
   const [asset, setAsset] = useState(null);
   const [locations, setLocations] = useState([]);
   const [instances, setInstances] = useState([]);
@@ -341,9 +341,11 @@ insuranceTerm: inst.insuranceTerm || "1_year",
         assetId,
         instances: payload,
       });
+      console.log("Created instances:", payload);
 
       alert("Instances created successfully");
       fetchData();
+      navigate("/inventory")
     } catch (err) {
       console.error(err);
       alert("Error creating instances");
@@ -583,7 +585,7 @@ insuranceTerm: inst.insuranceTerm || "1_year",
     <option value="3_years">3 Years</option>
   </select>
 </div>
-                            <div className="form-group">
+                            {/* <div className="form-group">
               <label>Insurance Expiry</label>
               <input
                 type="date"
@@ -596,7 +598,7 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                   })
                 }
               />
-              </div>
+              </div> */}
               <div className="form-group">
                 <label>Maintenance Cost</label>
               <input

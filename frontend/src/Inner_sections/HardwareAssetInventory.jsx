@@ -183,6 +183,12 @@ const handleUpdate = async () => {
       {/* WARRANTY */}
       <div className="instance-block">
         <p>
+          <span>Warranty Purchase</span>
+          {hw.warrantyPurchaseDate
+            ? new Date(hw.warrantyPurchaseDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+        <p>
           <span>Warranty Expiry</span>
           {hw.warrantyExpiry
             ? new Date(hw.warrantyExpiry).toLocaleDateString()
