@@ -50,6 +50,7 @@ const CreateInstances = () => {
     warrantyRenewalCost: "",
     insuranceCost: "",
     // 🔹 hardware additions
+    purchaseDate: "",
 warrantyPurchaseDate: "",
 insurancePurchaseDate: "",
 insuranceTerm: "1_year", // if you're using term
@@ -124,6 +125,7 @@ insuranceTerm: "1_year", // if you're using term
           warrantyRenewalCost: "",
           insuranceCost: "",
           // 🔹 hardware additions
+          purchaseDate: "",
 warrantyPurchaseDate: "",
 insurancePurchaseDate: "",
 insuranceTerm: "1_year", // if you're using term
@@ -165,6 +167,7 @@ insuranceTerm: "1_year", // if you're using term
       vendor: bulkValues.vendor || inst.vendor,
 
      ...(isHardware && {
+      purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
   warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
   warrantyPurchaseDate:
     bulkValues.warrantyPurchaseDate || inst.warrantyPurchaseDate,
@@ -301,7 +304,7 @@ insuranceTerm: "1_year", // if you're using term
             modelNo: inst.modelNo || "",
             specifications: inst.specifications || "",
 
-            purchaseDate: null,
+            purchaseDate: inst.purchaseDate || null,
             installationDate: inst.installationDate || null,
             vendor: inst.vendor || "",
 
@@ -457,6 +460,21 @@ insuranceTerm: inst.insuranceTerm || "1_year",
 
           {isHardware && (
             <>
+            <div className="form-group">
+  <label>Purchase Date</label>
+  <input
+    type="date"
+    value={bulkValues.purchaseDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      setBulkValues({
+        ...bulkValues,
+        purchaseDate: e.target.value,
+      })
+    }
+  />
+</div>
                             <div className="form-group">
   <label>Warranty Purchase Date</label>
   <input
@@ -797,6 +815,18 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                 {isHardware && (
                   <>
                     <div className="grid-3">
+                      <div>
+  <label>Purchase Date</label>
+  <input
+    type="date"
+    value={inst.purchaseDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      handleChange(index, "purchaseDate", e.target.value)
+    }
+  />
+</div>
                       <div>
   <label>Warranty Purchase Date</label>
   <input
