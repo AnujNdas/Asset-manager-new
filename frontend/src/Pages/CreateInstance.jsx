@@ -49,7 +49,10 @@ const CreateInstances = () => {
     maintenanceCost: "",
     warrantyRenewalCost: "",
     insuranceCost: "",
-
+    // 🔹 hardware additions
+warrantyPurchaseDate: "",
+insurancePurchaseDate: "",
+insuranceTerm: "1_year", // if you're using term
     // ✅ software
     licenseKey: "",
     licenseNumber: "",
@@ -120,7 +123,10 @@ const CreateInstances = () => {
           maintenanceCost: "",
           warrantyRenewalCost: "",
           insuranceCost: "",
-
+          // 🔹 hardware additions
+warrantyPurchaseDate: "",
+insurancePurchaseDate: "",
+insuranceTerm: "1_year", // if you're using term
           // ✅ software (FULL INIT)
           licenseKey: "",
           licenseNumber: "",
@@ -158,17 +164,29 @@ const CreateInstances = () => {
       currency: bulkValues.currency || inst.currency,
       vendor: bulkValues.vendor || inst.vendor,
 
-      ...(isHardware && {
-        warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
-        installationDate: bulkValues.installationDate || inst.installationDate,
-        insurancePolicyId:
-          bulkValues.insurancePolicyId || inst.insurancePolicyId,
-        insuranceExpiry: bulkValues.insuranceExpiry || inst.insuranceExpiry,
-        maintenanceCost: bulkValues.maintenanceCost || inst.maintenanceCost,
-        warrantyRenewalCost:
-          bulkValues.warrantyRenewalCost || inst.warrantyRenewalCost,
-        insuranceCost: bulkValues.insuranceCost || inst.insuranceCost,
-      }),
+     ...(isHardware && {
+  warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
+  warrantyPurchaseDate:
+    bulkValues.warrantyPurchaseDate || inst.warrantyPurchaseDate,
+
+  installationDate: bulkValues.installationDate || inst.installationDate,
+
+  insurancePolicyId:
+    bulkValues.insurancePolicyId || inst.insurancePolicyId,
+
+  insuranceExpiry: bulkValues.insuranceExpiry || inst.insuranceExpiry,
+
+  insurancePurchaseDate:
+    bulkValues.insurancePurchaseDate || inst.insurancePurchaseDate,
+
+  insuranceTerm:
+    bulkValues.insuranceTerm || inst.insuranceTerm,
+
+  maintenanceCost: bulkValues.maintenanceCost || inst.maintenanceCost,
+  warrantyRenewalCost:
+    bulkValues.warrantyRenewalCost || inst.warrantyRenewalCost,
+  insuranceCost: bulkValues.insuranceCost || inst.insuranceCost,
+}),
       ...(isSoftware && {
         licenseKey: bulkValues.licenseKey || inst.licenseKey,
         licenseNumber: bulkValues.licenseNumber || inst.licenseNumber,
@@ -287,8 +305,13 @@ const CreateInstances = () => {
             installationDate: inst.installationDate || null,
             vendor: inst.vendor || "",
 
-            warrantyExpiry: inst.warrantyDate || null,
-            insuranceExpiry: inst.insuranceExpiry || null,
+            warrantyPurchaseDate: inst.warrantyPurchaseDate || null,
+warrantyExpiry: inst.warrantyDate || null,
+
+insurancePurchaseDate: inst.insurancePurchaseDate || null,
+insuranceTerm: inst.insuranceTerm || "1_year",
+
+// ❌ DO NOT send insuranceExpiry anymore if backend calculates
             insuranceId: inst.insurancePolicyId || "",
 
             purchaseCost: inst.purchaseCost
@@ -434,9 +457,24 @@ const CreateInstances = () => {
 
           {isHardware && (
             <>
-                          <div className="form-group">
+                            <div className="form-group">
+  <label>Warranty Purchase Date</label>
+  <input
+    type="date"
+    value={bulkValues.warrantyPurchaseDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      setBulkValues({
+        ...bulkValues,
+        warrantyPurchaseDate: e.target.value,
+      })
+    }
+  />
+</div>
             
-              <label>Warranty Date</label>
+        <div className="form-group">
+              <label>Warranty Expiry Date</label>
               <input
                 type="date"
                 value={bulkValues.warrantyDate}
@@ -477,6 +515,37 @@ const CreateInstances = () => {
                 }
               />
               </div>
+              <div className="form-group">
+  <label>Insurance Purchase Date</label>
+  <input
+    type="date"
+    value={bulkValues.insurancePurchaseDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      setBulkValues({
+        ...bulkValues,
+        insurancePurchaseDate: e.target.value,
+      })
+    }
+  />
+</div>
+<div className="form-group">
+  <label>Insurance Term</label>
+  <select
+    value={bulkValues.insuranceTerm}
+    onChange={(e) =>
+      setBulkValues({
+        ...bulkValues,
+        insuranceTerm: e.target.value,
+      })
+    }
+  >
+    <option value="6_months">6 Months</option>
+    <option value="1_year">1 Year</option>
+    <option value="3_years">3 Years</option>
+  </select>
+</div>
                             <div className="form-group">
               <label>Insurance Expiry</label>
               <input
@@ -729,7 +798,19 @@ const CreateInstances = () => {
                   <>
                     <div className="grid-3">
                       <div>
-                        <label>Warranty Date</label>
+  <label>Warranty Purchase Date</label>
+  <input
+    type="date"
+    value={inst.warrantyPurchaseDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      handleChange(index, "warrantyPurchaseDate", e.target.value)
+    }
+  />
+</div>
+                      <div>
+                        <label>Warranty Expiry Date</label>
                         <input
                           type="date"
                           value={inst.warrantyDate}
@@ -802,6 +883,31 @@ const CreateInstances = () => {
                         }
                       />
                           </div>
+                          <div>
+  <label>Insurance Purchase Date</label>
+  <input
+    type="date"
+    value={inst.insurancePurchaseDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      handleChange(index, "insurancePurchaseDate", e.target.value)
+    }
+  />
+</div>
+<div>
+  <label>Insurance Term</label>
+  <select
+    value={inst.insuranceTerm}
+    onChange={(e) =>
+      handleChange(index, "insuranceTerm", e.target.value)
+    }
+  >
+    <option value="6_months">6 Months</option>
+    <option value="1_year">1 Year</option>
+    <option value="3_years">3 Years</option>
+  </select>
+</div>
                       <div>
                         <label>Insurance Expiry</label>
                         <input
