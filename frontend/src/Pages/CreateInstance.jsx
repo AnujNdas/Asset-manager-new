@@ -54,6 +54,7 @@ const CreateInstances = () => {
 warrantyPurchaseDate: "",
 insurancePurchaseDate: "",
 insuranceTerm: "1_year", // if you're using term
+  nextMaintenanceDate: "", // ✅ ADD THIS
     // ✅ software
     licenseKey: "",
     licenseNumber: "",
@@ -124,6 +125,7 @@ insuranceTerm: "1_year", // if you're using term
           maintenanceCost: "",
           warrantyRenewalCost: "",
           insuranceCost: "",
+            nextMaintenanceDate: "", // ✅ ADD THIS
           // 🔹 hardware additions
           purchaseDate: "",
 warrantyPurchaseDate: "",
@@ -186,6 +188,8 @@ insuranceTerm: "1_year", // if you're using term
     bulkValues.insuranceTerm || inst.insuranceTerm,
 
   maintenanceCost: bulkValues.maintenanceCost || inst.maintenanceCost,
+    nextMaintenanceDate:
+    bulkValues.nextMaintenanceDate || inst.nextMaintenanceDate, // ✅ ADD
   warrantyRenewalCost:
     bulkValues.warrantyRenewalCost || inst.warrantyRenewalCost,
   insuranceCost: bulkValues.insuranceCost || inst.insuranceCost,
@@ -316,7 +320,7 @@ insuranceTerm: inst.insuranceTerm || "1_year",
 
 // ❌ DO NOT send insuranceExpiry anymore if backend calculates
             insuranceId: inst.insurancePolicyId || "",
-
+              nextMaintenanceDate: inst.nextMaintenanceDate || null, // ✅ ADD
             purchaseCost: inst.purchaseCost
               ? {
                   amount: Number(inst.purchaseCost),
@@ -471,6 +475,21 @@ insuranceTerm: inst.insuranceTerm || "1_year",
       setBulkValues({
         ...bulkValues,
         purchaseDate: e.target.value,
+      })
+    }
+  />
+</div>
+<div className="form-group">
+  <label>Next Maintenance Date</label>
+  <input
+    type="date"
+    value={bulkValues.nextMaintenanceDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      setBulkValues({
+        ...bulkValues,
+        nextMaintenanceDate: e.target.value,
       })
     }
   />
@@ -804,6 +823,8 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                     {asset?.assetDOE || "—"}
                   </p>
                 )}
+                <div>
+                  <label>Specifications</label>
                 <textarea
                   placeholder={fieldLabels.specifications}
                   value={inst.specifications}
@@ -811,6 +832,7 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                     handleChange(index, "specifications", e.target.value)
                   }
                 />
+                </div>
 
                 {isHardware && (
                   <>
@@ -824,6 +846,18 @@ insuranceTerm: inst.insuranceTerm || "1_year",
     max={asset?.assetDOE || undefined}
     onChange={(e) =>
       handleChange(index, "purchaseDate", e.target.value)
+    }
+  />
+</div>
+<div>
+  <label>Next Maintenance Date</label>
+  <input
+    type="date"
+    value={inst.nextMaintenanceDate}
+    min={asset?.assetPurchaseDate || undefined}
+    max={asset?.assetDOE || undefined}
+    onChange={(e) =>
+      handleChange(index, "nextMaintenanceDate", e.target.value)
     }
   />
 </div>
@@ -1070,7 +1104,9 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                         />
                       </div>
 
-                      <input
+                        <div>
+                          <label>Purchase Cost</label>
+                        <input
                         type="number"
                         placeholder="Purchase Cost"
                         value={inst.purchaseCost}
@@ -1078,6 +1114,9 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                           handleChange(index, "purchaseCost", e.target.value)
                         }
                       />
+                      </div>
+                      <div>
+                        <label>Currency</label>
                       <select
                         className="dropdown-select"
                         value={inst.currency}
@@ -1091,7 +1130,9 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                           </option>
                         ))}
                       </select>
-
+                      </div>
+                        <div>
+                          <label>Renewal Cost</label>
                       <input
                         type="number"
                         placeholder="Renewal Cost"
@@ -1100,6 +1141,7 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                           handleChange(index, "renewalCost", e.target.value)
                         }
                       />
+                        </div>
                     </div>
                   </>
                 )}
