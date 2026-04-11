@@ -1092,120 +1092,144 @@ const calculateInsuranceExpiry = (purchaseDate, term) => {
       }
 
       // 🔥 CREATE INSTANCES
-      const newInstances = instances.map((inst, index) => (
-        console.log("Incoming hardware:", inst.hardware) || "N/A") || {
-        organizationId,
-        assetId,
-        assetTypeRef,
-        assetType,
+     const newInstances = instances.map((inst, index) => {
+  // 🔍 DEBUG LEVEL 1: entire instance
+  console.log("-------- INSTANCE START --------");
+  console.log("FULL INSTANCE:", JSON.stringify(inst, null, 2));
 
-        instanceCode: `${asset.assetCode}-${Date.now()}-${index}`,
+  // 🔍 DEBUG LEVEL 2: check hardware object
+  console.log("HARDWARE OBJECT:", inst.hardware);
 
-        deviceName: inst.deviceName || "",
-        serialNumber: inst.serialNumber || undefined,
+  // 🔍 DEBUG LEVEL 3: check specific field
+  console.log(
+    "warrantyPurchaseDate (nested):",
+    inst.hardware?.warrantyPurchaseDate
+  );
 
-        location: inst.location, // must be ObjectId
+  console.log(
+    "warrantyPurchaseDate (flat):",
+    inst.warrantyPurchaseDate
+  );
 
-        status: "in_stock",
-        condition: inst.condition || "new",
+  console.log("-------- INSTANCE END --------");
 
-        // 🔹 HARDWARE BLOCK
-       hardware:
-  assetType === "hardware"
-    ? (() => {
-        const purchaseDate =
-          inst.hardware?.insurancePurchaseDate || null;
+  return {
+    organizationId,
+    assetId,
+    assetTypeRef,
+    assetType,
 
-        const term =
-          inst.hardware?.insuranceTerm || "1_year";
+    instanceCode: `${asset.assetCode}-${Date.now()}-${index}`,
 
-        return {
-          modelNo: inst.hardware?.modelNo || "",
-          specifications: inst.hardware?.specifications || "",
+    deviceName: inst.deviceName || "",
+    serialNumber: inst.serialNumber || undefined,
 
-          purchaseDate: inst.hardware?.purchaseDate || null,
-          installationDate:
-            inst.hardware?.installationDate || null,
-          vendor: inst.hardware?.vendor || "",
+    location: inst.location,
+    status: "in_stock",
+    condition: inst.condition || "new",
 
-          warrantyPurchaseDate:
-            inst.hardware?.warrantyPurchaseDate ||
-            inst.hardware?.purchaseDate || null, // fallback
+    // 🔹 HARDWARE BLOCK
+    hardware:
+      assetType === "hardware"
+        ? (() => {
+            console.log("👉 ENTERING HARDWARE MAPPING");
 
-          warrantyExpiry:
-            inst.hardware?.warrantyExpiry || null,
+            const purchaseDate =
+              inst.hardware?.insurancePurchaseDate || null;
 
-          insuranceId: inst.hardware?.insuranceId || "",
+            const term =
+              inst.hardware?.insuranceTerm || "1_year";
 
-          insurancePurchaseDate: purchaseDate,
-          insuranceTerm: term,
+            console.log("👉 FINAL VALUE USED:", {
+              warrantyPurchaseDate:
+                inst.hardware?.warrantyPurchaseDate,
+              fallbackPurchaseDate: inst.hardware?.purchaseDate,
+            });
 
-          // 🔥 AUTO CALCULATED
-          insuranceExpiry: calculateInsuranceExpiry(
-            purchaseDate,
-            term
-          ),
+            return {
+              modelNo: inst.hardware?.modelNo || "",
+              specifications: inst.hardware?.specifications || "",
 
-          nextMaintenanceDate:
-            inst.hardware?.nextMaintenanceDate || null,
+              purchaseDate: inst.hardware?.purchaseDate || null,
+              installationDate:
+                inst.hardware?.installationDate || null,
 
-          purchaseCost: inst.hardware?.purchaseCost || null,
+              warrantyPurchaseDate:
+                inst.hardware?.warrantyPurchaseDate ||
+                inst.hardware?.purchaseDate ||
+                null,
 
-          costs: {
-            maintenanceCost:
-              Number(inst.hardware?.costs?.maintenanceCost) || 0,
-            warrantyRenewalCost:
-              Number(
-                inst.hardware?.costs?.warrantyRenewalCost
-              ) || 0,
-            insuranceCost:
-              Number(inst.hardware?.costs?.insuranceCost) || 0
-          }
-        };
-      })()
-            : undefined,
+              warrantyExpiry:
+                inst.hardware?.warrantyExpiry || null,
 
-        // 🔹 SOFTWARE BLOCK
-        software:
-          assetType === "software"
-            ? {
-                licenseKey: inst.software?.licenseKey || "",
-                licenseNumber:
-                  inst.software?.licenseNumber || "",
-                vendor: inst.software?.vendor || "",
+              insuranceId: inst.hardware?.insuranceId || "",
 
-                purchaseDate: inst.software?.purchaseDate || null,
-                installationDate:
-                  inst.software?.installationDate || null,
-                renewalDate: inst.software?.renewalDate || null,
-                lastUsedDate:
-                  inst.software?.lastUsedDate || null,
+              insurancePurchaseDate: purchaseDate,
+              insuranceTerm: term,
 
-                // 🔥 COST AT INSTANCE LEVEL
-                purchaseCost: inst.software?.purchaseCost || null,
+              insuranceExpiry: calculateInsuranceExpiry(
+                purchaseDate,
+                term
+              ),
 
-                costs: {
-                  renewalCost:
-                    Number(inst.software?.costs?.renewalCost) || 0
-                }
+              nextMaintenanceDate:
+                inst.hardware?.nextMaintenanceDate || null,
+
+              purchaseCost: inst.hardware?.purchaseCost || null,
+
+              costs: {
+                maintenanceCost:
+                  Number(inst.hardware?.costs?.maintenanceCost) || 0,
+                warrantyRenewalCost:
+                  Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
+                insuranceCost:
+                  Number(inst.hardware?.costs?.insuranceCost) || 0
               }
-            : undefined,
+            };
+          })()
+        : undefined,
 
-        lifecycle: [
-          {
-            action: "CREATED",
-            date: new Date(),
-            notes: "Instance created",
-            from: null,
-            to: {
-              location: inst.location,
-              condition: inst.condition || "new"
+    // 🔹 SOFTWARE BLOCK
+    software:
+      assetType === "software"
+        ? {
+            licenseKey: inst.software?.licenseKey || "",
+            licenseNumber:
+              inst.software?.licenseNumber || "",
+            vendor: inst.software?.vendor || "",
+
+            purchaseDate: inst.software?.purchaseDate || null,
+            installationDate:
+              inst.software?.installationDate || null,
+            renewalDate: inst.software?.renewalDate || null,
+            lastUsedDate:
+              inst.software?.lastUsedDate || null,
+
+            purchaseCost: inst.software?.purchaseCost || null,
+
+            costs: {
+              renewalCost:
+                Number(inst.software?.costs?.renewalCost) || 0
             }
           }
-        ],
+        : undefined,
 
-        createdBy: userId
-      }));
+    lifecycle: [
+      {
+        action: "CREATED",
+        date: new Date(),
+        notes: "Instance created",
+        from: null,
+        to: {
+          location: inst.location,
+          condition: inst.condition || "new"
+        }
+      }
+    ],
+
+    createdBy: userId
+  };
+});
 
       const saved = await AssetInstance.insertMany(newInstances);
 
