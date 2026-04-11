@@ -16,17 +16,21 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
 
   const fieldConfig = [
     // 🔸 HARDWARE COSTS
-    ...(isHardware ? [
-      { name: "maintenanceCost", label: "Maintenance Cost", type: "number" },
-      { name: "warrantyRenewalCost", label: "Warranty Renewal Cost", type: "number" },
-      { name: "insuranceCost", label: "Insurance Cost", type: "number" },
+...(isHardware ? [
+  { name: "maintenanceCost", label: "Maintenance Cost", type: "number" },
+  { name: "warrantyRenewalCost", label: "Warranty Renewal Cost", type: "number" },
+  { name: "insuranceCost", label: "Insurance Cost", type: "number" },
 
-      { name: "newWarrantyExpiry", label: "Warranty Expiry", type: "date" },
-      { name: "newInsuranceExpiry", label: "Insurance Expiry", type: "date" },
-      { name: "newMaintenanceDate", label: "Next Maintenance", type: "date" },
-      { name: "newInstallationDate", label: "Installation Date", type: "date" }
-    ] : []),
+  // ✅ NEW
+  { name: "newWarrantyPurchaseDate", label: "Warranty Purchase Date", type: "date" },
+  { name: "newWarrantyExpiry", label: "Warranty Expiry", type: "date" },
 
+  { name: "newInsurancePurchaseDate", label: "Insurance Purchase Date", type: "date" },
+  { name: "newInsuranceExpiry", label: "Insurance Expiry", type: "date" },
+
+  { name: "newMaintenanceDate", label: "Next Maintenance", type: "date" },
+  { name: "newInstallationDate", label: "Installation Date", type: "date" }
+] : []),
     // 🔸 SOFTWARE
     ...(isSoftware ? [
       { name: "renewalCost", label: "Renewal Cost", type: "number" },
@@ -40,29 +44,45 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
      🔹 INITIAL STATE
   ============================== */
 
-  const [form, setForm] = useState({
-    currency: "INR",
+const [form, setForm] = useState({
+  currency: instance?.hardware?.currency || instance?.software?.currency || "INR",
 
-    maintenanceCost: instance?.hardware?.costs?.maintenanceCost?.amount || "",
-    warrantyRenewalCost: instance?.hardware?.costs?.warrantyRenewalCost?.amount || "",
-    insuranceCost: instance?.hardware?.costs?.insuranceCost?.amount || "",
+  // ✅ COSTS (numbers now)
+  maintenanceCost: instance?.hardware?.costs?.maintenanceCost || "",
+  warrantyRenewalCost: instance?.hardware?.costs?.warrantyRenewalCost || "",
+  insuranceCost: instance?.hardware?.costs?.insuranceCost || "",
 
-    renewalCost: instance?.software?.costs?.renewalCost?.amount || "",
+  renewalCost: instance?.software?.costs?.renewalCost || "",
 
-    newWarrantyExpiry: instance?.hardware?.warrantyExpiry?.split("T")[0] || "",
-    newInsuranceExpiry: instance?.hardware?.insuranceExpiry?.split("T")[0] || "",
-    newMaintenanceDate: instance?.hardware?.nextMaintenanceDate?.split("T")[0] || "",
+  // ✅ NEW DATES
+  newWarrantyPurchaseDate:
+    instance?.hardware?.warrantyPurchaseDate?.split("T")[0] || "",
 
-    newRenewalDate: instance?.software?.renewalDate?.split("T")[0] || "",
-    newLastUsedDate: instance?.software?.lastUsedDate?.split("T")[0] || "",
+  newInsurancePurchaseDate:
+    instance?.hardware?.insurancePurchaseDate?.split("T")[0] || "",
 
-    newInstallationDate:
-      instance?.hardware?.installationDate?.split("T")[0] ||
-      instance?.software?.installationDate?.split("T")[0] ||
-      "",
+  newWarrantyExpiry:
+    instance?.hardware?.warrantyExpiry?.split("T")[0] || "",
 
-    condition: instance?.condition || ""
-  });
+  newInsuranceExpiry:
+    instance?.hardware?.insuranceExpiry?.split("T")[0] || "",
+
+  newMaintenanceDate:
+    instance?.hardware?.nextMaintenanceDate?.split("T")[0] || "",
+
+  newRenewalDate:
+    instance?.software?.renewalDate?.split("T")[0] || "",
+
+  newLastUsedDate:
+    instance?.software?.lastUsedDate?.split("T")[0] || "",
+
+  newInstallationDate:
+    instance?.hardware?.installationDate?.split("T")[0] ||
+    instance?.software?.installationDate?.split("T")[0] ||
+    "",
+
+  condition: instance?.condition || ""
+});
 
   /* =============================
      🔹 HANDLERS
