@@ -1176,7 +1176,7 @@ const calculateInsuranceExpiry = (purchaseDate, term) => {
                 inst.hardware?.nextMaintenanceDate || null,
 
               purchaseCost: inst.hardware?.purchaseCost || null,
-
+              currency: inst.hardware?.purchaseCost?.currency || "INR",
               costs: {
                 maintenanceCost:
                   Number(inst.hardware?.costs?.maintenanceCost) || 0,

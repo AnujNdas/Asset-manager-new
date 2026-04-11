@@ -72,7 +72,6 @@ const handleInstanceEditOpen = (inst) => {
     // SOFTWARE ONLY
     licenseKey: inst.software?.licenseKey || "",
     licenseNumber: inst.software?.licenseNumber || "",
-    vendor: inst.software?.vendor || "",
   });
 };
 const getRemainingDays = (date) => {
@@ -259,7 +258,6 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
       {/* LICENSE DETAILS */}
       <div className="instance-block">
         <p><span>License Key</span>{sw.licenseKey || "N/A"}</p>
-        <p><span>Vendor</span>{sw.vendor || "N/A"}</p>
       </div>
 
       {/* COST */}
@@ -552,21 +550,6 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
               setInstanceForm({
                 ...instanceForm,
                 location: e.target.value,
-              })
-            }
-          />
-        </div>
-
-        {/* INSTALLATION DATE (Allowed basic field) */}
-        <div className="input-group">
-          <label>Installation Date</label>
-          <input
-            type="date"
-            value={instanceForm.installationDate || ""}
-            onChange={(e) =>
-              setInstanceForm({
-                ...instanceForm,
-                installationDate: e.target.value,
               })
             }
           />
