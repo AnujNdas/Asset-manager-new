@@ -1092,7 +1092,8 @@ const calculateInsuranceExpiry = (purchaseDate, term) => {
       }
 
       // 🔥 CREATE INSTANCES
-      const newInstances = instances.map((inst, index) => ({
+      const newInstances = instances.map((inst, index) => (
+        console.log("Incoming hardware:", inst.hardware) || "N/A") || {
         organizationId,
         assetId,
         assetTypeRef,
