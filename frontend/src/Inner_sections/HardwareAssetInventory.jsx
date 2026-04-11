@@ -176,12 +176,24 @@ const handleUpdate = async () => {
 
       {/* TECH DETAILS */}
       <div className="instance-block">
-        <p><span>Model</span>{hw.modelNo || "N/A"}</p>
+        <p><span>Model NO</span>{hw.modelNo || "N/A"}</p>
         <p><span>Specs</span>{hw.specifications || "N/A"}</p>
       </div>
 
       {/* WARRANTY */}
       <div className="instance-block">
+        <p>
+          <span> Purchase Date</span>
+          {hw.purchaseDate
+            ? new Date(hw.purchaseDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+        <p>
+          <span> Maintainence Date</span>
+          {hw.purchaseDate
+            ? new Date(hw.nextMaintenanceDate).toLocaleDateString()
+            : "N/A"}
+        </p>
         <p>
           <span>Warranty Purchase</span>
           {hw.warrantyPurchaseDate
@@ -189,16 +201,23 @@ const handleUpdate = async () => {
             : "N/A"}
         </p>
         <p>
-          <span>Warranty Expiry</span>
+          <span>Warranty Renewal</span>
           {hw.warrantyExpiry
             ? new Date(hw.warrantyExpiry).toLocaleDateString()
             : "N/A"}
         </p>
 
         <p><span>Insurance ID</span>{hw.insuranceId || "N/A"}</p>
+        <p><span>Insurance Duration</span>{hw.insuranceTerm || "N/A"}</p>
 
         <p>
-          <span>Insurance Expiry</span>
+          <span>Insurance Purchase </span>
+          {hw.insurancePurchaseDate
+            ? new Date(hw.insurancePurchaseDate).toLocaleDateString()
+            : "N/A"}
+        </p>
+        <p>
+          <span>Insurance Renewal</span>
           {hw.insuranceExpiry
             ? new Date(hw.insuranceExpiry).toLocaleDateString()
             : "N/A"}
@@ -207,6 +226,8 @@ const handleUpdate = async () => {
 
       {/* COST */}
       <div className="instance-block cost">
+
+        <p><span>Purchase</span>{hw.purchaseCost?.amount || 0}<span style={{ color : "red"}}>{hw.purchaseCost?.currency || "N/A"}</span></p>
         <p><span>Maintenance</span>{hw.costs?.maintenanceCost || 0}</p>
         <p><span>Warranty Renewal</span>{hw.costs?.warrantyRenewalCost || 0}</p>
         <p><span>Insurance Cost</span>{hw.costs?.insuranceCost || 0}</p>
