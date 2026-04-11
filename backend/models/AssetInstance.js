@@ -68,7 +68,7 @@ hardware: {
 
   purchaseDate: Date,        // ✅ UI
   installationDate: Date,    // ✅ UI
-  WarrantyPurchaseDate: Date,
+  warrantyPurchaseDate: Date,
   warrantyExpiry: Date,
   insurancePurchaseDate: Date,
   insuranceExpiry: Date,

@@ -240,9 +240,6 @@ insuranceTerm: "1_year", // if you're using term
           rowErrors.renewalDate = "Exceeds asset expiry";
         }
 
-        if (inst.warrantyDate && inst.warrantyDate > asset.assetDOE) {
-          rowErrors.warrantyDate = "Exceeds asset expiry";
-        }
 
         if (inst.insuranceExpiry && inst.insuranceExpiry > asset.assetDOE) {
           rowErrors.insuranceExpiry = "Exceeds asset expiry";
@@ -517,7 +514,6 @@ insuranceTerm: inst.insuranceTerm || "1_year",
               <input
                 type="date"
                 value={bulkValues.warrantyDate}
-                max={asset?.assetDOE || undefined}
                 onChange={(e) =>
                   setBulkValues({
                     ...bulkValues,
@@ -880,7 +876,6 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                         <input
                           type="date"
                           value={inst.warrantyDate}
-                          max={asset?.assetDOE || undefined}
                           onChange={(e) =>
                             handleChange(index, "warrantyDate", e.target.value)
                           }
