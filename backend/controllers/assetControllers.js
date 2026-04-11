@@ -1155,8 +1155,8 @@ const calculateInsuranceExpiry = (purchaseDate, term) => {
                 inst.hardware?.installationDate || null,
 
               warrantyPurchaseDate:
-                inst.hardware?.warrantyPurchaseDate ||
-                inst.hardware?.purchaseDate ||
+                inst.hardware?.warrantyPurchaseDate ?? 
+                inst.hardware?.purchaseDate ?? 
                 null,
 
               warrantyExpiry:
