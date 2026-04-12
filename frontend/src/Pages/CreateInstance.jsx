@@ -7,6 +7,7 @@ import {
   getLocations,
   createAssetInstances,
   getAssetById,
+  bulkUploadInstances
 } from "../Services/ApiServices";
 const currencyOptions = [
   "INR",
@@ -44,7 +45,7 @@ const CreateInstances = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
+  const [file, setFile] = useState(null);
   const [bulkValues, setBulkValues] = useState({
     location: "",
     condition: "",
@@ -172,7 +173,38 @@ insuranceTerm: "1_year", // if you're using term
     updated[index][field] = value;
     setInstances(updated);
   };
+  const handleFileUpload = (e) => {
+  setFile(e.target.files[0]);
+};
 
+const handleImport = async () => {
+  if (!file) {
+    alert("Please select a file");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("assetId", assetId);
+
+  try {
+    setLoading(true);
+
+    const res = await bulkUploadInstances(formData);
+
+    if (res.success) {
+      alert("Import successful");
+      fetchData(); // refresh instances
+    } else {
+      alert(res.message || "Import failed");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error importing file");
+  } finally {
+    setLoading(false);
+  }
+};
   const applyBulkValues = () => {
     const updated = instances.map((inst) => ({
       ...inst,
@@ -395,7 +427,16 @@ insuranceTerm: inst.insuranceTerm || "1_year",
           <p>{asset.assetCode}</p>
         </div>
       )}
-
+  <div className="import-section">
+  <input
+    type="file"
+    accept=".csv"
+    onChange={handleFileUpload}
+  />
+  <button onClick={handleImport}>
+    Import CSV
+  </button>
+</div>
       {/* BULK APPLY */}
       <div className="bulk-panel">
         <h4>Bulk Apply</h4>
