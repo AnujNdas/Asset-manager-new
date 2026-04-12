@@ -11,6 +11,34 @@ import {
   getLocations,
   bulkUploadSoftwareAssets
 } from "../Services/ApiServices";
+import * as XLSX from "xlsx";
+
+const downloadTemplate = () => {
+  const data = [
+    {
+      assetName: "Adobe Photoshop",
+      assetCategory: "Design Software",
+      associateUnit: "IT Department",
+      locationName: "Head Office",
+      assetStatus: "Active",
+      type: "yearly",
+      assetQuantity: 10,
+      purchaseDate: "2026-01-01",
+      vendorName: "Adobe Inc.",
+      vendorContact: "1234567890",
+      vendorEmail: "support@adobe.com",
+      DOE: "2027-01-01",
+      renewalTerm: "1_year",
+    },
+  ];
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
+
+  XLSX.writeFile(workbook, "software_asset_template.xlsx");
+};
     export const SUPPORTED_CURRENCIES = [
       { code: "USD", label: "US Dollar", symbol: "$" },
       { code: "INR", label: "Indian Rupee", symbol: "₹" },
@@ -231,6 +259,9 @@ const handleSubmit = async () => {
           >
           ⬆ Import Excel
         </button>
+        <button onClick={downloadTemplate}>
+  ⬇ Download Template
+</button>
           </div>
 
         <div className="grid-2">

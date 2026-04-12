@@ -11,7 +11,31 @@
   } from "../Services/ApiServices";
   import Swal from "sweetalert2";
   import "../Page_styles/SoftwareCapture.css";
+import * as XLSX from "xlsx";
 
+const downloadTemplate = () => {
+  const data = [
+    {
+      assetName: "Dell Laptop",
+      assetCategory: "IT Equipment",
+      associateUnit: "Head Office",
+      locationName: "Mumbai",
+      assetStatus: "In Stock",
+      type: "one_time", // one_time / maintenance
+      assetQuantity: 10,
+      purchaseDate: "2026-04-01",
+      vendorName: "Dell India",
+      DOE: "2028-04-01",
+    },
+  ];
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
+
+  XLSX.writeFile(workbook, "software_asset_template.xlsx");
+};
   export const SUPPORTED_CURRENCIES = [
     { code: "USD", label: "US Dollar", symbol: "$" },
     { code: "INR", label: "Indian Rupee", symbol: "₹" },
@@ -343,6 +367,9 @@ const payload = {
   >
     ⬆ Import Excel
   </button>
+  <button onClick={downloadTemplate}>
+  ⬇ Download Template
+</button>
           </div>
           <div className="grid-2">
             <div className="input-group">
