@@ -569,6 +569,7 @@ insuranceTerm: inst.insuranceTerm || "1_year",
               />
               </div>
               <div className="form-group">
+                                         <label>Coverage Type</label>
  <select
   value={bulkValues.coverageType}
   onChange={(e) =>
@@ -980,6 +981,7 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                       />
                           </div>
                           <div>
+                            <label>Coverage Type</label>
  <select
   value={inst.coverageType}
   onChange={(e) =>

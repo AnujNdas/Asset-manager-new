@@ -1,15 +1,16 @@
-  // src/Pages/SoftwareAssetCapture.jsx
-  import React, { useState, useEffect } from "react";
-  import { useNavigate } from "react-router-dom";
-  import Swal from "sweetalert2";
-  import "../Page_styles/SoftwareCapture.css";
-  import {
-    getStatuses,
-    getCategories,
-    createSoftwareAsset,
-    getUnits,
-    getLocations,
-  } from "../Services/ApiServices";
+// src/Pages/SoftwareAssetCapture.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "../Page_styles/SoftwareCapture.css";
+import {
+  getStatuses,
+  getCategories,
+  createSoftwareAsset,
+  getUnits,
+  getLocations,
+  bulkUploadSoftwareAssets
+} from "../Services/ApiServices";
     export const SUPPORTED_CURRENCIES = [
       { code: "USD", label: "US Dollar", symbol: "$" },
       { code: "INR", label: "Indian Rupee", symbol: "₹" },
@@ -58,7 +59,9 @@
     const [categories, setCategories] = useState([]);
     const [units, setUnits] = useState([]);
     const [locations, setLocations] = useState([]);
-
+    const [showImport, setShowImport] = useState(false);
+    const [importFile, setImportFile] = useState(null);
+    const [importLoading, setImportLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -91,6 +94,41 @@
   }
 
   return true;
+};
+
+
+const handleImport = async () => {
+  if (!importFile) {
+    Swal.fire("Error", "Please select a file", "error");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", importFile);
+
+  try {
+    setImportLoading(true);
+
+    const res = await bulkUploadSoftwareAssets(formData);
+
+    if (res.success) {
+      Swal.fire(
+        "Success",
+        `${res.inserted} assets uploaded, ${res.skipped} skipped`,
+        "success"
+      );
+
+      setShowImport(false);
+      setImportFile(null);
+    } else {
+      Swal.fire("Error", res.message, "error");
+    }
+
+  } catch (err) {
+    Swal.fire("Error", "Upload failed", "error");
+  } finally {
+    setImportLoading(false);
+  }
 };
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -187,6 +225,12 @@ const handleSubmit = async () => {
       <div className="form-card">
 
         <h3>Software Details</h3>
+            <button 
+        className="import-btn"
+        onClick={() => setShowImport(true)}
+      >
+        ⬆ Import Excel
+      </button>
 
         <div className="grid-2">
           <div className="input-group">
@@ -292,6 +336,30 @@ const handleSubmit = async () => {
 
       </div>
     </div>
+    {showImport && (
+  <div className="import-modal">
+    <div className="import-box">
+      <h3>Import Software Assets</h3>
+
+      <input
+        type="file"
+        accept=".xlsx, .xls"
+        onChange={(e) => setImportFile(e.target.files[0])}
+      />
+
+      <div className="import-actions">
+        <button onClick={() => setShowImport(false)}>Cancel</button>
+
+        <button 
+          onClick={handleImport}
+          disabled={importLoading}
+        >
+          {importLoading ? "Uploading..." : "Upload"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
   </div>
     );
   }

@@ -6,7 +6,8 @@
     getLocations,
     getCategories,
     getStatuses,
-    createHardwareAsset
+    createHardwareAsset,
+    bulkUploadHardwareAssets
   } from "../Services/ApiServices";
   import Swal from "sweetalert2";
   import "../Page_styles/SoftwareCapture.css";
@@ -56,7 +57,9 @@ const defaultFormData = {
     const [categories, setCategories] = useState([]);
     const [statuses, setStatuses] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const [showImport, setShowImport] = useState(false);
+const [importFile, setImportFile] = useState(null);
+const [importLoading, setImportLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -148,7 +151,43 @@ const defaultFormData = {
 
     localStorage.setItem("assetCaptureGuideSeen", "true");
   };
+  const handleImport = async () => {
+  if (!importFile) {
+    Swal.fire("Error", "Please select a file", "error");
+    return;
+  }
 
+  const formData = new FormData();
+  formData.append("file", importFile);
+
+  try {
+    setImportLoading(true);
+
+    const res = await bulkUploadHardwareAssets(formData);
+
+    if (res.success) {
+      Swal.fire(
+        "Success",
+        `${res.inserted} assets uploaded, ${res.skipped} skipped`,
+        "success"
+      );
+
+      setShowImport(false);
+      setImportFile(null);
+    } else {
+      Swal.fire("Error", res.message, "error");
+    }
+
+  } catch (err) {
+    Swal.fire(
+      "Error",
+      err.response?.data?.message || "Upload failed",
+      "error"
+    );
+  } finally {
+    setImportLoading(false);
+  }
+};
  const handleChange = (e) => {
   const { name, value } = e.target;
 
@@ -297,7 +336,12 @@ const payload = {
         <div className="form-card">
 
           <h3>Hardware Details</h3>
-
+          <button 
+    className="import-btn"
+    onClick={() => setShowImport(true)}
+  >
+    ⬆ Import Excel
+  </button>
           <div className="grid-2">
             <div className="input-group">
               <label>Asset Name *</label>
@@ -434,6 +478,32 @@ const payload = {
 
         </div>
       </div>
+      {showImport && (
+  <div className="import-modal">
+    <div className="import-box">
+      <h3>Import Hardware Assets</h3>
+
+      <input
+        type="file"
+        accept=".xlsx, .xls"
+        onChange={(e) => setImportFile(e.target.files[0])}
+      />
+
+      <div className="import-actions">
+        <button onClick={() => setShowImport(false)}>
+          Cancel
+        </button>
+
+        <button 
+          onClick={handleImport}
+          disabled={importLoading}
+        >
+          {importLoading ? "Uploading..." : "Upload"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
   };

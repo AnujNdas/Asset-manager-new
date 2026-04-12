@@ -247,24 +247,49 @@ export const deleteCoreLicense = async (id) => {
 };
 
 
+/* ===============================
+   🔹 HARDWARE ASSETS (FILE UPLOAD)
+================================ */
 export const bulkUploadHardwareAssets = async (data) => {
   const response = await axiosInstance.post(
     "/assets/bulk-upload",
     data,
     {
       headers: { "Content-Type": "multipart/form-data" },
-      validateStatus: () => true, // ← prevents axios auto-throwing errors
+      validateStatus: () => true,
     }
   );
 
   return response.data;
 };
 
-
-
-
+/* ===============================
+   🔹 SOFTWARE ASSETS (FILE/JSON)
+================================ */
 export const bulkUploadSoftwareAssets = async (data) => {
-  const response = await axiosInstance.post("/software-assets/bulk-upload",data );
+  const response = await axiosInstance.post(
+    "/software-assets/bulk-upload",
+    data,
+    {
+      validateStatus: () => true,
+    }
+  );
+
+  return response.data;
+};
+
+/* ===============================
+   🔹 INSTANCES (JSON / FILE LATER)
+================================ */
+export const bulkUploadInstances = async (data) => {
+  const response = await axiosInstance.post(
+    "/asset-instances/bulk-upload", // ✅ FIXED ROUTE
+    data,
+    {
+      validateStatus: () => true,
+    }
+  );
+
   return response.data;
 };
 

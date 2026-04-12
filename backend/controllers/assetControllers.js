@@ -107,364 +107,319 @@ const buildFinancialTracking = (type, assetCost, maintenance, warranty, insuranc
   // BULK UPLOAD
   // =======================================================================
   // ================= BULK UPLOAD =================
-  const bulkUpload = async (req, res, next) => {
+const bulkUploadAssets = async (req, res, next) => {
+  try {
+    console.log("🔥 Bulk asset upload started");
 
-    try {
-      console.log("🔥 Bulk upload request received.");
+    const userId = req.user?.id;
+    const organizationId = req.user?.organizationId;
 
-      const userId = req.user?.id;
-      const organizationId = req.user?.organizationId;
-      const subscription = await Subscription.findOne({ organizationId });
+    if (!userId || !organizationId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
 
-  if (!subscription) {
-    return res.status(403).json({
-      success: false,
-      message: "No active subscription found"
-    });
-  }
+    /* =============================
+       🔐 SUBSCRIPTION CHECK
+    ============================== */
+    const subscription = await Subscription.findOne({ organizationId });
 
-  const tier = pricingTiers.find(t => t.key === subscription.tier);
-
-  if (!tier) {
-    return res.status(500).json({
-      success: false,
-      message: "Invalid subscription tier configuration"
-    });
-  }
-
-  const assetLimit = tier.assets;
-      if (!userId || !organizationId) {
-        return res.status(401).json({
-          success: false,
-          message: "Unauthorized",
-        });
-      }
-
-      const { assets, mode = "strict" } = req.body;
-
-      if (!assets) {
-        return res.status(400).json({
-          success: false,
-          message: "No asset data provided",
-        });
-      }
-
-      let parsedAssets;
-      try {
-        parsedAssets = JSON.parse(assets);
-      } catch {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid JSON format",
-        });
-      }
-
-      // ---------- FETCH REFERENCES (ORG-SAFE) ----------
-      const [categories, units, locations, statuses] = await Promise.all([
-        Category.find({ organizationId }),
-        Unit.find({ organizationId }),
-        Location.find({ organizationId }),
-        Status.find({ organizationId }),
-      ]);
-
-      const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c._id]));
-      const unitMap = new Map(units.map(u => [u.name.toLowerCase(), u._id]));
-      const locationMap = new Map(locations.map(l => [l.name.toLowerCase(), l._id]));
-      const statusMap = new Map(statuses.map(s => [s.name.toLowerCase(), s._id]));
-
-      const normalize = v => v?.toString().trim().toLowerCase();
-
-      let tempAssets = [];
-      let invalidRows = [];
-
-      // ---------- PROCESS ROWS ----------
-      for (const [index, asset] of parsedAssets.entries()) {
-        try {
-          const catKey = normalize(asset.assetCategory);
-          const unitKey = normalize(asset.associateUnit);
-          const locKey = normalize(asset.locationName);
-          const statusKey = normalize(asset.assetStatus);
-
-          let categoryId = categoryMap.get(catKey);
-          let unitId = unitMap.get(unitKey);
-          let locationId = locationMap.get(locKey);
-          let statusId = statusMap.get(statusKey);
-
-          // ---------- STRICT MODE ----------
-          if (
-            mode === "strict" &&
-            (!categoryId || !unitId || !locationId || !statusId)
-          ) {
-            invalidRows.push({
-              row: index + 2,
-              reason: "Missing reference data",
-              asset,
-            });
-            continue;
-          }
-
-          // ---------- UPSERT REFERENCES ----------
-          if (!categoryId && catKey) {
-            const category = await Category.findOneAndUpdate(
-              { name: new RegExp(`^${asset.assetCategory}$`, "i"), organizationId },
-              { name: asset.assetCategory, organizationId },
-              { upsert: true, new: true }
-            );
-            categoryId = category._id;
-            categoryMap.set(catKey, categoryId);
-          }
-
-          if (!unitId && unitKey) {
-            const unit = await Unit.findOneAndUpdate(
-              { name: new RegExp(`^${asset.associateUnit}$`, "i"), organizationId },
-              { name: asset.associateUnit, organizationId },
-              { upsert: true, new: true }
-            );
-            unitId = unit._id;
-            unitMap.set(unitKey, unitId);
-          }
-
-          if (!locationId && locKey) {
-            const location = await Location.findOneAndUpdate(
-              { name: new RegExp(`^${asset.locationName}$`, "i"), organizationId },
-              { name: asset.locationName, organizationId },
-              { upsert: true, new: true }
-            );
-            locationId = location._id;
-            locationMap.set(locKey, locationId);
-          }
-
-          if (!statusId && statusKey) {
-            const status = await Status.findOneAndUpdate(
-              { name: new RegExp(`^${asset.assetStatus}$`, "i"), organizationId },
-              { name: asset.assetStatus, organizationId },
-              { upsert: true, new: true }
-            );
-            statusId = status._id;
-            statusMap.set(statusKey, statusId);
-          }
-          const dop = parseDate(asset.DateOfPurchase);
-          const doe = parseDate(asset.DateOfExpiry);
-
-          // ---------- VALIDATIONS ----------
-          const totalQty = Number(asset.assetQuantity || 1);
-          if (totalQty <= 0) {
-            invalidRows.push({
-              row: index + 2,
-              reason: "Invalid asset quantity",
-              asset,
-            });
-            continue;
-          }
-
-          const totalAmount = Number(asset.assetCost || 0);
-
-          if (!dop) {
-    invalidRows.push({
-      row: index + 2,
-      reason: "Invalid or missing purchase date",
-      asset
-    });
-    continue;
-  }
-  if (totalAmount < 0) {
-    invalidRows.push({
-      row: index + 2,
-      reason: "Invalid total cost",
-      asset,
-    });
-    continue;
-  }
-  if (!asset.assetSpecification) {
-    invalidRows.push({
-      row: index + 2,
-      reason: "Missing asset specification",
-      asset
-    });
-    continue;
-  }
-  if (totalQty <= 0) {
-    invalidRows.push({
-      row: index + 2,
-      reason: "Invalid asset quantity",
-      asset,
-    });
-    continue;
-  }
-
-  const currency = (asset.assetCurrency || BASE_CURRENCY).toUpperCase();
-  const unitAmount = totalAmount / totalQty;
-  const baseTotalAmount = convertToBase(totalAmount, currency);
-
-
-          // ---------- TYPE VALIDATION ----------
-          const assetType = asset.type?.toLowerCase();
-
-          if (!["one_time", "maintenance"].includes(assetType)) {
-            invalidRows.push({
-              row: index + 2,
-              reason: "Invalid or missing asset type (one_time | maintenance)",
-              asset,
-            });
-            continue;
-          }
-
-          // ---------- WARRANTY BUILD ----------
-  let warrantyData = undefined;
-
-  if (asset.warrantyId || asset.warrantyExpiryDate) {
-  warrantyData = buildWarranty(
-    {
-      warrantyId: asset.warrantyId,
-      expiryDate: parseDate(asset.warrantyExpiryDate),
-    },
-    {},
-    dop
-  );
-  }
-  const vendor = buildVendor({
-    name: asset.vendorName,
-    contact: asset.vendorContact,
-    supportEmail: asset.vendorEmail
-  });
-  const normalizeTerm = (term) => {
-    if (!term) return null;
-
-    const t = term.toLowerCase();
-
-    if (t.includes("6")) return "6_month";
-    if (t.includes("1 year") || t === "1") return "1_year";
-    if (t.includes("2")) return "2_year";
-
-    return null;
-  };
-  const maintenance = buildMaintenance({
-    maintenanceTerm: normalizeTerm(asset.maintenanceTerm),
-    maintenanceCost: asset.maintenanceCost
-  });
-  const financialTracking = buildFinancialTracking(
-    { totalAmount },
-    maintenance,
-    warrantyData,
-    {}
-  );
-
-
-  // ---------- FINAL ASSET ----------
-tempAssets.push({
-  organizationId,
-  type: assetType,
-  assetCategory: categoryId,
-  barcodeNumber: asset.barcodeNumber,
-  assetName: asset.assetName,
-  associateUnit: unitId,
-  locationName: locationId,
-  locationAddress: asset.locationAddress,
-  modelNo: asset.modelNo,
-  assetSpecification: asset.assetSpecification,
-  assetStatus: statusId,
-  purchaseDetails: {
-    purchaseDate: dop,
-    vendor
-  },
-  DOE: doe,
-  assetLifetime: calculateAssetLifetime(dop, doe),
-  warranty: warrantyData,
-  assetCost: {
-    totalAmount,
-    unitAmount,
-    baseTotalAmount,
-    currency,
-  },
-  tracking: buildTracking({
-    assetTag: asset.assetTag,
-    qrCode: asset.qrCode
-  }),
-  maintenance,
-  financialTracking,
-  assetQuantity: totalQty,
-  inUse: 0,
-  createdBy: userId,
-  auditHistory: [
-    { date: new Date(), notes: `Bulk uploaded by user ${userId}` },
-  ],
-});
-
-        } catch (rowError) {
-          invalidRows.push({
-            row: index + 2,
-            reason: rowError.message,
-            asset,
-          });
-        }
-      }
-
-const org = await Organization.findById(organizationId);
-
-const orgCode = org?.orgCode || "ORG";
-const codes = await generateBulkAssetCodes(
-  organizationId,
-  tempAssets.length,
-  orgCode
-);
-
-let validAssets = tempAssets.map((asset, i) => ({
-  ...asset,
-  assetCode: codes[i]
-}));
-      // ---------- INSERT ----------
-  // ---------- PLAN LIMIT CHECK ----------
-  const currentAssetCount = await Asset.countDocuments({ organizationId });
-
-  if (assetLimit !== "unlimited") {
-
-    const availableSlots = assetLimit - currentAssetCount;
-
-    if (availableSlots <= 0) {
+    if (!subscription) {
       return res.status(403).json({
         success: false,
-        code: "ASSET_LIMIT_REACHED",
-        message: "Asset limit reached for your subscription plan",
-        limit: assetLimit,
-        current: currentAssetCount
+        message: "No active subscription found"
       });
     }
 
-    if (validAssets.length > availableSlots) {
-      // Trim upload to allowed size
-      validAssets = validAssets.slice(0, availableSlots);
+    const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+    if (!tier) {
+      return res.status(500).json({
+        success: false,
+        message: "Invalid subscription tier configuration"
+      });
     }
+
+    const assetLimit = tier.assets;
+
+    /* =============================
+       📦 INPUT PARSE
+    ============================== */
+    const { assets, mode = "strict" } = req.body;
+
+    if (!assets) {
+      return res.status(400).json({
+        success: false,
+        message: "No asset data provided"
+      });
+    }
+
+    let parsedAssets;
+    try {
+      parsedAssets = JSON.parse(assets);
+    } catch {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid JSON format"
+      });
+    }
+
+    /* =============================
+       🔎 FETCH REFERENCES
+    ============================== */
+    const [categories, units, locations, statuses] = await Promise.all([
+      Category.find({ organizationId }),
+      Unit.find({ organizationId }),
+      Location.find({ organizationId }),
+      Status.find({ organizationId })
+    ]);
+
+    const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c._id]));
+    const unitMap = new Map(units.map(u => [u.name.toLowerCase(), u._id]));
+    const locationMap = new Map(locations.map(l => [l.name.toLowerCase(), l._id]));
+    const statusMap = new Map(statuses.map(s => [s.name.toLowerCase(), s._id]));
+
+    const normalize = v => v?.toString().trim().toLowerCase();
+
+    let tempAssets = [];
+    let invalidRows = [];
+
+    /* =============================
+       🔁 PROCESS ROWS
+    ============================== */
+    for (const [index, asset] of parsedAssets.entries()) {
+      try {
+        const row = index + 2;
+
+        const catKey = normalize(asset.assetCategory);
+        const unitKey = normalize(asset.associateUnit);
+        const locKey = normalize(asset.locationName);
+        const statusKey = normalize(asset.assetStatus);
+
+        let categoryId = categoryMap.get(catKey);
+        let unitId = unitMap.get(unitKey);
+        let locationId = locationMap.get(locKey);
+        let statusId = statusMap.get(statusKey);
+
+        /* ---------- STRICT MODE ---------- */
+        if (
+          mode === "strict" &&
+          (!categoryId || !unitId || !locationId || !statusId)
+        ) {
+          invalidRows.push({
+            row,
+            reason: "Missing reference data",
+            asset
+          });
+          continue;
+        }
+
+        /* ---------- UPSERT REFERENCES ---------- */
+        if (!categoryId && catKey) {
+          const doc = await Category.findOneAndUpdate(
+            { name: new RegExp(`^${asset.assetCategory}$`, "i"), organizationId },
+            { name: asset.assetCategory, organizationId },
+            { upsert: true, new: true }
+          );
+          categoryId = doc._id;
+          categoryMap.set(catKey, categoryId);
+        }
+
+        if (!unitId && unitKey) {
+          const doc = await Unit.findOneAndUpdate(
+            { name: new RegExp(`^${asset.associateUnit}$`, "i"), organizationId },
+            { name: asset.associateUnit, organizationId },
+            { upsert: true, new: true }
+          );
+          unitId = doc._id;
+          unitMap.set(unitKey, unitId);
+        }
+
+        if (!locationId && locKey) {
+          const doc = await Location.findOneAndUpdate(
+            { name: new RegExp(`^${asset.locationName}$`, "i"), organizationId },
+            { name: asset.locationName, organizationId },
+            { upsert: true, new: true }
+          );
+          locationId = doc._id;
+          locationMap.set(locKey, locationId);
+        }
+
+        if (!statusId && statusKey) {
+          const doc = await Status.findOneAndUpdate(
+            { name: new RegExp(`^${asset.assetStatus}$`, "i"), organizationId },
+            { name: asset.assetStatus, organizationId },
+            { upsert: true, new: true }
+          );
+          statusId = doc._id;
+          statusMap.set(statusKey, statusId);
+        }
+
+        /* =============================
+           📅 DATES
+        ============================== */
+        const dop = parseDate(asset.DateOfPurchase);
+        const doe = parseDate(asset.DateOfExpiry);
+
+        if (!dop) {
+          invalidRows.push({
+            row,
+            reason: "Invalid or missing purchase date",
+            asset
+          });
+          continue;
+        }
+
+        /* =============================
+           🔢 VALIDATION
+        ============================== */
+        const totalQty = Number(asset.assetQuantity || 1);
+
+        if (totalQty <= 0) {
+          invalidRows.push({
+            row,
+            reason: "Invalid asset quantity",
+            asset
+          });
+          continue;
+        }
+
+        const assetType = asset.type?.toLowerCase();
+
+        if (!["one_time", "maintenance"].includes(assetType)) {
+          invalidRows.push({
+            row,
+            reason: "Invalid asset type",
+            asset
+          });
+          continue;
+        }
+
+        /* =============================
+           🏢 VENDOR
+        ============================== */
+        const vendor = {
+          name: asset.vendorName || "",
+          contact: asset.vendorContact || "",
+          supportEmail: asset.vendorEmail || ""
+        };
+
+        /* =============================
+           🧱 FINAL ASSET (CLEAN)
+        ============================== */
+        tempAssets.push({
+          organizationId,
+
+          assetName: asset.assetName,
+          type: assetType,
+
+          assetCategory: categoryId,
+          associateUnit: unitId,
+          locationName: locationId,
+          assetStatus: statusId,
+
+          purchaseDetails: {
+            purchaseDate: dop,
+            vendor
+          },
+
+          DOE: doe || null,
+
+          assetQuantity: totalQty,
+          inUse: 0,
+
+          financialTracking: {
+            totalAssetCost: 0,
+            monthlyCost: 0,
+            yearlyCost: 0,
+            maintenanceTotalCost: 0
+          },
+
+          createdBy: userId
+        });
+
+      } catch (err) {
+        invalidRows.push({
+          row: index + 2,
+          reason: err.message,
+          asset
+        });
+      }
+    }
+
+    /* =============================
+       🆔 GENERATE ASSET CODES
+    ============================== */
+    const org = await Organization.findById(organizationId);
+    const orgCode = org?.orgCode || "ORG";
+
+    const codes = await generateBulkAssetCodes(
+      organizationId,
+      tempAssets.length,
+      orgCode
+    );
+
+    let validAssets = tempAssets.map((asset, i) => ({
+      ...asset,
+      assetCode: codes[i]
+    }));
+
+    /* =============================
+       🚫 PLAN LIMIT CHECK
+    ============================== */
+    const currentCount = await Asset.countDocuments({ organizationId });
+
+    if (assetLimit !== "unlimited") {
+      const available = assetLimit - currentCount;
+
+      if (available <= 0) {
+        return res.status(403).json({
+          success: false,
+          message: "Asset limit reached"
+        });
+      }
+
+      if (validAssets.length > available) {
+        validAssets = validAssets.slice(0, available);
+      }
+    }
+
+    /* =============================
+       💾 INSERT
+    ============================== */
+    if (validAssets.length > 0) {
+      await Asset.insertMany(validAssets);
+    }
+
+    /* =============================
+       🔔 NOTIFICATION
+    ============================== */
+    await sendNotification({
+      req,
+      userId,
+      title: "Bulk Upload Completed",
+      message: `${validAssets.length} assets uploaded successfully.`,
+      redirectUrl: "/inventory",
+      type: "success"
+    });
+
+    /* =============================
+       ✅ RESPONSE
+    ============================== */
+    return res.status(200).json({
+      success: true,
+      inserted: validAssets.length,
+      skipped: invalidRows.length,
+      invalidRows
+    });
+
+  } catch (err) {
+    console.error("❌ Bulk Upload Error:", err);
+    return next(err);
   }
-
-  // ---------- INSERT ----------
-  if (validAssets.length > 0) {
-    const insertedDocs = await Asset.insertMany(validAssets);
-    console.log("Inserted docs count:", insertedDocs.length);
-
-    const totalCount = await Asset.countDocuments({ organizationId });
-    console.log("Total docs in org:", totalCount);
-  }
-      // ---------- NOTIFICATION ----------
-      await sendNotification({
-        req,
-        userId,
-        title: "Bulk Upload Completed",
-        message: `${validAssets.length} assets uploaded successfully.`,
-        redirectUrl: "/inventory",
-        type: "success",
-      });
-
-      return res.status(200).json({
-        success: true,
-        inserted: validAssets.length,
-        skipped: invalidRows.length,
-        invalidRows,
-      });
-    } catch (err) {
-      console.error("❌ Bulk Upload Error:", err);
-      return next(err);
-    }
-  };
+};
 
 
 
@@ -1383,12 +1338,334 @@ const updateAssetInstance = async (req, res, next) => {
     return next(error);
   }
 };
+const bulkUploadInstances = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
+    const organizationId = req.user?.organizationId;
+
+    if (!userId || !organizationId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const { assetId, instances, mode = "strict" } = req.body;
+
+    if (!assetId || !instances) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing assetId or instances",
+      });
+    }
+
+    let parsedInstances;
+    try {
+      parsedInstances = Array.isArray(instances)
+        ? instances
+        : JSON.parse(instances);
+    } catch {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid JSON format",
+      });
+    }
+
+    /* --------------------------------------------------
+       🔍 FETCH PARENT ASSET
+    -------------------------------------------------- */
+
+    let asset = await Asset.findById(assetId);
+    let assetTypeRef = "Asset";
+
+    if (!asset) {
+      asset = await SoftwareAsset.findById(assetId);
+      assetTypeRef = "SoftwareAsset";
+    }
+
+    if (!asset) {
+      return res.status(404).json({
+        success: false,
+        message: "Parent asset not found",
+      });
+    }
+
+    const assetType =
+      assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
+
+    /* --------------------------------------------------
+       🔒 QUANTITY VALIDATION
+    -------------------------------------------------- */
+
+    const existingCount = await AssetInstance.countDocuments({
+      assetId,
+      organizationId,
+    });
+
+    if (existingCount + parsedInstances.length > asset.assetQuantity) {
+      return res.status(400).json({
+        success: false,
+        message: "Exceeds asset quantity",
+      });
+    }
+
+    /* --------------------------------------------------
+       🔒 SERIAL VALIDATION (HARDWARE ONLY)
+    -------------------------------------------------- */
+
+    const serials = parsedInstances
+      .map((i) => i.serialNumber)
+      .filter(Boolean);
+
+    if (new Set(serials).size !== serials.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Duplicate serials in upload",
+      });
+    }
+
+    const existingSerials = await AssetInstance.find({
+      organizationId,
+      serialNumber: { $in: serials },
+    });
+
+    if (existingSerials.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Serial already exists",
+      });
+    }
+
+    /* --------------------------------------------------
+       🧠 UTIL: Insurance Expiry Calculator
+    -------------------------------------------------- */
+
+    const calculateInsuranceExpiry = (date, term) => {
+      if (!date) return null;
+
+      const d = new Date(date);
+
+      if (term === "6_months") d.setMonth(d.getMonth() + 6);
+      if (term === "1_year") d.setFullYear(d.getFullYear() + 1);
+      if (term === "3_years") d.setFullYear(d.getFullYear() + 3);
+
+      return d;
+    };
+
+    /* --------------------------------------------------
+       🚀 BUILD INSTANCES
+    -------------------------------------------------- */
+
+    let validInstances = [];
+    let invalidRows = [];
+
+    parsedInstances.forEach((inst, index) => {
+      try {
+        const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
+
+        /* ---------------- HARDWARE ---------------- */
+        if (assetType === "hardware") {
+          const purchaseDate = inst.hardware?.purchaseDate || null;
+          const warrantyPurchaseDate =
+            inst.hardware?.warrantyPurchaseDate ||
+            purchaseDate;
+
+          const insurancePurchaseDate =
+            inst.hardware?.insurancePurchaseDate || null;
+
+          const insuranceTerm =
+            inst.hardware?.insuranceTerm || "1_year";
+
+          validInstances.push({
+            organizationId,
+            assetId,
+            assetTypeRef,
+            assetType,
+
+            instanceCode,
+
+            serialNumber: inst.serialNumber || undefined,
+            deviceName: inst.deviceName || "",
+
+            location: inst.location,
+            condition: inst.condition || "new",
+            status: "in_stock",
+
+            hardware: {
+              modelNo: inst.hardware?.modelNo || "",
+              specifications: inst.hardware?.specifications || "",
+
+              purchaseDate,
+              installationDate:
+                inst.hardware?.installationDate || null,
+
+              warrantyPurchaseDate,
+              warrantyExpiry:
+                inst.hardware?.warrantyExpiry || null,
+
+              insuranceId: inst.hardware?.insuranceId || "",
+
+              insurancePurchaseDate,
+              insuranceTerm,
+
+              coverageType:
+                inst.hardware?.coverageType || "comprehensive",
+
+              insuranceExpiry: calculateInsuranceExpiry(
+                insurancePurchaseDate,
+                insuranceTerm
+              ),
+
+              nextMaintenanceDate:
+                inst.hardware?.nextMaintenanceDate || null,
+
+              purchaseCost:
+                inst.hardware?.purchaseCost || null,
+
+              costs: {
+                maintenanceCost:
+                  Number(inst.hardware?.costs?.maintenanceCost) || 0,
+                warrantyRenewalCost:
+                  Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
+                insuranceCost:
+                  Number(inst.hardware?.costs?.insuranceCost) || 0,
+              },
+            },
+
+            lifecycle: [
+              {
+                action: "CREATED",
+                date: new Date(),
+                notes: "Bulk instance upload",
+              },
+            ],
+
+            createdBy: userId,
+          });
+        }
+
+        /* ---------------- SOFTWARE ---------------- */
+        else {
+          validInstances.push({
+            organizationId,
+            assetId,
+            assetTypeRef,
+            assetType,
+
+            instanceCode,
+
+            location: inst.location,
+            condition: inst.condition || "new",
+            status: "in_stock",
+
+            software: {
+              licenseKey: inst.software?.licenseKey || "",
+              licenseNumber:
+                inst.software?.licenseNumber || "",
+
+              purchaseDate:
+                inst.software?.purchaseDate || null,
+              installationDate:
+                inst.software?.installationDate || null,
+              renewalDate:
+                inst.software?.renewalDate || null,
+              lastUsedDate:
+                inst.software?.lastUsedDate || null,
+
+              purchaseCost:
+                inst.software?.purchaseCost || null,
+
+              costs: {
+                renewalCost:
+                  Number(inst.software?.costs?.renewalCost) || 0,
+              },
+            },
+
+            lifecycle: [
+              {
+                action: "CREATED",
+                date: new Date(),
+                notes: "Bulk instance upload",
+              },
+            ],
+
+            createdBy: userId,
+          });
+        }
+      } catch (err) {
+        invalidRows.push({
+          row: index + 2,
+          reason: err.message,
+          inst,
+        });
+      }
+    });
+
+    /* --------------------------------------------------
+       💾 INSERT
+    -------------------------------------------------- */
+
+    let inserted = [];
+
+    if (validInstances.length) {
+      inserted = await AssetInstance.insertMany(validInstances, {
+        ordered: false,
+      });
+    }
+
+    /* --------------------------------------------------
+       💰 UPDATE PARENT COST
+    -------------------------------------------------- */
+
+    const aggregation = await AssetInstance.aggregate([
+      {
+        $match: { assetId: asset._id, organizationId },
+      },
+      {
+        $group: {
+          _id: null,
+          totalCost: {
+            $sum: {
+              $cond: [
+                { $eq: ["$assetType", "hardware"] },
+                { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+                { $ifNull: ["$software.purchaseCost.amount", 0] },
+              ],
+            },
+          },
+        },
+      },
+    ]);
+
+    const totalCost = aggregation[0]?.totalCost || 0;
+
+    await (assetType === "hardware" ? Asset : SoftwareAsset)
+      .findByIdAndUpdate(asset._id, {
+        "financialTracking.totalAssetCost": totalCost,
+      });
+
+    /* --------------------------------------------------
+       ✅ RESPONSE
+    -------------------------------------------------- */
+
+    return res.status(200).json({
+      success: true,
+      inserted: inserted.length,
+      skipped: invalidRows.length,
+      invalidRows,
+    });
+  } catch (err) {
+    console.error("❌ Bulk Instance Upload Error:", err);
+    return next(err);
+  }
+};
   module.exports = {
     addAsset,
     updateAsset,
     deleteAsset,
     getAllAssets,
-    bulkUpload,
+    bulkUploadInstances,
+    bulkUploadAssets,
     createAssetInstance,
     getAssetById,
     updateAssetInstance

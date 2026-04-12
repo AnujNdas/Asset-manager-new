@@ -8,7 +8,8 @@ const {
   deleteAsset,
   getAllAssets,
   updateAsset,
-  bulkUpload,
+  bulkUploadAssets,
+  bulkUploadInstances,
   createAssetInstance,
   getAssetById,
   updateAssetInstance
@@ -68,7 +69,15 @@ router.post(
   tenantMiddleware,
   requireActiveSubscription,
   uploadBulk.fields([{ name: "excel" }]),
-  bulkUpload
+  bulkUploadAssets
+);
+router.post(
+  "/bulk-Instances",
+  authenticateToken(["admin"]),
+  tenantMiddleware,
+  requireActiveSubscription,
+  uploadBulk.fields([{ name: "excel" }]),
+  bulkUploadInstances
 );
 router.post(
   "/create-instances",
