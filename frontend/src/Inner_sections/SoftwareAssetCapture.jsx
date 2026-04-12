@@ -223,14 +223,15 @@ const handleSubmit = async () => {
     <div className="right-panel">
 
       <div className="form-card">
-
-        <h3>Software Details</h3>
-            <button 
-        className="import-btn"
-        onClick={() => setShowImport(true)}
-      >
-        ⬆ Import Excel
-      </button>
+        <div className="capture-header">
+          <h3>Software Details</h3>
+              <button 
+          className="import-btn"
+          onClick={() => setShowImport(true)}
+          >
+          ⬆ Import Excel
+        </button>
+          </div>
 
         <div className="grid-2">
           <div className="input-group">

@@ -44,13 +44,13 @@ if (token) {
         >
           <span className="tab-text2">Software</span>
         </button>
-
+{/* 
         <button
           className={activeTab === "import" ? "tab active" : "tab"}
           onClick={() => setActiveTab("import")}
         >
-          <span className="tab-text2">Import</span> {/* Only one import tab */}
-        </button>
+          <span className="tab-text2">Import</span>
+        </button> */}
 
       </div>
 

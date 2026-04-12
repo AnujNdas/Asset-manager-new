@@ -6,7 +6,11 @@
   margin: auto;
   border-radius: 10px;
 }
-
+.capture-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 /* ===== LEFT PANEL ===== */
 .left-panel {
   flex: 0.5;
@@ -132,6 +136,7 @@
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
+  border: none;
 }
 
 .import-modal {

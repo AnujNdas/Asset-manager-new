@@ -334,6 +334,7 @@ const payload = {
       {/* RIGHT FORM PANEL */}
       <div className="right-panel">
         <div className="form-card">
+          <div className="capture-header">
 
           <h3>Hardware Details</h3>
           <button 
@@ -342,6 +343,7 @@ const payload = {
   >
     ⬆ Import Excel
   </button>
+          </div>
           <div className="grid-2">
             <div className="input-group">
               <label>Asset Name *</label>
