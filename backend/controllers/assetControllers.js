@@ -1163,7 +1163,8 @@ const calculateInsuranceExpiry = (purchaseDate, term) => {
                 inst.hardware?.warrantyExpiry || null,
 
               insuranceId: inst.hardware?.insuranceId || "",
-
+                        coverageType:
+            inst.hardware?.coverageType || "comprehensive",
               insurancePurchaseDate: purchaseDate,
               insuranceTerm: term,
 

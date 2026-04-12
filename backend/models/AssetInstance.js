@@ -79,7 +79,25 @@ hardware: {
     enum: ["6_months", "1_year", "3_years"],
     default: "1_year"
   },
-
+  coverageType: {
+  type: String,
+  enum: [
+    "comprehensive",
+    "accidental_damage",
+    "third_party",
+    "other",
+    "Theft & Burglary",
+    "Fire & Lightning",
+    "Natural Disasters",
+    "Vandalism",
+    "Business Interruption",
+    "Transit/Marine Cargo",
+    "Cyber-Physical Damage",
+    "Electrical Surge",
+    "Mechanical Breakdown"
+  ],
+  default: "comprehensive"
+},
   nextMaintenanceDate: Date,
   purchaseCost: costSchema,   // 🔥 NEW
   costs: {

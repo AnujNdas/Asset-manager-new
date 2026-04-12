@@ -20,6 +20,21 @@ const currencyOptions = [
   "AED",
   "CNY",
 ];
+const coverageOptions = [
+  { label: "Comprehensive", value: "comprehensive" },
+  { label: "Accidental Damage", value: "accidental_damage" },
+  { label: "Third Party", value: "third_party" },
+  { label: "Theft & Burglary", value: "Theft & Burglary" },
+  { label: "Fire & Lightning", value: "Fire & Lightning" },
+  { label: "Natural Disasters", value: "Natural Disasters" },
+  { label: "Vandalism", value: "Vandalism" },
+  { label: "Business Interruption", value: "Business Interruption" },
+  { label: "Transit / Marine Cargo", value: "Transit/Marine Cargo" },
+  { label: "Cyber-Physical Damage", value: "Cyber-Physical Damage" },
+  { label: "Electrical Surge", value: "Electrical Surge" },
+  { label: "Mechanical Breakdown", value: "Mechanical Breakdown" },
+  { label: "Other", value: "other" }
+];
 const CreateInstances = () => {
   const { assetId } = useParams();
   const navigate = useNavigate();
@@ -45,6 +60,7 @@ const CreateInstances = () => {
     warrantyDate: "",
     installationDate: "",
     insurancePolicyId: "",
+    coverageType: "comprehensive",
     insuranceExpiry: "",
     maintenanceCost: "",
     warrantyRenewalCost: "",
@@ -125,6 +141,7 @@ insuranceTerm: "1_year", // if you're using term
           maintenanceCost: "",
           warrantyRenewalCost: "",
           insuranceCost: "",
+          coverageType: "comprehensive",
             nextMaintenanceDate: "", // ✅ ADD THIS
           // 🔹 hardware additions
           purchaseDate: "",
@@ -175,7 +192,8 @@ insuranceTerm: "1_year", // if you're using term
     bulkValues.warrantyPurchaseDate || inst.warrantyPurchaseDate,
 
   installationDate: bulkValues.installationDate || inst.installationDate,
-
+      coverageType:
+  bulkValues.coverageType || inst.coverageType,
   insurancePolicyId:
     bulkValues.insurancePolicyId || inst.insurancePolicyId,
 
@@ -311,7 +329,7 @@ insuranceTerm: "1_year", // if you're using term
 
             warrantyPurchaseDate: inst.warrantyPurchaseDate || null,
 warrantyExpiry: inst.warrantyDate || null,
-
+coverageType: inst.coverageType || "comprehensive",
 insurancePurchaseDate: inst.insurancePurchaseDate || null,
 insuranceTerm: inst.insuranceTerm || "1_year",
 
@@ -550,6 +568,23 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                 }
               />
               </div>
+              <div className="form-group">
+ <select
+  value={bulkValues.coverageType}
+  onChange={(e) =>
+    setBulkValues({
+      ...bulkValues,
+      coverageType: e.target.value,
+    })
+  }
+>
+  {coverageOptions.map(opt => (
+    <option key={opt.value} value={opt.value}>
+      {opt.label}
+    </option>
+  ))}
+</select>
+</div>
               <div className="form-group">
   <label>Insurance Purchase Date</label>
   <input
@@ -944,6 +979,20 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                         }
                       />
                           </div>
+                          <div>
+ <select
+  value={inst.coverageType}
+  onChange={(e) =>
+    handleChange(index, "coverageType", e.target.value)
+  }
+>
+  {coverageOptions.map(opt => (
+    <option key={opt.value} value={opt.value}>
+      {opt.label}
+    </option>
+  ))}
+</select>
+</div>
                           <div>
   <label>Insurance Purchase Date</label>
   <input
