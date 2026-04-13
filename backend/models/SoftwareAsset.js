@@ -25,12 +25,6 @@ const SoftwareAssetSchema = new mongoose.Schema(
       required: true,
     },
 
-    assetStatus: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Status",
-      required: true,
-    },
-
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
@@ -62,11 +56,11 @@ const SoftwareAssetSchema = new mongoose.Schema(
       default: 0,
     },
     DOE: { type: Date },
-financialTracking: {
-  totalCost: { type: Number, default: 0 },        // 🔥 from instances
-  monthlyCost: { type: Number, default: 0 },      // derived later
-  yearlyCost: { type: Number, default: 0 }
-},
+    financialTracking: {
+      totalCost: { type: Number, default: 0 }, // 🔥 from instances
+      monthlyCost: { type: Number, default: 0 }, // derived later
+      yearlyCost: { type: Number, default: 0 },
+    },
 
     // Parent-level renewal config only
     renewal: {
@@ -86,16 +80,24 @@ financialTracking: {
       },
     ],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
 
 // indexes
 SoftwareAssetSchema.index({ organizationId: 1, assetCategory: 1 });
-SoftwareAssetSchema.index({ organizationId: 1, assetStatus: 1 });
 SoftwareAssetSchema.index({ organizationId: 1, locationName: 1 });
 
 SoftwareAssetSchema.virtual("inStock").get(function () {
   return this.assetQuantity - this.inUse;
+});
+SoftwareAssetSchema.virtual("status").get(function () {
+  if (this.inUse === 0) return "In stock";
+  if (this.inUse === this.assetQuantity) return "Fully in use";
+  return "Partially in use";
 });
 
 module.exports = mongoose.model("SoftwareAsset", SoftwareAssetSchema);

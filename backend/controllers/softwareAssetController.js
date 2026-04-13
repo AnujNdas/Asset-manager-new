@@ -363,40 +363,43 @@ const expiryDate = parseDate(req.body.DOE);
         message: "Invalid software category",
       });
     }
+const { assetStatus, ...cleanBody } = req.body;
 
-    const asset = await SoftwareAsset.create({
-      ...req.body,
+const asset = await SoftwareAsset.create({
+  ...cleanBody,
 
-      purchaseDetails: {
-        purchaseDate,
-vendor: {
-  name: req.body.purchaseDetails?.vendor?.name || "",
-  contact: req.body.purchaseDetails?.vendor?.contact || "",
-  supportEmail: req.body.purchaseDetails?.vendor?.supportEmail || ""
-}
-      },
+  purchaseDetails: {
+    purchaseDate,
+    vendor: {
+      name: req.body.purchaseDetails?.vendor?.name || "",
+      contact: req.body.purchaseDetails?.vendor?.contact || "",
+      supportEmail: req.body.purchaseDetails?.vendor?.supportEmail || ""
+    }
+  },
 
-      renewal: {
-        expiryDate,
-        renewalTerm: req.body.renewalTerm,
-        nextRenewalDate: expiryDate,
-      },
+  renewal: {
+    expiryDate,
+    renewalTerm: req.body.renewalTerm,
+    nextRenewalDate: expiryDate,
+  },
 
-      organizationId,
-      type,
-      assetCode: await generateSoftwareCode(organizationId),
+  organizationId,
+  type,
+  assetCode: await generateSoftwareCode(organizationId),
 
-      // 🔥 EMPTY AGGREGATE INIT
-      financialTracking: {
-        totalCost: 0,
-        monthlyCost: 0,
-        yearlyCost: 0
-      },
+  assetQuantity: quantity,
+  inUse: 0,
 
-      auditHistory: [
-        { date: new Date(), notes: `Created by user ${userId}` }
-      ]
-    });
+  financialTracking: {
+    totalCost: 0,
+    monthlyCost: 0,
+    yearlyCost: 0
+  },
+
+  auditHistory: [
+    { date: new Date(), notes: `Created by user ${userId}` }
+  ]
+});
     await sendNotification({
       req,
       userId,

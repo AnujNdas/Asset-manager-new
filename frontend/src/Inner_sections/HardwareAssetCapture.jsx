@@ -5,7 +5,6 @@
     getUnits,
     getLocations,
     getCategories,
-    getStatuses,
     createHardwareAsset,
     bulkUploadHardwareAssets
   } from "../Services/ApiServices";
@@ -20,7 +19,6 @@ const downloadTemplate = () => {
       assetCategory: "IT Equipment",
       associateUnit: "Head Office",
       locationName: "Mumbai",
-      assetStatus: "In Stock",
       type: "one_time", // one_time / maintenance
       assetQuantity: 10,
       purchaseDate: "2026-04-01",
@@ -66,7 +64,6 @@ const defaultFormData = {
   assetName: "",
   associateUnit: "",
   locationName: "",
-  assetStatus: "",
   DOE: "",
   purchaseFrom: "",
   type: "",
@@ -79,7 +76,6 @@ const defaultFormData = {
     const [units, setUnits] = useState([]);
     const [locations, setLocations] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [statuses, setStatuses] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showImport, setShowImport] = useState(false);
 const [importFile, setImportFile] = useState(null);
@@ -92,13 +88,11 @@ const [importLoading, setImportLoading] = useState(false);
           getUnits(),
           getLocations(),
           getCategories("hardware"),
-          getStatuses(),
         ]);
         console.log("category RESPONSE:", c);
         setUnits(Array.isArray(u) ? u : []);
         setLocations(Array.isArray(l?.data) ? l.data : []);
         setCategories(Array.isArray(c) ? c : []);
-        setStatuses(Array.isArray(s) ? s : []);
 
         console.log("LOCATION RESPONSE:", l);
       } catch (e) {
@@ -138,9 +132,11 @@ const [importLoading, setImportLoading] = useState(false);
         text : "Put cost Values like this"
       },
       {
-        title: "status",
-        image: "/guide/status.webp",
-        text : "Always use Instock for status"
+
+  title: "Availability",
+  image: "/guide/status.webp",
+  text: "Assets are automatically available after creation. Assignment will update their usage."
+
       },
       // {
       //   title: "Warranty & Insurance",
@@ -268,7 +264,6 @@ const [importLoading, setImportLoading] = useState(false);
     if (!formData.assetCategory) missing.push("Category");
     if (!formData.associateUnit) missing.push("Unit");
     if (!formData.locationName) missing.push("Location");
-    if (!formData.assetStatus) missing.push("Status");
     if (!formData.type) missing.push("Type");
     if (!formData.assetQuantity) missing.push("Quantity");
     if (!formData.DOP) missing.push("Purchase Date");
@@ -293,7 +288,6 @@ const payload = {
   assetCategory: formData.assetCategory,
   associateUnit: formData.associateUnit,
   locationName: formData.locationName,
-  assetStatus: formData.assetStatus,
   type: formData.type,
   assetQuantity: Number(formData.assetQuantity),
 
@@ -349,7 +343,7 @@ const payload = {
           <h4>Tips</h4>
           <ul>
             <li>Use correct quantity</li>
-            <li>Always set status as <b>In Stock</b></li>
+            <li>Status is managed automatically based on usage</li>
             <li>Enter accurate cost for reports</li>
           </ul>
         </div>
@@ -432,20 +426,6 @@ const payload = {
           </div>
 
           <div className="grid-2">
-
-            <div className="input-group">
-              <label>Status *</label>
-              <select
-                name="assetStatus"
-                value={formData.assetStatus}
-                onChange={handleChange}
-              >
-                <option value="">Select</option>
-                {statuses.map(s => (
-                  <option key={s._id} value={s._id}>{s.name}</option>
-                ))}
-              </select>
-            </div>
           <div className="input-group">
             <label>Type *</label>
             <select

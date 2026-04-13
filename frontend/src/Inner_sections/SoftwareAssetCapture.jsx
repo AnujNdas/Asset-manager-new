@@ -20,7 +20,6 @@ const downloadTemplate = () => {
       assetCategory: "Design Software",
       associateUnit: "IT Department",
       locationName: "Head Office",
-      assetStatus: "Active",
       type: "yearly",
       assetQuantity: 10,
       purchaseDate: "2026-01-01",
@@ -75,7 +74,6 @@ const downloadTemplate = () => {
 
     assetQuantity: "",
 
-    assetStatus: "",
   };
 
   export default function SoftwareAssetCapture() {
@@ -83,7 +81,6 @@ const downloadTemplate = () => {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState(initialForm);
 
-    const [statuses, setStatuses] = useState([]);
     const [categories, setCategories] = useState([]);
     const [units, setUnits] = useState([]);
     const [locations, setLocations] = useState([]);
@@ -98,12 +95,10 @@ const downloadTemplate = () => {
           getUnits(),
           getLocations(),
           getCategories("software"),
-          getStatuses(),
         ]);
         setUnits(u || []);
         setLocations(l?.data || []);
         setCategories(c || []);
-        setStatuses(s || []);
       })();
     }, []);
     const validateRequired = () => {
@@ -178,7 +173,6 @@ const handleSubmit = async () => {
       assetCategory: formData.assetCategory,
       associateUnit: formData.associateUnit,
       locationName: formData.locationName,
-      assetStatus: formData.assetStatus,
       type: formData.type,
       assetQuantity: Number(formData.assetQuantity),
 
@@ -315,15 +309,6 @@ const handleSubmit = async () => {
               <option value="monthly">Monthly</option>
               <option value="yearly">Yearly</option>
               <option value="one_time">One-Time</option>
-            </select>
-          </div>
-                  <div className="input-group">
-            <label>Status</label>
-            <select name="assetStatus" onChange={handleChange}>
-              <option value="">Select</option>
-              {statuses.map(l => (
-                <option key={l._id} value={l._id}>{l.name}</option>
-              ))}
             </select>
           </div>
         </div>

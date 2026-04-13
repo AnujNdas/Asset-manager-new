@@ -291,11 +291,16 @@ const assignAssetInstance = async (req, res) => {
 
       const Model = assetType === "hardware" ? Asset : SoftwareAsset;
 
-      await Model.findByIdAndUpdate(
-        assetId,
-        { $inc: { inUse: 1 } },
-        { session }
-      );
+const inUseCount = await AssetInstance.countDocuments({
+  assetId,
+  status: "in_use"
+}).session(session);
+
+await Model.findByIdAndUpdate(
+  assetId,
+  { inUse: inUseCount },
+  { session }
+);
 
       results.push(assignment);
     }
@@ -610,6 +615,120 @@ instance.lifecycle.push({
     });
   }
 };
+const unassignAssetInstance = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const { assetInstanceId } = req.body;
+
+    if (!assetInstanceId) {
+      throw new Error("Asset instance ID is required");
+    }
+
+    /* =============================
+       FETCH INSTANCE
+    ============================== */
+
+    const instance = await AssetInstance.findById(assetInstanceId).session(session);
+
+    if (!instance) {
+      throw new Error("Instance not found");
+    }
+
+    if (instance.status !== "in_use") {
+      throw new Error("Instance is not currently assigned");
+    }
+
+    /* =============================
+       FETCH ACTIVE ASSIGNMENT
+    ============================== */
+
+    const assignment = await AssetAssignment.findOne({
+      assetInstanceId,
+      status: "active"
+    }).session(session);
+
+    if (!assignment) {
+      throw new Error("Active assignment not found");
+    }
+
+    /* =============================
+       UPDATE INSTANCE
+    ============================== */
+
+    const previousAssignee = instance.assignedTo;
+
+    instance.status = "in_stock";
+    instance.assignedTo = null;
+
+    /* =============================
+       LIFECYCLE LOG
+    ============================== */
+
+    instance.lifecycle.push({
+      action: "UNASSIGNED",
+      from: previousAssignee,
+      to: null,
+      snapshot: {
+        location: instance.location,
+        condition: instance.condition,
+      },
+      date: new Date(),
+      notes: `Returned from ${previousAssignee?.employeeName || "unknown"}`
+    });
+
+    await instance.save({ session });
+
+    /* =============================
+       CLOSE ASSIGNMENT
+    ============================== */
+
+    assignment.status = "inactive";
+    assignment.returnedAt = new Date();
+
+    await assignment.save({ session });
+
+    /* =============================
+       UPDATE ASSET STOCK (RECOMPUTE)
+    ============================== */
+
+    const Model =
+      instance.assetType === "hardware" ? Asset : SoftwareAsset;
+
+    const inUseCount = await AssetInstance.countDocuments({
+      assetId: instance.assetId,
+      status: "in_use"
+    }).session(session);
+
+    await Model.findByIdAndUpdate(
+      instance.assetId,
+      { inUse: inUseCount },
+      { session }
+    );
+
+    /* =============================
+       COMMIT
+    ============================== */
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({
+      success: true,
+      message: "Asset unassigned successfully"
+    });
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 module.exports = {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
@@ -617,5 +736,6 @@ module.exports = {
   assignAssetInstance,
   returnAssetInstance,
   getEmployeesByDepartment,
-  reassignAssetInstance
+  reassignAssetInstance,
+  unassignAssetInstance
 };

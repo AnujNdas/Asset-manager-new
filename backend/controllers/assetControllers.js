@@ -480,13 +480,6 @@ const bulkUploadAssets = async (req, res, next) => {
       }
 
       const assetQuantity = Number(req.body.assetQuantity || 1);
-      const inUse = 0;
-
-      if (inUse > assetQuantity) {
-        return res.status(400).json({
-          message: "In-use quantity cannot exceed total quantity",
-        });
-      }
 
   if (assetQuantity <= 0) {
     return res.status(400).json({ message: "Invalid quantity" });
@@ -528,9 +521,9 @@ if (!parsedDOP || isNaN(parsedDOP.getTime())) {
   const parsedDOE = req.body.DOE ? parseDate(req.body.DOE) : null;
   const vendor = buildVendor(req.body.purchaseDetails?.vendor);
 
-
+const { assetStatus, ...cleanBody } = req.body;
 const newAsset = new Asset({
-  ...req.body,
+  ...cleanBody,
 
   purchaseDetails: {
     purchaseDate: parsedDOP,
