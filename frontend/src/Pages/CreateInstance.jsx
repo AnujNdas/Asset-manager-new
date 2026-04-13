@@ -621,12 +621,14 @@ insuranceTerm: inst.insuranceTerm || "1_year",
   value={coverageOptions.filter(opt =>
     (bulkValues.coverageType || []).includes(opt.value)
   )}
-onChange={(selected) => {
+onChange={(selected, actionMeta) => {
   let values = selected ? selected.map(s => s.value) : [];
 
-  if (values.includes("none") && values.length > 1) {
+  const lastSelected = actionMeta?.option?.value;
+
+  if (lastSelected === "none") {
     values = ["none"];
-  } else if (!values.includes("none")) {
+  } else {
     values = values.filter(v => v !== "none");
   }
 
@@ -1035,14 +1037,16 @@ onChange={(selected) => {
   value={coverageOptions.filter(opt =>
     inst.coverageType?.includes(opt.value)
   )}
-  onChange={(selected) => {
+onChange={(selected, actionMeta) => {
   let values = selected ? selected.map(s => s.value) : [];
 
-  if (values.includes("none") && values.length > 1) {
-    // User selected "none" along with others → keep only "none"
+  const lastSelected = actionMeta?.option?.value;
+
+  if (lastSelected === "none") {
+    // If user clicked "None" → override everything
     values = ["none"];
-  } else if (!values.includes("none")) {
-    // User selected something else → remove "none"
+  } else {
+    // If user selected anything else → remove "none"
     values = values.filter(v => v !== "none");
   }
 
