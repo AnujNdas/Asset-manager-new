@@ -79,23 +79,23 @@ hardware: {
     enum: ["6_months", "1_year", "3_years"],
     default: "1_year"
   },
-  coverageType: {
-  type: [String], // 🔥 ARRAY
+coverageType: {
+  type: [String],
   enum: [
     "comprehensive",
     "accidental_damage",
     "third_party",
     "other",
-    "Theft & Burglary",
-    "Fire & Lightning",
-    "Natural Disasters",
-    "Vandalism",
-    "Business Interruption",
-    "Transit/Marine Cargo",
-    "Cyber-Physical Damage",
-    "Electrical Surge",
-    "Mechanical Breakdown",
-    "None"
+    "theft_burglary",
+    "fire_lightning",
+    "natural_disasters",
+    "vandalism",
+    "business_interruption",
+    "transit_marine_cargo",
+    "cyber_physical_damage",
+    "electrical_surge",
+    "mechanical_breakdown",
+    "none"
   ],
   default: ["comprehensive"]
 },

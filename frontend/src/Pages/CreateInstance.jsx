@@ -26,15 +26,15 @@ const coverageOptions = [
   { label: "Comprehensive", value: "comprehensive" },
   { label: "Accidental Damage", value: "accidental_damage" },
   { label: "Third Party", value: "third_party" },
-  { label: "Theft & Burglary", value: "Theft & Burglary" },
-  { label: "Fire & Lightning", value: "Fire & Lightning" },
-  { label: "Natural Disasters", value: "Natural Disasters" },
-  { label: "Vandalism", value: "Vandalism" },
-  { label: "Business Interruption", value: "Business Interruption" },
-  { label: "Transit / Marine Cargo", value: "Transit/Marine Cargo" },
-  { label: "Cyber-Physical Damage", value: "Cyber-Physical Damage" },
-  { label: "Electrical Surge", value: "Electrical Surge" },
-  { label: "Mechanical Breakdown", value: "Mechanical Breakdown" },
+  { label: "Theft & Burglary", value: "theft_burglary" },
+  { label: "Fire & Lightning", value: "fire_lightning" },
+  { label: "Natural Disasters", value: "natural_disasters" },
+  { label: "Vandalism", value: "vandalism" },
+  { label: "Business Interruption", value: "business_interruption" },
+  { label: "Transit / Marine Cargo", value: "transit_marine_cargo" },
+  { label: "Cyber-Physical Damage", value: "cyber_physical_damage" },
+  { label: "Electrical Surge", value: "electrical_surge" },
+  { label: "Mechanical Breakdown", value: "mechanical_breakdown" },
   { label: "Other", value: "other" },
   { label: "None", value: "none" }
 ];
@@ -619,21 +619,24 @@ insuranceTerm: inst.insuranceTerm || "1_year",
   classNamePrefix="react-select"
   options={coverageOptions}
   value={coverageOptions.filter(opt =>
-    bulkValues.coverageType?.includes(opt.value)
+    (bulkValues.coverageType || []).includes(opt.value)
   )}
-  onChange={(selected) => {
-    let values = selected ? selected.map(s => s.value) : [];
+ onChange={(selected) => {
+  let values = selected ? selected.map(s => s.value) : [];
 
-    // 🔥 "None" logic
-    if (values.includes("None")) {
-      values = ["None"];
-    }
+  if (values.includes("none") && values.length > 1) {
+    // If "none" + others → remove others
+    values = ["none"];
+  } else {
+    // If selecting other values → remove "none"
+    values = values.filter(v => v !== "none");
+  }
 
-    setBulkValues({
-      ...bulkValues,
-      coverageType: values,
-    });
-  }}
+  setBulkValues({
+    ...bulkValues,
+    coverageType: values,
+  });
+}}
 />
 </div>
               <div className="form-group">
@@ -1035,15 +1038,14 @@ insuranceTerm: inst.insuranceTerm || "1_year",
     inst.coverageType?.includes(opt.value)
   )}
   onChange={(selected) => {
-    let values = selected ? selected.map(s => s.value) : [];
+  let values = selected ? selected.map(s => s.value) : [];
 
-    // 🔥 "None" logic
-    if (values.includes("None")) {
-      values = ["None"];
-    }
+  if (values.includes("none")) {
+    values = ["none"];
+  }
 
-    handleChange(index, "coverageType", values);
-  }}
+  handleChange(index, "coverageType", values);
+}}
 />
 </div>
                           <div>
