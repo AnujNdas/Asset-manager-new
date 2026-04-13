@@ -754,7 +754,6 @@ const getAllAssets = async (req, res, next) => {
     /* ================= ASSETS ================= */
     const assets = await Asset.find(filter)
       .populate("assetCategory", "name")
-      .populate("assetStatus", "name")
       .populate("associateUnit", "name")
       .populate("locationName", "name")
       .lean();
