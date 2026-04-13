@@ -234,7 +234,24 @@ button {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
+.react-select__control {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  min-height: 42px;
+}
 
+.react-select__multi-value {
+  background-color: #2563eb;
+  color: white;
+}
+
+.react-select__multi-value__label {
+  color: white;
+}
+
+.react-select__multi-value__remove {
+  color: white;
+}
 /* ===== MOBILE FIRST RESPONSIVE ===== */
 
 /* TABLET */

@@ -9,6 +9,7 @@ import {
   getAssetById,
   bulkUploadInstances
 } from "../Services/ApiServices";
+import Select from "react-select";
 const currencyOptions = [
   "INR",
   "USD",
@@ -34,7 +35,8 @@ const coverageOptions = [
   { label: "Cyber-Physical Damage", value: "Cyber-Physical Damage" },
   { label: "Electrical Surge", value: "Electrical Surge" },
   { label: "Mechanical Breakdown", value: "Mechanical Breakdown" },
-  { label: "Other", value: "other" }
+  { label: "Other", value: "other" },
+  { label: "None", value: "none" }
 ];
 const CreateInstances = () => {
   const { assetId } = useParams();
@@ -611,21 +613,28 @@ insuranceTerm: inst.insuranceTerm || "1_year",
               </div>
               <div className="form-group">
                                          <label>Coverage Type</label>
- <select
-  value={bulkValues.coverageType}
-  onChange={(e) =>
+<Select
+  isMulti
+  className="react-select-container"
+  classNamePrefix="react-select"
+  options={coverageOptions}
+  value={coverageOptions.filter(opt =>
+    bulkValues.coverageType?.includes(opt.value)
+  )}
+  onChange={(selected) => {
+    let values = selected ? selected.map(s => s.value) : [];
+
+    // 🔥 "None" logic
+    if (values.includes("None")) {
+      values = ["None"];
+    }
+
     setBulkValues({
       ...bulkValues,
-      coverageType: e.target.value,
-    })
-  }
->
-  {coverageOptions.map(opt => (
-    <option key={opt.value} value={opt.value}>
-      {opt.label}
-    </option>
-  ))}
-</select>
+      coverageType: values,
+    });
+  }}
+/>
 </div>
               <div className="form-group">
   <label>Insurance Purchase Date</label>
@@ -892,12 +901,6 @@ insuranceTerm: inst.insuranceTerm || "1_year",
 
             {expandedRow === index && (
               <div className="expand-panel">
-                {(asset?.assetPurchaseDate || asset?.assetDOE) && (
-                  <p className="hint" style={{ color: "red" }}>
-                    Dates must be between {asset?.assetPurchaseDate || "—"} and{" "}
-                    {asset?.assetDOE || "—"}
-                  </p>
-                )}
                 <div>
                   <label>Specifications</label>
                 <textarea
@@ -1023,18 +1026,25 @@ insuranceTerm: inst.insuranceTerm || "1_year",
                           </div>
                           <div>
                             <label>Coverage Type</label>
- <select
-  value={inst.coverageType}
-  onChange={(e) =>
-    handleChange(index, "coverageType", e.target.value)
-  }
->
-  {coverageOptions.map(opt => (
-    <option key={opt.value} value={opt.value}>
-      {opt.label}
-    </option>
-  ))}
-</select>
+<Select
+  isMulti
+  className="react-select-container"
+  classNamePrefix="react-select"
+  options={coverageOptions}
+  value={coverageOptions.filter(opt =>
+    inst.coverageType?.includes(opt.value)
+  )}
+  onChange={(selected) => {
+    let values = selected ? selected.map(s => s.value) : [];
+
+    // 🔥 "None" logic
+    if (values.includes("None")) {
+      values = ["None"];
+    }
+
+    handleChange(index, "coverageType", values);
+  }}
+/>
 </div>
                           <div>
   <label>Insurance Purchase Date</label>

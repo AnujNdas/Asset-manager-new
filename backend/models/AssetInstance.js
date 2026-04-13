@@ -80,7 +80,7 @@ hardware: {
     default: "1_year"
   },
   coverageType: {
-  type: String,
+  type: [String], // 🔥 ARRAY
   enum: [
     "comprehensive",
     "accidental_damage",
@@ -94,9 +94,10 @@ hardware: {
     "Transit/Marine Cargo",
     "Cyber-Physical Damage",
     "Electrical Surge",
-    "Mechanical Breakdown"
+    "Mechanical Breakdown",
+    "None"
   ],
-  default: "comprehensive"
+  default: ["comprehensive"]
 },
   nextMaintenanceDate: Date,
   purchaseCost: costSchema,   // 🔥 NEW
