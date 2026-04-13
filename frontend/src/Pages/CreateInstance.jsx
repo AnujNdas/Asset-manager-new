@@ -63,7 +63,7 @@ const CreateInstances = () => {
     warrantyDate: "",
     installationDate: "",
     insurancePolicyId: "",
-    coverageType: "comprehensive",
+    coverageType: ["comprehensive"],
     insuranceExpiry: "",
     maintenanceCost: "",
     warrantyRenewalCost: "",
@@ -144,7 +144,7 @@ insuranceTerm: "1_year", // if you're using term
           maintenanceCost: "",
           warrantyRenewalCost: "",
           insuranceCost: "",
-          coverageType: "comprehensive",
+          coverageType: ["comprehensive"],
             nextMaintenanceDate: "", // ✅ ADD THIS
           // 🔹 hardware additions
           purchaseDate: "",
@@ -621,14 +621,12 @@ insuranceTerm: inst.insuranceTerm || "1_year",
   value={coverageOptions.filter(opt =>
     (bulkValues.coverageType || []).includes(opt.value)
   )}
- onChange={(selected) => {
+onChange={(selected) => {
   let values = selected ? selected.map(s => s.value) : [];
 
   if (values.includes("none") && values.length > 1) {
-    // If "none" + others → remove others
     values = ["none"];
-  } else {
-    // If selecting other values → remove "none"
+  } else if (!values.includes("none")) {
     values = values.filter(v => v !== "none");
   }
 
@@ -1040,8 +1038,12 @@ insuranceTerm: inst.insuranceTerm || "1_year",
   onChange={(selected) => {
   let values = selected ? selected.map(s => s.value) : [];
 
-  if (values.includes("none")) {
+  if (values.includes("none") && values.length > 1) {
+    // User selected "none" along with others → keep only "none"
     values = ["none"];
+  } else if (!values.includes("none")) {
+    // User selected something else → remove "none"
+    values = values.filter(v => v !== "none");
   }
 
   handleChange(index, "coverageType", values);
