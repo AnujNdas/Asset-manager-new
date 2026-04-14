@@ -46,8 +46,6 @@ const assetSchema = new mongoose.Schema(
       },
     },
 
-    DOE: { type: Date },
-
     assetQuantity: {
       type: Number,
       required: true,

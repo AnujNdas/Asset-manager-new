@@ -518,7 +518,6 @@ if (!parsedDOP || isNaN(parsedDOP.getTime())) {
     message: "Valid purchase date is required"
   });
 }
-  const parsedDOE = req.body.DOE ? parseDate(req.body.DOE) : null;
   const vendor = buildVendor(req.body.purchaseDetails?.vendor);
 
 const { assetStatus, ...cleanBody } = req.body;
@@ -530,7 +529,6 @@ const newAsset = new Asset({
     vendor
   },
 
-  DOE: parsedDOE,
   organizationId,
   createdBy: userId,
   type,

@@ -378,7 +378,6 @@ const asset = await SoftwareAsset.create({
   },
 
   renewal: {
-    expiryDate,
     renewalTerm: req.body.renewalTerm,
     nextRenewalDate: expiryDate,
   },

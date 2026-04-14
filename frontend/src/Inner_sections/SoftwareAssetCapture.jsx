@@ -26,7 +26,6 @@ const downloadTemplate = () => {
       vendorName: "Adobe Inc.",
       vendorContact: "1234567890",
       vendorEmail: "support@adobe.com",
-      DOE: "2027-01-01",
       renewalTerm: "1_year",
     },
   ];
@@ -70,9 +69,13 @@ const downloadTemplate = () => {
     licenseMetric: "",
 
     DOP: "",
-    DOE: "",
 
     assetQuantity: "",
+      vendor: {
+    name: "",
+    contact: "",
+    supportEmail: ""
+  }
 
   };
 
@@ -153,11 +156,27 @@ const handleImport = async () => {
     setImportLoading(false);
   }
 };
-    const handleChange = (e) => {
-      const { name, value } = e.target;
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  // 🔥 handle nested vendor fields
+  if (name.startsWith("vendor.")) {
+    const field = name.split(".")[1];
+
+    setFormData(prev => ({
+      ...prev,
+      vendor: {
+        ...prev.vendor,
+        [field]: value
+      }
+    }));
+  } else {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }
+};
 
     const nextStep = () => setStep((s) => s + 1);
     const prevStep = () => setStep((s) => s - 1);
@@ -174,16 +193,12 @@ const handleSubmit = async () => {
       associateUnit: formData.associateUnit,
       locationName: formData.locationName,
       type: formData.type,
-      assetQuantity: Number(formData.assetQuantity),
+      assetQuantity: Number(formData.assetQuantity),  
 
-      DOE: formData.DOE || null,
-
-      purchaseDetails: {
-        purchaseDate: formData.DOP || null,
-        vendor: {
-          name: formData.purchaseFrom || "",
-        },
-      },
+purchaseDetails: {
+  purchaseDate: formData.DOP,
+  vendor: formData.vendor
+},
     };
 
     // ✅ CAPTURE RESPONSE
@@ -321,14 +336,34 @@ const handleSubmit = async () => {
             <label>Quantity *</label>
             <input type="number" name="assetQuantity" onChange={handleChange} />
           </div>
-          <div className="input-group">
-            <label>Vendor</label>
-            <input
-              name="purchaseFrom"
-              value={formData.purchaseFrom}
-              onChange={handleChange}
-            />
-          </div>
+         <div className="grid-2">
+  <div className="input-group">
+    <label>Vendor Name</label>
+    <input
+      name="vendor.name"
+      value={formData.vendor.name}
+      onChange={handleChange}
+    />
+  </div>
+
+  <div className="input-group">
+    <label>Vendor Contact</label>
+    <input
+      name="vendor.contact"
+      value={formData.vendor.contact}
+      onChange={handleChange}
+    />
+  </div>
+
+  <div className="input-group">
+    <label>Support Email</label>
+    <input
+      name="vendor.supportEmail"
+      value={formData.vendor.supportEmail}
+      onChange={handleChange}
+    />
+  </div>
+</div>
         </div>
               <h3> Dates</h3>
         <div className="grid-2">
@@ -336,11 +371,11 @@ const handleSubmit = async () => {
             <label>Start Date</label>
             <input type="date" name="DOP" onChange={handleChange} />
           </div>
-
+{/* 
           <div className="input-group">
             <label>Expiry Date</label>
             <input type="date" name="DOE" onChange={handleChange} />
-          </div>
+          </div> */}
         </div>
 
         <button 

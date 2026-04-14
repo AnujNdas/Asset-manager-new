@@ -23,7 +23,6 @@ const downloadTemplate = () => {
       assetQuantity: 10,
       purchaseDate: "2026-04-01",
       vendorName: "Dell India",
-      DOE: "2028-04-01",
     },
   ];
 
@@ -64,11 +63,16 @@ const defaultFormData = {
   assetName: "",
   associateUnit: "",
   locationName: "",
-  DOE: "",
   purchaseFrom: "",
   type: "",
   assetQuantity: "",
   DOP: "", // 🔥 required now
+    vendor: {
+    name: "",
+    contact: "",
+    supportEmail: ""
+  }
+
 };
 
 
@@ -208,53 +212,26 @@ const [importLoading, setImportLoading] = useState(false);
     setImportLoading(false);
   }
 };
- const handleChange = (e) => {
+const handleChange = (e) => {
   const { name, value } = e.target;
 
-  setFormData((prev) => {
-    let updated = {
+  // 🔥 handle nested vendor fields
+  if (name.startsWith("vendor.")) {
+    const field = name.split(".")[1];
+
+    setFormData(prev => ({
       ...prev,
-      [name]: value   // ✅ THIS LINE FIXES EVERYTHING
-    };
-
-    // ✅ Auto-calc lifetime
-    if (name === "DOP" || name === "DOE") {
-      const { DOP, DOE } = updated;
-      if (DOP && DOE) {
-        const start = new Date(DOP);
-        const end = new Date(DOE);
-        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-        updated.assetLifetime =
-          Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid";
-      } else {
-        updated.assetLifetime = "";
+      vendor: {
+        ...prev.vendor,
+        [field]: value
       }
-    }
-
-    // ✅ Auto-calc warranty lifetime (safe version)
-    if (name === "DOP" || name === "warranty.expiryDate") {
-      const warrantyExpiry = updated.warranty?.expiryDate;
-
-      if (updated.DOP && warrantyExpiry) {
-        const start = new Date(updated.DOP);
-        const end = new Date(warrantyExpiry);
-        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
-
-        updated.warranty = {
-          ...updated.warranty,
-          lifetime:
-            Number.isFinite(days) && days >= 0 ? `${days} days` : "Invalid"
-        };
-      } else if (updated.warranty) {
-        updated.warranty = {
-          ...updated.warranty,
-          lifetime: ""
-        };
-      }
-    }
-
-    return updated;
-  });
+    }));
+  } else {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }
 };
 
   const validateRequired = () => {
@@ -291,14 +268,10 @@ const payload = {
   type: formData.type,
   assetQuantity: Number(formData.assetQuantity),
 
-  DOE: formData.DOE || null,
-
-  purchaseDetails: {
-    purchaseDate: formData.DOP,
-    vendor: {
-      name: formData.purchaseFrom || "",
-    },
-  },
+purchaseDetails: {
+  purchaseDate: formData.DOP,
+  vendor: formData.vendor
+}
 };
 
       const createdAsset = await createHardwareAsset(payload);
@@ -438,14 +411,34 @@ const payload = {
               <option value="maintenance">Maintenance</option>
             </select>
           </div>
-                                  <div className="input-group">
-            <label>Vendor</label>
-            <input
-              name="purchaseFrom"
-              value={formData.purchaseFrom}
-              onChange={handleChange}
-            />
-          </div>
+                                  <div className="grid-2">
+  <div className="input-group">
+    <label>Vendor Name</label>
+    <input
+      name="vendor.name"
+      value={formData.vendor.name}
+      onChange={handleChange}
+    />
+  </div>
+
+  <div className="input-group">
+    <label>Vendor Contact</label>
+    <input
+      name="vendor.contact"
+      value={formData.vendor.contact}
+      onChange={handleChange}
+    />
+  </div>
+
+  <div className="input-group">
+    <label>Support Email</label>
+    <input
+      name="vendor.supportEmail"
+      value={formData.vendor.supportEmail}
+      onChange={handleChange}
+    />
+  </div>
+</div>
                       <div className="input-group">
               <label>Quantity *</label>
               <input
@@ -470,7 +463,7 @@ const payload = {
               />
             </div>
 
-            <div className="input-group">
+            {/* <div className="input-group">
               <label>Next Maintenance</label>
               <input
                 type="date"
@@ -478,7 +471,7 @@ const payload = {
                 value={formData.DOE}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
           </div>
 
           <button className="submit-btn" disabled={isSubmitting} onClick={handleAddAsset}>

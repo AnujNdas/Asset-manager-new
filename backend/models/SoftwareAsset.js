@@ -55,7 +55,6 @@ const SoftwareAssetSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    DOE: { type: Date },
     financialTracking: {
       totalCost: { type: Number, default: 0 }, // 🔥 from instances
       monthlyCost: { type: Number, default: 0 }, // derived later
@@ -63,8 +62,7 @@ const SoftwareAssetSchema = new mongoose.Schema(
     },
 
     // Parent-level renewal config only
-    renewal: {
-      expiryDate: Date,
+    renewal: {  
       renewalTerm: {
         type: String,
         enum: ["6_month", "1_year", "2_year"],
