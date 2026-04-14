@@ -1,15 +1,15 @@
-  // src/Pages/AssetCapture.jsx
-  import React, { useState, useEffect } from "react";
-  import { useNavigate } from "react-router-dom";
-  import {
-    getUnits,
-    getLocations,
-    getCategories,
-    createHardwareAsset,
-    bulkUploadHardwareAssets
-  } from "../Services/ApiServices";
-  import Swal from "sweetalert2";
-  import "../Page_styles/SoftwareCapture.css";
+// src/Pages/AssetCapture.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getUnits,
+  getLocations,
+  getCategories,
+  createHardwareAsset,
+  bulkUploadHardwareAssets,
+} from "../Services/ApiServices";
+import Swal from "sweetalert2";
+import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
 
 const downloadTemplate = () => {
@@ -33,57 +33,54 @@ const downloadTemplate = () => {
 
   XLSX.writeFile(workbook, "software_asset_template.xlsx");
 };
-  export const SUPPORTED_CURRENCIES = [
-    { code: "USD", label: "US Dollar", symbol: "$" },
-    { code: "INR", label: "Indian Rupee", symbol: "₹" },
-    { code: "EUR", label: "Euro", symbol: "€" },
-    { code: "GBP", label: "British Pound", symbol: "£" },
-    { code: "JPY", label: "Japanese Yen", symbol: "¥" },
-    { code: "AUD", label: "Australian Dollar", symbol: "A$" },
-    { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
-    { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
-    { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
-    { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
-    { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
-    { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
-    { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
-    { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
-    { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
-    { code: "SEK", label: "Swedish Krona", symbol: "kr" },
-    { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
-  ];
-  const AssetCapture = () => {
-    // src/constants/currencies.js
+export const SUPPORTED_CURRENCIES = [
+  { code: "USD", label: "US Dollar", symbol: "$" },
+  { code: "INR", label: "Indian Rupee", symbol: "₹" },
+  { code: "EUR", label: "Euro", symbol: "€" },
+  { code: "GBP", label: "British Pound", symbol: "£" },
+  { code: "JPY", label: "Japanese Yen", symbol: "¥" },
+  { code: "AUD", label: "Australian Dollar", symbol: "A$" },
+  { code: "CAD", label: "Canadian Dollar", symbol: "C$" },
+  { code: "CHF", label: "Swiss Franc", symbol: "Fr." },
+  { code: "CNY", label: "Chinese Yuan", symbol: "¥" },
+  { code: "HKD", label: "Hong Kong Dollar", symbol: "HK$" },
+  { code: "SGD", label: "Singapore Dollar", symbol: "S$" },
+  { code: "AED", label: "UAE Dirham", symbol: "د.إ" },
+  { code: "SAR", label: "Saudi Riyal", symbol: "﷼" },
+  { code: "QAR", label: "Qatari Riyal", symbol: "﷼" },
+  { code: "KWD", label: "Kuwaiti Dinar", symbol: "د.ك" },
+  { code: "SEK", label: "Swedish Krona", symbol: "kr" },
+  { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
+];
+const AssetCapture = () => {
+  // src/constants/currencies.js
 
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-
-const defaultFormData = {
-  assetCategory: "",
-  assetName: "",
-  associateUnit: "",
-  locationName: "",
-  purchaseFrom: "",
-  type: "",
-  assetQuantity: "",
-  DOP: "", // 🔥 required now
+  const defaultFormData = {
+    assetCategory: "",
+    assetName: "",
+    associateUnit: "",
+    locationName: "",
+    purchaseFrom: "",
+    type: "",
+    assetQuantity: "",
+    DOP: "", // 🔥 required now
     vendor: {
-    name: "",
-    contact: "",
-    supportEmail: ""
-  }
+      name: "",
+      contact: "",
+      supportEmail: "",
+    },
+  };
 
-};
-
-
-    const [formData, setFormData] = useState(defaultFormData);
-    const [units, setUnits] = useState([]);
-    const [locations, setLocations] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showImport, setShowImport] = useState(false);
-const [importFile, setImportFile] = useState(null);
-const [importLoading, setImportLoading] = useState(false);
+  const [formData, setFormData] = useState(defaultFormData);
+  const [units, setUnits] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importFile, setImportFile] = useState(null);
+  const [importLoading, setImportLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -133,14 +130,12 @@ const [importLoading, setImportLoading] = useState(false);
       {
         title: "Cost & Quantity",
         image: "/guide/cost&quantity.webp",
-        text : "Put cost Values like this"
+        text: "Put cost Values like this",
       },
       {
-
-  title: "Availability",
-  image: "/guide/status.webp",
-  text: "Assets are automatically available after creation. Assignment will update their usage."
-
+        title: "Availability",
+        image: "/guide/status.webp",
+        text: "Assets are automatically available after creation. Assignment will update their usage.",
       },
       // {
       //   title: "Warranty & Insurance",
@@ -165,7 +160,7 @@ const [importLoading, setImportLoading] = useState(false);
         cancelButtonText: "Skip",
         confirmButtonColor: "#2563eb",
         cancelButtonColor: "#9ca3af",
-        width: 500
+        width: 500,
       });
 
       if (result.dismiss === Swal.DismissReason.cancel) {
@@ -176,63 +171,62 @@ const [importLoading, setImportLoading] = useState(false);
     localStorage.setItem("assetCaptureGuideSeen", "true");
   };
   const handleImport = async () => {
-  if (!importFile) {
-    Swal.fire("Error", "Please select a file", "error");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("file", importFile);
-
-  try {
-    setImportLoading(true);
-
-    const res = await bulkUploadHardwareAssets(formData);
-
-    if (res.success) {
-      Swal.fire(
-        "Success",
-        `${res.inserted} assets uploaded, ${res.skipped} skipped`,
-        "success"
-      );
-
-      setShowImport(false);
-      setImportFile(null);
-    } else {
-      Swal.fire("Error", res.message, "error");
+    if (!importFile) {
+      Swal.fire("Error", "Please select a file", "error");
+      return;
     }
 
-  } catch (err) {
-    Swal.fire(
-      "Error",
-      err.response?.data?.message || "Upload failed",
-      "error"
-    );
-  } finally {
-    setImportLoading(false);
-  }
-};
-const handleChange = (e) => {
-  const { name, value } = e.target;
+    const formData = new FormData();
+    formData.append("file", importFile);
 
-  // 🔥 handle nested vendor fields
-  if (name.startsWith("vendor.")) {
-    const field = name.split(".")[1];
+    try {
+      setImportLoading(true);
 
-    setFormData(prev => ({
-      ...prev,
-      vendor: {
-        ...prev.vendor,
-        [field]: value
+      const res = await bulkUploadHardwareAssets(formData);
+
+      if (res.success) {
+        Swal.fire(
+          "Success",
+          `${res.inserted} assets uploaded, ${res.skipped} skipped`,
+          "success",
+        );
+
+        setShowImport(false);
+        setImportFile(null);
+      } else {
+        Swal.fire("Error", res.message, "error");
       }
-    }));
-  } else {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  }
-};
+    } catch (err) {
+      Swal.fire(
+        "Error",
+        err.response?.data?.message || "Upload failed",
+        "error",
+      );
+    } finally {
+      setImportLoading(false);
+    }
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // 🔥 handle nested vendor fields
+    if (name.startsWith("vendor.")) {
+      const field = name.split(".")[1];
+
+      setFormData((prev) => ({
+        ...prev,
+        vendor: {
+          ...prev.vendor,
+          [field]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
 
   const validateRequired = () => {
     const missing = [];
@@ -260,47 +254,48 @@ const handleChange = (e) => {
     setIsSubmitting(true);
 
     try {
-const payload = {
-  assetName: formData.assetName,
-  assetCategory: formData.assetCategory,
-  associateUnit: formData.associateUnit,
-  locationName: formData.locationName,
-  type: formData.type,
-  assetQuantity: Number(formData.assetQuantity),
+      const payload = {
+        assetName: formData.assetName,
+        assetCategory: formData.assetCategory,
+        associateUnit: formData.associateUnit,
+        locationName: formData.locationName,
+        type: formData.type,
+        assetQuantity: Number(formData.assetQuantity),
 
-purchaseDetails: {
-  purchaseDate: formData.DOP,
-  vendor: formData.vendor
-}
-};
+        purchaseDetails: {
+          purchaseDate: formData.DOP,
+          vendor: formData.vendor,
+        },
+      };
 
       const createdAsset = await createHardwareAsset(payload);
       const assetId = createdAsset._id;
 
       await Swal.fire("Success", "Asset added successfully!", "success");
       navigate("/instance-assets", {
-        state: { selectedAssetId: assetId }
+        state: { selectedAssetId: assetId },
       });
     } catch (err) {
       Swal.fire(
         "Error",
-        err.userMessage || err.response?.data?.message || "Failed to add asset.",
-        "error"
+        err.userMessage ||
+          err.response?.data?.message ||
+          "Failed to add asset.",
+        "error",
       );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-
   return (
     <div className="split-container">
-
       {/* LEFT INFO PANEL */}
       <div className="left-panel">
         <h2>Create Hardware Asset</h2>
         <p className="description">
-          Add physical assets with proper tracking, cost visibility, and lifecycle management.
+          Add physical assets with proper tracking, cost visibility, and
+          lifecycle management.
         </p>
 
         <div className="info-box">
@@ -326,17 +321,11 @@ purchaseDetails: {
       <div className="right-panel">
         <div className="form-card">
           <div className="capture-header">
-
-          <h3>Hardware Details</h3>
-          <button 
-    className="import-btn"
-    onClick={() => setShowImport(true)}
-  >
-    ⬆ Import Excel
-  </button>
-  <button onClick={downloadTemplate}>
-  ⬇ Download Template
-</button>
+            <h3>Hardware Details</h3>
+            <button className="import-btn" onClick={() => setShowImport(true)}>
+              ⬆ Import Excel
+            </button>
+            <button onClick={downloadTemplate}>⬇ Download Template</button>
           </div>
           <div className="grid-2">
             <div className="input-group">
@@ -356,17 +345,16 @@ purchaseDetails: {
                 onChange={handleChange}
               >
                 <option value="">Select</option>
-                {categories.map(c => (
-                  <option key={c._id} value={c._id}>{c.name}</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.name}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
 
-
-
-
-          <h3>Location & Status</h3>
+          <h3>Location & Dates</h3>
 
           <div className="grid-2">
             <div className="input-group">
@@ -377,8 +365,10 @@ purchaseDetails: {
                 onChange={handleChange}
               >
                 <option value="">Select</option>
-                {units.map(u => (
-                  <option key={u._id} value={u._id}>{u.name}</option>
+                {units.map((u) => (
+                  <option key={u._id} value={u._id}>
+                    {u.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -391,66 +381,14 @@ purchaseDetails: {
                 onChange={handleChange}
               >
                 <option value="">Select</option>
-                {locations.map(l => (
-                  <option key={l._id} value={l._id}>{l.name}</option>
+                {locations.map((l) => (
+                  <option key={l._id} value={l._id}>
+                    {l.name}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
-
-          <div className="grid-2">
-          <div className="input-group">
-            <label>Type *</label>
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-            >
-              <option value="">Select</option>
-              <option value="one_time">One-Time</option>
-              <option value="maintenance">Maintenance</option>
-            </select>
-          </div>
-                                  <div className="grid-2">
-  <div className="input-group">
-    <label>Vendor Name</label>
-    <input
-      name="vendor.name"
-      value={formData.vendor.name}
-      onChange={handleChange}
-    />
-  </div>
-
-  <div className="input-group">
-    <label>Vendor Contact</label>
-    <input
-      name="vendor.contact"
-      value={formData.vendor.contact}
-      onChange={handleChange}
-    />
-  </div>
-
-  <div className="input-group">
-    <label>Support Email</label>
-    <input
-      name="vendor.supportEmail"
-      value={formData.vendor.supportEmail}
-      onChange={handleChange}
-    />
-  </div>
-</div>
-                      <div className="input-group">
-              <label>Quantity *</label>
-              <input
-                type="number"
-                name="assetQuantity"
-                value={formData.assetQuantity}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <h3>Lifecycle</h3>
 
           <div className="grid-2">
             <div className="input-group">
@@ -462,52 +400,88 @@ purchaseDetails: {
                 onChange={handleChange}
               />
             </div>
-
-            {/* <div className="input-group">
-              <label>Next Maintenance</label>
+            <div className="input-group">
+              <label>Quantity *</label>
               <input
-                type="date"
-                name="DOE"
-                value={formData.DOE}
+                type="number"
+                name="assetQuantity"
+                value={formData.assetQuantity}
                 onChange={handleChange}
               />
-            </div> */}
+            </div>
           </div>
 
-          <button className="submit-btn" disabled={isSubmitting} onClick={handleAddAsset}>
+          <h3>Financial & Quantity</h3>
+
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Vendor Name</label>
+              <input
+                name="vendor.name"
+                value={formData.vendor.name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Vendor Contact</label>
+              <input
+                name="vendor.contact"
+                value={formData.vendor.contact}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Support Email</label>
+              <input
+                name="vendor.supportEmail"
+                value={formData.vendor.supportEmail}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="input-group">
+              <label>Type *</label>
+              <select name="type" value={formData.type} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="one_time">One-Time</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            className="submit-btn"
+            disabled={isSubmitting}
+            onClick={handleAddAsset}
+          >
             {isSubmitting ? "Saving..." : "Save Asset"}
           </button>
-
         </div>
       </div>
       {showImport && (
-  <div className="import-modal">
-    <div className="import-box">
-      <h3>Import Hardware Assets</h3>
+        <div className="import-modal">
+          <div className="import-box">
+            <h3>Import Hardware Assets</h3>
 
-      <input
-        type="file"
-        accept=".xlsx, .xls"
-        onChange={(e) => setImportFile(e.target.files[0])}
-      />
+            <input
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={(e) => setImportFile(e.target.files[0])}
+            />
 
-      <div className="import-actions">
-        <button onClick={() => setShowImport(false)}>
-          Cancel
-        </button>
+            <div className="import-actions">
+              <button onClick={() => setShowImport(false)}>Cancel</button>
 
-        <button 
-          onClick={handleImport}
-          disabled={importLoading}
-        >
-          {importLoading ? "Uploading..." : "Upload"}
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              <button onClick={handleImport} disabled={importLoading}>
+                {importLoading ? "Uploading..." : "Upload"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-  };
+};
 
-  export default AssetCapture;
+export default AssetCapture;
