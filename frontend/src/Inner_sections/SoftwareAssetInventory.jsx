@@ -20,6 +20,33 @@ import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 
 const SoftwareAssetList = () => {
+  const STATUS_CONFIG = {
+  in_stock: {
+    label: "Available",
+    className: "success",
+    icon: "🟢",
+  },
+  fully_in_use: {
+    label: "Fully Assigned",
+    className: "danger",
+    icon: "🔴",
+  },
+  partially_in_use: {
+    label: "Partially In Use",
+    className: "warning",
+    icon: "🟡",
+  },
+  partially_created: {
+    label: "Partially Created",
+    className: "info",
+    icon: "🟣",
+  },
+  not_created: {
+    label: "No Instances",
+    className: "default",
+    icon: "⚪",
+  },
+};
   const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
@@ -357,9 +384,20 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
       {getName(units, asset.associateUnit)}
     </span>
 
-    <span className="badge status">
-      {getName(statuses, asset.assetStatus)}
+{(() => {
+  const statusConfig =
+    STATUS_CONFIG[asset.status] || {
+      label: "Unknown",
+      className: "default",
+      icon: "❓",
+    };
+
+  return (
+    <span className={`badge status ${statusConfig.className}`}>
+      {statusConfig.icon} {statusConfig.label}
     </span>
+  );
+})()}
   </div>
 
   {/* 🔷 FINANCIAL */}

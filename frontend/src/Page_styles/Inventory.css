@@ -100,7 +100,8 @@
 .card-actions {
   margin-top: 12px;
   display: flex;
-  gap: 10px;
+  flex-direction: row;
+  gap: 5px;
 }
 
 .btn-view,
@@ -213,7 +214,7 @@
 }
 
 .badge.status {
-  background: #00ff2a;
+  background: #1bd73a;
   color: #ffffff;
 }
 
@@ -340,7 +341,6 @@
 }
 
 .badge.category { background: #2563eb; }
-.badge.status { background: #1e7f4f; }
 .badge.type { background: rgb(255, 59, 59); }
 
 .metrics {
