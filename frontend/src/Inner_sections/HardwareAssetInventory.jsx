@@ -19,6 +19,33 @@ import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
 
 const HardwareAssetList = () => {
+  const STATUS_CONFIG = {
+  in_stock: {
+    label: "Available",
+    className: "success",
+    icon: "🟢"
+  },
+  fully_in_use: {
+    label: "Fully Assigned",
+    className: "danger",
+    icon: "🔴"
+  },
+  partially_in_use: {
+    label: "Partially In Use",
+    className: "warning",
+    icon: "🟡"
+  },
+  partially_created: {
+    label: "Partially Created",
+    className: "info",
+    icon: "🟣"
+  },
+  not_created: {
+    label: "No Instances",
+    className: "default",
+    icon: "⚪"
+  }
+};
   const [assets, setAssets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [locations, setLocations] = useState([]);
@@ -264,6 +291,11 @@ const handleUpdate = async () => {
     </div>
   );
 };
+    const statusConfig = STATUS_CONFIG[assets.status] || {
+  label: assets.status,
+  className: "default",
+  icon: "❔"
+};
   return (
     <div className="inventory-container">
 
@@ -311,7 +343,11 @@ const handleUpdate = async () => {
     <span className="badge">{asset.assetCategory?.name}</span>
     <span className="badge">{asset.locationName?.name}</span>
     <span className="badge">{asset.associateUnit?.name}</span>
-    <span className="badge status">{asset.assetStatus?.name}</span>
+
+
+<span className={`badge status ${statusConfig.className}`}>
+  {statusConfig.icon} {statusConfig.label}
+</span>
   </div>
 
   {/* 🔷 FINANCIAL */}
