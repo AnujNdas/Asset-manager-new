@@ -19,6 +19,43 @@ import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
 
 const HardwareAssetList = () => {
+    const VENDOR_CONFIG = {
+  dell: { icon: "💻", color: "blue" },
+  hp: { icon: "🖥️", color: "cyan" },
+  lenovo: { icon: "📦", color: "red" },
+  apple: { icon: "🍎", color: "dark" },
+  microsoft: { icon: "🪟", color: "indigo" },
+  adobe: { icon: "🅰️", color: "red" },
+};
+const getVendorUI = (vendorName = "") => {
+  if (!vendorName) {
+    return {
+      icon: "🏢",
+      color: "gray",
+      label: "Unknown",
+      isCustom: false,
+    };
+  }
+
+  const key = vendorName.toLowerCase();
+  const config = VENDOR_CONFIG[key];
+
+  if (config) {
+    return {
+      ...config,
+      label: vendorName,
+      isCustom: true,
+    };
+  }
+
+  // 🔥 Dynamic fallback (unknown vendor)
+  return {
+    icon: vendorName.charAt(0).toUpperCase(), // first letter
+    color: "gray",
+    label: vendorName,
+    isCustom: false,
+  };
+};
   const STATUS_CONFIG = {
   in_stock: {
     label: "Available",
@@ -117,6 +154,11 @@ const [instanceForm, setInstanceForm] = useState({});
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN");
   };
+
+  const truncateText = (text = "", maxLength = 18) => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "...";
+};
 const handleUpdate = async () => {
   try {
     await updateHardwareAsset(editAsset._id, editForm);
@@ -331,14 +373,26 @@ const handleUpdate = async () => {
     >
       {/* 🔷 HEADER */}
       <div className="card-header">
-        <div>
-          <h3>{asset.assetName}</h3>
-          <p className="asset-code">{asset.assetCode}</p>
-        </div>
+<div>
+  <h3 title={asset.assetName}>
+    {truncateText(asset.assetName, 18)}
+  </h3>
+  <p className="asset-code">{asset.assetCode}</p>
+</div>  
 
-        <div className="expiry">
-          ⏳ {getRemainingDays(asset.DOE)} days left
-        </div>
+{(() => {
+  const vendorName = asset.purchaseDetails?.vendor?.name;
+  const vendor = getVendorUI(vendorName);
+
+  return (
+    <div className={`vendor-badge ${vendor.color}`}>
+      <span className={`vendor-icon ${!vendor.isCustom ? "avatar" : ""}`}>
+        {vendor.icon}
+      </span>
+      <span className="vendor-text">{vendor.label}</span>
+    </div>
+  );
+})()}
       </div>
 
       {/* 🔷 BADGE GRID */}
@@ -359,21 +413,9 @@ const handleUpdate = async () => {
           <p className="label"> Purchase Date</p>
           <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
         </div>
-        <div>
-          <p className="label"> Maintanence Date</p>
-          <p>⏰ {formatDate(asset.DOE)}</p>
-        </div>
-      </div>
-
-      {/* 🔷 META */}
-      <div className="meta-grid">
-        <div>
+       <div>
           <p className="label">Instance Count</p>
           <p>📦 {asset.instanceCount} instances</p>
-        </div>
-        <div>
-          <p className="label">Vendor</p>
-          <p>🏢 {asset.purchaseDetails?.vendor?.name || "N/A"}</p>
         </div>
       </div>
 
