@@ -291,11 +291,7 @@ const handleUpdate = async () => {
     </div>
   );
 };
-    const statusConfig = STATUS_CONFIG[assets.status] || {
-  label: assets.status,
-  className: "default",
-  icon: "❔"
-};
+
   return (
     <div className="inventory-container">
 
@@ -319,101 +315,105 @@ const handleUpdate = async () => {
       {/* GRID */}
       <div className="inventory-grid">
         <AnimatePresence>
-          {filteredAssets.map((asset) => (
-            <motion.div
-  key={asset._id}
-  className="inventory-card"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
->
-  {/* 🔷 HEADER */}
-  <div className="card-header">
-    <div>
-      <h3>{asset.assetName}</h3>
-      <p className="asset-code">{asset.assetCode}</p>
-    </div>
+      {filteredAssets.map((asset) => {
+  const statusConfig = STATUS_CONFIG[asset.status] || {
+    label: asset.status || "Unknown",
+    className: "default",
+    icon: "❓"
+  };
 
-    <div className="expiry">
-      ⏳ {getRemainingDays(asset.DOE)} days left
-    </div>
-  </div>
+  return (
+    <motion.div
+      key={asset._id}
+      className="inventory-card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      {/* 🔷 HEADER */}
+      <div className="card-header">
+        <div>
+          <h3>{asset.assetName}</h3>
+          <p className="asset-code">{asset.assetCode}</p>
+        </div>
 
-  {/* 🔷 BADGE GRID */}
-  <div className="badge-grid">
-    <span className="badge">{asset.assetCategory?.name}</span>
-    <span className="badge">{asset.locationName?.name}</span>
-    <span className="badge">{asset.associateUnit?.name}</span>
+        <div className="expiry">
+          ⏳ {getRemainingDays(asset.DOE)} days left
+        </div>
+      </div>
 
+      {/* 🔷 BADGE GRID */}
+      <div className="badge-grid">
+        <span className="badge">{asset.assetCategory?.name}</span>
+        <span className="badge">{asset.locationName?.name}</span>
+        <span className="badge">{asset.associateUnit?.name}</span>
 
-<span className={`badge status ${statusConfig.className}`}>
-  {statusConfig.icon} {statusConfig.label}
-</span>
-  </div>
+        {/* ✅ FIXED STATUS BADGE */}
+        <span className={`badge status ${statusConfig.className}`}>
+          {statusConfig.icon} {statusConfig.label}
+        </span>
+      </div>
 
-  {/* 🔷 FINANCIAL */}
-  {/* <div className="financial">
-    <div>
-      <p className="label">Total Cost</p>
-      <p>
-        {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(asset.assetCost?.baseTotalAmount || 0)}
-      </p>
-    </div>
+      {/* 🔷 DATES */}
+      <div className="dates">
+        <div>
+          <p className="label"> Purchase Date</p>
+          <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
+        </div>
+        <div>
+          <p className="label"> Maintanence Date</p>
+          <p>⏰ {formatDate(asset.DOE)}</p>
+        </div>
+      </div>
 
-    <div>
-      <p className="label">Unit Cost</p>
-      <p>
-        {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(asset.assetCost?.unitAmount || 0)}
-      </p>
-    </div>
-  </div> */}
+      {/* 🔷 META */}
+      <div className="meta-grid">
+        <div>
+          <p className="label">Instance Count</p>
+          <p>📦 {asset.instanceCount} instances</p>
+        </div>
+        <div>
+          <p className="label">Vendor</p>
+          <p>🏢 {asset.purchaseDetails?.vendor?.name || "N/A"}</p>
+        </div>
+      </div>
 
-  {/* 🔷 DATES */}
-  <div className="dates">
-    <div>
-    <p className="label"> Purchase Date</p>
-    <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
-    </div>
-    <div>
-    <p className="label"> Maintanence Date</p>
-    <p>⏰ {formatDate(asset.DOE)}</p>
-    </div>
-  </div>
+      {/* 🔷 OPTIONAL ALERTS (can remove now if using status) */}
+      {asset.status === "fully_in_use" && (
+        <div className="alert warning">⚠ Fully Assigned</div>
+      )}
 
-  {/* 🔷 META */}
-  <div className="meta-grid">
-    <div>
-      <p className="label">Instance Count</p>
-    <p>📦 {asset.instanceCount} instances</p>
-    </div>
-    <div>
-      <p className="label">Vendor</p>
-    <p>🏢 {asset.purchaseDetails?.vendor?.name || "N/A"}</p>
-    </div>
-  </div>
+      {asset.status === "not_created" && (
+        <div className="alert danger">❌ No Instances Created</div>
+      )}
 
-  {/* 🔷 ALERTS */}
-  {asset.inUse === asset.assetQuantity && (
-    <div className="alert warning">⚠ Fully Assigned</div>
-  )}
+      {asset.type === "maintenance" && (
+        <div className="alert info">🛠 Under Maintenance</div>
+      )}
 
-  {asset.assetQuantity === 0 && (
-    <div className="alert danger">❌ Out of Stock</div>
-  )}
-
-  {asset.type === "maintenance" && (
-    <div className="alert info">🛠 Under Maintenance</div>
-  )}
-
-  {/* 🔷 ACTIONS */}
-  <div className="card-actions">
-    <button onClick={() => setSelectedAsset(asset)} className="btn-save">View</button>
-    <button onClick={() => setEditAsset(asset)} className="btn-edit">Edit</button>
-    <button onClick={() => handleDelete(asset._id)} className="btn-delete">Delete</button>
-  </div>
-</motion.div>
-          ))}
+      {/* 🔷 ACTIONS */}
+      <div className="card-actions">
+        <button
+          onClick={() => setSelectedAsset(asset)}
+          className="btn-save"
+        >
+          View
+        </button>
+        <button
+          onClick={() => setEditAsset(asset)}
+          className="btn-edit"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => handleDelete(asset._id)}
+          className="btn-delete"
+        >
+          Delete
+        </button>
+      </div>
+    </motion.div>
+  );
+})}
         </AnimatePresence>
       </div>
 
