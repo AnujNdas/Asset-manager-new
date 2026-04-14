@@ -287,21 +287,19 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 });
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
- const renderSoftwareInstance = (inst, assignment) => {
-  // ✅ SAME LOGIC AS HARDWARE (source of truth)
+const renderSoftwareInstance = (inst, assignment) => {
   const isAssigned = !!assignment;
-
   const sw = inst.software || {};
 
   return (
-    <div className={`instance-card ${isAssigned ? "assigned-card" : ""}`}>
+    <div className={`instance-card modern ${isAssigned ? "assigned-card" : ""}`}>
 
-      {/* HEADER */}
-      <div className="instance-header">
+      {/* 🔷 HEADER */}
+      <div className="instance-header modern-header">
         <div>
           <p className="instance-title">{inst.instanceCode}</p>
           <p className="instance-sub">
-            {sw.licenseNumber || "No License"}
+            🔑 {sw.licenseNumber || "No License"}
           </p>
         </div>
 
@@ -310,61 +308,72 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
         </span>
       </div>
 
-      {/* BASIC INFO */}
-      <div className="instance-block">
-        <p><span>Location</span>{inst.location || "N/A"}</p>
-        <p><span>Condition</span>{inst.condition}</p>
-        <p>
-          <span>Installed</span>
-          {sw.installationDate
+      {/* 🔷 QUICK INFO STRIP */}
+      <div className="instance-quick">
+        <span>📍 {inst.location || "N/A"}</span>
+        <span>⚙ {inst.condition}</span>
+        <span>
+          🕒 {sw.installationDate
             ? new Date(sw.installationDate).toLocaleDateString()
             : "N/A"}
-        </p>
+        </span>
       </div>
 
-      {/* LICENSE DETAILS */}
-      <div className="instance-block">
-        <p><span>License Key</span>{sw.licenseKey || "N/A"}</p>
+      {/* 🔷 LICENSE SECTION */}
+      <div className="instance-section">
+        <p className="section-title">License Info</p>
+
+        <div className="info-grid">
+          <p><span>Key</span>{sw.licenseKey || "N/A"}</p>
+        </div>
       </div>
 
-      {/* COST */}
-      <div className="instance-block cost">
-        <p><span>Purchase Cost</span>{sw.purchaseCost?.amount || 0}</p>
-        <p><span>Renewal Cost</span>{sw.costs?.renewalCost || 0}</p>
+      {/* 🔷 COST SECTION */}
+      <div className="instance-section">
+        <p className="section-title">Cost</p>
+
+        <div className="info-grid">
+          <p><span>Purchase</span>{sw.purchaseCost?.amount || 0}</p>
+          <p><span>Renewal</span>{sw.costs?.renewalCost || 0}</p>
+        </div>
       </div>
 
-      {/* VALIDITY */}
-      <div className="instance-block">
-        <p>
-          <span>Expiry</span>
-          {sw.renewalDate
-            ? new Date(sw.renewalDate).toLocaleDateString()
-            : "N/A"}
-        </p>
+      {/* 🔷 VALIDITY */}
+      <div className="instance-section">
+        <p className="section-title">Validity</p>
 
-        <p>
-          <span>Last Used</span>
-          {sw.lastUsedDate
-            ? new Date(sw.lastUsedDate).toLocaleDateString()
-            : "N/A"}
-        </p>
+        <div className="info-grid">
+          <p>
+            <span>Expiry</span>
+            {sw.renewalDate
+              ? new Date(sw.renewalDate).toLocaleDateString()
+              : "N/A"}
+          </p>
+
+          <p>
+            <span>Last Used</span>
+            {sw.lastUsedDate
+              ? new Date(sw.lastUsedDate).toLocaleDateString()
+              : "N/A"}
+          </p>
+        </div>
       </div>
 
-      {/* ASSIGNMENT */}
+      {/* 🔷 ASSIGNMENT */}
       {isAssigned && (
-        <div className="assignment-box">
-          <p><span>Employee :- </span>{assignment.employee?.name}</p>
-          <p><span>Department :-</span>{assignment.department?.name}</p>
-          <p><span>Location :-</span>{assignment.location}</p>
+        <div className="assignment-box modern-assignment">
+          <p><span>👤</span>{assignment.employee?.name}</p>
+          <p><span>🏢</span>{assignment.department?.name}</p>
+          <p><span>📍</span>{assignment.location}</p>
         </div>
       )}
 
-      {/* ACTION */}
+      {/* 🔷 ACTION */}
       <button
-        className="btn-edit"
+        className="btn-edit modern-btn"
         onClick={() => handleInstanceEditOpen(inst)}
       >
-        Edit Instance
+        ✏ Edit
       </button>
     </div>
   );
@@ -375,7 +384,6 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
       <div className="dashboard-header">
         <h2 className="hardware-title">Software Inventory</h2>
 
-        <div className="header-actions">
           <input
             type="text"
             placeholder="Search software..."
@@ -383,9 +391,6 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="inventory-search-input"
           />
-
-          <CurrencyFilter />
-        </div>
       </div>
 
       {/* CARDS */}

@@ -211,116 +211,91 @@ const handleUpdate = async () => {
 
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
- const renderInstance = (inst, assignment) => {
+const renderInstance = (inst, assignment) => {
   const isAssigned = !!assignment;
-
   const hw = inst.hardware || {};
 
   return (
-    <div className={`instance-card ${isAssigned ? "assigned-card" : ""}`}>
-      
-      {/* HEADER */}
-      <div className="instance-header">
+    <div className={`instance-card-modern ${isAssigned ? "assigned" : ""}`}>
+
+      {/* 🔷 HEADER */}
+      <div className="instance-header-modern">
         <div>
-          <p className="instance-title">{inst.instanceCode}</p>
+          <h4 className="instance-title">{inst.instanceCode}</h4>
           <p className="instance-sub">{inst.serialNumber || "No Serial"}</p>
         </div>
 
         <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
-          {isAssigned ? "Assigned" : "Available"}
+          {isAssigned ? "🔴 Assigned" : "🟢 Available"}
         </span>
       </div>
 
-      {/* BASIC INFO */}
-      <div className="instance-block">
-        <p><span>Location</span>{inst.location || "N/A"}</p>
-        <p><span>Condition</span>{inst.condition}</p>
-        <p>
-          <span>Installed</span>
+      {/* 🔷 QUICK INFO */}
+      <div className="instance-quick-grid">
+        <div>📍 {inst.location || "N/A"}</div>
+        <div>⚙ {inst.condition}</div>
+        <div>
+          📅{" "}
           {hw.installationDate
             ? new Date(hw.installationDate).toLocaleDateString()
             : "N/A"}
-        </p>
+        </div>
       </div>
 
-      {/* TECH DETAILS */}
-      <div className="instance-block">
-        <p><span>Model NO</span>{hw.modelNo || "N/A"}</p>
-        <p><span>Specs</span>{hw.specifications || "N/A"}</p>
+      {/* 🔷 TECHNICAL */}
+      <div className="instance-section">
+        <p className="section-title">⚡ Technical</p>
+        <div className="grid-2">
+          <p><span>Model</span>{hw.modelNo || "N/A"}</p>
+          <p><span>Specs</span>{hw.specifications || "N/A"}</p>
+        </div>
       </div>
 
-      {/* WARRANTY */}
-      <div className="instance-block">
-        <p>
-          <span> Purchase Date</span>
-          {hw.purchaseDate
-            ? new Date(hw.purchaseDate).toLocaleDateString()
-            : "N/A"}
-        </p>
-        <p>
-          <span> Maintainence Date</span>
-          {hw.purchaseDate
-            ? new Date(hw.nextMaintenanceDate).toLocaleDateString()
-            : "N/A"}
-        </p>
-        <p>
-          <span>Warranty Purchase</span>
-          {hw.warrantyPurchaseDate
-            ? new Date(hw.warrantyPurchaseDate).toLocaleDateString()
-            : "N/A"}
-        </p>
-        <p>
-          <span>Warranty Renewal</span>
-          {hw.warrantyExpiry
-            ? new Date(hw.warrantyExpiry).toLocaleDateString()
-            : "N/A"}
-        </p>
-
-        <p><span>Insurance ID</span>{hw.insuranceId || "N/A"}</p>
-        <p><span>Insurance Duration</span>{hw.insuranceTerm || "N/A"}</p>
-
-        <p>
-          <span>Insurance Purchase </span>
-          {hw.insurancePurchaseDate
-            ? new Date(hw.insurancePurchaseDate).toLocaleDateString()
-            : "N/A"}
-        </p>
-        <p>
-          <span>Insurance Renewal</span>
-          {hw.insuranceExpiry
-            ? new Date(hw.insuranceExpiry).toLocaleDateString()
-            : "N/A"}
-        </p>
+      {/* 🔷 LIFECYCLE */}
+      <div className="instance-section">
+        <p className="section-title">📆 Lifecycle</p>
+        <div className="grid-2">
+          <p><span>Purchase</span>{hw.purchaseDate ? new Date(hw.purchaseDate).toLocaleDateString() : "N/A"}</p>
+          <p><span>Maintenance</span>{hw.nextMaintenanceDate ? new Date(hw.nextMaintenanceDate).toLocaleDateString() : "N/A"}</p>
+          <p><span>Warranty Exp</span>{hw.warrantyExpiry ? new Date(hw.warrantyExpiry).toLocaleDateString() : "N/A"}</p>
+          <p><span>Insurance Exp</span>{hw.insuranceExpiry ? new Date(hw.insuranceExpiry).toLocaleDateString() : "N/A"}</p>
+        </div>
       </div>
 
-      {/* COST */}
-      <div className="instance-block cost">
-
-        <p><span>Purchase</span>{hw.purchaseCost?.amount || 0}<span style={{ color : "red"}}>{hw.purchaseCost?.currency || "N/A"}</span></p>
-        <p><span>Maintenance</span>{hw.costs?.maintenanceCost || 0}</p>
-        <p><span>Warranty Renewal</span>{hw.costs?.warrantyRenewalCost || 0}</p>
-        <p><span>Insurance Cost</span>{hw.costs?.insuranceCost || 0}</p>
+      {/* 🔷 COST */}
+      <div className="instance-section">
+        <p className="section-title">💰 Cost</p>
+        <div className="grid-2">
+          <p>
+            <span>Purchase</span>
+            {hw.purchaseCost?.amount || 0}{" "}
+            <b>{hw.purchaseCost?.currency || ""}</b>
+          </p>
+          <p><span>Maintenance</span>{hw.costs?.maintenanceCost || 0}</p>
+          <p><span>Warranty</span>{hw.costs?.warrantyRenewalCost || 0}</p>
+          <p><span>Insurance</span>{hw.costs?.insuranceCost || 0}</p>
+        </div>
       </div>
 
-      {/* ASSIGNMENT */}
-      {isAssigned && assignment && (
-        <div className="assignment-box">
-          <p><span>Employee :-</span>{assignment.employee?.name}</p>
-          <p><span>Department :-</span>{assignment.department?.name}</p>
-          <p><span>Assigned Location :-</span>{assignment.location}</p>
-          <p><span>Device :-</span>{assignment.deviceInfo?.deviceName || "N/A"}</p>
+      {/* 🔷 ASSIGNMENT */}
+      {isAssigned && (
+        <div className="assignment-modern">
+          <p className="section-title">👤 Assignment</p>
+          <p>{assignment.employee?.name}</p>
+          <p>{assignment.department?.name}</p>
+          <p>{assignment.location}</p>
         </div>
       )}
 
+      {/* 🔷 ACTION */}
       <button
-        className="btn-edit"
+        className="btn-edit modern"
         onClick={() => {
           setEditInstance(inst);
 
           setInstanceForm({
             location: inst.location,
             condition: inst.condition,
-
             hardware: {
               modelNo: hw.modelNo || "",
               specifications: hw.specifications || "",
@@ -328,7 +303,7 @@ const handleUpdate = async () => {
           });
         }}
       >
-        Edit Instance
+        ✏ Edit
       </button>
     </div>
   );
@@ -341,7 +316,6 @@ const handleUpdate = async () => {
       <div className="dashboard-header">
         <h2>Hardware Inventory</h2>
 
-        <div className="header-actions">
           <input
             type="text"
             placeholder="Search software..."
@@ -350,8 +324,6 @@ const handleUpdate = async () => {
             className="inventory-search-input"
           />
 
-          <CurrencyFilter />
-        </div>
       </div>
 
       {/* GRID */}
