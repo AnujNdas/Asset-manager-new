@@ -419,6 +419,17 @@ const asset = await SoftwareAsset.create({
    GET SOFTWARE ASSETS (ORG-SCOPED)
 ====================================================== */
 const getSoftwareAssets = async (req, res) => {
+  const deriveAssetStatus = ({ assetQuantity, instanceCount, inUse }) => {
+  if (instanceCount === 0) return "not_created";
+
+  if (instanceCount < assetQuantity) return "partially_created";
+
+  if (inUse === 0) return "in_stock";
+
+  if (inUse === assetQuantity) return "fully_in_use";
+
+  return "partially_in_use";
+};
   try {
     const organizationId = req.user.organizationId;
 
@@ -544,7 +555,12 @@ const getSoftwareAssets = async (req, res) => {
 
         // instances
         instances: assetInstances,
-        instanceCount: assetInstances.length
+        instanceCount: assetInstances.length,
+          status: deriveAssetStatus({
+          assetQuantity: asset.assetQuantity,
+          instanceCount: assetInstances.length,
+          inUse: assignmentData.inUse || 0
+        })
       };
     });
 

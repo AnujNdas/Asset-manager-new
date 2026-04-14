@@ -63,25 +63,24 @@ assignedTo: {
 
   /* 🔹 HARDWARE SECTION (UI BLOCK) */
 hardware: {
-  modelNo: String,
-  specifications: String,
-
-  purchaseDate: Date,        // ✅ UI
-  installationDate: Date,    // ✅ UI
-  warrantyPurchaseDate: Date,
-  warrantyExpiry: Date,
-  insurancePurchaseDate: Date,
-  insuranceExpiry: Date,
-  insuranceId: String,       // ✅ UI
-    // ✅ NEW FIELD
-  insuranceTerm: {
-    type: String,
-    enum: ["6_months", "1_year", "3_years"],
-    default: "1_year"
-  },
-coverageType: {
-  type: [String],
-  enum: [
+  type: new mongoose.Schema({
+    modelNo: String,
+    specifications: String,
+    purchaseDate: Date,
+    installationDate: Date,
+    warrantyPurchaseDate: Date,
+    warrantyExpiry: Date,
+    insurancePurchaseDate: Date,
+    insuranceExpiry: Date,
+    insuranceId: String,
+    insuranceTerm: {
+      type: String,
+      enum: ["6_months", "1_year", "3_years"],
+      default: "1_year"
+    },
+    coverageType: {
+      type: [String],
+      enum: [
     "comprehensive",
     "accidental_damage",
     "third_party",
@@ -97,30 +96,36 @@ coverageType: {
     "mechanical_breakdown",
     "none"
   ],
-  default: ["comprehensive"]
-},
-  nextMaintenanceDate: Date,
-  purchaseCost: costSchema,   // 🔥 NEW
-  costs: {
-    maintenanceCost: Number,
-    warrantyRenewalCost: Number,
-    insuranceCost: Number
-  }
+      default: ["comprehensive"]
+    },
+    nextMaintenanceDate: Date,
+    purchaseCost: costSchema,
+    costs: {
+      maintenanceCost: Number,
+      warrantyRenewalCost: Number,
+      insuranceCost: Number
+    }
+  }, { _id: false }),
+
+  default: undefined   // 🔥 CRITICAL FIX
 },
 
   /* 🔹 SOFTWARE SECTION (UI BLOCK) */
 software: {
-  licenseKey: String,
-  licenseNumber: String,
+  type: new mongoose.Schema({
+    licenseKey: String,
+    licenseNumber: String,
+    purchaseDate: Date,
+    installationDate: Date,
+    renewalDate: Date,
+    lastUsedDate: Date,
+    purchaseCost: costSchema,
+    costs: {
+      renewalCost: Number
+    }
+  }, { _id: false }),
 
-  purchaseDate: Date,
-  installationDate: Date,   // ✅ UI
-  renewalDate: Date,
-  lastUsedDate: Date,
-  purchaseCost: costSchema,   // 🔥 NEW
-  costs: {
-    renewalCost: Number     // ✅ UI
-  }
+  default: undefined   // 🔥 IMPORTANT
 },
 
   /* 🔹 UI DERIVED FIELD (IMPORTANT) */
