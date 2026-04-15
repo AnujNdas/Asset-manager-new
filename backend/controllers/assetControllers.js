@@ -780,16 +780,30 @@ const getAllAssets = async (req, res, next) => {
       .populate("departmentId", "name")
       .populate("employeeId", "name employeeCode")
       .lean();
-    const calculateFinancials = (instances = []) => {
+const calculateFinancials = (instances = []) => {
   let totalPurchase = 0;
-  let totalMaintenance = 0;
-  let totalYearly = 0;
+
+  let totalMaintenance = 0; // total maintenance (lifetime or summed)
+  let yearlyMaintenance = 0;
+  let monthlyMaintenance = 0;
+
+  let currency = null;
 
   instances.forEach(inst => {
     const hw = inst.hardware || {};
     const sw = inst.software || {};
 
-    // ✅ PURCHASE COST
+    // ✅ detect currency (first valid one)
+    const instCurrency =
+      hw.purchaseCost?.currency ||
+      sw.purchaseCost?.currency ||
+      null;
+
+    if (!currency && instCurrency) {
+      currency = instCurrency;
+    }
+
+    // ✅ PURCHASE (CAPEX)
     const purchase =
       hw.purchaseCost?.amount ||
       sw.purchaseCost?.amount ||
@@ -797,31 +811,25 @@ const getAllAssets = async (req, res, next) => {
 
     totalPurchase += purchase;
 
-    // ✅ MAINTENANCE / RENEWAL / INSURANCE
+    // ✅ MAINTENANCE ONLY (OPEX)
     const maintenance =
       hw.costs?.maintenanceCost ||
       sw.costs?.maintenanceCost ||
       0;
 
-    const warranty =
-      hw.costs?.warrantyRenewalCost ||
-      sw.costs?.renewalCost ||
-      0;
-
-    const insurance =
-      hw.costs?.insuranceCost || 0;
-
-    const yearly = maintenance + warranty + insurance;
-
     totalMaintenance += maintenance;
-    totalYearly += yearly;
+
+    // ✅ ASSUMPTION: maintenanceCost is yearly
+    yearlyMaintenance += maintenance;
+    monthlyMaintenance += maintenance / 12;
   });
 
   return {
-    totalAssetCost: totalPurchase,
-    maintenanceTotalCost: totalMaintenance,
-    yearlyCost: totalYearly,
-    monthlyCost: totalYearly / 12,
+    totalAssetCost: totalPurchase,              // CAPEX
+    maintenanceTotalCost: totalMaintenance,     // total maintenance
+    yearlyMaintenanceCost: yearlyMaintenance,   // yearly maintenance
+    monthlyMaintenanceCost: monthlyMaintenance, // monthly maintenance
+    currency: currency || "INR"
   };
 };
     /* ================= ASSIGNMENT MAP ================= */
