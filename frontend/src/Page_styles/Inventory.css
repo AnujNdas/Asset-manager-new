@@ -766,6 +766,47 @@
   background: #1f2937;
   border-radius: 8px;
 }
+.financial-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* TOP ROW - highlighted */
+.financial-card.primary {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+}
+
+.financial-card.primary-alt {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+}
+
+/* BASE CARD */
+.financial-card {
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  background: #f8fafc;
+}
+
+/* SMALL (BOTTOM ROW) */
+.financial-card.small {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.financial-card .label {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.financial-card p:last-child {
+  font-weight: 600;
+  margin-top: 2px;
+}
 @media (max-width: 768px) {
   .asset-view-modal {
     max-width: 95%;

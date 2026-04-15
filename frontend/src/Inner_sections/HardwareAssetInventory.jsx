@@ -385,25 +385,52 @@ const renderInstance = (inst, assignment) => {
           <p className="label"> Purchase Date</p>
           <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
         </div>
-       <div>
-          <p className="label">Instance Count</p>
-          <p>📦 {asset.instanceCount} instances</p>
-        </div>
+    <div>
+      <p className="label">Usage</p>
+    <p>
+      💻 {asset.inUse}/{asset.assetQuantity} used
+    </p>
+    </div>
       </div>
 
-      {/* 🔷 OPTIONAL ALERTS (can remove now if using status) */}
-      {asset.status === "fully_in_use" && (
-        <div className="alert warning">⚠ Fully Assigned</div>
-      )}
+     {/* 🔷 FINANCIAL INSIGHTS (COMPACT) */}
+<div className="financial-grid-compact">
 
-      {asset.status === "not_created" && (
-        <div className="alert danger">❌ No Instances Created</div>
-      )}
+  {/* TOP ROW (IMPORTANT) */}
+  <div className="financial-card primary">
+    <p className="label">Total Cost</p>
+    <p>
+      💰 {asset.financialTracking?.currency}{" "}
+      {asset.financialTracking?.totalAssetCost || 0}
+    </p>
+  </div>
 
-      {asset.type === "maintenance" && (
-        <div className="alert info">🛠 Under Maintenance</div>
-      )}
+  <div className="financial-card primary-alt">
+    <p className="label">Maintenance</p>
+    <p>
+      🛠 {asset.financialTracking?.currency}{" "}
+      {asset.financialTracking?.maintenanceTotalCost || 0}
+    </p>
+  </div>
 
+  {/* BOTTOM ROW (LESS IMPORTANT) */}
+  <div className="financial-card small">
+    <p className="label">Yearly</p>
+    <p>
+      📅 {asset.financialTracking?.currency}{" "}
+      {asset.financialTracking?.yearlyMaintenanceCost?.toFixed(2) || 0}
+    </p>
+  </div>
+
+  <div className="financial-card small">
+    <p className="label">Monthly</p>
+    <p>
+      📊 {asset.financialTracking?.currency}{" "}
+      {asset.financialTracking?.monthlyMaintenanceCost?.toFixed(2) || 0}
+    </p>
+  </div>
+
+</div>
       {/* 🔷 ACTIONS */}
       <div className="card-actions">
         <button
