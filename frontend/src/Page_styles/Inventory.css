@@ -775,12 +775,12 @@
 
 /* TOP ROW - highlighted */
 .financial-card.primary {
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  background: linear-gradient(135deg, #c0bcff, #a2a4ff);
   color: #fff;
 }
 
 .financial-card.primary-alt {
-  background: linear-gradient(135deg, #059669, #10b981);
+  background: linear-gradient(135deg, #ccffef, #31c594);
   color: #fff;
 }
 
