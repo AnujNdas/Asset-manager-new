@@ -30,15 +30,17 @@ export const CurrencyProvider = ({ children }) => {
     localStorage.setItem("selected_currency", currency);
   }, [currency]);
 
-  const convertFromBase = (amountInINR) => {
-    if (!amountInINR) return 0;
-    if (!rates) return 0;
+const convertFromBase = (amountInINR) => {
+  if (!amountInINR) return 0;
+  if (!rates) return amountInINR;
 
-    const rate = rates[currency];
-    if (!rate) return amountInINR;
+  if (currency === "INR") return amountInINR;
 
-    return +(amountInINR * rate).toFixed(2);
-  };
+  const rate = rates[currency];
+  if (!rate) return amountInINR;
+
+  return +(amountInINR / rate).toFixed(2);
+};
 
   return (
     <CurrencyContext.Provider
