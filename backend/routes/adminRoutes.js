@@ -66,7 +66,83 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
         },
       },
     ]);
+          /* ================= Location based queries  ================= */
+          const topHardwareLocationsPromise = Hardware.aggregate([
+  { $match: { organizationId } },
 
+  {
+    $lookup: {
+      from: "assetinstances",
+      localField: "_id",
+      foreignField: "assetId",
+      as: "instances",
+    },
+  },
+
+  {
+    $addFields: {
+      instanceCount: { $size: "$instances" },
+    },
+  },
+
+  {
+    $group: {
+      _id: "$locationName",
+      total: { $sum: "$instanceCount" },
+    },
+  },
+
+  { $sort: { total: -1 } },
+  { $limit: 5 },
+
+  {
+    $lookup: {
+      from: "locations",
+      localField: "_id",
+      foreignField: "_id",
+      as: "location",
+    },
+  },
+  { $unwind: "$location" },
+]);
+const topSoftwareLocationsPromise = Software.aggregate([
+  { $match: { organizationId } },
+
+  {
+    $lookup: {
+      from: "assetinstances",
+      localField: "_id",
+      foreignField: "assetId",
+      as: "instances",
+    },
+  },
+
+  {
+    $addFields: {
+      instanceCount: { $size: "$instances" },
+    },
+  },
+
+  {
+    $group: {
+      _id: "$locationName",
+      total: { $sum: "$instanceCount" },
+    },
+  },
+
+  { $sort: { total: -1 } },
+  { $limit: 5 },
+
+  {
+    $lookup: {
+      from: "locations",
+      localField: "_id",
+      foreignField: "_id",
+      as: "location",
+    },
+  },
+  { $unwind: "$location" },
+]);
     /* ================= REMAINING OLD PROMISES (UNCHANGED) ================= */
 
     const [
@@ -89,8 +165,8 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
 
       softwareSpendByCategory,
       topSoftware,
-      topSoftwareLocations,
-      topHardwareLocations,
+topSoftwareLocations,
+topHardwareLocations,
       departmentAssignments,
     ] = await Promise.all([
       softwareStatsPromise,
@@ -240,16 +316,8 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
         .select("assetName assetCost.baseTotalAmount")
         .lean(),
 
-      Software.aggregate([
-        { $match: { organizationId } },
-        { $group: { _id: "$locationName", total: { $sum: "$assetQuantity" } } },
-      ]),
-
-      Hardware.aggregate([
-        { $match: { organizationId } },
-        { $group: { _id: "$locationName", total: { $sum: "$assetQuantity" } } },
-      ]),
-
+      topSoftwareLocationsPromise,
+      topHardwareLocationsPromise,
       AssetAssignment.aggregate([
         {
           $match: {
@@ -265,7 +333,23 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
         },
       ]),
     ]);
+    const mergedLocations = [
+  ...topSoftwareLocations,
+  ...topHardwareLocations,
+].reduce((acc, item) => {
+  const name = item.location?.name;
 
+  if (!name) return acc;
+
+  acc[name] = (acc[name] || 0) + item.total;
+
+  return acc;
+}, {});
+
+const topLocations = Object.entries(mergedLocations)
+  .map(([name, total]) => ({ name, total }))
+  .sort((a, b) => b.total - a.total)
+  .slice(0, 5);
     /* ================= SAFE FALLBACK ================= */
 
     const softwareData = softwareStats[0] || {
@@ -324,6 +408,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
         spendByCategory: softwareSpendByCategory,
         topAssets: topSoftware,
         departmentAssignments,
+        topLocations
       },
     });
   } catch (error) {
