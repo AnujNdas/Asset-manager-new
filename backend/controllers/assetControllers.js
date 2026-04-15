@@ -780,7 +780,50 @@ const getAllAssets = async (req, res, next) => {
       .populate("departmentId", "name")
       .populate("employeeId", "name employeeCode")
       .lean();
+    const calculateFinancials = (instances = []) => {
+  let totalPurchase = 0;
+  let totalMaintenance = 0;
+  let totalYearly = 0;
 
+  instances.forEach(inst => {
+    const hw = inst.hardware || {};
+    const sw = inst.software || {};
+
+    // ✅ PURCHASE COST
+    const purchase =
+      hw.purchaseCost?.amount ||
+      sw.purchaseCost?.amount ||
+      0;
+
+    totalPurchase += purchase;
+
+    // ✅ MAINTENANCE / RENEWAL / INSURANCE
+    const maintenance =
+      hw.costs?.maintenanceCost ||
+      sw.costs?.maintenanceCost ||
+      0;
+
+    const warranty =
+      hw.costs?.warrantyRenewalCost ||
+      sw.costs?.renewalCost ||
+      0;
+
+    const insurance =
+      hw.costs?.insuranceCost || 0;
+
+    const yearly = maintenance + warranty + insurance;
+
+    totalMaintenance += maintenance;
+    totalYearly += yearly;
+  });
+
+  return {
+    totalAssetCost: totalPurchase,
+    maintenanceTotalCost: totalMaintenance,
+    yearlyCost: totalYearly,
+    monthlyCost: totalYearly / 12,
+  };
+};
     /* ================= ASSIGNMENT MAP ================= */
     const assignmentMap = {};
 
@@ -839,36 +882,44 @@ const getAllAssets = async (req, res, next) => {
     });
 
     /* ================= MERGE ================= */
-    let enrichedAssets = assets.map(asset => {
-      const key = String(asset._id);
+let enrichedAssets = assets.map(asset => {
+  const key = String(asset._id);
 
-      const assignmentData = assignmentMap[key] || {};
-      const assetInstances = instanceMap[key] || [];
+  const assignmentData = assignmentMap[key] || {};
+  const assetInstances = instanceMap[key] || [];
 
-      return {
-        ...asset,
+  // 🔥 NEW: calculate financials
+  const financials = calculateFinancials(assetInstances);
 
-        // usage
-        inUse: assignmentData.inUse || 0,
+  return {
+    ...asset,
 
-        // department grouping
-        assignedDepartments: Object.values(
-          assignmentData.assignedDepartments || {}
-        ),
+    // usage
+    inUse: assignmentData.inUse || 0,
 
-        // records
-        assignmentRecords: assignmentData.assignmentRecords || [],
+    // department grouping
+    assignedDepartments: Object.values(
+      assignmentData.assignedDepartments || {}
+    ),
 
-        // instances
-        instances: assetInstances,
-        instanceCount: assetInstances.length,
-          status: deriveAssetStatus({
-    assetQuantity: asset.assetQuantity,
+    // records
+    assignmentRecords: assignmentData.assignmentRecords || [],
+
+    // instances
+    instances: assetInstances,
     instanceCount: assetInstances.length,
-    inUse: assignmentData.inUse || 0
-  })
-      };
-    });
+
+    // ✅ STATUS
+    status: deriveAssetStatus({
+      assetQuantity: asset.assetQuantity,
+      instanceCount: assetInstances.length,
+      inUse: assignmentData.inUse || 0
+    }),
+
+    // ✅ FINANCIALS (NEW)
+    financialTracking: financials
+  };
+});
 
     /* ================= INSTANCE FILTER ================= */
     if (instanceStatus === "missing") {
