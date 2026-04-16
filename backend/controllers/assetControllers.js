@@ -1203,28 +1203,27 @@ const newInstances = await Promise.all(
 );
 
         const saved = await AssetInstance.insertMany(newInstances);
-        const updatedInstances = await Promise.all(
+const updatedInstances = await Promise.all(
   saved.map(async (instance) => {
     if (instance.assetType !== "hardware") return instance;
 
     try {
-      // ✅ Use REAL ID (correct)
       const trackingUrl = `${process.env.FRONTEND_URL}/track/${instance._id}`;
 
-      // 🔥 Generate QR
       const qrImage = await QRCode.toDataURL(trackingUrl);
 
-      // ☁️ Upload to Cloudinary
       const uploadRes = await cloudinary.uploader.upload(qrImage, {
         folder: "asset_qr_codes",
         public_id: `qr-${instance._id}`,
       });
 
-      // 💾 Save only URL (lightweight)
-      instance.qrCode = {
-        url: uploadRes.secure_url,
-        public_id: uploadRes.public_id,
-      };
+      // ✅ FIXED HERE
+      if (instance.hardware) {
+        instance.hardware.qrCode = {
+          url: uploadRes.secure_url,
+          public_id: uploadRes.public_id,
+        };
+      }
 
       await instance.save();
 

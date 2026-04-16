@@ -64,32 +64,44 @@ const getTrackedInstances = async (req, res) => {
        ENRICH INSTANCES
     ============================== */
 
-    const enrichedInstances = instances.map((inst) => {
-      const assignment = assignmentMap[inst._id.toString()];
+const enrichedInstances = instances.map((inst) => {
+  const assignment = assignmentMap[inst._id.toString()];
 
-      return {
-        ...inst,
+  // ✅ Extract QR
+  const qrCode =
+    inst.assetType === "hardware"
+      ? inst.hardware?.qrCode || null
+      : null;
 
-        assignment: assignment
-          ? {
-              employee: {
-                name: assignment.employeeId?.name,
-                code: assignment.employeeId?.employeeCode
-              },
-              department: assignment.departmentId?.name,
-              location: assignment.location,
-              assignedAt: assignment.assignedAt,
+  // ✅ Add tracking URL
+  const trackingUrl = `${process.env.FRONTEND_URL}/track/${inst._id}`;
 
-              // ✅ NEW: DEVICE INFO FROM USER INPUT
-              deviceInfo: {
-                deviceName: assignment.deviceInfo?.deviceName || null,
-                assetTag: assignment.deviceInfo?.assetTag || null,
-                serialNumber: assignment.deviceInfo?.serialNumber || null
-              }
-            }
-          : null
-      };
-    });
+  return {
+    ...inst,
+
+    // 🔥 NEW FIELDS
+    qrCode,
+    trackingUrl,
+
+    assignment: assignment
+      ? {
+          employee: {
+            name: assignment.employeeId?.name,
+            code: assignment.employeeId?.employeeCode
+          },
+          department: assignment.departmentId?.name,
+          location: assignment.location,
+          assignedAt: assignment.assignedAt,
+
+          deviceInfo: {
+            deviceName: assignment.deviceInfo?.deviceName || null,
+            assetTag: assignment.deviceInfo?.assetTag || null,
+            serialNumber: assignment.deviceInfo?.serialNumber || null
+          }
+        }
+      : null
+  };
+});
 
     res.status(200).json({
       success: true,
