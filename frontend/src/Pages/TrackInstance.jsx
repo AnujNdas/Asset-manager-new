@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getTrackedInstancePublic } from "../Services/ApiServices";
 import "../Page_styles/TrackInstance.css";
-
+import axios from "axios";
 const TrackInstance = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
