@@ -73,6 +73,10 @@ hardware: {
     insurancePurchaseDate: Date,
     insuranceExpiry: Date,
     insuranceId: String,
+    qrCode: {
+      url: String,
+      public_id: String
+    },
     insuranceTerm: {
       type: String,
       enum: ["6_months", "1_year", "3_years"],
