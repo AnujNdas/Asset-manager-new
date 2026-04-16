@@ -1,0 +1,70 @@
+.track-page {
+  min-height: 100vh;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.track-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.track-card h2 {
+  margin-bottom: 10px;
+}
+
+.status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+}
+
+.status.in_use {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status.in_stock {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.status.maintenance {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status.retired {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.section {
+  margin-top: 15px;
+}
+
+.section h3 {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.section p {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.error {
+  text-align: center;
+}

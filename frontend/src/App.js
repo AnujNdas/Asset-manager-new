@@ -3,6 +3,7 @@ import { useEffect, useState, lazy , Suspense } from "react";
 
 import TenantRoutes from "./routes/TenantRoutes";
 import SuperAdminRoutes from "./routes/SuperAdminRoutes";
+import TrackInstance from "./pages/TrackInstance";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
 
@@ -34,6 +35,7 @@ const App = () => {
     <>
       <main>
         <Routes>
+          <Route path="/track/:id" element={<TrackInstance />} />
           <Route path="/user" element={<SuspenseWrapper><User /></SuspenseWrapper>}>
             <Route
               path="login"
