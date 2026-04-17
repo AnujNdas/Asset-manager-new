@@ -398,7 +398,7 @@ const renderInstance = (inst, assignment) => {
 
   {/* TOP ROW (IMPORTANT) */}
   <div className="financial-card primary">
-    <p className="label">Total Cost</p>
+    <p className="label">Total Purchase Cost</p>
     <p>
       💰 {asset.financialTracking?.currency}{" "}
       {asset.financialTracking?.totalAssetCost || 0}

@@ -15,6 +15,7 @@ const TrackInstance = () => {
   const fetchInstance = async (id) => {
     try {
       const res = await axios.get(`/api/tracking/${id}`);
+      console.log(res.data);
     return res.data;
       setData(res.data);
     } catch (err) {
