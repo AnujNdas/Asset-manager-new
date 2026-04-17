@@ -14,7 +14,7 @@ const TrackInstance = () => {
 
 const fetchInstance = async () => {
   try {
-    const res = await axios.get(`/api/tracking/${id}`);
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/tracking/${id}`);
 
     console.log("TRACK DATA:", res.data);
 
