@@ -111,7 +111,7 @@ app.use("/api/support", supportRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/instance-assets", instanceRoutes);
 app.use("/api/tracking", trackingRoutes);
-app.use("/api", publicRoutes);
+app.use("/api/track", publicRoutes);
 // ❗ Catch unknown routes (VERY IMPORTANT)
 app.all("*", (req, res, next) => {
   const error = new Error(`Cannot find ${req.originalUrl}`);
