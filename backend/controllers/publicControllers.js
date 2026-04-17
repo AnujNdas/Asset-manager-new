@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const getPublicTrackedInstance = async (req, res) => {
   try {
     const { id } = req.params;
