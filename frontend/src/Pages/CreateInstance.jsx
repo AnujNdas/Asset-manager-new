@@ -62,6 +62,7 @@
       specifications: "",
       warrantyDate: "",
       installationDate: "",
+      hasInsurance: false, // ✅ ADD THIS
       insurancePolicyId: "",
       coverageType: ["comprehensive"],
       insuranceExpiry: "",
@@ -139,6 +140,7 @@
             // hardware
             warrantyDate: "",
             installationDate: "",
+            hasInsurance: false, // ✅ ADD THIS
             insurancePolicyId: "",
             insuranceExpiry: "",
             maintenanceCost: "",
@@ -598,7 +600,24 @@
                   }
                 />
                 </div>
-                              <div className="form-group">
+                <div className="form-group">
+  <label>Has Insurance</label>
+  <select
+    value={bulkValues.hasInsurance}
+    onChange={(e) =>
+      setBulkValues({
+        ...bulkValues,
+        hasInsurance: e.target.value === "true",
+      })
+    }
+  >
+    <option value="false">No</option>
+    <option value="true">Yes</option>
+  </select>
+</div>
+{inst.hasInsurance && (
+  <>
+                                <div className="form-group">
                                 <label>Insurance Policy ID</label>
                 <input
                   placeholder="Insurance Policy"
@@ -670,6 +689,21 @@
       <option value="3_years">3 Years</option>
     </select>
   </div>
+                  <div className="form-group">
+                <label>Insurance Cost</label>
+                <input
+                  type="number"
+                  placeholder="Insurance Cost"
+                  value={bulkValues.insuranceCost}
+                  onChange={(e) =>
+                    setBulkValues({
+                      ...bulkValues,
+                      insuranceCost: e.target.value,
+                    })
+                  }
+                />
+                </div>
+  </>)}
                               {/* <div className="form-group">
                 <label>Insurance Expiry</label>
                 <input
@@ -713,20 +747,7 @@
                   }
                 />
                 </div>
-                <div className="form-group">
-                <label>Insurance Cost</label>
-                <input
-                  type="number"
-                  placeholder="Insurance Cost"
-                  value={bulkValues.insuranceCost}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      insuranceCost: e.target.value,
-                    })
-                  }
-                />
-                </div>
+
               </>
             )}
             {isSoftware && (
@@ -1014,6 +1035,20 @@
                             }
                           />
                         </div>
+                        <div>
+  <label>Has Insurance</label>
+  <select
+    value={inst.hasInsurance}
+    onChange={(e) =>
+      handleChange(index, "hasInsurance", e.target.value === "true")
+    }
+  >
+    <option value="false">No</option>
+    <option value="true">Yes</option>
+  </select>
+</div>
+{inst.hasInsurance && (
+  <>
                             <div>
                               <label>Insurance Id</label>
                         <input
@@ -1093,6 +1128,19 @@
                             }
                           />
                         </div>
+                                                  <div>
+                            <label>Insurance Cost</label>
+                        <input
+                          type="number"
+                          value={inst.insuranceCost}
+                          onChange={(e) =>
+                            handleChange(index, "insuranceCost", e.target.value)
+                          }
+                        />
+                          </div>
+                        </>
+)}
+
                       </div>
 
                       <div className="grid-3">
@@ -1120,16 +1168,7 @@
                           }
                         />
                         </div>
-                          <div>
-                            <label>Insurance Cost</label>
-                        <input
-                          type="number"
-                          value={inst.insuranceCost}
-                          onChange={(e) =>
-                            handleChange(index, "insuranceCost", e.target.value)
-                          }
-                        />
-                          </div>
+
                       </div>
                     </>
                   )}

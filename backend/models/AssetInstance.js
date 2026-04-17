@@ -77,6 +77,7 @@ hardware: {
       url: String,
       public_id: String
     },
+    hasInsurance: Boolean,
     insuranceTerm: {
       type: String,
       enum: ["6_months", "1_year", "3_years"],

@@ -1117,6 +1117,7 @@ const newInstances = await Promise.all(
 
 
     const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
+    const hasInsurance = inst.hardware?.hasInsurance ?? false;
 
     return {
       organizationId,
@@ -1133,57 +1134,65 @@ const newInstances = await Promise.all(
       status: "in_stock",
       condition: inst.condition || "new",
 
-      hardware:
-        assetType === "hardware"
-          ? {
-              modelNo: inst.hardware?.modelNo || "",
-              specifications: inst.hardware?.specifications || "",
 
-              purchaseDate: inst.hardware?.purchaseDate || null,
-              installationDate:
-                inst.hardware?.installationDate || null,
+hardware:
+  assetType === "hardware"
+    ? {
+        modelNo: inst.hardware?.modelNo || "",
+        specifications: inst.hardware?.specifications || "",
 
-              warrantyPurchaseDate:
-                inst.hardware?.warrantyPurchaseDate ??
-                inst.hardware?.purchaseDate ??
-                null,
+        purchaseDate: inst.hardware?.purchaseDate || null,
+        installationDate: inst.hardware?.installationDate || null,
 
-              warrantyExpiry:
-                inst.hardware?.warrantyExpiry || null,
+        warrantyPurchaseDate:
+          inst.hardware?.warrantyPurchaseDate ??
+          inst.hardware?.purchaseDate ??
+          null,
 
-              insuranceId: inst.hardware?.insuranceId || "",
-              coverageType:
-                inst.hardware?.coverageType || "comprehensive",
+        warrantyExpiry: inst.hardware?.warrantyExpiry || null,
 
-              insurancePurchaseDate:
-                inst.hardware?.insurancePurchaseDate || null,
+        // ✅ INSURANCE CONTROLLED HERE
+        hasInsurance,
 
-              insuranceTerm:
-                inst.hardware?.insuranceTerm || "1_year",
+        insuranceId: hasInsurance
+          ? inst.hardware?.insuranceId || ""
+          : null,
 
-              insuranceExpiry: calculateInsuranceExpiry(
-                inst.hardware?.insurancePurchaseDate,
-                inst.hardware?.insuranceTerm
-              ),
+        coverageType: hasInsurance
+          ? inst.hardware?.coverageType || ["comprehensive"]
+          : [],
 
-              nextMaintenanceDate:
-                inst.hardware?.nextMaintenanceDate || null,
+        insurancePurchaseDate: hasInsurance
+          ? inst.hardware?.insurancePurchaseDate || null
+          : null,
 
-              purchaseCost: inst.hardware?.purchaseCost || null,
-              currency:
-                inst.hardware?.purchaseCost?.currency || "INR",
+        insuranceTerm: hasInsurance
+          ? inst.hardware?.insuranceTerm || "1_year"
+          : null,
 
-              costs: {
-                maintenanceCost:
-                  Number(inst.hardware?.costs?.maintenanceCost) || 0,
-                warrantyRenewalCost:
-                  Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
-                insuranceCost:
-                  Number(inst.hardware?.costs?.insuranceCost) || 0
-              }
-            }
-          : undefined,
+        insuranceExpiry: hasInsurance
+          ? calculateInsuranceExpiry(
+              inst.hardware?.insurancePurchaseDate,
+              inst.hardware?.insuranceTerm
+            )
+          : null,
 
+        nextMaintenanceDate:
+          inst.hardware?.nextMaintenanceDate || null,
+
+        purchaseCost: inst.hardware?.purchaseCost || null,
+
+        costs: {
+          maintenanceCost:
+            Number(inst.hardware?.costs?.maintenanceCost) || 0,
+          warrantyRenewalCost:
+            Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
+          insuranceCost: hasInsurance
+            ? Number(inst.hardware?.costs?.insuranceCost) || 0
+            : 0
+        }
+      }
+    : undefined,
       lifecycle: [
         {
           action: "CREATED",
