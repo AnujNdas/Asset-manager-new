@@ -12,18 +12,21 @@ const TrackInstance = () => {
     fetchInstance();
   }, [id]);
 
-  const fetchInstance = async (id) => {
-    try {
-      const res = await axios.get(`/api/tracking/${id}`);
-      console.log(res.data);
-    return res.data;
-      setData(res.data);
-    } catch (err) {
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchInstance = async () => {
+  try {
+    const res = await axios.get(`/api/tracking/${id}`);
+
+    console.log("TRACK DATA:", res.data);
+
+    setData(res.data.data); // ✅ IMPORTANT (depends on backend response structure)
+
+  } catch (err) {
+    console.error(err);
+    setData(null);
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (loading) return <div className="track-page">Loading...</div>;
 
