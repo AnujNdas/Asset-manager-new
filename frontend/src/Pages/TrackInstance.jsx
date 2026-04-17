@@ -46,7 +46,7 @@ const fetchInstance = async () => {
 
     {/* HEADER */}
     <div className="track-header">
-      <h2>{data.instanceCode}</h2>
+      <h2>{data.asset?.name || "-"}</h2>
       <span className={`status ${data.status}`}>
         {data.status.replace("_", " ")}
       </span>
@@ -55,8 +55,7 @@ const fetchInstance = async () => {
     {/* ASSET INFO */}
     <div className="section">
       <h3>Asset Info</h3>
-      <p><strong>Name:</strong> {data.assetName || "-"}</p>
-      <p><strong>Code:</strong> {data.assetCode || "-"}</p>
+      <p><strong>Code:</strong> {data.asset?.code || "-"}</p>
       <p><strong>Type:</strong> {data.assetType}</p>
       <p><strong>Condition:</strong> {data.condition}</p>
     </div>
