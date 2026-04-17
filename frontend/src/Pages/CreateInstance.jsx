@@ -615,7 +615,7 @@
     <option value="true">Yes</option>
   </select>
 </div>
-{inst.hasInsurance && (
+{bulkValues.hasInsurance && (
   <>
                                 <div className="form-group">
                                 <label>Insurance Policy ID</label>
