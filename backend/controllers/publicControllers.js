@@ -47,42 +47,58 @@ const getPublicTrackedInstance = async (req, res) => {
 
     const isHardware = instance.assetType === "hardware";
 
-    const responseData = {
-      instanceCode: instance.instanceCode,
-      status: instance.status,
-      condition: instance.condition,
-      location: instance.location,
+const responseData = {
+  instanceCode: instance.instanceCode,
+  status: instance.status,
+  condition: instance.condition,
+  location: instance.location,
+  assetType: instance.assetType,
 
-      assetType: instance.assetType,
+  // 🔹 HARDWARE / SOFTWARE SPLIT
+  hardware: isHardware
+    ? {
+        modelNo: instance.hardware?.modelNo || null,
+        serialNumber: instance.serialNumber || null,
+        specifications: instance.hardware?.specifications || null,
 
-      // 🔹 HARDWARE / SOFTWARE SPLIT
-      hardware: isHardware
-        ? {
-            modelNo: instance.hardware?.modelNo || null,
-            serialNumber: instance.serialNumber || null
-          }
-        : null,
+        installationDate: instance.hardware?.installationDate || null,
+        purchaseDate: instance.hardware?.purchaseDate || null,
 
-      software: !isHardware
-        ? {
-            licenseNumber: instance.software?.licenseNumber || null
-          }
-        : null,
+        warrantyExpiry: instance.hardware?.warrantyExpiry || null,
 
-      // 🔹 ASSIGNMENT
-      assignment: assignment
-        ? {
-            employeeName: assignment.employeeId?.name || null,
-            department: assignment.departmentId?.name || null,
-            assignedAt: assignment.assignedAt || null,
+        insuranceExpiry: instance.hardware?.insuranceExpiry || null,
+        insuranceId: instance.hardware?.insuranceId || null,
 
-            deviceInfo: {
-              deviceName: assignment.deviceInfo?.deviceName || null,
-              assetTag: assignment.deviceInfo?.assetTag || null
-            }
-          }
-        : null
-    };
+        coverageType: instance.hardware?.coverageType || [],
+
+        nextMaintenanceDate:
+          instance.hardware?.nextMaintenanceDate || null
+      }
+    : null,
+
+  software: !isHardware
+    ? {
+        licenseNumber: instance.software?.licenseNumber || null,
+        purchaseDate: instance.software?.purchaseDate || null,
+        renewalDate: instance.software?.renewalDate || null,
+        lastUsedDate: instance.software?.lastUsedDate || null
+      }
+    : null,
+
+  // 🔹 ASSIGNMENT
+  assignment: assignment
+    ? {
+        employeeName: assignment.employeeId?.name || null,
+        department: assignment.departmentId?.name || null,
+        assignedAt: assignment.assignedAt || null,
+
+        deviceInfo: {
+          deviceName: assignment.deviceInfo?.deviceName || null,
+          assetTag: assignment.deviceInfo?.assetTag || null
+        }
+      }
+    : null
+};
 
     return res.status(200).json({
       success: true,
