@@ -15,10 +15,11 @@ const getPublicTrackedInstance = async (req, res) => {
        FETCH INSTANCE
     ============================== */
 
-    const instance = await mongoose
-      .model("AssetInstance")
-      .findById(id)
-      .lean();
+const instance = await mongoose
+  .model("AssetInstance")
+  .findById(id)
+  .populate("assetId", "assetName assetCode")
+  .lean();
 
     if (!instance) {
       return res.status(404).json({
@@ -53,7 +54,10 @@ const responseData = {
   condition: instance.condition,
   location: instance.location,
   assetType: instance.assetType,
-
+    asset: {
+    name: instance.assetId?.assetName || null,
+    code: instance.assetId?.assetCode || null
+  },
   // 🔹 HARDWARE / SOFTWARE SPLIT
   hardware: isHardware
     ? {
