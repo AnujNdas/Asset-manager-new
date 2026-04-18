@@ -125,137 +125,208 @@ const calculateServiceDays = (createdAt) => {
 
 // GET /instances/:id/history
 
-  const getInstanceHistory = async (req, res) => {
-    try {
-      const { id } = req.params;
+const getInstanceHistory = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-      const instance = await mongoose.model("AssetInstance")
-        .findOne({
-          _id: id,
-          organizationId: req.user.organizationId
-        })
-        .lean();
+    const instance = await mongoose.model("AssetInstance")
+      .findOne({
+        _id: id,
+        organizationId: req.user.organizationId
+      })
+      .lean();
 
-      if (!instance) {
-        return res.status(404).json({
-          success: false,
-          message: "Instance not found"
-        });
+    if (!instance) {
+      return res.status(404).json({
+        success: false,
+        message: "Instance not found"
+      });
+    }
+
+    /* =============================
+       FETCH ASSIGNMENTS
+    ============================== */
+
+    const assignments = await mongoose.model("AssetAssignment")
+      .find({ assetInstanceId: id })
+      .populate("employeeId", "name")
+      .populate("departmentId", "name")
+      .sort({ assignedAt: -1 })
+      .lean();
+
+    /* =============================
+       HELPERS
+    ============================== */
+
+    const formatDate = (date) => {
+      if (!date) return "-";
+      const d = new Date(date);
+      return isNaN(d) ? "-" : d.toLocaleDateString("en-GB");
+    };
+
+    const getServiceDays = (startDate) => {
+      if (!startDate) return "-";
+      const diff = Date.now() - new Date(startDate).getTime();
+      return Math.floor(diff / (1000 * 60 * 60 * 24)) + " Days";
+    };
+
+    const getActiveScore = (instance) => {
+      let score = 100;
+
+      const created = new Date(instance.createdAt);
+      const ageDays =
+        (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24);
+
+      if (ageDays > 365) score -= 20;
+      else if (ageDays > 180) score -= 10;
+
+      if (instance.condition === "used") score -= 10;
+      if (instance.condition === "damaged") score -= 30;
+
+      const next = instance.hardware?.nextMaintenanceDate;
+      if (next) {
+        const today = new Date();
+        const due = new Date(next);
+
+        if (due < today) score -= 25;
+        else if ((due - today) / (1000 * 60 * 60 * 24) <= 30)
+          score -= 10;
       }
 
-      /* =============================
-        FETCH ASSIGNMENTS (NEW)
-      ============================== */
+      const warranty = instance.hardware?.warrantyExpiry;
+      if (warranty && new Date(warranty) < new Date()) {
+        score -= 15;
+      }
 
-      const assignments = await mongoose.model("AssetAssignment")
-        .find({
-          assetInstanceId: id
-        })
-        .populate("employeeId", "name")
-        .populate("departmentId", "name")
-        .sort({ createdAt: -1 })
-        .lean();
+      return Math.max(score, 0);
+    };
 
-      /* =============================
-        HELPERS
-      ============================== */
+    /* =============================
+       MAP LIFECYCLE
+    ============================== */
 
-      const formatDate = (date) => {
-        if (!date) return "-";
-        const d = new Date(date);
-        if (isNaN(d)) return "-";
-        return d.toLocaleDateString("en-GB");
+    const lifecycleHistory = (instance.lifecycle || []).map((item) => {
+      const data = item.to || {};
+
+      const isoDate = item.date ? new Date(item.date) : null;
+
+      const next = instance.hardware?.nextMaintenanceDate;
+
+      let maintenanceStatus = "-";
+      if (next) {
+        const today = new Date();
+        const due = new Date(next);
+
+        if (due < today) maintenanceStatus = "overdue";
+        else if ((due - today) / (1000 * 60 * 60 * 24) <= 30)
+          maintenanceStatus = "due_soon";
+        else maintenanceStatus = "scheduled";
+      }
+
+      return {
+        type: "lifecycle",
+
+        action: item.action,
+        recordDate: formatDate(item.date),
+        recordDateISO: isoDate,
+
+        location:
+          typeof data.location === "object"
+            ? data.location?.name
+            : data.location || "-",
+
+        condition: data.condition || "-",
+
+        notes: item.notes || "-",
+
+        /* HARDWARE */
+        warrantyDate: formatDate(instance.hardware?.warrantyExpiry),
+
+        /* MAINTENANCE */
+        nextMaintenanceDate: formatDate(next),
+        maintenanceCost:
+          instance.hardware?.costs?.maintenanceCost ?? 0,
+        maintenanceStatus,
+
+        /* SOFTWARE */
+        licenseNumber: instance.software?.licenseNumber || "-",
+
+        assignedPerson: "-",
+
+        activeService: getServiceDays(instance.createdAt),
+        activeScore: getActiveScore(instance)
       };
+    });
 
-      const getServiceDays = (startDate) => {
-        if (!startDate) return "-";
-        const diff = Date.now() - new Date(startDate).getTime();
-        return Math.floor(diff / (1000 * 60 * 60 * 24)) + " Days";
-      };
+    /* =============================
+       MAP ASSIGNMENTS
+    ============================== */
 
-      /* =============================
-        MAP LIFECYCLE
-      ============================== */
-const lifecycleHistory = (instance.lifecycle || []).map((item) => {
-  const data = item.to || {}; // ✅ use "to" instead of snapshot
+    const assignmentHistory = assignments.map((a) => {
+      const isoDate = a.assignedAt ? new Date(a.assignedAt) : null;
 
-  return {
-    type: "lifecycle",
-
-    action: item.action,
-    recordDate: formatDate(item.date),
-
-    location:
-      typeof data.location === "object"
-        ? data.location?.name
-        : data.location || "-",
-
-    condition: data.condition || "-",
-
-    notes: item.notes || "-",
-
-    /* 🔧 HARDWARE */
-    warrantyDate: formatDate(instance.hardware?.warrantyExpiry),
-
-    /* 🔧 SOFTWARE */
-    licenseNumber: instance.software?.licenseNumber || "-",
-
-    /* ASSIGNED PERSON (not in lifecycle) */
-    assignedPerson: "-",
-
-    activeService: getServiceDays(instance.createdAt)
-  };
-});
-
-      /* =============================
-        MAP ASSIGNMENTS (NEW SOURCE)
-      ============================== */
-
-      const assignmentHistory = assignments.map((a) => ({
+      return {
         type: "assignment",
 
-        action: a.status.toUpperCase(), // active / returned / transferred
-
+        action: a.status?.toUpperCase() || "-",
         recordDate: formatDate(a.assignedAt),
+        recordDateISO: isoDate,
 
         location: a.location || "-",
 
         assignedPerson: a.employeeId?.name || "-",
         department: a.departmentId?.name || "-",
 
-        /* 🔥 DEVICE INFO (NEW CORE FEATURE) */
         deviceName: a.deviceInfo?.deviceName || "-",
         deviceTag: a.deviceInfo?.assetTag || "-",
 
-        status: a.status,
-
+        status: a.status || "-",
         returnedAt: formatDate(a.returnedAt)
-      }));
+      };
+    });
 
-      /* =============================
-        MERGE + SORT
-      ============================== */
+    /* =============================
+       MERGE + SORT (FIXED)
+    ============================== */
 
-      const history = [...lifecycleHistory, ...assignmentHistory]
-        .sort((a, b) => {
-          const d1 = new Date(a.recordDate.split("/").reverse().join("-"));
-          const d2 = new Date(b.recordDate.split("/").reverse().join("-"));
-          return d2 - d1;
-        });
+    const history = [...lifecycleHistory, ...assignmentHistory]
+      .sort((a, b) => {
+        if (!a.recordDateISO) return 1;
+        if (!b.recordDateISO) return -1;
+        return b.recordDateISO - a.recordDateISO;
+      })
+      .map(({ recordDateISO, ...rest }) => rest); // remove internal field
 
-      res.status(200).json({
-        success: true,
-        count: history.length,
-        data: history
-      });
+    /* =============================
+       FINAL RESPONSE
+    ============================== */
 
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
-    }
-  };
+    res.status(200).json({
+      success: true,
+      count: history.length,
+      summary: {
+        instanceCode: instance.instanceCode,
+        status: instance.status,
+        condition: instance.condition,
+        activeScore: getActiveScore(instance),
+        activeService: getServiceDays(instance.createdAt)
+      },
+      data: history
+    });
+
+  } catch (error) {
+    console.error("History Error:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+module.exports = {
+  getInstanceHistory
+};
 // PUT /instances/:id/upgrade
 
 const upgradeInstance = async (req, res) => {
