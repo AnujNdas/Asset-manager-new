@@ -125,141 +125,137 @@ const calculateServiceDays = (createdAt) => {
 
 // GET /instances/:id/history
 
-const getInstanceHistory = async (req, res) => {
-  try {
-    const { id } = req.params;
+  const getInstanceHistory = async (req, res) => {
+    try {
+      const { id } = req.params;
 
-    const instance = await mongoose.model("AssetInstance")
-      .findOne({
-        _id: id,
-        organizationId: req.user.organizationId
-      })
-      .lean();
+      const instance = await mongoose.model("AssetInstance")
+        .findOne({
+          _id: id,
+          organizationId: req.user.organizationId
+        })
+        .lean();
 
-    if (!instance) {
-      return res.status(404).json({
+      if (!instance) {
+        return res.status(404).json({
+          success: false,
+          message: "Instance not found"
+        });
+      }
+
+      /* =============================
+        FETCH ASSIGNMENTS (NEW)
+      ============================== */
+
+      const assignments = await mongoose.model("AssetAssignment")
+        .find({
+          assetInstanceId: id
+        })
+        .populate("employeeId", "name")
+        .populate("departmentId", "name")
+        .sort({ createdAt: -1 })
+        .lean();
+
+      /* =============================
+        HELPERS
+      ============================== */
+
+      const formatDate = (date) => {
+        if (!date) return "-";
+        const d = new Date(date);
+        if (isNaN(d)) return "-";
+        return d.toLocaleDateString("en-GB");
+      };
+
+      const getServiceDays = (startDate) => {
+        if (!startDate) return "-";
+        const diff = Date.now() - new Date(startDate).getTime();
+        return Math.floor(diff / (1000 * 60 * 60 * 24)) + " Days";
+      };
+
+      /* =============================
+        MAP LIFECYCLE
+      ============================== */
+const lifecycleHistory = (instance.lifecycle || []).map((item) => {
+  const data = item.to || {}; // ✅ use "to" instead of snapshot
+
+  return {
+    type: "lifecycle",
+
+    action: item.action,
+    recordDate: formatDate(item.date),
+
+    location:
+      typeof data.location === "object"
+        ? data.location?.name
+        : data.location || "-",
+
+    condition: data.condition || "-",
+
+    notes: item.notes || "-",
+
+    /* 🔧 HARDWARE */
+    warrantyDate: formatDate(instance.hardware?.warrantyExpiry),
+
+    /* 🔧 SOFTWARE */
+    licenseNumber: instance.software?.licenseNumber || "-",
+
+    /* ASSIGNED PERSON (not in lifecycle) */
+    assignedPerson: "-",
+
+    activeService: getServiceDays(instance.createdAt)
+  };
+});
+
+      /* =============================
+        MAP ASSIGNMENTS (NEW SOURCE)
+      ============================== */
+
+      const assignmentHistory = assignments.map((a) => ({
+        type: "assignment",
+
+        action: a.status.toUpperCase(), // active / returned / transferred
+
+        recordDate: formatDate(a.assignedAt),
+
+        location: a.location || "-",
+
+        assignedPerson: a.employeeId?.name || "-",
+        department: a.departmentId?.name || "-",
+
+        /* 🔥 DEVICE INFO (NEW CORE FEATURE) */
+        deviceName: a.deviceInfo?.deviceName || "-",
+        deviceTag: a.deviceInfo?.assetTag || "-",
+
+        status: a.status,
+
+        returnedAt: formatDate(a.returnedAt)
+      }));
+
+      /* =============================
+        MERGE + SORT
+      ============================== */
+
+      const history = [...lifecycleHistory, ...assignmentHistory]
+        .sort((a, b) => {
+          const d1 = new Date(a.recordDate.split("/").reverse().join("-"));
+          const d2 = new Date(b.recordDate.split("/").reverse().join("-"));
+          return d2 - d1;
+        });
+
+      res.status(200).json({
+        success: true,
+        count: history.length,
+        data: history
+      });
+
+    } catch (error) {
+      res.status(500).json({
         success: false,
-        message: "Instance not found"
+        message: error.message
       });
     }
-
-    /* =============================
-       FETCH ASSIGNMENTS (NEW)
-    ============================== */
-
-    const assignments = await mongoose.model("AssetAssignment")
-      .find({
-        assetInstanceId: id
-      })
-      .populate("employeeId", "name")
-      .populate("departmentId", "name")
-      .sort({ createdAt: -1 })
-      .lean();
-
-    /* =============================
-       HELPERS
-    ============================== */
-
-    const formatDate = (date) => {
-      if (!date) return "-";
-      const d = new Date(date);
-      if (isNaN(d)) return "-";
-      return d.toLocaleDateString("en-GB");
-    };
-
-    const getServiceDays = (startDate) => {
-      if (!startDate) return "-";
-      const diff = Date.now() - new Date(startDate).getTime();
-      return Math.floor(diff / (1000 * 60 * 60 * 24)) + " Days";
-    };
-
-    /* =============================
-       MAP LIFECYCLE
-    ============================== */
-
-    const lifecycleHistory = (instance.lifecycle || []).map((item) => {
-      const snap = item.snapshot || {};
-
-      return {
-        type: "lifecycle",
-
-        action: item.action,
-        recordDate: formatDate(item.date),
-
-        location:
-          typeof snap.location === "object"
-            ? snap.location?.name
-            : snap.location || "-",
-
-        condition: snap.condition || "-",
-
-        notes: item.notes || "-",
-
-        /* 🔧 HARDWARE SAFE */
-        warrantyDate: formatDate(snap.warrantyExpiry),
-
-        /* 🔧 SOFTWARE SAFE */
-        licenseNumber: snap.licenseNumber || "-",
-
-        /* ASSIGNED PERSON (fallback safe) */
-        assignedPerson:
-          snap.assignedTo?.employee?.name ||
-          snap.assignedTo?.employeeName ||
-          "-",
-
-        activeService: getServiceDays(instance.createdAt)
-      };
-    });
-
-    /* =============================
-       MAP ASSIGNMENTS (NEW SOURCE)
-    ============================== */
-
-    const assignmentHistory = assignments.map((a) => ({
-      type: "assignment",
-
-      action: a.status.toUpperCase(), // active / returned / transferred
-
-      recordDate: formatDate(a.assignedAt),
-
-      location: a.location || "-",
-
-      assignedPerson: a.employeeId?.name || "-",
-      department: a.departmentId?.name || "-",
-
-      /* 🔥 DEVICE INFO (NEW CORE FEATURE) */
-      deviceName: a.deviceInfo?.deviceName || "-",
-      deviceTag: a.deviceInfo?.assetTag || "-",
-
-      status: a.status,
-
-      returnedAt: formatDate(a.returnedAt)
-    }));
-
-    /* =============================
-       MERGE + SORT
-    ============================== */
-
-    const history = [...lifecycleHistory, ...assignmentHistory]
-      .sort((a, b) => {
-        const d1 = new Date(a.recordDate.split("/").reverse().join("-"));
-        const d2 = new Date(b.recordDate.split("/").reverse().join("-"));
-        return d2 - d1;
-      });
-
-    res.status(200).json({
-      success: true,
-      count: history.length,
-      data: history
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
+  };
 // PUT /instances/:id/upgrade
 
 const upgradeInstance = async (req, res) => {
