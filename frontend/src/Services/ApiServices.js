@@ -246,35 +246,14 @@ export const deleteCoreLicense = async (id) => {
 };
 
 
-/* ===============================
-   🔹 HARDWARE ASSETS (FILE UPLOAD)
-================================ */
 export const bulkUploadHardwareAssets = async (data) => {
-  const response = await axiosInstance.post(
-    "/assets/bulk-upload",
-    data,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-      validateStatus: () => true,
-    }
-  );
-
-  return response.data;
+  const res = await axiosInstance.post("/assets/bulk-upload", data);
+  return res.data;
 };
 
-/* ===============================
-   🔹 SOFTWARE ASSETS (FILE/JSON)
-================================ */
 export const bulkUploadSoftwareAssets = async (data) => {
-  const response = await axiosInstance.post(
-    "/software-assets/bulk-upload",
-    data,
-    {
-      validateStatus: () => true,
-    }
-  );
-
-  return response.data;
+  const res = await axiosInstance.post("/assets/bulk-upload", data);
+  return res.data;
 };
 
 /* ===============================

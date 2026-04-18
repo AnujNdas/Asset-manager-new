@@ -68,7 +68,7 @@ router.post(
   authenticateToken(["admin"]),
   tenantMiddleware,
   requireActiveSubscription,
-  uploadBulk.fields([{ name: "excel" }]),
+  uploadBulk.single("file"), // ✅ single field
   bulkUploadAssets
 );
 router.post(

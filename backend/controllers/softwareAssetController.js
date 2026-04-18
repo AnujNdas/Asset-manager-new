@@ -79,6 +79,8 @@ module.exports = generateSoftwareCode;
 ====================================================== */
 const bulkUploadSoftware = async (req, res) => {
   try {
+    console.log("🔥 Bulk software upload started");
+
     const userId = req.user?.id;
     const organizationId = req.user?.organizationId;
 
@@ -113,20 +115,18 @@ const bulkUploadSoftware = async (req, res) => {
     const softwareLimit = tier.assets;
 
     /* =============================
-       📦 INPUT PARSE
+       📦 INPUT (JSON ONLY)
     ============================== */
     const { assets, mode = "strict" } = req.body;
 
-    const parsedAssets = Array.isArray(assets)
-      ? assets
-      : JSON.parse(assets || "[]");
-
-    if (!parsedAssets.length) {
+    if (!Array.isArray(assets) || assets.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "No assets provided"
+        message: "Assets must be a non-empty array"
       });
     }
+
+    const parsedAssets = assets;
 
     /* =============================
        🔧 HELPERS
@@ -145,10 +145,10 @@ const bulkUploadSoftware = async (req, res) => {
        🔎 FETCH REFERENCES
     ============================== */
     const [categories, units, locations, statuses] = await Promise.all([
-      Category.find({ organizationId }).lean(),
-      Unit.find({ organizationId }).lean(),
-      Location.find({ organizationId }).lean(),
-      Status.find({ organizationId }).lean()
+      Category.find({ organizationId }),
+      Unit.find({ organizationId }),
+      Location.find({ organizationId }),
+      Status.find({ organizationId })
     ]);
 
     const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
@@ -196,31 +196,42 @@ const bulkUploadSoftware = async (req, res) => {
 
         const type = validateType(asset.type);
 
-        let categoryId = categoryMap.get(normalize(asset.Category));
-        let unitId = unitMap.get(normalize(asset.Unit));
+        let categoryId = categoryMap.get(normalize(asset.assetCategory));
+        let unitId = unitMap.get(normalize(asset.associateUnit));
         let locationId = locationMap.get(normalize(asset.locationName));
-        let statusId = statusMap.get(normalize(asset.Status));
+        let statusId = statusMap.get(normalize(asset.assetStatus));
 
         if (
           mode === "strict" &&
           (!categoryId || !unitId || !locationId || !statusId)
         ) {
-          throw new Error("Missing reference data");
+          invalidRows.push({
+            row,
+            reason: "Missing reference data",
+            asset
+          });
+          continue;
         }
 
-        if (!categoryId) categoryId = await upsert(Category, asset.Category, categoryMap);
-        if (!unitId) unitId = await upsert(Unit, asset.Unit, unitMap);
+        if (!categoryId) categoryId = await upsert(Category, asset.assetCategory, categoryMap);
+        if (!unitId) unitId = await upsert(Unit, asset.associateUnit, unitMap);
         if (!locationId) locationId = await upsert(Location, asset.locationName, locationMap);
-        if (!statusId) statusId = await upsert(Status, asset.Status, statusMap);
+        if (!statusId) statusId = await upsert(Status, asset.assetStatus, statusMap);
 
         /* ---------- VALIDATION ---------- */
         const quantity = Number(asset.assetQuantity || 1);
-        if (quantity <= 0) throw new Error("Invalid quantity");
+        if (quantity <= 0) {
+          invalidRows.push({ row, reason: "Invalid quantity", asset });
+          continue;
+        }
 
         const purchaseDate = parseDate(asset.DateOfPurchase);
         const expiryDate = parseDate(asset.DateOfExpiry);
 
-        if (!purchaseDate) throw new Error("Invalid purchase date");
+        if (!purchaseDate) {
+          invalidRows.push({ row, reason: "Invalid purchase date", asset });
+          continue;
+        }
 
         /* ---------- VENDOR ---------- */
         const vendor = {
@@ -230,13 +241,13 @@ const bulkUploadSoftware = async (req, res) => {
         };
 
         /* =============================
-           🧱 FINAL ASSET (CLEAN)
+           🧱 FINAL OBJECT
         ============================== */
         validAssets.push({
           organizationId,
           assetCode: `SW-${nextCode++}`,
 
-          assetName: asset.SoftwareName,
+          assetName: asset.assetName,
           type,
 
           assetCategory: categoryId,
@@ -254,7 +265,6 @@ const bulkUploadSoftware = async (req, res) => {
           assetQuantity: quantity,
           inUse: 0,
 
-          // 🔥 IMPORTANT: NO INSTANCE DATA HERE
           financialTracking: {
             totalAssetCost: 0,
             monthlyCost: type === "monthly" ? 0 : 0,

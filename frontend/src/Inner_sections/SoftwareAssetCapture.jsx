@@ -13,27 +13,33 @@ import {
 } from "../Services/ApiServices";
 import * as XLSX from "xlsx";
 
-const downloadTemplate = () => {
+const downloadSoftwareTemplate = () => {
   const data = [
     {
       assetName: "Adobe Photoshop",
       assetCategory: "Design Software",
       associateUnit: "IT Department",
       locationName: "Head Office",
-      type: "yearly",
+
+      type: "yearly", // monthly / yearly / one_time
+
       assetQuantity: 10,
-      purchaseDate: "2026-01-01",
+
+      DateOfPurchase: "2026-01-01",
+      DateOfExpiry: "2027-01-01",
+
       vendorName: "Adobe Inc.",
       vendorContact: "1234567890",
       vendorEmail: "support@adobe.com",
-      renewalTerm: "1_year",
+
+      renewalTerm: "1_year", // 6_month / 1_year / 2_year
     },
   ];
 
   const worksheet = XLSX.utils.json_to_sheet(data);
   const workbook = XLSX.utils.book_new();
 
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Software Template");
 
   XLSX.writeFile(workbook, "software_asset_template.xlsx");
 };
@@ -121,38 +127,53 @@ export default function SoftwareAssetCapture() {
     return true;
   };
 
-  const handleImport = async () => {
-    if (!importFile) {
-      Swal.fire("Error", "Please select a file", "error");
-      return;
+const handleImport = async () => {
+  if (!importFile) {
+    Swal.fire("Error", "Please select a file", "error");
+    return;
+  }
+
+  try {
+    setImportLoading(true);
+
+    /* =============================
+       📊 PARSE EXCEL → JSON
+    ============================== */
+    const data = await importFile.arrayBuffer();
+
+    const workbook = XLSX.read(data);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const jsonData = XLSX.utils.sheet_to_json(sheet, {
+      defval: "",
+    });
+
+    /* =============================
+       🚀 SEND JSON TO BACKEND
+    ============================== */
+    const res = await bulkUploadSoftwareAssets({
+      assets: jsonData,
+      type: "software", // 🔥 important
+    });
+
+    if (res.success) {
+      Swal.fire(
+        "Success",
+        `${res.inserted} assets uploaded, ${res.skipped} skipped`,
+        "success"
+      );
+
+      setShowImport(false);
+      setImportFile(null);
+    } else {
+      Swal.fire("Error", res.message, "error");
     }
-
-    const formData = new FormData();
-    formData.append("file", importFile);
-
-    try {
-      setImportLoading(true);
-
-      const res = await bulkUploadSoftwareAssets(formData);
-
-      if (res.success) {
-        Swal.fire(
-          "Success",
-          `${res.inserted} assets uploaded, ${res.skipped} skipped`,
-          "success",
-        );
-
-        setShowImport(false);
-        setImportFile(null);
-      } else {
-        Swal.fire("Error", res.message, "error");
-      }
-    } catch (err) {
-      Swal.fire("Error", "Upload failed", "error");
-    } finally {
-      setImportLoading(false);
-    }
-  };
+  } catch (err) {
+    Swal.fire("Error", "Upload failed", "error");
+  } finally {
+    setImportLoading(false);
+  }
+};
   const handleChange = (e) => {
     const { name, value } = e.target;
 

@@ -12,26 +12,33 @@ import Swal from "sweetalert2";
 import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
 
-const downloadTemplate = () => {
+const downloadHardwareTemplate = () => {
   const data = [
     {
       assetName: "Dell Laptop",
       assetCategory: "IT Equipment",
       associateUnit: "Head Office",
       locationName: "Mumbai",
+
       type: "one_time", // one_time / maintenance
+
       assetQuantity: 10,
-      purchaseDate: "2026-04-01",
+
+      DateOfPurchase: "2026-04-01",
+      DateOfExpiry: "", // optional
+
       vendorName: "Dell India",
+      vendorContact: "9876543210",
+      vendorEmail: "support@dell.com",
     },
   ];
 
   const worksheet = XLSX.utils.json_to_sheet(data);
   const workbook = XLSX.utils.book_new();
 
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Hardware Template");
 
-  XLSX.writeFile(workbook, "Hardware_asset_template.xlsx");
+  XLSX.writeFile(workbook, "hardware_asset_template.xlsx");
 };
 export const SUPPORTED_CURRENCIES = [
   { code: "USD", label: "US Dollar", symbol: "$" },
@@ -170,42 +177,57 @@ const AssetCapture = () => {
 
     localStorage.setItem("assetCaptureGuideSeen", "true");
   };
-  const handleImport = async () => {
-    if (!importFile) {
-      Swal.fire("Error", "Please select a file", "error");
-      return;
-    }
+const handleImport = async () => {
+  if (!importFile) {
+    Swal.fire("Error", "Please select a file", "error");
+    return;
+  }
 
-  const formData = new FormData();
-formData.append("excel", importFile); // ✅ MUST MATCH multer
+  try {
+    setImportLoading(true);
 
-    try {
-      setImportLoading(true);
+    /* =============================
+       📊 PARSE EXCEL → JSON
+    ============================== */
+    const data = await importFile.arrayBuffer();
 
-      const res = await bulkUploadHardwareAssets(formData);
+    const workbook = XLSX.read(data);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      if (res.success) {
-        Swal.fire(
-          "Success",
-          `${res.inserted} assets uploaded, ${res.skipped} skipped`,
-          "success",
-        );
+    const jsonData = XLSX.utils.sheet_to_json(sheet, {
+      defval: "", // avoid undefined
+    });
 
-        setShowImport(false);
-        setImportFile(null);
-      } else {
-        Swal.fire("Error", res.message, "error");
-      }
-    } catch (err) {
+    /* =============================
+       🚀 SEND JSON TO BACKEND
+    ============================== */
+    const res = await bulkUploadHardwareAssets({
+      assets: jsonData,
+      type: "hardware", // 🔥 important
+    });
+
+    if (res.success) {
       Swal.fire(
-        "Error",
-        err.response?.data?.message || "Upload failed",
-        "error",
+        "Success",
+        `${res.inserted} assets uploaded, ${res.skipped} skipped`,
+        "success"
       );
-    } finally {
-      setImportLoading(false);
+
+      setShowImport(false);
+      setImportFile(null);
+    } else {
+      Swal.fire("Error", res.message, "error");
     }
-  };
+  } catch (err) {
+    Swal.fire(
+      "Error",
+      err.response?.data?.message || "Upload failed",
+      "error"
+    );
+  } finally {
+    setImportLoading(false);
+  }
+};
   const handleChange = (e) => {
     const { name, value } = e.target;
 

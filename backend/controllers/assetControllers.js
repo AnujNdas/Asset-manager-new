@@ -145,173 +145,114 @@ const bulkUploadAssets = async (req, res, next) => {
     const assetLimit = tier.assets;
 
     /* =============================
-       📦 INPUT PARSE
+       📦 INPUT VALIDATION (JSON ONLY)
     ============================== */
     const { assets, mode = "strict" } = req.body;
 
-    if (!assets) {
+    if (!Array.isArray(assets) || assets.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "No asset data provided"
+        message: "Assets must be a non-empty array"
       });
     }
 
-    let parsedAssets;
-    try {
-      parsedAssets = JSON.parse(assets);
-    } catch {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid JSON format"
-      });
-    }
+    const normalize = (v) => v?.toString().trim().toLowerCase();
 
     /* =============================
        🔎 FETCH REFERENCES
     ============================== */
     const [categories, units, locations, statuses] = await Promise.all([
-      Category.find({ organizationId }),
-      Unit.find({ organizationId }),
-      Location.find({ organizationId }),
-      Status.find({ organizationId })
+      Category.find({ organizationId }).lean(),
+      Unit.find({ organizationId }).lean(),
+      Location.find({ organizationId }).lean(),
+      Status.find({ organizationId }).lean()
     ]);
 
-    const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c._id]));
-    const unitMap = new Map(units.map(u => [u.name.toLowerCase(), u._id]));
-    const locationMap = new Map(locations.map(l => [l.name.toLowerCase(), l._id]));
-    const statusMap = new Map(statuses.map(s => [s.name.toLowerCase(), s._id]));
+    const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
+    const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
+    const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
+    const statusMap = new Map(statuses.map(s => [normalize(s.name), s._id]));
 
-    const normalize = v => v?.toString().trim().toLowerCase();
+    /* =============================
+       🔧 UPSERT HELPER (DRY)
+    ============================== */
+    const upsert = async (Model, name, map) => {
+      if (!name) return null;
+
+      const key = normalize(name);
+
+      if (map.has(key)) return map.get(key);
+
+      const doc = await Model.findOneAndUpdate(
+        { name: new RegExp(`^${name}$`, "i"), organizationId },
+        { name, organizationId },
+        { upsert: true, new: true }
+      );
+
+      map.set(key, doc._id);
+      return doc._id;
+    };
 
     let tempAssets = [];
     let invalidRows = [];
 
     /* =============================
-       🔁 PROCESS ROWS
+       🔁 PROCESS LOOP
     ============================== */
-    for (const [index, asset] of parsedAssets.entries()) {
+    for (const [index, asset] of assets.entries()) {
       try {
         const row = index + 2;
 
-        const catKey = normalize(asset.assetCategory);
-        const unitKey = normalize(asset.associateUnit);
-        const locKey = normalize(asset.locationName);
-        const statusKey = normalize(asset.assetStatus);
+        /* ---------- REFERENCES ---------- */
+        let categoryId = categoryMap.get(normalize(asset.assetCategory));
+        let unitId = unitMap.get(normalize(asset.associateUnit));
+        let locationId = locationMap.get(normalize(asset.locationName));
+        let statusId = statusMap.get(normalize(asset.assetStatus));
 
-        let categoryId = categoryMap.get(catKey);
-        let unitId = unitMap.get(unitKey);
-        let locationId = locationMap.get(locKey);
-        let statusId = statusMap.get(statusKey);
-
-        /* ---------- STRICT MODE ---------- */
         if (
           mode === "strict" &&
           (!categoryId || !unitId || !locationId || !statusId)
         ) {
-          invalidRows.push({
-            row,
-            reason: "Missing reference data",
-            asset
-          });
-          continue;
+          throw new Error("Missing reference data");
         }
 
-        /* ---------- UPSERT REFERENCES ---------- */
-        if (!categoryId && catKey) {
-          const doc = await Category.findOneAndUpdate(
-            { name: new RegExp(`^${asset.assetCategory}$`, "i"), organizationId },
-            { name: asset.assetCategory, organizationId },
-            { upsert: true, new: true }
-          );
-          categoryId = doc._id;
-          categoryMap.set(catKey, categoryId);
-        }
+        if (!categoryId)
+          categoryId = await upsert(Category, asset.assetCategory, categoryMap);
 
-        if (!unitId && unitKey) {
-          const doc = await Unit.findOneAndUpdate(
-            { name: new RegExp(`^${asset.associateUnit}$`, "i"), organizationId },
-            { name: asset.associateUnit, organizationId },
-            { upsert: true, new: true }
-          );
-          unitId = doc._id;
-          unitMap.set(unitKey, unitId);
-        }
+        if (!unitId)
+          unitId = await upsert(Unit, asset.associateUnit, unitMap);
 
-        if (!locationId && locKey) {
-          const doc = await Location.findOneAndUpdate(
-            { name: new RegExp(`^${asset.locationName}$`, "i"), organizationId },
-            { name: asset.locationName, organizationId },
-            { upsert: true, new: true }
-          );
-          locationId = doc._id;
-          locationMap.set(locKey, locationId);
-        }
+        if (!locationId)
+          locationId = await upsert(Location, asset.locationName, locationMap);
 
-        if (!statusId && statusKey) {
-          const doc = await Status.findOneAndUpdate(
-            { name: new RegExp(`^${asset.assetStatus}$`, "i"), organizationId },
-            { name: asset.assetStatus, organizationId },
-            { upsert: true, new: true }
-          );
-          statusId = doc._id;
-          statusMap.set(statusKey, statusId);
-        }
+        if (!statusId)
+          statusId = await upsert(Status, asset.assetStatus, statusMap);
 
-        /* =============================
-           📅 DATES
-        ============================== */
+        /* ---------- DATES ---------- */
         const dop = parseDate(asset.DateOfPurchase);
         const doe = parseDate(asset.DateOfExpiry);
 
-        if (!dop) {
-          invalidRows.push({
-            row,
-            reason: "Invalid or missing purchase date",
-            asset
-          });
-          continue;
-        }
+        if (!dop) throw new Error("Invalid purchase date");
 
-        /* =============================
-           🔢 VALIDATION
-        ============================== */
-        const totalQty = Number(asset.assetQuantity || 1);
-
-        if (totalQty <= 0) {
-          invalidRows.push({
-            row,
-            reason: "Invalid asset quantity",
-            asset
-          });
-          continue;
-        }
+        /* ---------- VALIDATION ---------- */
+        const quantity = Number(asset.assetQuantity || 1);
+        if (quantity <= 0) throw new Error("Invalid quantity");
 
         const assetType = asset.type?.toLowerCase();
-
         if (!["one_time", "maintenance"].includes(assetType)) {
-          invalidRows.push({
-            row,
-            reason: "Invalid asset type",
-            asset
-          });
-          continue;
+          throw new Error("Invalid asset type");
         }
 
-        /* =============================
-           🏢 VENDOR
-        ============================== */
+        /* ---------- VENDOR ---------- */
         const vendor = {
           name: asset.vendorName || "",
           contact: asset.vendorContact || "",
           supportEmail: asset.vendorEmail || ""
         };
 
-        /* =============================
-           🧱 FINAL ASSET (CLEAN)
-        ============================== */
+        /* ---------- FINAL OBJECT ---------- */
         tempAssets.push({
           organizationId,
-
           assetName: asset.assetName,
           type: assetType,
 
@@ -327,7 +268,7 @@ const bulkUploadAssets = async (req, res, next) => {
 
           DOE: doe || null,
 
-          assetQuantity: totalQty,
+          assetQuantity: quantity,
           inUse: 0,
 
           financialTracking: {
@@ -389,8 +330,11 @@ const bulkUploadAssets = async (req, res, next) => {
     /* =============================
        💾 INSERT
     ============================== */
+    let insertedCount = 0;
+
     if (validAssets.length > 0) {
-      await Asset.insertMany(validAssets);
+      const result = await Asset.insertMany(validAssets);
+      insertedCount = result.length;
     }
 
     /* =============================
@@ -400,7 +344,7 @@ const bulkUploadAssets = async (req, res, next) => {
       req,
       userId,
       title: "Bulk Upload Completed",
-      message: `${validAssets.length} assets uploaded successfully.`,
+      message: `${insertedCount} assets uploaded successfully.`,
       redirectUrl: "/inventory",
       type: "success"
     });
@@ -410,7 +354,7 @@ const bulkUploadAssets = async (req, res, next) => {
     ============================== */
     return res.status(200).json({
       success: true,
-      inserted: validAssets.length,
+      inserted: insertedCount,
       skipped: invalidRows.length,
       invalidRows
     });
