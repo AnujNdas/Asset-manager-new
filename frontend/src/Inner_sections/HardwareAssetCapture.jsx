@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
 
-const downloadHardwareTemplate = () => {
+const downloadTemplate = () => {
   const data = [
     {
       assetName: "Dell Laptop",

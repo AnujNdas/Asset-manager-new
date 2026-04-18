@@ -13,7 +13,7 @@ import {
 } from "../Services/ApiServices";
 import * as XLSX from "xlsx";
 
-const downloadSoftwareTemplate = () => {
+const downloadTemplate = () => {
   const data = [
     {
       assetName: "Adobe Photoshop",
