@@ -31,7 +31,7 @@ const downloadTemplate = () => {
 
   XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
 
-  XLSX.writeFile(workbook, "software_asset_template.xlsx");
+  XLSX.writeFile(workbook, "Hardware_asset_template.xlsx");
 };
 export const SUPPORTED_CURRENCIES = [
   { code: "USD", label: "US Dollar", symbol: "$" },
@@ -176,8 +176,8 @@ const AssetCapture = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", importFile);
+   const formData = new FormData();
+formData.append("excel", file); // ✅ MUST MATCH multer
 
     try {
       setImportLoading(true);
