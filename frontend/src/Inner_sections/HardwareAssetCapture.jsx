@@ -176,8 +176,8 @@ const AssetCapture = () => {
       return;
     }
 
-   const formData = new FormData();
-formData.append("excel", file); // ✅ MUST MATCH multer
+  const formData = new FormData();
+formData.append("excel", importFile); // ✅ MUST MATCH multer
 
     try {
       setImportLoading(true);
