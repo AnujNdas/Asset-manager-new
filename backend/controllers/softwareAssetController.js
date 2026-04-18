@@ -148,13 +148,11 @@ const bulkUploadSoftware = async (req, res) => {
       Category.find({ organizationId }),
       Unit.find({ organizationId }),
       Location.find({ organizationId }),
-      Status.find({ organizationId })
     ]);
 
     const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
     const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
     const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
-    const statusMap = new Map(statuses.map(s => [normalize(s.name), s._id]));
 
     const upsert = async (Model, name, map) => {
       if (!name) return null;
@@ -199,11 +197,10 @@ const bulkUploadSoftware = async (req, res) => {
         let categoryId = categoryMap.get(normalize(asset.assetCategory));
         let unitId = unitMap.get(normalize(asset.associateUnit));
         let locationId = locationMap.get(normalize(asset.locationName));
-        let statusId = statusMap.get(normalize(asset.assetStatus));
 
         if (
           mode === "strict" &&
-          (!categoryId || !unitId || !locationId || !statusId)
+          (!categoryId || !unitId || !locationId)
         ) {
           invalidRows.push({
             row,
@@ -216,7 +213,6 @@ const bulkUploadSoftware = async (req, res) => {
         if (!categoryId) categoryId = await upsert(Category, asset.assetCategory, categoryMap);
         if (!unitId) unitId = await upsert(Unit, asset.associateUnit, unitMap);
         if (!locationId) locationId = await upsert(Location, asset.locationName, locationMap);
-        if (!statusId) statusId = await upsert(Status, asset.assetStatus, statusMap);
 
         /* ---------- VALIDATION ---------- */
         const quantity = Number(asset.assetQuantity || 1);
@@ -253,7 +249,6 @@ const bulkUploadSoftware = async (req, res) => {
           assetCategory: categoryId,
           associateUnit: unitId,
           locationName: locationId,
-          assetStatus: statusId,
 
           purchaseDetails: {
             purchaseDate,

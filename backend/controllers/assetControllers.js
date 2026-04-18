@@ -165,13 +165,11 @@ const bulkUploadAssets = async (req, res, next) => {
       Category.find({ organizationId }).lean(),
       Unit.find({ organizationId }).lean(),
       Location.find({ organizationId }).lean(),
-      Status.find({ organizationId }).lean()
     ]);
 
     const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
     const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
     const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
-    const statusMap = new Map(statuses.map(s => [normalize(s.name), s._id]));
 
     /* =============================
        🔧 UPSERT HELPER (DRY)
@@ -207,11 +205,10 @@ const bulkUploadAssets = async (req, res, next) => {
         let categoryId = categoryMap.get(normalize(asset.assetCategory));
         let unitId = unitMap.get(normalize(asset.associateUnit));
         let locationId = locationMap.get(normalize(asset.locationName));
-        let statusId = statusMap.get(normalize(asset.assetStatus));
 
         if (
           mode === "strict" &&
-          (!categoryId || !unitId || !locationId || !statusId)
+          (!categoryId || !unitId || !locationId)
         ) {
           throw new Error("Missing reference data");
         }
@@ -224,9 +221,6 @@ const bulkUploadAssets = async (req, res, next) => {
 
         if (!locationId)
           locationId = await upsert(Location, asset.locationName, locationMap);
-
-        if (!statusId)
-          statusId = await upsert(Status, asset.assetStatus, statusMap);
 
         /* ---------- DATES ---------- */
         const dop = parseDate(asset.DateOfPurchase);
@@ -259,7 +253,6 @@ const bulkUploadAssets = async (req, res, next) => {
           assetCategory: categoryId,
           associateUnit: unitId,
           locationName: locationId,
-          assetStatus: statusId,
 
           purchaseDetails: {
             purchaseDate: dop,

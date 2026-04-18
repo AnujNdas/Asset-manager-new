@@ -25,8 +25,7 @@ const downloadTemplate = () => {
 
       assetQuantity: 10,
 
-      DateOfPurchase: "2026-01-01",
-      DateOfExpiry: "2027-01-01",
+      DateOfPurchase: "2026-01-01", 
 
       vendorName: "Adobe Inc.",
       vendorContact: "1234567890",

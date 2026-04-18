@@ -25,7 +25,6 @@ const downloadTemplate = () => {
       assetQuantity: 10,
 
       DateOfPurchase: "2026-04-01",
-      DateOfExpiry: "", // optional
 
       vendorName: "Dell India",
       vendorContact: "9876543210",
