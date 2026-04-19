@@ -261,7 +261,7 @@ export const bulkUploadSoftwareAssets = async (data) => {
 ================================ */
 export const bulkUploadInstances = async (data) => {
   const response = await axiosInstance.post(
-    "/asset-instances/bulk-instances",
+    "/assets/bulk-instances",
     data,
     {
       headers: { "Content-Type": "application/json" },
