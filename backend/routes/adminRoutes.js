@@ -20,24 +20,37 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
 
     const totalsPromise = AssetInstance.aggregate([
       { $match: { organizationId } },
-      { 
-        $addFields: {
-          purchaseCost: {
-            $cond: [
-              { $eq: ["$assetType", "hardware"] },
-              { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-              { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-            ]
-          }
-        }
-      },
-      {
-        $group: {
-          _id: "$assetType",
-          totalValue: { $sum: "$purchaseCost" },
-          totalInstances: { $sum: 1 }
-        }
-      }
+{
+  $addFields: {
+    totalInstanceValue: {
+      $add: [
+        // Purchase cost
+        {
+          $cond: [
+            { $eq: ["$assetType", "hardware"] },
+            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+          ]
+        },
+
+        // Hardware extra costs
+        { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+        { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+        { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+
+        // Software renewal
+        { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+      ]
+    }
+  }
+},
+{
+  $group: {
+    _id: "$assetType",
+    totalValue: { $sum: "$totalInstanceValue" },
+    totalInstances: { $sum: 1 }
+  }
+}
     ]);
 
     /* =====================================================
@@ -66,17 +79,25 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       },
       { $unwind: "$asset" },
 
-      {
-        $addFields: {
-          cost: {
-  $cond: [
-    { $eq: ["$assetType", "hardware"] },
-    { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-    { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-  ]
-}
-        }
-      },
+{
+  $addFields: {
+    cost: {
+      $add: [
+        {
+          $cond: [
+            { $eq: ["$assetType", "hardware"] },
+            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+          ]
+        },
+        { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+        { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+        { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+        { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+      ]
+    }
+  }
+},
 
       {
         $group: {
@@ -105,11 +126,16 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       },
       { $unwind: "$asset" },
 
-      {
-        $addFields: {
-          cost: { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-        }
-      },
+{
+  $addFields: {
+    cost: {
+      $add: [
+        { $ifNull: ["$software.purchaseCost.baseAmount", 0] },
+        { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+      ]
+    }
+  }
+},
 
       {
         $group: {
@@ -251,6 +277,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
     ===================================================== */
 
     res.json({
+      currency: "INR",
       totals: {
         totalValue: (hardware.totalValue || 0) + (software.totalValue || 0),
 
