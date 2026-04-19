@@ -11,406 +11,274 @@ const authenticateToken = require("../Middleware/Authentication-token");
 const Department = require("../models/Department");
 router.get("/dashboard", authenticateToken(), async (req, res) => {
   try {
-    const organizationId = new mongoose.Types.ObjectId(
-      req.user.organizationId
-    );
-
+    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
     const now = new Date();
 
-    /* ================= INSTANCE BASED TOTALS ================= */
+    /* =====================================================
+       🧮 INSTANCE BASED TOTALS
+    ===================================================== */
 
-    const softwareStatsPromise = AssetInstance.aggregate([
+    const totalsPromise = AssetInstance.aggregate([
+      { $match: { organizationId } },
       {
-        $match: {
-          organizationId,
-          assetType: "software",
-        },
+        $addFields: {
+          purchaseCost: {
+            $cond: [
+              { $eq: ["$assetType", "hardware"] },
+              { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+              { $ifNull: ["$software.purchaseCost.amount", 0] }
+            ]
+          }
+        }
       },
       {
         $group: {
-          _id: null,
-          totalValue: {
-            $sum: { $ifNull: ["$software.purchaseCost.amount", 0] },
-          },
-          totalMaintenance: {
-            $sum: { $ifNull: ["$software.costs.renewalCost", 0] },
-          },
-          totalQuantity: { $sum: 1 },
-        },
-      },
+          _id: "$assetType",
+          totalValue: { $sum: "$purchaseCost" },
+          totalInstances: { $sum: 1 }
+        }
+      }
     ]);
 
-    const hardwareStatsPromise = AssetInstance.aggregate([
+    /* =====================================================
+       📦 ASSET COUNTS
+    ===================================================== */
+
+    const assetCountsPromise = Promise.all([
+      Hardware.countDocuments({ organizationId }),
+      Software.countDocuments({ organizationId })
+    ]);
+
+    /* =====================================================
+       🏷️ TOP CATEGORY (INSTANCE COST)
+    ===================================================== */
+
+    const topCategoriesPromise = AssetInstance.aggregate([
+      { $match: { organizationId } },
+
       {
-        $match: {
-          organizationId,
-          assetType: "hardware",
-        },
+        $lookup: {
+          from: "assets",
+          localField: "assetId",
+          foreignField: "_id",
+          as: "asset"
+        }
       },
+      { $unwind: "$asset" },
+
+      {
+        $addFields: {
+          cost: {
+            $cond: [
+              { $eq: ["$assetType", "hardware"] },
+              { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+              { $ifNull: ["$software.purchaseCost.amount", 0] }
+            ]
+          }
+        }
+      },
+
       {
         $group: {
-          _id: null,
-          totalValue: {
-            $sum: { $ifNull: ["$hardware.purchaseCost.amount", 0] },
-          },
-          totalMaintenance: {
-            $sum: {
-              $add: [
-                { $ifNull: ["$hardware.costs.maintenanceCost", 0] },
-                { $ifNull: ["$hardware.costs.warrantyRenewalCost", 0] },
-                { $ifNull: ["$hardware.costs.insuranceCost", 0] },
-              ],
-            },
-          },
-          totalQuantity: { $sum: 1 },
-        },
+          _id: "$asset.assetCategory",
+          total: { $sum: "$cost" }
+        }
       },
+      { $sort: { total: -1 } },
+      { $limit: 5 }
     ]);
-          /* ================= Location based queries  ================= */
-          const topHardwareLocationsPromise = Hardware.aggregate([
-  { $match: { organizationId } },
 
-  {
-    $lookup: {
-      from: "assetinstances",
-      localField: "_id",
-      foreignField: "assetId",
-      as: "instances",
-    },
-  },
+    /* =====================================================
+       💻 TOP SOFTWARE (IT ASSETS)
+    ===================================================== */
 
-  {
-    $addFields: {
-      instanceCount: { $size: "$instances" },
-    },
-  },
+    const topSoftwarePromise = AssetInstance.aggregate([
+      { $match: { organizationId, assetType: "software" } },
 
-  {
-    $group: {
-      _id: "$locationName",
-      total: { $sum: "$instanceCount" },
-    },
-  },
+      {
+        $lookup: {
+          from: "softwareassets",
+          localField: "assetId",
+          foreignField: "_id",
+          as: "asset"
+        }
+      },
+      { $unwind: "$asset" },
 
-  { $sort: { total: -1 } },
-  { $limit: 5 },
+      {
+        $addFields: {
+          cost: { $ifNull: ["$software.purchaseCost.amount", 0] }
+        }
+      },
 
-  {
-    $lookup: {
-      from: "locations",
-      localField: "_id",
-      foreignField: "_id",
-      as: "location",
-    },
-  },
-  { $unwind: "$location" },
-]);
-const topSoftwareLocationsPromise = Software.aggregate([
-  { $match: { organizationId } },
+      {
+        $group: {
+          _id: "$asset._id",
+          assetName: { $first: "$asset.assetName" },
+          total: { $sum: "$cost" }
+        }
+      },
+      { $sort: { total: -1 } },
+      { $limit: 5 }
+    ]);
 
-  {
-    $lookup: {
-      from: "assetinstances",
-      localField: "_id",
-      foreignField: "assetId",
-      as: "instances",
-    },
-  },
+    /* =====================================================
+       🏢 DEPARTMENT ASSIGNMENTS (SEPARATE)
+    ===================================================== */
 
-  {
-    $addFields: {
-      instanceCount: { $size: "$instances" },
-    },
-  },
+    const departmentPromise = AssetAssignment.aggregate([
+      { $match: { organizationId, status: "active" } },
 
-  {
-    $group: {
-      _id: "$locationName",
-      total: { $sum: "$instanceCount" },
-    },
-  },
+      {
+        $lookup: {
+          from: "assetinstances",
+          localField: "instanceId",
+          foreignField: "_id",
+          as: "instance"
+        }
+      },
+      { $unwind: "$instance" },
 
-  { $sort: { total: -1 } },
-  { $limit: 5 },
+      {
+        $group: {
+          _id: {
+            department: "$departmentId",
+            type: "$instance.assetType"
+          },
+          total: { $sum: 1 }
+        }
+      }
+    ]);
 
-  {
-    $lookup: {
-      from: "locations",
-      localField: "_id",
-      foreignField: "_id",
-      as: "location",
-    },
-  },
-  { $unwind: "$location" },
-]);
-    /* ================= REMAINING OLD PROMISES (UNCHANGED) ================= */
+    /* =====================================================
+       📅 UPCOMING EVENTS (INSTANCE BASED)
+    ===================================================== */
+
+    const upcomingPromise = AssetInstance.aggregate([
+      { $match: { organizationId } },
+
+      {
+        $project: {
+          assetId: 1,
+          assetType: 1,
+          deviceName: 1,
+
+          warranty: "$hardware.warrantyExpiry",
+          maintenance: "$hardware.nextMaintenanceDate",
+          insurance: "$hardware.insuranceExpiry",
+          renewal: "$software.renewalDate"
+        }
+      },
+
+      {
+        $facet: {
+          warranty: [
+            { $match: { warranty: { $gte: now } } },
+            { $sort: { warranty: 1 } },
+            { $limit: 5 }
+          ],
+          maintenance: [
+            { $match: { maintenance: { $gte: now } } },
+            { $sort: { maintenance: 1 } },
+            { $limit: 5 }
+          ],
+          insurance: [
+            { $match: { insurance: { $gte: now } } },
+            { $sort: { insurance: 1 } },
+            { $limit: 5 }
+          ],
+          renewal: [
+            { $match: { renewal: { $gte: now } } },
+            { $sort: { renewal: 1 } },
+            { $limit: 5 }
+          ]
+        }
+      }
+    ]);
+
+    /* =====================================================
+       📍 TOP LOCATIONS (INSTANCE BASED)
+    ===================================================== */
+
+    const topLocationsPromise = AssetInstance.aggregate([
+      { $match: { organizationId } },
+
+      {
+        $group: {
+          _id: "$location",
+          totalInstances: { $sum: 1 }
+        }
+      },
+
+      { $sort: { totalInstances: -1 } },
+      { $limit: 5 }
+    ]);
+
+    /* =====================================================
+       🚀 EXECUTE ALL
+    ===================================================== */
 
     const [
-      softwareStats,
-      hardwareStats,
-      usersCount,
-      teamsCount,
-
-      expiredSoftware,
-      upcomingSoftware,
-
-      expiredWarranty,
-      upcomingWarranty,
-
-      expiredMaintenance,
-      upcomingMaintenance,
-
-      expiredInsurance,
-      upcomingInsurance,
-
-      softwareSpendByCategory,
+      totals,
+      [hardwareAssets, softwareAssets],
+      topCategories,
       topSoftware,
-topSoftwareLocations,
-topHardwareLocations,
-      departmentAssignments,
+      departments,
+      upcoming,
+      topLocations
     ] = await Promise.all([
-      softwareStatsPromise,
-      hardwareStatsPromise,
-
-      User.countDocuments({ organizationId }),
-      Team.countDocuments({ organizationId }),
-
-      // ❗ STILL OLD LOGIC (we fix next step)
-      Software.aggregate([
-        { $match: { organizationId, DOE: { $lt: now } } },
-        { $project: { assetName: 1, DOE: 1, "assetCost.baseTotalAmount": 1 } },
-        { $sort: { DOE: -1 } },
-        { $limit: 5 },
-      ]),
-
-      Software.aggregate([
-        {
-          $match: {
-            organizationId,
-            DOE: { $gte: now },
-          },
-        },
-        {
-          $project: {
-            assetName: 1,
-            DOE: 1,
-            "assetCost.baseTotalAmount": 1,
-          },
-        },
-        { $sort: { DOE: 1 } },
-        { $limit: 5 },
-      ]),
-
-      Hardware.aggregate([
-        {
-          $match: {
-            organizationId,
-            "warranty.expiryDate": { $lt: now },
-          },
-        },
-        {
-          $project: {
-            assetName: 1,
-            "warranty.expiryDate": 1,
-            "assetCost.baseTotalAmount": 1,
-          },
-        },
-        { $sort: { "warranty.expiryDate": -1 } },
-        { $limit: 5 },
-      ]),
-
-      Hardware.aggregate([
-        {
-          $match: {
-            organizationId,
-            "warranty.expiryDate": { $gte: now },
-          },
-        },
-        {
-          $project: {
-            assetName: 1,
-            "warranty.expiryDate": 1,
-            "assetCost.baseTotalAmount": 1,
-          },
-        },
-        { $sort: { "warranty.expiryDate": 1 } },
-        { $limit: 5 },
-      ]),
-
-      Hardware.aggregate([
-        { $match: { organizationId, DOE: { $lt: now } } },
-        { $project: { assetName: 1, DOE: 1, "assetCost.baseTotalAmount": 1 } },
-        { $sort: { DOE: -1 } },
-        { $limit: 5 },
-      ]),
-
-      Hardware.aggregate([
-        {
-          $match: {
-            organizationId,
-            DOE: { $gte: now },
-          },
-        },
-        {
-          $project: {
-            assetName: 1,
-            DOE: 1,
-            "assetCost.baseTotalAmount": 1,
-          },
-        },
-        { $sort: { DOE: 1 } },
-        { $limit: 5 },
-      ]),
-
-      Hardware.aggregate([
-        {
-          $match: {
-            organizationId,
-            "insurance.expiryDate": { $lt: now },
-          },
-        },
-        {
-          $project: {
-            assetName: 1,
-            "insurance.expiryDate": 1,
-            "assetCost.baseTotalAmount": 1,
-          },
-        },
-        { $sort: { "insurance.expiryDate": -1 } },
-        { $limit: 5 },
-      ]),
-
-      Hardware.aggregate([
-        {
-          $match: {
-            organizationId,
-            "insurance.expiryDate": { $gte: now },
-          },
-        },
-        {
-          $project: {
-            assetName: 1,
-            "insurance.expiryDate": 1,
-            "assetCost.baseTotalAmount": 1,
-          },
-        },
-        { $sort: { "insurance.expiryDate": 1 } },
-        { $limit: 5 },
-      ]),
-
-      Software.aggregate([
-        { $match: { organizationId } },
-        {
-          $group: {
-            _id: "$assetCategory",
-            totalSpend: { $sum: "$assetCost.baseTotalAmount" },
-          },
-        },
-        { $sort: { totalSpend: -1 } },
-        { $limit: 5 },
-      ]),
-
-      Software.find({ organizationId })
-        .sort({ "assetCost.baseTotalAmount": -1 })
-        .limit(5)
-        .select("assetName assetCost.baseTotalAmount")
-        .lean(),
-
-      topSoftwareLocationsPromise,
-      topHardwareLocationsPromise,
-      AssetAssignment.aggregate([
-        {
-          $match: {
-            organizationId,
-            status: "active",
-          },
-        },
-        {
-          $group: {
-            _id: "$departmentId",
-            totalAssignedQuantity: { $sum: "$quantity" },
-          },
-        },
-      ]),
+      totalsPromise,
+      assetCountsPromise,
+      topCategoriesPromise,
+      topSoftwarePromise,
+      departmentPromise,
+      upcomingPromise,
+      topLocationsPromise
     ]);
-    const mergedLocations = [
-  ...topSoftwareLocations,
-  ...topHardwareLocations,
-].reduce((acc, item) => {
-  const name = item.location?.name;
 
-  if (!name) return acc;
+    /* =====================================================
+       🧠 FORMAT TOTALS
+    ===================================================== */
 
-  acc[name] = (acc[name] || 0) + item.total;
+    const map = {};
+    totals.forEach(t => (map[t._id] = t));
 
-  return acc;
-}, {});
+    const hardware = map["hardware"] || {};
+    const software = map["software"] || {};
 
-const topLocations = Object.entries(mergedLocations)
-  .map(([name, total]) => ({ name, total }))
-  .sort((a, b) => b.total - a.total)
-  .slice(0, 5);
-    /* ================= SAFE FALLBACK ================= */
-
-    const softwareData = softwareStats[0] || {
-      totalValue: 0,
-      totalMaintenance: 0,
-      totalQuantity: 0,
-    };
-
-    const hardwareData = hardwareStats[0] || {
-      totalValue: 0,
-      totalMaintenance: 0,
-      totalQuantity: 0,
-    };
-
-    /* ================= RESPONSE ================= */
+    /* =====================================================
+       ✅ RESPONSE
+    ===================================================== */
 
     res.json({
       totals: {
-        overallValuation:
-          softwareData.totalValue + hardwareData.totalValue,
+        totalValue: (hardware.totalValue || 0) + (software.totalValue || 0),
 
-        softwareValuation: softwareData.totalValue,
-        hardwareValuation: hardwareData.totalValue,
+        hardwareValue: hardware.totalValue || 0,
+        softwareValue: software.totalValue || 0,
 
-        softwareCount: softwareData.totalQuantity,
-        hardwareCount: hardwareData.totalQuantity,
+        hardwareAssets,
+        softwareAssets,
 
-        // ✅ NEW (important for dashboard)
-        softwareMaintenance: softwareData.totalMaintenance,
-        hardwareMaintenance: hardwareData.totalMaintenance,
+        hardwareInstances: hardware.totalInstances || 0,
+        softwareInstances: software.totalInstances || 0,
 
-        usersCount,
-        teamsCount,
-      },
-
-      upcoming: {
-        software: {
-          expired: expiredSoftware,
-          upcoming: upcomingSoftware,
-        },
-        warranty: {
-          expired: expiredWarranty,
-          upcoming: upcomingWarranty,
-        },
-        maintenance: {
-          expired: expiredMaintenance,
-          upcoming: upcomingMaintenance,
-        },
-        insurance: {
-          expired: expiredInsurance,
-          upcoming: upcomingInsurance,
-        },
+        totalAssets: hardwareAssets + softwareAssets,
+        totalInstances:
+          (hardware.totalInstances || 0) +
+          (software.totalInstances || 0)
       },
 
       analytics: {
-        spendByCategory: softwareSpendByCategory,
-        topAssets: topSoftware,
-        departmentAssignments,
+        topCategories,
+        topSoftware,
+        departments,
         topLocations
       },
+
+      upcoming: upcoming[0] || {}
     });
+
   } catch (error) {
     console.error("Dashboard Error:", error);
     res.status(500).json({ message: "Failed to load dashboard" });
