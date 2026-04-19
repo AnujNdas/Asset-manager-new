@@ -276,35 +276,58 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
        ✅ RESPONSE
     ===================================================== */
 
-    res.json({
-      currency: "INR",
-      totals: {
-        totalValue: (hardware.totalValue || 0) + (software.totalValue || 0),
+res.json({
+  totals: {
+    overallValuation:
+      (hardware.totalValue || 0) + (software.totalValue || 0),
 
-        hardwareValue: hardware.totalValue || 0,
-        softwareValue: software.totalValue || 0,
+    hardwareValuation: hardware.totalValue || 0,
+    softwareValuation: software.totalValue || 0,
 
-        hardwareAssets,
-        softwareAssets,
+    hardwareCount: hardwareAssets,
+    softwareCount: softwareAssets,
 
-        hardwareInstances: hardware.totalInstances || 0,
-        softwareInstances: software.totalInstances || 0,
+    hardwareInstances: hardware.totalInstances || 0,
+    softwareInstances: software.totalInstances || 0,
 
-        totalAssets: hardwareAssets + softwareAssets,
-        totalInstances:
-          (hardware.totalInstances || 0) +
-          (software.totalInstances || 0)
-      },
+    usersCount: 0, // you can wire later
+    teamsCount: 0  // you can wire later
+  },
 
-      analytics: {
-        topCategories,
-        topSoftware,
-        departments,
-        topLocations
-      },
+  analytics: {
+    spendByCategory: topCategories.map(c => ({
+      category: c._id,
+      totalSpend: c.total
+    })),
 
-      upcoming: upcoming[0] || {}
-    });
+    topAssets: topSoftware.map(a => ({
+      assetName: a.assetName,
+      totalCost: a.total
+    })),
+
+    departmentAssignments: departments,
+
+    topLocations: topLocations.map(l => ({
+      name: l._id,
+      total: l.totalInstances
+    }))
+  },
+
+  upcoming: {
+    software: {
+      upcoming: upcoming[0]?.renewal || []
+    },
+    maintenance: {
+      upcoming: upcoming[0]?.maintenance || []
+    },
+    warranty: {
+      upcoming: upcoming[0]?.warranty || []
+    },
+    insurance: {
+      upcoming: upcoming[0]?.insurance || []
+    }
+  }
+});
 
   } catch (error) {
     console.error("Dashboard Error:", error);
