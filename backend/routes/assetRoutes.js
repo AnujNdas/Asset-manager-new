@@ -72,11 +72,10 @@ router.post(
   bulkUploadAssets
 );
 router.post(
-  "/bulk-Instances",
+  "/bulk-instances",
   authenticateToken(["admin"]),
   tenantMiddleware,
   requireActiveSubscription,
-  uploadBulk.fields([{ name: "excel" }]),
   bulkUploadInstances
 );
 router.post(

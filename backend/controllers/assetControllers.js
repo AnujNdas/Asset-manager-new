@@ -1342,7 +1342,7 @@ const bulkUploadInstances = async (req, res, next) => {
       });
     }
 
-    const { assetId, instances, mode = "strict" } = req.body;
+    const { assetId, instances } = req.body;
 
     if (!assetId || !instances) {
       return res.status(400).json({
@@ -1366,7 +1366,6 @@ const bulkUploadInstances = async (req, res, next) => {
     /* --------------------------------------------------
        🔍 FETCH PARENT ASSET
     -------------------------------------------------- */
-
     let asset = await Asset.findById(assetId);
     let assetTypeRef = "Asset";
 
@@ -1388,7 +1387,6 @@ const bulkUploadInstances = async (req, res, next) => {
     /* --------------------------------------------------
        🔒 QUANTITY VALIDATION
     -------------------------------------------------- */
-
     const existingCount = await AssetInstance.countDocuments({
       assetId,
       organizationId,
@@ -1402,9 +1400,8 @@ const bulkUploadInstances = async (req, res, next) => {
     }
 
     /* --------------------------------------------------
-       🔒 SERIAL VALIDATION (HARDWARE ONLY)
+       🔒 SERIAL VALIDATION (GLOBAL CHECK)
     -------------------------------------------------- */
-
     const serials = parsedInstances
       .map((i) => i.serialNumber)
       .filter(Boolean);
@@ -1429,8 +1426,26 @@ const bulkUploadInstances = async (req, res, next) => {
     }
 
     /* --------------------------------------------------
-       🧠 UTIL: Insurance Expiry Calculator
+       🧠 HELPERS
     -------------------------------------------------- */
+    const normalize = (v) => v?.toString().trim();
+
+    const parseDateSafe = (d) => {
+      if (!d) return null;
+      const date = new Date(d);
+      return isNaN(date.getTime()) ? null : date;
+    };
+
+    const formatCost = (cost) => {
+      if (!cost) return null;
+
+      if (typeof cost === "object") return cost;
+
+      return {
+        amount: Number(cost) || 0,
+        currency: "INR",
+      };
+    };
 
     const calculateInsuranceExpiry = (date, term) => {
       if (!date) return null;
@@ -1447,26 +1462,42 @@ const bulkUploadInstances = async (req, res, next) => {
     /* --------------------------------------------------
        🚀 BUILD INSTANCES
     -------------------------------------------------- */
-
     let validInstances = [];
     let invalidRows = [];
 
-    parsedInstances.forEach((inst, index) => {
+    for (const [index, inst] of parsedInstances.entries()) {
       try {
-        const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
+        const row = index + 2;
+
+        const instanceCode = `${asset.assetCode}-${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2, 6)}`;
+
+        /* ---------- BASIC VALIDATION ---------- */
+        if (!inst.location) throw new Error("Location is required");
+
+        const location = normalize(inst.location);
+
+        if (assetType === "hardware" && !inst.serialNumber) {
+          throw new Error("Serial number required");
+        }
 
         /* ---------------- HARDWARE ---------------- */
         if (assetType === "hardware") {
-          const purchaseDate = inst.hardware?.purchaseDate || null;
+          const purchaseDate = parseDateSafe(inst.hardware?.purchaseDate);
+          const installationDate = parseDateSafe(inst.hardware?.installationDate);
+
           const warrantyPurchaseDate =
-            inst.hardware?.warrantyPurchaseDate ||
+            parseDateSafe(inst.hardware?.warrantyPurchaseDate) ||
             purchaseDate;
 
-          const insurancePurchaseDate =
-            inst.hardware?.insurancePurchaseDate || null;
+          const warrantyExpiry = parseDateSafe(inst.hardware?.warrantyExpiry);
 
-          const insuranceTerm =
-            inst.hardware?.insuranceTerm || "1_year";
+          const insurancePurchaseDate = parseDateSafe(
+            inst.hardware?.insurancePurchaseDate
+          );
+
+          const insuranceTerm = inst.hardware?.insuranceTerm || "1_year";
 
           validInstances.push({
             organizationId,
@@ -1476,43 +1507,42 @@ const bulkUploadInstances = async (req, res, next) => {
 
             instanceCode,
 
-            serialNumber: inst.serialNumber || undefined,
-            deviceName: inst.deviceName || "",
+            serialNumber: inst.serialNumber?.trim(),
+            deviceName: normalize(inst.deviceName) || "",
 
-            location: inst.location,
+            location,
             condition: inst.condition || "new",
             status: "in_stock",
 
             hardware: {
-              modelNo: inst.hardware?.modelNo || "",
-              specifications: inst.hardware?.specifications || "",
+              modelNo: normalize(inst.hardware?.modelNo) || "",
+              specifications: normalize(inst.hardware?.specifications) || "",
 
               purchaseDate,
-              installationDate:
-                inst.hardware?.installationDate || null,
+              installationDate,
 
               warrantyPurchaseDate,
-              warrantyExpiry:
-                inst.hardware?.warrantyExpiry || null,
+              warrantyExpiry,
 
               insuranceId: inst.hardware?.insuranceId || "",
 
               insurancePurchaseDate,
               insuranceTerm,
 
-              coverageType:
-                inst.hardware?.coverageType || "comprehensive",
+              coverageType: Array.isArray(inst.hardware?.coverageType)
+                ? inst.hardware.coverageType
+                : [inst.hardware?.coverageType || "comprehensive"],
 
               insuranceExpiry: calculateInsuranceExpiry(
                 insurancePurchaseDate,
                 insuranceTerm
               ),
 
-              nextMaintenanceDate:
-                inst.hardware?.nextMaintenanceDate || null,
+              nextMaintenanceDate: parseDateSafe(
+                inst.hardware?.nextMaintenanceDate
+              ),
 
-              purchaseCost:
-                inst.hardware?.purchaseCost || null,
+              purchaseCost: formatCost(inst.hardware?.purchaseCost),
 
               costs: {
                 maintenanceCost:
@@ -1546,26 +1576,20 @@ const bulkUploadInstances = async (req, res, next) => {
 
             instanceCode,
 
-            location: inst.location,
+            location,
             condition: inst.condition || "new",
             status: "in_stock",
 
             software: {
-              licenseKey: inst.software?.licenseKey || "",
-              licenseNumber:
-                inst.software?.licenseNumber || "",
+              licenseKey: normalize(inst.software?.licenseKey) || "",
+              licenseNumber: normalize(inst.software?.licenseNumber) || "",
 
-              purchaseDate:
-                inst.software?.purchaseDate || null,
-              installationDate:
-                inst.software?.installationDate || null,
-              renewalDate:
-                inst.software?.renewalDate || null,
-              lastUsedDate:
-                inst.software?.lastUsedDate || null,
+              purchaseDate: parseDateSafe(inst.software?.purchaseDate),
+              installationDate: parseDateSafe(inst.software?.installationDate),
+              renewalDate: parseDateSafe(inst.software?.renewalDate),
+              lastUsedDate: parseDateSafe(inst.software?.lastUsedDate),
 
-              purchaseCost:
-                inst.software?.purchaseCost || null,
+              purchaseCost: formatCost(inst.software?.purchaseCost),
 
               costs: {
                 renewalCost:
@@ -1591,12 +1615,11 @@ const bulkUploadInstances = async (req, res, next) => {
           inst,
         });
       }
-    });
+    }
 
     /* --------------------------------------------------
        💾 INSERT
     -------------------------------------------------- */
-
     let inserted = [];
 
     if (validInstances.length) {
@@ -1608,7 +1631,6 @@ const bulkUploadInstances = async (req, res, next) => {
     /* --------------------------------------------------
        💰 UPDATE PARENT COST
     -------------------------------------------------- */
-
     const aggregation = await AssetInstance.aggregate([
       {
         $match: { assetId: asset._id, organizationId },
@@ -1639,13 +1661,13 @@ const bulkUploadInstances = async (req, res, next) => {
     /* --------------------------------------------------
        ✅ RESPONSE
     -------------------------------------------------- */
-
     return res.status(200).json({
       success: true,
       inserted: inserted.length,
       skipped: invalidRows.length,
       invalidRows,
     });
+
   } catch (err) {
     console.error("❌ Bulk Instance Upload Error:", err);
     return next(err);

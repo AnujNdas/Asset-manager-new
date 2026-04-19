@@ -3,6 +3,7 @@
   import React, { useEffect, useState } from "react";
   import "../Page_styles/CreateInstance.css";
   import { useParams , useNavigate } from "react-router-dom";
+  import * as XLSX from "xlsx";
   import {
     getLocations,
     createAssetInstances,
@@ -39,6 +40,70 @@
     { label: "None", value: "none" }
   ];
   const CreateInstances = () => {
+    const downloadTemplate = (type) => {
+  let data = [];
+
+if (type === "hardware") {
+  data = [
+    {
+      serialNumber: "Required | Unique device serial",
+      deviceName: "Optional",
+      location: "Required",
+      condition: "new/used/damaged",
+      modelNo: "Optional",
+      specifications: "Optional",
+      purchaseDate: "YYYY-MM-DD",
+      installationDate: "YYYY-MM-DD",
+      warrantyPurchaseDate: "YYYY-MM-DD",
+      warrantyExpiry: "YYYY-MM-DD",
+      insuranceId: "Optional",
+      insurancePurchaseDate: "YYYY-MM-DD",
+      insuranceTerm: "6_months / 1_year / 3_years",
+      coverageType: "comma separated (e.g. comprehensive,fire_lightning)",
+      nextMaintenanceDate: "YYYY-MM-DD",
+      purchaseCost: "Number",
+      currency: "INR/USD/etc",
+      maintenanceCost: "Number",
+      warrantyRenewalCost: "Number",
+      insuranceCost: "Number",
+    },
+  ];
+} else {
+    data = [
+      {
+        location: "New York",
+        condition: "new",
+        licenseKey: "XXXX-YYYY-ZZZZ",
+        licenseNumber: "LIC-001",
+        purchaseDate: "2026-01-01",
+        installationDate: "2026-01-02",
+        renewalDate: "2027-01-01",
+        lastUsedDate: "2026-04-01",
+        purchaseCost: 10000,
+        currency: "INR",
+        renewalCost: 2000,
+      },
+    ];
+  }
+
+const worksheet = XLSX.utils.json_to_sheet(data, {
+  header: Object.keys(data[0]),
+});
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    type === "hardware" ? "Hardware Template" : "Software Template"
+  );
+
+  XLSX.writeFile(
+    workbook,
+    type === "hardware"
+      ? "hardware_instances_template.xlsx"
+      : "software_instances_template.xlsx"
+  );
+};
     const { assetId } = useParams();
     const navigate = useNavigate();
     const [asset, setAsset] = useState(null);
@@ -181,34 +246,121 @@
     setFile(e.target.files[0]);
   };
 
-  const handleImport = async () => {
-    if (!file) {
-      alert("Please select a file");
-      return;
+
+const handleImport = async () => {
+  if (!file) {
+    alert("Please select an Excel file");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const data = await file.arrayBuffer();
+
+    const workbook = XLSX.read(data, { type: "array" });
+
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+      defval: "", // prevents undefined
+    });
+
+    const payload = jsonData.map((row) => ({
+      serialNumber: row.serialNumber || undefined,
+      deviceName: row.deviceName || "",
+
+      location: formatLocation(row.location),
+
+      condition: row.condition || "new",
+
+      ...(isHardware && {
+        hardware: {
+          modelNo: row.modelNo || "",
+          specifications: row.specifications || "",
+
+          purchaseDate: row.purchaseDate || null,
+          installationDate: row.installationDate || null,
+
+          warrantyPurchaseDate:
+            row.warrantyPurchaseDate || null,
+          warrantyExpiry: row.warrantyExpiry || null,
+
+          insuranceId: row.insuranceId || "",
+
+          insurancePurchaseDate:
+            row.insurancePurchaseDate || null,
+
+          insuranceTerm: row.insuranceTerm || "1_year",
+
+          coverageType: row.coverageType
+            ? row.coverageType.split(",")
+            : ["comprehensive"],
+
+          nextMaintenanceDate:
+            row.nextMaintenanceDate || null,
+
+          purchaseCost: row.purchaseCost
+            ? {
+                amount: Number(row.purchaseCost),
+                currency: row.currency || "INR",
+              }
+            : null,
+
+          costs: {
+            maintenanceCost:
+              Number(row.maintenanceCost) || 0,
+            warrantyRenewalCost:
+              Number(row.warrantyRenewalCost) || 0,
+            insuranceCost:
+              Number(row.insuranceCost) || 0,
+          },
+        },
+      }),
+
+      ...(isSoftware && {
+        software: {
+          licenseKey: row.licenseKey || "",
+          licenseNumber: row.licenseNumber || "",
+
+          purchaseDate: row.purchaseDate || null,
+          installationDate: row.installationDate || null,
+          renewalDate: row.renewalDate || null,
+          lastUsedDate: row.lastUsedDate || null,
+
+          purchaseCost: row.purchaseCost
+            ? {
+                amount: Number(row.purchaseCost),
+                currency: row.currency || "INR",
+              }
+            : null,
+
+          costs: {
+            renewalCost: Number(row.renewalCost) || 0,
+          },
+        },
+      }),
+    }));
+
+    const res = await bulkUploadInstances({
+      assetId,
+      instances: payload,
+    });
+
+    if (res.success) {
+      alert(`✅ ${res.inserted} imported, ${res.skipped} skipped`);
+      fetchData();
+    } else {
+      alert(res.message || "Import failed");
     }
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("assetId", assetId);
-
-    try {
-      setLoading(true);
-
-      const res = await bulkUploadInstances(formData);
-
-      if (res.success) {
-        alert("Import successful");
-        fetchData(); // refresh instances
-      } else {
-        alert(res.message || "Import failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error importing file");
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Error reading Excel file");
+  } finally {
+    setLoading(false);
+  }
+};
     const applyBulkValues = () => {
       const updated = instances.map((inst) => ({
         ...inst,
@@ -431,16 +583,31 @@
             <p>{asset.assetCode}</p>
           </div>
         )}
-    <div className="import-section">
-    <input
-      type="file"
-      accept=".csv"
-      onChange={handleFileUpload}
-    />
-    <button onClick={handleImport}>
-      Import CSV
-    </button>
+<div className="import-section">
+  <input
+    type="file"
+    accept=".xlsx, .xls"
+    onChange={handleFileUpload}
+  />
+
+  <button onClick={handleImport}>
+    Import Excel
+  </button>
+
+  <div style={{ marginTop: "10px" }}>
+    {isHardware && (
+      <button onClick={() => downloadTemplate("hardware")}>
+        Download Hardware Template
+      </button>
+    )}
+
+    {isSoftware && (
+      <button onClick={() => downloadTemplate("software")}>
+        Download Software Template
+      </button>
+    )}
   </div>
+</div>
         {/* BULK APPLY */}
         <div className="bulk-panel">
           <h4>Bulk Apply</h4>
