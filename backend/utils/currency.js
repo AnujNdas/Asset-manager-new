@@ -1,18 +1,11 @@
 const BASE_CURRENCY = "INR";
 
-// Temporary static rates (INR as base)
-// NOTE: Values are approximate and can be updated later
 const RATES = {
-  // Base
   INR: 1,
-
-  // Major
   USD: 83,
   EUR: 90,
   GBP: 105,
   JPY: 0.56,
-
-  // Asia
   CNY: 11.5,
   HKD: 10.6,
   SGD: 61,
@@ -20,8 +13,6 @@ const RATES = {
   SAR: 22.1,
   QAR: 22.8,
   KWD: 270,
-
-  // Others
   AUD: 55,
   CAD: 61,
   CHF: 94,
@@ -29,24 +20,35 @@ const RATES = {
   NZD: 51
 };
 
-/**
- * Converts any supported currency → INR (base currency)
- */
-const convertToBase = (amount, currency) => {
+const convertToBase = (amount, currency, strict = false) => {
   if (amount == null || isNaN(amount)) return 0;
 
-  const rate = RATES[currency];
+  const normalizedCurrency = currency?.toUpperCase();
+  const rate = RATES[normalizedCurrency];
 
   if (!rate) {
-    throw new Error(`Unsupported currency: ${currency}`);
+    if (strict) {
+      throw new Error(`Unsupported currency: ${currency}`);
+    }
+    console.warn(`Unsupported currency: ${currency}`);
+    return 0;
   }
 
   return Number((amount * rate).toFixed(2));
 };
 
+const convertFromBase = (baseAmount, targetCurrency) => {
+  if (!baseAmount) return 0;
+
+  const rate = RATES[targetCurrency?.toUpperCase()];
+  if (!rate) return 0;
+
+  return Number((baseAmount / rate).toFixed(2));
+};
+
 module.exports = {
   BASE_CURRENCY,
   RATES,
-  convertToBase
+  convertToBase,
+  convertFromBase
 };
-

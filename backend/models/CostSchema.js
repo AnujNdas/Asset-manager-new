@@ -24,10 +24,11 @@ const costSchema = new mongoose.Schema(
     },
 
     // optional for future scaling
-    baseAmount: {
-      type: Number,
-      min: 0
-    }
+baseAmount: {
+  type: Number,
+  min: 0,
+  required: true
+}
   },
   { _id: false }
 );

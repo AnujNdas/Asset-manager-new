@@ -106,9 +106,9 @@ hardware: {
     nextMaintenanceDate: Date,
     purchaseCost: costSchema,
     costs: {
-      maintenanceCost: Number,
-      warrantyRenewalCost: Number,
-      insuranceCost: Number
+      maintenanceCost: costSchema,
+      warrantyRenewalCost: costSchema,
+      insuranceCost: costSchema
     }
   }, { _id: false }),
 
@@ -126,7 +126,7 @@ software: {
     lastUsedDate: Date,
     purchaseCost: costSchema,
     costs: {
-      renewalCost: Number
+      renewalCost: costSchema
     }
   }, { _id: false }),
 

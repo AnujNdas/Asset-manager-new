@@ -13,6 +13,7 @@
   const Status = require("../models/Status");
   const SoftwareAsset = require("../models/SoftwareAsset");
   const AssetInstance = require("../models/AssetInstance");
+  const { convertToBase } = require("../utils/currency"); // adjust path
 const QRCode = require("qrcode");
 
   const parseDate = (value) => {
@@ -987,248 +988,297 @@ const calculateInsuranceExpiry = (purchaseDate, term) => {
 
   return date;
 };
-    const createAssetInstance = async (req, res, next) => {
-      try {
-        const userId = req.user.id;
-        const organizationId = req.user.organizationId;
+const createAssetInstance = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const organizationId = req.user.organizationId;
 
-        const { assetId, instances } = req.body;
+    const { assetId, instances } = req.body;
 
-        if (!instances || instances.length === 0) {
-          return res.status(400).json({ message: "No instances provided" });
-        }
+    if (!instances || instances.length === 0) {
+      return res.status(400).json({ message: "No instances provided" });
+    }
 
-        // 🔍 Detect asset type
-        let asset = await Asset.findById(assetId);
-        let assetTypeRef = "Asset";
+    /* ================= DETECT ASSET ================= */
+    let asset = await Asset.findById(assetId);
+    let assetTypeRef = "Asset";
 
-        if (!asset) {
-          asset = await SoftwareAsset.findById(assetId);
-          assetTypeRef = "SoftwareAsset";
-        }
+    if (!asset) {
+      asset = await SoftwareAsset.findById(assetId);
+      assetTypeRef = "SoftwareAsset";
+    }
 
-        if (!asset) {
-          return res.status(404).json({ message: "Asset not found" });
-        }
+    if (!asset) {
+      return res.status(404).json({ message: "Asset not found" });
+    }
 
-        const assetType =
-          assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
+    const assetType =
+      assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
 
-        // 🔥 Quantity validation
-        const existingCount = await AssetInstance.countDocuments({
-          assetId,
-          organizationId
-        });
-
-        if (existingCount + instances.length > asset.assetQuantity) {
-          return res.status(400).json({
-            message: "Exceeds asset quantity"
-          });
-        }
-
-        // 🔥 SERIAL VALIDATION
-        const serials = instances
-          .map((i) => i.serialNumber)
-          .filter(Boolean);
-
-        if (new Set(serials).size !== serials.length) {
-          return res.status(400).json({
-            message: "Duplicate serials in request"
-          });
-        }
-
-        const existingSerials = await AssetInstance.find({
-          organizationId,
-          serialNumber: { $in: serials }
-        });
-
-        if (existingSerials.length > 0) {
-          return res.status(400).json({
-            message: "Serial already exists"
-          });
-        } 
-
-        // 🔥 CREATE INSTANCES
-const newInstances = await Promise.all(
-  instances.map(async (inst, index) => {
-
-
-    const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
-    const hasInsurance = inst.hardware?.hasInsurance ?? false;
-
-    return {
-      organizationId,
+    /* ================= QUANTITY VALIDATION ================= */
+    const existingCount = await AssetInstance.countDocuments({
       assetId,
-      assetTypeRef,
-      assetType,
+      organizationId
+    });
 
-      instanceCode,
-
-      deviceName: inst.deviceName || "",
-      serialNumber: inst.serialNumber || undefined,
-
-      location: inst.location,
-      status: "in_stock",
-      condition: inst.condition || "new",
-
-
-hardware:
-  assetType === "hardware"
-    ? {
-        modelNo: inst.hardware?.modelNo || "",
-        specifications: inst.hardware?.specifications || "",
-
-        purchaseDate: inst.hardware?.purchaseDate || null,
-        installationDate: inst.hardware?.installationDate || null,
-
-        warrantyPurchaseDate:
-          inst.hardware?.warrantyPurchaseDate ??
-          inst.hardware?.purchaseDate ??
-          null,
-
-        warrantyExpiry: inst.hardware?.warrantyExpiry || null,
-
-        // ✅ INSURANCE CONTROLLED HERE
-        hasInsurance,
-
-        insuranceId: hasInsurance
-          ? inst.hardware?.insuranceId || ""
-          : null,
-
-        coverageType: hasInsurance
-          ? inst.hardware?.coverageType || ["comprehensive"]
-          : [],
-
-        insurancePurchaseDate: hasInsurance
-          ? inst.hardware?.insurancePurchaseDate || null
-          : null,
-
-        insuranceTerm: hasInsurance
-          ? inst.hardware?.insuranceTerm || "1_year"
-          : null,
-
-        insuranceExpiry: hasInsurance
-          ? calculateInsuranceExpiry(
-              inst.hardware?.insurancePurchaseDate,
-              inst.hardware?.insuranceTerm
-            )
-          : null,
-
-        nextMaintenanceDate:
-          inst.hardware?.nextMaintenanceDate || null,
-
-        purchaseCost: inst.hardware?.purchaseCost || null,
-
-        costs: {
-          maintenanceCost:
-            Number(inst.hardware?.costs?.maintenanceCost) || 0,
-          warrantyRenewalCost:
-            Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
-          insuranceCost: hasInsurance
-            ? Number(inst.hardware?.costs?.insuranceCost) || 0
-            : 0
-        }
-      }
-    : undefined,
-      lifecycle: [
-        {
-          action: "CREATED",
-          date: new Date(),
-          notes: "Instance created",
-          from: null,
-          to: {
-            location: inst.location,
-            condition: inst.condition || "new"
-          }
-        }
-      ],
-
-      createdBy: userId
-    };
-  })
-);
-
-        const saved = await AssetInstance.insertMany(newInstances);
-const updatedInstances = await Promise.all(
-  saved.map(async (instance) => {
-    if (instance.assetType !== "hardware") return instance;
-
-    try {
-      const trackingUrl = `${process.env.FRONTEND_URL}/track/${instance._id}`;
-
-      const qrImage = await QRCode.toDataURL(trackingUrl);
-
-      const uploadRes = await cloudinary.uploader.upload(qrImage, {
-        folder: "asset_qr_codes",
-        public_id: `qr-${instance._id}`,
+    if (existingCount + instances.length > asset.assetQuantity) {
+      return res.status(400).json({
+        message: "Exceeds asset quantity"
       });
+    }
 
-      // ✅ FIXED HERE
-      if (instance.hardware) {
-        instance.hardware.qrCode = {
-          url: uploadRes.secure_url,
-          public_id: uploadRes.public_id,
+    /* ================= SERIAL VALIDATION ================= */
+    const serials = instances.map(i => i.serialNumber).filter(Boolean);
+
+    if (new Set(serials).size !== serials.length) {
+      return res.status(400).json({
+        message: "Duplicate serials in request"
+      });
+    }
+
+    const existingSerials = await AssetInstance.find({
+      organizationId,
+      serialNumber: { $in: serials }
+    });
+
+    if (existingSerials.length > 0) {
+      return res.status(400).json({
+        message: "Serial already exists"
+      });
+    }
+
+    /* ================= HELPER ================= */
+    const formatCost = (cost) => {
+      if (!cost) return null;
+
+      if (typeof cost === "object") {
+        return {
+          amount: Number(cost.amount) || 0,
+          currency: cost.currency || "INR",
+          baseAmount: convertToBase(
+            Number(cost.amount) || 0,
+            cost.currency || "INR"
+          )
         };
       }
 
-      await instance.save();
+      return {
+        amount: Number(cost) || 0,
+        currency: "INR",
+        baseAmount: convertToBase(Number(cost) || 0, "INR")
+      };
+    };
 
-      return instance;
-    } catch (err) {
-      console.error("QR upload failed:", err.message);
-      return instance;
-    }
-  })
-);
+    /* ================= CREATE INSTANCES ================= */
+    const newInstances = instances.map((inst, index) => {
+      const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
+      const hasInsurance = inst.hardware?.hasInsurance ?? false;
 
-        // 🔥 AGGREGATE TOTAL COST FROM INSTANCES
-        const aggregation = await AssetInstance.aggregate([
-          {
-            $match: {
-              assetId: asset._id,
-              organizationId
+      /* ================= HARDWARE ================= */
+      if (assetType === "hardware") {
+        const purchaseCost = formatCost(inst.hardware?.purchaseCost);
+        const currency = purchaseCost?.currency || "INR";
+
+        return {
+          organizationId,
+          assetId,
+          assetTypeRef,
+          assetType,
+
+          instanceCode,
+          deviceName: inst.deviceName || "",
+          serialNumber: inst.serialNumber || undefined,
+
+          location: inst.location,
+          status: "in_stock",
+          condition: inst.condition || "new",
+
+          hardware: {
+            modelNo: inst.hardware?.modelNo || "",
+            specifications: inst.hardware?.specifications || "",
+
+            purchaseDate: inst.hardware?.purchaseDate || null,
+            installationDate: inst.hardware?.installationDate || null,
+
+            warrantyPurchaseDate:
+              inst.hardware?.warrantyPurchaseDate ??
+              inst.hardware?.purchaseDate ??
+              null,
+
+            warrantyExpiry: inst.hardware?.warrantyExpiry || null,
+
+            hasInsurance,
+
+            insuranceId: hasInsurance
+              ? inst.hardware?.insuranceId || ""
+              : null,
+
+            coverageType: hasInsurance
+              ? inst.hardware?.coverageType || ["comprehensive"]
+              : [],
+
+            insurancePurchaseDate: hasInsurance
+              ? inst.hardware?.insurancePurchaseDate || null
+              : null,
+
+            insuranceTerm: hasInsurance
+              ? inst.hardware?.insuranceTerm || "1_year"
+              : null,
+
+            insuranceExpiry: hasInsurance
+              ? calculateInsuranceExpiry(
+                  inst.hardware?.insurancePurchaseDate,
+                  inst.hardware?.insuranceTerm
+                )
+              : null,
+
+            nextMaintenanceDate:
+              inst.hardware?.nextMaintenanceDate || null,
+
+            purchaseCost,
+
+            // ✅ currency propagated
+            costs: {
+              currency,
+              maintenanceCost:
+                Number(inst.hardware?.costs?.maintenanceCost) || 0,
+              warrantyRenewalCost:
+                Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
+              insuranceCost: hasInsurance
+                ? Number(inst.hardware?.costs?.insuranceCost) || 0
+                : 0
             }
           },
-          {
-            $group: {
-              _id: null,
-              totalCost: {
-                $sum: {
-                  $cond: [
-                    { $eq: ["$assetType", "hardware"] },
-                    {
-                      $ifNull: [
-                        "$hardware.purchaseCost.amount",
-                        0
-                      ]
-                    },
-                    {
-                      $ifNull: [
-                        "$software.purchaseCost.amount",
-                        0
-                      ]
-                    }
-                  ]
-                }
-              }
+
+          lifecycle: [
+            {
+              action: "CREATED",
+              date: new Date(),
+              notes: "Instance created"
             }
+          ],
+
+          createdBy: userId
+        };
+      }
+
+      /* ================= SOFTWARE ================= */
+      const purchaseCost = formatCost(inst.software?.purchaseCost);
+      const currency = purchaseCost?.currency || "INR";
+
+      return {
+        organizationId,
+        assetId,
+        assetTypeRef,
+        assetType,
+
+        instanceCode,
+
+        deviceName: inst.deviceName || "",
+        location: inst.location,
+        status: "in_stock",
+        condition: inst.condition || "new",
+
+        software: {
+          licenseKey: inst.software?.licenseKey || "",
+          licenseNumber: inst.software?.licenseNumber || "",
+
+          purchaseDate: inst.software?.purchaseDate || null,
+          installationDate: inst.software?.installationDate || null,
+          renewalDate: inst.software?.renewalDate || null,
+          lastUsedDate: inst.software?.lastUsedDate || null,
+
+          purchaseCost,
+
+          // ✅ currency propagated
+          costs: {
+            currency,
+            renewalCost:
+              Number(inst.software?.costs?.renewalCost) || 0
           }
-        ]);
+        },
 
-        const totalCost = aggregation[0]?.totalCost || 0;
+        lifecycle: [
+          {
+            action: "CREATED",
+            date: new Date(),
+            notes: "Instance created"
+          }
+        ],
 
-        // 🔥 UPDATE PARENT ASSET
-        await (assetType === "hardware" ? Asset : SoftwareAsset)
-          .findByIdAndUpdate(asset._id, {
-            "financialTracking.totalAssetCost": totalCost
+        createdBy: userId
+      };
+    });
+
+    const saved = await AssetInstance.insertMany(newInstances);
+
+    /* ================= QR GENERATION ================= */
+    const updatedInstances = await Promise.all(
+      saved.map(async (instance) => {
+        if (instance.assetType !== "hardware") return instance;
+
+        try {
+          const trackingUrl = `${process.env.FRONTEND_URL}/track/${instance._id}`;
+          const qrImage = await QRCode.toDataURL(trackingUrl);
+
+          const uploadRes = await cloudinary.uploader.upload(qrImage, {
+            folder: "asset_qr_codes",
+            public_id: `qr-${instance._id}`,
           });
 
-       return res.status(201).json(updatedInstances);
-      } catch (err) {
-        console.error("ERROR:", err.message);
-        return next(err);
+          instance.hardware.qrCode = {
+            url: uploadRes.secure_url,
+            public_id: uploadRes.public_id,
+          };
+
+          await instance.save();
+          return instance;
+
+        } catch (err) {
+          console.error("QR upload failed:", err.message);
+          return instance;
+        }
+      })
+    );
+
+    /* ================= UPDATE PARENT COST ================= */
+    const aggregation = await AssetInstance.aggregate([
+      {
+        $match: {
+          assetId: asset._id,
+          organizationId
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalCost: {
+            $sum: {
+              $cond: [
+                { $eq: ["$assetType", "hardware"] },
+                { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+                { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+              ]
+            }
+          }
+        }
       }
-    };
+    ]);
+
+    const totalCost = aggregation[0]?.totalCost || 0;
+
+    await (assetType === "hardware" ? Asset : SoftwareAsset)
+      .findByIdAndUpdate(asset._id, {
+        "financialTracking.totalAssetCost": totalCost
+      });
+
+    return res.status(201).json(updatedInstances);
+
+  } catch (err) {
+    console.error("ERROR:", err.message);
+    return next(err);
+  }
+};
 const updateAssetInstance = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -1436,16 +1486,7 @@ const bulkUploadInstances = async (req, res, next) => {
       return isNaN(date.getTime()) ? null : date;
     };
 
-    const formatCost = (cost) => {
-      if (!cost) return null;
 
-      if (typeof cost === "object") return cost;
-
-      return {
-        amount: Number(cost) || 0,
-        currency: "INR",
-      };
-    };
 
     const calculateInsuranceExpiry = (date, term) => {
       if (!date) return null;
@@ -1642,8 +1683,8 @@ const bulkUploadInstances = async (req, res, next) => {
             $sum: {
               $cond: [
                 { $eq: ["$assetType", "hardware"] },
-                { $ifNull: ["$hardware.purchaseCost.amount", 0] },
-                { $ifNull: ["$software.purchaseCost.amount", 0] },
+                { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+                { $ifNull: ["$software.purchaseCost.baseAmount", 0] },
               ],
             },
           },
@@ -1672,6 +1713,25 @@ const bulkUploadInstances = async (req, res, next) => {
     console.error("❌ Bulk Instance Upload Error:", err);
     return next(err);
   }
+};
+const formatCost = (cost) => {
+  if (!cost) return null;
+
+  let amount, currency;
+
+  if (typeof cost === "object") {
+    amount = Number(cost.amount) || 0;
+    currency = cost.currency || "INR";
+  } else {
+    amount = Number(cost) || 0;
+    currency = "INR";
+  }
+
+  return {
+    amount,
+    currency,
+    baseAmount: convertToBase(amount, currency),
+  };
 };
   module.exports = {
     addAsset,

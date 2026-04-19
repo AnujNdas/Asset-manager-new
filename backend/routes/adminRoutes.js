@@ -20,13 +20,13 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
 
     const totalsPromise = AssetInstance.aggregate([
       { $match: { organizationId } },
-      {
+      { 
         $addFields: {
           purchaseCost: {
             $cond: [
               { $eq: ["$assetType", "hardware"] },
-              { $ifNull: ["$hardware.purchaseCost.amount", 0] },
-              { $ifNull: ["$software.purchaseCost.amount", 0] }
+              { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+              { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
             ]
           }
         }
@@ -69,12 +69,12 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
       {
         $addFields: {
           cost: {
-            $cond: [
-              { $eq: ["$assetType", "hardware"] },
-              { $ifNull: ["$hardware.purchaseCost.amount", 0] },
-              { $ifNull: ["$software.purchaseCost.amount", 0] }
-            ]
-          }
+  $cond: [
+    { $eq: ["$assetType", "hardware"] },
+    { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+    { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+  ]
+}
         }
       },
 
@@ -107,7 +107,7 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
 
       {
         $addFields: {
-          cost: { $ifNull: ["$software.purchaseCost.amount", 0] }
+          cost: { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
         }
       },
 
