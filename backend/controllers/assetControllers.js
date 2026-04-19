@@ -13,7 +13,6 @@
   const Status = require("../models/Status");
   const SoftwareAsset = require("../models/SoftwareAsset");
   const AssetInstance = require("../models/AssetInstance");
-  const { convertToBase } = require("../utils/currency"); // adjust path
 const QRCode = require("qrcode");
 
   const parseDate = (value) => {
