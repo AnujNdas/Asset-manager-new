@@ -39,6 +39,7 @@ li {
 }
 a{
   width: 100%;
+  color : #DFD0B8;
   display: flex;
   align-items: center;
   /* gap: 10px; */
@@ -129,7 +130,7 @@ a:hover {
 }
 
 .title-text span {
-  color: #2563eb; /* highlight Vault */
+  color: #DFD0B8; /* highlight Vault */
 
 }
 .title-text {
@@ -254,7 +255,7 @@ a:hover {
   /* gap: 10px; */
   cursor: pointer;
   width: 100%;
-  color: #2563eb;
+  color: #DFD0B8;
   border-radius: 10px;
 }
 

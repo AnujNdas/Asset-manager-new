@@ -11,20 +11,21 @@
   align-items: center;
   padding: 9px 12px;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  border: none;
+  background: #222831;
+  color: #948979;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .currency-selected:hover {
-  border-color: #2563eb;
+  border-color: #DFD0B8;
   box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
 }
 
 .currency-dropdown.open .currency-selected {
-  border-color: #2563eb;
+  border-color: #DFD0B8;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
@@ -35,6 +36,7 @@
   border-right: 5px solid transparent;
   border-top: 6px solid #6b7280;
   transition: transform 0.2s ease;
+  color: #948979;
 }
 
 .currency-dropdown.open .dropdown-arrow {
