@@ -9,18 +9,11 @@
   min-width: 180px;
 
   font-family: "Inter", sans-serif;
-  background: #eff6ff; /* light blue base */
-  border: 1px solid #dbeafe;
 
   transition: all 0.25s ease;
 }
 
-/* Normal state (light #2563eb variant) */
-.plan-timer.normal {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.15);
-}
+
 
 /* Urgent state (< 2 days) */
 .plan-timer.urgent {
@@ -40,7 +33,7 @@
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.5px;
-  color: #6b7280;
+  color: #948979;
   margin-bottom: 3px;
   text-transform: uppercase;
 }
@@ -48,7 +41,7 @@
 .time {
   font-size: 14px;
   font-weight: 600;
-  color: #2563eb;
+  color: #DFD0B8;
 }
 
 .plan-timer.urgent .time {
