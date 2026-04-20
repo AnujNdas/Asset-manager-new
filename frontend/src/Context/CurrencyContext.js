@@ -15,6 +15,7 @@ export const CurrencyProvider = ({ children }) => {
       try {
         const fetchedRates = await getRates();
         setRates(fetchedRates);
+        console.log("Rates:", fetchedRates);
       } catch (err) {
         console.error("Currency fetch failed:", err);
       } finally {
@@ -31,7 +32,7 @@ export const CurrencyProvider = ({ children }) => {
   }, [currency]);
 
 const convertFromBase = (amountInINR) => {
-  if (!amountInINR) return 0;
+  if (amountInINR == null) return 0;
   if (!rates) return amountInINR;
 
   if (currency === "INR") return amountInINR;
@@ -39,9 +40,8 @@ const convertFromBase = (amountInINR) => {
   const rate = rates[currency];
   if (!rate) return amountInINR;
 
-  return +(amountInINR / rate).toFixed(2);
+  return +(amountInINR * rate).toFixed(2);
 };
-
   return (
     <CurrencyContext.Provider
       value={{
