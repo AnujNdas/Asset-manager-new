@@ -140,7 +140,7 @@ const [instanceForm, setInstanceForm] = useState({});
       setLoading(false);
     }
   };
-  const getCost = (costObj, convertFromBase) => {
+const getCost = (costObj) => {
   return convertFromBase(Number(costObj?.baseAmount || 0));
 };
  const getAssetTotals = (asset) => {
