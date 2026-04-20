@@ -35,7 +35,7 @@ li {
   /* font-family: "Lato", sans-serif; */
 }
 .tab-text{
-  color : #2563eb;
+  color : #DFD0B8;
 }
 a{
   width: 100%;
@@ -49,8 +49,8 @@ a{
 }
 
 a:hover {
-  background: rgba(59, 130, 246, 0.1);
-  color: #2563eb; /* soft blue highlight */
+  background: #393E46;
+  color: #948979; /* soft blue highlight */
   text-decoration: none;
 }
 
@@ -58,8 +58,8 @@ a:hover {
 .sidebar-container {
   height: 100%;
   width: 100%;
-  background: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  background: #222831;
+  border: none;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

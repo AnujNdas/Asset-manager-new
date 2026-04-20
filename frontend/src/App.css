@@ -96,7 +96,7 @@
   left: 14%;
   width: 86%;
   height: 60px;
-  background-color: #ffffff;
+  background: #222831;
   z-index: 10;
   transition: left 0.3s ease, width 0.3s ease;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
@@ -108,8 +108,8 @@
   left: 14%;
   height: calc(100% - 100px);
   width: 86%;
-  background: #f1f1f1;
-  border-radius: 10px;
+  background: #222831;
+  /* border-radius: 10px; */
   overflow-y: auto;
   transition: left 0.3s ease, width 0.3s ease;
   /* margin:  0px 0px 0px 5px; */
