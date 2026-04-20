@@ -26,7 +26,7 @@
 
   text-decoration: none;
   border: none;
-  background: #ffffff;
+  background: #948979;
 
   padding: 8px 14px;
   border-radius: 8px;
@@ -48,8 +48,8 @@
 
 /* Active Tab */
 .tab.active {
-  background: #bbd8ff;
-  color: #ffffff;
+  background: #DFD0B8;
+  color: #222831;
   font-weight: 600;
 }
 
