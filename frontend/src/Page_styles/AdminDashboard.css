@@ -94,7 +94,7 @@
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #202124;
+  color: #948979;
 }
 
 /* ================= LIST ================= */
@@ -348,7 +348,7 @@
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 10px;
-  color: #2563eb;
+  color: #948979;
 }
 /* Layout */
 .list-row {
@@ -357,6 +357,7 @@
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
+  color: #DFD0B8;
 }
 
 .left-section {
@@ -392,8 +393,8 @@
 
 /* NORMAL >= 10 days */
 .days-badge.normal {
-  background: linear-gradient(135deg, #2563eb, #60a5fa);
-  color: white;
+  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
+  color: #222831;
 }
 
 /* Blinking Animation */

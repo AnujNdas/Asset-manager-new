@@ -638,11 +638,9 @@ const SpendByCategoryBarChart = ({ data }) => {
       return (
         <div
           style={{
-            background: "#ffffff",
             padding: "10px 14px",
             borderRadius: "10px",
             boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-            border: "1px solid #f1f5f9",
           }}
         >
           <div style={{ fontWeight: 600, marginBottom: 4 }}>
@@ -663,7 +661,6 @@ const SpendByCategoryBarChart = ({ data }) => {
     <div
       style={{
         width: "100%",
-        background: "#ffffff",
         borderRadius: "16px",
         padding: isMobile ? "6px" : "24px",
         boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
@@ -682,8 +679,8 @@ const SpendByCategoryBarChart = ({ data }) => {
   >
     <defs>
       <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
-        <stop offset="100%" stopColor="#2563eb" stopOpacity={0.7} />
+        <stop offset="0%" stopColor="#DFD0B8" stopOpacity={0.9} />
+        <stop offset="100%" stopColor="#DFD0B8" stopOpacity={0.7} />
       </linearGradient>
     </defs>
 
