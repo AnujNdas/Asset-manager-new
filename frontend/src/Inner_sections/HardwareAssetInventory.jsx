@@ -369,6 +369,7 @@ const renderInstance = (inst, assignment) => {
       <div className="inventory-grid">
         <AnimatePresence>
       {filteredAssets.map((asset) => {
+        const totals = getAssetTotals(asset);
   const statusConfig = STATUS_CONFIG[asset.status] || {
     label: asset.status || "Unknown",
     className: "default",
