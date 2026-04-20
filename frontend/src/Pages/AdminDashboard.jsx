@@ -166,42 +166,37 @@ redirectTo="/inventory?hardware"
   {/* SOFTWARE */}
 
 
-  <ListCard
-    title="Upcoming Software Renewals"
-    items={upcoming.software?.upcoming || []}
-    dateField="DOE"
-    redirectTo="/inventory?software"
-  />
+<ListCard
+  title="Upcoming Software Renewals"
+  items={upcoming.software?.upcoming || []}
+  dateField="renewal"
+/>
 
   {/* MAINTENANCE */}
 
-
-  <ListCard
-    title="Upcoming Hardware Maintenance"
-    items={upcoming.maintenance?.upcoming || []}
-    dateField="DOE"
-    redirectTo="/inventory?hardware"
-  />
+<ListCard
+  title="Upcoming Hardware Maintenance"
+  items={upcoming.maintenance?.upcoming || []}
+  dateField="maintenance"
+/>
   {/* WARRANTY */}
 
 
-  <ListCard
-    title="Upcoming Hardware Warranty"
-    items={upcoming.warranty?.upcoming || []}
-    dateField="warranty.expiryDate"
-    redirectTo="/inventory?hardware"
-  />
+<ListCard
+  title="Upcoming Hardware Warranty"
+  items={upcoming.warranty?.upcoming || []}
+  dateField="warranty"
+/>
 
 
   {/* INSURANCE */}
 
 
-  <ListCard
-    title="Upcoming Hardware Insurance"
-    items={upcoming.insurance?.upcoming || []}
-    dateField="insurance.expiryDate"
-    redirectTo="/inventory?hardware"
-  />
+<ListCard
+  title="Upcoming Hardware Insurance"
+  items={upcoming.insurance?.upcoming || []}
+  dateField="insurance"
+/>
 
   {/* <ListCard
     title="Expired Hardware Insurance"
@@ -302,7 +297,7 @@ const ListCard = ({ title, items, dateField , redirectTo }) => {
               <div key={index} className="list-row">
                 <div className="left-section">
                   <span className="asset-name">
-                    {item.assetName}
+                    {item.deviceName || `Asset #${item.assetId?.slice(-4)}`}
                   </span>
                   <span className="date-text">
                     {getFormattedDate(item)}
