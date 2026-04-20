@@ -93,7 +93,7 @@
   cursor: pointer;
   text-align: center;
   border-radius: 50%;
-  color: #2463eb;
+  color: #948979;
 }
 
 .buttons-1 {
@@ -114,7 +114,7 @@
 .profile-button {
   border: none;
   background: transparent;
-  color: #2463eb;
+  color: #948979;
   font-size: 18px;
   cursor: pointer;
   display: flex;
@@ -191,7 +191,7 @@
 .title-text{
   font-weight: 600;
   font-size: 1rem;
-  color: #2563eb;
+  color: #948979;
   display: flex;
   gap: 4px;
 }
