@@ -140,6 +140,30 @@ const [instanceForm, setInstanceForm] = useState({});
       setLoading(false);
     }
   };
+  const getCost = (costObj, convertFromBase) => {
+  return convertFromBase(Number(costObj?.baseAmount || 0));
+};
+ const getAssetTotals = (asset) => {
+    const instances = asset.instances || [];
+
+    const totalPurchase = instances.reduce(
+      (sum, inst) =>
+        sum + Number(inst.hardware?.purchaseCost?.baseAmount || 0),
+      0
+    );
+
+    const totalMaintenance = instances.reduce(
+      (sum, inst) =>
+        sum +
+        Number(inst.hardware?.costs?.maintenanceCost?.baseAmount || 0),
+      0
+    );
+
+    return {
+      totalPurchase: convertFromBase(totalPurchase),
+      totalMaintenance: convertFromBase(totalMaintenance),
+    };
+  };  
   const getRemainingDays = (expiryDate) => {
   if (!expiryDate) return "-";
 
@@ -268,12 +292,27 @@ const renderInstance = (inst, assignment) => {
         <div className="grid-2">
           <p>
             <span>Purchase</span>
-            {hw.purchaseCost?.amount || 0}{" "}
-            <b>{hw.purchaseCost?.currency || ""}</b>
+            {CURRENCY_SYMBOLS[currency]}{" "}
+            {getCost(hw.purchaseCost).toLocaleString()}
           </p>
-          <p><span>Maintenance</span>{hw.costs?.maintenanceCost || 0}</p>
-          <p><span>Warranty</span>{hw.costs?.warrantyRenewalCost || 0}</p>
-          <p><span>Insurance</span>{hw.costs?.insuranceCost || 0}</p>
+
+          <p>
+            <span>Maintenance</span>
+            {CURRENCY_SYMBOLS[currency]}{" "}
+            {getCost(hw.costs?.maintenanceCost).toLocaleString()}
+          </p>
+
+          <p>
+            <span>Warranty</span>
+            {CURRENCY_SYMBOLS[currency]}{" "}
+            {getCost(hw.costs?.warrantyRenewalCost).toLocaleString()}
+          </p>
+
+          <p>
+            <span>Insurance</span>
+            {CURRENCY_SYMBOLS[currency]}{" "}
+            {getCost(hw.costs?.insuranceCost).toLocaleString()}
+          </p>
         </div>
       </div>
 
@@ -399,36 +438,40 @@ const renderInstance = (inst, assignment) => {
   {/* TOP ROW (IMPORTANT) */}
   <div className="financial-card primary">
     <p className="label">Total Purchase Cost</p>
-    <p>
-      💰 {asset.financialTracking?.currency}{" "}
-      {asset.financialTracking?.totalAssetCost || 0}
-    </p>
+               <p>
+                  💰 {CURRENCY_SYMBOLS[currency]}{" "}
+                  {totals.totalPurchase.toLocaleString()}
+                </p>
   </div>
 
   <div className="financial-card primary-alt">
     <p className="label">Maintenance</p>
-    <p>
-      🛠 {asset.financialTracking?.currency}{" "}
-      {asset.financialTracking?.maintenanceTotalCost || 0}
-    </p>
+                <p>
+                  🛠 {CURRENCY_SYMBOLS[currency]}{" "}
+                  {totals.totalMaintenance.toLocaleString()}
+                </p>
+
   </div>
 
   {/* BOTTOM ROW (LESS IMPORTANT) */}
-  <div className="financial-card small">
+  {/* <div className="financial-card small">
     <p className="label">Yearly</p>
     <p>
       📅 {asset.financialTracking?.currency}{" "}
-      {asset.financialTracking?.yearlyMaintenanceCost?.toFixed(2) || 0}
+     {CURRENCY_SYMBOLS[currency]}{" "}
+{convertFromBase(
+  Number(asset.financialTracking?.yearlyMaintenanceCost?.baseAmount || 0)
+).toLocaleString()}
     </p>
-  </div>
+  </div> */}
 
-  <div className="financial-card small">
+  {/* <div className="financial-card small">
     <p className="label">Monthly</p>
     <p>
       📊 {asset.financialTracking?.currency}{" "}
       {asset.financialTracking?.monthlyMaintenanceCost?.toFixed(2) || 0}
     </p>
-  </div>
+  </div> */}
 
 </div>
       {/* 🔷 ACTIONS */}

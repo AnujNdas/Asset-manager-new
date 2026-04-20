@@ -126,6 +126,16 @@ const [instanceForm, setInstanceForm] = useState({});
     expiryDate: asset.renewal?.expiryDate?.slice(0, 10),
   });
 };
+
+const formatMoney = (costObj) => {
+  if (!costObj || typeof costObj !== "object") return "0";
+
+  return `${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
+    Number(costObj.baseAmount || 0)
+  ).toLocaleString()}`;
+};
+
+
 const handleInstanceEditOpen = (inst) => {
   setEditInstance(inst);
 
@@ -333,8 +343,15 @@ const renderSoftwareInstance = (inst, assignment) => {
         <p className="section-title">Cost</p>
 
         <div className="info-grid">
-          <p><span>Purchase</span>{sw.purchaseCost?.amount || 0}</p>
-          <p><span>Renewal</span>{sw.costs?.renewalCost || 0}</p>
+<p>
+  <span>Purchase</span>
+  {formatMoney(sw.purchaseCost)}
+</p>
+
+<p>
+  <span>Renewal</span>
+  {formatMoney(sw.costs?.renewalCost)}
+</p>
         </div>
       </div>
 
