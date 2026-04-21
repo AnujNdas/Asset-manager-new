@@ -175,21 +175,21 @@
   .tab {
     padding: 10px 20px;
     border: none;
-    background: rgba(255, 255, 255, 0.7);
+    background: #948979;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    color: #333;
+    color: #222831;
     font-weight: 500;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
     .tab:hover {
-    background: #f0f5ff;
+    background: #DFD0B8;
     transform: translateY(-2px);
   }
 
   .tab.active {
-    background: #bbd8ff;
+    background: #DFD0B8;
     box-shadow: 0 4px 8px rgba(0,123,255,0.2);
     font-weight: 600;
   }
