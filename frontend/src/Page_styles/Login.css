@@ -58,7 +58,7 @@ body {
    FORM PANEL (Login / Signup)
 ========================================================= */
 .form-panel {
-  background: #fff;
+  background: linear-gradient(180deg, #222831 0%, #2c3138 50%, #393E46 100%);
   padding: 5px 18px;
 
   display: grid;
@@ -82,6 +82,7 @@ body {
 .form-header h2 {
   font-size: clamp(16px, 2vw, 22px);
   margin: 0;
+  color: #DFD0B8;
 }
 
 .form-sub {
@@ -154,7 +155,7 @@ body {
 
 .field-label {
   font-size: 13px;
-  color: var(--muted);
+  color: #948979;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -166,10 +167,10 @@ body {
   padding: 0 14px;
 
   border-radius: 12px;
-  border: 1px solid var(--line);
+  border: 1px solid #948979;
 
-  background: rgba(255, 255, 255, 0.02);
-  color: var(--text);
+  background: #393E46;
+  color:#DFD0B8;
 
   outline: none;
   transition: 0.15s ease;
@@ -177,13 +178,13 @@ body {
 
 .field input::placeholder {
   font-size: 13px;
-  color: #2346ed;
+  color: #DFD0B8;
   opacity: 0.75;
 }
 
 .field input:focus {
-  border-color: #2346ed;
-  box-shadow: 0 0 0 1px #2346ed;
+  border-color: #DFD0B8;
+  box-shadow: 0 0 0 1px #DFD0B8;
 }
 
 /* =========================================================
@@ -196,7 +197,7 @@ body {
 
 .link {
   font-size: 13px;
-  color: #2346ed;
+  color: #DFD0B8;
   text-align: center;
   text-decoration: none;
 }
@@ -216,11 +217,9 @@ body {
   border-radius: 12px;
 
   font-weight: 600;
-  color: #fff;
+  color: #222831;
 
-  background: #2563eb;
-
-  box-shadow: 0 8px 22px rgba(79, 70, 229, 0.35);
+  background: #DFD0B8;
   cursor: pointer;
 
   transition: 0.2s ease;
@@ -246,7 +245,7 @@ body {
 ========================================================= */
 .tiny-note {
   font-size: 12px;
-  color: var(--muted);
+  color: #948979;
   text-align: center;
   margin: 0;
 }

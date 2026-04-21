@@ -34,7 +34,7 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  color: #333;
+  color: #222931;
 
   transition: all 0.2s ease-in-out;
   min-width: 100px;
@@ -42,8 +42,8 @@
 
 /* Hover State */
 .tab:hover {
-  background: #007bff;
-  color: #ffffff;
+  background: #948979;
+  color: #393E46;
 }
 
 /* Active Tab */

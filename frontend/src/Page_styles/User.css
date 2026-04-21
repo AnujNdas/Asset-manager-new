@@ -2,7 +2,7 @@
   .auth-wrapper {
     height: 100vh;
     width: 100%;
-    background: #f3f4f6;
+    /* background: #f3f4f6; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,7 +14,7 @@
     width: 100%;
     /* max-width: 100%; */
     height: 100%;
-    background: #ffffff;
+    /* background: #ffffff; */
     /* border-radius: 20px; */
     display: flex;
     overflow: hidden;
@@ -31,11 +31,12 @@
     align-items: center;
     overflow-y: auto;
     gap: 10px;
+    background: #393E46;
   }
 
   .auth-header h2 {
     font-weight: 600;
-    color: #000000;
+    color: #DFD0B8;
     font-size: 20px;
     margin: 0;
   }
@@ -49,8 +50,7 @@
   /* RIGHT PANEL */
   .auth-right {
     flex: 1;
-    background: linear-gradient(135deg, #4f46e5, #3b82f6);
-    color: white;
+    background: linear-gradient(135deg, #222831, #393E46);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,13 +84,14 @@
     font-weight: 600;
     margin-bottom: 0px;
     text-align: center;
-    color: #ffffff;
+    color: #DFD0B8;
   }
 
   .right-content p {
     opacity: 0.9;
     text-align: center;
     margin: 0;
+    color: #948979;
   }
 
   /* Tabs */
@@ -103,17 +104,17 @@
     flex: 1;
     padding: 10px;
     border: none;
-    background: transparent;
     font-weight: 600;
     cursor: pointer;
     border-bottom: 2px solid transparent;
     border-radius: 10px;
+    background: #948979;
+    color: #222931;
   }
 
   .tab-btn.active {
-    border-bottom: 2px solid #4f46e5;
-    color: #ffffff;
-    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    color: #222931;
+    background: #DFD0B8;
   }
 
   @media (max-width: 900px) {

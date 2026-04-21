@@ -141,7 +141,7 @@ if (role === "super-admin") {
           </div>
 
           <p className="tiny-note">
-            By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "blue", cursor : "pointer", textAlign : "center" , justifyContent : "center"}} target="_blank">Terms & Privacy Policy.</a> 
+            By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "#DFD0B8", cursor : "pointer", textAlign : "center" , justifyContent : "center"}} target="_blank">Terms & Privacy Policy.</a> 
           </p>
         </form>
       </div>
