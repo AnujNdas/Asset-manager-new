@@ -73,7 +73,7 @@
 .card-header h3 {
   font-size: 15px;
   font-weight: 600;
-  color: #2563eb;
+  color: #DFD0B8;
 }
 
 /* STATUS BADGE */
@@ -181,7 +181,7 @@
 
 /* ================= INSTANCES ================= */
 .inventory-card {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
