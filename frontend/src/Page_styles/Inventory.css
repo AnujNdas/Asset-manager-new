@@ -46,7 +46,7 @@
 
 /* ================= CARD ================= */
 .inventory-card {
-  background: linear-gradient(145deg, #111827, #1f2937);
+  background: linear-gradient(135deg, #222831, #393E46);
   border-radius: 18px;
   padding: 18px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.4);
@@ -88,12 +88,12 @@
 .inventory-card p {
   font-size: 13px;
   margin: 4px 0;
-  color: #000000;
+  color: #DFD0B8;
 }
 
 /* STRONG LABEL */
 .inventory-card strong {
-  color: #2c2c2c;
+  color: #DFD0B8;
 }
 
 /* ================= ACTIONS ================= */
@@ -222,16 +222,17 @@
 }
 
 .badge {
-  background: #2563eb;
+  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
   padding: 6px;
   border-radius: 8px;
   font-size: 12px;
   text-align: center;
+  color: #222831;
 }
 
 .badge.status {
   background: #1bd73a;
-  color: #ffffff;
+  color: #222831;
 }
 
 /* FINANCIAL */
@@ -775,13 +776,13 @@
 
 /* TOP ROW - highlighted */
 .financial-card.primary {
-  background: linear-gradient(135deg, #c0bcff, #a2a4ff);
-  color: #fff;
+  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
+  color: #222831;
 }
 
 .financial-card.primary-alt {
-  background: linear-gradient(135deg, #ccffef, #31c594);
-  color: #fff;
+  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
+  color: #222831;
 }
 
 /* BASE CARD */

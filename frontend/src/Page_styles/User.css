@@ -45,6 +45,9 @@
     max-width: 380px;
     width: 100%;
     min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
   /* RIGHT PANEL */

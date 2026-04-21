@@ -248,9 +248,8 @@
 
 /* SAVE BUTTON (Primary SaaS Blue) */
 .btn-save {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  background: #948979;
+  color: #222831;
 }
 
 .btn-save:hover {
