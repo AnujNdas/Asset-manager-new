@@ -17,7 +17,7 @@ const User = ({ removeUser }) => {
       <div className="auth-left">
 <div className="dash-logo">
   <img
-    src="/images/logo.webp"
+    src="/images/Logo.png"
     alt="Socialfly Logo"
     width="100"
     height="100"

@@ -65,6 +65,8 @@ body {
   /* gap: 16px; */
 
   color: var(--text);
+  gap: 5px;
+  border-radius: 10px;
 }
 
 /* Header section (logo + title) */
