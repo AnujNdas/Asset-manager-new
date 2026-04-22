@@ -33,11 +33,15 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
 
       <div className="instance-grid">
 
-        {/* INSTANCE CODE */}
         <div>
           <p className="label">Instance Code</p>
           <p className="value">{instance.instanceCode}</p>
         </div>
+        <div>
+          <p className="label">Instance Name</p>
+          <p className="value">{instance.deviceName}</p>
+        </div>
+        {/* INSTANCE CODE */}
         {/* QR CODE */}
 {isHardware && instance.qrCode?.url && (
   <div className="qr-section">

@@ -343,11 +343,12 @@ const upgradeInstance = async (req, res) => {
       maintenanceCost,
       warrantyRenewalCost,
       insuranceCost,
-
       // 🔹 Software Cost
       renewalCost,
-
+      
       // 🔹 Hardware Dates
+      hasInsurance,
+      insuranceTerm,
       newWarrantyExpiry,
       newInsuranceExpiry,
       newMaintenanceDate,
@@ -358,7 +359,8 @@ const upgradeInstance = async (req, res) => {
       // 🔹 Software Dates
       newRenewalDate,
       newLastUsedDate,
-
+      upgradeDescription,
+      upgradeNotes, 
       // 🔹 Common
       condition
     } = req.body;
@@ -433,10 +435,6 @@ const upgradeInstance = async (req, res) => {
         instance.hardware.costs.warrantyRenewalCost = Number(warrantyRenewalCost) || 0;
       }
 
-      if (insuranceCost !== undefined) {
-        instance.hardware.costs.insuranceCost = Number(insuranceCost) || 0;
-      }
-
       // 💱 Currency (shared)
       if (currency) {
         instance.hardware.currency = currency;
@@ -451,14 +449,56 @@ const upgradeInstance = async (req, res) => {
         instance.hardware.warrantyExpiry = newWarrantyExpiry;
       }
 
-      if (newInsurancePurchaseDate) {
-        instance.hardware.insurancePurchaseDate = newInsurancePurchaseDate;
-      }
+      /* ---------- INSURANCE LOGIC ---------- */
 
-      if (newInsuranceExpiry) {
-        instance.hardware.insuranceExpiry = newInsuranceExpiry;
-      }
+// ✅ Toggle insurance
+if (hasInsurance !== undefined) {
+  instance.hardware.hasInsurance = hasInsurance;
+}
 
+// ❌ If insurance is turned OFF → wipe data
+if (hasInsurance === false) {
+  instance.hardware.insuranceTerm = undefined;
+  instance.hardware.insurancePurchaseDate = undefined;
+  instance.hardware.insuranceExpiry = undefined;
+  instance.hardware.costs.insuranceCost = 0;
+}
+
+// ✅ If insurance is ON → apply logic
+if (hasInsurance === true) {
+  if (insuranceTerm) {
+    instance.hardware.insuranceTerm = insuranceTerm;
+  }
+
+  if (newInsurancePurchaseDate) {
+    instance.hardware.insurancePurchaseDate = newInsurancePurchaseDate;
+
+    // 🔥 AUTO CALCULATE EXPIRY
+    const purchaseDate = new Date(newInsurancePurchaseDate);
+    let expiry = new Date(purchaseDate);
+
+    switch (insuranceTerm || instance.hardware.insuranceTerm) {
+      case "6_months":
+        expiry.setMonth(expiry.getMonth() + 6);
+        break;
+      case "1_year":
+        expiry.setFullYear(expiry.getFullYear() + 1);
+        break;
+      case "3_years":
+        expiry.setFullYear(expiry.getFullYear() + 3);
+        break;
+      default:
+        break;
+    }
+
+    instance.hardware.insuranceExpiry = expiry;
+  }
+
+  // Optional manual override (if provided)
+  if (newInsuranceExpiry) {
+    instance.hardware.insuranceExpiry = newInsuranceExpiry;
+  }
+}
       if (newMaintenanceDate) {
         instance.hardware.nextMaintenanceDate = newMaintenanceDate;
       }
@@ -525,8 +565,16 @@ const upgradeInstance = async (req, res) => {
         renewalCost: normalizeCost(instance.software?.costs?.renewalCost)
       }
     };
+    if (upgradeDescription && upgradeDescription.trim()) {
+      instance.upgrades = instance.upgrades || [];
 
-    /* =============================
+      instance.upgrades.push({
+        description: upgradeDescription.trim(),
+        performedBy: req.user.id,
+        notes: upgradeNotes || ""
+      });
+    }
+    /* ===========  ==================
        🟣 LIFECYCLE ENTRY
     ============================== */
     instance.lifecycle.push({
@@ -548,7 +596,7 @@ const upgradeInstance = async (req, res) => {
       },
 
       date: new Date(),
-      notes: "Asset upgraded"
+     notes: upgradeDescription || "Asset upgraded"
     });
 
     /* =============================

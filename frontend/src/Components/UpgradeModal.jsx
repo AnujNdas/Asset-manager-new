@@ -7,8 +7,8 @@ const currencyOptions = [
 ];
 
 const UpgradeModal = ({ instance, onClose, refresh }) => {
-  const isHardware = !!instance?.hardware;
-  const isSoftware = !!instance?.software;
+  const isHardware = instance?.assetType === "hardware";
+  const isSoftware = instance?.assetType === "software";
 
   /* =============================
      🔹 FIELD CONFIG (DYNAMIC)
@@ -19,14 +19,10 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
 ...(isHardware ? [
   { name: "maintenanceCost", label: "Maintenance Cost", type: "number" },
   { name: "warrantyRenewalCost", label: "Warranty Renewal Cost", type: "number" },
-  { name: "insuranceCost", label: "Insurance Cost", type: "number" },
 
   // ✅ NEW
   { name: "newWarrantyPurchaseDate", label: "Warranty Purchase Date", type: "date" },
   { name: "newWarrantyExpiry", label: "Warranty Expiry", type: "date" },
-
-  { name: "newInsurancePurchaseDate", label: "Insurance Purchase Date", type: "date" },
-  { name: "newInsuranceExpiry", label: "Insurance Expiry", type: "date" },
 
   { name: "newMaintenanceDate", label: "Next Maintenance", type: "date" },
   { name: "newInstallationDate", label: "Installation Date", type: "date" }
@@ -58,8 +54,12 @@ const [form, setForm] = useState({
   newWarrantyPurchaseDate:
     instance?.hardware?.warrantyPurchaseDate?.split("T")[0] || "",
 
-  newInsurancePurchaseDate:
-    instance?.hardware?.insurancePurchaseDate?.split("T")[0] || "",
+    hasInsurance: instance?.hardware?.hasInsurance || false,
+
+    insuranceTerm: instance?.hardware?.insuranceTerm || "1_year",
+
+    newInsurancePurchaseDate:
+      instance?.hardware?.insurancePurchaseDate?.split("T")[0] || "",
 
   newWarrantyExpiry:
     instance?.hardware?.warrantyExpiry?.split("T")[0] || "",
@@ -81,7 +81,8 @@ const [form, setForm] = useState({
     instance?.software?.installationDate?.split("T")[0] ||
     "",
 
-  condition: instance?.condition || ""
+  condition: instance?.condition || "",
+  upgradeNotes: ""
 });
 
   /* =============================
@@ -97,30 +98,39 @@ const [form, setForm] = useState({
 
   const handleSubmit = async () => {
     try {
-      const payload = {
-        currency: form.currency,
+const payload = {
+  currency: form.currency,
 
-        ...(isHardware && {
-          maintenanceCost: Number(form.maintenanceCost) || 0,
-          warrantyRenewalCost: Number(form.warrantyRenewalCost) || 0,
-          insuranceCost: Number(form.insuranceCost) || 0,
+  ...(isHardware && {
+    maintenanceCost: Number(form.maintenanceCost) || 0,
+    warrantyRenewalCost: Number(form.warrantyRenewalCost) || 0,
 
-          newWarrantyExpiry: form.newWarrantyExpiry || undefined,
-          newInsuranceExpiry: form.newInsuranceExpiry || undefined,
-          newMaintenanceDate: form.newMaintenanceDate || undefined,
-          newInstallationDate: form.newInstallationDate || undefined
-        }),
+    hasInsurance: form.hasInsurance,
+    insuranceTerm: form.insuranceTerm,
 
-        ...(isSoftware && {
-          renewalCost: Number(form.renewalCost) || 0,
+    insuranceCost: form.hasInsurance
+      ? Number(form.insuranceCost) || 0
+      : 0,
 
-          newRenewalDate: form.newRenewalDate || undefined,
-          newLastUsedDate: form.newLastUsedDate || undefined,
-          newInstallationDate: form.newInstallationDate || undefined
-        }),
+    newInsurancePurchaseDate: form.hasInsurance
+      ? form.newInsurancePurchaseDate || undefined
+      : undefined,
 
-        condition: form.condition || undefined
-      };
+    newWarrantyExpiry: form.newWarrantyExpiry || undefined,
+    newMaintenanceDate: form.newMaintenanceDate || undefined,
+    newInstallationDate: form.newInstallationDate || undefined
+  }),
+
+  ...(isSoftware && {
+    renewalCost: Number(form.renewalCost) || 0,
+    newRenewalDate: form.newRenewalDate || undefined,
+    newLastUsedDate: form.newLastUsedDate || undefined,
+    newInstallationDate: form.newInstallationDate || undefined
+  }),
+
+  condition: form.condition || undefined,
+  upgradeNotes: form.upgradeNotes || undefined
+};
 
       await upgradeInstance(instance._id, payload);
 
@@ -150,20 +160,89 @@ const [form, setForm] = useState({
             ))}
           </select>
         </div>
+        {isHardware && (
+  <>
+    {/* HAS INSURANCE */}
+    <div className="input-group">
+      <label>
+        <input
+          type="checkbox"
+          name="hasInsurance"
+          checked={form.hasInsurance}
+onChange={(e) => {
+  const checked = e.target.checked;
+
+  setForm({
+    ...form,
+    hasInsurance: checked,
+    ...(checked
+      ? {}
+      : {
+          insuranceTerm: "1_year",
+          insuranceCost: "",
+          newInsurancePurchaseDate: ""
+        })
+  });
+}}
+        />
+        Has Insurance
+      </label>
+    </div>
+
+    {/* INSURANCE TERM */}
+{form.hasInsurance && (
+  <>
+    <div className="input-group">
+      <label>Insurance Term</label>
+      <select
+        name="insuranceTerm"
+        value={form.insuranceTerm}
+        onChange={handleChange}
+      >
+        <option value="6_months">6 Months</option>
+        <option value="1_year">1 Year</option>
+        <option value="3_years">3 Years</option>
+      </select>
+    </div>
+
+    <div className="input-group">
+      <label>Insurance Purchase Date</label>
+      <input
+        type="date"
+        name="newInsurancePurchaseDate"
+        value={form.newInsurancePurchaseDate}
+        onChange={handleChange}
+      />
+    </div>
+
+    <div className="input-group">
+      <label>Insurance Cost</label>
+      <input
+        type="number"
+        name="insuranceCost"
+        value={form.insuranceCost}
+        onChange={handleChange}
+      />
+    </div>
+  </>
+)}
+  </>
+)}
 
         {/* ✅ DYNAMIC FIELDS */}
         <div className="grid-2">
-          {fieldConfig.map((field) => (
-            <div className="input-group" key={field.name}>
-              <label>{field.label}</label>
-              <input
-                type={field.type}
-                name={field.name}
-                value={form[field.name] || ""}
-                onChange={handleChange}
-              />
-            </div>
-          ))}
+          {fieldConfig
+            .map((field) => (
+              <div className="input-group" key={field.name}>
+                <label>{field.label}</label>
+                <input
+                  type={field.type}
+                  name={field.name}
+                  value={form[field.name] || ""}
+                  onChange={handleChange}
+                />
+              </div>
+            ))}
         </div>
 
         {/* ✅ CONDITION */}
@@ -179,6 +258,16 @@ const [form, setForm] = useState({
             <option value="used">Used</option>
             <option value="damaged">Damaged</option>
           </select>
+        </div>
+        <div className="input-group">
+          <label>Upgrade Details</label>
+          <textarea
+            name="upgradeNotes"
+            placeholder="e.g. RAM upgraded to 16GB, SSD replaced, oil changed"
+            value={form.upgradeNotes}
+            onChange={handleChange}
+            rows={3}
+          />
         </div>
 
         {/* ACTIONS */}

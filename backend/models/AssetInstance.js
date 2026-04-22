@@ -52,8 +52,25 @@ const assetInstanceSchema = new mongoose.Schema(
     enum: ["new", "used", "damaged"],
     default: "new"
   },
-
-  notes: String,
+  upgrades: [
+  {
+    description: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    },
+    performedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
+    cost: costSchema, // optional (very useful later)
+    notes: String
+  }
+],
 
   /* 🔹 ASSIGNMENT (COMMON) */
 assignedTo: {
