@@ -7,8 +7,17 @@ const formatDate = (date) => {
 };
 
 const formatCurrency = (obj) => {
-  if (!obj?.amount) return "-";
-  return `${obj.currency || "INR"} ${obj.amount}`;
+  if (!obj) return "-";
+
+  if (typeof obj === "number") {
+    return `INR ${obj}`;
+  }
+
+  if (typeof obj === "object") {
+    return `${obj.currency || "INR"} ${obj.amount || 0}`;
+  }
+
+  return "-";
 };
 
 const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
@@ -85,8 +94,8 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           </p>
           <p className="value">
             {isSoftware
-              ? sw.costs?.renewalCost || 0
-              : hw.costs?.maintenanceCost || 0}
+            ? formatCurrency(sw.costs?.renewalCost)
+            : formatCurrency(hw.costs?.maintenanceCost)}
           </p>
         </div>
 
@@ -95,7 +104,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <div>
             <p className="label">Warranty Cost</p>
             <p className="value">
-              {hw.costs?.warrantyRenewalCost || 0}
+              {formatCurrency(hw.costs?.warrantyRenewalCost)}
             </p>
           </div>
         )}
@@ -105,7 +114,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <div>
             <p className="label">Insurance Cost</p>
             <p className="value">
-              {hw.costs?.insuranceCost || 0}
+              {formatCurrency(hw.costs?.insuranceCost)}
             </p>
           </div>
         )}
