@@ -1,493 +1,505 @@
-  // src/pages/CreateInstances.jsx
+    // src/pages/CreateInstances.jsx
 
-  import React, { useEffect, useState } from "react";
-  import "../Page_styles/CreateInstance.css";
-  import { useParams , useNavigate } from "react-router-dom";
-  import * as XLSX from "xlsx";
-  import {
-    getLocations,
-    createAssetInstances,
-    getAssetById,
-    bulkUploadInstances
-  } from "../Services/ApiServices";
-  import Select from "react-select";
-  const currencyOptions = [
-    "INR",
-    "USD",
-    "EUR",
-    "GBP",
-    "JPY",
-    "AUD",
-    "CAD",
-    "SGD",
-    "AED",
-    "CNY",
-  ];
-  const coverageOptions = [
-    { label: "Comprehensive", value: "comprehensive" },
-    { label: "Accidental Damage", value: "accidental_damage" },
-    { label: "Third Party", value: "third_party" },
-    { label: "Theft & Burglary", value: "theft_burglary" },
-    { label: "Fire & Lightning", value: "fire_lightning" },
-    { label: "Natural Disasters", value: "natural_disasters" },
-    { label: "Vandalism", value: "vandalism" },
-    { label: "Business Interruption", value: "business_interruption" },
-    { label: "Transit / Marine Cargo", value: "transit_marine_cargo" },
-    { label: "Cyber-Physical Damage", value: "cyber_physical_damage" },
-    { label: "Electrical Surge", value: "electrical_surge" },
-    { label: "Mechanical Breakdown", value: "mechanical_breakdown" },
-    { label: "Other", value: "other" },
-    { label: "None", value: "none" }
-  ];
-  const CreateInstances = () => {
-    const downloadTemplate = (type) => {
-  let data = [];
+    import React, { useEffect, useState } from "react";
+    import "../Page_styles/CreateInstance.css";
+    import { useParams , useNavigate } from "react-router-dom";
+    import * as XLSX from "xlsx";
+    import {
+      getLocations,
+      createAssetInstances,
+      getAssetById,
+      bulkUploadInstances
+    } from "../Services/ApiServices";
+    import Select from "react-select";
+    const currencyOptions = [
+      "INR",
+      "USD",
+      "EUR",
+      "GBP",
+      "JPY",
+      "AUD",
+      "CAD",
+      "SGD",
+      "AED",
+      "CNY",
+    ];
+    const coverageOptions = [
+      { label: "Comprehensive", value: "comprehensive" },
+      { label: "Accidental Damage", value: "accidental_damage" },
+      { label: "Third Party", value: "third_party" },
+      { label: "Theft & Burglary", value: "theft_burglary" },
+      { label: "Fire & Lightning", value: "fire_lightning" },
+      { label: "Natural Disasters", value: "natural_disasters" },
+      { label: "Vandalism", value: "vandalism" },
+      { label: "Business Interruption", value: "business_interruption" },
+      { label: "Transit / Marine Cargo", value: "transit_marine_cargo" },
+      { label: "Cyber-Physical Damage", value: "cyber_physical_damage" },
+      { label: "Electrical Surge", value: "electrical_surge" },
+      { label: "Mechanical Breakdown", value: "mechanical_breakdown" },
+      { label: "Other", value: "other" },
+      { label: "None", value: "none" }
+    ];
+    const CreateInstances = () => {
+      const downloadTemplate = (type) => {
+    let data = [];
 
-if (type === "hardware") {
-  data = [
-    {
-      serialNumber: "Required | Unique device serial",
-      deviceName: "Optional",
-      location: "Required",
-      condition: "new/used/damaged",
-      modelNo: "Optional",
-      specifications: "Optional",
-      purchaseDate: "YYYY-MM-DD",
-      installationDate: "YYYY-MM-DD",
-      warrantyPurchaseDate: "YYYY-MM-DD",
-      warrantyExpiry: "YYYY-MM-DD",
-      insuranceId: "Optional",
-      insurancePurchaseDate: "YYYY-MM-DD",
-      insuranceTerm: "6_months / 1_year / 3_years",
-      coverageType: "comma separated (e.g. comprehensive,fire_lightning)",
-      nextMaintenanceDate: "YYYY-MM-DD",
-      purchaseCost: "Number",
-      currency: "INR/USD/etc",
-      maintenanceCost: "Number",
-      warrantyRenewalCost: "Number",
-      insuranceCost: "Number",
-    },
-  ];
-} else {
+  if (type === "hardware") {
     data = [
       {
-        location: "New York",
-        condition: "new",
-        licenseKey: "XXXX-YYYY-ZZZZ",
-        licenseNumber: "LIC-001",
-        purchaseDate: "2026-01-01",
-        installationDate: "2026-01-02",
-        renewalDate: "2027-01-01",
-        lastUsedDate: "2026-04-01",
-        purchaseCost: 10000,
-        currency: "INR",
-        renewalCost: 2000,
+        deviceName: "Optional",
+        location: "Required",
+        condition: "new/used/damaged",
+        modelNo: "Optional",
+        specifications: "Optional",
+        purchaseDate: "YYYY-MM-DD",
+        installationDate: "YYYY-MM-DD",
+        warrantyPurchaseDate: "YYYY-MM-DD",
+        warrantyExpiry: "YYYY-MM-DD",
+        hasInsurance: "true/false",
+        insuranceId: "Optional",
+        insurancePurchaseDate: "YYYY-MM-DD",
+        insuranceTerm: "6_months / 1_year / 3_years",
+        coverageType: "comma separated (e.g. comprehensive,fire_lightning)",
+        nextMaintenanceDate: "YYYY-MM-DD",
+        purchaseCost: "Number",
+        currency: "INR/USD/etc",
+        maintenanceCost: "Number",
+        warrantyRenewalCost: "Number",
+        insuranceCost: "Number",
       },
     ];
-  }
-
-const worksheet = XLSX.utils.json_to_sheet(data, {
-  header: Object.keys(data[0]),
-});
-
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(
-    workbook,
-    worksheet,
-    type === "hardware" ? "Hardware Template" : "Software Template"
-  );
-
-  XLSX.writeFile(
-    workbook,
-    type === "hardware"
-      ? "hardware_instances_template.xlsx"
-      : "software_instances_template.xlsx"
-  );
-};
-    const { assetId } = useParams();
-    const navigate = useNavigate();
-    const [asset, setAsset] = useState(null);
-    const [locations, setLocations] = useState([]);
-    const [instances, setInstances] = useState([]);
-    const [expandedRow, setExpandedRow] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState({});
-    const [file, setFile] = useState(null);
-    const [bulkValues, setBulkValues] = useState({
-      location: "",
-      condition: "",
-
-      // shared
-      purchaseCost: "",
-      currency: "INR",
-      vendor: "",
-
-      // hardware
-      modelNo: "",
-      specifications: "",
-      warrantyDate: "",
-      installationDate: "",
-      hasInsurance: false, // ✅ ADD THIS
-      insurancePolicyId: "",
-      coverageType: ["comprehensive"],
-      insuranceExpiry: "",
-      maintenanceCost: "",
-      warrantyRenewalCost: "",
-      insuranceCost: "",
-      // 🔹 hardware additions
-      purchaseDate: "",
-  warrantyPurchaseDate: "",
-  insurancePurchaseDate: "",
-  insuranceTerm: "1_year", // if you're using term
-    nextMaintenanceDate: "", // ✅ ADD THIS
-      // ✅ software
-      licenseKey: "",
-      licenseNumber: "",
-      purchaseDate: "",
-      renewalDate: "",
-      lastUsedDate: "",
-      renewalCost: "",
-    });
-
-    const isHardware = asset?.assetType === "hardware";
-    const isSoftware = asset?.assetType === "software";
-
-    const fieldLabels = {
-      modelNo: isHardware ? "Model No" : "License Key",
-      specifications: isHardware ? "Specifications" : "Version & Details",
-    };
-
-    const total = asset?.assetQuantity || 0;
-    const pending = asset?.pendingInstances || 0;
-    const created = total - pending;
-    const progress = total > 0 ? (created / total) * 100 : 0;
-
-    useEffect(() => {
-      fetchData();
-    }, []);
-    const formatLocation = (loc) =>
-      loc.trim().replace(/\b\w/g, (c) => c.toUpperCase());
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        const [assetData, locationData] = await Promise.all([
-          getAssetById(assetId),
-          getLocations(),
-        ]);
-
-        setAsset(assetData);
-        const assetDOE = assetData?.DOE ? assetData.DOE.split("T")[0] : null;
-
-        const assetPurchaseDate = assetData?.purchaseDetails?.purchaseDate
-          ? assetData.purchaseDetails.purchaseDate.split("T")[0]
-          : null;
-        setAsset({
-          ...assetData,
-          assetDOE,
-          assetPurchaseDate,
-        });
-        setLocations(locationData.data);
-
-        const rows = Array.from(
-          { length: assetData.pendingInstances || 0 },
-          () => ({
-            serialNumber: "",
-            condition: "new",
-            location: "",
-
-            modelNo: "",
-            specifications: "",
-
-            purchaseCost: "",
-            currency: "INR",
-
-            // hardware
-            warrantyDate: "",
-            installationDate: "",
-            hasInsurance: false, // ✅ ADD THIS
-            insurancePolicyId: "",
-            insuranceExpiry: "",
-            maintenanceCost: "",
-            warrantyRenewalCost: "",
-            insuranceCost: "",
-            coverageType: ["comprehensive"],
-              nextMaintenanceDate: "", // ✅ ADD THIS
-            // 🔹 hardware additions
-            purchaseDate: "",
-  warrantyPurchaseDate: "",
-  insurancePurchaseDate: "",
-  insuranceTerm: "1_year", // if you're using term
-            // ✅ software (FULL INIT)
-            licenseKey: "",
-            licenseNumber: "",
-            vendor: "",
-            purchaseDate: "",
-            installationDate: "",
-            renewalDate: "",
-            lastUsedDate: "",
-            renewalCost: "",
-          }),
-        );
-        setInstances(rows);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const handleChange = (index, field, value) => {
-      const updated = [...instances];
-      updated[index][field] = value;
-      setInstances(updated);
-    };
-    const handleFileUpload = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-
-const handleImport = async () => {
-  if (!file) {
-    alert("Please select an Excel file");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const data = await file.arrayBuffer();
-
-    const workbook = XLSX.read(data, { type: "array" });
-
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-
-    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-      defval: "", // prevents undefined
-    });
-
-    const payload = jsonData.map((row) => ({
-      serialNumber: row.serialNumber || undefined,
-      deviceName: row.deviceName || "",
-
-      location: formatLocation(row.location),
-
-      condition: row.condition || "new",
-
-      ...(isHardware && {
-        hardware: {
-          modelNo: row.modelNo || "",
-          specifications: row.specifications || "",
-
-          purchaseDate: row.purchaseDate || null,
-          installationDate: row.installationDate || null,
-
-          warrantyPurchaseDate:
-            row.warrantyPurchaseDate || null,
-          warrantyExpiry: row.warrantyExpiry || null,
-
-          insuranceId: row.insuranceId || "",
-
-          insurancePurchaseDate:
-            row.insurancePurchaseDate || null,
-
-          insuranceTerm: row.insuranceTerm || "1_year",
-
-          coverageType: row.coverageType
-            ? row.coverageType.split(",")
-            : ["comprehensive"],
-
-          nextMaintenanceDate:
-            row.nextMaintenanceDate || null,
-
-          purchaseCost: row.purchaseCost
-            ? {
-                amount: Number(row.purchaseCost),
-                currency: row.currency || "INR",
-              }
-            : null,
-
-          costs: {
-            maintenanceCost:
-              Number(row.maintenanceCost) || 0,
-            warrantyRenewalCost:
-              Number(row.warrantyRenewalCost) || 0,
-            insuranceCost:
-              Number(row.insuranceCost) || 0,
-          },
+  } else {
+      data = [
+        {
+          location: "New York",
+          condition: "new",
+          licenseKey: "XXXX-YYYY-ZZZZ",
+          licenseNumber: "LIC-001",
+          purchaseDate: "2026-01-01",
+          installationDate: "2026-01-02",
+          renewalDate: "2027-01-01",
+          lastUsedDate: "2026-04-01",
+          purchaseCost: 10000,
+          currency: "INR",
+          renewalCost: 2000,
         },
-      }),
-
-      ...(isSoftware && {
-        software: {
-          licenseKey: row.licenseKey || "",
-          licenseNumber: row.licenseNumber || "",
-
-          purchaseDate: row.purchaseDate || null,
-          installationDate: row.installationDate || null,
-          renewalDate: row.renewalDate || null,
-          lastUsedDate: row.lastUsedDate || null,
-
-          purchaseCost: row.purchaseCost
-            ? {
-                amount: Number(row.purchaseCost),
-                currency: row.currency || "INR",
-              }
-            : null,
-
-          costs: {
-            renewalCost: Number(row.renewalCost) || 0,
-          },
-        },
-      }),
-    }));
-
-    const res = await bulkUploadInstances({
-      assetId,
-      instances: payload,
-    });
-
-    if (res.success) {
-      alert(`✅ ${res.inserted} imported, ${res.skipped} skipped`);
-      fetchData();
-    } else {
-      alert(res.message || "Import failed");
+      ];
     }
-  } catch (err) {
-    console.error(err);
-    alert("Error reading Excel file");
-  } finally {
-    setLoading(false);
-  }
-};
-    const applyBulkValues = () => {
-      const updated = instances.map((inst) => ({
-        ...inst,
-        location: bulkValues.location || inst.location,
-        condition: bulkValues.condition || inst.condition,
-        modelNo: bulkValues.modelNo || inst.modelNo,
-        specifications: bulkValues.specifications || inst.specifications,
 
-        purchaseCost: bulkValues.purchaseCost || inst.purchaseCost,
-        currency: bulkValues.currency || inst.currency,
-        vendor: bulkValues.vendor || inst.vendor,
+  const worksheet = XLSX.utils.json_to_sheet(data, {
+    header: Object.keys(data[0]),
+  });
 
-      ...(isHardware && {
-        purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
-    warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
-    warrantyPurchaseDate:
-      bulkValues.warrantyPurchaseDate || inst.warrantyPurchaseDate,
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      type === "hardware" ? "Hardware Template" : "Software Template"
+    );
 
-    installationDate: bulkValues.installationDate || inst.installationDate,
-        coverageType:
-    bulkValues.coverageType || inst.coverageType,
-    insurancePolicyId:
-      bulkValues.insurancePolicyId || inst.insurancePolicyId,
+    XLSX.writeFile(
+      workbook,
+      type === "hardware"
+        ? "hardware_instances_template.xlsx"
+        : "software_instances_template.xlsx"
+    );
+  };
+      const { assetId } = useParams();
+      const navigate = useNavigate();
+      const [asset, setAsset] = useState(null);
+      const [locations, setLocations] = useState([]);
+      const [instances, setInstances] = useState([]);
+      const [expandedRow, setExpandedRow] = useState(null);
+      const [loading, setLoading] = useState(false);
+      const [errors, setErrors] = useState({});
+      const [file, setFile] = useState(null);
+      const [bulkValues, setBulkValues] = useState({
+        location: "",
+        condition: "",
+        deviceName: "",
+        // shared
+        purchaseCost: "",
+        currency: "INR",
+        vendor: "",
+        purchaseDate: "",
 
-    insuranceExpiry: bulkValues.insuranceExpiry || inst.insuranceExpiry,
+        // hardware
+        modelNo: "",
+        specifications: "",
+        warrantyDate: "",
+        installationDate: "",
+        hasInsurance: false, // ✅ ADD THIS
+        insurancePolicyId: "",
+        coverageType: ["comprehensive"],
+        maintenanceCost: "",
+        warrantyRenewalCost: "",
+        insuranceCost: "",
+        // 🔹 hardware additions
 
-    insurancePurchaseDate:
-      bulkValues.insurancePurchaseDate || inst.insurancePurchaseDate,
+    warrantyPurchaseDate: "",
+    insurancePurchaseDate: "",
+    insuranceTerm: "1_year", // if you're using term
+      nextMaintenanceDate: "", // ✅ ADD THIS
+        // ✅ software
+        licenseKey: "",
+        licenseNumber: "",
+        renewalDate: "",
+        lastUsedDate: "",
+        renewalCost: "",
+      });
 
-    insuranceTerm:
-      bulkValues.insuranceTerm || inst.insuranceTerm,
+      const isHardware = asset?.assetType === "hardware";
+      const isSoftware = asset?.assetType === "software";
 
-    maintenanceCost: bulkValues.maintenanceCost || inst.maintenanceCost,
-      nextMaintenanceDate:
-      bulkValues.nextMaintenanceDate || inst.nextMaintenanceDate, // ✅ ADD
-    warrantyRenewalCost:
-      bulkValues.warrantyRenewalCost || inst.warrantyRenewalCost,
-    insuranceCost: bulkValues.insuranceCost || inst.insuranceCost,
-  }),
+      const fieldLabels = {
+        modelNo: isHardware ? "Model No" : "License Key",
+        specifications: isHardware ? "Specifications" : "Version & Details",
+      };
+
+      const total = asset?.assetQuantity || 0;
+      const pending = asset?.pendingInstances || 0;
+      const created = total - pending;
+      const progress = total > 0 ? (created / total) * 100 : 0;
+
+      useEffect(() => {
+        fetchData();
+      }, []);
+      const formatLocation = (loc) =>
+        loc.trim().replace(/\b\w/g, (c) => c.toUpperCase());
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+
+          const [assetData, locationData] = await Promise.all([
+            getAssetById(assetId),
+            getLocations(),
+          ]);
+
+          setAsset(assetData);
+          const assetDOE = assetData?.DOE ? assetData.DOE.split("T")[0] : null;
+
+          const assetPurchaseDate = assetData?.purchaseDetails?.purchaseDate
+            ? assetData.purchaseDetails.purchaseDate.split("T")[0]
+            : null;
+          setAsset({
+            ...assetData,
+            assetDOE,
+            assetPurchaseDate,
+          });
+          setLocations(locationData.data);
+
+          const rows = Array.from(
+            { length: assetData.pendingInstances || 0 },
+            () => ({
+              condition: "new",
+              location: "",
+              deviceName: "",
+              modelNo: "",
+              specifications: "",
+
+              purchaseCost: "",
+              currency: "INR",
+
+              // hardware
+              warrantyDate: "",
+              installationDate: "",
+              hasInsurance: false, // ✅ ADD THIS
+              insurancePolicyId: "",
+              maintenanceCost: "",
+              warrantyRenewalCost: "",
+              insuranceCost: "",
+              coverageType: ["comprehensive"],
+                nextMaintenanceDate: "", // ✅ ADD THIS
+              // 🔹 hardware additions
+              purchaseDate: "",
+    warrantyPurchaseDate: "",
+    insurancePurchaseDate: "",
+    insuranceTerm: "1_year", // if you're using term
+              // ✅ software (FULL INIT)
+              licenseKey: "",
+              licenseNumber: "",
+              vendor: "",
+              purchaseDate: "",
+              installationDate: "",
+              renewalDate: "",
+              lastUsedDate: "",
+              renewalCost: "",
+            }),
+          );
+          setInstances(rows);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const handleChange = (index, field, value) => {
+        const updated = [...instances];
+        updated[index][field] = value;
+        setInstances(updated);
+      };
+      const handleFileUpload = (e) => {
+      setFile(e.target.files[0]);
+    };
+
+
+  const handleImport = async () => {
+    if (!file) {
+      alert("Please select an Excel file");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const data = await file.arrayBuffer();
+
+      const workbook = XLSX.read(data, { type: "array" });
+
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+        defval: "", // prevents undefined
+      });
+
+      const payload = jsonData.map((row) => ({
+        deviceName: row.deviceName || "",
+
+        location: formatLocation(row.location),
+
+        condition: row.condition || "new",
+
+        ...(isHardware && {
+          hardware: {
+            modelNo: row.modelNo || "",
+            specifications: row.specifications || "",
+
+            purchaseDate: row.purchaseDate || null,
+            installationDate: row.installationDate || null,
+
+            warrantyPurchaseDate:
+              row.warrantyPurchaseDate || null,
+            warrantyExpiry: row.warrantyExpiry || null,
+...(row.hasInsurance === "true" || row.hasInsurance === true
+  ? {
+      insuranceId: row.insuranceId || "",
+      insurancePurchaseDate: row.insurancePurchaseDate || null,
+      insuranceTerm: row.insuranceTerm || "1_year",
+      coverageType: row.coverageType
+        ? row.coverageType.split(",")
+        : ["comprehensive"],
+    }
+  : {}),
+            nextMaintenanceDate:
+              row.nextMaintenanceDate || null,
+
+            purchaseCost: row.purchaseCost
+              ? {
+                  amount: Number(row.purchaseCost),
+                  currency: row.currency || "INR",
+                }
+              : null,
+
+            costs: {
+              maintenanceCost:
+                Number(row.maintenanceCost) || 0,
+              warrantyRenewalCost:
+                Number(row.warrantyRenewalCost) || 0,
+              insuranceCost:
+                Number(row.insuranceCost) || 0,
+            },
+          },
+        }),
+
         ...(isSoftware && {
-          licenseKey: bulkValues.licenseKey || inst.licenseKey,
-          licenseNumber: bulkValues.licenseNumber || inst.licenseNumber,
-          vendor: bulkValues.vendor || inst.vendor,
+          software: {
+            licenseKey: row.licenseKey || "",
+            licenseNumber: row.licenseNumber || "",
 
-          purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
-          installationDate: bulkValues.installationDate || inst.installationDate,
-          renewalDate: bulkValues.renewalDate || inst.renewalDate,
-          lastUsedDate: bulkValues.lastUsedDate || inst.lastUsedDate,
+            purchaseDate: row.purchaseDate || null,
+            installationDate: row.installationDate || null,
+            renewalDate: row.renewalDate || null,
+            lastUsedDate: row.lastUsedDate || null,
 
-          renewalCost: bulkValues.renewalCost || inst.renewalCost,
+            purchaseCost: row.purchaseCost
+              ? {
+                  amount: Number(row.purchaseCost),
+                  currency: row.currency || "INR",
+                }
+              : null,
+
+            costs: {
+              renewalCost: Number(row.renewalCost) || 0,
+            },
+          },
         }),
       }));
 
-      setInstances(updated);
-    };
-    const toggleExpand = (index) => {
-      setExpandedRow(expandedRow === index ? null : index);
-    };
-
-    const validate = () => {
-      const newErrors = {};
-      const serials = new Set();
-
-      instances.forEach((inst, index) => {
-        const rowErrors = {};
-
-        if (!inst.location || !inst.location.trim()) {
-          rowErrors.location = "Location is required";
-        }
-
-        if (!inst.purchaseCost) {
-          rowErrors.purchaseCost = "Cost required";
-        }
-
-        if (inst.serialNumber) {
-          if (serials.has(inst.serialNumber)) {
-            rowErrors.serialNumber = "Duplicate";
-          }
-          serials.add(inst.serialNumber);
-        }
-        if (asset?.assetDOE) {
-          if (inst.renewalDate && inst.renewalDate > asset.assetDOE) {
-            rowErrors.renewalDate = "Exceeds asset expiry";
-          }
-
-
-          if (inst.insuranceExpiry && inst.insuranceExpiry > asset.assetDOE) {
-            rowErrors.insuranceExpiry = "Exceeds asset expiry";
-          }
-
-          if (Object.keys(rowErrors).length > 0) {
-            newErrors[index] = rowErrors;
-          }
-        }
-
-        if (asset?.assetPurchaseDate) {
-          if (inst.purchaseDate && inst.purchaseDate < asset.assetPurchaseDate) {
-            rowErrors.purchaseDate = "Before asset purchase date";
-          }
-        }
+      const res = await bulkUploadInstances({
+        assetId,
+        instances: payload,
       });
 
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
-    };
+      if (res.success) {
+        alert(`✅ ${res.inserted} imported, ${res.skipped} skipped`);
+        fetchData();
+      } else {
+        alert(res.message || "Import failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error reading Excel file");
+    } finally {
+      setLoading(false);
+    }
+  };
+      const applyBulkValues = () => {
+        const updated = instances.map((inst) => ({
+          ...inst,
+          location: bulkValues.location || inst.location,
+          condition: bulkValues.condition || inst.condition,
+          modelNo: bulkValues.modelNo || inst.modelNo,
+          specifications: bulkValues.specifications || inst.specifications,
+          deviceName: bulkValues.deviceName || inst.deviceName,
+          purchaseCost: bulkValues.purchaseCost || inst.purchaseCost,
+          currency: bulkValues.currency || inst.currency,
+          vendor: bulkValues.vendor || inst.vendor,
 
-    const handleSubmit = async () => {
-      if (!validate()) return;
+        ...(isHardware && {
+          purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
+      warrantyDate: bulkValues.warrantyDate || inst.warrantyDate,
+      warrantyPurchaseDate:
+        bulkValues.warrantyPurchaseDate || inst.warrantyPurchaseDate,
 
-      try {
-        setLoading(true);
+      installationDate: bulkValues.installationDate || inst.installationDate,
+      hasInsurance:
+  bulkValues.hasInsurance ?? inst.hasInsurance,
+         coverageType: inst.coverageType || ["comprehensive"],
+      insurancePolicyId:
+        bulkValues.insurancePolicyId || inst.insurancePolicyId,
 
-        const payload = instances.map((inst) => {
-          if (isSoftware) {
+      insurancePurchaseDate:
+        bulkValues.insurancePurchaseDate || inst.insurancePurchaseDate,
+
+      insuranceTerm:
+        bulkValues.insuranceTerm || inst.insuranceTerm,
+
+      maintenanceCost: bulkValues.maintenanceCost || inst.maintenanceCost,
+        nextMaintenanceDate:
+        bulkValues.nextMaintenanceDate || inst.nextMaintenanceDate, // ✅ ADD
+      warrantyRenewalCost:
+        bulkValues.warrantyRenewalCost || inst.warrantyRenewalCost,
+      insuranceCost: bulkValues.insuranceCost || inst.insuranceCost,
+    }),
+          ...(isSoftware && {
+            licenseKey: bulkValues.licenseKey || inst.licenseKey,
+            licenseNumber: bulkValues.licenseNumber || inst.licenseNumber,
+            vendor: bulkValues.vendor || inst.vendor,
+
+            purchaseDate: bulkValues.purchaseDate || inst.purchaseDate,
+            installationDate: bulkValues.installationDate || inst.installationDate,
+            renewalDate: bulkValues.renewalDate || inst.renewalDate,
+            lastUsedDate: bulkValues.lastUsedDate || inst.lastUsedDate,
+
+            renewalCost: bulkValues.renewalCost || inst.renewalCost,
+          }),
+        }));
+
+        setInstances(updated);
+      };
+      const toggleExpand = (index) => {
+        setExpandedRow(expandedRow === index ? null : index);
+      };
+
+      const validate = () => {
+        const newErrors = {};
+        const serials = new Set();
+
+        instances.forEach((inst, index) => {
+          const rowErrors = {};
+
+          if (!inst.location || !inst.location.trim()) {
+            rowErrors.location = "Location is required";
+          }
+
+if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
+  rowErrors.purchaseCost = "Valid cost required";
+}
+
+                      if (asset?.assetPurchaseDate) {
+                        if (inst.purchaseDate && inst.purchaseDate < asset.assetPurchaseDate) {
+                          rowErrors.purchaseDate = "Before asset purchase date";
+                        }
+                      }
+            if (Object.keys(rowErrors).length > 0) {
+              newErrors[index] = rowErrors;
+            }
+        });
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
+
+      const handleSubmit = async () => {
+        if (!validate()) return;
+
+        try {
+          setLoading(true);
+
+          const payload = instances.map((inst) => {
+            if (isSoftware) {
+              return {
+                location: formatLocation(inst.location),
+
+                software: {
+                  licenseKey: inst.licenseKey || "",
+                  licenseNumber: inst.licenseNumber || "",
+                  vendor: inst.vendor || "",
+
+                  purchaseDate: inst.purchaseDate || null,
+                  installationDate: inst.installationDate || null,
+                  renewalDate: inst.renewalDate || null,
+                  lastUsedDate: inst.lastUsedDate || null,
+
+                  purchaseCost: inst.purchaseCost
+                    ? {
+                        amount: Number(inst.purchaseCost),
+                        currency: inst.currency || "INR",
+                      }
+                    : null,
+
+                  costs: {
+                    renewalCost: Number(inst.renewalCost) || 0,
+                  },
+                },
+              };
+            }
+
             return {
+              condition: inst.condition || "new",
               location: formatLocation(inst.location),
 
-              software: {
-                licenseKey: inst.licenseKey || "",
-                licenseNumber: inst.licenseNumber || "",
-                vendor: inst.vendor || "",
+              hardware: {
+                modelNo: inst.modelNo || "",
+                specifications: inst.specifications || "",
 
                 purchaseDate: inst.purchaseDate || null,
                 installationDate: inst.installationDate || null,
-                renewalDate: inst.renewalDate || null,
-                lastUsedDate: inst.lastUsedDate || null,
+                vendor: inst.vendor || "",
 
+                warrantyPurchaseDate: inst.warrantyPurchaseDate || null,
+    warrantyExpiry: inst.warrantyDate || null,
+    coverageType: inst.coverageType?.length
+                  ? inst.coverageType
+                  : ["comprehensive"],
+    insurancePurchaseDate: inst.insurancePurchaseDate || null,
+    insuranceTerm: inst.insuranceTerm || "1_year",
+
+    // ❌ DO NOT send insuranceExpiry anymore if backend calculates
+                insuranceId: inst.insurancePolicyId || "",
+                  nextMaintenanceDate: inst.nextMaintenanceDate || null, // ✅ ADD
                 purchaseCost: inst.purchaseCost
                   ? {
                       amount: Number(inst.purchaseCost),
@@ -496,473 +508,244 @@ const handleImport = async () => {
                   : null,
 
                 costs: {
-                  renewalCost: Number(inst.renewalCost) || 0,
+                  maintenanceCost: Number(inst.maintenanceCost) || 0,
+                  warrantyRenewalCost: Number(inst.warrantyRenewalCost) || 0,
+                  insuranceCost: Number(inst.insuranceCost) || 0,
                 },
               },
             };
-          }
+          });
 
-          return {
-            serialNumber: inst.serialNumber || undefined,
-            condition: inst.condition || "new",
-            location: formatLocation(inst.location),
+          await createAssetInstances({
+            assetId,
+            instances: payload,
+          });
+          console.log("Created instances:", payload);
 
-            hardware: {
-              modelNo: inst.modelNo || "",
-              specifications: inst.specifications || "",
+          alert("Instances created successfully");
+          fetchData();
+          navigate("/inventory")
+        } catch (err) {
+          console.error(err);
+          alert("Error creating instances");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-              purchaseDate: inst.purchaseDate || null,
-              installationDate: inst.installationDate || null,
-              vendor: inst.vendor || "",
+      return (
+        <div className="instance-form-page">
+          <h2>Create Instances</h2>
 
-              warrantyPurchaseDate: inst.warrantyPurchaseDate || null,
-  warrantyExpiry: inst.warrantyDate || null,
-  coverageType: inst.coverageType || "comprehensive",
-  insurancePurchaseDate: inst.insurancePurchaseDate || null,
-  insuranceTerm: inst.insuranceTerm || "1_year",
-
-  // ❌ DO NOT send insuranceExpiry anymore if backend calculates
-              insuranceId: inst.insurancePolicyId || "",
-                nextMaintenanceDate: inst.nextMaintenanceDate || null, // ✅ ADD
-              purchaseCost: inst.purchaseCost
-                ? {
-                    amount: Number(inst.purchaseCost),
-                    currency: inst.currency || "INR",
-                  }
-                : null,
-
-              costs: {
-                maintenanceCost: Number(inst.maintenanceCost) || 0,
-                warrantyRenewalCost: Number(inst.warrantyRenewalCost) || 0,
-                insuranceCost: Number(inst.insuranceCost) || 0,
-              },
-            },
-          };
-        });
-
-        await createAssetInstances({
-          assetId,
-          instances: payload,
-        });
-        console.log("Created instances:", payload);
-
-        alert("Instances created successfully");
-        fetchData();
-        navigate("/inventory")
-      } catch (err) {
-        console.error(err);
-        alert("Error creating instances");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    return (
-      <div className="instance-form-page">
-        <h2>Create Instances</h2>
-
-        {/* PROGRESS */}
-        <div className="progress-container">
-          <div className="progress-top">
-            <span>
-              {created} / {total}
-            </span>
+          {/* PROGRESS */}
+          <div className="progress-container">
+            <div className="progress-top">
+              <span>
+                {created} / {total}
+              </span>
+            </div>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${progress}%` }} />
+            </div>
           </div>
-          <div className="progress-bar">
-            <div className="progress-fill" style={{ width: `${progress}%` }} />
-          </div>
-        </div>
 
-        {/* ASSET INFO */}
-        {asset && (
-          <div className="asset-info">
-            <h3>
-              {asset.assetName}{" "}
-              <span className="type-badge">{asset.assetType.toUpperCase()}</span>
-            </h3>
-            <p>{asset.assetCode}</p>
-          </div>
-        )}
-<div className="import-section">
-  <input
-    type="file"
-    accept=".xlsx, .xls"
-    onChange={handleFileUpload}
-  />
+          {/* ASSET INFO */}
+          {asset && (
+            <div className="asset-info">
+              <h3>
+                {asset.assetName}{" "}
+                <span className="type-badge">{asset.assetType.toUpperCase()}</span>
+              </h3>
+              <p>{asset.assetCode}</p>
+            </div>
+          )}
+  <div className="import-section">
+    <input
+      type="file"
+      accept=".xlsx, .xls"
+      onChange={handleFileUpload}
+    />
 
-  <button onClick={handleImport}>
-    Import Excel
-  </button>
+    <button onClick={handleImport}>
+      Import Excel
+    </button>
 
-  <div style={{ marginTop: "10px" }}>
-    {isHardware && (
-      <button onClick={() => downloadTemplate("hardware")}>
-        Download Hardware Template
-      </button>
-    )}
+    <div style={{ marginTop: "10px" }}>
+      {isHardware && (
+        <button onClick={() => downloadTemplate("hardware")}>
+          Download Hardware Template
+        </button>
+      )}
 
-    {isSoftware && (
-      <button onClick={() => downloadTemplate("software")}>
-        Download Software Template
-      </button>
-    )}
+      {isSoftware && (
+        <button onClick={() => downloadTemplate("software")}>
+          Download Software Template
+        </button>
+      )}
+    </div>
   </div>
-</div>
-        {/* BULK APPLY */}
-        <div className="bulk-panel">
-          <h4>Bulk Apply</h4>
+          {/* BULK APPLY */}
+          <div className="bulk-panel">
+            <h4>Bulk Apply</h4>
 
-          <div className="bulk-grid">
-            <div className="form-group">
-              <label>Location</label>
-            <input
-              value={bulkValues.location}
-              onChange={(e) =>
-                setBulkValues({
-                  ...bulkValues,
-                  location: e.target.value,
-                })
-              }
-            />
-            </div>
-            <div className="form-group">
-              <label>Condition</label>
-            <select
-              value={bulkValues.condition}
-              onChange={(e) =>
-                setBulkValues({
-                  ...bulkValues,
-                  condition: e.target.value,
-                })
-              }
-            >
-              <option value="">Condition</option>
-              <option value="new">New</option>
-              <option value="used">Used</option>
-              <option value="damaged">Damaged</option>
-            </select>
-            </div>
-
-            <div className="form-group">
-              <label>Purchase Cost</label>
-            <input
-              type="number"
-              placeholder="Purchase Cost"
-              value={bulkValues.purchaseCost}
-              onChange={(e) =>
-                setBulkValues({
-                  ...bulkValues,
-                  purchaseCost: e.target.value,
-                })
-              }
-            />
-            </div>
-
-          
-            <div className="form-group">
-              <label>Specification</label>
-            <input
-              placeholder={fieldLabels.specifications}
-              value={bulkValues.specifications}
-              onChange={(e) =>
-                setBulkValues({
-                  ...bulkValues,
-                  specifications: e.target.value,
-                })
-              }
-            />
-            </div>
+            <div className="bulk-grid">
               <div className="form-group">
-                <label>Currency</label>
-            <select
-              value={bulkValues.currency}
-              onChange={(e) =>
-                setBulkValues({
-                  ...bulkValues,
-                  currency: e.target.value,
-                })
-              }
-            >
-              {currencyOptions.map((cur) => (
-                <option key={cur} value={cur}>
-                  {cur}
-                </option>
-              ))}
-            </select>
-            </div>
-
-            {isHardware && (
-              <>
+                <label>Location</label>
+              <input
+                value={bulkValues.location}
+                onChange={(e) =>
+                  setBulkValues({
+                    ...bulkValues,
+                    location: e.target.value,
+                  })
+                }
+              />
+              </div>
               <div className="form-group">
-    <label>Purchase Date</label>
+                <label>Condition</label>
+              <select
+                value={bulkValues.condition}
+                onChange={(e) =>
+                  setBulkValues({
+                    ...bulkValues,
+                    condition: e.target.value,
+                  })
+                }
+              >
+                <option value="">Condition</option>
+                <option value="new">New</option>
+                <option value="used">Used</option>
+                <option value="damaged">Damaged</option>
+              </select>
+              </div>
+              <div className="form-group">
+    <label>Device Name</label>
     <input
-      type="date"
-      value={bulkValues.purchaseDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
+      value={bulkValues.deviceName}
       onChange={(e) =>
         setBulkValues({
           ...bulkValues,
-          purchaseDate: e.target.value,
+          deviceName: e.target.value,
         })
       }
     />
   </div>
-  <div className="form-group">
-    <label>Next Maintenance Date</label>
-    <input
-      type="date"
-      value={bulkValues.nextMaintenanceDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
-      onChange={(e) =>
-        setBulkValues({
-          ...bulkValues,
-          nextMaintenanceDate: e.target.value,
-        })
-      }
-    />
-  </div>
-                              <div className="form-group">
-    <label>Warranty Purchase Date</label>
-    <input
-      type="date"
-      value={bulkValues.warrantyPurchaseDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
-      onChange={(e) =>
-        setBulkValues({
-          ...bulkValues,
-          warrantyPurchaseDate: e.target.value,
-        })
-      }
-    />
-  </div>
-              
-          <div className="form-group">
-                <label>Warranty Expiry Date</label>
-                <input
-                  type="date"
-                  value={bulkValues.warrantyDate}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      warrantyDate: e.target.value,
-                    })
-                  }
-                />
-                </div>
-                              <div className="form-group">
-                <label>Installation Date</label>
-                <input
-                  type="date"
-                  value={bulkValues.installationDate}
-                  min={asset?.assetDOP || undefined}
-                  max={asset?.assetDOE || undefined}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      installationDate: e.target.value,
-                    })
-                  }
-                />
-                </div>
+
+              <div className="form-group">
+                <label>Purchase Cost</label>
+              <input
+                type="number"
+                placeholder="Purchase Cost"
+                value={bulkValues.purchaseCost}
+                onChange={(e) =>
+                  setBulkValues({
+                    ...bulkValues,
+                    purchaseCost: e.target.value,
+                  })
+                }
+              />
+              </div>
+
+            
+              <div className="form-group">
+                <label>Specification</label>
+              <input
+                placeholder={fieldLabels.specifications}
+                value={bulkValues.specifications}
+                onChange={(e) =>
+                  setBulkValues({
+                    ...bulkValues,
+                    specifications: e.target.value,
+                  })
+                }
+              />
+              </div>
                 <div className="form-group">
-  <label>Has Insurance</label>
-  <select
-    value={bulkValues.hasInsurance}
-    onChange={(e) =>
-      setBulkValues({
-        ...bulkValues,
-        hasInsurance: e.target.value === "true",
-      })
-    }
-  >
-    <option value="false">No</option>
-    <option value="true">Yes</option>
-  </select>
-</div>
-{bulkValues.hasInsurance && (
-  <>
+                  <label>Currency</label>
+              <select
+                value={bulkValues.currency}
+                onChange={(e) =>
+                  setBulkValues({
+                    ...bulkValues,
+                    currency: e.target.value,
+                  })
+                }
+              >
+                {currencyOptions.map((cur) => (
+                  <option key={cur} value={cur}>
+                    {cur}
+                  </option>
+                ))}
+              </select>
+              </div>
+
+              {isHardware && (
+                <>
+                <div className="form-group">
+      <label>Purchase Date</label>
+      <input
+        type="date"
+        value={bulkValues.purchaseDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          setBulkValues({
+            ...bulkValues,
+            purchaseDate: e.target.value,
+          })
+        }
+      />
+    </div>
+    <div className="form-group">
+      <label>Next Maintenance Date</label>
+      <input
+        type="date"
+        value={bulkValues.nextMaintenanceDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          setBulkValues({
+            ...bulkValues,
+            nextMaintenanceDate: e.target.value,
+          })
+        }
+      />
+    </div>
                                 <div className="form-group">
-                                <label>Insurance Policy ID</label>
-                <input
-                  placeholder="Insurance Policy"
-                  value={bulkValues.insurancePolicyId}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      insurancePolicyId: e.target.value,
-                    })
-                  }
-                />
-                </div>
-                <div className="form-group">
-                                          <label>Coverage Type</label>
-  <Select
-    isMulti
-    className="react-select-container"
-    classNamePrefix="react-select"
-    options={coverageOptions}
-    value={coverageOptions.filter(opt =>
-      (bulkValues.coverageType || []).includes(opt.value)
-    )}
-  onChange={(selected, actionMeta) => {
-    let values = selected ? selected.map(s => s.value) : [];
-
-    const lastSelected = actionMeta?.option?.value;
-
-    if (lastSelected === "none") {
-      values = ["none"];
-    } else {
-      values = values.filter(v => v !== "none");
-    }
-
-    setBulkValues({
-      ...bulkValues,
-      coverageType: values,
-    });
-  }}
-  />
-  </div>
-                <div className="form-group">
-    <label>Insurance Purchase Date</label>
-    <input
-      type="date"
-      value={bulkValues.insurancePurchaseDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
-      onChange={(e) =>
-        setBulkValues({
-          ...bulkValues,
-          insurancePurchaseDate: e.target.value,
-        })
-      }
-    />
-  </div>
-  <div className="form-group">
-    <label>Insurance Term</label>
-    <select
-      value={bulkValues.insuranceTerm}
-      onChange={(e) =>
-        setBulkValues({
-          ...bulkValues,
-          insuranceTerm: e.target.value,
-        })
-      }
-    >
-      <option value="6_months">6 Months</option>
-      <option value="1_year">1 Year</option>
-      <option value="3_years">3 Years</option>
-    </select>
-  </div>
-                  <div className="form-group">
-                <label>Insurance Cost</label>
-                <input
-                  type="number"
-                  placeholder="Insurance Cost"
-                  value={bulkValues.insuranceCost}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      insuranceCost: e.target.value,
-                    })
-                  }
-                />
-                </div>
-  </>)}
-                              {/* <div className="form-group">
-                <label>Insurance Expiry</label>
-                <input
-                  type="date"
-                  value={bulkValues.insuranceExpiry}
-                  max={asset?.assetDOE || undefined}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      insuranceExpiry: e.target.value,
-                    })
-                  }
-                />
-                </div> */}
-                <div className="form-group">
-                  <label>Maintenance Cost</label>
-                <input
-                  type="number"
-                  placeholder="Maintenance Cost"
-                  value={bulkValues.maintenanceCost}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      maintenanceCost: e.target.value,
-                    })
-                  }
-                />
-                </div>
-                <div className="form-group">
-                  <label>Warranty Renewal Cost</label>
-                <input
-                  type="number"
-                  placeholder="Warranty Renewal"
-                  value={bulkValues.warrantyRenewalCost}
-                  max={asset?.assetDOE || undefined}
-                  onChange={(e) =>
-                    setBulkValues({
-                      ...bulkValues,
-                      warrantyRenewalCost: e.target.value,
-                    })
-                  }
-                />
-                </div>
-
-              </>
-            )}
-            {isSoftware && (
-              <>
-                {/* <div className="form-group">
-        <label>License Key</label>
-        <input
-          value={bulkValues.licenseKey}
-          onChange={(e) =>
-            setBulkValues({ ...bulkValues, licenseKey: e.target.value })
-          }
-        />
-      </div> */}
-
-                <div className="form-group">
-                  <label>License Number</label>
-                  <input
-                    value={bulkValues.licenseNumber}
-                    onChange={(e) =>
-                      setBulkValues({
-                        ...bulkValues,
-                        licenseNumber: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Purchase Date</label>
+      <label>Warranty Purchase Date</label>
+      <input
+        type="date"
+        value={bulkValues.warrantyPurchaseDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          setBulkValues({
+            ...bulkValues,
+            warrantyPurchaseDate: e.target.value,
+          })
+        }
+      />
+    </div>
+                
+            <div className="form-group">
+                  <label>Warranty Expiry Date</label>
                   <input
                     type="date"
-                    value={bulkValues.purchaseDate}
-                    min={asset?.assetDOP || undefined}
-                    max={asset?.assetDOE || undefined}
+                    value={bulkValues.warrantyDate}
                     onChange={(e) =>
                       setBulkValues({
                         ...bulkValues,
-                        purchaseDate: e.target.value,
+                        warrantyDate: e.target.value,
                       })
                     }
                   />
-                </div>
-
-                <div className="form-group">
+                  </div>
+                                <div className="form-group">
                   <label>Installation Date</label>
                   <input
                     type="date"
                     value={bulkValues.installationDate}
+                    min={asset?.assetDOP || undefined}
                     max={asset?.assetDOE || undefined}
                     onChange={(e) =>
                       setBulkValues({
@@ -971,506 +754,722 @@ const handleImport = async () => {
                       })
                     }
                   />
-                </div>
-
-                <div className="form-group">
-                  <label>Renewal Date</label>
+                  </div>
+                  <div className="form-group">
+    <label>Has Insurance</label>
+    <select
+      value={bulkValues.hasInsurance}
+      onChange={(e) =>
+        setBulkValues({
+          ...bulkValues,
+          hasInsurance: e.target.value === "true",
+        })
+      }
+    >
+      <option value="false">No</option>
+      <option value="true">Yes</option>
+    </select>
+  </div>
+  {bulkValues.hasInsurance && (
+    <>
+                                  <div className="form-group">
+                                  <label>Insurance Policy ID</label>
                   <input
-                    type="date"
-                    value={bulkValues.renewalDate}
-                    max={asset?.assetDOE || undefined}
+                    placeholder="Insurance Policy"
+                    value={bulkValues.insurancePolicyId}
                     onChange={(e) =>
                       setBulkValues({
                         ...bulkValues,
-                        renewalDate: e.target.value,
+                        insurancePolicyId: e.target.value,
                       })
                     }
                   />
-                </div>
+                  </div>
+                  <div className="form-group">
+                                            <label>Coverage Type</label>
+    <Select
+      isMulti
+      className="react-select-container"
+      classNamePrefix="react-select"
+      options={coverageOptions}
+      value={coverageOptions.filter(opt =>
+        (bulkValues.coverageType || []).includes(opt.value)
+      )}
+    onChange={(selected, actionMeta) => {
+      let values = selected ? selected.map(s => s.value) : [];
 
-                <div className="form-group">
-                  <label>Last Used Date</label>
-                  <input
-                    type="date"
-                    value={bulkValues.lastUsedDate}
-                    max={asset?.assetDOE || undefined}
-                    onChange={(e) =>
-                      setBulkValues({
-                        ...bulkValues,
-                        lastUsedDate: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+      const lastSelected = actionMeta?.option?.value;
 
-                <div className="form-group">
-                  <label>Renewal Cost</label>
+      if (lastSelected === "none") {
+        values = ["none"];
+      } else {
+        values = values.filter(v => v !== "none");
+      }
+
+      setBulkValues({
+        ...bulkValues,
+        coverageType: values,
+      });
+    }}
+    />
+    </div>
+                  <div className="form-group">
+      <label>Insurance Purchase Date</label>
+      <input
+        type="date"
+        value={bulkValues.insurancePurchaseDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          setBulkValues({
+            ...bulkValues,
+            insurancePurchaseDate: e.target.value,
+          })
+        }
+      />
+    </div>
+    <div className="form-group">
+      <label>Insurance Term</label>
+      <select
+        value={bulkValues.insuranceTerm}
+        onChange={(e) =>
+          setBulkValues({
+            ...bulkValues,
+            insuranceTerm: e.target.value,
+          })
+        }
+      >
+        <option value="6_months">6 Months</option>
+        <option value="1_year">1 Year</option>
+        <option value="3_years">3 Years</option>
+      </select>
+    </div>
+                    <div className="form-group">
+                  <label>Insurance Cost</label>
                   <input
                     type="number"
-                    value={bulkValues.renewalCost}
+                    placeholder="Insurance Cost"
+                    value={bulkValues.insuranceCost}
                     onChange={(e) =>
                       setBulkValues({
                         ...bulkValues,
-                        renewalCost: e.target.value,
+                        insuranceCost: e.target.value,
                       })
                     }
                   />
-                </div>
-              </>
-            )}
-            <button onClick={applyBulkValues}>Apply to All</button>
-          </div>
-        </div>
-
-        {/* TABLE */}
-        <div className="instance-table">
-          <div className="table-header">
-            <span>Serial</span>
-            <span>Condition</span>
-            <span>Location</span>
-            <span>{fieldLabels.modelNo}</span>
-            <span>Expand</span>
-          </div>
-
-          {instances.map((inst, index) => (
-            <div key={index}>
-              <h2 style={{ color: "#2563eb", fontSize: "12px", padding: "5px" }}>
-                {" "}
-                Instance {index + 1}{" "}
-              </h2>
-              <div className="table-row">
-                <input
-                  value={inst.serialNumber}
-                  placeholder="Serial"
-                  onChange={(e) =>
-                    handleChange(index, "serialNumber", e.target.value)
-                  }
-                />
-
-                <select
-                  value={inst.condition}
-                  onChange={(e) =>
-                    handleChange(index, "condition", e.target.value)
-                  }
-                >
-                  <option value="new">New</option>
-                  <option value="used">Used</option>
-                  <option value="damaged">Damaged</option>
-                </select>
-
-                <div className="input-group">
+                  </div>
+    </>)}
+                                {/* <div className="form-group">
+                  <label>Insurance Expiry</label>
                   <input
-                    type="text"
-                    placeholder="Enter location"
-                    value={inst.location}
+                    type="date"
+                    value={bulkValues.insuranceExpiry}
+                    max={asset?.assetDOE || undefined}
                     onChange={(e) =>
-                      handleChange(index, "location", e.target.value)
+                      setBulkValues({
+                        ...bulkValues,
+                        insuranceExpiry: e.target.value,
+                      })
                     }
                   />
-
-                  {errors[index]?.location && (
-                    <span className="error">{errors[index].location}</span>
-                  )}
-                </div>
-
-                <input
-                  placeholder={fieldLabels.modelNo}
-                  value={isSoftware ? inst.licenseKey : inst.modelNo}
-                  onChange={(e) =>
-                    handleChange(
-                      index,
-                      isSoftware ? "licenseKey" : "modelNo",
-                      e.target.value,
-                    )
-                  }
-                />
-
-                <button onClick={() => toggleExpand(index)}>
-                  {expandedRow === index ? "−" : "+"}
-                </button>
-              </div>
-
-              {expandedRow === index && (
-                <div className="expand-panel">
-                  <div>
-                    <label>Specifications</label>
-                  <textarea
-                    placeholder={fieldLabels.specifications}
-                    value={inst.specifications}
+                  </div> */}
+                  <div className="form-group">
+                    <label>Maintenance Cost</label>
+                  <input
+                    type="number"
+                    placeholder="Maintenance Cost"
+                    value={bulkValues.maintenanceCost}
                     onChange={(e) =>
-                      handleChange(index, "specifications", e.target.value)
+                      setBulkValues({
+                        ...bulkValues,
+                        maintenanceCost: e.target.value,
+                      })
+                    }
+                  />
+                  </div>
+                  <div className="form-group">
+                    <label>Warranty Renewal Cost</label>
+                  <input
+                    type="number"
+                    placeholder="Warranty Renewal"
+                    value={bulkValues.warrantyRenewalCost}
+                    max={asset?.assetDOE || undefined}
+                    onChange={(e) =>
+                      setBulkValues({
+                        ...bulkValues,
+                        warrantyRenewalCost: e.target.value,
+                      })
                     }
                   />
                   </div>
 
-                  {isHardware && (
-                    <>
-                      <div className="grid-3">
-                        <div>
-    <label>Purchase Date</label>
-    <input
-      type="date"
-      value={inst.purchaseDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
-      onChange={(e) =>
-        handleChange(index, "purchaseDate", e.target.value)
-      }
-    />
-  </div>
-  <div>
-    <label>Next Maintenance Date</label>
-    <input
-      type="date"
-      value={inst.nextMaintenanceDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
-      onChange={(e) =>
-        handleChange(index, "nextMaintenanceDate", e.target.value)
-      }
-    />
-  </div>
-                        <div>
-    <label>Warranty Purchase Date</label>
-    <input
-      type="date"
-      value={inst.warrantyPurchaseDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
-      onChange={(e) =>
-        handleChange(index, "warrantyPurchaseDate", e.target.value)
-      }
-    />
-  </div>
-                        <div>
-                          <label>Warranty Expiry Date</label>
-                          <input
-                            type="date"
-                            value={inst.warrantyDate}
-                            onChange={(e) =>
-                              handleChange(index, "warrantyDate", e.target.value)
-                            }
-                          />
-                          {errors[index]?.warrantyDate && (
-                            <span className="error">
-                              {errors[index].warrantyDate}
-                            </span>
-                          )}
-                        </div>
-                        <div>
-                          <label>Purchase Cost</label>
-                        <input
-                          type="number"
-                          value={inst.purchaseCost}
-                          onChange={(e) =>
-                            handleChange(index, "purchaseCost", e.target.value)
-                          }
-                        />
-                        {errors[index]?.purchaseCost && (
-                          <span className="error">
-                            {errors[index].purchaseCost}
-                          </span>
-                        )}
-                        </div>
-                        <div>
-                          <label>Currency</label>
-                        <select
-                          value={inst.currency}
-                          onChange={(e) =>
-                            handleChange(index, "currency", e.target.value)
-                          }
-                        >
-                          {currencyOptions.map((cur) => (
-                            <option key={cur} value={cur}>
-                              {cur}
-                            </option>
-                          ))}
-                        </select>
-                        </div>
-                        <div>
-                          <label>Installation Date</label>
+                </>
+              )}
+              {isSoftware && (
+                <>
+                  {/* <div className="form-group">
+          <label>License Key</label>
+          <input
+            value={bulkValues.licenseKey}
+            onChange={(e) =>
+              setBulkValues({ ...bulkValues, licenseKey: e.target.value })
+            }
+          />
+        </div> */}
 
-                          <input
-                            type="date"
-                            value={inst.installationDate}
-                            onChange={(e) =>
-                              handleChange(
-                                index,
-                                "installationDate",
-                                e.target.value,
-                              )
-                            }
-                          />
-                        </div>
-                        <div>
-  <label>Has Insurance</label>
-  <select
-    value={inst.hasInsurance}
+                  <div className="form-group">
+                    <label>License Number</label>
+                    <input
+                      value={bulkValues.licenseNumber}
+                      onChange={(e) =>
+                        setBulkValues({
+                          ...bulkValues,
+                          licenseNumber: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Purchase Date</label>
+                    <input
+                      type="date"
+                      value={bulkValues.purchaseDate}
+                      min={asset?.assetDOP || undefined}
+                      max={asset?.assetDOE || undefined}
+                      onChange={(e) =>
+                        setBulkValues({
+                          ...bulkValues,
+                          purchaseDate: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Installation Date</label>
+                    <input
+                      type="date"
+                      value={bulkValues.installationDate}
+                      max={asset?.assetDOE || undefined}
+                      onChange={(e) =>
+                        setBulkValues({
+                          ...bulkValues,
+                          installationDate: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Renewal Date</label>
+                    <input
+                      type="date"
+                      value={bulkValues.renewalDate}
+                      max={asset?.assetDOE || undefined}
+                      onChange={(e) =>
+                        setBulkValues({
+                          ...bulkValues,
+                          renewalDate: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Last Used Date</label>
+                    <input
+                      type="date"
+                      value={bulkValues.lastUsedDate}
+                      max={asset?.assetDOE || undefined}
+                      onChange={(e) =>
+                        setBulkValues({
+                          ...bulkValues,
+                          lastUsedDate: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Renewal Cost</label>
+                    <input
+                      type="number"
+                      value={bulkValues.renewalCost}
+                      onChange={(e) =>
+                        setBulkValues({
+                          ...bulkValues,
+                          renewalCost: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </>
+              )}
+              <button onClick={applyBulkValues}>Apply to All</button>
+            </div>
+          </div>
+
+          {/* TABLE */}
+          <div className="instance-table">
+            <div className="table-header">
+              {isHardware && <span>Serial</span>}
+              <span>Device Name</span>
+              <span>Condition</span>
+              <span>Location</span>
+              <span>{fieldLabels.modelNo}</span>
+              <span>Expand</span>
+            </div>
+
+            {instances.map((inst, index) => (
+              <div key={index}>
+                <h2 style={{ color: "#2563eb", fontSize: "12px", padding: "5px" }}>
+                  {" "}
+                  Instance {index + 1}{" "}
+                </h2>
+                <div className="table-row">
+<div className="input-group">
+  <input
+    value={inst.deviceName || ""}
+    placeholder="Device Name"
     onChange={(e) =>
-      handleChange(index, "hasInsurance", e.target.value === "true")
+      handleChange(index, "deviceName", e.target.value)
     }
-  >
-    <option value="false">No</option>
-    <option value="true">Yes</option>
-  </select>
-</div>
-{inst.hasInsurance && (
-  <>
-                            <div>
-                              <label>Insurance Id</label>
-                        <input
-                          value={inst.insurancePolicyId}
-                          onChange={(e) =>
-                            handleChange(
-                              index,
-                              "insurancePolicyId",
-                              e.target.value,
-                            )
-                          }
-                        />
-                            </div>
-                            <div>
-                              <label>Coverage Type</label>
-  <Select
-    isMulti
-    className="react-select-container"
-    classNamePrefix="react-select"
-    options={coverageOptions}
-    value={coverageOptions.filter(opt =>
-      inst.coverageType?.includes(opt.value)
-    )}
-  onChange={(selected, actionMeta) => {
-    let values = selected ? selected.map(s => s.value) : [];
-
-    const lastSelected = actionMeta?.option?.value;
-
-    if (lastSelected === "none") {
-      // If user clicked "None" → override everything
-      values = ["none"];
-    } else {
-      // If user selected anything else → remove "none"
-      values = values.filter(v => v !== "none");
-    }
-
-    handleChange(index, "coverageType", values);
-  }}
   />
   </div>
-                            <div>
-    <label>Insurance Purchase Date</label>
-    <input
-      type="date"
-      value={inst.insurancePurchaseDate}
-      min={asset?.assetPurchaseDate || undefined}
-      max={asset?.assetDOE || undefined}
-      onChange={(e) =>
-        handleChange(index, "insurancePurchaseDate", e.target.value)
-      }
-    />
-  </div>
-  <div>
-    <label>Insurance Term</label>
-    <select
-      value={inst.insuranceTerm}
-      onChange={(e) =>
-        handleChange(index, "insuranceTerm", e.target.value)
-      }
-    >
-      <option value="6_months">6 Months</option>
-      <option value="1_year">1 Year</option>
-      <option value="3_years">3 Years</option>
-    </select>
-  </div>
-                        <div>
-                          <label>Insurance Expiry</label>
-                          <input
-                            type="date"
-                            value={inst.insuranceExpiry}
-                            onChange={(e) =>
-                              handleChange(
-                                index,
-                                "insuranceExpiry",
-                                e.target.value,
-                              )
-                            }
-                          />
-                        </div>
-                                                  <div>
-                            <label>Insurance Cost</label>
+  <div className="input-group">
+                  <select
+                    value={inst.condition}
+                    onChange={(e) =>
+                      handleChange(index, "condition", e.target.value)
+                    }
+                  >
+                    <option value="new">New</option>
+                    <option value="used">Used</option>
+                    <option value="damaged">Damaged</option>
+                  </select>
+</div>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      placeholder="Enter location"
+                      value={inst.location}
+                      onChange={(e) =>
+                        handleChange(index, "location", e.target.value)
+                      }
+                    />
+
+                    {errors[index]?.location && (
+                      <span className="error">{errors[index].location}</span>
+                    )}
+                  </div>
+
+                  <input
+                    placeholder={fieldLabels.modelNo}
+                    value={isSoftware ? inst.licenseKey : inst.modelNo}
+                    onChange={(e) =>
+                      handleChange(
+                        index,
+                        isSoftware ? "licenseKey" : "modelNo",
+                        e.target.value,
+                      )
+                    }
+                  />
+
+                  <button onClick={() => toggleExpand(index)}>
+                    {expandedRow === index ? "−" : "+"}
+                  </button>
+                </div>
+
+                {expandedRow === index && (
+                  <div className="expand-panel">
+                    <div>
+                      <label>Specifications</label>
+                    <textarea
+                      placeholder={fieldLabels.specifications}
+                      value={inst.specifications}
+                      onChange={(e) =>
+                        handleChange(index, "specifications", e.target.value)
+                      }
+                    />
+                    </div>
+                      <div>
+                        <label>Device Name</label>
                         <input
-                          type="number"
-                          value={inst.insuranceCost}
+                          value={inst.deviceName || ""}
                           onChange={(e) =>
-                            handleChange(index, "insuranceCost", e.target.value)
+                            handleChange(index, "deviceName", e.target.value)
                           }
                         />
+                      </div>
+                    {isHardware && (
+                      <>
+                        <div className="grid-3">
+                          <div>
+      <label>Purchase Date</label>
+      <input
+        type="date"
+        value={inst.purchaseDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          handleChange(index, "purchaseDate", e.target.value)
+        }
+      />
+    </div>
+    <div>
+      <label>Next Maintenance Date</label>
+      <input
+        type="date"
+        value={inst.nextMaintenanceDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          handleChange(index, "nextMaintenanceDate", e.target.value)
+        }
+      />
+    </div>
+                          <div>
+      <label>Warranty Purchase Date</label>
+      <input
+        type="date"
+        value={inst.warrantyPurchaseDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          handleChange(index, "warrantyPurchaseDate", e.target.value)
+        }
+      />
+    </div>
+                          <div>
+                            <label>Warranty Expiry Date</label>
+                            <input
+                              type="date"
+                              value={inst.warrantyDate}
+                              onChange={(e) =>
+                                handleChange(index, "warrantyDate", e.target.value)
+                              }
+                            />
+                            {errors[index]?.warrantyDate && (
+                              <span className="error">
+                                {errors[index].warrantyDate}
+                              </span>
+                            )}
                           </div>
-                        </>
-)}
-
-                      </div>
-
-                      <div className="grid-3">
-                        <div>
-                          <label>Maintenance Cost</label>
-                        <input
-                          type="number"
-                          value={inst.maintenanceCost}
-                          onChange={(e) =>
-                            handleChange(index, "maintenanceCost", e.target.value)
-                          }
-                        />
-                        </div>
-                        <div>
-                          <label>Warranty Renewal Cost</label>
-                        <input
-                          type="number"
-                          value={inst.warrantyRenewalCost}
-                          onChange={(e) =>
-                            handleChange(
-                              index,
-                              "warrantyRenewalCost",
-                              e.target.value,
-                            )
-                          }
-                        />
-                        </div>
-
-                      </div>
-                    </>
-                  )}
-                  {isSoftware && (
-                    <>
-                      <div className="grid-3">
-                        <div>
-                          <label>License Number</label>
-                        <input
-                          placeholder="License Number"
-                          value={inst.licenseNumber || ""}
-                          onChange={(e) =>
-                            handleChange(index, "licenseNumber", e.target.value)
-                          }
-                        />
-                        </div>
-                      </div>
-
-                      <div className="grid-3">
-                        <div>
-                          <label>Purchase Date</label>
-                          <input
-                            type="date"
-                            value={inst.purchaseDate}
-                            min={asset?.assetPurchaseDate || undefined}
-                            max={asset?.assetDOE || undefined}
-                            onChange={(e) =>
-                              handleChange(index, "purchaseDate", e.target.value)
-                            }
-                          />
-                          {errors[index]?.purchaseDate && (
-                            <span className="error">
-                              {errors[index].purchaseDate}
-                            </span>
-                          )}
-                        </div>
-                        <div>
-                          <label>Installation Date</label>
-                          <input
-                            type="date"
-                            value={inst.installationDate}
-                            onChange={(e) =>
-                              handleChange(
-                                index,
-                                "installationDate",
-                                e.target.value,
-                              )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <label>Renewal Date</label>
-                          <input
-                            type="date"
-                            value={inst.renewalDate}
-                            max={asset?.assetDOE || undefined}
-                            min={asset?.assetPurchaseDate || undefined}
-                            onChange={(e) =>
-                              handleChange(index, "renewalDate", e.target.value)
-                            }
-                          />
-                          {errors[index]?.renewalDate && (
-                            <span className="error">
-                              {errors[index].renewalDate}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="grid-3">
-                        <div>
-                          <label>Last Used Date</label>
-                          <input
-                            type="date"
-                            value={inst.lastUsedDate}
-                            onChange={(e) =>
-                              handleChange(index, "lastUsedDate", e.target.value)
-                            }
-                          />
-                        </div>
-
                           <div>
                             <label>Purchase Cost</label>
                           <input
-                          type="number"
-                          placeholder="Purchase Cost"
-                          value={inst.purchaseCost}
-                          onChange={(e) =>
-                            handleChange(index, "purchaseCost", e.target.value)
-                          }
-                        />
-                        </div>
-                        <div>
-                          <label>Currency</label>
-                        <select
-                          className="dropdown-select"
-                          value={inst.currency}
-                          onChange={(e) =>
-                            handleChange(index, "currency", e.target.value)
-                          }
-                        >
-                          {currencyOptions.map((cur) => (
-                            <option key={cur} value={cur}>
-                              {cur}
-                            </option>
-                          ))}
-                        </select>
-                        </div>
-                          <div>
-                            <label>Renewal Cost</label>
-                        <input
-                          type="number"
-                          placeholder="Renewal Cost"
-                          value={inst.renewalCost}
-                          onChange={(e) =>
-                            handleChange(index, "renewalCost", e.target.value)
-                          }
-                        />
+                            type="number"
+                            value={inst.purchaseCost}
+                            onChange={(e) =>
+                              handleChange(index, "purchaseCost", e.target.value)
+                            }
+                          />
+                          {errors[index]?.purchaseCost && (
+                            <span className="error">
+                              {errors[index].purchaseCost}
+                            </span>
+                          )}
                           </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                          <div>
+                            <label>Currency</label>
+                          <select
+                            value={inst.currency}
+                            onChange={(e) =>
+                              handleChange(index, "currency", e.target.value)
+                            }
+                          >
+                            {currencyOptions.map((cur) => (
+                              <option key={cur} value={cur}>
+                                {cur}
+                              </option>
+                            ))}
+                          </select>
+                          </div>
+                          <div>
+                            <label>Installation Date</label>
 
-        <div className="form-actions">
-          <button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Saving..." : "Create Instances"}
-          </button>
-        </div>
-      </div>
-    );
-  };
+                            <input
+                              type="date"
+                              value={inst.installationDate}
+                              onChange={(e) =>
+                                handleChange(
+                                  index,
+                                  "installationDate",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div>
+    <label>Has Insurance</label>
+    <select
+      value={inst.hasInsurance}
+      onChange={(e) =>
+        handleChange(index, "hasInsurance", e.target.value === "true")
+      }
+    >
+      <option value="false">No</option>
+      <option value="true">Yes</option>
+    </select>
+  </div>
+  {inst.hasInsurance && (
+    <>
+                              <div>
+                                <label>Insurance Id</label>
+                          <input
+                            value={inst.insurancePolicyId}
+                            onChange={(e) =>
+                              handleChange(
+                                index,
+                                "insurancePolicyId",
+                                e.target.value,
+                              )
+                            }
+                          />
+                              </div>
+                              <div>
+                                <label>Coverage Type</label>
+    <Select
+      isMulti
+      className="react-select-container"
+      classNamePrefix="react-select"
+      options={coverageOptions}
+      value={coverageOptions.filter(opt =>
+        inst.coverageType?.includes(opt.value)
+      )}
+    onChange={(selected, actionMeta) => {
+      let values = selected ? selected.map(s => s.value) : [];
 
-  export default CreateInstances;
+      const lastSelected = actionMeta?.option?.value;
+
+      if (lastSelected === "none") {
+        // If user clicked "None" → override everything
+        values = ["none"];
+      } else {
+        // If user selected anything else → remove "none"
+        values = values.filter(v => v !== "none");
+      }
+
+      handleChange(index, "coverageType", values);
+    }}
+    />
+    </div>
+                              <div>
+      <label>Insurance Purchase Date</label>
+      <input
+        type="date"
+        value={inst.insurancePurchaseDate}
+        min={asset?.assetPurchaseDate || undefined}
+        max={asset?.assetDOE || undefined}
+        onChange={(e) =>
+          handleChange(index, "insurancePurchaseDate", e.target.value)
+        }
+      />
+    </div>
+    <div>
+      <label>Insurance Term</label>
+      <select
+        value={inst.insuranceTerm}
+        onChange={(e) =>
+          handleChange(index, "insuranceTerm", e.target.value)
+        }
+      >
+        <option value="6_months">6 Months</option>
+        <option value="1_year">1 Year</option>
+        <option value="3_years">3 Years</option>
+      </select>
+    </div>
+                          {/* <div>
+                            <label>Insurance Expiry</label>
+                            <input
+                              type="date"
+                              value={inst.insuranceExpiry}
+                              onChange={(e) =>
+                                handleChange(
+                                  index,
+                                  "insuranceExpiry",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div> */}
+                                                    <div>
+                              <label>Insurance Cost</label>
+                          <input
+                            type="number"
+                            value={inst.insuranceCost}
+                            onChange={(e) =>
+                              handleChange(index, "insuranceCost", e.target.value)
+                            }
+                          />
+                            </div>
+                          </>
+  )}
+
+                        </div>
+
+                        <div className="grid-3">
+                          <div>
+                            <label>Maintenance Cost</label>
+                          <input
+                            type="number"
+                            value={inst.maintenanceCost}
+                            onChange={(e) =>
+                              handleChange(index, "maintenanceCost", e.target.value)
+                            }
+                          />
+                          </div>
+                          <div>
+                            <label>Warranty Renewal Cost</label>
+                          <input
+                            type="number"
+                            value={inst.warrantyRenewalCost}
+                            onChange={(e) =>
+                              handleChange(
+                                index,
+                                "warrantyRenewalCost",
+                                e.target.value,
+                              )
+                            }
+                          />
+                          </div>
+
+                        </div>
+                      </>
+                    )}
+                    {isSoftware && (
+                      <>
+                        <div className="grid-3">
+                          <div>
+                            <label>License Number</label>
+                          <input
+                            placeholder="License Number"
+                            value={inst.licenseNumber || ""}
+                            onChange={(e) =>
+                              handleChange(index, "licenseNumber", e.target.value)
+                            }
+                          />
+                          </div>
+                        </div>
+
+                        <div className="grid-3">
+                          <div>
+                            <label>Purchase Date</label>
+                            <input
+                              type="date"
+                              value={inst.purchaseDate}
+                              min={asset?.assetPurchaseDate || undefined}
+                              max={asset?.assetDOE || undefined}
+                              onChange={(e) =>
+                                handleChange(index, "purchaseDate", e.target.value)
+                              }
+                            />
+                            {errors[index]?.purchaseDate && (
+                              <span className="error">
+                                {errors[index].purchaseDate}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <label>Installation Date</label>
+                            <input
+                              type="date"
+                              value={inst.installationDate}
+                              onChange={(e) =>
+                                handleChange(
+                                  index,
+                                  "installationDate",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div>
+                            <label>Renewal Date</label>
+                            <input
+                              type="date"
+                              value={inst.renewalDate}
+                              max={asset?.assetDOE || undefined}
+                              min={asset?.assetPurchaseDate || undefined}
+                              onChange={(e) =>
+                                handleChange(index, "renewalDate", e.target.value)
+                              }
+                            />
+                            {errors[index]?.renewalDate && (
+                              <span className="error">
+                                {errors[index].renewalDate}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="grid-3">
+                          <div>
+                            <label>Last Used Date</label>
+                            <input
+                              type="date"
+                              value={inst.lastUsedDate}
+                              onChange={(e) =>
+                                handleChange(index, "lastUsedDate", e.target.value)
+                              }
+                            />
+                          </div>
+
+                            <div>
+                              <label>Purchase Cost</label>
+                            <input
+                            type="number"
+                            placeholder="Purchase Cost"
+                            value={inst.purchaseCost}
+                            onChange={(e) =>
+                              handleChange(index, "purchaseCost", e.target.value)
+                            }
+                          />
+                          </div>
+                          <div>
+                            <label>Currency</label>
+                          <select
+                            className="dropdown-select"
+                            value={inst.currency}
+                            onChange={(e) =>
+                              handleChange(index, "currency", e.target.value)
+                            }
+                          >
+                            {currencyOptions.map((cur) => (
+                              <option key={cur} value={cur}>
+                                {cur}
+                              </option>
+                            ))}
+                          </select>
+                          </div>
+                            <div>
+                              <label>Renewal Cost</label>
+                          <input
+                            type="number"
+                            placeholder="Renewal Cost"
+                            value={inst.renewalCost}
+                            onChange={(e) =>
+                              handleChange(index, "renewalCost", e.target.value)
+                            }
+                          />
+                            </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="form-actions">
+            <button onClick={handleSubmit} disabled={loading}>
+              {loading ? "Saving..." : "Create Instances"}
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    export default CreateInstances;

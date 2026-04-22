@@ -1040,18 +1040,19 @@ const createAssetInstance = async (req, res, next) => {
     }
 
     /* ================= SERIAL VALIDATION ================= */
-    const serials = instances.map(i => i.serialNumber).filter(Boolean);
+    const serials = instances
+  .filter(i => i.hardware?.serialNumber)
+  .map(i => i.hardware.serialNumber);
 
     if (new Set(serials).size !== serials.length) {
       return res.status(400).json({
         message: "Duplicate serials in request"
       });
     }
-
-    const existingSerials = await AssetInstance.find({
-      organizationId,
-      serialNumber: { $in: serials }
-    });
+const existingSerials = await AssetInstance.find({
+  organizationId,
+  "hardware.serialNumber": { $in: serials }
+});
 
     if (existingSerials.length > 0) {
       return res.status(400).json({
@@ -1080,7 +1081,12 @@ const createAssetInstance = async (req, res, next) => {
         baseAmount: convertToBase(Number(cost) || 0, "INR")
       };
     };
+    const generateSerial = (asset, index) => {
+  const prefix = asset.assetCode || "AST";
+  const unique = Date.now().toString().slice(-5);
 
+  return `${prefix}-SN-${unique}-${index}`;
+};
     /* ================= CREATE INSTANCES ================= */
     const newInstances = instances.map((inst, index) => {
       const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
@@ -1099,13 +1105,15 @@ const createAssetInstance = async (req, res, next) => {
 
           instanceCode,
           deviceName: inst.deviceName || "",
-          serialNumber: inst.serialNumber || undefined,
 
           location: inst.location,
           status: "in_stock",
           condition: inst.condition || "new",
 
           hardware: {
+            serialNumber:
+              inst.hardware?.serialNumber ||
+              generateSerial(asset, index),
             modelNo: inst.hardware?.modelNo || "",
             specifications: inst.hardware?.specifications || "",
 

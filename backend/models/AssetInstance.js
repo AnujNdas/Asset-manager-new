@@ -29,12 +29,12 @@ const assetInstanceSchema = new mongoose.Schema(
   /* 🔹 BASIC UI FIELDS */
   instanceCode: { type: String, required: true },
 
-  deviceName: String, // 👉 Assigned Device Name
+  deviceName: {
+  type: String,
+  trim: true
+},
 
-  serialNumber: {
-    type: String, // 👉 Device Serial Number
-    sparse: true
-  },
+
 
   location: {
     type: String,
@@ -64,6 +64,8 @@ assignedTo: {
   /* 🔹 HARDWARE SECTION (UI BLOCK) */
 hardware: {
   type: new mongoose.Schema({
+        serialNumber: String, 
+
     modelNo: String,
     specifications: String,
     purchaseDate: Date,
