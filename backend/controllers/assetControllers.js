@@ -27,11 +27,22 @@ const QRCode = require("qrcode");
     const parsed = new Date(value);
     return isNaN(parsed.getTime()) ? null : parsed;
   };
-  const buildVendor = (incoming = {}) => ({
-    name: incoming.name?.trim() || null,
-    contact: incoming.contact?.trim() || null,
-    supportEmail: incoming.supportEmail?.trim() || null,
-  });
+const buildVendor = (incoming = {}, existing = {}) => ({
+  name:
+    incoming.name !== undefined
+      ? incoming.name?.trim() || null
+      : existing?.name ?? null,
+
+  contact:
+    incoming.contact !== undefined
+      ? incoming.contact?.trim() || null
+      : existing?.contact ?? null,
+
+  supportEmail:
+    incoming.supportEmail !== undefined
+      ? incoming.supportEmail?.trim() || null
+      : existing?.supportEmail ?? null,
+});
   const buildMaintenance = (incoming = {}) => {
     if (!incoming) return {};
 
@@ -564,15 +575,18 @@ const updateAsset = async (req, res, next) => {
     }
 
     /* ================= PURCHASE DETAILS ================= */
-    const purchaseDetails = {
-      purchaseDate: req.body.purchaseDetails?.purchaseDate
-        ? parseDate(req.body.purchaseDetails.purchaseDate)
-        : existingAsset.purchaseDetails?.purchaseDate,
+const purchaseDetails = {
+  ...existingAsset.purchaseDetails,
 
-      vendor: req.body.purchaseDetails?.vendor
-        ? buildVendor(req.body.purchaseDetails.vendor)
-        : existingAsset.purchaseDetails?.vendor,
-    };
+  purchaseDate: req.body.purchaseDetails?.purchaseDate
+    ? parseDate(req.body.purchaseDetails.purchaseDate)
+    : existingAsset.purchaseDetails?.purchaseDate,
+
+  vendor: buildVendor(
+    req.body.purchaseDetails?.vendor,
+    existingAsset.purchaseDetails?.vendor
+  ),
+};
 
     /* ================= LIFETIME ================= */
     const DOE = req.body.DOE
@@ -589,11 +603,10 @@ const updateAsset = async (req, res, next) => {
       assetName: req.body.assetName ?? existingAsset.assetName,
       assetCode: req.body.assetCode ?? existingAsset.assetCode,
       assetCategory: req.body.assetCategory ?? existingAsset.assetCategory,
+      associateUnit: req.body.associateUnit ?? existingAsset.associateUnit,
       assetQuantity,
       type: req.body.type ?? existingAsset.type,
       purchaseDetails,
-      DOE,
-      assetLifetime: updatedLifetime,
     };
 
     const updatedAsset = await Asset.findByIdAndUpdate(

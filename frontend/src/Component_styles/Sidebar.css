@@ -106,7 +106,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  /* background: #ffffff; */
 
   /* center the wrapper */
   margin: 0 auto;

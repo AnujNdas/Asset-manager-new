@@ -109,9 +109,16 @@ const [instanceForm, setInstanceForm] = useState({});
       assetCategory: editAsset.assetCategory?._id,
       associateUnit: editAsset.associateUnit?._id,
       locationName: editAsset.locationName?._id,
-      assetStatus: editAsset.assetStatus?._id,
       type: editAsset.type,
       assetQuantity: editAsset.assetQuantity,
+      purchaseDetails: {
+        purchaseDate: editAsset.purchaseDetails?.purchaseDate?.split("T")[0] || "",
+        vendor: {
+          name: editAsset.purchaseDetails?.vendor?.name || "",
+          contact: editAsset.purchaseDetails?.vendor?.contact || "",
+          supportEmail: editAsset.purchaseDetails?.vendor?.supportEmail || "",
+        },
+      },
     });
   }
 }, [editAsset]);
@@ -761,7 +768,7 @@ const renderInstance = (inst, assignment) => {
 
       {/* STATUS + TYPE */}
       <div className="grid-2">
-        <div className="input-group">
+        {/* <div className="input-group">
           <label>Status</label>
           <select
             value={editForm.assetStatus}
@@ -778,7 +785,7 @@ const renderInstance = (inst, assignment) => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <div className="input-group">
           <label>Type</label>
@@ -813,6 +820,68 @@ const renderInstance = (inst, assignment) => {
           />
         </div>
       </div>
+      {/* 🔷 VENDOR DETAILS */}
+<div className="grid-2">
+  <div className="input-group">
+    <label>Vendor Name</label>
+    <input
+      value={editForm.purchaseDetails?.vendor?.name || ""}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          purchaseDetails: {
+            ...editForm.purchaseDetails,
+            vendor: {
+              ...editForm.purchaseDetails.vendor,
+              name: e.target.value,
+            },
+          },
+        })
+      }
+    />
+  </div>
+
+  <div className="input-group">
+    <label>Vendor Contact</label>
+    <input
+      value={editForm.purchaseDetails?.vendor?.contact || ""}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          purchaseDetails: {
+            ...editForm.purchaseDetails,
+            vendor: {
+              ...editForm.purchaseDetails.vendor,
+              contact: e.target.value,
+            },
+          },
+        })
+      }
+    />
+  </div>
+</div>
+
+<div className="grid-2">
+  <div className="input-group">
+    <label>Support Email</label>
+    <input
+      type="email"
+      value={editForm.purchaseDetails?.vendor?.supportEmail || ""}
+      onChange={(e) =>
+        setEditForm({
+          ...editForm,
+          purchaseDetails: {
+            ...editForm.purchaseDetails,
+            vendor: {
+              ...editForm.purchaseDetails.vendor,
+              supportEmail: e.target.value,
+            },
+          },
+        })
+      }
+    />
+  </div>
+</div>
 
       {/* ACTIONS */}
       <div className="modal-actions">

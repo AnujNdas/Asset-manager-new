@@ -165,18 +165,13 @@
 
 /* MODAL BOX */
 .asset-view-modal {
-  background: #ffffff;
+  background: #222831;
   padding: 20px;
   border-radius: 16px;
   width: 90%;
   max-width: 800px;
   max-height: 85vh;
   overflow-y: auto;
-}
-
-/* TITLE */
-.asset-view-modal h3 {
-  margin-bottom: 15px;
 }
 
 /* ================= INSTANCES ================= */
@@ -513,8 +508,7 @@
 .asset-view-modal h3 {
   font-size: 1.4rem;
   font-weight: 600;
-  color: #0f172a;
-
+  color: #DFD0B8;
   margin-bottom: 18px;
 }
 .grid-2 {
