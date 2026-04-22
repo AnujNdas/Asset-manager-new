@@ -1546,85 +1546,96 @@ const bulkUploadInstances = async (req, res, next) => {
         /* ---------------- HARDWARE ---------------- */
         if (assetType === "hardware") {
           const purchaseDate = parseDateSafe(inst.hardware?.purchaseDate);
-          const installationDate = parseDateSafe(inst.hardware?.installationDate);
+const installationDate = parseDateSafe(inst.hardware?.installationDate);
 
-          const warrantyPurchaseDate =
-            parseDateSafe(inst.hardware?.warrantyPurchaseDate) ||
-            purchaseDate;
+const warrantyPurchaseDate =
+  parseDateSafe(inst.hardware?.warrantyPurchaseDate) || purchaseDate;
 
-          const warrantyExpiry = parseDateSafe(inst.hardware?.warrantyExpiry);
+const warrantyExpiry = parseDateSafe(inst.hardware?.warrantyExpiry);
 
-          const insurancePurchaseDate = parseDateSafe(
-            inst.hardware?.insurancePurchaseDate
-          );
+// ✅ DEFINE FIRST
+const insurancePurchaseDate = parseDateSafe(
+  inst.hardware?.insurancePurchaseDate
+);
 
-          const insuranceTerm = inst.hardware?.insuranceTerm || "1_year";
+const insuranceTerm = inst.hardware?.insuranceTerm || "1_year";
 
-          validInstances.push({
-            organizationId,
-            assetId,
-            assetTypeRef,
-            assetType,
+// ✅ SINGLE SOURCE OF TRUTH
+const hasInsurance = !!insurancePurchaseDate;
 
-            instanceCode,
+// ✅ SAFE EXPIRY
+const insuranceExpiry = hasInsurance
+  ? calculateInsuranceExpiry(insurancePurchaseDate, insuranceTerm)
+  : null;
 
-            serialNumber: inst.serialNumber?.trim(),
-            deviceName: normalize(inst.deviceName) || "",
+validInstances.push({
+  organizationId,
+  assetId,
+  assetTypeRef,
+  assetType,
 
-            location,
-            condition: inst.condition || "new",
-            status: "in_stock",
+  instanceCode,
 
-            hardware: {
-              modelNo: normalize(inst.hardware?.modelNo) || "",
-              specifications: normalize(inst.hardware?.specifications) || "",
+  serialNumber: inst.serialNumber?.trim(),
+  deviceName: normalize(inst.deviceName) || "",
 
-              purchaseDate,
-              installationDate,
+  location,
+  condition: inst.condition || "new",
+  status: "in_stock",
 
-              warrantyPurchaseDate,
-              warrantyExpiry,
+  hardware: {
+    modelNo: normalize(inst.hardware?.modelNo) || "",
+    specifications: normalize(inst.hardware?.specifications) || "",
 
-              insuranceId: inst.hardware?.insuranceId || "",
+    purchaseDate,
+    installationDate,
 
-              insurancePurchaseDate,
-              insuranceTerm,
+    warrantyPurchaseDate,
+    warrantyExpiry,
 
-              coverageType: Array.isArray(inst.hardware?.coverageType)
-                ? inst.hardware.coverageType
-                : [inst.hardware?.coverageType || "comprehensive"],
+    insuranceId: inst.hardware?.insuranceId || "",
 
-              insuranceExpiry: calculateInsuranceExpiry(
-                insurancePurchaseDate,
-                insuranceTerm
-              ),
+    // ✅ STORE THIS
+    hasInsurance,
 
-              nextMaintenanceDate: parseDateSafe(
-                inst.hardware?.nextMaintenanceDate
-              ),
+    insurancePurchaseDate,
+    insuranceTerm,
+    insuranceExpiry,
 
-              purchaseCost: formatCost(inst.hardware?.purchaseCost),
+    coverageType: Array.isArray(inst.hardware?.coverageType)
+      ? inst.hardware.coverageType
+      : [inst.hardware?.coverageType || "comprehensive"],
 
-              costs: {
-                maintenanceCost:
-                  Number(inst.hardware?.costs?.maintenanceCost) || 0,
-                warrantyRenewalCost:
-                  Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
-                insuranceCost:
-                  Number(inst.hardware?.costs?.insuranceCost) || 0,
-              },
-            },
+    nextMaintenanceDate: parseDateSafe(
+      inst.hardware?.nextMaintenanceDate
+    ),
 
-            lifecycle: [
-              {
-                action: "CREATED",
-                date: new Date(),
-                notes: "Bulk instance upload",
-              },
-            ],
+    purchaseCost: formatCost(inst.hardware?.purchaseCost),
 
-            createdBy: userId,
-          });
+    costs: {
+      maintenanceCost:
+        Number(inst.hardware?.costs?.maintenanceCost) || 0,
+
+      warrantyRenewalCost:
+        Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
+
+      // ✅ CONDITIONAL COST
+      insuranceCost: hasInsurance
+        ? Number(inst.hardware?.costs?.insuranceCost) || 0
+        : 0,
+    },
+  },
+
+  lifecycle: [
+    {
+      action: "CREATED",
+      date: new Date(),
+      notes: "Bulk instance upload",
+    },
+  ],
+
+  createdBy: userId,
+});
         }
 
         /* ---------------- SOFTWARE ---------------- */

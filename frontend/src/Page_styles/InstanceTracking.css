@@ -91,11 +91,12 @@
   padding: 20px;
   border-radius: 10px;
   width: 400px;
-  height: auto;
+  height: 650px;
   margin: auto;
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: relative; 
+  overflow: auto;
 }
 
 .modal-actions {

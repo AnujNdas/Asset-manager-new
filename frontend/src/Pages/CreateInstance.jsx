@@ -71,6 +71,7 @@
   } else {
       data = [
         {
+          deviceName: "Optional",
           location: "New York",
           condition: "new",
           licenseKey: "XXXX-YYYY-ZZZZ",
