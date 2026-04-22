@@ -114,16 +114,20 @@ const [instanceForm, setInstanceForm] = useState({});
     assetCategory: asset.assetCategory?._id || asset.assetCategory,
     associateUnit: asset.associateUnit?._id || asset.associateUnit,
     locationName: asset.locationName?._id || asset.locationName,
-    assetStatus: asset.assetStatus?._id || asset.assetStatus,
     type: asset.type,
 
     assetQuantity: asset.assetQuantity,
 
 
-    purchaseDate: asset.purchaseDetails?.purchaseDate?.slice(0, 10),
+          purchaseDetails: {
+        purchaseDate: editForm.purchaseDate,
+        vendor: {
+          name: editForm.vendorName,
+          contact: editForm.vendorContact,
+          supportEmail: editForm.vendorEmail,
+        },
+      },
 
-    // SOFTWARE ONLY
-    expiryDate: asset.renewal?.expiryDate?.slice(0, 10),
   });
 };
 
@@ -758,6 +762,35 @@ const renderSoftwareInstance = (inst, assignment) => {
       <h3>Edit Asset</h3>
 
       {/* CATEGORY + UNIT */}
+            {/* NAME + QUANTITY */}
+      <div className="grid-2">
+        <div className="input-group">
+          <label>Name</label>
+          <input
+            value={editForm.assetName}
+            onChange={(e) =>
+              setEditForm({ ...editForm, assetName: e.target.value })
+            }
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Quantity</label>
+          <input
+            type="number"
+            value={editForm.assetQuantity}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                assetQuantity: Number(e.target.value),
+              })
+            }
+          />
+          <p className="warning-text">
+            ⚠ Changing quantity will add/remove instances automatically.
+          </p>
+        </div>
+      </div>
       <div className="grid-2">
         <div className="input-group">
           <label>Category</label>
@@ -817,57 +850,10 @@ const renderSoftwareInstance = (inst, assignment) => {
               </option>
             ))}
           </select>
-        </div>
-
-        <div className="input-group">
-          <label>Status</label>
-          <select
-            value={editForm.assetStatus}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                assetStatus: e.target.value,
-              })
-            }
-          >
-            {statuses.map(s => (
-              <option key={s._id} value={s._id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        </div>  
       </div>
 
-      {/* NAME + QUANTITY */}
-      <div className="grid-2">
-        <div className="input-group">
-          <label>Name</label>
-          <input
-            value={editForm.assetName}
-            onChange={(e) =>
-              setEditForm({ ...editForm, assetName: e.target.value })
-            }
-          />
-        </div>
 
-        <div className="input-group">
-          <label>Quantity</label>
-          <input
-            type="number"
-            value={editForm.assetQuantity}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                assetQuantity: Number(e.target.value),
-              })
-            }
-          />
-          <p className="warning-text">
-            ⚠ Changing quantity will add/remove instances automatically.
-          </p>
-        </div>
-      </div>
 
       {/* PURCHASE DATE */}
       <div className="grid-2">
@@ -884,24 +870,46 @@ const renderSoftwareInstance = (inst, assignment) => {
             }
           />
         </div>
+  <div className="input-group">
+    <label>Vendor Name</label>
+    <input
+      type="text"
+      placeholder="e.g. Dell, Microsoft"
+      value={editForm.vendorName || ""}
+      onChange={(e) =>
+        setEditForm({ ...editForm, vendorName: e.target.value })
+      }
+    />
+  </div>
 
-        {/* SOFTWARE ONLY */}
-        {editForm.expiryDate !== undefined && (
-          <div className="input-group">
-            <label>Expiry Date</label>
-            <input
-              type="date"
-              value={editForm.expiryDate || ""}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  expiryDate: e.target.value,
-                })
-              }
-            />
-          </div>
-        )}
-      </div>
+  {/* Contact */}
+  <div className="input-group">
+    <label>Contact Number</label>
+    <input
+      type="text"
+      placeholder="+91 9876543210"
+      value={editForm.vendorContact || ""}
+      onChange={(e) =>
+        setEditForm({ ...editForm, vendorContact: e.target.value })
+      }
+    />
+  </div>
+</div>
+
+<div className="grid-2">
+  {/* Support Email */}
+  <div className="input-group">
+    <label>Support Email</label>
+    <input
+      type="email"
+      placeholder="support@vendor.com"
+      value={editForm.vendorEmail || ""}
+      onChange={(e) =>
+        setEditForm({ ...editForm, vendorEmail: e.target.value })
+      }
+    />
+  </div>
+</div>
 
       {/* INFO */}
       <p className="info-text">

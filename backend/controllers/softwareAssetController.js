@@ -684,14 +684,6 @@ const updateSoftwareAsset = async (req, res) => {
         req.body.purchaseDetails.vendor
       );
     }
-
-    /* ================= RENEWAL METADATA ================= */
-    if (req.body.renewal?.expiryDate) {
-      asset.renewal.expiryDate = parseDate(
-        req.body.renewal.expiryDate
-      );
-    }
-
     if (req.body.renewal?.renewalTerm) {
       asset.renewal.renewalTerm = req.body.renewal.renewalTerm;
     }
@@ -702,9 +694,7 @@ const updateSoftwareAsset = async (req, res) => {
       "assetCategory",
       "associateUnit",
       "locationName",
-      "assetStatus",
       "type",
-      "DOE",
     ];
 
     allowedFields.forEach((field) => {
