@@ -13,6 +13,7 @@ const Asset = require("../models/Asset");
 const AssetAssignment = require("../models/AssetAssignment");
 const SupportTicket = require("../models/SupportTicket");
 const SoftwareAsset = require("../models/SoftwareAsset");
+const AssetInstance = require("../models/AssetInstance");
 const Category = require("../models/Category");
 const Location = require("../models/Location");
 const Status = require("../models/Status");
