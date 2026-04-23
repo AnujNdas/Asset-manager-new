@@ -159,7 +159,7 @@
   overflow-y: auto;
 
   padding: 20px;
-
+  display: block;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 .modal input,
