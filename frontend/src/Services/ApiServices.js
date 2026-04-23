@@ -48,7 +48,7 @@ export const restoreDepartment = async(id) => {
 // ----- LOCATION API CALLS -----
 export const getLocations = async () => {
   const response = await axiosInstance.get("/location");
-  return response.data.data;
+  return response.data;
 };
 
 export const createLocation = async (locationData) => {
