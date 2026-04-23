@@ -41,7 +41,13 @@ const fetchItems = async () => {
     const res = await getAll();
     console.log(`Fetched ${title}:`, res);
 
-    const data = res?.data ?? res;
+    const data = Array.isArray(res)
+  ? res
+  : Array.isArray(res?.data)
+  ? res.data
+  : Array.isArray(res?.data?.data)
+  ? res.data.data
+  : [];
 
     if (!Array.isArray(data)) {
       console.error("Expected array but got:", data);
