@@ -67,6 +67,7 @@ useEffect(() => {
   fetchInstances(value);
 };
 const handleReassign = (instance) => {
+  console.log("Reassign clicked for instance:", instance);
   if (!instance) {
     return Swal.fire("Error", "Invalid instance selected", "error");
   }
@@ -75,6 +76,7 @@ const handleReassign = (instance) => {
   setShowReassign(true);
 };
 const handleUpgrade = (instance) => {
+  console.log("Upgrade clicked for instance:", instance);
   if (!instance) {
     return Swal.fire("Error", "Invalid instance selected", "error");
   }
@@ -83,6 +85,7 @@ const handleUpgrade = (instance) => {
   setShowUpgrade(true);
 };
 const handleHistory = async (instance) => {
+  console.log("History clicked for instance:", instance);
   try {
     const res = await getInstanceHistory(instance._id);
 

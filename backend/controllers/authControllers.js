@@ -14,6 +14,7 @@ const AssetAssignment = require("../models/AssetAssignment");
 const SupportTicket = require("../models/SupportTicket");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const AssetInstance = require("../models/AssetInstance");
+const Employee = require("../models/Employee");
 const Category = require("../models/Category");
 const Location = require("../models/Location");
 const Status = require("../models/Status");
@@ -573,6 +574,7 @@ const resetSystemData = async (req, res) => {
         Asset.deleteMany({ organizationId }, { session }),
         SoftwareAsset.deleteMany({ organizationId }, { session }),
         SupportTicket.deleteMany({ organizationId }, { session }),
+        Employee.deleteMany({ organizationId }, { session }),
       ]);
 
       // 2️⃣ DELETE ALL CLASSIFICATIONS
