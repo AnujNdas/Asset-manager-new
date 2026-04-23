@@ -96,7 +96,7 @@
    CARD ACTIONS
 ========================================================= */
 .card-actions {
-  margin-top: auto;
+  /* margin-top: auto; */
   display: flex;
   gap: 8px;
   align-items: center;

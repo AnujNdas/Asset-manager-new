@@ -71,7 +71,7 @@
 }
 
 .card-header h3 {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
   color: #DFD0B8;
 }
@@ -556,7 +556,7 @@
   margin-top: 20px;
 }
 .instance-card-modern {
-  background: #ffffff;
+  background: #393E46;
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 16px;
@@ -579,11 +579,12 @@
 .instance-title {
   font-size: 16px;
   font-weight: 600;
+  color: #DFD0B8;
 }
 
 .instance-sub {
   font-size: 12px;
-  color: #6b7280;
+  color: #948979;
 }
 
 /* STATUS */
@@ -609,7 +610,7 @@
   justify-content: space-between;
   margin: 12px 0;
   font-size: 13px;
-  color: #374151;
+  color: #DFD0B8;
 }
 
 /* SECTIONS */
@@ -637,7 +638,7 @@
 }
 
 .grid-2 span {
-  color: #6b7280;
+  color: #DFD0B8;
 }
 
 /* ASSIGNMENT */
@@ -655,8 +656,8 @@
   width: 100%;
   padding: 8px;
   border-radius: 10px;
-  background: #2563eb;
-  color: white;
+  background: #948979;
+  color: #222831;
   border: none;
   cursor: pointer;
 }
@@ -693,7 +694,7 @@
 .section-title {
   font-size: 12px;
   font-weight: 600;
-  color: #888;
+  color: #DFD0B8;
   margin-bottom: 6px;
 }
 
@@ -796,6 +797,7 @@
 .financial-card .label {
   font-size: 10px;
   opacity: 0.7;
+  color: #222831;
 }
 
 .financial-card p:last-child {
