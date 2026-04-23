@@ -1597,17 +1597,12 @@ validInstances.push({
     purchaseCost: formatCost(inst.hardware?.purchaseCost),
 
     costs: {
-      maintenanceCost:
-        Number(inst.hardware?.costs?.maintenanceCost) || 0,
-
-      warrantyRenewalCost:
-        Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
-
-      // ✅ CONDITIONAL COST
-      insuranceCost: hasInsurance
-        ? Number(inst.hardware?.costs?.insuranceCost) || 0
-        : 0,
-    },
+  maintenanceCost: formatCost(inst.hardware?.costs?.maintenanceCost),
+  warrantyRenewalCost: formatCost(inst.hardware?.costs?.warrantyRenewalCost),
+  insuranceCost: hasInsurance
+    ? formatCost(inst.hardware?.costs?.insuranceCost)
+    : formatCost(0),
+}
   },
 
   lifecycle: [
@@ -1649,7 +1644,7 @@ validInstances.push({
 
               costs: {
                 renewalCost:
-                  Number(inst.software?.costs?.renewalCost) || 0,
+                  formatCost(inst.software?.costs?.renewalCost) || 0,
               },
             },
 
