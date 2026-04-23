@@ -567,10 +567,11 @@ const resetSystemData = async (req, res) => {
 
       // 1️⃣ DELETE OPERATIONAL DATA
       await Promise.all([
-        Asset.deleteMany({ organizationId }, { session }),
+        AssetInstance.deleteMany({ organizationId }, { session }), // 🔥 first
         AssetAssignment.deleteMany({ organizationId }, { session }),
-        SupportTicket.deleteMany({ organizationId }, { session }),
+        Asset.deleteMany({ organizationId }, { session }),
         SoftwareAsset.deleteMany({ organizationId }, { session }),
+        SupportTicket.deleteMany({ organizationId }, { session }),
       ]);
 
       // 2️⃣ DELETE ALL CLASSIFICATIONS
