@@ -269,7 +269,7 @@ a:hover {
   /* padding: 10px; */
   margin-top: 5px;
   overflow: visible;
-  color: #2563eb;
+  /* color: #2563eb; */
   gap: 0px;
   background: rgba(59, 130, 246, 0.1);
   /* border-radius: 10px; */
@@ -287,7 +287,7 @@ a:hover {
   /* padding: 8px 0; */
   /* font-size: 14px; */
   text-decoration: none;
-  color: inherit;
+  color: #DFD0B8;
 }
 
 /* Arrow */

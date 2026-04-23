@@ -1470,32 +1470,6 @@ const bulkUploadInstances = async (req, res, next) => {
     }
 
     /* --------------------------------------------------
-       🔒 SERIAL VALIDATION (GLOBAL CHECK)
-    -------------------------------------------------- */
-    const serials = parsedInstances
-      .map((i) => i.serialNumber)
-      .filter(Boolean);
-
-    if (new Set(serials).size !== serials.length) {
-      return res.status(400).json({
-        success: false,
-        message: "Duplicate serials in upload",
-      });
-    }
-
-    const existingSerials = await AssetInstance.find({
-      organizationId,
-      serialNumber: { $in: serials },
-    });
-
-    if (existingSerials.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Serial already exists",
-      });
-    }
-
-    /* --------------------------------------------------
        🧠 HELPERS
     -------------------------------------------------- */
     const normalize = (v) => v?.toString().trim();
@@ -1525,9 +1499,20 @@ const bulkUploadInstances = async (req, res, next) => {
     -------------------------------------------------- */
     let validInstances = [];
     let invalidRows = [];
-
+    const generatedSerials = new Set();
     for (const [index, inst] of parsedInstances.entries()) {
       try {
+        let serialNumber = normalize(inst.serialNumber);
+        const generateSerial = () =>
+          `${asset.assetCode}-SN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+                // ✅ AUTO GENERATE SERIAL
+        if (assetType === "hardware" && !serialNumber) {
+          serialNumber = generateSerial();
+        }
+        if (generatedSerials.has(serialNumber)) {
+          throw new Error("Duplicate serial generated");
+        }
+        generatedSerials.add(serialNumber);
         const row = index + 2;
 
         const instanceCode = `${asset.assetCode}-${Date.now()}-${Math.random()
@@ -1538,10 +1523,6 @@ const bulkUploadInstances = async (req, res, next) => {
         if (!inst.location) throw new Error("Location is required");
 
         const location = normalize(inst.location);
-
-        if (assetType === "hardware" && !inst.serialNumber) {
-          throw new Error("Serial number required");
-        }
 
         /* ---------------- HARDWARE ---------------- */
         if (assetType === "hardware") {
@@ -1575,8 +1556,6 @@ validInstances.push({
   assetType,
 
   instanceCode,
-
-  serialNumber: inst.serialNumber?.trim(),
   deviceName: normalize(inst.deviceName) || "",
 
   location,
@@ -1584,6 +1563,7 @@ validInstances.push({
   status: "in_stock",
 
   hardware: {
+    serialNumber,
     modelNo: normalize(inst.hardware?.modelNo) || "",
     specifications: normalize(inst.hardware?.specifications) || "",
 
@@ -1688,7 +1668,17 @@ validInstances.push({
         });
       }
     }
+    const existingSerials = await AssetInstance.find({
+      organizationId,
+      serialNumber: { $in: [...generatedSerials] },
+    });
 
+    if (existingSerials.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Serial already exists in system",
+      });
+    }
     /* --------------------------------------------------
        💾 INSERT
     -------------------------------------------------- */
