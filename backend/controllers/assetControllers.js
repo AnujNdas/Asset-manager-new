@@ -1426,6 +1426,7 @@ const bulkUploadInstances = async (req, res, next) => {
       parsedInstances = Array.isArray(instances)
         ? instances
         : JSON.parse(instances);
+      console.log("📦 Parsed Instances Count:", parsedInstances.length);
     } catch {
       return res.status(400).json({
         success: false,
@@ -1500,8 +1501,10 @@ const bulkUploadInstances = async (req, res, next) => {
     let validInstances = [];
     let invalidRows = [];
     const generatedSerials = new Set();
+    console.log("🚀 Starting instance build...");
     for (const [index, inst] of parsedInstances.entries()) {
       try {
+        console.log(`➡️ Processing row ${index + 2}`, inst);
         let serialNumber = normalize(inst.serialNumber);
         const generateSerial = () =>
           `${asset.assetCode}-SN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
@@ -1513,6 +1516,7 @@ const bulkUploadInstances = async (req, res, next) => {
           throw new Error("Duplicate serial generated");
         }
         generatedSerials.add(serialNumber);
+        console.log(`🔢 Serial generated for row ${index + 2}:`, serialNumber);
         const row = index + 2;
 
         const instanceCode = `${asset.assetCode}-${Date.now()}-${Math.random()
@@ -1548,7 +1552,7 @@ const hasInsurance = !!insurancePurchaseDate;
 const insuranceExpiry = hasInsurance
   ? calculateInsuranceExpiry(insurancePurchaseDate, insuranceTerm)
   : null;
-
+  console.log(`✅ Row ${index + 2} VALID`);
 validInstances.push({
   organizationId,
   assetId,
@@ -1661,17 +1665,23 @@ validInstances.push({
           });
         }
       } catch (err) {
-        invalidRows.push({
-          row: index + 2,
-          reason: err.message,
-          inst,
-        });
-      }
+  console.error(`❌ Row ${index + 2} FAILED:`, err.message);
+
+  invalidRows.push({
+    row: index + 2,
+    reason: err.message,
+    inst,
+  });
+}
     }
+    console.log("📊 Build Summary:");
+    console.log("Valid Instances:", validInstances.length);
+    console.log("Invalid Rows:", invalidRows.length);
     const existingSerials = await AssetInstance.find({
       organizationId,
       serialNumber: { $in: [...generatedSerials] },
     });
+    console.log("🔍 Checking serials in DB:", [...generatedSerials]);
 
     if (existingSerials.length > 0) {
       return res.status(400).json({
@@ -1679,9 +1689,13 @@ validInstances.push({
         message: "Serial already exists in system",
       });
     }
+    console.log("⚠️ Existing serials found:", existingSerials.length);
     /* --------------------------------------------------
        💾 INSERT
+       
+       
     -------------------------------------------------- */
+    console.log("💾 Inserting instances...");
     let inserted = [];
 
     if (validInstances.length) {
@@ -1689,7 +1703,7 @@ validInstances.push({
         ordered: false,
       });
     }
-
+    console.log("✅ Inserted count:", inserted.length);
     /* --------------------------------------------------
        💰 UPDATE PARENT COST
     -------------------------------------------------- */
