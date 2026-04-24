@@ -1,6 +1,6 @@
 .instance-page {
   padding: 20px;
-  background: #222831;
+  /* background: #222831; */
   min-height: 100vh;
   color: #DFD0B8;
 }
@@ -28,7 +28,7 @@
 
 /* ---------------- CARD ---------------- */
 .instance-card {
-  background: #393E46;
+  background: #222831;
   padding: 20px;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.05);
@@ -161,6 +161,7 @@
   padding: 20px;
   display: block;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  position: relative;
 }
 .modal input,
 .modal select {

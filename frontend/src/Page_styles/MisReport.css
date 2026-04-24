@@ -57,6 +57,7 @@ body {
   gap: 12px;
   flex-wrap: wrap;
   max-width: 100%;
+  justify-content: center;
 }
 
 .navs button {
@@ -66,7 +67,7 @@ body {
   background: #fff;
   font-weight: 500;
   font-size: 13px;
-  color: #2463eb;
+  color: #222831;
   cursor: pointer;
   box-shadow: 0 4px 10px #0003;
   transition: all 0.2s ease-in-out;
@@ -79,8 +80,7 @@ body {
 }
 
 .navs button.active-tab {
-  background: #bbd8ff;
-  box-shadow: 0 4px 8px #007bff33;
+  background: #DFD0B8;
   font-weight: 600;
 }
 
@@ -113,7 +113,7 @@ body {
 
 /* ==== Table Wrapper ==== */
 .table-wrapper {
-  background: var(--bg-card);
+  background: #222831;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   width: 100%;
@@ -137,23 +137,19 @@ body {
   white-space: nowrap;
 }
 
-.mis-table thead {
-  background: #f9fafb;
-}
-
 .mis-table th {
-  color: var(--text-muted);
+  color: #948979;
   font-weight: 600;
 }
 
-.mis-table tr:hover td {
-  background: #f8fafc;
+.mis-table tr {
+  color: #DFD0B8;
 }
 
 /* ==== Buttons ==== */
 .misbutton {
-  background: #2563eb;
-  color: #fff;
+  background: #948979;
+  color: #222831;
   border: none;
   padding: 10px 16px;
   border-radius: var(--radius-sm);
@@ -184,7 +180,7 @@ select:focus-visible {
   align-items: center;
   gap: 6px;
 
-  background: #f5f7fb;
+  background: #222831;
   padding: 6px;
   border-radius: 12px;
 
@@ -200,7 +196,7 @@ select:focus-visible {
   border-radius: 10px;
 
   background: transparent;
-  color: #6b7280;
+  color: #DFD0B8;
 
   font-size: 14px;
   font-weight: 500;
@@ -215,13 +211,13 @@ select:focus-visible {
 
 /* Hover */
 .sub-tabs button:hover {
-  color: #111827;
+  color: #948979;
 }
 
 /* ===== ACTIVE TAB ===== */
 .sub-tabs .active-tab {
-  background: white;
-  color: #111827;
+  background: #DFD0B8;
+  color: #222831;
   font-weight: 600;
 
   box-shadow:
@@ -256,13 +252,14 @@ select:focus-visible {
 .mis-filters input {
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: none;
   font-size: 13px;
-  background: white;
+  background: #222831;
+  color: #DFD0B8;
 }
 
 .mis-filters input[type="date"] {
-  color: #64748b;
+  color: #DFD0B8;
 }
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
