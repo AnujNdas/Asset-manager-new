@@ -19,12 +19,7 @@
 .classify_heading2 {
   font-size: 20px;
   font-weight: 500;
-
-  /* Gradient text effect */
-  background: linear-gradient(90deg, #000000ff, #333);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
+  color: #DFD0B8;
   letter-spacing: 0.5px;
   padding: 8px 9px;
 }
@@ -154,8 +149,8 @@
 
 /* Main export button */
 .export-btn {
-  background: #2563eb;
-  color: white;
+  background: #948979;
+  color: #222831;
   padding: 8px 16px;
   border-radius: 6px;
   border: none;

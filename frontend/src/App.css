@@ -221,13 +221,13 @@
 }
 .category_search_input {
   flex: 1;
-  border: 1px solid #a1a1a1;
+  border: none;
   border-radius: 10px;
   outline: none;
   padding: 10px 12px;
   font-size: 14px;
-  color: #111827;
-  background: transparent;
+  color: #DFD0B8;
+  background: #222831;
 }
 
 .category_search_input::placeholder {

@@ -19,13 +19,9 @@
 .classification-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: #222831;
   border-radius: 10px;
   overflow: hidden;
-}
-
-.classification-table thead {
-  background: #f4f6f9;
 }
 
 .classification-table th {
@@ -33,18 +29,15 @@
   padding: 14px 16px;
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: #948979;
 }
 
 .classification-table td {
   padding: 14px 16px;
   font-size: 14px;
-  border-top: 1px solid #eee;
+  color: #DFD0B8;
 }
 
-.classification-table tbody tr:hover {
-  background: #fafafa;
-}
 
 .name-cell {
   font-weight: 500;
@@ -123,8 +116,8 @@
   padding: 0 14px;
   border-radius: 8px;
   border: none;
-  background-color: #2563eb;
-  color: white;
+  background-color: #948979;
+  color: #222831;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
