@@ -5,7 +5,6 @@
   .help-container {
     padding: 14px;
     max-width: 1100px;
-    margin: auto;
     color: #1f2937;
   }
 
@@ -18,11 +17,11 @@
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 6px;
-    color: #000000;
+    color: #DFD0B8;
   }
 
   .help-header p {
-    color: #6b7280;
+    color: #948979;
     font-size: 14px;
   }
 
@@ -38,14 +37,15 @@
   }
 
   .help-nav button {
-    background: none;
+    background: #948979;
     border: none;
     padding: 12px 16px;
     font-size: 14px;
     cursor: pointer;
-    color: #6b7280;
+    color: #222831;
     border-bottom: 2px solid transparent;
     transition: all 0.2s ease;
+    border-radius: 10px;
   }
 
   .help-nav button:hover {
@@ -53,8 +53,9 @@
   }
 
   .help-nav button.active {
-    color: #2563eb;
-    border-bottom-color: #2563eb;
+    color: #222831;
+    background: #DFD0B8;
+    border-radius: 10px;
     font-weight: 500;
   }
 
@@ -71,6 +72,7 @@
     border-radius: 8px;
     margin-bottom: 12px;
     overflow: hidden;
+    background: #222831;
   }
 
   .accordion-title {
@@ -78,7 +80,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 14px 16px;
-    background: #f9fafb;
+    color: #DFD0B8;
+    /* background: #f9fafb; */
     cursor: pointer;
   }
 
@@ -95,8 +98,8 @@
   .accordion-content {
     padding: 14px 16px;
     font-size: 14px;
-    color: #374151;
-    background: #ffffff;
+    color: #948979;
+    /* background: #ffffff; */
     line-height: 1.6;
   }
 
@@ -119,6 +122,7 @@
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 12px;
+    color: #DFD0B8;
   }
 
   .help-form {
@@ -134,8 +138,10 @@
     padding: 10px 12px;
     font-size: 14px;
     border-radius: 6px;
-    border: 1px solid #d1d5db;
+    border: none;
     outline: none;
+    background: #222831;
+    color: #DFD0B8;
   }
 
   .help-form textarea {
@@ -151,8 +157,8 @@
 
   /* Buttons */
   .help-form button {
-    background: #2563eb;
-    color: #ffffff;
+    background: #948979;
+    color: #222831;
     padding: 10px;
     font-size: 14px;
     border: none;
@@ -263,12 +269,12 @@
 
   /* Step text pill */
   .step-text {
-    background: #f3f4f6;
+    background: #948979;
     padding: 8px 14px;
     border-radius: 999px;
     font-size: 14px;
     font-weight: 500;
-    color: #111827;
+    color: #222831;
     white-space: nowrap;
   }
 
@@ -290,7 +296,7 @@
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #111827;
+  color: #DFD0B8;
 }
 
 /* Empty state */
@@ -298,7 +304,7 @@
   text-align: center;
   padding: 2rem;
   font-size: 0.95rem;
-  color: #6b7280;
+  color: #948979;
 }
 
 /* List */

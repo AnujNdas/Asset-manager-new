@@ -39,7 +39,7 @@
 
   text-decoration: none;
   border: none;
-  background: #fff;
+  background: #948979;
 
   padding: 10px 14px;
   border-radius: 10px;
@@ -47,7 +47,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #222831;
 
   transition: all 0.25s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -68,8 +68,7 @@
 
 /* Active tab state */
 .settings-tabs a.active {
-  background: #bbd8ff;
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+  background: #DFD0B8;
 }
 
 /* Active tab text override */

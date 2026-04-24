@@ -42,8 +42,8 @@
    ====================================================== */
 
 .mark-read-btn {
-  background: #2563eb;
-  color: #ffffff;
+  background: #948979;
+  color: #222831;
 
   border: none;
   border-radius: 6px;
@@ -107,8 +107,8 @@
 
 /* Read notification state */
 .notification-list li.read {
-  background: #ffffff;
-  color: #666;
+  background: #222831;
+  color: #DFD0B8;
 }
 
 /* ======================================================
@@ -119,13 +119,13 @@
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #222;
+  color: #DFD0B8;
 }
 
 .notification-item p {
   margin: 5px 0;
   font-size: 13px;
-  color: #555;
+  color: #DFD0B8;
   line-height: 1.5;
 }
 
@@ -139,7 +139,7 @@
   align-items: center;
 
   font-size: 13px;
-  color: #888;
+  color: #948979;
 }
 
 /* Notification Type Badge */

@@ -19,7 +19,7 @@
    SECTION WRAPPER (FORM + TABLE)
 ========================= */
 .settings-container > *:not(h2) {
-  background: #ffffff;
+  background: #222831;
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 20px;
@@ -139,7 +139,7 @@
    INVITE FORM CARD
 ========================= */
 .invite-form-card {
-  background: #ffffff;
+  /* background: #ffffff; */
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
@@ -151,7 +151,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #1f2937;
+  color: #DFD0B8;
 }
 
 /* =========================
@@ -167,7 +167,7 @@
 .invite-form-card label {
   font-size: 0.85rem;
   font-weight: 500;
-  color: #374151;
+  color: #948979;
 }
 
 /* =========================
@@ -177,11 +177,11 @@
 .invite-form-card select {
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border:none;
   font-size: 0.95rem;
   outline: none;
-  background: #ffffff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: #393E46;
+  color: #DFD0B8;
 }
 
 .invite-form-card input:focus,
@@ -190,15 +190,6 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* Custom dropdown arrow */
-.invite-form-card select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 16px;
-  padding-right: 36px;
-}
 
 /* =========================
    BUTTON
@@ -209,8 +200,8 @@
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
-  background: #2563eb;
-  color: #ffffff;
+  background: #948979;
+  color: #222831;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -218,13 +209,12 @@
 }
 
 .invite-form-card button:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: #DFD0B8;
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
 }
 
 .invite-form-card button:disabled {
-  background: #9ca3af;
+  background: #948979;
   cursor: not-allowed;
 }
 .invite-box {
@@ -232,6 +222,18 @@
   gap: 20px;
   grid-template-columns: repeat(2 ,1fr);
   /* flex-wrap: wrap; */
+}
+.invite-table-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #DFD0B8;
+}
+.invite-table-card p {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #DFD0B8;
 }
 /* =========================
    RESPONSIVE DESIGN
@@ -267,7 +269,7 @@
   .invite-table tr {
     margin-bottom: 16px;
     border-radius: 12px;
-    background: #f9fafb;
+    background: #393E46;
     padding: 12px;
   }
 
@@ -282,6 +284,6 @@
   .invite-table td::before {
     content: attr(data-label);
     font-weight: 500;
-    color: #374151;
+    color: #DFD0B8;
   }
 }

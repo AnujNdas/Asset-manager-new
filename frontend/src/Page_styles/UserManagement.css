@@ -22,13 +22,13 @@
   margin: 0;
   font-size: 24px;
   font-weight: 600;
-  color: #1f2937;
+  color: #DFD0B8;
 }
 
 .saas-user-header p {
   margin: 4px 0 0;
   font-size: 14px;
-  color: #6b7280;
+  color: #948979;
 }
 
 /* Search */
@@ -36,8 +36,9 @@
   width: 280px;
   padding: 10px 14px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: white;
+  border: none;
+  background: #222831;
+  color: #DFD0B8;
   transition: all 0.2s ease;
 }
 
@@ -49,10 +50,9 @@
 
 /* Card */
 .saas-user-card {
-  background: white;
+  background: #222831;
   border-radius: 18px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
-  border: 1px solid #eef0f4;
+  border: none;
   overflow: hidden;
 }
 
@@ -62,25 +62,21 @@
   border-collapse: collapse;
 }
 
-.saas-user-table thead {
-  background: #f9fafb;
-}
-
 .saas-user-table th {
   text-align: left;
   padding: 16px 20px;
   font-size: 13px;
   font-weight: 600;
-  color: #6b7280;
+  color: #948979;
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
 
 .saas-user-table td {
   padding: 16px 20px;
-  border-top: 1px solid #f1f3f7;
+  border-top: none;
   font-size: 14px;
-  color: #374151;
+  color: #DFD0B8;
 }
 
 .saas-user-table tbody tr:hover {
