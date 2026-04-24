@@ -279,7 +279,7 @@
 
             purchaseDate: row.purchaseDate || null,
             installationDate: row.installationDate || null,
-
+            
             warrantyPurchaseDate:
               row.warrantyPurchaseDate || null,
             warrantyExpiry: row.warrantyExpiry || null,
@@ -489,7 +489,7 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
                 purchaseDate: inst.purchaseDate || null,
                 installationDate: inst.installationDate || null,
                 vendor: inst.vendor || "",
-
+                hasInsurance: inst.hasInsurance,
                 warrantyPurchaseDate: inst.warrantyPurchaseDate || null,
     warrantyExpiry: inst.warrantyDate || null,
     coverageType: inst.coverageType?.length
