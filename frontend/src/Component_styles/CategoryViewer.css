@@ -11,8 +11,10 @@
   max-width: 400px;
   padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: none;
   outline: none;
+  background: #222831;
+  color: #DFD0B8;
 }
 
 .category-grid {
@@ -29,18 +31,14 @@
 
 .category-column h2 {
   margin-bottom: 15px;
-  color: #000000;
+  color: #948979;
 }
 
 .category-card {
-  background: #f5f5f5;
+  background: #393E46;
   padding: 12px 16px;
   margin-bottom: 10px;
   border-radius: 10px;
-  color: #050505;
+  color: #DFD0B8;
   transition: 0.2s;
-}
-
-.category-card:hover {
-  background: #d7d7d7;
 }
