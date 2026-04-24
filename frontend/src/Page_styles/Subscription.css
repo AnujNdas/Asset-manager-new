@@ -9,12 +9,12 @@
   font-weight: 800;
   text-align: center;
   margin-bottom: 8px;
-  color: #2463eb;
+  color: #DFD0B8;
 }
 
 .subscription-page p {
   text-align: center;
-  color: #000000;
+  color: #948979;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
@@ -53,10 +53,10 @@
   margin-top: 12px;
 }
 .plan-card {
-  background: #ffffff;
+  background: #222831;
   border-radius: 18px;
   padding: 14px;
-  border: 1px solid #e5e7eb;
+  border: none;
   cursor: pointer;
   transition: all 0.25s ease;
   display: flex;
@@ -161,12 +161,12 @@
   margin-top: 20px;
 }
 
-.btn.primary {
+.btn-primary {
   background: #DFD0B8;
   color: #222831;
 }
 
-.btn.primary:hover {
+.btn-primary:hover {
   background: #948979 ;
 }
 
