@@ -23,7 +23,7 @@
   display: flex;
   justify-content: center;
   margin: 0 auto;
-  background: #f3f4f6;
+  background: #222831;
   border-radius: 999px;
   padding: 6px;
   width: 100%;
@@ -37,13 +37,13 @@
   background: transparent;
   font-weight: 600;
   cursor: pointer;
-  color: #374151;
+  color: #948979;
   transition: all 0.25s ease;
 }
 
 .billing-toggle button.active {
-  background: #2463eb;
-  color: #ffffff;
+  background: #DFD0B8;
+  color: #222831;
   border: none;
 }
 .plans-grid {
@@ -92,7 +92,7 @@
   font-weight: 800;
   margin-bottom: 6px;
   text-align: center;
-  color: #2463eb;
+  color: #DFD0B8;
 }
 
 .plan-price {
@@ -106,7 +106,7 @@
 .plan-price .amount {
   font-size: 40px;
   font-weight: 900;
-  color: #111827;
+  color: #DFD0B8;
 }
 
 .plan-price .duration {
@@ -135,7 +135,7 @@
   display: flex;
   justify-content: center;
   font-size: 14px;
-  color: #374151;
+  color: #948979;
   padding-left: 26px;
   margin-bottom: 10px;
   position: relative;
@@ -146,7 +146,7 @@
   content: "*";
   position: absolute;
   left: 0;
-  color: #22c55e;
+  color: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
   font-weight: 800;
 }
 
@@ -162,12 +162,12 @@
 }
 
 .btn.primary {
-  background: #6366f1;
-  color: #ffffff;
+  background: #DFD0B8;
+  color: #222831;
 }
 
 .btn.primary:hover {
-  background: #4f46e5;
+  background: #948979 ;
 }
 
 .btn.secondary {
