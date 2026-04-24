@@ -1158,16 +1158,22 @@ const existingSerials = await AssetInstance.find({
             purchaseCost,
 
             // ✅ currency propagated
-            costs: {
-              currency,
-              maintenanceCost:
-                Number(inst.hardware?.costs?.maintenanceCost) || 0,
-              warrantyRenewalCost:
-                Number(inst.hardware?.costs?.warrantyRenewalCost) || 0,
-              insuranceCost: hasInsurance
-                ? Number(inst.hardware?.costs?.insuranceCost) || 0
-                : 0
-            }
+costs: {
+  maintenanceCost: formatCost({
+    amount: inst.hardware?.costs?.maintenanceCost,
+    currency
+  }),
+  warrantyRenewalCost: formatCost({
+    amount: inst.hardware?.costs?.warrantyRenewalCost,
+    currency
+  }),
+  insuranceCost: formatCost({
+    amount: hasInsurance
+      ? inst.hardware?.costs?.insuranceCost
+      : 0,
+    currency
+  })
+}
           },
 
           lifecycle: [
@@ -1212,9 +1218,10 @@ const existingSerials = await AssetInstance.find({
 
           // ✅ currency propagated
           costs: {
-            currency,
-            renewalCost:
-              Number(inst.software?.costs?.renewalCost) || 0
+            renewalCost: formatCost({
+  amount: inst.software?.costs?.renewalCost,
+  currency
+})
           }
         },
 
@@ -1547,6 +1554,8 @@ const insuranceTerm = inst.hardware?.insuranceTerm || "1_year";
 
 // ✅ SINGLE SOURCE OF TRUTH
 const hasInsurance = !!insurancePurchaseDate;
+const purchaseCost = formatCost(inst.hardware?.purchaseCost);
+const currency = purchaseCost?.currency || "INR";
 
 // ✅ SAFE EXPIRY
 const insuranceExpiry = hasInsurance
@@ -1594,14 +1603,16 @@ validInstances.push({
       inst.hardware?.nextMaintenanceDate
     ),
 
-    purchaseCost: formatCost(inst.hardware?.purchaseCost),
 
-    costs: {
-  maintenanceCost: formatCost(inst.hardware?.costs?.maintenanceCost),
-  warrantyRenewalCost: formatCost(inst.hardware?.costs?.warrantyRenewalCost),
+
+purchaseCost,
+
+costs: {
+  maintenanceCost: formatCost(inst.hardware?.costs?.maintenanceCost, currency),
+  warrantyRenewalCost: formatCost(inst.hardware?.costs?.warrantyRenewalCost, currency),
   insuranceCost: hasInsurance
-    ? formatCost(inst.hardware?.costs?.insuranceCost)
-    : formatCost(0),
+  ? formatCost(inst.hardware?.costs?.insuranceCost, currency)
+  : null,
 }
   },
 
@@ -1618,47 +1629,52 @@ validInstances.push({
         }
 
         /* ---------------- SOFTWARE ---------------- */
-        else {
-          validInstances.push({
-            organizationId,
-            assetId,
-            assetTypeRef,
-            assetType,
+else {
+  const purchaseCost = formatCost(inst.software?.purchaseCost);
+  const currency = purchaseCost?.currency || "INR";
 
-            instanceCode,
+  validInstances.push({
+    organizationId,
+    assetId,
+    assetTypeRef,
+    assetType,
 
-            location,
-            condition: inst.condition || "new",
-            status: "in_stock",
+    instanceCode,
 
-            software: {
-              licenseKey: normalize(inst.software?.licenseKey) || "",
-              licenseNumber: normalize(inst.software?.licenseNumber) || "",
+    location,
+    condition: inst.condition || "new",
+    status: "in_stock",
 
-              purchaseDate: parseDateSafe(inst.software?.purchaseDate),
-              installationDate: parseDateSafe(inst.software?.installationDate),
-              renewalDate: parseDateSafe(inst.software?.renewalDate),
-              lastUsedDate: parseDateSafe(inst.software?.lastUsedDate),
+    software: {
+      licenseKey: normalize(inst.software?.licenseKey) || "",
+      licenseNumber: normalize(inst.software?.licenseNumber) || "",
 
-              purchaseCost: formatCost(inst.software?.purchaseCost),
+      purchaseDate: parseDateSafe(inst.software?.purchaseDate),
+      installationDate: parseDateSafe(inst.software?.installationDate),
+      renewalDate: parseDateSafe(inst.software?.renewalDate),
+      lastUsedDate: parseDateSafe(inst.software?.lastUsedDate),
 
-              costs: {
-                renewalCost:
-                  formatCost(inst.software?.costs?.renewalCost) || 0,
-              },
-            },
+      purchaseCost,
 
-            lifecycle: [
-              {
-                action: "CREATED",
-                date: new Date(),
-                notes: "Bulk instance upload",
-              },
-            ],
+      costs: {
+        renewalCost: formatCost(
+          inst.software?.costs?.renewalCost,
+          currency
+        ),
+      },
+    },
 
-            createdBy: userId,
-          });
-        }
+    lifecycle: [
+      {
+        action: "CREATED",
+        date: new Date(),
+        notes: "Bulk instance upload",
+      },
+    ],
+
+    createdBy: userId,
+  });
+}
       } catch (err) {
   console.error(`❌ Row ${index + 2} FAILED:`, err.message);
 
@@ -1744,17 +1760,17 @@ validInstances.push({
     return next(err);
   }
 };
-const formatCost = (cost) => {
+const formatCost = (cost, fallbackCurrency = "INR") => {
   if (!cost) return null;
 
   let amount, currency;
 
   if (typeof cost === "object") {
     amount = Number(cost.amount) || 0;
-    currency = cost.currency || "INR";
+    currency = cost.currency || fallbackCurrency;
   } else {
     amount = Number(cost) || 0;
-    currency = "INR";
+    currency = fallbackCurrency;
   }
 
   return {
