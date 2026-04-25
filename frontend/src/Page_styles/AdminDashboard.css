@@ -121,7 +121,7 @@
 
 .value-text {
   font-weight: 600;
-  color: #1a73e8; /* Google blue */
+  color: #DFD0B8; /* Google blue */
 }
 
 .date-text {
@@ -301,7 +301,7 @@
   font-size: 13px;
   font-weight: 600;
   padding: 10px 8px;
-  color: #6b7280;
+  color: #948979;
   border-bottom: 2px solid #e5e7eb;
 }
 
@@ -309,6 +309,7 @@
   padding: 10px 5px;
   font-size: 12px;
   border-bottom: 1px solid #f1f1f1;
+  color: #DFD0B8;
   /* text-align: center; */
 }
 
