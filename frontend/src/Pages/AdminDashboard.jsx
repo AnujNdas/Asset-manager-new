@@ -27,6 +27,7 @@ import {
   LabelList,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Components/Loader";
 
 
 const COLORS = [
@@ -82,9 +83,7 @@ useEffect(() => {
 
  if (loading || loadingRates) { 
     return (
-      <div className="dashboard-loader">
-        <div className="spinner"></div>
-      </div>
+     <Loader />
     );
   }
 
