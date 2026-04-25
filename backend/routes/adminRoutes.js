@@ -324,7 +324,7 @@ res.json({
 
   analytics: {
     spendByCategory: topCategories.map(c => ({
-      category: c._id,
+      category: c.category,   // ✅ correct field
       totalSpend: c.total
     })),
 
