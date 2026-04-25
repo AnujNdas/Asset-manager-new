@@ -369,38 +369,35 @@ const DepartmentAnalyticsCard = ({ title, items }) => {
       <h3 className="card-heading">{title}</h3>
 
       {items.length === 0 ? (
-        <p className="empty-text">No employee data</p>
+        <p className="empty-text">No department data</p>
       ) : (
         <div className="table-wrapper">
           <table className="analytics-table">
             <thead>
               <tr>
-                <th>Dept</th>
-                <th>Name</th>
-                <th>Assets < br/> (H | S)</th>
+                <th>Department</th>
+                <th>Assets <br/> (H | S)</th>
                 <th className="text-right">Total</th>
               </tr>
             </thead>
 
-<tbody>
-  {items.map((dept, index) => (
-    <tr key={index}>
-      <td>{dept.departmentName}</td>
+            <tbody>
+              {items.map((dept, index) => (
+                <tr key={index}>
+                  <td>{dept.departmentName || "N/A"}</td>
 
-      {/* remove employeeName (not available) */}
-      <td>-</td>
+                  <td>
+                    {dept.hardware || 0} | {dept.software || 0}
+                  </td>
 
-      {/* correct fields */}
-      <td>
-        {dept.hardware} | {dept.software}
-      </td>
-
-      <td className="text-right">
-        <strong>{(dept.hardware || 0) + (dept.software || 0)}</strong>
-      </td>
-    </tr>
-  ))}
-</tbody>
+                  <td className="text-right">
+                    <strong>
+                      {(dept.hardware || 0) + (dept.software || 0)}
+                    </strong>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       )}
