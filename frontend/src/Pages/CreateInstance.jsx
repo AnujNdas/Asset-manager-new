@@ -567,7 +567,7 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
       onChange={handleFileUpload}
     />
     <div className="import-actions">
-    <button onClick={handleImport} className="btn-edit">
+    <button onClick={handleImport} className="btn-save">
       Import Excel
     </button>
 

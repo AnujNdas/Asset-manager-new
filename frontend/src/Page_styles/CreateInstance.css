@@ -151,9 +151,7 @@ button {
   flex-direction: row;
   justify-content: space-between;
 }
-.import-section {
-  background: #222831;
-}
+
 /* ===== TABLE ===== */
 .instance-table {
   overflow: hidden;
