@@ -180,29 +180,35 @@ const topCategoriesPromise = AssetInstance.aggregate([
        🏢 DEPARTMENT ASSIGNMENTS (SEPARATE)
     ===================================================== */
 
-    const departmentPromise = AssetAssignment.aggregate([
-      { $match: { organizationId, status: "active" } },
+const departmentPromise = AssetAssignment.aggregate([
+  { $match: { organizationId, status: "active" } },
 
-      {
-        $lookup: {
-          from: "assetinstances",
-          localField: "instanceId",
-          foreignField: "_id",
-          as: "instance"
-        }
+  {
+    $lookup: {
+      from: "assetinstances",
+      localField: "assetInstanceId",   // ✅ FIXED
+      foreignField: "_id",
+      as: "instance"
+    }
+  },
+
+  {
+    $unwind: {
+      path: "$instance",
+      preserveNullAndEmptyArrays: false // keep strict
+    }
+  },
+
+  {
+    $group: {
+      _id: {
+        department: "$departmentId",
+        type: "$instance.assetType"
       },
-      { $unwind: "$instance" },
-
-      {
-        $group: {
-          _id: {
-            department: "$departmentId",
-            type: "$instance.assetType"
-          },
-          total: { $sum: 1 }
-        }
-      }
-    ]);
+      total: { $sum: 1 }
+    }
+  }
+]);
 
     /* =====================================================
        📅 UPCOMING EVENTS (INSTANCE BASED)
