@@ -146,11 +146,11 @@ redirectTo="/inventory?hardware"
   />
 </div>
 
-        <AnalyticsCard
-          title="Top IT Assets"
-          items={analytics.topAssets}
-          labelKey="assetName"
-          valueKey="assetCost.baseTotalAmount"
+<AnalyticsCard
+  title="Top IT Assets"
+  items={analytics.topAssets}
+  labelKey="assetName"
+  valueKey="totalCost"
           currency={currency}
           redirectTo="/inventory?software"
         />
@@ -382,20 +382,25 @@ const DepartmentAnalyticsCard = ({ title, items }) => {
               </tr>
             </thead>
 
-            <tbody>
-              {items.map((emp, index) => (
-                <tr key={index}>
-                  <td>{emp.departmentName}</td>
-                  <td>{emp.employeeName}</td>
-                  <td>
-                    {emp.hardwareCount} | {emp.softwareCount}
-                  </td>
-                  <td className="text-right">
-                    <strong>{emp.totalAssignedQuantity}</strong>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+<tbody>
+  {items.map((dept, index) => (
+    <tr key={index}>
+      <td>{dept.departmentName}</td>
+
+      {/* remove employeeName (not available) */}
+      <td>-</td>
+
+      {/* correct fields */}
+      <td>
+        {dept.hardware} | {dept.software}
+      </td>
+
+      <td className="text-right">
+        <strong>{(dept.hardware || 0) + (dept.software || 0)}</strong>
+      </td>
+    </tr>
+  ))}
+</tbody>
           </table>
         </div>
       )}
