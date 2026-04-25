@@ -287,7 +287,6 @@ button {
     gap: 10px;
     border-radius: var(--radius);
     margin-bottom: 10px;
-    background: white;
     box-shadow: var(--shadow-sm);
   }
 

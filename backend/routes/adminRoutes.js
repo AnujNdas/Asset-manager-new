@@ -66,48 +66,76 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
        🏷️ TOP CATEGORY (INSTANCE COST)
     ===================================================== */
 
-    const topCategoriesPromise = AssetInstance.aggregate([
-      { $match: { organizationId } },
+const topCategoriesPromise = AssetInstance.aggregate([
+  { $match: { organizationId } },
 
-      {
-        $lookup: {
-          from: "assets",
-          localField: "assetId",
-          foreignField: "_id",
-          as: "asset"
-        }
-      },
-      { $unwind: "$asset" },
-
-{
-  $addFields: {
-    cost: {
-      $add: [
-        {
-          $cond: [
-            { $eq: ["$assetType", "hardware"] },
-            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-          ]
-        },
-        { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-        { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
-        { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
-        { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
-      ]
+  {
+    $lookup: {
+      from: "assets",
+      localField: "assetId",
+      foreignField: "_id",
+      as: "asset"
     }
-  }
-},
+  },
+  { $unwind: "$asset" },
 
-      {
-        $group: {
-          _id: "$asset.assetCategory",
-          total: { $sum: "$cost" }
-        }
-      },
-      { $sort: { total: -1 } },
-      { $limit: 5 }
-    ]);
+  // ✅ cost calculation (same as yours)
+  {
+    $addFields: {
+      cost: {
+        $add: [
+          {
+            $cond: [
+              { $eq: ["$assetType", "hardware"] },
+              { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+              { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+            ]
+          },
+          { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+          { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+          { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+          { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+        ]
+      }
+    }
+  },
+
+  // ✅ group by category ID
+  {
+    $group: {
+      _id: "$asset.assetCategory",
+      total: { $sum: "$cost" }
+    }
+  },
+
+  // ✅ 🔥 IMPORTANT: lookup category collection
+  {
+    $lookup: {
+      from: "categories", // ⚠️ verify exact collection name
+      localField: "_id",
+      foreignField: "_id",
+      as: "category"
+    }
+  },
+
+  {
+    $unwind: {
+      path: "$category",
+      preserveNullAndEmptyArrays: true
+    }
+  },
+
+  {
+    $project: {
+      _id: 0,
+      category: "$category.name", // ✅ actual name
+      total: 1
+    }
+  },
+
+  { $sort: { total: -1 } },
+  { $limit: 5 }
+]);
 
     /* =====================================================
        💻 TOP SOFTWARE (IT ASSETS)
