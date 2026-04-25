@@ -9,7 +9,7 @@
 .app-wrapper{
   height: 100dvh;
   width: 100%;
-  background : #f1f1f1;
+  /* background : #f1f1f1; */
   overflow : hidden
 }
 .guide-btn {
