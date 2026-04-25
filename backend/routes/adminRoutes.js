@@ -179,33 +179,99 @@ const topCategoriesPromise = AssetInstance.aggregate([
     /* =====================================================
        🏢 DEPARTMENT ASSIGNMENTS (SEPARATE)
     ===================================================== */
-
 const departmentPromise = AssetAssignment.aggregate([
   { $match: { organizationId, status: "active" } },
 
+  /* ================= INSTANCE ================= */
   {
     $lookup: {
       from: "assetinstances",
-      localField: "assetInstanceId",   // ✅ FIXED
+      localField: "assetInstanceId",
       foreignField: "_id",
       as: "instance"
     }
   },
+  { $unwind: "$instance" },
 
+  /* ================= ASSET (HARDWARE) ================= */
   {
-    $unwind: {
-      path: "$instance",
-      preserveNullAndEmptyArrays: false // keep strict
+    $lookup: {
+      from: "assets",
+      localField: "instance.assetId",
+      foreignField: "_id",
+      as: "hardwareAsset"
     }
   },
 
+  /* ================= ASSET (SOFTWARE) ================= */
+  {
+    $lookup: {
+      from: "softwareassets",
+      localField: "instance.assetId",
+      foreignField: "_id",
+      as: "softwareAsset"
+    }
+  },
+
+  /* ================= PICK CORRECT NAME ================= */
+  {
+    $addFields: {
+      assetName: {
+        $cond: [
+          { $eq: ["$instance.assetType", "hardware"] },
+          { $arrayElemAt: ["$hardwareAsset.assetName", 0] },
+          { $arrayElemAt: ["$softwareAsset.assetName", 0] }
+        ]
+      }
+    }
+  },
+
+  /* ================= GROUP BY DEPT ================= */
   {
     $group: {
-      _id: {
-        department: "$departmentId",
-        type: "$instance.assetType"
+      _id: "$departmentId",
+
+      hardware: {
+        $sum: {
+          $cond: [{ $eq: ["$instance.assetType", "hardware"] }, 1, 0]
+        }
       },
-      total: { $sum: 1 }
+
+      software: {
+        $sum: {
+          $cond: [{ $eq: ["$instance.assetType", "software"] }, 1, 0]
+        }
+      },
+
+      assets: { $addToSet: "$assetName" } // ✅ unique asset names
+    }
+  },
+
+  /* ================= DEPARTMENT NAME ================= */
+  {
+    $lookup: {
+      from: "departments",
+      localField: "_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: {
+      path: "$department",
+      preserveNullAndEmptyArrays: true
+    }
+  },
+
+  /* ================= FINAL ================= */
+  {
+    $project: {
+      _id: 0,
+      departmentId: "$_id",
+      departmentName: "$department.name",
+      hardware: 1,
+      software: 1,
+      assets: 1
     }
   }
 ]);
