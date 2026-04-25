@@ -566,20 +566,20 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
       accept=".xlsx, .xls"
       onChange={handleFileUpload}
     />
-    <div className="Import-actions">
+    <div className="import-actions">
     <button onClick={handleImport} className="btn-edit">
       Import Excel
     </button>
 
     <div>
       {isHardware && (
-        <button onClick={() => downloadTemplate("hardware")} className="btn-edit">
+        <button onClick={() => downloadTemplate("hardware")} className="btn-save">
           Download Hardware Template
         </button>
       )}
 
       {isSoftware && (
-        <button onClick={() => downloadTemplate("software")} className="btn-edit">
+        <button onClick={() => downloadTemplate("software")} className="btn-save">
           Download Software Template
         </button>
       )}
