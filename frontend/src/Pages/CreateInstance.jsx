@@ -566,23 +566,24 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
       accept=".xlsx, .xls"
       onChange={handleFileUpload}
     />
-
-    <button onClick={handleImport}>
+    <div className="Import-actions">
+    <button onClick={handleImport} className="btn-edit">
       Import Excel
     </button>
 
-    <div style={{ marginTop: "10px" }}>
+    <div>
       {isHardware && (
-        <button onClick={() => downloadTemplate("hardware")}>
+        <button onClick={() => downloadTemplate("hardware")} className="btn-edit">
           Download Hardware Template
         </button>
       )}
 
       {isSoftware && (
-        <button onClick={() => downloadTemplate("software")}>
+        <button onClick={() => downloadTemplate("software")} className="btn-edit">
           Download Software Template
         </button>
       )}
+      </div>
     </div>
   </div>
           {/* BULK APPLY */}
@@ -1024,7 +1025,7 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
 
             {instances.map((inst, index) => (
               <div key={index}>
-                <h2 style={{ color: "#2563eb", fontSize: "12px", padding: "5px" }}>
+                <h2 style={{ color: "#DFD0B8", fontSize: "12px", padding: "5px" }}>
                   {" "}
                   Instance {index + 1}{" "}
                 </h2>

@@ -539,15 +539,6 @@
 
   transition: all 0.2s ease;
 }
-.input-group input:focus,
-.input-group select:focus {
-  outline: none;
-
-  border-color: #3b82f6;
-  background: #fff;
-
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
 .modal-actions {
   display: flex;
   justify-content: flex-end;
