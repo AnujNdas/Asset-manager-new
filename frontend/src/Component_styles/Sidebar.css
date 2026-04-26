@@ -96,7 +96,7 @@ a:hover {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #4f46e5, transparent);
+  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
   border-radius: 2px;
 }
 

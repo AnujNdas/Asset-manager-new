@@ -339,29 +339,34 @@ const departmentPromise = AssetAssignment.aggregate([
       { $sort: { totalInstances: -1 } },
       { $limit: 5 }
     ]);
+    const usersCountPromise = User.countDocuments({ organizationId });
 
+    const employeesCountPromise = Employee.countDocuments({ organizationId });
     /* =====================================================
        🚀 EXECUTE ALL
     ===================================================== */
 
-    const [
-      totals,
-      [hardwareAssets, softwareAssets],
-      topCategories,
-      topSoftware,
-      departments,
-      upcoming,
-      topLocations
-    ] = await Promise.all([
-      totalsPromise,
-      assetCountsPromise,
-      topCategoriesPromise,
-      topSoftwarePromise,
-      departmentPromise,
-      upcomingPromise,
-      topLocationsPromise
-    ]);
-
+const [
+  totals,
+  [hardwareAssets, softwareAssets],
+  topCategories,
+  topSoftware,
+  departments,
+  upcoming,
+  topLocations,
+  usersCount,
+  employeesCount
+] = await Promise.all([
+  totalsPromise,
+  assetCountsPromise,
+  topCategoriesPromise,
+  topSoftwarePromise,
+  departmentPromise,
+  upcomingPromise,
+  topLocationsPromise,
+  usersCountPromise,
+  employeesCountPromise
+]);
     /* =====================================================
        🧠 FORMAT TOTALS
     ===================================================== */
@@ -390,8 +395,8 @@ res.json({
     hardwareInstances: hardware.totalInstances || 0,
     softwareInstances: software.totalInstances || 0,
 
-    usersCount: 0, // you can wire later
-    teamsCount: 0  // you can wire later
+    usersCount: usersCount || 0,
+    employeesCount: employeesCount || 0,
   },
 
   analytics: {
