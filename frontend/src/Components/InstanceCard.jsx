@@ -41,44 +41,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <p className="label">Instance Name</p>
           <p className="value">{instance.deviceName}</p>
         </div>
-        {/* INSTANCE CODE */}
-        {/* QR CODE */}
-{isHardware && instance.qrCode?.url && (
-  <div className="qr-section">
-    <p className="label">QR Code</p>
 
-    <a
-      href={instance.trackingUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <img
-        src={instance.qrCode.url}
-        alt="QR Code"
-        className="qr-image"
-      />
-    </a>
-
-    <div className="qr-actions">
-      <a
-        href={instance.qrCode.url}
-        download
-        className="btn btn-small"
-      >
-        Download
-      </a>
-
-      <a
-        href={instance.trackingUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-small btn-blue"
-      >
-        Open Link
-      </a>
-    </div>
-  </div>
-)}
         {/* UNIQUE IDENTIFIER */}
         <div>
           <p className="label">
@@ -231,6 +194,44 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
         <button className="btn btn-blue" onClick={() => onUpgrade(instance)}>
           Upgrade
         </button>
+                {/* INSTANCE CODE */}
+        {/* QR CODE */}
+{isHardware && instance.qrCode?.url && (
+  <div className="qr-section">
+    <p className="label">QR Code</p>
+
+    <a
+      href={instance.trackingUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={instance.qrCode.url}
+        alt="QR Code"
+        className="qr-image"
+      />
+    </a>
+
+    <div className="qr-actions">
+      <a
+        href={instance.qrCode.url}
+        download
+        className="btn btn-small"
+      >
+        Download
+      </a>
+
+      <a
+        href={instance.trackingUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-small btn-blue"
+      >
+        Open Link
+      </a>
+    </div>
+  </div>
+)}
       </div>
     </div>
   );

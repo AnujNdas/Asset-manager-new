@@ -453,7 +453,7 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
             if (isSoftware) {
               return {
                 location: formatLocation(inst.location),
-
+                deviceName: inst.deviceName || "",
                 software: {
                   licenseKey: inst.licenseKey || "",
                   licenseNumber: inst.licenseNumber || "",
@@ -481,7 +481,7 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
             return {
               condition: inst.condition || "new",
               location: formatLocation(inst.location),
-
+              deviceName: inst.deviceName || "",
               hardware: {
                 modelNo: inst.modelNo || "",
                 specifications: inst.specifications || "",
