@@ -177,6 +177,7 @@
           ]);
 
           setAsset(assetData);
+          console.log("Asset Data:", assetData);
           const assetDOE = assetData?.DOE ? assetData.DOE.split("T")[0] : null;
 
           const assetPurchaseDate = assetData?.purchaseDetails?.purchaseDate

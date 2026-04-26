@@ -194,6 +194,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
         <button className="btn btn-blue" onClick={() => onUpgrade(instance)}>
           Upgrade
         </button>
+      </div>
                 {/* INSTANCE CODE */}
         {/* QR CODE */}
 {isHardware && instance.qrCode?.url && (
@@ -232,7 +233,6 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
     </div>
   </div>
 )}
-      </div>
     </div>
   );
 };
