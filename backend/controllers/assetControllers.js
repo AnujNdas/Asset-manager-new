@@ -14,6 +14,7 @@
   const SoftwareAsset = require("../models/SoftwareAsset");
   const AssetInstance = require("../models/AssetInstance");
 const QRCode = require("qrcode");
+const cloudinary = require("../config/cloudinary"); 
 
   const parseDate = (value) => {
     if (!value) return null;

@@ -51,7 +51,7 @@ const ReassignModal = ({ instance, onClose, refresh }) => {
         </select>
 
         <div className="modal-actions">
-          <button onClick={onClose} className="btn-delete">Cancel</button>
+          <button onClick={onClose} className="btn-cancel">Cancel</button>
           <button className="btn-save" onClick={handleSubmit}>
             Confirm
           </button>

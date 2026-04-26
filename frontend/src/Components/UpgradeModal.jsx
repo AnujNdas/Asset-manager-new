@@ -272,10 +272,10 @@ onChange={(e) => {
 
         {/* ACTIONS */}
         <div className="modal-actions">
-          <button onClick={onClose} className="btn-delete">Cancel</button>
+          <button onClick={onClose} className="btn-cancel">Cancel</button>
 
           <button onClick={handleSubmit} className="btn-save">
-            Apply Upgrade
+            Apply Upgrade 
           </button>
         </div>
 

@@ -494,7 +494,7 @@ const handleImport = async () => {
             />
 
             <div className="import-actions">
-              <button onClick={() => setShowImport(false)}>Cancel</button>
+              <button onClick={() => setShowImport(false)} className="btn-delete">Cancel</button>
 
               <button onClick={handleImport} disabled={importLoading}>
                 {importLoading ? "Uploading..." : "Upload"}
