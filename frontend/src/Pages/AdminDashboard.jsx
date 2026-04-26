@@ -126,7 +126,7 @@ redirectTo="/inventory?hardware"
 
         <MetricCard
           title="Users / Team-members"
-          value={`${totals.usersCount} / ${totals.teamsCount}`}
+          value={`${totals.usersCount} / ${totals.employeesCount}`}
           redirectTo="/setting/users"
         />
       </div>
