@@ -556,6 +556,7 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
             <div className="asset-info">
               <h3>
                 {asset.assetName}{" "}
+                <span className="type-badge">{asset.locationName.name.toUpperCase()}</span>
                 <span className="type-badge">{asset.assetType.toUpperCase()}</span>
               </h3>
               <p>{asset.assetCode}</p>

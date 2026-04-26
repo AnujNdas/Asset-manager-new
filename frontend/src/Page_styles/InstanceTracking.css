@@ -198,7 +198,9 @@
   align-items: center;
   gap: 12px;
 }
-
+.qr-section a {
+  width: 120px;
+}
 /* QR IMAGE */
 .qr-image {
   width: 120px;
