@@ -261,7 +261,7 @@ a:hover {
 
 /* Active header */
 .sb-group-header.active {
-  background: rgba(59, 130, 246, 0.1);
+  background: #393E46;
 }
 
 /* Content */

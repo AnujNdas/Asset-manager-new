@@ -61,7 +61,6 @@
   background: #222831;
   padding: 18px;
   border-radius: 14px;
-  border: 1px solid var(--border);
   cursor: pointer;
   transition: all 0.25s ease;
   position: relative;

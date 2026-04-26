@@ -20,7 +20,8 @@
 .instance-header select {
   padding: 6px 10px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  background: #222831;
+  color: #DFD0B8;
 }
 
 /* GRID */
@@ -35,7 +36,6 @@
   background: #222831;
   border-radius: 12px;
   padding: 18px;
-  border: 1px solid #e5e5e5;
   transition: 0.2s;
 }
 

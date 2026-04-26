@@ -96,31 +96,6 @@
   transition: all 0.25s ease;
 }
 
-/* Hover state */
-.tab_link:hover {
-  background: #f0f5ff;
-  color: #007bff;
-  transform: translateY(-2px);
-}
-
-/* Active tab */
-.tab_link.active {
-  background: #bbd8ff;
-  box-shadow: 0 4px 8px rgba(0,123,255,0.2);
-}
-
-/* Tab icon styling */
-.tab-icon {
-  font-size: 16px;
-  color: #2463eb;
-}
-
-/* Tab text styling */
-.tab-text {
-  font-size: 13px;
-  color: #2463eb;
-}
-
 /* =========================================================
    MAIN CONTENT AREA
    Holds the classification table/forms
