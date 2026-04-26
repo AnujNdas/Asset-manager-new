@@ -188,7 +188,7 @@ button {
 }
 
 .table-row button:hover {
-  background: var(--primary);
+  background: #948979;
   color: white;
 }
 

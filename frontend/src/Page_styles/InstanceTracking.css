@@ -152,7 +152,7 @@
   border-radius: 12px;
   border: 1px solid #555;
 
-  width: 420px;
+  width: 600px;
   max-width: 90%;
 
   max-height: 85vh;
@@ -164,7 +164,8 @@
   position: relative;
 }
 .modal input,
-.modal select {
+.modal select
+.modal textarea {
   background: #222831;
   border: 1px solid #555;
   color: #DFD0B8;

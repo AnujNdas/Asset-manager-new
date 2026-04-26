@@ -109,7 +109,7 @@ const fetchHistory = async () => {
 
         {/* ACTION */}
         <div className="modal-actions">
-          <button onClick={onClose}>Close</button>
+          <button onClick={onClose} className="btn-delete">Close</button>
         </div>
 
       </div>

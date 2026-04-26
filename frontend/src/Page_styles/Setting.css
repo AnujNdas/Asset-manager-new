@@ -55,7 +55,7 @@
 .redirect-tab {
   color: #222831;
   font-weight: 600;
-  background: #DFD0B8;
+  /* background: #DFD0B8; */
 }
 /* Hover interaction */
 .settings-tabs a:hover,

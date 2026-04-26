@@ -44,6 +44,7 @@
 .tab:hover {
   background: #948979;
   color: #393E46;
+  box-shadow: none;
 }
 
 /* Active Tab */
