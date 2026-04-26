@@ -19,7 +19,7 @@ const downloadTemplate = () => {
       assetName: "Adobe Photoshop",
       assetCategory: "Design Software",
       associateUnit: "IT Department",
-      locationName: "Head Office",
+      BillingLocation: "Head Office",
 
       type: "yearly", // monthly / yearly / one_time
 
@@ -318,7 +318,7 @@ const handleImport = async () => {
             </div>
 
             <div className="input-group">
-              <label>Location</label>
+              <label>Billing Location</label>
               <select name="locationName" onChange={handleChange}>
                 <option value="">Select</option>
                 {locations.map((l) => (

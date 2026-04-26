@@ -18,7 +18,7 @@ const downloadTemplate = () => {
       assetName: "Dell Laptop",
       assetCategory: "IT Equipment",
       associateUnit: "Head Office",
-      locationName: "Mumbai",
+      BillingLocation: "Mumbai",
 
       type: "one_time", // one_time / maintenance
 
@@ -397,7 +397,7 @@ const handleImport = async () => {
             </div>
 
             <div className="input-group">
-              <label>Location *</label>
+              <label>Billing Location *</label>
               <select
                 name="locationName"
                 value={formData.locationName}
