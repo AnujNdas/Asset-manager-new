@@ -244,7 +244,7 @@ const MisReport = () => {
 
       {/* HEADER */}
       <div className="report-header">
-        <h2>Asset MIS Report</h2>
+        <h3>Asset MIS Report</h3>
         <div className="header-actions">
           <CurrencyFilter />
           <button onClick={exportData} className="misbutton">

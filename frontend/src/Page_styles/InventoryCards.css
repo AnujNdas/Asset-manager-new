@@ -64,8 +64,8 @@
 
 /* Status pill */
 .status-badge {
-  background: #ebf4ff;
-  color: #3b82f6;
+  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
+  color: #222831;
   font-size: 13px;
   padding: 4px 10px;
   border-radius: 20px;

@@ -15,6 +15,7 @@
 .instance-header h2 {
   font-size: 22px;
   font-weight: 600;
+  color: #DFD0B8;
 }
 
 .instance-header select {
@@ -47,6 +48,7 @@
 .asset-card-header h3 {
   margin: 0;
   font-size: 16px;
+  color: #DFD0B8;
 }
 
 .asset-code {
@@ -92,6 +94,7 @@
 .pending {
   font-size: 13px;
   margin: 10px 0;
+  color: #DFD0B8;
 }
 
 .pending strong {
@@ -103,18 +106,18 @@
   width: 100%;
   padding: 8px;
   border: none;
-  background: #1976d2;
-  color: white;
+  background: #DFD0B8;
+  color: #222831;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .create-btn:hover {
-  background: #125aa0;
+  background: #948979;
 }
 
 .create-btn.disabled {
-  background: #aaa;
+  background: #948979;
   cursor: not-allowed;
 }
 

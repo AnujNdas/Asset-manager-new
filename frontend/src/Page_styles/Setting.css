@@ -52,17 +52,16 @@
   transition: all 0.25s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-
-/* Secondary tab text color */
-.tab-text2 {
-  color: #2463eb;
+.redirect-tab {
+  color: #222831;
+  font-weight: 600;
+  background: #DFD0B8;
 }
-
 /* Hover interaction */
 .settings-tabs a:hover,
 .settings-tabs button:hover {
-  background: #f0f5ff;
-  color: #007bff;
+  background: #948979;
+  color: #222831;
   transform: translateY(-2px);
 }
 

@@ -130,7 +130,7 @@ const Setting = () => {
             className={location.pathname.includes(path) ? "active" : ""}
           >
             <Icon className="tab-icon" />
-            <span className="tab-text">{label}</span>
+            <span className="redirect-tab">{label}</span>
           </Link>
         ))}
       </nav>
