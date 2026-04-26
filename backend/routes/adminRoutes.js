@@ -341,7 +341,7 @@ const departmentPromise = AssetAssignment.aggregate([
     ]);
     const usersCountPromise = User.countDocuments({ organizationId });
 
-    const employeesCountPromise = Employee.countDocuments({ organizationId });
+    const employeesCountPromise = Team.countDocuments({ organizationId });
     /* =====================================================
        🚀 EXECUTE ALL
     ===================================================== */
