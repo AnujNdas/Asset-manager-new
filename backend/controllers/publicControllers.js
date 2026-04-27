@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { getTrackedInstances } = require("../../frontend/src/Services/ApiServices");
 const getTrackedInstance = async (req, res) => {
   try {
     const { id } = req.params;
