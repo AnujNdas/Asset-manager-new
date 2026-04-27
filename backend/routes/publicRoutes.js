@@ -9,6 +9,6 @@ router.get(
   authenticateToken(["admin", "user"]),
   tenantMiddleware,                // ✅ ADD THIS
   requireActiveSubscription,
-  getPublicTrackedInstance
+  getTrackedInstance
 );
 module.exports = router;
