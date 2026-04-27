@@ -7,6 +7,7 @@ import InstanceCard from "../Components/InstanceCard";
 import ReassignModal from "../Components/ReassignModal";
 import HistoryModal from "../Components/HistoryModal";
 import UpgradeModal from "../Components/UpgradeModal";
+import QRScanner from "../Components/Qrscanner";
 import {
   getTrackedInstances,
   getInstanceHistory
