@@ -255,21 +255,27 @@ const renderInstance = (inst, assignment) => {
   };
 
   return (
-    <div className={`instance-card-modern ${isAssigned ? "assigned" : ""}`}>
+<div className={`instance-card-modern ${isAssigned ? "assigned" : ""}`}>
 
-      {/* 🔷 HEADER */}
-      <div className="instance-header-modern">
-        <div>
-          <h4 className="instance-title">{inst.instanceCode}</h4>
-          <p className="instance-sub">{inst.serialNumber || "No Serial"}</p>
-        </div>
+  {/* 🔷 HEADER */}
+  <div className="instance-header-modern">
+    <div>
+      <h4 className="instance-title">{inst.instanceCode}</h4>
+      <p className="instance-sub">{inst.serialNumber || "No Serial"}</p>
+    </div>
 
-        <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
-          {isAssigned ? "🔴 Assigned" : "🟢 Available"}
-        </span>
-      </div>
+    <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
+      {isAssigned ? "🔴 Assigned" : "🟢 Available"}
+    </span>
+  </div>
 
-      {/* 🔷 QUICK INFO */}
+  {/* 🔷 MAIN SPLIT */}
+  <div className="instance-body">
+
+    {/* LEFT SIDE */}
+    <div className="instance-left">
+
+      {/* QUICK */}
       <div className="instance-quick-grid">
         <div>📍 {inst.location || "N/A"}</div>
         <div>⚙ {inst.condition}</div>
@@ -281,131 +287,77 @@ const renderInstance = (inst, assignment) => {
         </div>
       </div>
 
-      {/* 🔷 TECHNICAL */}
+      {/* TECH */}
       <div className="instance-section">
-        <p className="section-title">⚡ Technical</p>
+        <p className="section-title">Technical</p>
         <div className="grid-2">
           <p><span>Model</span>{hw.modelNo || "N/A"}</p>
           <p><span>Specs</span>{hw.specifications || "N/A"}</p>
         </div>
       </div>
 
-      {/* 🔷 LIFECYCLE */}
+      {/* LIFECYCLE */}
       <div className="instance-section">
-        <p className="section-title">📆 Lifecycle</p>
+        <p className="section-title">Lifecycle</p>
         <div className="grid-2">
           <p><span>Purchase</span>{hw.purchaseDate ? new Date(hw.purchaseDate).toLocaleDateString() : "N/A"}</p>
           <p><span>Maintenance</span>{hw.nextMaintenanceDate ? new Date(hw.nextMaintenanceDate).toLocaleDateString() : "N/A"}</p>
-          <p><span>Warranty Exp</span>{hw.warrantyExpiry ? new Date(hw.warrantyExpiry).toLocaleDateString() : "N/A"}</p>
-          <p><span>Insurance Exp</span>{hw.insuranceExpiry ? new Date(hw.insuranceExpiry).toLocaleDateString() : "N/A"}</p>
+          <p><span>Warranty</span>{hw.warrantyExpiry ? new Date(hw.warrantyExpiry).toLocaleDateString() : "N/A"}</p>
+          <p><span>Insurance</span>{hw.insuranceExpiry ? new Date(hw.insuranceExpiry).toLocaleDateString() : "N/A"}</p>
         </div>
       </div>
 
-      {/* 🔷 COST */}
+      {/* COST */}
       <div className="instance-section">
-        <p className="section-title">💰 Cost</p>
+        <p className="section-title">Cost</p>
         <div className="grid-2">
-          <p>
-            <span>Purchase</span>
-            {CURRENCY_SYMBOLS[currency]}{" "}
-            {getCost(hw.purchaseCost).toLocaleString()}
-          </p>
-
-          <p>
-            <span>Maintenance</span>
-            {CURRENCY_SYMBOLS[currency]}{" "}
-            {getCost(hw.costs?.maintenanceCost).toLocaleString()}
-          </p>
-
-          <p>
-            <span>Warranty</span>
-            {CURRENCY_SYMBOLS[currency]}{" "}
-            {getCost(hw.costs?.warrantyRenewalCost).toLocaleString()}
-          </p>
-
-          <p>
-            <span>Insurance</span>
-            {CURRENCY_SYMBOLS[currency]}{" "}
-            {getCost(hw.costs?.insuranceCost).toLocaleString()}
-          </p>
+          <p><span>Purchase</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.purchaseCost)}</p>
+          <p><span>Maintenance</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.costs?.maintenanceCost)}</p>
+          <p><span>Warranty</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.costs?.warrantyRenewalCost)}</p>
+          <p><span>Insurance</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.costs?.insuranceCost)}</p>
         </div>
       </div>
 
-      {/* 🔷 QR CODE */}
+    </div>
+
+    {/* RIGHT SIDE */}
+    <div className="instance-right">
+
+      {/* QR */}
       {qrUrl && (
-        <div className="instance-section">
-          <p className="section-title">🔳 QR Code</p>
+        <div className="instance-section qr-box">
+          <p className="section-title">QR Code</p>
 
-          <div className="qr-container">
-            {inst.trackingUrl ? (
-              <a
-                href={inst.trackingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={qrUrl}
-                  alt="QR Code"
-                  className="qr-image-modern"
-                />
+          <img src={qrUrl} alt="QR" className="qr-image-modern" />
+
+          <div className="qr-actions">
+            <a href={qrUrl} download className="btn-small">Download</a>
+
+            {inst.trackingUrl && (
+              <a href={inst.trackingUrl} target="_blank" rel="noreferrer" className="btn-small btn-blue">
+                Open
               </a>
-            ) : (
-              <img
-                src={qrUrl}
-                alt="QR Code"
-                className="qr-image-modern"
-              />
             )}
-
-            <div className="qr-actions">
-              <a href={qrUrl} download className="btn-small">
-                Download
-              </a>
-
-              {inst.trackingUrl && (
-                <a
-                  href={inst.trackingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-small btn-blue"
-                >
-                  Open Tracking
-                </a>
-              )}
-            </div>
           </div>
         </div>
       )}
 
-      {/* 🔷 ASSIGNMENT */}
+      {/* ASSIGNMENT */}
       {isAssigned && (
-        <div className="assignment-modern">
-          <p className="section-title">👤 Assignment</p>
+        <div className="instance-section assignment-box">
+          <p className="section-title">Assignment</p>
           <p>{assignment.employee?.name}</p>
           <p>{assignment.department?.name}</p>
           <p>{assignment.location}</p>
         </div>
       )}
 
-      {/* 🔷 ACTION */}
-      <button
-        className="btn-edit modern"
-        onClick={() => {
-          setEditInstance(inst);
-
-          setInstanceForm({
-            location: inst.location,
-            condition: inst.condition,
-            hardware: {
-              modelNo: hw.modelNo || "",
-              specifications: hw.specifications || "",
-            },
-          });
-        }}
-      >
-        ✏ Edit
-      </button>
     </div>
+  </div>
+
+  {/* ACTION */}
+  <button className="btn-edit modern">✏ Edit</button>
+</div>
   );
 };
 
