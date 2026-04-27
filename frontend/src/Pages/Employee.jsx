@@ -61,6 +61,7 @@ const fetchDepartments = async () => {
 const fetchEmployeeSummary = async () => {
   try {
     const res = await getEmployeeSummary();
+    console.log("Fetched Employee Summary:", res.data);
     setEmployeeSummary(res.data);
   } catch (err) {
     console.error(err);

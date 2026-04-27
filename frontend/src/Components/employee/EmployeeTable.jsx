@@ -12,7 +12,8 @@ const EmployeeTable = ({ employees, onEdit, onDelete }) => {
             <th>Email</th>
             <th>Phone</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
 
@@ -37,7 +38,7 @@ const EmployeeTable = ({ employees, onEdit, onDelete }) => {
                   </span>
                 </td>
 
-                <td className="action-buttons">
+                <td>
                   <button
                     className="edit-btn"
                     onClick={() => onEdit(emp)}
@@ -45,13 +46,16 @@ const EmployeeTable = ({ employees, onEdit, onDelete }) => {
                     Edit
                   </button>
 
+                  
+                </td>
+                <td>
                   <button
                     className="delete-btn"
                     onClick={() => onDelete(emp._id)}
                   >
                     Delete
                   </button>
-                </td>
+                  </td>
               </tr>
             ))
           )}
