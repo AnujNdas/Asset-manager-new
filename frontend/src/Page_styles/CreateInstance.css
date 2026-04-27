@@ -201,6 +201,7 @@ button {
 .details-box {
   display: flex;
   justify-content: space-between;
+  color: #DFD0B8;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-6px); }
