@@ -124,7 +124,7 @@ const getEmployeeAssetSummary = async (req, res) => {
         }
       },
 
-      // employee info
+      // 🔹 JOIN EMPLOYEE
       {
         $lookup: {
           from: "employees",
@@ -135,7 +135,7 @@ const getEmployeeAssetSummary = async (req, res) => {
       },
       { $unwind: "$employee" },
 
-      // department info
+      // 🔹 JOIN DEPARTMENT
       {
         $lookup: {
           from: "departments",
@@ -146,101 +146,131 @@ const getEmployeeAssetSummary = async (req, res) => {
       },
       { $unwind: "$department" },
 
-      // hardware assets
+      // 🔥 JOIN INSTANCE (CRITICAL)
+      {
+        $lookup: {
+          from: "assetinstances",
+          localField: "assetInstanceId",
+          foreignField: "_id",
+          as: "instance"
+        }
+      },
+      { $unwind: "$instance" },
+
+      // 🔹 JOIN ASSET (for name only)
       {
         $lookup: {
           from: "assets",
-          localField: "assetId",
+          localField: "instance.assetId",
           foreignField: "_id",
-          as: "hardwareAsset"
+          as: "asset"
         }
       },
+      { $unwind: "$asset" },
 
-      // software assets
-      {
-        $lookup: {
-          from: "softwareassets",
-          localField: "assetId",
-          foreignField: "_id",
-          as: "softwareAsset"
-        }
-      },
-
+      // 🔥 EXTRACT COST (BASE AMOUNT)
       {
         $addFields: {
-          asset: {
+          instanceCost: {
             $cond: [
               { $eq: ["$assetType", "hardware"] },
-              { $arrayElemAt: ["$hardwareAsset", 0] },
-              { $arrayElemAt: ["$softwareAsset", 0] }
+              "$instance.hardware.purchaseCost.baseAmount",
+              "$instance.software.purchaseCost.baseAmount"
             ]
           }
         }
       },
 
-      {
-        $project: {
-          employeeId: "$employee._id",
-          employeeName: "$employee.name",
-          employeeCode: "$employee.employeeCode",
-          department: "$department.name",
-
-          assetName: "$asset.assetName",
-          assetType: "$assetType",
-
-          quantity: "$quantity",
-          location: "$assignLocation",
-          status: "$status",
-
-          unitCost: "$asset.assetCost.unitAmount",
-          totalCost: {
-            $multiply: [
-              "$quantity",
-              "$asset.assetCost.unitAmount"
-            ]
-          }
-        }
-      },
-
+      // 🔹 GROUP BY EMPLOYEE
       {
         $group: {
-          _id: "$employeeId",
+          _id: "$employee._id",
 
-          employeeName: { $first: "$employeeName" },
-          employeeCode: { $first: "$employeeCode" },
-          department: { $first: "$department" },
+          employeeName: { $first: "$employee.name" },
+          employeeCode: { $first: "$employee.employeeCode" },
+          department: { $first: "$department.name" },
 
-          hardwareAssets: {
-            $push: {
+          // 🔹 INSTANCE COUNTS
+          hardwareInstanceCount: {
+            $sum: {
+              $cond: [{ $eq: ["$assetType", "hardware"] }, 1, 0]
+            }
+          },
+          softwareInstanceCount: {
+            $sum: {
+              $cond: [{ $eq: ["$assetType", "software"] }, 1, 0]
+            }
+          },
+
+          // 🔹 UNIQUE ASSET COUNTS
+          hardwareAssetsSet: {
+            $addToSet: {
               $cond: [
                 { $eq: ["$assetType", "hardware"] },
-                {
-                  name: "$assetName",
-                  quantity: "$quantity",
-                  cost: "$totalCost",
-                  location: "$location"
-                },
+                "$asset._id",
+                "$$REMOVE"
+              ]
+            }
+          },
+          softwareAssetsSet: {
+            $addToSet: {
+              $cond: [
+                { $eq: ["$assetType", "software"] },
+                "$asset._id",
                 "$$REMOVE"
               ]
             }
           },
 
-          softwareAssets: {
-            $push: {
+          // 🔹 COST
+          hardwareCost: {
+            $sum: {
+              $cond: [
+                { $eq: ["$assetType", "hardware"] },
+                "$instanceCost",
+                0
+              ]
+            }
+          },
+          softwareCost: {
+            $sum: {
               $cond: [
                 { $eq: ["$assetType", "software"] },
-                {
-                  name: "$assetName",
-                  quantity: "$quantity",
-                  cost: "$totalCost",
-                  location: "$location"
-                },
-                "$$REMOVE"
+                "$instanceCost",
+                0
               ]
             }
           }
         }
-      }
+      },
+
+      // 🔹 FINAL SHAPE
+      {
+        $project: {
+          _id: 1,
+          employeeName: 1,
+          employeeCode: 1,
+          department: 1,
+
+          hardware: {
+            assetCount: { $size: "$hardwareAssetsSet" },
+            instanceCount: "$hardwareInstanceCount",
+            totalCost: "$hardwareCost"
+          },
+
+          software: {
+            assetCount: { $size: "$softwareAssetsSet" },
+            instanceCount: "$softwareInstanceCount",
+            totalCost: "$softwareCost"
+          },
+
+          totalCost: {
+            $add: ["$hardwareCost", "$softwareCost"]
+          }
+        }
+      },
+
+      { $sort: { employeeName: 1 } }
     ]);
 
     res.json({
@@ -249,6 +279,7 @@ const getEmployeeAssetSummary = async (req, res) => {
     });
 
   } catch (error) {
+    console.error("Employee Summary Error:", error);
     res.status(500).json({
       success: false,
       message: error.message
