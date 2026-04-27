@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import EmployeeTable from "../Components/employee/EmployeeTable";
 import EmployeeModal from "../Components/employee/EmployeeModal";
+import { useCurrency } from "../Context/CurrencyContext";
+import { CURRENCY_SYMBOLS } from "../Components/CurrencyFilter";
 import { 
   getEmployees, 
   getDepartments,
@@ -13,6 +15,7 @@ import "../Page_styles/Employee.css";
 import Swal from "sweetalert2";
 import Loader from "../Components/Loader";
 const EmployeePage = () => {
+ const { currency, convertFromBase, loadingRates } = useCurrency();
   const [loading , setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -70,15 +73,26 @@ const fetchEmployeeSummary = async () => {
 
 // run once
 useEffect(() => {
-  fetchDepartments();
-  fetchEmployeeSummary();
-  setLoading(false)
-}, []);
+  const init = async () => {
+    setLoading(true);
+    await Promise.all([
+      fetchDepartments(),
+      fetchEmployeeSummary()
+    ]);
+    setLoading(false);
+  };
 
+  init();
+}, []);
 // run when filter changes
 useEffect(() => {
-  fetchEmployees();
-  setLoading(false)
+  const loadEmployees = async () => {
+    setLoading(true);
+    await fetchEmployees();
+    setLoading(false);
+  };
+
+  loadEmployees();
 }, [departmentFilter]);
 
   const filteredEmployees = employees.filter(emp =>
@@ -86,6 +100,7 @@ useEffect(() => {
     emp.employeeCode.toLowerCase().includes(search.toLowerCase())
   );
 if (loading) return <Loader />
+if (loadingRates) return <Loader />;
   return (
     <div className="employee-page">
       <div className="employee-header">
@@ -128,64 +143,50 @@ if (loading) return <Loader />
   <div className="team-asset-grid">
     {employeeSummary.map((emp) => {
 
-      const hardwareCost = emp.hardwareAssets.reduce(
-        (sum, a) => sum + a.cost, 0
-      );
+    const hardware = emp.hardware || {};
+    const software = emp.software || {};
 
-      const softwareCost = emp.softwareAssets.reduce(
-        (sum, a) => sum + a.cost, 0
-      );
-
-      const totalCost = hardwareCost + softwareCost;
+    const totalCost = emp.totalCost || 0;
 
       return (
-        <div key={emp._id} className="team-asset-card">
+<div key={emp._id} className="team-asset-card">
 
-          <div className="team-card-header">
-            <h4>{emp.employeeName}</h4>
-            <span>{emp.employeeCode}</span>
-            <p>{emp.department}</p>
-          </div>
+  <div className="team-card-header">
+    <h4>{emp.employeeName}</h4>
+    <span>{emp.employeeCode}</span>
+    <p>{emp.department}</p>
+  </div>
 
-          <div className="asset-section">
+  <div className="asset-section">
 
-            <div>
-              <h5>Hardware</h5>
-              {emp.hardwareAssets.length === 0 ? (
-                <p>No hardware</p>
-              ) : (
-                emp.hardwareAssets.map((a, i) => (
-                  <div key={i} className="asset-item">
-                    <span>{a.name}</span>
-                    <span>Qty: {a.quantity}</span>
-                    <span>${a.cost}</span>
-                  </div>
-                ))
-              )}
-            </div>
+    <div>
+      <h5>Hardware</h5>
+      <p>Assets: {hardware.assetCount || 0}</p>
+      <p>Instances: {hardware.instanceCount || 0}</p>
+      <p>
+  Value: {CURRENCY_SYMBOLS[currency]}{" "}
+  {convertFromBase(hardware.totalCost || 0)}
+</p>
+    </div>
 
-            <div>
-              <h5>Software</h5>
-              {emp.softwareAssets.length === 0 ? (
-                <p>No software</p>
-              ) : (
-                emp.softwareAssets.map((a, i) => (
-                  <div key={i} className="asset-item">
-                    <span>{a.name}</span>
-                    <span>Qty: {a.quantity}</span>
-                    <span>${a.cost}</span>
-                  </div>
-                ))
-              )}
-            </div>
+    <div>
+      <h5>Software</h5>
+      <p>Assets: {software.assetCount || 0}</p>
+      <p>Instances: {software.instanceCount || 0}</p>
+      <p>
+  Value: {CURRENCY_SYMBOLS[currency]}{" "}
+  {convertFromBase(software.totalCost || 0)}
+</p>
+    </div>
 
-          </div>
+  </div>
 
-          <div className="total-cost">
-            Total Asset Value: ${totalCost}
-          </div>
-
-        </div>
+  {/* ✅ FIXED POSITION */}
+<div className="total-cost">
+  Total Asset Value: {CURRENCY_SYMBOLS[currency]}{" "}
+  {convertFromBase(totalCost)}
+</div>
+</div>
       );
     })}
   </div>
