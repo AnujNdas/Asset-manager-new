@@ -95,14 +95,14 @@
 
 /* Hover effect */
 .notification-list li:hover {
-  background: #f1f7ff;
+  background: #222831;
   box-shadow: 0 3px 10px rgba(0, 123, 255, 0.08);
 }
 
 /* Unread notification state */
 .notification-list li.unread {
-  background: #f9faff;
-  border-left: 5px solid #007bff;
+  background: #393E46;
+  border-left: 5px solid #DFD0B8;
 }
 
 /* Read notification state */

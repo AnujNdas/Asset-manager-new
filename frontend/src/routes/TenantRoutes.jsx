@@ -18,6 +18,7 @@ const Subscription = lazy(() => import("../Inner_sections/Subscription"));
 const AssetInstance = lazy(() => import("../Pages/AssetInstance"));
 const CreateInstance = lazy(() => import("../Pages/CreateInstance"))
 const InstanceTracking = lazy(() => import("../Pages/InstanceTracking"))
+const TrackInstance = lazy(() => import("../Pages/TrackInstance"));
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
     <Route element={<TenantLayout profileUser={profileUser} />}>
@@ -43,6 +44,7 @@ const TenantRoutes = ({ profileUser }) => (
         <Route path="/instance-assets" element={<AssetInstance />} />
         <Route path="/create-instances/:assetId" element={<CreateInstance />} />  
         <Route path="/tracking" element={<InstanceTracking />} />  
+        <Route path="/track/:id" element={<TrackInstance />} />
       </Route>
 
     </Route>

@@ -35,7 +35,6 @@ const App = () => {
     <>
       <main>
         <Routes>
-          <Route path="/track/:id" element={<TrackInstance />} />
           <Route path="/user" element={<SuspenseWrapper><User /></SuspenseWrapper>}>
             <Route
               path="login"
