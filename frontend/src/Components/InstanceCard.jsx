@@ -197,7 +197,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
       </div>
                 {/* INSTANCE CODE */}
         {/* QR CODE */}
-{isHardware && instance.qrCode?.url && (
+{/* {isHardware && instance.qrCode?.url && (
   <div className="qr-section">
     <p className="label">QR Code</p>
 
@@ -232,7 +232,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
       </a>
     </div>
   </div>
-)}
+)} */}
     </div>
   );
 };

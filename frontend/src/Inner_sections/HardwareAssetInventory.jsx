@@ -246,6 +246,14 @@ const renderInstance = (inst, assignment) => {
   const isAssigned = !!assignment;
   const hw = inst.hardware || {};
 
+  // ✅ Safe QR fallback
+  const qrUrl = inst.qrCode?.url || hw.qrCode?.url;
+
+  // ✅ Safe cost helper
+  const getCost = (costObj) => {
+    return convertFromBase(Number(costObj?.baseAmount || 0));
+  };
+
   return (
     <div className={`instance-card-modern ${isAssigned ? "assigned" : ""}`}>
 
@@ -322,6 +330,52 @@ const renderInstance = (inst, assignment) => {
           </p>
         </div>
       </div>
+
+      {/* 🔷 QR CODE */}
+      {qrUrl && (
+        <div className="instance-section">
+          <p className="section-title">🔳 QR Code</p>
+
+          <div className="qr-container">
+            {inst.trackingUrl ? (
+              <a
+                href={inst.trackingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={qrUrl}
+                  alt="QR Code"
+                  className="qr-image-modern"
+                />
+              </a>
+            ) : (
+              <img
+                src={qrUrl}
+                alt="QR Code"
+                className="qr-image-modern"
+              />
+            )}
+
+            <div className="qr-actions">
+              <a href={qrUrl} download className="btn-small">
+                Download
+              </a>
+
+              {inst.trackingUrl && (
+                <a
+                  href={inst.trackingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-small btn-blue"
+                >
+                  Open Tracking
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 🔷 ASSIGNMENT */}
       {isAssigned && (
