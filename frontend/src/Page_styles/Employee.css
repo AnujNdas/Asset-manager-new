@@ -370,6 +370,7 @@ color:#2563eb;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-top: 8px;
+  color: #DFD0B8;
 }
 
 .asset-section h5 {
@@ -414,7 +415,7 @@ color:#2563eb;
   padding-top: 12px;
   font-size: 14px;
   font-weight: 600;
-  color: #1f2937;
+  color: #DFD0B8;
   border-top: 1px solid #f1f5f9;
 }
 
