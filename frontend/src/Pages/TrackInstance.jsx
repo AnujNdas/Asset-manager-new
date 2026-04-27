@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getTrackedInstancePublic } from "../Services/ApiServices";
+import { getInstanceData } from "../Services/ApiServices";
 import "../Page_styles/TrackInstance.css";
 import axios from "axios";
 const TrackInstance = () => {
@@ -14,15 +14,22 @@ const TrackInstance = () => {
 
 const fetchInstance = async () => {
   try {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/track/${id}`);
+    const res = await getInstanceData(id);
 
     console.log("TRACK DATA:", res.data);
 
-    setData(res.data.data); // ✅ IMPORTANT (depends on backend response structure)
+    setData(res.data.data);
 
   } catch (err) {
     console.error(err);
-    setData(null);
+
+    // 🔐 Handle unauthorized (important for QR flow)
+    if (err.response?.status === 401) {
+      window.location.href = `/login?redirect=/track/${id}`;
+    } else {
+      setData(null);
+    }
+
   } finally {
     setLoading(false);
   }

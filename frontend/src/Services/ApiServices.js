@@ -429,6 +429,10 @@ export const getTrackedInstances = async ({
 
   return response.data;
 };
+// 🔐 Protected tracking API
+export const getInstanceData = (id) => {
+  return axiosInstance.get(`/track/${id}`);
+};
 export const getInstanceHistory = async (instanceId) => {
   const response = await axiosInstance.get(
     `/tracking/${instanceId}/history`
