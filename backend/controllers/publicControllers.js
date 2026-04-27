@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const getPublicTrackedInstance = async (req, res) => {
+const { getTrackedInstances } = require("../../frontend/src/Services/ApiServices");
+const getTrackedInstance = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -17,7 +18,10 @@ const getPublicTrackedInstance = async (req, res) => {
 
 const instance = await mongoose
   .model("AssetInstance")
-  .findById(id)
+  .findOne({
+    _id: id,
+    organizationId: req.user.organizationId   // 🔒 CRITICAL
+  })
   .populate("assetId", "assetName assetCode")
   .lean();
 
@@ -119,5 +123,5 @@ const responseData = {
   }
 };
 module.exports = {
-  getPublicTrackedInstance
+  getTrackedInstance
 };

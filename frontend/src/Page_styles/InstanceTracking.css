@@ -103,24 +103,22 @@
 
 /* Blue action */
 .btn-blue {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
+  background: #DFD0B8;
+  color: #222831;
 }
 
 .btn-blue:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+  background: #948979;
 }
 
 /* Dark button */
 .btn-dark {
-  background: #222831;
-  color: #DFD0B8;
-  border: 1px solid #555;
+  background: #948979;
+  color: #222831;
 }
 
 .btn-dark:hover {
-  background: #2f363e;
+  background: #DFD0B8;
 }
 
 /* Disabled */
@@ -233,7 +231,28 @@
   padding: 6px 10px;
   border-radius: 6px;
 }
+.scanner-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  z-index: 999;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+#qr-reader {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .qr-image {

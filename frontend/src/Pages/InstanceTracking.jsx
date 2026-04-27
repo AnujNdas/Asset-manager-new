@@ -18,7 +18,7 @@ const InstanceTracking = () => {
   const [loading, setLoading] = useState(true);
     const [showUpgrade, setShowUpgrade] = useState(false);
   const [filterType, setFilterType] = useState("all");
-
+  const [showScanner, setShowScanner] = useState(false);
   const [selectedInstance, setSelectedInstance] = useState(null);
   const [showReassign, setShowReassign] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -112,17 +112,26 @@ const handleHistory = async (instance) => {
     <div className="instance-page">
 
       {/* 🔽 FILTER BAR */}
-      <div className="filter-bar">
-<select value={filterType} onChange={handleFilterChange}>
-          <option value="all">All Assets</option>
-          <option value="hardware">Hardware</option>
-          <option value="software">Software</option>
-        </select>
+<div className="filter-bar">
+  <select value={filterType} onChange={handleFilterChange}>
+    <option value="all">All Assets</option>
+    <option value="hardware">Hardware</option>
+    <option value="software">Software</option>
+  </select>
 
-        <span className="count">
-          {instances.length} items
-        </span>
-      </div>
+  <div className="right-actions">
+    <button
+      className="btn btn-blue"
+      onClick={() => setShowScanner(true)}
+    >
+      Scan QR
+    </button>
+
+    <span className="count">
+      {instances.length} items
+    </span>
+  </div>
+</div>
 
       {/* 🔽 LIST */}
       <div className="instance-list">
@@ -158,6 +167,9 @@ const handleHistory = async (instance) => {
     onClose={() => setShowUpgrade(false)}
     refresh={() => fetchInstances(filterType)}
   />
+)}
+{showScanner && (
+  <QRScanner onClose={() => setShowScanner(false)} />
 )}
     </div>
   );
