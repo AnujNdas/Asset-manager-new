@@ -245,7 +245,10 @@
       setFile(e.target.files[0]);
     };
 
-
+      const formatDate = (date) => {
+    if (!date) return "N/A";
+    return new Date(date).toLocaleDateString("en-IN");
+  };
   const handleImport = async () => {
     if (!file) {
       alert("Please select an Excel file");
@@ -554,12 +557,17 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
           {/* ASSET INFO */}
           {asset && (
             <div className="asset-info">
+              <div className="details-box">
               <h3>
                 {asset.assetName}{" "}
+              </h3>
                 <span className="type-badge">{asset.locationName.name.toUpperCase()}</span>
                 <span className="type-badge">{asset.assetType.toUpperCase()}</span>
-              </h3>
+              </div>
+              <div className="details-box">
               <p>{asset.assetCode}</p>
+                <span className="type-badge">{formatDate(asset.purchaseDetails.purchaseDate)}</span>
+              </div>
             </div>
           )}
   <div className="import-section">
