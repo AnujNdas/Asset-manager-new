@@ -55,6 +55,8 @@ const COUNTRY_NAME_MAP = {
 
 
 const AdminDashboard = () => {
+  const { totals, upcoming, analytics } = data;
+const costBreakdown = analytics?.costBreakdown || {};
 const { currency, convertFromBase, loadingRates } = useCurrency();
   console.log("AdminDashboard mounted");
   const [data, setData] = useState(null);
@@ -110,8 +112,9 @@ useEffect(() => {
           title="Software Assets"
           value={totals.softwareCount}
           sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-  totals.softwareValuation,
+  totals.softwarePurchaseValue,
 ).toLocaleString()}`}
+sub={totals.softwareInstances}
 redirectTo="/inventory?software"
         />
 
@@ -119,8 +122,9 @@ redirectTo="/inventory?software"
           title="Hardware Assets"
           value={totals.hardwareCount}
           sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-  totals.hardwareValuation,
+  totals.hardwarePurchaseValue,
 ).toLocaleString()}`}
+sub={totals.hardwareInstances}
 redirectTo="/inventory?hardware"
         />
 
@@ -218,7 +222,27 @@ redirectTo="/inventory?hardware"
     dateField="DOE"
   /> */}
 </div>
+<div className="section-grid">
+  <CostBreakdownCard
+    title="Top Maintenance Costs"
+    items={costBreakdown.maintenance}
+  />
 
+  <CostBreakdownCard
+    title="Top Warranty Costs"
+    items={costBreakdown.warranty}
+  />
+
+  <CostBreakdownCard
+    title="Top Insurance Costs"
+    items={costBreakdown.insurance}
+  />
+
+  <CostBreakdownCard
+    title="Top Software Renewal Costs"
+    items={costBreakdown.renewal}
+  />
+</div>
       <div className="section-grid">
       <TopLocationsMap
   title="Top Locations"
@@ -760,4 +784,38 @@ const SpendByCategoryBarChart = ({ data }) => {
   );
 };
 
+const CostBreakdownCard = ({ title, items }) => {
+  const { currency, convertFromBase } = useCurrency();
 
+  if (!items || items.length === 0) {
+    return (
+      <div className="card">
+        <h3 className="card-heading">{title}</h3>
+        <p className="empty-text">No data available</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card">
+      <h3 className="card-heading">{title}</h3>
+
+      <div className="list">
+        {items.map((item, index) => {
+          const converted = convertFromBase(item.cost || 0);
+
+          return (
+            <div key={item._id || index} className={`list-row ${isTop ? "top-cost" : ""}`}>
+              <span>{item.instanceName}</span>
+
+              <span className="value-text">
+                {CURRENCY_SYMBOLS[currency]}{" "}
+                {converted.toLocaleString()}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};

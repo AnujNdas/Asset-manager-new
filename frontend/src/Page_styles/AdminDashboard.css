@@ -397,7 +397,15 @@
   background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
   color: #222831;
 }
+.top-cost {
+  background: rgba(223, 208, 184, 0.15);
+  border-left: 4px solid #DFD0B8;
+}
 
+.value-text {
+  color: #DFD0B8;
+  font-weight: 600;
+}
 /* Blinking Animation */
 @keyframes blink {
   0% { opacity: 1; }
