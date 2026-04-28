@@ -106,25 +106,23 @@ useEffect(() => {
 
         />
 
-        <MetricCard
-          title="Software Assets"
-          value={totals.softwareCount}
-          sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-  totals.softwarePurchaseValue,
-).toLocaleString()}`}
-sub={totals.softwareInstances}
-redirectTo="/inventory?software"
-        />
+<MetricCard
+  title="Software Assets"
+  value={totals.softwareCount}
+  sub={`${totals.softwareInstances} Instances • ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
+    totals.softwarePurchaseValue
+  ).toLocaleString()}`}
+  redirectTo="/inventory?software"
+/>
 
-        <MetricCard
-          title="Hardware Assets"
-          value={totals.hardwareCount}
-          sub={`${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-  totals.hardwarePurchaseValue,
-).toLocaleString()}`}
-sub={totals.hardwareInstances}
-redirectTo="/inventory?hardware"
-        />
+<MetricCard
+  title="Hardware Assets"
+  value={totals.hardwareCount}
+  sub={`${totals.hardwareInstances} Instances • ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
+    totals.hardwarePurchaseValue
+  ).toLocaleString()}`}
+  redirectTo="/inventory?hardware"
+/>
 
         <MetricCard
           title="Users / Team-members"
@@ -220,7 +218,7 @@ redirectTo="/inventory?hardware"
     dateField="DOE"
   /> */}
 </div>
-<div className="section-grid">
+<div className="section-grid2">
   <CostBreakdownCard
     title="Top Maintenance Costs"
     items={costBreakdown.maintenance}
