@@ -8,53 +8,41 @@ const QRScanner = ({ onClose, onScanSuccess }) => {
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
       "qr-reader",
-      {
-        fps: 10,
-        qrbox: 250,
-      },
+      { fps: 10, qrbox: 250 },
       false
     );
 
-scanner.render(
-  (decodedText) => {
-    console.log("QR Result:", decodedText);
+    scanner.render(
+      (decodedText) => {
+        console.log("QR Result:", decodedText);
 
-    let instanceId = null;
+        let instanceId = decodedText;
 
-    try {
-      // ✅ handle full URL QR
-      if (decodedText.startsWith("http")) {
-        const url = new URL(decodedText);
-        instanceId = url.searchParams.get("instance");
-      } else {
-        // fallback: QR contains only instanceId
-        instanceId = decodedText;
-      }
+        // ✅ If QR contains full URL → extract ID
+        if (decodedText.startsWith("http")) {
+          const parts = decodedText.split("/");
+          instanceId = parts[parts.length - 1]; // last segment
+        }
 
-      if (!instanceId) {
-        console.warn("No instanceId found in QR");
-        return;
-      }
+        console.log("Extracted ID:", instanceId);
 
-      // ✅ send to parent instead of navigating
-      if (onScanSuccess) {
-        onScanSuccess(instanceId);
-      }
+        // ✅ pass ID to parent instead of redirect
+        if (onScanSuccess) {
+          onScanSuccess(instanceId);
+        } else {
+          navigate(`/track/${instanceId}`);
+        }
 
-    } catch (err) {
-      console.error("QR parse error:", err);
-    }
-
-    scanner.clear();
-    onClose();
-  },
-  () => {}
-);
+        scanner.clear();
+        onClose();
+      },
+      () => {}
+    );
 
     return () => {
       scanner.clear().catch(() => {});
     };
-  }, [navigate, onClose]);
+  }, [navigate, onClose, onScanSuccess]);
 
   return (
     <div className="scanner-modal">
@@ -65,5 +53,4 @@ scanner.render(
     </div>
   );
 };
-
 export default QRScanner;

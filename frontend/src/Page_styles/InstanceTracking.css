@@ -167,7 +167,12 @@
   background: #393E46;
   color: #DFD0B8;
 }
-
+.highlight-card {
+  border: 2px solid #2563eb;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
 /* ---------------- HISTORY ---------------- */
 .history-header {
   color: #DFD0B8;

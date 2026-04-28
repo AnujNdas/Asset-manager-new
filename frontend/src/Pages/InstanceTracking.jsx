@@ -24,12 +24,13 @@ const InstanceTracking = () => {
   const [showReassign, setShowReassign] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [highlightedId, setHighlightedId] = useState(null);
-  useEffect(() => {
-  if (highlightedId && instanceRefs.current[highlightedId]) {
-    instanceRefs.current[highlightedId].scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+useEffect(() => {
+  if (highlightedId) {
+    const timer = setTimeout(() => {
+      setHighlightedId(null);
+    }, 4000);
+
+    return () => clearTimeout(timer);
   }
 }, [highlightedId]);
     const fetchInstances = async (type = filterType) => {
@@ -144,17 +145,22 @@ const handleHistory = async (instance) => {
 </div>
 
       {/* 🔽 LIST */}
-      <div className="instance-list">
-{instances.map((inst) => (
-<InstanceCard
-  key={inst._id}
-  instance={inst}
-  onReassign={handleReassign}
-  onHistory={handleHistory}
-  onUpgrade={handleUpgrade}
-/>
-))}
-      </div>
+<div className="instance-list">
+  {instances.map((inst) => (
+    <div
+      key={inst._id}
+      ref={(el) => (instanceRefs.current[inst._id] = el)}
+      className={highlightedId === inst._id ? "highlight-card" : ""}
+    >
+      <InstanceCard
+        instance={inst}
+        onReassign={handleReassign}
+        onHistory={handleHistory}
+        onUpgrade={handleUpgrade}
+      />
+    </div>
+  ))}
+</div>
 
       {/* 🔽 MODALS */}
       {showReassign && (
