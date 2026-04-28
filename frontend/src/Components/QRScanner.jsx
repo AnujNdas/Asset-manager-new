@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { useNavigate } from "react-router-dom";
 
-const QRScanner = ({ onClose }) => {
+const QRScanner = ({ onClose, onScanSuccess }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,25 +14,41 @@ const QRScanner = ({ onClose }) => {
       false
     );
 
-    scanner.render(
-      (decodedText) => {
-        console.log("QR Result:", decodedText);
+scanner.render(
+  (decodedText) => {
+    console.log("QR Result:", decodedText);
 
-        // ✅ If your QR contains full URL
-        if (decodedText.startsWith("http")) {
-          window.location.href = decodedText;
-        } else {
-          // fallback → route internally
-          navigate(`/track/${decodedText}`);
-        }
+    let instanceId = null;
 
-        scanner.clear();
-        onClose();
-      },
-      (error) => {
-        // ignore scan errors
+    try {
+      // ✅ handle full URL QR
+      if (decodedText.startsWith("http")) {
+        const url = new URL(decodedText);
+        instanceId = url.searchParams.get("instance");
+      } else {
+        // fallback: QR contains only instanceId
+        instanceId = decodedText;
       }
-    );
+
+      if (!instanceId) {
+        console.warn("No instanceId found in QR");
+        return;
+      }
+
+      // ✅ send to parent instead of navigating
+      if (onScanSuccess) {
+        onScanSuccess(instanceId);
+      }
+
+    } catch (err) {
+      console.error("QR parse error:", err);
+    }
+
+    scanner.clear();
+    onClose();
+  },
+  () => {}
+);
 
     return () => {
       scanner.clear().catch(() => {});

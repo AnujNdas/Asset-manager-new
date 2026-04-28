@@ -15,6 +15,7 @@ import {
 import Loader from "../Components/Loader";
 import Swal from "sweetalert2";
 const InstanceTracking = () => {
+  const instanceRefs = useRef({});
   const [instances, setInstances] = useState([]);
   const [loading, setLoading] = useState(true);
     const [showUpgrade, setShowUpgrade] = useState(false);
@@ -23,6 +24,15 @@ const InstanceTracking = () => {
   const [selectedInstance, setSelectedInstance] = useState(null);
   const [showReassign, setShowReassign] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [highlightedId, setHighlightedId] = useState(null);
+  useEffect(() => {
+  if (highlightedId && instanceRefs.current[highlightedId]) {
+    instanceRefs.current[highlightedId].scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+}, [highlightedId]);
     const fetchInstances = async (type = filterType) => {
   try {
     setLoading(true);
@@ -170,7 +180,20 @@ const handleHistory = async (instance) => {
   />
 )}
 {showScanner && (
-  <QRScanner onClose={() => setShowScanner(false)} />
+  <QRScanner
+  onClose={() => setShowScanner(false)}
+  onScanSuccess={(instanceId) => {
+    console.log("Scanned instance:", instanceId);
+
+    // ✅ ensure all instances are loaded
+    fetchInstances("all");
+
+    // ✅ small delay to wait for state update
+    setTimeout(() => {
+      setHighlightedId(instanceId);
+    }, 300);
+  }}
+/>
 )}
     </div>
   );
