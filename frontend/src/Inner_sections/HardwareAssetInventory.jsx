@@ -356,12 +356,7 @@ const renderInstance = (inst, assignment) => {
   </div>
 
   {/* ACTION */}
-  <button
-        className="btn-edit modern"
-        onClick={() => handleInstanceEditOpen(inst)}
-      >
-        ✏ Edit
-      </button>
+  <button className="btn-edit modern">✏ Edit</button>
 </div>
   );
 };
