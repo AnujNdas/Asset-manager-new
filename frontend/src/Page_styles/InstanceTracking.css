@@ -144,7 +144,7 @@
 
 /* ---------------- MODAL BOX ---------------- */
 .modal {
-  background: #393E46;
+  background: #222831;
   color: #DFD0B8;
 
   border-radius: 12px;
@@ -164,8 +164,7 @@
 .modal input,
 .modal select
 .modal textarea {
-  background: #222831;
-  border: 1px solid #555;
+  background: #393E46;
   color: #DFD0B8;
 }
 

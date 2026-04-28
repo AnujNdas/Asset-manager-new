@@ -141,6 +141,7 @@ const formatMoney = (costObj) => {
 
 
 const handleInstanceEditOpen = (inst) => {
+  console.log("Editing instance:", inst);
   setEditInstance(inst);
 
   setInstanceForm({
@@ -306,92 +307,106 @@ const renderSoftwareInstance = (inst, assignment) => {
   const sw = inst.software || {};
 
   return (
-    <div className={`instance-card modern ${isAssigned ? "assigned-card" : ""}`}>
+    <div className={`instance-card-modern ${isAssigned ? "assigned" : ""}`}>
 
       {/* 🔷 HEADER */}
-      <div className="instance-header modern-header">
+      <div className="instance-header-modern">
         <div>
-          <p className="instance-title">{inst.instanceCode}</p>
+          <h4 className="instance-title">{inst.instanceCode}</h4>
           <p className="instance-sub">
             🔑 {sw.licenseNumber || "No License"}
           </p>
         </div>
 
         <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
-          {isAssigned ? "Assigned" : "Available"}
+          {isAssigned ? "🔴 Assigned" : "🟢 Available"}
         </span>
       </div>
 
-      {/* 🔷 QUICK INFO STRIP */}
-      <div className="instance-quick">
-        <span>📍 {inst.location || "N/A"}</span>
-        <span>⚙ {inst.condition}</span>
-        <span>
-          🕒 {sw.installationDate
-            ? new Date(sw.installationDate).toLocaleDateString()
-            : "N/A"}
-        </span>
-      </div>
+      {/* 🔷 MAIN SPLIT */}
+      <div className="instance-body">
 
-      {/* 🔷 LICENSE SECTION */}
-      <div className="instance-section">
-        <p className="section-title">License Info</p>
+        {/* LEFT SIDE */}
+        <div className="instance-left">
 
-        <div className="info-grid">
-          <p><span>Key</span>{sw.licenseKey || "N/A"}</p>
+          {/* QUICK */}
+          <div className="instance-quick-grid">
+            <div>📍 {inst.location || "N/A"}</div>
+            <div>⚙ {inst.condition}</div>
+            <div>
+              📅{" "}
+              {sw.installationDate
+                ? new Date(sw.installationDate).toLocaleDateString()
+                : "N/A"}
+            </div>
+          </div>
+
+          {/* LICENSE */}
+          <div className="instance-section">
+            <p className="section-title">License</p>
+            <div className="grid-2">
+              <p><span>Key</span>{sw.licenseKey || "N/A"}</p>
+              <p><span>Number</span>{sw.licenseNumber || "N/A"}</p>
+            </div>
+          </div>
+
+          {/* VALIDITY */}
+          <div className="instance-section">
+            <p className="section-title">Validity</p>
+            <div className="grid-2">
+              <p>
+                <span>Expiry</span>
+                {sw.renewalDate
+                  ? new Date(sw.renewalDate).toLocaleDateString()
+                  : "N/A"}
+              </p>
+
+              <p>
+                <span>Last Used</span>
+                {sw.lastUsedDate
+                  ? new Date(sw.lastUsedDate).toLocaleDateString()
+                  : "N/A"}
+              </p>
+            </div>
+          </div>
+
+          {/* COST */}
+          <div className="instance-section">
+            <p className="section-title">Cost</p>
+            <div className="grid-2">
+              <p>
+                <span>Purchase</span>
+                {formatMoney(sw.purchaseCost)}
+              </p>
+
+              <p>
+                <span>Renewal</span>
+                {formatMoney(sw.costs?.renewalCost)}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div className="instance-right">
+
+          {/* ASSIGNMENT */}
+          {isAssigned && (
+            <div className="instance-section assignment-box">
+              <p className="section-title">Assignment</p>
+              <p>{assignment.employee?.name}</p>
+              <p>{assignment.department?.name}</p>
+              <p>{assignment.location}</p>
+            </div>
+          )}
+
         </div>
       </div>
 
-      {/* 🔷 COST SECTION */}
-      <div className="instance-section">
-        <p className="section-title">Cost</p>
-
-        <div className="info-grid">
-<p>
-  <span>Purchase</span>
-  {formatMoney(sw.purchaseCost)}
-</p>
-
-<p>
-  <span>Renewal</span>
-  {formatMoney(sw.costs?.renewalCost)}
-</p>
-        </div>
-      </div>
-
-      {/* 🔷 VALIDITY */}
-      <div className="instance-section">
-        <p className="section-title">Validity</p>
-
-        <div className="info-grid">
-          <p>
-            <span>Expiry</span>
-            {sw.renewalDate
-              ? new Date(sw.renewalDate).toLocaleDateString()
-              : "N/A"}
-          </p>
-
-          <p>
-            <span>Last Used</span>
-            {sw.lastUsedDate
-              ? new Date(sw.lastUsedDate).toLocaleDateString()
-              : "N/A"}
-          </p>
-        </div>
-      </div>
-
-      {/* 🔷 ASSIGNMENT */}
-      {isAssigned && (
-        <div className="assignment-box modern-assignment">
-          <p><span>👤</span>{assignment.employee?.name}</p>
-          <p><span>🏢</span>{assignment.department?.name}</p>
-          <p><span>📍</span>{assignment.location}</p>
-        </div>
-      )}
-
-      {/* 🔷 ACTION */}
+      {/* ACTION */}
       <button
-        className="btn-edit modern-btn"
+        className="btn-edit modern"
         onClick={() => handleInstanceEditOpen(inst)}
       >
         ✏ Edit
