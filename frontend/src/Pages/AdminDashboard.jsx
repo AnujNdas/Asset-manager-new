@@ -55,8 +55,6 @@ const COUNTRY_NAME_MAP = {
 
 
 const AdminDashboard = () => {
-  const { totals, upcoming, analytics } = data;
-const costBreakdown = analytics?.costBreakdown || {};
 const { currency, convertFromBase, loadingRates } = useCurrency();
   console.log("AdminDashboard mounted");
   const [data, setData] = useState(null);
@@ -89,7 +87,7 @@ useEffect(() => {
     );
   }
 
-  const { totals, upcoming, analytics } = data;
+  const { totals, upcoming, analytics , costBreakdown} = data;
 
   return (
     <div className="dashboard-container">
