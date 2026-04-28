@@ -310,19 +310,6 @@
   border-left: 3px solid #2563eb;
   border-radius: 6px;
 }
-
-.instance-card {
-  background: white;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  margin-bottom: 12px;
-  transition: 0.2s;
-}
-
-.instance-card:hover {
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-}
 .header-actions{
   display: flex;
   flex-direction: row;
@@ -403,11 +390,9 @@
   background: #dcfce7;
 }
 .instance-card {
-  background: #fff;
   padding: 12px;
   border-radius: 10px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .instance-header {
@@ -528,14 +513,15 @@
   font-weight: 500;
 }
 .input-group input,
-.input-group select {
+.input-group select,
+.input-group textarea {
   padding: 10px 12px;
 
   border-radius: 8px;
 
   font-size: 0.9rem;
   background: #393E46;
-
+  color: #DFD0B8;
   transition: all 0.2s ease;
 }
 .modal-actions {
@@ -552,6 +538,7 @@
   margin-bottom: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   transition: 0.2s ease;
+  color: #DFD0B8;
 }
 
 .instance-card-modern:hover {
