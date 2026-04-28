@@ -1025,7 +1025,6 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
           {/* TABLE */}
           <div className="instance-table">
             <div className="table-header">
-              {isHardware && <span>Serial</span>}
               <span>Device Name</span>
               <span>Condition</span>
               <span>Location</span>

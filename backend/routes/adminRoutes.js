@@ -18,41 +18,40 @@ router.get("/dashboard", authenticateToken(), async (req, res) => {
        🧮 INSTANCE BASED TOTALS
     ===================================================== */
 
-    const totalsPromise = AssetInstance.aggregate([
-      { $match: { organizationId } },
-{
-  $addFields: {
-    totalInstanceValue: {
-      $add: [
-        // Purchase cost
-        {
-          $cond: [
-            { $eq: ["$assetType", "hardware"] },
-            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-          ]
-        },
+const totalsPromise = AssetInstance.aggregate([
+  { $match: { organizationId } },
 
-        // Hardware extra costs
-        { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-        { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
-        { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+  {
+    $addFields: {
+      purchaseCost: {
+        $cond: [
+          { $eq: ["$assetType", "hardware"] },
+          { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+          { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+        ]
+      },
 
-        // Software renewal
-        { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
-      ]
+      extraCost: {
+        $add: [
+          { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+          { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+          { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+          { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+        ]
+      }
+    }
+  },
+
+  {
+    $group: {
+      _id: "$assetType",
+
+      totalPurchase: { $sum: "$purchaseCost" }, // ✅ ONLY purchase
+      totalExtra: { $sum: "$extraCost" },       // ✅ other costs
+      totalInstances: { $sum: 1 }
     }
   }
-},
-{
-  $group: {
-    _id: "$assetType",
-    totalValue: { $sum: "$totalInstanceValue" },
-    totalInstances: { $sum: 1 }
-  }
-}
-    ]);
-
+]);
     /* =====================================================
        📦 ASSET COUNTS
     ===================================================== */
@@ -176,6 +175,63 @@ const topCategoriesPromise = AssetInstance.aggregate([
       { $limit: 5 }
     ]);
 
+    /* =====================================================
+       Extra Cost Related Fields (SEPARATE)
+    ===================================================== */
+const topMaintenancePromise = AssetInstance.aggregate([
+  { $match: { organizationId, assetType: "hardware" } },
+
+  {
+    $project: {
+      instanceName: "$deviceName",
+      cost: "$hardware.costs.maintenanceCost.baseAmount"
+    }
+  },
+
+  { $sort: { cost: -1 } },
+  { $limit: 5 }
+]);
+
+const topWarrantyPromise = AssetInstance.aggregate([
+  { $match: { organizationId, assetType: "hardware" } },
+
+  {
+    $project: {
+      instanceName: "$deviceName",
+      cost: "$hardware.costs.warrantyRenewalCost.baseAmount"
+    }
+  },
+
+  { $sort: { cost: -1 } },
+  { $limit: 5 }
+]);
+
+const topInsurancePromise = AssetInstance.aggregate([
+  { $match: { organizationId, assetType: "hardware" } },
+
+  {
+    $project: {
+      instanceName: "$deviceName",
+      cost: "$hardware.costs.insuranceCost.baseAmount"
+    }
+  },
+
+  { $sort: { cost: -1 } },
+  { $limit: 5 }
+]);
+const topRenewalPromise = AssetInstance.aggregate([
+  { $match: { organizationId, assetType: "software" } },
+
+  {
+    $project: {
+      instanceName: "$deviceName",
+      cost: "$software.costs.renewalCost.baseAmount"
+    }
+  },
+
+  { $sort: { cost: -1 } },
+  { $limit: 5 }
+]);
     /* =====================================================
        🏢 DEPARTMENT ASSIGNMENTS (SEPARATE)
     ===================================================== */
@@ -355,7 +411,11 @@ const [
   upcoming,
   topLocations,
   usersCount,
-  employeesCount
+  employeesCount,
+  topMaintenance,
+  topWarranty,
+  topInsurance,
+  topRenewal
 ] = await Promise.all([
   totalsPromise,
   assetCountsPromise,
@@ -365,7 +425,11 @@ const [
   upcomingPromise,
   topLocationsPromise,
   usersCountPromise,
-  employeesCountPromise
+  employeesCountPromise,
+  topMaintenancePromise,
+  topWarrantyPromise,
+  topInsurancePromise,
+  topRenewalPromise
 ]);
     /* =====================================================
        🧠 FORMAT TOTALS
@@ -374,20 +438,28 @@ const [
     const map = {};
     totals.forEach(t => (map[t._id] = t));
 
-    const hardware = map["hardware"] || {};
-    const software = map["software"] || {};
+const hardware = map["hardware"] || {};
+const software = map["software"] || {};
 
+const hardwarePurchase = hardware.totalPurchase || 0;
+const softwarePurchase = software.totalPurchase || 0;
+
+const hardwareExtra = hardware.totalExtra || 0;
+const softwareExtra = software.totalExtra || 0;
+
+const overallValuation =
+  hardwarePurchase + softwarePurchase +
+  hardwareExtra + softwareExtra;
     /* =====================================================
        ✅ RESPONSE
     ===================================================== */
 
 res.json({
   totals: {
-    overallValuation:
-      (hardware.totalValue || 0) + (software.totalValue || 0),
+    overallValuation,
 
-    hardwareValuation: hardware.totalValue || 0,
-    softwareValuation: software.totalValue || 0,
+  hardwarePurchaseValue: hardwarePurchase,
+  softwarePurchaseValue: softwarePurchase,
 
     hardwareCount: hardwareAssets,
     softwareCount: softwareAssets,
@@ -431,6 +503,13 @@ res.json({
     insurance: {
       upcoming: upcoming[0]?.insurance || []
     }
+  },
+  
+  costBreakdown: {
+    maintenance: topMaintenance,
+    warranty: topWarranty,
+    insurance: topInsurance,
+    renewal: topRenewal
   }
 });
 
