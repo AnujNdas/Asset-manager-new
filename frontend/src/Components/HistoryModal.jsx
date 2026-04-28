@@ -47,64 +47,57 @@ const fetchHistory = async () => {
         )}
 
         {/* TABLE HEADER */}
-        <div className="history-header">
-          <span>Warranty</span>
-          <span>Maintenance</span>
-          <span>Status</span>
-          <span>Location</span>
-          <span>Assigned</span>
-          <span>Service</span>
-          <span>Score</span>
-          <span>Event</span>
-          <span>Date</span>
+{/* TABLE HEADER */}
+<div className="history-table">
+  <div className="history-header">
+    <span>Warranty</span>
+    <span>Maintenance</span>
+    <span>Status</span>
+    <span>Location</span>
+    <span>Assigned</span>
+    <span>Service</span>
+    <span>Score</span>
+    <span>Event</span>
+    <span>Date</span>
+  </div>
+
+  {/* TABLE BODY */}
+  <div className="history-body">
+    {history?.length ? (
+      history.map((item, index) => (
+        <div key={index} className="history-row">
+
+          <span>{item.warrantyDate || "-"}</span>
+
+          <span>
+            {item.nextMaintenanceDate || "-"}
+            <small>{item.maintenanceStatus || ""}</small>
+          </span>
+
+          <span>{item.status || item.action}</span>
+
+          <span>{item.location || "-"}</span>
+
+          <span>{item.assignedPerson || "-"}</span>
+
+          <span>{item.activeService || "-"}</span>
+
+          <span>{item.activeScore ?? "-"}</span>
+
+          <span className="event-cell">
+            {item.type === "assignment"
+              ? `${item.action} (${item.deviceName || "Device"})`
+              : item.notes || "-"}
+          </span>
+
+          <span>{item.recordDate}</span>
+
         </div>
-
-        {/* TABLE BODY */}
-<div className="history-body">
-  {history?.length ? (
-    history.map((item, index) => (
-      <div key={index} className="history-row">
-
-        {/* WARRANTY */}
-        <span>{item.warrantyDate || "-"}</span>
-
-        {/* MAINTENANCE */}
-        <span>
-          {item.nextMaintenanceDate || "-"}
-          <br />
-          <small>{item.maintenanceStatus || "-"}</small>
-        </span>
-
-        {/* STATUS */}
-        <span>{item.status || item.action}</span>
-
-        {/* LOCATION */}
-        <span>{item.location || "-"}</span>
-
-        {/* PERSON */}
-        <span>{item.assignedPerson || "-"}</span>
-
-        {/* SERVICE */}
-        <span>{item.activeService || "-"}</span>
-
-        {/* SCORE */}
-        <span>{item.activeScore ?? "-"}</span>
-
-        {/* EVENT */}
-        <span>
-          {item.type === "assignment"
-            ? `${item.action} (${item.deviceName || "Device"})`
-            : item.notes}
-        </span>
-
-        {/* DATE */}
-        <span>{item.recordDate}</span>
-
-      </div>
-    ))
-  ) : (
-    <div className="empty">No history available</div>
-  )}
+      ))
+    ) : (
+      <div className="empty">No history available</div>
+    )}
+  </div>
 </div>
 
         {/* ACTION */}

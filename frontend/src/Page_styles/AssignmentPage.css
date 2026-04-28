@@ -38,15 +38,14 @@
 .step {
   padding: 8px 14px;
   border-radius: 999px;
-  background: #DFD0B8;
+  background: #948979;
   font-size: 13px;
   font-weight: 500;
 }
 
 .step.active {
-  background: #948979;
+  background: #DFD0B8;
   color: #222831;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
 }
 
 /* ===== GRID ===== */
@@ -91,8 +90,7 @@
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  border-color: var(--primary);
+  border-color: #DFD0B8;
 }
 
 /* ===== FILTER BUTTONS ===== */
@@ -108,6 +106,7 @@
   background: #948979;
   cursor: pointer;
   font-size: 13px;
+  border: none;
   transition: all 0.2s ease;
 }
 
@@ -158,9 +157,8 @@
 }
 
 .instance.selected {
-  border-color: var(--primary);
-  background: var(--primary-light);
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  border-color: #DFD0B8;
+  background: #393E46;
 }
 
 /* ===== FORM ===== */
@@ -187,7 +185,7 @@
 
 /* ===== REVIEW ===== */
 .review {
-  background: white;
+  background: #222831;
   padding: 20px;
   border-radius: 14px;
   border: 1px solid var(--border);
@@ -196,11 +194,13 @@
 
 .review h3 {
   margin-bottom: 12px;
+  color: #DFD0B8;
 }
 
 .review p {
   font-size: 14px;
   margin-bottom: 8px;
+  color: #948979;
 }
 
 .review button {
@@ -208,8 +208,8 @@
   width: 100%;
   padding: 10px;
   border-radius: 8px;
-  background: var(--primary);
-  color: white;
+  background: #DFD0B8;
+  color: #222831;
   border: none;
   cursor: pointer;
   transition: 0.2s;
@@ -224,6 +224,7 @@
   /* margin-top: 24px; */
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 .footer2 button {

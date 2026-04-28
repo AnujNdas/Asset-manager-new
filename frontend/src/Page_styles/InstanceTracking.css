@@ -253,6 +253,138 @@
   border-radius: 10px;
   overflow: hidden;
 }
+/* OVERLAY */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MODAL */
+.history-modal {
+  width: 90%;
+  max-width: 1100px;
+  max-height: 85vh;
+  overflow: hidden;
+  background: #393E46;
+  color: #DFD0B8;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.history-modal h2 {
+  margin-bottom: 10px;
+}
+
+/* SUMMARY CARD */
+.history-summary {
+  background: rgba(255,255,255,0.05);
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  font-size: 14px;
+}
+
+.history-summary p {
+  margin: 0;
+}
+
+.history-summary strong {
+  color: #948979;
+}
+
+/* TABLE WRAPPER */
+.history-table {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* HEADER */
+.history-header {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(120px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #948979;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* BODY */
+.history-body {
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+/* ROW */
+.history-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(120px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  align-items: center;
+}
+
+.history-row:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* CELLS */
+.history-row span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-row small {
+  font-size: 11px;
+  color: #948979;
+}
+
+/* EVENT CELL */
+.event-cell {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* EMPTY */
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: #948979;
+}
+
+/* ACTIONS */
+.modal-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-cancel {
+  background: #948979;
+  color: #393E46;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .qr-image {
