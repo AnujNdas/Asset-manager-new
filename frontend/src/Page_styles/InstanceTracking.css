@@ -320,7 +320,7 @@
   padding: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: #948979;
+  color: #DFD0B8;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
@@ -341,10 +341,6 @@
   align-items: center;
 }
 
-.history-row:hover {
-  background: rgba(255,255,255,0.05);
-}
-
 /* CELLS */
 .history-row span {
   display: flex;
@@ -354,7 +350,7 @@
 
 .history-row small {
   font-size: 11px;
-  color: #948979;
+  color: #DFD0B8;
 }
 
 /* EVENT CELL */
