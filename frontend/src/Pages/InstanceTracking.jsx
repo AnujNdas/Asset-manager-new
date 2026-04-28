@@ -25,45 +25,37 @@ const InstanceTracking = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [highlightedId, setHighlightedId] = useState(null);
 useEffect(() => {
-  if (highlightedId) {
-    const timer = setTimeout(() => {
-      setHighlightedId(null);
-    }, 4000);
+  if (!highlightedId) return;
 
-    return () => clearTimeout(timer);
+  const el = instanceRefs.current[highlightedId];
+
+  if (el) {
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
   }
-}, [highlightedId]);
-    const fetchInstances = async (type = filterType) => {
+}, [highlightedId, instances]); // 👈 important
+const fetchInstances = async (type = filterType, highlightId = null) => {
   try {
     setLoading(true);
 
     const res = await getTrackedInstances({ type });
-    console.log("Fetched instances:", res.data);
-
     const data = res.data || [];
 
     setInstances(data);
-
-    // 🟡 Optional: No data alert
-    if (data.length === 0) {
-      Swal.fire({
-        icon: "info",
-        title: "No Data",
-        text: "No instances found for selected filter",
-        timer: 1500,
-        showConfirmButton: false
-      });
+    console.log("Checking match:",
+      data.find(i => i._id === highlightId)
+    );
+    // ✅ highlight AFTER state update
+    if (highlightId) {
+      setTimeout(() => {
+        setHighlightedId(highlightId);
+      }, 100); // small delay just for DOM render
     }
 
   } catch (err) {
     console.error(err);
-
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Failed to load instances"
-    });
-
   } finally {
     setLoading(false);
   }
@@ -187,17 +179,12 @@ const handleHistory = async (instance) => {
 {showScanner && (
   <QRScanner
   onClose={() => setShowScanner(false)}
-  onScanSuccess={(instanceId) => {
-    console.log("Scanned instance:", instanceId);
+onScanSuccess={(instanceId) => {
+  console.log("Scanned instance:", instanceId);
 
-    // ✅ ensure all instances are loaded
-    fetchInstances("all");
-
-    // ✅ small delay to wait for state update
-    setTimeout(() => {
-      setHighlightedId(instanceId);
-    }, 300);
-  }}
+  // ✅ pass ID into fetch
+  fetchInstances("all", instanceId);
+}}
 />
 )}
     </div>
