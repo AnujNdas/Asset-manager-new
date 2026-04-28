@@ -803,7 +803,7 @@ const CostBreakdownCard = ({ title, items }) => {
           const converted = convertFromBase(item.cost || 0);
 
           return (
-            <div key={item._id || index} className={`list-row ${isTop ? "top-cost" : ""}`}>
+            <div key={item._id || index} className="list-row">
               <span>{item.instanceName}</span>
 
               <span className="value-text">
