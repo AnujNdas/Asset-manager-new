@@ -710,7 +710,7 @@ const renderSoftwareInstance = (inst, assignment) => {
       {/* SOFTWARE ONLY */}
       {editInstance.assetType === "software" && (
         <>
-          <h4>Software Details</h4>
+          <h3>Software Details</h3>
 
           <div className="grid-2">
             <div className="input-group">
