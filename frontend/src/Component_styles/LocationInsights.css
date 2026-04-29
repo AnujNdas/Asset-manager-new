@@ -8,6 +8,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
+  color: #DFD0B8;
 }
 
 .location-container {
@@ -29,6 +30,8 @@
   cursor: pointer;
   border-radius: 10px;
   transition: 0.2s;
+  border-bottom: 1px solid #DFD0B8;
+  margin-bottom: 10px;
 }
 
 .location-item:hover {

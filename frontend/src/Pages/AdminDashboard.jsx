@@ -628,7 +628,15 @@ const TopLocationsMap = ({ title, items }) => {
     </div>
   );
 };  
-
+const formatCurrency = (value) => {
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(1)}M`;
+  } else if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(1)}K`;
+  } else {
+    return value.toFixed(0);
+  }
+};
 const SpendByCategoryBarChart = ({ data }) => {
   const { currency, convertFromBase } = useCurrency();
 
@@ -667,8 +675,8 @@ const SpendByCategoryBarChart = ({ data }) => {
           </div>
 
           <div style={{ color: "#2563eb", fontWeight: 500 }}>
-            {CURRENCY_SYMBOLS[currency]}{" "}
-            {payload[0].payload.totalSpendConverted.toLocaleString()}
+             {CURRENCY_SYMBOLS[currency]}{" "}
+  {formatCurrency(payload[0].payload.totalSpendConverted)}
           </div>
         </div>
       );
@@ -738,11 +746,11 @@ const SpendByCategoryBarChart = ({ data }) => {
           textAnchor="end"
         />
 
-        <YAxis
-          tickFormatter={(value) =>
-            `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
-          }
-        />
+<YAxis
+  tickFormatter={(value) =>
+    `${CURRENCY_SYMBOLS[currency]}${formatCurrency(value)}`
+  }
+/>
       </>
     )}
 
@@ -767,13 +775,13 @@ const SpendByCategoryBarChart = ({ data }) => {
       radius={isMobile ? [0, 8, 8, 0] : [8, 8, 0, 0]}
     >
       {!isMobile && (
-        <LabelList
-          dataKey="totalSpendConverted"
-          position="top"
-          formatter={(value) =>
-            `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
-          }
-        />
+<LabelList
+  dataKey="totalSpendConverted"
+  position="top"
+  formatter={(value) =>
+    `${CURRENCY_SYMBOLS[currency]}${formatCurrency(value)}`
+  }
+/>
       )}
     </Bar>
   </BarChart>
