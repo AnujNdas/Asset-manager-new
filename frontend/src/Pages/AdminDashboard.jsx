@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getDashboardData } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
+import LocationInsights from "../Components/LocationInsights";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
@@ -240,10 +241,7 @@ useEffect(() => {
   />
 </div>
       <div className="section-grid">
-      <TopLocationsMap
-  title="Top Locations"
-  items={analytics.topLocations}
-/>
+      <LocationInsights items={analytics.topLocations} />
 </div>
     </div>
   );

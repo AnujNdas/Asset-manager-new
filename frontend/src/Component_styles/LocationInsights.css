@@ -1,0 +1,147 @@
+.location-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+}
+
+.location-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.location-container {
+  display: flex;
+  gap: 16px;
+}
+
+/* LEFT LIST */
+.location-list {
+  width: 35%;
+  max-height: 400px;
+  overflow-y: auto;
+  border-right: 1px solid #eee;
+}
+
+.location-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.location-item:hover {
+  background: #f5f8ff;
+}
+
+.location-item.active {
+  background: #e8f0fe;
+}
+
+.loc-name {
+  font-weight: 500;
+}
+
+.loc-sub {
+  font-size: 12px;
+  color: #888;
+}
+
+.loc-value {
+  font-size: 13px;
+  color: #2563eb;
+}
+
+/* RIGHT PANEL */
+.location-details {
+  width: 65%;
+  padding: 10px 16px;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-badge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.status-badge.critical {
+  background: #ffe5e5;
+  color: #d32f2f;
+}
+
+.status-badge.idle {
+  background: #fff4cc;
+  color: #b28704;
+}
+
+.status-badge.healthy {
+  background: #e6f4ea;
+  color: #1b873f;
+}
+
+/* STATS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 16px;
+  gap: 10px;
+}
+
+.stats-grid div {
+  background: #f9fafb;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* UTILIZATION */
+.utilization {
+  margin-top: 16px;
+}
+
+.bar {
+  height: 8px;
+  background: #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.fill {
+  height: 100%;
+  background: #2563eb;
+}
+
+/* COST GRID */
+.cost-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.cost-grid div {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* META */
+.meta {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #555;
+}
+
+.meta p {
+  margin-bottom: 6px;
+}
