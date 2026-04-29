@@ -190,7 +190,6 @@
 
   .tab.active {
     background: #DFD0B8;
-    box-shadow: 0 4px 8px rgba(0,123,255,0.2);
     font-weight: 600;
   }
 .edit-btn {
@@ -361,7 +360,7 @@
   top: 5px;
   left: 10px;
   z-index: 2000; /* Make sure it's above the sidebar and other sections */
-  background-color: #ffffff;
+  background-color: #393E46;
   padding: 8px 12px;
   font-size: 24px;
   border: none;

@@ -2,8 +2,10 @@
   background: #222831;
   border-radius: 16px;
   padding: 20px;
+  width: 100%;
 }
 
+/* TITLE */
 .location-title {
   font-size: 18px;
   font-weight: 600;
@@ -11,18 +13,22 @@
   color: #DFD0B8;
 }
 
+/* MAIN LAYOUT */
 .location-container {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap; /* ✅ important for mobile */
 }
 
-/* LEFT LIST */
+/* ================= LEFT LIST ================= */
 .location-list {
-  width: 35%;
-  max-height: 400px;
+  flex: 1;
+  min-width: 260px;
+  max-height: 420px;
   overflow-y: auto;
 }
 
+/* ITEM */
 .location-item {
   display: flex;
   justify-content: space-between;
@@ -34,10 +40,7 @@
   margin-bottom: 10px;
 }
 
-.location-item:hover {
-  background: #393E46;
-}
-
+.location-item:hover,
 .location-item.active {
   background: #393E46;
 }
@@ -57,26 +60,32 @@
   color: #DFD0B8;
 }
 
-/* RIGHT PANEL */
+/* ================= RIGHT PANEL ================= */
 .location-details {
-  width: 65%;
+  flex: 2;
+  min-width: 300px;
   padding: 10px 16px;
 }
 
+/* HEADER */
 .details-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
+
 .details-header h4 {
   font-size: 16px;
   color: #DFD0B8;
 }
 
+/* STATUS */
 .status-badge {
   font-size: 12px;
   padding: 6px 10px;
   border-radius: 999px;
+  margin-top: 6px;
 }
 
 .status-badge.critical {
@@ -94,7 +103,7 @@
   color: #1b873f;
 }
 
-/* STATS */
+/* ================= STATS ================= */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -110,7 +119,7 @@
   color: #DFD0B8;
 }
 
-/* UTILIZATION */
+/* ================= UTILIZATION ================= */
 .utilization {
   margin-top: 16px;
   color: #DFD0B8;
@@ -129,7 +138,7 @@
   background: #948979;
 }
 
-/* COST GRID */
+/* ================= COST ================= */
 .cost-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -144,7 +153,7 @@
   color: #DFD0B8;
 }
 
-/* META */
+/* ================= META ================= */
 .meta {
   margin-top: 16px;
   font-size: 13px;
@@ -153,4 +162,71 @@
 
 .meta p {
   margin-bottom: 6px;
+}
+
+/* ========================================= */
+/* 🔥 RESPONSIVE BREAKPOINTS */
+/* ========================================= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cost-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .location-container {
+    flex-direction: column;
+  }
+
+  .location-list {
+    width: 100%;
+    max-height: 250px;
+  }
+
+  .location-details {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+  .location-title {
+    font-size: 16px;
+  }
+
+  .details-header h4 {
+    font-size: 14px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cost-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .location-item {
+    padding: 10px;
+  }
+
+  .loc-name {
+    font-size: 14px;
+  }
+
+  .loc-value {
+    font-size: 12px;
+  }
 }

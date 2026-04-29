@@ -307,7 +307,7 @@ a:hover {
     left: -260px;
     width: 200px;
     height: 100vh;
-    background: #fff;
+    background: #222831;
     transition: left 0.3s ease;
     z-index: 999;
     border-top-right-radius: 20px;
@@ -376,5 +376,8 @@ a:hover {
 @media (min-width: 1025px) {
   .sidebar-container {
     width: 14%;
+  }
+  .sb-group {
+    justify-content: center;
   }
 }
