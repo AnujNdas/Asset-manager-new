@@ -1,8 +1,7 @@
 .location-card {
-  background: #fff;
+  background: #222831;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
 }
 
 .location-title {
@@ -21,7 +20,6 @@
   width: 35%;
   max-height: 400px;
   overflow-y: auto;
-  border-right: 1px solid #eee;
 }
 
 .location-item {
@@ -34,25 +32,26 @@
 }
 
 .location-item:hover {
-  background: #f5f8ff;
+  background: #393E46;
 }
 
 .location-item.active {
-  background: #e8f0fe;
+  background: #393E46;
 }
 
 .loc-name {
   font-weight: 500;
+  color: #DFD0B8;
 }
 
 .loc-sub {
   font-size: 12px;
-  color: #888;
+  color: #948979;
 }
 
 .loc-value {
   font-size: 13px;
-  color: #2563eb;
+  color: #DFD0B8;
 }
 
 /* RIGHT PANEL */
@@ -66,6 +65,10 @@
   justify-content: space-between;
   align-items: center;
 }
+.details-header h4 {
+  font-size: 16px;
+  color: #DFD0B8;
+}
 
 .status-badge {
   font-size: 12px;
@@ -74,13 +77,13 @@
 }
 
 .status-badge.critical {
-  background: #ffe5e5;
+  background: #DFD0B8;
   color: #d32f2f;
 }
 
 .status-badge.idle {
-  background: #fff4cc;
-  color: #b28704;
+  background: #948979;
+  color: #222831;
 }
 
 .status-badge.healthy {
@@ -97,15 +100,17 @@
 }
 
 .stats-grid div {
-  background: #f9fafb;
+  background: #393E46;
   padding: 10px;
   border-radius: 8px;
   text-align: center;
+  color: #DFD0B8;
 }
 
 /* UTILIZATION */
 .utilization {
   margin-top: 16px;
+  color: #DFD0B8;
 }
 
 .bar {
@@ -118,7 +123,7 @@
 
 .fill {
   height: 100%;
-  background: #2563eb;
+  background: #948979;
 }
 
 /* COST GRID */
@@ -130,16 +135,17 @@
 }
 
 .cost-grid div {
-  background: #f8fafc;
+  background: #393E46;
   padding: 10px;
   border-radius: 8px;
+  color: #DFD0B8;
 }
 
 /* META */
 .meta {
   margin-top: 16px;
   font-size: 13px;
-  color: #555;
+  color: #DFD0B8;
 }
 
 .meta p {

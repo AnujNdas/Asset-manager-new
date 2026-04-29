@@ -712,7 +712,11 @@ const SpendByCategoryBarChart = ({ data }) => {
           type="number"
           tick={{ fontSize: 10 }}
           tickFormatter={(value) =>
-            `${CURRENCY_SYMBOLS[currency]}${(value / 1000000).toFixed(1)}M`
+            `${CURRENCY_SYMBOLS[currency]}${value >= 1_000_000
+  ? `${(value / 1_000_000).toFixed(1)}M`
+  : value >= 1_000
+  ? `${(value / 1_000).toFixed(1)}K`
+  : value.toFixed(0)}M`
           }
         />
 
