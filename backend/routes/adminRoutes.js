@@ -557,10 +557,27 @@ res.json({
 
     departmentAssignments: departments,
 
-    topLocations: topLocations.map(l => ({
-      name: l._id,
-      total: l.totalInstances
-    }))
+topLocations: topLocations.map(l => ({
+  name: l._id,
+
+  total: l.totalInstances,
+
+  hardware: l.hardwareCount,
+  software: l.softwareCount,
+
+  assigned: l.assignedCount,
+
+  value: l.totalValue,
+
+  costs: {
+    purchase: l.purchaseValue,
+    maintenance: l.maintenanceCost,
+    warranty: l.warrantyCost,
+    insurance: l.insuranceCost
+  },
+
+  upcomingMaintenance: l.upcomingMaintenance
+}))
   },
 
   upcoming: {
