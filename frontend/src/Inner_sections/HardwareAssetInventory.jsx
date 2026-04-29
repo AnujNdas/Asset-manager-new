@@ -356,7 +356,24 @@ const renderInstance = (inst, assignment) => {
   </div>
 
   {/* ACTION */}
-  <button className="btn-edit modern">✏ Edit</button>
+  <button
+  className="btn-edit modern"
+  onClick={() => {
+    setEditInstance(inst);
+
+    setInstanceForm({
+      location: inst.location || "",
+      condition: inst.condition || "new",
+      serialNumber:
+        inst.hardware?.serialNumber ||
+        inst.software?.licenseNumber ||
+        "",
+      assetType: inst.assetType,
+    });
+  }}
+>
+  ✏ Edit
+</button>
 </div>
   );
 };
