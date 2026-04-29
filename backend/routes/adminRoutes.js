@@ -382,19 +382,92 @@ const departmentPromise = AssetAssignment.aggregate([
        📍 TOP LOCATIONS (INSTANCE BASED)
     ===================================================== */
 
-    const topLocationsPromise = AssetInstance.aggregate([
-      { $match: { organizationId } },
+const topLocationsPromise = AssetInstance.aggregate([
+  { $match: { organizationId } },
 
-      {
-        $group: {
-          _id: "$location",
-          totalInstances: { $sum: 1 }
-        }
+  // Assignment join
+  {
+    $lookup: {
+      from: "assignments",
+      localField: "_id",
+      foreignField: "assetInstanceId",
+      as: "assignment"
+    }
+  },
+
+  {
+    $addFields: {
+      isAssigned: { $gt: [{ $size: "$assignment" }, 0] },
+      isHardware: { $eq: ["$assetType", "hardware"] },
+      isSoftware: { $eq: ["$assetType", "software"] }
+    }
+  },
+
+  {
+    $group: {
+      _id: "$location",
+
+      // 📦 Counts
+      totalInstances: { $sum: 1 },
+      hardwareCount: {
+        $sum: { $cond: ["$isHardware", 1, 0] }
+      },
+      softwareCount: {
+        $sum: { $cond: ["$isSoftware", 1, 0] }
       },
 
-      { $sort: { totalInstances: -1 } },
-      { $limit: 5 }
-    ]);
+      assignedCount: {
+        $sum: { $cond: ["$isAssigned", 1, 0] }
+      },
+
+      // 💰 Costs
+      purchaseValue: {
+        $sum: "$hardware.purchaseCost.baseAmount"
+      },
+
+      maintenanceCost: {
+        $sum: "$hardware.costs.maintenanceCost.baseAmount"
+      },
+
+      warrantyCost: {
+        $sum: "$hardware.costs.warrantyRenewalCost.baseAmount"
+      },
+
+      insuranceCost: {
+        $sum: "$hardware.costs.insuranceCost.baseAmount"
+      },
+
+      // 📅 Upcoming (simple logic)
+      upcomingMaintenance: {
+        $sum: {
+          $cond: [
+            {
+              $gt: ["$hardware.nextMaintenanceDate", new Date()]
+            },
+            1,
+            0
+          ]
+        }
+      }
+    }
+  },
+
+  {
+    $addFields: {
+      totalValue: {
+        $add: [
+          "$purchaseValue",
+          "$maintenanceCost",
+          "$warrantyCost",
+          "$insuranceCost"
+        ]
+      }
+    }
+  },
+
+  { $sort: { totalValue: -1 } },
+  { $limit: 5 }
+]);
     const usersCountPromise = User.countDocuments({ organizationId });
 
     const employeesCountPromise = Team.countDocuments({ organizationId });
