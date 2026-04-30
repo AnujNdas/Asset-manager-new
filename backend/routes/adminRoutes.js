@@ -397,14 +397,32 @@ const topLocationsPromise = AssetInstance.aggregate([
   { $unwind: { path: "$asset", preserveNullAndEmptyArrays: true } },
 
   /* ================= RESOLVE ASSET LOCATION NAME ================= */
+{
+  $lookup: {
+    from: "assignments",
+    let: { instId: "$_id" },
+    pipeline: [
+      {
+        $match: {
+          $expr: {
+            $eq: [
+              { $toString: "$assetInstanceId" },
+              { $toString: "$$instId" }
+            ]
+          }
+        }
+      }
+    ],
+    as: "assignment"
+  }
+},
   {
-    $lookup: {
-      from: "locations",
-      localField: "asset.locationName",
-      foreignField: "_id",
-      as: "assetLocationObj"
-    }
-  },
+  $addFields: {
+    debug_instanceId: "$_id",
+    debug_assignmentIds: "$assignment.assetInstanceId",
+    debug_assignmentFull: "$assignment"
+  }
+},
   { $unwind: { path: "$assetLocationObj", preserveNullAndEmptyArrays: true } },
 
   /* ================= JOIN ASSIGNMENTS ================= */
@@ -609,7 +627,9 @@ const topLocationsPromise = AssetInstance.aggregate([
     $project: {
       _id: 0,
       name: "$_id",
-
+      debug_instanceId: 1,
+    debug_assignmentIds: 1,
+    debug_assignmentFull: 1,
       total: "$totalInstances",
       hardware: "$hardwareCount",
       software: "$softwareCount",
