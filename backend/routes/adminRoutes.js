@@ -9,743 +9,746 @@ const User = require("../models/User");
 const Team = require("../models/Employee");
 const authenticateToken = require("../Middleware/Authentication-token");
 const Department = require("../models/Department");
-router.get("/dashboard", authenticateToken(), async (req, res) => {
-  try {
-    const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
-    const now = new Date();
+  router.get("/dashboard", authenticateToken(), async (req, res) => {
+    try {
+      const organizationId = new mongoose.Types.ObjectId(req.user.organizationId);
+      const now = new Date();
 
-    /* =====================================================
-       🧮 INSTANCE BASED TOTALS
-    ===================================================== */
+      /* =====================================================
+        🧮 INSTANCE BASED TOTALS
+      ===================================================== */
 
-const totalsPromise = AssetInstance.aggregate([
-  { $match: { organizationId } },
+  const totalsPromise = AssetInstance.aggregate([
+    { $match: { organizationId } },
 
-  {
-    $addFields: {
-      purchaseCost: {
-        $cond: [
-          { $eq: ["$assetType", "hardware"] },
-          { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-          { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-        ]
-      },
+    {
+      $addFields: {
+        purchaseCost: {
+          $cond: [
+            { $eq: ["$assetType", "hardware"] },
+            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+          ]
+        },
 
-      extraCost: {
-        $add: [
-          { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-          { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
-          { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
-          { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
-        ]
+        extraCost: {
+          $add: [
+            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+          ]
+        }
+      }
+    },
+
+    {
+      $group: {
+        _id: "$assetType",
+
+        totalPurchase: { $sum: "$purchaseCost" }, // ✅ ONLY purchase
+        totalExtra: { $sum: "$extraCost" },       // ✅ other costs
+        totalInstances: { $sum: 1 }
       }
     }
-  },
+  ]);
+      /* =====================================================
+        📦 ASSET COUNTS
+      ===================================================== */
 
-  {
-    $group: {
-      _id: "$assetType",
+      const assetCountsPromise = Promise.all([
+        Hardware.countDocuments({ organizationId }),
+        Software.countDocuments({ organizationId })
+      ]);
 
-      totalPurchase: { $sum: "$purchaseCost" }, // ✅ ONLY purchase
-      totalExtra: { $sum: "$extraCost" },       // ✅ other costs
-      totalInstances: { $sum: 1 }
-    }
-  }
-]);
-    /* =====================================================
-       📦 ASSET COUNTS
-    ===================================================== */
+      /* =====================================================
+        🏷️ TOP CATEGORY (INSTANCE COST)
+      ===================================================== */
 
-    const assetCountsPromise = Promise.all([
-      Hardware.countDocuments({ organizationId }),
-      Software.countDocuments({ organizationId })
-    ]);
+  const topCategoriesPromise = AssetInstance.aggregate([
+    { $match: { organizationId } },
 
-    /* =====================================================
-       🏷️ TOP CATEGORY (INSTANCE COST)
-    ===================================================== */
+    {
+      $lookup: {
+        from: "assets",
+        localField: "assetId",
+        foreignField: "_id",
+        as: "asset"
+      }
+    },
+    { $unwind: "$asset" },
 
-const topCategoriesPromise = AssetInstance.aggregate([
-  { $match: { organizationId } },
+    // ✅ cost calculation (same as yours)
+    {
+      $addFields: {
+        cost: {
+          $add: [
+            {
+              $cond: [
+                { $eq: ["$assetType", "hardware"] },
+                { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+                { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+              ]
+            },
+            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+          ]
+        }
+      }
+    },
 
-  {
-    $lookup: {
-      from: "assets",
-      localField: "assetId",
-      foreignField: "_id",
-      as: "asset"
-    }
-  },
-  { $unwind: "$asset" },
+    // ✅ group by category ID
+    {
+      $group: {
+        _id: "$asset.assetCategory",
+        total: { $sum: "$cost" }
+      }
+    },
 
-  // ✅ cost calculation (same as yours)
+    // ✅ 🔥 IMPORTANT: lookup category collection
+    {
+      $lookup: {
+        from: "categories", // ⚠️ verify exact collection name
+        localField: "_id",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+
+    {
+      $unwind: {
+        path: "$category",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+
+    {
+      $project: {
+        _id: 0,
+        category: "$category.name", // ✅ actual name
+        total: 1
+      }
+    },
+
+    { $sort: { total: -1 } },
+    { $limit: 5 }
+  ]);
+
+      /* =====================================================
+        💻 TOP SOFTWARE (IT ASSETS)
+      ===================================================== */
+
+      const topSoftwarePromise = AssetInstance.aggregate([
+        { $match: { organizationId, assetType: "software" } },
+
+        {
+          $lookup: {
+            from: "softwareassets",
+            localField: "assetId",
+            foreignField: "_id",
+            as: "asset"
+          }
+        },
+        { $unwind: "$asset" },
+
   {
     $addFields: {
       cost: {
         $add: [
-          {
-            $cond: [
-              { $eq: ["$assetType", "hardware"] },
-              { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-              { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-            ]
-          },
-          { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-          { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
-          { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+          { $ifNull: ["$software.purchaseCost.baseAmount", 0] },
           { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
         ]
       }
     }
   },
 
-  // ✅ group by category ID
-  {
-    $group: {
-      _id: "$asset.assetCategory",
-      total: { $sum: "$cost" }
-    }
-  },
+        {
+          $group: {
+            _id: "$asset._id",
+            assetName: { $first: "$asset.assetName" },
+            total: { $sum: "$cost" }
+          }
+        },
+        { $sort: { total: -1 } },
+        { $limit: 5 }
+      ]);
 
-  // ✅ 🔥 IMPORTANT: lookup category collection
-  {
-    $lookup: {
-      from: "categories", // ⚠️ verify exact collection name
-      localField: "_id",
-      foreignField: "_id",
-      as: "category"
-    }
-  },
+      /* =====================================================
+        Extra Cost Related Fields (SEPARATE)
+      ===================================================== */
+  const topMaintenancePromise = AssetInstance.aggregate([
+    { $match: { organizationId, assetType: "hardware" } },
 
-  {
-    $unwind: {
-      path: "$category",
-      preserveNullAndEmptyArrays: true
-    }
-  },
-
-  {
-    $project: {
-      _id: 0,
-      category: "$category.name", // ✅ actual name
-      total: 1
-    }
-  },
-
-  { $sort: { total: -1 } },
-  { $limit: 5 }
-]);
-
-    /* =====================================================
-       💻 TOP SOFTWARE (IT ASSETS)
-    ===================================================== */
-
-    const topSoftwarePromise = AssetInstance.aggregate([
-      { $match: { organizationId, assetType: "software" } },
-
-      {
-        $lookup: {
-          from: "softwareassets",
-          localField: "assetId",
-          foreignField: "_id",
-          as: "asset"
-        }
-      },
-      { $unwind: "$asset" },
-
-{
-  $addFields: {
-    cost: {
-      $add: [
-        { $ifNull: ["$software.purchaseCost.baseAmount", 0] },
-        { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
-      ]
-    }
-  }
-},
-
-      {
-        $group: {
-          _id: "$asset._id",
-          assetName: { $first: "$asset.assetName" },
-          total: { $sum: "$cost" }
-        }
-      },
-      { $sort: { total: -1 } },
-      { $limit: 5 }
-    ]);
-
-    /* =====================================================
-       Extra Cost Related Fields (SEPARATE)
-    ===================================================== */
-const topMaintenancePromise = AssetInstance.aggregate([
-  { $match: { organizationId, assetType: "hardware" } },
-
-  {
-    $project: {
-      instanceName: "$deviceName",
-      cost: "$hardware.costs.maintenanceCost.baseAmount"
-    }
-  },
-
-  { $sort: { cost: -1 } },
-  { $limit: 5 }
-]);
-
-const topWarrantyPromise = AssetInstance.aggregate([
-  { $match: { organizationId, assetType: "hardware" } },
-
-  {
-    $project: {
-      instanceName: "$deviceName",
-      cost: "$hardware.costs.warrantyRenewalCost.baseAmount"
-    }
-  },
-
-  { $sort: { cost: -1 } },
-  { $limit: 5 }
-]);
-
-const topInsurancePromise = AssetInstance.aggregate([
-  { $match: { organizationId, assetType: "hardware" } },
-
-  {
-    $project: {
-      instanceName: "$deviceName",
-      cost: "$hardware.costs.insuranceCost.baseAmount"
-    }
-  },
-
-  { $sort: { cost: -1 } },
-  { $limit: 5 }
-]);
-const topRenewalPromise = AssetInstance.aggregate([
-  { $match: { organizationId, assetType: "software" } },
-
-  {
-    $project: {
-      instanceName: "$deviceName",
-      cost: "$software.costs.renewalCost.baseAmount"
-    }
-  },
-
-  { $sort: { cost: -1 } },
-  { $limit: 5 }
-]);
-    /* =====================================================
-       🏢 DEPARTMENT ASSIGNMENTS (SEPARATE)
-    ===================================================== */
-const departmentPromise = AssetAssignment.aggregate([
-  { $match: { organizationId, status: "active" } },
-
-  /* ================= INSTANCE ================= */
-  {
-    $lookup: {
-      from: "assetinstances",
-      localField: "assetInstanceId",
-      foreignField: "_id",
-      as: "instance"
-    }
-  },
-  { $unwind: "$instance" },
-
-  /* ================= ASSET (HARDWARE) ================= */
-  {
-    $lookup: {
-      from: "assets",
-      localField: "instance.assetId",
-      foreignField: "_id",
-      as: "hardwareAsset"
-    }
-  },
-
-  /* ================= ASSET (SOFTWARE) ================= */
-  {
-    $lookup: {
-      from: "softwareassets",
-      localField: "instance.assetId",
-      foreignField: "_id",
-      as: "softwareAsset"
-    }
-  },
-
-  /* ================= PICK CORRECT NAME ================= */
-  {
-    $addFields: {
-      assetName: {
-        $cond: [
-          { $eq: ["$instance.assetType", "hardware"] },
-          { $arrayElemAt: ["$hardwareAsset.assetName", 0] },
-          { $arrayElemAt: ["$softwareAsset.assetName", 0] }
-        ]
+    {
+      $project: {
+        instanceName: "$deviceName",
+        cost: "$hardware.costs.maintenanceCost.baseAmount"
       }
-    }
-  },
+    },
 
-  /* ================= GROUP BY DEPT ================= */
-  {
-    $group: {
-      _id: "$departmentId",
+    { $sort: { cost: -1 } },
+    { $limit: 5 }
+  ]);
 
-      hardware: {
-        $sum: {
-          $cond: [{ $eq: ["$instance.assetType", "hardware"] }, 1, 0]
-        }
-      },
+  const topWarrantyPromise = AssetInstance.aggregate([
+    { $match: { organizationId, assetType: "hardware" } },
 
-      software: {
-        $sum: {
-          $cond: [{ $eq: ["$instance.assetType", "software"] }, 1, 0]
-        }
-      },
+    {
+      $project: {
+        instanceName: "$deviceName",
+        cost: "$hardware.costs.warrantyRenewalCost.baseAmount"
+      }
+    },
 
-      assets: { $addToSet: "$assetName" } // ✅ unique asset names
-    }
-  },
+    { $sort: { cost: -1 } },
+    { $limit: 5 }
+  ]);
 
-  /* ================= DEPARTMENT NAME ================= */
-  {
-    $lookup: {
-      from: "departments",
-      localField: "_id",
-      foreignField: "_id",
-      as: "department"
-    }
-  },
-  {
-    $unwind: {
-      path: "$department",
-      preserveNullAndEmptyArrays: true
-    }
-  },
+  const topInsurancePromise = AssetInstance.aggregate([
+    { $match: { organizationId, assetType: "hardware" } },
 
-  /* ================= FINAL ================= */
-  {
-    $project: {
-      _id: 0,
-      departmentId: "$_id",
-      departmentName: "$department.name",
-      hardware: 1,
-      software: 1,
-      assets: 1
-    }
-  }
-]);
+    {
+      $project: {
+        instanceName: "$deviceName",
+        cost: "$hardware.costs.insuranceCost.baseAmount"
+      }
+    },
 
-    /* =====================================================
-       📅 UPCOMING EVENTS (INSTANCE BASED)
-    ===================================================== */
+    { $sort: { cost: -1 } },
+    { $limit: 5 }
+  ]);
+  const topRenewalPromise = AssetInstance.aggregate([
+    { $match: { organizationId, assetType: "software" } },
 
-    const upcomingPromise = AssetInstance.aggregate([
-      { $match: { organizationId } },
+    {
+      $project: {
+        instanceName: "$deviceName",
+        cost: "$software.costs.renewalCost.baseAmount"
+      }
+    },
 
-      {
-        $project: {
-          assetId: 1,
-          assetType: 1,
-          deviceName: 1,
+    { $sort: { cost: -1 } },
+    { $limit: 5 }
+  ]);
+      /* =====================================================
+        🏢 DEPARTMENT ASSIGNMENTS (SEPARATE)
+      ===================================================== */
+  const departmentPromise = AssetAssignment.aggregate([
+    { $match: { organizationId, status: "active" } },
 
-          warranty: "$hardware.warrantyExpiry",
-          maintenance: "$hardware.nextMaintenanceDate",
-          insurance: "$hardware.insuranceExpiry",
-          renewal: "$software.renewalDate"
-        }
-      },
+    /* ================= INSTANCE ================= */
+    {
+      $lookup: {
+        from: "assetinstances",
+        localField: "assetInstanceId",
+        foreignField: "_id",
+        as: "instance"
+      }
+    },
+    { $unwind: "$instance" },
 
-      {
-        $facet: {
-          warranty: [
-            { $match: { warranty: { $gte: now } } },
-            { $sort: { warranty: 1 } },
-            { $limit: 5 }
-          ],
-          maintenance: [
-            { $match: { maintenance: { $gte: now } } },
-            { $sort: { maintenance: 1 } },
-            { $limit: 5 }
-          ],
-          insurance: [
-            { $match: { insurance: { $gte: now } } },
-            { $sort: { insurance: 1 } },
-            { $limit: 5 }
-          ],
-          renewal: [
-            { $match: { renewal: { $gte: now } } },
-            { $sort: { renewal: 1 } },
-            { $limit: 5 }
+    /* ================= ASSET (HARDWARE) ================= */
+    {
+      $lookup: {
+        from: "assets",
+        localField: "instance.assetId",
+        foreignField: "_id",
+        as: "hardwareAsset"
+      }
+    },
+
+    /* ================= ASSET (SOFTWARE) ================= */
+    {
+      $lookup: {
+        from: "softwareassets",
+        localField: "instance.assetId",
+        foreignField: "_id",
+        as: "softwareAsset"
+      }
+    },
+
+    /* ================= PICK CORRECT NAME ================= */
+    {
+      $addFields: {
+        assetName: {
+          $cond: [
+            { $eq: ["$instance.assetType", "hardware"] },
+            { $arrayElemAt: ["$hardwareAsset.assetName", 0] },
+            { $arrayElemAt: ["$softwareAsset.assetName", 0] }
           ]
         }
       }
-    ]);
+    },
 
-    /* =====================================================
-       📍 TOP LOCATIONS (INSTANCE BASED)
-    ===================================================== */
+    /* ================= GROUP BY DEPT ================= */
+    {
+      $group: {
+        _id: "$departmentId",
 
-const topLocationsPromise = AssetInstance.aggregate([
-  { $match: { organizationId } },
-
-  /* ================= JOIN ASSET ================= */
-  {
-    $lookup: {
-      from: "assets",
-      localField: "assetId",
-      foreignField: "_id",
-      as: "asset"
-    }
-  },
-  { $unwind: { path: "$asset", preserveNullAndEmptyArrays: true } },
-
-  /* ================= LOCATION NAME RESOLVE ================= */
-  {
-    $lookup: {
-      from: "locations",
-      localField: "asset.locationName",
-      foreignField: "_id",
-      as: "assetLocationObj"
-    }
-  },
-  { $unwind: { path: "$assetLocationObj", preserveNullAndEmptyArrays: true } },
-
-  /* ================= FIXED ASSIGNMENT LOOKUP ================= */
-  {
-    $lookup: {
-      from: "assignments",
-      let: { instId: "$_id" },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $eq: [
-                { $toString: "$assetInstanceId" },
-                { $toString: "$$instId" }
-              ]
-            }
+        hardware: {
+          $sum: {
+            $cond: [{ $eq: ["$instance.assetType", "hardware"] }, 1, 0]
           }
-        }
-      ],
-      as: "assignment"
-    }
-  },
+        },
 
-  /* ================= DEBUG ================= */
-  {
-    $addFields: {
-      debug_assignment_count: { $size: "$assignment" },
-      debug_assignment_data: "$assignment"
-    }
-  },
-
-  /* ================= NORMALIZE ================= */
-  {
-    $addFields: {
-      instanceLocation: "$location",
-      assetLocation: "$assetLocationObj.name",
-
-      assignedLocationsArray: {
-        $map: {
-          input: "$assignment",
-          as: "a",
-          in: "$$a.location"
-        }
-      },
-
-      finalLocation: {
-        $ifNull: [
-          { $arrayElemAt: ["$assignment.location", 0] },
-          {
-            $ifNull: ["$location", "$assetLocationObj.name"]
+        software: {
+          $sum: {
+            $cond: [{ $eq: ["$instance.assetType", "software"] }, 1, 0]
           }
-        ]
-      },
+        },
 
-      isAssigned: {
-        $cond: [
-          { $gt: [{ $size: "$assignment" }, 0] },
-          1,
-          0
-        ]
-      },
+        assets: { $addToSet: "$assetName" } // ✅ unique asset names
+      }
+    },
 
-      isHardware: { $eq: ["$assetType", "hardware"] },
-      isSoftware: { $eq: ["$assetType", "software"] },
+    /* ================= DEPARTMENT NAME ================= */
+    {
+      $lookup: {
+        from: "departments",
+        localField: "_id",
+        foreignField: "_id",
+        as: "department"
+      }
+    },
+    {
+      $unwind: {
+        path: "$department",
+        preserveNullAndEmptyArrays: true
+      }
+    },
 
-      assetName: "$asset.assetName",
-
-      /* 💰 COSTS */
-      purchaseCost: {
-        $cond: [
-          { $eq: ["$assetType", "hardware"] },
-          { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-          { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-        ]
-      },
-
-      maintenanceCost: {
-        $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0]
-      },
-
-      warrantyCost: {
-        $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0]
-      },
-
-      insuranceCost: {
-        $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0]
+    /* ================= FINAL ================= */
+    {
+      $project: {
+        _id: 0,
+        departmentId: "$_id",
+        departmentName: "$department.name",
+        hardware: 1,
+        software: 1,
+        assets: 1
       }
     }
-  },
+  ]);
 
-  /* ================= GROUP ================= */
-  {
-    $group: {
-      _id: "$finalLocation",
+      /* =====================================================
+        📅 UPCOMING EVENTS (INSTANCE BASED)
+      ===================================================== */
 
-      totalInstances: { $sum: 1 },
+      const upcomingPromise = AssetInstance.aggregate([
+        { $match: { organizationId } },
 
-      hardwareCount: {
-        $sum: { $cond: ["$isHardware", 1, 0] }
-      },
+        {
+          $project: {
+            assetId: 1,
+            assetType: 1,
+            deviceName: 1,
 
-      softwareCount: {
-        $sum: { $cond: ["$isSoftware", 1, 0] }
-      },
+            warranty: "$hardware.warrantyExpiry",
+            maintenance: "$hardware.nextMaintenanceDate",
+            insurance: "$hardware.insuranceExpiry",
+            renewal: "$software.renewalDate"
+          }
+        },
 
-      assignedCount: { $sum: "$isAssigned" },
+        {
+          $facet: {
+            warranty: [
+              { $match: { warranty: { $gte: now } } },
+              { $sort: { warranty: 1 } },
+              { $limit: 5 }
+            ],
+            maintenance: [
+              { $match: { maintenance: { $gte: now } } },
+              { $sort: { maintenance: 1 } },
+              { $limit: 5 }
+            ],
+            insurance: [
+              { $match: { insurance: { $gte: now } } },
+              { $sort: { insurance: 1 } },
+              { $limit: 5 }
+            ],
+            renewal: [
+              { $match: { renewal: { $gte: now } } },
+              { $sort: { renewal: 1 } },
+              { $limit: 5 }
+            ]
+          }
+        }
+      ]);
 
-      instanceLocations: { $addToSet: "$instanceLocation" },
-      assetLocations: { $addToSet: "$assetLocation" },
+      /* =====================================================
+        📍 TOP LOCATIONS (INSTANCE BASED)
+      ===================================================== */
 
-      assignedLocations: {
-        $push: "$assignedLocationsArray"
-      },
+  const topLocationsPromise = AssetInstance.aggregate([
+    { $match: { organizationId } },
 
-      assetNames: { $addToSet: "$assetName" },
+    /* ================= JOIN ASSET ================= */
+    {
+      $lookup: {
+        from: "assets",
+        localField: "assetId",
+        foreignField: "_id",
+        as: "asset"
+      }
+    },
+    { $unwind: { path: "$asset", preserveNullAndEmptyArrays: true } },
 
-      purchaseValue: { $sum: "$purchaseCost" },
-      maintenanceTotal: { $sum: "$maintenanceCost" },
-      warrantyTotal: { $sum: "$warrantyCost" },
-      insuranceTotal: { $sum: "$insuranceCost" },
+    /* ================= LOCATION NAME RESOLVE ================= */
+    {
+      $lookup: {
+        from: "locations",
+        localField: "asset.locationName",
+        foreignField: "_id",
+        as: "assetLocationObj"
+      }
+    },
+    { $unwind: { path: "$assetLocationObj", preserveNullAndEmptyArrays: true } },
 
-      upcomingMaintenance: {
-        $sum: {
+    /* ================= FIXED ASSIGNMENT LOOKUP ================= */
+    {
+      $lookup: {
+        from: "assignments",
+        let: { instId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  { $toString: "$assetInstanceId" },
+                  { $toString: "$$instId" }
+                ]
+              }
+            }
+          }
+        ],
+        as: "assignment"
+      }
+    },
+
+    /* ================= DEBUG ================= */
+    {
+      $addFields: {
+        debug_assignment_count: { $size: "$assignment" },
+        debug_assignment_data: "$assignment"
+      }
+    },
+
+    /* ================= NORMALIZE ================= */
+    {
+      $addFields: {
+        instanceLocation: "$location",
+        assetLocation: "$assetLocationObj.name",
+
+        assignedLocationsArray: {
+          $map: {
+            input: "$assignment",
+            as: "a",
+            in: "$$a.location"
+          }
+        },
+
+        finalLocation: {
+          $ifNull: [
+            { $arrayElemAt: ["$assignment.location", 0] },
+            {
+              $ifNull: ["$location", "$assetLocationObj.name"]
+            }
+          ]
+        },
+
+        isAssigned: {
           $cond: [
-            { $gt: ["$hardware.nextMaintenanceDate", new Date()] },
+            { $gt: [{ $size: "$assignment" }, 0] },
             1,
             0
           ]
-        }
-      },
+        },
 
-      debug_assignment_count: { $sum: "$debug_assignment_count" }
-    }
-  },
+        isHardware: { $eq: ["$assetType", "hardware"] },
+        isSoftware: { $eq: ["$assetType", "software"] },
 
-  /* ================= FLATTEN ================= */
-  {
-    $addFields: {
-      assignedLocations: {
-        $reduce: {
-          input: "$assignedLocations",
-          initialValue: [],
-          in: { $setUnion: ["$$value", "$$this"] }
+        assetName: "$asset.assetName",
+
+        /* 💰 COSTS */
+        purchaseCost: {
+          $cond: [
+            { $eq: ["$assetType", "hardware"] },
+            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+          ]
+        },
+
+        maintenanceCost: {
+          $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0]
+        },
+
+        warrantyCost: {
+          $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0]
+        },
+
+        insuranceCost: {
+          $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0]
         }
       }
-    }
-  },
+    },
 
-  /* ================= FINAL ================= */
-  {
-    $addFields: {
-      totalValue: {
-        $add: [
-          "$purchaseValue",
-          "$maintenanceTotal",
-          "$warrantyTotal",
-          "$insuranceTotal"
-        ]
+    /* ================= GROUP ================= */
+    {
+      $group: {
+        _id: "$finalLocation",
+
+        totalInstances: { $sum: 1 },
+
+        hardwareCount: {
+          $sum: { $cond: ["$isHardware", 1, 0] }
+        },
+
+        softwareCount: {
+          $sum: { $cond: ["$isSoftware", 1, 0] }
+        },
+
+        assignedCount: { $sum: "$isAssigned" },
+
+        instanceLocations: { $addToSet: "$instanceLocation" },
+        assetLocations: { $addToSet: "$assetLocation" },
+
+        assignedLocations: {
+          $push: "$assignedLocationsArray"
+        },
+
+        assetNames: { $addToSet: "$assetName" },
+
+        purchaseValue: { $sum: "$purchaseCost" },
+        maintenanceTotal: { $sum: "$maintenanceCost" },
+        warrantyTotal: { $sum: "$warrantyCost" },
+        insuranceTotal: { $sum: "$insuranceCost" },
+
+        upcomingMaintenance: {
+          $sum: {
+            $cond: [
+              { $gt: ["$hardware.nextMaintenanceDate", new Date()] },
+              1,
+              0
+            ]
+          }
+        },
+
+        debug_assignment_count: { $sum: "$debug_assignment_count" }
       }
-    }
-  },
+    },
 
-  {
-    $project: {
-      _id: 0,
-      name: "$_id",
+    /* ================= FLATTEN ================= */
+    {
+      $addFields: {
+        assignedLocations: {
+          $reduce: {
+            input: "$assignedLocations",
+            initialValue: [],
+            in: { $setUnion: ["$$value", "$$this"] }
+          }
+        }
+      }
+    },
 
-      total: "$totalInstances",
-      hardware: "$hardwareCount",
-      software: "$softwareCount",
-      assigned: "$assignedCount",
+    /* ================= FINAL ================= */
+    {
+      $addFields: {
+        totalValue: {
+          $add: [
+            "$purchaseValue",
+            "$maintenanceTotal",
+            "$warrantyTotal",
+            "$insuranceTotal"
+          ]
+        }
+      }
+    },
 
-      instanceLocations: 1,
-      assetLocations: 1,
-      assignedLocations: 1,
-      assetNames: 1,
+    {
+      $project: {
+        _id: 0,
+        name: "$_id",
 
-      debug_assignment_count: 1, // 🔥 KEEP THIS TEMP
+        total: "$totalInstances",
+        hardware: "$hardwareCount",
+        software: "$softwareCount",
+        assigned: "$assignedCount",
 
-      costs: {
-        purchase: "$purchaseValue",
-        maintenance: "$maintenanceTotal",
-        warranty: "$warrantyTotal",
-        insurance: "$insuranceTotal"
+        instanceLocations: 1,
+        assetLocations: 1,
+        assignedLocations: 1,
+        assetNames: 1,
+
+        debug_assignment_count: 1, // 🔥 KEEP THIS TEMP
+
+        costs: {
+          purchase: "$purchaseValue",
+          maintenance: "$maintenanceTotal",
+          warranty: "$warrantyTotal",
+          insurance: "$insuranceTotal"
+        },
+
+        upcomingMaintenance: 1,
+        value: "$totalValue"
+      }
+    },
+
+    { $sort: { value: -1 } },
+    { $limit: 5 }
+  ]);
+      const usersCountPromise = User.countDocuments({ organizationId });
+
+      const employeesCountPromise = Team.countDocuments({ organizationId });
+      /* =====================================================
+        🚀 EXECUTE ALL
+      ===================================================== */
+
+  const [
+    totals,
+    [hardwareAssets, softwareAssets],
+    topCategories,
+    topSoftware,
+    departments,
+    upcoming,
+    topLocations,
+    usersCount,
+    employeesCount,
+    topMaintenance,
+    topWarranty,
+    topInsurance,
+    topRenewal
+  ] = await Promise.all([
+    totalsPromise,
+    assetCountsPromise,
+    topCategoriesPromise,
+    topSoftwarePromise,
+    departmentPromise,
+    upcomingPromise,
+    topLocationsPromise,
+    usersCountPromise,
+    employeesCountPromise,
+    topMaintenancePromise,
+    topWarrantyPromise,
+    topInsurancePromise,
+    topRenewalPromise
+  ]);
+      /* =====================================================
+        🧠 FORMAT TOTALS
+      ===================================================== */
+
+      const map = {};
+      totals.forEach(t => (map[t._id] = t));
+
+  const hardware = map["hardware"] || {};
+  const software = map["software"] || {};
+
+  const hardwarePurchase = hardware.totalPurchase || 0;
+  const softwarePurchase = software.totalPurchase || 0;
+
+  const hardwareExtra = hardware.totalExtra || 0;
+  const softwareExtra = software.totalExtra || 0;
+
+  const overallValuation =
+    hardwarePurchase + softwarePurchase +
+    hardwareExtra + softwareExtra;
+      /* =====================================================
+        ✅ RESPONSE
+      ===================================================== */
+
+  res.json({
+    totals: {
+      overallValuation,
+
+    hardwarePurchaseValue: hardwarePurchase,
+    softwarePurchaseValue: softwarePurchase,
+
+      hardwareCount: hardwareAssets,
+      softwareCount: softwareAssets,
+
+      hardwareInstances: hardware.totalInstances || 0,
+      softwareInstances: software.totalInstances || 0,
+
+      usersCount: usersCount || 0,
+      employeesCount: employeesCount || 0,
+    },
+
+    analytics: {
+      spendByCategory: topCategories.map(c => ({
+        category: c.category,   // ✅ correct field
+        totalSpend: c.total
+      })),
+
+      topAssets: topSoftware.map(a => ({
+        assetName: a.assetName,
+        totalCost: a.total
+      })),
+
+      departmentAssignments: departments,
+
+  topLocations: topLocations.map(l => ({
+    name: l.name, // ✅ FIXED
+
+    total: l.total,
+
+    hardware: l.hardware,
+    software: l.software,
+    assigned: l.assigned,
+
+    value: l.value,
+
+    costs: {
+      purchase: l.costs?.purchase || 0,
+      maintenance: l.costs?.maintenance || 0,
+      warranty: l.costs?.warranty || 0,
+      insurance: l.costs?.insurance || 0
+    },
+
+    upcomingMaintenance: l.upcomingMaintenance,
+
+    // 🔥 FULL LOCATION CONTEXT
+    instanceLocations: l.instanceLocations || [],
+    assetLocations: l.assetLocations || [],
+    assignedLocations: l.assignedLocations || [],
+
+    // 🔥 NEW (you added in pipeline)
+    assetNames: l.assetNames || [],
+      debug: {
+    assignmentCount: l.debug_assignment_count
+  }
+  }))
+    },
+
+    upcoming: {
+      software: {
+        upcoming: upcoming[0]?.renewal || []
       },
-
-      upcomingMaintenance: 1,
-      value: "$totalValue"
+      maintenance: {
+        upcoming: upcoming[0]?.maintenance || []
+      },
+      warranty: {
+        upcoming: upcoming[0]?.warranty || []
+      },
+      insurance: {
+        upcoming: upcoming[0]?.insurance || []
+      }
+    },
+    
+    costBreakdown: {
+      maintenance: topMaintenance,
+      warranty: topWarranty,
+      insurance: topInsurance,
+      renewal: topRenewal
     }
-  },
+  });
 
-  { $sort: { value: -1 } },
-  { $limit: 5 }
-]);
-    const usersCountPromise = User.countDocuments({ organizationId });
-
-    const employeesCountPromise = Team.countDocuments({ organizationId });
-    /* =====================================================
-       🚀 EXECUTE ALL
-    ===================================================== */
-
-const [
-  totals,
-  [hardwareAssets, softwareAssets],
-  topCategories,
-  topSoftware,
-  departments,
-  upcoming,
-  topLocations,
-  usersCount,
-  employeesCount,
-  topMaintenance,
-  topWarranty,
-  topInsurance,
-  topRenewal
-] = await Promise.all([
-  totalsPromise,
-  assetCountsPromise,
-  topCategoriesPromise,
-  topSoftwarePromise,
-  departmentPromise,
-  upcomingPromise,
-  topLocationsPromise,
-  usersCountPromise,
-  employeesCountPromise,
-  topMaintenancePromise,
-  topWarrantyPromise,
-  topInsurancePromise,
-  topRenewalPromise
-]);
-    /* =====================================================
-       🧠 FORMAT TOTALS
-    ===================================================== */
-
-    const map = {};
-    totals.forEach(t => (map[t._id] = t));
-
-const hardware = map["hardware"] || {};
-const software = map["software"] || {};
-
-const hardwarePurchase = hardware.totalPurchase || 0;
-const softwarePurchase = software.totalPurchase || 0;
-
-const hardwareExtra = hardware.totalExtra || 0;
-const softwareExtra = software.totalExtra || 0;
-
-const overallValuation =
-  hardwarePurchase + softwarePurchase +
-  hardwareExtra + softwareExtra;
-    /* =====================================================
-       ✅ RESPONSE
-    ===================================================== */
-
-res.json({
-  totals: {
-    overallValuation,
-
-  hardwarePurchaseValue: hardwarePurchase,
-  softwarePurchaseValue: softwarePurchase,
-
-    hardwareCount: hardwareAssets,
-    softwareCount: softwareAssets,
-
-    hardwareInstances: hardware.totalInstances || 0,
-    softwareInstances: software.totalInstances || 0,
-
-    usersCount: usersCount || 0,
-    employeesCount: employeesCount || 0,
-  },
-
-  analytics: {
-    spendByCategory: topCategories.map(c => ({
-      category: c.category,   // ✅ correct field
-      totalSpend: c.total
-    })),
-
-    topAssets: topSoftware.map(a => ({
-      assetName: a.assetName,
-      totalCost: a.total
-    })),
-
-    departmentAssignments: departments,
-
-topLocations: topLocations.map(l => ({
-  name: l.name, // ✅ FIXED
-
-  total: l.total,
-
-  hardware: l.hardware,
-  software: l.software,
-  assigned: l.assigned,
-
-  value: l.value,
-
-  costs: {
-    purchase: l.costs?.purchase || 0,
-    maintenance: l.costs?.maintenance || 0,
-    warranty: l.costs?.warranty || 0,
-    insurance: l.costs?.insurance || 0
-  },
-
-  upcomingMaintenance: l.upcomingMaintenance,
-
-  // 🔥 FULL LOCATION CONTEXT
-  instanceLocations: l.instanceLocations || [],
-  assetLocations: l.assetLocations || [],
-  assignedLocations: l.assignedLocations || [],
-
-  // 🔥 NEW (you added in pipeline)
-  assetNames: l.assetNames || []
-}))
-  },
-
-  upcoming: {
-    software: {
-      upcoming: upcoming[0]?.renewal || []
-    },
-    maintenance: {
-      upcoming: upcoming[0]?.maintenance || []
-    },
-    warranty: {
-      upcoming: upcoming[0]?.warranty || []
-    },
-    insurance: {
-      upcoming: upcoming[0]?.insurance || []
+    } catch (error) {
+      console.error("Dashboard Error:", error);
+      res.status(500).json({ message: "Failed to load dashboard" });
     }
-  },
-  
-  costBreakdown: {
-    maintenance: topMaintenance,
-    warranty: topWarranty,
-    insurance: topInsurance,
-    renewal: topRenewal
-  }
-});
-
-  } catch (error) {
-    console.error("Dashboard Error:", error);
-    res.status(500).json({ message: "Failed to load dashboard" });
-  }
-});
+  });
 
 router.put(
   "/users/:id/role",
