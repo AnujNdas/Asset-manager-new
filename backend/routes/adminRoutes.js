@@ -407,7 +407,7 @@ const topLocationsPromise = AssetInstance.aggregate([
   },
   { $unwind: { path: "$assetLocationObj", preserveNullAndEmptyArrays: true } },
 
-  /* ================= JOIN ASSIGNMENTS (NO UNWIND) ================= */
+  /* ================= JOIN ASSIGNMENTS ================= */
   {
     $lookup: {
       from: "assignments",
@@ -421,16 +421,22 @@ const topLocationsPromise = AssetInstance.aggregate([
   {
     $addFields: {
       instanceLocation: "$location",
-
       assetLocation: "$assetLocationObj.name",
 
-      assignedLocation: {
-        $arrayElemAt: ["$assignment.location", 0]
+      // 🔥 KEEP ALL assignment locations (IMPORTANT)
+      assignedLocationsArray: {
+        $map: {
+          input: "$assignment",
+          as: "a",
+          in: "$$a.location"
+        }
       },
 
       finalLocation: {
         $ifNull: [
-          { $arrayElemAt: ["$assignment.location", 0] },
+          {
+            $arrayElemAt: ["$assignment.location", 0]
+          },
           {
             $ifNull: ["$location", "$assetLocationObj.name"]
           }
@@ -494,10 +500,12 @@ const topLocationsPromise = AssetInstance.aggregate([
       instanceLocations: {
         $addToSet: {
           $cond: [
-            { $and: [
-              { $ne: ["$instanceLocation", null] },
-              { $ne: ["$instanceLocation", ""] }
-            ]},
+            {
+              $and: [
+                { $ne: ["$instanceLocation", null] },
+                { $ne: ["$instanceLocation", ""] }
+              ]
+            },
             "$instanceLocation",
             "$$REMOVE"
           ]
@@ -507,37 +515,44 @@ const topLocationsPromise = AssetInstance.aggregate([
       assetLocations: {
         $addToSet: {
           $cond: [
-            { $and: [
-              { $ne: ["$assetLocation", null] },
-              { $ne: ["$assetLocation", ""] }
-            ]},
+            {
+              $and: [
+                { $ne: ["$assetLocation", null] },
+                { $ne: ["$assetLocation", ""] }
+              ]
+            },
             "$assetLocation",
             "$$REMOVE"
           ]
         }
       },
 
+      // 🔥 FIXED assigned locations (ARRAY SAFE)
       assignedLocations: {
         $addToSet: {
           $cond: [
-            { $and: [
-              { $ne: ["$assignedLocation", null] },
-              { $ne: ["$assignedLocation", ""] }
-            ]},
-            "$assignedLocation",
+            {
+              $and: [
+                { $isArray: "$assignedLocationsArray" },
+                { $gt: [{ $size: "$assignedLocationsArray" }, 0] }
+              ]
+            },
+            "$assignedLocationsArray",
             "$$REMOVE"
           ]
         }
       },
 
-      /* 🔥 NEW: Asset names */
+      /* 🔥 ASSET NAMES */
       assetNames: {
         $addToSet: {
           $cond: [
-            { $and: [
-              { $ne: ["$assetName", null] },
-              { $ne: ["$assetName", ""] }
-            ]},
+            {
+              $and: [
+                { $ne: ["$assetName", null] },
+                { $ne: ["$assetName", ""] }
+              ]
+            },
             "$assetName",
             "$$REMOVE"
           ]
@@ -557,6 +572,19 @@ const topLocationsPromise = AssetInstance.aggregate([
             1,
             0
           ]
+        }
+      }
+    }
+  },
+
+  /* ================= FLATTEN ASSIGNED LOCATIONS ================= */
+  {
+    $addFields: {
+      assignedLocations: {
+        $reduce: {
+          input: "$assignedLocations",
+          initialValue: [],
+          in: { $setUnion: ["$$value", "$$this"] }
         }
       }
     }
