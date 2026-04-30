@@ -396,7 +396,18 @@ const topLocationsPromise = AssetInstance.aggregate([
   },
   { $unwind: { path: "$asset", preserveNullAndEmptyArrays: true } },
 
-  /* ================= JOIN ASSIGNMENT ================= */
+  /* ================= RESOLVE ASSET LOCATION NAME ================= */
+  {
+    $lookup: {
+      from: "locations",
+      localField: "asset.locationName",
+      foreignField: "_id",
+      as: "assetLocationObj"
+    }
+  },
+  { $unwind: { path: "$assetLocationObj", preserveNullAndEmptyArrays: true } },
+
+  /* ================= JOIN ASSIGNMENTS (NO UNWIND) ================= */
   {
     $lookup: {
       from: "assignments",
@@ -405,29 +416,41 @@ const topLocationsPromise = AssetInstance.aggregate([
       as: "assignment"
     }
   },
-  { $unwind: { path: "$assignment", preserveNullAndEmptyArrays: true } },
 
-  /* ================= NORMALIZE FIELDS ================= */
+  /* ================= NORMALIZE ================= */
   {
     $addFields: {
       instanceLocation: "$location",
-      assetLocation: "$asset.locationName",   // ObjectId (can resolve later)
-      assignedLocation: "$assignment.location",
+
+      assetLocation: "$assetLocationObj.name",
+
+      assignedLocation: {
+        $arrayElemAt: ["$assignment.location", 0]
+      },
 
       finalLocation: {
         $ifNull: [
-          "$assignment.location",
+          { $arrayElemAt: ["$assignment.location", 0] },
           {
-            $ifNull: ["$location", "$asset.locationName"]
+            $ifNull: ["$location", "$assetLocationObj.name"]
           }
         ]
       },
 
-      isAssigned: { $cond: [{ $ifNull: ["$assignment", false] }, 1, 0] },
+      isAssigned: {
+        $cond: [
+          { $gt: [{ $size: "$assignment" }, 0] },
+          1,
+          0
+        ]
+      },
 
       isHardware: { $eq: ["$assetType", "hardware"] },
       isSoftware: { $eq: ["$assetType", "software"] },
 
+      assetName: "$asset.assetName",
+
+      /* 💰 COSTS */
       purchaseCost: {
         $cond: [
           { $eq: ["$assetType", "hardware"] },
@@ -467,12 +490,61 @@ const topLocationsPromise = AssetInstance.aggregate([
 
       assignedCount: { $sum: "$isAssigned" },
 
-      // 🔥 keep all sources
-      instanceLocations: { $addToSet: "$instanceLocation" },
-      assetLocations: { $addToSet: "$assetLocation" },
-      assignedLocations: { $addToSet: "$assignedLocation" },
+      /* ✅ CLEAN ARRAYS */
+      instanceLocations: {
+        $addToSet: {
+          $cond: [
+            { $and: [
+              { $ne: ["$instanceLocation", null] },
+              { $ne: ["$instanceLocation", ""] }
+            ]},
+            "$instanceLocation",
+            "$$REMOVE"
+          ]
+        }
+      },
 
-      // 💰 costs
+      assetLocations: {
+        $addToSet: {
+          $cond: [
+            { $and: [
+              { $ne: ["$assetLocation", null] },
+              { $ne: ["$assetLocation", ""] }
+            ]},
+            "$assetLocation",
+            "$$REMOVE"
+          ]
+        }
+      },
+
+      assignedLocations: {
+        $addToSet: {
+          $cond: [
+            { $and: [
+              { $ne: ["$assignedLocation", null] },
+              { $ne: ["$assignedLocation", ""] }
+            ]},
+            "$assignedLocation",
+            "$$REMOVE"
+          ]
+        }
+      },
+
+      /* 🔥 NEW: Asset names */
+      assetNames: {
+        $addToSet: {
+          $cond: [
+            { $and: [
+              { $ne: ["$assetName", null] },
+              { $ne: ["$assetName", ""] }
+            ]},
+            "$assetName",
+            "$$REMOVE"
+          ]
+        }
+      },
+
+      /* 💰 COSTS */
       purchaseValue: { $sum: "$purchaseCost" },
       maintenanceTotal: { $sum: "$maintenanceCost" },
       warrantyTotal: { $sum: "$warrantyCost" },
@@ -490,7 +562,7 @@ const topLocationsPromise = AssetInstance.aggregate([
     }
   },
 
-  /* ================= FINAL VALUE ================= */
+  /* ================= FINAL CALC ================= */
   {
     $addFields: {
       totalValue: {
@@ -504,7 +576,35 @@ const topLocationsPromise = AssetInstance.aggregate([
     }
   },
 
-  { $sort: { totalValue: -1 } },
+  /* ================= FORMAT RESPONSE ================= */
+  {
+    $project: {
+      _id: 0,
+      name: "$_id",
+
+      total: "$totalInstances",
+      hardware: "$hardwareCount",
+      software: "$softwareCount",
+      assigned: "$assignedCount",
+
+      instanceLocations: 1,
+      assetLocations: 1,
+      assignedLocations: 1,
+      assetNames: 1,
+
+      costs: {
+        purchase: "$purchaseValue",
+        maintenance: "$maintenanceTotal",
+        warranty: "$warrantyTotal",
+        insurance: "$insuranceTotal"
+      },
+
+      upcomingMaintenance: 1,
+      value: "$totalValue"
+    }
+  },
+
+  { $sort: { value: -1 } },
   { $limit: 5 }
 ]);
     const usersCountPromise = User.countDocuments({ organizationId });
@@ -597,29 +697,32 @@ res.json({
     departmentAssignments: departments,
 
 topLocations: topLocations.map(l => ({
-  name: l._id, // finalLocation
+  name: l.name, // ✅ FIXED
 
-  total: l.totalInstances,
+  total: l.total,
 
-  hardware: l.hardwareCount,
-  software: l.softwareCount,
-  assigned: l.assignedCount,
+  hardware: l.hardware,
+  software: l.software,
+  assigned: l.assigned,
 
-  value: l.totalValue,
+  value: l.value,
 
   costs: {
-    purchase: l.purchaseValue,
-    maintenance: l.maintenanceTotal,
-    warranty: l.warrantyTotal,
-    insurance: l.insuranceTotal
+    purchase: l.costs?.purchase || 0,
+    maintenance: l.costs?.maintenance || 0,
+    warranty: l.costs?.warranty || 0,
+    insurance: l.costs?.insurance || 0
   },
 
   upcomingMaintenance: l.upcomingMaintenance,
 
-  // 🔥 NEW (what you wanted)
-  instanceLocations: l.instanceLocations,
-  assetLocations: l.assetLocations,
-  assignedLocations: l.assignedLocations
+  // 🔥 FULL LOCATION CONTEXT
+  instanceLocations: l.instanceLocations || [],
+  assetLocations: l.assetLocations || [],
+  assignedLocations: l.assignedLocations || [],
+
+  // 🔥 NEW (you added in pipeline)
+  assetNames: l.assetNames || []
 }))
   },
 
