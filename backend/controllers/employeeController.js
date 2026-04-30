@@ -124,7 +124,7 @@ const getEmployeeAssetSummary = async (req, res) => {
         }
       },
 
-      // 🔹 JOIN EMPLOYEE
+      /* ================= EMPLOYEE ================= */
       {
         $lookup: {
           from: "employees",
@@ -135,7 +135,7 @@ const getEmployeeAssetSummary = async (req, res) => {
       },
       { $unwind: "$employee" },
 
-      // 🔹 JOIN DEPARTMENT
+      /* ================= DEPARTMENT ================= */
       {
         $lookup: {
           from: "departments",
@@ -146,7 +146,7 @@ const getEmployeeAssetSummary = async (req, res) => {
       },
       { $unwind: "$department" },
 
-      // 🔥 JOIN INSTANCE (CRITICAL)
+      /* ================= INSTANCE ================= */
       {
         $lookup: {
           from: "assetinstances",
@@ -157,31 +157,62 @@ const getEmployeeAssetSummary = async (req, res) => {
       },
       { $unwind: "$instance" },
 
-      // 🔹 JOIN ASSET (for name only)
+      /* ================= 🔥 FIX: JOIN BOTH ASSET TYPES ================= */
+
+      // hardware assets
       {
         $lookup: {
           from: "assets",
           localField: "instance.assetId",
           foreignField: "_id",
-          as: "asset"
+          as: "hardwareAsset"
         }
       },
-      { $unwind: "$asset" },
 
-      // 🔥 EXTRACT COST (BASE AMOUNT)
+      // software assets
+      {
+        $lookup: {
+          from: "softwareassets",
+          localField: "instance.assetId",
+          foreignField: "_id",
+          as: "softwareAsset"
+        }
+      },
+
+      // pick correct asset dynamically
       {
         $addFields: {
-          instanceCost: {
+          asset: {
             $cond: [
-              { $eq: ["$assetType", "hardware"] },
-              "$instance.hardware.purchaseCost.baseAmount",
-              "$instance.software.purchaseCost.baseAmount"
+              { $eq: ["$instance.assetType", "hardware"] },
+              { $arrayElemAt: ["$hardwareAsset", 0] },
+              { $arrayElemAt: ["$softwareAsset", 0] }
             ]
           }
         }
       },
 
-      // 🔹 GROUP BY EMPLOYEE
+      // ⚠️ keep only valid (prevents null crash but does NOT drop software anymore)
+      {
+        $match: {
+          asset: { $ne: null }
+        }
+      },
+
+      /* ================= COST ================= */
+      {
+        $addFields: {
+          instanceCost: {
+            $cond: [
+              { $eq: ["$instance.assetType", "hardware"] },
+              { $ifNull: ["$instance.hardware.purchaseCost.baseAmount", 0] },
+              { $ifNull: ["$instance.software.purchaseCost.baseAmount", 0] }
+            ]
+          }
+        }
+      },
+
+      /* ================= GROUP ================= */
       {
         $group: {
           _id: "$employee._id",
@@ -190,23 +221,23 @@ const getEmployeeAssetSummary = async (req, res) => {
           employeeCode: { $first: "$employee.employeeCode" },
           department: { $first: "$department.name" },
 
-          // 🔹 INSTANCE COUNTS
+          /* INSTANCE COUNTS */
           hardwareInstanceCount: {
             $sum: {
-              $cond: [{ $eq: ["$assetType", "hardware"] }, 1, 0]
+              $cond: [{ $eq: ["$instance.assetType", "hardware"] }, 1, 0]
             }
           },
           softwareInstanceCount: {
             $sum: {
-              $cond: [{ $eq: ["$assetType", "software"] }, 1, 0]
+              $cond: [{ $eq: ["$instance.assetType", "software"] }, 1, 0]
             }
           },
 
-          // 🔹 UNIQUE ASSET COUNTS
+          /* UNIQUE ASSETS */
           hardwareAssetsSet: {
             $addToSet: {
               $cond: [
-                { $eq: ["$assetType", "hardware"] },
+                { $eq: ["$instance.assetType", "hardware"] },
                 "$asset._id",
                 "$$REMOVE"
               ]
@@ -215,18 +246,18 @@ const getEmployeeAssetSummary = async (req, res) => {
           softwareAssetsSet: {
             $addToSet: {
               $cond: [
-                { $eq: ["$assetType", "software"] },
+                { $eq: ["$instance.assetType", "software"] },
                 "$asset._id",
                 "$$REMOVE"
               ]
             }
           },
 
-          // 🔹 COST
+          /* COST */
           hardwareCost: {
             $sum: {
               $cond: [
-                { $eq: ["$assetType", "hardware"] },
+                { $eq: ["$instance.assetType", "hardware"] },
                 "$instanceCost",
                 0
               ]
@@ -235,7 +266,7 @@ const getEmployeeAssetSummary = async (req, res) => {
           softwareCost: {
             $sum: {
               $cond: [
-                { $eq: ["$assetType", "software"] },
+                { $eq: ["$instance.assetType", "software"] },
                 "$instanceCost",
                 0
               ]
@@ -244,7 +275,7 @@ const getEmployeeAssetSummary = async (req, res) => {
         }
       },
 
-      // 🔹 FINAL SHAPE
+      /* ================= FINAL ================= */
       {
         $project: {
           _id: 1,
