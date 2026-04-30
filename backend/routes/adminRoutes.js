@@ -396,42 +396,43 @@ const topLocationsPromise = AssetInstance.aggregate([
   },
   { $unwind: { path: "$asset", preserveNullAndEmptyArrays: true } },
 
-  /* ================= RESOLVE ASSET LOCATION NAME ================= */
-{
-  $lookup: {
-    from: "assignments",
-    let: { instId: "$_id" },
-    pipeline: [
-      {
-        $match: {
-          $expr: {
-            $eq: [
-              { $toString: "$assetInstanceId" },
-              { $toString: "$$instId" }
-            ]
-          }
-        }
-      }
-    ],
-    as: "assignment"
-  }
-},
+  /* ================= LOCATION NAME RESOLVE ================= */
   {
-  $addFields: {
-    debug_instanceId: "$_id",
-    debug_assignmentIds: "$assignment.assetInstanceId",
-    debug_assignmentFull: "$assignment"
-  }
-},
+    $lookup: {
+      from: "locations",
+      localField: "asset.locationName",
+      foreignField: "_id",
+      as: "assetLocationObj"
+    }
+  },
   { $unwind: { path: "$assetLocationObj", preserveNullAndEmptyArrays: true } },
 
-  /* ================= JOIN ASSIGNMENTS ================= */
+  /* ================= FIXED ASSIGNMENT LOOKUP ================= */
   {
     $lookup: {
       from: "assignments",
-      localField: "_id",
-      foreignField: "assetInstanceId",
+      let: { instId: "$_id" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $eq: [
+                { $toString: "$assetInstanceId" },
+                { $toString: "$$instId" }
+              ]
+            }
+          }
+        }
+      ],
       as: "assignment"
+    }
+  },
+
+  /* ================= DEBUG ================= */
+  {
+    $addFields: {
+      debug_assignment_count: { $size: "$assignment" },
+      debug_assignment_data: "$assignment"
     }
   },
 
@@ -441,7 +442,6 @@ const topLocationsPromise = AssetInstance.aggregate([
       instanceLocation: "$location",
       assetLocation: "$assetLocationObj.name",
 
-      // 🔥 KEEP ALL assignment locations (IMPORTANT)
       assignedLocationsArray: {
         $map: {
           input: "$assignment",
@@ -452,9 +452,7 @@ const topLocationsPromise = AssetInstance.aggregate([
 
       finalLocation: {
         $ifNull: [
-          {
-            $arrayElemAt: ["$assignment.location", 0]
-          },
+          { $arrayElemAt: ["$assignment.location", 0] },
           {
             $ifNull: ["$location", "$assetLocationObj.name"]
           }
@@ -514,70 +512,15 @@ const topLocationsPromise = AssetInstance.aggregate([
 
       assignedCount: { $sum: "$isAssigned" },
 
-      /* ✅ CLEAN ARRAYS */
-      instanceLocations: {
-        $addToSet: {
-          $cond: [
-            {
-              $and: [
-                { $ne: ["$instanceLocation", null] },
-                { $ne: ["$instanceLocation", ""] }
-              ]
-            },
-            "$instanceLocation",
-            "$$REMOVE"
-          ]
-        }
-      },
+      instanceLocations: { $addToSet: "$instanceLocation" },
+      assetLocations: { $addToSet: "$assetLocation" },
 
-      assetLocations: {
-        $addToSet: {
-          $cond: [
-            {
-              $and: [
-                { $ne: ["$assetLocation", null] },
-                { $ne: ["$assetLocation", ""] }
-              ]
-            },
-            "$assetLocation",
-            "$$REMOVE"
-          ]
-        }
-      },
-
-      // 🔥 FIXED assigned locations (ARRAY SAFE)
       assignedLocations: {
-        $addToSet: {
-          $cond: [
-            {
-              $and: [
-                { $isArray: "$assignedLocationsArray" },
-                { $gt: [{ $size: "$assignedLocationsArray" }, 0] }
-              ]
-            },
-            "$assignedLocationsArray",
-            "$$REMOVE"
-          ]
-        }
+        $push: "$assignedLocationsArray"
       },
 
-      /* 🔥 ASSET NAMES */
-      assetNames: {
-        $addToSet: {
-          $cond: [
-            {
-              $and: [
-                { $ne: ["$assetName", null] },
-                { $ne: ["$assetName", ""] }
-              ]
-            },
-            "$assetName",
-            "$$REMOVE"
-          ]
-        }
-      },
+      assetNames: { $addToSet: "$assetName" },
 
-      /* 💰 COSTS */
       purchaseValue: { $sum: "$purchaseCost" },
       maintenanceTotal: { $sum: "$maintenanceCost" },
       warrantyTotal: { $sum: "$warrantyCost" },
@@ -591,11 +534,13 @@ const topLocationsPromise = AssetInstance.aggregate([
             0
           ]
         }
-      }
+      },
+
+      debug_assignment_count: { $sum: "$debug_assignment_count" }
     }
   },
 
-  /* ================= FLATTEN ASSIGNED LOCATIONS ================= */
+  /* ================= FLATTEN ================= */
   {
     $addFields: {
       assignedLocations: {
@@ -608,7 +553,7 @@ const topLocationsPromise = AssetInstance.aggregate([
     }
   },
 
-  /* ================= FINAL CALC ================= */
+  /* ================= FINAL ================= */
   {
     $addFields: {
       totalValue: {
@@ -622,14 +567,11 @@ const topLocationsPromise = AssetInstance.aggregate([
     }
   },
 
-  /* ================= FORMAT RESPONSE ================= */
   {
     $project: {
       _id: 0,
       name: "$_id",
-      debug_instanceId: 1,
-    debug_assignmentIds: 1,
-    debug_assignmentFull: 1,
+
       total: "$totalInstances",
       hardware: "$hardwareCount",
       software: "$softwareCount",
@@ -639,6 +581,8 @@ const topLocationsPromise = AssetInstance.aggregate([
       assetLocations: 1,
       assignedLocations: 1,
       assetNames: 1,
+
+      debug_assignment_count: 1, // 🔥 KEEP THIS TEMP
 
       costs: {
         purchase: "$purchaseValue",
