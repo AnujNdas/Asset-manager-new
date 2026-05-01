@@ -424,10 +424,6 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
 /* ============================
    RETURN INSTANCE
 ============================ */
-const asyncHandler = require("../utils/asyncHandler");
-const AppError = require("../utils/AppError");
-const mongoose = require("mongoose");
-
 const returnAssetInstance = asyncHandler(async (req, res, next) => {
 
   const session = await mongoose.startSession();
@@ -572,9 +568,6 @@ const getEmployeesByDepartment = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-const asyncHandler = require("../utils/asyncHandler");
-const AppError = require("../utils/AppError");
-const mongoose = require("mongoose");
 
 const reassignAssetInstance = asyncHandler(async (req, res, next) => {
 
