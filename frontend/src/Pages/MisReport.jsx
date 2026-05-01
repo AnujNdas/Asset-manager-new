@@ -109,9 +109,9 @@ const MisReport = () => {
     });
 
     return (asset.instances || []).map((inst) => ({
-      assetName: asset.assetName,
+      assetName: inst.deviceName,
       instanceCode: inst.instanceCode,
-      model: inst.hardwareDetails?.modelNo,
+      model: inst.hardware?.modelNo,
       status: inst.status,
       condition: inst.condition,
       location: inst.location,
@@ -120,29 +120,34 @@ const MisReport = () => {
         assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
       department:
         assignmentMap[String(inst._id)]?.department?.name || "-",
-      cost: asset.assetCost?.baseTotalAmount || 0,
+      cost: inst.hardware?.purchaseCost?.baseAmount || 0
     }));
   });
 
-  const softwareInstances = software.flatMap((asset) => {
-    const assignmentMap = {};
-    asset.assignmentRecords?.forEach((a) => {
-      assignmentMap[String(a.assetInstanceId)] = a;
-    });
-
-    return (asset.instances || []).map((inst) => ({
-      assetName: asset.assetName,
-      instanceCode: inst.instanceCode,
-      licenseKey: inst.softwareDetails?.licenseKey,
-      vendor: inst.softwareDetails?.vendor,
-      status: inst.status,
-      location: inst.location,
-      expiry: inst.softwareDetails?.renewalDate,
-      assignedTo:
-        assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
-      cost: asset.assetCost?.baseTotalAmount || 0,
-    }));
+const softwareInstances = software.flatMap((asset) => {
+  const assignmentMap = {};
+  asset.assignmentRecords?.forEach((a) => {
+    assignmentMap[String(a.assetInstanceId)] = a;
   });
+
+  return (asset.instances || []).map((inst) => ({
+    assetName: inst.deviceName,
+    instanceCode: inst.instanceCode,
+    licenseKey: inst.software?.licenseKey,
+    licenseNumber: inst.software?.licenseNumber,
+    status: inst.status,
+    location: inst.location,
+    expiry: inst.software?.renewalDate,
+    assignedTo:
+      assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
+
+    // ❌ OLD
+    // cost: asset.assetCost?.baseTotalAmount || 0,
+
+    // ✅ NEW
+    cost: inst.software?.purchaseCost?.baseAmount || 0,
+  }));
+});
 
   // ================= DATA SWITCH =================
   let baseData =
@@ -400,7 +405,9 @@ const MisReport = () => {
                     <td>{row.condition}</td>
                     <td>{row.assignedTo}</td>
                     <td>{row.department}</td>
-                    <td>{row.cost}</td>
+                                        <td>
+  {CURRENCY_SYMBOLS[currency]} {convertFromBase(row.cost).toFixed(2)}
+</td>
                   </>
                 )}
                 {activeTab === "software" && viewMode === "summary" && (
@@ -423,7 +430,9 @@ const MisReport = () => {
                     <td>{row.vendor}</td>
                     <td>{row.status}</td>
                     <td>{row.assignedTo}</td>
-                    <td>{formatDate(row.expiry)}</td>
+                    <td>
+  {CURRENCY_SYMBOLS[currency]} {convertFromBase(row.cost).toFixed(2)}
+</td>
                   </>
                 )}
 

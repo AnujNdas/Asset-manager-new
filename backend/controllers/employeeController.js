@@ -4,21 +4,73 @@ const mongoose = require("mongoose");
 /**
  * Create Employee
  */
-const createEmployee = async (req, res) => {
+const createEmployee = async (req, res, next) => {
   try {
-    const organizationId = req.user.organizationId;
+    const { organizationId, id: userId } = req.user;
+
+    if (!organizationId || !userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
+    /* ================= VALIDATION ================= */
+
+    const { name, employeeCode, email } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Employee name is required"
+      });
+    }
+
+    if (!employeeCode || !employeeCode.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Employee code is required"
+      });
+    }
+
+    /* ================= DUPLICATE CHECK ================= */
+
+    const existing = await Employee.findOne({
+      organizationId,
+      $or: [
+        { employeeCode: employeeCode.trim() },
+        ...(email ? [{ email: email.trim().toLowerCase() }] : [])
+      ]
+    });
+
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        message: "Employee with same code or email already exists"
+      });
+    }
+
+    /* ================= CREATE ================= */
 
     const employee = await Employee.create({
       ...req.body,
-      organizationId
+      name: name.trim(),
+      employeeCode: employeeCode.trim(),
+      email: email?.trim().toLowerCase() || "",
+      organizationId,
+      createdBy: userId
     });
 
-    res.status(201).json({ success: true, data: employee });
+    return res.status(201).json({
+      success: true,
+      data: employee
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("CREATE EMPLOYEE ERROR:", error);
+    return next(error);
   }
 };
-
 /**
  * Get Employees (with department filter optional)
  */
@@ -46,19 +98,24 @@ const getEmployees = async (req, res) => {
 /**
  * Update Employee
  */
-const updateEmployee = async (req, res) => {
+const updateEmployee = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const organizationId = req.user.organizationId;
+    const { organizationId, id: userId } = req.user;
 
-    const employee = await Employee.findOneAndUpdate(
-      { _id: id, organizationId }, // prevent cross-org access
-      { ...req.body },
-      {
-        new: true,
-        runValidators: true
-      }
-    ).populate("departmentId", "name");
+    if (!organizationId || !userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
+    /* ================= FETCH EXISTING ================= */
+
+    const employee = await Employee.findOne({
+      _id: id,
+      organizationId
+    });
 
     if (!employee) {
       return res.status(404).json({
@@ -67,16 +124,76 @@ const updateEmployee = async (req, res) => {
       });
     }
 
-    res.json({
+    /* ================= SAFE INPUT ================= */
+
+    let { name, employeeCode, email, departmentId } = req.body;
+
+    if (name !== undefined) {
+      if (!name.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: "Employee name cannot be empty"
+        });
+      }
+      name = name.trim().replace(/\s+/g, " ");
+    }
+
+    if (employeeCode !== undefined) {
+      if (!employeeCode.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: "Employee code cannot be empty"
+        });
+      }
+      employeeCode = employeeCode.trim();
+    }
+
+    if (email !== undefined) {
+      email = email.trim().toLowerCase();
+    }
+
+    /* ================= DUPLICATE CHECK ================= */
+
+    if (employeeCode || email) {
+      const exists = await Employee.findOne({
+        organizationId,
+        _id: { $ne: id },
+        $or: [
+          ...(employeeCode ? [{ employeeCode }] : []),
+          ...(email ? [{ email }] : [])
+        ]
+      });
+
+      if (exists) {
+        return res.status(409).json({
+          success: false,
+          message: "Employee with same code or email already exists"
+        });
+      }
+    }
+
+    /* ================= APPLY UPDATES ================= */
+
+    if (name !== undefined) employee.name = name;
+    if (employeeCode !== undefined) employee.employeeCode = employeeCode;
+    if (email !== undefined) employee.email = email;
+    if (departmentId !== undefined) employee.departmentId = departmentId;
+
+    employee.updatedBy = userId;
+
+    await employee.save();
+
+    const updatedEmployee = await Employee.findById(employee._id)
+      .populate("departmentId", "name");
+
+    return res.json({
       success: true,
-      data: employee
+      data: updatedEmployee
     });
 
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    console.error("UPDATE EMPLOYEE ERROR:", error);
+    return next(error);
   }
 };
 /**
