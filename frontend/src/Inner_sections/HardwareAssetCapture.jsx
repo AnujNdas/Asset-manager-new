@@ -356,7 +356,7 @@ const handleImport = async () => {
             <button className="import-btn" onClick={() => setShowImport(true)}>
               ⬆ Import Excel
             </button>
-            <button onClick={downloadTemplate}>⬇ Download Template</button>
+            <button onClick={downloadTemplate} className="btn-cancel">⬇ Download Template</button>
             </div>
           </div>
           <div className="grid-2">

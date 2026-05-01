@@ -176,11 +176,11 @@
     padding: 10px 20px;
     border: none;
     background: #948979;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     color: #222831;
     font-weight: 500;
     border-radius: 8px;
     cursor: pointer;
+    font-size: 14px;
     transition: all 0.2s ease;
   }
     .tab:hover {
@@ -247,8 +247,9 @@
 
 /* SAVE BUTTON (Primary SaaS Blue) */
 .btn-save {
-  background: #948979;
+  background: #DFD0B8;
   color: #222831;
+  font-size: 14px;
 }
 
 .btn-save:hover {
@@ -261,12 +262,13 @@
 
 /* CANCEL BUTTON (Soft Neutral) */
 .btn-cancel {
-  background: #f3f4f6;
-  color: #222831;
+  background: #393E46;
+  color: #DFD0B8;
+  font-size: 14px;
 }
 
 .btn-cancel:hover {
-  background: #e5e7eb;
+  background: #222831;
   transform: translateY(-1px);
 }
 

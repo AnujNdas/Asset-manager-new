@@ -17,13 +17,16 @@
 ========================================================= */
 .classify_heading,
 .classify_heading2 {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 600;
   color: #DFD0B8;
   letter-spacing: 0.5px;
   padding: 8px 9px;
 }
-
+.category-title {
+  font-size: 22px;
+  color: #DFD0B8;
+}
 /* Secondary heading alignment */
 .classify_heading2 {
   width: 100%;

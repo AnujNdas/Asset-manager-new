@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
-
+import { getErrorMessage } from "../utils/getErrorMessage";
 const SoftwareAssetList = () => {
   const VENDOR_CONFIG = {
   dell: { icon: "💻", color: "blue" },
@@ -196,9 +196,13 @@ const handleInstanceUpdate = async () => {
     Swal.fire("Updated", "Instance updated", "success");
     setEditInstance(null);
     fetchAll();
-  } catch (err) {
-    Swal.fire("Error", err.message, "error");
-  }
+} catch (err) {
+  Swal.fire(
+    "Error",
+    getErrorMessage(err, "Failed to update instance"),
+    "error"
+  );
+}
 };
   const fetchAll = async () => {
     try {
@@ -219,10 +223,14 @@ const handleInstanceUpdate = async () => {
 
       setApiDone(true);
       setTimeout(() => setLoading(false), 400);
-    } catch (err) {
-      Swal.fire("Error", "Failed to load software assets", "error");
-      setLoading(false);
-    }
+} catch (err) {
+  Swal.fire(
+    "Error",
+    getErrorMessage(err, "Failed to load software assets"),
+    "error"
+  );
+  setLoading(false);
+}
   };
 
   const getName = (list, value) => {
@@ -232,20 +240,29 @@ const handleInstanceUpdate = async () => {
     return found ? found.name : "N/A";
   };
 
-  const handleDelete = async (id) => {
-    const res = await Swal.fire({
-      title: "Delete software asset?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-    });
+const handleDelete = async (id) => {
+  const res = await Swal.fire({
+    title: "Delete software asset?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+  });
 
-    if (!res.isConfirmed) return;
+  if (!res.isConfirmed) return;
 
+  try {
     await deleteSoftwareAsset(id);
     setAssets((p) => p.filter((a) => a._id !== id));
+
     Swal.fire("Deleted", "Software asset removed", "success");
-  };
+  } catch (err) {
+    Swal.fire(
+      "Error",
+      getErrorMessage(err, "Failed to delete asset"),
+      "error"
+    );
+  }
+};
   const truncateText = (text = "", maxLength = 18) => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
@@ -261,26 +278,34 @@ const handleInstanceUpdate = async () => {
   };
   const handleEditSave = async () => {
   try {
-    await updateSoftwareAsset(editAsset._id, {
-      assetName: editForm.assetName,
-      assetCategory: editForm.assetCategory,
-      associateUnit: editForm.associateUnit,
-      locationName: editForm.locationName,
-      assetStatus: editForm.assetStatus,
-      type: editForm.type,
+await updateSoftwareAsset(editAsset._id, {
+  assetName: editForm.assetName,
+  assetCategory: editForm.assetCategory,
+  associateUnit: editForm.associateUnit,
+  locationName: editForm.locationName,
+  type: editForm.type,
+  assetQuantity: editForm.assetQuantity,
 
-      assetQuantity: editForm.assetQuantity,
-
-      purchaseDate: editForm.purchaseDate,
-      expiryDate: editForm.expiryDate,
-    });
+  purchaseDetails: {
+    purchaseDate: editForm.purchaseDate,
+    vendor: {
+      name: editForm.vendorName,
+      contact: editForm.vendorContact,
+      supportEmail: editForm.vendorEmail,
+    },
+  },
+});
 
     Swal.fire("Updated", "Software updated", "success");
     setEditAsset(null);
     fetchAll();
-  } catch (err) {
-    Swal.fire("Error", err.message, "error");
-  }
+} catch (err) {
+  Swal.fire(
+    "Error",
+    getErrorMessage(err, "Failed to update software"),
+    "error"
+  );
+}
 };
   const filteredAssets = assets.filter((asset) => {
     const term = searchTerm.toLowerCase();

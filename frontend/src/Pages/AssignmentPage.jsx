@@ -12,7 +12,7 @@ import {
   getInstancesByAsset
 } from "../Services/ApiServices";
 import Loader from "../Components/Loader";
-
+import { getErrorMessage } from "../utils/getErrorMessage";
 const steps = [
   "Category",
   "Assets",
@@ -94,8 +94,8 @@ const selectAsset = async (asset) => {
     setInstances(res.data || []);
     console.log(res)
   } catch (err) {
-    Swal.fire("Error", "Failed to load instances", "error");
-  }
+  Swal.fire("Error", getErrorMessage(err, "Failed to load instances"), "error");
+}
 
   setSelectedInstances([]);
   setStep(2);
@@ -155,9 +155,9 @@ const payload = selectedInstances.map(inst => ({
       Swal.fire("Success", "Instances assigned successfully", "success");
 
       resetAll();
-    } catch (err) {
-      Swal.fire("Error", err.message || "Assignment failed", "error");
-    } finally {
+    }catch (err) {
+  Swal.fire("Error", getErrorMessage(err, "Assignment failed"), "error");
+} finally {
       setLoading(false);
     }
   };

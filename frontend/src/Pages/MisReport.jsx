@@ -247,7 +247,7 @@ const softwareInstances = software.flatMap((asset) => {
 
       {/* HEADER */}
       <div className="report-header">
-        <h3>Asset MIS Report</h3>
+        <h2>Asset MIS Report</h2>
         <div className="header-actions">
           <CurrencyFilter />
           <button onClick={exportData} className="misbutton">

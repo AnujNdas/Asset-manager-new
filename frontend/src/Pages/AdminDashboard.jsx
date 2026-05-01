@@ -11,6 +11,8 @@ import {
   Geography,
   ZoomableGroup
 } from "react-simple-maps";
+import { getErrorMessage } from "../utils/getErrorMessage";
+import Swal from "sweetalert2"; // (recommended since you're already using it elsewhere)
 import { scaleLinear } from "d3-scale";
 import {  useMemo } from "react";
 import countries from "i18n-iso-countries";
@@ -71,9 +73,15 @@ useEffect(() => {
       const res = await getDashboardData();
       console.log("Dashboard data:", res);
       setData(res);
-    } catch (error) {
-      console.error("Dashboard error:", error);
-    } finally {
+    }catch (error) {
+  console.error("Dashboard error:", error);
+
+  Swal.fire(
+    "Error",
+    getErrorMessage(error, "Failed to load dashboard data"),
+    "error"
+  );
+} finally {
       console.log("Finished API call");
       setLoading(false);
     }
@@ -88,7 +96,15 @@ useEffect(() => {
     );
   }
 
-  const { totals, upcoming, analytics , costBreakdown} = data;
+if (!data) {
+  return (
+    <div className="dashboard-container">
+      <p className="empty-text">No dashboard data available</p>
+    </div>
+  );
+}
+
+const { totals, upcoming, analytics, costBreakdown } = data;
 
   return (
     <div className="dashboard-container">

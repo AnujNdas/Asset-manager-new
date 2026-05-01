@@ -12,7 +12,7 @@ import {
   bulkUploadSoftwareAssets,
 } from "../Services/ApiServices";
 import * as XLSX from "xlsx";
-
+import { getErrorMessage } from "../utils/getErrorMessage";
 const downloadTemplate = () => {
   const data = [
     {
@@ -96,18 +96,28 @@ export default function SoftwareAssetCapture() {
   const [importLoading, setImportLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const [u, l, c, s] = await Promise.all([
+useEffect(() => {
+  (async () => {
+    try {
+      const [u, l, c] = await Promise.all([
         getUnits(),
         getLocations(),
         getCategories("software"),
       ]);
+
       setUnits(u || []);
       setLocations(l?.data || []);
       setCategories(c || []);
-    })();
-  }, []);
+
+    } catch (err) {
+      Swal.fire(
+        "Error",
+        getErrorMessage(err, "Failed to load initial data"),
+        "error"
+      );
+    }
+  })();
+}, []);
   const validateRequired = () => {
     const missing = [];
 
@@ -156,20 +166,27 @@ const handleImport = async () => {
     });
 
     if (res.success) {
-      Swal.fire(
-        "Success",
-        `${res.inserted} assets uploaded, ${res.skipped} skipped`,
-        "success"
-      );
+Swal.fire({
+  title: "Upload Complete",
+  html: `
+    <b>${res.inserted}</b> assets uploaded<br/>
+    <b>${res.skipped}</b> skipped
+  `,
+  icon: res.skipped > 0 ? "warning" : "success"
+});
 
       setShowImport(false);
       setImportFile(null);
     } else {
       Swal.fire("Error", res.message, "error");
     }
-  } catch (err) {
-    Swal.fire("Error", "Upload failed", "error");
-  } finally {
+} catch (err) {
+  Swal.fire(
+    "Error",
+    getErrorMessage(err, "Upload failed"),
+    "error"
+  );
+} finally {
     setImportLoading(false);
   }
 };
@@ -233,10 +250,8 @@ const handleImport = async () => {
     } catch (err) {
       Swal.fire(
         "Error",
-        err.userMessage ||
-          err.response?.data?.message ||
-          "Failed to create asset.",
-        "error",
+        getErrorMessage(err, "Failed to create asset."),
+        "error"
       );
     } finally {
       setIsSubmitting(false);
@@ -279,10 +294,13 @@ const handleImport = async () => {
         <div className="form-card">
           <div className="capture-header">
             <h3>Software Details</h3>
+            <div>
+
             <button className="import-btn" onClick={() => setShowImport(true)}>
               ⬆ Import Excel
             </button>
-            <button onClick={downloadTemplate}>⬇ Download Template</button>
+            <button onClick={downloadTemplate} className="btn-cancel">⬇ Download Template</button>
+            </div>
           </div>
 
           <div className="grid-2">

@@ -11,6 +11,8 @@
       bulkUploadInstances
     } from "../Services/ApiServices";
     import Select from "react-select";
+    import Swal from "sweetalert2";
+    import { getErrorMessage } from "../utils/getErrorMessage";
     const currencyOptions = [
       "INR",
       "USD",
@@ -229,9 +231,10 @@
             }),
           );
           setInstances(rows);
-        } catch (err) {
-          console.error(err);
-        } finally {
+        }catch (err) {
+  console.error("Fetch error:", err);
+  swal.fire("Error", getErrorMessage(err, "Failed to load asset data"), "error");
+} finally {
           setLoading(false);
         }
       };
@@ -347,16 +350,15 @@
         instances: payload,
       });
 
-      if (res.success) {
-        alert(`✅ ${res.inserted} imported, ${res.skipped} skipped`);
-        fetchData();
-      } else {
-        alert(res.message || "Import failed");
-      }
+if (res.success) {
+  Swal.fire("Success", `✅ ${res.inserted} imported, ${res.skipped} skipped`, "success");
+} else {
+  Swal.fire("Error", res.message || "Import failed", "error");
+}
     } catch (err) {
-      console.error(err);
-      alert("Error reading Excel file");
-    } finally {
+  console.error("Import error:", err);
+  Swal.fire("Error", getErrorMessage(err, "Failed to import Excel file"), "error");
+} finally {
       setLoading(false);
     }
   };
@@ -429,10 +431,13 @@
             rowErrors.location = "Location is required";
           }
 
-if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
+if (!inst.purchaseCost || isNaN(Number(inst.purchaseCost))) {
   rowErrors.purchaseCost = "Valid cost required";
 }
 
+if (isSoftware && !inst.licenseNumber) {
+  rowErrors.licenseNumber = "License number required";
+}
                       if (asset?.assetPurchaseDate) {
                         if (inst.purchaseDate && inst.purchaseDate < asset.assetPurchaseDate) {
                           rowErrors.purchaseDate = "Before asset purchase date";
@@ -527,13 +532,13 @@ if (inst.purchaseCost === "" || Number(inst.purchaseCost) <= 0) {
           });
           console.log("Created instances:", payload);
 
-          alert("Instances created successfully");
+          Swal.fire("Success", "Instances created successfully", "success");
           fetchData();
           navigate("/inventory")
         } catch (err) {
-          console.error(err);
-          alert("Error creating instances");
-        } finally {
+  console.error("Create instances error:", err);
+  Swal.fire("Error", getErrorMessage(err, "Failed to create instances"), "error");
+}finally {
           setLoading(false);
         }
       };

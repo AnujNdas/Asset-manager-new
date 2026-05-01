@@ -5,8 +5,8 @@
 }
 
 .subscription-page h2 {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 22px;
+  font-weight: 600;
   text-align: center;
   margin-bottom: 8px;
   color: #DFD0B8;
@@ -34,8 +34,8 @@
   padding: 10px 18px;
   border-radius: 999px;
   border: none;
-  background: transparent;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   color: #948979;
   transition: all 0.25s ease;
@@ -164,6 +164,8 @@
 .btn-primary {
   background: #DFD0B8;
   color: #222831;
+  font-size: 14px;
+  border: none;
 }
 
 .btn-primary:hover {

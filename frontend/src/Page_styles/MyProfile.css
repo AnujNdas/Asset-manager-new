@@ -111,13 +111,13 @@
 }
 
 .btn.primary {
-  background: #948979;
+  background: #DFD0B8;
   color: #222831;
   border: none;
   padding: 12px 22px;
   border-radius: 10px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
 }

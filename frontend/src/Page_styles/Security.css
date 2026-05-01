@@ -96,14 +96,14 @@
 }
 
 .change-button button {
-  background-color: #948979;
+  background-color: #DFD0B8;
   color: #222831;
   padding: 10px 18px;
   border: none;
   border-radius: 6px;
 
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   transition: 0.3s ease;
 }
 

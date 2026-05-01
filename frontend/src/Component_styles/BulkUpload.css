@@ -130,6 +130,8 @@
 .import-btn {
   background: #DFD0B8;
   color: #222831;
+  font-size: 14px;
+  margin-right: 5px;
 }
 
 .template-btn {

@@ -20,8 +20,8 @@
 
 .saas-user-header h1 {
   margin: 0;
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 500;
   color: #DFD0B8;
 }
 
@@ -40,12 +40,7 @@
   background: #222831;
   color: #DFD0B8;
   transition: all 0.2s ease;
-}
-
-.saas-user-search input:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+  font-size: 14px;
 }
 
 /* Card */
@@ -102,8 +97,8 @@
 }
 
 .role-admin {
-  background: #ff0000;
-  color: #ffffff;
+  background: #DFD0B8;
+  color: #222831;
 }
 
 .role-super-admin {
@@ -115,9 +110,9 @@
 .saas-user-table select {
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: white;
-  font-size: 13px;
+  background: #393E46;
+  color: #DFD0B8;
+  font-size: 14px;
 }
 
 .saas-user-table select:focus {

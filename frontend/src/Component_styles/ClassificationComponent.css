@@ -75,6 +75,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
+
 }
 /* 
 .category_search_input {
@@ -116,9 +117,10 @@
   padding: 0 14px;
   border-radius: 8px;
   border: none;
-  background-color: #948979;
+  background-color: #DFD0B8;
   color: #222831;
   font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
 }

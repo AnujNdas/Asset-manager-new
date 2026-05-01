@@ -23,7 +23,7 @@
 
 .left-panel h2 {
   margin-bottom: 10px;
-  font-size: 20px;
+  font-size: 15px;
   color: #DFD0B8;
 }
 
@@ -44,7 +44,8 @@
 
 .info-box h4 {
   margin-bottom: 8px;
-  color: #948979;
+  color: #DFD0B8;
+  font-size: 15px;
 }
 
 /* ===== RIGHT PANEL ===== */
@@ -81,7 +82,7 @@
 .form-card h3 {
   margin: 20px 0 10px;
   color: #948979;
-  font-size: 18px;
+  font-size: 15px;
 }
 
 /* ===== GRID ===== */
@@ -112,20 +113,15 @@
   color: #DFD0B8;
 }
 
-.input-group input:focus,
-.input-group select:focus {
-  outline: none;
-  border-color: #2563eb;
-}
-
 /* ===== BUTTON ===== */
 .submit-btn {
   margin-top: 20px;
   width: 100%;
   padding: 12px;
-  background: #948979;
+  background: #DFD0B8;
   color: #222831;
   border: none;
+  font-size: 14px;
   border-radius: 8px;
   cursor: pointer;
 }

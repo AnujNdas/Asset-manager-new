@@ -15,15 +15,19 @@
 
 .filter-bar select {
   padding: 8px 12px;
-  background: #393E46;
-  border: 1px solid #555;
+  background: #222831;
   color: #DFD0B8;
   border-radius: 6px;
+  font-size: 14px;
 }
-
+.right-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 .count {
-  font-size: 13px;
-  color: #948979;
+  font-size: 14px;
+  color: #DFD0B8;
 }
 
 /* ---------------- CARD ---------------- */
@@ -95,7 +99,7 @@
 .btn {
   padding: 6px 12px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   border: none;
   transition: all 0.2s ease;
@@ -160,6 +164,9 @@
   display: block;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
   position: relative;
+}
+.modal h2 {
+  font-size: 22px;
 }
 .modal input,
 .modal select

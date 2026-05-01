@@ -148,7 +148,7 @@
 
 /* Title */
 .invite-form-card h3 {
-  font-size: 1.1rem;
+  font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
   color: #DFD0B8;
@@ -178,16 +178,10 @@
   padding: 10px 12px;
   border-radius: 8px;
   border:none;
-  font-size: 0.95rem;
+  font-size: 14px;
   outline: none;
   background: #393E46;
   color: #DFD0B8;
-}
-
-.invite-form-card input:focus,
-.invite-form-card select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 
@@ -200,9 +194,9 @@
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
-  background: #948979;
+  background: #DFD0B8;
   color: #222831;
-  font-size: 0.95rem;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;

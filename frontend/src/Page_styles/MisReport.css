@@ -64,12 +64,11 @@ body {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background: #fff;
+  background: #948979;
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
   color: #222831;
   cursor: pointer;
-  box-shadow: 0 4px 10px #0003;
   transition: all 0.2s ease-in-out;
   flex-shrink: 0;
 }
@@ -148,7 +147,7 @@ body {
 
 /* ==== Buttons ==== */
 .misbutton {
-  background: #948979;
+  background: #DFD0B8;
   color: #222831;
   border: none;
   padding: 10px 16px;
@@ -157,17 +156,6 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
-}
-
-.misbutton:hover {
-  background: #1e4ed8;
-}
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
 }
 .header-actions {
   display: flex;
@@ -253,7 +241,7 @@ select:focus-visible {
   padding: 8px 10px;
   border-radius: 8px;
   border: none;
-  font-size: 13px;
+  font-size: 14px;
   background: #222831;
   color: #DFD0B8;
 }
@@ -365,7 +353,10 @@ select:focus-visible {
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
-
+.report-header h3 {
+  font-size: 22px;
+  font-weight: 600;
+}
 /* Tablet */
 @media (max-width: 768px) {
   .report-header {

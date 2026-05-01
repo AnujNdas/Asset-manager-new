@@ -13,6 +13,7 @@ import {
   updateHardwareAsset,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
+import { getErrorMessage } from "../utils/getErrorMessage";
 import Loader from "../Components/Loader";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
@@ -142,10 +143,10 @@ const [instanceForm, setInstanceForm] = useState({});
 
       setApiDone(true);
       setTimeout(() => setLoading(false), 400);
-    } catch (err) {
-      Swal.fire("Error", err.message || "Failed to load data", "error");
-      setLoading(false);
-    }
+} catch (err) {
+  Swal.fire("Error", getErrorMessage(err, "Failed to load data"), "error");
+  setLoading(false);
+}
   };
 const getCost = (costObj) => {
   return convertFromBase(Number(costObj?.baseAmount || 0));
@@ -198,9 +199,9 @@ const handleUpdate = async () => {
 
     setEditAsset(null);
     fetchAll();
-  } catch (err) {
-    Swal.fire("Error", err.message || "Failed", "error");
-  }
+} catch (err) {
+  Swal.fire("Error", getErrorMessage(err, "Failed to update asset"), "error");
+}
 };
   const handleDelete = async (id) => {
     const resp = await Swal.fire({
@@ -216,9 +217,9 @@ const handleUpdate = async () => {
       await deleteHardwareAsset(id);
       setAssets((prev) => prev.filter((a) => a._id !== id));
       Swal.fire("Deleted", "Asset removed.", "success");
-    } catch (err) {
-      Swal.fire("Error", err.message || "Failed", "error");
-    }
+} catch (err) {
+  Swal.fire("Error", getErrorMessage(err, "Failed to delete asset"), "error");
+}
   };
   const handleInstanceUpdate = async () => {
   try {
@@ -228,9 +229,9 @@ const handleUpdate = async () => {
 
     setEditInstance(null);
     fetchAll(); // refresh
-  } catch (err) {
-    Swal.fire("Error", err.message, "error");
-  }
+} catch (err) {
+  Swal.fire("Error", getErrorMessage(err, "Failed to update instance"), "error");
+}
 };
   const filteredAssets = assets.filter((asset) => {
     const term = searchTerm.toLowerCase();

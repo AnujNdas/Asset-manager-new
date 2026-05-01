@@ -23,6 +23,7 @@
   border-radius: 6px;
   background: #222831;
   color: #DFD0B8;
+  font-size: 14px;
 }
 
 /* GRID */
@@ -110,6 +111,7 @@
   color: #222831;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .create-btn:hover {
