@@ -370,7 +370,8 @@ const softwareInstances = software.flatMap((asset) => {
                 <>
                   <th>Asset</th>
                   <th>License</th>
-                  <th>Vendor</th>
+                  <th>License No</th>
+                  <th>Expiry</th>
                   <th>Status</th>
                   <th>Assigned</th>
                   <th>Cost</th>
@@ -427,7 +428,8 @@ const softwareInstances = software.flatMap((asset) => {
                   <>
                     <td>{row.assetName}</td>
                     <td>{row.licenseKey}</td>
-                    <td>{row.vendor}</td>
+                    <td>{row.licenseNumber}</td>
+                    <td>{formatDate(row.expiry)}</td>
                     <td>{row.status}</td>
                     <td>{row.assignedTo}</td>
                     <td>
