@@ -233,7 +233,7 @@
           setInstances(rows);
         }catch (err) {
   console.error("Fetch error:", err);
-  swal.fire("Error", getErrorMessage(err, "Failed to load asset data"), "error");
+  Swal.fire("Error", getErrorMessage(err, "Failed to load asset data"), "error");
 } finally {
           setLoading(false);
         }

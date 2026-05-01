@@ -45,7 +45,6 @@ const Inventory = () => {
       <div className="tab-content">
         {activeTab === "hardware" && <HardwareAssetList />}
         {activeTab === "software" && <SoftwareAssetList />}
-         {activeTab === "core" && <CoreCompanyLicenseList />} 
       </div>
     </div>
   );
