@@ -11,6 +11,7 @@ import {
 import Swal from "sweetalert2";
 import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
+import getErrorMessage from "../Utils/getErrorMessage";
 
 const downloadTemplate = () => {
   const data = [
@@ -102,10 +103,16 @@ const AssetCapture = () => {
         setCategories(Array.isArray(c) ? c : []);
 
         console.log("LOCATION RESPONSE:", l);
-      } catch (e) {
-        console.error(e);
-        Swal.fire("Error", "Failed to load classifications", "error");
-      }
+      } catch (err) {
+  console.error(err);
+
+  const message = getErrorMessage(
+    err,
+    "Failed to load classifications"
+  );
+
+  Swal.fire("Error", message, "error");
+}
     })();
   }, []);
 
@@ -206,11 +213,14 @@ const handleImport = async () => {
     });
 
     if (res.success) {
-      Swal.fire(
-        "Success",
-        `${res.inserted} assets uploaded, ${res.skipped} skipped`,
-        "success"
-      );
+     Swal.fire({
+  title: "Upload Complete",
+  html: `
+    <b>${res.inserted}</b> assets uploaded<br/>
+    <b>${res.skipped}</b> skipped
+  `,
+  icon: res.skipped > 0 ? "warning" : "success"
+});
 
       setShowImport(false);
       setImportFile(null);
@@ -218,12 +228,11 @@ const handleImport = async () => {
       Swal.fire("Error", res.message, "error");
     }
   } catch (err) {
-    Swal.fire(
-      "Error",
-      err.response?.data?.message || "Upload failed",
-      "error"
-    );
-  } finally {
+  const message = getErrorMessage(err, "Upload failed");
+
+  Swal.fire("Error", message, "error");
+}
+   finally {
     setImportLoading(false);
   }
 };
@@ -290,21 +299,21 @@ const handleImport = async () => {
       };
 
       const createdAsset = await createHardwareAsset(payload);
-      const assetId = createdAsset._id;
+      const assetId = createdAsset?.data?._id || createdAsset?._id;
+
+      if (!assetId) {
+        throw new Error("Invalid asset response");
+      }
 
       await Swal.fire("Success", "Asset added successfully!", "success");
       navigate("/instance-assets", {
         state: { selectedAssetId: assetId },
       });
-    } catch (err) {
-      Swal.fire(
-        "Error",
-        err.userMessage ||
-          err.response?.data?.message ||
-          "Failed to add asset.",
-        "error",
-      );
-    } finally {
+    }  catch (err) {
+  const message = getErrorMessage(err, "Failed to add asset");
+
+  Swal.fire("Error", message, "error");
+} finally {
       setIsSubmitting(false);
     }
   };

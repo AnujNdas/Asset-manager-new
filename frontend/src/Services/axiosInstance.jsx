@@ -43,16 +43,30 @@ axiosInstance.interceptors.response.use(
     progressController.stop();
 
     const status = error.response?.status;
+    const data = error.response?.data || {};
     const currentPath = window.location.pathname;
 
-    error.userMessage =
-      error.response?.data?.error ||
-      error.response?.data?.message ||
-      "Something went wrong. Please try again.";
+    // ✅ Normalize error object
+    const normalizedError = {
+      status,
+      message:
+        data.message ||
+        data.error ||
+        "Something went wrong. Please try again.",
+      code: data.code || null,
+      details: data.details || null,
+      raw: error
+    };
 
-    // ✅ 401 → Session expired → Login
+    // attach to error
+    error.normalized = normalizedError;
+
+    /* =========================
+       AUTH HANDLING
+    ========================== */
+
     if (status === 401) {
-      console.warn("Session expired or invalid token");
+      console.warn("Session expired");
 
       localStorage.removeItem("auth");
 
@@ -63,11 +77,13 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // ✅ 403 → Authenticated but forbidden → Unauthorized
-    if (status === 403 && currentPath !== "/unauthorized") {
-      window.location.href = `/unauthorized?message=${encodeURIComponent(
-        error.userMessage
-      )}`;
+    if (status === 403) {
+      if (currentPath !== "/unauthorized") {
+        window.location.href = `/unauthorized?message=${encodeURIComponent(
+          normalizedError.message
+        )}`;
+      }
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);
