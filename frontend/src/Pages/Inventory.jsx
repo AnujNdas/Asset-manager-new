@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import HardwareAssetList from "../Inner_sections/HardwareAssetInventory";
 import SoftwareAssetList from "../Inner_sections/SoftwareAssetInventory";
-import CoreCompanyLicenseList from "../Inner_sections/CoreCompanyLicenseInventory";
 import "../Page_styles/Inventory.css";
 
 const Inventory = () => {

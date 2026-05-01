@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import HardwareAssetCapture from "../Inner_sections/HardwareAssetCapture";
 import SoftwareAssetCapture from "../Inner_sections/SoftwareAssetCapture";
-import CoreCompanyLicenseCapture from "../Inner_sections/CoreCompanyLicenseCapture";
 import BulkUpload from "../Components/BulkUpload";
 import "../Page_styles/Tabs.css";
 import {jwtDecode} from "jwt-decode";
