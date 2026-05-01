@@ -10,7 +10,6 @@ const bcrypt = require("bcryptjs");
 
 // ✅ Import routes
 
-const errorMiddleware = require("./Middleware/errorMiddleware");
 const assetsRoutes = require("./routes/assetRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -34,6 +33,7 @@ const supportRoutes = require("./routes/supportRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
 const trackingRoutes = require("./routes/trackingRoutes");
 const publicRoutes = require("./routes/publicRoutes");
+const errorHandler = require("./Middleware/errorHandler")
 // ✅ Import User model for Super Admin seeding
 const User = require("./models/User");
 
@@ -119,7 +119,7 @@ app.all("*", (req, res, next) => {
   next(error);
 });
 // ❗ Global error handler (LAST)
-app.use(errorMiddleware);
+app.use(errorHandler);
 
 app.get("/smtp-test", async (req, res) => {
   try {

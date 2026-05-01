@@ -64,44 +64,44 @@ const getTrackedInstances = async (req, res) => {
        ENRICH INSTANCES
     ============================== */
 
-const enrichedInstances = instances.map((inst) => {
-  const assignment = assignmentMap[inst._id.toString()];
+  const enrichedInstances = instances.map((inst) => {
+    const assignment = assignmentMap[inst._id.toString()];
 
-  // ✅ Extract QR
-  const qrCode =
-    inst.assetType === "hardware"
-      ? inst.hardware?.qrCode || null
-      : null;
+    // ✅ Extract QR
+    const qrCode =
+      inst.assetType === "hardware"
+        ? inst.hardware?.qrCode || null
+        : null;
 
-  // ✅ Add tracking URL
-  const trackingUrl = `${process.env.FRONTEND_URL}/track/${inst._id}`;
+    // ✅ Add tracking URL
+    const trackingUrl = `${process.env.FRONTEND_URL}/track/${inst._id}`;
 
-  return {
-    ...inst,
+    return {
+      ...inst,
 
-    // 🔥 NEW FIELDS
-    qrCode,
-    trackingUrl,
+      // 🔥 NEW FIELDS
+      qrCode,
+      trackingUrl,
 
-    assignment: assignment
-      ? {
-          employee: {
-            name: assignment.employeeId?.name,
-            code: assignment.employeeId?.employeeCode
-          },
-          department: assignment.departmentId?.name,
-          location: assignment.location,
-          assignedAt: assignment.assignedAt,
+      assignment: assignment
+        ? {
+            employee: {
+              name: assignment.employeeId?.name,
+              code: assignment.employeeId?.employeeCode
+            },
+            department: assignment.departmentId?.name,
+            location: assignment.location,
+            assignedAt: assignment.assignedAt,
 
-          deviceInfo: {
-            deviceName: assignment.deviceInfo?.deviceName || null,
-            assetTag: assignment.deviceInfo?.assetTag || null,
-            serialNumber: assignment.deviceInfo?.serialNumber || null
+            deviceInfo: {
+              deviceName: assignment.deviceInfo?.deviceName || null,
+              assetTag: assignment.deviceInfo?.assetTag || null,
+              serialNumber: assignment.deviceInfo?.serialNumber || null
+            }
           }
-        }
-      : null
-  };
-});
+        : null
+    };
+  });
 
     res.status(200).json({
       success: true,
@@ -324,9 +324,6 @@ const getInstanceHistory = async (req, res) => {
   }
 };
 
-module.exports = {
-  getInstanceHistory
-};
 // PUT /instances/:id/upgrade
 
 const upgradeInstance = async (req, res) => {
@@ -626,5 +623,6 @@ if (hasInsurance === true) {
 module.exports = {
     getInstanceHistory,
     upgradeInstance,
-    getTrackedInstances
+    getTrackedInstances,
+    getInstanceHistory
 }

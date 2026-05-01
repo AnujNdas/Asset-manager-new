@@ -5,144 +5,188 @@ const AssetAssignment = require("../models/AssetAssignment");
 const Employee = require("../models/Employee");
 const AssetInstance = require("../models/AssetInstance");
 const Department = require("../models/Department");
+const asyncHandler = require("../utils/asyncHandler");
+const AppError = require("../utils/AppError");
 /* ============================
    GET IN-STOCK CATEGORY SUMMARY
 ============================ */
-const getInStockCategorySummary = async (req, res) => {
-  try {
-    const orgId = new mongoose.Types.ObjectId(req.user.organizationId);
 
-    const hardware = await Asset.aggregate([
-      { $match: { organizationId: orgId } },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "assetCategory",
-          foreignField: "_id",
-          as: "category"
-        }
-      },
-      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
-      {
-        $project: {
-          categoryId: "$assetCategory",
-          categoryName: { $ifNull: ["$category.name", "Unknown"] },
-          available: { $subtract: ["$assetQuantity", "$inUse"] }
-        }
-      },
-      { $match: { available: { $gt: 0 } } },
-      {
-        $group: {
-          _id: "$categoryId",
-          categoryName: { $first: "$categoryName" },
-          hardwareCount: { $sum: "$available" }
-        }
-      }
-    ]);
+const getInStockCategorySummary = asyncHandler(async (req, res, next) => {
 
-    const software = await SoftwareAsset.aggregate([
-      { $match: { organizationId: orgId } },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "assetCategory",
-          foreignField: "_id",
-          as: "category"
-        }
-      },
-      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
-      {
-        $project: {
-          categoryId: "$assetCategory",
-          categoryName: { $ifNull: ["$category.name", "Unknown"] },
-          available: { $subtract: ["$assetQuantity", "$inUse"] }
-        }
-      },
-      { $match: { available: { $gt: 0 } } },
-      {
-        $group: {
-          _id: "$categoryId",
-          categoryName: { $first: "$categoryName" },
-          softwareCount: { $sum: "$available" }
-        }
-      }
-    ]);
+  const { organizationId } = req.user;
 
-    const map = {};
-
-    hardware.forEach(h => {
-      map[h._id] = {
-        category: h._id,
-        categoryName: h.categoryName,
-        hardwareCount: h.hardwareCount,
-        softwareCount: 0
-      };
-    });
-
-    software.forEach(s => {
-      if (!map[s._id]) {
-        map[s._id] = {
-          category: s._id,
-          categoryName: s.categoryName,
-          hardwareCount: 0,
-          softwareCount: s.softwareCount
-        };
-      } else {
-        map[s._id].softwareCount = s.softwareCount;
-      }
-    });
-
-    const result = Object.values(map).map(i => ({
-      ...i,
-      totalInStock: i.hardwareCount + i.softwareCount
-    }));
-
-    res.json({ success: true, data: result });
-
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+  if (!organizationId) {
+    throw new AppError(
+      "Organization context missing",
+      403,
+      "ORG_CONTEXT_MISSING"
+    );
   }
-};
+
+  const orgId = new mongoose.Types.ObjectId(organizationId);
+
+  /* ================= HARDWARE ================= */
+  const hardware = await Asset.aggregate([
+    { $match: { organizationId: orgId } },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "assetCategory",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+    { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+    {
+      $project: {
+        categoryId: "$assetCategory",
+        categoryName: { $ifNull: ["$category.name", "Unknown"] },
+        available: { $subtract: ["$assetQuantity", "$inUse"] }
+      }
+    },
+    { $match: { available: { $gt: 0 } } },
+    {
+      $group: {
+        _id: "$categoryId",
+        categoryName: { $first: "$categoryName" },
+        hardwareCount: { $sum: "$available" }
+      }
+    }
+  ]);
+
+  /* ================= SOFTWARE ================= */
+  const software = await SoftwareAsset.aggregate([
+    { $match: { organizationId: orgId } },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "assetCategory",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+    { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+    {
+      $project: {
+        categoryId: "$assetCategory",
+        categoryName: { $ifNull: ["$category.name", "Unknown"] },
+        available: { $subtract: ["$assetQuantity", "$inUse"] }
+      }
+    },
+    { $match: { available: { $gt: 0 } } },
+    {
+      $group: {
+        _id: "$categoryId",
+        categoryName: { $first: "$categoryName" },
+        softwareCount: { $sum: "$available" }
+      }
+    }
+  ]);
+
+  /* ================= MERGE ================= */
+  const map = {};
+
+  hardware.forEach(h => {
+    map[h._id] = {
+      category: h._id,
+      categoryName: h.categoryName,
+      hardwareCount: h.hardwareCount,
+      softwareCount: 0
+    };
+  });
+
+  software.forEach(s => {
+    if (!map[s._id]) {
+      map[s._id] = {
+        category: s._id,
+        categoryName: s.categoryName,
+        hardwareCount: 0,
+        softwareCount: s.softwareCount
+      };
+    } else {
+      map[s._id].softwareCount = s.softwareCount;
+    }
+  });
+
+  const result = Object.values(map).map(i => ({
+    ...i,
+    totalInStock: i.hardwareCount + i.softwareCount
+  }));
+
+  /* ================= RESPONSE ================= */
+  res.status(200).json({
+    success: true,
+    message: "In-stock category summary fetched successfully",
+    data: result
+  });
+
+});
 
 /* ============================
    GET ASSETS BY CATEGORY
 ============================ */
-const getInStockAssetsByCategory = async (req, res) => {
-  try {
-    const orgId = req.user.organizationId;
-    const category = req.params.category;
 
-    const hardware = await Asset.find({
-      organizationId: orgId,
-      assetCategory: category
-    }).select("assetName inUse assetQuantity");
+const getInStockAssetsByCategory = asyncHandler(async (req, res, next) => {
 
-    const software = await SoftwareAsset.find({
-      organizationId: orgId,
-      assetCategory: category
-    }).select("assetName inUse assetQuantity");
+  const { organizationId } = req.user;
+  const { category } = req.params;
 
-    const data = [
-      ...hardware.map(a => ({
-        _id: a._id,
-        name: a.assetName,
-        assetType: "hardware",
-        available: a.assetQuantity - a.inUse
-      })),
-      ...software.map(s => ({
-        _id: s._id,
-        name: s.assetName,
-        assetType: "software",
-        available: s.assetQuantity - s.inUse
-      }))
-    ];
-
-    res.json({ success: true, data });
-
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+  /* ================= VALIDATION ================= */
+  if (!organizationId) {
+    throw new AppError(
+      "Organization context missing",
+      403,
+      "ORG_CONTEXT_MISSING"
+    );
   }
-};
+
+  if (!category || !mongoose.Types.ObjectId.isValid(category)) {
+    throw new AppError(
+      "Invalid category id",
+      400,
+      "INVALID_CATEGORY_ID"
+    );
+  }
+
+  const categoryId = new mongoose.Types.ObjectId(category);
+
+  /* ================= HARDWARE ================= */
+  const hardware = await Asset.find({
+    organizationId,
+    assetCategory: categoryId
+  }).select("assetName inUse assetQuantity");
+
+  /* ================= SOFTWARE ================= */
+  const software = await SoftwareAsset.find({
+    organizationId,
+    assetCategory: categoryId
+  }).select("assetName inUse assetQuantity");
+
+  /* ================= MERGE ================= */
+  const data = [
+    ...hardware.map(a => ({
+      _id: a._id,
+      name: a.assetName,
+      assetType: "hardware",
+      available: Math.max(0, a.assetQuantity - a.inUse)
+    })),
+
+    ...software.map(s => ({
+      _id: s._id,
+      name: s.assetName,
+      assetType: "software",
+      available: Math.max(0, s.assetQuantity - s.inUse)
+    }))
+  ];
+
+  /* ================= RESPONSE ================= */
+  res.status(200).json({
+    success: true,
+    message: "In-stock assets fetched successfully",
+    data
+  });
+
+});
 
 /* ============================
    GET INSTANCES BY ASSET
@@ -168,15 +212,32 @@ const getInstancesByAsset = async (req, res) => {
 /* ============================
    ASSIGN INSTANCES (BULK)
 ============================ */
-const assignAssetInstance = async (req, res) => {
+
+
+const assignAssetInstance = asyncHandler(async (req, res, next) => {
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
+    const { organizationId, id: userId } = req.user;
     const { assignments } = req.body;
 
-    if (!assignments?.length) {
-      throw new Error("No assignments provided");
+    /* ================= VALIDATION ================= */
+    if (!organizationId) {
+      throw new AppError(
+        "Organization context missing",
+        403,
+        "ORG_CONTEXT_MISSING"
+      );
+    }
+
+    if (!Array.isArray(assignments) || assignments.length === 0) {
+      throw new AppError(
+        "No assignments provided",
+        400,
+        "NO_ASSIGNMENTS"
+      );
     }
 
     const results = [];
@@ -189,43 +250,97 @@ const assignAssetInstance = async (req, res) => {
         departmentId,
         employeeId,
         location,
-        deviceInfo // ✅ NEW (from frontend)
+        deviceInfo
       } = item;
 
-      /* =============================
-         VALIDATION
-      ============================== */
+      /* ================= OBJECT ID VALIDATION ================= */
+      const ids = [assetId, assetInstanceId, departmentId, employeeId];
 
+      if (ids.some(id => !mongoose.Types.ObjectId.isValid(id))) {
+        throw new AppError(
+          "Invalid ID provided",
+          400,
+          "INVALID_ID"
+        );
+      }
+
+      /* ================= TYPE VALIDATION ================= */
+      if (!["hardware", "software"].includes(assetType)) {
+        throw new AppError(
+          "Invalid asset type",
+          400,
+          "INVALID_ASSET_TYPE"
+        );
+      }
+
+      if (!location) {
+        throw new AppError(
+          "Location is required",
+          400,
+          "LOCATION_REQUIRED"
+        );
+      }
+
+      /* ================= INSTANCE ================= */
       const instance = await AssetInstance.findOne({
         _id: assetInstanceId,
         assetId,
+        organizationId,
         status: "in_stock"
       }).session(session);
 
-      if (!instance) throw new Error("Instance not available");
+      if (!instance) {
+        throw new AppError(
+          "Instance not available",
+          404,
+          "INSTANCE_NOT_AVAILABLE"
+        );
+      }
 
+      /* ================= DUPLICATE CHECK ================= */
       const exists = await AssetAssignment.findOne({
         assetInstanceId,
+        organizationId,
         status: "active"
       }).session(session);
 
-      if (exists) throw new Error("Instance already assigned");
-
-      if (!location) {
-        throw new Error("Location is required");
+      if (exists) {
+        throw new AppError(
+          "Instance already assigned",
+          400,
+          "INSTANCE_ALREADY_ASSIGNED"
+        );
       }
 
-      const employee = await Employee.findById(employeeId).session(session);
-      const department = await Department.findById(departmentId).session(session);
+      /* ================= EMPLOYEE ================= */
+      const employee = await Employee.findOne({
+        _id: employeeId,
+        organizationId
+      }).session(session);
 
-      if (!employee || !department) {
-        throw new Error("Invalid employee or department");
+      if (!employee) {
+        throw new AppError(
+          "Employee not found",
+          404,
+          "EMPLOYEE_NOT_FOUND"
+        );
       }
 
-      /* =============================
-         UPDATE INSTANCE (SNAPSHOT)
-      ============================== */
+      /* ================= DEPARTMENT ================= */
+      const department = await Department.findOne({
+        _id: departmentId,
+        organizationId
+      }).session(session);
 
+      if (!department) {
+        throw new AppError(
+          "Department not found",
+          404,
+          "DEPARTMENT_NOT_FOUND"
+        );
+      }
+
+      /* ================= UPDATE INSTANCE ================= */
       instance.status = "in_use";
 
       instance.assignedTo = {
@@ -234,10 +349,6 @@ const assignAssetInstance = async (req, res) => {
       };
 
       instance.location = location;
-
-      /* =============================
-         LIFECYCLE LOG
-      ============================== */
 
       instance.lifecycle.push({
         action: "ASSIGNED",
@@ -248,11 +359,9 @@ const assignAssetInstance = async (req, res) => {
         },
         snapshot: {
           location,
-          assignedTo: {
-            employeeName: employee.name
-          },
+          assignedTo: { employeeName: employee.name },
           condition: instance.condition,
-          deviceInfo // ✅ snapshot device info too
+          deviceInfo
         },
         date: new Date(),
         notes: `Assigned to ${employee.name}`
@@ -260,47 +369,39 @@ const assignAssetInstance = async (req, res) => {
 
       await instance.save({ session });
 
-      /* =============================
-         CREATE ASSIGNMENT (SOURCE OF TRUTH)
-      ============================== */
-
+      /* ================= CREATE ASSIGNMENT ================= */
       const [assignment] = await AssetAssignment.create([{
-        organizationId: req.user.organizationId,
+        organizationId,
         assetId,
         assetInstanceId,
         assetType,
         assetModel: assetType === "hardware" ? "Asset" : "SoftwareAsset",
-
         employeeId,
         departmentId,
         location,
-
         deviceInfo: {
           deviceName: deviceInfo?.deviceName || "",
           serialNumber: deviceInfo?.serialNumber || "",
           model: deviceInfo?.model || ""
         },
-
         status: "active",
-        assignedBy: req.user.id
+        assignedBy: userId
       }], { session });
 
-      /* =============================
-         UPDATE ASSET STOCK
-      ============================== */
-
+      /* ================= UPDATE STOCK ================= */
       const Model = assetType === "hardware" ? Asset : SoftwareAsset;
 
-const inUseCount = await AssetInstance.countDocuments({
-  assetId,
-  status: "in_use"
-}).session(session);
+      const inUseCount = await AssetInstance.countDocuments({
+        assetId,
+        organizationId,
+        status: "in_use"
+      }).session(session);
 
-await Model.findByIdAndUpdate(
-  assetId,
-  { inUse: inUseCount },
-  { session }
-);
+      await Model.findByIdAndUpdate(
+        assetId,
+        { inUse: inUseCount },
+        { session }
+      );
 
       results.push(assignment);
     }
@@ -317,108 +418,131 @@ await Model.findByIdAndUpdate(
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
+    next(error); // ✅ GLOBAL HANDLER
   }
-};
-
+});
 /* ============================
    RETURN INSTANCE
 ============================ */
-const returnAssetInstance = async (req, res) => {
+const asyncHandler = require("../utils/asyncHandler");
+const AppError = require("../utils/AppError");
+const mongoose = require("mongoose");
+
+const returnAssetInstance = asyncHandler(async (req, res, next) => {
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
+    const { organizationId, id: userId } = req.user;
     const { assignmentId } = req.params;
 
-    const assignment = await AssetAssignment.findById(assignmentId).session(session);
-
-    if (!assignment || assignment.status !== "active") {
-      throw new Error("Invalid assignment");
+    /* ================= VALIDATION ================= */
+    if (!organizationId) {
+      throw new AppError(
+        "Organization context missing",
+        403,
+        "ORG_CONTEXT_MISSING"
+      );
     }
 
-    const instance = await AssetInstance.findById(
-      assignment.assetInstanceId
-    ).session(session);
+    if (!mongoose.Types.ObjectId.isValid(assignmentId)) {
+      throw new AppError(
+        "Invalid assignment ID",
+        400,
+        "INVALID_ASSIGNMENT_ID"
+      );
+    }
+
+    /* ================= FETCH ASSIGNMENT ================= */
+    const assignment = await AssetAssignment.findOne({
+      _id: assignmentId,
+      organizationId
+    }).session(session);
+
+    if (!assignment) {
+      throw new AppError(
+        "Assignment not found",
+        404,
+        "ASSIGNMENT_NOT_FOUND"
+      );
+    }
+
+    if (assignment.status !== "active") {
+      throw new AppError(
+        "Assignment already returned",
+        400,
+        "ASSIGNMENT_ALREADY_RETURNED"
+      );
+    }
+
+    /* ================= FETCH INSTANCE ================= */
+    const instance = await AssetInstance.findOne({
+      _id: assignment.assetInstanceId,
+      organizationId
+    }).session(session);
 
     if (!instance) {
-      throw new Error("Asset instance not found");
+      throw new AppError(
+        "Asset instance not found",
+        404,
+        "INSTANCE_NOT_FOUND"
+      );
     }
 
-    /* =============================
-       CAPTURE CURRENT STATE (IMPORTANT)
-    ============================== */
-
+    /* ================= SNAPSHOT ================= */
     const previousAssignedTo = instance.assignedTo;
 
-    /* =============================
-       UPDATE INSTANCE
-    ============================== */
-
+    /* ================= UPDATE INSTANCE ================= */
     instance.status = "in_stock";
     instance.assignedTo = null;
 
-    /* =============================
-       LIFECYCLE LOG (CORRECT FORMAT)
-    ============================== */
-
     instance.lifecycle.push({
       action: "RETURNED",
-
       from: {
         employeeName: previousAssignedTo?.employeeName || null
       },
-
       to: null,
-
       snapshot: {
         location: instance.location,
-
         assignedTo: {
           employeeName: previousAssignedTo?.employeeName || null
         },
-
         condition: instance.condition
       },
-
       date: new Date(),
-
-      notes: `Returned by ${req.user.id}`
+      notes: `Returned by ${userId}`
     });
 
     await instance.save({ session });
 
-    /* =============================
-       UPDATE ASSET STOCK
-    ============================== */
-
+    /* ================= UPDATE STOCK (SAFE) ================= */
     const Model =
       assignment.assetType === "hardware" ? Asset : SoftwareAsset;
 
+    const inUseCount = await AssetInstance.countDocuments({
+      assetId: assignment.assetId,
+      organizationId,
+      status: "in_use"
+    }).session(session);
+
     await Model.findByIdAndUpdate(
       assignment.assetId,
-      { $inc: { inUse: -1 } },
+      { inUse: inUseCount },
       { session }
     );
 
-    /* =============================
-       UPDATE ASSIGNMENT
-    ============================== */
-
+    /* ================= UPDATE ASSIGNMENT ================= */
     assignment.status = "returned";
     assignment.returnedAt = new Date();
-    assignment.returnedBy = req.user.id;
+    assignment.returnedBy = userId;
 
     await assignment.save({ session });
 
     await session.commitTransaction();
     session.endSession();
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Instance returned successfully"
     });
@@ -426,13 +550,9 @@ const returnAssetInstance = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
+    next(error); // ✅ global handler
   }
-};
+});
 
 /* ============================
    GET EMPLOYEES BY DEPARTMENT
@@ -452,130 +572,168 @@ const getEmployeesByDepartment = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-const reassignAssetInstance = async (req, res) => {
+const asyncHandler = require("../utils/asyncHandler");
+const AppError = require("../utils/AppError");
+const mongoose = require("mongoose");
+
+const reassignAssetInstance = asyncHandler(async (req, res, next) => {
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
+    const { organizationId, id: userId } = req.user;
     const { assignmentId } = req.params;
-    const { newEmployeeId, newDepartmentId, newLocationId } = req.body;
+    const { newEmployeeId, newDepartmentId, newLocation } = req.body;
 
-    /* =============================
-       FETCH CURRENT ASSIGNMENT
-    ============================== */
+    /* ================= VALIDATION ================= */
 
-    const oldAssignment = await AssetAssignment.findById(assignmentId).session(session);
-
-    if (!oldAssignment || oldAssignment.status !== "active") {
-      throw new Error("Invalid or inactive assignment");
+    if (!organizationId) {
+      throw new AppError(
+        "Organization context missing",
+        403,
+        "ORG_CONTEXT_MISSING"
+      );
     }
 
-    /* =============================
-       VALIDATE NEW EMPLOYEE
-    ============================== */
+    const ids = [assignmentId, newEmployeeId, newDepartmentId];
 
-    const Department = mongoose.model("Department");
+    if (ids.some(id => !mongoose.Types.ObjectId.isValid(id))) {
+      throw new AppError(
+        "Invalid ID provided",
+        400,
+        "INVALID_ID"
+      );
+    }
+
+    if (!newLocation) {
+      throw new AppError(
+        "Location is required",
+        400,
+        "LOCATION_REQUIRED"
+      );
+    }
+
+    /* ================= FETCH ASSIGNMENT ================= */
+
+    const oldAssignment = await AssetAssignment.findOne({
+      _id: assignmentId,
+      organizationId
+    }).session(session);
+
+    if (!oldAssignment) {
+      throw new AppError(
+        "Assignment not found",
+        404,
+        "ASSIGNMENT_NOT_FOUND"
+      );
+    }
+
+    if (oldAssignment.status !== "active") {
+      throw new AppError(
+        "Assignment is not active",
+        400,
+        "ASSIGNMENT_NOT_ACTIVE"
+      );
+    }
+
+    /* ================= VALIDATE DEPARTMENT ================= */
 
     const department = await Department.findOne({
       _id: newDepartmentId,
-      organizationId: oldAssignment.organizationId
+      organizationId
     }).session(session);
 
-    if (!department) throw new Error("Department not found");
+    if (!department) {
+      throw new AppError(
+        "Department not found",
+        404,
+        "DEPARTMENT_NOT_FOUND"
+      );
+    }
 
-    const employee = await mongoose.model("Employee").findOne({
+    /* ================= VALIDATE EMPLOYEE ================= */
+
+    const employee = await Employee.findOne({
       _id: newEmployeeId,
       departmentId: newDepartmentId,
-      organizationId: oldAssignment.organizationId
+      organizationId
     }).session(session);
 
-    if (!employee) throw new Error("Invalid employee for department");
+    if (!employee) {
+      throw new AppError(
+        "Employee not found in department",
+        404,
+        "EMPLOYEE_INVALID_FOR_DEPARTMENT"
+      );
+    }
 
-    /* =============================
-       FETCH INSTANCE
-    ============================== */
+    /* ================= FETCH INSTANCE ================= */
 
-    const instance = await mongoose.model("AssetInstance").findById(
-      oldAssignment.assetInstanceId
-    ).session(session);
+    const instance = await AssetInstance.findOne({
+      _id: oldAssignment.assetInstanceId,
+      organizationId
+    }).session(session);
 
-    if (!instance) throw new Error("Instance not found");
+    if (!instance) {
+      throw new AppError(
+        "Instance not found",
+        404,
+        "INSTANCE_NOT_FOUND"
+      );
+    }
 
-    /* =============================
-       CLOSE OLD ASSIGNMENT
-    ============================== */
+    const previousAssignedTo = instance.assignedTo || {};
+
+    /* ================= CLOSE OLD ASSIGNMENT ================= */
 
     oldAssignment.status = "transferred";
     oldAssignment.returnedAt = new Date();
-    oldAssignment.returnedBy = req.user.id;
+    oldAssignment.returnedBy = userId;
 
     await oldAssignment.save({ session });
 
-    /* =============================
-       UPDATE INSTANCE OWNER
-    ============================== */
+    /* ================= UPDATE INSTANCE ================= */
 
-const newEmployee = await mongoose.model("Employee").findById(newEmployeeId).session(session);
-const newDepartment = await mongoose.model("Department").findById(newDepartmentId).session(session);
+    instance.assignedTo = {
+      employeeId: employee._id,
+      employeeName: employee.name,
+      departmentId: department._id,
+      departmentName: department.name,
+      assignedAt: new Date()
+    };
 
-const oldAssignmentData = instance.assignedTo || {};
+    instance.location = newLocation;
+    instance.status = "in_use"; // ✅ consistent
 
-instance.assignedTo = {
-  employeeId: newEmployee._id,
-  employeeName: newEmployee.name,
-  departmentId: newDepartment._id,
-  departmentName: newDepartment.name,
-  assignedAt: new Date()
-};
+    instance.lifecycle.push({
+      action: "REASSIGNED",
+      from: {
+        employeeName: previousAssignedTo.employeeName || null,
+        departmentName: previousAssignedTo.departmentName || null
+      },
+      to: {
+        employeeName: employee.name,
+        departmentName: department.name
+      },
+      snapshot: {
+        location: newLocation,
+        assignedTo: {
+          employeeName: employee.name,
+          departmentName: department.name
+        },
+        condition: instance.condition
+      },
+      date: new Date(),
+      notes: `Reassigned to ${employee.name}`
+    });
 
-instance.location = newLocationId;
-instance.status = "assigned";
-
-instance.lifecycle.push({
-  action: "REASSIGNED",
-
-  from: {
-    employeeName: oldAssignmentData.employeeName || null,
-    departmentName: oldAssignmentData.departmentName || null
-  },
-
-  to: {
-    employeeName: newEmployee.name,
-    departmentName: newDepartment.name
-  },
-
-  snapshot: {
-    location: newLocationId,
-
-    assignedTo: {
-      employeeName: newEmployee.name,
-      departmentName: newDepartment.name
-    },
-
-    warrantyExpiry: instance.warranty?.expiryDate || null,
-    insuranceExpiry: instance.insurance?.expiryDate || null,
-
-    condition: instance.condition,
-
-    costTracking: {
-      maintenanceCost: instance.costTracking?.maintenanceCost || 0,
-      warrantyRenewalCost: instance.costTracking?.warrantyRenewalCost || 0,
-      insuranceCost: instance.costTracking?.insuranceCost || 0
-    }
-  },
-
-  date: new Date(),
-
-  notes: `Reassigned to ${newEmployee.name}`
-});
     await instance.save({ session });
 
-    /* =============================
-       CREATE NEW ASSIGNMENT
-    ============================== */
+    /* ================= CREATE NEW ASSIGNMENT ================= */
 
     const [newAssignment] = await AssetAssignment.create([{
-      organizationId: oldAssignment.organizationId,
+      organizationId,
       assetId: oldAssignment.assetId,
       assetInstanceId: oldAssignment.assetInstanceId,
       assetType: oldAssignment.assetType,
@@ -583,11 +741,10 @@ instance.lifecycle.push({
 
       departmentId: newDepartmentId,
       employeeId: newEmployeeId,
-      locationId: newLocationId,
+      location: newLocation,
 
-      quantity: 1,
       status: "active",
-      assignedBy: req.user.id,
+      assignedBy: userId,
 
       reassignedFrom: {
         employeeId: oldAssignment.employeeId,
@@ -599,7 +756,7 @@ instance.lifecycle.push({
     await session.commitTransaction();
     session.endSession();
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Asset reassigned successfully",
       data: newAssignment
@@ -608,96 +765,118 @@ instance.lifecycle.push({
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
+    next(error);
   }
-};
-const unassignAssetInstance = async (req, res) => {
+});
+const asyncHandler = require("../utils/asyncHandler");
+const AppError = require("../utils/AppError");
+const mongoose = require("mongoose");
+
+const unassignAssetInstance = asyncHandler(async (req, res, next) => {
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
+    const { organizationId, id: userId } = req.user;
     const { assetInstanceId } = req.body;
 
-    if (!assetInstanceId) {
-      throw new Error("Asset instance ID is required");
+    /* ================= VALIDATION ================= */
+
+    if (!organizationId) {
+      throw new AppError(
+        "Organization context missing",
+        403,
+        "ORG_CONTEXT_MISSING"
+      );
     }
 
-    /* =============================
-       FETCH INSTANCE
-    ============================== */
+    if (!assetInstanceId || !mongoose.Types.ObjectId.isValid(assetInstanceId)) {
+      throw new AppError(
+        "Invalid asset instance ID",
+        400,
+        "INVALID_INSTANCE_ID"
+      );
+    }
 
-    const instance = await AssetInstance.findById(assetInstanceId).session(session);
+    /* ================= FETCH INSTANCE ================= */
+
+    const instance = await AssetInstance.findOne({
+      _id: assetInstanceId,
+      organizationId
+    }).session(session);
 
     if (!instance) {
-      throw new Error("Instance not found");
+      throw new AppError(
+        "Instance not found",
+        404,
+        "INSTANCE_NOT_FOUND"
+      );
     }
 
     if (instance.status !== "in_use") {
-      throw new Error("Instance is not currently assigned");
+      throw new AppError(
+        "Instance is not currently assigned",
+        400,
+        "INSTANCE_NOT_ASSIGNED"
+      );
     }
 
-    /* =============================
-       FETCH ACTIVE ASSIGNMENT
-    ============================== */
+    /* ================= FETCH ASSIGNMENT ================= */
 
     const assignment = await AssetAssignment.findOne({
       assetInstanceId,
+      organizationId,
       status: "active"
     }).session(session);
 
     if (!assignment) {
-      throw new Error("Active assignment not found");
+      throw new AppError(
+        "Active assignment not found",
+        404,
+        "ASSIGNMENT_NOT_FOUND"
+      );
     }
 
-    /* =============================
-       UPDATE INSTANCE
-    ============================== */
+    /* ================= UPDATE INSTANCE ================= */
 
     const previousAssignee = instance.assignedTo;
 
     instance.status = "in_stock";
     instance.assignedTo = null;
 
-    /* =============================
-       LIFECYCLE LOG
-    ============================== */
-
     instance.lifecycle.push({
       action: "UNASSIGNED",
-      from: previousAssignee,
+      from: {
+        employeeName: previousAssignee?.employeeName || null
+      },
       to: null,
       snapshot: {
         location: instance.location,
-        condition: instance.condition,
+        condition: instance.condition
       },
       date: new Date(),
-      notes: `Returned from ${previousAssignee?.employeeName || "unknown"}`
+      notes: `Unassigned from ${previousAssignee?.employeeName || "unknown"}`
     });
 
     await instance.save({ session });
 
-    /* =============================
-       CLOSE ASSIGNMENT
-    ============================== */
+    /* ================= CLOSE ASSIGNMENT ================= */
 
-    assignment.status = "inactive";
+    assignment.status = "returned"; // ✅ consistent with system
     assignment.returnedAt = new Date();
+    assignment.returnedBy = userId;
 
     await assignment.save({ session });
 
-    /* =============================
-       UPDATE ASSET STOCK (RECOMPUTE)
-    ============================== */
+    /* ================= UPDATE STOCK ================= */
 
     const Model =
       instance.assetType === "hardware" ? Asset : SoftwareAsset;
 
     const inUseCount = await AssetInstance.countDocuments({
       assetId: instance.assetId,
+      organizationId,
       status: "in_use"
     }).session(session);
 
@@ -707,14 +886,12 @@ const unassignAssetInstance = async (req, res) => {
       { session }
     );
 
-    /* =============================
-       COMMIT
-    ============================== */
+    /* ================= COMMIT ================= */
 
     await session.commitTransaction();
     session.endSession();
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Asset unassigned successfully"
     });
@@ -722,13 +899,9 @@ const unassignAssetInstance = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-
-    return res.status(400).json({
-      success: false,
-      message: error.message
-    });
+    next(error);
   }
-};
+});
 module.exports = {
   getInStockCategorySummary,
   getInStockAssetsByCategory,

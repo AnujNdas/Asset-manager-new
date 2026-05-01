@@ -51,7 +51,7 @@ const MisReport = () => {
           getCategories(),
           getLocations(),
         ]);
-
+        console.log(ha, sw);
         setHardware(ha?.data || ha || []);
         setSoftware(Array.isArray(sw) ? sw : sw?.data || []);
         setCategories(cat || []);
@@ -86,7 +86,6 @@ const MisReport = () => {
     inUse: a.inUse,
     total: a.assetQuantity,
     inStock: a.assetQuantity - a.inUse,
-    cost: a.assetCost?.baseTotalAmount || 0,
     purchaseDate: a.purchaseDetails?.purchaseDate || null,
   }));
 
@@ -100,7 +99,6 @@ const MisReport = () => {
     inUse: a.inUse,
     total: a.assetQuantity,
     inStock: a.assetQuantity - a.inUse,
-    cost: a.assetCost?.baseTotalAmount || 0,
     purchaseDate: a.purchaseDetails?.purchaseDate || null,
   }));
 
@@ -335,7 +333,7 @@ const MisReport = () => {
                   <th>In Use</th>
                   <th>Stock</th>
                   <th>Location</th>
-                  <th>Cost</th>
+                  <th>Purchase Date</th>
                 </>
               )}
 
@@ -348,7 +346,7 @@ const MisReport = () => {
                   <th>Condition</th>
                   <th>Assigned</th>
                   <th>Department</th>
-                  <th>Warranty</th>
+                  <th>Cost</th>
                 </>
               )}
                 {activeTab === "software" && viewMode === "summary" && (
@@ -358,7 +356,7 @@ const MisReport = () => {
     <th>In Use</th>
     <th>Stock</th>
     <th>Location</th>
-    <th>Cost</th>
+    <th>Purchase Date</th>
   </>
 )}
 
@@ -370,7 +368,7 @@ const MisReport = () => {
                   <th>Vendor</th>
                   <th>Status</th>
                   <th>Assigned</th>
-                  <th>Expiry</th>
+                  <th>Cost</th>
                 </>
               )}
             </tr>
@@ -388,10 +386,7 @@ const MisReport = () => {
                     <td>{row.inUse}</td>
                     <td>{row.inStock}</td>
                     <td>{row.location}</td>
-                    <td>
-                      {CURRENCY_SYMBOLS[currency]}{" "}
-                      {convertFromBase(row.cost).toLocaleString()}
-                    </td>
+                    <td>{formatDate(row.purchaseDate)}</td>
                   </>
                 )}
 
@@ -405,7 +400,7 @@ const MisReport = () => {
                     <td>{row.condition}</td>
                     <td>{row.assignedTo}</td>
                     <td>{row.department}</td>
-                    <td>{formatDate(row.warranty)}</td>
+                    <td>{row.cost}</td>
                   </>
                 )}
                 {activeTab === "software" && viewMode === "summary" && (
@@ -416,8 +411,7 @@ const MisReport = () => {
     <td>{row.inStock}</td>
     <td>{row.location}</td>
     <td>
-      {CURRENCY_SYMBOLS[currency]}{" "}
-      {convertFromBase(row.cost).toLocaleString()}
+      {formatDate(row.purchaseDate)}
     </td>
   </>
 )}
