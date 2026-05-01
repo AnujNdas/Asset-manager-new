@@ -768,9 +768,6 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-const asyncHandler = require("../utils/asyncHandler");
-const AppError = require("../utils/AppError");
-const mongoose = require("mongoose");
 
 const unassignAssetInstance = asyncHandler(async (req, res, next) => {
 
