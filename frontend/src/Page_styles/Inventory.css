@@ -142,8 +142,8 @@
 }
 
 .btn-delete {
-  background: #ef4444;
-  color: #fff;
+  background: #393E46;
+  color: #DFD0B8;
 }
 
 .btn-delete:hover {
@@ -500,6 +500,7 @@
 }
 .asset-view-modal h4 {
   color: #DFD0B8;
+  font-size: 18px;
 }
 .info-text {
   color: #DFD0B8;
@@ -529,7 +530,7 @@
   border-radius: 8px;
 
   font-size: 14px;
-  background: #393E46;
+  /* background: #393E46; */
   color: #DFD0B8;
   transition: all 0.2s ease;
 }
@@ -770,7 +771,7 @@
 /* BUTTON */
 .btn-edit.modern {
   margin-top: 12px;
-  background: #948979;
+  background: #DFD0B8;
   border: none;
   padding: 8px 12px;
   border-radius: 8px;

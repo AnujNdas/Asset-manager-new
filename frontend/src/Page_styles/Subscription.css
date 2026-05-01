@@ -37,6 +37,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  background-color: #222831;
   color: #948979;
   transition: all 0.25s ease;
 }

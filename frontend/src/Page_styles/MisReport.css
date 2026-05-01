@@ -353,7 +353,7 @@ body {
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
-.report-header h3 {
+.report-header h2 {
   font-size: 22px;
   font-weight: 600;
 }
