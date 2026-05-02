@@ -256,72 +256,6 @@ const handleUpdate = async () => {
 
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
-const mapInstanceData = (inst, assignment) => {
-  const isHardware = inst.assetType === "hardware";
-  const hw = inst.hardware || {};
-  const sw = inst.software || {};
-
-return {
-  id: inst._id,
-  code: inst.instanceCode,
-
-  subText: isHardware
-    ? hw.serialNumber || "No Serial"
-    : sw.licenseNumber || "No License",
-
-    quick: {
-      location: inst.location,
-      condition: inst.condition,
-      date: isHardware
-        ? hw.installationDate
-        : sw.installationDate
-    },
-
-    details: isHardware
-      ? [
-          { label: "Model", value: hw.modelNo },
-          { label: "Specs", value: hw.specifications }
-        ]
-      : [
-          { label: "License Key", value: sw.licenseKey },
-          { label: "License No", value: sw.licenseNumber }
-        ],
-
-    lifecycle: isHardware
-      ? [
-          { label: "Purchase", value: hw.purchaseDate },
-          { label: "Warranty", value: hw.warrantyExpiry },
-          { label: "Maintenance", value: hw.nextMaintenanceDate }
-        ]
-      : [
-          { label: "Expiry", value: sw.renewalDate },
-          { label: "Last Used", value: sw.lastUsedDate }
-        ],
-
-    costs: isHardware
-      ? [
-          { label: "Purchase", value: hw.purchaseCost },
-          { label: "Maintenance", value: hw.costs?.maintenanceCost },
-          { label: "Warranty", value: hw.costs?.warrantyRenewalCost },
-          { label: "Insurance", value: hw.costs?.insuranceCost }
-        ]
-      : [
-          { label: "Purchase", value: sw.purchaseCost },
-          { label: "Renewal", value: sw.costs?.renewalCost }
-        ],
-
-    qr: hw.qrCode?.url || null,
-
-    assignment: assignment
-      ? {
-          name: assignment.employee?.name,
-          dept: assignment.department?.name,
-          location: assignment.location
-        }
-      : null
-  };
-};
-
   return (
     <div className="inventory-container">
 
@@ -518,7 +452,9 @@ return {
     return (
       <InstanceCard
         key={inst._id}
-        inst={data}
+        inst={inst}
+         assignment={assignmentMap[String(inst._id)]}
+         convertFromBase={convertFromBase}
         onEdit={() => {
           setEditInstance(inst);
           setInstanceForm({

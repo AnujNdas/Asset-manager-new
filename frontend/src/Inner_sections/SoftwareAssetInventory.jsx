@@ -595,7 +595,10 @@ const mapInstanceData = (inst, assignment) => {
   return (
 <InstanceCard
   key={inst._id}
-  inst={data}   // ✅ correct prop name
+  inst={inst}
+  convertFromBase={convertFromBase}
+  assignment={assignmentMap[String(inst._id)]}
+     // ✅ correct prop name
   onEdit={handleInstanceEditOpen}
 />
   );
