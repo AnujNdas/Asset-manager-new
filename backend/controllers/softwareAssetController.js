@@ -524,34 +524,59 @@ const getSoftwareAssets = asyncHandler(async (req, res, next) => {
 
     instanceMap[id].push({
       ...inst,
-      licenseKey: inst.software?.licenseKey || "",
-      licenseNumber: inst.software?.licenseNumber || "",
-      purchaseCost: inst.software?.purchaseCost?.amount || 0
     });
   });
 
   /* ================= 4️⃣ MERGE ================= */
-  const enrichedAssets = assets.map(asset => {
-    const id = String(asset._id);
+const enrichedAssets = assets.map(asset => {
+  const id = String(asset._id);
 
-    const assignmentData = assignmentMap[id] || {};
-    const assetInstances = instanceMap[id] || [];
+  const assignmentData = assignmentMap[id] || {};
+  const assetInstances = instanceMap[id] || [];
 
-    return {
-      ...asset,
-      inUse: assignmentData.inUse || 0,
-      assignedDepartments: assignmentData.assignedDepartments || [],
-      assignmentRecords: assignmentData.assignmentRecords || [],
-      instances: assetInstances,
-      instanceCount: assetInstances.length,
+  // 🔥 CALCULATE COSTS
+  let totalCost = 0;
+  let yearlyCost = 0;
+  let monthlyCost = 0;
 
-      status: deriveAssetStatus({
-        assetQuantity: asset.assetQuantity,
-        instanceCount: assetInstances.length,
-        inUse: assignmentData.inUse || 0
-      })
-    };
+  assetInstances.forEach(inst => {
+    const purchase = inst.software?.purchaseCost?.amount || 0;
+    const renewal = inst.software?.costs?.renewalCost?.amount || 0;
+
+    totalCost += purchase;
+
+    // assuming renewal is yearly
+    yearlyCost += renewal;
+
+    // if asset.type === monthly → divide
+    if (asset.type === "monthly") {
+      monthlyCost += renewal;
+    } else {
+      monthlyCost += renewal / 12;
+    }
   });
+
+  return {
+    ...asset,
+    inUse: assignmentData.inUse || 0,
+    assignedDepartments: assignmentData.assignedDepartments || [],
+    assignmentRecords: assignmentData.assignmentRecords || [],
+    instances: assetInstances,
+    instanceCount: assetInstances.length,
+
+    financialTracking: {
+      totalCost,
+      yearlyCost,
+      monthlyCost
+    },
+
+    status: deriveAssetStatus({
+      assetQuantity: asset.assetQuantity,
+      instanceCount: assetInstances.length,
+      inUse: assignmentData.inUse || 0
+    })
+  };
+});
 
   /* ================= 5️⃣ RESPONSE ================= */
   res.status(200).json({

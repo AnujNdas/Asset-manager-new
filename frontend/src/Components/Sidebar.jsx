@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../Component_styles/Sidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink, useLocation } from "react-router-dom";
-import image from "../Images/Logo.png";
+import image from "../Images/Logo.webp";
 
 import {
   faGauge,
