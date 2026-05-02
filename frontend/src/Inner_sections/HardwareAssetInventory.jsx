@@ -13,7 +13,6 @@ import {
   updateHardwareAsset,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
-import {useNavigate} from "react-router-dom"
 import { getErrorMessage } from "../utils/getErrorMessage";
 import Loader from "../Components/Loader";
 import { useCurrency } from "../Context/CurrencyContext";
@@ -22,6 +21,7 @@ import CurrencyFilter from "../Components/CurrencyFilter";
 import { useNavigate } from "react-router-dom";
 
 const HardwareAssetList = () => {
+  const navigate = useNavigate();
     const VENDOR_CONFIG = {
   dell: { icon: "💻", color: "blue" },
   hp: { icon: "🖥️", color: "cyan" },
