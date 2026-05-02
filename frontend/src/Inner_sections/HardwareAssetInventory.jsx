@@ -518,7 +518,7 @@ return {
     return (
       <InstanceCard
         key={inst._id}
-        data={data}
+        inst={data}
         onEdit={() => {
           setEditInstance(inst);
           setInstanceForm({

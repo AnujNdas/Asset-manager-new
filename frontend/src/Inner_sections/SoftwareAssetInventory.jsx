@@ -593,11 +593,11 @@ const mapInstanceData = (inst, assignment) => {
   const data = mapInstanceData(inst, assignment);
 
   return (
-    <InstanceCard
-      key={inst._id}
-      data={data}
-      onEdit={() => handleInstanceEditOpen(inst)}
-    />
+<InstanceCard
+  key={inst._id}
+  inst={data}   // ✅ correct prop name
+  onEdit={handleInstanceEditOpen}
+/>
   );
 })
 ) : (
