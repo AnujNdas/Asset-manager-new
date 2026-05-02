@@ -534,27 +534,24 @@ const enrichedAssets = assets.map(asset => {
   const assignmentData = assignmentMap[id] || {};
   const assetInstances = instanceMap[id] || [];
 
-  // 🔥 CALCULATE COSTS
-  let totalCost = 0;
-  let yearlyCost = 0;
-  let monthlyCost = 0;
+let totalCost = 0;
+let yearlyCost = 0;
 
-  assetInstances.forEach(inst => {
-    const purchase = inst.software?.purchaseCost?.amount || 0;
-    const renewal = inst.software?.costs?.renewalCost?.amount || 0;
+assetInstances.forEach(inst => {
+  const purchase =
+    inst.software?.purchaseCost?.baseAmount || 0;
 
-    totalCost += purchase;
+  const renewal =
+    inst.software?.costs?.renewalCost?.baseAmount || 0;
 
-    // assuming renewal is yearly
-    yearlyCost += renewal;
+  // 🔹 Total = one-time purchase
+  totalCost += purchase;
 
-    // if asset.type === monthly → divide
-    if (asset.type === "monthly") {
-      monthlyCost += renewal;
-    } else {
-      monthlyCost += renewal / 12;
-    }
-  });
+  // 🔹 Yearly = recurring
+  yearlyCost += renewal;
+});
+
+const monthlyCost = yearlyCost / 12;
 
   return {
     ...asset,
