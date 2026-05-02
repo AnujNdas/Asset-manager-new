@@ -823,48 +823,48 @@ const getAllAssets = asyncHandler(async (req, res, next) => {
     return "partially_in_use";
   };
 
-  const calculateFinancials = (instances = []) => {
-    let totalPurchase = 0;
-    let totalMaintenance = 0;
-    let yearlyMaintenance = 0;
-    let monthlyMaintenance = 0;
-    let currency = null;
+const calculateFinancials = (instances = []) => {
+  let totalCost = 0;
+  let yearlyCost = 0;
 
-    instances.forEach(inst => {
-      const hw = inst.hardware || {};
-      const sw = inst.software || {};
+  instances.forEach(inst => {
+    const hw = inst.hardware || {};
+    const sw = inst.software || {};
 
-      const instCurrency =
-        hw.purchaseCost?.currency ||
-        sw.purchaseCost?.currency;
+    // 🔹 HARDWARE COSTS
+    const hwPurchase = hw.purchaseCost?.baseAmount || 0;
+    const hwMaintenance = hw.costs?.maintenanceCost?.baseAmount || 0;
+    const hwInsurance = hw.costs?.insuranceCost?.baseAmount || 0;
+    const hwWarranty = hw.costs?.warrantyRenewalCost?.baseAmount || 0;
 
-      if (!currency && instCurrency) currency = instCurrency;
+    // 🔹 SOFTWARE COSTS
+    const swPurchase = sw.purchaseCost?.baseAmount || 0;
+    const swRenewal = sw.costs?.renewalCost?.baseAmount || 0;
 
-      const purchase =
-        hw.purchaseCost?.amount ||
-        sw.purchaseCost?.amount ||
-        0;
+    // 🔹 TOTAL COST (ALL)
+    totalCost +=
+      hwPurchase +
+      hwMaintenance +
+      hwInsurance +
+      hwWarranty +
+      swPurchase +
+      swRenewal;
 
-      totalPurchase += purchase;
+    // 🔹 YEARLY COST (recurring + software license)
+    yearlyCost +=
+      hwMaintenance +
+      hwInsurance +
+      hwWarranty +
+      swPurchase +
+      swRenewal;
+  });
 
-      const maintenance =
-        hw.costs?.maintenanceCost ||
-        sw.costs?.maintenanceCost ||
-        0;
-
-      totalMaintenance += maintenance;
-      yearlyMaintenance += maintenance;
-      monthlyMaintenance += maintenance / 12;
-    });
-
-    return {
-      totalAssetCost: totalPurchase,
-      maintenanceTotalCost: totalMaintenance,
-      yearlyMaintenanceCost: yearlyMaintenance,
-      monthlyMaintenanceCost: monthlyMaintenance,
-      currency: currency || "INR"
-    };
+  return {
+    totalCost,
+    yearlyCost,
+    monthlyCost: yearlyCost / 12
   };
+};
 
   /* ================= MERGE ================= */
   let enrichedAssets = assets.map(asset => {
@@ -889,7 +889,11 @@ const getAllAssets = asyncHandler(async (req, res, next) => {
         instanceCount: assetInstances.length,
         inUse: assignmentData.inUse || 0
       }),
-      financialTracking: financials
+      financialTracking: {
+        totalCost: financials.totalCost,
+        yearlyCost: financials.yearlyCost,
+        monthlyCost: financials.monthlyCost
+      }
     };
   });
 
@@ -1133,6 +1137,20 @@ for (let index = 0; index < instances.length; index++) {
   };
 
   if (assetType === "hardware") {
+    const maintenanceCost = await formatCost({
+  amount: inst.hardware?.costs?.maintenanceCost,
+  currency
+});
+
+const warrantyRenewalCost = await formatCost({
+  amount: inst.hardware?.costs?.warrantyRenewalCost,
+  currency
+});
+
+const insuranceCost = await formatCost({
+  amount: inst.hardware?.costs?.insuranceCost,
+  currency
+});
     newInstances.push({
       ...basePayload,
       hardware: {
@@ -1147,10 +1165,9 @@ for (let index = 0; index < instances.length; index++) {
         hasInsurance,
         purchaseCost,
         costs: {
-          maintenanceCost: await formatCost({
-            amount: inst.hardware?.costs?.maintenanceCost,
-            currency
-          })
+          maintenanceCost,
+          warrantyRenewalCost,
+          insuranceCost
         }
       }
     });
@@ -1158,16 +1175,22 @@ for (let index = 0; index < instances.length; index++) {
     newInstances.push({
       ...basePayload,
       software: {
-        licenseKey: inst.software?.licenseKey || "",
-        purchaseDate: inst.software?.purchaseDate || null,
-        purchaseCost,
-        costs: {
-          renewalCost: await formatCost({
-            amount: inst.software?.costs?.renewalCost,
-            currency
-          })
-        }
-      }
+  licenseKey: inst.software?.licenseKey || "",
+  licenseNumber: inst.software?.licenseNumber || "",
+  purchaseDate: inst.software?.purchaseDate || null,
+  installationDate: inst.software?.installationDate || null,
+  renewalDate: inst.software?.renewalDate || null,
+  lastUsedDate: inst.software?.lastUsedDate || null,
+
+  purchaseCost,
+
+  costs: {
+    renewalCost: await formatCost({
+      amount: inst.software?.costs?.renewalCost,
+      currency
+    })
+  }
+}
     });
   }
 }
@@ -1203,32 +1226,57 @@ for (let index = 0; index < instances.length; index++) {
   );
 
   /* ================= UPDATE PARENT COST ================= */
-  const aggregation = await AssetInstance.aggregate([
-    {
-      $match: { assetId: asset._id, organizationId }
-    },
-    {
-      $group: {
-        _id: null,
-        totalCost: {
-          $sum: {
-            $cond: [
-              { $eq: ["$assetType", "hardware"] },
-              { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-              { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
-            ]
-          }
+const aggregation = await AssetInstance.aggregate([
+  {
+    $match: { assetId: asset._id, organizationId }
+  },
+  {
+    $group: {
+      _id: null,
+
+      // 🔹 TOTAL COST (ALL COSTS COMBINED)
+      totalCost: {
+        $sum: {
+          $add: [
+            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+
+            { $ifNull: ["$software.purchaseCost.baseAmount", 0] },
+            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+          ]
+        }
+      },
+
+      // 🔹 YEARLY COST ONLY (recurring)
+      yearlyCost: {
+        $sum: {
+          $add: [
+            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+
+            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }, // since yearly license
+            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+          ]
         }
       }
     }
-  ]);
+  }
+]);
 
-  const totalCost = aggregation[0]?.totalCost || 0;
 
-  await (assetType === "hardware" ? Asset : SoftwareAsset)
-    .findByIdAndUpdate(asset._id, {
-      "financialTracking.totalCost": totalCost
-    });
+const totalCost = aggregation[0]?.totalCost || 0;
+const yearlyCost = aggregation[0]?.yearlyCost || 0;
+const monthlyCost = yearlyCost / 12;
+
+await (assetType === "hardware" ? Asset : SoftwareAsset)
+  .findByIdAndUpdate(asset._id, {
+    "financialTracking.totalCost": totalCost,
+    "financialTracking.yearlyCost": yearlyCost,
+    "financialTracking.monthlyCost": monthlyCost
+  });
 
   // ✅ FINAL RESPONSE
   res.status(201).json({
