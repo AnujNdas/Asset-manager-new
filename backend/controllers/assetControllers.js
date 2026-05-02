@@ -15,6 +15,7 @@
   const Status = require("../models/Status");
   const SoftwareAsset = require("../models/SoftwareAsset");
   const AssetInstance = require("../models/AssetInstance");
+  const convertToBase = require("../utils/convertToBase");
 const QRCode = require("qrcode");
 const cloudinary = require("../config/cloudinary"); 
 
@@ -1089,28 +1090,6 @@ const createAssetInstance = asyncHandler(async (req, res, next) => {
     );
   }
 
-  /* ================= HELPERS ================= */
-  const formatCost = (cost) => {
-    if (!cost) return null;
-
-    if (typeof cost === "object") {
-      return {
-        amount: Number(cost.amount) || 0,
-        currency: cost.currency || "INR",
-        baseAmount: convertToBase(
-          Number(cost.amount) || 0,
-          cost.currency || "INR"
-        )
-      };
-    }
-
-    return {
-      amount: Number(cost) || 0,
-      currency: "INR",
-      baseAmount: convertToBase(Number(cost) || 0, "INR")
-    };
-  };
-
   const generateSerial = (asset, index) => {
     const prefix = asset.assetCode || "AST";
     const unique = Date.now().toString().slice(-5);
@@ -1118,77 +1097,81 @@ const createAssetInstance = asyncHandler(async (req, res, next) => {
   };
 
   /* ================= CREATE INSTANCES ================= */
-  const newInstances = instances.map((inst, index) => {
-    const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
-    const hasInsurance = inst.hardware?.hasInsurance ?? false;
+const newInstances = [];
 
-    const purchaseCost = formatCost(
-      assetType === "hardware"
-        ? inst.hardware?.purchaseCost
-        : inst.software?.purchaseCost
-    );
+for (let index = 0; index < instances.length; index++) {
+  const inst = instances[index];
 
-    const currency = purchaseCost?.currency || "INR";
+  const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
+  const hasInsurance = inst.hardware?.hasInsurance ?? false;
 
-    const basePayload = {
-      organizationId,
-      assetId,
-      assetTypeRef,
-      assetType,
-      instanceCode,
-      deviceName: inst.deviceName || "",
-      location: inst.location,
-      status: "in_stock",
-      condition: inst.condition || "new",
-      lifecycle: [
-        {
-          action: "CREATED",
-          date: new Date(),
-          notes: "Instance created"
+  const purchaseCost = await formatCost(
+    assetType === "hardware"
+      ? inst.hardware?.purchaseCost
+      : inst.software?.purchaseCost
+  );
+
+  const currency = purchaseCost?.currency || "INR";
+
+  const basePayload = {
+    organizationId,
+    assetId,
+    assetTypeRef,
+    assetType,
+    instanceCode,
+    deviceName: inst.deviceName || "",
+    location: inst.location,
+    status: "in_stock",
+    condition: inst.condition || "new",
+    lifecycle: [
+      {
+        action: "CREATED",
+        date: new Date(),
+        notes: "Instance created"
+      }
+    ],
+    createdBy: userId
+  };
+
+  if (assetType === "hardware") {
+    newInstances.push({
+      ...basePayload,
+      hardware: {
+        serialNumber:
+          inst.hardware?.serialNumber ||
+          generateSerial(asset, index),
+        modelNo: inst.hardware?.modelNo || "",
+        specifications: inst.hardware?.specifications || "",
+        purchaseDate: inst.hardware?.purchaseDate || null,
+        installationDate: inst.hardware?.installationDate || null,
+        warrantyExpiry: inst.hardware?.warrantyExpiry || null,
+        hasInsurance,
+        purchaseCost,
+        costs: {
+          maintenanceCost: await formatCost({
+            amount: inst.hardware?.costs?.maintenanceCost,
+            currency
+          })
         }
-      ],
-      createdBy: userId
-    };
-
-    if (assetType === "hardware") {
-      return {
-        ...basePayload,
-        hardware: {
-          serialNumber:
-            inst.hardware?.serialNumber ||
-            generateSerial(asset, index),
-          modelNo: inst.hardware?.modelNo || "",
-          specifications: inst.hardware?.specifications || "",
-          purchaseDate: inst.hardware?.purchaseDate || null,
-          installationDate: inst.hardware?.installationDate || null,
-          warrantyExpiry: inst.hardware?.warrantyExpiry || null,
-          hasInsurance,
-          purchaseCost,
-          costs: {
-            maintenanceCost: formatCost({
-              amount: inst.hardware?.costs?.maintenanceCost,
-              currency
-            })
-          }
-        }
-      };
-    }
-
-    return {
+      }
+    });
+  } else {
+    newInstances.push({
       ...basePayload,
       software: {
         licenseKey: inst.software?.licenseKey || "",
         purchaseDate: inst.software?.purchaseDate || null,
         purchaseCost,
         costs: {
-          renewalCost: formatCost({
+          renewalCost: await formatCost({
             amount: inst.software?.costs?.renewalCost,
             currency
           })
         }
       }
-    };
-  });
+    });
+  }
+}
 
   const saved = await AssetInstance.insertMany(newInstances);
 
@@ -1245,7 +1228,7 @@ const createAssetInstance = asyncHandler(async (req, res, next) => {
 
   await (assetType === "hardware" ? Asset : SoftwareAsset)
     .findByIdAndUpdate(asset._id, {
-      "financialTracking.totalAssetCost": totalCost
+      "financialTracking.totalCost": totalCost
     });
 
   // ✅ FINAL RESPONSE
@@ -1477,17 +1460,35 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
       const instanceCode = `${asset.assetCode}-${Date.now()}-${Math.random()
         .toString(36)
         .slice(2, 6)}`;
+        const purchaseDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.purchaseDate) : parseDateSafe(inst.software?.purchaseDate);
+        const purchaseCost =
+  assetType === "hardware"
+    ? await formatCost(inst.hardware?.purchaseCost)
+    : await formatCost(inst.software?.purchaseCost);
 
+const currency = purchaseCost?.currency || "INR";
       /* ---------------- HARDWARE ---------------- */
       if (assetType === "hardware") {
-        const purchaseDate = parseDateSafe(inst.hardware?.purchaseDate);
         const insurancePurchaseDate = parseDateSafe(
           inst.hardware?.insurancePurchaseDate
         );
 
         const hasInsurance = !!insurancePurchaseDate;
         const insuranceTerm = inst.hardware?.insuranceTerm || "1_year";
+        const maintenanceCost = await formatCost({
+          amount: inst.hardware?.maintenanceCost,
+          currency
+        });
 
+        const warrantyRenewalCost = await formatCost({
+          amount: inst.hardware?.warrantyRenewalCost,
+          currency
+        });
+
+        const insuranceCost = await formatCost({
+          amount: inst.hardware?.insuranceCost,
+          currency
+        });
         validInstances.push({
           organizationId,
           assetId,
@@ -1509,13 +1510,18 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
             installationDate: parseDateSafe(inst.hardware?.installationDate),
 
             warrantyExpiry: parseDateSafe(inst.hardware?.warrantyExpiry),
-
+            purchaseCost,
             hasInsurance,
             insurancePurchaseDate,
             insuranceTerm,
             insuranceExpiry: hasInsurance
               ? calculateInsuranceExpiry(insurancePurchaseDate, insuranceTerm)
-              : null
+              : null,
+              cost : {
+                maintenanceCost,
+                warrantyRenewalCost,
+                insuranceCost
+              }
           },
 
           lifecycle: [
@@ -1532,6 +1538,12 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
 
       /* ---------------- SOFTWARE ---------------- */
       else {
+          const renewalCost = await formatCost({
+            amount: inst.software?.renewalCost,
+            currency
+          });
+          const renewalDate = parseDateSafe(inst.software?.renewalDate);
+          const installationDate = parseDateSafe(inst.software?.installationDate);
         validInstances.push({
           organizationId,
           assetId,
@@ -1544,8 +1556,16 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
           status: "in_stock",
 
           software: {
+            purchaseDate,
             licenseKey: normalize(inst.software?.licenseKey) || "",
-            purchaseDate: parseDateSafe(inst.software?.purchaseDate)
+            purchaseDate: parseDateSafe(inst.software?.purchaseDate),
+            licenseNumber: inst.licenseNumber || "",
+            installationDate,
+            renewalDate,
+            cost : {
+              renewalCost
+            },
+            purchaseCost
           },
 
           lifecycle: [
@@ -1603,23 +1623,30 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
     }
   });
 });
-const formatCost = (cost, fallbackCurrency = "INR") => {
+
+
+const formatCost = async (cost) => {
   if (!cost) return null;
 
   let amount, currency;
 
   if (typeof cost === "object") {
     amount = Number(cost.amount) || 0;
-    currency = cost.currency || fallbackCurrency;
+    currency = cost.currency || "INR";
   } else {
     amount = Number(cost) || 0;
-    currency = fallbackCurrency;
+    currency = "INR";
   }
+
+  const { baseAmount, conversionRate } =
+    await convertToBase(amount, currency);
 
   return {
     amount,
     currency,
-    baseAmount: convertToBase(amount, currency),
+    baseAmount,
+    conversionRate,
+    convertedAt: new Date()
   };
 };
   module.exports = {

@@ -132,24 +132,10 @@
   font-size: 13px;
 }
 
-.btn-view {
-  background: #3b82f6;
-  color: #fff;
-}
-
-.btn-view:hover {
-  background: #2563eb;
-}
-
 .btn-delete {
-  background: #393E46;
+  background: #222831;
   color: #DFD0B8;
 }
-
-.btn-delete:hover {
-  background: #dc2626;
-}
-
 /* ================= MODAL ================= */
 .asset-view-overlay {
   position: fixed;
@@ -186,7 +172,10 @@
   /* gap: 12px; */
   transition: 0.3s;
 }
-
+.btn-assign{
+  color: #222831;
+  background: #DFD0B8;
+}
 .inventory-card:hover {
   transform: translateY(-4px);
 }

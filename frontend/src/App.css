@@ -262,16 +262,10 @@
 
 /* CANCEL BUTTON (Soft Neutral) */
 .btn-cancel {
-  background: #393E46;
+  background: #222831;
   color: #DFD0B8;
   font-size: 14px;
 }
-
-.btn-cancel:hover {
-  background: #222831;
-  transform: translateY(-1px);
-}
-
 .btn-cancel:active {
   transform: scale(0.97);
 }
@@ -291,7 +285,7 @@
 
   border-radius: 8px;
 
-  background: #393E46;
+  background: #222831;
   color: #DFD0B8;
 
   cursor: pointer;
@@ -303,14 +297,6 @@
   gap: 6px;
 
   white-space: nowrap;
-}
-.btn-edit:hover {
-  background: #3b82f6;
-  color: #fff;
-  border-color: #3b82f6;
-
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(59, 130, 246, 0.25);
 }
 
 .btn-edit:active {

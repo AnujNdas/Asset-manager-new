@@ -203,6 +203,16 @@ const handleUpdate = async () => {
   Swal.fire("Error", getErrorMessage(err, "Failed to update asset"), "error");
 }
 };
+  const handleAssign = (asset) => {
+    navigate("/assignment", {
+      state: {
+        categoryId: asset.assetCategory,
+        assetId: asset._id,
+        assetType: "hardware",
+      },
+    });
+  };
+
   const handleDelete = async (id) => {
     const resp = await Swal.fire({
       title: "Delete asset?",
@@ -526,6 +536,9 @@ const renderInstance = (inst, assignment) => {
         >
           Delete
         </button>
+            <button onClick={() => handleAssign(asset)} className="btn-assign">
+      Assign
+    </button>
       </div>
     </motion.div>
   );

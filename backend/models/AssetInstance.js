@@ -72,7 +72,7 @@ const assetInstanceSchema = new mongoose.Schema(
   }
 ],
 
-  /* 🔹 ASSIGNMENT (COMMON) */
+  /* 🔹 ASSIGNMENT (COMMON) */  
 assignedTo: {
   employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
   employeeName: String
