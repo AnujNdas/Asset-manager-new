@@ -14,6 +14,7 @@ import {
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
+import InstanceCard from "../Components/InstanceCard";
 import { useNavigate } from "react-router-dom";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
@@ -327,117 +328,67 @@ selectedAsset?.assignmentRecords?.forEach(assign => {
 });
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
-const renderSoftwareInstance = (inst, assignment) => {
-  const isAssigned = !!assignment;
+const mapInstanceData = (inst, assignment) => {
+  const isHardware = inst.assetType === "hardware";
+  const hw = inst.hardware || {};
   const sw = inst.software || {};
 
-  return (
-    <div className={`instance-card-modern ${isAssigned ? "assigned" : ""}`}>
+  return {
+    id: inst._id,
+    code: inst.instanceCode,
+    status: assignment ? "assigned" : "available",
 
-      {/* 🔷 HEADER */}
-      <div className="instance-header-modern">
-        <div>
-          <h4 className="instance-title">{inst.instanceCode}</h4>
-          <p className="instance-sub">
-            🔑 {sw.licenseNumber || "No License"}
-          </p>
-        </div>
+    quick: {
+      location: inst.location,
+      condition: inst.condition,
+      date: isHardware
+        ? hw.installationDate
+        : sw.installationDate
+    },
 
-        <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
-          {isAssigned ? "🔴 Assigned" : "🟢 Available"}
-        </span>
-      </div>
+    details: isHardware
+      ? [
+          { label: "Model", value: hw.modelNo },
+          { label: "Specs", value: hw.specifications }
+        ]
+      : [
+          { label: "License Key", value: sw.licenseKey },
+          { label: "License No", value: sw.licenseNumber }
+        ],
 
-      {/* 🔷 MAIN SPLIT */}
-      <div className="instance-body">
+    lifecycle: isHardware
+      ? [
+          { label: "Purchase", value: hw.purchaseDate },
+          { label: "Warranty", value: hw.warrantyExpiry },
+          { label: "Maintenance", value: hw.nextMaintenanceDate }
+        ]
+      : [
+          { label: "Expiry", value: sw.renewalDate },
+          { label: "Last Used", value: sw.lastUsedDate }
+        ],
 
-        {/* LEFT SIDE */}
-        <div className="instance-left">
+    costs: isHardware
+      ? [
+          { label: "Purchase", value: hw.purchaseCost },
+          { label: "Maintenance", value: hw.costs?.maintenanceCost },
+          { label: "Warranty", value: hw.costs?.warrantyRenewalCost },
+          { label: "Insurance", value: hw.costs?.insuranceCost }
+        ]
+      : [
+          { label: "Purchase", value: sw.purchaseCost },
+          { label: "Renewal", value: sw.costs?.renewalCost }
+        ],
 
-          {/* QUICK */}
-          <div className="instance-quick-grid">
-            <div>📍 {inst.location || "N/A"}</div>
-            <div>⚙ {inst.condition}</div>
-            <div>
-              📅{" "}
-              {sw.installationDate
-                ? new Date(sw.installationDate).toLocaleDateString()
-                : "N/A"}
-            </div>
-          </div>
+    qr: hw.qrCode?.url || null,
 
-          {/* LICENSE */}
-          <div className="instance-section">
-            <p className="section-title">License</p>
-            <div className="grid-2">
-              <p><span>Key</span>{sw.licenseKey || "N/A"}</p>
-              <p><span>Number</span>{sw.licenseNumber || "N/A"}</p>
-            </div>
-          </div>
-
-          {/* VALIDITY */}
-          <div className="instance-section">
-            <p className="section-title">Validity</p>
-            <div className="grid-2">
-              <p>
-                <span>Expiry</span>
-                {sw.renewalDate
-                  ? new Date(sw.renewalDate).toLocaleDateString()
-                  : "N/A"}
-              </p>
-
-              <p>
-                <span>Last Used</span>
-                {sw.lastUsedDate
-                  ? new Date(sw.lastUsedDate).toLocaleDateString()
-                  : "N/A"}
-              </p>
-            </div>
-          </div>
-
-          {/* COST */}
-          <div className="instance-section">
-            <p className="section-title">Cost</p>
-            <div className="grid-2">
-              <p>
-                <span>Purchase</span>
-                {formatMoney(sw.purchaseCost)}
-              </p>
-
-              <p>
-                <span>Renewal</span>
-                {formatMoney(sw.costs?.renewalCost)}
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-        {/* RIGHT SIDE */}
-        <div className="instance-right">
-
-          {/* ASSIGNMENT */}
-          {isAssigned && (
-            <div className="instance-section assignment-box">
-              <p className="section-title">Assignment</p>
-              <p>{assignment.employee?.name}</p>
-              <p>{assignment.department?.name}</p>
-              <p>{assignment.location}</p>
-            </div>
-          )}
-
-        </div>
-      </div>
-
-      {/* ACTION */}
-      <button
-        className="btn-edit modern"
-        onClick={() => handleInstanceEditOpen(inst)}
-      >
-        ✏ Edit
-      </button>
-    </div>
-  );
+    assignment: assignment
+      ? {
+          name: assignment.employee?.name,
+          dept: assignment.department?.name,
+          location: assignment.location
+        }
+      : null
+  };
 };
   return (
     <div className="inventory-container">
@@ -637,12 +588,18 @@ const renderSoftwareInstance = (inst, assignment) => {
                <h4>All Instances</h4>
 
 {selectedAsset.instances?.length ? (
-  selectedAsset.instances.map((inst) =>
-    renderSoftwareInstance(
-      inst,
-      assignmentMap[inst._id]
-    )
-  )
+  selectedAsset.instances.map((inst) => {
+  const assignment = assignmentMap[inst._id];
+  const data = mapInstanceData(inst, assignment);
+
+  return (
+    <InstanceCard
+      key={inst._id}
+      data={data}
+      onEdit={() => handleInstanceEditOpen(inst)}
+    />
+  );
+})
 ) : (
   <p>No instances found</p>
 )}

@@ -13,6 +13,7 @@ import {
   updateHardwareAsset,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
+import InstanceCard from "../Components/InstanceCard";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import Loader from "../Components/Loader";
 import { useCurrency } from "../Context/CurrencyContext";
@@ -255,140 +256,70 @@ const handleUpdate = async () => {
 
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
-const renderInstance = (inst, assignment) => {
-  const isAssigned = !!assignment;
+const mapInstanceData = (inst, assignment) => {
+  const isHardware = inst.assetType === "hardware";
   const hw = inst.hardware || {};
+  const sw = inst.software || {};
 
-  // ✅ Safe QR fallback
-  const qrUrl = inst.qrCode?.url || hw.qrCode?.url;
+return {
+  id: inst._id,
+  code: inst.instanceCode,
 
-  // ✅ Safe cost helper
-  const getCost = (costObj) => {
-    return convertFromBase(Number(costObj?.baseAmount || 0));
+  subText: isHardware
+    ? hw.serialNumber || "No Serial"
+    : sw.licenseNumber || "No License",
+
+    quick: {
+      location: inst.location,
+      condition: inst.condition,
+      date: isHardware
+        ? hw.installationDate
+        : sw.installationDate
+    },
+
+    details: isHardware
+      ? [
+          { label: "Model", value: hw.modelNo },
+          { label: "Specs", value: hw.specifications }
+        ]
+      : [
+          { label: "License Key", value: sw.licenseKey },
+          { label: "License No", value: sw.licenseNumber }
+        ],
+
+    lifecycle: isHardware
+      ? [
+          { label: "Purchase", value: hw.purchaseDate },
+          { label: "Warranty", value: hw.warrantyExpiry },
+          { label: "Maintenance", value: hw.nextMaintenanceDate }
+        ]
+      : [
+          { label: "Expiry", value: sw.renewalDate },
+          { label: "Last Used", value: sw.lastUsedDate }
+        ],
+
+    costs: isHardware
+      ? [
+          { label: "Purchase", value: hw.purchaseCost },
+          { label: "Maintenance", value: hw.costs?.maintenanceCost },
+          { label: "Warranty", value: hw.costs?.warrantyRenewalCost },
+          { label: "Insurance", value: hw.costs?.insuranceCost }
+        ]
+      : [
+          { label: "Purchase", value: sw.purchaseCost },
+          { label: "Renewal", value: sw.costs?.renewalCost }
+        ],
+
+    qr: hw.qrCode?.url || null,
+
+    assignment: assignment
+      ? {
+          name: assignment.employee?.name,
+          dept: assignment.department?.name,
+          location: assignment.location
+        }
+      : null
   };
-
-  return (
-<div className={`instance-card-modern ${isAssigned ? "assigned" : ""}`}>
-
-  {/* 🔷 HEADER */}
-  <div className="instance-header-modern">
-    <div>
-      <h4 className="instance-title">{inst.instanceCode}</h4>
-      <p className="instance-sub">{inst.serialNumber || "No Serial"}</p>
-    </div>
-
-    <span className={`status-pill ${isAssigned ? "assigned" : "available"}`}>
-      {isAssigned ? "🔴 Assigned" : "🟢 Available"}
-    </span>
-  </div>
-
-  {/* 🔷 MAIN SPLIT */}
-  <div className="instance-body">
-
-    {/* LEFT SIDE */}
-    <div className="instance-left">
-
-      {/* QUICK */}
-      <div className="instance-quick-grid">
-        <div>📍 {inst.location || "N/A"}</div>
-        <div>⚙ {inst.condition}</div>
-        <div>
-          📅{" "}
-          {hw.installationDate
-            ? new Date(hw.installationDate).toLocaleDateString()
-            : "N/A"}
-        </div>
-      </div>
-
-      {/* TECH */}
-      <div className="instance-section">
-        <p className="section-title">Technical</p>
-        <div className="grid-2">
-          <p><span>Model</span>{hw.modelNo || "N/A"}</p>
-          <p><span>Specs</span>{hw.specifications || "N/A"}</p>
-        </div>
-      </div>
-
-      {/* LIFECYCLE */}
-      <div className="instance-section">
-        <p className="section-title">Lifecycle</p>
-        <div className="grid-2">
-          <p><span>Purchase</span>{hw.purchaseDate ? new Date(hw.purchaseDate).toLocaleDateString() : "N/A"}</p>
-          <p><span>Maintenance</span>{hw.nextMaintenanceDate ? new Date(hw.nextMaintenanceDate).toLocaleDateString() : "N/A"}</p>
-          <p><span>Warranty</span>{hw.warrantyExpiry ? new Date(hw.warrantyExpiry).toLocaleDateString() : "N/A"}</p>
-          <p><span>Insurance</span>{hw.insuranceExpiry ? new Date(hw.insuranceExpiry).toLocaleDateString() : "N/A"}</p>
-        </div>
-      </div>
-
-      {/* COST */}
-      <div className="instance-section">
-        <p className="section-title">Cost</p>
-        <div className="grid-2">
-          <p><span>Purchase</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.purchaseCost)}</p>
-          <p><span>Maintenance</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.costs?.maintenanceCost)}</p>
-          <p><span>Warranty</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.costs?.warrantyRenewalCost)}</p>
-          <p><span>Insurance</span>{CURRENCY_SYMBOLS[currency]} {getCost(hw.costs?.insuranceCost)}</p>
-        </div>
-      </div>
-
-    </div>
-
-    {/* RIGHT SIDE */}
-    <div className="instance-right">
-
-      {/* QR */}
-      {qrUrl && (
-        <div className="instance-section qr-box">
-          <p className="section-title">QR Code</p>
-
-          <img src={qrUrl} alt="QR" className="qr-image-modern" />
-
-          <div className="qr-actions">
-            <a href={qrUrl} download className="btn-small">Download</a>
-
-            {inst.trackingUrl && (
-              <a href={inst.trackingUrl} target="_blank" rel="noreferrer" className="btn-small btn-blue">
-                Open
-              </a>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ASSIGNMENT */}
-      {isAssigned && (
-        <div className="instance-section assignment-box">
-          <p className="section-title">Assignment</p>
-          <p>{assignment.employee?.name}</p>
-          <p>{assignment.department?.name}</p>
-          <p>{assignment.location}</p>
-        </div>
-      )}
-
-    </div>
-  </div>
-
-  {/* ACTION */}
-  <button
-  className="btn-edit modern"
-  onClick={() => {
-    setEditInstance(inst);
-
-    setInstanceForm({
-      location: inst.location || "",
-      condition: inst.condition || "new",
-      serialNumber:
-        inst.hardware?.serialNumber ||
-        inst.software?.licenseNumber ||
-        "",
-      assetType: inst.assetType,
-    });
-  }}
->
-  ✏ Edit
-</button>
-</div>
-  );
 };
 
   return (
@@ -579,12 +510,31 @@ const renderInstance = (inst, assignment) => {
 {instances.length === 0 ? (
   <p>No instances found</p>
 ) : (
-  instances.map((inst) =>
-    renderInstance(
-      inst,
-      assignmentMap[String(inst._id)]
-    )
-  )
+ <div className="instance-grid">
+  {instances.map((inst) => {
+    const assignment = assignmentMap[String(inst._id)];
+    const data = mapInstanceData(inst, assignment);
+
+    return (
+      <InstanceCard
+        key={inst._id}
+        data={data}
+        onEdit={() => {
+          setEditInstance(inst);
+          setInstanceForm({
+            location: inst.location || "",
+            condition: inst.condition || "new",
+            serialNumber:
+              inst.hardware?.serialNumber ||
+              inst.software?.licenseNumber ||
+              "",
+            assetType: inst.assetType,
+          });
+        }}
+      />
+    );
+  })}
+</div>
 )}
                   </>
                 );
