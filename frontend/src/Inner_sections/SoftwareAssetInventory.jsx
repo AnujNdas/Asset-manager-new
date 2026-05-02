@@ -518,23 +518,23 @@ const renderSoftwareInstance = (inst, assignment) => {
   </div>
 
   {/* 🔷 FINANCIAL */}
-  {/* <div className="financial">
+  <div className="financial">
     <div>
-      <p className="label">Total Cost</p>
+      <p className="label">Yearly Cost</p>
       <p>
         {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(asset.assetCost?.baseTotalAmount || 0)}
+        {convertFromBase(asset.financialTracking?.yearlyCost || 0)}
       </p>
     </div>
 
     <div>
-      <p className="label">Unit Cost</p>
+      <p className="label">Monthly Cost</p>
       <p>
         {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(asset.assetCost?.unitAmount || 0)}
+        {convertFromBase(asset.financialTracking?.monthlyCost || 0)}
       </p>
     </div>
-  </div> */}
+  </div>
 
   {/* 🔷 DATES */}
   <div className="dates">
