@@ -5,7 +5,6 @@
   const sendNotification = require("../utils/notify");
   const asyncHandler = require("../utils/asyncHandler");
   const AppError = require("../utils/AppError");
-  const { convertToBase, BASE_CURRENCY } = require("../utils/currency");
   const pricingTiers = require("../config/pricingTiers");
   const Subscription = require("../models/Subscription");
   const Category = require("../models/Category");
