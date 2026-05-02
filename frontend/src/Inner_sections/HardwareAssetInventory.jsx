@@ -13,7 +13,7 @@ import {
   updateHardwareAsset,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
-import InstanceCard from "../Components/InstanceCard";
+import InstanceCard from "../Components/InstanceInventory";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import Loader from "../Components/Loader";
 import { useCurrency } from "../Context/CurrencyContext";

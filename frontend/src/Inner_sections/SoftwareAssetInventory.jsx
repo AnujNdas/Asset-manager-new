@@ -14,7 +14,7 @@ import {
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Loader from "../Components/Loader";
-import InstanceCard from "../Components/InstanceCard";
+import InstanceCard from "../Components/InstanceInventory";
 import { useNavigate } from "react-router-dom";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
