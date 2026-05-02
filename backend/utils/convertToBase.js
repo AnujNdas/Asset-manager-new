@@ -1,5 +1,5 @@
 // utils/convertToBase.js
-const { getRates } = require("./currencyService");
+const { getRates } = require("./currencyServices");
 
 const convertToBase = async (amount, currency) => {
   if (currency === "INR") {
