@@ -1,5 +1,5 @@
 import React from "react";
-import "./Component_styles/InstanceInventory.css"
+import "../Component_styles/InstanceInventory.css"
 
 const InstanceCard = ({
   inst,
