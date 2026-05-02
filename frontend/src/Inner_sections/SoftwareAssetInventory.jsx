@@ -590,7 +590,6 @@ const mapInstanceData = (inst, assignment) => {
 {selectedAsset.instances?.length ? (
   selectedAsset.instances.map((inst) => {
   const assignment = assignmentMap[inst._id];
-  const data = mapInstanceData(inst, assignment);
 
   return (
 <InstanceCard
