@@ -852,6 +852,7 @@ const calculateFinancials = (instances = []) => {
 
     // 🔹 YEARLY COST (recurring + software license)
     yearlyCost +=
+      hwPurchase
       hwMaintenance +
       hwInsurance +
       hwWarranty +
@@ -1253,6 +1254,7 @@ const aggregation = await AssetInstance.aggregate([
       yearlyCost: {
         $sum: {
           $add: [
+            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
             { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
             { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
             { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
