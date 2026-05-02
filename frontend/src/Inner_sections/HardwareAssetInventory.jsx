@@ -447,7 +447,6 @@ const handleUpdate = async () => {
  <div className="instance-grid">
   {instances.map((inst) => {
     const assignment = assignmentMap[String(inst._id)];
-    const data = mapInstanceData(inst, assignment);
 
     return (
       <InstanceCard
