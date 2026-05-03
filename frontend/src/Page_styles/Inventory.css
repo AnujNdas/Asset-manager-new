@@ -79,11 +79,11 @@
 
 /* STATUS BADGE */
 .card-header span {
-  background: #22c55e;
+  background: #222831;
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 12px;
-  color: #ffffff;
+  color: #DFD0B8;
 }
 
 /* TEXT */
@@ -217,8 +217,8 @@
 }
 
 .badge.status {
-  background: #1bd73a;
-  color: #222831;
+  background: #222831;
+  color: #DFD0B8;
 }
 
 /* FINANCIAL */
@@ -522,7 +522,7 @@
   /* background: #393E46; */
   color: #DFD0B8;
   transition: all 0.2s ease;
-  background: #393E46;
+  background: #222831;
 }
 .modal-actions {
   display: flex;

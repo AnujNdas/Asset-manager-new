@@ -198,9 +198,6 @@ body {
 }
 
 /* Hover */
-.sub-tabs button:hover {
-  color: #948979;
-}
 
 /* ===== ACTIVE TAB ===== */
 .sub-tabs .active-tab {
@@ -345,6 +342,7 @@ body {
 .report-header h2 {
   font-size: 22px;
   font-weight: 600;
+  color: #DFD0B8;
 }
 /* Tablet */
 @media (max-width: 768px) {

@@ -69,12 +69,9 @@
   cursor: pointer;
   font-weight: 500;
   transition: all 0.25s ease;
+  margin: 0;
 }
 
-.employee-actions button:hover {
-  background: var(--primary-light);
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
-}
 
 /* ===== Table Container ===== */
 .employee-table {
@@ -163,7 +160,7 @@
   margin-bottom: 20px;
   font-size: 18px;
   font-weight: 600;
-  color: var(--text);
+  color: #DFD0B8;
 }
 
 /* Modal Inputs */
@@ -177,14 +174,6 @@
   font-size: 14px;
   transition: all 0.2s ease;
 }
-
-.modal input:focus,
-.modal select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-soft);
-}
-
 /* ===== Modal Buttons ===== */
 .modal-buttons {
   display: flex;

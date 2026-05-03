@@ -15,7 +15,17 @@
   width: 100%;
   overflow-x: auto;
 }
-
+.category_search_input {
+  /* width: 260px; */
+  max-width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #222831;
+  color: #DFD0B8;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 .classification-table {
   width: 100%;
   border-collapse: collapse;

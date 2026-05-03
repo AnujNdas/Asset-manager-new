@@ -222,6 +222,7 @@ const handleUpdate = async () => {
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Delete",
+      background : "#222831"
     });
 
     if (!resp.isConfirmed) return;

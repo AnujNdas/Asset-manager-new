@@ -187,7 +187,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           Reassign
         </button>
 
-        <button className="btn btn-dark" onClick={() => onHistory(instance)}>
+        <button className="btn btn-blue" onClick={() => onHistory(instance)}>
           History
         </button>
 

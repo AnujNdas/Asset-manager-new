@@ -99,14 +99,14 @@ const AddEmployeeModal = ({ departments, employee, onClose, onSuccess }) => {
           />
 
           <div className="modal-buttons">
-            <button type="submit">
+            <button type="submit" className="btn-save">
               {employee ? "Update" : "Save"}
             </button>
 
             <button
               type="button"
               onClick={onClose}
-              className="cancel"
+              className="btn-cancel"
             >
               Cancel
             </button>
