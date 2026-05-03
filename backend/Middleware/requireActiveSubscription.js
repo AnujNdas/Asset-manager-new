@@ -1,5 +1,6 @@
 const Subscription = require("../models/Subscription");
 const pricingTiers = require("../config/pricingTiers");
+const resolveSubscriptionState = require("../utils/subscriptionStateResolver");
 const mongoose = require("mongoose");
 
 const requireActiveSubscription = async (req, res, next) => {
@@ -16,117 +17,25 @@ const requireActiveSubscription = async (req, res, next) => {
       organizationId: new mongoose.Types.ObjectId(orgId),
     });
 
-    if (!subscription) {
-      return res.status(403).json({
-        error: "Subscription not found",
-      });
-    }
+    // 🔥 Resolve state (single source of truth)
+    const state = resolveSubscriptionState(subscription);
 
-    const now = new Date();
-
-    /* --------------------------------------------
-       1️⃣ TRIAL ACCESS
-    -------------------------------------------- */
-    if (
-      subscription.status === "trialing" &&
-      subscription.trialEnd &&
-      subscription.trialEnd > now
-    ) {
-      return allowAccess(subscription, "omni", req, res, next);
-    }
-
-    /* --------------------------------------------
-       2️⃣ ACTIVE (VALID PERIOD)
-    -------------------------------------------- */
-    if (
-      subscription.status === "active" &&
-      subscription.currentEnd &&
-      subscription.currentEnd > now
-    ) {
-      return allowAccess(
-        subscription,
-        subscription.tier,
-        req,
-        res,
-        next
-      );
-    }
-
-    /* --------------------------------------------
-       3️⃣ PAST DUE WITH 3-DAY GRACE
-    -------------------------------------------- */
-    if (
-      subscription.status === "past_due" &&
-      subscription.pastDueAt
-    ) {
-      const graceEnd = new Date(subscription.pastDueAt);
-      graceEnd.setDate(graceEnd.getDate() + 3);
-
-      if (now < graceEnd) {
-        return allowAccess(
-          subscription,
-          subscription.tier,
-          req,
-          res,
-          next
-        );
-      }
-
+    // 🔴 Block access if not allowed
+    if (!state.access.hasAccess) {
       return res.status(402).json({
         error: "subscription_required",
-        reason: "payment_overdue",
-      });
-    }
-/* --------------------------------------------
-   1️⃣ TRIAL ACCESS
--------------------------------------------- */
-if (
-  subscription.status === "trialing" &&
-  subscription.currentEnd &&
-  subscription.currentEnd > now
-) {
-  return allowAccess(
-    subscription,
-    subscription.tier, // ← important fix
-    req,
-    res,
-    next
-  );
-}
-
-/* --------------------------------------------
-   4️⃣ TRIAL EXPIRED
--------------------------------------------- */
-if (
-  subscription.status === "trialing" &&
-  subscription.currentEnd &&
-  subscription.currentEnd <= now
-) {
-  return res.status(402).json({
-    error: "subscription_required",
-    reason: "trial_expired",
-  });
-}
-    /* --------------------------------------------
-       5️⃣ PLAN EXPIRED (Hard Stop)
-    -------------------------------------------- */
-    if (
-      subscription.currentEnd &&
-      subscription.currentEnd <= now
-    ) {
-      return res.status(402).json({
-        error: "subscription_required",
-        reason: "plan_expired",
+        ...state,
       });
     }
 
-    /* --------------------------------------------
-       6️⃣ EVERYTHING ELSE
-    -------------------------------------------- */
-    return res.status(402).json({
-      error: "subscription_required",
-      reason: "no_active_subscription",
-    });
+    // ✅ Allow access
+    return allowAccess(
+      subscription,
+      subscription.tier,
+      req,
+      res,
+      next
+    );
 
   } catch (err) {
     console.error("Subscription check failed:", err);
@@ -135,7 +44,6 @@ if (
     });
   }
 };
-
 /* --------------------------------------------
    Access Resolver Helper
 -------------------------------------------- */

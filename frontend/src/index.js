@@ -16,10 +16,10 @@ root.render(
   <BrowserRouter>
     <React.StrictMode>
       <SubscriptionProvider>
-      <AnalyticsTracker />
       {/* <ProgressProvider> */}
         <NotificationProvider>
           <CurrencyProvider>
+      <AnalyticsTracker />
           <App />
           </CurrencyProvider>
         </NotificationProvider>

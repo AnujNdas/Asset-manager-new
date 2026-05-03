@@ -6,7 +6,7 @@ import SuperAdminRoutes from "./routes/SuperAdminRoutes";
 import TrackInstance from "./pages/TrackInstance";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
-
+import UpgradePage from "./Pages/UpgradePage";
 import User from "./Pages/User";
 import Loader from "./Components/Loader";
 import "./Component_styles/ClassificationComponent.css";
@@ -45,6 +45,7 @@ const App = () => {
             <Route path="reset/:token" element={<SuspenseWrapper><ResetPassword /></SuspenseWrapper>} />
           </Route>
 
+          <Route path="/upgrade" element={<SuspenseWrapper><UpgradePage /></SuspenseWrapper>} />
           <Route path="/unauthorized" element={<SuspenseWrapper><Unauthorized /></SuspenseWrapper>} />
 
           {TenantRoutes({ profileUser })}

@@ -16,6 +16,8 @@ const razorpay = require("../config/razorpay");
 const HardwareAsset = require("../models/Asset");
 const SoftwareAsset = require("../models/SoftwareAsset");
 const User = require("../models/User");
+const resolveSubscriptionState = require("../utils/subscriptionStateResolver");
+const pricingTiers = require("../config/pricingTiers");
 router.post(
   "/preview-price",
   authenticateToken(),
@@ -27,83 +29,108 @@ router.post(
   authenticateToken(),
   createCheckout
 );
-router.get("/me", authenticateToken(), requireActiveSubscription, async (req, res) => {
+router.get("/me", authenticateToken(), async (req, res) => {
+  try {
+    const now = new Date();
 
-  const now = new Date();
+    const subscription = await Subscription.findOne({
+      organizationId: req.user.organizationId
+    });
 
-  const daysRemaining = req.subscription.currentEnd
-    ? Math.max(
-        0,
-        Math.ceil(
-          (req.subscription.currentEnd - now) /
-          (1000 * 60 * 60 * 24)
+    // 🔥 Resolve state
+    const state = resolveSubscriptionState(subscription);
+
+    // 🔥 Safe defaults if no subscription
+    const tierConfig = subscription
+      ? pricingTiers.find(t => t.key === subscription.tier)
+      : null;
+
+    const currentEnd = subscription?.currentEnd || null;
+
+    const daysRemaining = currentEnd
+      ? Math.max(
+          0,
+          Math.ceil((currentEnd - now) / (1000 * 60 * 60 * 24))
         )
-      )
-    : null;
+      : null;
 
-  const timeRemainingMs = req.subscription.currentEnd
-    ? Math.max(0, req.subscription.currentEnd - now)
-    : null;
+    const timeRemainingMs = currentEnd
+      ? Math.max(0, currentEnd - now)
+      : null;
 
+    /* -------------------------
+       USAGE CALCULATION
+    ------------------------- */
 
-  /* -------------------------
-     USAGE CALCULATION
-  ------------------------- */
+    const orgId = subscription?.organizationId;
 
-  const hardwareCount = await HardwareAsset.countDocuments({
-    organizationId: req.subscription.organizationId
-  });
+    const hardwareCount = orgId
+      ? await HardwareAsset.countDocuments({ organizationId: orgId })
+      : 0;
 
-  const softwareCount = await SoftwareAsset.countDocuments({
-    organizationId: req.subscription.organizationId
-  });
+    const softwareCount = orgId
+      ? await SoftwareAsset.countDocuments({ organizationId: orgId })
+      : 0;
 
-  const adminCount = await User.countDocuments({
-    organizationId: req.subscription.organizationId,
-    role: "admin"
-  });
+    const adminCount = orgId
+      ? await User.countDocuments({
+          organizationId: orgId,
+          role: "admin"
+        })
+      : 0;
 
+    /* -------------------------
+       RESPONSE
+    ------------------------- */
 
-  res.json({
+    return res.json({
+      ...state,
 
-    tier: req.subscription.tier,
-    effectiveTier: req.effectiveTier,
-    status: req.subscription.status,
-    billingCycle: req.subscription.billingCycle,
-    currentEnd: req.subscription.currentEnd,
-    daysRemaining,
-    timeRemainingMs,
+      tier: subscription?.tier || null,
+      effectiveTier: tierConfig?.name || null,
+      status: subscription?.status || "none",
+      billingCycle: subscription?.billingCycle || null,
+      currentEnd,
 
-    pendingUpgrade: req.subscription.pendingUpgrade || null,
+      daysRemaining,
+      timeRemainingMs,
 
-    /* PLAN LIMITS */
-    limits: {
-      hardwareAssets:
-        req.tierConfig.hardwareAssets === "unlimited"
-          ? Infinity
-          : req.tierConfig.hardwareAssets,
+      pendingUpgrade: subscription?.pendingUpgrade || null,
 
-      softwareAssets:
-        req.tierConfig.softwareAssets === "unlimited"
-          ? Infinity
-          : req.tierConfig.softwareAssets,
+      /* PLAN LIMITS */
+      limits: {
+        hardwareAssets:
+          tierConfig?.hardwareAssets === "unlimited"
+            ? Infinity
+            : tierConfig?.hardwareAssets || 0,
 
-      admins:
-        req.tierConfig.admins === "unlimited"
-          ? Infinity
-          : req.tierConfig.admins
-    },
+        softwareAssets:
+          tierConfig?.softwareAssets === "unlimited"
+            ? Infinity
+            : tierConfig?.softwareAssets || 0,
 
-    /* CURRENT USAGE */
-    usage: {
-      hardwareAssets: hardwareCount,
-      softwareAssets: softwareCount,
-      admins: adminCount
-    },
+        admins:
+          tierConfig?.admins === "unlimited"
+            ? Infinity
+            : tierConfig?.admins || 0
+      },
 
-    isTrial: req.subscription.status === "trialing"
+      /* CURRENT USAGE */
+      usage: {
+        hardwareAssets: hardwareCount,
+        softwareAssets: softwareCount,
+        admins: adminCount
+      },
 
-  });
+      isTrial: subscription?.status === "trialing"
+    });
+
+  } catch (err) {
+    console.error("Subscription /me error:", err);
+    return res.status(500).json({
+      error: "Failed to fetch subscription details"
+    });
+  }
 });
 router.post(
   "/verify-payment",
@@ -113,7 +140,6 @@ router.post(
 router.post(
   "/cancel-auto-pay",
   authenticateToken(),
-  requireActiveSubscription,
   cancelAutoPay
 );
 

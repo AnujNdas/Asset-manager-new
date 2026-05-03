@@ -6,20 +6,22 @@ const SubscriptionContext = createContext();
 export const SubscriptionProvider = ({ children }) => {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [expired, setExpired] = useState(false);
 
   const fetchSubscription = async () => {
     try {
       const data = await getMySubscription();
+
+      // ✅ Always store response (even expired)
       setSubscription(data);
-      setExpired(false);
+
     } catch (err) {
-      if (err.response?.status === 402) {
-        setExpired(true);
-        setSubscription(null);
-      } else {
-        console.error("Subscription fetch failed", err);
-      }
+      console.error("Subscription fetch failed", err);
+
+      // fallback safe state
+      setSubscription({
+        access: { hasAccess: false, reason: "network_error" },
+        lifecycle: { isExpired: true }
+      });
     } finally {
       setLoading(false);
     }
@@ -31,7 +33,11 @@ export const SubscriptionProvider = ({ children }) => {
 
   return (
     <SubscriptionContext.Provider
-      value={{ subscription, loading, expired, refreshSubscription: fetchSubscription }}
+      value={{
+        subscription,
+        loading,
+        refreshSubscription: fetchSubscription
+      }}
     >
       {children}
     </SubscriptionContext.Provider>

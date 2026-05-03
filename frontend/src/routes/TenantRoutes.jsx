@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 
 import TenantLayout from "../layout/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
-
+import SubscriptionGate from "../Components/SubscriptionGate";
 const Dashboard = lazy(() => import("../Pages/AdminDashboard"));
 const AssetCapture = lazy(() => import("../Pages/AssetCapture"));
 const Inventory = lazy(() => import("../Pages/Inventory"));
@@ -21,33 +21,44 @@ const InstanceTracking = lazy(() => import("../Pages/InstanceTracking"))
 const TrackInstance = lazy(() => import("../Pages/TrackInstance"));
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
-    <Route element={<TenantLayout profileUser={profileUser} />}>
 
-      <Route
-        element={
-          <Suspense fallback={<div className="page-loader">Loading...</div>}>
-            <Outlet />
-          </Suspense>
-        }
-      >
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/assetCapture" element={<AssetCapture />} />
-        <Route path="/inventory" element={<Inventory />} />
-        <Route path="/setting/*" element={<Setting />} />
-        <Route path="/classification/*" element={<Classification />} />
-        <Route path="/misreport" element={<MisReport />} />
-        <Route path="/scanner" element={<AssetScanner />} />
-        <Route path="/assignment" element={<AssignmentPage />} />
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="/employee" element={<EmployeePage />} />
-        <Route path="/subscription" element={<Subscription />} />
-        <Route path="/instance-assets" element={<AssetInstance />} />
-        <Route path="/create-instances/:assetId" element={<CreateInstance />} />  
-        <Route path="/tracking" element={<InstanceTracking />} />  
-        <Route path="/track/:id" element={<TrackInstance />} />
+    {/* ✅ Accessible even if expired */}
+    <Route element={<TenantLayout profileUser={profileUser} />}>
+      <Route path="/subscription" element={<Subscription />} />
+    </Route>
+
+    {/* 🔒 Protected by subscription */}
+    <Route element={<SubscriptionGate />}>
+
+      <Route element={<TenantLayout profileUser={profileUser} />}>
+
+        <Route
+          element={
+            <Suspense fallback={<div className="page-loader">Loading...</div>}>
+              <Outlet />
+            </Suspense>
+          }
+        >
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/assetCapture" element={<AssetCapture />} />
+          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/setting/*" element={<Setting />} />
+          <Route path="/classification/*" element={<Classification />} />
+          <Route path="/misreport" element={<MisReport />} />
+          <Route path="/scanner" element={<AssetScanner />} />
+          <Route path="/assignment" element={<AssignmentPage />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/employee" element={<EmployeePage />} />
+          <Route path="/instance-assets" element={<AssetInstance />} />
+          <Route path="/create-instances/:assetId" element={<CreateInstance />} />  
+          <Route path="/tracking" element={<InstanceTracking />} />  
+          <Route path="/track/:id" element={<TrackInstance />} />
+        </Route>
+
       </Route>
 
     </Route>
+
   </Route>
 );
 
