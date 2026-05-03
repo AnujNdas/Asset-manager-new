@@ -20,8 +20,8 @@
   font-size: 12px;
 }
 
-.status.assigned { background: #DFD0B8; }
-.status.free { background: #10b981; }
+.status.assigned { background: #DFD0B8;color: #222831; }
+.status.free { background: #10b981;color: #222831; }
 
 /* KPI */
 .kpi-strip {

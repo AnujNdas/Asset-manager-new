@@ -179,6 +179,7 @@
   font-size: 14px;
   transition: all 0.2s ease;
   color: #DFD0B8;
+  border: none;
 }
 /* ===== Modal Buttons ===== */
 .modal-buttons {
@@ -222,7 +223,7 @@
 }
 
 .edit-btn {
-  background: #948979;
+  background: #DFD0B8;
   color: #222831;
   border: none;
   padding: 6px 10px;

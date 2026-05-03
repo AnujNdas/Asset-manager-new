@@ -155,7 +155,6 @@ useEffect(() => {
       <FontAwesomeIcon icon={faSearch} /> Search {title}
     </label> */}
 
-    <div className="input-with-button">
       <input
         className="category_search_input"
         value={searchValue}
@@ -170,7 +169,6 @@ useEffect(() => {
       >
         <FontAwesomeIcon icon={faSearch} />
       </button> */}
-    </div>
   </div>
 
   {/* ADD SECTION */}

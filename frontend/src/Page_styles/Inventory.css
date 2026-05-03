@@ -522,7 +522,8 @@
   /* background: #393E46; */
   color: #DFD0B8;
   transition: all 0.2s ease;
-  background: #222831;
+  background: #393E46;
+  border: none;
 }
 .modal-actions {
   display: flex;
