@@ -19,13 +19,12 @@
 
 .category-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
-
 .category-column {
   background: #222831;
-  padding: 20px;
+  padding: clamp(14px, 2vw, 20px);
   border-radius: 16px;
 }
 
@@ -36,9 +35,36 @@
 
 .category-card {
   background: #393E46;
-  padding: 12px 16px;
+  padding: clamp(10px, 2vw, 14px);
   margin-bottom: 10px;
   border-radius: 10px;
   color: #DFD0B8;
   transition: 0.2s;
+}
+
+.category-card * {
+  word-break: break-word;
+}
+@media (max-width: 768px) {
+  .search-input {
+    max-width: 100%;
+  }
+  
+}
+@media (max-width: 480px) {
+  .category-container {
+    padding: 12px;
+  }
+
+  .category-column {
+    border-radius: 12px;
+  }
+
+  .category-column h2 {
+    font-size: 16px;
+  }
+
+  .category-card {
+    font-size: 14px;
+  }
 }

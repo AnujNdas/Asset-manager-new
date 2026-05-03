@@ -522,6 +522,7 @@
   /* background: #393E46; */
   color: #DFD0B8;
   transition: all 0.2s ease;
+  background: #393E46;
 }
 .modal-actions {
   display: flex;
@@ -715,6 +716,7 @@
 
 .grid-2 p {
   font-size: 13px;
+  color: #DFD0B8;
 }
 
 .grid-2 span {
