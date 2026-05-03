@@ -169,8 +169,7 @@
 
 /* Modal Inputs */
 .modal input,
-.modal select
-.modal textarea {
+.modal select {
   width: 100%;
   padding: 10px 12px;
   margin-bottom: 14px;
