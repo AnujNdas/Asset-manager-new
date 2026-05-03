@@ -294,7 +294,7 @@ Swal.fire({
         <div className="form-card">
           <div className="capture-header">
             <h3>Software Details</h3>
-            <div>
+            <div className="group-buttons">
 
             <button className="import-btn" onClick={() => setShowImport(true)}>
               ⬆ Import Excel

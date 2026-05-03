@@ -1,10 +1,9 @@
 .instance-card-v2 {
-  background: linear-gradient(145deg, #1f2937, #111827);
+  background: linear-gradient(145deg, #222831, #393E46);
   border-radius: 18px;
   padding: 16px;
   margin-bottom: 16px;
-  color: #e5e7eb;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  color: #DFD0B8;
 }
 
 /* HEADER */
@@ -14,10 +13,6 @@
   align-items: center;
 }
 
-.sub {
-  font-size: 12px;
-  opacity: 0.7;
-}
 
 .status {
   padding: 6px 10px;
@@ -25,13 +20,13 @@
   font-size: 12px;
 }
 
-.status.assigned { background: #ef4444; }
+.status.assigned { background: #DFD0B8; }
 .status.free { background: #10b981; }
 
 /* KPI */
 .kpi-strip {
   display: grid;
-  grid-template-columns: repeat(4,1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 10px;
   margin: 14px 0;
 }
@@ -48,12 +43,12 @@
 /* GRID */
 .card-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
 }
 
 .card-box {
-  background: rgba(255,255,255,0.04);
+  background: #393E46;
   padding: 12px;
   border-radius: 12px;
 }
@@ -62,7 +57,9 @@
   margin-bottom: 6px;
   color: #948979;
 }
-
+.card-box p {
+  color: #DFD0B8;
+}
 .card-box span {
   opacity: 0.7;
   color: #948979;
@@ -72,19 +69,75 @@
   text-align: center;
 }
 
-.card-box.highlight {
-  border-left: 3px solid #3b82f6;
-}
-
 /* FOOTER */
 .card-footer {
   margin-top: 10px;
   text-align: right;
+  display: flex;
+  justify-content: flex-end;
 }
 
+
+@media (max-width: 480px) {
+  .card-footer {
+    justify-content: stretch;
+  }
+
+  .card-footer button {
+    width: 100%;
+  }
+}
+.card-box img {
+  max-width: 100%;
+  height: auto;
+}
 .card-footer button {
-  background: #222831;
-  color: #DFD0B8;
+  background: #DFD0B8;
+  color: #222831;
   padding: 8px 14px;
   border-radius: 8px;
+  border: none;
+}
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .status {
+    align-self: flex-end;
+  }
+}
+.instance-card-v2 h3 {
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+.sub {
+  font-size: clamp(11px, 1.5vw, 12px);
+}
+@media (max-width: 480px) {
+  .instance-card-v2 {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .card-box {
+    padding: 10px;
+  }
+
+  .kpi-strip div {
+    padding: 8px;
+  }
+
+  .card-box h5 {
+    font-size: 13px;
+  }
+
+  .card-box p {
+    font-size: 12px;
+  }
+}
+.instance-card-v2 * {
+  word-break: break-word;
 }

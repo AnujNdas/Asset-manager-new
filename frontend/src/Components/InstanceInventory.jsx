@@ -119,6 +119,15 @@ const InstanceCard = ({
               </div>
             </>
           )}
+                    {/* ASSIGNMENT */}
+                    {isAssigned && (
+            <div className="card-box highlight">
+              <h5>Assigned To</h5>
+              <p>{assignment.employee?.name}</p>
+              <p>{assignment.department?.name}</p>
+              <p>{assignment.location}</p>
+            </div>
+          )}
         </div>
 
         {/* RIGHT COLUMN */}
@@ -147,15 +156,8 @@ const InstanceCard = ({
             </div>
           )}
 
-          {/* ASSIGNMENT */}
-          {isAssigned && (
-            <div className="card-box highlight">
-              <h5>Assigned To</h5>
-              <p>{assignment.employee?.name}</p>
-              <p>{assignment.department?.name}</p>
-              <p>{assignment.location}</p>
-            </div>
-          )}
+
+
         </div>
       </div>
 

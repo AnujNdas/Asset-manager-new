@@ -352,7 +352,7 @@ const handleImport = async () => {
         <div className="form-card">
           <div className="capture-header">
             <h3>Hardware Details</h3>
-            <div>
+            <div className="group-buttons">
             <button className="import-btn" onClick={() => setShowImport(true)}>
               ⬆ Import Excel
             </button>
