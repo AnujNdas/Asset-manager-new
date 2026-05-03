@@ -138,7 +138,6 @@
   border-radius: 16px;
 
   width: 100%;
-  max-width: 480px;
   max-height: 90vh;
   overflow-y: auto;
 
@@ -170,7 +169,8 @@
 
 /* Modal Inputs */
 .modal input,
-.modal select {
+.modal select
+.modal textarea {
   width: 100%;
   padding: 10px 12px;
   margin-bottom: 14px;

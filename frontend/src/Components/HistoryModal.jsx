@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getInstanceHistory } from "../Services/ApiServices";
-
+import Loader from "./Loader";
 const HistoryModal = ({ instance, onClose }) => {
   const [history, setHistory] = useState([]);
   const [summary, setSummary] = useState(null);
@@ -22,20 +22,27 @@ const fetchHistory = async () => {
     setLoading(false);
   }
 };
-  useEffect(() => {
+useEffect(() => {
+  if (instance?._id) {
+    setLoading(true);
     fetchHistory();
-  }, []);
-
-  if (loading) return <div className="modal">Loading...</div>;
+  }
+}, [instance]);
 
   return (
-    <div className="modal-overlay">
-      <div className="modal history-modal">
+<div className="modal-overlay">
+  <div className="modal history-modal">
 
+    {loading ? (
+      <div className="loader-wrapper">
+        <Loader />   {/* your existing loader */}
+      </div>
+    ) : (
+      <>
         {/* HEADER */}
         <h2>Asset History</h2>
 
-        {/* ✅ SUMMARY PANEL */}
+        {/* SUMMARY */}
         {summary && (
           <div className="history-summary">
             <p><strong>Instance:</strong> {summary.instanceCode}</p>
@@ -46,67 +53,61 @@ const fetchHistory = async () => {
           </div>
         )}
 
-        {/* TABLE HEADER */}
-{/* TABLE HEADER */}
-<div className="history-table">
-  <div className="history-header">
-    <span>Warranty</span>
-    <span>Maintenance</span>
-    <span>Status</span>
-    <span>Location</span>
-    <span>Assigned</span>
-    <span>Service</span>
-    <span>Score</span>
-    <span>Event</span>
-    <span>Date</span>
-  </div>
+        {/* TABLE */}
+        <div className="history-table">
+          <div className="history-header">
+            <span>Warranty</span>
+            <span>Maintenance</span>
+            <span>Status</span>
+            <span>Location</span>
+            <span>Assigned</span>
+            <span>Service</span>
+            <span>Score</span>
+            <span>Event</span>
+            <span>Date</span>
+          </div>
 
-  {/* TABLE BODY */}
-  <div className="history-body">
-    {history?.length ? (
-      history.map((item, index) => (
-        <div key={index} className="history-row">
+          <div className="history-body">
+            {history?.length ? (
+              history.map((item, index) => (
+                <div key={index} className="history-row">
+                  <span>{item.warrantyDate || "-"}</span>
 
-          <span>{item.warrantyDate || "-"}</span>
+                  <span>
+                    {item.nextMaintenanceDate || "-"}
+                    <small>{item.maintenanceStatus || ""}</small>
+                  </span>
 
-          <span>
-            {item.nextMaintenanceDate || "-"}
-            <small>{item.maintenanceStatus || ""}</small>
-          </span>
+                  <span>{item.status || item.action}</span>
+                  <span>{item.location || "-"}</span>
+                  <span>{item.assignedPerson || "-"}</span>
+                  <span>{item.activeService || "-"}</span>
+                  <span>{item.activeScore ?? "-"}</span>
 
-          <span>{item.status || item.action}</span>
+                  <span className="event-cell">
+                    {item.type === "assignment"
+                      ? `${item.action} (${item.deviceName || "Device"})`
+                      : item.notes || "-"}
+                  </span>
 
-          <span>{item.location || "-"}</span>
-
-          <span>{item.assignedPerson || "-"}</span>
-
-          <span>{item.activeService || "-"}</span>
-
-          <span>{item.activeScore ?? "-"}</span>
-
-          <span className="event-cell">
-            {item.type === "assignment"
-              ? `${item.action} (${item.deviceName || "Device"})`
-              : item.notes || "-"}
-          </span>
-
-          <span>{item.recordDate}</span>
-
+                  <span>{item.recordDate}</span>
+                </div>
+              ))
+            ) : (
+              <div className="empty">No history available</div>
+            )}
+          </div>
         </div>
-      ))
-    ) : (
-      <div className="empty">No history available</div>
-    )}
-  </div>
-</div>
 
         {/* ACTION */}
         <div className="modal-actions">
           <button onClick={onClose} className="btn-cancel">Close</button>
         </div>
+      </>
+    )}
 
-      </div>
-    </div>
+  </div>
+</div>
   );
 };
 
