@@ -6,32 +6,32 @@ const UpgradePage = () => {
   const { subscription, loading } = useSubscription();
   const navigate = useNavigate();
 
-  if (loading) return <div>Loading...</div>;
-
+  
   const reason = subscription?.access?.reason;
-
+  
   /* 🔥 Optional: auto redirect after few seconds */
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate("/subscription");
-    }, 5000); // 5 sec delay
-
-    return () => clearTimeout(timer);
-  }, [navigate]);
-
-  const getMessage = () => {
-    switch (reason) {
-      case "plan_expired":
-        return "Your subscription has expired.";
-      case "payment_overdue":
-        return "Your payment is overdue. Please renew to continue.";
-      case "no_subscription":
-        return "You don't have an active subscription.";
-      default:
-        return "Access to this feature requires a subscription.";
-    }
-  };
-
+      const timer = setTimeout(() => {
+          navigate("/subscription");
+        }, 5000); // 5 sec delay
+        
+        return () => clearTimeout(timer);
+    }, [navigate]);
+    
+    const getMessage = () => {
+        switch (reason) {
+            case "plan_expired":
+                return "Your subscription has expired.";
+                case "payment_overdue":
+                    return "Your payment is overdue. Please renew to continue.";
+                    case "no_subscription":
+                        return "You don't have an active subscription.";
+                        default:
+                            return "Access to this feature requires a subscription.";
+                        }
+                    };
+                    
+if (loading) return <div>Loading...</div>;
   return (
     <div style={styles.container}>
       <div style={styles.card}>
