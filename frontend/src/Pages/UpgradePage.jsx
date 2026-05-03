@@ -63,10 +63,10 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "#f9fafb",
+    background: "#393E46",
   },
   card: {
-    background: "#fff",
+    background: "#222831",
     padding: "40px",
     borderRadius: "12px",
     textAlign: "center",
@@ -82,15 +82,15 @@ const styles = {
   },
   subtext: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#948979",
     marginBottom: "20px",
   },
   button: {
     padding: "10px 20px",
     border: "none",
     borderRadius: "8px",
-    background: "#6366f1",
-    color: "#fff",
+    background: "#DFD0B8",
+    color: "#222831",
     cursor: "pointer",
   },
 };

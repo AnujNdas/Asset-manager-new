@@ -161,7 +161,10 @@
   width: 100%;
   margin-top: 20px;
 }
-
+.cancel-autopay {
+  background: #222831;
+  color: #DFD0B8;
+}
 .btn-primary {
   background: #DFD0B8;
   color: #222831;
@@ -174,8 +177,8 @@
 }
 
 .btn.secondary {
-  background: #e5e7eb;
-  color: #374151;
+  background: #948979;
+  color: #222831;
 }
 
 .btn.current {
@@ -191,8 +194,8 @@
   border-radius: 14px;
 }
 .upgrade-btn{
-  background: #2563eb;
-  color: rgb(255, 255, 255);
+  background: #DFD0B8;
+  color: #222831;
   font-weight: 600;
   margin-top:20px;
   padding:12px 24px;
@@ -205,8 +208,8 @@
   position: absolute;
   top: -10px;
   right: 15px;
-  background: linear-gradient(135deg,#16a34a,#22c55e);
-  color: white;
+  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
+  color: #222831;
   font-size: 12px;
   font-weight: 600;
   padding: 4px 10px;
@@ -248,7 +251,7 @@
 
 .label{
   font-size:12px;
-  color:#777;
+  color:#948979;
   font-weight:500;
   text-transform:uppercase;
   letter-spacing:.4px;
@@ -259,7 +262,7 @@
 .value{
   font-size:16px;
   font-weight:600;
-  color:#222;
+  color:#DFD0B8;
 }
 
 /* Status Colors */
@@ -311,8 +314,7 @@
   padding:18px 22px;
   border-radius:10px;
 
-  background:#f8fafc;
-  border:1px solid #e5e7eb;
+  background:#222831;
 }
 
 /* Each metric */
@@ -384,7 +386,7 @@
   font-size:16px;
   font-weight:600;
   margin-bottom:15px;
-  color:#111827;
+  color:#DFD0B8;
 }
 
 /* usage grid */
@@ -398,8 +400,7 @@
 /* usage card */
 
 .usage-card{
-  background:#f9fafb;
-  border:1px solid #e5e7eb;
+  background:#222831;
   border-radius:10px;
   padding:16px;
   display:flex;
@@ -411,7 +412,7 @@
 
 .usage-label{
   font-size:13px;
-  color:#6b7280;
+  color:#948979;
 }
 
 /* usage numbers */
@@ -419,7 +420,7 @@
 .usage-value{
   font-size:16px;
   font-weight:600;
-  color:#111827;
+  color:#DFD0B8;
 }
 
 /* progress bar */
@@ -449,8 +450,8 @@
 /* feature item */
 
 .feature-pill{
-  background:#eef2ff;
-  color:#4338ca;
+  background:#222831;
+  color:#DFD0B8;
   padding:8px 12px;
   border-radius:8px;
   font-size:13px;

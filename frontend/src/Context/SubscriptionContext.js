@@ -30,7 +30,27 @@ export const SubscriptionProvider = ({ children }) => {
   useEffect(() => {
     fetchSubscription();
   }, []);
+  useEffect(() => {
+  if (!subscription?.currentEnd) return;
 
+  const now = Date.now();
+  const expiryTime = new Date(subscription.currentEnd).getTime();
+
+  const timeLeft = expiryTime - now;
+
+  if (timeLeft <= 0) {
+    setExpired(true);
+    return;
+  }
+
+  // 🔥 auto trigger when time hits
+  const timer = setTimeout(() => {
+    setExpired(true);
+  }, timeLeft);
+
+  return () => clearTimeout(timer);
+
+}, [subscription]);
   return (
     <SubscriptionContext.Provider
       value={{
