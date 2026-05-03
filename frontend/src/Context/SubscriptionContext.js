@@ -6,7 +6,7 @@ const SubscriptionContext = createContext();
 export const SubscriptionProvider = ({ children }) => {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [expired , serExpired] = useState(false)
   const fetchSubscription = async () => {
     try {
       const data = await getMySubscription();
