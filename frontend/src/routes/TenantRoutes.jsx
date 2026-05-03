@@ -22,23 +22,21 @@ const TrackInstance = lazy(() => import("../Pages/TrackInstance"));
 const TenantRoutes = ({ profileUser }) => (
   <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
 
-    {/* ✅ Accessible even if expired */}
+    {/* ✅ Single Layout */}
     <Route element={<TenantLayout profileUser={profileUser} />}>
-      <Route path="/subscription" element={<Subscription />} />
-    </Route>
 
-    {/* 🔒 Protected by subscription */}
-    <Route element={<SubscriptionGate />}>
+      <Route
+        element={
+          <Suspense fallback={<div className="page-loader">Loading...</div>}>
+            <Outlet />
+          </Suspense>
+        }
+      >
+        {/* ✅ PUBLIC (within auth, but no subscription needed) */}
+        <Route path="/subscription" element={<Subscription />} />
 
-      <Route element={<TenantLayout profileUser={profileUser} />}>
-
-        <Route
-          element={
-            <Suspense fallback={<div className="page-loader">Loading...</div>}>
-              <Outlet />
-            </Suspense>
-          }
-        >
+        {/* 🔒 SUBSCRIPTION PROTECTED */}
+        <Route element={<SubscriptionGate />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/assetCapture" element={<AssetCapture />} />
           <Route path="/inventory" element={<Inventory />} />
