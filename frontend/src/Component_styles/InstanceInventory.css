@@ -37,9 +37,12 @@
 }
 
 .kpi-strip div {
-  background: rgba(255,255,255,0.05);
+  background: #393E46;
   padding: 10px;
   border-radius: 10px;
+}
+.kpi-strip div p {
+    color: #948979;
 }
 
 /* GRID */
@@ -57,10 +60,12 @@
 
 .card-box h5 {
   margin-bottom: 6px;
+  color: #948979;
 }
 
 .card-box span {
   opacity: 0.7;
+  color: #948979;
 }
 
 .card-box.center {
@@ -78,7 +83,8 @@
 }
 
 .card-footer button {
-  background: #3b82f6;
+  background: #222831;
+  color: #DFD0B8;
   padding: 8px 14px;
   border-radius: 8px;
 }

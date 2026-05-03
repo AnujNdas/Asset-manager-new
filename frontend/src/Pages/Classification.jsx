@@ -134,8 +134,8 @@ const Classification = () => {
 
           {exportOpen && (
             <div className="export-dropdown">
-              <button onClick={() => handleExport("csv")}>Export as CSV</button>
-              <button onClick={() => handleExport("excel")}>
+              <button onClick={() => handleExport("csv")} className="edit-btn">Export as CSV</button>
+              <button onClick={() => handleExport("excel")} className="edit-btn">
                 Export as Excel
               </button>
             </div>

@@ -193,8 +193,8 @@
     font-weight: 600;
   }
 .edit-btn {
-  background: #2563eb;
-  color: white;
+  background: #DFD0B8;
+  color: #222831;
   border: none;
   padding: 6px 10px;
   border-radius: 4px;
@@ -202,8 +202,8 @@
 }
 
 .delete-btn {
-  background: #dc2626;
-  color: white;
+  background: #393E46;
+  color: #DFD0B8;
   border: none;
   padding: 6px 10px;
   border-radius: 4px;
