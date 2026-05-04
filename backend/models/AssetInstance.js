@@ -176,5 +176,5 @@ software: {
 },
 { timestamps: true }
 );
-AssetInstanceSchema.index({ organizationId: 1, assetType: 1 });
+assetInstanceSchema.index({ organizationId: 1, assetType: 1 });
 module.exports = mongoose.model("AssetInstance", assetInstanceSchema);
