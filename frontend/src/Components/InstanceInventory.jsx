@@ -99,7 +99,7 @@ const InstanceCard = ({
                 <p><span>Purchase:</span> {formatDate(hw.purchaseDate)}</p>
                 <p><span>Maintenance:</span> {formatDate(hw.nextMaintenanceDate)}</p>
                 <p><span>Warranty:</span> {formatDate(hw.warrantyExpiry)}</p>
-                <p><span>Insurance:</span> {formatDate(hw.Insurance || "N/A")}</p>
+                <p><span>Insurance:</span> {formatDate(hw.InsuranceExpiry || "N/A")}</p>
               </div>
             </>
           )}
@@ -163,12 +163,12 @@ const InstanceCard = ({
     <div className="coverage-tags">
       {hw.coverageType?.length ? (
         hw.coverageType.map((type, i) => (
-          <span key={i} className="tag">
+          <div key={i} className="tag">
             {type}
-          </span>
+          </div>
         ))
       ) : (
-        <span className="no-data">N/A</span>
+        <div className="no-data">N/A</div>
       )}
     </div>
 
