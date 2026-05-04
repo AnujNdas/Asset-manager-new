@@ -77,7 +77,39 @@
   display: flex;
   justify-content: flex-end;
 }
+/* Container for tags */
+.coverage-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
 
+/* Individual tag */
+.tag {
+  background-color: #DFD0B8;
+  color: #222831;
+  padding: 4px 10px;
+  border-radius: 999px; /* pill shape */
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Optional: subtle hover (keeps it modern) */
+.tag:hover {
+  filter: brightness(0.95);
+  cursor: default;
+}
+
+/* Fallback text */
+.no-data {
+  font-size: 12px;
+  color: #888;
+}
 
 @media (max-width: 480px) {
   .card-footer {

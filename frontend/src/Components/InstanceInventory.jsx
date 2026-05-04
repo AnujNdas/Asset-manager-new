@@ -99,6 +99,7 @@ const InstanceCard = ({
                 <p><span>Purchase:</span> {formatDate(hw.purchaseDate)}</p>
                 <p><span>Maintenance:</span> {formatDate(hw.nextMaintenanceDate)}</p>
                 <p><span>Warranty:</span> {formatDate(hw.warrantyExpiry)}</p>
+                <p><span>Insurance:</span> {formatDate(hw.Insurance || "N/A")}</p>
               </div>
             </>
           )}
@@ -141,7 +142,7 @@ const InstanceCard = ({
               <>
                 <p>Maintenance: {getCost(hw.costs?.maintenanceCost)}</p>
                 <p>Warranty: {getCost(hw.costs?.warrantyRenewalCost)}</p>
-                <p>Insurance: {getCost(hw.costs?.insuranceCost)}</p>
+                <p>Insurance: {getCost(hw.costs?.insuranceCost || "N/A")}</p>
               </>
             ) : (
               <p>Renewal: {getCost(sw.costs?.renewalCost)}</p>
@@ -155,6 +156,24 @@ const InstanceCard = ({
               <img src={qrUrl} alt="QR" />
             </div>
           )}
+{isHardware && (
+  <div className="card-box">
+    <h5>Coverage Type</h5>
+
+    <div className="coverage-tags">
+      {hw.coverageType?.length ? (
+        hw.coverageType.map((type, i) => (
+          <span key={i} className="tag">
+            {type}
+          </span>
+        ))
+      ) : (
+        <span className="no-data">N/A</span>
+      )}
+    </div>
+
+  </div>
+)}
 
 
 
