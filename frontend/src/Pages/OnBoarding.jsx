@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 import axiosInstance from "../Services/axiosInstance";
 import "../Page_styles/OnBoarding.css";
 const Onboarding = () => {
@@ -38,7 +38,7 @@ const handleSubmit = async () => {
       })
     );
 
-    await Swal.fire(
+    await ThemeSwal.fire(
       "Welcome!",
       "Your workspace has been set up successfully.",
       "success"
@@ -47,7 +47,7 @@ const handleSubmit = async () => {
     navigate("/");
   } catch (err) {
     console.error(err);
-    Swal.fire("Error", "Onboarding failed. Please try again.", "error");
+    ThemeSwal.fire("Error", "Onboarding failed. Please try again.", "error");
   }
 };
 

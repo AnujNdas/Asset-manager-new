@@ -11,7 +11,7 @@
       bulkUploadInstances
     } from "../Services/ApiServices";
     import Select from "react-select";
-    import Swal from "sweetalert2";
+    import ThemedSwal from "../utils/SwalTheme";
     import { getErrorMessage } from "../utils/getErrorMessage";
     const currencyOptions = [
       "INR",
@@ -233,7 +233,7 @@
           setInstances(rows);
         }catch (err) {
   console.error("Fetch error:", err);
-  Swal.fire("Error", getErrorMessage(err, "Failed to load asset data"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to load asset data"), "error");
 } finally {
           setLoading(false);
         }
@@ -351,13 +351,13 @@
       });
 
 if (res.success) {
-  Swal.fire("Success", `✅ ${res.inserted} imported, ${res.skipped} skipped`, "success");
+  ThemeSwal.fire("Success", `✅ ${res.inserted} imported, ${res.skipped} skipped`, "success");
 } else {
-  Swal.fire("Error", res.message || "Import failed", "error");
+  ThemeSwal.fire("Error", res.message || "Import failed", "error");
 }
     } catch (err) {
   console.error("Import error:", err);
-  Swal.fire("Error", getErrorMessage(err, "Failed to import Excel file"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to import Excel file"), "error");
 } finally {
       setLoading(false);
     }
@@ -532,12 +532,12 @@ if (isSoftware && !inst.licenseNumber) {
           });
           console.log("Created instances:", payload);
 
-          Swal.fire("Success", "Instances created successfully", "success");
+          ThemeSwal.fire("Success", "Instances created successfully", "success");
           fetchData();
           navigate("/inventory")
         } catch (err) {
   console.error("Create instances error:", err);
-  Swal.fire("Error", getErrorMessage(err, "Failed to create instances"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to create instances"), "error");
 }finally {
           setLoading(false);
         }

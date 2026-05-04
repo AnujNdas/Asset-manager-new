@@ -1,6 +1,6 @@
 // ✅ src/Pages/AssignmentPage.jsx
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 import "../Page_styles/AssignmentPage.css";
 
 import {
@@ -94,7 +94,7 @@ const selectAsset = async (asset) => {
     setInstances(res.data || []);
     console.log(res)
   } catch (err) {
-  Swal.fire("Error", getErrorMessage(err, "Failed to load instances"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to load instances"), "error");
 }
 
   setSelectedInstances([]);
@@ -125,10 +125,10 @@ const selectAsset = async (asset) => {
   /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
     if (!selectedInstances.length) {
-      return Swal.fire("Select at least one instance");
+      return ThemeSwal.fire("Select at least one instance");
     }
     if (!assignmentData.deviceName || !assignmentData.serialNumber) {
-  return Swal.fire("Device info required");
+  return ThemeSwal.fire("Device info required");
 }
 const payload = selectedInstances.map(inst => ({
   assetId: selectedAsset._id,
@@ -152,11 +152,11 @@ const payload = selectedInstances.map(inst => ({
         assignments: payload
       });
 
-      Swal.fire("Success", "Instances assigned successfully", "success");
+      ThemeSwal.fire("Success", "Instances assigned successfully", "success");
 
       resetAll();
     }catch (err) {
-  Swal.fire("Error", getErrorMessage(err, "Assignment failed"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Assignment failed"), "error");
 } finally {
       setLoading(false);
     }

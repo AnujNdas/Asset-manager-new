@@ -1,0 +1,100 @@
+/* Container */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background: #222831;
+  padding: 10px;
+  border-radius: 10px;
+  gap: 6px;
+}
+
+/* Buttons */
+.pagination button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: #393E46;
+  color: #DFD0B8;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.pagination button:hover:not(:disabled) {
+  background: #948979;
+  color: #222831;
+}
+
+/* Active Page */
+.pagination button.active {
+  background: #DFD0B8;
+  color: #222831;
+  font-weight: 600;
+}
+
+/* Disabled */
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Dots (...) */
+.pagination .dots {
+  padding: 0 6px;
+  color: #948979;
+  font-size: 14px;
+}
+
+/* Prev / Next buttons */
+.pagination button:first-child,
+.pagination button:last-child {
+  font-weight: 500;
+  padding: 0 12px;
+}
+
+/* -------------------------
+   📱 MOBILE RESPONSIVE
+------------------------- */
+@media (max-width: 768px) {
+  .pagination {
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .pagination button {
+    min-width: 32px;
+    height: 32px;
+    font-size: 12px;
+    padding: 0 8px;
+  }
+
+  .pagination .dots {
+    font-size: 12px;
+  }
+}
+
+/* -------------------------
+   📱 SMALL DEVICES
+------------------------- */
+@media (max-width: 480px) {
+  .pagination {
+    gap: 3px;
+  }
+
+  .pagination button {
+    min-width: 28px;
+    height: 28px;
+    font-size: 11px;
+    padding: 0 6px;
+  }
+
+  /* Hide some buttons if needed (optional improvement) */
+  .pagination button:not(.active):not(:first-child):not(:last-child) {
+    opacity: 0.85;
+  }
+}

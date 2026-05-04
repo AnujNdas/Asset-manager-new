@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -85,7 +85,7 @@ useEffect(() => {
     e.preventDefault();
 
     if (!addValue.trim()) {
-      Swal.fire("Warning", "Name cannot be empty", "warning");
+      ThemeSwal.fire("Warning", "Name cannot be empty", "warning");
       return;
     }
 
@@ -95,7 +95,7 @@ useEffect(() => {
       setItems(prev => [newItem, ...prev]);
       setAddValue("");
 
-      Swal.fire({
+      ThemeSwal.fire({
         icon: "success",
         title: `${title} Added`,
         timer: 1200,
@@ -106,12 +106,12 @@ useEffect(() => {
         }
       });
     } catch (err) {
-      Swal.fire("Error", "Already exists", "error");
+      ThemeSwal.fire("Error", "Already exists", "error");
     }
   };
 
   const handleDelete = async (id, name) => {
-    const confirm = await Swal.fire({
+    const confirm = await ThemeSwal.fire({
       title: `Deactivate ${title}?`,
       text: `Deactivate "${name}"?`,
       icon: "warning",
@@ -131,7 +131,7 @@ useEffect(() => {
 
   const handleUpdate = async () => {
     if (!updatedName.trim()) {
-      Swal.fire("Warning", "Name cannot be empty", "warning");
+      ThemeSwal.fire("Warning", "Name cannot be empty", "warning");
       return;
     }
 

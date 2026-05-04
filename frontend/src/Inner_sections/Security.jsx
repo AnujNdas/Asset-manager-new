@@ -2,7 +2,7 @@ import React , { useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import "../Page_styles/Security.css"
-import Swal from "sweetalert2"
+import ThemedSwal from '../utils/SwalTheme'
 import AuthService from '../Services/AuthService'
 const Security = () => {
   const navigate = useNavigate()
@@ -12,7 +12,7 @@ const Security = () => {
 const handleResetData = async () => {
   try {
     // STEP 1: RESET keyword confirmation
-    const { value: confirmText } = await Swal.fire({
+    const { value: confirmText } = await ThemeSwal.fire({
       title: "Confirm System Reset",
       html: `
         <p style="font-size:14px;">
@@ -30,7 +30,7 @@ const handleResetData = async () => {
       cancelButtonColor: "#9e9e9e",
       preConfirm: (value) => {
         if (value !== "RESET") {
-          Swal.showValidationMessage("You must type RESET exactly");
+          ThemeSwal.showValidationMessage("You must type RESET exactly");
         }
         return value;
       }
@@ -41,7 +41,7 @@ const handleResetData = async () => {
     // STEP 2: FETCH RESET PREVIEW
     const previewRes = await AuthService.getResetPreview();
     console.log("Reset Preview:", previewRes);
-    await Swal.fire({
+    await ThemeSwal.fire({
       title: "Reset Preview",
       icon: "warning",
       html: `
@@ -67,7 +67,7 @@ const handleResetData = async () => {
     });
 
     // STEP 3: PASSWORD VERIFICATION
-    const { value: password } = await Swal.fire({
+    const { value: password } = await ThemeSwal.fire({
       title: "Verify Your Password",
       input: "password",
       inputPlaceholder: "Enter your current password",
@@ -81,7 +81,7 @@ const handleResetData = async () => {
       cancelButtonColor: "#9e9e9e",
       preConfirm: (value) => {
         if (!value) {
-          Swal.showValidationMessage("Password is required");
+          ThemeSwal.showValidationMessage("Password is required");
         }
         return value;
       }
@@ -90,19 +90,19 @@ const handleResetData = async () => {
     if (!password) return;
 
     // STEP 4: EXECUTE RESET
-    Swal.fire({
+    ThemeSwal.fire({
       title: "Resetting...",
       text: "Please wait while we reset your organization data.",
       allowOutsideClick: false,
       didOpen: () => {
-        Swal.showLoading();
+        ThemeSwal.showLoading();
       }
     });
 
     await AuthService.ResetSystemData(password);
 
     // STEP 5: SUCCESS
-    await Swal.fire({
+    await ThemeSwal.fire({
       title: "Reset Completed",
       text: "All organization data has been reset successfully.",
       icon: "success",
@@ -115,7 +115,7 @@ const handleResetData = async () => {
   } catch (error) {
     console.error("RESET FAILED:", error);
 
-    Swal.fire({
+    ThemeSwal.fire({
       title: "Reset Failed",
       text:
         error?.response?.data?.message ||
@@ -140,7 +140,7 @@ const handleResetData = async () => {
           }
         }
       );
-      Swal.fire({
+      ThemeSwal.fire({
       title: "Password Changed",
       text: "Password reset successful. Please login again.",
       icon: "success",
@@ -153,7 +153,7 @@ const handleResetData = async () => {
 
     setMessage(res.data.message);
   } catch (error) {
-    Swal.fire({
+    ThemeSwal.fire({
       title: "Error",
       text: error.response?.data?.error || "Error changing password",
       icon: "error",

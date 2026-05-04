@@ -5,7 +5,7 @@ import { Link, useNavigate , useSearchParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock, faPerson } from '@fortawesome/free-solid-svg-icons';
-import Swal from 'sweetalert2';
+import ThemedSwal from '../utils/SwalTheme';
 import AuthService from '../Services/AuthService';
 
 const Signup = () => {
@@ -28,12 +28,12 @@ useEffect(() => {
     e.preventDefault();
 
 if (!username || !email || !password) {
-  Swal.fire("Error", "All fields are required", "error");
+  ThemeSwal.fire("Error", "All fields are required", "error");
   return;
 }
 
 if (!strongPasswordRegex.test(password)) {
-  Swal.fire(
+  ThemeSwal.fire(
     "Weak Password",
     "Password must contain at least 8 characters including uppercase, lowercase, number, and special character.",
     "warning"
@@ -48,7 +48,7 @@ if (!strongPasswordRegex.test(password)) {
       const res = await AuthService.sendOtp(email);
       if (res.success) {
         // Step 2: Ask for OTP via SweetAlert
-        const { value: otp } = await Swal.fire({
+        const { value: otp } = await ThemeSwal.fire({
           title: "Email Verification",
           text: `Enter the 6-digit OTP sent to ${email}`,
           input: "text",
@@ -81,7 +81,7 @@ if (!strongPasswordRegex.test(password)) {
             console.log("VERIFY RESPONSE:", verifyRes);
 
 if (verifyRes.success && verifyRes.user) {
-  await Swal.fire({
+  await ThemeSwal.fire({
     title: "Account Created",
     text: "Let’s complete your profile to get started.",
     icon: "success",
@@ -110,7 +110,7 @@ localStorage.removeItem("inviteToken");
     navigate("/dashboard");
   }
 } else {
-  Swal.fire(
+  ThemeSwal.fire(
     "Error",
     verifyRes.error || "Signup failed",
     "error"
@@ -119,7 +119,7 @@ localStorage.removeItem("inviteToken");
 
 
         } catch (err) {
-          Swal.fire(
+          ThemeSwal.fire(
             "Error",
             err.response?.data?.error || "Something went wrong while verifying OTP",
             "error"
@@ -127,10 +127,10 @@ localStorage.removeItem("inviteToken");
         }
       }
     } else {
-      Swal.fire("Error", res.error || "Failed to send OTP", "error");
+      ThemeSwal.fire("Error", res.error || "Failed to send OTP", "error");
     }
   } catch (err) {
-    Swal.fire("Error", err.response?.data?.error || "Something went wrong", "error");
+    ThemeSwal.fire("Error", err.response?.data?.error || "Something went wrong", "error");
   } finally {
     setLoading(false);
   }

@@ -1,6 +1,6 @@
 // ✅ src/Pages/SoftwareAssetList.jsx
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   getSoftwareAssets,
@@ -194,11 +194,11 @@ const handleInstanceUpdate = async () => {
         : undefined,
     });
 
-    Swal.fire("Updated", "Instance updated", "success");
+    ThemeSwal.fire("Updated", "Instance updated", "success");
     setEditInstance(null);
     fetchAll();
 } catch (err) {
-  Swal.fire(
+  ThemeSwal.fire(
     "Error",
     getErrorMessage(err, "Failed to update instance"),
     "error"
@@ -225,7 +225,7 @@ const handleInstanceUpdate = async () => {
       setApiDone(true);
       setTimeout(() => setLoading(false), 400);
 } catch (err) {
-  Swal.fire(
+  ThemeSwal.fire(
     "Error",
     getErrorMessage(err, "Failed to load software assets"),
     "error"
@@ -242,7 +242,7 @@ const handleInstanceUpdate = async () => {
   };
 
 const handleDelete = async (id) => {
-  const res = await Swal.fire({
+  const res = await ThemeSwal.fire({
     title: "Delete software asset?",
     icon: "warning",
     showCancelButton: true,
@@ -255,9 +255,9 @@ const handleDelete = async (id) => {
     await deleteSoftwareAsset(id);
     setAssets((p) => p.filter((a) => a._id !== id));
 
-    Swal.fire("Deleted", "Software asset removed", "success");
+    ThemeSwal.fire("Deleted", "Software asset removed", "success");
   } catch (err) {
-    Swal.fire(
+    ThemeSwal.fire(
       "Error",
       getErrorMessage(err, "Failed to delete asset"),
       "error"
@@ -297,11 +297,11 @@ await updateSoftwareAsset(editAsset._id, {
   },
 });
 
-    Swal.fire("Updated", "Software updated", "success");
+    ThemeSwal.fire("Updated", "Software updated", "success");
     setEditAsset(null);
     fetchAll();
 } catch (err) {
-  Swal.fire(
+  ThemeSwal.fire(
     "Error",
     getErrorMessage(err, "Failed to update software"),
     "error"

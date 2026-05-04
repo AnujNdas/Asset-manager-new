@@ -13,7 +13,7 @@ import {
   getInstanceHistory
 } from "../Services/ApiServices"; 
 import Loader from "../Components/Loader";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 const InstanceTracking = () => {
   const instanceRefs = useRef({});
   const [instances, setInstances] = useState([]);
@@ -73,7 +73,7 @@ useEffect(() => {
 const handleReassign = (instance) => {
   console.log("Reassign clicked for instance:", instance);
   if (!instance) {
-    return Swal.fire("Error", "Invalid instance selected", "error");
+    return ThemeSwal.fire("Error", "Invalid instance selected", "error");
   }
 
   setSelectedInstance(instance);
@@ -82,7 +82,7 @@ const handleReassign = (instance) => {
 const handleUpgrade = (instance) => {
   console.log("Upgrade clicked for instance:", instance);
   if (!instance) {
-    return Swal.fire("Error", "Invalid instance selected", "error");
+    return ThemeSwal.fire("Error", "Invalid instance selected", "error");
   }
 
   setSelectedInstance(instance);
@@ -103,7 +103,7 @@ const handleHistory = async (instance) => {
   } catch (err) {
     console.error(err);
 
-    Swal.fire({
+    ThemeSwal.fire({
       icon: "error",
       title: "Error",
       text: "Failed to load history"

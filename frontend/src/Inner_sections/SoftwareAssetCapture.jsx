@@ -1,7 +1,7 @@
 // src/Pages/SoftwareAssetCapture.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 import "../Page_styles/SoftwareCapture.css";
 import {
   getStatuses,
@@ -110,7 +110,7 @@ useEffect(() => {
       setCategories(c || []);
 
     } catch (err) {
-      Swal.fire(
+      ThemeSwal.fire(
         "Error",
         getErrorMessage(err, "Failed to load initial data"),
         "error"
@@ -129,7 +129,7 @@ useEffect(() => {
     if (!formData.DOP) missing.push("Start Date"); // 🔥 IMPORTANT
 
     if (missing.length) {
-      Swal.fire("Missing fields", missing.join(", "), "error");
+      ThemeSwal.fire("Missing fields", missing.join(", "), "error");
       return false;
     }
 
@@ -138,7 +138,7 @@ useEffect(() => {
 
 const handleImport = async () => {
   if (!importFile) {
-    Swal.fire("Error", "Please select a file", "error");
+    ThemeSwal.fire("Error", "Please select a file", "error");
     return;
   }
 
@@ -166,7 +166,7 @@ const handleImport = async () => {
     });
 
     if (res.success) {
-Swal.fire({
+ThemeSwal.fire({
   title: "Upload Complete",
   html: `
     <b>${res.inserted}</b> assets uploaded<br/>
@@ -178,10 +178,10 @@ Swal.fire({
       setShowImport(false);
       setImportFile(null);
     } else {
-      Swal.fire("Error", res.message, "error");
+      ThemeSwal.fire("Error", res.message, "error");
     }
 } catch (err) {
-  Swal.fire(
+  ThemeSwal.fire(
     "Error",
     getErrorMessage(err, "Upload failed"),
     "error"
@@ -241,14 +241,14 @@ Swal.fire({
       // ⚠️ depends on your API response shape
       const assetId = createdAsset?._id || createdAsset?.data?._id;
 
-      await Swal.fire("Success", "Asset created!", "success");
+      await ThemeSwal.fire("Success", "Asset created!", "success");
 
       // ✅ NAVIGATE SAME AS HARDWARE
       navigate("/instance-assets", {
         state: { selectedAssetId: assetId },
       });
     } catch (err) {
-      Swal.fire(
+      ThemeSwal.fire(
         "Error",
         getErrorMessage(err, "Failed to create asset."),
         "error"

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import AuthService from '../Services/AuthService';
-import Swal from 'sweetalert2';
+import ThemedSwal from '../utils/SwalTheme';
 import Loader from "../Components/Loader";
 const Login = ({ setProfileUser }) => {
   const [email, setEmail] = useState("");
@@ -37,7 +37,7 @@ const handlelogin = async (e) => {
       })
     );
 
-    Swal.fire({
+    ThemeSwal.fire({
       title: "Success",
       text: "Login successful",
       icon: "success",
@@ -67,7 +67,7 @@ if (role === "super-admin") {
   } catch (error) {
     console.error("Login error:", error);
 
-    Swal.fire({
+    ThemeSwal.fire({
       title: "Error",
       text: error.response?.data?.error || "Login failed",
       icon: "error"

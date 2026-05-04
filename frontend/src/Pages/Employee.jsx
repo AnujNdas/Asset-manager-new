@@ -12,7 +12,7 @@ import {
 } from "../Services/ApiServices";
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 import Loader from "../Components/Loader";
 const EmployeePage = () => {
  const { currency, convertFromBase, loadingRates } = useCurrency();
@@ -25,7 +25,7 @@ const EmployeePage = () => {
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [employeeSummary, setEmployeeSummary] = useState([]);
 const handleDelete = async (id) => {
-  const result = await Swal.fire({
+  const result = await ThemeSwal.fire({
     title: "Delete Employee?",
     text: "This action cannot be undone.",
     icon: "warning",

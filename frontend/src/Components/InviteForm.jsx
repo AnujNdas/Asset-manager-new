@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createInvite } from "../Services/ApiServices";
-import Swal from "sweetalert2";
+import ThemedSwal from "../utils/SwalTheme";
 
 const InviteForm = ({ onCreated }) => {
   const [role, setRole] = useState("user");
@@ -19,7 +19,7 @@ const InviteForm = ({ onCreated }) => {
 
       setInviteUrl(data.inviteUrl);
 
-      Swal.fire({
+      ThemeSwal.fire({
         icon: "success",
         title: "Invite Created",
         text: "You can copy the invite link below.",
@@ -28,7 +28,7 @@ const InviteForm = ({ onCreated }) => {
       onCreated?.();
     } catch (err) {
       console.error(err);
-      Swal.fire({
+      ThemeSwal.fire({
         icon: "error",
         title: "Error",
         text: err.response?.data?.error || "Failed to create invite",
@@ -41,7 +41,7 @@ const InviteForm = ({ onCreated }) => {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(inviteUrl);
-      Swal.fire({
+      ThemeSwal.fire({
         icon: "success",
         title: "Copied!",
         text: "Invite link copied to clipboard",
@@ -54,7 +54,7 @@ const InviteForm = ({ onCreated }) => {
 
       });
     } catch (err) {
-      Swal.fire({
+      ThemeSwal.fire({
         icon: "error",
         title: "Copy Failed",
         text: "Unable to copy invite link",
