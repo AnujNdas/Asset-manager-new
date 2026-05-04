@@ -6,22 +6,33 @@ const SubscriptionContext = createContext();
 export const SubscriptionProvider = ({ children }) => {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [expired , setExpired] = useState(false)
+  const [expired, setExpired] = useState(false);
+
   const fetchSubscription = async () => {
     try {
+      setLoading(true);                // ✅ FIX 1
+      setExpired(false);              // ✅ FIX 2 (reset stale state)
+
       const data = await getMySubscription();
 
-      // ✅ Always store response (even expired)
       setSubscription(data);
+
+      // ✅ derive expired immediately
+      if (data?.currentEnd) {
+        const isExpired =
+          new Date(data.currentEnd).getTime() <= Date.now();
+        setExpired(isExpired);
+      }
 
     } catch (err) {
       console.error("Subscription fetch failed", err);
 
-      // fallback safe state
       setSubscription({
         access: { hasAccess: false, reason: "network_error" },
         lifecycle: { isExpired: true }
       });
+
+      setExpired(true); // fallback
     } finally {
       setLoading(false);
     }
@@ -30,32 +41,32 @@ export const SubscriptionProvider = ({ children }) => {
   useEffect(() => {
     fetchSubscription();
   }, []);
+
+  // 🔥 live expiry timer
   useEffect(() => {
-  if (!subscription?.currentEnd) return;
+    if (!subscription?.currentEnd) return;
 
-  const now = Date.now();
-  const expiryTime = new Date(subscription.currentEnd).getTime();
+    const expiryTime = new Date(subscription.currentEnd).getTime();
+    const now = Date.now();
 
-  const timeLeft = expiryTime - now;
+    if (expiryTime <= now) {
+      setExpired(true);
+      return;
+    }
 
-  if (timeLeft <= 0) {
-    setExpired(true);
-    return;
-  }
+    const timer = setTimeout(() => {
+      setExpired(true);
+    }, expiryTime - now);
 
-  // 🔥 auto trigger when time hits
-  const timer = setTimeout(() => {
-    setExpired(true);
-  }, timeLeft);
+    return () => clearTimeout(timer);
+  }, [subscription]);
 
-  return () => clearTimeout(timer);
-
-}, [subscription]);
   return (
     <SubscriptionContext.Provider
       value={{
         subscription,
         loading,
+        expired,                 // ✅ FIX 3 (expose it)
         refreshSubscription: fetchSubscription
       }}
     >

@@ -1,153 +1,157 @@
-import React, { useState } from 'react';
-import '../Page_styles/Login.css';
-import { Link, useNavigate } from 'react-router-dom';
-// import image from '../Images/logo.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-import AuthService from '../Services/AuthService';
-import ThemeSwal from '../utils/SwalTheme';
-import Loader from "../Components/Loader";
-const Login = ({ setProfileUser }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [apiDone , setApiDone] = useState(false);
-  const navigate = useNavigate();
+  import React, { useState } from 'react';
+  import '../Page_styles/Login.css';
+  import { Link, useNavigate } from 'react-router-dom';
+  // import image from '../Images/logo.png';
+  import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+  import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
+  import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+  import AuthService from '../Services/AuthService';
+  import ThemeSwal from '../utils/SwalTheme';
+  import Loader from "../Components/Loader";
+  import { useSubscription } from '../Context/SubscriptionContext';
+  const Login = ({ setProfileUser }) => {
+  const { refreshSubscription } = useSubscription();
 
-  // Keep your original logic intact
-const handlelogin = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [apiDone , setApiDone] = useState(false);
+    const navigate = useNavigate();
 
-  try {
-    const response = await AuthService.login(email, password);
-    console.log("Login response:", response);
+    // Keep your original logic intact
+  const handlelogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-    if (!response.success || !response.token || !response.user) {
-      throw new Error("Invalid login response");
-    }
+    try {
+      const response = await AuthService.login(email, password);
+      console.log("Login response:", response);
 
-    // ✅ STORE AUTH IN ONE PLACE, ONE FORMAT
-    localStorage.setItem(
-      "auth",
-      JSON.stringify({
-        token: response.token,
-        user: response.user
-      })
-    );
+      if (!response.success || !response.token || !response.user) {
+        throw new Error("Invalid login response");
+      }
 
-    ThemeSwal.fire({
-      title: "Success",
-      text: "Login successful",
-      icon: "success",
-      confirmButtonText: "OK",
-        customClass: {
-    confirmButton: "my-confirm-btn",
-    cancelButton: "my-cancel-btn"
-  },
-    });
+      // ✅ STORE AUTH IN ONE PLACE, ONE FORMAT
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          token: response.token,
+          user: response.user
+        })
+      );
 
-    setApiDone(true);
-    setLoading(false);
+      ThemeSwal.fire({
+        title: "Success",
+        text: "Login successful",
+        icon: "success",
+        confirmButtonText: "OK",
+          customClass: {
+      confirmButton: "my-confirm-btn",
+      cancelButton: "my-cancel-btn"
+    },
+      });
 
-    // ✅ SINGLE, CORRECT REDIRECT
-const role = response.user.role;
+      setApiDone(true);
+      setLoading(false);
 
-if (role === "super-admin") {
-  navigate("/super-admin/dashboard");
-} else if (!response.user.onboardingCompleted) {
-  navigate("/onboarding");
-} else {
-  console.log("Navigating to /");
-  navigate("/");
-}
+      // ✅ SINGLE, CORRECT REDIRECT
+  const role = response.user.role;
 
-
-  } catch (error) {
-    console.error("Login error:", error);
-
-    ThemeSwal.fire({
-      title: "Error",
-      text: error.response?.data?.error || "Login failed",
-      icon: "error"
-    });
-
-    setLoading(false);
+  if (role === "super-admin") {
+    navigate("/super-admin/dashboard");
+  } else if (!response.user.onboardingCompleted) {
+    navigate("/onboarding");
+  } else {
+    console.log("Navigating to /");
+    await refreshSubscription();  // 🔥 critical
+    navigate("/");
   }
-};
 
-  return (
-    <>
-  {loading && (
-  <div className="loader-overlay">
-    <Loader type="login" apiDone={apiDone}/>
-  </div>
-)}
-    <div className="auth-page">
-      <div className="auth-card">
-        {/* Brand / Welcome panel (left on desktop, stacked on mobile) */}
-        {/* <aside className="brand-panel">
-          <img src={image} alt="Logo" className="brand-logo" />
-          <h1>Welcome back</h1>
-          <p className="brand-sub">
-            Sign in to access your dashboard and continue where you left off.
-          </p>
-        </aside> */}
 
-        {/* Form panel */}
-        <form className="form-panel" onSubmit={handlelogin}>
-          <div className="form-header">
-            {/* <img src={image} alt="Logo" className="form-logo" /> */}
-            <h2>Sign in</h2>
-          </div>
+    } catch (error) {
+      console.error("Login error:", error);
 
-{/*           <div className="social-row" aria-label="Social options">
-            <button type="button" className="social-btn" title="Facebook"><FontAwesomeIcon icon={faFacebook} /></button>
-            <button type="button" className="social-btn" title="Twitter"><FontAwesomeIcon icon={faTwitter} /></button>
-            <button type="button" className="social-btn" title="LinkedIn"><FontAwesomeIcon icon={faLinkedin} /></button>
-            <button type="button" className="social-btn" title="GitHub"><FontAwesomeIcon icon={faGithub} /></button>
-          </div>
+      ThemeSwal.fire({
+        title: "Error",
+        text: error.response?.data?.error || "Login failed",
+        icon: "error"
+      });
 
-          <div className="divider"><span>or</span></div> */}
+      setLoading(false);
+    }
+  };
 
-          <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> E mail</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your Email"
-              required
-            />
-          </label>
-
-          <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faLock} /> Password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
-          </label>
-
-          <div className="form-actions">
-            <Link to="/user/forgot" className="link">Forgot password?</Link>
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Logging in…' : 'Login'}
-            </button>
-          </div>
-
-          <p className="tiny-note">
-            By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "#DFD0B8", cursor : "pointer", textAlign : "center" , justifyContent : "center"}} target="_blank">Terms & Privacy Policy.</a> 
-          </p>
-        </form>
-      </div>
+    return (
+      <>
+    {loading && (
+    <div className="loader-overlay">
+      <Loader type="login" apiDone={apiDone}/>
     </div>
-      </>
-  );
-};
+  )}
+      <div className="auth-page">
+        <div className="auth-card">
+          {/* Brand / Welcome panel (left on desktop, stacked on mobile) */}
+          {/* <aside className="brand-panel">
+            <img src={image} alt="Logo" className="brand-logo" />
+            <h1>Welcome back</h1>
+            <p className="brand-sub">
+              Sign in to access your dashboard and continue where you left off.
+            </p>
+          </aside> */}
 
-export default Login;
+          {/* Form panel */}
+          <form className="form-panel" onSubmit={handlelogin}>
+            <div className="form-header">
+              {/* <img src={image} alt="Logo" className="form-logo" /> */}
+              <h2>Sign in</h2>
+            </div>
+
+  {/*           <div className="social-row" aria-label="Social options">
+              <button type="button" className="social-btn" title="Facebook"><FontAwesomeIcon icon={faFacebook} /></button>
+              <button type="button" className="social-btn" title="Twitter"><FontAwesomeIcon icon={faTwitter} /></button>
+              <button type="button" className="social-btn" title="LinkedIn"><FontAwesomeIcon icon={faLinkedin} /></button>
+              <button type="button" className="social-btn" title="GitHub"><FontAwesomeIcon icon={faGithub} /></button>
+            </div>
+
+            <div className="divider"><span>or</span></div> */}
+
+            <label className="field">
+              <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> E mail</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your Email"
+                required
+              />
+            </label>
+
+            <label className="field">
+              <span className="field-label"><FontAwesomeIcon icon={faLock} /> Password</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </label>
+
+            <div className="form-actions">
+              <Link to="/user/forgot" className="link">Forgot password?</Link>
+              <button type="submit" className="btn-primary" disabled={loading}>
+                {loading ? 'Logging in…' : 'Login'}
+              </button>
+            </div>
+
+            <p className="tiny-note">
+              By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "#DFD0B8", cursor : "pointer", textAlign : "center" , justifyContent : "center"}} target="_blank">Terms & Privacy Policy.</a> 
+            </p>
+          </form>
+        </div>
+      </div>
+        </>
+    );
+  };
+
+  export default Login;
