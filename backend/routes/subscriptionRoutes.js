@@ -18,6 +18,7 @@ const SoftwareAsset = require("../models/SoftwareAsset");
 const User = require("../models/User");
 const resolveSubscriptionState = require("../utils/subscriptionStateResolver");
 const pricingTiers = require("../config/pricingTiers");
+const AssetInstance = require("../models/AssetInstance")
 router.post(
   "/preview-price",
   authenticateToken(),
@@ -64,14 +65,19 @@ router.get("/me", authenticateToken(), async (req, res) => {
 
     const orgId = subscription?.organizationId;
 
-    const hardwareCount = orgId
-      ? await HardwareAsset.countDocuments({ organizationId: orgId })
-      : 0;
+const hardwareCount = orgId
+  ? await AssetInstance.countDocuments({
+      organizationId: orgId,
+      assetType: "hardware"
+    })
+  : 0;
 
-    const softwareCount = orgId
-      ? await SoftwareAsset.countDocuments({ organizationId: orgId })
-      : 0;
-
+const softwareCount = orgId
+  ? await AssetInstance.countDocuments({
+      organizationId: orgId,
+      assetType: "software"
+    })
+  : 0;
     const adminCount = orgId
       ? await User.countDocuments({
           organizationId: orgId,

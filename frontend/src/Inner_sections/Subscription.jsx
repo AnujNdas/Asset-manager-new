@@ -47,7 +47,9 @@ const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = user?.role === "admin";
 
   const activeTier = subscription?.tier;
-  const isActive = subscription?.status === "active";
+  const isActive =
+  subscription?.status === "active" ||
+  subscription?.status === "trialing";
 
   /* -------------------------
      CENTRAL SUBSCRIPTION LOADER
@@ -355,7 +357,9 @@ const handleUpgradeClick = async () => {
         <div>
           <span className="label">Days Remaining</span>
           <span className="value">
-            {subscription?.daysRemaining ?? "-"} days
+            {subscription.status === "active" || subscription.status === "trialing"
+              ? `${subscription.daysRemaining ?? "-"} days`
+              : "Expired"}
           </span>
         </div>
 

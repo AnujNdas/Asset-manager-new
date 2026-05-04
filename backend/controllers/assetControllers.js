@@ -387,21 +387,7 @@ const addAsset = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const currentAssetCount = await Asset.countDocuments({ organizationId });
-  const assetLimit = tier.assets;
 
-  if (assetLimit !== "unlimited" && currentAssetCount >= assetLimit) {
-    throw new AppError(
-      "Asset limit reached for your subscription plan",
-      403,
-      "ASSET_LIMIT_REACHED",
-      null,
-      {
-        limit: assetLimit,
-        current: currentAssetCount
-      }
-    );
-  }
 
   // 🔴 VALIDATION
   const errors = {};
@@ -1054,6 +1040,70 @@ const createAssetInstance = asyncHandler(async (req, res, next) => {
   const assetType =
     assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
 
+    /* ================= SUBSCRIPTION LIMIT CHECK ================= */
+
+const subscription = await Subscription.findOne({ organizationId });
+
+if (!subscription) {
+  throw new AppError(
+    "No active subscription",
+    403,
+    "NO_SUBSCRIPTION"
+  );
+}
+
+const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+if (!tier) {
+  throw new AppError(
+    "Invalid tier config",
+    500,
+    "INVALID_TIER"
+  );
+}
+
+/* ---------------- COUNT CURRENT INSTANCES ---------------- */
+
+let currentCount;
+
+if (assetType === "hardware") {
+  currentCount = await AssetInstance.countDocuments({
+    organizationId,
+    assetType: "hardware"
+  });
+} else {
+  currentCount = await AssetInstance.countDocuments({
+    organizationId,
+    assetType: "software"
+  });
+}
+
+/* ---------------- GET LIMIT ---------------- */
+
+const limit =
+  assetType === "hardware"
+    ? tier.hardwareAssets
+    : tier.softwareAssets;
+
+/* ---------------- VALIDATE LIMIT ---------------- */
+
+if (
+  limit !== "unlimited" &&
+  currentCount + instances.length > limit
+) {
+  throw new AppError(
+    `${assetType} instance limit exceeded`,
+    403,
+    "INSTANCE_LIMIT_EXCEEDED",
+    null,
+    {
+      limit,
+      current: currentCount,
+      requested: instances.length
+    }
+  );
+}
+
   /* ================= VALIDATION ================= */
   const errors = {};
 
@@ -1425,7 +1475,27 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
   /* ================= FETCH ASSET (SAFE) ================= */
   let asset = await Asset.findOne({ _id: assetId, organizationId });
   let assetTypeRef = "Asset";
+  /* ================= SUBSCRIPTION LIMIT CHECK ================= */
 
+const subscription = await Subscription.findOne({ organizationId });
+
+if (!subscription) {
+  throw new AppError(
+    "No active subscription",
+    403,
+    "NO_SUBSCRIPTION"
+  );
+}
+
+const tier = pricingTiers.find(t => t.key === subscription.tier);
+
+if (!tier) {
+  throw new AppError(
+    "Invalid subscription tier",
+    500,
+    "INVALID_TIER"
+  );
+}
   if (!asset) {
     asset = await SoftwareAsset.findOne({ _id: assetId, organizationId });
     assetTypeRef = "SoftwareAsset";
@@ -1637,7 +1707,43 @@ const currency = purchaseCost?.currency || "INR";
       });
     }
   }
+  /* ================= INSTANCE LIMIT VALIDATION ================= */
 
+let currentCount;
+
+if (assetType === "hardware") {
+  currentCount = await AssetInstance.countDocuments({
+    organizationId,
+    assetType: "hardware"
+  });
+} else {
+  currentCount = await AssetInstance.countDocuments({
+    organizationId,
+    assetType: "software"
+  });
+}
+
+const limit =
+  assetType === "hardware"
+    ? tier.hardwareAssets
+    : tier.softwareAssets;
+
+if (
+  limit !== "unlimited" &&
+  currentCount + validInstances.length > limit
+) {
+  throw new AppError(
+    `${assetType} instance limit exceeded`,
+    403,
+    "INSTANCE_LIMIT_EXCEEDED",
+    null,
+    {
+      limit,
+      current: currentCount,
+      attempted: validInstances.length
+    }
+  );
+}
   /* ================= SERIAL DB CHECK ================= */
   const existingSerials = await AssetInstance.find({
     organizationId,
