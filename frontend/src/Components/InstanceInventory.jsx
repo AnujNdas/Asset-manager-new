@@ -99,7 +99,7 @@ const InstanceCard = ({
                 <p><span>Purchase:</span> {formatDate(hw.purchaseDate)}</p>
                 <p><span>Maintenance:</span> {formatDate(hw.nextMaintenanceDate)}</p>
                 <p><span>Warranty:</span> {formatDate(hw.warrantyExpiry)}</p>
-                <p><span>Insurance:</span> {formatDate(hw.InsuranceExpiry || "N/A")}</p>
+                <p><span>Insurance:</span> {formatDate(hw.insuranceExpiry || "N/A")}</p>
               </div>
             </>
           )}
