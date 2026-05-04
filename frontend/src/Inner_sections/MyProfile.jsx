@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import ThemeSwal from "../utils/SwalTheme";
 import axiosInstance from "../Services/axiosInstance";
 import Loader from "../Components/Loader";
 import "../Page_styles/MyProfile.css";
@@ -95,9 +95,9 @@ useEffect(() => {
       setUser(res.data.user);
       setAvatarFile(null);
 
-      Swal.fire("Updated", "Profile updated successfully", "success");
+      ThemeSwal.fire("Updated", "Profile updated successfully", "success");
     } catch (err) {
-      Swal.fire("Error", "Profile update failed", "error");
+      ThemeSwal.fire("Error", "Profile update failed", "error");
       console.log("Profile update error:", err);
     } finally {
       setSaving(false);

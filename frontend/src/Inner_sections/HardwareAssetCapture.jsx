@@ -8,7 +8,7 @@ import {
   createHardwareAsset,
   bulkUploadHardwareAssets,
 } from "../Services/ApiServices";
-import Swal from "sweetalert2";
+import ThemeSwal from "../utils/SwalTheme";
 import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
 import getErrorMessage from "../Utils/getErrorMessage";
@@ -111,7 +111,7 @@ const AssetCapture = () => {
     "Failed to load classifications"
   );
 
-  Swal.fire("Error", message, "error");
+  ThemeSwal.fire("Error", message, "error");
 }
     })();
   }, []);
@@ -159,7 +159,7 @@ const AssetCapture = () => {
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
 
-      const result = await Swal.fire({
+      const result = await ThemeSwal.fire({
         title: step.title,
         html: `
           <div style="display:flex;flex-direction:column;align-items:center">
@@ -176,7 +176,7 @@ const AssetCapture = () => {
         width: 500,
       });
 
-      if (result.dismiss === Swal.DismissReason.cancel) {
+      if (result.dismiss === ThemeSwal.DismissReason.cancel) {
         break;
       }
     }
@@ -185,7 +185,7 @@ const AssetCapture = () => {
   };
 const handleImport = async () => {
   if (!importFile) {
-    Swal.fire("Error", "Please select a file", "error");
+    ThemeSwal.fire("Error", "Please select a file", "error");
     return;
   }
 
@@ -213,7 +213,7 @@ const handleImport = async () => {
     });
 
     if (res.success) {
-     Swal.fire({
+     ThemeSwal.fire({
   title: "Upload Complete",
   html: `
     <b>${res.inserted}</b> assets uploaded<br/>
@@ -225,12 +225,12 @@ const handleImport = async () => {
       setShowImport(false);
       setImportFile(null);
     } else {
-      Swal.fire("Error", res.message, "error");
+      ThemeSwal.fire("Error", res.message, "error");
     }
   } catch (err) {
   const message = getErrorMessage(err, "Upload failed");
 
-  Swal.fire("Error", message, "error");
+  ThemeSwal.fire("Error", message, "error");
 }
    finally {
     setImportLoading(false);
@@ -270,7 +270,7 @@ const handleImport = async () => {
     if (!formData.DOP) missing.push("Purchase Date");
 
     if (missing.length) {
-      Swal.fire("Missing fields", missing.join(", "), "error");
+      ThemeSwal.fire("Missing fields", missing.join(", "), "error");
       return false;
     }
 
@@ -305,14 +305,14 @@ const handleImport = async () => {
         throw new Error("Invalid asset response");
       }
 
-      await Swal.fire("Success", "Asset added successfully!", "success");
+      await ThemeSwal.fire("Success", "Asset added successfully!", "success");
       navigate("/instance-assets", {
         state: { selectedAssetId: assetId },
       });
     }  catch (err) {
   const message = getErrorMessage(err, "Failed to add asset");
 
-  Swal.fire("Error", message, "error");
+  ThemeSwal.fire("Error", message, "error");
 } finally {
       setIsSubmitting(false);
     }

@@ -1,6 +1,6 @@
 // ✅ src/Pages/HardwareAssetList.jsx
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import ThemeSwal from "../utils/SwalTheme";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   getHardwareAssets,
@@ -147,7 +147,7 @@ const [instanceForm, setInstanceForm] = useState({});
       setApiDone(true);
       setTimeout(() => setLoading(false), 400);
 } catch (err) {
-  Swal.fire("Error", getErrorMessage(err, "Failed to load data"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to load data"), "error");
   setLoading(false);
 }
   };
@@ -198,12 +198,12 @@ const handleUpdate = async () => {
   try {
     await updateHardwareAsset(editAsset._id, editForm);
 
-    await Swal.fire("Success", "Asset updated", "success");
+    await ThemeSwal.fire("Success", "Asset updated", "success");
 
     setEditAsset(null);
     fetchAll();
 } catch (err) {
-  Swal.fire("Error", getErrorMessage(err, "Failed to update asset"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to update asset"), "error");
 }
 };
   const handleAssign = (asset) => {
@@ -217,7 +217,7 @@ const handleUpdate = async () => {
   };
 
   const handleDelete = async (id) => {
-    const resp = await Swal.fire({
+    const resp = await ThemeSwal.fire({
       title: "Delete asset?",
       icon: "warning",
       showCancelButton: true,
@@ -230,21 +230,21 @@ const handleUpdate = async () => {
     try {
       await deleteHardwareAsset(id);
       setAssets((prev) => prev.filter((a) => a._id !== id));
-      Swal.fire("Deleted", "Asset removed.", "success");
+      ThemeSwal.fire("Deleted", "Asset removed.", "success");
 } catch (err) {
-  Swal.fire("Error", getErrorMessage(err, "Failed to delete asset"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to delete asset"), "error");
 }
   };
   const handleInstanceUpdate = async () => {
   try {
     await updateAssetInstance(editInstance._id, instanceForm);
 
-    Swal.fire("Updated", "Instance updated", "success");
+    ThemeSwal.fire("Updated", "Instance updated", "success");
 
     setEditInstance(null);
     fetchAll(); // refresh
 } catch (err) {
-  Swal.fire("Error", getErrorMessage(err, "Failed to update instance"), "error");
+  ThemeSwal.fire("Error", getErrorMessage(err, "Failed to update instance"), "error");
 }
 };
   const filteredAssets = assets.filter((asset) => {

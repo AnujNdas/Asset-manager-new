@@ -19,7 +19,7 @@ import {
   FaEnvelope,
   FaMousePointer,
 } from "react-icons/fa";
-
+import "../Page_styles/Classification.css"
 import axiosInstance from "../Services/axiosInstance";
 import Loader from "../Components/Loader"
 // Lazy load inner sections

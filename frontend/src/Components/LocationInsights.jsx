@@ -141,6 +141,10 @@ const LocationInsights = ({ items = [] }) => {
             {/* EXTRA INFO */}
             <div className="meta">
               <p>
+                📦 Asset Locations:{" "}
+                {selected.assetLocations?.join(", ") || "—"}
+              </p>
+              <p>
                 📦 Instance Locations:{" "}
                 {selected.instanceLocations?.join(", ") || "—"}
               </p>
