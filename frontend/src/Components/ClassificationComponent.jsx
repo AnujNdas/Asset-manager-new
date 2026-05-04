@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ThemedSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/SwalTheme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,

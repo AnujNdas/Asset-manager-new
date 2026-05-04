@@ -12,7 +12,7 @@ import {
 } from "../Services/ApiServices";
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
-import ThemedSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/SwalTheme";
 import Loader from "../Components/Loader";
 const EmployeePage = () => {
  const { currency, convertFromBase, loadingRates } = useCurrency();

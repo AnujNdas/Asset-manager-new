@@ -1,6 +1,6 @@
 // ✅ src/Pages/SoftwareAssetList.jsx
 import React, { useEffect, useState } from "react";
-import ThemedSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/SwalTheme";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   getSoftwareAssets,

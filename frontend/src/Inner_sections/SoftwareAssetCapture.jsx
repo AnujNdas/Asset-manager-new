@@ -1,7 +1,7 @@
 // src/Pages/SoftwareAssetCapture.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ThemedSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/SwalTheme";
 import "../Page_styles/SoftwareCapture.css";
 import {
   getStatuses,

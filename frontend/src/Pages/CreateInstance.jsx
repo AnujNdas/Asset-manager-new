@@ -11,7 +11,7 @@
       bulkUploadInstances
     } from "../Services/ApiServices";
     import Select from "react-select";
-    import ThemedSwal from "../utils/SwalTheme";
+    import ThemeSwal from "../utils/SwalTheme";
     import { getErrorMessage } from "../utils/getErrorMessage";
     const currencyOptions = [
       "INR",

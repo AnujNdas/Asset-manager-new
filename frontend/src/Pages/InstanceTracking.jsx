@@ -13,7 +13,7 @@ import {
   getInstanceHistory
 } from "../Services/ApiServices"; 
 import Loader from "../Components/Loader";
-import ThemedSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/SwalTheme";
 const InstanceTracking = () => {
   const instanceRefs = useRef({});
   const [instances, setInstances] = useState([]);

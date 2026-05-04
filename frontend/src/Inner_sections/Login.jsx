@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import AuthService from '../Services/AuthService';
-import ThemedSwal from '../utils/SwalTheme';
+import ThemeSwal from '../utils/SwalTheme';
 import Loader from "../Components/Loader";
 const Login = ({ setProfileUser }) => {
   const [email, setEmail] = useState("");

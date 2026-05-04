@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createInvite } from "../Services/ApiServices";
-import ThemedSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/SwalTheme";
 
 const InviteForm = ({ onCreated }) => {
   const [role, setRole] = useState("user");

@@ -1,6 +1,6 @@
 // ✅ src/Pages/AssignmentPage.jsx
 import React, { useEffect, useState } from "react";
-import ThemedSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/SwalTheme";
 import "../Page_styles/AssignmentPage.css";
 
 import {
