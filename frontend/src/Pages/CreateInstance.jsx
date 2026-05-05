@@ -25,6 +25,62 @@
       "AED",
       "CNY",
     ];
+    const customSelectStyles = {
+  control: (base, state) => ({
+    ...base,
+    backgroundColor: "#222831",
+    borderColor: state.isFocused ? "#DFD0B8" : "#393E46",
+    boxShadow: "none",
+    color: "#DFD0B8",
+    minHeight: "42px",
+  }),
+
+  menu: (base) => ({
+    ...base,
+    backgroundColor: "#222831",
+    border: "1px solid #393E46",
+  }),
+
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isFocused
+      ? "#393E46"
+      : state.isSelected
+      ? "#DFD0B8"
+      : "#222831",
+    color: state.isSelected ? "#000" : "#DFD0B8",
+    cursor: "pointer",
+  }),
+
+  multiValue: (base) => ({
+    ...base,
+    backgroundColor: "#393E46",
+  }),
+
+  multiValueLabel: (base) => ({
+    ...base,
+    color: "#DFD0B8",
+  }),
+
+  multiValueRemove: (base) => ({
+    ...base,
+    color: "#DFD0B8",
+    ":hover": {
+      backgroundColor: "#ff4d4f",
+      color: "white",
+    },
+  }),
+
+  singleValue: (base) => ({
+    ...base,
+    color: "#DFD0B8",
+  }),
+
+  placeholder: (base) => ({
+    ...base,
+    color: "#888",
+  }),
+};
     const coverageOptions = [
       { label: "Comprehensive", value: "comprehensive" },
       { label: "Accidental Damage", value: "accidental_damage" },
@@ -806,6 +862,7 @@ if (isSoftware && !inst.licenseNumber) {
                                             <label>Coverage Type</label>
     <Select
       isMulti
+      styles={customSelectStyles}
       className="react-select-container"
       classNamePrefix="react-select"
       options={coverageOptions}
