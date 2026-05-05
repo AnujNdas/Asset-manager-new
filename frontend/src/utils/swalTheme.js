@@ -10,7 +10,8 @@ const ThemedSwal = Swal.mixin({
     popup: "swal-popup-dark",
     title: "swal-title-dark",
     htmlContainer: "swal-text-dark",
+    confirmButton: "swal-confirm-dark",   // ✅ add this
+    cancelButton: "swal-cancel-dark"      // optional
   }
 });
-
 export default ThemedSwal;
