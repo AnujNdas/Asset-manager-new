@@ -183,7 +183,6 @@
   width: 100%;
   padding: 10px 12px;
   background: #393E46;
-  border: 1px solid #948979;
   color: #DFD0B8;
   border-radius: 6px;
   outline: none;
@@ -200,11 +199,10 @@
   color: #DFD0B8;
   margin-top: 10px;
 }
-
-.checkbox-group input {
-  width: 16px;
+.checkbox-ins {
+    width: 16px;
   height: 16px;
-  accent-color: #DFD0B8;
+    accent-color: #DFD0B8;
   cursor: pointer;
 }
 .highlight-card {

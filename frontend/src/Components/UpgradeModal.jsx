@@ -166,6 +166,7 @@ const payload = {
 <div className="checkbox-group">
   <input
     type="checkbox"
+    className="checkbox-ins"
     name="hasInsurance"
     checked={form.hasInsurance}
     onChange={(e) => {

@@ -171,14 +171,19 @@
 .import-box input {
   background-color: #222831;
   color: #DFD0B8;
+  width: 90%;
 }
 .btn-delete {
   background: #222831;
   color: #DFD0B8;
+  border: none;
+  font-size: 14px;
 }
 .import-box button {
   color: #222831;
   background: #DFD0B8;
+  border: none;
+  font-size: 14px;
 }
 .import-actions {
   display: flex;
