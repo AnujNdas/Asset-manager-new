@@ -12,6 +12,7 @@ import {
 } from "../Services/ApiServices";
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
+import Pagination from "../Components/Pagination";
 import ThemeSwal from "../utils/SwalTheme";
 import Loader from "../Components/Loader";
 const EmployeePage = () => {
@@ -24,6 +25,19 @@ const EmployeePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [employeeSummary, setEmployeeSummary] = useState([]);
+  // 🔹 Employee Table
+const [empPage, setEmpPage] = useState(1);
+const employeesPerPage = 8;
+
+// 🔹 Team Asset Overview
+const [summaryPage, setSummaryPage] = useState(1);
+const summaryPerPage = 6;
+useEffect(() => {
+  setEmpPage(1);
+}, [search, departmentFilter]);
+useEffect(() => {
+  setSummaryPage(1);
+}, [employeeSummary]);
 const handleDelete = async (id) => {
   const result = await ThemeSwal.fire({
     title: "Delete Employee?",
@@ -70,7 +84,16 @@ const fetchEmployeeSummary = async () => {
     console.error(err);
   }
 };
+const summaryIndexLast = summaryPage * summaryPerPage;
 
+const paginatedSummary = employeeSummary.slice(
+  summaryIndexLast - summaryPerPage,
+  summaryIndexLast
+);
+
+const totalSummaryPages = Math.ceil(
+  employeeSummary.length / summaryPerPage
+);
 // run once
 useEffect(() => {
   const init = async () => {
@@ -99,6 +122,16 @@ useEffect(() => {
     emp.name.toLowerCase().includes(search.toLowerCase()) ||
     emp.employeeCode.toLowerCase().includes(search.toLowerCase())
   );
+  const empIndexLast = empPage * employeesPerPage;
+
+const paginatedEmployees = filteredEmployees.slice(
+  empIndexLast - employeesPerPage,
+  empIndexLast
+);
+
+const totalEmpPages = Math.ceil(
+  filteredEmployees.length / employeesPerPage
+);
 if (loading) return <Loader />
 if (loadingRates) return <Loader />;
   return (
@@ -131,17 +164,21 @@ if (loadingRates) return <Loader />;
           </button>
         </div>
       </div>
-
-    <EmployeeTable
-  employees={filteredEmployees}
+<EmployeeTable
+  employees={paginatedEmployees}
   onEdit={handleEdit}
   onDelete={handleDelete}
+/>
+<Pagination
+  currentPage={empPage}
+  totalPages={totalEmpPages}
+  onPageChange={setEmpPage}
 />
 <div className="team-assets-section">
   <h3>Team Asset Overview</h3>
 
   <div className="team-asset-grid">
-    {employeeSummary.map((emp) => {
+{paginatedSummary.map((emp) => {
 
     const hardware = emp.hardware || {};
     const software = emp.software || {};
@@ -190,6 +227,11 @@ if (loadingRates) return <Loader />;
       );
     })}
   </div>
+  <Pagination
+  currentPage={summaryPage}
+  totalPages={totalSummaryPages}
+  onPageChange={setSummaryPage}
+/>
 </div>
 
       {showModal && (

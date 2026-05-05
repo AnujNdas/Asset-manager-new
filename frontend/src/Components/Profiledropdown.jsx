@@ -41,10 +41,6 @@ useEffect(() => {
       confirmButtonText: "Yes, Logout",
       cancelButtonText: "Cancel",
       confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-        customClass: {
-    cancelButton: "my-confirm-btn"
-  },
 
     }).then((result) => {
       if (result.isConfirmed) {

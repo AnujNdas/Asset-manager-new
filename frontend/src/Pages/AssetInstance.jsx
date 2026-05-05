@@ -7,18 +7,28 @@
   import { useNavigate } from "react-router-dom";
   import Loader from "../Components/Loader";
   import { useLocation } from "react-router-dom";
-
+import Pagination from "../Components/Pagination";
   const InstanceAssets = () => {
     const [assets, setAssets] = useState([]);
     const [filter, setFilter] = useState("all");
     const [loading, setLoading] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const assetsPerPage = 8;
     const location = useLocation();
   const selectedAssetId = location.state?.selectedAssetId;
     useEffect(() => {
       fetchAssets();
     }, [filter]);
-
+    useEffect(() => {
+  setCurrentPage(1);
+}, [filter]);
+useEffect(() => {
+  const maxPage = Math.ceil(assets.length / assetsPerPage);
+  if (currentPage > maxPage) {
+    setCurrentPage(maxPage || 1);
+  }
+}, [assets]);
   const fetchAssets = async () => {
     try {
       setLoading(true);
@@ -36,6 +46,13 @@
       setLoading(false);
     }
   };
+  const indexOfLast = currentPage * assetsPerPage;
+const currentAssets = assets.slice(
+  indexOfLast - assetsPerPage,
+  indexOfLast
+);
+
+const totalPages = Math.ceil(assets.length / assetsPerPage);
     if (loading) return <Loader / >;
     return (
       <div className="instance-page">
@@ -59,8 +76,9 @@
         ) : assets.length === 0 ? (
           <p className="empty">No assets pending instance creation</p>
         ) : (
+          <>
           <div className="asset-grid">
-  {assets.map((asset) => (
+{currentAssets.map((asset) => (
     <AssetCard
       key={asset._id}
       asset={asset}
@@ -68,7 +86,14 @@
     />
   ))}
           </div>
+                      <Pagination
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={setCurrentPage}
+/>
+</>
         )}
+
       </div>
     );
   };

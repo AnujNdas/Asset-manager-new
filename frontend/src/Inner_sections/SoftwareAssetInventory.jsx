@@ -309,6 +309,9 @@ await updateSoftwareAsset(editAsset._id, {
   );
 }
 };
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm]);
   const filteredAssets = assets.filter((asset) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -322,6 +325,7 @@ await updateSoftwareAsset(editAsset._id, {
     indexOfLast - assetsPerPage,
     indexOfLast
   );
+  const totalPages = Math.ceil(filteredAssets.length / assetsPerPage);
   const assignmentMap = {};
 
 selectedAsset?.assignmentRecords?.forEach(assign => {
@@ -570,6 +574,11 @@ const mapInstanceData = (inst, assignment) => {
           ))}
         </AnimatePresence>
       </div>
+      <Pagination
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={setCurrentPage}
+/>
 
       {/* ================= VIEW MODAL ================= */}
       <AnimatePresence>

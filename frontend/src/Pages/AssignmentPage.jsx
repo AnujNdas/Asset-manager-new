@@ -12,6 +12,7 @@ import {
   getEmployeesByDepartment,
   getInstancesByAsset
 } from "../Services/ApiServices";
+import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
 import { getErrorMessage } from "../utils/getErrorMessage";
 const steps = [
@@ -39,7 +40,13 @@ const AssignmentPage = () => {
   const [selectedInstances, setSelectedInstances] = useState([]);
 
   const [assetTypeFilter, setAssetTypeFilter] = useState("all");
+  // 🔹 Step 2 (Assets)
+const [assetPage, setAssetPage] = useState(1);
+const assetsPerPage = 8;
 
+// 🔹 Step 3 (Instances)
+const [instancePage, setInstancePage] = useState(1);
+const instancesPerPage = 10;
 const [assignmentData, setAssignmentData] = useState({
   department: "",
   employee: "",
@@ -56,7 +63,13 @@ const [assignmentData, setAssignmentData] = useState({
     fetchCategories();
     fetchDepartments();
   }, []);
+  useEffect(() => {
+  setAssetPage(1);
+}, [filteredAssets]);
 
+useEffect(() => {
+  setInstancePage(1);
+}, [instances]);
   const fetchCategories = async () => {
     const res = await getInStockCategorySummary();
     setCategories(res.data || []);
@@ -87,7 +100,13 @@ const [assignmentData, setAssignmentData] = useState({
       );
     }
   }, [assetTypeFilter, assets]);
+const assetIndexLast = assetPage * assetsPerPage;
+const paginatedAssets = filteredAssets.slice(
+  assetIndexLast - assetsPerPage,
+  assetIndexLast
+);
 
+const totalAssetPages = Math.ceil(filteredAssets.length / assetsPerPage);
 const selectAsset = async (asset) => {
   setSelectedAsset(asset);
   
@@ -126,7 +145,16 @@ const selectAsset = async (asset) => {
       setSelectedInstances(prev => [...prev, instance]);
     }
   };
+  const instanceIndexLast = instancePage * instancesPerPage;
 
+const paginatedInstances = instances.slice(
+  instanceIndexLast - instancesPerPage,
+  instanceIndexLast
+);
+
+const totalInstancePages = Math.ceil(
+  instances.length / instancesPerPage
+);
   /* ================= STEP 4 ================= */
   const handleDepartment = async (depId) => {
     setAssignmentData(prev => ({ ...prev, department: depId }));
@@ -244,7 +272,7 @@ setAssignmentData({
           </div>
 
           <div className="grid">
-            {filteredAssets.map(asset => (
+            {paginatedAssets.map(asset => (
               <div key={asset._id} className="card" onClick={() => selectAsset(asset)}>
                 <h3>{asset.name}</h3>
                 <p>{asset.available} available</p>
@@ -252,16 +280,22 @@ setAssignmentData({
               </div>
             ))}
           </div>
+          <Pagination
+  currentPage={assetPage}
+  totalPages={totalAssetPages}
+  onPageChange={setAssetPage}
+/>
         </>
       )}
 
       {/* STEP 3 */}
       {step === 2 && (
+        <>
 <div className="instance-grid">
   {instances.length === 0 ? (
     <p>No instances found</p>
   ) : (
-    instances.map(inst => {
+    paginatedInstances.map(inst => {
 const costObj =
   inst.assetType === "hardware"
     ? inst.hardware?.purchaseCost
@@ -290,6 +324,12 @@ const cost = convertFromBase(costObj?.baseAmount || 0);
     })
   )}
 </div>
+<Pagination
+  currentPage={instancePage}
+  totalPages={totalInstancePages}
+  onPageChange={setInstancePage}
+/>
+</>
       )}
 
       {/* STEP 4 */}
