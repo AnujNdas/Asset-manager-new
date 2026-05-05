@@ -686,11 +686,11 @@ const SpendByCategoryBarChart = ({ data }) => {
             boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           }}
         >
-          <div style={{ fontWeight: 600, marginBottom: 4 }}>
+          <div style={{ fontWeight: 600, marginBottom: 4 , color : "#DFD0B8"}}>
             {payload[0].payload.category}
           </div>
 
-          <div style={{ color: "#2563eb", fontWeight: 500 }}>
+          <div style={{ color: "#DFD0B8", fontWeight: 500 }}>
              {CURRENCY_SYMBOLS[currency]}{" "}
   {formatCurrency(payload[0].payload.totalSpendConverted)}
           </div>
