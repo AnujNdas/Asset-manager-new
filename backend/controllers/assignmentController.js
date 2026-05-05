@@ -195,11 +195,19 @@ const getInstancesByAsset = async (req, res) => {
   try {
     const { assetId } = req.params;
 
-    const instances = await mongoose.model("AssetInstance").find({
-      assetId,
-      status: "in_stock"
-    })
-      .select("instanceCode uniqueIdentifier status")
+    const instances = await mongoose.model("AssetInstance")
+      .find({
+        assetId,
+        status: "in_stock"
+      })
+      .select(`
+        instanceCode 
+        status 
+        deviceName 
+        hardware.serialNumber 
+        hardware.purchaseCost 
+        software.purchaseCost
+      `)
       .lean();
 
     res.json({ success: true, data: instances });

@@ -58,16 +58,3 @@
   justify-content: flex-end;
   gap: 10px;
 }
-
-.btn-save {
-  background: #2563eb;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 8px;
-}
-
-.btn-cancel {
-  background: #e5e7eb;
-  padding: 8px 14px;
-  border-radius: 8px;
-}

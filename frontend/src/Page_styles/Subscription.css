@@ -165,6 +165,9 @@
   background: #222831;
   color: #DFD0B8;
 }
+.cancel-autopay:hover{
+  background: #393E46;
+}
 .btn-primary {
   background: #DFD0B8;
   color: #222831;
@@ -435,7 +438,7 @@
 
 .usage-progress{
   height:100%;
-  background:#4f46e5;
+  background:#948979;
   transition:width .3s ease;
 }
 

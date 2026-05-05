@@ -171,8 +171,8 @@ const AssetCapture = () => {
         confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
         showCancelButton: true,
         cancelButtonText: "Skip",
-        confirmButtonColor: "#2563eb",
-        cancelButtonColor: "#9ca3af",
+        confirmButtonColor: "#DFD0B8",
+        cancelButtonColor: "#393E46",
         width: 500,
       });
 

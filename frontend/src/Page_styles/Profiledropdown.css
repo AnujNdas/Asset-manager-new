@@ -18,8 +18,7 @@
 
   width: 160px;
   padding: 8px 0;
-
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #222831;
   border-radius: 12px;
 
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -93,8 +92,8 @@
   width: 100%;
   padding: 6px 6px;
 
-  background: red;
-  color: #ffffff;
+  background: #393E46;
+  color: #DFD0B8;
 
   border: none;
   border-radius: 5px;
@@ -126,7 +125,7 @@
   border: none;
   width: 100%;
   justify-content: space-around;
-  background: #ffffff;
+  background: #222831;
 }
 /* User Avatar */
 .avatar {
@@ -145,7 +144,7 @@
 .username {
   font-weight: 500;
   font-size: 13px;
-  color: #2346ed;
+  color: #DFD0B8;
 }
 
 /* Divider line */

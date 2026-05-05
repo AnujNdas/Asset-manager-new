@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import ThemeSwal from "../utils/SwalTheme";
 import "../Page_styles/AssignmentPage.css";
-
+import { useCurrency } from "../Context/CurrencyContext";
 import {
   getInStockCategorySummary,
   getInStockAssetsByCategory,
@@ -22,6 +22,7 @@ const steps = [
 ];
 
 const AssignmentPage = () => {
+  const { currency, convertFromBase, loadingRates } = useCurrency();
   const [step, setStep] = useState(0);
 
   const [categories, setCategories] = useState([]);
@@ -255,23 +256,39 @@ setAssignmentData({
 
       {/* STEP 3 */}
       {step === 2 && (
-        <div className="instance-grid">
-          {instances.length === 0 ? (
-            <p>No instances found</p>
-          ) : (
-            instances.map(inst => (
-              <div
-                key={inst._id}
-                className={`instance ${selectedInstances.some(i => i._id === inst._id) ? "selected" : ""}`}
-                onClick={() => toggleInstance(inst)}
-              >
-                <h4>{inst.instanceCode}</h4>
-                <p>{inst.uniqueIdentifier}</p>
-                <span>{inst.status}</span>
-              </div>
-            ))
-          )}
+<div className="instance-grid">
+  {instances.length === 0 ? (
+    <p>No instances found</p>
+  ) : (
+    instances.map(inst => {
+const costObj =
+  inst.assetType === "hardware"
+    ? inst.hardware?.purchaseCost
+    : inst.software?.purchaseCost;
+
+const cost = convertFromBase(costObj?.baseAmount || 0);
+
+      return (
+        <div
+          key={inst._id}
+          className={`instance ${
+            selectedInstances.some(i => i._id === inst._id) ? "selected" : ""
+          }`}
+          onClick={() => toggleInstance(inst)}
+        >
+          <h4>{inst.deviceName || "Unnamed Device"}</h4>
+          <p>{inst.instanceCode}</p>
+
+          {/* ✅ COST DISPLAY */}
+<p className="instance-cost">
+  💰 {CURRENCY_SYMBOLS[currency]} {cost.toLocaleString()}
+</p>
+          <span>{inst.status}</span>
         </div>
+      );
+    })
+  )}
+</div>
       )}
 
       {/* STEP 4 */}

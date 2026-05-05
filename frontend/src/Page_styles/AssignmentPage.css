@@ -153,14 +153,17 @@
 
 .instance:hover {
   transform: translateY(-4px);
-  border-color: var(--primary);
 }
 
 .instance.selected {
-  box-shadow: 0px 0px 2px #DFD0B8;
+  border: 2px solid #DFD0B8;
   background: #222831;
 }
-
+.instance-cost {
+  font-size: 0.85rem;
+  color: #948979;
+  margin-top: 4px;
+}
 /* ===== FORM ===== */
 .form {
   display: grid;
