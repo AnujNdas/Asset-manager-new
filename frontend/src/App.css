@@ -346,7 +346,7 @@
   position: fixed;
   top: 5px;
   left: 10px;
-  z-index: 2000; /* Make sure it's above the sidebar and other sections */
+  z-index: 99999; /* Make sure it's above the sidebar and other sections */
   background-color: #393E46;
   color: #DFD0B8;
   padding: 8px 12px;

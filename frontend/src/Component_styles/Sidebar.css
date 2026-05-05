@@ -309,7 +309,7 @@ a:hover {
     height: 100vh;
     background: #222831;
     transition: left 0.3s ease;
-    z-index: 999;
+    z-index: 9999;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
   }
