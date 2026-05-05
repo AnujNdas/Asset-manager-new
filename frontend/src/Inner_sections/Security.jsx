@@ -27,7 +27,6 @@ const handleResetData = async () => {
       showCancelButton: true,
       confirmButtonText: "Continue",
       confirmButtonColor: "#d32f2f",
-      cancelButtonColor: "#9e9e9e",
       preConfirm: (value) => {
         if (value !== "RESET") {
           ThemeSwal.showValidationMessage("You must type RESET exactly");

@@ -1039,7 +1039,7 @@ if (isSoftware && !inst.licenseNumber) {
 
             {instances.map((inst, index) => (
               <div key={index}>
-                <h2 style={{ color: "#DFD0B8", fontSize: "12px", padding: "5px" }}>
+                <h2 style={{ color: "#DFD0B8", fontSize: "12px", padding: "5px" , padding : "0px 14px"}}>
                   {" "}
                   Instance {index + 1}{" "}
                 </h2>

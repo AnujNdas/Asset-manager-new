@@ -212,19 +212,19 @@ const handleImport = async () => {
       type: "hardware", // 🔥 important
     });
 
-    if (res.success) {
-     ThemeSwal.fire({
-  title: "Upload Complete",
-  html: `
-    <b>${res.inserted}</b> assets uploaded<br/>
-    <b>${res.skipped}</b> skipped
-  `,
-  icon: res.skipped > 0 ? "warning" : "success"
-});
+if (res.success) {
+  ThemeSwal.fire({
+    title: "Upload Complete",
+    html: `
+      <b>${res.data.inserted}</b> assets uploaded<br/>
+      <b>${res.data.skipped}</b> skipped
+    `,
+    icon: res.data.skipped > 0 ? "warning" : "success"
+  });
 
-      setShowImport(false);
-      setImportFile(null);
-    } else {
+  setShowImport(false);
+  setImportFile(null);
+} else {
       ThemeSwal.fire("Error", res.message, "error");
     }
   } catch (err) {

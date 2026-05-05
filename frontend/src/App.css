@@ -6,6 +6,15 @@
 #root{
   height : 100dvh;
 }
+/* 🔥 Target SweetAlert button properly */
+.swal2-confirm.swal-confirm-dark {
+  color: #222831 !important;
+}
+
+/* Optional (cancel button) */
+.swal2-cancel.swal-cancel-dark {
+  color: #DFD0B8 !important;
+}
 .app-wrapper{
   height: 100dvh;
   width: 100%;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Swal from "sweetalert2";
+import ThemeSwal from "../utils/SwalTheme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 import "../Page_styles/Profiledropdown.css";
@@ -33,7 +33,7 @@ useEffect(() => {
    * 🚪 LOGOUT HANDLER
    */
   const handleLogout = () => {
-    Swal.fire({
+    ThemeSwal.fire({
       title: "Are you sure?",
       text: "Do you really want to logout?",
       icon: "warning",
@@ -50,7 +50,7 @@ useEffect(() => {
       if (result.isConfirmed) {
         localStorage.clear();
 
-        Swal.fire({
+        ThemeSwal.fire({
           icon: "success",
           title: "Logged Out",
           text: "You have been successfully logged out!",

@@ -261,7 +261,6 @@
 
 /* Modal Box */
 .edit-modal-content {
-  background: white;
   padding: 25px;
   /* width: 350px; */
   border-radius: 10px;
@@ -361,8 +360,6 @@
 
 /* Save Button */
 .save-btn {
-  background: #10b981; /* Emerald */
-  color: white;
   padding: 8px 20px;
   border: none;
   border-radius: 6px;
@@ -374,15 +371,11 @@
   transition: 0.25s;
 }
 
-.save-btn:hover {
-  background: #059669;
-  transform: scale(1.05);
-}
 
 /* Cancel Button */
 .cancel-btn {
-  background: #6b7280; /* Gray */
-  color: white;
+  background: #393E46; /* Gray */
+  color: #DFD0B8;
   padding: 8px 20px;
   border: none;
   border-radius: 6px;

@@ -13,6 +13,7 @@ import {
   updateAssetInstance,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
+import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
 import InstanceCard from "../Components/InstanceInventory";
 import { useNavigate } from "react-router-dom";

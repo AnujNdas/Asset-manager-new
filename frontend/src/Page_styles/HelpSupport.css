@@ -148,15 +148,10 @@
     min-height: 100px;
   }
 
-  .help-form input:focus,
-  .help-form select:focus,
-  .help-form textarea:focus {
-    border-color: #2563eb;
-  }
 
   /* Buttons */
   .help-form button {
-    background: #948979;
+    background: #DFD0B8;
     color: #222831;
     padding: 10px;
     font-size: 14px;
@@ -165,11 +160,6 @@
     cursor: pointer;
     transition: background 0.2s ease;
   }
-
-  .help-form button:hover {
-    background: #1d4ed8;
-  }
-
   .help-form button:disabled {
     background: #9ca3af;
     cursor: not-allowed;

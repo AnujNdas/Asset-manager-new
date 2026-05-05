@@ -41,7 +41,7 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
   ============================== */
 
 const [form, setForm] = useState({
-  currency: instance?.hardware?.currency || instance?.software?.currency || "INR",
+  currency: instance?.hardware?.currency || instance?.software?.currency || "USD",
 
   // ✅ COSTS (numbers now)
   maintenanceCost: instance?.hardware?.costs?.maintenanceCost || "",

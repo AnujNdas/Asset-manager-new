@@ -20,6 +20,7 @@ import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useNavigate } from "react-router-dom";
+import Pagination from "../Components/Pagination";
 
 const HardwareAssetList = () => {
   const navigate = useNavigate();
@@ -100,7 +101,8 @@ const getVendorUI = (vendorName = "") => {
 const [instanceForm, setInstanceForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 8; // adjust based on your grid density
   const { currency, convertFromBase, loadingRates } = useCurrency();
 
   useEffect(() => {
@@ -194,6 +196,9 @@ const getCost = (costObj) => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
 };
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm]);
 const handleUpdate = async () => {
   try {
     await updateHardwareAsset(editAsset._id, editForm);
@@ -254,7 +259,12 @@ const handleUpdate = async () => {
       asset.assetCode?.toLowerCase().includes(term)
     );
   });
+  const totalPages = Math.ceil(filteredAssets.length / itemsPerPage);
 
+const paginatedAssets = filteredAssets.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
   if (loading || loadingRates)
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
@@ -277,7 +287,7 @@ const handleUpdate = async () => {
       {/* GRID */}
       <div className="inventory-grid">
         <AnimatePresence>
-      {filteredAssets.map((asset) => {
+      {paginatedAssets.map((asset) => {
         const totals = getAssetTotals(asset);
   const statusConfig = STATUS_CONFIG[asset.status] || {
     label: asset.status || "Unknown",
@@ -413,7 +423,11 @@ const handleUpdate = async () => {
 })}
         </AnimatePresence>
       </div>
-
+  <Pagination
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={(page) => setCurrentPage(page)}
+/>
       {/* MODAL */}
       <AnimatePresence>
         {selectedAsset && (
