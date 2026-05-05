@@ -78,11 +78,11 @@ const assignmentSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    deviceInfo: {
-      deviceName: { type: String, required: true },
-      serialNumber: { type: String, required: true },
-      model: { type: String }
-    },
+deviceInfo: {
+  deviceName: String,
+  serialNumber: String,
+  model: String
+},
     returnedAt: Date,
 
     returnedBy: {

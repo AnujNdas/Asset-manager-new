@@ -88,7 +88,18 @@ const [assignmentData, setAssignmentData] = useState({
 
 const selectAsset = async (asset) => {
   setSelectedAsset(asset);
+  
+  const isSoftware = asset.assetType === "software";
 
+  // ✅ RESET DEVICE INFO IF HARDWARE
+  if (!isSoftware) {
+    setAssignmentData(prev => ({
+      ...prev,
+      deviceName: "",
+      serialNumber: "",
+      model: ""
+    }));
+  }
   try {
     const res = await getInstancesByAsset(asset._id);
     setInstances(res.data || []);
@@ -127,8 +138,16 @@ const selectAsset = async (asset) => {
     if (!selectedInstances.length) {
       return ThemeSwal.fire("Select at least one instance");
     }
-    if (!assignmentData.deviceName || !assignmentData.serialNumber) {
-  return ThemeSwal.fire("Device info required");
+const isSoftware = selectedAsset?.assetType === "software";
+
+if (isSoftware) {
+  if (!assignmentData.deviceName || !assignmentData.serialNumber) {
+    return ThemeSwal.fire(
+      "Error",
+      "Device info required for software",
+      "error"
+    );
+  }
 }
 const payload = selectedInstances.map(inst => ({
   assetId: selectedAsset._id,
@@ -138,11 +157,13 @@ const payload = selectedInstances.map(inst => ({
   employeeId: assignmentData.employee,
   location: assignmentData.location,
 
-  deviceInfo: {
-    deviceName: assignmentData.deviceName,
-    serialNumber: assignmentData.serialNumber,
-    model: assignmentData.model
-  }
+  ...(isSoftware && {
+    deviceInfo: {
+      deviceName: assignmentData.deviceName,
+      serialNumber: assignmentData.serialNumber,
+      model: assignmentData.model
+    }
+  })
 }));
 
     try {
@@ -275,29 +296,33 @@ setAssignmentData({
           <input placeholder="Assign Location"
             onChange={(e) => setAssignmentData(p => ({ ...p, location: e.target.value }))} />
 
-<input
-  placeholder="Device Name"
-  value={assignmentData.deviceName}
-  onChange={(e) =>
-    setAssignmentData(p => ({ ...p, deviceName: e.target.value }))
-  }
-/>
+{selectedAsset?.assetType === "software" && (
+  <>
+    <input
+      placeholder="Device Name"
+      value={assignmentData.deviceName}
+      onChange={(e) =>
+        setAssignmentData(p => ({ ...p, deviceName: e.target.value }))
+      }
+    />
 
-<input
-  placeholder="Serial Number"
-  value={assignmentData.serialNumber}
-  onChange={(e) =>
-    setAssignmentData(p => ({ ...p, serialNumber: e.target.value }))
-  }
-/>
+    <input
+      placeholder="Serial Number"
+      value={assignmentData.serialNumber}
+      onChange={(e) =>
+        setAssignmentData(p => ({ ...p, serialNumber: e.target.value }))
+      }
+    />
 
-<input
-  placeholder="Model"
-  value={assignmentData.model}
-  onChange={(e) =>
-    setAssignmentData(p => ({ ...p, model: e.target.value }))
-  }
-/>
+    <input
+      placeholder="Model"
+      value={assignmentData.model}
+      onChange={(e) =>
+        setAssignmentData(p => ({ ...p, model: e.target.value }))
+      }
+    />
+  </>
+)}
         </div>
       )}
 

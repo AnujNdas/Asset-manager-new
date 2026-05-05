@@ -266,7 +266,7 @@ const handleUpdate = async () => {
 
           <input
             type="text"
-            placeholder="Search software..."
+            placeholder="Search Hardware..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="inventory-search-input"

@@ -280,7 +280,15 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
           "LOCATION_REQUIRED"
         );
       }
-
+      if (assetType === "software") {
+  if (!deviceInfo?.serialNumber && !deviceInfo?.deviceName) {
+    throw new AppError(
+      "Device info required for software assignment",
+      400,
+      "DEVICE_INFO_REQUIRED"
+    );
+  }
+}
       /* ================= INSTANCE ================= */
       const instance = await AssetInstance.findOne({
         _id: assetInstanceId,
@@ -361,7 +369,7 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
           location,
           assignedTo: { employeeName: employee.name },
           condition: instance.condition,
-          deviceInfo
+          deviceInfo: assetType === "software" ? deviceInfo : undefined
         },
         date: new Date(),
         notes: `Assigned to ${employee.name}`
@@ -379,11 +387,13 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
         employeeId,
         departmentId,
         location,
-        deviceInfo: {
-          deviceName: deviceInfo?.deviceName || "",
-          serialNumber: deviceInfo?.serialNumber || "",
-          model: deviceInfo?.model || ""
-        },
+deviceInfo: assetType === "software"
+  ? {
+      deviceName: deviceInfo?.deviceName || "",
+      serialNumber: deviceInfo?.serialNumber || "",
+      model: deviceInfo?.model || ""
+    }
+  : undefined,
         status: "active",
         assignedBy: userId
       }], { session });

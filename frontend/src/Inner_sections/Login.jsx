@@ -45,10 +45,6 @@
         text: "Login successful",
         icon: "success",
         confirmButtonText: "OK",
-          customClass: {
-      confirmButton: "my-confirm-btn",
-      cancelButton: "my-cancel-btn"
-    },
       });
 
       setApiDone(true);

@@ -13,10 +13,6 @@
   transition: background 0.15s ease, transform 0.1s ease;
 }
 
-.notification-btn:hover {
-  background: rgba(36, 86, 237, 0.08);
-}
-
 .notification-btn:active {
   transform: scale(0.96);
 }
@@ -24,7 +20,7 @@
 /* Bell Icon */
 .notification-icon {
   font-size: 1.05rem;
-  color: #949879;
+  color: #DFD0B8;
 }
 
 /* Badge */
