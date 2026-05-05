@@ -179,6 +179,34 @@
   background: #393E46;
   color: #DFD0B8;
 }
+.input-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: #393E46;
+  border: 1px solid #948979;
+  color: #DFD0B8;
+  border-radius: 6px;
+  outline: none;
+  font-size: 0.9rem;
+}
+.input-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #DFD0B8;
+  margin-top: 10px;
+}
+
+.checkbox-group input {
+  width: 16px;
+  height: 16px;
+  accent-color: #DFD0B8;
+  cursor: pointer;
+}
 .highlight-card {
   border: 2px solid #2563eb;
   box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);

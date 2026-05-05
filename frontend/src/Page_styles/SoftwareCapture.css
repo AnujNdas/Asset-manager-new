@@ -159,12 +159,27 @@
 }
 
 .import-box {
-  background: white;
+  background: #393E46;
   padding: 20px;
   border-radius: 10px;
   width: 350px;
 }
-
+.import-box h3 {
+  font-size: 20px;
+  color: #DFD0B8;
+}
+.import-box input {
+  background-color: #222831;
+  color: #DFD0B8;
+}
+.btn-delete {
+  background: #222831;
+  color: #DFD0B8;
+}
+.import-box button {
+  color: #222831;
+  background: #DFD0B8;
+}
 .import-actions {
   display: flex;
   justify-content: flex-end;

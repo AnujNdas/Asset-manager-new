@@ -163,31 +163,29 @@ const payload = {
         {isHardware && (
   <>
     {/* HAS INSURANCE */}
-    <div className="input-group">
-      <label>
-        <input
-          type="checkbox"
-          name="hasInsurance"
-          checked={form.hasInsurance}
-onChange={(e) => {
-  const checked = e.target.checked;
-
-  setForm({
-    ...form,
-    hasInsurance: checked,
-    ...(checked
-      ? {}
-      : {
-          insuranceTerm: "1_year",
-          insuranceCost: "",
-          newInsurancePurchaseDate: ""
-        })
-  });
-}}
-        />
-        Has Insurance
-      </label>
-    </div>
+<div className="checkbox-group">
+  <input
+    type="checkbox"
+    name="hasInsurance"
+    checked={form.hasInsurance}
+    onChange={(e) => {
+      const checked = e.target.checked;
+    
+      setForm({
+        ...form,
+        hasInsurance: checked,
+        ...(checked
+          ? {}
+          : {
+              insuranceTerm: "1_year",
+              insuranceCost: "",
+              newInsurancePurchaseDate: ""
+            })
+      });
+    }}  
+  />
+  <label>Has Insurance</label>
+</div>
 
     {/* INSURANCE TERM */}
 {form.hasInsurance && (

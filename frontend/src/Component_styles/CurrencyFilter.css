@@ -22,7 +22,7 @@
 
 .currency-selected:hover {
   border-color: #DFD0B8;
-  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 3px 8px #948979;
 }
 
 .currency-dropdown.open .currency-selected {
@@ -49,10 +49,8 @@
   top: 110%;
   left: 0;
   width: 100%;
-  background: #ffffff;
+  background: #222831;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
   padding: 6px 0;
   height: 420px;
   overflow-y: auto;
@@ -74,16 +72,17 @@
   padding: 8px 12px;
   cursor: pointer;
   transition: background 0.15s ease;
+  color: #DFD0B8;
 }
 
 .currency-option:hover,
 .currency-option.focused {
-  background: rgba(37, 99, 235, 0.08);
+  background: #393E46;
 }
 
 .currency-option.selected {
   font-weight: 600;
-  color: #2563eb;
+  color: #DFD0B8;
 }
 
 /* Scrollbar styling */
