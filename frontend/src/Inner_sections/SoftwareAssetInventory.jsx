@@ -454,59 +454,62 @@ const mapInstanceData = (inst, assignment) => {
   continuous
   showSkipButton
   showProgress
-  disableBeacon
+    disableBeacon={true}   // 🔥 ADD THIS (global)
   scrollToFirstStep
   spotlightPadding={10}
-  callback={(data) => {
-    const { status } = data;
+callback={(data) => {
+  const { status, index, type } = data;
 
-    if (status === "finished" || status === "skipped") {
-      setRunTour(false);
-      setStepIndex(0); // reset
-    }
-  }}
+  if (type === "step:after") {
+    setStepIndex(index + 1);   // 🔥 move to next step
+  }
+
+  if (status === "finished" || status === "skipped") {
+    setRunTour(false);
+    setStepIndex(0);
+  }
+}}
 styles={{
-    options: {
-      primaryColor: "#948979",
-      zIndex: 10000,
-      arrowColor: "#222831",
-      overlayColor: "rgba(0,0,0,0.7)",
-    },
+  options: {
+    primaryColor: "#948979",
+    arrowColor: "#222831",
+    overlayColor: "rgba(0,0,0,0.7)",
+    zIndex: 10000,
+  },
 
-    tooltipContainer: {
-      backgroundColor: "#222831",
-      color: "#DFD0B8",
-      borderRadius: "12px",
-      padding: "16px",
-    },
+  tooltip: {
+    backgroundColor: "#222831",   // 🔥 THIS FIXES WHITE BOX
+    borderRadius: "12px",
+  },
 
-    tooltipTitle: {
-      color: "#DFD0B8",
-    },
+  tooltipContainer: {
+    backgroundColor: "#222831",
+    color: "#DFD0B8",
+    padding: "16px",
+  },
 
-    tooltipContent: {
-      color: "#DFD0B8",
-    },
+  tooltipContent: {
+    color: "#DFD0B8",
+  },
 
-    buttonNext: {
-      backgroundColor: "#948979",
-      color: "#222831",
-      borderRadius: "8px",
-      padding: "6px 12px",
-    },
+  buttonNext: {
+    backgroundColor: "#948979",
+    color: "#222831",
+    borderRadius: "8px",
+  },
 
-    buttonBack: {
-      color: "#DFD0B8",
-    },
+  buttonBack: {
+    color: "#DFD0B8",
+  },
 
-    buttonSkip: {
-      color: "#948979",
-    },
+  buttonSkip: {
+    color: "#948979",
+  },
 
-    buttonClose: {
-      color: "#948979",
-    },
-  }}
+  buttonClose: {
+    color: "#948979",
+  },
+}}
 />
       {/* HEADER */}
       <div className="dashboard-header">
@@ -519,6 +522,18 @@ styles={{
             onChange={(e) => setSearchTerm(e.target.value)}
             className="inventory-search-input tour-search"
           />
+<button
+  onClick={() => {
+    setStepIndex(0);
+    setRunTour(false);   // reset first
+    setTimeout(() => {
+      setRunTour(true);  // restart clean
+    }, 100);
+  }}
+  className="tour-help-btn"
+>
+  ❓ Guide
+</button>
       </div>
 
       {/* CARDS */}

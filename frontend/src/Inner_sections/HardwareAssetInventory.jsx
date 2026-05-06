@@ -337,59 +337,62 @@ const paginatedAssets = filteredAssets.slice(
   continuous
   showSkipButton
   showProgress
-  disableBeacon
+   disableBeacon={true}   // 🔥 ADD THIS (global)
   scrollToFirstStep
   spotlightPadding={10}
-  callback={(data) => {
-    const { status } = data;
+callback={(data) => {
+  const { status, index, type } = data;
 
-    if (status === "finished" || status === "skipped") {
-      setRunTour(false);
-      setStepIndex(0); // reset
-    }
-  }}
-  styles={{
-    options: {
-      primaryColor: "#948979",
-      zIndex: 10000,
-      arrowColor: "#222831",
-      overlayColor: "rgba(0,0,0,0.7)",
-    },
+  if (type === "step:after") {
+    setStepIndex(index + 1);   // 🔥 move to next step
+  }
 
-    tooltipContainer: {
-      backgroundColor: "#222831",
-      color: "#DFD0B8",
-      borderRadius: "12px",
-      padding: "16px",
-    },
+  if (status === "finished" || status === "skipped") {
+    setRunTour(false);
+    setStepIndex(0);
+  }
+}}
+styles={{
+  options: {
+    primaryColor: "#948979",
+    arrowColor: "#222831",
+    overlayColor: "rgba(0,0,0,0.7)",
+    zIndex: 10000,
+  },
 
-    tooltipTitle: {
-      color: "#DFD0B8",
-    },
+  tooltip: {
+    backgroundColor: "#222831",   // 🔥 THIS FIXES WHITE BOX
+    borderRadius: "12px",
+  },
 
-    tooltipContent: {
-      color: "#DFD0B8",
-    },
+  tooltipContainer: {
+    backgroundColor: "#222831",
+    color: "#DFD0B8",
+    padding: "16px",
+  },
 
-    buttonNext: {
-      backgroundColor: "#948979",
-      color: "#222831",
-      borderRadius: "8px",
-      padding: "6px 12px",
-    },
+  tooltipContent: {
+    color: "#DFD0B8",
+  },
 
-    buttonBack: {
-      color: "#DFD0B8",
-    },
+  buttonNext: {
+    backgroundColor: "#948979",
+    color: "#222831",
+    borderRadius: "8px",
+  },
 
-    buttonSkip: {
-      color: "#948979",
-    },
+  buttonBack: {
+    color: "#DFD0B8",
+  },
 
-    buttonClose: {
-      color: "#948979",
-    },
-  }}
+  buttonSkip: {
+    color: "#948979",
+  },
+
+  buttonClose: {
+    color: "#948979",
+  },
+}}
 />
 
       {/* HEADER */}
@@ -405,8 +408,11 @@ const paginatedAssets = filteredAssets.slice(
           />
 <button
   onClick={() => {
-    setStepIndex(0);   // restart from beginning
-    setRunTour(true);
+    setStepIndex(0);
+    setRunTour(false);   // reset first
+    setTimeout(() => {
+      setRunTour(true);  // restart clean
+    }, 100);
   }}
   className="tour-help-btn"
 >
