@@ -258,7 +258,7 @@
               specifications: "",
 
               purchaseCost: "",
-              currency: "INR",
+              currency: "USD",
 
               // hardware
               warrantyDate: "",

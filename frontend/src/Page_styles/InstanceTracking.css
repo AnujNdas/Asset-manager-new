@@ -289,7 +289,12 @@
   justify-content: center;
   padding: 20px;
 }
-
+.scanner-Close-btn {
+  padding: 10px;
+  margin-top: 10px;
+  background: #DFD0B8;
+  color: #222831;
+}
 #qr-reader {
   max-width: 400px;
   width: 100%;
