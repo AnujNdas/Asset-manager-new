@@ -330,22 +330,23 @@ const paginatedAssets = filteredAssets.slice(
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
     <div className="inventory-container">
-<Joyride
-  steps={steps}
-  run={runTour}
-  continuous
-  showSkipButton
-  showProgress
-  disableBeacon
-  scrollToFirstStep
-  spotlightPadding={10}
-  callback={(data) => {
-    const { status } = data;
+  <Joyride
+    key={runTour ? "run" : "stop"}   // 🔥 forces fresh mount
+    steps={steps}
+    run={runTour}
+    continuous
+    showSkipButton
+    showProgress
+    disableBeacon
+    scrollToFirstStep
+    spotlightPadding={10}
+    callback={(data) => {
+      const { status } = data;
 
-    if (status === "finished" || status === "skipped") {
-      setRunTour(false);
-    }
-  }}
+      if (status === "finished" || status === "skipped") {
+        setRunTour(false);
+      }
+    }}
 styles={{
   options: {
     primaryColor: "#948979",
@@ -401,12 +402,12 @@ styles={{
             className="inventory-search-input tour-search"
           />
 <button
-  onClick={() => {
-    setRunTour(false);
-    setTimeout(() => {
-      setRunTour(true);
-    }, 50);
-  }}
+onClick={() => {
+  setRunTour(false);        // reset
+  setTimeout(() => {
+    setRunTour(true);       // fresh start
+  }, 50);
+}}
   className="tour-help-btn"
 >
   ❓ Guide

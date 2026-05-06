@@ -448,6 +448,7 @@ const mapInstanceData = (inst, assignment) => {
   return (
     <div className="inventory-container">
 <Joyride
+  key={runTour ? "run" : "stop"}   // 🔥 forces fresh mount
   steps={steps}
   run={runTour}
   continuous
@@ -517,12 +518,12 @@ styles={{
             className="inventory-search-input tour-search"
           />
 <button
-  onClick={() => {
-    setRunTour(false);
-    setTimeout(() => {
-      setRunTour(true);
-    }, 50);
-  }}
+onClick={() => {
+  setRunTour(false);        // reset
+  setTimeout(() => {
+    setRunTour(true);       // fresh start
+  }, 50);
+}}
   className="tour-help-btn"
 >
   ❓ Guide
