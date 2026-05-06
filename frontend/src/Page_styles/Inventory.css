@@ -66,6 +66,9 @@
 .tour-help-btn:active {
   transform: scale(0.96);
 }
+.react-joyride__beacon {
+  display: none !important;
+}
 /* ================= CARD ================= */
 .inventory-card {
   background: linear-gradient(135deg, #222831, #393E46);

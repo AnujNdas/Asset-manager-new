@@ -202,7 +202,8 @@
   margin-top: 10px;
 }
 .checkbox-ins {
-    width: 16px;
+    width: 16px !important;
+    margin-bottom: 0px !important;
   height: 16px;
     accent-color: #DFD0B8;
   cursor: pointer;
