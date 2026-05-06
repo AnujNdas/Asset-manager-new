@@ -179,11 +179,15 @@
   border: none;
   font-size: 14px;
 }
-.import-box button {
+.import-actions button {
   color: #222831;
   background: #DFD0B8;
   border: none;
   font-size: 14px;
+  font-weight: 500;
+  padding: 5px;
+  border-radius: 5px;
+  width: 50%;
 }
 .import-actions {
   display: flex;
