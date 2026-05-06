@@ -102,9 +102,36 @@ const [instanceForm, setInstanceForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 8; // adjust based on your grid density
+const [itemsPerPage, setItemsPerPage] = useState(8);
   const { currency, convertFromBase, loadingRates } = useCurrency();
+  useEffect(() => {
+  const calculateItemsPerPage = () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
+    // 🎯 match your CSS grid breakpoints
+    let columns = 1;
+
+    if (width >= 1400) columns = 4;
+    else if (width >= 1024) columns = 3;
+    else if (width >= 768) columns = 2;
+    else columns = 1;
+
+    // 🎯 estimate rows based on screen height
+    const cardHeight = 300; // adjust if needed
+    const availableHeight = height - 220; // header + padding
+
+    const rows = Math.max(1, Math.floor(availableHeight / cardHeight));
+
+    setItemsPerPage(columns * rows);
+  };
+
+  calculateItemsPerPage();
+
+  window.addEventListener("resize", calculateItemsPerPage);
+
+  return () => window.removeEventListener("resize", calculateItemsPerPage);
+}, []);
   useEffect(() => {
     fetchAll();
   }, []);
@@ -198,7 +225,8 @@ const getCost = (costObj) => {
 };
 useEffect(() => {
   setCurrentPage(1);
-}, [searchTerm]);
+}, [searchTerm, itemsPerPage]);
+
 const handleUpdate = async () => {
   try {
     await updateHardwareAsset(editAsset._id, editForm);
@@ -320,7 +348,7 @@ const paginatedAssets = filteredAssets.slice(
       <span className={`vendor-icon ${!vendor.isCustom ? "avatar" : ""}`}>
         {vendor.icon}
       </span>
-      <span className="vendor-text">{vendor.label}</span>
+      <span className="vendor-text">{truncateText(vendor.label , 10)}</span>
     </div>
   );
 })()}

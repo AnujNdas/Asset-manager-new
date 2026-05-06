@@ -54,8 +54,7 @@
 .employee-actions input:focus,
 .employee-actions select:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-soft);
+  border-color:#DFD0B8;
 }
 
 /* Primary Button */

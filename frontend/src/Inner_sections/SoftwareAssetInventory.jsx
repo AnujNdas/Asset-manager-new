@@ -100,11 +100,36 @@ const getVendorUI = (vendorName = "") => {
   const [editInstance, setEditInstance] = useState(null);
 const [instanceForm, setInstanceForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const assetsPerPage = 8;
+const [assetsPerPage, setAssetsPerPage] = useState(8);
 
   const navigate = useNavigate();
   const { currency, convertFromBase, loadingRates } = useCurrency();
+  useEffect(() => {
+  const calculateAssetsPerPage = () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
+    // 🎯 Determine columns (based on your CSS grid)
+    let columns = 1;
+
+    if (width >= 1400) columns = 4;
+    else if (width >= 1024) columns = 3;
+    else if (width >= 768) columns = 2;
+    else columns = 1;
+
+    // 🎯 Estimate rows based on viewport height
+    const cardHeight = 280; // adjust to your actual card height
+    const availableHeight = height - 200; // subtract header/padding
+    const rows = Math.max(1, Math.floor(availableHeight / cardHeight));
+
+    setAssetsPerPage(columns * rows);
+  };
+
+  calculateAssetsPerPage();
+  window.addEventListener("resize", calculateAssetsPerPage);
+
+  return () => window.removeEventListener("resize", calculateAssetsPerPage);
+}, []);
   useEffect(() => {
     fetchAll();
   }, []);
@@ -311,7 +336,7 @@ await updateSoftwareAsset(editAsset._id, {
 };
 useEffect(() => {
   setCurrentPage(1);
-}, [searchTerm]);
+}, [searchTerm , assetsPerPage]);
   const filteredAssets = assets.filter((asset) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -437,7 +462,7 @@ const mapInstanceData = (inst, assignment) => {
       <span className={`vendor-icon ${!vendor.isCustom ? "avatar" : ""}`}>
         {vendor.icon}
       </span>
-      <span className="vendor-text">{vendor.label}</span>
+      <span className="vendor-text">{truncateText(vendor.label, 10)}</span>
     </div>
   );
 })()}
