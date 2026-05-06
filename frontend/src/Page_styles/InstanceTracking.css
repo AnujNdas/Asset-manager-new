@@ -101,13 +101,15 @@
 }
 
 /* Buttons */
-.btn {
+.scanner-Close-btn {
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
   border: none;
   transition: all 0.2s ease;
+  margin-top: 10px;
+  background: #DFD0B8;
 }
 
 /* Blue action */

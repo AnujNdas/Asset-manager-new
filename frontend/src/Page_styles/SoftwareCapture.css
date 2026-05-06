@@ -172,6 +172,8 @@
   background-color: #222831;
   color: #DFD0B8;
   width: 90%;
+  padding: 10px;
+  border-radius: 10px;
 }
 .btn-delete {
   background: #222831;

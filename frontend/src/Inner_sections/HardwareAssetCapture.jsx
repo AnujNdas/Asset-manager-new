@@ -9,6 +9,7 @@ import {
   bulkUploadHardwareAssets,
 } from "../Services/ApiServices";
 import ThemeSwal from "../utils/SwalTheme";
+import Papa from "papaparse";
 import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
 import getErrorMessage from "../Utils/getErrorMessage";
@@ -19,7 +20,7 @@ const downloadTemplate = () => {
       assetName: "Dell Laptop",
       assetCategory: "IT Equipment",
       associateUnit: "Head Office",
-      BillingLocation: "Mumbai",
+      locationName: "Mumbai", 
 
       type: "one_time", // one_time / maintenance
 
@@ -192,47 +193,81 @@ const handleImport = async () => {
   try {
     setImportLoading(true);
 
+    let jsonData = [];
+
     /* =============================
-       📊 PARSE EXCEL → JSON
+       📊 FILE TYPE DETECTION
     ============================== */
-    const data = await importFile.arrayBuffer();
+    const fileName = importFile.name.toLowerCase();
 
-    const workbook = XLSX.read(data);
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    if (fileName.endsWith(".csv")) {
+      // ✅ CSV PARSE
+      jsonData = await new Promise((resolve, reject) => {
+        Papa.parse(importFile, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => resolve(results.data),
+          error: (err) => reject(err),
+        });
+      });
 
-    const jsonData = XLSX.utils.sheet_to_json(sheet, {
-      defval: "", // avoid undefined
-    });
+    } else {
+      // ✅ EXCEL PARSE
+      const data = await importFile.arrayBuffer();
+
+      const workbook = XLSX.read(data);
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      jsonData = XLSX.utils.sheet_to_json(sheet, {
+        defval: "", // avoid undefined
+      });
+    }
+          /* =============================
+        🧠 NORMALIZE KEYS (ADD HERE)
+      ============================= */
+      const normalizeKeys = (data) => {
+        return data.map(row => ({
+          assetName: row.assetName || row.AssetName,
+          assetCategory: row.assetCategory || row.Category,
+          associateUnit: row.associateUnit || row.Unit,
+          locationName: row.locationName || row.BillingLocation,
+          type: row.type,
+          assetQuantity: row.assetQuantity,
+          DateOfPurchase: row.DateOfPurchase,
+          vendorName: row.vendorName,
+          vendorContact: row.vendorContact,
+          vendorEmail: row.vendorEmail,
+        }));
+      };
 
     /* =============================
-       🚀 SEND JSON TO BACKEND
+       🚀 SEND TO BACKEND
     ============================== */
     const res = await bulkUploadHardwareAssets({
       assets: jsonData,
-      type: "hardware", // 🔥 important
+      type: "hardware",
     });
 
-if (res.success) {
-  ThemeSwal.fire({
-    title: "Upload Complete",
-    html: `
-      <b>${res.data.inserted}</b> assets uploaded<br/>
-      <b>${res.data.skipped}</b> skipped
-    `,
-    icon: res.data.skipped > 0 ? "warning" : "success"
-  });
+    if (res.success) {
+      ThemeSwal.fire({
+        title: "Upload Complete",
+        html: `
+          <b>${res.data.inserted}</b> assets uploaded<br/>
+          <b>${res.data.skipped}</b> skipped
+        `,
+        icon: res.data.skipped > 0 ? "warning" : "success"
+      });
 
-  setShowImport(false);
-  setImportFile(null);
-} else {
+      setShowImport(false);
+      setImportFile(null);
+    } else {
       ThemeSwal.fire("Error", res.message, "error");
     }
-  } catch (err) {
-  const message = getErrorMessage(err, "Upload failed");
 
-  ThemeSwal.fire("Error", message, "error");
-}
-   finally {
+  } catch (err) {
+    const message = getErrorMessage(err, "Upload failed");
+    ThemeSwal.fire("Error", message, "error");
+  } finally {
     setImportLoading(false);
   }
 };
@@ -498,7 +533,7 @@ if (res.success) {
 
             <input
               type="file"
-              accept=".xlsx, .xls"
+              accept=".xlsx, .xls, .csv"
               onChange={(e) => setImportFile(e.target.files[0])}
             />
 

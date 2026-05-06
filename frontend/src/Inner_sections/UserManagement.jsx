@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllUsers, updateUserRole } from "../Services/ApiServices";
-import Swal from "sweetalert2";
+import ThemeSwal from "../utils/SwalTheme";
 import "../Page_styles/UserManagement.css";
 
 const UserManagement = () => {
@@ -19,7 +19,7 @@ const UserManagement = () => {
       setUsers(data);
     } catch (err) {
       console.error("Error fetching users:", err);
-      Swal.fire("Error", "Failed to load users", "error");
+      ThemeSwal.fire("Error", "Failed to load users", "error");
     } finally {
       setLoading(false);
     }
@@ -28,10 +28,10 @@ const UserManagement = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       await updateUserRole(userId, newRole);
-      Swal.fire("Success", "User role updated", "success");
+      ThemeSwal.fire("Success", "User role updated", "success");
       fetchUsers();
     } catch (err) {
-      Swal.fire("Error", "Failed to update role", "error");
+      ThemeSwal.fire("Error", "Failed to update role", "error");
     }
   };
 
