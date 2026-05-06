@@ -108,20 +108,18 @@ const [instanceForm, setInstanceForm] = useState({});
 const [itemsPerPage, setItemsPerPage] = useState(8);
   const { currency, convertFromBase, loadingRates } = useCurrency();
 useEffect(() => {
-const calculate = () => {
-  if (!gridRef.current || !cardRef.current) return;
+  const calculate = () => {
+    if (!gridRef.current || !cardRef.current) return;
 
-  const gridWidth = gridRef.current.clientWidth;
-  const gridHeight = gridRef.current.clientHeight;
+    const gridWidth = gridRef.current.clientWidth;
+    const cardWidth = cardRef.current.offsetWidth;
 
-  const cardWidth = cardRef.current.offsetWidth;
-  const cardHeight = cardRef.current.offsetHeight;
+    const columns = Math.floor(gridWidth / cardWidth) || 1;
 
-  const columns = Math.floor(gridWidth / cardWidth) || 1;
-  const rows = Math.floor(gridHeight / cardHeight) || 1;
+    const rows = 2; // 🔥 fixed rows per page (tune this)
 
-  setItemsPerPage(columns * rows);
-};
+    setItemsPerPage(columns * rows);
+  };
 
   calculate();
   window.addEventListener("resize", calculate);

@@ -107,20 +107,18 @@ const [assetsPerPage, setAssetsPerPage] = useState(8);
   const navigate = useNavigate();
   const { currency, convertFromBase, loadingRates } = useCurrency();
 useEffect(() => {
-const calculate = () => {
-  if (!gridRef.current || !cardRef.current) return;
+  const calculate = () => {
+    if (!gridRef.current || !cardRef.current) return;
 
-  const gridWidth = gridRef.current.clientWidth;
-  const gridHeight = gridRef.current.clientHeight;
+    const gridWidth = gridRef.current.clientWidth;
+    const cardWidth = cardRef.current.offsetWidth;
 
-  const cardWidth = cardRef.current.offsetWidth;
-  const cardHeight = cardRef.current.offsetHeight;
+    const columns = Math.floor(gridWidth / cardWidth) || 1;
 
-  const columns = Math.floor(gridWidth / cardWidth) || 1;
-  const rows = Math.floor(gridHeight / cardHeight) || 1;
+    const rows = 2; // 🔥 fixed rows per page (tune this)
 
-  setAssetsPerPage(columns * rows);
-};
+    setAssetsPerPage(columns * rows);
+  };
 
   calculate();
   window.addEventListener("resize", calculate);
@@ -143,14 +141,14 @@ const calculate = () => {
     assetQuantity: asset.assetQuantity,
 
 
-          purchaseDetails: {
-        purchaseDate: editForm.purchaseDate,
-        vendor: {
-          name: editForm.vendorName,
-          contact: editForm.vendorContact,
-          supportEmail: editForm.vendorEmail,
-        },
-      },
+purchaseDetails: {
+  purchaseDate: asset.purchaseDetails?.purchaseDate?.split("T")[0] || "",
+  vendor: {
+    name: asset.purchaseDetails?.vendor?.name || "",
+    contact: asset.purchaseDetails?.vendor?.contact || "",
+    supportEmail: asset.purchaseDetails?.vendor?.supportEmail || "",
+  },
+},
 
   });
 };
