@@ -47,7 +47,7 @@ const QRScanner = ({ onClose, onScanSuccess }) => {
   return (
     <div className="scanner-modal">
       <div id="qr-reader" style={{ width: "100%" }} />
-      <button onClick={onClose} className="scanner-close-btn">
+      <button onClick={onClose} style={{ padding : "10px" , marginTop : "10px" , background : "#DFD0B8" , color : "#222831"}}>
         Close
       </button>
     </div>

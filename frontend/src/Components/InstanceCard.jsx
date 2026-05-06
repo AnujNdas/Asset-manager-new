@@ -164,13 +164,6 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           </p>
         </div>
 
-        <div>
-          <p className="label">Asset Tag</p>
-          <p className="value">
-            {assignment?.deviceInfo?.assetTag || "-"}
-          </p>
-        </div>
-
         {/* LOCATION */}
         <div>
           <p className="label">Location</p>
