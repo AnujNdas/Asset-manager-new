@@ -119,7 +119,7 @@ const calculate = () => {
   const columns = Math.floor(gridWidth / cardWidth) || 1;
   const rows = Math.floor(gridHeight / cardHeight) || 1;
 
-  setItemsPerPage(columns * rows);
+  setAssetsPerPage(columns * rows);
 };
 
   calculate();
