@@ -448,20 +448,26 @@ const mapInstanceData = (inst, assignment) => {
   return (
     <div className="inventory-container">
 <Joyride
-  key={runTour ? "run" : "stop"}   // 🔥 forces fresh mount
+  key={runTour ? "run" : "stop"}
   steps={steps}
   run={runTour}
+  stepIndex={stepIndex}   // ✅ IMPORTANT
   continuous
   showSkipButton
   showProgress
-  disableBeacon
+  disableBeacon={true}
   scrollToFirstStep
   spotlightPadding={10}
   callback={(data) => {
-    const { status } = data;
+    const { status, index, type } = data;
+
+    if (type === "step:after") {
+      setStepIndex(index + 1);   // ✅ move forward manually
+    }
 
     if (status === "finished" || status === "skipped") {
       setRunTour(false);
+      setStepIndex(0);           // ✅ reset
     }
   }}
 styles={{
@@ -519,9 +525,11 @@ styles={{
           />
 <button
 onClick={() => {
-  setRunTour(false);        // reset
+  setStepIndex(0);      // ✅ reset to first step
+  setRunTour(false);
+
   setTimeout(() => {
-    setRunTour(true);       // fresh start
+    setRunTour(true);   // ✅ start fresh
   }, 50);
 }}
   className="tour-help-btn"
