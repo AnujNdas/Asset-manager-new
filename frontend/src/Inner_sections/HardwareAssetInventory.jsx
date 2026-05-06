@@ -1,5 +1,5 @@
 // ✅ src/Pages/HardwareAssetList.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef } from "react";
 import ThemeSwal from "../utils/SwalTheme";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../Components/Pagination";
 
 const HardwareAssetList = () => {
+  const gridRef = useRef(null);
   const navigate = useNavigate();
     const VENDOR_CONFIG = {
   dell: { icon: "💻", color: "blue" },
@@ -104,33 +105,27 @@ const [instanceForm, setInstanceForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
 const [itemsPerPage, setItemsPerPage] = useState(8);
   const { currency, convertFromBase, loadingRates } = useCurrency();
-  useEffect(() => {
-  const calculateItemsPerPage = () => {
-    const width = window.innerWidth;
+useEffect(() => {
+  const calculate = () => {
+    if (!gridRef.current) return;
+
+    const gridWidth = gridRef.current.offsetWidth;
+
+    const cardWidth = 260; // match CSS card width
+    const columns = Math.floor(gridWidth / cardWidth) || 1;
+
     const height = window.innerHeight;
+    const cardHeight = 300;
 
-    // 🎯 match your CSS grid breakpoints
-    let columns = 1;
-
-    if (width >= 1400) columns = 4;
-    else if (width >= 1024) columns = 3;
-    else if (width >= 768) columns = 2;
-    else columns = 1;
-
-    // 🎯 estimate rows based on screen height
-    const cardHeight = 300; // adjust if needed
-    const availableHeight = height - 220; // header + padding
-
-    const rows = Math.max(1, Math.floor(availableHeight / cardHeight));
+    const rows = Math.floor((height - 220) / cardHeight);
 
     setItemsPerPage(columns * rows);
   };
 
-  calculateItemsPerPage();
+  calculate();
+  window.addEventListener("resize", calculate);
 
-  window.addEventListener("resize", calculateItemsPerPage);
-
-  return () => window.removeEventListener("resize", calculateItemsPerPage);
+  return () => window.removeEventListener("resize", calculate);
 }, []);
   useEffect(() => {
     fetchAll();
@@ -313,7 +308,7 @@ const paginatedAssets = filteredAssets.slice(
       </div>
 
       {/* GRID */}
-      <div className="inventory-grid">
+      <div className="inventory-grid" ref={gridRef}>
         <AnimatePresence>
       {paginatedAssets.map((asset) => {
         const totals = getAssetTotals(asset);
