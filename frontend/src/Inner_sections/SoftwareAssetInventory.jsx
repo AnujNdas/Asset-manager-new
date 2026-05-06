@@ -447,28 +447,22 @@ const mapInstanceData = (inst, assignment) => {
 };
   return (
     <div className="inventory-container">
-      <Joyride
+<Joyride
   steps={steps}
   run={runTour}
-  stepIndex={stepIndex}
   continuous
   showSkipButton
   showProgress
-    disableBeacon={true}   // 🔥 ADD THIS (global)
+  disableBeacon
   scrollToFirstStep
   spotlightPadding={10}
-callback={(data) => {
-  const { status, index, type } = data;
+  callback={(data) => {
+    const { status } = data;
 
-  if (type === "step:after") {
-    setStepIndex(index + 1);   // 🔥 move to next step
-  }
-
-  if (status === "finished" || status === "skipped") {
-    setRunTour(false);
-    setStepIndex(0);
-  }
-}}
+    if (status === "finished" || status === "skipped") {
+      setRunTour(false);
+    }
+  }}
 styles={{
   options: {
     primaryColor: "#948979",
@@ -524,11 +518,10 @@ styles={{
           />
 <button
   onClick={() => {
-    setStepIndex(0);
-    setRunTour(false);   // reset first
+    setRunTour(false);
     setTimeout(() => {
-      setRunTour(true);  // restart clean
-    }, 100);
+      setRunTour(true);
+    }, 50);
   }}
   className="tour-help-btn"
 >
