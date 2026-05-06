@@ -13,6 +13,7 @@ import {
   updateHardwareAsset,
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
+
 import InstanceCard from "../Components/InstanceInventory";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import Loader from "../Components/Loader";
@@ -24,6 +25,7 @@ import Pagination from "../Components/Pagination";
 
 const HardwareAssetList = () => {
   const gridRef = useRef(null);
+  const cardRef = useRef(null);
   const navigate = useNavigate();
     const VENDOR_CONFIG = {
   dell: { icon: "💻", color: "blue" },
@@ -106,21 +108,20 @@ const [instanceForm, setInstanceForm] = useState({});
 const [itemsPerPage, setItemsPerPage] = useState(8);
   const { currency, convertFromBase, loadingRates } = useCurrency();
 useEffect(() => {
-  const calculate = () => {
-    if (!gridRef.current) return;
+const calculate = () => {
+  if (!gridRef.current || !cardRef.current) return;
 
-    const gridWidth = gridRef.current.offsetWidth;
+  const gridWidth = gridRef.current.clientWidth;
+  const gridHeight = gridRef.current.clientHeight;
 
-    const cardWidth = 260; // match CSS card width
-    const columns = Math.floor(gridWidth / cardWidth) || 1;
+  const cardWidth = cardRef.current.offsetWidth;
+  const cardHeight = cardRef.current.offsetHeight;
 
-    const height = window.innerHeight;
-    const cardHeight = 300;
+  const columns = Math.floor(gridWidth / cardWidth) || 1;
+  const rows = Math.floor(gridHeight / cardHeight) || 1;
 
-    const rows = Math.floor((height - 220) / cardHeight);
-
-    setItemsPerPage(columns * rows);
-  };
+  setItemsPerPage(columns * rows);
+};
 
   calculate();
   window.addEventListener("resize", calculate);
@@ -321,6 +322,7 @@ const paginatedAssets = filteredAssets.slice(
   return (
     <motion.div
       key={asset._id}
+      ref={index === 0 ? cardRef : null}
       className="inventory-card"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
