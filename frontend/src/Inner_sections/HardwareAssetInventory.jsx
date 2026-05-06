@@ -129,6 +129,7 @@ const [instanceForm, setInstanceForm] = useState({});
   const [apiDone, setApiDone] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [runTour, setRunTour] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0);
 const [itemsPerPage, setItemsPerPage] = useState(8);
   const { currency, convertFromBase, loadingRates } = useCurrency();
 useEffect(() => {
@@ -325,20 +326,47 @@ const paginatedAssets = filteredAssets.slice(
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
     <div className="inventory-container">
-      <Joyride
+<Joyride
   steps={steps}
   run={runTour}
   continuous
   showSkipButton
   showProgress
+  disableBeacon
   scrollToFirstStep
+  spotlightPadding={10}
+  callback={(data) => {
+    const { status } = data;
+
+    if (status === "finished" || status === "skipped") {
+      setRunTour(false);
+      setStepIndex(0); // reset
+    }
+  }}
   styles={{
     options: {
-      primaryColor: "#4f46e5",
-      backgroundColor: "#222831",
-      textColor: "#ffffff",
+      primaryColor: "#948979",       // buttons / accent
+      backgroundColor: "#222831",    // tooltip bg
+      textColor: "#DFD0B8",          // main text
       arrowColor: "#222831",
-      overlayColor: "rgba(0,0,0,0.6)",
+      overlayColor: "rgba(0,0,0,0.7)",
+      zIndex: 10000,
+    },
+    tooltip: {
+      borderRadius: "12px",
+      padding: "14px",
+    },
+    buttonNext: {
+      backgroundColor: "#948979",
+      color: "#222831",
+      borderRadius: "8px",
+      padding: "6px 12px",
+    },
+    buttonBack: {
+      color: "#DFD0B8",
+    },
+    buttonSkip: {
+      color: "#948979",
     },
   }}
 />
@@ -354,13 +382,15 @@ const paginatedAssets = filteredAssets.slice(
             onChange={(e) => setSearchTerm(e.target.value)}
             className="inventory-search-input tour-search"
           />
-          <button
-            onClick={() => setRunTour(true)}
-            style={{ marginLeft: "10px" }}
-            className="btn-help"
-          >
-            Help
-          </button>
+<button
+  onClick={() => {
+    setStepIndex(0);   // restart from beginning
+    setRunTour(true);
+  }}
+  className="tour-help-btn"
+>
+  ❓ Guide
+</button>
 
       </div>
 
