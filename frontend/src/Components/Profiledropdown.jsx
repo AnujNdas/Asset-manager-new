@@ -33,16 +33,19 @@ useEffect(() => {
    * 🚪 LOGOUT HANDLER
    */
   const handleLogout = () => {
-    ThemeSwal.fire({
-      title: "Are you sure?",
-      text: "Do you really want to logout?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Logout",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#d33",
+ThemeSwal.fire({
+  title: "Are you sure?",
+  text: "Do you really want to logout?",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonText: "Yes, Logout",
+  cancelButtonText: "Cancel",
+  confirmButtonColor: "#d33",
 
-    }).then((result) => {
+  customClass: {
+    confirmButton: "logout-confirm-btn"
+  }
+}).then((result) => {
       if (result.isConfirmed) {
         localStorage.clear();
 

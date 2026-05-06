@@ -113,7 +113,9 @@
   transform: scale(1.1);
   transition: 0.2s ease-in-out;
 }
-
+.logout-confirm-btn {
+  color: #DFD0B8 !important; /* change to any color you want */
+}
 /* ======================================================
    USER INFO SECTION
    ====================================================== */
