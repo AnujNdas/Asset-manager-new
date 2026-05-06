@@ -311,7 +311,7 @@ const paginatedAssets = filteredAssets.slice(
       {/* GRID */}
       <div className="inventory-grid" ref={gridRef}>
         <AnimatePresence>
-      {paginatedAssets.map((asset) => {
+      {paginatedAssets.map((asset , index) => {
         const totals = getAssetTotals(asset);
   const statusConfig = STATUS_CONFIG[asset.status] || {
     label: asset.status || "Unknown",
