@@ -1,5 +1,5 @@
 // ✅ src/Pages/SoftwareAssetList.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef} from "react";
 import ThemeSwal from "../utils/SwalTheme";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -22,6 +22,8 @@ import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 import { getErrorMessage } from "../utils/getErrorMessage";
 const SoftwareAssetList = () => {
+    const gridRef = useRef(null);
+    const cardRef = useRef(null);
   const VENDOR_CONFIG = {
   dell: { icon: "💻", color: "blue" },
   hp: { icon: "🖥️", color: "cyan" },
@@ -104,31 +106,26 @@ const [assetsPerPage, setAssetsPerPage] = useState(8);
 
   const navigate = useNavigate();
   const { currency, convertFromBase, loadingRates } = useCurrency();
-  useEffect(() => {
-  const calculateAssetsPerPage = () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+useEffect(() => {
+const calculate = () => {
+  if (!gridRef.current || !cardRef.current) return;
 
-    // 🎯 Determine columns (based on your CSS grid)
-    let columns = 1;
+  const gridWidth = gridRef.current.clientWidth;
+  const gridHeight = gridRef.current.clientHeight;
 
-    if (width >= 1400) columns = 4;
-    else if (width >= 1024) columns = 3;
-    else if (width >= 768) columns = 2;
-    else columns = 1;
+  const cardWidth = cardRef.current.offsetWidth;
+  const cardHeight = cardRef.current.offsetHeight;
 
-    // 🎯 Estimate rows based on viewport height
-    const cardHeight = 280; // adjust to your actual card height
-    const availableHeight = height - 200; // subtract header/padding
-    const rows = Math.max(1, Math.floor(availableHeight / cardHeight));
+  const columns = Math.floor(gridWidth / cardWidth) || 1;
+  const rows = Math.floor(gridHeight / cardHeight) || 1;
 
-    setAssetsPerPage(columns * rows);
-  };
+  setItemsPerPage(columns * rows);
+};
 
-  calculateAssetsPerPage();
-  window.addEventListener("resize", calculateAssetsPerPage);
+  calculate();
+  window.addEventListener("resize", calculate);
 
-  return () => window.removeEventListener("resize", calculateAssetsPerPage);
+  return () => window.removeEventListener("resize", calculate);
 }, []);
   useEffect(() => {
     fetchAll();
@@ -438,9 +435,10 @@ const mapInstanceData = (inst, assignment) => {
       {/* CARDS */}
       <div className="inventory-grid">
         <AnimatePresence>
-          {currentAssets.map((asset) => (
+          {currentAssets.map((asset , index) => (
             <motion.div
   key={asset._id}
+  ref={index === 0 ? cardRef : null}
   className="inventory-card"
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
