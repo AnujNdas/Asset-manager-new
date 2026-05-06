@@ -22,7 +22,7 @@ import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../Components/Pagination";
-import Joyride from "react-joyride";
+import { Joyride } from "react-joyride";
 const HardwareAssetList = () => {
   const steps = [
   {
