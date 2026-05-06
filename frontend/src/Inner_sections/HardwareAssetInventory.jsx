@@ -22,8 +22,31 @@ import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../Components/Pagination";
-
+import Joyride from "react-joyride";
 const HardwareAssetList = () => {
+  const steps = [
+  {
+    target: ".tour-search",
+    content: "Search and quickly find hardware assets.",
+    disableBeacon: true,
+  },
+  {
+    target: ".tour-card",
+    content: "Each card represents a hardware asset with details.",
+  },
+  {
+    target: ".tour-view",
+    content: "View all instances of this asset.",
+  },
+  {
+    target: ".tour-edit",
+    content: "Edit asset details anytime.",
+  },
+  {
+    target: ".tour-assign",
+    content: "Assign this asset to employees.",
+  },
+];
   const gridRef = useRef(null);
   const cardRef = useRef(null);
   const navigate = useNavigate();
@@ -105,6 +128,7 @@ const [instanceForm, setInstanceForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [runTour, setRunTour] = useState(false);
 const [itemsPerPage, setItemsPerPage] = useState(8);
   const { currency, convertFromBase, loadingRates } = useCurrency();
 useEffect(() => {
@@ -125,6 +149,16 @@ useEffect(() => {
   window.addEventListener("resize", calculate);
 
   return () => window.removeEventListener("resize", calculate);
+}, []);
+useEffect(() => {
+  const seen = localStorage.getItem("inventoryTourSeen");
+
+  if (!seen) {
+    setTimeout(() => {
+      setRunTour(true);
+      localStorage.setItem("inventoryTourSeen", "true");
+    }, 1000); // wait for cards to render
+  }
 }, []);
   useEffect(() => {
     fetchAll();
@@ -291,6 +325,23 @@ const paginatedAssets = filteredAssets.slice(
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
     <div className="inventory-container">
+      <Joyride
+  steps={steps}
+  run={runTour}
+  continuous
+  showSkipButton
+  showProgress
+  scrollToFirstStep
+  styles={{
+    options: {
+      primaryColor: "#4f46e5",
+      backgroundColor: "#222831",
+      textColor: "#ffffff",
+      arrowColor: "#222831",
+      overlayColor: "rgba(0,0,0,0.6)",
+    },
+  }}
+/>
 
       {/* HEADER */}
       <div className="dashboard-header">
@@ -301,8 +352,15 @@ const paginatedAssets = filteredAssets.slice(
             placeholder="Search Hardware..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="inventory-search-input"
+            className="inventory-search-input tour-search"
           />
+          <button
+            onClick={() => setRunTour(true)}
+            style={{ marginLeft: "10px" }}
+            className="btn-help"
+          >
+            Help
+          </button>
 
       </div>
 
@@ -321,7 +379,7 @@ const paginatedAssets = filteredAssets.slice(
     <motion.div
       key={asset._id}
       ref={index === 0 ? cardRef : null}
-      className="inventory-card"
+      className="inventory-card tour-card"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
@@ -421,13 +479,13 @@ const paginatedAssets = filteredAssets.slice(
       <div className="card-actions">
         <button
           onClick={() => setSelectedAsset(asset)}
-          className="btn-save"
+          className="btn-save tour-view"
         >
           View
         </button>
         <button
           onClick={() => setEditAsset(asset)}
-          className="btn-edit"
+          className="btn-edit tour-edit"
         >
           Edit
         </button>
@@ -437,7 +495,7 @@ const paginatedAssets = filteredAssets.slice(
         >
           Delete
         </button>
-            <button onClick={() => handleAssign(asset)} className="btn-assign">
+            <button onClick={() => handleAssign(asset)} className="btn-assign tour-assign">
       Assign
     </button>
       </div>
