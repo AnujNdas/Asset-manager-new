@@ -21,7 +21,35 @@ import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 import { getErrorMessage } from "../utils/getErrorMessage";
+import { Joyride } from "react-joyride";
 const SoftwareAssetList = () => {
+  const steps = [
+  {
+    target: ".tour-search",
+    content: "Search and quickly find Software assets.",
+    disableBeacon: true,
+  },
+  {
+    target: ".tour-card",
+    content: "Each card represents a Software asset with details.",
+    disableBeacon: true,
+  },
+  {
+    target: ".tour-view",
+    content: "View all instances of this asset.",
+    disableBeacon: true,
+  },
+  {
+    target: ".tour-edit",
+    content: "Edit Software details anytime.",
+    disableBeacon: true,
+  },
+  {
+    target: ".tour-assign",
+    content: "Assign this Software to employees.",
+    disableBeacon: true,
+  },
+];
     const gridRef = useRef(null);
     const cardRef = useRef(null);
   const VENDOR_CONFIG = {
@@ -103,6 +131,8 @@ const getVendorUI = (vendorName = "") => {
 const [instanceForm, setInstanceForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
 const [assetsPerPage, setAssetsPerPage] = useState(8);
+  const [runTour, setRunTour] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0);
 
   const navigate = useNavigate();
   const { currency, convertFromBase, loadingRates } = useCurrency();
@@ -417,6 +447,67 @@ const mapInstanceData = (inst, assignment) => {
 };
   return (
     <div className="inventory-container">
+      <Joyride
+  steps={steps}
+  run={runTour}
+  stepIndex={stepIndex}
+  continuous
+  showSkipButton
+  showProgress
+  disableBeacon
+  scrollToFirstStep
+  spotlightPadding={10}
+  callback={(data) => {
+    const { status } = data;
+
+    if (status === "finished" || status === "skipped") {
+      setRunTour(false);
+      setStepIndex(0); // reset
+    }
+  }}
+styles={{
+    options: {
+      primaryColor: "#948979",
+      zIndex: 10000,
+      arrowColor: "#222831",
+      overlayColor: "rgba(0,0,0,0.7)",
+    },
+
+    tooltipContainer: {
+      backgroundColor: "#222831",
+      color: "#DFD0B8",
+      borderRadius: "12px",
+      padding: "16px",
+    },
+
+    tooltipTitle: {
+      color: "#DFD0B8",
+    },
+
+    tooltipContent: {
+      color: "#DFD0B8",
+    },
+
+    buttonNext: {
+      backgroundColor: "#948979",
+      color: "#222831",
+      borderRadius: "8px",
+      padding: "6px 12px",
+    },
+
+    buttonBack: {
+      color: "#DFD0B8",
+    },
+
+    buttonSkip: {
+      color: "#948979",
+    },
+
+    buttonClose: {
+      color: "#948979",
+    },
+  }}
+/>
       {/* HEADER */}
       <div className="dashboard-header">
         <h2 className="hardware-title">Software Inventory</h2>
@@ -426,7 +517,7 @@ const mapInstanceData = (inst, assignment) => {
             placeholder="Search software..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="inventory-search-input"
+            className="inventory-search-input tour-search"
           />
       </div>
 
@@ -437,7 +528,7 @@ const mapInstanceData = (inst, assignment) => {
             <motion.div
   key={asset._id}
   ref={index === 0 ? cardRef : null}
-  className="inventory-card"
+  className="inventory-card tour-card"
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
 >
@@ -575,11 +666,11 @@ const mapInstanceData = (inst, assignment) => {
 
   {/* 🔷 ACTIONS */}
   <div className="card-actions">
-    <button onClick={() => setSelectedAsset(asset)} className="btn-save">
+    <button onClick={() => setSelectedAsset(asset)} className="btn-save tour-view">
       View
     </button>
 
-    <button onClick={() => handleEditOpen(asset)} className="btn-edit">
+    <button onClick={() => handleEditOpen(asset)} className="btn-edit tour-edit">
       Edit
     </button>
 
@@ -587,7 +678,7 @@ const mapInstanceData = (inst, assignment) => {
       Delete
     </button>
 
-    <button onClick={() => handleAssign(asset)} className="btn-assign">
+    <button onClick={() => handleAssign(asset)} className="btn-assign tour-assign">
       Assign
     </button>
   </div>

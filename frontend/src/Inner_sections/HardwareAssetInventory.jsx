@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../Components/Pagination";
 import { Joyride } from "react-joyride";
 const HardwareAssetList = () => {
-  const steps = [
+const steps = [
   {
     target: ".tour-search",
     content: "Search and quickly find hardware assets.",
@@ -33,18 +33,22 @@ const HardwareAssetList = () => {
   {
     target: ".tour-card",
     content: "Each card represents a hardware asset with details.",
+    disableBeacon: true,
   },
   {
     target: ".tour-view",
-    content: "View all instances of this asset.",
+    content: "View all instances of this hardware asset.",
+    disableBeacon: true,
   },
   {
     target: ".tour-edit",
-    content: "Edit asset details anytime.",
+    content: "Edit hardware details anytime.",
+    disableBeacon: true,
   },
   {
     target: ".tour-assign",
-    content: "Assign this asset to employees.",
+    content: "Assign this hardware to employees.",
+    disableBeacon: true,
   },
 ];
   const gridRef = useRef(null);
@@ -329,6 +333,7 @@ const paginatedAssets = filteredAssets.slice(
 <Joyride
   steps={steps}
   run={runTour}
+  stepIndex={stepIndex}
   continuous
   showSkipButton
   showProgress
@@ -345,27 +350,43 @@ const paginatedAssets = filteredAssets.slice(
   }}
   styles={{
     options: {
-      primaryColor: "#948979",       // buttons / accent
-      backgroundColor: "#222831",    // tooltip bg
-      textColor: "#DFD0B8",          // main text
+      primaryColor: "#948979",
+      zIndex: 10000,
       arrowColor: "#222831",
       overlayColor: "rgba(0,0,0,0.7)",
-      zIndex: 10000,
     },
-    tooltip: {
+
+    tooltipContainer: {
+      backgroundColor: "#222831",
+      color: "#DFD0B8",
       borderRadius: "12px",
-      padding: "14px",
+      padding: "16px",
     },
+
+    tooltipTitle: {
+      color: "#DFD0B8",
+    },
+
+    tooltipContent: {
+      color: "#DFD0B8",
+    },
+
     buttonNext: {
       backgroundColor: "#948979",
       color: "#222831",
       borderRadius: "8px",
       padding: "6px 12px",
     },
+
     buttonBack: {
       color: "#DFD0B8",
     },
+
     buttonSkip: {
+      color: "#948979",
+    },
+
+    buttonClose: {
       color: "#948979",
     },
   }}
