@@ -76,7 +76,7 @@
 }
 
 .asset-info h3 {
-  font-size: 18px;
+  font-size: clamp(12px, 1.2vw, 18px);
   color: #DFD0B8;
 }
 .asset-info p {
@@ -208,9 +208,11 @@ button {
   animation: fadeIn 0.2s ease;
 }
 .details-box {
-  display: flex;
-  justify-content: space-between;
-  color: #DFD0B8;
+     color: #dfd0b8;
+    display: flex;
+    justify-content: space-between;
+    font-size: clamp(12px, 1.2vw, 18px);
+    gap: 5px;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-6px); }

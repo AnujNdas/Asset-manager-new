@@ -330,27 +330,20 @@ const paginatedAssets = filteredAssets.slice(
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
     <div className="inventory-container">
-  <Joyride
-  key={runTour ? "run" : "stop"}
+<Joyride
   steps={steps}
   run={runTour}
-  stepIndex={stepIndex}   // ✅ IMPORTANT
   continuous
   showSkipButton
   showProgress
-  disableBeacon={true}
+  disableBeacon
   scrollToFirstStep
   spotlightPadding={10}
   callback={(data) => {
-    const { status, index, type } = data;
-
-    if (type === "step:after") {
-      setStepIndex(index + 1);   // ✅ move forward manually
-    }
+    const { status } = data;
 
     if (status === "finished" || status === "skipped") {
       setRunTour(false);
-      setStepIndex(0);           // ✅ reset
     }
   }}
 styles={{
@@ -408,12 +401,12 @@ styles={{
             className="inventory-search-input tour-search"
           />
 <button
-onClick={() => {
-  setRunTour(false);        // reset
-  setTimeout(() => {
-    setRunTour(true);       // fresh start
-  }, 50);
-}}
+  onClick={() => {
+    setRunTour(false);
+    setTimeout(() => {
+      setRunTour(true);
+    }, 50);
+  }}
   className="tour-help-btn"
 >
   ❓ Guide

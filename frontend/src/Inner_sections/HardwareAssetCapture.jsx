@@ -18,9 +18,9 @@ const downloadTemplate = () => {
   const data = [
     {
       assetName: "Dell Laptop",
-      assetCategory: "IT Equipment",
-      associateUnit: "Head Office",
-      locationName: "Mumbai", 
+      assetCategory: "Electronics",
+      associateUnit: "Piece",
+      locationName: "Paris, France", 
 
       type: "one_time", // one_time / maintenance
 

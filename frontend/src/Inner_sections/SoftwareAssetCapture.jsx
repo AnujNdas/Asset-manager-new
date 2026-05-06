@@ -17,9 +17,9 @@ const downloadTemplate = () => {
   const data = [
     {
       assetName: "Adobe Photoshop",
-      assetCategory: "Design Software",
-      associateUnit: "IT Department",
-      BillingLocation: "Head Office",
+      assetCategory: "Operating system",
+      associateUnit: "Concurrent User",
+      locationName: "Paris , France",
 
       type: "yearly", // monthly / yearly / one_time
 
