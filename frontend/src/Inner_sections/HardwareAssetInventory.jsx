@@ -27,6 +27,8 @@ import "driver.js/dist/driver.css";
 
 const HardwareAssetList = () => {
   const navigate = useNavigate();
+      const gridRef = useRef(null);
+      const cardRef = useRef(null);
     const VENDOR_CONFIG = {
   dell: { icon: "💻", color: "blue" },
   hp: { icon: "🖥️", color: "cyan" },
