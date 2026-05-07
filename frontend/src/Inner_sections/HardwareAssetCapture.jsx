@@ -13,7 +13,8 @@ import Papa from "papaparse";
 import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
 import getErrorMessage from "../Utils/getErrorMessage";
-
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 const downloadTemplate = () => {
   const data = [
     {
@@ -62,7 +63,81 @@ export const SUPPORTED_CURRENCIES = [
 ];
 const AssetCapture = () => {
   // src/constants/currencies.js
-
+      const driverObj = driver({
+      showProgress: true,
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+    
+      overlayColor: "rgba(0,0,0,0.75)",
+    
+      popoverClass: "custom-driver-popover",
+    
+      steps: [
+        {
+          element: ".tour-import",
+          popover: {
+            title: "Import Assets",
+            description: "You can add more than one Hardware asset at a time.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+    
+        {
+          element: ".tour-template",
+          popover: {
+            title: "Download Template",
+            description:
+              "Download and View the Format in which data is required for import.",
+            side: "bottom",
+          },
+        },
+    
+        {
+          element: ".tour-category",
+          popover: {
+            title: "Category section",
+            description: "Categories are set as default for both hardware and software",
+            side: "bottom",
+          },
+        },
+    
+        {
+          element: ".tour-unit",
+          popover: {
+            title: "Unit Section",
+            description: "Defaults units are there but you can add them if you want.",
+            side: "bottom",
+          },
+        },
+    
+        {
+          element: ".tour-location",
+          popover: {
+            title: "Location Section",
+            description: "Defaults Locations are there but you can add them if you want.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-quantity",
+          popover: {
+            title: "Quantity Section",
+            description: "Number of Instances you want to add under this Hardware Asset.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-save",
+          popover: {
+            title: "Save Section",
+            description: "Click here to save Hardware here.",
+            side: "bottom",
+          },
+        },
+      ],
+    });
   const navigate = useNavigate();
 
   const defaultFormData = {
@@ -117,73 +192,21 @@ const AssetCapture = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    const guideSeen = localStorage.getItem("assetCaptureGuideSeen");
+useEffect(() => {
+  const seen = localStorage.getItem("inventoryTourSeen");
 
-    if (!guideSeen) {
-      showGuide();
-    }
-  }, []);
-  const showGuide = async () => {
-    const steps = [
-      // {
-      //   title: "Asset Name",
-      //   image: "/guide/asset-name.png",
-      //   text: "Enter a clear and descriptive name for the hardware asset."
-      // },
-      // {
-      //   title: "Category Selection",
-      //   image: "/guide/category.png",
-      //   text: "Choose the correct category so assets are organized properly."
-      // },
-      // {
-      //   title: "Location Information",
-      //   image: "/guide/location.png",
-      //   text: "Specify where the asset is physically located."
-      // },
-      {
-        title: "Cost & Quantity",
-        image: "/guide/cost&quantity.webp",
-        text: "Put cost Values like this",
-      },
-      {
-        title: "Availability",
-        image: "/guide/status.webp",
-        text: "Assets are automatically available after creation. Assignment will update their usage.",
-      },
-      // {
-      //   title: "Warranty & Insurance",
-      //   image: "/guide/warranty.png",
-      // }
-    ];
+  if (!seen) {
+    setTimeout(() => {
+      driverObj.drive();
 
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
+      localStorage.setItem(
+        "inventoryTourSeen",
+        "true"
+      );
+    }, 1000);
+  }
+}, []);
 
-      const result = await ThemeSwal.fire({
-        title: step.title,
-        html: `
-          <div style="display:flex;flex-direction:column;align-items:center">
-            <img src="${step.image}" 
-                style="max-width:320px;margin-bottom:15px;border-radius:8px" />
-            <p style="font-size:14px">${step.text}</p>  
-          </div>
-        `,
-        confirmButtonText: i === steps.length - 1 ? "Start Using Page" : "Next",
-        showCancelButton: true,
-        cancelButtonText: "Skip",
-        confirmButtonColor: "#DFD0B8",
-        cancelButtonColor: "#393E46",
-        width: 500,
-      });
-
-      if (result.dismiss === ThemeSwal.DismissReason.cancel) {
-        break;
-      }
-    }
-
-    localStorage.setItem("assetCaptureGuideSeen", "true");
-  };
 const handleImport = async () => {
   if (!importFile) {
     ThemeSwal.fire("Error", "Please select a file", "error");
@@ -380,6 +403,12 @@ const handleImport = async () => {
             <li>Enter accurate cost for reports</li>
           </ul>
         </div>
+          <button
+    onClick={() => driverObj.drive()}
+    className="tour-help-btn"
+  >
+    ❓ Guide
+  </button>
       </div>
 
       {/* RIGHT FORM PANEL */}
@@ -388,10 +417,10 @@ const handleImport = async () => {
           <div className="capture-header">
             <h3>Hardware Details</h3>
             <div className="group-buttons">
-            <button className="import-btn" onClick={() => setShowImport(true)}>
+            <button className="import-btn tour-import" onClick={() => setShowImport(true)}>
               ⬆ Import Excel
             </button>
-            <button onClick={downloadTemplate} className="btn-cancel">⬇ Download Template</button>
+            <button onClick={downloadTemplate} className="btn-cancel tour-template">⬇ Download Template</button>
             </div>
           </div>
           <div className="grid-2">
@@ -404,7 +433,7 @@ const handleImport = async () => {
               />
             </div>
 
-            <div className="input-group">
+            <div className="input-group tour-category">
               <label>Category *</label>
               <select
                 name="assetCategory"
@@ -424,7 +453,7 @@ const handleImport = async () => {
           <h3>Location & Dates</h3>
 
           <div className="grid-2">
-            <div className="input-group">
+            <div className="input-group tour-unit">
               <label>Unit *</label>
               <select
                 name="associateUnit"
@@ -440,7 +469,7 @@ const handleImport = async () => {
               </select>
             </div>
 
-            <div className="input-group">
+            <div className="input-group tour-location">
               <label>Billing Location *</label>
               <select
                 name="locationName"
@@ -467,7 +496,7 @@ const handleImport = async () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="input-group">
+            <div className="input-group tour-quantity">
               <label>Quantity *</label>
               <input
                 type="number"
@@ -518,7 +547,7 @@ const handleImport = async () => {
           </div>
 
           <button
-            className="submit-btn"
+            className="submit-btn tour-save"
             disabled={isSubmitting}
             onClick={handleAddAsset}
           >

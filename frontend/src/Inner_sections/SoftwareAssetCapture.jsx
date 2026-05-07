@@ -12,6 +12,8 @@ import {
   bulkUploadSoftwareAssets,
 } from "../Services/ApiServices";
 import * as XLSX from "xlsx";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import { getErrorMessage } from "../utils/getErrorMessage";
 const downloadTemplate = () => {
   const data = [
@@ -95,6 +97,95 @@ export default function SoftwareAssetCapture() {
   const [importFile, setImportFile] = useState(null);
   const [importLoading, setImportLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+      const driverObj = driver({
+      showProgress: true,
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+    
+      overlayColor: "rgba(0,0,0,0.75)",
+    
+      popoverClass: "custom-driver-popover",
+    
+      steps: [
+        {
+          element: ".tour-import",
+          popover: {
+            title: "Import Assets",
+            description: "You can add more than one Software asset at a time.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+    
+        {
+          element: ".tour-template",
+          popover: {
+            title: "Download Template",
+            description:
+              "Download and View the Format in which data is required for import.",
+            side: "bottom",
+          },
+        },
+    
+        {
+          element: ".tour-category",
+          popover: {
+            title: "Category section",
+            description: "Categories are set as default for both hardware and software",
+            side: "bottom",
+          },
+        },
+    
+        {
+          element: ".tour-unit",
+          popover: {
+            title: "Unit Section",
+            description: "Defaults units are there but you can add them if you want.",
+            side: "bottom",
+          },
+        },
+    
+        {
+          element: ".tour-location",
+          popover: {
+            title: "Location Section",
+            description: "Defaults Locations are there but you can add them if you want.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-quantity",
+          popover: {
+            title: "Quantity Section",
+            description: "Number of Instances you want to add under this Software Asset.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-save",
+          popover: {
+            title: "Save Section",
+            description: "Click here to save Software here.",
+            side: "bottom",
+          },
+        },
+      ],
+    });
+  useEffect(() => {
+    const seen = localStorage.getItem("inventoryTourSeen");
+  
+    if (!seen) {
+      setTimeout(() => {
+        driverObj.drive();
+  
+        localStorage.setItem(
+          "inventoryTourSeen",
+          "true"
+        );
+      }, 1000);
+    }
+  }, []);
 
 useEffect(() => {
   (async () => {
@@ -287,6 +378,12 @@ ThemeSwal.fire({
             <li>Ensure expiry date is accurate</li>
           </ul>
         </div>
+        <button
+  onClick={() => driverObj.drive()}
+  className="tour-help-btn"
+>
+  ❓ Guide
+</button>
       </div>
 
       {/* RIGHT FORM PANEL */}
@@ -296,10 +393,10 @@ ThemeSwal.fire({
             <h3>Software Details</h3>
             <div className="group-buttons">
 
-            <button className="import-btn" onClick={() => setShowImport(true)}>
+            <button className="import-btn tour-import" onClick={() => setShowImport(true)}>
               ⬆ Import Excel
             </button>
-            <button onClick={downloadTemplate} className="btn-cancel">⬇ Download Template</button>
+            <button onClick={downloadTemplate} className="btn-cancel tour-template">⬇ Download Template</button>
             </div>
           </div>
 
@@ -309,7 +406,7 @@ ThemeSwal.fire({
               <input name="assetName" onChange={handleChange} />
             </div>
 
-            <div className="input-group">
+            <div className="input-group tour-category">
               <label>Category *</label>
               <select name="assetCategory" onChange={handleChange}>
                 <option value="">Select</option>
@@ -323,7 +420,7 @@ ThemeSwal.fire({
           </div>
 
           <div className="grid-2">
-            <div className="input-group">
+            <div className="input-group tour-unit">
               <label>Unit *</label>
               <select name="associateUnit" onChange={handleChange}>
                 <option value="">Select</option>
@@ -335,7 +432,7 @@ ThemeSwal.fire({
               </select>
             </div>
 
-            <div className="input-group">
+            <div className="input-group tour-location">
               <label>Billing Location</label>
               <select name="locationName" onChange={handleChange}>
                 <option value="">Select</option>
@@ -369,7 +466,7 @@ ThemeSwal.fire({
           <h3>Financial</h3>
 
           <div className="grid-2">
-            <div className="input-group">
+            <div className="input-group tour-quantity">
               <label>Quantity *</label>
               <input
                 type="number"
@@ -412,7 +509,7 @@ ThemeSwal.fire({
           </div> */}
 
           <button
-            className="submit-btn"
+            className="submit-btn tour-save"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >

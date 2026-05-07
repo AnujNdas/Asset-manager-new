@@ -23,7 +23,7 @@ const tabs = [
   { name: "Unit", key: "unit", path: "/classification/unit" },
   { name: "Category", key: "category", path: "/classification/category" },
   { name: "Department", key: "department", path: "/classification/department" },
-  { name: "Status", key: "status", path: "/classification/status" },
+  // { name: "Status", key: "status", path: "/classification/status" },
 ];
 const preloadMap = {
   location: () => import("../Inner_sections/Location"),
