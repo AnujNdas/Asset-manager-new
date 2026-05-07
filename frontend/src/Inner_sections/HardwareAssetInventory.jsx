@@ -333,17 +333,23 @@ const paginatedAssets = filteredAssets.slice(
 <Joyride
   steps={steps}
   run={runTour}
+  stepIndex={stepIndex}
   continuous
   showSkipButton
   showProgress
-  disableBeacon
+  disableBeacon={true}
   scrollToFirstStep
   spotlightPadding={10}
   callback={(data) => {
-    const { status } = data;
+    const { status, index, type } = data;
+
+    if (type === "step:after") {
+      setStepIndex(index + 1);
+    }
 
     if (status === "finished" || status === "skipped") {
       setRunTour(false);
+      setStepIndex(0);
     }
   }}
 styles={{
@@ -402,10 +408,8 @@ styles={{
           />
 <button
   onClick={() => {
-    setRunTour(false);
-    setTimeout(() => {
-      setRunTour(true);
-    }, 50);
+    setStepIndex(0);
+    setRunTour(true);
   }}
   className="tour-help-btn"
 >
