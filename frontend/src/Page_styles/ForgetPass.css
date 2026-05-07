@@ -4,11 +4,11 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  background: #f4f6f9;
+  /* background: #222831; */
 }
 
 .forgot-card {
-  background: #fff;
+  background: #222831;
   padding: 30px;
   border-radius: 10px;
   width: 350px;
@@ -18,12 +18,12 @@
 
 .forgot-card h2 {
   margin-bottom: 10px;
-  color: #333;
+  color: #DFD0B8;
 }
 
 .forgot-card p {
   font-size: 14px;
-  color: #666;
+  color: #948979;
   margin-bottom: 20px;
 }
 
@@ -36,24 +36,25 @@
 .forgot-card label {
   font-size: 14px;
   text-align: left;
-  color: #444;
+  color: #948979;
 }
 
 .forgot-card input {
   padding: 10px;
-  border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
+  background: #393E46;
+  border: none;
 }
 
 .forgot-card input:focus {
-  border-color: #007bff;
+  border-color: #DFD0B8;
   outline: none;
 }
 
 .forgot-card button {
-  background: #007bff;
-  color: white;
+  background: #DFD0B8;
+  color: #222831;
   padding: 10px;
   font-size: 15px;
   border: none;
@@ -63,7 +64,7 @@
 }
 
 .forgot-card button:hover {
-  background: #0056b3;
+  background: #948979;
 }
 
 .message {

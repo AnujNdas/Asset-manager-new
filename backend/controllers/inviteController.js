@@ -219,16 +219,73 @@ const getInvites = async (req, res) => {
     const invites = await OrganizationInvite.find({
       organizationId: req.user.organizationId,
     })
+      .populate("createdBy", "name email")
       .sort({ createdAt: -1 })
       .lean();
 
-    res.status(200).json(invites);
+    const formattedInvites = invites.map((invite) => {
+      const now = new Date();
+
+      // 🔥 Expired check
+      const isExpired =
+        invite.expiresAt && new Date(invite.expiresAt) < now;
+
+      // 🔥 Remaining days
+      let remainingDays = null;
+
+      if (invite.expiresAt) {
+        const diffMs =
+          new Date(invite.expiresAt) - now;
+
+        remainingDays = Math.max(
+          0,
+          Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+        );
+      }
+
+      return {
+        _id: invite._id,
+
+        email: invite.email,
+        role: invite.role,
+        status: isExpired ? "expired" : invite.status,
+
+        inviteToken: invite.inviteToken,
+        inviteUrl: `${process.env.FRONTEND_URL}/user/signup?invite=${invite.inviteToken}`,
+
+        maxUses: invite.maxUses,
+        usedCount: invite.usedCount || 0,
+
+        createdAt: invite.createdAt,
+        updatedAt: invite.updatedAt,
+        expiresAt: invite.expiresAt,
+
+        remainingDays,
+
+        createdBy: invite.createdBy
+          ? {
+              _id: invite.createdBy._id,
+              name: invite.createdBy.name,
+              email: invite.createdBy.email,
+            }
+          : null,
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: formattedInvites.length,
+      data: formattedInvites,
+    });
   } catch (err) {
     console.error("Fetch invites error:", err);
-    res.status(500).json({ error: "Failed to fetch invites" });
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch invites",
+    });
   }
 };
-
 const revokeInvite = async (req, res) => {
   try {
     const invite = await OrganizationInvite.findOne({
