@@ -21,35 +21,68 @@ import CurrencyFilter from "../Components/CurrencyFilter";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
 import { getErrorMessage } from "../utils/getErrorMessage";
-import { Joyride } from "react-joyride";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 const SoftwareAssetList = () => {
-  const steps = [
-  {
-    target: ".tour-search",
-    content: "Search and quickly find Software assets.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-card",
-    content: "Each card represents a Software asset with details.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-view",
-    content: "View all instances of this asset.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-edit",
-    content: "Edit Software details anytime.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-assign",
-    content: "Assign this Software to employees.",
-    disableBeacon: true,
-  },
-];
+  const driverObj = driver({
+  showProgress: true,
+  animate: true,
+  smoothScroll: true,
+  allowClose: true,
+
+  overlayColor: "rgba(0,0,0,0.75)",
+
+  popoverClass: "custom-driver-popover",
+
+  steps: [
+    {
+      element: ".tour-search",
+      popover: {
+        title: "Search Assets",
+        description: "Search and quickly find Software assets.",
+        side: "bottom",
+        align: "start",
+      },
+    },
+
+    {
+      element: ".tour-card",
+      popover: {
+        title: "Asset Cards",
+        description:
+          "Each card represents a Software asset with important details.",
+        side: "bottom",
+      },
+    },
+
+    {
+      element: ".tour-view",
+      popover: {
+        title: "View Instances",
+        description: "View all instances of this Software asset.",
+        side: "bottom",
+      },
+    },
+
+    {
+      element: ".tour-edit",
+      popover: {
+        title: "Edit Asset",
+        description: "Edit Software details anytime.",
+        side: "bottom",
+      },
+    },
+
+    {
+      element: ".tour-assign",
+      popover: {
+        title: "Assign Asset",
+        description: "Assign this Software to Team members.",
+        side: "bottom",
+      },
+    },
+  ],
+});
     const gridRef = useRef(null);
     const cardRef = useRef(null);
   const VENDOR_CONFIG = {
@@ -154,6 +187,20 @@ useEffect(() => {
   window.addEventListener("resize", calculate);
 
   return () => window.removeEventListener("resize", calculate);
+}, []);
+useEffect(() => {
+  const seen = localStorage.getItem("inventoryTourSeen");
+
+  if (!seen) {
+    setTimeout(() => {
+      driverObj.drive();
+
+      localStorage.setItem(
+        "inventoryTourSeen",
+        "true"
+      );
+    }, 1000);
+  }
 }, []);
   useEffect(() => {
     fetchAll();
@@ -447,68 +494,10 @@ const mapInstanceData = (inst, assignment) => {
 };
   return (
     <div className="inventory-container">
-<Joyride
-  steps={steps}
-  run={runTour}
-  continuous
-  showSkipButton
-  showProgress
-  disableBeacon
-  scrollToFirstStep
-  spotlightPadding={10}
-  callback={(data) => {
-    const { status } = data;
-
-    if (status === "finished" || status === "skipped") {
-      setRunTour(false);
-    }
-  }}
-styles={{
-  options: {
-    primaryColor: "#948979",
-    arrowColor: "#222831",
-    overlayColor: "rgba(0,0,0,0.7)",
-    zIndex: 10000,
-  },
-
-  tooltip: {
-    backgroundColor: "#222831",   // 🔥 THIS FIXES WHITE BOX
-    borderRadius: "12px",
-  },
-
-  tooltipContainer: {
-    backgroundColor: "#222831",
-    color: "#DFD0B8",
-    padding: "16px",
-  },
-
-  tooltipContent: {
-    color: "#DFD0B8",
-  },
-
-  buttonNext: {
-    backgroundColor: "#948979",
-    color: "#222831",
-    borderRadius: "8px",
-  },
-
-  buttonBack: {
-    color: "#DFD0B8",
-  },
-
-  buttonSkip: {
-    color: "#948979",
-  },
-
-  buttonClose: {
-    color: "#948979",
-  },
-}}
-/>
       {/* HEADER */}
       <div className="dashboard-header">
         <h2 className="hardware-title">Software Inventory</h2>
-
+        <div style={{display : "flex" , gap : "5px"}}>
           <input
             type="text"
             placeholder="Search software..."
@@ -517,16 +506,12 @@ styles={{
             className="inventory-search-input tour-search"
           />
 <button
-onClick={() => {
-  setRunTour(false);        // reset
-  setTimeout(() => {
-    setRunTour(true);       // fresh start
-  }, 50);
-}}
+  onClick={() => driverObj.drive()}
   className="tour-help-btn"
 >
   ❓ Guide
 </button>
+</div>
       </div>
 
       {/* CARDS */}

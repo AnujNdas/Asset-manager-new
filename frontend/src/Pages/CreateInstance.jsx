@@ -139,7 +139,7 @@
           renewalDate: "2027-01-01",
           lastUsedDate: "2026-04-01",
           purchaseCost: 10000,
-          currency: "INR",
+          currency: "USD",
           renewalCost: 2000,
         },
       ];
@@ -178,7 +178,7 @@
         deviceName: "",
         // shared
         purchaseCost: "",
-        currency: "INR",
+        currency: "USD",
         vendor: "",
         purchaseDate: "",
 

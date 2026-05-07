@@ -163,7 +163,7 @@ const [itemsPerPage, setItemsPerPage] = useState(8);
       element: ".tour-assign",
       popover: {
         title: "Assign Asset",
-        description: "Assign this hardware to employees.",
+        description: "Assign this hardware to Team members.",
         side: "bottom",
       },
     },
@@ -373,7 +373,7 @@ const paginatedAssets = filteredAssets.slice(
       {/* HEADER */}
       <div className="dashboard-header">
         <h2>Hardware Inventory</h2>
-
+    <div style={{display : "flex" , gap : "5px"}}>
           <input
             type="text"
             placeholder="Search Hardware..."
@@ -387,7 +387,7 @@ const paginatedAssets = filteredAssets.slice(
 >
   ❓ Guide
 </button>
-
+</div>
       </div>
 
       {/* GRID */}
