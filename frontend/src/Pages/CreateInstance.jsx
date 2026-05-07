@@ -407,7 +407,14 @@
       });
 
 if (res.success) {
-  ThemeSwal.fire("Success", `✅ ${res.inserted} imported, ${res.skipped} skipped`, "success");
+  const inserted = res.inserted ?? res.data?.inserted ?? 0;
+  const skipped = res.skipped ?? res.data?.skipped ?? 0;
+
+  ThemeSwal.fire(
+    "Success",
+    `✅ ${inserted} imported, ${skipped} skipped`,
+    "success"
+  );
 } else {
   ThemeSwal.fire("Error", res.message || "Import failed", "error");
 }
