@@ -410,6 +410,20 @@ if (res.success) {
   const inserted = res.inserted ?? res.data?.inserted ?? 0;
   const skipped = res.skipped ?? res.data?.skipped ?? 0;
 
+  // ✅ update progress instantly
+  setAsset((prev) => ({
+    ...prev,
+    pendingInstances: Math.max(
+      0,
+      (prev?.pendingInstances || 0) - inserted
+    ),
+  }));
+
+  // ✅ remove created rows from UI
+  setInstances((prev) =>
+    prev.slice(inserted)
+  );
+
   ThemeSwal.fire(
     "Success",
     `✅ ${inserted} imported, ${skipped} skipped`,
