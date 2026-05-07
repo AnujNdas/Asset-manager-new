@@ -4,7 +4,7 @@ const OrganizationInvite = require("../models/OrganizationInvite");
 const Subscription = require("../models/Subscription");
 const User = require("../models/User");
 
-const { pricingTiers } = require("../Config/pricing");
+const { pricingTiers } = require("../config/pricingTiers");
 
 // ✅ YOUR EXISTING BREVO UTILITY
 const sendBrevoEmail = require("../utils/sendBrevoEmail");
