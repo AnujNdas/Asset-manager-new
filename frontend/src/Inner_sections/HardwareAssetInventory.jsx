@@ -22,37 +22,10 @@ import { CURRENCY_SYMBOLS } from "../utils/currency";
 import CurrencyFilter from "../Components/CurrencyFilter";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../Components/Pagination";
-import { Joyride } from "react-joyride";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+
 const HardwareAssetList = () => {
-const steps = [
-  {
-    target: ".tour-search",
-    content: "Search and quickly find hardware assets.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-card",
-    content: "Each card represents a hardware asset with details.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-view",
-    content: "View all instances of this hardware asset.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-edit",
-    content: "Edit hardware details anytime.",
-    disableBeacon: true,
-  },
-  {
-    target: ".tour-assign",
-    content: "Assign this hardware to employees.",
-    disableBeacon: true,
-  },
-];
-  const gridRef = useRef(null);
-  const cardRef = useRef(null);
   const navigate = useNavigate();
     const VENDOR_CONFIG = {
   dell: { icon: "💻", color: "blue" },
@@ -132,10 +105,70 @@ const [instanceForm, setInstanceForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [runTour, setRunTour] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0);
 const [itemsPerPage, setItemsPerPage] = useState(8);
   const { currency, convertFromBase, loadingRates } = useCurrency();
+
+  const driverObj = driver({
+  showProgress: true,
+  animate: true,
+  smoothScroll: true,
+  allowClose: true,
+
+  overlayColor: "rgba(0,0,0,0.75)",
+
+  popoverClass: "custom-driver-popover",
+
+  steps: [
+    {
+      element: ".tour-search",
+      popover: {
+        title: "Search Assets",
+        description: "Search and quickly find hardware assets.",
+        side: "bottom",
+        align: "start",
+      },
+    },
+
+    {
+      element: ".tour-card",
+      popover: {
+        title: "Asset Cards",
+        description:
+          "Each card represents a hardware asset with important details.",
+        side: "bottom",
+      },
+    },
+
+    {
+      element: ".tour-view",
+      popover: {
+        title: "View Instances",
+        description: "View all instances of this hardware asset.",
+        side: "bottom",
+      },
+    },
+
+    {
+      element: ".tour-edit",
+      popover: {
+        title: "Edit Asset",
+        description: "Edit hardware details anytime.",
+        side: "bottom",
+      },
+    },
+
+    {
+      element: ".tour-assign",
+      popover: {
+        title: "Assign Asset",
+        description: "Assign this hardware to employees.",
+        side: "bottom",
+      },
+    },
+  ],
+});
+
+
 useEffect(() => {
   const calculate = () => {
     if (!gridRef.current || !cardRef.current) return;
@@ -160,9 +193,13 @@ useEffect(() => {
 
   if (!seen) {
     setTimeout(() => {
-      setRunTour(true);
-      localStorage.setItem("inventoryTourSeen", "true");
-    }, 1000); // wait for cards to render
+      driverObj.drive();
+
+      localStorage.setItem(
+        "inventoryTourSeen",
+        "true"
+      );
+    }, 1000);
   }
 }, []);
   useEffect(() => {
@@ -330,70 +367,6 @@ const paginatedAssets = filteredAssets.slice(
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
     <div className="inventory-container">
-<Joyride
-  steps={steps}
-  run={runTour}
-  stepIndex={stepIndex}
-  continuous
-  showSkipButton
-  showProgress
-  disableBeacon={true}
-  scrollToFirstStep
-  spotlightPadding={10}
-  callback={(data) => {
-    const { status, index, type } = data;
-
-    if (type === "step:after") {
-      setStepIndex(index + 1);
-    }
-
-    if (status === "finished" || status === "skipped") {
-      setRunTour(false);
-      setStepIndex(0);
-    }
-  }}
-styles={{
-  options: {
-    primaryColor: "#948979",
-    arrowColor: "#222831",
-    overlayColor: "rgba(0,0,0,0.7)",
-    zIndex: 10000,
-  },
-
-  tooltip: {
-    backgroundColor: "#222831",   // 🔥 THIS FIXES WHITE BOX
-    borderRadius: "12px",
-  },
-
-  tooltipContainer: {
-    backgroundColor: "#222831",
-    color: "#DFD0B8",
-    padding: "16px",
-  },
-
-  tooltipContent: {
-    color: "#DFD0B8",
-  },
-
-  buttonNext: {
-    backgroundColor: "#948979",
-    color: "#222831",
-    borderRadius: "8px",
-  },
-
-  buttonBack: {
-    color: "#DFD0B8",
-  },
-
-  buttonSkip: {
-    color: "#948979",
-  },
-
-  buttonClose: {
-    color: "#948979",
-  },
-}}
-/>
 
       {/* HEADER */}
       <div className="dashboard-header">
@@ -407,10 +380,7 @@ styles={{
             className="inventory-search-input tour-search"
           />
 <button
-  onClick={() => {
-    setStepIndex(0);
-    setRunTour(true);
-  }}
+  onClick={() => driverObj.drive()}
   className="tour-help-btn"
 >
   ❓ Guide
