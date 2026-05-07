@@ -1,9 +1,13 @@
 const crypto = require("crypto");
-const OrganizationInvite = require("../models/OrganizationInvite");
 
-const pricingTiers = require("../config/pricingTiers");
-const Subscription = require("../models/Subscription");
-const User = require("../models/User");
+const OrganizationInvite = require("../Models/OrganizationInvite");
+const Subscription = require("../Models/Subscription");
+const User = require("../Models/User");
+
+const { pricingTiers } = require("../Config/pricing");
+
+// ✅ YOUR EXISTING BREVO UTILITY
+const sendBrevoEmail = require("../utils/sendBrevoEmail");
 
 const createInvite = async (req, res, next) => {
   try {
@@ -48,7 +52,21 @@ const createInvite = async (req, res, next) => {
       });
     }
 
-    /* ================= DUPLICATE CHECK ================= */
+    /* ================= USER EXISTS ================= */
+
+    const existingUser = await User.findOne({
+      organizationId,
+      email
+    });
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists in organization"
+      });
+    }
+
+    /* ================= ACTIVE INVITE CHECK ================= */
 
     const existingInvite = await OrganizationInvite.findOne({
       organizationId,
@@ -66,7 +84,9 @@ const createInvite = async (req, res, next) => {
     /* ================= ADMIN LIMIT ================= */
 
     if (role === "admin") {
-      const subscription = await Subscription.findOne({ organizationId });
+      const subscription = await Subscription.findOne({
+        organizationId
+      });
 
       if (!subscription) {
         return res.status(403).json({
@@ -75,7 +95,9 @@ const createInvite = async (req, res, next) => {
         });
       }
 
-      const tier = pricingTiers.find(t => t.key === subscription.tier);
+      const tier = pricingTiers.find(
+        (t) => t.key === subscription.tier
+      );
 
       if (!tier) {
         return res.status(500).json({
@@ -104,9 +126,17 @@ const createInvite = async (req, res, next) => {
       }
     }
 
-    /* ================= CREATE INVITE ================= */
+    /* ================= CREATE TOKEN ================= */
 
-    const inviteToken = crypto.randomBytes(32).toString("hex");
+    const inviteToken = crypto
+      .randomBytes(32)
+      .toString("hex");
+
+    const expiresAt = new Date(
+      Date.now() + expiresInDays * 24 * 60 * 60 * 1000
+    );
+
+    /* ================= SAVE INVITE ================= */
 
     const invite = await OrganizationInvite.create({
       organizationId,
@@ -114,19 +144,66 @@ const createInvite = async (req, res, next) => {
       role,
       email,
       maxUses: maxUses || null,
-      expiresAt: new Date(
-        Date.now() + expiresInDays * 24 * 60 * 60 * 1000
-      ),
+      expiresAt,
       createdBy: userId,
       status: "active"
     });
 
-    const inviteUrl = `${process.env.FRONTEND_URL}/user/signup?invite=${inviteToken}`;
+    /* ================= INVITE URL ================= */
+
+    const inviteUrl =
+      `${process.env.FRONTEND_URL}/user/signup?invite=${inviteToken}`;
+
+    /* ================= SEND EMAIL ================= */
+
+    await sendBrevoEmail(
+      email,
+      "You're Invited to Join Asset Manager",
+      `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        
+        <h2 style="color:#222831;">
+          Organization Invitation
+        </h2>
+
+        <p>
+          You have been invited to join
+          <strong>Asset Manager</strong>
+          as a <strong>${role}</strong>.
+        </p>
+
+        <p>
+          Click the button below to accept the invitation:
+        </p>
+
+        <a
+          href="${inviteUrl}"
+          style="
+            display:inline-block;
+            margin-top:12px;
+            padding:12px 20px;
+            background:#948979;
+            color:#222831;
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+          "
+        >
+          Accept Invitation
+        </a>
+
+        <p style="margin-top:20px; color:#666;">
+          This invitation expires in ${expiresInDays} day(s).
+        </p>
+
+      </div>
+      `
+    );
 
     return res.status(201).json({
       success: true,
+      message: "Invite created and email sent successfully",
       data: {
-        inviteUrl,
         invite
       }
     });
