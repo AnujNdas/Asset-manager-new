@@ -1,8 +1,8 @@
 const crypto = require("crypto");
 
-const OrganizationInvite = require("../Models/OrganizationInvite");
-const Subscription = require("../Models/Subscription");
-const User = require("../Models/User");
+const OrganizationInvite = require("../models/OrganizationInvite");
+const Subscription = require("../models/Subscription");
+const User = require("../models/User");
 
 const { pricingTiers } = require("../Config/pricing");
 
