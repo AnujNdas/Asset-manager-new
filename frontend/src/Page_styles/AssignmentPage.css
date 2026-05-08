@@ -193,6 +193,7 @@
   border-radius: 14px;
   border: 1px solid var(--border);
   max-width: 400px;
+  color: #DFD0B8;
 }
 
 .review h3 {
