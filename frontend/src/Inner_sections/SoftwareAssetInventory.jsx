@@ -416,6 +416,13 @@ useEffect(() => {
   setCurrentPage(1);
 }, [searchTerm , assetsPerPage]);
 
+  const filteredAssets = assets.filter((asset) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      asset.assetName?.toLowerCase().includes(term) ||
+      asset.assetCode?.toLowerCase().includes(term)
+    );
+  });
 useEffect(() => {
   const total = Math.ceil(
     filteredAssets.length / assetsPerPage
@@ -427,13 +434,6 @@ useEffect(() => {
 }, [filteredAssets, assetsPerPage, currentPage]);
 
 
-  const filteredAssets = assets.filter((asset) => {
-    const term = searchTerm.toLowerCase();
-    return (
-      asset.assetName?.toLowerCase().includes(term) ||
-      asset.assetCode?.toLowerCase().includes(term)
-    );
-  });
 
   const indexOfLast = currentPage * assetsPerPage;
   const currentAssets = filteredAssets.slice(
