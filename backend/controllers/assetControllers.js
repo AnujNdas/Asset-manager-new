@@ -1529,11 +1529,28 @@ if (!tier) {
   /* ================= HELPERS ================= */
   const normalize = (v) => v?.toString().trim();
 
-  const parseDateSafe = (d) => {
-    if (!d) return null;
-    const date = new Date(d);
-    return isNaN(date.getTime()) ? null : date;
-  };
+const parseDateSafe = (d) => {
+  if (!d) return null;
+
+  // Excel serial date
+  if (typeof d === "number") {
+    const excelEpoch = new Date(
+      Date.UTC(1899, 11, 30)
+    );
+
+    excelEpoch.setUTCDate(
+      excelEpoch.getUTCDate() + d
+    );
+
+    return excelEpoch;
+  }
+
+  const date = new Date(d);
+
+  return isNaN(date.getTime())
+    ? null
+    : date;
+};
 
   const calculateInsuranceExpiry = (date, term) => {
     if (!date) return null;
@@ -1588,26 +1605,47 @@ if (!tier) {
 const currency = purchaseCost?.currency || "INR";
       /* ---------------- HARDWARE ---------------- */
       if (assetType === "hardware") {
-        const insurancePurchaseDate = parseDateSafe(
-          inst.hardware?.insurancePurchaseDate
-        );
+const hasInsurance =
+  inst.hardware?.hasInsurance === true ||
+  inst.hardware?.hasInsurance === "true";
 
-        const hasInsurance = !!insurancePurchaseDate;
-        const insuranceTerm = inst.hardware?.insuranceTerm || "1_year";
-        const maintenanceCost = await formatCost({
-          amount: inst.hardware?.maintenanceCost,
-          currency
-        });
+const insurancePurchaseDate = hasInsurance
+  ? parseDateSafe(inst.hardware?.insurancePurchaseDate)
+  : null;
 
-        const warrantyRenewalCost = await formatCost({
-          amount: inst.hardware?.warrantyRenewalCost,
-          currency
-        });
+const insuranceTerm = hasInsurance
+  ? inst.hardware?.insuranceTerm || "1_year"
+  : null;
 
-        const insuranceCost = await formatCost({
-          amount: inst.hardware?.insuranceCost,
-          currency
-        });
+const coverageType = hasInsurance
+  ? inst.hardware?.coverageType || ["comprehensive"]
+  : [];
+
+const insuranceExpiry =
+  hasInsurance && insurancePurchaseDate
+    ? calculateInsuranceExpiry(
+        insurancePurchaseDate,
+        insuranceTerm
+      )
+    : null;
+
+const insuranceId = hasInsurance
+  ? normalize(inst.hardware?.insuranceId)
+  : null;
+const maintenanceCost = await formatCost({
+  amount: inst.hardware?.costs?.maintenanceCost || 0,
+  currency
+});
+
+const warrantyRenewalCost = await formatCost({
+  amount: inst.hardware?.costs?.warrantyRenewalCost || 0,
+  currency
+});
+
+const insuranceCost = await formatCost({
+  amount: inst.hardware?.costs?.insuranceCost || 0,
+  currency
+});
         validInstances.push({
           organizationId,
           assetId,
@@ -1633,14 +1671,16 @@ const currency = purchaseCost?.currency || "INR";
             hasInsurance,
             insurancePurchaseDate,
             insuranceTerm,
-            insuranceExpiry: hasInsurance
-              ? calculateInsuranceExpiry(insurancePurchaseDate, insuranceTerm)
-              : null,
-              cost : {
-                maintenanceCost,
-                warrantyRenewalCost,
-                insuranceCost
-              }
+            insuranceExpiry,
+            insuranceId,
+            coverageType,
+            costs: {
+              maintenanceCost,
+              warrantyRenewalCost,
+              insuranceCost: hasInsurance
+                ? insuranceCost
+                : null
+            }
           },
 
           lifecycle: [
@@ -1658,7 +1698,7 @@ const currency = purchaseCost?.currency || "INR";
       /* ---------------- SOFTWARE ---------------- */
       else {
           const renewalCost = await formatCost({
-            amount: inst.software?.renewalCost,
+            amount: inst.software?.costs.renewalCost,
             currency
           });
           const renewalDate = parseDateSafe(inst.software?.renewalDate);
@@ -1681,7 +1721,7 @@ const currency = purchaseCost?.currency || "INR";
             licenseNumber: inst.licenseNumber || "",
             installationDate,
             renewalDate,
-            cost : {
+            costs : {
               renewalCost
             },
             purchaseCost

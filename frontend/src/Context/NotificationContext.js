@@ -67,7 +67,7 @@ const showToast = (notification) => {
   console.log(notification)
 
   const baseStyle = {
-    color: "#fff",
+    color: "#222831",
     borderRadius: "8px",
     padding: "12px 16px",
     fontWeight: "500"
@@ -87,7 +87,7 @@ const showToast = (notification) => {
       toast.error(`${title}: ${message}`, {
         style: {
           ...baseStyle,
-          background: "#2563eb" // blue
+          background: "#d32f2f" // blue
         }
       });
       break;
@@ -97,7 +97,7 @@ const showToast = (notification) => {
         icon: "⚠️",
         style: {
           ...baseStyle,
-          background: "#2563eb"
+          background: "#DFD0B8"
         }
       });
       break;
@@ -106,7 +106,7 @@ const showToast = (notification) => {
       toast(`${title}: ${message}`, {
         style: {
           ...baseStyle,
-          background: "#2563eb"
+          background: "#DFD0B8"
         }
       });
   }
