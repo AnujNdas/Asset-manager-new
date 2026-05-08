@@ -98,7 +98,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
   const hw = instance.hardware || {};
   const sw = instance.software || {};
   const assignment = instance.assignment;
-    console.log(instance.assignment);
+  console.log(instance.assignment);
   return (
     <div className="instance-card tour-card">
 
@@ -223,7 +223,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
         <div>
           <p className="label">Department</p>
           <p className="value">
-            {assignment?.department || "-"}
+            {assignment?.department?.name || "-"}
           </p>
         </div>
 
