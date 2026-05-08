@@ -174,7 +174,8 @@ useEffect(() => {
     if (!gridRef.current || !cardRef.current) return;
 
     const gridWidth = gridRef.current.clientWidth;
-    const cardWidth = cardRef.current.offsetWidth;
+    const cardWidth =
+  cardRef.current.offsetWidth || 320;
 
     const columns = Math.floor(gridWidth / cardWidth) || 1;
 
@@ -409,6 +410,18 @@ await updateSoftwareAsset(editAsset._id, {
 useEffect(() => {
   setCurrentPage(1);
 }, [searchTerm , assetsPerPage]);
+
+useEffect(() => {
+  const total = Math.ceil(
+    filteredAssets.length / assetsPerPage
+  );
+
+  if (currentPage > total) {
+    setCurrentPage(total || 1);
+  }
+}, [filteredAssets, assetsPerPage, currentPage]);
+
+
   const filteredAssets = assets.filter((asset) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -515,9 +528,12 @@ const mapInstanceData = (inst, assignment) => {
       </div>
 
       {/* CARDS */}
-      <div className="inventory-grid">
+<div className="inventory-grid" ref={gridRef}>
         <AnimatePresence>
-          {currentAssets.map((asset , index) => (
+          {currentAssets.map((asset , index) => {
+            const isFullyAssigned =
+    asset.inUse >= asset.assetQuantity;
+            return (
             <motion.div
   key={asset._id}
   ref={index === 0 ? cardRef : null}
@@ -671,12 +687,24 @@ const mapInstanceData = (inst, assignment) => {
       Delete
     </button>
 
-    <button onClick={() => handleAssign(asset)} className="btn-assign tour-assign">
-      Assign
-    </button>
+<button
+  onClick={() => handleAssign(asset)}
+  className={`btn-assign tour-assign ${
+    isFullyAssigned ? "disabled-btn" : ""
+  }`}
+  disabled={isFullyAssigned}
+  title={
+    isFullyAssigned
+      ? "All licenses are already assigned"
+      : "Assign software"
+  }
+>
+  {isFullyAssigned ? "Fully Assigned" : "Assign"}
+</button>
   </div>
 </motion.div>
-          ))}
+           );
+})}
         </AnimatePresence>
       </div>
       <Pagination

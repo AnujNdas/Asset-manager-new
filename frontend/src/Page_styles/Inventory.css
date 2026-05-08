@@ -60,7 +60,11 @@
 .tour-help-btn:active {
   transform: scale(0.96);
 }
-
+.disabled-btn {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 /* ================= CARD ================= */
 .inventory-card {
   background: linear-gradient(135deg, #222831, #393E46);

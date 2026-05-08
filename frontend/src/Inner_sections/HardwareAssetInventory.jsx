@@ -395,6 +395,9 @@ const paginatedAssets = filteredAssets.slice(
         <AnimatePresence>
       {paginatedAssets.map((asset , index) => {
         const totals = getAssetTotals(asset);
+        const allAssigned =
+  asset.assetQuantity > 0 &&
+  asset.inUse >= asset.assetQuantity;
   const statusConfig = STATUS_CONFIG[asset.status] || {
     label: asset.status || "Unknown",
     className: "default",
@@ -521,9 +524,15 @@ const paginatedAssets = filteredAssets.slice(
         >
           Delete
         </button>
-            <button onClick={() => handleAssign(asset)} className="btn-assign tour-assign">
-      Assign
-    </button>
+<button
+  onClick={() => handleAssign(asset)}
+  className={`btn-assign tour-assign ${
+    allAssigned ? "disabled-btn" : ""
+  }`}
+  disabled={allAssigned}
+>
+  {allAssigned ? "Fully Assigned" : "Assign"}
+</button>
       </div>
     </motion.div>
   );
