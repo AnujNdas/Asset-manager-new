@@ -210,7 +210,9 @@ useEffect(() => {
 useEffect(() => {
   registerTour(driverObj);
 }, []);
-
+  useEffect(() => {
+  fetchAll();
+}, []);
   useEffect(() => {
   if (editAsset) {
     setEditForm({

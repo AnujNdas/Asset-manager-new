@@ -704,7 +704,7 @@ const mapInstanceData = (inst, assignment) => {
       : "Assign software"
   }
 >
-  {isFullyAssigned ? "Fully Assigned" : "Assign"}
+  {isFullyAssigned ? "Assigned" : "Assign"}
 </button>
   </div>
 </motion.div>
