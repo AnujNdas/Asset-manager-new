@@ -98,7 +98,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
   const hw = instance.hardware || {};
   const sw = instance.software || {};
   const assignment = instance.assignment;
-
+    console.log(instance.assignment);
   return (
     <div className="instance-card tour-card">
 
