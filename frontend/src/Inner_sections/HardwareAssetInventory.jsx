@@ -24,8 +24,9 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../Components/Pagination";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-
+import { useTour } from "../Context/TourContext";
 const HardwareAssetList = () => {
+    const { registerTour } = useTour();
   const navigate = useNavigate();
       const gridRef = useRef(null);
       const cardRef = useRef(null);
@@ -190,6 +191,7 @@ useEffect(() => {
 
   return () => window.removeEventListener("resize", calculate);
 }, []);
+
 useEffect(() => {
   const seen = localStorage.getItem("inventoryTourSeen");
 
@@ -204,9 +206,11 @@ useEffect(() => {
     }, 1000);
   }
 }, []);
-  useEffect(() => {
-    fetchAll();
-  }, []);
+
+useEffect(() => {
+  registerTour(driverObj);
+}, []);
+
   useEffect(() => {
   if (editAsset) {
     setEditForm({
@@ -381,12 +385,12 @@ const paginatedAssets = filteredAssets.slice(
             onChange={(e) => setSearchTerm(e.target.value)}
             className="inventory-search-input tour-search"
           />
-<button
+{/* <button
   onClick={() => driverObj.drive()}
   className="tour-help-btn"
 >
   ❓ Guide
-</button>
+</button> */}
 </div>
       </div>
 

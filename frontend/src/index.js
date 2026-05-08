@@ -10,6 +10,9 @@ import { NotificationProvider } from './Context/NotificationContext';
 import { CurrencyProvider } from './Context/CurrencyContext'; 
 import AnalyticsTracker from './Components/AnalyticsTracker';
 import { SubscriptionProvider } from "./Context/SubscriptionContext";
+import { TourProvider } from "./Context/TourContext";
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -20,7 +23,10 @@ root.render(
         <NotificationProvider>
           <CurrencyProvider>
       <AnalyticsTracker />
+      <TourProvider>
+
           <App />
+      </TourProvider>
           </CurrencyProvider>
         </NotificationProvider>
        {/* </ProgressProvider>  */}

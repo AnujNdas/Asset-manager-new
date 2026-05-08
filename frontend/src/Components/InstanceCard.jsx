@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useTour } from "../Context/TourContext";
 const formatDate = (date) => {
   if (!date) return "-";
   const d = new Date(date);
@@ -21,6 +21,74 @@ const formatCurrency = (obj) => {
 };
 
 const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
+  const { registerTour } = useTour();
+    const driverObj = driver({
+      showProgress: true,
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+  
+      overlayColor: "rgba(0,0,0,0.75)",
+  
+      popoverClass: "custom-driver-popover",
+  
+      steps: [
+        {
+          element: ".tour-card",
+          popover: {
+            title: "Instance Card",
+            description: "Each card Contains Instance related data.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+  
+        {
+          element: ".tour-reassign",
+          popover: {
+            title: "Reassign Instance",
+            description:
+              "Click and reassign instance to team members.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-history",
+          popover: {
+            title: "History Tracking",
+            description:
+              "Check history for the instances.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-upgrade",
+          popover: {
+            title: "Upgrade Instance",
+            description:
+              "Cost related Upgrades can be done from here.",
+            side: "bottom",
+          },
+        },
+      ],
+    });
+      useEffect(() => {
+        const seen = localStorage.getItem("inventoryTourSeen");
+      
+        if (!seen) {
+          setTimeout(() => {
+            driverObj.drive();
+      
+            localStorage.setItem(
+              "inventoryTourSeen",
+              "true"
+            );
+          }, 1000);
+        }
+      }, []);
+      useEffect(() => {
+      registerTour(driverObj);
+    }, []);
   const isHardware = instance.assetType === "hardware";
   const isSoftware = instance.assetType === "software";
 
@@ -29,7 +97,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
   const assignment = instance.assignment;
 
   return (
-    <div className="instance-card">
+    <div className="instance-card tour-card">
 
       <div className="instance-grid">
 
@@ -176,15 +244,15 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
 
       {/* ACTIONS */}
       <div className="actions">
-        <button className="btn btn-blue" onClick={() => onReassign(instance)}>
+        <button className="btn btn-blue tour-reassign" onClick={() => onReassign(instance)}>
           Reassign
         </button>
 
-        <button className="btn btn-blue" onClick={() => onHistory(instance)}>
+        <button className="btn btn-blue tour-history" onClick={() => onHistory(instance)}>
           History
         </button>
 
-        <button className="btn btn-blue" onClick={() => onUpgrade(instance)}>
+        <button className="btn btn-blue tour-upgrade" onClick={() => onUpgrade(instance)}>
           Upgrade
         </button>
       </div>

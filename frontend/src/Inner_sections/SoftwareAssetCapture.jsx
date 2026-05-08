@@ -14,8 +14,10 @@ import {
 import * as XLSX from "xlsx";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
 import { getErrorMessage } from "../utils/getErrorMessage";
 const downloadTemplate = () => {
+  const { registerTour } = useTour();
   const data = [
     {
       assetName: "Adobe Photoshop",
@@ -186,7 +188,9 @@ export default function SoftwareAssetCapture() {
       }, 1000);
     }
   }, []);
-
+  useEffect(() => {
+  registerTour(driverObj);
+}, []);
 useEffect(() => {
   (async () => {
     try {
@@ -378,12 +382,12 @@ ThemeSwal.fire({
             <li>Ensure expiry date is accurate</li>
           </ul>
         </div>
-        <button
+        {/* <button
   onClick={() => driverObj.drive()}
   className="tour-help-btn"
 >
   ❓ Guide
-</button>
+</button> */}
       </div>
 
       {/* RIGHT FORM PANEL */}

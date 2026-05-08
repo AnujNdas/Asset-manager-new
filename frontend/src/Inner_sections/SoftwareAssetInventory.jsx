@@ -23,7 +23,9 @@ import { CURRENCY_SYMBOLS } from "../utils/currency";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
 const SoftwareAssetList = () => {
+  const { registerTour } = useTour();
   const driverObj = driver({
   showProgress: true,
   animate: true,
@@ -202,6 +204,9 @@ useEffect(() => {
       );
     }, 1000);
   }
+}, []);
+useEffect(() => {
+  registerTour(driverObj);
 }, []);
   useEffect(() => {
     fetchAll();
@@ -518,12 +523,12 @@ const mapInstanceData = (inst, assignment) => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="inventory-search-input tour-search"
           />
-<button
+{/* <button
   onClick={() => driverObj.drive()}
   className="tour-help-btn"
 >
   ❓ Guide
-</button>
+</button> */}
 </div>
       </div>
 

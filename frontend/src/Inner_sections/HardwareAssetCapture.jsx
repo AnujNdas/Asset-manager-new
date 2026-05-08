@@ -15,7 +15,9 @@ import * as XLSX from "xlsx";
 import getErrorMessage from "../Utils/getErrorMessage";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
 const downloadTemplate = () => {
+  const { registerTour } = useTour();
   const data = [
     {
       assetName: "Dell Laptop",
@@ -206,7 +208,9 @@ useEffect(() => {
     }, 1000);
   }
 }, []);
-
+useEffect(() => {
+  registerTour(driverObj);
+}, []);
 const handleImport = async () => {
   if (!importFile) {
     ThemeSwal.fire("Error", "Please select a file", "error");

@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
 import PlanTimer from "./PlanTimer";
-
+import { useTour } from "../Context/TourContext";
 const Menubar = ({ username, toggleSidebar }) => {
   const navigate = useNavigate();
   const toggleButtonRef = useRef(null);
@@ -87,9 +87,9 @@ useEffect(() => {
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
   };
-  const handleHelpClick = () => {
-    navigate("/setting/help&support");
-  }
+
+
+const { startTour } = useTour();
   return (
     <div className="menubar-container">
       <div className="menubar">
@@ -108,7 +108,18 @@ useEffect(() => {
   <PlanTimer />
 </div>
         <div className="control-panel">
-          <button onClick={handleHelpClick} style={{border : "none",background: "transparent"}}><FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#DFD0B8" }} /></button>
+<button
+  onClick={startTour}
+  style={{
+    border: "none",
+    background: "transparent",
+  }}
+>
+  <FontAwesomeIcon
+    icon={faCircleQuestion}
+    style={{ color: "#DFD0B8" }}
+  />
+</button>
           <NotificationButton />
 
           {/* HELP ICON */}

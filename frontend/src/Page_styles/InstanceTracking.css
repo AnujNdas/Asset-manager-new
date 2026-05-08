@@ -430,6 +430,60 @@
   border-radius: 8px;
   cursor: pointer;
 }
+/* Tour-guide-styles
+ */
+ .custom-driver-popover {
+  background: #222831 !important;
+  color: #DFD0B8 !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 35px rgba(0,0,0,0.45);
+}
+
+.custom-driver-popover .driver-popover-title {
+  color: #DFD0B8 !important;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.custom-driver-popover .driver-popover-description {
+  color: #948979 !important;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.custom-driver-popover .driver-popover-progress-text {
+  color: #948979 !important;
+}
+
+.custom-driver-popover button {
+  background: #DFD0B8 !important;
+  text-shadow: none !important;
+  color: #222831 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
+  font-weight: 600;
+}
+
+.driver-popover-arrow {
+  border-color: #222831 !important;
+}
+.tour-help-btn {
+  background: linear-gradient(135deg, #DFD0B8, #948979);
+  color: #222831;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tour-help-btn:active {
+  transform: scale(0.96);
+}
 @media (max-width: 768px) {
   .filter-bar {
     flex-direction: column;
