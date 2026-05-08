@@ -19,6 +19,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
 const EmployeePage = () => {
+      const { registerTour } = useTour();
  const { currency, convertFromBase, loadingRates } = useCurrency();
   const [loading , setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
