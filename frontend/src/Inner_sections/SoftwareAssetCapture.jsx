@@ -17,7 +17,7 @@ import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
 import { getErrorMessage } from "../utils/getErrorMessage";
 const downloadTemplate = () => {
-  const { registerTour } = useTour();
+
   const data = [
     {
       assetName: "Adobe Photoshop",
@@ -88,6 +88,7 @@ const initialForm = {
 };
 
 export default function SoftwareAssetCapture() {
+    const { registerTour } = useTour();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(initialForm);
