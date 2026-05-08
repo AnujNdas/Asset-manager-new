@@ -17,7 +17,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
 const downloadTemplate = () => {
-  const { registerTour } = useTour();
+
   const data = [
     {
       assetName: "Dell Laptop",
@@ -64,6 +64,7 @@ export const SUPPORTED_CURRENCIES = [
   { code: "NZD", label: "New Zealand Dollar", symbol: "NZ$" },
 ];
 const AssetCapture = () => {
+    const { registerTour } = useTour();
   // src/constants/currencies.js
       const driverObj = driver({
       showProgress: true,
