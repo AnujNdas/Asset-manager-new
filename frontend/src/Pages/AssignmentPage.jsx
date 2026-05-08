@@ -480,16 +480,97 @@ const cost = convertFromBase(costObj?.baseAmount || 0);
       )}
 
       {/* STEP 5 */}
-      {step === 4 && (
-        <div className="review">
-          <h3>Review</h3>
-          <p><b>Asset:</b> {selectedAsset?.name}</p>
-          <p><b>Instances:</b> {selectedInstances.length}</p>
-          <button onClick={handleSubmit}>
-            {loading ? "Assigning..." : "Confirm"}
-          </button>
+{/* STEP 5 */}
+{step === 4 && (() => {
+
+  const selectedDepartment = departments.find(
+    d => d._id === assignmentData.department
+  );
+
+  const selectedEmployee = employees.find(
+    e => e._id === assignmentData.employee
+  );
+
+  return (
+    <div className="review">
+
+      <h3>Review Assignment</h3>
+
+      {/* CATEGORY */}
+      <div className="review-section">
+        <p><b>Category:</b> {selectedCategory?.categoryName || "-"}</p>
+      </div>
+
+      {/* ASSET */}
+      <div className="review-section">
+        <p><b>Asset:</b> {selectedAsset?.name || "-"}</p>
+        <p><b>Asset Type:</b> {selectedAsset?.assetType || "-"}</p>
+      </div>
+
+      {/* INSTANCES */}
+      <div className="review-section">
+        <p><b>Total Instances:</b> {selectedInstances.length}</p>
+
+        <div className="review-instance-list">
+          {selectedInstances.map((inst) => (
+            <div key={inst._id} className="review-instance-item">
+              <span>{inst.deviceName}</span>
+              <small>{inst.instanceCode}</small>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ASSIGNMENT INFO */}
+      <div className="review-section">
+        <p>
+          <b>Department:</b>{" "}
+          {selectedDepartment?.name || "-"}
+        </p>
+
+        <p>
+          <b>Employee:</b>{" "}
+          {selectedEmployee?.name || "-"}
+        </p>
+
+        <p>
+          <b>Location:</b>{" "}
+          {assignmentData.location || "-"}
+        </p>
+      </div>
+
+      {/* SOFTWARE DEVICE INFO */}
+      {selectedAsset?.assetType === "software" && (
+        <div className="review-section">
+
+          <h4>Device Information</h4>
+
+          <p>
+            <b>Device Name:</b>{" "}
+            {assignmentData.deviceName || "-"}
+          </p>
+
+          <p>
+            <b>Serial Number:</b>{" "}
+            {assignmentData.serialNumber || "-"}
+          </p>
+
+          <p>
+            <b>Model:</b>{" "}
+            {assignmentData.model || "-"}
+          </p>
+
         </div>
       )}
+
+      <button onClick={handleSubmit}>
+        {loading ? "Assigning..." : "Confirm Assignment"}
+      </button>
+
+    </div>
+  );
+
+})()}
 
     </div>
 
