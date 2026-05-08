@@ -214,6 +214,15 @@ button {
     font-size: clamp(12px, 1.2vw, 18px);
     gap: 5px;
 }
+.import-actions button {
+    background: #dfd0b8;
+    border: none;
+    border-radius: 5px;
+    color: #222831;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px;
+}
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }

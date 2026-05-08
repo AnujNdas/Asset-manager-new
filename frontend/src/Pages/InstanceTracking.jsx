@@ -126,9 +126,13 @@ const InstanceTracking = () => {
   };
   const handleReassign = (instance) => {
     console.log("Reassign clicked for instance:", instance);
-    if (!instance) {
-      return ThemeSwal.fire("Error", "Invalid instance selected", "error");
-    }
+if (!instance || !instance.assignment?._id) {
+  return ThemeSwal.fire(
+    "Error",
+    "This asset is not currently assigned",
+    "error"
+  );
+}
 
     setSelectedInstance(instance);
     setShowReassign(true);
@@ -201,14 +205,14 @@ const InstanceTracking = () => {
           </div>
         ))}
       </div>
-
+        
       {/* 🔽 MODALS */}
       {showReassign && (
-        <ReassignModal
-          instance={selectedInstance}
-          onClose={() => setShowReassign(false)}
-          refresh={fetchInstances}
-        />
+<ReassignModal
+  assignment={selectedInstance?.assignment}
+  onClose={() => setShowReassign(false)}
+  refresh={() => fetchInstances(filterType)}
+/>
       )}
 
       {showHistory && (

@@ -83,23 +83,32 @@ const getTrackedInstances = async (req, res) => {
       qrCode,
       trackingUrl,
 
-      assignment: assignment
-        ? {
-            employee: {
-              name: assignment.employeeId?.name,
-              code: assignment.employeeId?.employeeCode
-            },
-            department: assignment.departmentId?.name,
-            location: assignment.location,
-            assignedAt: assignment.assignedAt,
+assignment: assignment
+  ? {
+      _id: assignment._id,
 
-            deviceInfo: {
-              deviceName: assignment.deviceInfo?.deviceName || null,
-              assetTag: assignment.deviceInfo?.assetTag || null,
-              serialNumber: assignment.deviceInfo?.serialNumber || null
-            }
-          }
-        : null
+      employee: {
+        name: assignment.employeeId?.name,
+        code: assignment.employeeId?.employeeCode,
+        _id: assignment.employeeId?._id
+      },
+
+      department: {
+        _id: assignment.departmentId?._id,
+        name: assignment.departmentId?.name
+      },
+
+      location: assignment.location,
+
+      assignedAt: assignment.assignedAt,
+
+      deviceInfo: {
+        deviceName: assignment.deviceInfo?.deviceName || null,
+        assetTag: assignment.deviceInfo?.assetTag || null,
+        serialNumber: assignment.deviceInfo?.serialNumber || null
+      }
+    }
+  : null
     };
   });
 
