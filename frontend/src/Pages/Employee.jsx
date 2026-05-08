@@ -15,6 +15,9 @@ import "../Page_styles/Employee.css";
 import Pagination from "../Components/Pagination";
 import ThemeSwal from "../utils/SwalTheme";
 import Loader from "../Components/Loader";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
 const EmployeePage = () => {
  const { currency, convertFromBase, loadingRates } = useCurrency();
   const [loading , setLoading] = useState(true);
@@ -32,6 +35,77 @@ const employeesPerPage = 8;
 // 🔹 Team Asset Overview
 const [summaryPage, setSummaryPage] = useState(1);
 const summaryPerPage = 6;
+
+      const driverObj = driver({
+        showProgress: true,
+        animate: true,
+        smoothScroll: true,
+        allowClose: true,
+    
+        overlayColor: "rgba(0,0,0,0.75)",
+    
+        popoverClass: "custom-driver-popover",
+    
+        steps: [
+                  {
+            element: ".tour-search",
+            popover: {
+              title: "Search",
+              description:
+                "Search team members.",
+              side: "bottom",
+            },
+          },
+          {
+            element: ".tour-department",
+            popover: {
+              title: "Department Selector",
+              description: "Select department.",
+              side: "bottom",
+              align: "start",
+            },
+          },
+    
+          {
+            element: ".tour-add",
+            popover: {
+              title: "Add Team member",
+              description:
+                "Add Team Member to a specific department.",
+              side: "bottom",
+            },
+          },
+  
+          {
+            element: ".tour-member-info",
+            popover: {
+              title: "Assignment information",
+              description:
+                "contains assignement related information of the instances.",
+              side: "bottom",
+            },
+          },
+        ],
+      });
+    
+      useEffect(() => {
+        const seen = localStorage.getItem("inventoryTourSeen");
+      
+        if (!seen) {
+          setTimeout(() => {
+            driverObj.drive();
+      
+            localStorage.setItem(
+              "inventoryTourSeen",
+              "true"
+            );
+          }, 1000);
+        }
+      }, []);
+      useEffect(() => {
+      registerTour(driverObj);
+    }, []);
+
 useEffect(() => {
   setEmpPage(1);
 }, [search, departmentFilter]);
@@ -141,6 +215,7 @@ if (loadingRates) return <Loader />;
 
         <div className="employee-actions">
           <input
+          className="tour-search"
             type="text"
             placeholder="Search team member..."
             value={search}
@@ -148,6 +223,7 @@ if (loadingRates) return <Loader />;
           />
 
           <select
+          className="tour-department"
             value={departmentFilter}
             onChange={e => setDepartmentFilter(e.target.value)}
           >
@@ -159,7 +235,7 @@ if (loadingRates) return <Loader />;
             ))}
           </select>
 
-          <button onClick={() => setShowModal(true)} className="submit-btn">
+          <button onClick={() => setShowModal(true)} className="submit-btn tour-add">
             + Add Team Member
           </button>
         </div>
@@ -186,7 +262,7 @@ if (loadingRates) return <Loader />;
     const totalCost = emp.totalCost || 0;
 
       return (
-<div key={emp._id} className="team-asset-card">
+<div key={emp._id} className="team-asset-card  tour-member-info">
 
   <div className="team-card-header">
     <h4>{emp.employeeName}</h4>

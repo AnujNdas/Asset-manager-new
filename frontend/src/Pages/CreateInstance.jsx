@@ -13,6 +13,9 @@
     import Select from "react-select";
     import ThemeSwal from "../utils/SwalTheme";
     import { getErrorMessage } from "../utils/getErrorMessage";
+    import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
     const currencyOptions = [
       "INR",
       "USD",
@@ -98,6 +101,7 @@
       { label: "None", value: "none" }
     ];
     const CreateInstances = () => {
+        const { registerTour } = useTour();
       const downloadTemplate = (type) => {
     let data = [];
 
@@ -308,6 +312,96 @@
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN");
   };
+
+    const driverObj = driver({
+      showProgress: true,
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+  
+      overlayColor: "rgba(0,0,0,0.75)",
+  
+      popoverClass: "custom-driver-popover",
+  
+      steps: [
+                {
+          element: ".tour-progress",
+          popover: {
+            title: "Progress",
+            description:
+              "Shows Progress of how many instances created yet.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-info",
+          popover: {
+            title: "Asset Information",
+            description: "Contains Main asset Information.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+  
+        {
+          element: ".tour-import",
+          popover: {
+            title: "Import Button",
+            description:
+              "Import instances for the asset.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-template",
+          popover: {
+            title: "Download template",
+            description:
+              "Download and see the format before importing ...",
+            side: "bottom",
+          },
+        },
+
+        {
+          element: ".tour-bulk",
+          popover: {
+            title: "Bulk input area",
+            description:
+              "After filling the input fields click on the apply to all button.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-create",
+          popover: {
+            title: "Create Button",
+            description:
+              "Click to create instances.",
+            side: "bottom",
+          },
+        },
+      ],
+    });
+  
+    useEffect(() => {
+      const seen = localStorage.getItem("inventoryTourSeen");
+    
+      if (!seen) {
+        setTimeout(() => {
+          driverObj.drive();
+    
+          localStorage.setItem(
+            "inventoryTourSeen",
+            "true"
+          );
+        }, 1000);
+      }
+    }, []);
+    useEffect(() => {
+    registerTour(driverObj);
+  }, []);
+
+
   const handleImport = async () => {
     if (!file) {
       alert("Please select an Excel file");
@@ -631,14 +725,14 @@ if (isSoftware && !inst.licenseNumber) {
                 {created} / {total}
               </span>
             </div>
-            <div className="progress-bar">
+            <div className="progress-bar  tour-progress">
               <div className="progress-fill" style={{ width: `${progress}%` }} />
             </div>
           </div>
 
           {/* ASSET INFO */}
           {asset && (
-            <div className="asset-info">
+            <div className="asset-info tour-info">
               <div className="details-box">
               <h3>
                 {asset.assetName}{" "}
@@ -659,19 +753,19 @@ if (isSoftware && !inst.licenseNumber) {
       onChange={handleFileUpload}
     />
     <div className="import-actions">
-    <button onClick={handleImport} className="btn-save">
+    <button onClick={handleImport} className="btn-save tour-import">
       Import Excel
     </button>
 
     <div>
       {isHardware && (
-        <button onClick={() => downloadTemplate("hardware")} className="btn-save">
+        <button onClick={() => downloadTemplate("hardware")} className="btn-save tour-template">
           Download Hardware Template
         </button>
       )}
 
       {isSoftware && (
-        <button onClick={() => downloadTemplate("software")} className="btn-save">
+        <button onClick={() => downloadTemplate("software")} className="btn-save tour-template">
           Download Software Template
         </button>
       )}
@@ -679,7 +773,7 @@ if (isSoftware && !inst.licenseNumber) {
     </div>
   </div>
           {/* BULK APPLY */}
-          <div className="bulk-panel">
+          <div className="bulk-panel tour-bulk">
             <h4>Bulk Apply</h4>
 
             <div className="bulk-grid">
@@ -1558,7 +1652,7 @@ if (isSoftware && !inst.licenseNumber) {
           </div>
 
           <div className="form-actions">
-            <button onClick={handleSubmit} disabled={loading}>
+            <button onClick={handleSubmit} disabled={loading} className="tour-create">
               {loading ? "Saving..." : "Create Instances"}
             </button>
           </div>

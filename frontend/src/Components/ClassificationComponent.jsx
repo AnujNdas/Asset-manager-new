@@ -9,6 +9,9 @@ import {
 import Pagination from "./Pagination";
 import Loader from "./Loader";
 import "../Component_styles/ClassificationComponent.css";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
 const ClassificationPage = ({
   title,
   getAll,
@@ -18,6 +21,7 @@ const ClassificationPage = ({
   restoreItem,
   allowDelete = true   // NEW PROP
 }) => {
+      const { registerTour } = useTour();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
@@ -30,6 +34,66 @@ const ClassificationPage = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+
+        const driverObj = driver({
+        showProgress: true,
+        animate: true,
+        smoothScroll: true,
+        allowClose: true,
+    
+        overlayColor: "rgba(0,0,0,0.75)",
+    
+        popoverClass: "custom-driver-popover",
+    
+        steps: [
+          {
+            element: ".tour-search",
+            popover: {
+              title: "Search",
+              description: "Search for classification.",
+              side: "bottom",
+              align: "start",
+            },
+          },
+    
+          {
+            element: ".tour-add",
+            popover: {
+              title: "Add",
+              description:
+                "Add New ones.",
+              side: "bottom",
+            },
+          },
+          {
+            element: ".tour-info",
+            popover: {
+              title: "Info",
+              description:
+                "You can edit & delete from here.",
+              side: "bottom",
+            },
+          },
+        ],
+      });
+    
+      useEffect(() => {
+        const seen = localStorage.getItem("inventoryTourSeen");
+      
+        if (!seen) {
+          setTimeout(() => {
+            driverObj.drive();
+      
+            localStorage.setItem(
+              "inventoryTourSeen",
+              "true"
+            );
+          }, 1000);
+        }
+      }, []);
+      useEffect(() => {
+      registerTour(driverObj);
+    }, []);
 
   useEffect(() => {
     fetchItems();
@@ -156,7 +220,7 @@ useEffect(() => {
     </label> */}
 
       <input
-        className="category_search_input"
+        className="category_search_input tour-search"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         placeholder={`Search ${title.toLowerCase()}...`}
@@ -179,7 +243,7 @@ useEffect(() => {
       <FontAwesomeIcon icon={faPlus} /> Add New {title}
     </label> */}
 
-    <div className="input-with-button">
+    <div className="input-with-button tour-add">
       <input
         className="category_search_input"
         value={addValue}
@@ -203,7 +267,7 @@ useEffect(() => {
   {currentItems.length === 0 ? (
     <p className="no-data">No {title.toLowerCase()} found</p>
   ) : (
-    <table className="classification-table">
+    <table className="classification-table tour-info">
       <thead>
         <tr>
           <th>#</th>

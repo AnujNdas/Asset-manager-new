@@ -537,7 +537,7 @@ const paginatedAssets = filteredAssets.slice(
   }`}
   disabled={allAssigned}
 >
-  {allAssigned ? "Fully Assigned" : "Assign"}
+  {allAssigned ? "Assigned" : "Assign"}
 </button>
       </div>
     </motion.div>

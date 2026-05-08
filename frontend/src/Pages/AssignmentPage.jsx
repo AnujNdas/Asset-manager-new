@@ -15,6 +15,9 @@ import {
 import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
 import { getErrorMessage } from "../utils/getErrorMessage";
+    import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
 const steps = [
   "Category",
   "Assets",
@@ -24,6 +27,7 @@ const steps = [
 ];
 
 const AssignmentPage = () => {
+  const { registerTour } = useTour();
   const { currency, convertFromBase, loadingRates } = useCurrency();
   const [step, setStep] = useState(0);
 
@@ -79,6 +83,97 @@ useEffect(() => {
     const res = await getDepartments();
     setDepartments(res.data || res || []);
   };
+
+  /* ================= Tour guide ================= */
+
+      const driverObj = driver({
+        showProgress: true,
+        animate: true,
+        smoothScroll: true,
+        allowClose: true,
+    
+        overlayColor: "rgba(0,0,0,0.75)",
+    
+        popoverClass: "custom-driver-popover",
+    
+        steps: [
+                  {
+            element: ".tour-steps",
+            popover: {
+              title: "Steps",
+              description:
+                "Shows step by step for assigning instances.",
+              side: "bottom",
+            },
+          },
+          {
+            element: ".tour-info",
+            popover: {
+              title: "Instance Information",
+              description: "Contains Instance Information and Availability.",
+              side: "bottom",
+              align: "start",
+            },
+          },
+    
+          {
+            element: ".tour-next",
+            popover: {
+              title: "Next",
+              description:
+                "After selecting click next to move on.",
+              side: "bottom",
+            },
+          },
+          {
+            element: ".tour-back",
+            popover: {
+              title: "Back",
+              description:
+                "Go back to the previous step.",
+              side: "bottom",
+            },
+          },
+  
+          {
+            element: ".tour-bulk",
+            popover: {
+              title: "Bulk input area",
+              description:
+                "After filling the input fields click on the apply to all button.",
+              side: "bottom",
+            },
+          },
+          {
+            element: ".tour-create",
+            popover: {
+              title: "Create Button",
+              description:
+                "Click to create instances.",
+              side: "bottom",
+            },
+          },
+        ],
+      });
+    
+      useEffect(() => {
+        const seen = localStorage.getItem("inventoryTourSeen");
+      
+        if (!seen) {
+          setTimeout(() => {
+            driverObj.drive();
+      
+            localStorage.setItem(
+              "inventoryTourSeen",
+              "true"
+            );
+          }, 1000);
+        }
+      }, []);
+      useEffect(() => {
+      registerTour(driverObj);
+    }, []);
+  
 
   /* ================= STEP 1 ================= */
   const selectCategory = async (cat) => {
@@ -239,7 +334,7 @@ setAssignmentData({
     </div>
 
     {/* STEPS */}
-    <div className="steps">
+    <div className="steps tour-step">
       {steps.map((s, i) => (
         <div key={i} className={`step ${step === i ? "active" : ""}`}>
           {i + 1}. {s}
@@ -254,7 +349,7 @@ setAssignmentData({
       {step === 0 && (
         <div className="grid">
           {categories.map(cat => (
-            <div key={cat.category} className="card" onClick={() => selectCategory(cat)}>
+            <div key={cat.category} className="card tour-info" onClick={() => selectCategory(cat)}>
               <h3>{cat.categoryName}</h3>
               <p>{cat.totalInStock} available</p>
             </div>
@@ -400,8 +495,8 @@ const cost = convertFromBase(costObj?.baseAmount || 0);
 
     {/* FOOTER */}
     <div className="footer2">
-      {step > 0 && <button onClick={() => setStep(step - 1)}>Back</button>}
-      {step < 4 && <button onClick={() => setStep(step + 1)}>Next</button>}
+      {step > 0 && <button onClick={() => setStep(step - 1)} className="tour-back">Back</button>}
+      {step < 4 && <button onClick={() => setStep(step + 1)} className="tour-next">Next</button>}
     </div>
 
   </div>

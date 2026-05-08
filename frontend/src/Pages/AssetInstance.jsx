@@ -8,7 +8,11 @@
   import Loader from "../Components/Loader";
   import { useLocation } from "react-router-dom";
 import Pagination from "../Components/Pagination";
+    import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { useTour } from "../Context/TourContext";
   const InstanceAssets = () => {
+    const { registerTour } = useTour();
     const [assets, setAssets] = useState([]);
     const [filter, setFilter] = useState("all");
     const [loading, setLoading] = useState(false);
@@ -52,6 +56,76 @@ const currentAssets = assets.slice(
   indexOfLast
 );
 
+
+    const driverObj = driver({
+      showProgress: true,
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+  
+      overlayColor: "rgba(0,0,0,0.75)",
+  
+      popoverClass: "custom-driver-popover",
+  
+      steps: [
+                {
+          element: ".tour-filter",
+          popover: {
+            title: "Filter",
+            description:
+              "Select which type of Asset you want to create.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-card",
+          popover: {
+            title: "Asset Information",
+            description: "Contains Main asset Information.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+  
+        {
+          element: ".tour-progress",
+          popover: {
+            title: "Progress",
+            description:
+              "You can check how many instances can be created and already created.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-create",
+          popover: {
+            title: "Create Button",
+            description:
+              "Click this to Go to Create Instance Page.",
+            side: "bottom",
+          },
+        },
+      ],
+    });
+  
+    useEffect(() => {
+      const seen = localStorage.getItem("inventoryTourSeen");
+    
+      if (!seen) {
+        setTimeout(() => {
+          driverObj.drive();
+    
+          localStorage.setItem(
+            "inventoryTourSeen",
+            "true"
+          );
+        }, 1000);
+      }
+    }, []);
+    useEffect(() => {
+    registerTour(driverObj);
+  }, []);
+
 const totalPages = Math.ceil(assets.length / assetsPerPage);
     if (loading) return <Loader / >;
     return (
@@ -61,6 +135,7 @@ const totalPages = Math.ceil(assets.length / assetsPerPage);
           <h2>Instances Dashboard</h2>
 
           <select
+          className="tour-filter"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             >
@@ -98,9 +173,68 @@ const totalPages = Math.ceil(assets.length / assetsPerPage);
     );
   };
 const AssetCard = ({ asset, isSelected }) => {
+      const { registerTour } = useTour();
   const navigate = useNavigate();
   const cardRef = useRef();
-
+      const driverObj = driver({
+      showProgress: true,
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+  
+      overlayColor: "rgba(0,0,0,0.75)",
+  
+      popoverClass: "custom-driver-popover",
+  
+      steps: [
+        {
+          element: ".tour-card",
+          popover: {
+            title: "Asset Information",
+            description: "Contains Main asset Information.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+  
+        {
+          element: ".tour-progress",
+          popover: {
+            title: "Progress",
+            description:
+              "You can check how many instances can be created and already created.",
+            side: "bottom",
+          },
+        },
+        {
+          element: ".tour-create",
+          popover: {
+            title: "Create Button",
+            description:
+              "Click this to Go to Create Instance Page.",
+            side: "bottom",
+          },
+        },
+      ],
+    });
+  
+    useEffect(() => {
+      const seen = localStorage.getItem("inventoryTourSeen");
+    
+      if (!seen) {
+        setTimeout(() => {
+          driverObj.drive();
+    
+          localStorage.setItem(
+            "inventoryTourSeen",
+            "true"
+          );
+        }, 1000);
+      }
+    }, []);
+    useEffect(() => {
+    registerTour(driverObj);
+  }, []);
   const progress =
     asset.assetQuantity > 0
       ? (asset.instanceCount / asset.assetQuantity) * 100
@@ -124,7 +258,7 @@ const AssetCard = ({ asset, isSelected }) => {
   return (
     <div
       ref={cardRef}
-      className={`asset-card ${isSelected ? "highlight" : ""}`}
+      className={`asset-card ${isSelected ? "highlight" : ""} tour-card`}
     >
       <div className="asset-card-header">
         <h3>{asset.assetName}</h3>
@@ -144,7 +278,7 @@ const AssetCard = ({ asset, isSelected }) => {
           </span>
         </div>
 
-        <div className="progress-bar">
+        <div className="progress-bar tour-progress">
           <div
             className="progress-fill"
             style={{ width: `${progress}%` }}
@@ -157,7 +291,7 @@ const AssetCard = ({ asset, isSelected }) => {
       </p>
 
       <button
-        className={`create-btn ${isComplete ? "disabled" : ""}`}
+        className={`create-btn ${isComplete ? "disabled" : ""} tour-create`}
         disabled={isComplete}
         onClick={() => navigate(`/create-instances/${asset._id}`)}
       >
