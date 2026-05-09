@@ -153,57 +153,75 @@ const getInstanceHistory = async (req, res) => {
     }
 
     /* =============================
-       FETCH ASSIGNMENTS
-    ============================== */
-
-    const assignments = await mongoose.model("AssetAssignment")
-      .find({ assetInstanceId: id })
-      .populate("employeeId", "name")
-      .populate("departmentId", "name")
-      .sort({ assignedAt: -1 })
-      .lean();
-
-    /* =============================
        HELPERS
     ============================== */
 
     const formatDate = (date) => {
       if (!date) return "-";
+
       const d = new Date(date);
-      return isNaN(d) ? "-" : d.toLocaleDateString("en-GB");
+
+      return isNaN(d)
+        ? "-"
+        : d.toLocaleDateString("en-GB");
     };
 
     const getServiceDays = (startDate) => {
       if (!startDate) return "-";
-      const diff = Date.now() - new Date(startDate).getTime();
-      return Math.floor(diff / (1000 * 60 * 60 * 24)) + " Days";
+
+      const diff =
+        Date.now() - new Date(startDate).getTime();
+
+      return (
+        Math.floor(
+          diff / (1000 * 60 * 60 * 24)
+        ) + " Days"
+      );
     };
 
     const getActiveScore = (instance) => {
       let score = 100;
 
       const created = new Date(instance.createdAt);
+
       const ageDays =
-        (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24);
+        (Date.now() - created.getTime()) /
+        (1000 * 60 * 60 * 24);
 
       if (ageDays > 365) score -= 20;
       else if (ageDays > 180) score -= 10;
 
-      if (instance.condition === "used") score -= 10;
-      if (instance.condition === "damaged") score -= 30;
+      if (instance.condition === "used")
+        score -= 10;
 
-      const next = instance.hardware?.nextMaintenanceDate;
+      if (instance.condition === "damaged")
+        score -= 30;
+
+      const next =
+        instance.hardware?.nextMaintenanceDate;
+
       if (next) {
         const today = new Date();
         const due = new Date(next);
 
         if (due < today) score -= 25;
-        else if ((due - today) / (1000 * 60 * 60 * 24) <= 30)
+
+        else if (
+          (due - today) /
+            (1000 * 60 * 60 * 24) <=
+          30
+        ) {
           score -= 10;
+        }
       }
 
-      const warranty = instance.hardware?.warrantyExpiry;
-      if (warranty && new Date(warranty) < new Date()) {
+      const warranty =
+        instance.hardware?.warrantyExpiry;
+
+      if (
+        warranty &&
+        new Date(warranty) < new Date()
+      ) {
         score -= 15;
       }
 
@@ -211,100 +229,175 @@ const getInstanceHistory = async (req, res) => {
     };
 
     /* =============================
+       MAINTENANCE STATUS
+    ============================== */
+
+    const next =
+      instance.hardware?.nextMaintenanceDate;
+
+    let maintenanceStatus = "-";
+
+    if (next) {
+      const today = new Date();
+      const due = new Date(next);
+
+      if (due < today)
+        maintenanceStatus = "overdue";
+
+      else if (
+        (due - today) /
+          (1000 * 60 * 60 * 24) <=
+        30
+      ) {
+        maintenanceStatus = "due_soon";
+      } else {
+        maintenanceStatus = "scheduled";
+      }
+    }
+
+    /* =============================
        MAP LIFECYCLE
     ============================== */
 
-    const lifecycleHistory = (instance.lifecycle || []).map((item) => {
-      const data = item.to || {};
+    const history = (instance.lifecycle || [])
+      .map((item) => {
+        const isoDate = item.date
+          ? new Date(item.date)
+          : null;
 
-      const isoDate = item.date ? new Date(item.date) : null;
+        return {
+          action: item.action || "-",
 
-      const next = instance.hardware?.nextMaintenanceDate;
+          recordDate: formatDate(item.date),
 
-      let maintenanceStatus = "-";
-      if (next) {
-        const today = new Date();
-        const due = new Date(next);
+          recordDateISO: isoDate,
 
-        if (due < today) maintenanceStatus = "overdue";
-        else if ((due - today) / (1000 * 60 * 60 * 24) <= 30)
-          maintenanceStatus = "due_soon";
-        else maintenanceStatus = "scheduled";
-      }
+          notes: item.notes || "-",
 
-      return {
-        type: "lifecycle",
+          /* =============================
+             FROM
+          ============================== */
 
-        action: item.action,
-        recordDate: formatDate(item.date),
-        recordDateISO: isoDate,
+          from: {
+            status:
+              item.from?.status || "-",
 
-        location:
-          typeof data.location === "object"
-            ? data.location?.name
-            : data.location || "-",
+            employeeName:
+              item.from?.assignedTo
+                ?.employeeName || "-",
 
-        condition: data.condition || "-",
+            departmentName:
+              item.from?.assignedTo
+                ?.departmentName || "-",
 
-        notes: item.notes || "-",
+            location:
+              item.from?.location || "-",
 
-        /* HARDWARE */
-        warrantyDate: formatDate(instance.hardware?.warrantyExpiry),
+            condition:
+              item.from?.condition || "-"
+          },
 
-        /* MAINTENANCE */
-        nextMaintenanceDate: formatDate(next),
-        maintenanceCost:
-          instance.hardware?.costs?.maintenanceCost ?? 0,
-        maintenanceStatus,
+          /* =============================
+             TO
+          ============================== */
 
-        /* SOFTWARE */
-        licenseNumber: instance.software?.licenseNumber || "-",
+          to: {
+            status:
+              item.to?.status || "-",
 
-        assignedPerson: "-",
+            employeeName:
+              item.to?.assignedTo
+                ?.employeeName || "-",
 
-        activeService: getServiceDays(instance.createdAt),
-        activeScore: getActiveScore(instance)
-      };
-    });
+            departmentName:
+              item.to?.assignedTo
+                ?.departmentName || "-",
 
-    /* =============================
-       MAP ASSIGNMENTS
-    ============================== */
+            location:
+              item.to?.location || "-",
 
-    const assignmentHistory = assignments.map((a) => {
-      const isoDate = a.assignedAt ? new Date(a.assignedAt) : null;
+            condition:
+              item.to?.condition || "-"
+          },
 
-      return {
-        type: "assignment",
+          /* =============================
+             HARDWARE
+          ============================== */
 
-        action: a.status?.toUpperCase() || "-",
-        recordDate: formatDate(a.assignedAt),
-        recordDateISO: isoDate,
+          hardware: instance.hardware
+            ? {
+                serialNumber:
+                  instance.hardware
+                    ?.serialNumber || "-",
 
-        location: a.location || "-",
+                modelNo:
+                  instance.hardware
+                    ?.modelNo || "-",
 
-        assignedPerson: a.employeeId?.name || "-",
-        department: a.departmentId?.name || "-",
+                warrantyExpiry:
+                  formatDate(
+                    instance.hardware
+                      ?.warrantyExpiry
+                  ),
 
-        deviceName: a.deviceInfo?.deviceName || "-",
-        deviceTag: a.deviceInfo?.assetTag || "-",
+                nextMaintenanceDate:
+                  formatDate(
+                    instance.hardware
+                      ?.nextMaintenanceDate
+                  ),
 
-        status: a.status || "-",
-        returnedAt: formatDate(a.returnedAt)
-      };
-    });
+                maintenanceStatus,
 
-    /* =============================
-       MERGE + SORT (FIXED)
-    ============================== */
+                maintenanceCost:
+                  instance.hardware?.costs
+                    ?.maintenanceCost || null
+              }
+            : null,
 
-    const history = [...lifecycleHistory, ...assignmentHistory]
+          /* =============================
+             SOFTWARE
+          ============================== */
+
+          software: instance.software
+            ? {
+                licenseNumber:
+                  instance.software
+                    ?.licenseNumber || "-",
+
+                renewalDate:
+                  formatDate(
+                    instance.software
+                      ?.renewalDate
+                  ),
+
+                renewalCost:
+                  instance.software?.costs
+                    ?.renewalCost || null
+              }
+            : null,
+
+          /* =============================
+             META
+          ============================== */
+
+          meta: item.meta || {},
+
+          activeScore:
+            getActiveScore(instance),
+
+          activeService:
+            getServiceDays(instance.createdAt)
+        };
+      })
+
       .sort((a, b) => {
         if (!a.recordDateISO) return 1;
         if (!b.recordDateISO) return -1;
+
         return b.recordDateISO - a.recordDateISO;
       })
-      .map(({ recordDateISO, ...rest }) => rest); // remove internal field
+
+      .map(({ recordDateISO, ...rest }) => rest);
 
     /* =============================
        FINAL RESPONSE
@@ -312,19 +405,33 @@ const getInstanceHistory = async (req, res) => {
 
     res.status(200).json({
       success: true,
+
       count: history.length,
+
       summary: {
         instanceCode: instance.instanceCode,
+
+        assetType: instance.assetType,
+
         status: instance.status,
+
         condition: instance.condition,
-        activeScore: getActiveScore(instance),
-        activeService: getServiceDays(instance.createdAt)
+
+        activeScore:
+          getActiveScore(instance),
+
+        activeService:
+          getServiceDays(instance.createdAt)
       },
+
       data: history
     });
 
   } catch (error) {
-    console.error("History Error:", error.message);
+    console.error(
+      "History Error:",
+      error.message
+    );
 
     res.status(500).json({
       success: false,
@@ -583,27 +690,93 @@ if (hasInsurance === true) {
     /* ===========  ==================
        🟣 LIFECYCLE ENTRY
     ============================== */
-    instance.lifecycle.push({
-      action: "UPGRADE",
+/* ==============================
+   🟣 LIFECYCLE ENTRY
+============================== */
 
-      from: beforeSnapshot,
-      to: afterSnapshot,
+instance.lifecycle.push({
+  action: "UPGRADE",
 
-      snapshot: {
-        location: instance.location,
+  from: beforeSnapshot,
 
-        assignedTo: {
-          employeeName: instance.assignedTo?.employeeName,
-          departmentName: instance.assignedTo?.departmentName
-        },
+  to: {
+    condition: afterSnapshot.condition,
 
-        costs: afterSnapshot.costs,
-        dates: afterSnapshot.dates
-      },
+    location: instance.location,
 
-      date: new Date(),
-     notes: upgradeDescription || "Asset upgraded"
-    });
+    assignedTo: {
+      employeeId: instance.assignedTo?.employeeId || null,
+      employeeName: instance.assignedTo?.employeeName || "-"
+    },
+
+    hardware: isHardware
+      ? {
+          warrantyPurchaseDate:
+            instance.hardware?.warrantyPurchaseDate || null,
+
+          warrantyExpiry:
+            instance.hardware?.warrantyExpiry || null,
+
+          insurancePurchaseDate:
+            instance.hardware?.insurancePurchaseDate || null,
+
+          insuranceExpiry:
+            instance.hardware?.insuranceExpiry || null,
+
+          nextMaintenanceDate:
+            instance.hardware?.nextMaintenanceDate || null,
+
+          installationDate:
+            instance.hardware?.installationDate || null,
+
+          hasInsurance:
+            instance.hardware?.hasInsurance || false,
+
+          insuranceTerm:
+            instance.hardware?.insuranceTerm || null,
+
+          costs: {
+            maintenanceCost:
+              instance.hardware?.costs?.maintenanceCost || null,
+
+            warrantyRenewalCost:
+              instance.hardware?.costs?.warrantyRenewalCost || null,
+
+            insuranceCost:
+              instance.hardware?.costs?.insuranceCost || null
+          }
+        }
+      : undefined,
+
+    software: isSoftware
+      ? {
+          renewalDate:
+            instance.software?.renewalDate || null,
+
+          lastUsedDate:
+            instance.software?.lastUsedDate || null,
+
+          installationDate:
+            instance.software?.installationDate || null,
+
+          costs: {
+            renewalCost:
+              instance.software?.costs?.renewalCost || null
+          }
+        }
+      : undefined
+  },
+
+  date: new Date(),
+
+  notes: upgradeNotes || "Asset upgraded",
+
+  meta: {
+    upgradedBy: req.user.id,
+    upgradeDescription:
+      upgradeDescription || "General upgrade"
+  }
+});
 
     /* =============================
        💾 SAVE

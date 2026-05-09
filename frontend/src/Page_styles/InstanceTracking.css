@@ -484,6 +484,56 @@
 .tour-help-btn:active {
   transform: scale(0.96);
 }
+
+.event-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.event-badge.created {
+  background: rgba(52, 152, 219, 0.15);
+}
+
+.event-badge.assigned {
+  background: rgba(46, 204, 113, 0.15);
+}
+
+.event-badge.reassigned {
+  background: rgba(241, 196, 15, 0.15);
+}
+
+.event-badge.upgrade {
+  background: rgba(155, 89, 182, 0.15);
+}
+
+.details-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.details-cell small {
+  opacity: 0.7;
+  font-size: 11px;
+}
+
+.history-row {
+  display: grid;
+  grid-template-columns:
+    120px
+    180px
+    120px
+    100px
+    1fr
+    120px;
+
+  gap: 14px;
+  align-items: start;
+}
+
 @media (max-width: 768px) {
   .filter-bar {
     flex-direction: column;

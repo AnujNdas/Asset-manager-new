@@ -158,16 +158,64 @@ software: {
   },
 
   /* 🔹 LIFECYCLE (KEEP AS IS - GOOD DESIGN) */
-  lifecycle: [
-    {
-      action: String,
-      from: Object,
-      to: Object,
-      date: { type: Date, default: Date.now },
-      notes: String
-    }
-  ],
+lifecycle: [
+  {
+    eventType: {
+      type: String,
+      enum: [
+        "created",
+        "updated",
+        "assigned",
+        "reassigned",
+        "returned",
+        "maintenance",
+        "upgraded",
+        "status_changed",
+        "condition_changed",
+        "retired",
+        "disposed"
+      ],
+      required: true
+    },
 
+    category: {
+      type: String,
+      enum: [
+        "instance",
+        "assignment",
+        "maintenance",
+        "upgrade",
+        "system"
+      ],
+      default: "instance"
+    },
+
+    title: {
+      type: String,
+      required: true
+    },
+
+    description: {
+      type: String,
+      default: ""
+    },
+
+    performedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
+
+    date: {
+      type: Date,
+      default: Date.now
+    },
+
+    metadata: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    }
+  }
+],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"

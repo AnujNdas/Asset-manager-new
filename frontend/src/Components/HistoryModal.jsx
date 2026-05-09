@@ -54,50 +54,114 @@ useEffect(() => {
         )}
 
         {/* TABLE */}
-        <div className="history-table">
-          <div className="history-header">
-            <span>Warranty</span>
-            <span>Maintenance</span>
-            <span>Status</span>
-            <span>Location</span>
-            <span>Assigned</span>
-            <span>Service</span>
-            <span>Score</span>
-            <span>Event</span>
-            <span>Date</span>
-          </div>
+<div className="history-table">
+  <div className="history-header">
+    <span>Event</span>
+    <span>User / Assignment</span>
+    <span>Location</span>
+    <span>Condition</span>
+    <span>Details</span>
+    <span>Date</span>
+  </div>
 
-          <div className="history-body">
-            {history?.length ? (
-              history.map((item, index) => (
-                <div key={index} className="history-row">
-                  <span>{item.warrantyDate || "-"}</span>
+  <div className="history-body">
+    {history?.length ? (
+      history.map((item, index) => (
+        <div key={index} className="history-row">
 
-                  <span>
-                    {item.nextMaintenanceDate || "-"}
-                    <small>{item.maintenanceStatus || ""}</small>
-                  </span>
+          {/* EVENT */}
+          <span className={`event-badge ${item.action?.toLowerCase()}`}>
+            {item.action}
+          </span>
 
-                  <span>{item.status || item.action}</span>
-                  <span>{item.location || "-"}</span>
-                  <span>{item.assignedPerson || "-"}</span>
-                  <span>{item.activeService || "-"}</span>
-                  <span>{item.activeScore ?? "-"}</span>
-
-                  <span className="event-cell">
-                    {item.type === "assignment"
-                      ? `${item.action} (${item.deviceName || "Device"})`
-                      : item.notes || "-"}
-                  </span>
-
-                  <span>{item.recordDate}</span>
-                </div>
-              ))
-            ) : (
-              <div className="empty">No history available</div>
+          {/* USER / ASSIGNMENT */}
+          <span>
+            {item.assignedTo?.employeeName || "-"}
+            {item.assignedTo?.departmentName && (
+              <small>
+                {item.assignedTo.departmentName}
+              </small>
             )}
-          </div>
+          </span>
+
+          {/* LOCATION */}
+          <span>{item.location || "-"}</span>
+
+          {/* CONDITION */}
+          <span>{item.condition || "-"}</span>
+
+          {/* DETAILS */}
+          <span className="details-cell">
+
+            {/* CREATED */}
+            {item.action === "CREATED" && (
+              <>
+                <div>Instance Created</div>
+
+                {item.serialNumber && (
+                  <small>Serial: {item.serialNumber}</small>
+                )}
+
+                {item.licenseNumber && (
+                  <small>License: {item.licenseNumber}</small>
+                )}
+              </>
+            )}
+
+            {/* ASSIGNED */}
+            {item.action === "ASSIGNED" && (
+              <>
+                <div>
+                  Assigned to{" "}
+                  {item.assignedTo?.employeeName || "-"}
+                </div>
+
+                {item.deviceInfo?.deviceName && (
+                  <small>
+                    Device: {item.deviceInfo.deviceName}
+                  </small>
+                )}
+              </>
+            )}
+
+            {/* REASSIGNED */}
+            {item.action === "REASSIGNED" && (
+              <>
+                <div>
+                  Reassigned from{" "}
+                  {item.from?.employeeName || "-"}
+                </div>
+
+                <small>
+                  To {item.to?.employeeName || "-"}
+                </small>
+              </>
+            )}
+
+            {/* UPGRADE */}
+            {item.action === "UPGRADE" && (
+              <>
+                <div>{item.notes || "Asset upgraded"}</div>
+
+                {item.upgrade?.description && (
+                  <small>
+                    {item.upgrade.description}
+                  </small>
+                )}
+              </>
+            )}
+
+          </span>
+
+          {/* DATE */}
+          <span>{item.recordDate}</span>
         </div>
+      ))
+    ) : (
+      <div className="empty">No history available</div>
+    )}
+  </div>
+</div>
 
         {/* ACTION */}
         <div className="modal-actions">

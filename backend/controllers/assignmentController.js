@@ -366,22 +366,66 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
 
       instance.location = location;
 
-      instance.lifecycle.push({
-        action: "ASSIGNED",
-        from: null,
-        to: {
-          employeeName: employee.name,
-          departmentName: department.name
-        },
-        snapshot: {
-          location,
-          assignedTo: { employeeName: employee.name },
-          condition: instance.condition,
-          deviceInfo: assetType === "software" ? deviceInfo : undefined
-        },
-        date: new Date(),
-        notes: `Assigned to ${employee.name}`
-      });
+instance.lifecycle.push({
+  action: "ASSIGNED",
+
+  from: {
+    status: "in_stock",
+
+    assignedTo: null,
+
+    location: instance.location,
+
+    condition: instance.condition
+  },
+
+  to: {
+    status: "in_use",
+
+    assignedTo: {
+      employeeId: employee._id,
+
+      employeeName: employee.name,
+
+      departmentId: department._id,
+
+      departmentName: department.name
+    },
+
+    location,
+
+    condition: instance.condition,
+
+    deviceInfo:
+      assetType === "software"
+        ? {
+            deviceName:
+              deviceInfo?.deviceName || "-",
+
+            serialNumber:
+              deviceInfo?.serialNumber || "-",
+
+            model:
+              deviceInfo?.model || "-"
+          }
+        : undefined
+  },
+
+  date: new Date(),
+
+  notes: `Assigned to ${employee.name}`,
+
+  meta: {
+    assignedBy: userId,
+
+    assetType,
+
+    assignmentType:
+      assetType === "software"
+        ? "software_license"
+        : "hardware_asset"
+  }
+});
 
       await instance.save({ session });
 
@@ -717,27 +761,64 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
     instance.location = newLocation;
     instance.status = "in_use"; // ✅ consistent
 
-    instance.lifecycle.push({
-      action: "REASSIGNED",
-      from: {
-        employeeName: previousAssignedTo.employeeName || null,
-        departmentName: previousAssignedTo.departmentName || null
-      },
-      to: {
-        employeeName: employee.name,
-        departmentName: department.name
-      },
-      snapshot: {
-        location: newLocation,
-        assignedTo: {
-          employeeName: employee.name,
-          departmentName: department.name
-        },
-        condition: instance.condition
-      },
-      date: new Date(),
-      notes: `Reassigned to ${employee.name}`
-    });
+instance.lifecycle.push({
+  action: "REASSIGNED",
+
+  from: {
+    status: "in_use",
+
+    assignedTo: {
+      employeeId:
+        previousAssignedTo.employeeId || null,
+
+      employeeName:
+        previousAssignedTo.employeeName || null,
+
+      departmentId:
+        previousAssignedTo.departmentId || null,
+
+      departmentName:
+        previousAssignedTo.departmentName || null
+    },
+
+    location: oldAssignment.location || instance.location,
+
+    condition: instance.condition
+  },
+
+  to: {
+    status: "in_use",
+
+    assignedTo: {
+      employeeId: employee._id,
+
+      employeeName: employee.name,
+
+      departmentId: department._id,
+
+      departmentName: department.name
+    },
+
+    location: newLocation,
+
+    condition: instance.condition
+  },
+
+  date: new Date(),
+
+  notes: `Reassigned from ${
+    previousAssignedTo.employeeName || "Unknown"
+  } to ${employee.name}`,
+
+  meta: {
+    reassignedBy: userId,
+
+    reassignmentType:
+      instance.assetType === "software"
+        ? "software_license"
+        : "hardware_asset"
+  }
+});
 
     await instance.save({ session });
 

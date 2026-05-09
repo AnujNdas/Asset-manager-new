@@ -1166,7 +1166,59 @@ for (let index = 0; index < instances.length; index++) {
   );
 
   const currency = purchaseCost?.currency || "INR";
+  const lifecycleEvent = {
+  eventType: "created",
 
+  category: "instance",
+
+  title: "Instance Created",
+
+  description:
+    instances.length > 1
+      ? "Bulk instance upload"
+      : "Single instance created",
+
+  performedBy: userId,
+
+  date: new Date(),
+
+  metadata: {
+    assetId: asset._id,
+
+    assetName: asset.assetName,
+
+    assetType,
+
+    instanceCode,
+
+    deviceName: inst.deviceName || "-",
+
+    location: inst.location || "-",
+
+    status: "in_stock",
+
+    condition: inst.condition || "new",
+
+    purchaseCost:
+      purchaseCost?.amount || 0,
+
+    currency:
+      purchaseCost?.currency || "INR",
+
+    ...(assetType === "hardware"
+      ? {
+          serialNumber:
+            inst.hardware?.serialNumber || "-",
+
+          modelNo:
+            inst.hardware?.modelNo || "-"
+        }
+      : {
+          licenseNumber:
+            inst.software?.licenseNumber || "-"
+        })
+  }
+};
   const basePayload = {
     organizationId,
     assetId,
@@ -1177,13 +1229,7 @@ for (let index = 0; index < instances.length; index++) {
     location: inst.location,
     status: "in_stock",
     condition: inst.condition || "new",
-    lifecycle: [
-      {
-        action: "CREATED",
-        date: new Date(),
-        notes: "Instance created"
-      }
-    ],
+    lifecycle: [lifecycleEvent],
     createdBy: userId
   };
 
