@@ -75,15 +75,19 @@ useEffect(() => {
           </span>
 
           {/* USER / ASSIGNMENT */}
-          <span>
-            {item.assignedTo?.employeeName || "-"}
-            {item.assignedTo?.departmentName && (
-              <small>
-                {item.assignedTo.departmentName}
-              </small>
-            )}
-          </span>
+<div className="assignment-cell">
 
+  <span>
+    {item.assignedTo?.employeeName || "-"}
+  </span>
+
+  {item.assignedTo?.departmentName && (
+    <small>
+      {item.assignedTo.departmentName}
+    </small>
+  )}
+
+</div>
           {/* LOCATION */}
           <span>{item.location || "-"}</span>
 
@@ -91,68 +95,110 @@ useEffect(() => {
           <span>{item.condition || "-"}</span>
 
           {/* DETAILS */}
-          <span className="details-cell">
+{/* DETAILS */}
+<div className="details-cell">
 
-            {/* CREATED */}
-            {item.action === "CREATED" && (
-              <>
-                <div>Instance Created</div>
+  {/* TITLE */}
+  <div className="history-title">
+    {item.title || item.action}
+  </div>
 
-                {item.serialNumber && (
-                  <small>Serial: {item.serialNumber}</small>
-                )}
+  {/* DESCRIPTION */}
+  <small className="history-description">
+    {item.description || "-"}
+  </small>
 
-                {item.licenseNumber && (
-                  <small>License: {item.licenseNumber}</small>
-                )}
-              </>
-            )}
+  {/* HARDWARE */}
+  {item.hardware && (
+    <div className="history-meta">
 
-            {/* ASSIGNED */}
-            {item.action === "ASSIGNED" && (
-              <>
-                <div>
-                  Assigned to{" "}
-                  {item.assignedTo?.employeeName || "-"}
-                </div>
+      <small>
+        SN: {item.hardware.serialNumber || "-"}
+      </small>
 
-                {item.deviceInfo?.deviceName && (
-                  <small>
-                    Device: {item.deviceInfo.deviceName}
-                  </small>
-                )}
-              </>
-            )}
+      <small>
+        Model: {item.hardware.modelNo || "-"}
+      </small>
 
-            {/* REASSIGNED */}
-            {item.action === "REASSIGNED" && (
-              <>
-                <div>
-                  Reassigned from{" "}
-                  {item.from?.employeeName || "-"}
-                </div>
+      <small>
+        Warranty: {item.hardware.warrantyExpiry || "-"}
+      </small>
 
-                <small>
-                  To {item.to?.employeeName || "-"}
-                </small>
-              </>
-            )}
+      <small>
+        Maintenance:{" "}
+        {item.hardware.nextMaintenanceDate || "-"}
+      </small>
 
-            {/* UPGRADE */}
-            {item.action === "UPGRADE" && (
-              <>
-                <div>{item.notes || "Asset upgraded"}</div>
+    </div>
+  )}
 
-                {item.upgrade?.description && (
-                  <small>
-                    {item.upgrade.description}
-                  </small>
-                )}
-              </>
-            )}
+  {/* SOFTWARE */}
+  {item.software && (
+    <div className="history-meta">
 
-          </span>
+      <small>
+        License:{" "}
+        {item.software.licenseNumber || "-"}
+      </small>
 
+      <small>
+        Renewal:{" "}
+        {item.software.renewalDate || "-"}
+      </small>
+
+    </div>
+  )}
+
+  {/* DEVICE INFO */}
+  {item.deviceInfo && (
+    <div className="history-meta">
+
+      <small>
+        Device:{" "}
+        {item.deviceInfo.deviceName || "-"}
+      </small>
+
+      <small>
+        Serial:{" "}
+        {item.deviceInfo.serialNumber || "-"}
+      </small>
+
+    </div>
+  )}
+
+  {/* REASSIGN */}
+  {item.reassignedFrom && (
+    <div className="history-meta">
+
+      <small>
+        Reassigned From:{" "}
+        {item.reassignedFrom.employeeName || "-"}
+      </small>
+
+    </div>
+  )}
+
+  {/* UPGRADE */}
+  {item.upgrade && (
+    <div className="history-meta">
+
+      <small>
+        Upgrade:{" "}
+        {item.upgrade.description || "-"}
+      </small>
+
+      {item.upgrade.cost?.amount && (
+        <small>
+          Cost:{" "}
+          {item.upgrade.cost.amount}{" "}
+          {item.upgrade.cost.currency}
+        </small>
+      )}
+
+    </div>
+  )}
+
+</div>
           {/* DATE */}
           <span>{item.recordDate}</span>
         </div>
