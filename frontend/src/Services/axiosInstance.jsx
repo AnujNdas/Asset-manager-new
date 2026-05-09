@@ -64,19 +64,29 @@ axiosInstance.interceptors.response.use(
     /* =========================
        AUTH HANDLING
     ========================== */
+const publicRoutes = [
+  "/user/login",
+  "/user/signup",
+  "/user/forgot",
+];
 
-    if (status === 401) {
-      console.warn("Session expired");
+const isResetRoute = currentPath.startsWith("/user/reset/");
 
-      localStorage.removeItem("auth");
+if (status === 401) {
+  console.warn("Session expired");
 
-      if (currentPath !== "/user/login") {
-        window.location.href = "/user/login";
-      }
+  localStorage.removeItem("auth");
 
-      return Promise.reject(error);
-    }
+  // ✅ Do NOT redirect on public auth pages
+  if (
+    !publicRoutes.includes(currentPath) &&
+    !isResetRoute
+  ) {
+    window.location.href = "/user/login";
+  }
 
+  return Promise.reject(error);
+}
     if (status === 403) {
       if (currentPath !== "/unauthorized") {
         window.location.href = `/unauthorized?message=${encodeURIComponent(

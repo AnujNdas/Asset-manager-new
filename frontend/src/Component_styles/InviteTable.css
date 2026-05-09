@@ -36,13 +36,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
   gap: 20px;
+  overflow: auto;
+  height: 400px;
 }
 
 .invite-card {
-  background: #2D343F;
+  background: #393E46;
   border-radius: 22px;
   padding: 20px;
-  border: 1px solid rgba(255,255,255,0.06);
   transition: 0.25s ease;
 }
 
@@ -88,7 +89,7 @@
   align-items: center;
   gap: 10px;
   color: #DFD0B8;
-  background: #393E46;
+  background: #222831;
   padding: 12px;
   border-radius: 14px;
   margin-bottom: 18px;
@@ -158,8 +159,8 @@
 }
 
 .revoke-btn {
-  background: rgba(255,0,0,0.12);
-  color: #ff6b6b;
+  background: #ff6b6b;
+  color: #222831;
 }
 
 .revoke-btn:hover {
