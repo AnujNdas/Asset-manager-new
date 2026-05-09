@@ -367,34 +367,53 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
       instance.location = location;
 
 instance.lifecycle.push({
-  action: "ASSIGNED",
+  eventType: "assigned",
 
-  from: {
-    status: "in_stock",
+  category: "assignment",
 
-    assignedTo: null,
+  title: "Instance Assigned",
 
-    location: instance.location,
+  description: `Assigned to ${employee.name}`,
 
-    condition: instance.condition
-  },
+  performedBy: userId,
 
-  to: {
-    status: "in_use",
+  date: new Date(),
 
-    assignedTo: {
-      employeeId: employee._id,
+  metadata: {
+    assetType,
 
-      employeeName: employee.name,
+    assignmentType:
+      assetType === "software"
+        ? "software_license"
+        : "hardware_asset",
 
-      departmentId: department._id,
+    from: {
+      status: "in_stock",
 
-      departmentName: department.name
+      assignedTo: null,
+
+      location: instance.location,
+
+      condition: instance.condition
     },
 
-    location,
+    to: {
+      status: "in_use",
 
-    condition: instance.condition,
+      assignedTo: {
+        employeeId: employee._id,
+
+        employeeName: employee.name,
+
+        departmentId: department._id,
+
+        departmentName: department.name
+      },
+
+      location,
+
+      condition: instance.condition
+    },
 
     deviceInfo:
       assetType === "software"
@@ -408,25 +427,9 @@ instance.lifecycle.push({
             model:
               deviceInfo?.model || "-"
           }
-        : undefined
-  },
-
-  date: new Date(),
-
-  notes: `Assigned to ${employee.name}`,
-
-  meta: {
-    assignedBy: userId,
-
-    assetType,
-
-    assignmentType:
-      assetType === "software"
-        ? "software_license"
-        : "hardware_asset"
+        : null
   }
 });
-
       await instance.save({ session });
 
       /* ================= CREATE ASSIGNMENT ================= */
