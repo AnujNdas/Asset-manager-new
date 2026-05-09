@@ -140,8 +140,9 @@
     width: 100px;
     font-size: 10px;
   }
-  .status {
-    align-self: flex-end;
+  .status.free {
+    width: 100px;
+    font-size: 10px;
   }
 }
 .instance-card-v2 h3 {

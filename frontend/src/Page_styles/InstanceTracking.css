@@ -371,7 +371,9 @@
   color: #DFD0B8;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
-
+.history-header span {
+  text-align: center;
+}
 /* BODY */
 .history-body {
   overflow-y: auto;
