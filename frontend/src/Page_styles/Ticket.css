@@ -2,6 +2,10 @@
 .ticket-admin-container {
   padding: 24px;
 }
+.ticket-admin-container h2 {
+  color: #DFD0B8;
+  font-size: 18px;
+}
 
 .ticket-grid {
   display: grid;
@@ -10,14 +14,16 @@
 }
 
 .ticket-card {
-  background: #fff;
+  background: #222831;
   border-radius: 12px;
   padding: 16px;
   cursor: pointer;
   box-shadow: 0 6px 14px rgba(0,0,0,0.08);
   transition: transform 0.2s ease;
 }
-
+.ticket-card h4 {
+  color: #DFD0B8;
+}
 .ticket-card:hover {
   transform: translateY(-4px);
 }
@@ -27,10 +33,12 @@
   border-radius: 999px;
   font-size: 12px;
 }
-
-.badge.open { background: #ffeaea; color: #d32f2f; }
+.date {
+  color: #DFD0B8;
+}
+.badge.open { background: #DFD0B8; color: #222831; }
 .badge.in\ progress { background: #fff3cd; color: #856404; }
-.badge.resolved { background: #e6f4ea; color: #2e7d32; }
+.badge.resolved { background: #2e7d32; color: #DFD0B8; }
 
 .ticket-modal {
   position: fixed;
@@ -42,17 +50,34 @@
 }
 
 .modal-content {
-  background: #fff;
+  background: #393E46;
   padding: 24px;
   width: 420px;
   border-radius: 14px;
 }
-
+.modal-content h3 {
+  color: #DFD0B8;
+}
+.modal-content p {
+  color: #948979;
+}
 .modal-content textarea {
   width: 100%;
   min-height: 80px;
+  background: #222831;
+  color: #DFD0B8;
 }
-
+.modal-content label {
+  color: #948979;
+}
+.modal-content select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  background: #222831;
+  color: #DFD0B8;
+  border: none;
+}
 .actions {
   display: flex;
   justify-content: flex-end;

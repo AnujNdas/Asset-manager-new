@@ -311,7 +311,7 @@
   display: grid;
   grid-template-columns: 5px 1.5fr 1fr 3fr auto;
   align-items: center;
-  background: #ffffff;
+  background: #222831;
   border-radius: 12px;
   padding: 0.9rem 1rem;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
@@ -324,33 +324,29 @@
   width: 5px;
   height: 100%;
   border-radius: 12px 0 0 12px;
-  background: currentColor;
+  background: #DFD0B8;
 }
 
-/* Hover */
-.ticket:hover {
-  background: #f9fafb;
-  transform: translateY(-1px);
-}
+
 
 /* Subject */
 .ticket strong {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #111827;
+  color: #DFD0B8;
 }
 
 /* Issue type */
 .ticket span {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #4b5563;
+  color: #948979;
 }
 
 /* Description */
 .ticket p {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: #DFD0B8;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -365,18 +361,12 @@
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  color: #222831;
+  background: #DFD0B8;
 }
 
 /* ===== Status Colors ===== */
 
-.ticket.open {
-  color: #2563eb;
-}
-
-.ticket.open .ticket-status {
-  background: #e0ecff;
-  color: #2563eb;
-}
 
 .ticket.in-progress {
   color: #d97706;

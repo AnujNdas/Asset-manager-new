@@ -51,7 +51,6 @@ useEffect(() => {
 
   const publicRoutes = [
     "/user/login",
-    "/user/signup",
     "/user/forgot",
   ];
 

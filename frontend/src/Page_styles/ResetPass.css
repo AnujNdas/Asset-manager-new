@@ -12,10 +12,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   /* Gradient background */
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-
   padding: 20px;
 }
 
@@ -24,14 +21,13 @@
    ====================================================== */
 
 .reset-card {
-  background: #fff;
+  background: #222831;
   width: 100%;
   max-width: 400px;
 
   padding: 30px;
   border-radius: 12px;
 
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
 
   /* Entry animation */
@@ -43,7 +39,7 @@
   margin-bottom: 20px;
   font-size: 24px;
   font-weight: 700;
-  color: #333;
+  color: #DFD0B8;
 }
 
 /* ======================================================
@@ -62,7 +58,7 @@
 .reset-card label {
   font-size: 14px;
   font-weight: 500;
-  color: #444;
+  color: #948979;
   margin-bottom: 5px;
 }
 
@@ -70,7 +66,7 @@
 .reset-card input {
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #ddd;
+  background: #393E46;
 
   font-size: 14px;
   outline: none;
@@ -89,8 +85,8 @@
    ====================================================== */
 
 .reset-card button {
-  background: #2575fc;
-  color: #fff;
+  background: #DFD0B8;
+  color: #222831;
 
   border: none;
   border-radius: 8px;
@@ -102,11 +98,6 @@
 
   cursor: pointer;
   transition: background 0.3s;
-}
-
-/* Button hover state */
-.reset-card button:hover {
-  background: #1d63d1;
 }
 
 /* ======================================================
