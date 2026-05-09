@@ -259,145 +259,171 @@ const getInstanceHistory = async (req, res) => {
        MAP LIFECYCLE
     ============================== */
 
-    const history = (instance.lifecycle || [])
-      .map((item) => {
-        const isoDate = item.date
-          ? new Date(item.date)
-          : null;
+/* =============================
+   MAP LIFECYCLE
+============================== */
 
-        return {
-          action: item.action || "-",
+const history = (instance.lifecycle || [])
+  .map((item) => {
+    const isoDate = item.date
+      ? new Date(item.date)
+      : null;
 
-          recordDate: formatDate(item.date),
+    const meta = item.metadata || {};
 
-          recordDateISO: isoDate,
+    return {
+      /* =============================
+         CORE
+      ============================== */
 
-          notes: item.notes || "-",
+      action:
+        item.eventType?.toUpperCase() || "-",
 
-          /* =============================
-             FROM
-          ============================== */
+      category: item.category || "-",
 
-          from: {
-            status:
-              item.from?.status || "-",
+      title: item.title || "-",
 
-            employeeName:
-              item.from?.assignedTo
-                ?.employeeName || "-",
+      description:
+        item.description || "-",
 
-            departmentName:
-              item.from?.assignedTo
-                ?.departmentName || "-",
+      recordDate: formatDate(item.date),
 
-            location:
-              item.from?.location || "-",
+      recordDateISO: isoDate,
 
-            condition:
-              item.from?.condition || "-"
-          },
+      /* =============================
+         INSTANCE
+      ============================== */
 
-          /* =============================
-             TO
-          ============================== */
+      instanceCode:
+        meta.instanceCode ||
+        instance.instanceCode,
 
-          to: {
-            status:
-              item.to?.status || "-",
+      assetType:
+        meta.assetType ||
+        instance.assetType,
 
-            employeeName:
-              item.to?.assignedTo
-                ?.employeeName || "-",
+      deviceName:
+        meta.deviceName ||
+        instance.deviceName ||
+        "-",
 
-            departmentName:
-              item.to?.assignedTo
-                ?.departmentName || "-",
+      location:
+        meta.location ||
+        instance.location ||
+        "-",
 
-            location:
-              item.to?.location || "-",
+      status:
+        meta.status ||
+        instance.status ||
+        "-",
 
-            condition:
-              item.to?.condition || "-"
-          },
+      condition:
+        meta.condition ||
+        instance.condition ||
+        "-",
 
-          /* =============================
-             HARDWARE
-          ============================== */
+      /* =============================
+         HARDWARE
+      ============================== */
 
-          hardware: instance.hardware
-            ? {
-                serialNumber:
-                  instance.hardware
-                    ?.serialNumber || "-",
+      hardware: instance.hardware
+        ? {
+            serialNumber:
+              meta.serialNumber ||
+              instance.hardware
+                ?.serialNumber ||
+              "-",
 
-                modelNo:
-                  instance.hardware
-                    ?.modelNo || "-",
+            modelNo:
+              meta.modelNo ||
+              instance.hardware
+                ?.modelNo ||
+              "-",
 
-                warrantyExpiry:
-                  formatDate(
-                    instance.hardware
-                      ?.warrantyExpiry
-                  ),
+            warrantyExpiry:
+              formatDate(
+                instance.hardware
+                  ?.warrantyExpiry
+              ),
 
-                nextMaintenanceDate:
-                  formatDate(
-                    instance.hardware
-                      ?.nextMaintenanceDate
-                  ),
+            nextMaintenanceDate:
+              formatDate(
+                instance.hardware
+                  ?.nextMaintenanceDate
+              ),
 
-                maintenanceStatus,
+            maintenanceStatus,
 
-                maintenanceCost:
-                  instance.hardware?.costs
-                    ?.maintenanceCost || null
-              }
-            : null,
+            maintenanceCost:
+              instance.hardware?.costs
+                ?.maintenanceCost || null
+          }
+        : null,
 
-          /* =============================
-             SOFTWARE
-          ============================== */
+      /* =============================
+         SOFTWARE
+      ============================== */
 
-          software: instance.software
-            ? {
-                licenseNumber:
-                  instance.software
-                    ?.licenseNumber || "-",
+      software: instance.software
+        ? {
+            licenseNumber:
+              meta.licenseNumber ||
+              instance.software
+                ?.licenseNumber ||
+              "-",
 
-                renewalDate:
-                  formatDate(
-                    instance.software
-                      ?.renewalDate
-                  ),
+            renewalDate:
+              formatDate(
+                instance.software
+                  ?.renewalDate
+              ),
 
-                renewalCost:
-                  instance.software?.costs
-                    ?.renewalCost || null
-              }
-            : null,
+            renewalCost:
+              instance.software?.costs
+                ?.renewalCost || null
+          }
+        : null,
 
-          /* =============================
-             META
-          ============================== */
+      /* =============================
+         ASSIGNMENT
+      ============================== */
 
-          meta: item.meta || {},
+      assignedTo:
+        meta.assignedTo || null,
 
-          activeScore:
-            getActiveScore(instance),
+      reassignedFrom:
+        meta.reassignedFrom || null,
 
-          activeService:
-            getServiceDays(instance.createdAt)
-        };
-      })
+      deviceInfo:
+        meta.deviceInfo || null,
 
-      .sort((a, b) => {
-        if (!a.recordDateISO) return 1;
-        if (!b.recordDateISO) return -1;
+      /* =============================
+         UPGRADE
+      ============================== */
 
-        return b.recordDateISO - a.recordDateISO;
-      })
+      upgrade:
+        meta.upgrade || null,
 
-      .map(({ recordDateISO, ...rest }) => rest);
+      /* =============================
+         HEALTH
+      ============================== */
+
+      activeScore:
+        getActiveScore(instance),
+
+      activeService:
+        getServiceDays(instance.createdAt)
+    };
+  })
+
+  .sort((a, b) => {
+    if (!a.recordDateISO) return 1;
+    if (!b.recordDateISO) return -1;
+
+    return b.recordDateISO - a.recordDateISO;
+  })
+
+  .map(({ recordDateISO, ...rest }) => rest);
 
     /* =============================
        FINAL RESPONSE
