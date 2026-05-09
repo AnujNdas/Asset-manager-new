@@ -38,10 +38,37 @@ export const SubscriptionProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    fetchSubscription();
-  }, []);
+useEffect(() => {
+  const auth = localStorage.getItem("auth");
 
+  // ✅ Don't fetch if user not logged in
+  if (!auth) {
+    setLoading(false);
+    return;
+  }
+
+  const currentPath = window.location.pathname;
+
+  const publicRoutes = [
+    "/user/login",
+    "/user/signup",
+    "/user/forgot",
+  ];
+
+  const isResetRoute =
+    currentPath.startsWith("/user/reset/");
+
+  // ✅ Skip public auth pages
+  if (
+    publicRoutes.includes(currentPath) ||
+    isResetRoute
+  ) {
+    setLoading(false);
+    return;
+  }
+
+  fetchSubscription();
+}, []);
   // 🔥 live expiry timer
   useEffect(() => {
     if (!subscription?.currentEnd) return;
