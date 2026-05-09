@@ -476,7 +476,7 @@ export const getAllSupportTickets = async () => {
 }
 // UPDATE SUPPORT TICKET (ORG ADMIN)
 export const updateSupportTicket = async (ticketId, payload) => {
-  const res = await axiosInstance.patch(`/tickets/${ticketId}`, payload);
+  const res = await axiosInstance.patch(`/support/tickets/${ticketId}`, payload);
   return res.data;
 };
 export const contactSupport = async (data) => {
