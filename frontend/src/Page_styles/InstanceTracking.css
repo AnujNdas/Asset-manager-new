@@ -124,12 +124,13 @@
   border-radius: 15px;
 }
 .scan-btn {
-    background: #DFD0B8;
+  background: #DFD0B8;
   color: #222831;
   padding: 10px;
   margin: 0;
   width: 100px;
   border-radius: 15px;
+  border: none;
 }
 .btn-blue:hover {
   background: #948979;
@@ -575,9 +576,6 @@
   .filter-bar select {
     width: 100%;
   }
-}
-.actions {
-  flex-wrap: wrap;
 }
 @media (max-width: 1024px) {
   .history-header,
