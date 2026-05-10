@@ -360,13 +360,49 @@ const handleDelete = async (id) => {
     setAssets((p) => p.filter((a) => a._id !== id));
 
     ThemeSwal.fire("Deleted", "Software asset removed", "success");
-  } catch (err) {
-    ThemeSwal.fire(
-      "Error",
-      getErrorMessage(err, "Failed to delete asset"),
-      "error"
-    );
+} catch (err) {
+
+  const data = err?.response?.data;
+
+  // 🔥 Special handling for assets in use
+  if (data?.code === "ASSET_IN_USE") {
+
+    return ThemeSwal.fire({
+      icon: "warning",
+      title: "Asset Cannot Be Deleted",
+      html: `
+        <div style="text-align:left">
+          <p style="margin-bottom:10px;">
+            ${data.message}
+          </p>
+
+          <div style="
+            background:#2d333b;
+            padding:12px;
+            border-radius:10px;
+            margin-top:10px;
+          ">
+            <p><strong>Total Instances:</strong> ${data.errors?.total || 0}</p>
+            <p><strong>Currently In Use:</strong> ${data.errors?.inUse || 0}</p>
+          </div>
+
+          <p style="margin-top:12px;color:#f1c40f;">
+            Please unassign all active instances before deleting this asset.
+          </p>
+        </div>
+      `,
+      confirmButtonText: "Understood",
+      background: "#222831",
+    });
   }
+
+  // 🔥 Default error
+  ThemeSwal.fire(
+    "Error",
+    getErrorMessage(err, "Failed to delete asset"),
+    "error"
+  );
+}
 };
   const truncateText = (text = "", maxLength = 18) => {
   if (text.length <= maxLength) return text;

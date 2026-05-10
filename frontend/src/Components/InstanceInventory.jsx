@@ -39,8 +39,84 @@ const InstanceCard = ({
   /* ================= DATE HELPERS ================= */
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "N/A";
+  const handlePrintQR = () => {
+  if (!qrUrl) return;
 
-  return (
+  const printWindow = window.open("", "_blank");
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Print QR</title>
+
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: white;
+          }
+
+          .print-container {
+            text-align: center;
+            border: 2px dashed #333;
+            padding: 30px;
+            border-radius: 12px;
+            width: 320px;
+          }
+
+          img {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            margin-bottom: 15px;
+          }
+
+          h2 {
+            margin: 0 0 8px;
+            font-size: 18px;
+          }
+
+          p {
+            margin: 4px 0;
+            font-size: 14px;
+          }
+        </style>
+      </head>
+
+      <body>
+        <div class="print-container">
+          <img src="${qrUrl}" />
+
+          <h2>${inst.deviceName || "Hardware Asset"}</h2>
+
+          <p><strong>Instance:</strong> ${inst.instanceCode}</p>
+
+          <p><strong>Serial:</strong> ${
+            hw.serialNumber || "N/A"
+          }</p>
+
+          <p><strong>Model:</strong> ${
+            hw.modelNo || "N/A"
+          }</p>
+        </div>
+
+        <script>
+          window.onload = () => {
+            window.print();
+            window.onafterprint = () => window.close();
+          };
+        </script>
+      </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+};
+  return (  
     <div className="instance-card-v2">
 
       {/* ================= HEADER ================= */}
@@ -150,12 +226,21 @@ const InstanceCard = ({
           </div>
 
           {/* QR */}
-          {isHardware && qrUrl && (
-            <div className="card-box center">
-              <h5>QR</h5>
-              <img src={qrUrl} alt="QR" />
-            </div>
-          )}
+{/* QR */}
+{isHardware && qrUrl && (
+  <div className="card-box center">
+    <h5>QR</h5>
+
+    <img src={qrUrl} alt="QR" />
+
+    <button
+      className="print-qr-btn"
+      onClick={handlePrintQR}
+    >
+      🖨 Print QR
+    </button>
+  </div>
+)}
 {isHardware && (
   <div className="card-box">
     <h5>Coverage Type</h5>

@@ -123,7 +123,7 @@
 }
 
 .btn.primary:hover {
-  background: var(--primary-hover);
+  background: #948979;
 }
 
 .btn.primary:disabled {

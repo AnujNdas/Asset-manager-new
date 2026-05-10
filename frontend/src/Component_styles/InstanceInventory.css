@@ -110,7 +110,22 @@
   font-size: 12px;
   color: #DFD0B8;
 }
+.print-qr-btn {
+  margin-top: 10px;
+  border: none;
+  background: #DFD0B8;
+  color: #222831;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
 
+.print-qr-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
 @media (max-width: 480px) {
   .card-footer {
     justify-content: stretch;
