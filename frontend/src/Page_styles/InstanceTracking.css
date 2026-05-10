@@ -11,7 +11,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
-  width: 100px;
+
 }
 
 .filter-bar select {
@@ -20,6 +20,7 @@
   color: #DFD0B8;
   border-radius: 6px;
   font-size: 14px;
+    width: 100px;
 }
 .right-actions {
   display: flex;
@@ -117,6 +118,8 @@
 .btn-blue {
   background: #DFD0B8;
   color: #222831;
+  padding: 10px;
+  margin: 0;
 }
 
 .btn-blue:hover {
