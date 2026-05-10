@@ -49,7 +49,7 @@ const assetInstanceSchema = new mongoose.Schema(
 
   condition: {
     type: String,
-    enum: ["new", "used", "damaged"],
+    enum: ["new", "used", "damaged" , "broken" , "stolen" , "repaired(in)" , "repaired(out)"],
     default: "new"
   },
   upgrades: [

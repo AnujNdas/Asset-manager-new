@@ -804,6 +804,10 @@ if (isSoftware && !inst.licenseNumber) {
                 <option value="new">New</option>
                 <option value="used">Used</option>
                 <option value="damaged">Damaged</option>
+                <option value="stolen">Stolen</option>
+                <option value="broken">Broken</option>
+                <option value="repaired(in)">Repaired(IN)</option>
+                <option value="repaired(out)">Repaired(OUT)</option>
               </select>
               </div>
               <div className="form-group">
