@@ -1211,7 +1211,23 @@ for (let index = 0; index < instances.length; index++) {
             inst.hardware?.serialNumber || "-",
 
           modelNo:
-            inst.hardware?.modelNo || "-"
+            inst.hardware?.modelNo || "-"/
+            hasInsurance,
+
+            insuranceTerm:
+              hasInsurance
+                ? insuranceTerm
+                : null,
+
+            insuranceExpiry:
+              hasInsurance
+                ? insuranceExpiry
+                : null,
+
+            coverageType:
+              hasInsurance
+                ? coverageType
+                : [],
         }
       : {
           licenseNumber:
@@ -1248,26 +1264,106 @@ const insuranceCost = await formatCost({
   amount: inst.hardware?.costs?.insuranceCost,
   currency
 });
-    newInstances.push({
-      ...basePayload,
-      hardware: {
-        serialNumber:
-          inst.hardware?.serialNumber ||
-          generateSerial(asset, index),
-        modelNo: inst.hardware?.modelNo || "",
-        specifications: inst.hardware?.specifications || "",
-        purchaseDate: inst.hardware?.purchaseDate || null,
-        installationDate: inst.hardware?.installationDate || null,
-        warrantyExpiry: inst.hardware?.warrantyExpiry || null,
-        hasInsurance,
-        purchaseCost,
-        costs: {
-          maintenanceCost,
-          warrantyRenewalCost,
-          insuranceCost
-        }
-      }
-    });
+/* ================= INSURANCE ================= */
+
+const insuranceTerm =
+  inst.hardware?.insuranceTerm || null;
+
+const insurancePurchaseDate =
+  inst.hardware?.insurancePurchaseDate || null;
+
+const coverageType =
+  inst.hardware?.coverageType || [];
+
+let insuranceExpiry = null;
+
+/* AUTO CALCULATE EXPIRY */
+if (hasInsurance && insurancePurchaseDate) {
+  const expiry = new Date(insurancePurchaseDate);
+
+  switch (insuranceTerm) {
+    case "6_months":
+      expiry.setMonth(expiry.getMonth() + 6);
+      break;
+
+    case "1_year":
+      expiry.setFullYear(
+        expiry.getFullYear() + 1
+      );
+      break;
+
+    case "3_years":
+      expiry.setFullYear(
+        expiry.getFullYear() + 3
+      );
+      break;
+
+    default:
+      break;
+  }
+
+  insuranceExpiry = expiry;
+}
+newInstances.push({
+  ...basePayload,
+
+  hardware: {
+    serialNumber:
+      inst.hardware?.serialNumber ||
+      generateSerial(asset, index),
+
+    modelNo:
+      inst.hardware?.modelNo || "",
+
+    specifications:
+      inst.hardware?.specifications || "",
+
+    purchaseDate:
+      inst.hardware?.purchaseDate || null,
+
+    installationDate:
+      inst.hardware?.installationDate || null,
+
+    warrantyPurchaseDate:
+      inst.hardware?.warrantyPurchaseDate || null,
+
+    warrantyExpiry:
+      inst.hardware?.warrantyExpiry || null,
+
+    nextMaintenanceDate:
+      inst.hardware?.nextMaintenanceDate || null,
+
+    hasInsurance,
+
+    insuranceTerm:
+      hasInsurance
+        ? insuranceTerm
+        : null,
+
+    insurancePurchaseDate:
+      hasInsurance
+        ? insurancePurchaseDate
+        : null,
+
+    insuranceExpiry:
+      hasInsurance
+        ? insuranceExpiry
+        : null,
+
+    coverageType:
+      hasInsurance
+        ? none
+        : [],
+
+    purchaseCost,
+
+    costs: {
+      maintenanceCost,
+      warrantyRenewalCost,
+      insuranceCost
+    }
+  }
+});
   } else {
     newInstances.push({
       ...basePayload,
@@ -1643,6 +1739,7 @@ const parseDateSafe = (d) => {
         .toString(36)
         .slice(2, 6)}`;
         const purchaseDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.purchaseDate) : parseDateSafe(inst.software?.purchaseDate);
+        const nextmaintenanceDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.nextMaintenanceDate) : null;
         const purchaseCost =
   assetType === "hardware"
     ? await formatCost(inst.hardware?.purchaseCost)
@@ -1710,6 +1807,7 @@ const insuranceCost = await formatCost({
             specifications: normalize(inst.hardware?.specifications) || "",
 
             purchaseDate,
+            nextMaintenanceDate,
             installationDate: parseDateSafe(inst.hardware?.installationDate),
 
             warrantyExpiry: parseDateSafe(inst.hardware?.warrantyExpiry),

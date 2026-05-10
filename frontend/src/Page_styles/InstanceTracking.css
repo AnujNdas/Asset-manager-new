@@ -529,14 +529,8 @@
 
 .history-row {
   display: grid;
-  grid-template-columns:
-    120px
-    180px
-    120px
-    100px
-    1fr
-    120px;
-
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  place-items: center;
   gap: 14px;
   align-items: start;
 }

@@ -33,6 +33,9 @@
   border-radius: 999px;
   font-size: 12px;
 }
+.issue {
+  color: #DFD0B8;
+}
 .date {
   color: #DFD0B8;
 }

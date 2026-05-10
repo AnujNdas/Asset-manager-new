@@ -384,18 +384,24 @@ const history = (instance.lifecycle || [])
           }
         : null,
 
-      /* =============================
-         ASSIGNMENT
-      ============================== */
+/* =============================
+   ASSIGNMENT
+============================== */
 
-      assignedTo:
-        meta.assignedTo || null,
+from: meta.from || null,
 
-      reassignedFrom:
-        meta.reassignedFrom || null,
+to: meta.to || null,
 
-      deviceInfo:
-        meta.deviceInfo || null,
+assignedTo:
+  meta.to?.assignedTo ||
+  meta.assignedTo ||
+  null,
+
+reassignedFrom:
+  meta.reassignedFrom || null,
+
+deviceInfo:
+  meta.deviceInfo || null,
 
       /* =============================
          UPGRADE

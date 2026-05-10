@@ -112,9 +112,11 @@ useEffect(() => {
   {item.hardware && (
     <div className="history-meta">
 
-      <small>
-        SN: {item.hardware.serialNumber || "-"}
-      </small>
+      {item.hardware?.serialNumber && (
+  <small>
+    Serial: {item.hardware.serialNumber}
+  </small>
+)}
 
       <small>
         Model: {item.hardware.modelNo || "-"}
@@ -136,10 +138,11 @@ useEffect(() => {
   {item.software && (
     <div className="history-meta">
 
-      <small>
-        License:{" "}
-        {item.software.licenseNumber || "-"}
-      </small>
+{item.software?.licenseNumber && (
+  <small>
+    License: {item.software.licenseNumber}
+  </small>
+)}
 
       <small>
         Renewal:{" "}
