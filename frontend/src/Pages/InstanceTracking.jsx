@@ -180,7 +180,7 @@ if (!instance || !instance.assignment?._id) {
         </select>
 
         <div className="right-actions">
-          <button className="btn btn-blue tour-scan" onClick={() => setShowScanner(true)}>
+          <button className="scan-btn tour-scan" onClick={() => setShowScanner(true)}>
             Scan QR
           </button>
 
