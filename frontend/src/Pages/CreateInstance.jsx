@@ -1236,9 +1236,13 @@ if (isSoftware && !inst.licenseNumber) {
                       handleChange(index, "condition", e.target.value)
                     }
                   >
-                    <option value="new">New</option>
-                    <option value="used">Used</option>
-                    <option value="damaged">Damaged</option>
+                           <option value="new">New</option>
+                <option value="used">Used</option>
+                <option value="damaged">Damaged</option>
+                <option value="stolen">Stolen</option>
+                <option value="broken">Broken</option>
+                <option value="repaired(in)">Repaired(IN)</option>
+                <option value="repaired(out)">Repaired(OUT)</option>
                   </select>
 </div>
                   <div className="input-group">
@@ -1285,7 +1289,7 @@ if (isSoftware && !inst.licenseNumber) {
                       }
                     />
                     </div>
-                      <div>
+                      {/* <div>
                         <label>Device Name</label>
                         <input
                           value={inst.deviceName || ""}
@@ -1293,7 +1297,7 @@ if (isSoftware && !inst.licenseNumber) {
                             handleChange(index, "deviceName", e.target.value)
                           }
                         />
-                      </div>
+                      </div> */}
                     {isHardware && (
                       <>
                         <div className="grid-3">
