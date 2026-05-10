@@ -112,21 +112,21 @@ useEffect(() => {
   {item.hardware && (
     <div className="history-meta">
 
-      {item.hardware?.serialNumber && (
+      {/* {item.hardware?.serialNumber && (
   <small>
     Serial: {item.hardware.serialNumber}
   </small>
-)}
+)} */}
 
-      <small>
+      <small className="meta-item">
         Model: {item.hardware.modelNo || "-"}
       </small>
 
-      <small>
+      <small className="meta-item">
         Warranty: {item.hardware.warrantyExpiry || "-"}
       </small>
 
-      <small>
+      <small className="meta-item">
         Maintenance:{" "}
         {item.hardware.nextMaintenanceDate || "-"}
       </small>
@@ -139,12 +139,12 @@ useEffect(() => {
     <div className="history-meta">
 
 {item.software?.licenseNumber && (
-  <small>
+  <small className="meta-item">
     License: {item.software.licenseNumber}
   </small>
 )}
 
-      <small>
+      <small className="meta-item">
         Renewal:{" "}
         {item.software.renewalDate || "-"}
       </small>
@@ -156,12 +156,12 @@ useEffect(() => {
   {item.deviceInfo && (
     <div className="history-meta">
 
-      <small>
+      <small className="meta-item">
         Device:{" "}
         {item.deviceInfo.deviceName || "-"}
       </small>
 
-      <small>
+      <small className="meta-item">
         Serial:{" "}
         {item.deviceInfo.serialNumber || "-"}
       </small>
@@ -173,7 +173,7 @@ useEffect(() => {
   {item.reassignedFrom && (
     <div className="history-meta">
 
-      <small>
+      <small className="meta-item">
         Reassigned From:{" "}
         {item.reassignedFrom.employeeName || "-"}
       </small>
@@ -185,13 +185,13 @@ useEffect(() => {
   {item.upgrade && (
     <div className="history-meta">
 
-      <small>
+      <small className="meta-item">
         Upgrade:{" "}
         {item.upgrade.description || "-"}
       </small>
 
       {item.upgrade.cost?.amount && (
-        <small>
+        <small className="meta-item">
           Cost:{" "}
           {item.upgrade.cost.amount}{" "}
           {item.upgrade.cost.currency}

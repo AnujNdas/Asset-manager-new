@@ -359,11 +359,23 @@
   flex-direction: column;
   overflow: hidden;
 }
+.history-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
 
+.meta-item {
+  display: block;
+  font-size: 12px;
+  color: #a1a1aa;
+  line-height: 1.4;
+}
 /* HEADER */
 .history-header {
   display: grid;
-  grid-template-columns: repeat(9, minmax(120px, 1fr));
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
   /* gap: 10px; */
   padding: 10px;
   font-size: 13px;
