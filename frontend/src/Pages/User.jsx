@@ -26,7 +26,7 @@ const User = ({ removeUser }) => {
   />
 </div>
         <div className="auth-header">
-          <h2>Machine And IT Asset Management System</h2>
+          <h2>Machine + IT Asset Management System</h2>
         </div>
 
         <div className="auth-content">
