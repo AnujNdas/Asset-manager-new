@@ -28,7 +28,8 @@ const handleResetData = async () => {
       confirmButtonText: "Continue",
       confirmButtonColor: "#d32f2f",
       customClass: {
-        confirmButton: "custom-confirm-btn"
+        confirmButton: "custom-confirm-btn",
+        cancelButton: "custom-cancel-btn"
       },
       preConfirm: (value) => {
         if (value !== "RESET") {
@@ -67,7 +68,8 @@ const handleResetData = async () => {
       confirmButtonColor: "#d32f2f",
       showCancelButton: true,
         customClass: {
-    confirmButton: "custom-confirm-btn"
+    confirmButton: "custom-confirm-btn",
+    cancelButton: "custom-cancel-btn"
   },
     });
 
@@ -85,7 +87,8 @@ const handleResetData = async () => {
       confirmButtonColor: "#d32f2f",
       cancelButtonColor: "#9e9e9e",
       customClass: {  
-        confirmButton: "custom-confirm-btn"
+        confirmButton: "custom-confirm-btn",
+        cancelButton: "custom-cancel-btn"
       },  
       preConfirm: (value) => {
         if (!value) {
@@ -114,7 +117,8 @@ const handleResetData = async () => {
       title: "Reset Completed",
       text: "All organization data has been reset successfully.",
       icon: "success",
-      confirmButtonColor: "#2e7d32"
+      confirmButtonColor: "#DFD0B8",
+
     });
 
     // OPTIONAL: reload or redirect
@@ -141,7 +145,7 @@ const handleChangePassword = async () => {
     const token = authData?.token;
 
     const res = await axios.put(
-      `${process.env.REACT_APP_API_BASE_URL}/api/auth/change-password`,
+      `${process.env.REACT_APP_API_URL}/api/auth/change-password`,
       { currentPassword, newPassword },
       {
         headers: {
