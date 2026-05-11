@@ -621,7 +621,7 @@ const paginatedAssets = filteredAssets.slice(
 {instances.length === 0 ? (
   <p>No instances found</p>
 ) : (
- <div className="instance-grid">
+ <div className="instance-group">
   {instances.map((inst) => {
     const assignment = assignmentMap[String(inst._id)];
 

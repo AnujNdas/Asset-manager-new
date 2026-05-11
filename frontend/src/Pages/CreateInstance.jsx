@@ -402,11 +402,8 @@ import { useTour } from "../Context/TourContext";
   }, []);
 
 
-  const handleImport = async () => {
-    if (!file) {
-      alert("Please select an Excel file");
-      return;
-    }
+  const handleImport = async (file) => {
+    if (!file) return;
 
     setLoading(true);
 
@@ -746,32 +743,36 @@ if (isSoftware && !inst.licenseNumber) {
               </div>
             </div>
           )}
-  <div className="import-section">
-    <input
-      type="file"
-      accept=".xlsx, .xls"
-      onChange={handleFileUpload}
-    />
-    <div className="import-actions">
-    <button onClick={handleImport} className="btn-save tour-import">
-      Import Excel
+<div className="capture-header">
+  <h3>Create Instances</h3>
+
+  <div className="group-buttons">
+    <button
+      className="import-btn tour-import"
+      onClick={() => setShowImport(true)}
+    >
+      ⬆ Import Excel
     </button>
 
-    <div>
-      {isHardware && (
-        <button onClick={() => downloadTemplate("hardware")} className="btn-save tour-template">
-          Download Hardware Template
-        </button>
-      )}
+    {isHardware && (
+      <button
+        onClick={() => downloadTemplate("hardware")}
+        className="btn-cancel tour-template"
+      >
+        ⬇ Download Hardware Template
+      </button>
+    )}
 
-      {isSoftware && (
-        <button onClick={() => downloadTemplate("software")} className="btn-save tour-template">
-          Download Software Template
-        </button>
-      )}
-      </div>
-    </div>
+    {isSoftware && (
+      <button
+        onClick={() => downloadTemplate("software")}
+        className="btn-cancel tour-template"
+      >
+        ⬇ Download Software Template
+      </button>
+    )}
   </div>
+</div>
           {/* BULK APPLY */}
           <div className="bulk-panel tour-bulk">
             <h4>Bulk Apply</h4>
@@ -1664,7 +1665,63 @@ if (isSoftware && !inst.licenseNumber) {
               {loading ? "Saving..." : "Create Instances"}
             </button>
           </div>
+          {showImport && (
+  <div className="import-modal">
+    <div className="import-box">
+      <h3>
+        Import {isHardware ? "Hardware" : "Software"} Instances
+      </h3>
+
+      <input
+        type="file"
+        accept=".xlsx, .xls, .csv"
+        onChange={(e) => setImportFile(e.target.files[0])}
+      />
+
+      <div className="import-actions">
+        <button
+          onClick={() => {
+            setShowImport(false);
+            setImportFile(null);
+          }}
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={async () => {
+            if (!importFile) {
+              ThemeSwal.fire(
+                "Error",
+                "Please select a file",
+                "error"
+              );
+              return;
+            }
+
+            try {
+              setImportLoading(true);
+
+              await handleImport(importFile);
+
+              setShowImport(false);
+              setImportFile(null);
+            } catch (err) {
+              console.error(err);
+            } finally {
+              setImportLoading(false);
+            }
+          }}
+          disabled={importLoading}
+        >
+          {importLoading ? "Uploading..." : "Upload"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         </div>
+        
       );
     };
 
