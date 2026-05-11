@@ -523,13 +523,13 @@
 }
 
 .event-badge.created {
-  background: #DFD0B8;
+  background: #4caf50;
   color: #222831;
 }
 
 .event-badge.assigned {
   background: #ff0000;
-  color: #222831;
+  color: #DFD0B8;
 }
 
 .event-badge.reassigned {

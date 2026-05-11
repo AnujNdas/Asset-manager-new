@@ -116,6 +116,9 @@
 .logout-confirm-btn {
   color: #DFD0B8 !important; /* change to any color you want */
 }
+.logout-cancel-btn {
+  color: #DFD0B8 !important; /* change to any color you want */
+}
 /* ======================================================
    USER INFO SECTION
    ====================================================== */

@@ -62,7 +62,10 @@ const handleResetData = async () => {
       `,
       confirmButtonText: "Continue",
       confirmButtonColor: "#d32f2f",
-      showCancelButton: true
+      showCancelButton: true,
+        customClass: {
+    confirmButton: "custom-confirm-btn"
+  },
     });
 
     // STEP 3: PASSWORD VERIFICATION
@@ -126,40 +129,46 @@ const handleResetData = async () => {
 };
 
 
-  const handleChangePassword = async () => {
-    try {
-      const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
-      const res = await axios.put(
-        `${process.env.REACT_APP_API_BASE_URL}/auth/change-password`,
-        { currentPassword, newPassword },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
+const handleChangePassword = async () => {
+  try {
+    const authData = JSON.parse(localStorage.getItem("auth"));
+    const token = authData?.token;
+
+    const res = await axios.put(
+      `${process.env.REACT_APP_API_BASE_URL}/auth/change-password`,
+      { currentPassword, newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
         }
-      );
-      ThemeSwal.fire({
+      }
+    );
+
+    ThemeSwal.fire({
       title: "Password Changed",
       text: "Password reset successful. Please login again.",
       icon: "success",
       confirmButtonText: "OK",
     }).then(() => {
-      // ✅ Remove token and redirect to login page
-      localStorage.removeItem("token");
-      navigate('/user/login') // or use navigate("/login") if using React Router
+      localStorage.removeItem("auth");
+      navigate('/user/login');
     });
 
     setMessage(res.data.message);
+
   } catch (error) {
     ThemeSwal.fire({
       title: "Error",
       text: error.response?.data?.error || "Error changing password",
       icon: "error",
     });
-    setMessage(error.response?.data?.error || "Error changing password");
+
+    setMessage(
+      error.response?.data?.error || "Error changing password"
+    );
   }
-  };
+};
   return (
     <div className='Security-container'>
       <div className="classify_heading">Security</div>
@@ -192,7 +201,6 @@ const handleResetData = async () => {
             Change
           </button>
           </div>
-          {message && <p className="response-message">{message}</p>}
       </div>
       
 {/* ================= DANGER ZONE ================= */}

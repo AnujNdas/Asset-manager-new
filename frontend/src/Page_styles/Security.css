@@ -225,7 +225,10 @@
 .reset-system-btn:active {
   transform: scale(0.98);
 }
-
+.custom-confirm-btn {
+  color: #DFD0B8 !important;
+  font-weight: 600;
+}
 /* =======================
    Responsive Adjustments
    ======================= */

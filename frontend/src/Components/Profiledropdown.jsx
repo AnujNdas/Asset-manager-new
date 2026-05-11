@@ -43,7 +43,8 @@ ThemeSwal.fire({
   confirmButtonColor: "#d33",
 
   customClass: {
-    confirmButton: "logout-confirm-btn"
+    confirmButton: "logout-confirm-btn",
+    cancelButton: "logout-cancel-btn"
   }
 }).then((result) => {
       if (result.isConfirmed) {
