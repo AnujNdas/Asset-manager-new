@@ -176,6 +176,9 @@ import { useTour } from "../Context/TourContext";
       const [loading, setLoading] = useState(false);
       const [errors, setErrors] = useState({});
       const [file, setFile] = useState(null);
+      const [showImport, setShowImport] = useState(false);
+const [importFile, setImportFile] = useState(null);
+const [importLoading, setImportLoading] = useState(false);
       const [bulkValues, setBulkValues] = useState({
         location: "",
         condition: "",
