@@ -27,6 +27,9 @@ const handleResetData = async () => {
       showCancelButton: true,
       confirmButtonText: "Continue",
       confirmButtonColor: "#d32f2f",
+      customClass: {
+        confirmButton: "custom-confirm-btn"
+      },
       preConfirm: (value) => {
         if (value !== "RESET") {
           ThemeSwal.showValidationMessage("You must type RESET exactly");
@@ -81,6 +84,9 @@ const handleResetData = async () => {
       confirmButtonText: "Reset Now",
       confirmButtonColor: "#d32f2f",
       cancelButtonColor: "#9e9e9e",
+      customClass: {  
+        confirmButton: "custom-confirm-btn"
+      },  
       preConfirm: (value) => {
         if (!value) {
           ThemeSwal.showValidationMessage("Password is required");
@@ -135,7 +141,7 @@ const handleChangePassword = async () => {
     const token = authData?.token;
 
     const res = await axios.put(
-      `${process.env.REACT_APP_API_BASE_URL}/auth/change-password`,
+      `${process.env.REACT_APP_API_BASE_URL}/api/auth/change-password`,
       { currentPassword, newPassword },
       {
         headers: {

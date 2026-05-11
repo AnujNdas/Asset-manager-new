@@ -204,11 +204,14 @@ const softwareInstances = software.flatMap((asset) => {
     const rows = currentData.map((row) => {
       if (viewMode === "instance") {
         return {
-          Asset: row.assetName,
           Instance: row.instanceCode,
+          Model: row.model || row.licenseKey,
+          Status: row.status,
+          Asset: row.assetName,
           Status: row.status,
           Assigned: row.assignedTo,
           Location: row.location,
+          Department : row.department || "-",
           Cost: convertFromBase(row.cost),
         };
       }

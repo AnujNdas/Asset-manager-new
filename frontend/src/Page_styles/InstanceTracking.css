@@ -529,16 +529,16 @@
 
 .event-badge.assigned {
   background: #ff0000;
-  color: #DFD0B8;
+  color: #222831;
 }
 
 .event-badge.reassigned {
-  background: rgba(241, 196, 15, 0.15);
+  background: #948979;
   color: #222831;
 }
 
 .event-badge.upgrade {
-  background: #948979;  
+  background: #DFD0B8;  
   color: #222831;
 }
 

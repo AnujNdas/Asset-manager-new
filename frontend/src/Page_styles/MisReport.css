@@ -73,11 +73,6 @@ body {
   flex-shrink: 0;
 }
 
-.navs button:hover {
-  background: #e5e7eb;
-  transform: translateY(-2px);
-}
-
 .navs button.active-tab {
   background: #DFD0B8;
   font-weight: 600;
