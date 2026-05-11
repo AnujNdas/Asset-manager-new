@@ -747,7 +747,6 @@ if (isSoftware && !inst.licenseNumber) {
             </div>
           )}
 <div className="capture-header">
-  <h3>Create Instances</h3>
 
   <div className="group-buttons">
     <button
@@ -760,7 +759,7 @@ if (isSoftware && !inst.licenseNumber) {
     {isHardware && (
       <button
         onClick={() => downloadTemplate("hardware")}
-        className="btn-cancel tour-template"
+        className="btn-template tour-template"
       >
         ⬇ Download Hardware Template
       </button>

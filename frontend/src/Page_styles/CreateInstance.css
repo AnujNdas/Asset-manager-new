@@ -223,6 +223,191 @@ button {
     font-weight: 500;
     padding: 5px;
 }
+.import-btn {
+  background: #dfd0b8;
+  border: none;
+  border-radius: 10px;
+  color: #222831;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px;
+}
+.btn-template {
+  background: #DFD0B8;
+  border: none;
+  color: #222831;
+  padding: 5px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.group-buttons {
+  display: flex;
+  justify-content: center;
+}
+/* =========================
+   IMPORT MODAL
+========================= */
+
+.import-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.import-box {
+  width: 100%;
+  max-width: 480px;
+
+  background: var(--card-bg, #fff);
+  border-radius: 22px;
+
+  padding: 28px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 2px 10px rgba(0, 0, 0, 0.08);
+
+  animation: importFade 0.25s ease;
+}
+
+.import-box h3 {
+  margin: 0 0 20px;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  color: var(--text-primary, #111827);
+}
+
+/* =========================
+   FILE INPUT
+========================= */
+
+.import-box input[type="file"] {
+  width: 100%;
+
+  border: 2px dashed #d1d5db;
+  border-radius: 16px;
+
+  padding: 18px;
+
+  background: #f9fafb;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.import-box input[type="file"]:hover {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.import-actions {
+  margin-top: 24px;
+
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.import-actions button {
+  border: none;
+  outline: none;
+
+  padding: 12px 20px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+/* Cancel Button */
+.import-actions button:first-child {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.import-actions button:first-child:hover {
+  background: #e5e7eb;
+}
+
+/* Upload Button */
+.import-actions button:last-child {
+  background: #4f46e5;
+  color: white;
+
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+}
+
+.import-actions button:last-child:hover {
+  transform: translateY(-1px);
+  background: #4338ca;
+}
+
+.import-actions button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes importFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .import-box {
+    padding: 22px;
+    border-radius: 18px;
+  }
+
+  .import-box h3 {
+    font-size: 18px;
+  }
+
+  .import-actions {
+    flex-direction: column;
+  }
+
+  .import-actions button {
+    width: 100%;
+  }
+}
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }
