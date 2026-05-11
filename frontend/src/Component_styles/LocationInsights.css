@@ -99,8 +99,8 @@
 }
 
 .status-badge.healthy {
-  background: #e6f4ea;
-  color: #1b873f;
+  background: #4caf50;
+  color: #222831;
 }
 
 /* ================= STATS ================= */
@@ -135,7 +135,7 @@
 
 .fill {
   height: 100%;
-  background: #948979;
+  background: #4caf50;
 }
 
 /* ================= COST ================= */

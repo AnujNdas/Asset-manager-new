@@ -226,7 +226,7 @@ button {
 .import-btn {
   background: #dfd0b8;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   color: #222831;
   font-size: 14px;
   font-weight: 500;
@@ -237,13 +237,14 @@ button {
   border: none;
   color: #222831;
   padding: 5px;
-  border-radius: 10px;
+  border-radius: 5px;
   font-size: 14px;
   font-weight: 500;
 }
 .group-buttons {
   display: flex;
   justify-content: center;
+  gap: 10px;
 }
 /* =========================
    IMPORT MODAL
@@ -268,7 +269,7 @@ button {
   width: 100%;
   max-width: 480px;
 
-  background: var(--card-bg, #fff);
+  background: #393E46;
   border-radius: 22px;
 
   padding: 28px;
@@ -286,7 +287,7 @@ button {
   font-size: 22px;
   font-weight: 700;
 
-  color: var(--text-primary, #111827);
+  color: #DFD0B8;
 }
 
 /* =========================
@@ -295,22 +296,17 @@ button {
 
 .import-box input[type="file"] {
   width: 100%;
-
-  border: 2px dashed #d1d5db;
   border-radius: 16px;
-
   padding: 18px;
-
-  background: #f9fafb;
-
+  background: #222831;
+  color: #DFD0B8;
   cursor: pointer;
-
   transition: 0.25s ease;
 }
 
 .import-box input[type="file"]:hover {
-  border-color: #6366f1;
-  background: #eef2ff;
+  border-color: #DFD0B8;
+  background: #222831;
 }
 
 /* =========================
@@ -343,25 +339,15 @@ button {
 
 /* Cancel Button */
 .import-actions button:first-child {
-  background: #f3f4f6;
-  color: #374151;
+  background: #222831;
+  color: #DFD0B8;
 }
 
-.import-actions button:first-child:hover {
-  background: #e5e7eb;
-}
 
 /* Upload Button */
 .import-actions button:last-child {
-  background: #4f46e5;
-  color: white;
-
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
-}
-
-.import-actions button:last-child:hover {
-  transform: translateY(-1px);
-  background: #4338ca;
+  background: #DFD0B8;
+  color: #222831;
 }
 
 .import-actions button:disabled {
