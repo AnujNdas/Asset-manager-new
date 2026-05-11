@@ -1,71 +1,191 @@
 /* =========================
    PAGE CONTAINER
 ========================= */
+
 .settings-container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
-}
-
-/* Page Title */
-.settings-container h2 {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #1f2937; /* slate-800 */
+  overflow-x: hidden;
 }
 
 /* =========================
-   SECTION WRAPPER (FORM + TABLE)
+   PAGE TITLE
 ========================= */
+
+.settings-container h2 {
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1f2937;
+}
+
+/* =========================
+   SECTION WRAPPER
+========================= */
+
 .settings-container > *:not(h2) {
   background: #222831;
-  border-radius: 14px;
-  padding: 20px;
+  border-radius: 18px;
+  padding: 22px;
   margin-bottom: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
 }
 
 /* =========================
-   INVITE FORM (GENERAL ENHANCEMENT)
+   INVITE LAYOUT
 ========================= */
-.invite-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
 
-.invite-form input,
-.invite-form select {
-  flex: 1;
-  min-width: 220px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 0.95rem;
-}
-
-.invite-form button {
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.invite-form button:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
+.invite-box {
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
 
 /* =========================
-   INVITE TABLE WRAPPER
+   INVITE FORM CARD
 ========================= */
+
+.invite-form-card {
+  width: 100%;
+  border-radius: 16px;
+  padding: 22px;
+  background: #2d333d;
+  overflow: hidden;
+}
+
+.invite-form-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #DFD0B8;
+}
+
+/* =========================
+   FORM ROW
+========================= */
+
+.invite-form-card .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.invite-form-card label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #948979;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.invite-form-card input,
+.invite-form-card select {
+  width: 100%;
+  min-height: 46px;
+
+  padding: 12px 14px;
+
+  border-radius: 10px;
+  border: none;
+
+  font-size: 14px;
+  outline: none;
+
+  background: #393E46;
+  color: #DFD0B8;
+
+  transition: 0.2s ease;
+}
+
+.invite-form-card input:focus,
+.invite-form-card select:focus {
+  box-shadow: 0 0 0 2px rgba(223, 208, 184, 0.25);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.invite-form-card button {
+  width: 100%;
+  min-height: 46px;
+
+  margin-top: 8px;
+  padding: 12px 16px;
+
+  border-radius: 10px;
+  border: none;
+
+  background: #DFD0B8;
+  color: #222831;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.invite-form-card button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.invite-form-card button:disabled {
+  background: #948979;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* =========================
+   TABLE CARD
+========================= */
+
+.invite-table-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.invite-table-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #DFD0B8;
+}
+
+.invite-table-card p {
+  font-size: 13px;
+  margin-bottom: 18px;
+  color: #b9b0a1;
+  line-height: 1.5;
+}
+
+/* =========================
+   TABLE WRAPPER
+========================= */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 14px;
+}
+
+/* =========================
+   INVITE TABLE
+========================= */
+
 .invite-table {
   width: 100%;
+  min-width: 700px;
   border-collapse: collapse;
 }
 
@@ -75,24 +195,34 @@
 
 .invite-table th,
 .invite-table td {
-  padding: 14px 12px;
+  padding: 14px 14px;
   text-align: left;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.92rem;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.08);
+  white-space: nowrap;
 }
 
 .invite-table th {
-  font-weight: 600;
+  font-weight: 700;
   color: #374151;
 }
 
-/* Status badges */
+.invite-table td {
+  color: #DFD0B8;
+}
+
+/* =========================
+   STATUS BADGES
+========================= */
+
 .invite-status {
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .invite-status.pending {
@@ -110,146 +240,109 @@
   color: #991b1b;
 }
 
-/* Revoke Button */
+/* =========================
+   REVOKE BUTTON
+========================= */
+
 .invite-revoke-btn {
   background: transparent;
   border: none;
-  color: #dc2626;
+  color: #ef4444;
+
   font-size: 0.85rem;
+  font-weight: 600;
+
   cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: background 0.2s ease;
+
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  transition: 0.2s ease;
 }
 
 .invite-revoke-btn:hover {
-  background: #fee2e2;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 /* =========================
    EMPTY STATE
 ========================= */
+
 .invite-empty {
   text-align: center;
-  padding: 30px;
-  color: #6b7280;
-  font-size: 0.9rem;
-}
-/* =========================
-   INVITE FORM CARD
-========================= */
-.invite-form-card {
-  /* background: #ffffff; */
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
-  max-width: 480px;
-}
-
-/* Title */
-.invite-form-card h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #DFD0B8;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-size: 0.92rem;
 }
 
 /* =========================
-   FORM ROW
+   LARGE TABLETS
 ========================= */
-.invite-form-card .form-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
-}
 
-.invite-form-card label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #948979;
+@media (max-width: 1100px) {
+  .invite-box {
+    grid-template-columns: 1fr;
+  }
+
+  .invite-form-card {
+    max-width: 100%;
+  }
 }
 
 /* =========================
-   INPUT & SELECT
+   TABLETS
 ========================= */
-.invite-form-card input,
-.invite-form-card select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border:none;
-  font-size: 14px;
-  outline: none;
-  background: #393E46;
-  color: #DFD0B8;
-}
 
-
-/* =========================
-   BUTTON
-========================= */
-.invite-form-card button {
-  width: 100%;
-  margin-top: 8px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  background: #DFD0B8;
-  color: #222831;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.invite-form-card button:hover:not(:disabled) {
-  background: #DFD0B8;
-  transform: translateY(-1px);
-}
-
-.invite-form-card button:disabled {
-  background: #948979;
-  cursor: not-allowed;
-}
-.invite-box {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(2 ,1fr);
-  /* flex-wrap: wrap; */
-}
-.invite-table-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #DFD0B8;
-}
-.invite-table-card p {
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #DFD0B8;
-}
-/* =========================
-   RESPONSIVE DESIGN
-========================= */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .settings-container {
     padding: 16px;
   }
 
-  .settings-container h2 {
-    font-size: 1.4rem;
+  .settings-container > *:not(h2) {
+    padding: 16px;
   }
 
-  .invite-form {
-    flex-direction: column;
+  .invite-form-card {
+    padding: 18px;
+  }
+
+  .invite-table {
+    min-width: 620px;
   }
 }
 
-@media (max-width: 600px) {
-  /* Table → Card style */
-  .invite-table thead {
-    display: none;
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 640px) {
+  .settings-container {
+    padding: 12px;
+  }
+
+  .settings-container > *:not(h2) {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .invite-form-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .invite-form-card h3,
+  .invite-table-card h3 {
+    font-size: 1rem;
+  }
+
+  .invite-table-card p {
+    font-size: 12px;
+  }
+
+  /* MOBILE TABLE CARD VIEW */
+
+  .table-wrapper {
+    overflow: visible;
   }
 
   .invite-table,
@@ -258,26 +351,83 @@
   .invite-table td {
     display: block;
     width: 100%;
+    min-width: 100%;
+  }
+
+  .invite-table {
+    min-width: 100%;
+  }
+
+  .invite-table thead {
+    display: none;
   }
 
   .invite-table tr {
-    margin-bottom: 16px;
-    border-radius: 12px;
     background: #393E46;
-    padding: 12px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    padding: 14px;
   }
 
   .invite-table td {
-    border: none;
-    padding: 8px 0;
-    font-size: 0.85rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 10px 0;
+
+    border: none;
+    white-space: normal;
+    word-break: break-word;
+
+    font-size: 0.85rem;
   }
 
   .invite-table td::before {
     content: attr(data-label);
-    font-weight: 500;
+
+    flex-shrink: 0;
+
+    font-weight: 600;
     color: #DFD0B8;
+  }
+
+  .invite-revoke-btn {
+    width: 100%;
+    margin-top: 6px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+  .settings-container h2 {
+    font-size: 1.2rem;
+  }
+
+  .invite-form-card,
+  .settings-container > *:not(h2) {
+    padding: 12px;
+  }
+
+  .invite-form-card input,
+  .invite-form-card select,
+  .invite-form-card button {
+    min-height: 44px;
+    font-size: 13px;
+  }
+
+  .invite-table td {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .invite-table td::before {
+    margin-bottom: 2px;
   }
 }
