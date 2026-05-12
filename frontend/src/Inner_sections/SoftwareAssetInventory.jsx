@@ -214,7 +214,7 @@ useEffect(() => {
 
     const rows = 2;
 
-    setItemsPerPage(columns * rows);
+    setAssetsPerPage(columns * rows);
   };
 
   // Initial delayed calculation
