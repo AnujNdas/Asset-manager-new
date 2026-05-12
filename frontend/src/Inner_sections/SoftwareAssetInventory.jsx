@@ -194,7 +194,7 @@ const getCategoryUI = (categoryName = "") => {
   const [editInstance, setEditInstance] = useState(null);
 const [instanceForm, setInstanceForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-const [assetsPerPage, setAssetsPerPage] = useState(8);
+const [assetsPerPage, setAssetsPerPage] = useState(6);
   const [runTour, setRunTour] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 

@@ -128,7 +128,7 @@ const [instanceForm, setInstanceForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-const [itemsPerPage, setItemsPerPage] = useState(8);
+const [itemsPerPage, setItemsPerPage] = useState(6);
   const { currency, convertFromBase, loadingRates } = useCurrency();
 
   const driverObj = driver({
