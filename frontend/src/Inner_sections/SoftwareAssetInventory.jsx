@@ -610,15 +610,18 @@ const mapInstanceData = (inst, assignment) => {
   <p className="asset-code">{asset.assetCode}</p>
 </div>
 {(() => {
-  const vendorName = asset.purchaseDetails?.vendor?.name;
-  const vendor = getVendorUI(vendorName);
+  const categoryName = asset.assetCategory?.name;
+  const category = getCategoryUI(categoryName);
 
   return (
-    <div className={`vendor-badge ${vendor.color}`}>
-      <span className={`vendor-icon ${!vendor.isCustom ? "avatar" : ""}`}>
-        {vendor.icon}
+    <div className={`category-badge ${category.color}`}>
+      <span className="category-icon">
+        {category.icon}
       </span>
-      <span className="vendor-text">{truncateText(vendor.label , 10)}</span>
+
+      <span className="category-text">
+        {truncateText(categoryName, 14)}
+      </span>
     </div>
   );
 })()}
