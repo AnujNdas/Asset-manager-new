@@ -439,10 +439,13 @@ const getSoftwareAssets = asyncHandler(async (req, res, next) => {
   };
 
   /* ================= 1️⃣ FETCH SOFTWARE ASSETS ================= */
-  const assets = await SoftwareAsset.find({ organizationId })
-    .sort({ createdAt: -1 })
-    .lean();
-
+const assets = await SoftwareAsset.find({ organizationId })
+  .populate("assetCategory", "name")
+  .populate("associateUnit", "name")
+  .populate("locationName", "name")
+  .sort({ createdAt: -1 })
+  .lean();
+  
   if (!assets.length) {
     return res.status(200).json({
       success: true,
