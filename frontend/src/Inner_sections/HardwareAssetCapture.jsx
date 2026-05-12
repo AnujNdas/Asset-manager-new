@@ -489,10 +489,7 @@ const handleImport = async () => {
                 ))}
               </select>
             </div>
-          </div>
-
-          <div className="grid-2">
-            <div className="input-group">
+                        <div className="input-group">
               <label>Purchase Date</label>
               <input
                 type="date"

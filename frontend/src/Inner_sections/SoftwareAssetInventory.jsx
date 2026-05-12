@@ -86,7 +86,6 @@ const SoftwareAssetList = () => {
   ],
 });
     const gridRef = useRef(null);
-    const cardRef = useRef(null);
 const CATEGORY_CONFIG = {
 
   // SOFTWARE
@@ -136,8 +135,19 @@ const CATEGORY_CONFIG = {
   },
 };
 const getCategoryUI = (categoryName = "") => {
+  const normalized = categoryName
+    .trim()
+    .toLowerCase();
+
+  const normalizedConfig = Object.fromEntries(
+    Object.entries(CATEGORY_CONFIG).map(([key, value]) => [
+      key.toLowerCase(),
+      value,
+    ])
+  );
+
   return (
-    CATEGORY_CONFIG[categoryName] || {
+    normalizedConfig[normalized] || {
       icon: "📦",
       color: "gray",
     }
@@ -191,24 +201,40 @@ const [assetsPerPage, setAssetsPerPage] = useState(8);
   const navigate = useNavigate();
   const { currency, convertFromBase, loadingRates } = useCurrency();
 useEffect(() => {
+  if (!gridRef.current) return;
+
   const calculate = () => {
-    if (!gridRef.current || !cardRef.current) return;
-
     const gridWidth = gridRef.current.clientWidth;
-    const cardWidth =
-  cardRef.current.offsetWidth || 320;
 
-    const columns = Math.floor(gridWidth / cardWidth) || 1;
+    const MIN_CARD_WIDTH = 320;
+    const GAP = 20;
 
-    const rows = 2; // 🔥 fixed rows per page (tune this)
+    const columns =
+      Math.floor(gridWidth / (MIN_CARD_WIDTH + GAP)) || 1;
 
-    setAssetsPerPage(columns * rows);
+    const rows = 2;
+
+    setItemsPerPage(columns * rows);
   };
 
-  calculate();
+  // Initial delayed calculation
+  requestAnimationFrame(() => {
+    calculate();
+  });
+
+  // Observe size changes
+  const observer = new ResizeObserver(() => {
+    calculate();
+  });
+
+  observer.observe(gridRef.current);
+
   window.addEventListener("resize", calculate);
 
-  return () => window.removeEventListener("resize", calculate);
+  return () => {
+    observer.disconnect();
+    window.removeEventListener("resize", calculate);
+  };
 }, []);
 useEffect(() => {
   const seen = localStorage.getItem("inventoryTourSeen");
@@ -596,7 +622,6 @@ const mapInstanceData = (inst, assignment) => {
             return (
             <motion.div
   key={asset._id}
-  ref={index === 0 ? cardRef : null}
   className="inventory-card tour-card"
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
@@ -630,7 +655,7 @@ const mapInstanceData = (inst, assignment) => {
   {/* 🔷 BADGE GRID */}
   <div className="badge-grid">
     <span className="badge">
-      {getName(categories, asset.assetCategory)}
+      {getName(categories, asset.purchaseDetails?.vendor?.name)}
     </span>
 
     <span className="badge">

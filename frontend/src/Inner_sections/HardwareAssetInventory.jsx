@@ -192,9 +192,9 @@ const [itemsPerPage, setItemsPerPage] = useState(8);
 });
 
 useEffect(() => {
-  const calculate = () => {
-    if (!gridRef.current) return;
+  if (!gridRef.current) return;
 
+  const calculate = () => {
     const gridWidth = gridRef.current.clientWidth;
 
     const MIN_CARD_WIDTH = 320;
@@ -208,12 +208,24 @@ useEffect(() => {
     setItemsPerPage(columns * rows);
   };
 
-  calculate();
+  // Initial delayed calculation
+  requestAnimationFrame(() => {
+    calculate();
+  });
+
+  // Observe size changes
+  const observer = new ResizeObserver(() => {
+    calculate();
+  });
+
+  observer.observe(gridRef.current);
 
   window.addEventListener("resize", calculate);
 
-  return () =>
+  return () => {
+    observer.disconnect();
     window.removeEventListener("resize", calculate);
+  };
 }, []);
 
 useEffect(() => {
@@ -510,7 +522,7 @@ const paginatedAssets = filteredAssets.slice(
 
       {/* 🔷 BADGE GRID */}
       <div className="badge-grid">
-        <span className="badge">{asset.assetCategory?.name}</span>
+        <span className="badge">{asset.purchaseDetails?.vendor?.name}</span>
         <span className="badge">{asset.locationName?.name}</span>
         <span className="badge">{asset.associateUnit?.name}</span>
 
