@@ -87,42 +87,61 @@ const SoftwareAssetList = () => {
 });
     const gridRef = useRef(null);
     const cardRef = useRef(null);
-  const VENDOR_CONFIG = {
-  dell: { icon: "💻", color: "blue" },
-  hp: { icon: "🖥️", color: "cyan" },
-  lenovo: { icon: "📦", color: "red" },
-  apple: { icon: "🍎", color: "dark" },
-  microsoft: { icon: "🪟", color: "indigo" },
-  adobe: { icon: "🅰️", color: "red" },
-};
-const getVendorUI = (vendorName = "") => {
-  if (!vendorName) {
-    return {
-      icon: "🏢",
-      color: "gray",
-      label: "Unknown",
-      isCustom: false,
-    };
-  }
+const CATEGORY_CONFIG = {
 
-  const key = vendorName.toLowerCase();
-  const config = VENDOR_CONFIG[key];
+  // SOFTWARE
+  "Operating System": {
+    icon: "🖥️",
+    color: "indigo",
+  },
 
-  if (config) {
-    return {
-      ...config,
-      label: vendorName,
-      isCustom: true,
-    };
-  }
+  SaaS: {
+    icon: "☁️",
+    color: "blue",
+  },
 
-  // 🔥 Dynamic fallback (unknown vendor)
-  return {
-    icon: vendorName.charAt(0).toUpperCase(), // first letter
+  Server: {
+    icon: "🗄️",
     color: "gray",
-    label: vendorName,
-    isCustom: false,
-  };
+  },
+
+  "Desktop Applications": {
+    icon: "🧩",
+    color: "purple",
+  },
+
+  "Enterprise Systems": {
+    icon: "🏢",
+    color: "dark",
+  },
+
+  "Digital Accessories": {
+    icon: "🔗",
+    color: "cyan",
+  },
+
+  "Storage (Cloud)": {
+    icon: "☁️",
+    color: "blue",
+  },
+
+  "AI Models": {
+    icon: "🧠",
+    color: "pink",
+  },
+
+  "Data & Infrastructure": {
+    icon: "📊",
+    color: "green",
+  },
+};
+const getCategoryUI = (categoryName = "") => {
+  return (
+    CATEGORY_CONFIG[categoryName] || {
+      icon: "📦",
+      color: "gray",
+    }
+  );
 };
   const STATUS_CONFIG = {
   in_stock: {
@@ -599,7 +618,7 @@ const mapInstanceData = (inst, assignment) => {
       <span className={`vendor-icon ${!vendor.isCustom ? "avatar" : ""}`}>
         {vendor.icon}
       </span>
-      <span className="vendor-text">{truncateText(vendor.label, 10)}</span>
+      <span className="vendor-text">{truncateText(vendor.label , 10)}</span>
     </div>
   );
 })()}

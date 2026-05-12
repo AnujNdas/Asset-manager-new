@@ -168,24 +168,6 @@
   outline-offset: 2px;
 } */
 
-/* 🌿 Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 18px;
-  flex-wrap: wrap;
-}
-
-.pagination button {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  min-width: 34px;
-}
 .delete-category-btn {
   padding: 5px 12px;
   background: #ff4d4f;

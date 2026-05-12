@@ -995,7 +995,77 @@
 .driver-popover-arrow {
   border-color: #222831 !important;
 }
+.category-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
+  padding: 6px 10px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  background: #222831;
+  color: #DFD0B8;
+}
+
+.category-icon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-text {
+  white-space: nowrap;
+}
+
+/* OPTIONAL COLORS */
+
+.category-badge.blue {
+  border: 1px solid #3b82f6;
+}
+
+.category-badge.red {
+  border: 1px solid #ef4444;
+}
+
+.category-badge.green {
+  border: 1px solid #22c55e;
+}
+
+.category-badge.purple {
+  border: 1px solid #a855f7;
+}
+
+.category-badge.orange {
+  border: 1px solid #f97316;
+}
+
+.category-badge.cyan {
+  border: 1px solid #06b6d4;
+}
+
+.category-badge.gray {
+  border: 1px solid #6b7280;
+}
+
+.category-badge.dark {
+  border: 1px solid #525252;
+}
+
+.category-badge.yellow {
+  border: 1px solid #eab308;
+}
+
+.category-badge.indigo {
+  border: 1px solid #6366f1;
+}
+
+.category-badge.pink {
+  border: 1px solid #ec4899;
+}
 @media (max-width: 768px) {
   .asset-view-modal {
     max-width: 95%;

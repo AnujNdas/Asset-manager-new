@@ -29,44 +29,64 @@ const HardwareAssetList = () => {
     const { registerTour } = useTour();
   const navigate = useNavigate();
       const gridRef = useRef(null);
-      const cardRef = useRef(null);
-    const VENDOR_CONFIG = {
-  dell: { icon: "💻", color: "blue" },
-  hp: { icon: "🖥️", color: "cyan" },
-  lenovo: { icon: "📦", color: "red" },
-  apple: { icon: "🍎", color: "dark" },
-  microsoft: { icon: "🪟", color: "indigo" },
-  adobe: { icon: "🅰️", color: "red" },
-};
-const getVendorUI = (vendorName = "") => {
-  if (!vendorName) {
-    return {
-      icon: "🏢",
-      color: "gray",
-      label: "Unknown",
-      isCustom: false,
-    };
-  }
 
-  const key = vendorName.toLowerCase();
-  const config = VENDOR_CONFIG[key];
+      const CATEGORY_CONFIG = {
+  // HARDWARE
+  "User End Device": {
+    icon: "💻",
+    color: "blue",
+  },
 
-  if (config) {
-    return {
-      ...config,
-      label: vendorName,
-      isCustom: true,
-    };
-  }
+  Transport: {
+    icon: "🚚",
+    color: "orange",
+  },
 
-  // 🔥 Dynamic fallback (unknown vendor)
-  return {
-    icon: vendorName.charAt(0).toUpperCase(), // first letter
+  "Security & Safety": {
+    icon: "🛡️",
+    color: "red",
+  },
+
+  Equipment: {
+    icon: "⚙️",
     color: "gray",
-    label: vendorName,
-    isCustom: false,
-  };
+  },
+
+  Machinery: {
+    icon: "🏭",
+    color: "yellow",
+  },
+
+  Tools: {
+    icon: "🧰",
+    color: "green",
+  },
+
+  Robotics: {
+    icon: "🤖",
+    color: "purple",
+  },
+
+  Electronics: {
+    icon: "🔌",
+    color: "cyan",
+  },
+
+  Others: {
+    icon: "📦",
+    color: "dark",
+  },
 };
+
+const getCategoryUI = (categoryName = "") => {
+  return (
+    CATEGORY_CONFIG[categoryName] || {
+      icon: "📦",
+      color: "gray",
+    }
+  );
+};
+
   const STATUS_CONFIG = {
   in_stock: {
     label: "Available",
@@ -171,25 +191,29 @@ const [itemsPerPage, setItemsPerPage] = useState(8);
   ],
 });
 
-
 useEffect(() => {
   const calculate = () => {
-    if (!gridRef.current || !cardRef.current) return;
+    if (!gridRef.current) return;
 
     const gridWidth = gridRef.current.clientWidth;
-    const cardWidth = cardRef.current.offsetWidth;
 
-    const columns = Math.floor(gridWidth / cardWidth) || 1;
+    const MIN_CARD_WIDTH = 320;
+    const GAP = 20;
 
-    const rows = 2; // 🔥 fixed rows per page (tune this)
+    const columns =
+      Math.floor(gridWidth / (MIN_CARD_WIDTH + GAP)) || 1;
+
+    const rows = 2;
 
     setItemsPerPage(columns * rows);
   };
 
   calculate();
+
   window.addEventListener("resize", calculate);
 
-  return () => window.removeEventListener("resize", calculate);
+  return () =>
+    window.removeEventListener("resize", calculate);
 }, []);
 
 useEffect(() => {
@@ -453,7 +477,6 @@ const paginatedAssets = filteredAssets.slice(
   return (
     <motion.div
       key={asset._id}
-      ref={index === 0 ? cardRef : null}
       className="inventory-card tour-card"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -468,15 +491,18 @@ const paginatedAssets = filteredAssets.slice(
 </div>  
 
 {(() => {
-  const vendorName = asset.purchaseDetails?.vendor?.name;
-  const vendor = getVendorUI(vendorName);
+  const categoryName = asset.assetCategory?.name;
+  const category = getCategoryUI(categoryName);
 
   return (
-    <div className={`vendor-badge ${vendor.color}`}>
-      <span className={`vendor-icon ${!vendor.isCustom ? "avatar" : ""}`}>
-        {vendor.icon}
+    <div className={`category-badge ${category.color}`}>
+      <span className="category-icon">
+        {category.icon}
       </span>
-      <span className="vendor-text">{truncateText(vendor.label , 10)}</span>
+
+      <span className="category-text">
+        {truncateText(categoryName, 14)}
+      </span>
     </div>
   );
 })()}
