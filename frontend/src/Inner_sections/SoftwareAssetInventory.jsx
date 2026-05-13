@@ -328,7 +328,7 @@ const handleUnassign = async (assetInstanceId) => {
       "success"
     );
 
-    fetchAssets();
+    fetchAll();
 
   } catch (err) {
 

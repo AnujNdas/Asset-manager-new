@@ -387,7 +387,7 @@ const handleUpdate = async () => {
       "success"
     );
 
-    fetchAssets();
+    fetchAll();
 
   } catch (err) {
 
