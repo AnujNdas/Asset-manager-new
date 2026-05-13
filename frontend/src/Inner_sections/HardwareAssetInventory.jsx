@@ -364,7 +364,8 @@ const handleUpdate = async () => {
     });
   };
 
-  const handleUnassign = async (assetInstanceId) => {
+const handleUnassign = async (assignmentId) => {
+
   try {
 
     const confirm = await ThemeSwal.fire({
@@ -377,9 +378,9 @@ const handleUpdate = async () => {
 
     if (!confirm.isConfirmed) return;
 
-    await unassignAssetInstance({
-      assetInstanceId
-    });
+    await unassignAssetInstance(
+      assignmentId
+    );
 
     ThemeSwal.fire(
       "Success",
@@ -393,7 +394,8 @@ const handleUpdate = async () => {
 
     ThemeSwal.fire(
       "Error",
-      err?.response?.data?.message || "Failed to unassign asset",
+      err?.response?.data?.message ||
+      "Failed to unassign asset",
       "error"
     );
   }

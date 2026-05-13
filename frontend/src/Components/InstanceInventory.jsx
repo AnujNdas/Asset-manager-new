@@ -124,21 +124,30 @@ const InstanceCard = ({
 
   /* ================= UNASSIGN ================= */
 
-  const handleUnassign = async () => {
-    if (!onUnassign) return;
+/* ================= UNASSIGN ================= */
 
-    try {
-      setLoading(true);
+const handleUnassign = async () => {
 
-      await onUnassign(inst._id);
+  if (!onUnassign || !assignment?._id) return;
 
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
 
+    setLoading(true);
+
+    await onUnassign(
+      assignment._id
+    );
+
+  } catch (err) {
+
+    console.error(err);
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
   return (
     <div className="instance-card-v2">
 
