@@ -945,57 +945,43 @@ const unassignAssetInstance = asyncHandler(async (req, res, next) => {
 
     instance.assignedTo = null;
 
-    instance.lifecycle.push({
-      action: "UNASSIGNED",
+   instance.lifecycle.push({
 
-      from: {
-        status: "in_use",
+  eventType: "returned",
 
-        assignedTo: {
-          employeeId:
-            previousAssignee.employeeId || null,
+  category: "assignment",
 
-          employeeName:
-            previousAssignee.employeeName || null,
+  title: "Asset Unassigned",
 
-          departmentId:
-            previousAssignee.departmentId || null,
+  description: `Asset unassigned from ${
+    previousAssignee.employeeName || "Unknown"
+  }`,
 
-          departmentName:
-            previousAssignee.departmentName || null
-        },
+  performedBy: userId,
 
-        location:
-          assignment.location || instance.location,
+  date: new Date(),
 
-        condition: instance.condition
-      },
+  metadata: {
 
-      to: {
-        status: "in_stock",
+    previousAssignment: {
+      employeeId:
+        previousAssignee.employeeId || null,
 
-        assignedTo: null,
+      employeeName:
+        previousAssignee.employeeName || null
+    },
 
-        location: instance.location,
+    newStatus: "in_stock",
 
-        condition: instance.condition
-      },
+    location:
+      assignment.location || instance.location,
 
-      date: new Date(),
+    condition: instance.condition,
 
-      notes: `Unassigned from ${
-        previousAssignee.employeeName || "Unknown"
-      }`,
+    assignmentId: assignment._id
+  }
 
-      meta: {
-        unassignedBy: userId,
-
-        unassignmentType:
-          instance.assetType === "software"
-            ? "software_license"
-            : "hardware_asset"
-      }
-    });
+});
 
     await instance.save({ session });
 
