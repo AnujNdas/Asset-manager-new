@@ -1066,6 +1066,20 @@
 .category-badge.pink {
   border: 1px solid #ec4899;
 }
+.unassign-btn{
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.unassign-btn:hover{
+  transform: translateY(-1px);
+}
 @media (max-width: 768px) {
   .asset-view-modal {
     max-width: 95%;

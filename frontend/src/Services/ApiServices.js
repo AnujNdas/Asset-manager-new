@@ -506,3 +506,10 @@ export const getEmployeeSummary = async (id) => {
   const res = await axiosInstance.get(`/employees/summary`);
   return res.data;
 }
+
+export const unassignAssetInstance = async (data) => {
+  return axiosInstance.put(
+    "/assignment/unassign",
+    data
+  );
+};

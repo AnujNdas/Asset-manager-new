@@ -20,7 +20,7 @@
   max-width: 100%;
   padding: 10px 14px;
   border-radius: 8px;
-  background: #222831;
+  background: #222831 !important;
   color: #DFD0B8;
   font-size: 14px;
   outline: none;
@@ -136,7 +136,7 @@
 }
 
 .add-btn:hover {
-  background-color: #4338ca;
+  background-color: #948979;
 }
 
 .add-btn:active {

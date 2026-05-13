@@ -11,6 +11,7 @@ import {
   getStatuses,
   updateAssetInstance,
   updateHardwareAsset,
+  unassignAssetInstance
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 
@@ -363,6 +364,41 @@ const handleUpdate = async () => {
     });
   };
 
+  const handleUnassign = async (assetInstanceId) => {
+  try {
+
+    const confirm = await ThemeSwal.fire({
+      title: "Unassign Asset?",
+      text: "This asset will be moved back to stock.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Unassign"
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    await unassignAssetInstance({
+      assetInstanceId
+    });
+
+    ThemeSwal.fire(
+      "Success",
+      "Asset unassigned successfully",
+      "success"
+    );
+
+    fetchAssets();
+
+  } catch (err) {
+
+    ThemeSwal.fire(
+      "Error",
+      err?.response?.data?.message || "Failed to unassign asset",
+      "error"
+    );
+  }
+};
+
   const handleDelete = async (id) => {
     const resp = await ThemeSwal.fire({
       title: "Delete asset?",
@@ -681,6 +717,7 @@ const paginatedAssets = filteredAssets.slice(
             assetType: inst.assetType,
           });
         }}
+        onUnassign={handleUnassign}
       />
     );
   })}

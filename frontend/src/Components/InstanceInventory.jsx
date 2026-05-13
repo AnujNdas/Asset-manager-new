@@ -1,13 +1,17 @@
-import React from "react";
-import "../Component_styles/InstanceInventory.css"
+import React, { useState } from "react";
+import "../Component_styles/InstanceInventory.css";
 
 const InstanceCard = ({
   inst,
   assignment,
   convertFromBase,
   formatMoney,
-  onEdit
+  onEdit,
+  onUnassign // ✅ NEW PROP
 }) => {
+
+  const [loading, setLoading] = useState(false);
+
   const isAssigned = !!assignment;
   const isHardware = inst.assetType === "hardware";
 
@@ -39,90 +43,110 @@ const InstanceCard = ({
   /* ================= DATE HELPERS ================= */
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "N/A";
+
   const handlePrintQR = () => {
-  if (!qrUrl) return;
+    if (!qrUrl) return;
 
-  const printWindow = window.open("", "_blank");
+    const printWindow = window.open("", "_blank");
 
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Print QR</title>
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print QR</title>
 
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: white;
-          }
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              margin: 0;
+              background: white;
+            }
 
-          .print-container {
-            text-align: center;
-            border: 2px dashed #333;
-            padding: 30px;
-            border-radius: 12px;
-            width: 320px;
-          }
+            .print-container {
+              text-align: center;
+              border: 2px dashed #333;
+              padding: 30px;
+              border-radius: 12px;
+              width: 320px;
+            }
 
-          img {
-            width: 220px;
-            height: 220px;
-            object-fit: contain;
-            margin-bottom: 15px;
-          }
+            img {
+              width: 220px;
+              height: 220px;
+              object-fit: contain;
+              margin-bottom: 15px;
+            }
 
-          h2 {
-            margin: 0 0 8px;
-            font-size: 18px;
-          }
+            h2 {
+              margin: 0 0 8px;
+              font-size: 18px;
+            }
 
-          p {
-            margin: 4px 0;
-            font-size: 14px;
-          }
-        </style>
-      </head>
+            p {
+              margin: 4px 0;
+              font-size: 14px;
+            }
+          </style>
+        </head>
 
-      <body>
-        <div class="print-container">
-          <img src="${qrUrl}" />
+        <body>
+          <div class="print-container">
+            <img src="${qrUrl}" />
 
-          <h2>${inst.deviceName || "Hardware Asset"}</h2>
+            <h2>${inst.deviceName || "Hardware Asset"}</h2>
 
-          <p><strong>Instance:</strong> ${inst.instanceCode}</p>
+            <p><strong>Instance:</strong> ${inst.instanceCode}</p>
 
-          <p><strong>Serial:</strong> ${
-            hw.serialNumber || "N/A"
-          }</p>
+            <p><strong>Serial:</strong> ${
+              hw.serialNumber || "N/A"
+            }</p>
 
-          <p><strong>Model:</strong> ${
-            hw.modelNo || "N/A"
-          }</p>
-        </div>
+            <p><strong>Model:</strong> ${
+              hw.modelNo || "N/A"
+            }</p>
+          </div>
 
-        <script>
-          window.onload = () => {
-            window.print();
-            window.onafterprint = () => window.close();
-          };
-        </script>
-      </body>
-    </html>
-  `);
+          <script>
+            window.onload = () => {
+              window.print();
+              window.onafterprint = () => window.close();
+            };
+          </script>
+        </body>
+      </html>
+    `);
 
-  printWindow.document.close();
-};
-  return (  
+    printWindow.document.close();
+  };
+
+  /* ================= UNASSIGN ================= */
+
+  const handleUnassign = async () => {
+    if (!onUnassign) return;
+
+    try {
+      setLoading(true);
+
+      await onUnassign(inst._id);
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
     <div className="instance-card-v2">
 
       {/* ================= HEADER ================= */}
       <div className="card-header">
         <div>
           <h3>{inst.instanceCode}</h3>
+
           <p className="sub">
             {isHardware
               ? hw.serialNumber || "No Serial"
@@ -141,14 +165,17 @@ const InstanceCard = ({
           <p>Purchase</p>
           <h4>{purchase}</h4>
         </div>
+
         <div>
           <p>Yearly</p>
           <h4>{yearly}</h4>
         </div>
+
         <div>
           <p>Monthly</p>
           <h4>{monthly.toFixed(2)}</h4>
         </div>
+
         <div>
           <p>Location</p>
           <h4>{inst.location || "N/A"}</h4>
@@ -196,21 +223,21 @@ const InstanceCard = ({
               </div>
             </>
           )}
+
           {isHardware && qrUrl && (
-  <div className="card-box center">
-    <h5>QR</h5>
+            <div className="card-box center">
+              <h5>QR</h5>
 
-    <img src={qrUrl} alt="QR" />
+              <img src={qrUrl} alt="QR" />
 
-    <button
-      className="print-qr-btn"
-      onClick={handlePrintQR}
-    >
-      🖨 Print QR
-    </button>
-  </div>
-)}
-
+              <button
+                className="print-qr-btn"
+                onClick={handlePrintQR}
+              >
+                🖨 Print QR
+              </button>
+            </div>
+          )}
 
         </div>
 
@@ -231,45 +258,56 @@ const InstanceCard = ({
               <p>Renewal: {getCost(sw.costs?.renewalCost)}</p>
             )}
           </div>
-                    {/* ASSIGNMENT */}
-                    {isAssigned && (
+
+          {/* ASSIGNMENT */}
+          {isAssigned && (
             <div className="card-box highlight">
               <h5>Assigned To</h5>
+
               <p>{assignment.employee?.name}</p>
               <p>{assignment.department?.name}</p>
               <p>{assignment.location}</p>
+
+              {/* ✅ UNASSIGN BUTTON */}
+              <button
+                className="unassign-btn"
+                onClick={handleUnassign}
+                disabled={loading}
+              >
+                {loading ? "Unassigning..." : "↩ Unassign"}
+              </button>
             </div>
           )}
 
-{isHardware && (
-  <div className="card-box">
-    <h5>Coverage Type</h5>
+          {isHardware && (
+            <div className="card-box">
+              <h5>Coverage Type</h5>
 
-    <div className="coverage-tags">
-      {hw.coverageType?.length ? (
-        hw.coverageType.map((type, i) => (
-          <div key={i} className="tag">
-            {type}
-          </div>
-        ))
-      ) : (
-        <div className="no-data">N/A</div>
-      )}
-    </div>
-
-  </div>
-)}
-
-
+              <div className="coverage-tags">
+                {hw.coverageType?.length ? (
+                  hw.coverageType.map((type, i) => (
+                    <div key={i} className="tag">
+                      {type}
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-data">N/A</div>
+                )}
+              </div>
+            </div>
+          )}
 
         </div>
       </div>
 
       {/* ================= FOOTER ================= */}
       <div className="card-footer">
-        <button onClick={() => onEdit(inst)}>✏ Edit</button>
+        <button onClick={() => onEdit(inst)}>
+          ✏ Edit
+        </button>
       </div>
     </div>
   );
 };
-export default InstanceCard
+
+export default InstanceCard;
