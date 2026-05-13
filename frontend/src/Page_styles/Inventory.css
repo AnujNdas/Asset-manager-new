@@ -1075,6 +1075,8 @@
   cursor: pointer;
   font-weight: 600;
   transition: 0.2s;
+  background: #DFD0B8;
+  color: #222831;
 }
 
 .unassign-btn:hover{

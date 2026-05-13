@@ -507,9 +507,12 @@ export const getEmployeeSummary = async (id) => {
   return res.data;
 }
 
-export const unassignAssetInstance = async (data) => {
+export const unassignAssetInstance = async (
+  assignmentId
+) => {
+
   return axiosInstance.put(
-    "/assignment/unassign",
-    data
+    `/assignment/unassign/${assignmentId}`
   );
+
 };

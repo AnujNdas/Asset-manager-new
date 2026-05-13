@@ -6,7 +6,8 @@ const {
   returnAssetInstance,      // ✅ NEW
   reassignAssetInstance,    // ✅ NEW
   getEmployeesByDepartment,
-  getInstancesByAsset
+  getInstancesByAsset,
+  unassignAssetInstance
 } = require("../controllers/assignmentController");
 
 const authenticateToken = require("../Middleware/Authentication-token");
@@ -47,4 +48,10 @@ router.put("/return/:assignmentId", returnAssetInstance);
 
 // 🔥 Reassign instance
 router.put("/reassign/:assignmentId", reassignAssetInstance);
+
+//Unassign instance
+router.put(
+  "/unassign/:assignmentId",
+  unassignAssetInstance
+);
 module.exports = router;
