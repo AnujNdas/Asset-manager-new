@@ -196,15 +196,22 @@ const InstanceCard = ({
               </div>
             </>
           )}
-                    {/* ASSIGNMENT */}
-                    {isAssigned && (
-            <div className="card-box highlight">
-              <h5>Assigned To</h5>
-              <p>{assignment.employee?.name}</p>
-              <p>{assignment.department?.name}</p>
-              <p>{assignment.location}</p>
-            </div>
-          )}
+          {isHardware && qrUrl && (
+  <div className="card-box center">
+    <h5>QR</h5>
+
+    <img src={qrUrl} alt="QR" />
+
+    <button
+      className="print-qr-btn"
+      onClick={handlePrintQR}
+    >
+      🖨 Print QR
+    </button>
+  </div>
+)}
+
+
         </div>
 
         {/* RIGHT COLUMN */}
@@ -224,23 +231,16 @@ const InstanceCard = ({
               <p>Renewal: {getCost(sw.costs?.renewalCost)}</p>
             )}
           </div>
+                    {/* ASSIGNMENT */}
+                    {isAssigned && (
+            <div className="card-box highlight">
+              <h5>Assigned To</h5>
+              <p>{assignment.employee?.name}</p>
+              <p>{assignment.department?.name}</p>
+              <p>{assignment.location}</p>
+            </div>
+          )}
 
-          {/* QR */}
-{/* QR */}
-{isHardware && qrUrl && (
-  <div className="card-box center">
-    <h5>QR</h5>
-
-    <img src={qrUrl} alt="QR" />
-
-    <button
-      className="print-qr-btn"
-      onClick={handlePrintQR}
-    >
-      🖨 Print QR
-    </button>
-  </div>
-)}
 {isHardware && (
   <div className="card-box">
     <h5>Coverage Type</h5>

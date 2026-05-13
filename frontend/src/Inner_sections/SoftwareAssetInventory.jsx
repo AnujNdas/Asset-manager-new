@@ -192,9 +192,9 @@ const getCategoryUI = (categoryName = "") => {
   const [editAsset, setEditAsset] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [editInstance, setEditInstance] = useState(null);
-const [instanceForm, setInstanceForm] = useState({});
+  const [instanceForm, setInstanceForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-const [assetsPerPage, setAssetsPerPage] = useState(6);
+  const [assetsPerPage, setAssetsPerPage] = useState(6);
   const [runTour, setRunTour] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
@@ -655,7 +655,7 @@ const mapInstanceData = (inst, assignment) => {
   {/* 🔷 BADGE GRID */}
   <div className="badge-grid">
     <span className="badge">
-      {getName(categories, asset.purchaseDetails?.vendor?.name)}
+      {asset.purchaseDetails?.vendor?.name}
     </span>
 
     <span className="badge">
