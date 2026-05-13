@@ -867,11 +867,14 @@ instance.lifecycle.push({
 const unassignAssetInstance = asyncHandler(async (req, res, next) => {
 
   const session = await mongoose.startSession();
+
   session.startTransaction();
 
   try {
+
     const { organizationId, id: userId } = req.user;
-    const { assetInstanceId } = req.body;
+
+    const { assignmentId } = req.params;
 
     /* ================= VALIDATION ================= */
 
@@ -883,18 +886,37 @@ const unassignAssetInstance = asyncHandler(async (req, res, next) => {
       );
     }
 
-    if (!assetInstanceId || !mongoose.Types.ObjectId.isValid(assetInstanceId)) {
+    if (
+      !assignmentId ||
+      !mongoose.Types.ObjectId.isValid(assignmentId)
+    ) {
       throw new AppError(
-        "Invalid asset instance ID",
+        "Invalid assignment ID",
         400,
-        "INVALID_INSTANCE_ID"
+        "INVALID_ASSIGNMENT_ID"
+      );
+    }
+
+    /* ================= FETCH ASSIGNMENT ================= */
+
+    const assignment = await AssetAssignment.findOne({
+      _id: assignmentId,
+      organizationId,
+      status: "active"
+    }).session(session);
+
+    if (!assignment) {
+      throw new AppError(
+        "Active assignment not found",
+        404,
+        "ASSIGNMENT_NOT_FOUND"
       );
     }
 
     /* ================= FETCH INSTANCE ================= */
 
     const instance = await AssetInstance.findOne({
-      _id: assetInstanceId,
+      _id: assignment.assetInstanceId,
       organizationId
     }).session(session);
 
@@ -914,49 +936,75 @@ const unassignAssetInstance = asyncHandler(async (req, res, next) => {
       );
     }
 
-    /* ================= FETCH ASSIGNMENT ================= */
-
-    const assignment = await AssetAssignment.findOne({
-      assetInstanceId,
-      organizationId,
-      status: "active"
-    }).session(session);
-
-    if (!assignment) {
-      throw new AppError(
-        "Active assignment not found",
-        404,
-        "ASSIGNMENT_NOT_FOUND"
-      );
-    }
-
     /* ================= UPDATE INSTANCE ================= */
 
-    const previousAssignee = instance.assignedTo;
+    const previousAssignee =
+      instance.assignedTo || {};
 
     instance.status = "in_stock";
+
     instance.assignedTo = null;
 
     instance.lifecycle.push({
       action: "UNASSIGNED",
+
       from: {
-        employeeName: previousAssignee?.employeeName || null
-      },
-      to: null,
-      snapshot: {
-        location: instance.location,
+        status: "in_use",
+
+        assignedTo: {
+          employeeId:
+            previousAssignee.employeeId || null,
+
+          employeeName:
+            previousAssignee.employeeName || null,
+
+          departmentId:
+            previousAssignee.departmentId || null,
+
+          departmentName:
+            previousAssignee.departmentName || null
+        },
+
+        location:
+          assignment.location || instance.location,
+
         condition: instance.condition
       },
+
+      to: {
+        status: "in_stock",
+
+        assignedTo: null,
+
+        location: instance.location,
+
+        condition: instance.condition
+      },
+
       date: new Date(),
-      notes: `Unassigned from ${previousAssignee?.employeeName || "unknown"}`
+
+      notes: `Unassigned from ${
+        previousAssignee.employeeName || "Unknown"
+      }`,
+
+      meta: {
+        unassignedBy: userId,
+
+        unassignmentType:
+          instance.assetType === "software"
+            ? "software_license"
+            : "hardware_asset"
+      }
     });
 
     await instance.save({ session });
 
     /* ================= CLOSE ASSIGNMENT ================= */
 
-    assignment.status = "returned"; // ✅ consistent with system
+    assignment.status = "returned";
+
     assignment.returnedAt = new Date();
+
     assignment.returnedBy = userId;
 
     await assignment.save({ session });
@@ -964,23 +1012,31 @@ const unassignAssetInstance = asyncHandler(async (req, res, next) => {
     /* ================= UPDATE STOCK ================= */
 
     const Model =
-      instance.assetType === "hardware" ? Asset : SoftwareAsset;
+      instance.assetType === "hardware"
+        ? Asset
+        : SoftwareAsset;
 
-    const inUseCount = await AssetInstance.countDocuments({
-      assetId: instance.assetId,
-      organizationId,
-      status: "in_use"
-    }).session(session);
+    const inUseCount =
+      await AssetInstance.countDocuments({
+        assetId: instance.assetId,
+        organizationId,
+        status: "in_use"
+      }).session(session);
 
     await Model.findByIdAndUpdate(
       instance.assetId,
-      { inUse: inUseCount },
-      { session }
+      {
+        inUse: inUseCount
+      },
+      {
+        session
+      }
     );
 
     /* ================= COMMIT ================= */
 
     await session.commitTransaction();
+
     session.endSession();
 
     res.status(200).json({
@@ -989,8 +1045,11 @@ const unassignAssetInstance = asyncHandler(async (req, res, next) => {
     });
 
   } catch (error) {
+
     await session.abortTransaction();
+
     session.endSession();
+
     next(error);
   }
 });
