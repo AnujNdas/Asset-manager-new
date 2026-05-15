@@ -223,7 +223,7 @@
   cursor: pointer;
 }
 .highlight-card {
-  border: 2px solid #DFD0B8;
+  border: 2px solid #4caf50;
   transition: all 0.3s ease;
 }
 /* ---------------- HISTORY ---------------- */

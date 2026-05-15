@@ -35,47 +35,38 @@ const HardwareAssetList = () => {
   // HARDWARE
   "User End Device": {
     icon: "💻",
-    color: "blue",
   },
 
   Transport: {
     icon: "🚚",
-    color: "orange",
   },
 
   "Security & Safety": {
     icon: "🛡️",
-    color: "red",
   },
 
   Equipment: {
     icon: "⚙️",
-    color: "gray",
   },
 
   Machinery: {
     icon: "🏭",
-    color: "yellow",
   },
 
   Tools: {
     icon: "🧰",
-    color: "green",
   },
 
   Robotics: {
     icon: "🤖",
-    color: "purple",
   },
 
   Electronics: {
     icon: "🔌",
-    color: "cyan",
   },
 
   Others: {
     icon: "📦",
-    color: "dark",
   },
 };
 
@@ -92,27 +83,22 @@ const getCategoryUI = (categoryName = "") => {
   in_stock: {
     label: "Available",
     className: "success",
-    icon: "🟢"
   },
   fully_in_use: {
     label: "Fully Assigned",
     className: "danger",
-    icon: "🔴"
   },
   partially_in_use: {
     label: "Partially In Use",
     className: "warning",
-    icon: "🟡"
   },
   partially_created: {
     label: "Partially Created",
     className: "info",
-    icon: "🟣"
   },
   not_created: {
     label: "No Instances",
     className: "default",
-    icon: "⚪"
   }
 };
   const [assets, setAssets] = useState([]);
@@ -472,8 +458,15 @@ const handleUnassign = async (assignmentId) => {
   ThemeSwal.fire("Error", getErrorMessage(err, "Failed to update instance"), "error");
 }
 };
-  const filteredAssets = assets.filter((asset) => {
+const filteredAssets = [...assets]
+  .sort(
+    (a, b) =>
+      new Date(b.createdAt) - new Date(a.createdAt)
+  )
+  .filter((asset) => {
+
     const term = searchTerm.toLowerCase();
+
     return (
       asset.assetName?.toLowerCase().includes(term) ||
       asset.assetCode?.toLowerCase().includes(term)
@@ -545,7 +538,7 @@ const paginatedAssets = filteredAssets.slice(
   const category = getCategoryUI(categoryName);
 
   return (
-    <div className={`category-badge ${category.color}`}>
+    <div className="category-badge">
       <span className="category-icon">
         {category.icon}
       </span>

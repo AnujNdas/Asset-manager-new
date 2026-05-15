@@ -51,7 +51,13 @@ useEffect(() => {
     }
   };
   const indexOfLast = currentPage * assetsPerPage;
-const currentAssets = assets.slice(
+const sortedAssets = [...assets].sort(
+  (a, b) =>
+    new Date(b.createdAt || b.created_at || 0) -
+    new Date(a.createdAt || a.created_at || 0)
+);
+
+const currentAssets = sortedAssets.slice(
   indexOfLast - assetsPerPage,
   indexOfLast
 );
@@ -126,7 +132,9 @@ const currentAssets = assets.slice(
     registerTour(driverObj);
   }, []);
 
-const totalPages = Math.ceil(assets.length / assetsPerPage);
+const totalPages = Math.ceil(
+  sortedAssets.length / assetsPerPage
+);
     if (loading) return <Loader / >;
     return (
       <div className="instance-page">

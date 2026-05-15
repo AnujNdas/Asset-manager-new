@@ -92,47 +92,38 @@ const CATEGORY_CONFIG = {
   // SOFTWARE
   "Operating System": {
     icon: "🖥️",
-    color: "indigo",
   },
 
   SaaS: {
     icon: "☁️",
-    color: "blue",
   },
 
   Server: {
     icon: "🗄️",
-    color: "gray",
   },
 
   "Desktop Applications": {
     icon: "🧩",
-    color: "purple",
   },
 
   "Enterprise Systems": {
     icon: "🏢",
-    color: "dark",
   },
 
   "Digital Accessories": {
     icon: "🔗",
-    color: "cyan",
   },
 
   "Storage (Cloud)": {
     icon: "☁️",
-    color: "blue",
   },
 
   "AI Models": {
     icon: "🧠",
-    color: "pink",
   },
 
   "Data & Infrastructure": {
     icon: "📊",
-    color: "green",
   },
 };
 const getCategoryUI = (categoryName = "") => {
@@ -537,8 +528,15 @@ useEffect(() => {
   setCurrentPage(1);
 }, [searchTerm , assetsPerPage]);
 
-  const filteredAssets = assets.filter((asset) => {
+const filteredAssets = [...assets]
+  .sort(
+    (a, b) =>
+      new Date(b.createdAt || b.created_at || 0) -
+      new Date(a.createdAt || a.created_at || 0)
+  )
+  .filter((asset) => {
     const term = searchTerm.toLowerCase();
+
     return (
       asset.assetName?.toLowerCase().includes(term) ||
       asset.assetCode?.toLowerCase().includes(term)
@@ -679,7 +677,7 @@ const mapInstanceData = (inst, assignment) => {
   const category = getCategoryUI(categoryName);
 
   return (
-    <div className={`category-badge ${category.color}`}>
+    <div className="category-badge">
       <span className="category-icon">
         {category.icon}
       </span>
