@@ -565,14 +565,7 @@ gap:10px;
 ========================= */
 
 .checkout-plan-card {
-  background:
-    linear-gradient(
-      135deg,
-      #393E46,
-      #222831
-    );
-
-
+  background: #222831;
   border-radius: 22px;
 
   padding: 22px;
@@ -701,7 +694,7 @@ gap:10px;
 /* Secondary */
 
 .checkout-actions .secondary {
-  background: #393E46;
+  background: #222831;
   color: #DFD0B8;
 }
 
@@ -716,8 +709,7 @@ gap:10px;
 
   color: #222831;
 
-  box-shadow:
-    0 10px 30px #DFD0B8;
+    box-shadow: 0 2px 15px #948979;
 }
 
 .checkout-actions .primary:hover {
