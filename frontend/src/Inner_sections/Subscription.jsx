@@ -654,15 +654,15 @@ return (
 
         <PlanSelectionSection />
 
-        {selectedTier && (
-          <button
-            className="btn primary proceed"
-            onClick={handleCheckout}
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Proceed to Checkout"}
-          </button>
-        )}
+{selectedTier && (
+  <button
+    className="btn primary proceed"
+    onClick={handleOpenCheckoutPreview}
+    disabled={loading}
+  >
+    {loading ? "Processing..." : "Proceed to Checkout"}
+  </button>
+)}
       </>
     )}
 
