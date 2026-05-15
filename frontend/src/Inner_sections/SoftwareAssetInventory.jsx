@@ -527,7 +527,7 @@ await updateSoftwareAsset(editAsset._id, {
 useEffect(() => {
   setCurrentPage(1);
 }, [searchTerm , assetsPerPage]);
-
+  
 const filteredAssets = [...assets]
   .sort(
     (a, b) =>

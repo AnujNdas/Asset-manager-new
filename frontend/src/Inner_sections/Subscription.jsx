@@ -42,6 +42,8 @@ const Subscription = () => {
   const [subscriptionLoaded, setSubscriptionLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showCheckoutPreview, setShowCheckoutPreview] = useState(false);
+const [checkoutPreview, setCheckoutPreview] = useState(null);
   const PLAN_ORDER = ["base", "grow", "omni"];
 const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = user?.role === "admin";
@@ -218,6 +220,33 @@ const handleUpgradeClick = async () => {
 
   } catch (err) {
     console.error(err);
+  }
+};
+
+const handleOpenCheckoutPreview = async () => {
+  try {
+
+    setLoading(true);
+
+    const preview = await previewPrice({
+      tierId: selectedTier,
+      billingCycle: billing,
+    });
+
+    setCheckoutPreview(preview);
+
+    setShowCheckoutPreview(true);
+
+  } catch (err) {
+
+    Swal.fire(
+      "Error",
+      err.userMessage || "Failed to load pricing preview",
+      "error"
+    );
+
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -649,7 +678,7 @@ return (
         {selectedTier && (
           <button
             className="btn primary proceed"
-            onClick={handleCheckout}
+            onClick={handleOpenCheckoutPreview}
             disabled={loading}
           >
             {loading ? "Processing..." : "Proceed to Checkout"}
@@ -660,6 +689,100 @@ return (
 
     {error && <p className="error">{error}</p>}
 
+    {showCheckoutPreview && checkoutPreview && (
+  <div className="checkout-preview-overlay">
+
+    <div className="checkout-preview-modal">
+
+      <div className="checkout-preview-header">
+        <h3>Review Subscription</h3>
+
+        <button
+          className="close-btn"
+          onClick={() => setShowCheckoutPreview(false)}
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="checkout-plan-card">
+
+        <h2>
+          {selectedTier.toUpperCase()} Plan
+        </h2>
+
+        <span className="billing-cycle">
+          {billing}
+        </span>
+
+      </div>
+
+      <div className="checkout-breakdown">
+
+        <div className="breakdown-row">
+          <span>Base Price</span>
+          <span>
+            ₹{checkoutPreview.baseAmount}
+          </span>
+        </div>
+
+        <div className="breakdown-row">
+          <span>GST (18%)</span>
+          <span>
+            ₹{checkoutPreview.taxAmount}
+          </span>
+        </div>
+
+        <div className="breakdown-row total">
+          <span>Total Payable</span>
+          <span>
+            ₹{checkoutPreview.totalAmount}
+          </span>
+        </div>
+
+      </div>
+
+      <div className="checkout-info">
+
+        <p>
+          Your subscription will renew automatically every{" "}
+          <strong>{billing}</strong>.
+        </p>
+
+        <p>
+          Taxes are included as per applicable GST rules.
+        </p>
+
+      </div>
+
+      <div className="checkout-actions">
+
+        <button
+          className="btn secondary"
+          onClick={() => setShowCheckoutPreview(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="btn primary"
+          onClick={async () => {
+
+            setShowCheckoutPreview(false);
+
+            await handleCheckout();
+
+          }}
+        >
+          Confirm & Pay
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
   </div>
 );
 
