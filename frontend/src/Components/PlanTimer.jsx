@@ -3,7 +3,7 @@ import { useSubscription } from "../Context/SubscriptionContext";
 import "../Component_styles/PlanTimer.css";
 
 const PlanTimer = () => {
-  const { subscription, expired } = useSubscription();
+  const { subscription } = useSubscription();
   const [timeLeft, setTimeLeft] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
@@ -45,15 +45,22 @@ useEffect(() => {
 
   const isUrgent = timeLeft && timeLeft.days < 2;
 
-  const statusClass = expired
+  const isExpired =
+    subscription?.lifecycle?.isExpired ||
+    subscription?.status === "expired";
+    
+  const statusClass = isExpired
     ? "expired"
     : isUrgent
     ? "urgent"
     : "normal";
-
+console.log("PLAN TIMER", {
+  status: subscription?.status,
+  lifecycle: subscription?.lifecycle,
+});
   return (
     <div className={`plan-timer ${statusClass}`}>
-      {expired ? (
+      {isExpired ? (
         <span className="label">Subscription Expired</span>
       ) : (
         <>
