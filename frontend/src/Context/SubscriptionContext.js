@@ -67,26 +67,35 @@ useEffect(() => {
   fetchSubscription();
 }, []);
   // 🔥 live expiry timer
-  useEffect(() => {
-    if (!subscription?.currentEnd) return;
+// 🔥 live expiry timer
+useEffect(() => {
+  if (!subscription?.currentEnd) {
+    setExpired(false);
+    return;
+  }
 
-    const expiryTime = new Date(subscription.currentEnd).getTime();
-    const now = Date.now();
+  const expiryTime = new Date(subscription.currentEnd).getTime();
+  const now = Date.now();
 
-    if (
-      subscription?.lifecycle?.isExpired ||
-      subscription?.status === "expired"
-    ) {
-      setExpired(true);
-      return;
-    }
-    const timer = setTimeout(() => {
-      setExpired(true);
-    }, expiryTime - now);
+  const currentlyExpired =
+    subscription?.lifecycle?.isExpired ||
+    subscription?.status === "expired" ||
+    expiryTime <= now;
 
-    return () => clearTimeout(timer);
-  }, [subscription]);
+  // ✅ Always sync expired state
+  setExpired(currentlyExpired);
 
+  // ✅ stop here if already expired
+  if (currentlyExpired) return;
+
+  // ✅ auto expire later
+  const timer = setTimeout(() => {
+    setExpired(true);
+  }, expiryTime - now);
+
+  return () => clearTimeout(timer);
+
+}, [subscription]);
   return (
     <SubscriptionContext.Provider
       value={{
