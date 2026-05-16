@@ -408,12 +408,12 @@ const handleImport = async () => {
             <li>Enter accurate cost for reports</li>
           </ul>
         </div>
-          <button
+          {/* <button
     onClick={() => driverObj.drive()}
     className="tour-help-btn"
   >
     ❓ Guide
-  </button>
+  </button> */}
       </div>
 
       {/* RIGHT FORM PANEL */}
