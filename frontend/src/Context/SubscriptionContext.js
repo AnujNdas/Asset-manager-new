@@ -8,35 +8,33 @@ export const SubscriptionProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [expired, setExpired] = useState(false);
 
-  const fetchSubscription = async () => {
-    try {
-      setLoading(true);                // ✅ FIX 1
-      setExpired(false);              // ✅ FIX 2 (reset stale state)
+const fetchSubscription = async () => {
+  try {
+    setLoading(true);
 
-      const data = await getMySubscription();
+    const data = await getMySubscription();
 
-      setSubscription(data);
+    setSubscription(data);
 
-      // ✅ derive expired immediately
-      if (data?.currentEnd) {
-        const isExpired =
-          new Date(data.currentEnd).getTime() <= Date.now();
-        setExpired(isExpired);
-      }
+    setExpired(
+      data?.lifecycle?.isExpired ||
+      data?.status === "expired"
+    );
 
-    } catch (err) {
-      console.error("Subscription fetch failed", err);
+  } catch (err) {
+    console.error("Subscription fetch failed", err);
 
-      setSubscription({
-        access: { hasAccess: false, reason: "network_error" },
-        lifecycle: { isExpired: true }
-      });
+    setSubscription({
+      access: { hasAccess: false, reason: "network_error" },
+      lifecycle: { isExpired: true }
+    });
 
-      setExpired(true); // fallback
-    } finally {
-      setLoading(false);
-    }
-  };
+    setExpired(true);
+
+  } finally {
+    setLoading(false);
+  }
+};
 
 useEffect(() => {
   const auth = localStorage.getItem("auth");
@@ -75,11 +73,13 @@ useEffect(() => {
     const expiryTime = new Date(subscription.currentEnd).getTime();
     const now = Date.now();
 
-    if (expiryTime <= now) {
+    if (
+      subscription?.lifecycle?.isExpired ||
+      subscription?.status === "expired"
+    ) {
       setExpired(true);
       return;
     }
-
     const timer = setTimeout(() => {
       setExpired(true);
     }, expiryTime - now);
