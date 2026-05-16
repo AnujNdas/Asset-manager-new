@@ -160,8 +160,8 @@
   margin-top: 20px;
 }
 .cancel-autopay {
-  background: #222831;
-  color: #DFD0B8;
+  background: #222831 !important;
+  color: #DFD0B8 !important;
 }
 
 .btn-primary {

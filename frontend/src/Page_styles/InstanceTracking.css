@@ -134,6 +134,7 @@
 }
 .btn-blue:hover {
   background: #948979;
+  box-shadow: none !important;
 }
 
 /* Dark button */
