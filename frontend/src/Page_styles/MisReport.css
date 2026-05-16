@@ -156,6 +156,7 @@ body {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 /* ===== SUB TABS CONTAINER ===== */
 .sub-tabs {
@@ -325,6 +326,9 @@ body {
     padding: 8px;
     font-size: 12px;
   }
+  .mis-filters input, .mis-filters select {
+    width: 100%;
+  }
 }
 .report-header {
   display: flex;
@@ -354,7 +358,7 @@ body {
 @media (max-width: 480px) {
   .report-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .misbutton {

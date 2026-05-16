@@ -112,6 +112,7 @@
 }
 
 .saas-user-table select:focus {
+  
   outline: none;
   border-color: #DFD0B8;
 }
