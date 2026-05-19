@@ -38,17 +38,25 @@ const ProtectedRoute = ({ allowedRoles }) => {
     }
 
     // ✅ ROLE VALIDATION (Only after expiration check)
-    if (allowedRoles && !allowedRoles.includes(decoded.role)) {
-      return (
-        <Navigate
-          to="/unauthorized"
-          state={{
-            message: `Your role (${decoded.role}) is not allowed to access this page.`,
-          }}
-          replace
-        />
-      );
-    }
+// ✅ ROLE VALIDATION
+if (allowedRoles && !allowedRoles.includes(decoded.role)) {
+
+  setTimeout(() => {
+    import("../utils/SwalTheme").then(({ default: ThemeSwal }) => {
+      ThemeSwal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: `Your role (${decoded.role}) is not allowed to access this page.`,
+        confirmButtonText: "Okay",
+        customClass: {
+          confirmButton: "my-confirm-btn",
+        },
+      });
+    });
+  }, 100);
+
+  return <Navigate to="/" replace />;
+}
 
     return <Outlet />;
   } catch (error) {

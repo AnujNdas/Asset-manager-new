@@ -261,19 +261,84 @@ const handleImport = async () => {
       type: "software", // 🔥 important
     });
 
-    if (res.success) {
-ThemeSwal.fire({
-  title: "Upload Complete",
-  html: `
-    <b>${res.inserted}</b> assets uploaded<br/>
-    <b>${res.skipped}</b> skipped
-  `,
-  icon: res.skipped > 0 ? "warning" : "success"
-});
+if (res.success) {
+  const {
+    inserted = 0,
+    skipped = 0,
+    invalidRows = [],
+  } = res.data || {};
 
-      setShowImport(false);
-      setImportFile(null);
-    } else {
+  const errorHtml =
+    invalidRows.length > 0
+      ? `
+        <div style="
+          max-height:300px;
+          overflow-y:auto;
+          margin-top:15px;
+          text-align:left;
+          border-top:1px solid #333;
+          padding-top:10px;
+        ">
+          ${invalidRows
+            .map(
+              (row) => `
+              <div style="
+                margin-bottom:12px;
+                padding:10px;
+                border-radius:8px;
+                background:#1e1e1e;
+                border-left:4px solid #ff4d4f;
+              ">
+                <div style="font-weight:600; color:#ff7875;">
+                  Row ${row.row}
+                </div>
+
+                <div style="margin-top:4px;">
+                  ${row.reason}
+                </div>
+
+                ${
+                  row.asset?.assetName
+                    ? `
+                  <div style="
+                    margin-top:6px;
+                    font-size:12px;
+                    opacity:0.8;
+                  ">
+                    Asset: ${row.asset.assetName}
+                  </div>
+                `
+                    : ""
+                }
+              </div>
+            `
+            )
+            .join("")}
+        </div>
+      `
+      : "";
+
+  ThemeSwal.fire({
+    title: "Bulk Upload Result",
+    html: `
+      <div style="text-align:left; line-height:1.8">
+        <p>✅ Uploaded: <b>${inserted}</b></p>
+        <p>⚠️ Skipped: <b>${skipped}</b></p>
+
+        ${errorHtml}
+      </div>
+    `,
+    icon: skipped > 0 ? "warning" : "success",
+    width: 650,
+    confirmButtonText: "Okay",
+    customClass: {
+      confirmButton: "my-confirm-btn",
+    },
+  });
+
+  setShowImport(false);
+  setImportFile(null);
+} else {
       ThemeSwal.fire("Error", res.message, "error");
     }
 } catch (err) {

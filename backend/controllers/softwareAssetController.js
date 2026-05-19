@@ -125,13 +125,19 @@ const bulkUploadSoftware = asyncHandler(async (req, res, next) => {
 
   const normalize = v => v?.toString().trim().toLowerCase();
 
-  const validateType = (type) => {
-    const t = normalize(type);
-    if (!["monthly", "yearly", "one_time"].includes(t)) {
-      throw new Error("Invalid software type");
-    }
-    return t;
-  };
+const VALID_TYPES = ["monthly", "yearly", "one_time"];
+
+const validateType = (type) => {
+  const t = normalize(type);
+
+  if (!VALID_TYPES.includes(t)) {
+    throw new Error(
+      `Invalid asset type "${type}". Allowed: ${VALID_TYPES.join(", ")}`
+    );
+  }
+
+  return t;
+};
 
   /* ================= REFERENCES ================= */
   const [categories, units, locations] = await Promise.all([
@@ -184,9 +190,32 @@ const bulkUploadSoftware = asyncHandler(async (req, res, next) => {
       let unitId = unitMap.get(normalize(asset.associateUnit));
       let locationId = locationMap.get(normalize(asset.locationName));
 
-      if (mode === "strict" && (!categoryId || !unitId || !locationId)) {
-        throw new Error("Missing reference data");
-      }
+if (mode === "strict") {
+
+  const missing = [];
+
+  if (!categoryId) {
+    missing.push(
+      `Category "${asset.assetCategory}" not found`
+    );
+  }
+
+  if (!unitId) {
+    missing.push(
+      `Unit "${asset.associateUnit}" not found`
+    );
+  }
+
+  if (!locationId) {
+    missing.push(
+      `Location "${asset.locationName}" not found`
+    );
+  }
+
+  if (missing.length > 0) {
+    throw new Error(missing.join(" | "));
+  }
+}
 
       if (!categoryId)
         categoryId = await upsert(Category, asset.assetCategory, categoryMap);
@@ -198,12 +227,20 @@ const bulkUploadSoftware = asyncHandler(async (req, res, next) => {
         locationId = await upsert(Location, asset.locationName, locationMap);
 
       const quantity = Number(asset.assetQuantity || 1);
-      if (quantity <= 0) throw new Error("Invalid quantity");
+if (quantity <= 0) {
+  throw new Error(
+    `Invalid quantity "${asset.assetQuantity}". Must be greater than 0`
+  );
+}
 
       const purchaseDate = parseDate(asset.DateOfPurchase);
       const expiryDate = parseDate(asset.DateOfExpiry);
 
-      if (!purchaseDate) throw new Error("Invalid purchase date");
+if (!purchaseDate) {
+  throw new Error(
+    `Invalid purchase date "${asset.DateOfPurchase}"`
+  );
+}
 
       const vendor = {
         name: asset.vendorName || "",
@@ -241,11 +278,35 @@ const bulkUploadSoftware = asyncHandler(async (req, res, next) => {
       });
 
     } catch (err) {
-      invalidRows.push({
-        row: index + 2,
-        reason: err.message,
-        asset
-      });
+invalidRows.push({
+  row: index + 2,
+
+  assetName: asset.assetName || "Unnamed Asset",
+
+  reason: err.message,
+
+  receivedData: {
+    type: asset.type,
+    category: asset.assetCategory,
+    unit: asset.associateUnit,
+    location: asset.locationName,
+    quantity: asset.assetQuantity,
+    purchaseDate: asset.DateOfPurchase
+  },
+
+  suggestion:
+    err.message.includes("asset type")
+      ? "Use monthly, yearly or one_time"
+      : err.message.includes("Category")
+      ? "Create category first or use existing category"
+      : err.message.includes("Unit")
+      ? "Create unit first or use existing unit"
+      : err.message.includes("Location")
+      ? "Create location first or use existing location"
+      : err.message.includes("quantity")
+      ? "Quantity must be greater than 0"
+      : "Check the row data"
+});
     }
   }
 
