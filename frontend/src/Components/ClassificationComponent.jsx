@@ -85,7 +85,7 @@ const { registerTour, startTour } = useTour();
         "true"
       );
 
-      navigate("/team", {
+      navigate("/employee", {
         state: {
           startGuide: true,
         },
@@ -98,33 +98,15 @@ const { registerTour, startTour } = useTour();
       });
     
 useEffect(() => {
-
   const shouldStart =
     location.state?.startGuide &&
     !localStorage.getItem("classificationTourSeen");
 
   if (shouldStart) {
-
     setTimeout(() => {
-
-      startTour(() => {
-
-        localStorage.setItem(
-          "classificationTourSeen",
-          "true"
-        );
-
-        navigate("/team", {
-          state: {
-            startGuide: true,
-          },
-        });
-
-      });
-
+      driverObj.drive();
     }, 700);
   }
-
 }, []);
       useEffect(() => {
       registerTour(driverObj);

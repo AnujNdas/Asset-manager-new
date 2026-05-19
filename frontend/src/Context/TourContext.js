@@ -13,16 +13,10 @@ export const TourProvider = ({ children }) => {
     tourRef.current = tourInstance;
   };
 
-  const startTour = (onDestroyed) => {
-    if (!tourRef.current) return;
-
-    if (onDestroyed) {
-      tourRef.current.onDestroyed(() => {
-        onDestroyed();
-      });
+  const startTour = () => {
+    if (tourRef.current) {
+      tourRef.current.drive();
     }
-
-    tourRef.current.drive();
   };
 
   return (

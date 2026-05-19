@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useMemo
+} from "react";
 import EmployeeTable from "../Components/employee/EmployeeTable";
 import EmployeeModal from "../Components/employee/EmployeeModal";
 import { useCurrency } from "../Context/CurrencyContext";
@@ -41,98 +45,88 @@ const employeesPerPage = 8;
 const [summaryPage, setSummaryPage] = useState(1);
 const summaryPerPage = 6;
 
-      const driverObj = driver({
-        showProgress: true,
-        animate: true,
-        smoothScroll: true,
-        allowClose: true,
-    
-        overlayColor: "rgba(0,0,0,0.75)",
-    
-        popoverClass: "custom-driver-popover",
-    
-        steps: [
-                  {
-            element: ".tour-search",
-            popover: {
-              title: "Search",
-              description:
-                "Search team members.",
-              side: "bottom",
-            },
+const driverObj = useMemo(() => {
+  return driver({
+    showProgress: true,
+    animate: true,
+    smoothScroll: true,
+    allowClose: true,
+
+    overlayColor: "rgba(0,0,0,0.75)",
+
+    popoverClass: "custom-driver-popover",
+
+    steps: [
+      {
+        element: ".tour-search",
+        popover: {
+          title: "Search",
+          description:
+            "Search team members.",
+          side: "bottom",
+        },
+      },
+      {
+        element: ".tour-department",
+        popover: {
+          title: "Department Selector",
+          description: "Select department.",
+          side: "bottom",
+          align: "start",
+        },
+      },
+      {
+        element: ".tour-add",
+        popover: {
+          title: "Add Team member",
+          description:
+            "Add Team Member to a specific department.",
+          side: "bottom",
+        },
+      },
+      {
+        element: ".tour-member-info",
+        popover: {
+          title: "Assignment information",
+          description:
+            "contains assignment related information of the instances.",
+          side: "bottom",
+
+          onNextClick: () => {
+            driverObj.destroy();
+
+            localStorage.setItem(
+              "teamTourSeen",
+              "true"
+            );
+
+            navigate("/dashboard");
           },
-          {
-            element: ".tour-department",
-            popover: {
-              title: "Department Selector",
-              description: "Select department.",
-              side: "bottom",
-              align: "start",
-            },
-          },
-    
-          {
-            element: ".tour-add",
-            popover: {
-              title: "Add Team member",
-              description:
-                "Add Team Member to a specific department.",
-              side: "bottom",
-            },
-          },
-{
-  element: ".tour-member-info",
-  popover: {
-    title: "Assignment information",
-    description:
-      "contains assignment related information of the instances.",
-    side: "bottom",
-
-    onNextClick: () => {
-
-      driverObj.destroy();
-
-      localStorage.setItem(
-        "teamTourSeen",
-        "true"
-      );
-
-      navigate("/dashboard");
-
-    },
-  },
-},
-        ],
-      });
-    
+        },
+      },
+    ],
+  });
+}, [navigate]);
 useEffect(() => {
+  registerTour(driverObj);
 
   const shouldStart =
     location.state?.startGuide &&
     !localStorage.getItem("teamTourSeen");
 
   if (shouldStart) {
-
     setTimeout(() => {
-
       startTour(() => {
-
         localStorage.setItem(
           "teamTourSeen",
           "true"
         );
 
         navigate("/dashboard");
-
       });
-
     }, 700);
   }
-
-}, []);
-      useEffect(() => {
-      registerTour(driverObj);
-    }, []);
+}, [driverObj]);  
 
 useEffect(() => {
   setEmpPage(1);
