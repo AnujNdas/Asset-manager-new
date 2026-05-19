@@ -22,7 +22,6 @@ const Onboarding = () => {
       [e.target.name]: e.target.value,
     }));
   };
-
 const handleSubmit = async () => {
   try {
     const res = await axiosInstance.put("/user/onboarding", formData);
@@ -44,10 +43,20 @@ const handleSubmit = async () => {
       "success"
     );
 
-    navigate("/");
+    navigate("/classification", {
+      state: {
+        startGuide: true,
+      },
+    });
+
   } catch (err) {
     console.error(err);
-    ThemeSwal.fire("Error", "Onboarding failed. Please try again.", "error");
+
+    ThemeSwal.fire(
+      "Error",
+      "Onboarding failed. Please try again.",
+      "error"
+    );
   }
 };
 

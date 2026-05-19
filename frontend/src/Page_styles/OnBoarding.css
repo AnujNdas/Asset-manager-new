@@ -15,7 +15,7 @@
 .onboarding-card {
   width: 100%;
   max-width: 460px;
-  background: #ffffff;
+  background: #393E46;
   border-radius: 14px;
   padding: 32px 28px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
@@ -28,7 +28,7 @@
   font-weight: 600;
   margin-bottom: 22px;
   text-align: center;
-  color: #1f2937; /* slate-800 */
+  color: #DFD0B8; /* slate-800 */
 }
 
 /* ===== Inputs & Select ===== */
@@ -41,19 +41,19 @@
   border: 1px solid #d1d5db; /* gray-300 */
   font-size: 0.95rem;
   outline: none;
-  background-color: #ffffff;
+  color: #DFD0B8;
+  background-color: #222831;
   transition: all 0.2s ease;
 }
 
 .onboarding-card input:focus,
 .onboarding-card select:focus {
-  border-color: #2563eb; /* blue-600 */
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: #948979; /* blue-600 */
 }
 
 /* ===== Select Placeholder Color ===== */
 .onboarding-card select {
-  color: #374151;
+  color: #DFD0B8;
 }
 
 /* ===== Button ===== */
@@ -61,8 +61,8 @@
   width: 100%;
   margin-top: 10px;
   padding: 13px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #ffffff;
+  background: #DFD0B8;
+  color: #222831;
   font-size: 1rem;
   font-weight: 500;
   border: none;
@@ -73,7 +73,6 @@
 
 .onboarding-card button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
 }
 
 .onboarding-card button:active {
