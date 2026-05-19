@@ -6,6 +6,17 @@ const SubscriptionGate = () => {
   const { subscription, loading } = useSubscription();
   const location = useLocation();
 
+  // ✅ Allow onboarding flow routes without subscription
+  const onboardingRoutes = [
+    "/onboarding",
+    "/classification",
+    "/employee",
+  ];
+
+  if (onboardingRoutes.includes(location.pathname)) {
+    return <Outlet />;
+  }
+
   if (loading || subscription === null) {
     return <Loader />;
   }
@@ -19,7 +30,7 @@ const SubscriptionGate = () => {
   console.log("SUB GATE", {
     hasAccess,
     isExpired,
-    subscription
+    subscription,
   });
 
   if (isExpired || !hasAccess) {
@@ -32,7 +43,7 @@ const SubscriptionGate = () => {
             (isExpired
               ? "plan_expired"
               : "no_subscription"),
-          from: location.pathname
+          from: location.pathname,
         }}
         replace
       />
