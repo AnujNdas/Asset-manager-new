@@ -54,10 +54,10 @@ useEffect(() => {
     : isUrgent
     ? "urgent"
     : "normal";
-console.log("PLAN TIMER", {
-  status: subscription?.status,
-  lifecycle: subscription?.lifecycle,
-});
+// console.log("PLAN TIMER", {
+//   status: subscription?.status,
+//   lifecycle: subscription?.lifecycle,
+// });
   return (
     <div className={`plan-timer ${statusClass}`}>
       {isExpired ? (

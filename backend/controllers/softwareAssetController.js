@@ -145,31 +145,60 @@ module.exports = generateSoftwareCode;
   };
 
     /* ================= REFERENCES ================= */
-    const [categories, units, locations] = await Promise.all([
-      Category.find({ organizationId }).lean(),
-      Unit.find({ organizationId }).lean(),
-      Location.find({ organizationId }).lean(),
-    ]);
+/* ================= REFERENCES ================= */
+const [categories, units, locations] = await Promise.all([
+  Category.find({
+    organizationId,
+    categoryType: "software",
+  }).lean(),
 
+  Unit.find({ organizationId }).lean(),
+
+  Location.find({ organizationId }).lean(),
+]);
     const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
     const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
     const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
+const upsert = async (Model, name, map) => {
+  if (!name) return null;
 
-    const upsert = async (Model, name, map) => {
-      if (!name) return null;
+  const key = normalize(name);
 
-      const key = normalize(name);
-      if (map.has(key)) return map.get(key);
+  if (map.has(key)) return map.get(key);
 
-      const doc = await Model.findOneAndUpdate(
-        { name: new RegExp(`^${name}$`, "i"), organizationId },
-        { name, organizationId },
-        { upsert: true, new: true }
-      );
+  const query =
+    Model.modelName === "Category"
+      ? {
+          name: new RegExp(`^${name}$`, "i"),
+          organizationId,
+          categoryType: "software",
+        }
+      : {
+          name: new RegExp(`^${name}$`, "i"),
+          organizationId,
+        };
 
-      map.set(key, doc._id);
-      return doc._id;
-    };
+  const update =
+    Model.modelName === "Category"
+      ? {
+          name,
+          organizationId,
+          categoryType: "software",
+        }
+      : {
+          name,
+          organizationId,
+        };
+
+  const doc = await Model.findOneAndUpdate(query, update, {
+    upsert: true,
+    new: true,
+  });
+
+  map.set(key, doc._id);
+
+  return doc._id;
+};
 
     /* ================= CODE GENERATION ================= */
     const last = await SoftwareAsset.findOne({

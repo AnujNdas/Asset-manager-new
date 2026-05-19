@@ -252,7 +252,7 @@ export const bulkUploadHardwareAssets = async (data) => {
 };
 
 export const bulkUploadSoftwareAssets = async (data) => {
-  const res = await axiosInstance.post("/assets/bulk-upload", data);
+  const res = await axiosInstance.post("/software-assets/bulk-upload", data);
   return res.data;
 };
 
