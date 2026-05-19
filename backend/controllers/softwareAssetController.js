@@ -273,11 +273,11 @@ module.exports = generateSoftwareCode;
           assetQuantity: quantity,
           inUse: 0,
 
-   financialTracking: {
-  totalCost: 0,
-  monthlyCost: 0,
-  yearlyCost: 0
-},
+          financialTracking: {
+            totalCost: 0,
+            monthlyCost: 0,
+            yearlyCost: 0
+          },
 
           createdBy: userId
         });
