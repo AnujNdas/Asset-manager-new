@@ -81,282 +81,287 @@ module.exports = generateSoftwareCode;
 ====================================================== */
 
 
-const bulkUploadSoftware = asyncHandler(async (req, res, next) => {
-  const userId = req.user?.id;
-  const organizationId = req.user?.organizationId;
+  const bulkUploadSoftware = asyncHandler(async (req, res, next) => {
+    const userId = req.user?.id;
+    const organizationId = req.user?.organizationId;
 
-  if (!userId || !organizationId) {
-    throw new AppError("Unauthorized", 401, "UNAUTHORIZED");
-  }
-
-  /* ================= SUBSCRIPTION ================= */
-  const subscription = await Subscription.findOne({ organizationId });
-
-  if (!subscription) {
-    throw new AppError(
-      "No active subscription found",
-      403,
-      "NO_SUBSCRIPTION"
-    );
-  }
-
-  const tier = pricingTiers.find(t => t.key === subscription.tier);
-
-  if (!tier) {
-    throw new AppError(
-      "Invalid subscription tier",
-      500,
-      "INVALID_TIER_CONFIG"
-    );
-  }
-
-  const softwareLimit = tier.assets;
-
-  /* ================= INPUT ================= */
-  const { assets, mode = "strict" } = req.body;
-
-  if (!Array.isArray(assets) || assets.length === 0) {
-    throw new AppError(
-      "Assets must be a non-empty array",
-      400,
-      "INVALID_INPUT"
-    );
-  }
-
-  const normalize = v => v?.toString().trim().toLowerCase();
-
-const VALID_TYPES = ["monthly", "yearly", "one_time"];
-
-const validateType = (type) => {
-  const t = normalize(type);
-
-  if (!VALID_TYPES.includes(t)) {
-    throw new Error(
-      `Invalid asset type "${type}". Allowed: ${VALID_TYPES.join(", ")}`
-    );
-  }
-
-  return t;
-};
-
-  /* ================= REFERENCES ================= */
-  const [categories, units, locations] = await Promise.all([
-    Category.find({ organizationId }).lean(),
-    Unit.find({ organizationId }).lean(),
-    Location.find({ organizationId }).lean(),
-  ]);
-
-  const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
-  const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
-  const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
-
-  const upsert = async (Model, name, map) => {
-    if (!name) return null;
-
-    const key = normalize(name);
-    if (map.has(key)) return map.get(key);
-
-    const doc = await Model.findOneAndUpdate(
-      { name: new RegExp(`^${name}$`, "i"), organizationId },
-      { name, organizationId },
-      { upsert: true, new: true }
-    );
-
-    map.set(key, doc._id);
-    return doc._id;
-  };
-
-  /* ================= CODE GENERATION ================= */
-  const last = await SoftwareAsset.findOne({
-    organizationId,
-    assetCode: { $regex: /^SW-\d+$/ }
-  }).sort({ createdAt: -1 });
-
-  let nextCode = last
-    ? parseInt(last.assetCode.split("-")[1]) + 1
-    : 1;
-
-  let tempAssets = [];
-  let invalidRows = [];
-
-  /* ================= PROCESS ================= */
-  for (const [index, asset] of assets.entries()) {
-    try {
-      const row = index + 2;
-
-      const type = validateType(asset.type);
-
-      let categoryId = categoryMap.get(normalize(asset.assetCategory));
-      let unitId = unitMap.get(normalize(asset.associateUnit));
-      let locationId = locationMap.get(normalize(asset.locationName));
-
-if (mode === "strict") {
-
-  const missing = [];
-
-  if (!categoryId) {
-    missing.push(
-      `Category "${asset.assetCategory}" not found`
-    );
-  }
-
-  if (!unitId) {
-    missing.push(
-      `Unit "${asset.associateUnit}" not found`
-    );
-  }
-
-  if (!locationId) {
-    missing.push(
-      `Location "${asset.locationName}" not found`
-    );
-  }
-
-  if (missing.length > 0) {
-    throw new Error(missing.join(" | "));
-  }
-}
-
-      if (!categoryId)
-        categoryId = await upsert(Category, asset.assetCategory, categoryMap);
-
-      if (!unitId)
-        unitId = await upsert(Unit, asset.associateUnit, unitMap);
-
-      if (!locationId)
-        locationId = await upsert(Location, asset.locationName, locationMap);
-
-      const quantity = Number(asset.assetQuantity || 1);
-if (quantity <= 0) {
-  throw new Error(
-    `Invalid quantity "${asset.assetQuantity}". Must be greater than 0`
-  );
-}
-
-      const purchaseDate = parseDate(asset.DateOfPurchase);
-      const expiryDate = parseDate(asset.DateOfExpiry);
-
-if (!purchaseDate) {
-  throw new Error(
-    `Invalid purchase date "${asset.DateOfPurchase}"`
-  );
-}
-
-      const vendor = {
-        name: asset.vendorName || "",
-        contact: asset.vendorContact || "",
-        supportEmail: asset.vendorEmail || ""
-      };
-
-      tempAssets.push({
-        organizationId,
-        assetCode: `SW-${nextCode++}`,
-        assetName: asset.assetName,
-        type,
-
-        assetCategory: categoryId,
-        associateUnit: unitId,
-        locationName: locationId,
-
-        purchaseDetails: {
-          purchaseDate,
-          vendor
-        },
-
-        DOE: expiryDate || null,
-
-        assetQuantity: quantity,
-        inUse: 0,
-
-        financialTracking: {
-          totalAssetCost: 0,
-          monthlyCost: 0,
-          yearlyCost: 0
-        },
-
-        createdBy: userId
-      });
-
-    } catch (err) {
-invalidRows.push({
-  row: index + 2,
-
-  assetName: asset.assetName || "Unnamed Asset",
-
-  reason: err.message,
-
-  receivedData: {
-    type: asset.type,
-    category: asset.assetCategory,
-    unit: asset.associateUnit,
-    location: asset.locationName,
-    quantity: asset.assetQuantity,
-    purchaseDate: asset.DateOfPurchase
-  },
-
-  suggestion:
-    err.message.includes("asset type")
-      ? "Use monthly, yearly or one_time"
-      : err.message.includes("Category")
-      ? "Create category first or use existing category"
-      : err.message.includes("Unit")
-      ? "Create unit first or use existing unit"
-      : err.message.includes("Location")
-      ? "Create location first or use existing location"
-      : err.message.includes("quantity")
-      ? "Quantity must be greater than 0"
-      : "Check the row data"
-});
+    if (!userId || !organizationId) {
+      throw new AppError("Unauthorized", 401, "UNAUTHORIZED");
     }
-  }
 
-  /* ================= LIMIT ================= */
-  const currentCount = await SoftwareAsset.countDocuments({ organizationId });
+    /* ================= SUBSCRIPTION ================= */
+    const subscription = await Subscription.findOne({ organizationId });
 
-  let allowedAssets = tempAssets;
-
-  if (softwareLimit !== "unlimited") {
-    const available = softwareLimit - currentCount;
-
-    if (available <= 0) {
+    if (!subscription) {
       throw new AppError(
-        "Software asset limit reached",
+        "No active subscription found",
         403,
-        "ASSET_LIMIT_REACHED",
-        null,
-        { limit: softwareLimit, current: currentCount }
+        "NO_SUBSCRIPTION"
       );
     }
 
-    if (tempAssets.length > available) {
-      allowedAssets = tempAssets.slice(0, available);
+    const tier = pricingTiers.find(t => t.key === subscription.tier);
 
-      invalidRows.push({
-        row: "LIMIT",
-        reason: `Only ${available} assets allowed by plan`
-      });
+    if (!tier) {
+      throw new AppError(
+        "Invalid subscription tier",
+        500,
+        "INVALID_TIER_CONFIG"
+      );
+    }
+
+    const softwareLimit = tier.assets;
+
+    /* ================= INPUT ================= */
+    const { assets, mode = "strict" } = req.body;
+
+    if (!Array.isArray(assets) || assets.length === 0) {
+      throw new AppError(
+        "Assets must be a non-empty array",
+        400,
+        "INVALID_INPUT"
+      );
+    }
+
+    const normalize = (v) =>
+  v
+    ?.toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, "_");
+
+  const VALID_TYPES = ["monthly", "yearly", "one_time"];
+
+  const validateType = (type) => {
+    const t = normalize(type);
+
+    if (!VALID_TYPES.includes(t)) {
+      throw new Error(
+        `Invalid asset type "${type}". Allowed: ${VALID_TYPES.join(", ")}`
+      );
+    }
+
+    return t;
+  };
+
+    /* ================= REFERENCES ================= */
+    const [categories, units, locations] = await Promise.all([
+      Category.find({ organizationId }).lean(),
+      Unit.find({ organizationId }).lean(),
+      Location.find({ organizationId }).lean(),
+    ]);
+
+    const categoryMap = new Map(categories.map(c => [normalize(c.name), c._id]));
+    const unitMap = new Map(units.map(u => [normalize(u.name), u._id]));
+    const locationMap = new Map(locations.map(l => [normalize(l.name), l._id]));
+
+    const upsert = async (Model, name, map) => {
+      if (!name) return null;
+
+      const key = normalize(name);
+      if (map.has(key)) return map.get(key);
+
+      const doc = await Model.findOneAndUpdate(
+        { name: new RegExp(`^${name}$`, "i"), organizationId },
+        { name, organizationId },
+        { upsert: true, new: true }
+      );
+
+      map.set(key, doc._id);
+      return doc._id;
+    };
+
+    /* ================= CODE GENERATION ================= */
+    const last = await SoftwareAsset.findOne({
+      organizationId,
+      assetCode: { $regex: /^SW-\d+$/ }
+    }).sort({ createdAt: -1 });
+
+    let nextCode = last
+      ? parseInt(last.assetCode.split("-")[1]) + 1
+      : 1;
+
+    let tempAssets = [];
+    let invalidRows = [];
+
+    /* ================= PROCESS ================= */
+    for (const [index, asset] of assets.entries()) {
+      try {
+        const row = index + 2;
+
+        const type = validateType(asset.type);
+
+        let categoryId = categoryMap.get(normalize(asset.assetCategory));
+        let unitId = unitMap.get(normalize(asset.associateUnit));
+        let locationId = locationMap.get(normalize(asset.locationName));
+
+  if (mode === "strict") {
+
+    const missing = [];
+
+    if (!categoryId) {
+      missing.push(
+        `Category "${asset.assetCategory}" not found`
+      );
+    }
+
+    if (!unitId) {
+      missing.push(
+        `Unit "${asset.associateUnit}" not found`
+      );
+    }
+
+    if (!locationId) {
+      missing.push(
+        `Location "${asset.locationName}" not found`
+      );
+    }
+
+    if (missing.length > 0) {
+      throw new Error(missing.join(" | "));
     }
   }
 
-  /* ================= INSERT ================= */
-  let inserted = 0;
+        if (!categoryId)
+          categoryId = await upsert(Category, asset.assetCategory, categoryMap);
 
-  if (allowedAssets.length > 0) {
-    const result = await SoftwareAsset.insertMany(allowedAssets);
-    inserted = result.length;
+        if (!unitId)
+          unitId = await upsert(Unit, asset.associateUnit, unitMap);
+
+        if (!locationId)
+          locationId = await upsert(Location, asset.locationName, locationMap);
+
+        const quantity = Number(asset.assetQuantity || 1);
+  if (quantity <= 0) {
+    throw new Error(
+      `Invalid quantity "${asset.assetQuantity}". Must be greater than 0`
+    );
   }
 
-  /* ================= RESPONSE ================= */
-  res.status(200).json({
-    success: true,
-    message: "Bulk software upload completed",
-    data: {
-      inserted,
-      skipped: invalidRows.length,
-      invalidRows
-    }
+        const purchaseDate = parseDate(asset.DateOfPurchase);
+        const expiryDate = parseDate(asset.DateOfExpiry);
+
+  if (!purchaseDate) {
+    throw new Error(
+      `Invalid purchase date "${asset.DateOfPurchase}"`
+    );
+  }
+
+        const vendor = {
+          name: asset.vendorName || "",
+          contact: asset.vendorContact || "",
+          supportEmail: asset.vendorEmail || ""
+        };
+
+        tempAssets.push({
+          organizationId,
+          assetCode: `SW-${nextCode++}`,
+          assetName: asset.assetName,
+          type,
+
+          assetCategory: categoryId,
+          associateUnit: unitId,
+          locationName: locationId,
+
+          purchaseDetails: {
+            purchaseDate,
+            vendor
+          },
+
+          DOE: expiryDate || null,
+
+          assetQuantity: quantity,
+          inUse: 0,
+
+   financialTracking: {
+  totalCost: 0,
+  monthlyCost: 0,
+  yearlyCost: 0
+},
+
+          createdBy: userId
+        });
+
+      } catch (err) {
+  invalidRows.push({
+    row: index + 2,
+
+    assetName: asset.assetName || "Unnamed Asset",
+
+    reason: err.message,
+
+    receivedData: {
+      type: asset.type,
+      category: asset.assetCategory,
+      unit: asset.associateUnit,
+      location: asset.locationName,
+      quantity: asset.assetQuantity,
+      purchaseDate: asset.DateOfPurchase
+    },
+
+    suggestion:
+      err.message.includes("asset type")
+        ? "Use monthly, yearly or one_time"
+        : err.message.includes("Category")
+        ? "Create category first or use existing category"
+        : err.message.includes("Unit")
+        ? "Create unit first or use existing unit"
+        : err.message.includes("Location")
+        ? "Create location first or use existing location"
+        : err.message.includes("quantity")
+        ? "Quantity must be greater than 0"
+        : "Check the row data"
   });
-});
+      }
+    }
+
+    /* ================= LIMIT ================= */
+    const currentCount = await SoftwareAsset.countDocuments({ organizationId });
+
+    let allowedAssets = tempAssets;
+
+    if (softwareLimit !== "unlimited") {
+      const available = softwareLimit - currentCount;
+
+      if (available <= 0) {
+        throw new AppError(
+          "Software asset limit reached",
+          403,
+          "ASSET_LIMIT_REACHED",
+          null,
+          { limit: softwareLimit, current: currentCount }
+        );
+      }
+
+      if (tempAssets.length > available) {
+        allowedAssets = tempAssets.slice(0, available);
+
+        invalidRows.push({
+          row: "LIMIT",
+          reason: `Only ${available} assets allowed by plan`
+        });
+      }
+    }
+
+    /* ================= INSERT ================= */
+    let inserted = 0;
+
+    if (allowedAssets.length > 0) {
+      const result = await SoftwareAsset.insertMany(allowedAssets);
+      inserted = result.length;
+    }
+
+    /* ================= RESPONSE ================= */
+    res.status(200).json({
+      success: true,
+      message: "Bulk software upload completed",
+      data: {
+        inserted,
+        skipped: invalidRows.length,
+        invalidRows
+      }
+    });
+  });
 
 /* ======================================================
    CREATE SOFTWARE ASSET
