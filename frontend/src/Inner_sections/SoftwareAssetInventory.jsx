@@ -650,7 +650,26 @@ const mapInstanceData = (inst, assignment) => {
 </button> */}
 </div>
       </div>
+{filteredAssets.length === 0 ? (
+  <div className="empty-state">
+    <div className="empty-icon">💻</div>
 
+    <h3>No Software Assets Found</h3>
+
+    <p>
+      No software assets have been added yet.
+      Start by capturing your first software asset.
+    </p>
+
+    <button
+      className="btn-save"
+      onClick={() => navigate("/capture")}
+    >
+      Go to Capture Page
+    </button>
+  </div>
+) : (
+  <>
       {/* CARDS */}
 <div className="inventory-grid" ref={gridRef}>
         <AnimatePresence>
@@ -838,6 +857,8 @@ const mapInstanceData = (inst, assignment) => {
   totalPages={totalPages}
   onPageChange={setCurrentPage}
 />
+</>
+      )}
 
       {/* ================= VIEW MODAL ================= */}
       <AnimatePresence>
@@ -873,7 +894,7 @@ const mapInstanceData = (inst, assignment) => {
   );
 })
 ) : (
-  <p>No instances found</p>
+  <p style={{ color : "#948979"}}>No instances found</p>
 )}
 <AnimatePresence>
   {editInstance && (

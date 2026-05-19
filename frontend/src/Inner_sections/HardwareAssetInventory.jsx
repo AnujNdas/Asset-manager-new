@@ -504,7 +504,36 @@ const paginatedAssets = filteredAssets.slice(
       </div>
 
       {/* GRID */}
-      <div className="inventory-grid" ref={gridRef}>
+{/* EMPTY STATE */}
+{filteredAssets.length === 0 ? (
+  <div className="empty-state">
+    <div className="empty-icon">🖥️</div>
+
+    <h3>
+      {searchTerm
+        ? "No Matching Hardware Found"
+        : "No Hardware Assets Found"}
+    </h3>
+
+    <p>
+      {searchTerm
+        ? "No hardware assets matched your search."
+        : "No hardware assets have been added yet. Start by capturing your first hardware asset."}
+    </p>
+
+    {!searchTerm && (
+      <button
+        className="btn-save"
+        onClick={() => navigate("/capture")}
+      >
+        Go to Capture Page
+      </button>
+    )}
+  </div>
+) : (
+  <>
+    {/* GRID */}
+    <div className="inventory-grid" ref={gridRef}>
         <AnimatePresence>
       {paginatedAssets.map((asset , index) => {
         const totals = getAssetTotals(asset);
@@ -654,11 +683,13 @@ const paginatedAssets = filteredAssets.slice(
 })}
         </AnimatePresence>
       </div>
-  <Pagination
+<Pagination
   currentPage={currentPage}
   totalPages={totalPages}
   onPageChange={(page) => setCurrentPage(page)}
 />
+  </>
+)}
       {/* MODAL */}
       <AnimatePresence>
         {selectedAsset && (
@@ -688,7 +719,7 @@ const paginatedAssets = filteredAssets.slice(
 <h4>All Instances</h4>
 
 {instances.length === 0 ? (
-  <p>No instances found</p>
+  <p style={{ color : "#948979"}}>No instances found</p>
 ) : (
  <div className="instance-group">
   {instances.map((inst) => {

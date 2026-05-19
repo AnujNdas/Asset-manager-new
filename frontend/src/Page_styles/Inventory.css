@@ -793,7 +793,38 @@
   cursor: pointer;
   font-size: 14px;
 }
+.empty-state {
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(10px);
+}
 
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #DFD0B8;
+}
+
+.empty-state p {
+  max-width: 500px;
+  color: #948979;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .instance-body {
