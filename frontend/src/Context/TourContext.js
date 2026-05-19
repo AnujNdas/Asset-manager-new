@@ -1,4 +1,8 @@
-import React, { createContext, useContext, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useRef,
+} from "react";
 
 const TourContext = createContext();
 
@@ -9,10 +13,16 @@ export const TourProvider = ({ children }) => {
     tourRef.current = tourInstance;
   };
 
-  const startTour = () => {
-    if (tourRef.current) {
-      tourRef.current.drive();
+  const startTour = (onDestroyed) => {
+    if (!tourRef.current) return;
+
+    if (onDestroyed) {
+      tourRef.current.onDestroyed(() => {
+        onDestroyed();
+      });
     }
+
+    tourRef.current.drive();
   };
 
   return (
@@ -27,4 +37,5 @@ export const TourProvider = ({ children }) => {
   );
 };
 
-export const useTour = () => useContext(TourContext);
+export const useTour = () =>
+  useContext(TourContext);

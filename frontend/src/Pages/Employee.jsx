@@ -18,9 +18,13 @@ import Loader from "../Components/Loader";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
+import { useLocation, useNavigate } from "react-router-dom";
 const EmployeePage = () => {
-      const { registerTour } = useTour();
- const { currency, convertFromBase, loadingRates } = useCurrency();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { registerTour, startTour } = useTour();
+   const { currency, convertFromBase, loadingRates } = useCurrency();
   const [loading , setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -76,33 +80,56 @@ const summaryPerPage = 6;
               side: "bottom",
             },
           },
-  
-          {
-            element: ".tour-member-info",
-            popover: {
-              title: "Assignment information",
-              description:
-                "contains assignement related information of the instances.",
-              side: "bottom",
-            },
-          },
+{
+  element: ".tour-member-info",
+  popover: {
+    title: "Assignment information",
+    description:
+      "contains assignment related information of the instances.",
+    side: "bottom",
+
+    onNextClick: () => {
+
+      driverObj.destroy();
+
+      localStorage.setItem(
+        "teamTourSeen",
+        "true"
+      );
+
+      navigate("/dashboard");
+
+    },
+  },
+},
         ],
       });
     
-      useEffect(() => {
-        const seen = localStorage.getItem("inventoryTourSeen");
-      
-        if (!seen) {
-          setTimeout(() => {
-            driverObj.drive();
-      
-            localStorage.setItem(
-              "inventoryTourSeen",
-              "true"
-            );
-          }, 1000);
-        }
-      }, []);
+useEffect(() => {
+
+  const shouldStart =
+    location.state?.startGuide &&
+    !localStorage.getItem("teamTourSeen");
+
+  if (shouldStart) {
+
+    setTimeout(() => {
+
+      startTour(() => {
+
+        localStorage.setItem(
+          "teamTourSeen",
+          "true"
+        );
+
+        navigate("/dashboard");
+
+      });
+
+    }, 700);
+  }
+
+}, []);
       useEffect(() => {
       registerTour(driverObj);
     }, []);

@@ -663,7 +663,7 @@ const mapInstanceData = (inst, assignment) => {
 
     <button
       className="btn-save"
-      onClick={() => navigate("/capture")}
+      onClick={() => navigate("/assetCapture")}
     >
       Go to Capture Page
     </button>

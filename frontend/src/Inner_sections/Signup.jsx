@@ -107,7 +107,11 @@ localStorage.removeItem("inviteToken");
   if (!verifyRes.user.onboardingCompleted) {
     navigate("/onboarding");
   } else {
-    navigate("/dashboard");
+    navigate("/classification", {
+  state: {
+    startGuide: true,
+  },
+});
   }
 } else {
   ThemeSwal.fire(

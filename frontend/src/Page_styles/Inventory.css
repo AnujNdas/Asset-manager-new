@@ -804,7 +804,7 @@
   padding: 40px 20px;
   border: 1px dashed rgba(255,255,255,0.15);
   border-radius: 20px;
-  background: rgba(255,255,255,0.02);
+  background: #222831;
   backdrop-filter: blur(10px);
 }
 

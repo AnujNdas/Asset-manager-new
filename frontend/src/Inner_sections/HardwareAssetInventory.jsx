@@ -524,7 +524,7 @@ const paginatedAssets = filteredAssets.slice(
     {!searchTerm && (
       <button
         className="btn-save"
-        onClick={() => navigate("/capture")}
+        onClick={() => navigate("/assetCapture")}
       >
         Go to Capture Page
       </button>

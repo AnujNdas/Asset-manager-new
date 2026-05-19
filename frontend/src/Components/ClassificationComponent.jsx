@@ -12,6 +12,7 @@ import "../Component_styles/ClassificationComponent.css";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
+import { useLocation, useNavigate } from "react-router-dom";
 const ClassificationPage = ({
   title,
   getAll,
@@ -21,7 +22,9 @@ const ClassificationPage = ({
   restoreItem,
   allowDelete = true   // NEW PROP
 }) => {
-      const { registerTour } = useTour();
+      const location = useLocation();
+const navigate = useNavigate();
+const { registerTour, startTour } = useTour();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiDone, setApiDone] = useState(false);
@@ -65,32 +68,64 @@ const ClassificationPage = ({
               side: "bottom",
             },
           },
-          {
-            element: ".tour-info",
-            popover: {
-              title: "Info",
-              description:
-                "You can edit & delete from here.",
-              side: "bottom",
-            },
-          },
+{
+  element: ".tour-info",
+  popover: {
+    title: "Info",
+    description:
+      "You can edit & delete from here.",
+    side: "bottom",
+
+    onNextClick: () => {
+
+      driverObj.destroy();
+
+      localStorage.setItem(
+        "classificationTourSeen",
+        "true"
+      );
+
+      navigate("/team", {
+        state: {
+          startGuide: true,
+        },
+      });
+
+    },
+  },
+},
         ],
       });
     
-      useEffect(() => {
-        const seen = localStorage.getItem("inventoryTourSeen");
-      
-        if (!seen) {
-          setTimeout(() => {
-            driverObj.drive();
-      
-            localStorage.setItem(
-              "inventoryTourSeen",
-              "true"
-            );
-          }, 1000);
-        }
-      }, []);
+useEffect(() => {
+
+  const shouldStart =
+    location.state?.startGuide &&
+    !localStorage.getItem("classificationTourSeen");
+
+  if (shouldStart) {
+
+    setTimeout(() => {
+
+      startTour(() => {
+
+        localStorage.setItem(
+          "classificationTourSeen",
+          "true"
+        );
+
+        navigate("/team", {
+          state: {
+            startGuide: true,
+          },
+        });
+
+      });
+
+    }, 700);
+  }
+
+}, []);
       useEffect(() => {
       registerTour(driverObj);
     }, []);
