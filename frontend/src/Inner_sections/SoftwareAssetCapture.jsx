@@ -252,6 +252,7 @@ const handleImport = async () => {
     const jsonData = XLSX.utils.sheet_to_json(sheet, {
       defval: "",
     });
+    console.log(jsonData);
 
     /* =============================
        🚀 SEND JSON TO BACKEND
