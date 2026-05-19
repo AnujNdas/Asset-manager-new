@@ -139,7 +139,9 @@
 }
 .card-box img {
   max-width: 100%;
-  height: auto;
+  width: 120px;
+  height: 120px;
+  margin: auto;
 }
 .card-footer button {
   background: #DFD0B8;

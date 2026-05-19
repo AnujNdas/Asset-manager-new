@@ -149,27 +149,22 @@ const getCategoryUI = (categoryName = "") => {
   in_stock: {
     label: "Available",
     className: "success",
-    icon: "🟢",
   },
   fully_in_use: {
     label: "Fully Assigned",
     className: "danger",
-    icon: "🔴",
   },
   partially_in_use: {
     label: "Partially In Use",
     className: "warning",
-    icon: "🟡",
   },
   partially_created: {
     label: "Partially Created",
     className: "info",
-    icon: "🟣",
   },
   not_created: {
     label: "No Instances",
     className: "default",
-    icon: "⚪",
   },
 };
   const [assets, setAssets] = useState([]);
