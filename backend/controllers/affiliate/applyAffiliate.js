@@ -27,7 +27,7 @@ const generateAffiliateCode = (name) => {
 /* =========================================
    APPLY AS AFFILIATE
 ========================================= */
-exports.applyAffiliate = asyncHandler(
+const applyAffiliate = asyncHandler(
   async (req, res, next) => {
 
     const {
@@ -176,3 +176,4 @@ exports.applyAffiliate = asyncHandler(
     });
   }
 );
+module.exports = { applyAffiliate };
