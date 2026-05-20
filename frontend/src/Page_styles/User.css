@@ -120,7 +120,51 @@
     color: #222931;
     background: #DFD0B8;
   }
+.affiliate-cta {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  text-align: center;
+}
+
+.affiliate-cta p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.85;
+  color: #d1d5db;
+}
+
+.affiliate-btn {
+  border: none;
+  outline: none;
+
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #4f46e5
+  );
+
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.affiliate-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
   @media (max-width: 900px) {
     .auth-container {
       flex-direction: column;
