@@ -23,7 +23,7 @@ organizationId: {
 
 role: {
   type: String,
-  enum: ["super-admin", "admin", "user"], // ✅ added "super-admin"
+  enum: ["super-admin", "admin", "user" , "affiliate"], // ✅ added "super-admin" and "affiliate"
   default: "user",
 },
   // Reset password fields
