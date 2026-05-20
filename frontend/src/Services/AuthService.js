@@ -21,7 +21,7 @@ const verifyOtpAndSignup = async (email, username, password, otp, inviteToken) =
 };
  const applyAffiliate = async (data) => {
   const res = await axios.post(
-    "/affiliate/apply",
+    `${API_URL}/affiliate/apply`,
     data
   );
 
