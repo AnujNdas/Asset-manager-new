@@ -9,7 +9,7 @@
 }
 
 .affiliate-left {
-  padding: 60px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -21,16 +21,16 @@
 }
 
 .affiliate-left h1 {
-  font-size: 48px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 600;
   line-height: 1.2;
   margin-bottom: 18px;
 }
 
 .affiliate-subtitle {
-  font-size: 18px;
+  font-size: 16px;
   opacity: 0.8;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   max-width: 500px;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .benefit-card {
-  padding: 20px;
+  padding: 10px;
   border-radius: 18px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
@@ -60,14 +60,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 20px;
 }
 
 .affiliate-form {
   width: 100%;
   max-width: 620px;
 
-  padding: 36px;
+  padding: 16px;
   border-radius: 24px;
 
   background: rgba(255,255,255,0.04);
@@ -78,19 +78,19 @@
 
 .affiliate-form h2 {
   margin-bottom: 28px;
-  font-size: 32px;
+  font-size: 22px;
 }
 
 .affiliate-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  gap: 10px;
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 18px;
+  /* margin-bottom: 18px; */
 }
 
 .input-group label {

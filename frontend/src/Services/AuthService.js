@@ -19,7 +19,14 @@ const verifyOtpAndSignup = async (email, username, password, otp, inviteToken) =
     });
     return response.data;
 };
+ const applyAffiliate = async (data) => {
+  const res = await axios.post(
+    "/affiliate/apply",
+    data
+  );
 
+  return res.data;
+};
 // ✅ Login
 const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/login`, { email, password });
@@ -33,5 +40,5 @@ const ResetSystemData = async (password) => {
   const response = await axiosInstance.post("/auth/reset-system-data", { password });
   return response.data; 
 } 
-export default { sendOtp, verifyOtpAndSignup, login, getResetPreview , ResetSystemData};
+export default { sendOtp, verifyOtpAndSignup, login, getResetPreview , ResetSystemData , applyAffiliate};
 

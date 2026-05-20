@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Page_styles/AffiliateApply.css";
-
+import { applyAffiliate } from "../Services/AuthService";
 export default function AffiliateApply() {
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ export default function AffiliateApply() {
       setLoading(true);
 
       // 🔥 API CALL HERE
-      console.log(formData);
+      await applyAffiliate(formData);
 
       // await applyAffiliate(formData)
 

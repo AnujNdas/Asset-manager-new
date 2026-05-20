@@ -33,7 +33,8 @@ const supportRoutes = require("./routes/supportRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
 const trackingRoutes = require("./routes/trackingRoutes");
 const publicRoutes = require("./routes/publicRoutes");
-const errorHandler = require("./Middleware/errorHandler")
+const affiliateRoutes = require("./routes/affiliateRoutes");
+const errorHandler = require("./Middleware/errorHandler");
 // ✅ Import User model for Super Admin seeding
 const User = require("./models/User");
 
@@ -112,6 +113,10 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/instance-assets", instanceRoutes);
 app.use("/api/tracking", trackingRoutes);
 app.use("/api/track", publicRoutes);
+app.use(
+  "/api/affiliate",
+  affiliateRoutes
+);
 // ❗ Catch unknown routes (VERY IMPORTANT)
 app.all("*", (req, res, next) => {
   const error = new Error(`Cannot find ${req.originalUrl}`);
