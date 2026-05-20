@@ -10,6 +10,7 @@ import UpgradePage from "./Pages/UpgradePage";
 import User from "./Pages/User";
 import Loader from "./Components/Loader";
 import "./Component_styles/ClassificationComponent.css";
+import AffiliateApply from "./Inner_sections/AffiliateApply";
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
 const ForgotPassword = lazy(() => import("./Inner_sections/ForgetPass"));
@@ -35,6 +36,7 @@ const App = () => {
     <>
       <main>
         <Routes>
+          <Route path="/affiliate/apply" element={<SuspenseWrapper><AffiliateApply /></SuspenseWrapper>} />
           <Route path="/user" element={<SuspenseWrapper><User /></SuspenseWrapper>}>
             <Route
               path="login"
