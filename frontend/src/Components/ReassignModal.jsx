@@ -45,7 +45,7 @@ const fetchEmployees = async (departmentId) => {
     setEmployees(
       Array.isArray(res)
         ? res
-        : res?.employees || []
+        : res?.data || []
     );
 
   } catch (err) {
@@ -125,14 +125,15 @@ const handleSubmit = async () => {
             Select Employee
           </option>
 
-          {employees.map((emp) => (
-            <option
-              key={emp._id}
-              value={emp._id}
-            >
-              {emp.name}
-            </option>
-          ))}
+{Array.isArray(employees) &&
+  employees.map((emp) => (
+    <option
+      key={emp._id}
+      value={emp._id}
+    >
+      {emp.name}
+    </option>
+))}
         </select>
 
         {/* LOCATION */}
