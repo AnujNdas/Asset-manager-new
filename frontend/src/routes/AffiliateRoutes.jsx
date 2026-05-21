@@ -5,7 +5,7 @@ import AffiliateLayout from "../layout/AffiliateLayout";
 import AffiliateDashboard from "../Pages/affiliate/AffiliateDashboard";
 import AffiliateReferrals from "../Pages/affiliate/AffiliateReferrals";
 import AffiliateEarnings from "../Pages/affiliate/AffiliateEarnings";
-import AffiliatePayouts from "../Pages/affiliate/AffiliatePayouts";
+import AffiliatePayouts from "../Pages/affiliate/AffiliatePayout";
 import AffiliateProfile from "../Pages/affiliate/AffiliateProfile";
 
 const AffiliateRoutes = () => {
