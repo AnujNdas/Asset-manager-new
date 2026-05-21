@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import AffiliateSidebar from "../Components/AffiliateSidebar";
+import AffiliateSidebar from "../Components/affiliate/AffiliateSidebar";
 import "../Page_styles/Affiliate.css";
 
 export default function AffiliateLayout() {
