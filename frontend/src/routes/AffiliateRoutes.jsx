@@ -1,0 +1,47 @@
+import { Route } from "react-router-dom";
+
+import AffiliateLayout from "../Layouts/AffiliateLayout";
+
+import AffiliateDashboard from "../Pages/affiliate/AffiliateDashboard";
+import AffiliateReferrals from "../Pages/affiliate/AffiliateReferrals";
+import AffiliateEarnings from "../Pages/affiliate/AffiliateEarnings";
+import AffiliatePayouts from "../Pages/affiliate/AffiliatePayouts";
+import AffiliateProfile from "../Pages/affiliate/AffiliateProfile";
+
+const AffiliateRoutes = () => {
+  return (
+    <>
+      <Route
+        path="/affiliate"
+        element={<AffiliateLayout />}
+      >
+        <Route
+          path="dashboard"
+          element={<AffiliateDashboard />}
+        />
+
+        <Route
+          path="referrals"
+          element={<AffiliateReferrals />}
+        />
+
+        <Route
+          path="earnings"
+          element={<AffiliateEarnings />}
+        />
+
+        <Route
+          path="payouts"
+          element={<AffiliatePayouts />}
+        />
+
+        <Route
+          path="profile"
+          element={<AffiliateProfile />}
+        />
+      </Route>
+    </>
+  );
+};
+
+export default AffiliateRoutes;

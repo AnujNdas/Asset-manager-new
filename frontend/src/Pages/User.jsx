@@ -54,17 +54,6 @@ const User = ({ removeUser }) => {
               </button>
             </div>
 
-            {/* AFFILIATE CTA */}
-            <div className="affiliate-cta">
-              <p>Want to earn by referring businesses?</p>
-
-              <button
-                className="affiliate-btn"
-                onClick={() => navigate("/affiliate/apply")}
-              >
-                Become an Affiliate Partner
-              </button>
-            </div>
 
             {/* AUTH CONTENT */}
             <div className="auth-section">
@@ -96,7 +85,18 @@ const User = ({ removeUser }) => {
                 decoding="async"
               />
             </div>
+                
+            {/* AFFILIATE CTA */}
+            <div className="affiliate-cta">
+              <p>Want to earn by referring businesses?</p>
 
+              <button
+                className="affiliate-btn"
+                onClick={() => navigate("/affiliate/apply")}
+              >
+                Become an Affiliate Partner
+              </button>
+            </div>
           </div>
         </div>
 
