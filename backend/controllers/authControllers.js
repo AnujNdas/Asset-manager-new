@@ -293,12 +293,24 @@ const login = async (req, res) => {
     }
 
     // 🛑 Organization check (except super-admin)
-    if (user.role !== "super-admin" && !user.organizationId) {
-      return res.status(403).json({
-        success: false,
-        error: "User is not associated with any organization",
-      });
-    }
+// 🛑 Organization check
+// Affiliates and super-admins do not require organization
+
+const rolesWithoutOrg = [
+  "super-admin",
+  "affiliate",
+];
+
+if (
+  !rolesWithoutOrg.includes(user.role) &&
+  !user.organizationId
+) {
+  return res.status(403).json({
+    success: false,
+    error:
+      "User is not associated with any organization",
+  });
+}
 
     // ✅ Capture Client IP
     const ip = getClientIp(req);

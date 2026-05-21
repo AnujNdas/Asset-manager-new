@@ -51,17 +51,28 @@
       setLoading(false);
 
       // ✅ SINGLE, CORRECT REDIRECT
-  const role = response.user.role;
+const role = response.user.role;
 
-  if (role === "super-admin") {
-    navigate("/super-admin/dashboard");
-  } else if (!response.user.onboardingCompleted) {
-    navigate("/onboarding");
-  } else {
-    console.log("Navigating to /");
-    await refreshSubscription();  // 🔥 critical
-    navigate("/");
-  }
+if (role === "super-admin") {
+
+  navigate("/super-admin/dashboard");
+
+} else if (role === "affiliate") {
+
+  navigate("/affiliate/dashboard");
+
+} else if (!response.user.onboardingCompleted) {
+
+  navigate("/onboarding");
+
+} else {
+
+  console.log("Navigating to /");
+
+  await refreshSubscription();
+
+  navigate("/");
+}
 
 
     } catch (error) {

@@ -23,7 +23,7 @@ import { useTour } from "../Context/TourContext";
 
   if (width >= 1800) return 15;
   if (width >= 1440) return 12;
-  if (width >= 1200) return 10;
+  if (width >= 1200) return 9;
   if (width >= 992) return 8;
   if (width >= 768) return 6;
   if (width >= 576) return 4;
