@@ -35,13 +35,13 @@ const ReassignModal = ({
     setDepartments(res || []);
   };
 
-  const fetchEmployees = async (departmentId) => {
-    const res = await getEmployees({
-      departmentId
-    });
-    console.log("Employees:", res);
-    setEmployees(res || []);
-  };
+const fetchEmployees = async (departmentId) => {
+  const res = await getEmployees(departmentId);
+
+  console.log("Employees:", res);
+
+  setEmployees(res || []);
+};
 
 const handleSubmit = async () => {
   try {
