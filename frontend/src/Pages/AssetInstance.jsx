@@ -18,7 +18,22 @@ import { useTour } from "../Context/TourContext";
     const [loading, setLoading] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const assetsPerPage = 8;
+    const getAssetsPerPage = () => {
+  const width = window.innerWidth;
+
+  if (width >= 1800) return 15;
+  if (width >= 1440) return 12;
+  if (width >= 1200) return 10;
+  if (width >= 992) return 8;
+  if (width >= 768) return 6;
+  if (width >= 576) return 4;
+
+  return 2;
+};
+
+const [assetsPerPage, setAssetsPerPage] = useState(
+  getAssetsPerPage()
+);
     const location = useLocation();
   const selectedAssetId = location.state?.selectedAssetId;
     useEffect(() => {
@@ -33,6 +48,18 @@ useEffect(() => {
     setCurrentPage(maxPage || 1);
   }
 }, [assets]);
+
+useEffect(() => {
+  const handleResize = () => {
+    setAssetsPerPage(getAssetsPerPage());
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  return () =>
+    window.removeEventListener("resize", handleResize);
+}, []);
+
   const fetchAssets = async () => {
     try {
       setLoading(true);
