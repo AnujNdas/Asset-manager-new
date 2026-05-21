@@ -40,7 +40,7 @@ const ReassignModal = ({
       departmentId
     });
     console.log("Employees:", res);
-    setEmployees(res.data || []);
+    setEmployees(res || []);
   };
 
 const handleSubmit = async () => {
