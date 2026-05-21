@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
 
-import AffiliateLayout from "../Layouts/AffiliateLayout";
+import AffiliateLayout from "../layout/AffiliateLayout";
 
 import AffiliateDashboard from "../Pages/affiliate/AffiliateDashboard";
 import AffiliateReferrals from "../Pages/affiliate/AffiliateReferrals";
