@@ -31,7 +31,7 @@ const ReassignModal = ({
 
   const fetchDepartments = async () => {
     const res = await getDepartments();
-    console.log("Departments:", res.data);
+    console.log("Departments:", res);
     setDepartments(res.data || []);
   };
 
@@ -39,7 +39,7 @@ const ReassignModal = ({
     const res = await getEmployees({
       departmentId
     });
-    console.log("Employees:", res.data);
+    console.log("Employees:", res);
     setEmployees(res.data || []);
   };
 
