@@ -36,13 +36,23 @@ const ReassignModal = ({
   };
 
 const fetchEmployees = async (departmentId) => {
-  const res = await getEmployees(departmentId);
+  try {
+    const res = await getEmployees(departmentId);
 
-  console.log("Employees:", res);
+    console.log("Employees:", res);
 
-  setEmployees(res || []);
+    // ✅ handle API response safely
+    setEmployees(
+      Array.isArray(res)
+        ? res
+        : res?.employees || []
+    );
+
+  } catch (err) {
+    console.error(err);
+    setEmployees([]);
+  }
 };
-
 const handleSubmit = async () => {
   try {
 
