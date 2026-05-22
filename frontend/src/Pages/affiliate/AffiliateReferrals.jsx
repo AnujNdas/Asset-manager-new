@@ -17,7 +17,7 @@ import {
   getAffiliateDashboard,
 } from "../Services/AffiliateService";
 
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/ThemeSwal";
 
 export default function AffiliateReferrals() {
   const [loading, setLoading] = useState(true);
