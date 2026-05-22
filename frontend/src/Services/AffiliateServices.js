@@ -1,7 +1,7 @@
 // src/Services/AffiliateService.js
 
 import axios from "axios";
-const API_URL = `${process.env.REACT_APP_API_URL}/api/`;
+const API_URL = `${process.env.REACT_APP_API_URL}/api`;
 // ✅ Dashboard stats
 export const getAffiliateDashboard = async () => {
   const res = await axios.get(
