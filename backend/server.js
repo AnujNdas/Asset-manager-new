@@ -39,8 +39,15 @@ const errorHandler = require("./Middleware/errorHandler");
 const User = require("./models/User");
 
 
+const cookieParser = require("cookie-parser");
+
 const app = express();
+
 require("./cron/expirySchedular");
+
+app.use(
+  cookieParser(process.env.COOKIE_SECRET)
+);
 app.set("trust proxy", true);
 app.use((req, res, next) => {
   console.log("Incoming request:", req.method, req.url);

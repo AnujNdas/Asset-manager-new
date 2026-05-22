@@ -150,7 +150,7 @@ const applyAffiliate = asyncHandler(
           promotionMethod || "",
 
         referralLink:
-          `${process.env.CLIENT_URL}/signup?ref=${affiliateCode}`,
+          `${process.env.FRONTEND_URL}/user/signup?ref=${affiliateCode}`,
 
         status: "pending",
       });

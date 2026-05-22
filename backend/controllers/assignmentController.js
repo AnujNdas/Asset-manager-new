@@ -741,7 +741,13 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
       );
     }
 
-    const previousAssignedTo = instance.assignedTo || {};
+    const previousAssignmentData = {
+  employeeId: oldAssignment.employeeId,
+  employeeName: oldAssignment.employeeName,
+  departmentId: oldAssignment.departmentId,
+  departmentName: oldAssignment.departmentName,
+  location: oldAssignment.location
+};
 
     /* ================= CLOSE OLD ASSIGNMENT ================= */
 
@@ -771,77 +777,101 @@ instance.lifecycle.push({
 
   title: "Asset Reassigned",
 
-  description: `Asset reassigned from ${
-    previousAssignedTo.employeeName || "Unknown"
-  } to ${employee.name}`,
+description: `Asset reassigned from ${
+  previousAssignmentData.employeeName || "Unknown"
+} to ${employee.name}`,
 
   performedBy: userId,
 
   date: new Date(),
 
-  metadata: {
-    from: {
-      employeeId:
-        previousAssignedTo.employeeId || null,
+metadata: {
+  from: {
+    employeeId:
+      previousAssignmentData.employeeId || null,
 
-      employeeName:
-        previousAssignedTo.employeeName || null,
+    employeeName:
+      previousAssignmentData.employeeName || null,
 
-      departmentId:
-        previousAssignedTo.departmentId || null,
+    departmentId:
+      previousAssignmentData.departmentId || null,
 
-      departmentName:
-        previousAssignedTo.departmentName || null,
+    departmentName:
+      previousAssignmentData.departmentName || null,
 
-      location:
-        oldAssignment.location || instance.location
-    },
+    location:
+      previousAssignmentData.location || "-"
+  },
 
-    to: {
-      employeeId: employee._id,
+  to: {
+    employeeId: employee._id,
 
-      employeeName: employee.name,
+    employeeName: employee.name,
 
-      departmentId: department._id,
+    departmentId: department._id,
 
-      departmentName: department.name,
+    departmentName: department.name,
 
-      location: newLocation
-    },
+    location: newLocation
+  },
 
-    assetType: instance.assetType,
+  assetType: instance.assetType,
 
-    reassignmentType:
-      instance.assetType === "software"
-        ? "software_license"
-        : "hardware_asset"
-  }
+  instanceCode: instance.instanceCode,
+
+  deviceName: instance.deviceName,
+
+  status: "in_use",
+
+  condition: instance.condition,
+
+  reassignmentType:
+    instance.assetType === "software"
+      ? "software_license"
+      : "hardware_asset"
+}
 });
 
     await instance.save({ session });
 
     /* ================= CREATE NEW ASSIGNMENT ================= */
 
-    const [newAssignment] = await AssetAssignment.create([{
-      organizationId,
-      assetId: oldAssignment.assetId,
-      assetInstanceId: oldAssignment.assetInstanceId,
-      assetType: oldAssignment.assetType,
-      assetModel: oldAssignment.assetModel,
+const [newAssignment] = await AssetAssignment.create([{
+  organizationId,
 
-      departmentId: newDepartmentId,
-      employeeId: newEmployeeId,
-      location: newLocation,
+  assetId: oldAssignment.assetId,
 
-      status: "active",
-      assignedBy: userId,
+  assetInstanceId:
+    oldAssignment.assetInstanceId,
 
-      reassignedFrom: {
-        employeeId: oldAssignment.employeeId,
-        departmentId: oldAssignment.departmentId,
-        date: new Date()
-      }
-    }], { session });
+  assetType: oldAssignment.assetType,
+
+  assetModel: oldAssignment.assetModel,
+
+  departmentId: newDepartmentId,
+  departmentName: department.name,
+
+  employeeId: newEmployeeId,
+  employeeName: employee.name,
+
+  location: newLocation,
+
+  status: "active",
+
+  assignedBy: userId,
+
+  reassignedFrom: {
+    employeeId: oldAssignment.employeeId,
+    employeeName: oldAssignment.employeeName,
+
+    departmentId: oldAssignment.departmentId,
+    departmentName: oldAssignment.departmentName,
+
+    location: oldAssignment.location,
+
+    date: new Date()
+  }
+}], { session });
 
     await session.commitTransaction();
     session.endSession();
