@@ -18,7 +18,6 @@ import {
 } from "../Services/AffiliateService";
 
 import ThemeSwal from "../utils/SwalTheme";
-import axiosInstance from "../Services/axiosInstance";
 
 export default function AffiliateReferrals() {
   const [loading, setLoading] = useState(true);
