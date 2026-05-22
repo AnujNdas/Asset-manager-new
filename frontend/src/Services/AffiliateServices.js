@@ -22,7 +22,7 @@ export const getAffiliateReferrals = async () => {
 
 // ✅ Copy / regenerate referral link
 export const regenerateAffiliateLink = async () => {
-  const res = await axiosInstance.patch(
+  const res = await axios.patch(
     `${API_URL}/affiliate/referral-link`
   );
 
@@ -33,7 +33,7 @@ export const regenerateAffiliateLink = async () => {
 export const updateAffiliatePayout = async (
   data
 ) => {
-  const res = await axiosInstance.put(
+  const res = await axios.put(
     `${API_URL}/affiliate/payout`,
     data
   );
