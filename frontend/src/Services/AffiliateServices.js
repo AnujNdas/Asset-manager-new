@@ -1,11 +1,11 @@
 // src/Services/AffiliateService.js
 
-import axios from "axios";
-const API_URL = `${process.env.REACT_APP_API_URL}/api`;
+import axiosInstance from "./axiosInstance";
+
 // ✅ Dashboard stats
 export const getAffiliateDashboard = async () => {
-  const res = await axios.get(
-    `${API_URL}/affiliate/dashboard`
+  const res = await axiosInstance.get(
+    "/affiliate/dashboard"
   );
 
   return res.data;
@@ -13,8 +13,8 @@ export const getAffiliateDashboard = async () => {
 
 // ✅ Referral list
 export const getAffiliateReferrals = async () => {
-  const res = await axios.get(
-    `${API_URL}/affiliate/referrals`
+  const res = await axiosInstance.get(
+    "/affiliate/referrals"
   );
 
   return res.data;
@@ -22,8 +22,8 @@ export const getAffiliateReferrals = async () => {
 
 // ✅ Copy / regenerate referral link
 export const regenerateAffiliateLink = async () => {
-  const res = await axios.patch(
-    `${API_URL}/affiliate/referral-link`
+  const res = await axiosInstance.patch(
+    "/affiliate/referral-link"
   );
 
   return res.data;
@@ -33,8 +33,8 @@ export const regenerateAffiliateLink = async () => {
 export const updateAffiliatePayout = async (
   data
 ) => {
-  const res = await axios.put(
-    `${API_URL}/affiliate/payout`,
+  const res = await axiosInstance.put(
+    "/affiliate/payout",
     data
   );
 
