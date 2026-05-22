@@ -15,7 +15,7 @@ import {
 import "../../Page_styles/AffiliateReferrals.css";
 import {
   getAffiliateDashboard,
-} from "../../Services/AffiliateService";
+} from "../../Services/AffiliateServices";
 
 import ThemeSwal from "../utils/ThemeSwal";
 
