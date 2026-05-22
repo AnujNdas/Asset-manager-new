@@ -12,7 +12,7 @@ import {
   FaChartLine,
 } from "react-icons/fa";
 
-import "../Page_styles/AffiliateReferrals.css";
+import "../../Page_styles/AffiliateReferrals.css";
 import {
   getAffiliateDashboard,
 } from "../Services/AffiliateService";
