@@ -26,19 +26,20 @@ export default function AffiliateReferrals() {
     useEffect(() => {
     fetchDashboard();
   }, []);
- const fetchDashboard = async () => {
-    try {
-      const res =
-        await getAffiliateDashboard();
+const fetchDashboard = async () => {
+  try {
 
-      setDashboard(res.data);
+    const res =
+      await getAffiliateDashboard();
 
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setDashboard(res);
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const copyLink = async () => {
     try {
