@@ -308,8 +308,9 @@ const history = (instance.lifecycle || [])
         "-",
 
       location:
-        meta.location ||
-        instance.location ||
+        meta.to?.location ||       // reassigned/assigned location
+        meta.location ||           // direct location snapshot
+        instance.location ||       // fallback
         "-",
 
       status:
@@ -388,17 +389,24 @@ const history = (instance.lifecycle || [])
    ASSIGNMENT
 ============================== */
 
+/* =============================
+   ASSIGNMENT
+============================== */
+
 from: meta.from || null,
 
 to: meta.to || null,
 
 assignedTo:
   meta.to?.assignedTo ||
+  meta.to ||                  // ✅ IMPORTANT
   meta.assignedTo ||
   null,
 
 reassignedFrom:
-  meta.reassignedFrom || null,
+  meta.from ||                // ✅ IMPORTANT
+  meta.reassignedFrom ||
+  null,
 
 deviceInfo:
   meta.deviceInfo || null,
