@@ -765,12 +765,22 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
     instance.status = "in_use"; // ✅ consistent
 
 instance.lifecycle.push({
-  action: "REASSIGNED",
+  eventType: "reassigned",
 
-  from: {
-    status: "in_use",
+  category: "assignment",
 
-    assignedTo: {
+  title: "Asset Reassigned",
+
+  description: `Asset reassigned from ${
+    previousAssignedTo.employeeName || "Unknown"
+  } to ${employee.name}`,
+
+  performedBy: userId,
+
+  date: new Date(),
+
+  metadata: {
+    from: {
       employeeId:
         previousAssignedTo.employeeId || null,
 
@@ -781,40 +791,25 @@ instance.lifecycle.push({
         previousAssignedTo.departmentId || null,
 
       departmentName:
-        previousAssignedTo.departmentName || null
+        previousAssignedTo.departmentName || null,
+
+      location:
+        oldAssignment.location || instance.location
     },
 
-    location: oldAssignment.location || instance.location,
-
-    condition: instance.condition
-  },
-
-  to: {
-    status: "in_use",
-
-    assignedTo: {
+    to: {
       employeeId: employee._id,
 
       employeeName: employee.name,
 
       departmentId: department._id,
 
-      departmentName: department.name
+      departmentName: department.name,
+
+      location: newLocation
     },
 
-    location: newLocation,
-
-    condition: instance.condition
-  },
-
-  date: new Date(),
-
-  notes: `Reassigned from ${
-    previousAssignedTo.employeeName || "Unknown"
-  } to ${employee.name}`,
-
-  meta: {
-    reassignedBy: userId,
+    assetType: instance.assetType,
 
     reassignmentType:
       instance.assetType === "software"
