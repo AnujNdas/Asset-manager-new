@@ -62,7 +62,6 @@ const trackReferralVisit = asyncHandler(
           req.headers.origin || "",
       });
 
-    // 🔹 Save secure cookie
 // 🔹 Save secure cookie
 res.cookie(
   "affiliate_ref",
@@ -70,13 +69,11 @@ res.cookie(
   {
     httpOnly: true,
 
-    secure:
-      process.env.NODE_ENV ===
-      "production",
+    secure: true,
 
-    sameSite: "lax",
+    sameSite: "none",
 
-    signed: true, // ✅ IMPORTANT
+    signed: true,
 
     maxAge:
       1000 * 60 * 60 * 24 * 30,
