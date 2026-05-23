@@ -45,6 +45,11 @@ export const trackAffiliateVisit = async (
   ref
 ) => {
 
+  console.log(
+    "📡 Sending affiliate track request:",
+    ref
+  );
+
   const res =
     await axiosInstance.post(
       "/affiliate/track",
@@ -55,6 +60,11 @@ export const trackAffiliateVisit = async (
         withCredentials: true,
       }
     );
+
+  console.log(
+    "📥 Affiliate track response:",
+    res.data
+  );
 
   return res.data;
 };

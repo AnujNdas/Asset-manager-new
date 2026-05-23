@@ -20,13 +20,38 @@ const Signup = () => {
   const [passwordValid, setPasswordValid] = useState(true);
 useEffect(() => {
 
+  console.log(
+    "🔥 Signup page mounted"
+  );
+
+  console.log(
+    "Current URL:",
+    window.location.href
+  );
+
+  console.log(
+    "Search params:",
+    Object.fromEntries(
+      [...searchParams]
+    )
+  );
+
   const setupAffiliate =
     async () => {
+
+      /* =========================
+         INVITE TRACKING
+      ========================= */
 
       const invite =
         searchParams.get(
           "invite"
         );
+
+      console.log(
+        "Invite token:",
+        invite
+      );
 
       if (invite) {
 
@@ -34,42 +59,93 @@ useEffect(() => {
           "inviteToken",
           invite
         );
+
+        console.log(
+          "✅ Invite token saved"
+        );
       }
+
+      /* =========================
+         AFFILIATE TRACKING
+      ========================= */
 
       const affiliateRef =
         searchParams.get("ref");
 
-      if (affiliateRef) {
+      console.log(
+        "Affiliate ref:",
+        affiliateRef
+      );
 
-        localStorage.setItem(
-          "affiliateRef",
-          affiliateRef
+      if (!affiliateRef) {
+
+        console.warn(
+          "❌ No affiliate ref found in URL"
         );
 
-        try {
+        return;
+      }
 
+      localStorage.setItem(
+        "affiliateRef",
+        affiliateRef
+      );
+
+      console.log(
+        "✅ Affiliate ref saved to localStorage"
+      );
+
+      try {
+
+        console.log(
+          "🚀 Calling trackAffiliateVisit..."
+        );
+
+        const response =
           await trackAffiliateVisit(
             affiliateRef
           );
 
-          console.log(
-            "Affiliate tracked"
-          );
+        console.log(
+          "✅ Affiliate tracked successfully"
+        );
 
-        } catch (err) {
+        console.log(
+          "Track response:",
+          response
+        );
 
-          console.error(
-            "Affiliate tracking failed",
-            err
-          );
-        }
+        console.log(
+          "Cookies after tracking:",
+          document.cookie
+        );
+
+      } catch (err) {
+
+        console.error(
+          "❌ Affiliate tracking failed"
+        );
+
+        console.error(
+          "Error object:",
+          err
+        );
+
+        console.error(
+          "Response:",
+          err?.response
+        );
+
+        console.error(
+          "Response data:",
+          err?.response?.data
+        );
       }
     };
 
   setupAffiliate();
 
 }, [searchParams]);
-
   const strongPasswordRegex =
 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
   const handleSignup = async (e) => {
