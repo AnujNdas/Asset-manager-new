@@ -1351,10 +1351,10 @@ newInstances.push({
         ? insuranceExpiry
         : null,
 
-    coverageType:
-      hasInsurance
-        ? none
-        : [],
+coverageType:
+  hasInsurance
+    ? coverageType
+    : [],
 
     purchaseCost,
 
