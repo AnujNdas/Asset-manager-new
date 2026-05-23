@@ -161,7 +161,7 @@ const handleUnassign = async () => {
       <div className="card-header">
         <div>
           <h3>{inst.deviceName}</h3>
-
+          <p className="sub">{inst.instanceCode}</p>
           <p className="sub">
             {isHardware
               ? hw.serialNumber || "No Serial"

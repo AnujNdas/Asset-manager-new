@@ -411,7 +411,7 @@ const cost = convertFromBase(costObj?.baseAmount || 0);
 
           {/* ✅ COST DISPLAY */}
 <p className="instance-cost">
-  💰 {CURRENCY_SYMBOLS[currency]} {cost.toLocaleString()}
+  💰 {inst.location}
 </p>
           <span>{inst.status}</span>
         </div>

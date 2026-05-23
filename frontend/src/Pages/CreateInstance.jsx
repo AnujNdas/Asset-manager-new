@@ -1478,6 +1478,7 @@ const payload = activeInstances.map((inst) => {
                                 <label>Coverage Type</label>
     <Select
       isMulti
+          styles={customSelectStyles}
       className="react-select-container"
       classNamePrefix="react-select"
       options={coverageOptions}
