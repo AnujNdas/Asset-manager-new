@@ -28,30 +28,33 @@ import { useTour } from "../Context/TourContext";
       "AED",
       "CNY",
     ];
-    const customSelectStyles = {
+const customSelectStyles = {
   control: (base, state) => ({
     ...base,
     backgroundColor: "#222831",
     borderColor: state.isFocused ? "#DFD0B8" : "#393E46",
     boxShadow: "none",
-    color: "#DFD0B8",
     minHeight: "42px",
+    color: "#DFD0B8",
+
+    "&:hover": {
+      borderColor: "#DFD0B8",
+    },
   }),
 
   menu: (base) => ({
     ...base,
     backgroundColor: "#222831",
-    border: "1px solid #393E46",
+    color: "#DFD0B8",
+    zIndex: 9999,
   }),
 
   option: (base, state) => ({
     ...base,
     backgroundColor: state.isFocused
       ? "#393E46"
-      : state.isSelected
-      ? "#DFD0B8"
       : "#222831",
-    color: state.isSelected ? "#000" : "#DFD0B8",
+    color: "#DFD0B8",
     cursor: "pointer",
   }),
 
@@ -68,20 +71,26 @@ import { useTour } from "../Context/TourContext";
   multiValueRemove: (base) => ({
     ...base,
     color: "#DFD0B8",
-    ":hover": {
+
+    "&:hover": {
       backgroundColor: "#ff4d4f",
-      color: "white",
+      color: "#fff",
     },
   }),
 
-  singleValue: (base) => ({
+  input: (base) => ({
     ...base,
     color: "#DFD0B8",
   }),
 
   placeholder: (base) => ({
     ...base,
-    color: "#888",
+    color: "#A0A0A0",
+  }),
+
+  singleValue: (base) => ({
+    ...base,
+    color: "#DFD0B8",
   }),
 };
     const coverageOptions = [
