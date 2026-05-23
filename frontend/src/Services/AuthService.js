@@ -9,15 +9,29 @@ const sendOtp = async (email) => {
 };
 
 // ✅ Verify OTP and Signup in one step
-const verifyOtpAndSignup = async (email, username, password, otp, inviteToken) => {
-    const response = await axios.post(`${API_URL}/verify-otp-signup`, {
-        email,
-        username,
-        password,
-        otp,
-        inviteToken,
-    });
-    return response.data;
+const verifyOtpAndSignup = async (
+  email,
+  username,
+  password,
+  otp,
+  inviteToken
+) => {
+
+  const response = await axios.post(
+    `${API_URL}/verify-otp-signup`,
+    {
+      email,
+      username,
+      password,
+      otp,
+      inviteToken,
+    },
+    {
+      withCredentials: true,
+    }
+  );
+
+  return response.data;
 };
  const applyAffiliate = async (data) => {
   const res = await axios.post(
