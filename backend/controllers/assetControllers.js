@@ -1256,7 +1256,7 @@ if (hasInsurance && insurancePurchaseDate) {
             inst.hardware?.serialNumber || "-",
 
           modelNo:
-            inst.hardware?.modelNo || "-"/
+            inst.hardware?.modelNo || "-",
             hasInsurance,
 
             insuranceTerm:
