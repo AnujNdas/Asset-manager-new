@@ -40,3 +40,21 @@ export const updateAffiliatePayout = async (
 
   return res.data;
 };
+// ✅ Track affiliate visit
+export const trackAffiliateVisit = async (
+  ref
+) => {
+
+  const res =
+    await axiosInstance.post(
+      "/affiliate/track",
+      {
+        ref,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+  return res.data;
+};

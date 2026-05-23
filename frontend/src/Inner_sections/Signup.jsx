@@ -7,7 +7,9 @@ import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-b
 import { faEnvelope, faLock, faPerson } from '@fortawesome/free-solid-svg-icons';
 import ThemeSwal from '../utils/SwalTheme';
 import AuthService from '../Services/AuthService';
-
+import {
+  trackAffiliateVisit,
+} from "../Services/AffiliateService";
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -17,11 +19,57 @@ const Signup = () => {
   const [searchParams] = useSearchParams();
   const [passwordValid, setPasswordValid] = useState(true);
 useEffect(() => {
-  const invite = searchParams.get("invite");
-  if (invite) {
-    localStorage.setItem("inviteToken", invite);
-  }
+
+  const setupAffiliate =
+    async () => {
+
+      const invite =
+        searchParams.get(
+          "invite"
+        );
+
+      if (invite) {
+
+        localStorage.setItem(
+          "inviteToken",
+          invite
+        );
+      }
+
+      const affiliateRef =
+        searchParams.get("ref");
+
+      if (affiliateRef) {
+
+        localStorage.setItem(
+          "affiliateRef",
+          affiliateRef
+        );
+
+        try {
+
+          await trackAffiliateVisit(
+            affiliateRef
+          );
+
+          console.log(
+            "Affiliate tracked"
+          );
+
+        } catch (err) {
+
+          console.error(
+            "Affiliate tracking failed",
+            err
+          );
+        }
+      }
+    };
+
+  setupAffiliate();
+
 }, [searchParams]);
+
   const strongPasswordRegex =
 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
   const handleSignup = async (e) => {

@@ -63,21 +63,25 @@ const trackReferralVisit = asyncHandler(
       });
 
     // 🔹 Save secure cookie
-    res.cookie(
-      "affiliate_ref",
-      referralToken,
-      {
-        httpOnly: true,
-        secure:
-          process.env.NODE_ENV ===
-          "production",
+// 🔹 Save secure cookie
+res.cookie(
+  "affiliate_ref",
+  referralToken,
+  {
+    httpOnly: true,
 
-        sameSite: "lax",
+    secure:
+      process.env.NODE_ENV ===
+      "production",
 
-        maxAge:
-          1000 * 60 * 60 * 24 * 30,
-      }
-    );
+    sameSite: "lax",
+
+    signed: true, // ✅ IMPORTANT
+
+    maxAge:
+      1000 * 60 * 60 * 24 * 30,
+  }
+);
 
     // 🔹 Increment click count
     await AffiliateProfile.updateOne(

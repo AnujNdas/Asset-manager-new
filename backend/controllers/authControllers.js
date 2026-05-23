@@ -273,18 +273,20 @@ const verifyOtpAndSignup = async (req, res) => {
       if (referral) {
 
         // 🔥 Prevent self-referral fraud
-        if (
-          referral.referredUserId &&
-          referral.referredUserId.toString() ===
-          newUser._id.toString()
-        ) {
+if (
+  referral.referredUserId &&
+  referral.referredUserId.toString() ===
+  newUser._id.toString()
+) {
 
-          referral.isFraud = true;
+  referral.isFraud = true;
 
-          referral.fraudReason =
-            "Self referral";
+  referral.fraudReason =
+    "Self referral";
 
-        } else {
+  await referral.save({ session });
+
+} else {
 
           referral.referredUserId =
             newUser._id;
@@ -310,7 +312,7 @@ const verifyOtpAndSignup = async (req, res) => {
             },
             {
               $inc: {
-                totalSignups: 1,
+                totalReferrals: 1,
               },
             },
             { session }
