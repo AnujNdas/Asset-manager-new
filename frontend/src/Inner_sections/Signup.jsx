@@ -9,7 +9,7 @@ import ThemeSwal from '../utils/SwalTheme';
 import AuthService from '../Services/AuthService';
 import {
   trackAffiliateVisit,
-} from "../Services/AffiliateService";
+} from "../Services/AffiliateServices";
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
