@@ -20,13 +20,19 @@ const InstanceCard = ({
 
   const qrUrl = inst.qrCode?.url || hw.qrCode?.url;
 
-  const getCost = (costObj) => {
-    if (!costObj) return 0;
-    return convertFromBase
-      ? convertFromBase(costObj.baseAmount || 0)
-      : costObj.amount || 0;
-  };
+const getCost = (costObj) => {
+  if (!costObj) return 0;
 
+  // use original amount if same currency
+  if (!convertFromBase) {
+    return Number(costObj.amount || 0);
+  }
+
+  // fallback conversion
+  return Number(
+    convertFromBase(costObj.baseAmount || 0)
+  );
+};
   /* ================= COST LOGIC ================= */
   const purchase = isHardware
     ? getCost(hw.purchaseCost)
@@ -154,7 +160,7 @@ const handleUnassign = async () => {
       {/* ================= HEADER ================= */}
       <div className="card-header">
         <div>
-          <h3>{inst.instanceCode}</h3>
+          <h3>{inst.deviceName}</h3>
 
           <p className="sub">
             {isHardware
@@ -261,7 +267,13 @@ const handleUnassign = async () => {
               <>
                 <p>Maintenance: {getCost(hw.costs?.maintenanceCost)}</p>
                 <p>Warranty: {getCost(hw.costs?.warrantyRenewalCost)}</p>
-                <p>Insurance: {getCost(hw.costs?.insuranceCost || "N/A")}</p>
+                <p>
+  Insurance: {
+    hw.costs?.insuranceCost
+      ? getCost(hw.costs.insuranceCost)
+      : "N/A"
+  }
+</p>
               </>
             ) : (
               <p>Renewal: {getCost(sw.costs?.renewalCost)}</p>
