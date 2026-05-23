@@ -1166,6 +1166,51 @@ for (let index = 0; index < instances.length; index++) {
   );
 
   const currency = purchaseCost?.currency || "INR";
+  
+/* ================= INSURANCE ================= */
+
+const insuranceCost = await formatCost({
+  amount: inst.hardware?.costs?.insuranceCost,
+  currency
+});
+const insuranceTerm =
+  inst.hardware?.insuranceTerm || null;
+
+const insurancePurchaseDate =
+  inst.hardware?.insurancePurchaseDate || null;
+
+const coverageType =
+  inst.hardware?.coverageType || [];
+
+let insuranceExpiry = null;
+
+/* AUTO CALCULATE EXPIRY */
+if (hasInsurance && insurancePurchaseDate) {
+  const expiry = new Date(insurancePurchaseDate);
+
+  switch (insuranceTerm) {
+    case "6_months":
+      expiry.setMonth(expiry.getMonth() + 6);
+      break;
+
+    case "1_year":
+      expiry.setFullYear(
+        expiry.getFullYear() + 1
+      );
+      break;
+
+    case "3_years":
+      expiry.setFullYear(
+        expiry.getFullYear() + 3
+      );
+      break;
+
+    default:
+      break;
+  }
+
+  insuranceExpiry = expiry;
+}
   const lifecycleEvent = {
   eventType: "created",
 
@@ -1260,50 +1305,6 @@ const warrantyRenewalCost = await formatCost({
   currency
 });
 
-const insuranceCost = await formatCost({
-  amount: inst.hardware?.costs?.insuranceCost,
-  currency
-});
-/* ================= INSURANCE ================= */
-
-const insuranceTerm =
-  inst.hardware?.insuranceTerm || null;
-
-const insurancePurchaseDate =
-  inst.hardware?.insurancePurchaseDate || null;
-
-const coverageType =
-  inst.hardware?.coverageType || [];
-
-let insuranceExpiry = null;
-
-/* AUTO CALCULATE EXPIRY */
-if (hasInsurance && insurancePurchaseDate) {
-  const expiry = new Date(insurancePurchaseDate);
-
-  switch (insuranceTerm) {
-    case "6_months":
-      expiry.setMonth(expiry.getMonth() + 6);
-      break;
-
-    case "1_year":
-      expiry.setFullYear(
-        expiry.getFullYear() + 1
-      );
-      break;
-
-    case "3_years":
-      expiry.setFullYear(
-        expiry.getFullYear() + 3
-      );
-      break;
-
-    default:
-      break;
-  }
-
-  insuranceExpiry = expiry;
-}
 newInstances.push({
   ...basePayload,
 
