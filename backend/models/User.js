@@ -46,12 +46,7 @@ role: {
     enum: ["Startup", "Enterprise", "Agency", "NGO", "Other"],
     default: "Other",
   },
-  departmentId: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Department",
-  default: null,   // important
-  index: true
-},
+  department: { type: String, default: "" },
   designation: { type: String, default: "" },
   workEmail: { type: String, default: "" },
 

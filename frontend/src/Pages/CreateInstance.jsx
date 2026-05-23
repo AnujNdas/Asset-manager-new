@@ -591,37 +591,65 @@ if (res.success) {
         setExpandedRow(expandedRow === index ? null : index);
       };
 
-      const validate = () => {
-        const newErrors = {};
-        const serials = new Set();
+const validate = () => {
+  const newErrors = {};
 
-        instances.forEach((inst, index) => {
-          const rowErrors = {};
+  // ✅ ONLY rows user interacted with
+  const activeRows = instances.filter((inst) => {
+    return (
+      inst.deviceName?.trim() ||
+      inst.location?.trim() ||
+      inst.licenseKey?.trim() ||
+      inst.licenseNumber?.trim() ||
+      inst.purchaseCost
+    );
+  });
 
-          if (!inst.location || !inst.location.trim()) {
-            rowErrors.location = "Location is required";
-          }
+  // ❌ no filled rows
+  if (activeRows.length === 0) {
+    ThemeSwal.fire(
+      "Error",
+      "Please fill at least one instance",
+      "error"
+    );
 
-if (!inst.purchaseCost || isNaN(Number(inst.purchaseCost))) {
-  rowErrors.purchaseCost = "Valid cost required";
-}
+    return false;
+  }
 
-if (isSoftware && !inst.licenseNumber) {
-  rowErrors.licenseNumber = "License number required";
-}
-                      if (asset?.assetPurchaseDate) {
-                        if (inst.purchaseDate && inst.purchaseDate < asset.assetPurchaseDate) {
-                          rowErrors.purchaseDate = "Before asset purchase date";
-                        }
-                      }
-            if (Object.keys(rowErrors).length > 0) {
-              newErrors[index] = rowErrors;
-            }
-        });
+  activeRows.forEach((inst, index) => {
+    const rowErrors = {};
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-      };
+    if (!inst.location || !inst.location.trim()) {
+      rowErrors.location = "Location is required";
+    }
+
+    if (!inst.purchaseCost || isNaN(Number(inst.purchaseCost))) {
+      rowErrors.purchaseCost = "Valid cost required";
+    }
+
+    if (isSoftware && !inst.licenseNumber) {
+      rowErrors.licenseNumber = "License number required";
+    }
+
+    if (asset?.assetPurchaseDate) {
+      if (
+        inst.purchaseDate &&
+        inst.purchaseDate < asset.assetPurchaseDate
+      ) {
+        rowErrors.purchaseDate =
+          "Before asset purchase date";
+      }
+    }
+
+    if (Object.keys(rowErrors).length > 0) {
+      newErrors[index] = rowErrors;
+    }
+  });
+
+  setErrors(newErrors);
+
+  return Object.keys(newErrors).length === 0;
+};
 
       const handleSubmit = async () => {
         if (!validate()) return;
@@ -629,7 +657,17 @@ if (isSoftware && !inst.licenseNumber) {
         try {
           setLoading(true);
 
-          const payload = instances.map((inst) => {
+const activeInstances = instances.filter((inst) => {
+  return (
+    inst.deviceName?.trim() ||
+    inst.location?.trim() ||
+    inst.licenseKey?.trim() ||
+    inst.licenseNumber?.trim() ||
+    inst.purchaseCost
+  );
+});
+
+const payload = activeInstances.map((inst) => {
             if (isSoftware) {
               return {
                 location: formatLocation(inst.location),

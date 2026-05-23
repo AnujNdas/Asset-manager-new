@@ -704,7 +704,7 @@ const paginatedAssets = filteredAssets.slice(
               className="asset-view-modal"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3>Instances — {selectedAsset.assetName}</h3>
+              <h3>{selectedAsset.instances.deviceName}</h3>
 
               {/* 🔥 DATA PREP */}
               {(() => {
