@@ -396,7 +396,8 @@ const costObj =
     ? inst.hardware?.purchaseCost
     : inst.software?.purchaseCost;
 
-const cost = convertFromBase(costObj?.baseAmount || 0);
+const cost = costObj?.amount || 0;
+const currencyCode = costObj?.currency || "USD";
 
       return (
         <div
@@ -411,7 +412,7 @@ const cost = convertFromBase(costObj?.baseAmount || 0);
 
           {/* ✅ COST DISPLAY */}
   <p className="instance-cost">
-    💰 {formatMoney(cost)}
+    💰 {cost} {CURRENCY_SYMBOLS[currencyCode] || currencyCode}
   </p>
 
   <p className="instance-location">
