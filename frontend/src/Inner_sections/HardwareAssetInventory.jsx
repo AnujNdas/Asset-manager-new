@@ -343,13 +343,12 @@ const handleUpdate = async () => {
 const handleAssign = (asset) => {
   navigate("/assignment", {
     state: {
-      category: asset.category, // ✅ FIX
+      category: asset.assetCategory?._id, // ✅ FIX
       assetId: asset._id,
-      assetType: "hardware",
+      assetType: asset.assetType,
     },
   });
 };
-
 const handleUnassign = async (assignmentId) => {
 
   try {
