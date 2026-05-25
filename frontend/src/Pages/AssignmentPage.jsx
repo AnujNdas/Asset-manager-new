@@ -76,7 +76,7 @@ useEffect(() => {
     // ✅ AUTO REDIRECT FLOW
     if (preselectedCategory) {
       const res = await getInStockAssetsByCategory(
-        preselectedCategoryId
+        preselectedCategory
       );
 
       const assetList = res.data || [];
@@ -90,7 +90,7 @@ useEffect(() => {
 
       if (foundAsset) {
         setSelectedCategory({
-          category: preselectedCategoryId
+          category: preselectedCategory
         });
 
         setSelectedAsset(foundAsset);
