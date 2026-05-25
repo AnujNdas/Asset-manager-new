@@ -340,15 +340,15 @@ const handleUpdate = async () => {
   ThemeSwal.fire("Error", getErrorMessage(err, "Failed to update asset"), "error");
 }
 };
-  const handleAssign = (asset) => {
-    navigate("/assignment", {
-      state: {
-        categoryId: asset.assetCategory,
-        assetId: asset._id,
-        assetType: "hardware",
-      },
-    });
-  };
+const handleAssign = (asset) => {
+  navigate("/assignment", {
+    state: {
+      category: asset.category, // ✅ FIX
+      assetId: asset._id,
+      assetType: "hardware",
+    },
+  });
+};
 
 const handleUnassign = async (assignmentId) => {
 

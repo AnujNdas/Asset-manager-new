@@ -50,7 +50,7 @@ const [assetPage, setAssetPage] = useState(1);
 const assetsPerPage = 8;
 const location = useLocation();
 
-const preselectedCategoryId = location.state?.categoryId;
+const preselectedCategory = location.state?.category;
 const preselectedAssetId = location.state?.assetId;
 const preselectedAssetType = location.state?.assetType;
 // 🔹 Step 3 (Instances)
@@ -74,7 +74,7 @@ useEffect(() => {
     await fetchDepartments();
 
     // ✅ AUTO REDIRECT FLOW
-    if (preselectedCategoryId) {
+    if (preselectedCategory) {
       const res = await getInStockAssetsByCategory(
         preselectedCategoryId
       );
