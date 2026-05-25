@@ -43,7 +43,7 @@ const AssignmentPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedInstances, setSelectedInstances] = useState([]);
-
+  const [initializing, setInitializing] = useState(true);
   const [assetTypeFilter, setAssetTypeFilter] = useState("all");
   // 🔹 Step 2 (Assets)
 const [assetPage, setAssetPage] = useState(1);
@@ -70,40 +70,54 @@ const [assignmentData, setAssignmentData] = useState({
   /* ================= LOAD ================= */
 useEffect(() => {
   const init = async () => {
-    await fetchCategories();
-    await fetchDepartments();
+    try {
+      setInitializing(true);
 
-    // ✅ AUTO REDIRECT FLOW
-    if (preselectedCategory) {
-      const res = await getInStockAssetsByCategory(
-        preselectedCategory
-      );
+      await fetchDepartments();
 
-      const assetList = res.data || [];
+      // ✅ DIRECT NAVIGATION FLOW
+      if (preselectedCategory && preselectedAssetId) {
 
-      setAssets(assetList);
-      setFilteredAssets(assetList);
+        const res = await getInStockAssetsByCategory(
+          preselectedCategory
+        );
 
-      const foundAsset = assetList.find(
-        a => a._id === preselectedAssetId
-      );
+        const assetList = res.data || [];
 
-      if (foundAsset) {
-        setSelectedCategory({
-          category: preselectedCategory
-        });
+        setAssets(assetList);
+        setFilteredAssets(assetList);
 
-        setSelectedAsset(foundAsset);
+        const foundAsset = assetList.find(
+          a => a._id === preselectedAssetId
+        );
 
-        const instanceRes =
-          await getInstancesByAsset(foundAsset._id);
+        if (foundAsset) {
+          setSelectedCategory({
+            category: preselectedCategory
+          });
 
-        setInstances(instanceRes.data || []);
+          setSelectedAsset(foundAsset);
 
-        setStep(2); // directly open instances step
+          const instanceRes =
+            await getInstancesByAsset(foundAsset._id);
+
+          setInstances(instanceRes.data || []);
+
+          // ✅ OPEN DIRECTLY
+          setStep(2);
+        } else {
+          setStep(1);
+        }
+
       } else {
-        setStep(1);
+        // ✅ NORMAL FLOW
+        await fetchCategories();
       }
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setInitializing(false);
     }
   };
 
