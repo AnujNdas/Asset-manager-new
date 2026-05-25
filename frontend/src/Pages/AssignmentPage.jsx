@@ -14,6 +14,7 @@ import {
 } from "../Services/ApiServices";
 import Pagination from "../Components/Pagination";
 import Loader from "../Components/Loader";
+import { useLocation } from "react-router-dom";
 import { getErrorMessage } from "../utils/getErrorMessage";
     import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
@@ -47,7 +48,11 @@ const AssignmentPage = () => {
   // 🔹 Step 2 (Assets)
 const [assetPage, setAssetPage] = useState(1);
 const assetsPerPage = 8;
+const location = useLocation();
 
+const preselectedCategoryId = location.state?.categoryId;
+const preselectedAssetId = location.state?.assetId;
+const preselectedAssetType = location.state?.assetType;
 // 🔹 Step 3 (Instances)
 const [instancePage, setInstancePage] = useState(1);
 const instancesPerPage = 10;
@@ -63,10 +68,47 @@ const [assignmentData, setAssignmentData] = useState({
   const [loading, setLoading] = useState(false);
 
   /* ================= LOAD ================= */
-  useEffect(() => {
-    fetchCategories();
-    fetchDepartments();
-  }, []);
+useEffect(() => {
+  const init = async () => {
+    await fetchCategories();
+    await fetchDepartments();
+
+    // ✅ AUTO REDIRECT FLOW
+    if (preselectedCategoryId) {
+      const res = await getInStockAssetsByCategory(
+        preselectedCategoryId
+      );
+
+      const assetList = res.data || [];
+
+      setAssets(assetList);
+      setFilteredAssets(assetList);
+
+      const foundAsset = assetList.find(
+        a => a._id === preselectedAssetId
+      );
+
+      if (foundAsset) {
+        setSelectedCategory({
+          category: preselectedCategoryId
+        });
+
+        setSelectedAsset(foundAsset);
+
+        const instanceRes =
+          await getInstancesByAsset(foundAsset._id);
+
+        setInstances(instanceRes.data || []);
+
+        setStep(2); // directly open instances step
+      } else {
+        setStep(1);
+      }
+    }
+  };
+
+  init();
+}, []);
   useEffect(() => {
   setAssetPage(1);
 }, [filteredAssets]);
