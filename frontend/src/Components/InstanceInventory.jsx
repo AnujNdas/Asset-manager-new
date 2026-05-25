@@ -50,10 +50,14 @@ const purchase = isHardware
   : sw.purchaseCost.amount || 0;
 
 const yearly = isHardware
-  ? getNumericCost(hw.costs?.maintenanceCost?.amount) +
-    getNumericCost(hw.costs?.insuranceCost?.amount) +
-    getNumericCost(hw.costs?.warrantyRenewalCost?.amount)
-  : getNumericCost(sw.costs?.renewalCost?.amount);
+  ? (hw.costs?.maintenanceCost?.amount ||
+    0) +
+    (hw.costs?.insuranceCost?.amount ||
+      0) +
+    (hw.costs?.warrantyRenewalCost?.amount ||
+      0)
+  : (sw.costs?.renewalCost?.amount ||
+      0);
 
 const monthly = yearly / 12;
   /* ================= DATE HELPERS ================= */
