@@ -410,9 +410,13 @@ const cost = convertFromBase(costObj?.baseAmount || 0);
           <p>{inst.instanceCode}</p>
 
           {/* ✅ COST DISPLAY */}
-<p className="instance-cost">
-  💰 {inst.location}
-</p>
+  <p className="instance-cost">
+    💰 {formatMoney(cost)}
+  </p>
+
+  <p className="instance-location">
+    📍 {inst.location || "No Location"}
+  </p>
           <span>{inst.status}</span>
         </div>
       );

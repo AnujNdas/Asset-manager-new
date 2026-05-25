@@ -201,22 +201,28 @@ const getInstancesByAsset = async (req, res) => {
         status: "in_stock"
       })
       .select(`
-        instanceCode 
-        status 
-        deviceName 
-        hardware.serialNumber 
-        hardware.purchaseCost 
+        instanceCode
+        status
+        deviceName
+        location
+        hardware.serialNumber
+        hardware.purchaseCost
         software.purchaseCost
       `)
       .lean();
 
-    res.json({ success: true, data: instances });
+    res.json({
+      success: true,
+      data: instances
+    });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
-
 /* ============================
    ASSIGN INSTANCES (BULK)
 ============================ */
