@@ -43,25 +43,17 @@ const formatCostValue = (costObj) => {
     : `${currency} ${value.toFixed(2)}`;
 };
 
-const getNumericCost = (costObj) => {
-  if (!costObj) return 0;
-
-  return convertFromBase
-    ? Number(convertFromBase(costObj.baseAmount || 0))
-    : Number(costObj.amount || 0);
-};
-
 /* ================= COST LOGIC ================= */
 
 const purchase = isHardware
-  ? getNumericCost(hw.purchaseCost)
-  : getNumericCost(sw.purchaseCost);
+  ? hw.purchaseCost.amount || 0
+  : sw.purchaseCost.amount || 0;
 
 const yearly = isHardware
-  ? getNumericCost(hw.costs?.maintenanceCost) +
-    getNumericCost(hw.costs?.insuranceCost) +
-    getNumericCost(hw.costs?.warrantyRenewalCost)
-  : getNumericCost(sw.costs?.renewalCost);
+  ? getNumericCost(hw.costs?.maintenanceCost?.amount) +
+    getNumericCost(hw.costs?.insuranceCost?.amount) +
+    getNumericCost(hw.costs?.warrantyRenewalCost?.amount)
+  : getNumericCost(sw.costs?.renewalCost?.amount);
 
 const monthly = yearly / 12;
   /* ================= DATE HELPERS ================= */
