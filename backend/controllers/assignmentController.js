@@ -200,15 +200,16 @@ const getInstancesByAsset = async (req, res) => {
         assetId,
         status: "in_stock"
       })
-      .select(`
-        instanceCode
-        status
-        deviceName
-        location
-        hardware.serialNumber
-        hardware.purchaseCost
-        software.purchaseCost
-      `)
+.select(`
+  assetType
+  instanceCode 
+  location
+  status 
+  deviceName 
+  hardware.serialNumber 
+  hardware.purchaseCost 
+  software.purchaseCost
+`)
       .lean();
 
     res.json({
