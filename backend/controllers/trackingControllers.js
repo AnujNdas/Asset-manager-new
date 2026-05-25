@@ -490,7 +490,6 @@ const upgradeInstance = async (req, res) => {
     const { id } = req.params;
 
     const {
-      currency = "INR",
 
       // 🔹 Hardware Costs
       maintenanceCost,
@@ -533,11 +532,15 @@ const upgradeInstance = async (req, res) => {
     /* =============================
        🟡 HELPER (Normalize old data)
     ============================== */
-    const normalizeCost = (val) => {
-      if (val && typeof val === "object") return val.amount || 0;
-      return val || 0;
-    };
+const normalizeCost = (val) => {
+  if (!val) return 0;
 
+  if (typeof val === "object") {
+    return Number(val.amount) || 0;
+  }
+
+  return Number(val) || 0;
+};
     /* =============================
        🟡 BEFORE SNAPSHOT
     ============================== */
@@ -581,18 +584,18 @@ const upgradeInstance = async (req, res) => {
 
       // 💰 Costs (NUMBERS ONLY)
       if (maintenanceCost !== undefined) {
-        instance.hardware.costs.maintenanceCost = Number(maintenanceCost) || 0;
+        instance.hardware.costs.maintenanceCost = {
+  amount: Number(maintenanceCost) || 0,
+  currency: "USD"
+};
       }
 
       if (warrantyRenewalCost !== undefined) {
-        instance.hardware.costs.warrantyRenewalCost = Number(warrantyRenewalCost) || 0;
-      }
-
-      // 💱 Currency (shared)
-      if (currency) {
-        instance.hardware.currency = currency;
-      }
-
+        instance.hardware.costs.warrantyRenewalCost = {
+  amount: Number(warrantyRenewalCost) || 0,
+  currency: "USD"
+};
+}
       // 📅 Dates
       if (newWarrantyPurchaseDate) {
         instance.hardware.warrantyPurchaseDate = newWarrantyPurchaseDate;
@@ -614,7 +617,10 @@ if (hasInsurance === false) {
   instance.hardware.insuranceTerm = undefined;
   instance.hardware.insurancePurchaseDate = undefined;
   instance.hardware.insuranceExpiry = undefined;
-  instance.hardware.costs.insuranceCost = 0;
+  instance.hardware.costs.insuranceCost = {
+  amount: 0,
+  currency: "USD"
+};
 }
 
 // ✅ If insurance is ON → apply logic
@@ -651,6 +657,12 @@ if (hasInsurance === true) {
   if (newInsuranceExpiry) {
     instance.hardware.insuranceExpiry = newInsuranceExpiry;
   }
+  if (insuranceCost !== undefined) {
+  instance.hardware.costs.insuranceCost = {
+    amount: Number(insuranceCost) || 0,
+    currency: "USD"
+  };
+}
 }
       if (newMaintenanceDate) {
         instance.hardware.nextMaintenanceDate = newMaintenanceDate;
@@ -668,14 +680,11 @@ if (hasInsurance === true) {
 
       // 💰 Cost
       if (renewalCost !== undefined) {
-        instance.software.costs.renewalCost = Number(renewalCost) || 0;
+        instance.software.costs.renewalCost = {
+  amount: Number(renewalCost) || 0,
+  currency: "USD"
+};
       }
-
-      // 💱 Currency
-      if (currency) {
-        instance.software.currency = currency;
-      }
-
       // 📅 Dates
       if (newRenewalDate) {
         instance.software.renewalDate = newRenewalDate;

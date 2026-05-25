@@ -5,10 +5,6 @@ import * as XLSX from "xlsx";
 import "../Page_styles/MisReport.css";
 import Loader from "../Components/Loader";
 import Pagination from "../Components/Pagination";
-import CurrencyFilter from "../Components/CurrencyFilter";
-import { useCurrency } from "../Context/CurrencyContext";
-import { CURRENCY_SYMBOLS } from "../utils/currency";
-
 import {
   getLocations,
   getCategories,
@@ -17,7 +13,6 @@ import {
 } from "../Services/ApiServices";
 
 const MisReport = () => {
-  const { currency, convertFromBase, loadingRates } = useCurrency();
 
   const [activeTab, setActiveTab] = useState("hardware");
   const [viewMode, setViewMode] = useState("summary");
@@ -73,7 +68,18 @@ const MisReport = () => {
   // ================= HELPERS =================
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString("en-IN") : "-";
+  const formatCost = (costObj) => {
+  if (!costObj) return "USD 0.00";
 
+  // legacy numeric fallback
+  if (typeof costObj === "number") {
+    return `USD ${costObj.toFixed(2)}`;
+  }
+
+  return `${costObj.currency || "USD"} ${Number(
+    costObj.amount || 0
+  ).toFixed(2)}`;
+};
   const getCategoryName = (id) =>
     categories.find((c) => c._id === id)?.name || "-";
 
@@ -120,7 +126,7 @@ const MisReport = () => {
         assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
       department:
         assignmentMap[String(inst._id)]?.department?.name || "-",
-      cost: inst.hardware?.purchaseCost?.baseAmount || 0
+      cost: inst.hardware?.purchaseCost.amount || null,
     }));
   });
 
@@ -145,7 +151,7 @@ const softwareInstances = software.flatMap((asset) => {
     // cost: asset.assetCost?.baseTotalAmount || 0,
 
     // ✅ NEW
-    cost: inst.software?.purchaseCost?.baseAmount || 0,
+    cost: inst.software?.purchaseCost.amount || null,
   }));
 });
 
@@ -212,7 +218,7 @@ const softwareInstances = software.flatMap((asset) => {
           Assigned: row.assignedTo,
           Location: row.location,
           Department : row.department || "-",
-          Cost: convertFromBase(row.cost),
+          Cost: formatCost(row.cost),
         };
       }
 
@@ -222,7 +228,7 @@ const softwareInstances = software.flatMap((asset) => {
         InUse: row.inUse,
         Stock: row.inStock,
         Location: row.location,
-        Cost: convertFromBase(row.cost),
+        Cost: formatCost(row.cost),
       };
     });
 
@@ -241,7 +247,7 @@ const softwareInstances = software.flatMap((asset) => {
     );
   };
 
-  if (loading || loadingRates)
+  if (loading)
     return <Loader type="mis" apiDone={apiDone} />;
 
   // ================= UI =================
@@ -252,7 +258,6 @@ const softwareInstances = software.flatMap((asset) => {
       <div className="report-header">
         <h2>Asset MIS Report</h2>
         <div className="header-actions">
-          <CurrencyFilter />
           <button onClick={exportData} className="misbutton">
             Export Excel
           </button>
@@ -409,9 +414,8 @@ const softwareInstances = software.flatMap((asset) => {
                     <td>{row.condition}</td>
                     <td>{row.assignedTo}</td>
                     <td>{row.department}</td>
-                                        <td>
-  {CURRENCY_SYMBOLS[currency]} {convertFromBase(row.cost).toFixed(2)}
-</td>
+  <td>{formatCost(row.cost)}</td>
+
                   </>
                 )}
                 {activeTab === "software" && viewMode === "summary" && (
@@ -435,9 +439,7 @@ const softwareInstances = software.flatMap((asset) => {
                     <td>{formatDate(row.expiry)}</td>
                     <td>{row.status}</td>
                     <td>{row.assignedTo}</td>
-                    <td>
-  {CURRENCY_SYMBOLS[currency]} {convertFromBase(row.cost).toFixed(2)}
-</td>
+<td>{formatCost(row.cost)}</td>
                   </>
                 )}
 

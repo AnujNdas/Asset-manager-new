@@ -20,32 +20,50 @@ const InstanceCard = ({
 
   const qrUrl = inst.qrCode?.url || hw.qrCode?.url;
 
-const getCost = (costObj) => {
-  if (!costObj) return 0;
+/* ================= COST HELPERS ================= */
 
-  // use original amount if same currency
-  if (!convertFromBase) {
-    return Number(costObj.amount || 0);
+const currency =
+  hw.purchaseCost?.currency ||
+  sw.purchaseCost?.currency ||
+  "USD";
+
+const formatCostValue = (costObj) => {
+  if (!costObj) {
+    return formatMoney
+      ? formatMoney(0, currency)
+      : `${currency} 0`;
   }
 
-  // fallback conversion
-  return Number(
-    convertFromBase(costObj.baseAmount || 0)
-  );
+  const value = convertFromBase
+    ? Number(convertFromBase(costObj.baseAmount || 0))
+    : Number(costObj.amount || 0);
+
+  return formatMoney
+    ? formatMoney(value, currency)
+    : `${currency} ${value.toFixed(2)}`;
 };
-  /* ================= COST LOGIC ================= */
-  const purchase = isHardware
-    ? getCost(hw.purchaseCost)
-    : getCost(sw.purchaseCost);
 
-  const yearly = isHardware
-    ? getCost(hw.costs?.maintenanceCost) +
-      getCost(hw.costs?.insuranceCost) +
-      getCost(hw.costs?.warrantyRenewalCost)
-    : getCost(sw.costs?.renewalCost);
+const getNumericCost = (costObj) => {
+  if (!costObj) return 0;
 
-  const monthly = yearly / 12;
+  return convertFromBase
+    ? Number(convertFromBase(costObj.baseAmount || 0))
+    : Number(costObj.amount || 0);
+};
 
+/* ================= COST LOGIC ================= */
+
+const purchase = isHardware
+  ? getNumericCost(hw.purchaseCost)
+  : getNumericCost(sw.purchaseCost);
+
+const yearly = isHardware
+  ? getNumericCost(hw.costs?.maintenanceCost) +
+    getNumericCost(hw.costs?.insuranceCost) +
+    getNumericCost(hw.costs?.warrantyRenewalCost)
+  : getNumericCost(sw.costs?.renewalCost);
+
+const monthly = yearly / 12;
   /* ================= DATE HELPERS ================= */
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "N/A";
@@ -175,27 +193,39 @@ const handleUnassign = async () => {
       </div>
 
       {/* ================= KPI STRIP ================= */}
-      <div className="kpi-strip">
-        <div>
-          <p>Purchase</p>
-          <h4>{purchase}</h4>
-        </div>
+<div className="kpi-strip">
+  <div>
+    <p>Purchase</p>
+    <h4>
+      {formatMoney
+        ? formatMoney(purchase, currency)
+        : `${currency} ${purchase.toFixed(2)}`}
+    </h4>
+  </div>
 
-        <div>
-          <p>Yearly</p>
-          <h4>{yearly}</h4>
-        </div>
+  <div>
+    <p>Yearly</p>
+    <h4>
+      {formatMoney
+        ? formatMoney(yearly, currency)
+        : `${currency} ${yearly.toFixed(2)}`}
+    </h4>
+  </div>
 
-        <div>
-          <p>Monthly</p>
-          <h4>{monthly.toFixed(2)}</h4>
-        </div>
+  <div>
+    <p>Monthly</p>
+    <h4>
+      {formatMoney
+        ? formatMoney(monthly, currency)
+        : `${currency} ${monthly.toFixed(2)}`}
+    </h4>
+  </div>
 
-        <div>
-          <p>Location</p>
-          <h4>{inst.location || "N/A"}</h4>
-        </div>
-      </div>
+  <div>
+    <p>Location</p>
+    <h4>{inst.location || "N/A"}</h4>
+  </div>
+</div>
 
       {/* ================= BODY GRID ================= */}
       <div className="card-grid">
@@ -260,25 +290,43 @@ const handleUnassign = async () => {
         <div className="col">
 
           {/* COST */}
-          <div className="card-box">
-            <h5>Cost Breakdown</h5>
+<div className="card-box">
+  <h5>Cost Breakdown</h5>
 
-            {isHardware ? (
-              <>
-                <p>Maintenance: {getCost(hw.costs?.maintenanceCost)}</p>
-                <p>Warranty: {getCost(hw.costs?.warrantyRenewalCost)}</p>
-                <p>
-  Insurance: {
-    hw.costs?.insuranceCost
-      ? getCost(hw.costs.insuranceCost)
-      : "N/A"
-  }
-</p>
-              </>
-            ) : (
-              <p>Renewal: {getCost(sw.costs?.renewalCost)}</p>
-            )}
-          </div>
+  {isHardware ? (
+    <>
+      <p>
+        Maintenance:
+        <span>
+          {formatCostValue(hw.costs?.maintenanceCost)}
+        </span>
+      </p>
+
+      <p>
+        Warranty:
+        <span>
+          {formatCostValue(hw.costs?.warrantyRenewalCost)}
+        </span>
+      </p>
+
+      <p>
+        Insurance:
+        <span>
+          {hw.costs?.insuranceCost
+            ? formatCostValue(hw.costs.insuranceCost)
+            : "N/A"}
+        </span>
+      </p>
+    </>
+  ) : (
+    <p>
+      Renewal:
+      <span>
+        {formatCostValue(sw.costs?.renewalCost)}
+      </span>
+    </p>
+  )}
+</div>
 
           {/* ASSIGNMENT */}
           {isAssigned && (

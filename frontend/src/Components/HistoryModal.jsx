@@ -28,7 +28,27 @@ useEffect(() => {
     fetchHistory();
   }
 }, [instance]);
+const formatDate = (date) => {
+  if (!date) return "-";
 
+  try {
+    return new Date(date).toLocaleDateString();
+  } catch {
+    return "-";
+  }
+};
+const formatCost = (costObj) => {
+  if (!costObj) return "N/A";
+
+  // legacy numeric support
+  if (typeof costObj === "number") {
+    return `USD ${costObj.toFixed(2)}`;
+  }
+
+  return `${costObj.currency || "USD"} ${Number(
+    costObj.amount || 0
+  ).toFixed(2)}`;
+};
   return (
 <div className="modal-overlay">
   <div className="modal history-modal">

@@ -362,7 +362,7 @@ const addAsset = asyncHandler(async (req, res, next) => {
     throw new AppError(
       "Organization context missing",
       403,
-      "ORG_CONTEXT_MISSING"
+      "ORG_CONTEXT_MISSING" 
     );
   }
 
@@ -457,12 +457,27 @@ const addAsset = asyncHandler(async (req, res, next) => {
     assetCode,
     assetQuantity,
     inUse: 0,
-    financialTracking: {
-      totalAssetCost: 0,
-      monthlyCost: 0,
-      yearlyCost: 0,
-      maintenanceTotalCost: 0
-    }
+financialTracking: {
+  totalCost: {
+    amount: 0,
+    currency: "USD"
+  },
+
+  monthlyCost: {
+    amount: 0,
+    currency: "USD"
+  },
+
+  yearlyCost: {
+    amount: 0,
+    currency: "USD"
+  },
+
+  maintenanceTotalCost: {
+    amount: 0,
+    currency: "USD"
+  }
+}
   });
 
   const savedAsset = await newAsset.save();
@@ -818,17 +833,27 @@ const calculateFinancials = (instances = []) => {
     const sw = inst.software || {};
 
     // 🔹 HARDWARE COSTS
-    const hwPurchase = hw.purchaseCost?.baseAmount || 0;
-    const hwMaintenance = hw.costs?.maintenanceCost?.baseAmount || 0;
-    const hwInsurance = hw.costs?.insuranceCost?.baseAmount || 0;
-    const hwWarranty = hw.costs?.warrantyRenewalCost?.baseAmount || 0;
+    const hwPurchase =
+      hw.purchaseCost?.amount || 0;
+
+    const hwMaintenance =
+      hw.costs?.maintenanceCost?.amount || 0;
+
+    const hwInsurance =
+      hw.costs?.insuranceCost?.amount || 0;
+
+    const hwWarranty =
+      hw.costs?.warrantyRenewalCost?.amount || 0;
 
     // 🔹 SOFTWARE COSTS
-    const swPurchase = sw.purchaseCost?.baseAmount || 0;
-    const swRenewal = sw.costs?.renewalCost?.baseAmount || 0;
+    const swPurchase =
+      sw.purchaseCost?.amount || 0;
 
-    // 🔹 TOTAL COST (ALL)
-    totalCost +=
+    const swRenewal =
+      sw.costs?.renewalCost?.amount || 0;
+
+    // 🔹 TOTAL COST
+    const instanceTotal =
       hwPurchase +
       hwMaintenance +
       hwInsurance +
@@ -836,14 +861,10 @@ const calculateFinancials = (instances = []) => {
       swPurchase +
       swRenewal;
 
-    // 🔹 YEARLY COST (recurring + software license)
-    yearlyCost +=
-      hwPurchase
-      hwMaintenance +
-      hwInsurance +
-      hwWarranty +
-      swPurchase +
-      swRenewal;
+    totalCost += instanceTotal;
+
+    // 🔹 YEARLY COST
+    yearlyCost += instanceTotal;
   });
 
   return {
@@ -1159,20 +1180,23 @@ for (let index = 0; index < instances.length; index++) {
   const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
   const hasInsurance = inst.hardware?.hasInsurance ?? false;
 
-  const purchaseCost = await formatCost(
+const purchaseCost = {
+  amount: Number(
     assetType === "hardware"
-      ? inst.hardware?.purchaseCost
-      : inst.software?.purchaseCost
-  );
-
-  const currency = purchaseCost?.currency || "INR";
+      ? inst.hardware?.purchaseCost || 0
+      : inst.software?.purchaseCost || 0
+  ),
+  currency: "USD"
+};
   
 /* ================= INSURANCE ================= */
 
-const insuranceCost = await formatCost({
-  amount: inst.hardware?.costs?.insuranceCost,
-  currency
-});
+const insuranceCost = {
+  amount: Number(
+    inst.hardware?.costs?.insuranceCost || 0
+  ),
+  currency: "USD"
+};
 const insuranceTerm =
   inst.hardware?.insuranceTerm || null;
 
@@ -1247,8 +1271,7 @@ if (hasInsurance && insurancePurchaseDate) {
     purchaseCost:
       purchaseCost?.amount || 0,
 
-    currency:
-      purchaseCost?.currency || "INR",
+    currency: "USD",
 
     ...(assetType === "hardware"
       ? {
@@ -1295,15 +1318,19 @@ if (hasInsurance && insurancePurchaseDate) {
   };
 
   if (assetType === "hardware") {
-    const maintenanceCost = await formatCost({
-  amount: inst.hardware?.costs?.maintenanceCost,
-  currency
-});
+const maintenanceCost = {
+  amount: Number(
+    inst.hardware?.costs?.maintenanceCost || 0
+  ),
+  currency: "USD"
+};
 
-const warrantyRenewalCost = await formatCost({
-  amount: inst.hardware?.costs?.warrantyRenewalCost,
-  currency
-});
+const warrantyRenewalCost = {
+  amount: Number(
+    inst.hardware?.costs?.warrantyRenewalCost || 0
+  ),
+  currency: "USD"
+};
 
 newInstances.push({
   ...basePayload,
@@ -1379,10 +1406,12 @@ coverageType:
   purchaseCost,
 
   costs: {
-    renewalCost: await formatCost({
-      amount: inst.software?.costs?.renewalCost,
-      currency
-    })
+renewalCost: {
+  amount: Number(
+    inst.software?.costs?.renewalCost || 0
+  ),
+  currency: "USD"
+}
   }
 }
     });
@@ -1432,13 +1461,13 @@ const aggregation = await AssetInstance.aggregate([
       totalCost: {
         $sum: {
           $add: [
-            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
 
-            { $ifNull: ["$software.purchaseCost.baseAmount", 0] },
-            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+            { $ifNull: ["$software.purchaseCost.amount", 0] },
+            { $ifNull: ["$software.costs.renewalCost.amount", 0] }
           ]
         }
       },
@@ -1447,13 +1476,13 @@ const aggregation = await AssetInstance.aggregate([
       yearlyCost: {
         $sum: {
           $add: [
-            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
+            { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
 
-            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }, // since yearly license
-            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+            { $ifNull: ["$software.purchaseCost.amount", 0] }, // since yearly license
+            { $ifNull: ["$software.costs.renewalCost.amount", 0] }
           ]
         }
       }
@@ -1741,12 +1770,20 @@ const parseDateSafe = (d) => {
         .slice(2, 6)}`;
         const purchaseDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.purchaseDate) : parseDateSafe(inst.software?.purchaseDate);
         const nextmaintenanceDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.nextMaintenanceDate) : null;
-        const purchaseCost =
+const purchaseCost =
   assetType === "hardware"
-    ? await formatCost(inst.hardware?.purchaseCost)
-    : await formatCost(inst.software?.purchaseCost);
-
-const currency = purchaseCost?.currency || "INR";
+    ? {
+        amount: Number(
+          inst.hardware?.purchaseCost?.amount || 0
+        ),
+        currency: "USD"
+      }
+    : {
+        amount: Number(
+          inst.software?.purchaseCost?.amount || 0
+        ),
+        currency: "USD"
+      };
       /* ---------------- HARDWARE ---------------- */
       if (assetType === "hardware") {
 const hasInsurance =
@@ -1776,20 +1813,26 @@ const insuranceExpiry =
 const insuranceId = hasInsurance
   ? normalize(inst.hardware?.insuranceId)
   : null;
-const maintenanceCost = await formatCost({
-  amount: inst.hardware?.costs?.maintenanceCost || 0,
-  currency
-});
+const maintenanceCost = {
+  amount: Number(
+    inst.hardware?.costs?.maintenanceCost || 0
+  ),
+  currency: "USD"
+};
 
-const warrantyRenewalCost = await formatCost({
-  amount: inst.hardware?.costs?.warrantyRenewalCost || 0,
-  currency
-});
+const warrantyRenewalCost = {
+  amount: Number(
+    inst.hardware?.costs?.warrantyRenewalCost || 0
+  ),
+  currency: "USD"
+};
 
-const insuranceCost = await formatCost({
-  amount: inst.hardware?.costs?.insuranceCost || 0,
-  currency
-});
+const insuranceCost = {
+  amount: Number(
+    inst.hardware?.costs?.insuranceCost || 0
+  ),
+  currency: "USD"
+};
         validInstances.push({
           organizationId,
           assetId,
@@ -1842,10 +1885,12 @@ const insuranceCost = await formatCost({
 
       /* ---------------- SOFTWARE ---------------- */
       else {
-          const renewalCost = await formatCost({
-            amount: inst.software?.costs.renewalCost,
-            currency
-          });
+const renewalCost = {
+  amount: Number(
+    inst.software?.costs?.renewalCost || 0
+  ),
+  currency: "USD"
+};
           const renewalDate = parseDateSafe(inst.software?.renewalDate);
           const installationDate = parseDateSafe(inst.software?.installationDate);
         validInstances.push({

@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { upgradeInstance } from "../Services/ApiServices";
 
-const currencyOptions = [
-  "INR", "USD", "EUR", "GBP", "JPY",
-  "AUD", "CAD", "SGD", "AED", "CNY"
-];
-
 const UpgradeModal = ({ instance, onClose, refresh }) => {
   const isHardware = instance?.assetType === "hardware";
   const isSoftware = instance?.assetType === "software";
@@ -41,14 +36,19 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
   ============================== */
 
 const [form, setForm] = useState({
-  currency: instance?.hardware?.currency || instance?.software?.currency || "USD",
+  // ❌ REMOVE currency
 
-  // ✅ COSTS (numbers now)
-  maintenanceCost: instance?.hardware?.costs?.maintenanceCost || "",
-  warrantyRenewalCost: instance?.hardware?.costs?.warrantyRenewalCost || "",
-  insuranceCost: instance?.hardware?.costs?.insuranceCost || "",
+  maintenanceCost:
+    instance?.hardware?.costs?.maintenanceCost?.amount || "",
 
-  renewalCost: instance?.software?.costs?.renewalCost || "",
+  warrantyRenewalCost:
+    instance?.hardware?.costs?.warrantyRenewalCost?.amount || "",
+
+  insuranceCost:
+    instance?.hardware?.costs?.insuranceCost?.amount || "",
+
+  renewalCost:
+    instance?.software?.costs?.renewalCost?.amount || "",
 
   // ✅ NEW DATES
   newWarrantyPurchaseDate:
@@ -99,33 +99,48 @@ const [form, setForm] = useState({
   const handleSubmit = async () => {
     try {
 const payload = {
-  currency: form.currency,
-
   ...(isHardware && {
-    maintenanceCost: Number(form.maintenanceCost) || 0,
-    warrantyRenewalCost: Number(form.warrantyRenewalCost) || 0,
+    maintenanceCost:
+      Number(form.maintenanceCost) || 0,
+
+    warrantyRenewalCost:
+      Number(form.warrantyRenewalCost) || 0,
 
     hasInsurance: form.hasInsurance,
+
     insuranceTerm: form.insuranceTerm,
 
     insuranceCost: form.hasInsurance
       ? Number(form.insuranceCost) || 0
       : 0,
 
-    newInsurancePurchaseDate: form.hasInsurance
-      ? form.newInsurancePurchaseDate || undefined
-      : undefined,
+    newInsurancePurchaseDate:
+      form.hasInsurance
+        ? form.newInsurancePurchaseDate || undefined
+        : undefined,
 
-    newWarrantyExpiry: form.newWarrantyExpiry || undefined,
-    newMaintenanceDate: form.newMaintenanceDate || undefined,
-    newInstallationDate: form.newInstallationDate || undefined
+    newWarrantyExpiry:
+      form.newWarrantyExpiry || undefined,
+
+    newMaintenanceDate:
+      form.newMaintenanceDate || undefined,
+
+    newInstallationDate:
+      form.newInstallationDate || undefined
   }),
 
   ...(isSoftware && {
-    renewalCost: Number(form.renewalCost) || 0,
-    newRenewalDate: form.newRenewalDate || undefined,
-    newLastUsedDate: form.newLastUsedDate || undefined,
-    newInstallationDate: form.newInstallationDate || undefined
+    renewalCost:
+      Number(form.renewalCost) || 0,
+
+    newRenewalDate:
+      form.newRenewalDate || undefined,
+
+    newLastUsedDate:
+      form.newLastUsedDate || undefined,
+
+    newInstallationDate:
+      form.newInstallationDate || undefined
   }),
 
   condition: form.condition || undefined,
@@ -152,14 +167,17 @@ const payload = {
         <h2>Upgrade Asset</h2>
 
         {/* ✅ CURRENCY */}
-        <div className="input-group">
-          <label>Currency</label>
-          <select name="currency" value={form.currency} onChange={handleChange}>
-            {currencyOptions.map((cur) => (
-              <option key={cur} value={cur}>{cur}</option>
-            ))}
-          </select>
-        </div>
+{/* ✅ CURRENCY (READ ONLY) */}
+<div className="input-group">
+  <label>Currency</label>
+
+  <input
+    type="text"
+    value="USD"
+    readOnly
+    className="readonly-input"
+  />
+</div>
         {isHardware && (
   <>
     {/* HAS INSURANCE */}

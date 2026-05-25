@@ -379,6 +379,9 @@ setAssignmentData({
 });
   };
   if (loading) return <Loader />;
+  if (initializing) {
+  return <Loader />;
+}
   /* ================= UI ================= */
   return (
   <div className="assignment-container">
