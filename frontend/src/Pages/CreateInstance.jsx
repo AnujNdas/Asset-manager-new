@@ -1454,21 +1454,16 @@ costs: {
                           </span>
                         )}
                       </div>
-                      <div>
-                        <label>Currency</label>
-                        <select
-                          value={inst.currency}
-                          onChange={(e) =>
-                            handleChange(index, "currency", e.target.value)
-                          }
-                        >
-                          {currencyOptions.map((cur) => (
-                            <option key={cur} value={cur}>
-                              {cur}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                                <div className="form-group">
+            <label>Currency</label>
+
+            <input
+              type="text"
+              value="USD"
+              disabled
+              className="disabled-input"
+            />
+          </div>
                       <div>
                         <label>Installation Date</label>
 
