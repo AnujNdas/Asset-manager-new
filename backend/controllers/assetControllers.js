@@ -1180,20 +1180,26 @@ for (let index = 0; index < instances.length; index++) {
   const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
   const hasInsurance = inst.hardware?.hasInsurance ?? false;
 
-const purchaseCost = {
-  amount: Number(
-    assetType === "hardware"
-      ? inst.hardware?.purchaseCost || 0
-      : inst.software?.purchaseCost || 0
-  ),
-  currency: "USD"
-};
+const purchaseCost =
+  assetType === "hardware"
+    ? {
+        amount: Number(
+          inst.hardware?.purchaseCost?.amount || 0
+        ),
+        currency: "USD"
+      }
+    : {
+        amount: Number(
+          inst.software?.purchaseCost?.amount || 0
+        ),
+        currency: "USD"
+      };
   
 /* ================= INSURANCE ================= */
 
 const insuranceCost = {
   amount: Number(
-    inst.hardware?.costs?.insuranceCost || 0
+    inst.hardware?.costs?.insuranceCost?.amount || 0
   ),
   currency: "USD"
 };
@@ -1320,17 +1326,18 @@ if (hasInsurance && insurancePurchaseDate) {
   if (assetType === "hardware") {
 const maintenanceCost = {
   amount: Number(
-    inst.hardware?.costs?.maintenanceCost || 0
+    inst.hardware?.costs?.maintenanceCost?.amount || 0
   ),
   currency: "USD"
 };
 
 const warrantyRenewalCost = {
   amount: Number(
-    inst.hardware?.costs?.warrantyRenewalCost || 0
+    inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
   ),
   currency: "USD"
 };
+
 
 newInstances.push({
   ...basePayload,
@@ -1408,7 +1415,7 @@ coverageType:
   costs: {
 renewalCost: {
   amount: Number(
-    inst.software?.costs?.renewalCost || 0
+    inst.software?.costs?.renewalCost?.amount || 0
   ),
   currency: "USD"
 }
