@@ -689,100 +689,157 @@ return (
 
     {error && <p className="error">{error}</p>}
 
-    {showCheckoutPreview && checkoutPreview && (
-  <div className="checkout-preview-overlay">
+{showCheckoutPreview && checkoutPreview && (() => {
 
-    <div className="checkout-preview-modal">
+  const today = new Date();
 
-      <div className="checkout-preview-header">
-        <h3>Review Subscription</h3>
+  const expiryDate = new Date(today);
 
-        <button
-          className="close-btn"
-          onClick={() => setShowCheckoutPreview(false)}
-        >
-          ✕
-        </button>
-      </div>
+  if (billing === "yearly") {
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+  } else {
+    expiryDate.setMonth(expiryDate.getMonth() + 1);
+  }
 
-      <div className="checkout-plan-card">
+  const formatDate = (date) =>
+    date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
 
-        <h2>
-          {selectedTier.toUpperCase()} Plan
-        </h2>
+  const baseAmount =
+    checkoutPreview.baseAmount ??
+    checkoutPreview.amount ??
+    0;
 
-        <span className="billing-cycle">
-          {billing}
-        </span>
+  const totalAmount =
+    checkoutPreview.totalAmount ??
+    checkoutPreview.finalAmount ??
+    baseAmount;
 
-      </div>
+  return (
+    <div className="checkout-preview-overlay">
 
-      <div className="checkout-breakdown">
+      <div className="checkout-preview-modal">
 
-        <div className="breakdown-row">
-          <span>Base Price</span>
-          <span>
-            ₹{checkoutPreview.baseAmount}
-          </span>
+        {/* HEADER */}
+        <div className="checkout-preview-header">
+          <h3>Review Subscription</h3>
+
+          <button
+            className="close-btn"
+            onClick={() => setShowCheckoutPreview(false)}
+          >
+            ✕
+          </button>
         </div>
 
-        <div className="breakdown-row">
-          <span>GST (18%)</span>
-          <span>
-            ₹{checkoutPreview.taxAmount}
+        {/* PLAN CARD */}
+        <div className="checkout-plan-card">
+
+          <h2>
+            {selectedTier.toUpperCase()} Plan
+          </h2>
+
+          <span className="billing-cycle">
+            {billing}
           </span>
+
         </div>
 
-        <div className="breakdown-row total">
-          <span>Total Payable</span>
-          <span>
-            ₹{checkoutPreview.totalAmount}
-          </span>
+        {/* DATES */}
+        <div className="checkout-dates">
+
+          <div className="date-box">
+            <span className="label">Starts On</span>
+            <span className="value">
+              {formatDate(today)}
+            </span>
+          </div>
+
+          <div className="date-box">
+            <span className="label">Expires On</span>
+            <span className="value">
+              {formatDate(expiryDate)}
+            </span>
+          </div>
+
         </div>
 
-      </div>
+        {/* PRICE BREAKDOWN */}
+        <div className="checkout-breakdown">
 
-      <div className="checkout-info">
+          <div className="breakdown-row">
+            <span>Plan Price</span>
+            <span>
+              ₹{Number(baseAmount).toLocaleString()}
+            </span>
+          </div>
 
-        <p>
-          Your subscription will renew automatically every{" "}
-          <strong>{billing}</strong>.
-        </p>
+          <div className="breakdown-row">
+            <span>Billing Cycle</span>
+            <span>
+              {billing === "yearly"
+                ? "1 Year"
+                : "1 Month"}
+            </span>
+          </div>
 
-        <p>
-          Taxes are included as per applicable GST rules.
-        </p>
+          <div className="breakdown-row total">
+            <span>Total Payable</span>
+            <span>
+              ₹{Number(totalAmount).toLocaleString()}
+            </span>
+          </div>
 
-      </div>
+        </div>
 
-      <div className="checkout-actions">
+        {/* INFO */}
+        <div className="checkout-info">
 
-        <button
-          className="btn secondary"
-          onClick={() => setShowCheckoutPreview(false)}
-        >
-          Cancel
-        </button>
+          <p>
+            Your subscription will renew automatically every{" "}
+            <strong>{billing}</strong>.
+          </p>
 
-        <button
-          className="btn primary"
-          onClick={async () => {
+          <p>
+            You can cancel auto-renewal anytime from the subscription settings.
+          </p>
 
-            setShowCheckoutPreview(false);
+        </div>
 
-            await handleCheckout();
+        {/* ACTIONS */}
+        <div className="checkout-actions">
 
-          }}
-        >
-          Confirm & Pay
-        </button>
+          <button
+            className="btn secondary"
+            onClick={() => setShowCheckoutPreview(false)}
+          >
+            Cancel
+          </button>
+
+          <button
+            className="btn primary"
+            onClick={async () => {
+
+              setShowCheckoutPreview(false);
+
+              await handleCheckout();
+
+            }}
+          >
+            Confirm & Pay
+          </button>
+
+        </div>
 
       </div>
 
     </div>
+  );
 
-  </div>
-)}
+})()}
   </div>
 );
 
