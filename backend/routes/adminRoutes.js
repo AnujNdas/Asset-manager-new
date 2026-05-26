@@ -26,17 +26,17 @@ const Department = require("../models/Department");
         purchaseCost: {
           $cond: [
             { $eq: ["$assetType", "hardware"] },
-            { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-            { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+            { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+            { $ifNull: ["$software.purchaseCost.amount", 0] }
           ]
         },
 
         extraCost: {
           $add: [
-            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
-            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+            { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
+            { $ifNull: ["$software.costs.renewalCost.amount", 0] }
           ]
         }
       }
@@ -86,14 +86,14 @@ const Department = require("../models/Department");
             {
               $cond: [
                 { $eq: ["$assetType", "hardware"] },
-                { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-                { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+                { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+                { $ifNull: ["$software.purchaseCost.amount", 0] }
               ]
             },
-            { $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0] },
-            { $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0] },
-            { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+            { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
+            { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
+            { $ifNull: ["$software.costs.renewalCost.amount", 0] }
           ]
         }
       }
@@ -157,8 +157,8 @@ const Department = require("../models/Department");
     $addFields: {
       cost: {
         $add: [
-          { $ifNull: ["$software.purchaseCost.baseAmount", 0] },
-          { $ifNull: ["$software.costs.renewalCost.baseAmount", 0] }
+          { $ifNull: ["$software.purchaseCost.amount", 0] },
+          { $ifNull: ["$software.costs.renewalCost.amount", 0] }
         ]
       }
     }
@@ -184,7 +184,7 @@ const Department = require("../models/Department");
     {
       $project: {
         instanceName: "$deviceName",
-        cost: "$hardware.costs.maintenanceCost.baseAmount"
+        cost: "$hardware.costs.maintenanceCost.amount"
       }
     },
 
@@ -198,7 +198,7 @@ const Department = require("../models/Department");
     {
       $project: {
         instanceName: "$deviceName",
-        cost: "$hardware.costs.warrantyRenewalCost.baseAmount"
+        cost: "$hardware.costs.warrantyRenewalCost.amount"
       }
     },
 
@@ -212,7 +212,7 @@ const Department = require("../models/Department");
     {
       $project: {
         instanceName: "$deviceName",
-        cost: "$hardware.costs.insuranceCost.baseAmount"
+        cost: "$hardware.costs.insuranceCost.amount"
       }
     },
 
@@ -225,7 +225,7 @@ const Department = require("../models/Department");
     {
       $project: {
         instanceName: "$deviceName",
-        cost: "$software.costs.renewalCost.baseAmount"
+        cost: "$software.costs.renewalCost.amount"
       }
     },
 
@@ -466,21 +466,21 @@ const topLocationsPromise = AssetInstance.aggregate([
       purchaseCost: {
         $cond: [
           { $eq: ["$assetType", "hardware"] },
-          { $ifNull: ["$hardware.purchaseCost.baseAmount", 0] },
-          { $ifNull: ["$software.purchaseCost.baseAmount", 0] }
+          { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+          { $ifNull: ["$software.purchaseCost.amount", 0] }
         ]
       },
 
       maintenanceCost: {
-        $ifNull: ["$hardware.costs.maintenanceCost.baseAmount", 0]
+        $ifNull: ["$hardware.costs.maintenanceCost.amount", 0]
       },
 
       warrantyCost: {
-        $ifNull: ["$hardware.costs.warrantyRenewalCost.baseAmount", 0]
+        $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0]
       },
 
       insuranceCost: {
-        $ifNull: ["$hardware.costs.insuranceCost.baseAmount", 0]
+        $ifNull: ["$hardware.costs.insuranceCost.amount", 0]
       }
     }
   },
