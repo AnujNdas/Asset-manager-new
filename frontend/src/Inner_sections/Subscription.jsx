@@ -708,16 +708,14 @@ return (
       year: "numeric",
     });
 
-  const baseAmount =
-    checkoutPreview.baseAmount ??
-    checkoutPreview.amount ??
-    0;
+const baseAmount =
+  checkoutPreview?.pricing?.amount ?? 0;
 
-  const totalAmount =
-    checkoutPreview.totalAmount ??
-    checkoutPreview.finalAmount ??
-    baseAmount;
+const totalAmount =
+  checkoutPreview?.pricing?.amount ?? 0;
 
+const currency =
+  checkoutPreview?.pricing?.currency ?? "USD";
   return (
     <div className="checkout-preview-overlay">
 
@@ -773,7 +771,7 @@ return (
           <div className="breakdown-row">
             <span>Plan Price</span>
             <span>
-              ₹{Number(baseAmount).toLocaleString()}
+            {currency} {Number(baseAmount).toLocaleString()}
             </span>
           </div>
 
@@ -789,7 +787,7 @@ return (
           <div className="breakdown-row total">
             <span>Total Payable</span>
             <span>
-              ₹{Number(totalAmount).toLocaleString()}
+             {currency} {Number(totalAmount).toLocaleString()}
             </span>
           </div>
 
