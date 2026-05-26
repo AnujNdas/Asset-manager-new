@@ -25,6 +25,37 @@ const organizationSchema = new mongoose.Schema(
       enum: ["active", "suspended"],
       default: "active",
     },
+
+    /* ==============================
+       ✅ ORGANIZATION ONBOARDING
+    ============================== */
+
+    onboardingCompleted: {
+      type: Boolean,
+      default: false,
+    },
+
+    organizationType: {
+      type: String,
+      enum: ["Startup", "Enterprise", "Agency", "NGO", "Other"],
+      default: "Other",
+    },
+
+    country: {
+      type: String,
+      default: "",
+    },
+
+    city: {
+      type: String,
+      default: "",
+    },
+
+    officeLocation: {
+      type: String,
+      default: "",
+    }
+
   },
   { timestamps: true }
 );

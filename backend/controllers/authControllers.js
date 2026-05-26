@@ -191,11 +191,14 @@ const verifyOtpAndSignup = async (req, res) => {
         await Organization.create(
           [
             {
-              name:
-                organizationName ||
-                `${username}'s Organization`,
-              orgCode,
-            },
+   name:
+     organizationName ||
+     `${username}'s Organization`,
+
+   orgCode,
+
+   onboardingCompleted: false
+}
           ],
           { session }
         );
@@ -246,8 +249,6 @@ const verifyOtpAndSignup = async (req, res) => {
 
           organizationId:
             organization._id,
-
-          onboardingCompleted: false,
         },
       ],
       { session }
@@ -407,9 +408,13 @@ if (
         id: newUser._id,
         email: newUser.email,
         role: newUser.role,
+
         organizationId:
           organization._id,
-      },
+
+        organizationOnboarded:
+          organization.onboardingCompleted
+      }
     });
 
   } catch (err) {
@@ -456,7 +461,15 @@ const login = async (req, res) => {
     // 🛑 Organization check (except super-admin)
 // 🛑 Organization check
 // Affiliates and super-admins do not require organization
+let organization = null;
 
+if (user.organizationId) {
+
+  organization =
+    await Organization.findById(
+      user.organizationId
+    );
+}
 const rolesWithoutOrg = [
   "super-admin",
   "affiliate",
@@ -540,13 +553,23 @@ await sendNotification({
       success: true,
       token,
       user: {
-        _id: user._id,
-        email: user.email,
-        username: user.username,
-        role: user.role,
-        organizationId: user.organizationId || null,
-        onboardingCompleted: user.onboardingCompleted,
-      },
+  _id: user._id,
+
+  email: user.email,
+
+  username: user.username,
+
+  role: user.role,
+
+  organizationId:
+    user.organizationId || null,
+
+  onboardingCompleted:
+    user.onboardingCompleted,
+
+  organizationOnboardingCompleted:
+    organization?.onboardingCompleted || false,
+},
     });
 
   } catch (error) {
@@ -669,49 +692,103 @@ await sendNotification({
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
 const completeOnboarding = async (req, res) => {
   try {
+
     const { userId, profile } = req.body;
 
     const user = await User.findById(userId);
+
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({
+        error: "User not found"
+      });
     }
 
-    // Update optional fields only
+    /* =========================
+       UPDATE USER PROFILE
+    ========================= */
+
     Object.assign(user, profile);
+
     user.onboardingCompleted = true;
 
     await user.save();
 
-    // 🔑 Auto-login token (ONLY HERE)
+    /* =========================
+       COMPLETE ORG ONBOARDING
+    ========================= */
+
+    if (user.organizationId) {
+
+      await Organization.findByIdAndUpdate(
+        user.organizationId,
+        {
+          onboardingCompleted: true,
+        }
+      );
+    }
+
+    /* =========================
+       JWT
+    ========================= */
+
     const token = jwt.sign(
       {
         email: user.email,
         id: user._id,
         role: user.role,
         username: user.username,
+        organizationId:
+          user.organizationId,
       },
-      "jwt_secret",
-      { expiresIn: "3h" }
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "3h",
+      }
     );
+
+    /* =========================
+       RESPONSE
+    ========================= */
 
     res.json({
       success: true,
+
       token,
+
       user: {
         id: user._id,
+
         email: user.email,
+
         username: user.username,
+
         role: user.role,
+
+        organizationId:
+          user.organizationId,
+
+        onboardingCompleted: true,
+
+        organizationOnboardingCompleted: true,
       },
     });
+
   } catch (error) {
-    console.error("Complete onboarding error:", error);
-    res.status(500).json({ error: "Failed to complete onboarding" });
+
+    console.error(
+      "Complete onboarding error:",
+      error
+    );
+
+    res.status(500).json({
+      error:
+        "Failed to complete onboarding",
+    });
   }
 };
-
 const resetSystemData = async (req, res) => {
   const session = await mongoose.startSession();
 

@@ -458,26 +458,11 @@ const addAsset = asyncHandler(async (req, res, next) => {
     assetQuantity,
     inUse: 0,
 financialTracking: {
-  totalCost: {
-    amount: 0,
-    currency: "USD"
-  },
-
-  monthlyCost: {
-    amount: 0,
-    currency: "USD"
-  },
-
-  yearlyCost: {
-    amount: 0,
-    currency: "USD"
-  },
-
-  maintenanceTotalCost: {
-    amount: 0,
-    currency: "USD"
-  }
-}
+  totalAssetCost: 0,
+  monthlyCost: 0,
+  yearlyCost: 0,
+  maintenanceTotalCost: 0,
+} 
   });
 
   const savedAsset = await newAsset.save();

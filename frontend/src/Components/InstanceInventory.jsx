@@ -318,7 +318,9 @@ const handleUnassign = async () => {
     <p>
       Renewal:
       <span>
-        {formatCostValue(sw.costs?.renewalCost)}
+              {formatMoney
+        ? formatMoney(yearly, currency)
+        : `${currency} ${yearly.toFixed(2)}`}
       </span>
     </p>
   )}

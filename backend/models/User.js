@@ -38,27 +38,10 @@ role: {
   fullName: { type: String, default: "" },
   phone: { type: String, default: "" },
   profileTitle: { type: String, default: "" },
-
-  // 🔹 Organization
-  organizationName: { type: String, default: "" },
-  organizationType: {
-    type: String,
-    enum: ["Startup", "Enterprise", "Agency", "NGO", "Other"],
-    default: "Other",
-  },
   department: { type: String, default: "" },
   designation: { type: String, default: "" },
   workEmail: { type: String, default: "" },
 
-  // 🔹 Location / Compliance
-  country: { type: String, default: "" },
-  city: { type: String, default: "" },
-  officeLocation: { type: String, default: "" },
-  taxId: { type: String, default: "" },
-  onboardingCompleted: {
-  type: Boolean,
-  default: false,
-},
   // Two-Factor Authentication fields
   tfaEnabled: { type: Boolean, default: false },
   tfaOTP: { type: String },              // Store the current OTP

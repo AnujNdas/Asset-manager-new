@@ -205,18 +205,24 @@ if (!strongPasswordRegex.test(password)) {
             console.log("VERIFY RESPONSE:", verifyRes);
 
 if (verifyRes.success && verifyRes.user) {
-  await ThemeSwal.fire({
-    title: "Account Created",
-    text: "Let’s complete your profile to get started.",
-    icon: "success",
-    confirmButtonText: "Continue",
-    allowOutsideClick: false,
-    customClass: {
+await ThemeSwal.fire({
+  title: "Account Created",
+
+  text: verifyRes.user.organizationOnboarded
+    ? "Your account is ready."
+    : "Let’s set up your workspace.",
+
+  icon: "success",
+
+  confirmButtonText: "Continue",
+
+  allowOutsideClick: false,
+
+  customClass: {
     confirmButton: "my-confirm-btn",
     cancelButton: "my-cancel-btn"
   },
-
-  });
+});
   localStorage.setItem(
   "auth",
   JSON.stringify({
@@ -228,15 +234,19 @@ if (verifyRes.success && verifyRes.user) {
 localStorage.removeItem("inviteToken");
 
 
-  if (!verifyRes.user.onboardingCompleted) {
-    navigate("/onboarding");
-  } else {
-    navigate("/classification", {
-  state: {
-    startGuide: true,
-  },
-});
-  }
+if (!verifyRes.user.organizationOnboarded) {
+
+  navigate("/onboarding");
+
+} else {
+
+  navigate("/classification", {
+    state: {
+      startGuide: true,
+    },
+  });
+
+}
 } else {
   ThemeSwal.fire(
     "Error",
