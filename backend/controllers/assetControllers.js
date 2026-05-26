@@ -15,6 +15,7 @@
   const SoftwareAsset = require("../models/SoftwareAsset");
   const AssetInstance = require("../models/AssetInstance");
   const convertToBase = require("../utils/convertToBase");
+  const buildVendor = require("../utils/buildVendor");
 const QRCode = require("qrcode");
 const cloudinary = require("../config/cloudinary"); 
 
@@ -30,24 +31,22 @@ const cloudinary = require("../config/cloudinary");
     const parsed = new Date(value);
     return isNaN(parsed.getTime()) ? null : parsed;
   };
-function buildVendor(incoming = {}, existing = {}) {
-  return {
-    name:
-      incoming.name !== undefined
-        ? incoming.name?.trim() || null
-        : existing?.name ?? null,
+const buildVendor = (incoming = {}, existing = {}) => ({
+  name:
+    incoming.name !== undefined
+      ? incoming.name?.trim() || null
+      : existing?.name ?? null,
 
-    contact:
-      incoming.contact !== undefined
-        ? incoming.contact?.trim() || null
-        : existing?.contact ?? null,
+  contact:
+    incoming.contact !== undefined
+      ? incoming.contact?.trim() || null
+      : existing?.contact ?? null,
 
-    supportEmail:
-      incoming.supportEmail !== undefined
-        ? incoming.supportEmail?.trim() || null
-        : existing?.supportEmail ?? null,
-  };
-}
+  supportEmail:
+    incoming.supportEmail !== undefined
+      ? incoming.supportEmail?.trim() || null
+      : existing?.supportEmail ?? null,
+});
   const buildMaintenance = (incoming = {}) => {
     if (!incoming) return {};
 
