@@ -1761,7 +1761,10 @@ const parseDateSafe = (d) => {
         .toString(36)
         .slice(2, 6)}`;
         const purchaseDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.purchaseDate) : parseDateSafe(inst.software?.purchaseDate);
-        const nextmaintenanceDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.nextMaintenanceDate) : null;
+const nextMaintenanceDate =
+  assetType === "hardware"
+    ? parseDateSafe(inst.hardware?.nextMaintenanceDate)
+    : null;
 const purchaseCost =
   assetType === "hardware"
     ? {
