@@ -386,15 +386,38 @@ const topLocationsPromise = AssetInstance.aggregate([
   { $match: { organizationId } },
 
   /* ================= JOIN ASSET ================= */
-  {
-    $lookup: {
-      from: "assets",
-      localField: "assetId",
-      foreignField: "_id",
-      as: "asset"
+/* ================= HARDWARE ASSET ================= */
+{
+  $lookup: {
+    from: "assets",
+    localField: "assetId",
+    foreignField: "_id",
+    as: "hardwareAsset"
+  }
+},
+
+/* ================= SOFTWARE ASSET ================= */
+{
+  $lookup: {
+    from: "softwareassets",
+    localField: "assetId",
+    foreignField: "_id",
+    as: "softwareAsset"
+  }
+},
+
+/* ================= NORMALIZE ASSET ================= */
+{
+  $addFields: {
+    asset: {
+      $cond: [
+        { $eq: ["$assetType", "hardware"] },
+        { $arrayElemAt: ["$hardwareAsset", 0] },
+        { $arrayElemAt: ["$softwareAsset", 0] }
+      ]
     }
-  },
-  { $unwind: { path: "$asset", preserveNullAndEmptyArrays: true } },
+  }
+},
 
   /* ================= LOCATION NAME ================= */
   {
