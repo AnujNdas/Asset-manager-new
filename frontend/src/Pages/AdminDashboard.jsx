@@ -156,7 +156,6 @@ const { totals, upcoming, analytics, costBreakdown } = data;
   items={analytics.topAssets}
   labelKey="assetName"
   valueKey="totalCost"
-          currency={currency}
           redirectTo="/inventory?software"
         />
 
