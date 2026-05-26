@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { getDashboardData } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
 import LocationInsights from "../Components/LocationInsights";
-import { useCurrency } from "../Context/CurrencyContext";
-import { CURRENCY_SYMBOLS } from "../utils/currency";
-import CurrencyFilter from "../Components/CurrencyFilter";
 import {
   ComposableMap,
   Geographies,
@@ -58,7 +55,6 @@ const COUNTRY_NAME_MAP = {
 
 
 const AdminDashboard = () => {
-const { currency, convertFromBase, loadingRates } = useCurrency();
   console.log("AdminDashboard mounted");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -90,7 +86,7 @@ useEffect(() => {
   fetchDashboard();
 }, []);
 
- if (loading || loadingRates) { 
+ if (loading) { 
     return (
      <Loader />
     );
@@ -110,34 +106,26 @@ const { totals, upcoming, analytics, costBreakdown } = data;
     <div className="dashboard-container">
       <div className="dashboard-header">
   <h1 className="dashboard-title">Admin Dashboard</h1>
-  <CurrencyFilter />
 </div>
 
       {/* ================= TOP METRICS ================= */}
       <div className="metrics-grid">
-        <MetricCard
-          title="Total Valuation"
-          value={` ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-  totals.overallValuation,
-).toLocaleString()}`}
-
-        />
+<MetricCard
+  title="Total Valuation"
+  value={`$ ${totals.overallValuation.toLocaleString()}`}
+/>
 
 <MetricCard
   title="Software Assets"
   value={totals.softwareCount}
-  sub={`${totals.softwareInstances} Instances • ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-    totals.softwarePurchaseValue
-  ).toLocaleString()}`}
+  sub={`${totals.softwareInstances} Instances • $ ${totals.softwarePurchaseValue.toLocaleString()}`}
   redirectTo="/inventory?software"
 />
 
 <MetricCard
   title="Hardware Assets"
   value={totals.hardwareCount}
-  sub={`${totals.hardwareInstances} Instances • ${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-    totals.hardwarePurchaseValue
-  ).toLocaleString()}`}
+  sub={`${totals.hardwareInstances} Instances • $ ${totals.hardwarePurchaseValue.toLocaleString()}`}
   redirectTo="/inventory?hardware"
 />
 
@@ -367,7 +355,7 @@ const AnalyticsCard = ({
   redirectTo
 }) => {
   const navigate = useNavigate();
-  const { currency, convertFromBase} = useCurrency();
+
   const getValue = (obj, path) =>
     path.split(".").reduce((o, key) => o?.[key], obj);
 
@@ -381,14 +369,13 @@ const AnalyticsCard = ({
       <div className="list">
         {items.map((item, index) => {
           const rawValue = getValue(item, valueKey) || 0;
-          const converted = convertFromBase(rawValue);
 
           return (
             <div key={index} className="list-row">
               <span>{getValue(item, labelKey)}</span>
+
               <span className="value-text">
-                {CURRENCY_SYMBOLS[currency]}{" "}
-                {converted.toLocaleString()}
+                $ {rawValue.toLocaleString()}
               </span>
             </div>
           );
@@ -654,7 +641,6 @@ const formatCurrency = (value) => {
   }
 };
 const SpendByCategoryBarChart = ({ data }) => {
-  const { currency, convertFromBase } = useCurrency();
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
@@ -671,10 +657,9 @@ const SpendByCategoryBarChart = ({ data }) => {
     return <div className="chart-empty">No spend data available</div>;
   }
 
-  const chartData = data.map((item) => ({
-    ...item,
-    totalSpendConverted: convertFromBase(item.totalSpend),
-  }));
+const chartData = data.map((item) => ({
+  ...item,
+}));
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -691,8 +676,7 @@ const SpendByCategoryBarChart = ({ data }) => {
           </div>
 
           <div style={{ color: "#DFD0B8", fontWeight: 500 }}>
-             {CURRENCY_SYMBOLS[currency]}{" "}
-  {formatCurrency(payload[0].payload.totalSpendConverted)}
+$ {formatCurrency(payload[0].payload.totalSpend)}
           </div>
         </div>
       );
@@ -735,13 +719,7 @@ const SpendByCategoryBarChart = ({ data }) => {
         <XAxis
           type="number"
           tick={{ fontSize: 10 }}
-          tickFormatter={(value) =>
-            `${CURRENCY_SYMBOLS[currency]}${value >= 1_000_000
-  ? `${(value / 1_000_000).toFixed(1)}M`
-  : value >= 1_000
-  ? `${(value / 1_000).toFixed(1)}K`
-  : value.toFixed(0)}M`
-          }
+          tickFormatter={(value) => `$${formatCurrency(value)}`}
         />
 
 <YAxis
@@ -763,9 +741,7 @@ const SpendByCategoryBarChart = ({ data }) => {
         />
 
 <YAxis
-  tickFormatter={(value) =>
-    `${CURRENCY_SYMBOLS[currency]}${formatCurrency(value)}`
-  }
+  tickFormatter={(value) => `$${formatCurrency(value)}`}
 />
       </>
     )}
@@ -785,18 +761,16 @@ const SpendByCategoryBarChart = ({ data }) => {
     )}
 
     <Bar
-      dataKey="totalSpendConverted"
+      dataKey="totalSpend"
       name="Total Spend"
       fill="url(#barGradient)"
       radius={isMobile ? [0, 8, 8, 0] : [8, 8, 0, 0]}
     >
       {!isMobile && (
 <LabelList
-  dataKey="totalSpendConverted"
+  dataKey="totalSpend"
   position="top"
-  formatter={(value) =>
-    `${CURRENCY_SYMBOLS[currency]}${formatCurrency(value)}`
-  }
+  formatter={(value) => `$${formatCurrency(value)}`}
 />
       )}
     </Bar>
@@ -807,8 +781,6 @@ const SpendByCategoryBarChart = ({ data }) => {
 };
 
 const CostBreakdownCard = ({ title, items }) => {
-  const { currency, convertFromBase } = useCurrency();
-
   if (!items || items.length === 0) {
     return (
       <div className="card">
@@ -824,15 +796,12 @@ const CostBreakdownCard = ({ title, items }) => {
 
       <div className="list">
         {items.map((item, index) => {
-          const converted = convertFromBase(item.cost || 0);
-
           return (
             <div key={item._id || index} className="list-row">
               <span>{item.instanceName}</span>
 
               <span className="value-text">
-                {CURRENCY_SYMBOLS[currency]}{" "}
-                {converted.toLocaleString()}
+                $ {(item.cost || 0).toLocaleString()}
               </span>
             </div>
           );
