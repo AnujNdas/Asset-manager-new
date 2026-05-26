@@ -1868,13 +1868,27 @@ const insuranceCost = {
             }
           },
 
-          lifecycle: [
-            {
-              action: "CREATED",
-              date: new Date(),
-              notes: "Bulk instance upload"
-            }
-          ],
+lifecycle: [
+  {
+    eventType: "created",
+
+    category: "instance",
+
+    title: "Instance Created",
+
+    description: "Bulk instance upload",
+
+    performedBy: userId,
+
+    date: new Date(),
+
+    metadata: {
+      source: "bulk_upload",
+      assetId: asset._id,
+      assetType
+    }
+  }
+],
 
           createdBy: userId
         });
@@ -1915,13 +1929,27 @@ const renewalCost = {
             purchaseCost
           },
 
-          lifecycle: [
-            {
-              action: "CREATED",
-              date: new Date(),
-              notes: "Bulk instance upload"
-            }
-          ],
+lifecycle: [
+  {
+    eventType: "created",
+
+    category: "instance",
+
+    title: "Instance Created",
+
+    description: "Bulk instance upload",
+
+    performedBy: userId,
+
+    date: new Date(),
+
+    metadata: {
+      source: "bulk_upload",
+      assetId: asset._id,
+      assetType
+    }
+  }
+],
 
           createdBy: userId
         });
