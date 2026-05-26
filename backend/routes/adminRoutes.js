@@ -467,7 +467,7 @@ finalLocation: {
       ]
     }
   ]
-}
+},
 
       isAssigned: {
         $cond: [{ $gt: [{ $size: "$assignment" }, 0] }, 1, 0]
