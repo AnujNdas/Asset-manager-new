@@ -232,7 +232,7 @@ const handleOpenCheckoutPreview = async () => {
       tierId: selectedTier,
       billingCycle: billing,
     });
-
+    console.log("PREVIEW RESPONSE =>", preview);
     setCheckoutPreview(preview);
 
     setShowCheckoutPreview(true);
