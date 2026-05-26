@@ -1739,7 +1739,9 @@ const parseDateSafe = (d) => {
     try {
       const row = index + 2;
 
-      let serialNumber = normalize(inst.serialNumber);
+      let serialNumber = normalize(
+  inst.hardware?.serialNumber
+);
 
       if (assetType === "hardware" && !serialNumber) {
         serialNumber = generateSerial();
@@ -1810,21 +1812,21 @@ const insuranceId = hasInsurance
   : null;
 const maintenanceCost = {
   amount: Number(
-    inst.hardware?.costs?.maintenanceCost || 0
+    inst.hardware?.costs?.maintenanceCost?.amount || 0
   ),
   currency: "USD"
 };
 
 const warrantyRenewalCost = {
   amount: Number(
-    inst.hardware?.costs?.warrantyRenewalCost || 0
+    inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
   ),
   currency: "USD"
 };
 
 const insuranceCost = {
   amount: Number(
-    inst.hardware?.costs?.insuranceCost || 0
+    inst.hardware?.costs?.insuranceCost?.amount || 0
   ),
   currency: "USD"
 };
@@ -1882,7 +1884,7 @@ const insuranceCost = {
       else {
 const renewalCost = {
   amount: Number(
-    inst.software?.costs?.renewalCost || 0
+    inst.software?.costs?.renewalCost?.amount || 0
   ),
   currency: "USD"
 };
@@ -1903,7 +1905,8 @@ const renewalCost = {
             purchaseDate,
             licenseKey: normalize(inst.software?.licenseKey) || "",
             purchaseDate: parseDateSafe(inst.software?.purchaseDate),
-            licenseNumber: inst.licenseNumber || "",
+            licenseNumber:
+              normalize(inst.software?.licenseNumber) || "",
             installationDate,
             renewalDate,
             costs : {
@@ -1991,7 +1994,8 @@ if (
       ordered: false
     });
   }
-
+  console.log("VALID INSTANCES:", validInstances.length);
+console.log(validInstances);
   /* ================= RESPONSE ================= */
   res.status(200).json({
     success: true,
