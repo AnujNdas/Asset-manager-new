@@ -446,12 +446,28 @@ const topLocationsPromise = AssetInstance.aggregate([
         }
       },
 
-      finalLocation: {
-        $ifNull: [
-          { $arrayElemAt: ["$assignment.location", 0] },
-          { $ifNull: ["$location", "$assetLocationObj.name"] }
-        ]
-      },
+finalLocation: {
+  $ifNull: [
+    {
+      $arrayElemAt: [
+        {
+          $map: {
+            input: "$assignment",
+            as: "a",
+            in: "$$a.location"
+          }
+        },
+        0
+      ]
+    },
+    {
+      $ifNull: [
+        "$assetLocationObj.name",
+        "$location"
+      ]
+    }
+  ]
+}
 
       isAssigned: {
         $cond: [{ $gt: [{ $size: "$assignment" }, 0] }, 1, 0]
