@@ -237,7 +237,7 @@ const slides = [
                 className="preview-image"
               />
 
-              <div className="image-overlay">
+              {/* <div className="image-overlay">
                 <div className="overlay-content">
                   <div>
                     <h4 className="overlay-title">
@@ -257,7 +257,7 @@ const slides = [
                     ))}
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
