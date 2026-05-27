@@ -15,90 +15,90 @@ const slides = [
   {
     id: 1,
     title: "Welcome to Socialfly AMS",
-    subtitle: "Smart Asset Management",
+    subtitle: "Complete Asset Management Platform",
     description:
-      "Manage and monitor organizational assets efficiently.",
+      "Get started with Socialfly AMS to manage hardware, software, inventory, assignments, and organization-wide asset tracking from one centralized dashboard.",
     image: slide1,
   },
 
   {
     id: 2,
-    title: "Inventory Tracking",
-    subtitle: "Centralized Asset Control",
+    title: "Setup Classifications",
+    subtitle: "Configure Locations, Units & Departments",
     description:
-      "Track hardware and software assets in real time.",
+      "Begin by creating your organization structure inside Workforce → Classifications. Add locations, units, categories, and departments for proper asset organization.",
     image: slide2,
   },
 
   {
     id: 3,
-    title: "Assignments",
-    subtitle: "Employee Asset Allocation",
+    title: "Add Business Locations",
+    subtitle: "Manage Offices & Asset Destinations",
     description:
-      "Assign and monitor assets across departments.",
+      "Create and manage company locations such as cities, offices, branches, floors, and addresses where assets will be installed or assigned.",
     image: slide3,
   },
 
   {
     id: 4,
-    title: "Reports & Analytics",
-    subtitle: "Visual Insights",
+    title: "Configure Asset Units",
+    subtitle: "Standardize Asset Measurements",
     description:
-      "Generate reports and monitor asset performance.",
+      "Set up units like devices, seats, terabytes, gigabytes, licenses, and concurrent users to accurately manage both hardware and software assets.",
     image: slide4,
   },
 
   {
     id: 5,
-    title: "License Management",
-    subtitle: "Software Compliance",
+    title: "Create Departments",
+    subtitle: "Organize Workforce Structure",
     description:
-      "Track licenses, expiries and renewals easily.",
+      "Add departments such as IT, Marketing, Operations, Sales, and Product Management to simplify asset ownership and employee assignments.",
     image: slide5,
   },
 
   {
     id: 6,
-    title: "Maintenance Tracking",
-    subtitle: "Lifecycle Monitoring",
+    title: "Capture New Assets",
+    subtitle: "Add Hardware & Software Assets",
     description:
-      "Monitor repairs, warranty and maintenance history.",
+      "Create physical and digital assets with details like category, quantity, vendor, purchase dates, billing location, and lifecycle information.",
     image: slide6,
   },
 
   {
     id: 7,
-    title: "Employee Requests",
-    subtitle: "Request Workflow",
+    title: "Generate Asset Instances",
+    subtitle: "Create Individual Trackable Records",
     description:
-      "Handle employee asset requests efficiently.",
+      "Convert assets into unique trackable instances with serial numbers, quantities, and stock availability for better inventory control.",
     image: slide7,
   },
 
   {
     id: 8,
-    title: "Notifications",
-    subtitle: "Real-Time Alerts",
+    title: "Manage Asset Details",
+    subtitle: "Track Costs, Warranty & Maintenance",
     description:
-      "Stay updated with assignments and inventory events.",
+      "Add complete asset instance information including purchase cost, maintenance dates, insurance, warranty expiry, installation details, and location.",
     image: slide8,
   },
 
   {
     id: 9,
-    title: "Organization Insights",
-    subtitle: "Department Visibility",
+    title: "Assign Assets to Employees",
+    subtitle: "Department-Based Asset Allocation",
     description:
-      "View organization-wide asset utilization.",
+      "Assign hardware and software instances to employees by selecting categories, assets, and departments while maintaining assignment history.",
     image: slide9,
   },
 
   {
     id: 10,
-    title: "You're Ready",
-    subtitle: "Start Managing Assets",
+    title: "Track Asset Lifecycle",
+    subtitle: "Monitor Usage, History & Reassignment",
     description:
-      "Begin using Socialfly AMS with complete control.",
+      "View complete asset history including assignments, upgrades, maintenance, renewal costs, reassignment records, and lifecycle activities.",
     image: slide10,
   },
 ];
