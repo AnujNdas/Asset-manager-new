@@ -26,6 +26,17 @@ const Menubar = ({ username, toggleSidebar }) => {
   const [showInstallButton, setShowInstallButton] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  useEffect(() => {
+  if (showOnboarding) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [showOnboarding]);
 useEffect(() => {
   const handleResize = () => {
     setIsMobile(window.innerWidth < 768);
