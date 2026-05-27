@@ -97,7 +97,7 @@ const MisReport = () => {
 
   const softwareSummary = software.map((a) => ({
     assetName: a.assetName,
-    category: getCategoryName(a.assetCategory),
+    category: a.assetCategory?.name,
     location:
       typeof a.locationName === "object"
         ? a.locationName?.name
