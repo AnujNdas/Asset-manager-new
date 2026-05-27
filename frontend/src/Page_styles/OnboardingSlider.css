@@ -231,7 +231,7 @@
 
 .description {
   max-width: 620px;
-  font-size: 18px;
+  font-size: 12px;
   line-height: 1.8;
   color: #948979;
 }
@@ -275,7 +275,7 @@
 }
 
 .feature-text {
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 500;
   color: #DFD0B8;
 }
