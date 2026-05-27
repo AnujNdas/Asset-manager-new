@@ -120,8 +120,8 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           </p>
           <p className="value">
             {isSoftware
-            ? sw.costs?.renewalCost?.amount
-            : hw.costs?.maintenanceCost?.amount}
+            ? `${sw.costs?.renewalCost?.currency} ${sw.costs?.renewalCost?.amount}`
+            : `${hw.costs?.maintenanceCost?.currency} ${hw.costs?.maintenanceCost?.amount}`}
           </p>
         </div>
 
@@ -130,7 +130,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <div>
             <p className="label">Warranty Cost</p>
             <p className="value">
-              {hw.costs?.warrantyRenewalCost?.amount}
+              {hw.costs?.warrantyRenewalCost?.currency} {hw.costs?.warrantyRenewalCost?.amount}
             </p>
           </div>
         )}
@@ -140,7 +140,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <div>
             <p className="label">Insurance Cost</p>
             <p className="value">
-              {hw.costs?.insuranceCost?.amount}
+              {hw.costs?.insuranceCost?.currency} {hw.costs?.insuranceCost?.amount}
             </p>
           </div>
         )}
@@ -150,8 +150,8 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <p className="label">Purchase Cost</p>
           <p className="value">
             {isSoftware
-              ? sw.purchaseCost?.amount
-              : hw.purchaseCost?.amount}
+              ? `${sw.purchaseCost?.currency} ${sw.purchaseCost?.amount}`
+              : `${hw.purchaseCost?.currency} ${hw.purchaseCost?.amount}`}
           </p>
         </div>
 
