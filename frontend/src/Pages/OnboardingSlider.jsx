@@ -1,5 +1,5 @@
 import React from "react";
-import "./OnboardingSliderPage.css";
+import "../Page_styles/OnboardingSlider.css";
 import slide1 from "../images/1.png";
 import slide2 from "../images/2.png";
 import slide3 from "../images/3.png";
