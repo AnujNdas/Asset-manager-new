@@ -9,19 +9,7 @@ const formatDate = (date) => {
   return isNaN(d) ? "-" : d.toLocaleDateString();
 };
 
-const formatCurrency = (obj) => {
-  if (!obj) return "-";
 
-  if (typeof obj === "number") {
-    return `INR ${obj}`;
-  }
-
-  if (typeof obj === "object") {
-    return `${obj.currency || "INR"} ${obj.amount || 0}`;
-  }
-
-  return "-";
-};
 
 const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
   const { registerTour } = useTour();
@@ -132,8 +120,8 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           </p>
           <p className="value">
             {isSoftware
-            ? formatCurrency(sw.costs?.renewalCost)
-            : formatCurrency(hw.costs?.maintenanceCost)}
+            ? sw.costs?.renewalCost?.amount
+            : hw.costs?.maintenanceCost?.amount}
           </p>
         </div>
 
@@ -142,7 +130,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <div>
             <p className="label">Warranty Cost</p>
             <p className="value">
-              {formatCurrency(hw.costs?.warrantyRenewalCost)}
+              {hw.costs?.warrantyRenewalCost?.amount}
             </p>
           </div>
         )}
@@ -152,7 +140,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <div>
             <p className="label">Insurance Cost</p>
             <p className="value">
-              {formatCurrency(hw.costs?.insuranceCost)}
+              {hw.costs?.insuranceCost?.amount}
             </p>
           </div>
         )}
@@ -162,8 +150,8 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
           <p className="label">Purchase Cost</p>
           <p className="value">
             {isSoftware
-              ? formatCurrency(sw.purchaseCost)
-              : formatCurrency(hw.purchaseCost)}
+              ? sw.purchaseCost?.amount
+              : hw.purchaseCost?.amount}
           </p>
         </div>
 

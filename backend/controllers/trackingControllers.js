@@ -357,7 +357,7 @@ const history = (instance.lifecycle || [])
 
             maintenanceCost:
               instance.hardware?.costs
-                ?.maintenanceCost || null
+                ?.maintenanceCost?.amount || null
           }
         : null,
 
@@ -381,7 +381,7 @@ const history = (instance.lifecycle || [])
 
             renewalCost:
               instance.software?.costs
-                ?.renewalCost || null
+                ?.renewalCost?.amount || null
           }
         : null,
 
