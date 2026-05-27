@@ -850,7 +850,6 @@ router.get(
       const users = await User.find({
         organizationId: new mongoose.Types.ObjectId(organizationId),
       })
-        .populate("departmentId", "name")   // ✅ ADD THIS
         .select("-password")
         .sort({ createdAt: -1 });
 
@@ -861,5 +860,4 @@ router.get(
     }
   }
 );
-
 module.exports = router;
