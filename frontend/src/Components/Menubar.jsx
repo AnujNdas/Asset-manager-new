@@ -14,7 +14,7 @@ import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
 import PlanTimer from "./PlanTimer";
 import { useTour } from "../Context/TourContext";
-import OnboardingSliderPage from "../Pages/OnboardingSliderPage";
+import OnboardingSliderPage from "../Pages/OnboardingSlider";
 const Menubar = ({ username, toggleSidebar }) => {
   const navigate = useNavigate();
   const toggleButtonRef = useRef(null);
