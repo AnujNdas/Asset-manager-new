@@ -14,6 +14,7 @@ import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
 import PlanTimer from "./PlanTimer";
 import { useTour } from "../Context/TourContext";
+import OnboardingSliderPage from "../Pages/OnboardingSliderPage";
 const Menubar = ({ username, toggleSidebar }) => {
   const navigate = useNavigate();
   const toggleButtonRef = useRef(null);
@@ -24,7 +25,7 @@ const Menubar = ({ username, toggleSidebar }) => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
-
+  const [showOnboarding, setShowOnboarding] = useState(false);
 useEffect(() => {
   const handleResize = () => {
     setIsMobile(window.innerWidth < 768);
@@ -109,10 +110,11 @@ const { startTour } = useTour();
 </div>
         <div className="control-panel">
 <button
-  onClick={startTour}
+  onClick={() => setShowOnboarding(true)}
   style={{
     border: "none",
     background: "transparent",
+    cursor: "pointer",
   }}
 >
   <FontAwesomeIcon
@@ -149,7 +151,13 @@ const { startTour } = useTour();
           </button>
         </div>
       </div>
-
+              {showOnboarding && (
+  <div className="onboarding-overlay">
+    <OnboardingSliderPage
+      onClose={() => setShowOnboarding(false)}
+    />
+  </div>
+)}
       <ProfileDropdown
         isVisible={isDropdownVisible}
         onClose={() => setDropdownVisible(false)}
