@@ -282,21 +282,21 @@ useEffect(() => {
 }
   };
 const getCost = (costObj) => {
-  return convertFromBase(Number(costObj?.baseAmount || 0));
+  return convertFromBase(Number(costObj?.amount || 0));
 };
  const getAssetTotals = (asset) => {
     const instances = asset.instances || [];
 
     const totalPurchase = instances.reduce(
       (sum, inst) =>
-        sum + Number(inst.hardware?.purchaseCost?.baseAmount || 0),
+        sum + Number(inst.hardware?.purchaseCost?.amount || 0),
       0
     );
 
     const totalMaintenance = instances.reduce(
       (sum, inst) =>
         sum +
-        Number(inst.hardware?.costs?.maintenanceCost?.baseAmount || 0),
+        Number(inst.hardware?.costs?.maintenanceCost?.amount || 0),
       0
     );
 
