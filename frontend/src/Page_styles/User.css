@@ -125,9 +125,8 @@
 ========================= */
 
 .affiliate-card {
-  margin-top: 1.5rem;
 
-  padding: 1rem 1.2rem;
+  padding: 5px 1.2rem;
 
   border-radius: 18px;
 
@@ -140,7 +139,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  /* gap: 1rem; */
 
   transition: 0.3s ease;
 }
@@ -157,15 +156,7 @@
 
   margin-bottom: 0.3rem;
 
-  color: #fff;
-}
-
-.affiliate-info p {
-  font-size: 0.88rem;
-
-  color: rgba(255,255,255,0.7);
-
-  line-height: 1.4;
+  color: #948979;
 }
 
 .affiliate-btn {
@@ -179,13 +170,9 @@
 
   cursor: pointer;
 
-  background: linear-gradient(
-    135deg,
-    #7c5cff,
-    #5b8cff
-  );
+  background: #DFD0B8;
 
-  color: white;
+  color: #222831;
 
   white-space: nowrap;
 

@@ -63,11 +63,6 @@ const User = ({ removeUser }) => {
 <div className="affiliate-card">
   <div className="affiliate-info">
     <h4>Become an Affiliate Partner</h4>
-
-    <p>
-      Refer businesses and earn commission
-      from successful subscriptions.
-    </p>
   </div>
 
   <button
