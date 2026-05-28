@@ -748,27 +748,34 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
       );
     }
 
+/* ================= FETCH PREVIOUS EMPLOYEE ================= */
+
+const previousEmployee = await Employee.findById(
+  oldAssignment.employeeId
+).session(session);
+
+const previousDepartment = await Department.findById(
+  oldAssignment.departmentId
+).session(session);
+
+/* ================= PREVIOUS ASSIGNMENT SNAPSHOT ================= */
+
 const previousAssignmentData = {
-  employeeId:
-    oldAssignment.employeeId ||
-    oldAssignment.assignedTo?.employeeId,
+  employeeId: oldAssignment.employeeId,
 
   employeeName:
     oldAssignment.employeeName ||
-    oldAssignment.assignedTo?.employeeName ||
-    oldAssignment.employee?.name,
+    previousEmployee?.name ||
+    "Unknown",
 
-  departmentId:
-    oldAssignment.departmentId ||
-    oldAssignment.assignedTo?.departmentId,
+  departmentId: oldAssignment.departmentId,
 
   departmentName:
     oldAssignment.departmentName ||
-    oldAssignment.assignedTo?.departmentName,
+    previousDepartment?.name ||
+    "-",
 
-  location:
-    oldAssignment.location ||
-    oldAssignment.assignedTo?.location
+  location: oldAssignment.location || "-"
 };
 
     /* ================= CLOSE OLD ASSIGNMENT ================= */
