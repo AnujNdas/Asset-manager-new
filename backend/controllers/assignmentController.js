@@ -748,12 +748,27 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
       );
     }
 
-    const previousAssignmentData = {
-  employeeId: oldAssignment.employeeId,
-  employeeName: oldAssignment.employeeName,
-  departmentId: oldAssignment.departmentId,
-  departmentName: oldAssignment.departmentName,
-  location: oldAssignment.location
+const previousAssignmentData = {
+  employeeId:
+    oldAssignment.employeeId ||
+    oldAssignment.assignedTo?.employeeId,
+
+  employeeName:
+    oldAssignment.employeeName ||
+    oldAssignment.assignedTo?.employeeName ||
+    oldAssignment.employee?.name,
+
+  departmentId:
+    oldAssignment.departmentId ||
+    oldAssignment.assignedTo?.departmentId,
+
+  departmentName:
+    oldAssignment.departmentName ||
+    oldAssignment.assignedTo?.departmentName,
+
+  location:
+    oldAssignment.location ||
+    oldAssignment.assignedTo?.location
 };
 
     /* ================= CLOSE OLD ASSIGNMENT ================= */
@@ -798,7 +813,7 @@ metadata: {
       previousAssignmentData.employeeId || null,
 
     employeeName:
-      previousAssignmentData.employeeName || null,
+  previousAssignmentData.employeeName || "Unknown",
 
     departmentId:
       previousAssignmentData.departmentId || null,
