@@ -92,15 +92,20 @@ useEffect(() => {
         );
 
         if (foundAsset) {
+console.log("FOUND ASSET =>", foundAsset);
+setSelectedCategory({
+  category: preselectedCategory,
 
-  setSelectedCategory({
-    category: preselectedCategory,
-    categoryName:
-      foundAsset.categoryName ||
-      foundAsset.category?.name ||
-      "Unknown Category"
-  });
-
+  categoryName:
+    foundAsset.categoryName ||
+    foundAsset.assetCategory?.categoryName ||
+    foundAsset.assetCategory?.name ||
+    foundAsset.category?.categoryName ||
+    foundAsset.category?.name ||
+    foundAsset.category ||
+    preselectedCategory ||
+    "Unknown Category"
+});
   setSelectedAsset(foundAsset);
 
   const instanceRes =

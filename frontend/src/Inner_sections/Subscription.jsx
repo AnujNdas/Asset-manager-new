@@ -755,7 +755,7 @@ const currency =
               {formatDate(today)}
             </span>
           </div>
-          <span style={{color : "#DFD0B8"}}>→</span>
+          <span style={{color : "#DFD0B8" , display : "flex" , alignItems : "center"}}>→</span>
 
           <div className="date-box">
             <span className="label">Expires On</span>
