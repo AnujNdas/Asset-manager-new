@@ -308,14 +308,14 @@ const handleUnassign = async (assignmentId) => {
     await unassignAssetInstance(
       assignmentId
     );
+    await fetchAll();
 
-    ThemeSwal.fire(
+    ThemeSwal.fire( 
       "Success",
       "Asset unassigned successfully",
       "success"
     );
 
-    fetchAll();
 
   } catch (err) {
 
@@ -482,7 +482,7 @@ const handleDelete = async (id) => {
   const handleAssign = (asset) => {
     navigate("/assignment", {
       state: {
-        categoryId: asset.assetCategory,
+        category: asset.assetCategory?._id, // ✅ FIX
         assetId: asset._id,
         assetType: "software",
       },

@@ -83,6 +83,7 @@
   padding: 15px;
   border-radius: 12px;
   border: none;
+  width: 100%;
 }
 
 .form-card h3 {

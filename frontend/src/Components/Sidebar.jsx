@@ -124,15 +124,15 @@ useEffect(() => {
         </NavLink>
       </li>
       <li>
-        <NavLink to="/tracking" onClick={closeSidebar} className={({ isActive }) => (isActive ? "active" : "")}>
-        <FontAwesomeIcon icon={faCheck} style={{ width: "25%" }} />
-          Track Records
-        </NavLink>
-      </li>
-      <li>
         <NavLink to="/instance-assets" onClick={closeSidebar} className={({ isActive }) => (isActive ? "active" : "")}>
         <FontAwesomeIcon icon={fa42Group} style={{ width: "25%" }} />
           Instance Dashboard
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/tracking" onClick={closeSidebar} className={({ isActive }) => (isActive ? "active" : "")}>
+        <FontAwesomeIcon icon={faCheck} style={{ width: "25%" }} />
+          Track Records
         </NavLink>
       </li>
     </ul>

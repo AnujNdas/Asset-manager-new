@@ -92,20 +92,24 @@ useEffect(() => {
         );
 
         if (foundAsset) {
-          setSelectedCategory({
-            category: preselectedCategory
-          });
 
-          setSelectedAsset(foundAsset);
+  setSelectedCategory({
+    category: preselectedCategory,
+    categoryName:
+      foundAsset.categoryName ||
+      foundAsset.category?.name ||
+      "Unknown Category"
+  });
 
-          const instanceRes =
-            await getInstancesByAsset(foundAsset._id);
+  setSelectedAsset(foundAsset);
 
-          setInstances(instanceRes.data || []);
+  const instanceRes =
+    await getInstancesByAsset(foundAsset._id);
 
-          // ✅ OPEN DIRECTLY
-          setStep(2);
-        } else {
+  setInstances(instanceRes.data || []);
+
+  setStep(2);
+} else {
           setStep(1);
         }
 

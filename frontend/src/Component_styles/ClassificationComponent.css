@@ -273,6 +273,10 @@
 .driver-popover-arrow {
   border-color: #222831 !important;
 }
+.my-confirm-btn { 
+  background: #DFD0B8 !important;
+  color: #222831 !important;
+}
 @keyframes modalFade {
   from {
     opacity: 0;

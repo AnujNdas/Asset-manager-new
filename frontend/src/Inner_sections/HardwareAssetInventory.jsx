@@ -363,17 +363,15 @@ const handleUnassign = async (assignmentId) => {
 
     if (!confirm.isConfirmed) return;
 
-    await unassignAssetInstance(
-      assignmentId
-    );
+    await unassignAssetInstance(assignmentId);
+
+    await fetchAll();
 
     ThemeSwal.fire(
       "Success",
       "Asset unassigned successfully",
       "success"
     );
-
-    fetchAll();
 
   } catch (err) {
 
