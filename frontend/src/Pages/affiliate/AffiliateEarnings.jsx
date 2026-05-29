@@ -1,8 +1,8 @@
 // ✅ src/Pages/AffiliateEarningsPage.jsx
 
 import React, { useEffect, useMemo, useState } from "react";
-import "../Page_styles/AffiliateEarnings.css";
-import Loader from "../Components/Loader";
+import "../../Page_styles/AffiliateEarnings.css";
+import Loader from "../../Components/Loader";
 
 import {
   ResponsiveContainer,
@@ -19,7 +19,7 @@ import {
   Cell,
 } from "recharts";
 
-import { getAffiliateEarnings } from "../Services/ApiServices";
+import { getAffiliateEarnings } from "../../Services/AffiliateServices";
 
 const AffiliateEarningsPage = () => {
 
