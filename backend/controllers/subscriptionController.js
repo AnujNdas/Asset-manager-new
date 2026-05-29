@@ -3,7 +3,7 @@ const razorpay = require("../config/razorpay");
 const razorpayPlans = require("../config/razorpayPlans");
 const pricingTiers = require("../config/pricingTiers");
 const Subscription = require("../models/Subscription");
-
+const processAffiliateConversion = require("../../utils/processAffiliateConversion");
 const isProduction = process.env.NODE_ENV === "production";
 
 /* ------------------------------------------------
@@ -90,7 +90,23 @@ const createCheckout = async (req, res) => {
     if (!planId) {
       return res.status(400).json({ message: "Invalid plan selection" });
     }
+    const tier = pricingTiers.find(
+  (t) => t.key === tierKey
+);
 
+if (!tier) {
+  return res.status(400).json({
+    message: "Invalid tier",
+  });
+}
+
+const amount =
+  billingCycle === "yearly"
+    ? tier.priceYearly
+    : tier.priceMonthly;
+
+const currency =
+  tier.currency || "USD";
     const subscription = await Subscription.findOne({
       organizationId: orgId,
     });
@@ -116,12 +132,20 @@ const createCheckout = async (req, res) => {
       });
 
     // 🔥 DO NOT TOUCH ACTIVE/TRIAL DATA
-    subscription.pendingUpgrade = {
-      tier: tierKey,
-      billingCycle,
-      razorpayPlanId: planId,
-      razorpaySubscriptionId: razorpaySubscription.id,
-    };
+subscription.pendingUpgrade = {
+  tier: tierKey,
+
+  billingCycle,
+
+  razorpayPlanId: planId,
+
+  razorpaySubscriptionId:
+    razorpaySubscription.id,
+
+  planPrice: amount,
+
+  currency,
+};
 
     await subscription.save();
 
@@ -316,7 +340,23 @@ const handleWebhook = async (req, res) => {
         subscription.razorpaySubscriptionId =
           subscription.pendingUpgrade.razorpaySubscriptionId;
 
-        subscription.pendingUpgrade = null;
+        subscription.planPrice =
+  subscription.pendingUpgrade.planPrice || 0;
+
+subscription.currency =
+  subscription.pendingUpgrade.currency || "USD";
+
+subscription.lastPaymentAmount =
+  subscription.pendingUpgrade.planPrice || 0;
+
+subscription.lastPaymentDate =
+  new Date();
+
+subscription.totalPaid =
+  (subscription.totalPaid || 0) +
+  (subscription.pendingUpgrade.planPrice || 0);
+
+subscription.pendingUpgrade = null;
       } else {
         console.log("No pending upgrade found");
       }
@@ -327,6 +367,12 @@ const handleWebhook = async (req, res) => {
       subscription.pastDueAt = null;
 
       await subscription.save();
+      if (
+  subscription.tier !== "trial" &&
+  subscription.status === "active"
+) {
+  await processAffiliateConversion(subscription);
+}
 
       console.log("✅ Subscription activated and saved to DB");
     }
@@ -340,7 +386,15 @@ const handleWebhook = async (req, res) => {
       subscription.currentStart = new Date(entity.current_start * 1000);
       subscription.currentEnd = new Date(entity.current_end * 1000);
       subscription.pastDueAt = null;
+      subscription.lastPaymentDate =
+  new Date();
 
+subscription.lastPaymentAmount =
+  subscription.planPrice || 0;
+
+subscription.totalPaid =
+  (subscription.totalPaid || 0) +
+  (subscription.planPrice || 0);
       await subscription.save();
 
       console.log("✅ Subscription renewed and DB updated");

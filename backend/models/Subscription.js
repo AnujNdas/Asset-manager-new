@@ -55,11 +55,35 @@ status: {
     pastDueAt: {
   type: Date,
 },
+planPrice: {
+  type: Number,
+  default: 0,
+},
+
+currency: {
+  type: String,
+  default: "USD",
+},
+
+lastPaymentAmount: {
+  type: Number,
+  default: 0,
+},
+
+lastPaymentDate: Date,
+
+totalPaid: {
+  type: Number,
+  default: 0,
+},
 pendingUpgrade: {
   tier: String,
   billingCycle: String,
   razorpayPlanId: String,
   razorpaySubscriptionId: String,
+
+  planPrice: Number,
+  currency: String,
 },
   },
   { timestamps: true }

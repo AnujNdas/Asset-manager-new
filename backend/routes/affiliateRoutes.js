@@ -13,6 +13,9 @@ const {
 const {
   getAffiliateDashboard,
 } = require("../controllers/affiliate/affiliateDashboard");
+const {
+  getAffiliateEarnings,
+} = require("../controllers/affiliate/affiliateEarning");
 const affiliateAuth = require(
   "../Middleware/affiliateAuth"
 );
@@ -29,5 +32,10 @@ router.get(
 router.post(
   "/track",
   trackReferralVisit
+);
+router.get(
+  "/earnings",
+  affiliateAuth,
+  getAffiliateEarnings
 );
 module.exports = router;
