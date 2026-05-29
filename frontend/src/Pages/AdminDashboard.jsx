@@ -748,15 +748,16 @@ $ {formatCurrency(payload[0].payload.totalSpend)}
     <Tooltip content={<CustomTooltip />} />
 
     {!isMobile && (
-      <Legend
-        verticalAlign="bottom"
-        align="center"
-        layout="horizontal"
-        wrapperStyle={{
-          paddingTop: 20,
-          fontSize: 13,
-        }}
-      />
+<Legend
+  verticalAlign="bottom"
+  align="center"
+  layout="horizontal"
+  wrapperStyle={{
+    paddingTop: 20,
+    fontSize: 13,
+    color: "#DFD0B8"
+  }}
+/>
     )}
 
     <Bar

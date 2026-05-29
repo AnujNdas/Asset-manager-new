@@ -91,22 +91,23 @@ useEffect(() => {
           a => a._id === preselectedAssetId
         );
 
-        if (foundAsset) {
-console.log("FOUND ASSET =>", foundAsset);
-setSelectedCategory({
-  category:
-    foundAsset.assetCategory?._id ||
-    foundAsset.category?._id ||
-    preselectedCategory,
+if (foundAsset) {
 
-  categoryName:
-    foundAsset.assetCategory?.categoryName ||
-    foundAsset.assetCategory?.name ||
-    foundAsset.category?.categoryName ||
-    foundAsset.category?.name ||
-    foundAsset.categoryName ||
-    "Unknown Category"
-});
+  const categoryObj =
+    foundAsset.assetCategory ||
+    foundAsset.category;
+
+  setSelectedCategory({
+    category:
+      categoryObj?._id ||
+      preselectedCategory,
+
+    categoryName:
+      categoryObj?.name ||
+      categoryObj?.categoryName ||
+      "Unknown Category",
+  });
+
   setSelectedAsset(foundAsset);
 
   const instanceRes =
@@ -115,6 +116,7 @@ setSelectedCategory({
   setInstances(instanceRes.data || []);
 
   setStep(2);
+
 } else {
           setStep(1);
         }

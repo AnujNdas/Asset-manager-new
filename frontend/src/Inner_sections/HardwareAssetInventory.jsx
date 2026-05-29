@@ -576,10 +576,22 @@ const paginatedAssets = filteredAssets.slice(
   );
 })()}
       </div>
+  {/* 🔷 VENDOR INFO */}
+<div className="vendor-card">
+  <p className="vendor-name">
+    🏢 {asset.purchaseDetails?.vendor?.name || "No Vendor"}
+  </p>
 
+  <p className="vendor-contact">
+    📞 {asset.purchaseDetails?.vendor?.contact || "No Contact"}
+  </p>
+
+  <p className="vendor-email">
+    ✉️ {asset.purchaseDetails?.vendor?.supportEmail || "No Email"}
+  </p>
+</div>
       {/* 🔷 BADGE GRID */}
       <div className="badge-grid">
-        <span className="badge">{asset.purchaseDetails?.vendor?.name}</span>
         <span className="badge">{asset.locationName?.name}</span>
         <span className="badge">{asset.associateUnit?.name}</span>
 

@@ -243,7 +243,7 @@
 .status.active {
   font-weight: 600;
   padding: 5px 10px;
-  background: linear-gradient(135deg, #DFD0B8 0%, #948979 50%, #DFD0B8 100%);
+  background: #4caf50;
   color: #222831;
   border-radius: 15px;
 }
