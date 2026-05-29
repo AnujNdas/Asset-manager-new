@@ -68,3 +68,16 @@ export const trackAffiliateVisit = async (
 
   return res.data;
 };
+export const getAffiliateEarnings = async () => {
+
+  const response = await axiosInstance.get(
+    "/affiliate/earnings",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
