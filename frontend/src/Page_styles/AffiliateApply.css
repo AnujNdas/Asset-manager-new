@@ -4,11 +4,11 @@
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: #0f172a;
+  background: #393E46;
   color: #DFD0B8;
 }
 
-.affiliate-left {
+.affiliate-left { 
   padding: 20px;
   display: flex;
   flex-direction: column;
