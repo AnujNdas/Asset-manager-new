@@ -478,12 +478,12 @@ const createSoftwareAsset = asyncHandler(async (req, res, next) => {
     assetQuantity: quantity,
     inUse: 0,
 
-    financialTracking: {
-      totalCost: 0,
-      monthlyCost: 0,
-      yearlyCost: 0
-    },
-
+financialTracking: {
+  totalAssetCost: 0,
+  monthlyCost: 0,
+  yearlyCost: 0,
+  maintenanceTotalCost: 0,
+} ,
     auditHistory: [
       {
         date: new Date(),
@@ -636,17 +636,16 @@ const enrichedAssets = assets.map(asset => {
 let totalCost = 0;
 let yearlyCost = 0;
 
-assetInstances.forEach(inst => {
-  const purchase =
-    inst.software?.purchaseCost?.baseAmount || 0;
+assetInstances.forEach((inst) => {
+  const purchase = Number(
+    inst.software?.purchaseCost?.amount || 0
+  );
 
-  const renewal =
-    inst.software?.costs?.renewalCost?.baseAmount || 0;
+  const renewal = Number(
+    inst.software?.costs?.renewalCost?.amount || 0
+  );
 
-  // 🔹 Total = one-time purchase
   totalCost += purchase;
-
-  // 🔹 Yearly = recurring
   yearlyCost += renewal;
 });
 

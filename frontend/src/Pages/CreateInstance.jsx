@@ -905,7 +905,7 @@ insuranceCost: {
             </select>
           </div>
           <div className="form-group">
-            <label>Device Name</label>
+            <label>Asset Name</label>
             <input
               value={bulkValues.deviceName}
               onChange={(e) =>
@@ -1302,7 +1302,7 @@ insuranceCost: {
               <div className="input-group">
                 <input
                   value={inst.deviceName || ""}
-                  placeholder="Device Name"
+                  placeholder="Asset Name"
                   onChange={(e) =>
                     handleChange(index, "deviceName", e.target.value)
                   }
