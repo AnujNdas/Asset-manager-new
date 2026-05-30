@@ -744,7 +744,19 @@ if (hasInsurance === true) {
 ============================== */
 
 instance.lifecycle.push({
+  eventType: "upgraded",
+  category: "instance",
+
+  title: "Instance Upgraded",
+
+  description:
+    upgradeDescription ||
+    "Instance upgrade performed",
+
+  performedBy: req.user.id,
+
   action: "UPGRADE",
+
 
   from: beforeSnapshot,
 
