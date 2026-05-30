@@ -749,7 +749,7 @@ const mapInstanceData = (inst, assignment) => {
       <p className="label">Yearly Cost</p>
       <p>
         {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(asset.financialTracking?.yearlyCost || 0)}
+        {asset.financialTracking?.yearlyCost || 0}
       </p>
     </div>
 
@@ -757,7 +757,7 @@ const mapInstanceData = (inst, assignment) => {
       <p className="label">Monthly Cost</p>
       <p>
         {CURRENCY_SYMBOLS[currency]}{" "}
-        {convertFromBase(asset.financialTracking?.monthlyCost || 0)}
+        {asset.financialTracking?.monthlyCost || 0}
       </p>
     </div>
   </div>
