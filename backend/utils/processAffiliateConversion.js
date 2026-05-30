@@ -27,8 +27,6 @@ const amountPaid =
 const currency =
   subscription.currency || "USD";
 
-  const currency = "USD";
-
   const commissionRate = 0.20;
 
   const commissionAmount =
