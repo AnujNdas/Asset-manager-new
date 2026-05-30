@@ -747,18 +747,18 @@ const mapInstanceData = (inst, assignment) => {
   <div className="financial">
     <div>
       <p className="label">Yearly Cost</p>
-      <p>
-        {CURRENCY_SYMBOLS[currency]}{" "}
-        {asset.financialTracking?.yearlyCost || 0}
-      </p>
+ <p>
+  {CURRENCY_SYMBOLS[currency]}{" "}
+  {(asset.financialTracking?.yearlyCost || 0).toFixed(2)}
+</p>
     </div>
 
     <div>
       <p className="label">Monthly Cost</p>
-      <p>
-        {CURRENCY_SYMBOLS[currency]}{" "}
-        {asset.financialTracking?.monthlyCost || 0}
-      </p>
+<p>
+  {CURRENCY_SYMBOLS[currency]}{" "}
+  {(asset.financialTracking?.monthlyCost || 0).toFixed(2)}
+</p>
     </div>
   </div>
 
