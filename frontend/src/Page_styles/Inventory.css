@@ -1089,12 +1089,12 @@
 .vendor-card p{
   margin: 0;
   font-size: 13px;
-  color: #d1d5db;
+  color: #DFD0B8;
 }
 
 .vendor-name{
   font-weight: 600;
-  color: #fff;
+  color: #DFD0B8;
 }
 @media (max-width: 768px) {
   .asset-view-modal {

@@ -301,10 +301,11 @@ const getCost = (costObj) => {
     );
 
     return {
-      totalPurchase: convertFromBase(totalPurchase),
-      totalMaintenance: convertFromBase(totalMaintenance),
+      totalPurchase: totalPurchase,
+      totalMaintenance: totalMaintenance,
     };
-  };  
+  };
+    
   const getRemainingDays = (expiryDate) => {
   if (!expiryDate) return "-";
 
