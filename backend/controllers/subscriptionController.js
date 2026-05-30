@@ -3,7 +3,7 @@ const razorpay = require("../config/razorpay");
 const razorpayPlans = require("../config/razorpayPlans");
 const pricingTiers = require("../config/pricingTiers");
 const Subscription = require("../models/Subscription");
-const processAffiliateConversion = require("../../utils/processAffiliateConversion");
+const processAffiliateConversion = require("../utils/processAffiliateConversion");
 const isProduction = process.env.NODE_ENV === "production";
 
 /* ------------------------------------------------
