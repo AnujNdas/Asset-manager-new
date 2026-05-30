@@ -717,16 +717,15 @@ if (
 
 purchaseCost: inst.purchaseCost
   ? {
-      amount: Number(inst.purchaseCost) || 0,
-      currency: "USD",
+      amount: Number(inst.purchaseCost?.amount) || 0,
+      currency: inst.purchaseCost?.currency || "USD",
     }
   : null,
-
 costs: {
-  renewalCost: {
-    amount: Number(inst.renewalCost) || 0,
-    currency: "USD",
-  },
+renewalCost: {
+  amount: Number(inst.renewalCost?.amount) || 0,
+  currency: inst.renewalCost?.currency || "USD",
+},
 },
             },
           };
@@ -757,26 +756,28 @@ costs: {
             nextMaintenanceDate: inst.nextMaintenanceDate || null, // ✅ ADD
 purchaseCost: inst.purchaseCost
   ? {
-      amount: Number(inst.purchaseCost) || 0,
-      currency: "USD",
+      amount: Number(inst.purchaseCost?.amount) || 0,
+      currency: inst.purchaseCost?.currency || "USD",
     }
   : null,
 
 costs: {
-  maintenanceCost: {
-    amount: Number(inst.maintenanceCost) || 0,
-    currency: "USD",
-  },
+maintenanceCost: {
+  amount: Number(inst.maintenanceCost?.amount) || 0,
+  currency: inst.maintenanceCost?.currency || "USD",
+},
 
-  warrantyRenewalCost: {
-    amount: Number(inst.warrantyRenewalCost) || 0,
-    currency: "USD",
-  },
+warrantyRenewalCost: {
+  amount: Number(inst.warrantyRenewalCost?.amount) || 0,
+  currency: inst.warrantyRenewalCost?.currency || "USD",
+},
 
-  insuranceCost: {
-    amount: Number(inst.insuranceCost) || 0,
-    currency: "USD",
-  },
+insuranceCost: {
+  amount: Number(inst.insuranceCost?.amount) || 0,
+  currency: inst.insuranceCost?.currency || "USD",
+},
+
+
 },
           },
         };
