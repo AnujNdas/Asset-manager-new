@@ -153,30 +153,62 @@ const getInStockAssetsByCategory = asyncHandler(async (req, res, next) => {
   /* ================= HARDWARE ================= */
   const hardware = await Asset.find({
     organizationId,
-    assetCategory: categoryId
-  }).select("assetName inUse assetQuantity");
+    assetCategory: categoryId,
+  })
+    .populate("assetCategory", "name categoryName")
+    .select(
+      "assetName inUse assetQuantity assetCategory"
+    );
 
   /* ================= SOFTWARE ================= */
   const software = await SoftwareAsset.find({
     organizationId,
-    assetCategory: categoryId
-  }).select("assetName inUse assetQuantity");
+    assetCategory: categoryId,
+  })
+    .populate("assetCategory", "name categoryName")
+    .select(
+      "assetName inUse assetQuantity assetCategory"
+    );
 
   /* ================= MERGE ================= */
-  const data = [
-    ...hardware.map(a => ({
+ const data = [
+    ...hardware.map((a) => ({
       _id: a._id,
       name: a.assetName,
+
+      assetCategory: {
+        _id: a.assetCategory?._id,
+        name:
+          a.assetCategory?.name ||
+          a.assetCategory?.categoryName,
+      },
+
       assetType: "hardware",
-      available: Math.max(0, a.assetQuantity - a.inUse)
+
+      available: Math.max(
+        0,
+        a.assetQuantity - a.inUse
+      ),
     })),
 
-    ...software.map(s => ({
+    ...software.map((s) => ({
       _id: s._id,
       name: s.assetName,
+
+      assetCategory: {
+        _id: s.assetCategory?._id,
+        name:
+          s.assetCategory?.name ||
+          s.assetCategory?.categoryName,
+      },
+
       assetType: "software",
-      available: Math.max(0, s.assetQuantity - s.inUse)
-    }))
+
+      available: Math.max(
+        0,
+        s.assetQuantity - s.inUse
+      ),
+    })),
   ];
 
   /* ================= RESPONSE ================= */

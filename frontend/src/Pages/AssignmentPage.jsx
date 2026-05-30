@@ -66,7 +66,8 @@ const [assignmentData, setAssignmentData] = useState({
 });
 
   const [loading, setLoading] = useState(false);
-
+  const capitalize = (str) =>
+  str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
   /* ================= LOAD ================= */
 useEffect(() => {
   const init = async () => {
@@ -442,7 +443,7 @@ setAssignmentData({
               <div key={asset._id} className="card" onClick={() => selectAsset(asset)}>
                 <h3>{asset.name}</h3>
                 <p>{asset.available} available</p>
-                <span>{asset.assetType}</span>
+                <span>{capitalize(asset.assetType)}</span>
               </div>
             ))}
           </div>
@@ -489,7 +490,7 @@ const currencyCode = costObj?.currency || "USD";
   <p className="instance-location">
     📍 {inst.location || "No Location"}
   </p>
-          <span>{inst.status}</span>
+          <span>{capitalize(inst.status)}</span>
         </div>
       );
     })
@@ -580,7 +581,7 @@ const currencyCode = costObj?.currency || "USD";
       {/* ASSET */}
       <div className="review-section">
         <p><b>Asset:</b> {selectedAsset?.name || "-"}</p>
-        <p><b>Asset Type:</b> {selectedAsset?.assetType || "-"}</p>
+        <p><b>Asset Type:</b> {capitalize(selectedAsset?.assetType) || "-"}</p>
       </div>
 
       {/* INSTANCES */}
@@ -590,8 +591,7 @@ const currencyCode = costObj?.currency || "USD";
         <div className="review-instance-list">
           {selectedInstances.map((inst) => (
             <div key={inst._id} className="review-instance-item">
-              <span>{inst.deviceName}</span>
-              <small>{inst.instanceCode}</small>
+              <p>Device Name :- </p><span>{inst.deviceName}</span>
             </div>
           ))}
         </div>
@@ -611,7 +611,7 @@ const currencyCode = costObj?.currency || "USD";
 
         <p>
           <b>Location:</b>{" "}
-          {assignmentData.location || "-"}
+          {capitalize(assignmentData.location) || "-"}
         </p>
       </div>
 

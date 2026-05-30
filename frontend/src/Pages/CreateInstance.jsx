@@ -1453,12 +1453,15 @@ costs: {
                       <div>
                         <label>Purchase Cost</label>
                         <input
-                          type="number"
-                          value={inst.purchaseCost}
-                          onChange={(e) =>
-                            handleChange(index, "purchaseCost", e.target.value)
-                          }
-                        />
+  type="number"
+  value={inst.purchaseCost?.amount || ""}
+  onChange={(e) =>
+    handleChange(index, "purchaseCost", {
+      amount: Number(e.target.value),
+      currency: "USD",
+    })
+  }
+/>
                         {errors[index]?.purchaseCost && (
                           <span className="error">
                             {errors[index].purchaseCost}
@@ -1600,17 +1603,20 @@ costs: {
                           </div> */}
                           <div>
                             <label>Insurance Cost</label>
-                            <input
-                              type="number"
-                              value={inst.insuranceCost}
-                              onChange={(e) =>
-                                handleChange(
-                                  index,
-                                  "insuranceCost",
-                                  e.target.value,
-                                )
-                              }
-                            />
+                           <input
+  type="number"
+  value={inst.insuranceCost?.amount || ""}
+  onChange={(e) =>
+    handleChange(
+      index,
+      "insuranceCost",
+      {
+        amount: Number(e.target.value) || 0,
+        currency: "USD",
+      }
+    )
+  }
+/>
                           </div>
                         </>
                       )}
@@ -1619,31 +1625,37 @@ costs: {
                     <div className="grid-3">
                       <div>
                         <label>Maintenance Cost</label>
-                        <input
-                          type="number"
-                          value={inst.maintenanceCost}
-                          onChange={(e) =>
-                            handleChange(
-                              index,
-                              "maintenanceCost",
-                              e.target.value,
-                            )
-                          }
-                        />
+                       <input
+  type="number"
+  value={inst.maintenanceCost?.amount || ""}
+  onChange={(e) =>
+    handleChange(
+      index,
+      "maintenanceCost",
+      {
+        amount: Number(e.target.value) || 0,
+        currency: "USD",
+      }
+    )
+  }
+/>
                       </div>
                       <div>
                         <label>Warranty Renewal Cost</label>
                         <input
-                          type="number"
-                          value={inst.warrantyRenewalCost}
-                          onChange={(e) =>
-                            handleChange(
-                              index,
-                              "warrantyRenewalCost",
-                              e.target.value,
-                            )
-                          }
-                        />
+  type="number"
+  value={inst.warrantyRenewalCost?.amount || ""}
+  onChange={(e) =>
+    handleChange(
+      index,
+      "warrantyRenewalCost",
+      {
+        amount: Number(e.target.value) || 0,
+        currency: "USD",
+      }
+    )
+  }
+/>
                       </div>
                     </div>
                   </>
@@ -1728,14 +1740,16 @@ costs: {
 
                       <div>
                         <label>Purchase Cost</label>
-                        <input
-                          type="number"
-                          placeholder="Purchase Cost"
-                          value={inst.purchaseCost}
-                          onChange={(e) =>
-                            handleChange(index, "purchaseCost", e.target.value)
-                          }
-                        />
+<input
+  type="number"
+  value={inst.purchaseCost?.amount || ""}
+  onChange={(e) =>
+    handleChange(index, "purchaseCost", {
+      amount: Number(e.target.value),
+      currency: "USD",
+    })
+  }
+/>
                       </div>
                       <div>
                         <label>Currency</label>
@@ -1750,13 +1764,20 @@ costs: {
                       <div>
                         <label>Renewal Cost</label>
                         <input
-                          type="number"
-                          placeholder="Renewal Cost"
-                          value={inst.renewalCost}
-                          onChange={(e) =>
-                            handleChange(index, "renewalCost", e.target.value)
-                          }
-                        />
+  type="number"
+  placeholder="Renewal Cost"
+  value={inst.renewalCost?.amount || ""}
+  onChange={(e) =>
+    handleChange(
+      index,
+      "renewalCost",
+      {
+        amount: Number(e.target.value) || 0,
+        currency: "USD",
+      }
+    )
+  }
+/>
                       </div>
                     </div>
                   </>
