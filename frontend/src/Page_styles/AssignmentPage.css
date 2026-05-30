@@ -206,7 +206,10 @@
   margin-bottom: 8px;
   color: #948979;
 }
-
+.review-instance-item { 
+  display: flex;
+  justify-content: space-between;
+}
 .review button {
   margin-top: 12px;
   width: 100%;

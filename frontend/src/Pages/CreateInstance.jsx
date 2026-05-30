@@ -629,57 +629,60 @@ console.log(
     setExpandedRow(expandedRow === index ? null : index);
   };
 
-  const validate = () => {
-    const newErrors = {};
+    const validate = () => {
+      const newErrors = {};
 
-    // ✅ ONLY rows user interacted with
-    const activeRows = instances.filter((inst) => {
-      return (
-        inst.deviceName?.trim() ||
-        inst.location?.trim() ||
-        inst.licenseKey?.trim() ||
-        inst.licenseNumber?.trim() ||
-        inst.purchaseCost
-      );
-    });
+      // ✅ ONLY rows user interacted with
+      const activeRows = instances.filter((inst) => {
+        return (
+          inst.deviceName?.trim() ||
+          inst.location?.trim() ||
+          inst.licenseKey?.trim() ||
+          inst.licenseNumber?.trim() ||
+          inst.purchaseCost
+        );
+      });
 
-    // ❌ no filled rows
-    if (activeRows.length === 0) {
-      ThemeSwal.fire("Error", "Please fill at least one instance", "error");
+      // ❌ no filled rows
+      if (activeRows.length === 0) {
+        ThemeSwal.fire("Error", "Please fill at least one instance", "error");
 
-      return false;
-    }
-
-    activeRows.forEach((inst, index) => {
-      const rowErrors = {};
-
-      if (!inst.location || !inst.location.trim()) {
-        rowErrors.location = "Location is required";
+        return false;
       }
 
-      if (!inst.purchaseCost || isNaN(Number(inst.purchaseCost))) {
-        rowErrors.purchaseCost = "Valid cost required";
-      }
+      activeRows.forEach((inst, index) => {
+        const rowErrors = {};
 
-      if (isSoftware && !inst.licenseNumber) {
-        rowErrors.licenseNumber = "License number required";
-      }
-
-      if (asset?.assetPurchaseDate) {
-        if (inst.purchaseDate && inst.purchaseDate < asset.assetPurchaseDate) {
-          rowErrors.purchaseDate = "Before asset purchase date";
+        if (!inst.location || !inst.location.trim()) {
+          rowErrors.location = "Location is required";
         }
-      }
 
-      if (Object.keys(rowErrors).length > 0) {
-        newErrors[index] = rowErrors;
-      }
-    });
+if (
+  !inst.purchaseCost?.amount &&
+  inst.purchaseCost?.amount !== 0
+) {
+  rowErrors.purchaseCost = "Valid cost required";
+}
 
-    setErrors(newErrors);
+        if (isSoftware && !inst.licenseNumber) {
+          rowErrors.licenseNumber = "License number required";
+        }
 
-    return Object.keys(newErrors).length === 0;
-  };
+        if (asset?.assetPurchaseDate) {
+          if (inst.purchaseDate && inst.purchaseDate < asset.assetPurchaseDate) {
+            rowErrors.purchaseDate = "Before asset purchase date";
+          }
+        }
+
+        if (Object.keys(rowErrors).length > 0) {
+          newErrors[index] = rowErrors;
+        }
+      });
+
+      setErrors(newErrors);
+
+      return Object.keys(newErrors).length === 0;
+    };
 
   const handleSubmit = async () => {
     if (!validate()) return;
@@ -959,8 +962,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.purchaseDate}
-                  min={asset?.assetPurchaseDate || undefined}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -974,8 +975,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.nextMaintenanceDate}
-                  min={asset?.assetPurchaseDate || undefined}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -989,8 +988,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.warrantyPurchaseDate}
-                  min={asset?.assetPurchaseDate || undefined}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -1018,8 +1015,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.installationDate}
-                  min={asset?.assetDOP || undefined}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -1094,8 +1089,6 @@ costs: {
                     <input
                       type="date"
                       value={bulkValues.insurancePurchaseDate}
-                      min={asset?.assetPurchaseDate || undefined}
-                      max={asset?.assetDOE || undefined}
                       onChange={(e) =>
                         setBulkValues({
                           ...bulkValues,
@@ -1211,8 +1204,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.purchaseDate}
-                  min={asset?.assetDOP || undefined}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -1227,7 +1218,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.installationDate}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -1242,7 +1232,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.renewalDate}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -1257,7 +1246,6 @@ costs: {
                 <input
                   type="date"
                   value={bulkValues.lastUsedDate}
-                  max={asset?.assetDOE || undefined}
                   onChange={(e) =>
                     setBulkValues({
                       ...bulkValues,
@@ -1396,8 +1384,6 @@ costs: {
                         <input
                           type="date"
                           value={inst.purchaseDate}
-                          min={asset?.assetPurchaseDate || undefined}
-                          max={asset?.assetDOE || undefined}
                           onChange={(e) =>
                             handleChange(index, "purchaseDate", e.target.value)
                           }
@@ -1408,8 +1394,6 @@ costs: {
                         <input
                           type="date"
                           value={inst.nextMaintenanceDate}
-                          min={asset?.assetPurchaseDate || undefined}
-                          max={asset?.assetDOE || undefined}
                           onChange={(e) =>
                             handleChange(
                               index,
@@ -1424,8 +1408,6 @@ costs: {
                         <input
                           type="date"
                           value={inst.warrantyPurchaseDate}
-                          min={asset?.assetPurchaseDate || undefined}
-                          max={asset?.assetDOE || undefined}
                           onChange={(e) =>
                             handleChange(
                               index,
@@ -1559,8 +1541,6 @@ costs: {
                             <input
                               type="date"
                               value={inst.insurancePurchaseDate}
-                              min={asset?.assetPurchaseDate || undefined}
-                              max={asset?.assetDOE || undefined}
                               onChange={(e) =>
                                 handleChange(
                                   index,
@@ -1681,8 +1661,6 @@ costs: {
                         <input
                           type="date"
                           value={inst.purchaseDate}
-                          min={asset?.assetPurchaseDate || undefined}
-                          max={asset?.assetDOE || undefined}
                           onChange={(e) =>
                             handleChange(index, "purchaseDate", e.target.value)
                           }
@@ -1712,8 +1690,6 @@ costs: {
                         <input
                           type="date"
                           value={inst.renewalDate}
-                          max={asset?.assetDOE || undefined}
-                          min={asset?.assetPurchaseDate || undefined}
                           onChange={(e) =>
                             handleChange(index, "renewalDate", e.target.value)
                           }
