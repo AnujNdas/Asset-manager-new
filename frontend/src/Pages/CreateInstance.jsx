@@ -271,7 +271,7 @@ const CreateInstances = () => {
           coverageType: ["comprehensive"],
           nextMaintenanceDate: "", // ✅ ADD THIS
           // 🔹 hardware additions
-          purchaseDate: "",
+          purchaseDate: "", 
           warrantyPurchaseDate: "",
           insurancePurchaseDate: "",
           insuranceTerm: "1_year", // if you're using term
@@ -611,7 +611,18 @@ insuranceCost:
     : inst.renewalCost,
       }),
     }));
+    console.log("Bulk Values:", bulkValues);
 
+console.log(
+  updated.map(i => ({
+    deviceName: i.deviceName,
+    purchaseCost: i.purchaseCost,
+    maintenanceCost: i.maintenanceCost,
+    warrantyRenewalCost: i.warrantyRenewalCost,
+    insuranceCost: i.insuranceCost,
+    renewalCost: i.renewalCost,
+  }))
+);
     setInstances(updated);
   };
   const toggleExpand = (index) => {
