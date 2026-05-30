@@ -294,14 +294,14 @@ const handleUnassign = async () => {
       <p>
         Maintenance:
         <span>
-          {formatCostValue(hw.costs?.maintenanceCost)}
+          {formatCostValue(hw.costs?.maintenanceCost?.amount)}
         </span>
       </p>
 
       <p>
         Warranty:
         <span>
-          {formatCostValue(hw.costs?.warrantyRenewalCost)}
+          {formatCostValue(hw.costs?.warrantyRenewalCost?.amount)}
         </span>
       </p>
 
@@ -309,7 +309,7 @@ const handleUnassign = async () => {
         Insurance:
         <span>
           {hw.costs?.insuranceCost
-            ? formatCostValue(hw.costs.insuranceCost)
+            ? formatCostValue(hw.costs.insuranceCost?.amount)
             : "N/A"}
         </span>
       </p>
