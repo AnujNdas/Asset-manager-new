@@ -277,6 +277,11 @@
   background: #DFD0B8 !important;
   color: #222831 !important;
 }
+.status-badge.badge-active {
+   background: #4caf50;
+  color: #222831;
+}
+
 @keyframes modalFade {
   from {
     opacity: 0;
