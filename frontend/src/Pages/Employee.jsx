@@ -299,8 +299,8 @@ if (loadingRates) return <Loader />;
       <p>Assets: {hardware.assetCount || 0}</p>
       <p>Instances: {hardware.instanceCount || 0}</p>
       <p>
-  Value: {CURRENCY_SYMBOLS[currency]}{" "}
-  {convertFromBase(hardware.totalCost || 0)}
+  Value: 
+  {hardware.totalCost || 0}
 </p>
     </div>
 
@@ -309,8 +309,8 @@ if (loadingRates) return <Loader />;
       <p>Assets: {software.assetCount || 0}</p>
       <p>Instances: {software.instanceCount || 0}</p>
       <p>
-  Value: {CURRENCY_SYMBOLS[currency]}{" "}
-  {convertFromBase(software.totalCost || 0)}
+  Value: 
+  {software.totalCost || 0}
 </p>
     </div>
 
@@ -318,8 +318,8 @@ if (loadingRates) return <Loader />;
 
   {/* ✅ FIXED POSITION */}
 <div className="total-cost">
-  Total Asset Value: {CURRENCY_SYMBOLS[currency]}{" "}
-  {convertFromBase(totalCost)}
+  Total Asset Value: 
+  {totalCost}
 </div>
 </div>
       );

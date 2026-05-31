@@ -252,6 +252,7 @@ const getEmployeeAssetSummary = async (req, res) => {
       },
       { $unwind: "$employee" },
 
+      
       /* ================= DEPARTMENT ================= */
       {
         $lookup: {
@@ -337,7 +338,15 @@ const getEmployeeAssetSummary = async (req, res) => {
           employeeName: { $first: "$employee.name" },
           employeeCode: { $first: "$employee.employeeCode" },
           department: { $first: "$department.name" },
-
+            currency: {
+              $first: {
+                $cond: [
+                  { $eq: ["$instance.assetType", "hardware"] },
+                  "$instance.hardware.purchaseCost.currency",
+                  "$instance.software.purchaseCost.currency"
+                ]
+              }
+            },
           /* INSTANCE COUNTS */
           hardwareInstanceCount: {
             $sum: {
@@ -414,7 +423,8 @@ const getEmployeeAssetSummary = async (req, res) => {
 
           totalCost: {
             $add: ["$hardwareCost", "$softwareCost"]
-          }
+          },
+          currency: 1
         }
       },
 
