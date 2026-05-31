@@ -299,7 +299,7 @@ if (loadingRates) return <Loader />;
       <p>Assets: {hardware.assetCount || 0}</p>
       <p>Instances: {hardware.instanceCount || 0}</p>
       <p>
-  Value: {currency}
+  Value: {currency}{" "}
   {hardware.totalCost || 0}
 </p>
     </div>
@@ -309,7 +309,7 @@ if (loadingRates) return <Loader />;
       <p>Assets: {software.assetCount || 0}</p>
       <p>Instances: {software.instanceCount || 0}</p>
       <p>
-  Value: {currency}
+  Value: {currency}{" "}
   {software.totalCost || 0}
 </p>
     </div>
@@ -319,7 +319,7 @@ if (loadingRates) return <Loader />;
   {/* ✅ FIXED POSITION */}
 <div className="total-cost">
   Total Asset Value: 
-  {currency} {totalCost}
+  {currency} {" "}{totalCost}
 </div>
 </div>
       );
