@@ -322,8 +322,8 @@ const getEmployeeAssetSummary = async (req, res) => {
           instanceCost: {
             $cond: [
               { $eq: ["$instance.assetType", "hardware"] },
-              { $ifNull: ["$instance.hardware.purchaseCost.baseAmount", 0] },
-              { $ifNull: ["$instance.software.purchaseCost.baseAmount", 0] }
+              { $ifNull: ["$instance.hardware.purchaseCost.amount", 0] },
+              { $ifNull: ["$instance.software.purchaseCost.amount", 0] }
             ]
           }
         }
