@@ -241,6 +241,7 @@
   background: #2c323a;
 }
 
+
 /* QR SECTION CONTAINER */
 .qr-section {
   margin-top: 16px;
@@ -554,7 +555,6 @@
 }
 
 .details-cell small {
-  opacity: 0.7;
   font-size: 11px;
 }
 
