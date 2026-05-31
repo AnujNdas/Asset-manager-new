@@ -30,29 +30,38 @@ const AffiliateEarningsPage = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [billingFilter, setBillingFilter] = useState("all");
   const [planFilter, setPlanFilter] = useState("all");
-
+  const [monthlyData, setMonthlyData] = useState([]);
+const [conversionData, setConversionData] = useState([]);
+const [planData, setPlanData] = useState([]);
   /* =========================================
      FETCH
   ========================================= */
 
-  const fetchEarnings = async () => {
-    try {
+const fetchEarnings = async () => {
+  try {
+    const res = await getAffiliateEarnings();
 
-      const res = await getAffiliateEarnings();
+    setSummary(res.summary || {});
+    setEarnings(res.earnings || []);
 
-      setSummary(res.summary || {});
-      setEarnings(res.earnings || []);
+    setMonthlyData(
+      res.charts?.monthlyEarnings || []
+    );
 
-    } catch (err) {
+    setConversionData(
+      res.charts?.monthlyConversions || []
+    );
 
-      console.error(err);
+    setPlanData(
+      res.charts?.planDistribution || []
+    );
 
-    } finally {
-
-      setLoading(false);
-
-    }
-  };
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchEarnings();
@@ -91,33 +100,6 @@ const AffiliateEarningsPage = () => {
     billingFilter,
     planFilter
   ]);
-
-  /* =========================================
-     CHART DATA
-  ========================================= */
-
-  const monthlyData = [
-    { month: "Jan", earnings: 120 },
-    { month: "Feb", earnings: 340 },
-    { month: "Mar", earnings: 240 },
-    { month: "Apr", earnings: 600 },
-    { month: "May", earnings: 890 },
-    { month: "Jun", earnings: 1200 },
-  ];
-
-  const conversionData = [
-    { month: "Jan", conversions: 2 },
-    { month: "Feb", conversions: 4 },
-    { month: "Mar", conversions: 3 },
-    { month: "Apr", conversions: 8 },
-    { month: "May", conversions: 10 },
-  ];
-
-  const planData = [
-    { name: "Base", value: 40 },
-    { name: "Grow", value: 35 },
-    { name: "Omni", value: 25 },
-  ];
 
   const COLORS = [
     "#6366f1",
@@ -169,7 +151,10 @@ const AffiliateEarningsPage = () => {
 
         <div className="earning-card">
           <span>Total Earnings</span>
-          <h2>${summary.totalEarnings || 0}</h2>
+          <h2>
+  {summary.currencySymbol || "$"}
+  {Number(summary.totalEarnings || 0).toFixed(2)}
+</h2>
         </div>
 
         <div className="earning-card pending">
@@ -362,8 +347,9 @@ const AffiliateEarningsPage = () => {
                   </td>
 
                   <td>
-                    {item.planName}
-                  </td>
+  {item.planName?.charAt(0).toUpperCase() +
+    item.planName?.slice(1)}
+</td>
 
                   <td>
                     {item.billingCycle}

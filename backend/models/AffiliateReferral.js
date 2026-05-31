@@ -82,7 +82,36 @@ const AffiliateReferralSchema = new mongoose.Schema(
       ],
       default: "pending",
     },
+    // 🔹 Conversion Financials
+planName: {
+  type: String,
+  default: null,
+},
 
+billingCycle: {
+  type: String,
+  default: null,
+},
+
+paymentAmount: {
+  type: Number,
+  default: 0,
+},
+
+paymentCurrency: {
+  type: String,
+  default: "USD",
+},
+
+commissionRate: {
+  type: Number,
+  default: 0,
+},
+
+lastPaymentDate: {
+  type: Date,
+  default: null,
+},
     // 🔹 Conversion Tracking
     signupAt: {
       type: Date,
