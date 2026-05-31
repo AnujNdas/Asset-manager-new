@@ -364,7 +364,6 @@
 
 .label {
   font-size: 0.75rem;
-  opacity: 0.6;
 }
 
 .alert {
@@ -947,6 +946,7 @@
 .financial-card .label {
   font-size: 12px;
   color: #222831;
+  font-weight: 500;
 }
 
 .financial-card p:last-child {
