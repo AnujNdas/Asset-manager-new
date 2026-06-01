@@ -43,6 +43,49 @@ const formatCostValue = (costObj) => {
     : `${currency} ${value.toFixed(2)}`;
 };
 
+const getActiveDays = (inst) => {
+  let startDate = null;
+  let endDate = null;
+
+  if (inst.assetType === "hardware") {
+    startDate = inst.hardware?.installationDate;
+    endDate = inst.hardware?.nextMaintenanceDate;
+  } else {
+    startDate = inst.software?.installationDate;
+    endDate = inst.software?.renewalDate;
+  }
+
+  if (!startDate || !endDate) return null;
+
+  return Math.floor(
+    (new Date(endDate) - new Date(startDate)) /
+      (1000 * 60 * 60 * 24)
+  );
+};
+
+const getActiveDuration = (inst) => {
+  const totalDays = getActiveDays(inst);
+
+  if (totalDays === null) return "N/A";
+
+  const years = Math.floor(totalDays / 365);
+  const months = Math.floor((totalDays % 365) / 30);
+  const days = totalDays % 30;
+
+  return `${years}y ${months}m ${days}d`;
+};
+
+const getDurationClass = (inst) => {
+  const days = getActiveDays(inst);
+
+  if (days === null) return "duration-na";
+
+  if (days < 100) return "duration-danger";
+
+  if (days < 300) return "duration-warning";
+
+  return "duration-safe";
+};
 /* ================= COST LOGIC ================= */
 
 const purchase = isHardware
@@ -182,10 +225,16 @@ const handleUnassign = async () => {
               : `🔑 ${sw.licenseNumber || "No License"}`}
           </p>
         </div>
-
+        <div>
         <span className={`status ${isAssigned ? "assigned" : "free"}`}>
           {isAssigned ? "Assigned" : "Available"}
         </span>
+<span
+  className={`type-badge ${getDurationClass(inst)}`}
+>
+  {getActiveDuration(inst)}
+</span>
+        </div>
       </div>
 
       {/* ================= KPI STRIP ================= */}
