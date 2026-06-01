@@ -53,3 +53,202 @@
 .affiliate-settings-content {
   flex: 1;
 }
+/* ===========================
+   SETTINGS WRAPPER
+=========================== */
+
+.affiliate-settings-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.settings-header {
+  margin-bottom: 24px;
+}
+
+.settings-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.settings-header p {
+  color: #777;
+  font-size: 0.95rem;
+}
+
+/* ===========================
+   GRID
+=========================== */
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+/* ===========================
+   FORM GROUP
+=========================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #dcdcdc;
+  font-size: 0.95rem;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
+/* ===========================
+   READONLY SECTION
+=========================== */
+
+.settings-readonly {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.settings-readonly label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.settings-readonly input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  background: #f7f7f7;
+  color: #666;
+}
+
+/* ===========================
+   TOGGLE ROW
+=========================== */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 14px;
+}
+
+.toggle-row span {
+  font-weight: 600;
+}
+
+.toggle-row input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+/* ===========================
+   SAVE BUTTON
+=========================== */
+
+.save-settings-btn {
+  border: none;
+  background: #4f46e5;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.save-settings-btn:hover {
+  transform: translateY(-1px);
+  background: #4338ca;
+}
+
+.save-settings-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===========================
+   PAYOUT METHOD SELECT
+=========================== */
+
+.affiliate-settings-card select {
+  cursor: pointer;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 992px) {
+  .settings-grid,
+  .settings-readonly {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .affiliate-settings-card {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .settings-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .toggle-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .save-settings-btn {
+    width: 100%;
+  }
+}
