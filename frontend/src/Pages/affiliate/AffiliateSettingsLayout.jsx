@@ -6,41 +6,46 @@ const AffiliateSettingsLayout = () => {
   return (
     <div className="affiliate-settings-page">
 
-      <div className="affiliate-settings-sidebar">
+      <div className="affiliate-settings-header">
+        <h1>Affiliate Settings</h1>
+        <p>
+          Manage your profile, payouts and preferences.
+        </p>
+      </div>
 
-        <h2>Affiliate Settings</h2>
+      <div className="affiliate-settings-tabs">
 
         <NavLink
           to="/affiliate/settings/profile"
           className={({ isActive }) =>
             isActive
-              ? "affiliate-settings-link active"
-              : "affiliate-settings-link"
+              ? "affiliate-settings-tab active"
+              : "affiliate-settings-tab"
           }
         >
-          👤 Profile
+          Profile
         </NavLink>
 
         <NavLink
           to="/affiliate/settings/payout"
           className={({ isActive }) =>
             isActive
-              ? "affiliate-settings-link active"
-              : "affiliate-settings-link"
+              ? "affiliate-settings-tab active"
+              : "affiliate-settings-tab"
           }
         >
-          💳 Payouts
+          Payouts
         </NavLink>
 
         <NavLink
           to="/affiliate/settings/preferences"
           className={({ isActive }) =>
             isActive
-              ? "affiliate-settings-link active"
-              : "affiliate-settings-link"
+              ? "affiliate-settings-tab active"
+              : "affiliate-settings-tab"
           }
         >
-          ⚙ Preferences
+          Preferences
         </NavLink>
 
       </div>
