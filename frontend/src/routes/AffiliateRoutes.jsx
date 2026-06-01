@@ -7,10 +7,10 @@ import AffiliateReferrals from "../Pages/affiliate/AffiliateReferrals";
 import AffiliateEarnings from "../Pages/affiliate/AffiliateEarnings";
 import AffiliatePayouts from "../Pages/affiliate/AffiliatePayout";
 import AffiliateProfile from "../Pages/affiliate/AffiliateProfile";
-import AffiliateSettingsLayout from "../Pages/Affiliate/AffiliateSettingsLayout";
-import AffiliateProfileSettings from "../Pages/Affiliate/AffiliateProfileSettings";
-import AffiliatePayoutSettings from "../Pages/Affiliate/AffiliatePayoutSettings";
-import AffiliatePreferenceSettings from "../Pages/Affiliate/AffiliatePreferenceSettings";
+import AffiliateSettingsLayout from "../Pages/affiliate/AffiliateSettingsLayout";
+import AffiliateProfileSettings from "../Pages/affiliate/AffiliateProfileSettings";
+import AffiliatePayoutSettings from "../Pages/affiliate/AffiliatePayoutSettings";
+import AffiliatePreferenceSettings from "../Pages/affiliate/AffiliatePreferenceSettings";
 const AffiliateRoutes = () => {
   return (
     <>
