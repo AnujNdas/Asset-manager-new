@@ -238,6 +238,11 @@ body {
   cursor: not-allowed;
   filter: grayscale(0.2);
 }
+.btn-primary:active {
+  transform: translateY(0);
+  background: #948979 !important;
+  color: #222831;
+}
 
 /* =========================================================
    SMALL FOOT NOTE
