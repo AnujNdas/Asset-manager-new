@@ -65,14 +65,7 @@ const getActiveDays = (inst) => {
 
 const getActiveDuration = (inst) => {
   const totalDays = getActiveDays(inst);
-
-  if (totalDays === null) return "N/A";
-
-  const years = Math.floor(totalDays / 365);
-  const months = Math.floor((totalDays % 365) / 30);
-  const days = totalDays % 30;
-
-  return `${years}y ${months}m ${days}d`;
+  return totalDays === null ? "N/A" : `${totalDays} Days`;
 };
 
 const getDurationClass = (inst) => {
@@ -225,7 +218,7 @@ const handleUnassign = async () => {
               : `🔑 ${sw.licenseNumber || "No License"}`}
           </p>
         </div>
-        <div>
+        <div style={{ display: "flex" , flexDirection: "column", gap: "8px" }}>
         <span className={`status ${isAssigned ? "assigned" : "free"}`}>
           {isAssigned ? "Assigned" : "Available"}
         </span>
