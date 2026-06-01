@@ -26,9 +26,9 @@ export default function AffiliateSidebar() {
           Payouts
         </NavLink>
 
-        <NavLink to="/affiliate/profile">
-          Profile
-        </NavLink>
+<NavLink to="/affiliate/settings/profile">
+  Settings
+</NavLink>
 
       </nav>
 
