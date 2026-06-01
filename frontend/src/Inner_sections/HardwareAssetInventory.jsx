@@ -215,24 +215,24 @@ useEffect(() => {
   };
 }, []);
 
-useEffect(() => {
-  const seen = localStorage.getItem("inventoryTourSeen");
+// useEffect(() => {
+//   const seen = localStorage.getItem("inventoryTourSeen");
 
-  if (!seen) {
-    setTimeout(() => {
-      driverObj.drive();
+//   if (!seen) {
+//     setTimeout(() => {
+//       driverObj.drive();
 
-      localStorage.setItem(
-        "inventoryTourSeen",
-        "true"
-      );
-    }, 1000);
-  }
-}, []);
+//       localStorage.setItem(
+//         "inventoryTourSeen",
+//         "true"
+//       );
+//     }, 1000);
+//   }
+// }, []);
 
-useEffect(() => {
-  registerTour(driverObj);
-}, []);
+// useEffect(() => {
+//   registerTour(driverObj);
+// }, []);
   useEffect(() => {
   fetchAll();
 }, []);

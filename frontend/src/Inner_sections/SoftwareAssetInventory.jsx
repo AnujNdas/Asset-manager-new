@@ -223,23 +223,23 @@ useEffect(() => {
     window.removeEventListener("resize", calculate);
   };
 }, []);
-useEffect(() => {
-  const seen = localStorage.getItem("inventoryTourSeen");
+// useEffect(() => {
+//   const seen = localStorage.getItem("inventoryTourSeen");
 
-  if (!seen) {
-    setTimeout(() => {
-      driverObj.drive();
+//   if (!seen) {
+//     setTimeout(() => {
+//       driverObj.drive();
 
-      localStorage.setItem(
-        "inventoryTourSeen",
-        "true"
-      );
-    }, 1000);
-  }
-}, []);
-useEffect(() => {
-  registerTour(driverObj);
-}, []);
+//       localStorage.setItem(
+//         "inventoryTourSeen",
+//         "true"
+//       );
+//     }, 1000);
+//   }
+// }, []);
+// useEffect(() => {
+//   registerTour(driverObj);
+// }, []);
   useEffect(() => {
     fetchAll();
   }, []);

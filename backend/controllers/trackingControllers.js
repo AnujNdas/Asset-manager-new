@@ -426,7 +426,7 @@ deviceInfo:
         getActiveScore(instance),
 
       activeService:
-        getServiceDays(instance.createdAt)
+        getServiceDays(instance.hardware?.installationDate || instance.createdAt)
     };
   })
 
