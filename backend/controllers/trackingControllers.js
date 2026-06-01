@@ -425,8 +425,11 @@ deviceInfo:
       activeScore:
         getActiveScore(instance),
 
-      activeService:
-        getServiceDays(instance.hardware?.installationDate || instance.createdAt)
+      activeService: getServiceDays(
+        instance.assetType === "hardware"
+          ? instance.hardware?.installationDate
+          : instance.software?.installationDate
+      )
     };
   })
 
@@ -461,7 +464,11 @@ deviceInfo:
           getActiveScore(instance),
 
         activeService:
-          getServiceDays(instance.hardware?.installationDate || instance.createdAt)
+          getServiceDays(
+            instance.assetType === "hardware"
+              ? instance.hardware?.installationDate
+              : instance.software?.installationDate
+          )
       },
 
       data: history
