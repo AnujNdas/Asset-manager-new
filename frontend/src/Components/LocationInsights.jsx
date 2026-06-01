@@ -53,7 +53,7 @@ const LocationInsights = ({ items = [] }) => {
 
               <div className="loc-value">
                 {CURRENCY_SYMBOLS[currency]}{" "}
-                {convertFromBase(loc.value || 0).toLocaleString()}
+                {loc.value || 0}.toLocaleString()
               </div>
             </div>
           ))}
@@ -112,28 +112,28 @@ const LocationInsights = ({ items = [] }) => {
                 <p>Total Value</p>
                 <strong>
                   {CURRENCY_SYMBOLS[currency]}{" "}
-                  {convertFromBase(selected.value || 0).toLocaleString()}
+                  {selected.value || 0}.toLocaleString()
                 </strong>
               </div>
 
               <div>
                 <p>Maintenance</p>
                 <span>
-                  {convertFromBase(selected.costs?.maintenance || 0).toLocaleString()}
+                  {selected.costs?.maintenance || 0}.toLocaleString()
                 </span>
               </div>
 
               <div>
                 <p>Warranty</p>
                 <span>
-                  {convertFromBase(selected.costs?.warranty || 0).toLocaleString()}
+                  {selected.costs?.warranty || 0}.toLocaleString()
                 </span>
               </div>
 
               <div>
                 <p>Insurance</p>
                 <span>
-                  {convertFromBase(selected.costs?.insurance || 0).toLocaleString()}
+                  {selected.costs?.insurance || 0}.toLocaleString()
                 </span>
               </div>
             </div>
