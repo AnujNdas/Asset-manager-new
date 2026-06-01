@@ -119,21 +119,21 @@ const LocationInsights = ({ items = [] }) => {
               <div>
                 <p>Maintenance</p>
                 <span>
-                  {selected.costs?.maintenance || 0}
+                  {CURRENCY_SYMBOLS[currency]}{" "}{selected.costs?.maintenance || 0}
                 </span>
               </div>
 
               <div>
                 <p>Warranty</p>
                 <span>
-                  {selected.costs?.warranty || 0}
+                  {CURRENCY_SYMBOLS[currency]}{" "}{selected.costs?.warranty || 0}
                 </span>
               </div>
 
               <div>
                 <p>Insurance</p>
                 <span>
-                  {selected.costs?.insurance || 0}
+                  {CURRENCY_SYMBOLS[currency]}{" "}{selected.costs?.insurance || 0}
                 </span>
               </div>
             </div>
@@ -142,11 +142,11 @@ const LocationInsights = ({ items = [] }) => {
             <div className="meta">
               <p>
                 📦 Asset Locations:{" "}
-                {selected.assetLocations?.join(", ") || "—"}
+                {CURRENCY_SYMBOLS[currency]}{" "}{selected.assetLocations?.join(", ") || "—"}
               </p>
               <p>
                 📦 Instance Locations:{" "}
-                {selected.instanceLocations?.join(", ") || "—"}
+                {CURRENCY_SYMBOLS[currency]}{" "}{selected.instanceLocations?.join(", ") || "—"}
               </p>
 
               <p>
