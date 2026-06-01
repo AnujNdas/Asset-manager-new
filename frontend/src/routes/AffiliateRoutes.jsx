@@ -7,7 +7,10 @@ import AffiliateReferrals from "../Pages/affiliate/AffiliateReferrals";
 import AffiliateEarnings from "../Pages/affiliate/AffiliateEarnings";
 import AffiliatePayouts from "../Pages/affiliate/AffiliatePayout";
 import AffiliateProfile from "../Pages/affiliate/AffiliateProfile";
-
+import AffiliateSettingsLayout from "../Pages/Affiliate/AffiliateSettingsLayout";
+import AffiliateProfileSettings from "../Pages/Affiliate/AffiliateProfileSettings";
+import AffiliatePayoutSettings from "../Pages/Affiliate/AffiliatePayoutSettings";
+import AffiliatePreferenceSettings from "../Pages/Affiliate/AffiliatePreferenceSettings";
 const AffiliateRoutes = () => {
   return (
     <>
@@ -39,6 +42,25 @@ const AffiliateRoutes = () => {
           path="profile"
           element={<AffiliateProfile />}
         />
+          <Route
+  path="/affiliate/settings"
+  element={<AffiliateSettingsLayout />}
+>
+  <Route
+    path="profile"
+    element={<AffiliateProfileSettings />}
+  />
+
+  <Route
+    path="payout"
+    element={<AffiliatePayoutSettings />}
+  />
+
+  <Route
+    path="preferences"
+    element={<AffiliatePreferenceSettings />}
+  />
+</Route>
       </Route>
     </>
   );

@@ -3,6 +3,14 @@
 const express = require("express");
 
 const router = express.Router();
+const {
+  getAffiliateProfileSettings,
+  updateAffiliateProfileSettings,
+  getAffiliatePayoutSettings,
+  updateAffiliatePayoutSettings,
+  getAffiliatePreferences,
+  updateAffiliatePreferences,
+} = require("../controllers/affiliate/settingsController");
 
 const {
   applyAffiliate,
@@ -38,4 +46,14 @@ router.get(
   affiliateAuth,
   getAffiliateEarnings
 );
+
+router.get("/settings/profile",affiliateAuth, getAffiliateProfileSettings);
+router.put("/settings/profile", affiliateAuth, updateAffiliateProfileSettings);
+
+router.get("/settings/payout", affiliateAuth, getAffiliatePayoutSettings);
+router.put("/settings/payout", affiliateAuth, updateAffiliatePayoutSettings);
+
+router.get("/settings/preferences", affiliateAuth, getAffiliatePreferences);
+router.put("/settings/preferences", affiliateAuth, updateAffiliatePreferences);
+
 module.exports = router;

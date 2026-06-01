@@ -1,0 +1,55 @@
+.affiliate-settings-page {
+  display: flex;
+  gap: 20px;
+  min-height: calc(100vh - 100px);
+}
+
+.affiliate-settings-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+
+  background: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  height: fit-content;
+}
+
+.affiliate-settings-sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.affiliate-settings-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  text-decoration: none;
+
+  color: var(--text-color);
+
+  padding: 12px 14px;
+
+  border-radius: 10px;
+
+  margin-bottom: 8px;
+
+  transition: all 0.2s ease;
+}
+
+.affiliate-settings-link:hover {
+  background: var(--hover-bg);
+}
+
+.affiliate-settings-link.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.affiliate-settings-content {
+  flex: 1;
+}

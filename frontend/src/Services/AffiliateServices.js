@@ -76,3 +76,71 @@ export const getAffiliateEarnings = async () => {
 
   return response.data;
 };
+// ======================================
+// AFFILIATE SETTINGS - PROFILE
+// ======================================
+
+export const getAffiliateProfileSettings =
+  async () => {
+    const res = await axiosInstance.get(
+      "/affiliate/settings/profile"
+    );
+
+    return res.data;
+  };
+
+export const updateAffiliateProfileSettings =
+  async (data) => {
+    const res = await axiosInstance.put(
+      "/affiliate/settings/profile",
+      data
+    );
+
+    return res.data;
+  };
+
+// ======================================
+// AFFILIATE SETTINGS - PAYOUT
+// ======================================
+
+export const getAffiliatePayoutSettings =
+  async () => {
+    const res = await axiosInstance.get(
+      "/affiliate/settings/payout"
+    );
+
+    return res.data;
+  };
+
+export const updateAffiliatePayoutSettings =
+  async (data) => {
+    const res = await axiosInstance.put(
+      "/affiliate/settings/payout",
+      data
+    );
+
+    return res.data;
+  };
+
+// ======================================
+// AFFILIATE SETTINGS - PREFERENCES
+// ======================================
+
+export const getAffiliatePreferences =
+  async () => {
+    const res = await axiosInstance.get(
+      "/affiliate/settings/preferences"
+    );
+
+    return res.data;
+  };
+
+export const updateAffiliatePreferences =
+  async (data) => {
+    const res = await axiosInstance.put(
+      "/affiliate/settings/preferences",
+      data
+    );
+
+    return res.data;
+  };
