@@ -10,7 +10,7 @@ import AffiliateSettingsLayout from "../Pages/affiliate/AffiliateSettingsLayout"
 import AffiliateProfileSettings from "../Pages/affiliate/AffiliateProfileSettings";
 import AffiliatePayoutSettings from "../Pages/affiliate/AffiliatePayoutSettings";
 import AffiliatePreferenceSettings from "../Pages/affiliate/AffiliatePreferencesSettings";
-import AffiliateTickets from "../Pages/affiliate/AffiliateTickets";
+import AffiliateTickets from "../Pages/affiliate/AffiliateTicket";
 const AffiliateRoutes = () => {
   return (
     <>
