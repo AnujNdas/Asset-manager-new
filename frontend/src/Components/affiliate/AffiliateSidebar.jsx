@@ -14,10 +14,6 @@ export default function AffiliateSidebar() {
           Dashboard
         </NavLink>
 
-        <NavLink to="/affiliate/referrals">
-          Referrals
-        </NavLink>
-
         <NavLink to="/affiliate/earnings">
           Earnings
         </NavLink>

@@ -9,6 +9,7 @@
   width: 260px;
   background: #222831;
   padding: 24px;
+  height: 100vh;
 }
 
 .affiliate-nav {
@@ -36,6 +37,7 @@
 
 .affiliate-content {
   flex: 1;
+  overflow: auto;
 }
 
 .affiliate-grid {

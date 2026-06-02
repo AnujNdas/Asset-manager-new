@@ -7,6 +7,7 @@
   flex-direction: column;
   gap: 24px;
   color: #DFD0B8;
+  padding: 20px 24px;
 }
 
 /* =========================================
@@ -17,7 +18,7 @@
   background: #222831;
   border: 1px solid rgba(223, 208, 184, 0.08);
   border-radius: 22px;
-  padding: 24px;
+  padding: 14px;
   transition: all 0.25s ease;
 }
 
@@ -30,6 +31,7 @@
 .dashboard-card h2,
 .dashboard-card h3 {
   color: #DFD0B8;
+  font-size : 22px;
 }
 
 .dashboard-card p,
@@ -67,13 +69,13 @@
 }
 
 .hero-card h1 {
-  font-size: 3rem;
+  font-size: 28px;
   line-height: 1.1;
   margin-bottom: 16px;
 }
 
 .hero-card p {
-  font-size: 1.15rem;
+  font-size: 16px;
   max-width: 450px;
 }
 
@@ -120,7 +122,7 @@
 }
 
 .link-header h3 {
-  font-size: 2rem;
+  font-size: 22px;
   margin-top: 8px;
 }
 
