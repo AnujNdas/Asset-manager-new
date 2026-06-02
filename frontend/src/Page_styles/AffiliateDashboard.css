@@ -1,0 +1,339 @@
+/* =========================================
+   PAGE
+========================================= */
+
+.affiliate-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: #DFD0B8;
+}
+
+/* =========================================
+   CARDS
+========================================= */
+
+.dashboard-card {
+  background: #222831;
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 22px;
+  padding: 24px;
+  transition: all 0.25s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(223, 208, 184, 0.18);
+}
+
+.dashboard-card h1,
+.dashboard-card h2,
+.dashboard-card h3 {
+  color: #DFD0B8;
+}
+
+.dashboard-card p,
+.dashboard-card span {
+  color: #c7b79b;
+}
+
+/* =========================================
+   TOP GRID
+========================================= */
+
+.dashboard-top-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 24px;
+}
+
+/* =========================================
+   HERO CARD
+========================================= */
+
+.hero-card {
+  position: relative;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-label {
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+  opacity: 0.8;
+}
+
+.hero-card h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.hero-card p {
+  font-size: 1.15rem;
+  max-width: 450px;
+}
+
+.affiliate-status {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.affiliate-status.approved {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+}
+
+.affiliate-status.pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.affiliate-status.rejected {
+  background: rgba(255, 0, 0, 0.15);
+  color: #ff6b6b;
+}
+
+/* =========================================
+   REFERRAL CARD
+========================================= */
+
+.link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.link-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-header h3 {
+  font-size: 2rem;
+  margin-top: 8px;
+}
+
+.link-header a {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: #393E46;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #DFD0B8;
+  font-size: 1.1rem;
+}
+
+.referral-link-box {
+  background: #1c2128;
+  border: 1px solid rgba(223, 208, 184, 0.08);
+
+  padding: 18px;
+  border-radius: 16px;
+
+  overflow-x: auto;
+  word-break: break-all;
+}
+
+.copy-btn {
+  border: none;
+  cursor: pointer;
+
+  background: #DFD0B8;
+  color: #222831;
+
+  padding: 14px 20px;
+  border-radius: 14px;
+
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: fit-content;
+}
+
+.copy-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   KPI GRID
+========================================= */
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 18px;
+}
+
+.stat-card {
+  text-align: center;
+  min-height: 170px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.stat-card svg {
+  font-size: 1.8rem;
+  margin: 0 auto;
+  color: #DFD0B8;
+}
+
+.stat-card h2 {
+  font-size: 2.2rem;
+  margin: 0;
+}
+
+.stat-card p {
+  font-size: 1rem;
+}
+
+/* =========================================
+   BOTTOM GRID
+========================================= */
+
+.dashboard-bottom-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr;
+  gap: 24px;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.referral-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 18px;
+}
+
+.referral-table th {
+  text-align: left;
+  background: #393E46;
+  padding: 16px;
+  color: #DFD0B8;
+}
+
+.referral-table td {
+  padding: 16px;
+  border-top: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.status-badge {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.status-badge.converted {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+}
+
+.status-badge.signed_up {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.status-badge.clicked {
+  background: rgba(223, 208, 184, 0.15);
+  color: #DFD0B8;
+}
+
+/* =========================================
+   TODAY STATS
+========================================= */
+
+.today-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.today-stats div {
+  background: #393E46;
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.today-stats span {
+  font-size: 0.9rem;
+}
+
+.today-stats h3 {
+  font-size: 2rem;
+  margin-top: 8px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1400px) {
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-top-grid,
+  .dashboard-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-card h1 {
+    font-size: 2rem;
+  }
+
+  .affiliate-status {
+    position: static;
+    margin-top: 16px;
+    width: fit-content;
+  }
+
+  .dashboard-card {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 500px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-card h1 {
+    font-size: 1.7rem;
+  }
+
+  .stat-card {
+    min-height: 130px;
+  }
+}
