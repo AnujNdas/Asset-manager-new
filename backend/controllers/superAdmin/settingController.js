@@ -1,3 +1,7 @@
+const asyncHandler = require("express-async-handler");
+const AppError = require("../../utils/AppError");
+const AffiliateProfile = require("../../models/AffiliateProfile");
+const AffiliateTicket = require("../../models/AffiliateTicket");
 let systemSettings = {
   allowRegistrations: true,
   maintenanceMode: false,
@@ -29,6 +33,42 @@ const updateSettings = async (req, res) => {
     });
   }
 };
+const resolveAffiliateTicket =
+  asyncHandler(async (req, res) => {
+
+    const { resolution } = req.body;
+
+    const ticket =
+      await AffiliateTicket.findById(
+        req.params.id
+      );
+
+    if (!ticket) {
+      throw new AppError(
+        "Ticket not found",
+        404
+      );
+    }
+
+    ticket.status = "resolved";
+
+    ticket.resolution =
+      resolution || "";
+
+    ticket.resolvedAt =
+      new Date();
+
+    ticket.resolvedBy =
+      req.user.id;
+
+    await ticket.save();
+
+    res.json({
+      success: true,
+      message:
+        "Ticket resolved successfully",
+    });
+  });
 module.exports = {
   getSettings,
   updateSettings,

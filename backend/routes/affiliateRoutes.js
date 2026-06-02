@@ -27,6 +27,11 @@ const {
 const affiliateAuth = require(
   "../Middleware/affiliateAuth"
 );
+const {
+  createAffiliateTicket,
+  getAffiliateTickets,
+  getAffiliateTicketById,
+} = require("../controllers/affiliate/affiliateTicket");
 
 router.post(
   "/apply",
@@ -55,5 +60,21 @@ router.put("/settings/payout", affiliateAuth, updateAffiliatePayoutSettings);
 
 router.get("/settings/preferences", affiliateAuth, getAffiliatePreferences);
 router.put("/settings/preferences", affiliateAuth, updateAffiliatePreferences);
+router.post(
+  "/tickets",
+  affiliateAuth,
+  createAffiliateTicket
+);
 
+router.get(
+  "/tickets",
+  affiliateAuth,
+  getAffiliateTickets
+);
+
+router.get(
+  "/tickets/:id",
+  affiliateAuth,
+  getAffiliateTicketById
+);
 module.exports = router;

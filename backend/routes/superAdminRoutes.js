@@ -8,6 +8,7 @@ const { getAllOrganizations, createOrganization , getOrganizationById ,toggleOrg
 const {getSettings, updateSettings} = require("../controllers/superAdmin/settingController");
 // const { getGAAnalytics } = require("../controllers/superAdmin/gaAnalysisController");
 const { getLoginActivity } = require("../controllers/superAdmin/loginActivityController");
+const { getAllAffiliateTickets, resolveAffiliateTicket } = require("../controllers/superAdmin/affiliateTicketController");
 
 
 /* ================= DASHBOARD ================= */
@@ -33,5 +34,15 @@ router.get(
   authenticateToken(["super-admin"]),
   getLoginActivity
 );
+router.get(
+  "/affiliate-tickets",
+  authenticateToken(["super-admin"]),
+  getAllAffiliateTickets
+);
 
+router.patch(
+  "/affiliate-tickets/:id/resolve",
+  authenticateToken(["super-admin"]),
+  resolveAffiliateTicket
+);
 module.exports = router;

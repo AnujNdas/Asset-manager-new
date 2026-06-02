@@ -47,7 +47,16 @@ const AffiliateSettingsLayout = () => {
         >
           Preferences
         </NavLink>
-
+          <NavLink
+  to="/affiliate/settings/tickets"
+  className={({ isActive }) =>
+    isActive
+      ? "affiliate-settings-link active"
+      : "affiliate-settings-link"
+  }
+>
+  🎫 Support Tickets
+</NavLink>
       </div>
 
       <div className="affiliate-settings-content">

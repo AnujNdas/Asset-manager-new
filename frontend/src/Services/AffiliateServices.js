@@ -144,3 +144,23 @@ export const updateAffiliatePreferences =
 
     return res.data;
   };
+  export const getAffiliateTickets =
+  async () => {
+    const res =
+      await axiosInstance.get(
+        "/affiliate/tickets"
+      );
+
+    return res.data;
+  };
+
+export const createAffiliateTicket =
+  async (data) => {
+    const res =
+      await axiosInstance.post(
+        "/affiliate/tickets",
+        data
+      );
+
+    return res.data;
+  };
