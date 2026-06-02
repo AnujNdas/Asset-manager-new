@@ -181,7 +181,7 @@ const CreateInstances = () => {
     currency: "USD",
     vendor: "",
     purchaseDate: "",
-
+    upgrades: [],
     // hardware
     modelNo: "",
     specifications: "",
@@ -312,87 +312,129 @@ const CreateInstances = () => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN");
   };
+  const addUpgrade = (instanceIndex) => {
+  const updated = [...instances];
 
-  const driverObj = driver({
-    showProgress: true,
-    animate: true,
-    smoothScroll: true,
-    allowClose: true,
-
-    overlayColor: "rgba(0,0,0,0.75)",
-
-    popoverClass: "custom-driver-popover",
-
-    steps: [
-      {
-        element: ".tour-progress",
-        popover: {
-          title: "Progress",
-          description: "Shows Progress of how many instances created yet.",
-          side: "bottom",
-        },
+  updated[instanceIndex].upgrades = [
+    ...(updated[instanceIndex].upgrades || []),
+    {
+      description: "",
+      date: "",
+      cost: {
+        amount: 0,
+        currency: "USD"
       },
-      {
-        element: ".tour-info",
-        popover: {
-          title: "Asset Information",
-          description: "Contains Main asset Information.",
-          side: "bottom",
-          align: "start",
-        },
-      },
-
-      {
-        element: ".tour-import",
-        popover: {
-          title: "Import Button",
-          description: "Import instances for the asset.",
-          side: "bottom",
-        },
-      },
-      {
-        element: ".tour-template",
-        popover: {
-          title: "Download template",
-          description: "Download and see the format before importing ...",
-          side: "bottom",
-        },
-      },
-
-      {
-        element: ".tour-bulk",
-        popover: {
-          title: "Bulk input area",
-          description:
-            "After filling the input fields click on the apply to all button.",
-          side: "bottom",
-        },
-      },
-      {
-        element: ".tour-create",
-        popover: {
-          title: "Create Button",
-          description: "Click to create instances.",
-          side: "bottom",
-        },
-      },
-    ],
-  });
-
-  useEffect(() => {
-    const seen = localStorage.getItem("inventoryTourSeen");
-
-    if (!seen) {
-      setTimeout(() => {
-        driverObj.drive();
-
-        localStorage.setItem("inventoryTourSeen", "true");
-      }, 1000);
+      notes: ""
     }
-  }, []);
-  useEffect(() => {
-    registerTour(driverObj);
-  }, []);
+  ];
+
+  setInstances(updated);
+};
+
+const removeUpgrade = (instanceIndex, upgradeIndex) => {
+  const updated = [...instances];
+
+  updated[instanceIndex].upgrades.splice(
+    upgradeIndex,
+    1
+  );
+
+  setInstances(updated);
+};
+
+const handleUpgradeChange = (
+  instanceIndex,
+  upgradeIndex,
+  field,
+  value
+) => {
+  const updated = [...instances];
+
+  updated[instanceIndex].upgrades[upgradeIndex][field] =
+    value;
+
+  setInstances(updated);
+};
+  // const driverObj = driver({
+  //   showProgress: true,
+  //   animate: true,
+  //   smoothScroll: true,
+  //   allowClose: true,
+
+  //   overlayColor: "rgba(0,0,0,0.75)",
+
+  //   popoverClass: "custom-driver-popover",
+
+  //   steps: [
+  //     {
+  //       element: ".tour-progress",
+  //       popover: {
+  //         title: "Progress",
+  //         description: "Shows Progress of how many instances created yet.",
+  //         side: "bottom",
+  //       },
+  //     },
+  //     {
+  //       element: ".tour-info",
+  //       popover: {
+  //         title: "Asset Information",
+  //         description: "Contains Main asset Information.",
+  //         side: "bottom",
+  //         align: "start",
+  //       },
+  //     },
+
+  //     {
+  //       element: ".tour-import",
+  //       popover: {
+  //         title: "Import Button",
+  //         description: "Import instances for the asset.",
+  //         side: "bottom",
+  //       },
+  //     },
+  //     {
+  //       element: ".tour-template",
+  //       popover: {
+  //         title: "Download template",
+  //         description: "Download and see the format before importing ...",
+  //         side: "bottom",
+  //       },
+  //     },
+
+  //     {
+  //       element: ".tour-bulk",
+  //       popover: {
+  //         title: "Bulk input area",
+  //         description:
+  //           "After filling the input fields click on the apply to all button.",
+  //         side: "bottom",
+  //       },
+  //     },
+  //     {
+  //       element: ".tour-create",
+  //       popover: {
+  //         title: "Create Button",
+  //         description: "Click to create instances.",
+  //         side: "bottom",
+  //       },
+  //     },
+  //   ],
+  // });
+
+  // useEffect(() => {
+  //   const seen = localStorage.getItem("inventoryTourSeen");
+
+  //   if (!seen) {
+  //     setTimeout(() => {
+  //       driverObj.drive();
+
+  //       localStorage.setItem("inventoryTourSeen", "true");
+  //     }, 1000);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   registerTour(driverObj);
+  // }, []);
 
   const handleImport = async (file) => {
     if (!file) return;
@@ -705,6 +747,19 @@ if (
           return {
             location: formatLocation(inst.location),
             deviceName: inst.deviceName || "",
+            upgrades:
+    inst.upgrades?.map(up => ({
+      description: up.description,
+      date: up.date || null,
+
+      cost: {
+        amount: Number(up.cost?.amount) || 0,
+        currency: up.cost?.currency || "USD"
+      },
+
+      notes: up.notes || ""
+    })) || [],
+
             software: {
               licenseKey: inst.licenseKey || "",
               licenseNumber: inst.licenseNumber || "",
@@ -735,6 +790,19 @@ renewalCost: {
           condition: inst.condition || "new",
           location: formatLocation(inst.location),
           deviceName: inst.deviceName || "",
+          upgrades:
+    inst.upgrades?.map(up => ({
+      description: up.description,
+      date: up.date || null,
+
+      cost: {
+        amount: Number(up.cost?.amount) || 0,
+        currency: up.cost?.currency || "USD"
+      },
+
+      notes: up.notes || ""
+    })) || [],
+
           hardware: {
             modelNo: inst.modelNo || "",
             specifications: inst.specifications || "",
@@ -1759,7 +1827,118 @@ insuranceCost: {
                     </div>
                   </>
                 )}
+                <div className="upgrade-section">
+
+  <div className="upgrade-header">
+    <h4>Historical Upgrades</h4>
+
+    <button
+      type="button"
+      onClick={() => addUpgrade(index)}
+    >
+      + Add Upgrade
+    </button>
+  </div>
+
+  {(inst.upgrades || []).map((upgrade, upIndex) => (
+
+    <div
+      key={upIndex}
+      className="upgrade-card"
+    >
+
+      <div className="grid-3">
+
+        <div>
+          <label>Description</label>
+
+          <input
+            value={upgrade.description}
+            placeholder="RAM upgraded to 16GB"
+            onChange={(e) =>
+              handleUpgradeChange(
+                index,
+                upIndex,
+                "description",
+                e.target.value
+              )
+            }
+          />
+        </div>
+
+        <div>
+          <label>Date Performed</label>
+
+          <input
+            type="date"
+            value={upgrade.date}
+            onChange={(e) =>
+              handleUpgradeChange(
+                index,
+                upIndex,
+                "date",
+                e.target.value
+              )
+            }
+          />
+        </div>
+
+        <div>
+          <label>Upgrade Cost</label>
+
+          <input
+            type="number"
+            value={upgrade.cost?.amount || ""}
+            onChange={(e) =>
+              handleUpgradeChange(
+                index,
+                upIndex,
+                "cost",
+                {
+                  amount:
+                    Number(e.target.value) || 0,
+                  currency: "USD"
+                }
+              )
+            }
+          />
+        </div>
+
+      </div>
+
+      <div>
+        <label>Notes</label>
+
+        <textarea
+          value={upgrade.notes}
+          placeholder="Optional notes"
+          onChange={(e) =>
+            handleUpgradeChange(
+              index,
+              upIndex,
+              "notes",
+              e.target.value
+            )
+          }
+        />
+      </div>
+
+      <button
+        type="button"
+        className="remove-upgrade-btn"
+        onClick={() =>
+          removeUpgrade(index, upIndex)
+        }
+      >
+        Remove Upgrade
+      </button>
+
+    </div>
+
+  ))}
+</div>
               </div>
+              
             )}
           </div>
         ))}

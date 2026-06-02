@@ -1184,7 +1184,7 @@ const coverageType =
   inst.hardware?.coverageType || [];
 
 let insuranceExpiry = null;
-
+const upgrades = inst.upgrades || [];
 /* AUTO CALCULATE EXPIRY */
 if (hasInsurance && insurancePurchaseDate) {
   const expiry = new Date(insurancePurchaseDate);
@@ -1212,51 +1212,53 @@ if (hasInsurance && insurancePurchaseDate) {
 
   insuranceExpiry = expiry;
 }
-  const lifecycleEvent = {
-  eventType: "created",
+const lifecycle = [
+  {
+    eventType: "created",
 
-  category: "instance",
+    category: "instance",
 
-  title: "Instance Created",
+    title: "Instance Created",
 
-  description:
-    instances.length > 1
-      ? "Bulk instance upload"
-      : "Single instance created",
+    description:
+      instances.length > 1
+        ? "Bulk instance upload"
+        : "Single instance created",
 
-  performedBy: userId,
+    performedBy: userId,
 
-  date: new Date(),
+    date: new Date(),
 
-  metadata: {
-    assetId: asset._id,
+    metadata: {
+      assetId: asset._id,
 
-    assetName: asset.assetName,
+      assetName: asset.assetName,
 
-    assetType,
+      assetType,
 
-    instanceCode,
+      instanceCode,
 
-    deviceName: inst.deviceName || "-",
+      deviceName: inst.deviceName || "-",
 
-    location: inst.location || "-",
+      location: inst.location || "-",
 
-    status: "in_stock",
+      status: "in_stock",
 
-    condition: inst.condition || "new",
+      condition: inst.condition || "new",
 
-    purchaseCost:
-      purchaseCost?.amount || 0,
+      purchaseCost:
+        purchaseCost?.amount || 0,
 
-    currency: "USD",
+      currency: "USD",
 
-    ...(assetType === "hardware"
-      ? {
-          serialNumber:
-            inst.hardware?.serialNumber || "-",
+      ...(assetType === "hardware"
+        ? {
+            serialNumber:
+              inst.hardware?.serialNumber || "-",
 
-          modelNo:
-            inst.hardware?.modelNo || "-",
+            modelNo:
+              inst.hardware?.modelNo || "-",
+
             hasInsurance,
 
             insuranceTerm:
@@ -1273,13 +1275,59 @@ if (hasInsurance && insurancePurchaseDate) {
               hasInsurance
                 ? coverageType
                 : [],
-        }
-      : {
-          licenseNumber:
-            inst.software?.licenseNumber || "-"
-        })
+          }
+        : {
+            licenseNumber:
+              inst.software?.licenseNumber || "-"
+          })
+    }
   }
-};
+];
+upgrades.forEach((upgrade) => {
+  lifecycle.push({
+    eventType: "upgraded",
+
+    category: "upgrade",
+
+    title:
+      upgrade.upgradeType
+        ? `${upgrade.upgradeType} Upgrade`
+        : "Historical Upgrade",
+
+    description:
+      upgrade.description ||
+
+      `${upgrade.oldValue || ""} → ${upgrade.newValue || ""}`,
+
+    performedBy:
+      upgrade.performedBy || userId,
+
+    date:
+      upgrade.date || new Date(),
+
+    metadata: {
+      upgrade: {
+        upgradeType:
+          upgrade.upgradeType || "other",
+
+        description:
+          upgrade.description || "",
+
+        oldValue:
+          upgrade.oldValue || "",
+
+        newValue:
+          upgrade.newValue || "",
+
+        cost:
+          upgrade.cost || null,
+
+        notes:
+          upgrade.notes || ""
+      }
+    }
+  });
+});
   const basePayload = {
     organizationId,
     assetId,
@@ -1312,7 +1360,7 @@ const warrantyRenewalCost = {
 
 newInstances.push({
   ...basePayload,
-
+  upgrades,
   hardware: {
     serialNumber:
       inst.hardware?.serialNumber ||
@@ -1373,6 +1421,7 @@ coverageType:
   } else {
     newInstances.push({
       ...basePayload,
+      upgrades,
       software: {
   licenseKey: inst.software?.licenseKey || "",
   licenseNumber: inst.software?.licenseNumber || "",
