@@ -1,4 +1,4 @@
-const asyncHandler = require("express-async-handler");
+const asyncHandler = require("../../utils/asyncHandler");
 const AppError = require("../../utils/AppError");
 const AffiliateProfile = require("../../models/AffiliateProfile");
 const AffiliateTicket = require("../../models/AffiliateTicket");
