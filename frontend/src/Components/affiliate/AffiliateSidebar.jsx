@@ -1,6 +1,16 @@
-import { NavLink } from "react-router-dom";
+import { NavLink , useNavigate } from "react-router-dom";
 
 export default function AffiliateSidebar() {
+    const navigate = useNavigate();
+    const handleLogout = () => {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    sessionStorage.clear();
+
+    navigate("/user/login");
+  };
   return (
     <div className="affiliate-sidebar">
 
@@ -27,7 +37,14 @@ export default function AffiliateSidebar() {
 </NavLink>
 
       </nav>
-
+    <div className="affiliate-sidebar-footer">
+        <button
+          className="affiliate-logout-btn"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }

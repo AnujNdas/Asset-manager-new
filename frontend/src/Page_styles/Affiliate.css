@@ -63,3 +63,23 @@
   font-size: 28px;
   font-weight: bold;
 }
+.affiliate-sidebar-footer {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.affiliate-logout-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #dc2626;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.affiliate-logout-btn:hover {
+  background: #b91c1c;
+}
