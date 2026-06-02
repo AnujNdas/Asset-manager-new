@@ -1,6 +1,6 @@
 .affiliate-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background: #393E46;
   color: #DFD0B8;
 }
@@ -19,7 +19,7 @@
 }
 
 .affiliate-nav a {
-  color: #cbd5e1;
+  color: #DFD0B8;
   text-decoration: none;
   padding: 12px 14px;
   border-radius: 10px;
@@ -31,8 +31,8 @@
 }
 
 .affiliate-nav .active {
-  background: #2563eb;
-  color: white;
+  background: #DFD0B8;
+  color: #222831;
 }
 
 .affiliate-content {
