@@ -101,7 +101,7 @@ const AffiliateTicketPage = () => {
         </div>
 
         <button
-          className="create-ticket-btn"
+          className="save-settings-btn"
           onClick={() =>
             setShowModal(true)
           }
@@ -310,7 +310,7 @@ const AffiliateTicketPage = () => {
               </button>
 
               <button
-                className="primary-btn"
+                className="save-settings-btn"
                 onClick={
                   handleCreateTicket
                 }

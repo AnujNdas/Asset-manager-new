@@ -83,3 +83,148 @@
 .affiliate-logout-btn:hover {
   background: #b91c1c;
 }
+/* =========================
+   LARGE TABLETS
+========================= */
+
+@media (max-width: 1024px) {
+
+  .affiliate-sidebar {
+    width: 220px;
+    padding: 18px;
+  }
+
+  .affiliate-logo h2 {
+    font-size: 1.3rem;
+  }
+
+  .affiliate-nav a {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+
+}
+
+/* =========================
+   TABLETS
+========================= */
+
+@media (max-width: 768px) {
+
+  .affiliate-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .affiliate-sidebar {
+    width: 100%;
+    height: auto;
+    padding: 16px;
+    border-bottom: 1px solid rgba(223,208,184,0.15);
+  }
+
+  .affiliate-logo {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .affiliate-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 5px;
+
+    scrollbar-width: none;
+  }
+
+  .affiliate-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .affiliate-nav a {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .affiliate-sidebar-footer {
+    margin-top: 15px;
+    padding-top: 0;
+  }
+
+  .affiliate-content {
+    width: 100%;
+  }
+
+  .affiliate-grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(180px, 1fr)
+    );
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 576px) {
+
+  .affiliate-sidebar {
+    padding: 12px;
+  }
+
+  .affiliate-logo h2 {
+    font-size: 1.1rem;
+  }
+
+  .affiliate-nav {
+    gap: 8px;
+  }
+
+  .affiliate-nav a {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+
+  .affiliate-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .affiliate-card {
+    padding: 18px;
+  }
+
+  .affiliate-card p {
+    font-size: 22px;
+  }
+
+  .affiliate-logout-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+}
+
+/* =========================
+   EXTRA SMALL DEVICES
+========================= */
+
+@media (max-width: 380px) {
+
+  .affiliate-nav a {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  .affiliate-card {
+    padding: 15px;
+  }
+
+  .affiliate-card p {
+    font-size: 20px;
+  }
+
+}

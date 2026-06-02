@@ -147,6 +147,30 @@
   cursor: pointer;
 }
 
+/* =========================
+   LARGE TABLETS
+========================= */
+
+@media (max-width: 1200px) {
+
+  .affiliate-left {
+    padding: 40px;
+  }
+
+  .affiliate-right {
+    padding: 30px;
+  }
+
+  .affiliate-form {
+    max-width: 100%;
+  }
+
+}
+
+/* =========================
+   TABLETS
+========================= */
+
 @media (max-width: 980px) {
 
   .affiliate-page {
@@ -154,11 +178,11 @@
   }
 
   .affiliate-left {
-    padding: 40px 24px 10px;
+    padding: 32px 24px 10px;
   }
 
   .affiliate-right {
-    padding: 24px;
+    padding: 20px;
   }
 
   .affiliate-grid {
@@ -166,6 +190,185 @@
   }
 
   .affiliate-left h1 {
-    font-size: 36px;
+    font-size: 30px;
   }
-}   
+
+  .affiliate-subtitle {
+    font-size: 15px;
+    max-width: 100%;
+  }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .affiliate-page {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .affiliate-left {
+    padding: 24px 18px 10px;
+  }
+
+  .affiliate-right {
+    padding: 18px;
+  }
+
+  .affiliate-logo img {
+    width: 70px;
+    margin-bottom: 16px;
+  }
+
+  .affiliate-left h1 {
+    font-size: 26px;
+  }
+
+  .affiliate-subtitle {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .affiliate-benefits {
+    gap: 12px;
+  }
+
+  .benefit-card {
+    padding: 14px;
+  }
+
+  .affiliate-form {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .affiliate-form h2 {
+    font-size: 20px;
+  }
+
+  .input-group input,
+  .input-group select,
+  .input-group textarea {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .affiliate-submit,
+  .back-btn {
+    padding: 14px;
+    font-size: 15px;
+  }
+
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 576px) {
+
+  .affiliate-left {
+    padding: 20px 14px 8px;
+  }
+
+  .affiliate-right {
+    padding: 14px;
+  }
+
+  .affiliate-left h1 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  .affiliate-subtitle {
+    font-size: 13px;
+  }
+
+  .benefit-card h3 {
+    font-size: 13px;
+  }
+
+  .benefit-card p {
+    font-size: 12px;
+  }
+
+  .affiliate-form {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .affiliate-form h2 {
+    font-size: 18px;
+  }
+
+  .input-group label {
+    font-size: 13px;
+  }
+
+  .input-group input,
+  .input-group select,
+  .input-group textarea {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .affiliate-submit,
+  .back-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+}
+
+/* =========================
+   EXTRA SMALL DEVICES
+========================= */
+
+@media (max-width: 380px) {
+
+  .affiliate-left {
+    padding: 16px 10px 6px;
+  }
+
+  .affiliate-right {
+    padding: 10px;
+  }
+
+  .affiliate-left h1 {
+    font-size: 19px;
+  }
+
+  .affiliate-subtitle {
+    font-size: 12px;
+  }
+
+  .benefit-card {
+    padding: 10px;
+  }
+
+  .affiliate-form {
+    padding: 12px;
+  }
+
+  .affiliate-form h2 {
+    font-size: 17px;
+  }
+
+  .input-group input,
+  .input-group select,
+  .input-group textarea {
+    padding: 9px;
+    font-size: 12px;
+  }
+
+  .affiliate-submit,
+  .back-btn {
+    font-size: 13px;
+    padding: 11px;
+  }
+
+}

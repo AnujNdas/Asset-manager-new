@@ -224,3 +224,238 @@
   justify-content: center;
   align-items: center;
 }
+/* =========================================
+   LARGE TABLETS
+========================================= */
+
+@media (max-width: 1200px) {
+
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* =========================================
+   TABLETS
+========================================= */
+
+@media (max-width: 992px) {
+
+  .affiliate-earnings-page {
+    padding: 20px;
+  }
+
+  .affiliate-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .affiliate-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .withdraw-btn {
+    width: 100%;
+  }
+
+  .earnings-summary-grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(180px, 1fr)
+    );
+  }
+
+  .earning-card h2 {
+    font-size: 1.7rem;
+  }
+
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .affiliate-earnings-page {
+    padding: 16px;
+  }
+
+  .affiliate-header {
+    margin-bottom: 20px;
+  }
+
+  .affiliate-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .affiliate-header p {
+    font-size: 0.9rem;
+  }
+
+  .earnings-summary-grid {
+    gap: 12px;
+  }
+
+  .earning-card {
+    padding: 16px;
+  }
+
+  .earning-card h2 {
+    font-size: 1.4rem;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .chart-card {
+    padding: 14px;
+  }
+
+  .chart-header h3 {
+    font-size: 1rem;
+  }
+
+  .earnings-filters {
+    flex-direction: column;
+  }
+
+  .earnings-filters select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .earnings-table th,
+  .earnings-table td {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  .payout-card {
+    grid-template-columns: 1fr;
+  }
+
+  .payout-card > div {
+    padding: 18px;
+  }
+
+  .payout-card p {
+    font-size: 1.2rem;
+  }
+
+}
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 576px) {
+
+  .affiliate-earnings-page {
+    padding: 12px;
+  }
+
+  .affiliate-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .affiliate-header p {
+    font-size: 0.85rem;
+  }
+
+  .withdraw-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .earning-card {
+    padding: 14px;
+  }
+
+  .earning-card span {
+    font-size: 0.8rem;
+  }
+
+  .earning-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .chart-card {
+    padding: 12px;
+  }
+
+  .chart-header {
+    margin-bottom: 10px;
+  }
+
+  .chart-header h3 {
+    font-size: 0.95rem;
+  }
+
+  .earnings-table th,
+  .earnings-table td {
+    padding: 10px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+
+  .empty-state {
+    padding: 20px;
+    font-size: 0.9rem;
+  }
+
+  .payout-card > div {
+    padding: 16px;
+  }
+
+  .payout-card h3 {
+    font-size: 0.9rem;
+  }
+
+  .payout-card p {
+    font-size: 1.05rem;
+  }
+
+}
+
+/* =========================================
+   EXTRA SMALL DEVICES
+========================================= */
+
+@media (max-width: 380px) {
+
+  .affiliate-header h1 {
+    font-size: 1.15rem;
+  }
+
+  .affiliate-header p {
+    font-size: 0.8rem;
+  }
+
+  .earning-card {
+    padding: 12px;
+  }
+
+  .earning-card h2 {
+    font-size: 1rem;
+  }
+
+  .chart-card {
+    padding: 10px;
+  }
+
+  .earnings-table th,
+  .earnings-table td {
+    padding: 8px;
+    font-size: 0.75rem;
+  }
+
+}
