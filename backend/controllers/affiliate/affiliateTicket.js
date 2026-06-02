@@ -97,4 +97,4 @@ const getAffiliateTickets =
       data: ticket,
     });
   });
-module.exports = createAffiliateTicket;
+module.exports =  { createAffiliateTicket, getAffiliateTickets, getAffiliateTicketById };
