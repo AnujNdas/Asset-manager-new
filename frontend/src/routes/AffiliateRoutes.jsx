@@ -10,6 +10,7 @@ import AffiliateSettingsLayout from "../Pages/affiliate/AffiliateSettingsLayout"
 import AffiliateProfileSettings from "../Pages/affiliate/AffiliateProfileSettings";
 import AffiliatePayoutSettings from "../Pages/affiliate/AffiliatePayoutSettings";
 import AffiliatePreferenceSettings from "../Pages/affiliate/AffiliatePreferencesSettings";
+import AffiliateTickets from "../Pages/affiliate/AffiliateTickets";
 const AffiliateRoutes = () => {
   return (
     <>
@@ -53,6 +54,10 @@ const AffiliateRoutes = () => {
   <Route
     path="preferences"
     element={<AffiliatePreferenceSettings />}
+  />
+  <Route
+    path="tickets"
+    element={<AffiliateTickets />}
   />
 </Route>
       </Route>

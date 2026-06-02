@@ -51,8 +51,8 @@ const AffiliateSettingsLayout = () => {
   to="/affiliate/settings/tickets"
   className={({ isActive }) =>
     isActive
-      ? "affiliate-settings-link active"
-      : "affiliate-settings-link"
+      ? "affiliate-settings-tab active"
+      : "affiliate-settings-tab"
   }
 >
   🎫 Support Tickets
