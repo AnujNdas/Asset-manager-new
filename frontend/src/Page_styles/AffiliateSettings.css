@@ -13,10 +13,7 @@
 ========================== */
 
 .affiliate-settings-header {
-  background: #222831;
-  border: 1px solid #393E46;
-  border-radius: 16px;
-  padding: 20px 24px;
+  padding: 10px 24px;
 }
 
 .affiliate-settings-header h1 {
@@ -27,7 +24,7 @@
 }
 
 .affiliate-settings-header p {
-  margin-top: 6px;
+  margin: 0;
   color: rgba(223, 208, 184, 0.8);
   font-size: 0.95rem;
 }
@@ -82,7 +79,6 @@
 .affiliate-settings-card {
   background: #222831;
   border: 1px solid #393E46;
-  border-radius: 18px;
   padding: 24px;
   color: #DFD0B8;
 }
@@ -169,9 +165,7 @@
 =========================== */
 
 .affiliate-settings-card {
-  background: var(--card-bg, #fff);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 20px;
   padding: 24px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
 }
@@ -209,14 +203,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.form-group label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #555;
+  margin-bottom: 5px;
 }
 
 .form-group input,
@@ -268,9 +255,6 @@
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid #e5e5e5;
-  background: #f7f7f7;
-  color: #666;
 }
 
 /* ===========================
@@ -283,7 +267,7 @@
   justify-content: space-between;
   margin: 24px 0;
   padding: 16px;
-  background: #f8fafc;
+  background: #393E46;
   border-radius: 14px;
 }
 
@@ -303,8 +287,8 @@
 
 .save-settings-btn {
   border: none;
-  background: #4f46e5;
-  color: white;
+  background: #DFD0B8;
+  color: #222831;
   padding: 12px 22px;
   border-radius: 12px;
   font-size: 0.95rem;
