@@ -1830,9 +1830,10 @@ insuranceCost: {
                 <div className="upgrade-section">
 
   <div className="upgrade-header">
-    <h4>Historical Upgrades</h4>
+    <h4 style={{ color : "#DFD0B8" , fontSize : "22px"}}>Historical Upgrades</h4>
 
     <button
+    style={{ backgroundColor : "#DFD0B8" , color : "#222831" , padding : "5px 10px" , borderRadius : "5px"}}
       type="button"
       onClick={() => addUpgrade(index)}
     >
@@ -1924,6 +1925,7 @@ insuranceCost: {
       </div>
 
       <button
+      style={{ backgroundColor : "#393E46" , color : "#DFD0B8" , padding : "5px 10px" , borderRadius : "5px"}}
         type="button"
         className="remove-upgrade-btn"
         onClick={() =>

@@ -1338,7 +1338,7 @@ upgrades.forEach((upgrade) => {
     location: inst.location,
     status: "in_stock",
     condition: inst.condition || "new",
-    lifecycle: [lifecycleEvent],
+    lifecycle,
     createdBy: userId
   };
 
