@@ -5,10 +5,10 @@ const authenticateToken = require("../Middleware/Authentication-token");
 
 const { getOverview } = require("../controllers/superAdmin/dashboardController");
 const { getAllOrganizations, createOrganization , getOrganizationById ,toggleOrganizationStatus , getOrganizationUsers  } = require("../controllers/superAdmin/organizationController");
-const {getSettings, updateSettings} = require("../controllers/superAdmin/settingController");
+const {getSettings, updateSettings , resolveAffiliateTicket} = require("../controllers/superAdmin/settingController");
 // const { getGAAnalytics } = require("../controllers/superAdmin/gaAnalysisController");
 const { getLoginActivity } = require("../controllers/superAdmin/loginActivityController");
-const { getAllAffiliateTickets, resolveAffiliateTicket } = require("../controllers/affiliate/affiliateTicket");
+const { getAllAffiliateTickets} = require("../controllers/affiliate/affiliateTicket");
 
 
 /* ================= DASHBOARD ================= */

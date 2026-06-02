@@ -72,4 +72,5 @@ const resolveAffiliateTicket =
 module.exports = {
   getSettings,
   updateSettings,
+  resolveAffiliateTicket,
 };
