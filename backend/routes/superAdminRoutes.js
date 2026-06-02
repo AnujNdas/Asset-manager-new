@@ -8,7 +8,7 @@ const { getAllOrganizations, createOrganization , getOrganizationById ,toggleOrg
 const {getSettings, updateSettings} = require("../controllers/superAdmin/settingController");
 // const { getGAAnalytics } = require("../controllers/superAdmin/gaAnalysisController");
 const { getLoginActivity } = require("../controllers/superAdmin/loginActivityController");
-const { getAllAffiliateTickets, resolveAffiliateTicket } = require("../controllers/superAdmin/affiliateTicketController");
+const { getAllAffiliateTickets, resolveAffiliateTicket } = require("../controllers/affiliate/affiliateTicket");
 
 
 /* ================= DASHBOARD ================= */
