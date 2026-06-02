@@ -6,7 +6,6 @@ import AffiliateDashboard from "../Pages/affiliate/AffiliateDashboard";
 import AffiliateReferrals from "../Pages/affiliate/AffiliateReferrals";
 import AffiliateEarnings from "../Pages/affiliate/AffiliateEarnings";
 import AffiliatePayouts from "../Pages/affiliate/AffiliatePayout";
-import AffiliateProfile from "../Pages/affiliate/AffiliateProfile";
 import AffiliateSettingsLayout from "../Pages/affiliate/AffiliateSettingsLayout";
 import AffiliateProfileSettings from "../Pages/affiliate/AffiliateProfileSettings";
 import AffiliatePayoutSettings from "../Pages/affiliate/AffiliatePayoutSettings";
@@ -36,11 +35,6 @@ const AffiliateRoutes = () => {
         <Route
           path="payouts"
           element={<AffiliatePayouts />}
-        />
-
-        <Route
-          path="profile"
-          element={<AffiliateProfile />}
         />
           <Route
   path="/affiliate/settings"
