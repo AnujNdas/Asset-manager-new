@@ -1883,7 +1883,30 @@ insuranceCost: {
             }
           />
         </div>
+            <div>
+  <label>Condition After Upgrade</label>
 
+  <select
+    value={upgrade.newCondition || ""}
+    onChange={(e) =>
+      handleUpgradeChange(
+        index,
+        upIndex,
+        "newCondition",
+        e.target.value
+      )
+    }
+  >
+    <option value="">No Change</option>
+    <option value="new">New</option>
+    <option value="used">Used</option>
+    <option value="damaged">Damaged</option>
+    <option value="broken">Broken</option>
+    <option value="stolen">Stolen</option>
+    <option value="repaired(in)">Repaired(IN)</option>
+    <option value="repaired(out)">Repaired(OUT)</option>
+  </select>
+</div>
         <div>
           <label>Upgrade Cost</label>
 

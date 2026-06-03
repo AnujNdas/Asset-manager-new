@@ -67,6 +67,18 @@ const assetInstanceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
+        newCondition: {
+      type: String,
+      enum: [
+        "new",
+        "used",
+        "damaged",
+        "broken",
+        "stolen",
+        "repaired(in)",
+        "repaired(out)"
+      ]
+    },
     cost: costSchema, // optional (very useful later)
     notes: String
   }

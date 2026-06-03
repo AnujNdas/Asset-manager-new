@@ -1312,7 +1312,8 @@ upgrades.forEach((upgrade) => {
 
         description:
           upgrade.description || "",
-
+        newCondition:
+          upgrade.newCondition || null,
         oldValue:
           upgrade.oldValue || "",
 
