@@ -751,7 +751,7 @@ if (
     inst.upgrades?.map(up => ({
       description: up.description,
       date: up.date || null,
-
+      newCondition: up.newCondition || "new",
       cost: {
         amount: Number(up.cost?.amount) || 0,
         currency: up.cost?.currency || "USD"
@@ -794,7 +794,7 @@ renewalCost: {
     inst.upgrades?.map(up => ({
       description: up.description,
       date: up.date || null,
-
+      newCondition: up.newCondition || "new",
       cost: {
         amount: Number(up.cost?.amount) || 0,
         currency: up.cost?.currency || "USD"
