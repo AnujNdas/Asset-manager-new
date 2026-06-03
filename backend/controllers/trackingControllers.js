@@ -453,6 +453,15 @@ deviceInfo:
 
       summary: {
         instanceCode: instance.instanceCode,
+        purchaseDate:
+    instance.assetType === "hardware"
+      ? formatDate(instance.hardware?.purchaseDate)
+      : formatDate(instance.software?.purchaseDate),
+
+  installationDate:
+    instance.assetType === "hardware"
+      ? formatDate(instance.hardware?.installationDate)
+      : formatDate(instance.software?.installationDate),
 
         assetType: instance.assetType,
 
