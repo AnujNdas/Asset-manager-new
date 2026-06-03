@@ -312,7 +312,7 @@ const CreateInstances = () => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-IN");
   };
-  const addUpgrade = (instanceIndex) => {
+const addUpgrade = (instanceIndex) => {
   const updated = [...instances];
 
   updated[instanceIndex].upgrades = [
@@ -320,6 +320,7 @@ const CreateInstances = () => {
     {
       description: "",
       date: "",
+      newCondition: "new",
       cost: {
         amount: 0,
         currency: "USD"
@@ -330,7 +331,6 @@ const CreateInstances = () => {
 
   setInstances(updated);
 };
-
 const removeUpgrade = (instanceIndex, upgradeIndex) => {
   const updated = [...instances];
 
