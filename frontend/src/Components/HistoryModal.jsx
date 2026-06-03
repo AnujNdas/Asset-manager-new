@@ -70,6 +70,8 @@ const formatCost = (costObj) => {
             <p><strong>Condition:</strong> {summary.condition}</p>
             <p><strong>Active Service:</strong> {summary.activeService}</p>
             <p><strong>Health Score:</strong> {summary.activeScore}</p>
+            <p><strong>Purchase Date:</strong> {summary.purchaseDate}</p>
+            <p><strong>Installation Date:</strong> {summary.installationDate}</p>
           </div>
         )}
 
