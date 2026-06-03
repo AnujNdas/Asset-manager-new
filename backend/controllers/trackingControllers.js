@@ -318,11 +318,11 @@ const history = (instance.lifecycle || [])
         instance.status ||
         "-",
 
-      condition:
-        meta.condition ||
-        instance.condition ||
-        "-",
-
+condition:
+  meta.upgrade?.newCondition ||
+  meta.condition ||
+  instance.condition ||
+  "-",
       /* =============================
          HARDWARE
       ============================== */
