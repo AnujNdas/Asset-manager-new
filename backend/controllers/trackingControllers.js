@@ -743,12 +743,12 @@ if (hasInsurance === true) {
         renewalCost: normalizeCost(instance.software?.costs?.renewalCost)
       }
     };
+    const effectiveUpgradeDate =
+upgradeDate && !isNaN(new Date(upgradeDate))
+  ? new Date(upgradeDate)
+  : new Date();
     if (upgradeDescription && upgradeDescription.trim()) {
       instance.upgrades = instance.upgrades || [];
-      const effectiveUpgradeDate =
-  upgradeDate && !isNaN(new Date(upgradeDate))
-    ? new Date(upgradeDate)
-    : new Date();
 instance.upgrades.push({
   description: upgradeDescription.trim(),
   performedBy: req.user.id,
