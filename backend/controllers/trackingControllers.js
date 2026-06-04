@@ -319,12 +319,12 @@ const history = (instance.lifecycle || [])
         "-",
 
 condition:
-  item.to?.condition ||
-  item.from?.condition ||
-  meta.to?.condition ||
-  meta.upgrade?.newCondition ||
-  meta.condition ||
-  "-",
+  item.eventType === "upgraded"
+    ? meta.upgrade?.newCondition
+    : meta.to?.condition ||
+      meta.condition ||
+      instance.condition ||
+      "-",
       /* =============================
          HARDWARE
       ============================== */
