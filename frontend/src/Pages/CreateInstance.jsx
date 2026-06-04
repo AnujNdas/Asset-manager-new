@@ -1803,20 +1803,6 @@ insuranceCost: {
                     </div>
                   </>
                 )}
-                <div className="upgrade-section">
-
-  <div className="upgrade-header">
-    <h4 style={{ color : "#DFD0B8" , fontSize : "22px"}}>Historical Upgrades</h4>
-
-    <button
-    style={{ backgroundColor : "#DFD0B8" , color : "#222831" , padding : "5px 10px" , borderRadius : "5px"}}
-      type="button"
-      onClick={() => addUpgrade(index)}
-    >
-      + Add Upgrade
-    </button>
-  </div>
-</div>
               </div>
               
             )}
