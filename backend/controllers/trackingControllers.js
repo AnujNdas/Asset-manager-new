@@ -513,7 +513,7 @@ const upgradeInstance = async (req, res) => {
       insuranceCost,
       // 🔹 Software Cost
       renewalCost,
-      
+      upgradeDate,   // ✅ NEW
       // 🔹 Hardware Dates
       hasInsurance,
       insuranceTerm,
@@ -745,12 +745,16 @@ if (hasInsurance === true) {
     };
     if (upgradeDescription && upgradeDescription.trim()) {
       instance.upgrades = instance.upgrades || [];
-
-      instance.upgrades.push({
-        description: upgradeDescription.trim(),
-        performedBy: req.user.id,
-        notes: upgradeNotes || ""
-      });
+      const effectiveUpgradeDate =
+  upgradeDate && !isNaN(new Date(upgradeDate))
+    ? new Date(upgradeDate)
+    : new Date();
+instance.upgrades.push({
+  description: upgradeDescription.trim(),
+  performedBy: req.user.id,
+  date: effectiveUpgradeDate,
+  notes: upgradeNotes || ""
+});
     }
     /* ===========  ==================
        🟣 LIFECYCLE ENTRY
@@ -844,15 +848,16 @@ instance.lifecycle.push({
       : undefined
   },
 
-  date: new Date(),
-
+ date: effectiveUpgradeDate,
   notes: upgradeNotes || "Asset upgraded",
 
-  meta: {
-    upgradedBy: req.user.id,
-    upgradeDescription:
-      upgradeDescription || "General upgrade"
-  }
+meta: {
+  upgradedBy: req.user.id,
+  upgradeDescription:
+    upgradeDescription || "General upgrade",
+
+  upgradeDate: effectiveUpgradeDate
+}
 });
 
     /* =============================

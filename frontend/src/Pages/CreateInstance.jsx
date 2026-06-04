@@ -747,18 +747,6 @@ if (
           return {
             location: formatLocation(inst.location),
             deviceName: inst.deviceName || "",
-            upgrades:
-    inst.upgrades?.map(up => ({
-      description: up.description,
-      date: up.date || null,
-      newCondition: up.newCondition || "new",
-      cost: {
-        amount: Number(up.cost?.amount) || 0,
-        currency: up.cost?.currency || "USD"
-      },
-
-      notes: up.notes || ""
-    })) || [],
 
             software: {
               licenseKey: inst.licenseKey || "",
@@ -790,18 +778,6 @@ renewalCost: {
           condition: inst.condition || "new",
           location: formatLocation(inst.location),
           deviceName: inst.deviceName || "",
-          upgrades:
-    inst.upgrades?.map(up => ({
-      description: up.description,
-      date: up.date || null,
-      newCondition: up.newCondition || "new",
-      cost: {
-        amount: Number(up.cost?.amount) || 0,
-        currency: up.cost?.currency || "USD"
-      },
-
-      notes: up.notes || ""
-    })) || [],
 
           hardware: {
             modelNo: inst.modelNo || "",
@@ -1840,127 +1816,6 @@ insuranceCost: {
       + Add Upgrade
     </button>
   </div>
-
-  {(inst.upgrades || []).map((upgrade, upIndex) => (
-
-    <div
-      key={upIndex}
-      className="upgrade-card"
-    >
-
-      <div className="grid-3">
-
-        <div>
-          <label>Description</label>
-
-          <input
-            value={upgrade.description}
-            placeholder="RAM upgraded to 16GB"
-            onChange={(e) =>
-              handleUpgradeChange(
-                index,
-                upIndex,
-                "description",
-                e.target.value
-              )
-            }
-          />
-        </div>
-
-        <div>
-          <label>Date Performed</label>
-
-          <input
-            type="date"
-            value={upgrade.date}
-            onChange={(e) =>
-              handleUpgradeChange(
-                index,
-                upIndex,
-                "date",
-                e.target.value
-              )
-            }
-          />
-        </div>
-            <div>
-  <label>Condition After Upgrade</label>
-
-  <select
-    value={upgrade.newCondition || ""}
-    onChange={(e) =>
-      handleUpgradeChange(
-        index,
-        upIndex,
-        "newCondition",
-        e.target.value
-      )
-    }
-  >
-    <option value="">No Change</option>
-    <option value="new">New</option>
-    <option value="used">Used</option>
-    <option value="damaged">Damaged</option>
-    <option value="broken">Broken</option>
-    <option value="stolen">Stolen</option>
-    <option value="repaired(in)">Repaired(IN)</option>
-    <option value="repaired(out)">Repaired(OUT)</option>
-  </select>
-</div>
-        <div>
-          <label>Upgrade Cost</label>
-
-          <input
-            type="number"
-            value={upgrade.cost?.amount || ""}
-            onChange={(e) =>
-              handleUpgradeChange(
-                index,
-                upIndex,
-                "cost",
-                {
-                  amount:
-                    Number(e.target.value) || 0,
-                  currency: "USD"
-                }
-              )
-            }
-          />
-        </div>
-
-      </div>
-
-      <div>
-        <label>Notes</label>
-
-        <textarea
-          value={upgrade.notes}
-          placeholder="Optional notes"
-          onChange={(e) =>
-            handleUpgradeChange(
-              index,
-              upIndex,
-              "notes",
-              e.target.value
-            )
-          }
-        />
-      </div>
-
-      <button
-      style={{ backgroundColor : "#393E46" , color : "#DFD0B8" , padding : "5px 10px" , borderRadius : "5px"}}
-        type="button"
-        className="remove-upgrade-btn"
-        onClick={() =>
-          removeUpgrade(index, upIndex)
-        }
-      >
-        Remove Upgrade
-      </button>
-
-    </div>
-
-  ))}
 </div>
               </div>
               

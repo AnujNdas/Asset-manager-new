@@ -82,7 +82,8 @@ const [form, setForm] = useState({
     "",
 
   condition: instance?.condition || "",
-  upgradeNotes: ""
+  upgradeNotes: "",
+  upgradeDate: new Date().toISOString().split("T")[0] // ✅ NEW
 });
 
   /* =============================
@@ -144,7 +145,9 @@ const payload = {
   }),
 
   condition: form.condition || undefined,
-  upgradeNotes: form.upgradeNotes || undefined
+  upgradeNotes: form.upgradeNotes || undefined,
+    upgradeDate:
+    form.upgradeDate || undefined
 };
 
       await upgradeInstance(instance._id, payload);
@@ -289,6 +292,16 @@ const payload = {
             rows={3}
           />
         </div>
+        <div>
+  <label>Upgrade Date</label>
+
+<input
+  type="date"
+  name="upgradeDate"
+  value={form.upgradeDate}
+  onChange={handleChange}
+/>
+</div>
 
         {/* ACTIONS */}
         <div className="modal-actions">
