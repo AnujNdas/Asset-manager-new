@@ -853,7 +853,7 @@ instance.lifecycle.push({
  date: effectiveUpgradeDate,
   notes: upgradeNotes || "Asset upgraded",
 
-meta: {
+metadata: {
   upgradedBy: req.user.id,
 
   upgradeDescription:
