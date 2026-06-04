@@ -319,9 +319,11 @@ const history = (instance.lifecycle || [])
         "-",
 
 condition:
+  item.to?.condition ||
+  item.from?.condition ||
+  meta.to?.condition ||
   meta.upgrade?.newCondition ||
   meta.condition ||
-  instance.condition ||
   "-",
       /* =============================
          HARDWARE
@@ -853,10 +855,20 @@ instance.lifecycle.push({
 
 meta: {
   upgradedBy: req.user.id,
+
   upgradeDescription:
     upgradeDescription || "General upgrade",
 
-  upgradeDate: effectiveUpgradeDate
+  upgradeDate: effectiveUpgradeDate,
+
+  from: beforeSnapshot,
+
+  to: afterSnapshot,
+
+  upgrade: {
+    previousCondition: beforeSnapshot.condition,
+    newCondition: afterSnapshot.condition
+  }
 }
 });
 
