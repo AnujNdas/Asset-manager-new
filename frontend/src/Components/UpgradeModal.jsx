@@ -82,6 +82,7 @@ const [form, setForm] = useState({
     "",
 
   condition: instance?.condition || "",
+  upgradeDescription: "",
   upgradeNotes: "",
   upgradeDate: new Date().toISOString().split("T")[0] // ✅ NEW
 });
@@ -145,6 +146,7 @@ const payload = {
   }),
 
   condition: form.condition || undefined,
+  upgradeDescription: form.upgradeDescription || undefined,
   upgradeNotes: form.upgradeNotes || undefined,
     upgradeDate:
     form.upgradeDate || undefined
@@ -284,13 +286,13 @@ const payload = {
         </div>
         <div className="input-group">
           <label>Upgrade Details</label>
-          <textarea
-            name="upgradeNotes"
-            placeholder="e.g. RAM upgraded to 16GB, SSD replaced, oil changed"
-            value={form.upgradeNotes}
-            onChange={handleChange}
-            rows={3}
-          />
+<textarea
+  name="upgradeDescription"
+  placeholder="Describe the upgrade"
+  value={form.upgradeDescription}
+  onChange={handleChange}
+  rows={3}
+/>
         </div>
         <div>
   <label>Upgrade Date</label>

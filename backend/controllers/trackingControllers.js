@@ -417,8 +417,13 @@ deviceInfo:
          UPGRADE
       ============================== */
 
-      upgrade:
-        meta.upgrade || null,
+upgrade: {
+  description: meta.upgradeDescription || null,
+  previousCondition:
+    meta.upgrade?.previousCondition || null,
+  newCondition:
+    meta.upgrade?.newCondition || null
+},
 
       /* =============================
          HEALTH
