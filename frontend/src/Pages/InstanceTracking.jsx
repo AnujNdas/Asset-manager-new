@@ -29,6 +29,7 @@ const InstanceTracking = () => {
   const [showReassign, setShowReassign] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [highlightedId, setHighlightedId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const driverObj = driver({
     showProgress: true,
     animate: true,
@@ -167,12 +168,30 @@ if (!instance || !instance.assignment?._id) {
       });
     }
   };
+  const filteredInstances = instances.filter((inst) => {
+  const assetName =
+    inst.assetName ||
+    inst.deviceName ||
+    "";
+
+  return assetName
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase());
+});
   if (loading) return <Loader />;
 
   return (
     <div className="instance-page">
       {/* 🔽 FILTER BAR */}
       <div className="filter-bar tour-filter">
+        <div className="search-box">
+    <input
+      type="text"
+      placeholder="Search by asset name..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  </div>
         <select value={filterType} onChange={handleFilterChange}>
           <option value="all">All Assets</option>
           <option value="hardware">Hardware</option>
@@ -190,7 +209,7 @@ if (!instance || !instance.assignment?._id) {
 
       {/* 🔽 LIST */}
       <div className="instance-list">
-        {instances.map((inst) => (
+        {filteredInstances.map((inst) => (
           <div
             key={inst._id}
             ref={(el) => (instanceRefs.current[inst._id] = el)}
