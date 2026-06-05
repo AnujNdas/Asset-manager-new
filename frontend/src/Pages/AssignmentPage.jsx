@@ -60,6 +60,7 @@ const [assignmentData, setAssignmentData] = useState({
   department: "",
   employee: "",
   location: "",
+  assignmentDate: new Date().toISOString().split("T")[0],
   deviceName: "",
   serialNumber: "",   // ✅ NEW
   model: ""           // ✅ NEW
@@ -343,7 +344,7 @@ if (isSoftware) {
     );
   }
 }
-const payload = selectedInstances.map(inst => ({
+const payload = selectedInstances.map((inst) => ({
   assetId: selectedAsset._id,
   assetType: selectedAsset.assetType,
   assetInstanceId: inst._id,
@@ -351,13 +352,15 @@ const payload = selectedInstances.map(inst => ({
   employeeId: assignmentData.employee,
   location: assignmentData.location,
 
+  assignmentDate: assignmentData.assignmentDate,
+
   ...(isSoftware && {
     deviceInfo: {
       deviceName: assignmentData.deviceName,
       serialNumber: assignmentData.serialNumber,
-      model: assignmentData.model
-    }
-  })
+      model: assignmentData.model,
+    },
+  }),
 }));
 
     try {
@@ -386,6 +389,8 @@ setAssignmentData({
   department: "",
   employee: "",
   location: "",
+  assignmentDate: new Date().toISOString().split("T")[0],
+
   deviceName: "",
   serialNumber: "",
   model: ""
@@ -526,6 +531,17 @@ const currencyCode = costObj?.currency || "USD";
           <input placeholder="Assign Location"
             onChange={(e) => setAssignmentData(p => ({ ...p, location: e.target.value }))} />
 
+            <input
+  type="date"
+  value={assignmentData.assignmentDate}
+  onChange={(e) =>
+    setAssignmentData((p) => ({
+      ...p,
+      assignmentDate: e.target.value,
+    }))
+  }
+/>
+
 {selectedAsset?.assetType === "software" && (
   <>
     <input
@@ -613,6 +629,10 @@ const currencyCode = costObj?.currency || "USD";
           <b>Location:</b>{" "}
           {capitalize(assignmentData.location) || "-"}
         </p>
+        <p>
+  <b>Assignment Date:</b>{" "}
+  {assignmentData.assignmentDate || "-"}
+</p>
       </div>
 
       {/* SOFTWARE DEVICE INFO */}

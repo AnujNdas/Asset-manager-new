@@ -574,14 +574,13 @@
   width: 100%;
   padding: 10px 14px;
   border-radius: 8px;
-  border: 1px solid #444;
-  background: #1f2937;
-  color: #fff;
+  background: #222831;
+  color: #DFD0B8;
   outline: none;
 }
 
 .search-box input:focus {
-  border-color: #3b82f6;
+  border-color: #DFD0B8;
 }
 @media (max-width: 768px) {
   .filter-bar {

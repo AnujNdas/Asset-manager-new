@@ -74,10 +74,10 @@ const assignmentSchema = new mongoose.Schema(
       required: true,
     },
 
-    assignedAt: {
-      type: Date,
-      default: Date.now,
-    },
+assignedAt: {
+  type: Date,
+  required: true
+},
 deviceInfo: {
   deviceName: String,
   serialNumber: String,

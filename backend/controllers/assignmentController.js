@@ -297,7 +297,8 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
         departmentId,
         employeeId,
         location,
-        deviceInfo
+        deviceInfo,
+        assignmentDate
       } = item;
 
       /* ================= OBJECT ID VALIDATION ================= */
@@ -394,7 +395,11 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
           "DEPARTMENT_NOT_FOUND"
         );
       }
-
+      const effectiveAssignmentDate =
+  assignmentDate &&
+  !isNaN(new Date(assignmentDate))
+    ? new Date(assignmentDate)
+    : new Date();
       /* ================= UPDATE INSTANCE ================= */
       instance.status = "in_use";
 
@@ -416,7 +421,7 @@ instance.lifecycle.push({
 
   performedBy: userId,
 
-  date: new Date(),
+  date: effectiveAssignmentDate,
 
   metadata: {
     assetType,
@@ -472,25 +477,37 @@ instance.lifecycle.push({
       await instance.save({ session });
 
       /* ================= CREATE ASSIGNMENT ================= */
-      const [assignment] = await AssetAssignment.create([{
-        organizationId,
-        assetId,
-        assetInstanceId,
-        assetType,
-        assetModel: assetType === "hardware" ? "Asset" : "SoftwareAsset",
-        employeeId,
-        departmentId,
-        location,
-deviceInfo: assetType === "software"
-  ? {
-      deviceName: deviceInfo?.deviceName || "",
-      serialNumber: deviceInfo?.serialNumber || "",
-      model: deviceInfo?.model || ""
-    }
-  : undefined,
-        status: "active",
-        assignedBy: userId
-      }], { session });
+const [assignment] = await AssetAssignment.create(
+  [{
+    organizationId,
+    assetId,
+    assetInstanceId,
+    assetType,
+    assetModel:
+      assetType === "hardware"
+        ? "Asset"
+        : "SoftwareAsset",
+
+    employeeId,
+    departmentId,
+    location,
+
+    assignedAt: effectiveAssignmentDate,
+    assignedBy: userId,
+
+    deviceInfo:
+      assetType === "software"
+        ? {
+            deviceName: deviceInfo?.deviceName || "",
+            serialNumber: deviceInfo?.serialNumber || "",
+            model: deviceInfo?.model || ""
+          }
+        : undefined,
+
+    status: "active"
+  }],
+  { session }
+);
 
       /* ================= UPDATE STOCK ================= */
       const Model = assetType === "hardware" ? Asset : SoftwareAsset;
