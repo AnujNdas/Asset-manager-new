@@ -18,7 +18,9 @@ const ReassignModal = ({
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [location, setLocation] = useState("");
-
+  const [reassignmentDate, setReassignmentDate] = useState(
+  new Date().toISOString().split("T")[0]
+);
   useEffect(() => {
     fetchDepartments();
   }, []);
@@ -68,11 +70,12 @@ const handleSubmit = async () => {
       return alert("Location required");
     }
 
-    await reassignAssetInstance(assignment._id, {
-      newEmployeeId: selectedEmployee,
-      newDepartmentId: selectedDepartment,
-      newLocation: location
-    });
+await reassignAssetInstance(assignment._id, {
+  newEmployeeId: selectedEmployee,
+  newDepartmentId: selectedDepartment,
+  newLocation: location,
+  reassignmentDate
+});
 
     refresh();
     onClose();
@@ -145,6 +148,19 @@ const handleSubmit = async () => {
             setLocation(e.target.value)
           }
         />
+
+        {/* REASSIGNMENT DATE */}
+<div className="input-group">
+  <label>Reassignment Date</label>
+
+  <input
+    type="date"
+    value={reassignmentDate}
+    onChange={(e) =>
+      setReassignmentDate(e.target.value)
+    }
+  />
+</div>
 
         <div className="modal-actions">
 

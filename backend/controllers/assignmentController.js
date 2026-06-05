@@ -698,7 +698,7 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
   try {
     const { organizationId, id: userId } = req.user;
     const { assignmentId } = req.params;
-    const { newEmployeeId, newDepartmentId, newLocation } = req.body;
+    const { newEmployeeId, newDepartmentId, newLocation , reassignmentDate } = req.body;
 
     /* ================= VALIDATION ================= */
 
@@ -796,6 +796,11 @@ const reassignAssetInstance = asyncHandler(async (req, res, next) => {
         "INSTANCE_NOT_FOUND"
       );
     }
+    const effectiveReassignmentDate =
+      reassignmentDate &&
+      !isNaN(new Date(reassignmentDate))  
+        ? new Date(reassignmentDate)
+        : new Date();
 
 /* ================= FETCH PREVIOUS EMPLOYEE ================= */
 
@@ -830,7 +835,7 @@ const previousAssignmentData = {
     /* ================= CLOSE OLD ASSIGNMENT ================= */
 
     oldAssignment.status = "transferred";
-    oldAssignment.returnedAt = new Date();
+    oldAssignment.returnedAt = effectiveReassignmentDate;
     oldAssignment.returnedBy = userId;
 
     await oldAssignment.save({ session });
@@ -842,7 +847,7 @@ const previousAssignmentData = {
       employeeName: employee.name,
       departmentId: department._id,
       departmentName: department.name,
-      assignedAt: new Date()
+      assignedAt: effectiveReassignmentDate
     };
 
     instance.location = newLocation;
@@ -861,7 +866,7 @@ description: `Asset reassigned from ${
 
   performedBy: userId,
 
-  date: new Date(),
+  date: effectiveReassignmentDate,
 
 metadata: {
   from: {
@@ -947,7 +952,7 @@ const [newAssignment] = await AssetAssignment.create([{
 
     location: oldAssignment.location,
 
-    date: new Date()
+    date: effectiveReassignmentDate
   }
 }], { session });
 
