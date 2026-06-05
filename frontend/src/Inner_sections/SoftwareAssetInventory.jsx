@@ -11,7 +11,8 @@ import {
   getUnits,
   getLocations,
   updateAssetInstance,
-  unassignAssetInstance
+  unassignAssetInstance,
+  deleteAssetInstance
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 import Pagination from "../Components/Pagination";
@@ -243,6 +244,40 @@ useEffect(() => {
   useEffect(() => {
     fetchAll();
   }, []);
+  const handleDeleteInstance = async (
+  instanceId
+) => {
+  try {
+    const result = await ThemeSwal.fire({
+      title: "Delete Instance?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+    });
+
+    if (!result.isConfirmed) return;
+
+    await deleteAssetInstance(instanceId);
+
+    ThemeSwal.fire({
+      icon: "success",
+      title: "Deleted",
+      text: "Instance deleted successfully",
+    });
+
+    fetchAll(); // reload list
+
+  } catch (error) {
+    ThemeSwal.fire({
+      icon: "error",
+      title: "Delete Failed",
+      text:
+        error?.response?.data?.message ||
+        "Something went wrong",
+    });
+  }
+};
   const handleEditOpen = (asset) => {
   setEditAsset(asset);
 
@@ -894,6 +929,7 @@ const mapInstanceData = (inst, assignment) => {
      // ✅ correct prop name
   onEdit={handleInstanceEditOpen}
   onUnassign={handleUnassign}
+  onDelete={handleDeleteInstance}
 />
   );
 })

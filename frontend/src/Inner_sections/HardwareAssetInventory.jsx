@@ -11,7 +11,8 @@ import {
   getStatuses,
   updateAssetInstance,
   updateHardwareAsset,
-  unassignAssetInstance
+  unassignAssetInstance,
+  deleteAssetInstance
 } from "../Services/ApiServices";
 import "../Page_styles/Inventory.css";
 
@@ -466,7 +467,7 @@ const handleUnassign = async (assignmentId) => {
       text: "Instance deleted successfully",
     });
 
-    fetchInstances(); // reload list
+    fetchAll(); // reload list
 
   } catch (error) {
     ThemeSwal.fire({
