@@ -169,10 +169,7 @@ if (!instance || !instance.assignment?._id) {
     }
   };
   const filteredInstances = instances.filter((inst) => {
-  const assetName =
-    inst.assetName ||
-    inst.deviceName ||
-    "";
+  const assetName = inst.deviceName;
 
   return assetName
     .toLowerCase()
