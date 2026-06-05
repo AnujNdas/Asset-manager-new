@@ -12,7 +12,8 @@ const {
   bulkUploadInstances,
   createAssetInstance,
   getAssetById,
-  updateAssetInstance
+  updateAssetInstance,
+  deleteInstance
 } = require("../controllers/assetControllers");
 
 const router = express.Router();
@@ -60,6 +61,14 @@ router.delete(
   tenantMiddleware,
   requireActiveSubscription,
   deleteAsset
+);
+
+router.delete(
+  "/instances/:id",
+  authenticateToken(["admin", "user"]),
+  tenantMiddleware,
+  requireActiveSubscription,
+  deleteInstance
 );
 
 // ➤ BULK UPLOAD

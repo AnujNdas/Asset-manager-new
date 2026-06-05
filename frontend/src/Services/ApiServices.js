@@ -516,3 +516,12 @@ export const unassignAssetInstance = async (
   );
 
 };
+export const deleteAssetInstance = async (
+  instanceId
+) => {
+  const res = await axiosInstance.delete(
+    `/instance/${instanceId}`
+  );
+
+  return res.data;
+};

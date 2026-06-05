@@ -7,6 +7,7 @@ const InstanceCard = ({
   convertFromBase,
   formatMoney,
   onEdit,
+  onDelete,
   onUnassign // ✅ NEW PROP
 }) => {
 
@@ -203,6 +204,11 @@ const handleUnassign = async () => {
     setLoading(false);
 
   }
+};
+const handleDelete = () => {
+  if (!onDelete) return;
+
+  onDelete(inst);
 };
   return (
     <div className="instance-card-v2">
@@ -410,11 +416,23 @@ const handleUnassign = async () => {
       </div>
 
       {/* ================= FOOTER ================= */}
-      <div className="card-footer">
-        <button onClick={() => onEdit(inst)}>
-          ✏ Edit
-        </button>
-      </div>
+<div className="card-footer">
+
+  <button
+    className="edit-btn"
+    onClick={() => onEdit(inst)}
+  >
+    ✏ Edit
+  </button>
+
+  <button
+    className="delete-btn"
+    onClick={handleDelete}
+  >
+    🗑 Delete
+  </button>
+
+</div>
     </div>
   );
 };

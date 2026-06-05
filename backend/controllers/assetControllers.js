@@ -2072,7 +2072,47 @@ console.log(validInstances);
   });
 });
 
+const deleteInstance = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const instance = await AssetInstance.findOne({
+      _id: id,
+      organizationId: req.user.organizationId,
+    });
+
+    if (!instance) {
+      return res.status(404).json({
+        success: false,
+        message: "Instance not found",
+      });
+    }
+
+    // Optional safety check
+    if (instance.assignedTo) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Cannot delete an assigned instance. Unassign first.",
+      });
+    }
+
+    await AssetInstance.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Instance deleted successfully",
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 const formatCost = async (cost) => {
   if (!cost) return null;
 
@@ -2106,5 +2146,6 @@ const formatCost = async (cost) => {
     bulkUploadAssets,
     createAssetInstance,
     getAssetById,
-    updateAssetInstance
+    updateAssetInstance,
+    deleteInstance
   };

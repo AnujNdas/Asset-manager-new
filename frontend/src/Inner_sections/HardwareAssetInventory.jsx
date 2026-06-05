@@ -444,6 +444,40 @@ const handleUnassign = async (assignmentId) => {
   );
 }
   };
+  const handleDeleteInstance = async (
+  instanceId
+) => {
+  try {
+    const result = await ThemeSwal.fire({
+      title: "Delete Instance?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+    });
+
+    if (!result.isConfirmed) return;
+
+    await deleteAssetInstance(instanceId);
+
+    ThemeSwal.fire({
+      icon: "success",
+      title: "Deleted",
+      text: "Instance deleted successfully",
+    });
+
+    fetchInstances(); // reload list
+
+  } catch (error) {
+    ThemeSwal.fire({
+      icon: "error",
+      title: "Delete Failed",
+      text:
+        error?.response?.data?.message ||
+        "Something went wrong",
+    });
+  }
+};
   const handleInstanceUpdate = async () => {
   try {
     await updateAssetInstance(editInstance._id, instanceForm);
@@ -754,6 +788,7 @@ const paginatedAssets = filteredAssets.slice(
           });
         }}
         onUnassign={handleUnassign}
+        onDelete={handleDeleteInstance}
       />
     );
   })}

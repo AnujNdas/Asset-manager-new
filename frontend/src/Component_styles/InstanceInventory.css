@@ -96,6 +96,7 @@
   text-align: right;
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 /* Container for tags */
 .coverage-tags {
