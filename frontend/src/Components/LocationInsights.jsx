@@ -142,11 +142,11 @@ const LocationInsights = ({ items = [] }) => {
             <div className="meta">
               <p>
                 📦 Asset Locations:{" "}
-                {CURRENCY_SYMBOLS[currency]}{" "}{selected.assetLocations?.join(", ") || "—"}
+                {" "}{selected.assetLocations?.join(", ") || "—"}
               </p>
               <p>
                 📦 Instance Locations:{" "}
-                {CURRENCY_SYMBOLS[currency]}{" "}{selected.instanceLocations?.join(", ") || "—"}
+             {" "}{selected.instanceLocations?.join(", ") || "—"}
               </p>
 
               <p>
