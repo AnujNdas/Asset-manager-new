@@ -520,7 +520,7 @@ export const deleteAssetInstance = async (
   instanceId
 ) => {
   const res = await axiosInstance.delete(
-    `/instance/${instanceId}`
+    `/assets/instances/${instanceId}`
   );
 
   return res.data;
