@@ -208,7 +208,7 @@ const handleUnassign = async () => {
 const handleDelete = () => {
   if (!onDelete) return;
 
-  onDelete(inst);
+  onDelete(inst._id)
 };
   return (
     <div className="instance-card-v2">
