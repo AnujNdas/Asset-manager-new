@@ -270,8 +270,22 @@ const history = (instance.lifecycle || [])
       : null;
 
     const meta = item.metadata || {};
+    /* =============================
+   HISTORICAL SNAPSHOT
+============================= */
 
-    return {
+const snapshotDates =
+  meta.to?.dates ||
+  meta.from?.dates ||
+  meta.dates ||
+  {};
+
+const snapshotCosts =
+  meta.to?.costs ||
+  meta.from?.costs ||
+  meta.costs ||
+  {};
+    return {  
       /* =============================
          CORE
       ============================== */
@@ -328,65 +342,64 @@ condition:
       /* =============================
          HARDWARE
       ============================== */
+hardware: instance.hardware
+  ? {
+      serialNumber:
+        meta.serialNumber ||
+        instance.hardware?.serialNumber ||
+        "-",
 
-      hardware: instance.hardware
-        ? {
-            serialNumber:
-              meta.serialNumber ||
-              instance.hardware
-                ?.serialNumber ||
-              "-",
+      modelNo:
+        meta.modelNo ||
+        instance.hardware?.modelNo ||
+        "-",
 
-            modelNo:
-              meta.modelNo ||
-              instance.hardware
-                ?.modelNo ||
-              "-",
+      warrantyExpiry:
+        formatDate(
+          snapshotDates.warrantyExpiry ||
+          instance.hardware?.warrantyExpiry
+        ),
 
-            warrantyExpiry:
-              formatDate(
-                instance.hardware
-                  ?.warrantyExpiry
-              ),
+      nextMaintenanceDate:
+        formatDate(
+          snapshotDates.maintenanceDate ||
+          instance.hardware?.nextMaintenanceDate
+        ),
 
-            nextMaintenanceDate:
-              formatDate(
-                instance.hardware
-                  ?.nextMaintenanceDate
-              ),
+      maintenanceStatus,
 
-            maintenanceStatus,
-
-            maintenanceCost:
-              instance.hardware?.costs
-                ?.maintenanceCost?.amount || null
-          }
-        : null,
+      maintenanceCost:
+        snapshotCosts.maintenanceCost ??
+        instance.hardware?.costs
+          ?.maintenanceCost?.amount ??
+        null
+    }
+  : null,
 
       /* =============================
          SOFTWARE
       ============================== */
 
-      software: instance.software
-        ? {
-            licenseNumber:
-              meta.licenseNumber ||
-              instance.software
-                ?.licenseNumber ||
-              "-",
+software: instance.software
+  ? {
+      licenseNumber:
+        meta.licenseNumber ||
+        instance.software?.licenseNumber ||
+        "-",
 
-            renewalDate:
-              formatDate(
-                instance.software
-                  ?.renewalDate
-              ),
+      renewalDate:
+        formatDate(
+          snapshotDates.renewalDate ||
+          instance.software?.renewalDate
+        ),
 
-            renewalCost:
-              instance.software?.costs
-                ?.renewalCost?.amount || null
-          }
-        : null,
-
+      renewalCost:
+        snapshotCosts.renewalCost ??
+        instance.software?.costs
+          ?.renewalCost?.amount ??
+        null
+    }
+  : null,
 /* =============================
    ASSIGNMENT
 ============================== */
