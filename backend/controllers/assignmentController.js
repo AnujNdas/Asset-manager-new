@@ -423,56 +423,91 @@ instance.lifecycle.push({
 
   date: effectiveAssignmentDate,
 
-  metadata: {
-    assetType,
+ metadata: {
+  assetType,
 
-    assignmentType:
-      assetType === "software"
-        ? "software_license"
-        : "hardware_asset",
+  assignmentType:
+    assetType === "software"
+      ? "software_license"
+      : "hardware_asset",
 
-    from: {
-      status: "in_stock",
+  dates: {
+    purchaseDate:
+      instance.hardware?.purchaseDate ||
+      instance.software?.purchaseDate ||
+      null,
 
-      assignedTo: null,
+    installationDate:
+      instance.hardware?.installationDate ||
+      instance.software?.installationDate ||
+      null,
 
-      location: instance.location,
+    warrantyExpiry:
+      instance.hardware?.warrantyExpiry ||
+      null,
 
-      condition: instance.condition
+    nextMaintenanceDate:
+      instance.hardware?.nextMaintenanceDate ||
+      null,
+
+    renewalDate:
+      instance.software?.renewalDate ||
+      null,
+
+    lastUsedDate:
+      instance.software?.lastUsedDate ||
+      null
+  },
+
+  costs: {
+    maintenanceCost:
+      instance.hardware?.costs?.maintenanceCost?.amount || 0,
+
+    warrantyRenewalCost:
+      instance.hardware?.costs?.warrantyRenewalCost?.amount || 0,
+
+    insuranceCost:
+      instance.hardware?.costs?.insuranceCost?.amount || 0,
+
+    renewalCost:
+      instance.software?.costs?.renewalCost?.amount || 0
+  },
+
+  from: {
+    status: "in_stock",
+    assignedTo: null,
+    location: instance.location,
+    condition: instance.condition
+  },
+
+  to: {
+    status: "in_use",
+
+    assignedTo: {
+      employeeId: employee._id,
+      employeeName: employee.name,
+      departmentId: department._id,
+      departmentName: department.name
     },
 
-    to: {
-      status: "in_use",
+    location,
+    condition: instance.condition
+  },
 
-      assignedTo: {
-        employeeId: employee._id,
+  deviceInfo:
+    assetType === "software"
+      ? {
+          deviceName:
+            deviceInfo?.deviceName || "-",
 
-        employeeName: employee.name,
+          serialNumber:
+            deviceInfo?.serialNumber || "-",
 
-        departmentId: department._id,
-
-        departmentName: department.name
-      },
-
-      location,
-
-      condition: instance.condition
-    },
-
-    deviceInfo:
-      assetType === "software"
-        ? {
-            deviceName:
-              deviceInfo?.deviceName || "-",
-
-            serialNumber:
-              deviceInfo?.serialNumber || "-",
-
-            model:
-              deviceInfo?.model || "-"
-          }
-        : null
-  }
+          model:
+            deviceInfo?.model || "-"
+        }
+      : null
+}
 });
       await instance.save({ session });
 

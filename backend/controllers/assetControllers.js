@@ -1229,29 +1229,41 @@ const lifecycle = [
 
     date: new Date(),
 
-    metadata: {
-      assetId: asset._id,
+   metadata: {
+  assetId: asset._id,
 
-      assetName: asset.assetName,
+  assetName: asset.assetName,
 
-      assetType,
+  assetType,
 
-      instanceCode,
+  instanceCode,
 
-      deviceName: inst.deviceName || "-",
+  deviceName: inst.deviceName || "-",
 
-      location: inst.location || "-",
+  location: inst.location || "-",
 
-      status: "in_stock",
+  status: "in_stock",
 
-      condition: inst.condition || "new",
+  condition: inst.condition || "new",
 
-      purchaseCost:
-        purchaseCost?.amount || 0,
+  snapshot: {
+    assetType,
 
-      currency: "USD",
+    instanceCode,
 
-      ...(assetType === "hardware"
+    deviceName:
+      inst.deviceName || "-",
+
+    location:
+      inst.location || "-",
+
+    status: "in_stock",
+
+    condition:
+      inst.condition || "new",
+
+    hardware:
+      assetType === "hardware"
         ? {
             serialNumber:
               inst.hardware?.serialNumber || "-",
@@ -1259,28 +1271,75 @@ const lifecycle = [
             modelNo:
               inst.hardware?.modelNo || "-",
 
-            hasInsurance,
+            specifications:
+              inst.hardware?.specifications || "-",
 
-            insuranceTerm:
-              hasInsurance
-                ? insuranceTerm
-                : null,
+            purchaseDate:
+              inst.hardware?.purchaseDate || null,
+
+            installationDate:
+              inst.hardware?.installationDate || null,
+
+            warrantyPurchaseDate:
+              inst.hardware?.warrantyPurchaseDate || null,
+
+            warrantyExpiry:
+              inst.hardware?.warrantyExpiry || null,
+
+            insurancePurchaseDate:
+              inst.hardware?.insurancePurchaseDate || null,
 
             insuranceExpiry:
-              hasInsurance
-                ? insuranceExpiry
-                : null,
+              inst.hardware?.insuranceExpiry || null,
+
+            nextMaintenanceDate:
+              inst.hardware?.nextMaintenanceDate || null,
+
+            hasInsurance,
+
+            insuranceTerm,
 
             coverageType:
-              hasInsurance
-                ? coverageType
-                : [],
+              coverageType || [],
+
+            purchaseCost:
+              inst.hardware?.purchaseCost || null,
+
+            costs:
+              inst.hardware?.costs || {}
           }
-        : {
+        : null,
+
+    software:
+      assetType === "software"
+        ? {
+            licenseKey:
+              inst.software?.licenseKey || "-",
+
             licenseNumber:
-              inst.software?.licenseNumber || "-"
-          })
-    }
+              inst.software?.licenseNumber || "-",
+
+            purchaseDate:
+              inst.software?.purchaseDate || null,
+
+            installationDate:
+              inst.software?.installationDate || null,
+
+            renewalDate:
+              inst.software?.renewalDate || null,
+
+            lastUsedDate:
+              inst.software?.lastUsedDate || null,
+
+            purchaseCost:
+              inst.software?.purchaseCost || null,
+
+            costs:
+              inst.software?.costs || {}
+          }
+        : null
+  }
+}
   }
 ];
 upgrades.forEach((upgrade) => {
