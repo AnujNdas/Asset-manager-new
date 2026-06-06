@@ -2154,13 +2154,13 @@ console.log({
   type: typeof instance.assignedTo,
 });
     // Optional safety check
-    if (instance.assignedTo) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Cannot delete an assigned instance. Unassign first.",
-      });
-    }
+if (instance.status === "in_use") {
+  return res.status(400).json({
+    success: false,
+    message:
+      "Cannot delete an assigned instance. Unassign first.",
+  });
+}
 
     await AssetInstance.findByIdAndDelete(id);
 
