@@ -2146,7 +2146,13 @@ const deleteInstance = async (req, res) => {
         message: "Instance not found",
       });
     }
-
+    console.log("DELETE INSTANCE DATA");
+console.log({
+  id: instance._id,
+  status: instance.status,
+  assignedTo: instance.assignedTo,
+  type: typeof instance.assignedTo,
+});
     // Optional safety check
     if (instance.assignedTo) {
       return res.status(400).json({
