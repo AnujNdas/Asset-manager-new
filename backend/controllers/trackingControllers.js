@@ -270,6 +270,7 @@ const history = (instance.lifecycle || [])
       : null;
 
     const meta = item.metadata || {};
+    const snapshot = meta.snapshot || {};
     /* =============================
    HISTORICAL SNAPSHOT
 ============================= */
@@ -345,33 +346,35 @@ condition:
 hardware: instance.hardware
   ? {
       serialNumber:
+        snapshot.hardware?.serialNumber ||
         meta.serialNumber ||
         instance.hardware?.serialNumber ||
         "-",
 
       modelNo:
+        snapshot.hardware?.modelNo ||
         meta.modelNo ||
         instance.hardware?.modelNo ||
         "-",
 
-      warrantyExpiry:
-        formatDate(
-          snapshotDates.warrantyExpiry ||
-          instance.hardware?.warrantyExpiry
-        ),
+      warrantyExpiry: formatDate(
+        snapshot.hardware?.warrantyExpiry ||
+        snapshotDates.warrantyExpiry ||
+        instance.hardware?.warrantyExpiry
+      ),
 
-      nextMaintenanceDate:
-        formatDate(
-          snapshotDates.maintenanceDate ||
-          instance.hardware?.nextMaintenanceDate
-        ),
+      nextMaintenanceDate: formatDate(
+        snapshot.hardware?.nextMaintenanceDate ||
+        snapshotDates.maintenanceDate ||
+        instance.hardware?.nextMaintenanceDate
+      ),
 
       maintenanceStatus,
 
       maintenanceCost:
+        snapshot.hardware?.costs?.maintenanceCost?.amount ??
         snapshotCosts.maintenanceCost ??
-        instance.hardware?.costs
-          ?.maintenanceCost?.amount ??
+        instance.hardware?.costs?.maintenanceCost?.amount ??
         null
     }
   : null,
@@ -383,20 +386,21 @@ hardware: instance.hardware
 software: instance.software
   ? {
       licenseNumber:
+        snapshot.software?.licenseNumber ||
         meta.licenseNumber ||
         instance.software?.licenseNumber ||
         "-",
 
-      renewalDate:
-        formatDate(
-          snapshotDates.renewalDate ||
-          instance.software?.renewalDate
-        ),
+      renewalDate: formatDate(
+        snapshot.software?.renewalDate ||
+        snapshotDates.renewalDate ||
+        instance.software?.renewalDate
+      ),
 
       renewalCost:
+        snapshot.software?.costs?.renewalCost?.amount ??
         snapshotCosts.renewalCost ??
-        instance.software?.costs
-          ?.renewalCost?.amount ??
+        instance.software?.costs?.renewalCost?.amount ??
         null
     }
   : null,
