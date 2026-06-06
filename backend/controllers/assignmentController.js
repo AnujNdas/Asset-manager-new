@@ -940,7 +940,7 @@ const [newAssignment] = await AssetAssignment.create([{
   location: newLocation,
 
   status: "active",
-
+  assignedAt: effectiveReassignmentDate, // ✅ ADD THIS
   assignedBy: userId,
 
   reassignedFrom: {
