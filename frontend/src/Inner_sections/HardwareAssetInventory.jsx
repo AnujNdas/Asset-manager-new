@@ -448,6 +448,7 @@ const handleUnassign = async (assignmentId) => {
   const handleDeleteInstance = async (
   instanceId
 ) => {
+  console.log("Deleting instance:", instanceId);
   try {
     const result = await ThemeSwal.fire({
       title: "Delete Instance?",
