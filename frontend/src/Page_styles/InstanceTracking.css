@@ -607,7 +607,6 @@
 =========================== */
 
 .asset-overview {
-  background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 18px;
   padding: 1.5rem;
@@ -668,7 +667,7 @@
 }
 
 .stat-card {
-  background: var(--card-bg);
+  background: #393E46;
   border: 1px solid var(--border-color);
   padding: 1rem;
   border-radius: 16px;
@@ -691,7 +690,7 @@
 
 .asset-timeline {
   flex: 1;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   padding-right: 8px;
 }
 
@@ -712,7 +711,7 @@
   top: 25px;
   width: 2px;
   height: calc(100% + 20px);
-  background: rgba(255,255,255,0.12);
+  background: #948979;
 }
 
 .timeline-event:last-child::before {
@@ -726,12 +725,12 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #3b82f6;
+  background: #DFD0B8;
   border: 4px solid var(--bg-secondary);
 }
 
 .timeline-content {
-  background: var(--card-bg);
+  background: #393E46;
   border: 1px solid var(--border-color);
   border-radius: 18px;
   padding: 1.25rem;
@@ -773,28 +772,28 @@
 }
 
 .event-tag.created {
-  background: #22c55e22;
-  color: #22c55e;
+  background: #4caf50;
+  color: #222831;
 }
 
 .event-tag.assigned {
-  background: #3b82f622;
-  color: #3b82f6;
+  background: #ff0000;
+  color: #DFD0B8;
 }
 
 .event-tag.reassigned {
-  background: #8b5cf622;
-  color: #8b5cf6;
+  background: #948979;
+  color: #222831;
 }
 
 .event-tag.upgraded {
-  background: #f59e0b22;
-  color: #f59e0b;
+  background: #DFD0B8;
+  color: #222831;
 }
 
 .event-tag.returned {
-  background: #ef444422;
-  color: #ef4444;
+  background: #393E46;
+  color: #DfD0B8;
 }
 
 .event-date {
