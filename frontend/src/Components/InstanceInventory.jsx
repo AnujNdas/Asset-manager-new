@@ -177,7 +177,7 @@ const monthly = yearly / 12;
     `);
 
     printWindow.document.close();
-  };
+  };  
 
   /* ================= UNASSIGN ================= */
 
@@ -288,10 +288,10 @@ const handleDelete = () => {
 
               <div className="card-box">
                 <h5>Lifecycle</h5>
-                <p><span>Purchase:</span> {formatDate(hw.purchaseDate)}</p>
-                <p><span>Maintenance:</span> {formatDate(hw.nextMaintenanceDate)}</p>
-                <p><span>Warranty:</span> {formatDate(hw.warrantyExpiry)}</p>
-                <p><span>Insurance:</span> {formatDate(hw.insuranceExpiry || "N/A")}</p>
+                <p><span>Purchase Date:</span> {formatDate(hw.purchaseDate)}</p>
+                <p><span>Next Maintenance Date:</span> {formatDate(hw.nextMaintenanceDate)}</p>
+                <p><span>Warranty Expiry:</span> {formatDate(hw.warrantyExpiry)}</p>
+                <p><span>Insurance Expiry:</span> {formatDate(hw.insuranceExpiry || "N/A")}</p>
               </div>
             </>
           )}
@@ -307,8 +307,8 @@ const handleDelete = () => {
 
               <div className="card-box">
                 <h5>Validity</h5>
-                <p><span>Expiry:</span> {formatDate(sw.renewalDate)}</p>
-                <p><span>Last Used:</span> {formatDate(sw.lastUsedDate)}</p>
+                <p><span>Expiry Date:</span> {formatDate(sw.renewalDate)}</p>
+                <p><span>Last Used Date:</span> {formatDate(sw.lastUsedDate)}</p>
               </div>
             </>
           )}

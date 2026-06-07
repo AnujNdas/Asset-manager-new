@@ -211,7 +211,7 @@ const CreateInstances = () => {
   const isSoftware = asset?.assetType === "software";
 
   const fieldLabels = {
-    modelNo: isHardware ? "Model No" : "License Key",
+    modelNo: isHardware ? "Serial Number" : "License Key",
     specifications: isHardware ? "Specifications" : "Version & Details",
   };
 
