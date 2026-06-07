@@ -63,175 +63,411 @@ const formatCost = (costObj) => {
         <h2>Asset History</h2>
 
         {/* SUMMARY */}
-        {summary && (
-          <div className="history-summary">
-            <p><strong>Instance:</strong> {summary.instanceCode}</p>
-            <p><strong>Status:</strong> {summary.status}</p>
-            <p><strong>Condition:</strong> {summary.condition}</p>
-            <p><strong>Active Service:</strong> {summary.activeService}</p>
-            <p><strong>Health Score:</strong> {summary.activeScore}</p>
-            <p><strong>Purchase Date:</strong> {summary.purchaseDate}</p>
-            <p><strong>Installation Date:</strong> {summary.installationDate}</p>
-          </div>
-        )}
+{summary && (
 
-        {/* TABLE */}
-<div className="history-table">
-  <div className="history-header">
-    <span>Event</span>
-    <span>User / Assignment</span>
-    <span>Location</span>
-    <span>Condition</span>
-    <span>Details</span>
-    <span>Date</span>
-  </div>
+  <div className="asset-overview">
 
-  <div className="history-body">
-    {history?.length ? (
-      history.map((item, index) => (
-        <div key={index} className="history-row">
+    <div className="overview-header">
 
-          {/* EVENT */}
-          <span className={`event-badge ${item.action?.toLowerCase()}`}>
-            {item.action}
-          </span>
+      <h3>
+        {instance.deviceName}
+      </h3>
 
-          {/* USER / ASSIGNMENT */}
-<div className="assignment-cell">
-
-  <span>
-    {item.assignedTo?.employeeName || "-"}
-  </span>
-
-  {item.assignedTo?.departmentName && (
-    <small>
-      {item.assignedTo.departmentName}
-    </small>
-  )}
-
-</div>
-          {/* LOCATION */}
-          <span>{item.location || "-"}</span>
-
-          {/* CONDITION */}
-          <span>{item.condition || "-"}</span>
-
-          {/* DETAILS */}
-{/* DETAILS */}
-<div className="details-cell">
-
-  {/* TITLE */}
-  <div className="history-title">
-    {item.title || item.action}
-  </div>
-
-  {/* DESCRIPTION */}
-  <small className="history-description">
-    {item.description || "-"}
-  </small>
-
-  {/* HARDWARE */}
-  {item.hardware && (
-    <div className="history-meta">
-
-      {/* {item.hardware?.serialNumber && (
-  <small>
-    Serial: {item.hardware.serialNumber}
-  </small>
-)} */}
-
-      <small className="meta-item">
-        Model: {item.hardware.modelNo || "-"}
-      </small>
-
-      <small className="meta-item">
-        Warranty: {item.hardware.warrantyExpiry || "-"}
-      </small>
-
-      <small className="meta-item">
-        Maintenance:{" "}
-        {item.hardware.nextMaintenanceDate || "-"}
-      </small>
+      <span>
+        {summary.instanceCode}
+      </span>
 
     </div>
-  )}
 
-  {/* SOFTWARE */}
-  {item.software && (
-    <div className="history-meta">
+    <div className="overview-grid">
 
-{item.software?.licenseNumber && (
-  <small className="meta-item">
-    License: {item.software.licenseNumber}
-  </small>
+      <div>
+        <label>Status</label>
+        <span>{summary.status}</span>
+      </div>
+
+      <div>
+        <label>Condition</label>
+        <span>{summary.condition}</span>
+      </div>
+
+      <div>
+        <label>Health Score</label>
+        <span>
+          {summary.activeScore}/100
+        </span>
+      </div>
+
+      <div>
+        <label>Active Service</label>
+        <span>
+          {summary.activeService}
+        </span>
+      </div>
+
+      <div>
+        <label>Purchase Date</label>
+        <span>
+          {summary.purchaseDate}
+        </span>
+      </div>
+
+      <div>
+        <label>Installation Date</label>
+        <span>
+          {summary.installationDate}
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
 )}
+        {/* TABLE */}
+{/* TIMELINE STATS */}
 
-      <small className="meta-item">
-        Renewal:{" "}
-        {item.software.renewalDate || "-"}
-      </small>
+<div className="history-stats">
 
-    </div>
-  )}
+  <div className="stat-card">
+    <span>Created</span>
+    <h3>
+      {
+        history.find(
+          h => h.action === "CREATED"
+        )?.recordDate || "-"
+      }
+    </h3>
+  </div>
 
-  {/* DEVICE INFO */}
-  {item.deviceInfo && (
-    <div className="history-meta">
+  <div className="stat-card">
+    <span>Upgrades</span>
+    <h3>
+      {
+        history.filter(
+          h => h.action === "UPGRADED"
+        ).length
+      }
+    </h3>
+  </div>
 
-      <small className="meta-item">
-        Device:{" "}
-        {item.deviceInfo.deviceName || "-"}
-      </small>
-
-      <small className="meta-item">
-        Serial:{" "}
-        {item.deviceInfo.serialNumber || "-"}
-      </small>
-
-    </div>
-  )}
-
-  {/* REASSIGN */}
-  {item.reassignedFrom && (
-    <div className="history-meta">
-
-      <small className="meta-item">
-        Reassigned From:{" "}
-        {item.reassignedFrom.employeeName || "-"}
-      </small>
-
-    </div>
-  )}
-
-  {/* UPGRADE */}
-  {item.upgrade && (
-    <div className="history-meta">
-
-      <small className="meta-item">
-        Upgrade:{" "}
-        {item.upgrade.description || "-"}
-      </small>
-
-      {item.upgrade.cost?.amount && (
-        <small className="meta-item">
-          Cost:{" "}
-          {item.upgrade.cost.amount}{" "}
-          {item.upgrade.cost.currency}
-        </small>
-      )}
-
-    </div>
-  )}
+  <div className="stat-card">
+    <span>Assignments</span>
+    <h3>
+      {
+        history.filter(
+          h =>
+            h.action === "ASSIGNED" ||
+            h.action === "REASSIGNED"
+        ).length
+      }
+    </h3>
+  </div>
 
 </div>
-          {/* DATE */}
-          <span>{item.recordDate}</span>
+
+{/* TIMELINE */}
+
+<div className="asset-timeline">
+
+  {history?.length ? (
+
+    history.map((item, index) => (
+
+      <div
+        key={index}
+        className={`timeline-event ${item.action?.toLowerCase()}`}
+      >
+
+        <div className="timeline-dot" />
+
+        <div className="timeline-content">
+
+          {/* TOP BAR */}
+
+          <div className="timeline-top">
+
+            <span
+              className={`event-tag ${item.action?.toLowerCase()}`}
+            >
+              {item.action}
+            </span>
+
+            <span className="event-date">
+              {item.recordDate}
+            </span>
+
+          </div>
+
+          {/* TITLE */}
+
+          <h4 className="timeline-title">
+            {item.title}
+          </h4>
+
+          {/* DESCRIPTION */}
+
+          <p className="timeline-description">
+            {item.description}
+          </p>
+
+          {/* ASSIGNMENT */}
+
+          {(item.action === "ASSIGNED" ||
+            item.action === "REASSIGNED") && (
+
+            <div className="user-card">
+
+              <div>
+                <strong>Employee</strong>
+                <span>
+                  {
+                    item.assignedTo?.employeeName ||
+                    "-"
+                  }
+                </span>
+              </div>
+
+              <div>
+                <strong>Department</strong>
+                <span>
+                  {
+                    item.assignedTo?.departmentName ||
+                    "-"
+                  }
+                </span>
+              </div>
+
+              <div>
+                <strong>Location</strong>
+                <span>
+                  {item.location || "-"}
+                </span>
+              </div>
+
+            </div>
+
+          )}
+
+          {/* REASSIGN FLOW */}
+
+          {item.reassignedFrom?.employeeName && (
+
+            <div className="transfer-card">
+
+              <div className="transfer-user">
+
+                <small>From</small>
+
+                <strong>
+                  {
+                    item.reassignedFrom
+                      .employeeName
+                  }
+                </strong>
+
+              </div>
+
+              <div className="transfer-arrow">
+                →
+              </div>
+
+              <div className="transfer-user">
+
+                <small>To</small>
+
+                <strong>
+                  {
+                    item.assignedTo
+                      ?.employeeName
+                  }
+                </strong>
+
+              </div>
+
+            </div>
+
+          )}
+
+          {/* UPGRADE INFO */}
+
+          {item.action === "UPGRADED" &&
+            item.upgrade && (
+
+            <div className="upgrade-card">
+
+              <div className="upgrade-row">
+
+                <span>
+                  Previous Condition
+                </span>
+
+                <strong>
+                  {
+                    item.upgrade
+                      .previousCondition ||
+                    "-"
+                  }
+                </strong>
+
+              </div>
+
+              <div className="upgrade-row">
+
+                <span>
+                  New Condition
+                </span>
+
+                <strong>
+                  {
+                    item.upgrade
+                      .newCondition || "-"
+                  }
+                </strong>
+
+              </div>
+
+              {item.upgrade.description && (
+
+                <div className="upgrade-row">
+
+                  <span>
+                    Upgrade Details
+                  </span>
+
+                  <strong>
+                    {
+                      item.upgrade
+                        .description
+                    }
+                  </strong>
+
+                </div>
+
+              )}
+
+            </div>
+
+          )}
+
+          {/* HARDWARE DETAILS */}
+
+          {item.hardware && (
+
+            <div className="hardware-grid">
+
+              <div className="hardware-item">
+
+                <label>Model</label>
+
+                <span>
+                  {item.hardware.modelNo}
+                </span>
+
+              </div>
+
+              <div className="hardware-item">
+
+                <label>Serial</label>
+
+                <span>
+                  {
+                    item.hardware
+                      .serialNumber
+                  }
+                </span>
+
+              </div>
+
+              <div className="hardware-item">
+
+                <label>Warranty</label>
+
+                <span>
+                  {
+                    item.hardware
+                      .warrantyExpiry
+                  }
+                </span>
+
+              </div>
+
+              <div className="hardware-item">
+
+                <label>Maintenance</label>
+
+                <span>
+                  {
+                    item.hardware
+                      .nextMaintenanceDate
+                  }
+                </span>
+
+              </div>
+
+            </div>
+
+          )}
+
+          {/* SOFTWARE DETAILS */}
+
+          {item.software && (
+
+            <div className="hardware-grid">
+
+              <div className="hardware-item">
+
+                <label>License</label>
+
+                <span>
+                  {
+                    item.software
+                      .licenseNumber
+                  }
+                </span>
+
+              </div>
+
+              <div className="hardware-item">
+
+                <label>Renewal</label>
+
+                <span>
+                  {
+                    item.software
+                      .renewalDate
+                  }
+                </span>
+
+              </div>
+
+            </div>
+
+          )}
+
         </div>
-      ))
-    ) : (
-      <div className="empty">No history available</div>
-    )}
-  </div>
+
+      </div>
+
+    ))
+
+  ) : (
+
+    <div className="empty-history">
+
+      <h3>
+        No History Available
+      </h3>
+
+      <p>
+        This asset doesn't have any
+        recorded lifecycle events yet.
+      </p>
+
+    </div>
+
+  )}
+
 </div>
 
         {/* ACTION */}
