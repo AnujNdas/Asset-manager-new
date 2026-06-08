@@ -779,6 +779,18 @@ instance.upgrades.push({
   date: effectiveUpgradeDate,
   notes: upgradeNotes || ""
 });
+const upgradeCost = {
+  maintenanceCost: Number(maintenanceCost) || 0,
+  warrantyRenewalCost: Number(warrantyRenewalCost) || 0,
+  insuranceCost: Number(insuranceCost) || 0,
+  renewalCost: Number(renewalCost) || 0
+};
+
+upgradeCost.total =
+  upgradeCost.maintenanceCost +
+  upgradeCost.warrantyRenewalCost +
+  upgradeCost.insuranceCost +
+  upgradeCost.renewalCost;
     }
     /* ===========  ==================
        🟣 LIFECYCLE ENTRY
@@ -882,7 +894,7 @@ metadata: {
     upgradeDescription || "General upgrade",
 
   upgradeDate: effectiveUpgradeDate,
-
+  upgradeCost,
   from: beforeSnapshot,
 
   to: afterSnapshot,
