@@ -12,6 +12,7 @@ const formatDate = (date) => {
 
 
 const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
+  console.log("Rendering InstanceCard for:", instance);
   const { registerTour } = useTour();
     const driverObj = driver({
       showProgress: true,
@@ -272,6 +273,7 @@ const totalUpgradeCost = upgradeEvents.reduce(
     {latestUpgradeCurrency} {totalUpgradeCost}
   </p>
 </div>
+
 
 {/* LAST UPGRADE DATE */}
 <div>
