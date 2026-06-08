@@ -63,23 +63,23 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
         },
       ],
     });
-      useEffect(() => {
-        const seen = localStorage.getItem("inventoryTourSeen");
+    //   useEffect(() => {
+    //     const seen = localStorage.getItem("inventoryTourSeen");
       
-        if (!seen) {
-          setTimeout(() => {
-            driverObj.drive();
+    //     if (!seen) {
+    //       setTimeout(() => {
+    //         driverObj.drive();
       
-            localStorage.setItem(
-              "inventoryTourSeen",
-              "true"
-            );
-          }, 1000);
-        }
-      }, []);
-      useEffect(() => {
-      registerTour(driverObj);
-    }, []);
+    //         localStorage.setItem(
+    //           "inventoryTourSeen",
+    //           "true"
+    //         );
+    //       }, 1000);
+    //     }
+    //   }, []);
+    //   useEffect(() => {
+    //   registerTour(driverObj);
+    // }, []);
   const isHardware = instance.assetType === "hardware";
   const isSoftware = instance.assetType === "software";
 
@@ -87,6 +87,33 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
   const sw = instance.software || {};
   const assignment = instance.assignment;
   console.log(instance.assignment);
+
+  // Get all upgrade lifecycle entries
+const upgradeEvents =
+  instance.lifecycle?.filter(
+    (item) => item.eventType === "upgraded"
+  ) || [];
+
+// Latest upgrade
+const latestUpgrade =
+  upgradeEvents.length > 0
+    ? upgradeEvents[upgradeEvents.length - 1]
+    : null;
+
+// Latest upgrade cost
+const latestUpgradeCost =
+  latestUpgrade?.metadata?.upgradeCost?.amount || 0;
+
+const latestUpgradeCurrency =
+  latestUpgrade?.metadata?.upgradeCost?.currency || "USD";
+
+// Total upgrade cost
+const totalUpgradeCost = upgradeEvents.reduce(
+  (sum, event) =>
+    sum +
+    (event?.metadata?.upgradeCost?.amount || 0),
+  0
+);
   return (
     <div className="instance-card tour-card">
 
@@ -230,6 +257,29 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
             {assignment?.location || instance.location || "-"}
           </p>
         </div>
+        {/* LAST UPGRADE COST */}
+<div>
+  <p className="label">Last Upgrade Cost</p>
+  <p className="value">
+    {latestUpgradeCurrency} {latestUpgradeCost}
+  </p>
+</div>
+
+{/* TOTAL UPGRADE COST */}
+<div>
+  <p className="label">Total Upgrade Cost</p>
+  <p className="value">
+    {latestUpgradeCurrency} {totalUpgradeCost}
+  </p>
+</div>
+
+{/* LAST UPGRADE DATE */}
+<div>
+  <p className="label">Last Upgrade Date</p>
+  <p className="value">
+    {formatDate(latestUpgrade?.date)}
+  </p>
+</div>
 
       </div>
 
