@@ -768,6 +768,18 @@ if (hasInsurance === true) {
         renewalCost: normalizeCost(instance.software?.costs?.renewalCost)
       }
     };
+const calculatedUpgradeCost = {
+  maintenanceCost: Number(maintenanceCost) || 0,
+  warrantyRenewalCost: Number(warrantyRenewalCost) || 0,
+  insuranceCost: Number(insuranceCost) || 0,
+  renewalCost: Number(renewalCost) || 0,
+};
+
+calculatedUpgradeCost.total =
+  calculatedUpgradeCost.maintenanceCost +
+  calculatedUpgradeCost.warrantyRenewalCost +
+  calculatedUpgradeCost.insuranceCost +
+  calculatedUpgradeCost.renewalCost;
     const effectiveUpgradeDate =
 upgradeDate && !isNaN(new Date(upgradeDate))
   ? new Date(upgradeDate)
@@ -780,18 +792,7 @@ instance.upgrades.push({
   date: effectiveUpgradeDate,
   notes: upgradeNotes || ""
 });
-const upgradeCost = {
-  maintenanceCost: Number(maintenanceCost) || 0,
-  warrantyRenewalCost: Number(warrantyRenewalCost) || 0,
-  insuranceCost: Number(insuranceCost) || 0,
-  renewalCost: Number(renewalCost) || 0
-};
 
-upgradeCost.total =
-  upgradeCost.maintenanceCost +
-  upgradeCost.warrantyRenewalCost +
-  upgradeCost.insuranceCost +
-  upgradeCost.renewalCost;
     }
     /* ===========  ==================
        🟣 LIFECYCLE ENTRY
@@ -896,7 +897,7 @@ metadata: {
 
   upgradeDate: effectiveUpgradeDate,
   upgradeCost: {
-    amount: Number(upgradeCost) || 0,
+    amount: calculatedUpgradeCost.total,
     currency: "USD"
   },
   from: beforeSnapshot,
