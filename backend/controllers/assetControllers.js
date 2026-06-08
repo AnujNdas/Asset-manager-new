@@ -1834,19 +1834,24 @@ const parseDateSafe = (d) => {
     try {
       const row = index + 2;
 
-      let serialNumber = normalize(
-  inst.hardware?.serialNumber
-);
+let serialNumber = null;
 
-      if (assetType === "hardware" && !serialNumber) {
-        serialNumber = generateSerial();
-      }
+if (assetType === "hardware") {
 
-      if (generatedSerials.has(serialNumber)) {
-        throw new Error("Duplicate serial in request");
-      }
+  serialNumber = normalize(
+    inst.hardware?.serialNumber
+  );
 
-      generatedSerials.add(serialNumber);
+  if (!serialNumber) {
+    serialNumber = generateSerial();
+  }
+
+  if (generatedSerials.has(serialNumber)) {
+    throw new Error("Duplicate serial in request");
+  }
+
+  generatedSerials.add(serialNumber);
+}
 
       if (!inst.location) {
         throw new Error("Location is required");
