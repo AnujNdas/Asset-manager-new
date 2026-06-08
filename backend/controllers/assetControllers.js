@@ -2122,7 +2122,24 @@ console.log("VALID INSTANCES:", validInstances.length);
 try {
   console.log("BEFORE INSERT", validInstances.length);
   if (validInstances.length) {
+    console.log(
+  "MODEL:",
+  AssetInstance.modelName
+);
 
+console.log(
+  "COLLECTION:",
+  AssetInstance.collection.name
+);
+
+console.log(
+  "FIRST DOC:"
+);
+
+console.dir(
+  validInstances[0],
+  { depth: null }
+);
     inserted = await AssetInstance.insertMany(
       validInstances,
       {
