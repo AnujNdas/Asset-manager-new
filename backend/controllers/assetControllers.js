@@ -2120,7 +2120,7 @@ let inserted = [];
 console.log("VALID INSTANCES:", validInstances.length);
 
 try {
-
+  console.log("BEFORE INSERT", validInstances.length);
   if (validInstances.length) {
 
     inserted = await AssetInstance.insertMany(
@@ -2129,7 +2129,18 @@ try {
         ordered: false
       }
     );
+    const inserted = await AssetInstance.insertMany(
+  validInstances,
+  { ordered: false }
+);
 
+console.log("INSERT RESULT:", inserted);
+
+const count = await AssetInstance.countDocuments({
+  organizationId
+});
+
+console.log("DB COUNT:", count);
     console.log(
       "INSERTED COUNT:",
       inserted.length
