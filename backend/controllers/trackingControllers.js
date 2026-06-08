@@ -537,6 +537,7 @@ const upgradeInstance = async (req, res) => {
       insuranceCost,
       // 🔹 Software Cost
       renewalCost,
+      upgradeCost,   // ✅ NEW
       upgradeDate,   // ✅ NEW
       // 🔹 Hardware Dates
       hasInsurance,
