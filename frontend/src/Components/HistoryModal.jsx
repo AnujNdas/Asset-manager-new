@@ -349,7 +349,49 @@ const formatCost = (costObj) => {
             </div>
 
           )}
+          {item.action === "UPGRADED" && item.from?.costs && item.to?.costs && (
 
+  <div className="hardware-grid">
+
+    {item.from.costs.maintenanceCost !== item.to.costs.maintenanceCost && (
+      <div className="hardware-item">
+        <label>Maintenance Cost</label>
+        <span>
+          USD {item.from.costs.maintenanceCost} → USD {item.to.costs.maintenanceCost}
+        </span>
+      </div>
+    )}
+
+    {item.from.costs.warrantyRenewalCost !== item.to.costs.warrantyRenewalCost && (
+      <div className="hardware-item">
+        <label>Warranty Renewal</label>
+        <span>
+          USD {item.from.costs.warrantyRenewalCost} → USD {item.to.costs.warrantyRenewalCost}
+        </span>
+      </div>
+    )}
+
+    {item.from.costs.insuranceCost !== item.to.costs.insuranceCost && (
+      <div className="hardware-item">
+        <label>Insurance Cost</label>
+        <span>
+          USD {item.from.costs.insuranceCost} → USD {item.to.costs.insuranceCost}
+        </span>
+      </div>
+    )}
+
+    {item.from.costs.renewalCost !== item.to.costs.renewalCost && (
+      <div className="hardware-item">
+        <label>Software Renewal</label>
+        <span>
+          USD {item.from.costs.renewalCost} → USD {item.to.costs.renewalCost}
+        </span>
+      </div>
+    )}
+
+  </div>
+
+)}
           {/* HARDWARE DETAILS */}
 
           {item.hardware && (
