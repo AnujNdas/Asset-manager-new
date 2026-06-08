@@ -2115,15 +2115,53 @@ if (
   }
 
   /* ================= INSERT ================= */
-  let inserted = [];
+let inserted = [];
+
+console.log("VALID INSTANCES:", validInstances.length);
+
+try {
 
   if (validInstances.length) {
-    inserted = await AssetInstance.insertMany(validInstances, {
-      ordered: false
-    });
+
+    inserted = await AssetInstance.insertMany(
+      validInstances,
+      {
+        ordered: false
+      }
+    );
+
+    console.log(
+      "INSERTED COUNT:",
+      inserted.length
+    );
+
+    console.log(
+      "INSERTED DOCS:",
+      inserted.map(i => i._id)
+    );
   }
-  console.log("VALID INSTANCES:", validInstances.length);
-console.log(validInstances);
+
+} catch (err) {
+
+  console.error(
+    "INSERT MANY ERROR:"
+  );
+
+  console.error(err);
+
+  if (err.writeErrors) {
+    console.error(
+      "WRITE ERRORS:"
+    );
+
+    console.dir(
+      err.writeErrors,
+      { depth: null }
+    );
+  }
+
+  throw err;
+}
   /* ================= RESPONSE ================= */
   res.status(200).json({
     success: true,
