@@ -895,7 +895,10 @@ metadata: {
     upgradeDescription || "General upgrade",
 
   upgradeDate: effectiveUpgradeDate,
-  upgradeCost,
+  upgradeCost: {
+    amount: Number(upgradeCost) || 0,
+    currency: "USD"
+  },
   from: beforeSnapshot,
 
   to: afterSnapshot,
