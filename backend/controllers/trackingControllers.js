@@ -582,6 +582,61 @@ const normalizeCost = (val) => {
 
   return Number(val) || 0;
 };
+const isDue = (date) => {
+  if (!date) return true;
+
+  return new Date() >= new Date(date);
+};
+
+const formatDate = (date) => {
+  if (!date) return "Not configured";
+
+  return new Date(date).toLocaleDateString();
+};
+const normalizedUpgradeCost = {
+  amount: Number(upgradeCost) || 0,
+  currency: "USD"
+};
+   if (
+  maintenanceCost !== undefined &&
+  !isDue(instance.hardware?.nextMaintenanceDate)
+) {
+  throw new Error(
+    `Maintenance can only be recorded on or after ${formatDate(
+      instance.hardware.nextMaintenanceDate
+    )}`
+  );
+}
+if (
+  warrantyRenewalCost !== undefined &&
+  !isDue(instance.hardware?.warrantyExpiry)
+) {
+  throw new Error(
+    `Warranty renewal can only be recorded on or after ${formatDate(
+      instance.hardware.warrantyExpiry
+    )}`
+  );
+}
+if (
+  insuranceCost !== undefined &&
+  !isDue(instance.hardware?.insuranceExpiry)
+) {
+  throw new Error(
+    `Insurance renewal can only be recorded on or after ${formatDate(
+      instance.hardware.insuranceExpiry
+    )}`
+  );
+}
+if (
+  renewalCost !== undefined &&
+  !isDue(instance.software?.renewalDate)
+) {
+  throw new Error(
+    `License renewal can only be recorded on or after ${formatDate(
+      instance.software.renewalDate
+    )}`
+  );
+}
     /* =============================
        🟡 BEFORE SNAPSHOT
     ============================== */
@@ -739,7 +794,7 @@ if (hasInsurance === true) {
         instance.software.installationDate = newInstallationDate;
       }
     }
-
+ 
     /* =============================
        🔵 AFTER SNAPSHOT
     ============================== */
@@ -768,18 +823,6 @@ if (hasInsurance === true) {
         renewalCost: normalizeCost(instance.software?.costs?.renewalCost)
       }
     };
-const calculatedUpgradeCost = {
-  maintenanceCost: Number(maintenanceCost) || 0,
-  warrantyRenewalCost: Number(warrantyRenewalCost) || 0,
-  insuranceCost: Number(insuranceCost) || 0,
-  renewalCost: Number(renewalCost) || 0,
-};
-
-calculatedUpgradeCost.total =
-  calculatedUpgradeCost.maintenanceCost +
-  calculatedUpgradeCost.warrantyRenewalCost +
-  calculatedUpgradeCost.insuranceCost +
-  calculatedUpgradeCost.renewalCost;
     const effectiveUpgradeDate =
 upgradeDate && !isNaN(new Date(upgradeDate))
   ? new Date(upgradeDate)
@@ -788,11 +831,17 @@ upgradeDate && !isNaN(new Date(upgradeDate))
       instance.upgrades = instance.upgrades || [];
 instance.upgrades.push({
   description: upgradeDescription.trim(),
-  performedBy: req.user.id,
-  date: effectiveUpgradeDate,
-  notes: upgradeNotes || ""
-});
 
+  performedBy: req.user.id,
+
+  date: effectiveUpgradeDate,
+
+  cost: normalizedUpgradeCost,
+
+  notes: upgradeNotes || "",
+
+  newCondition: condition || instance.condition
+});
     }
     /* ===========  ==================
        🟣 LIFECYCLE ENTRY
@@ -896,10 +945,7 @@ metadata: {
     upgradeDescription || "General upgrade",
 
   upgradeDate: effectiveUpgradeDate,
-  upgradeCost: {
-    amount: calculatedUpgradeCost.total,
-    currency: "USD"
-  },
+  upgradeCost: normalizedUpgradeCost,
   from: beforeSnapshot,
 
   to: afterSnapshot,

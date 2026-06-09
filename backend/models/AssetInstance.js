@@ -139,7 +139,8 @@ hardware: {
     costs: {
       maintenanceCost: costSchema,
       warrantyRenewalCost: costSchema,
-      insuranceCost: costSchema
+      insuranceCost: costSchema,
+      upgradeCost: costSchema,
     }
   }, { _id: false }),
 
@@ -157,7 +158,8 @@ software: {
     lastUsedDate: Date,
     purchaseCost: costSchema,
     costs: {
-      renewalCost: costSchema
+      renewalCost: costSchema,
+      upgradeCost: costSchema 
     }
   }, { _id: false }),
 

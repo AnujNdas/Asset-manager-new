@@ -84,7 +84,8 @@ const [form, setForm] = useState({
   condition: instance?.condition || "",
   upgradeDescription: "",
   upgradeNotes: "",
-  upgradeDate: new Date().toISOString().split("T")[0] // ✅ NEW
+  upgradeDate: new Date().toISOString().split("T")[0] ,
+  upgradeCost: "",
 });
 
   /* =============================
@@ -149,8 +150,21 @@ const payload = {
   upgradeDescription: form.upgradeDescription || undefined,
   upgradeNotes: form.upgradeNotes || undefined,
     upgradeDate:
-    form.upgradeDate || undefined
+    form.upgradeDate || undefined,
+     upgradeCost:
+    Number(form.upgradeCost) || 0,
 };
+if (
+  form.upgradeCost > 0 &&
+  !form.upgradeDescription.trim()
+) {
+ThemeSwal.fire(
+  "Validation",
+  "Upgrade description is required when an upgrade cost is entered.",
+  "warning"
+);
+return;
+}
 
       await upgradeInstance(instance._id, payload);
 
@@ -285,6 +299,18 @@ const payload = {
           </select>
         </div>
         <div className="input-group">
+  <label>Upgrade Cost</label>
+
+  <input
+    type="number"
+    name="upgradeCost"
+    value={form.upgradeCost}
+    onChange={handleChange}
+    placeholder="Cost of upgrade"
+  />
+</div>
+        <div className="input-group">
+
           <label>Upgrade Details</label>
 <textarea
   name="upgradeDescription"
