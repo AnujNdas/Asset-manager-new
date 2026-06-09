@@ -145,18 +145,23 @@ const [form, setForm] = useState({
 const payload = {
   ...(isHardware && {
     maintenanceCost:
-      Number(form.maintenanceCost) || 0,
+  form.maintenanceCost !== ""
+    ? Number(form.maintenanceCost)
+    : undefined,
 
     warrantyRenewalCost:
-      Number(form.warrantyRenewalCost) || 0,
+  form.warrantyRenewalCost !== ""
+    ? Number(form.warrantyRenewalCost)
+    : undefined,
 
     hasInsurance: form.hasInsurance,
 
     insuranceTerm: form.insuranceTerm,
 
-    insuranceCost: form.hasInsurance
-      ? Number(form.insuranceCost) || 0
-      : 0,
+   insuranceCost:
+  form.insuranceCost !== ""
+    ? Number(form.insuranceCost)
+    : undefined,
 
 newWarrantyPurchaseDate:
   form.newWarrantyPurchaseDate || undefined,
@@ -179,7 +184,9 @@ newInstallationDate:
 
   ...(isSoftware && {
     renewalCost:
-      Number(form.renewalCost) || 0,
+  form.renewalCost !== ""
+    ? Number(form.renewalCost)
+    : undefined,
 
     newRenewalDate:
       form.newRenewalDate || undefined,
