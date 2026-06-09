@@ -168,12 +168,18 @@ if (!instance || !instance.assignment?._id) {
       });
     }
   };
-  const filteredInstances = instances.filter((inst) => {
-  const assetName = inst.deviceName;
+const filteredInstances = instances.filter((inst) => {
+  const assetName = String(
+    inst?.deviceName ||
+    inst?.assetName ||
+    inst?.hardware?.deviceName ||
+    inst?.software?.softwareName ||
+    ""
+  );
 
   return assetName
     .toLowerCase()
-    .includes(searchTerm.toLowerCase());
+    .includes(String(searchTerm || "").toLowerCase());
 });
   if (loading) return <Loader />;
 
