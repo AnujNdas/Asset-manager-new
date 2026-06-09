@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { upgradeInstance } from "../Services/ApiServices";
-
+import ThemeSwal from "../Utils/ThemeSwal";
 const UpgradeModal = ({ instance, onClose, refresh }) => {
   const isHardware = instance?.assetType === "hardware";
   const isSoftware = instance?.assetType === "software";
