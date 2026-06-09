@@ -843,119 +843,194 @@ instance.upgrades.push({
   newCondition: condition || instance.condition
 });
     }
-    /* ===========  ==================
-       🟣 LIFECYCLE ENTRY
-    ============================== */
+const lifecycleEntries = [];
+
+const pushLifecycleEvent = ({
+  eventType,
+  title,
+  action,
+  description,
+  cost = null
+}) => {
+  lifecycleEntries.push({
+    eventType,
+    category: "service",
+
+    title,
+    description,
+
+    performedBy: req.user.id,
+
+    action,
+
+    from: beforeSnapshot,
+    to: afterSnapshot,
+
+    date: effectiveUpgradeDate,
+
+    notes: upgradeNotes || "",
+
+    metadata: {
+      performedBy: req.user.id,
+
+      cost,
+
+      from: beforeSnapshot,
+      to: afterSnapshot
+    }
+  });
+};
+if (
+  maintenanceCost !== undefined ||
+  newMaintenanceDate
+) {
+  pushLifecycleEvent({
+    eventType: "maintenance",
+    title: "Maintenance Performed",
+    action: "MAINTENANCE",
+    description:
+      upgradeDescription ||
+      "Maintenance performed",
+
+    cost: {
+      amount: Number(maintenanceCost) || 0,
+      currency: "USD"
+    }
+  });
+}
+if (
+  warrantyRenewalCost !== undefined ||
+  newWarrantyExpiry ||
+  newWarrantyPurchaseDate
+) {
+  pushLifecycleEvent({
+    eventType: "warranty_renewal",
+
+    title: "Warranty Renewed",
+
+    action: "WARRANTY_RENEWAL",
+
+    description:
+      upgradeDescription ||
+      "Warranty renewed",
+
+    cost: {
+      amount:
+        Number(warrantyRenewalCost) || 0,
+
+      currency: "USD"
+    }
+  });
+}
+if (
+  insuranceCost !== undefined ||
+  newInsuranceExpiry ||
+  newInsurancePurchaseDate
+) {
+  pushLifecycleEvent({
+    eventType: "insurance_renewal",
+
+    title: "Insurance Renewed",
+
+    action: "INSURANCE_RENEWAL",
+
+    description:
+      upgradeDescription ||
+      "Insurance renewed",
+
+    cost: {
+      amount:
+        Number(insuranceCost) || 0,
+
+      currency: "USD"
+    }
+  });
+}
+if (
+  renewalCost !== undefined ||
+  newRenewalDate
+) {
+  pushLifecycleEvent({
+    eventType: "license_renewal",
+
+    title: "License Renewed",
+
+    action: "LICENSE_RENEWAL",
+
+    description:
+      upgradeDescription ||
+      "License renewed",
+
+    cost: {
+      amount:
+        Number(renewalCost) || 0,
+
+      currency: "USD"
+    }
+  });
+}
+const hasUpgrade =
+  upgradeDescription?.trim() ||
+  condition;
+
+if (hasUpgrade) {
+  lifecycleEntries.push({
+    eventType: "upgraded",
+
+    category: "instance",
+
+    title: "Instance Upgraded",
+
+    description:
+      upgradeDescription ||
+      "Instance upgraded",
+
+    performedBy: req.user.id,
+
+    action: "UPGRADED",
+
+    from: beforeSnapshot,
+
+    to: afterSnapshot,
+
+    date: effectiveUpgradeDate,
+
+    notes:
+      upgradeNotes ||
+      "Asset upgraded",
+
+    metadata: {
+      upgradedBy: req.user.id,
+
+      upgradeDescription,
+
+      upgradeDate:
+        effectiveUpgradeDate,
+
+      upgradeCost:
+        normalizedUpgradeCost,
+
+      from: beforeSnapshot,
+
+      to: afterSnapshot,
+
+      upgrade: {
+        previousCondition:
+          beforeSnapshot.condition,
+
+        newCondition:
+          afterSnapshot.condition
+      }
+    }
+  });
+}
 /* ==============================
    🟣 LIFECYCLE ENTRY
 ============================== */
 
-instance.lifecycle.push({
-  eventType: "upgraded",
-  category: "instance",
-
-  title: "Instance Upgraded",
-
-  description:
-    upgradeDescription ||
-    "Instance upgrade performed",
-
-  performedBy: req.user.id,
-
-  action: "UPGRADE",
-
-
-  from: beforeSnapshot,
-
-  to: {
-    condition: afterSnapshot.condition,
-
-    location: instance.location,
-
-    assignedTo: {
-      employeeId: instance.assignedTo?.employeeId || null,
-      employeeName: instance.assignedTo?.employeeName || "-"
-    },
-
-    hardware: isHardware
-      ? {
-          warrantyPurchaseDate:
-            instance.hardware?.warrantyPurchaseDate || null,
-
-          warrantyExpiry:
-            instance.hardware?.warrantyExpiry || null,
-
-          insurancePurchaseDate:
-            instance.hardware?.insurancePurchaseDate || null,
-
-          insuranceExpiry:
-            instance.hardware?.insuranceExpiry || null,
-
-          nextMaintenanceDate:
-            instance.hardware?.nextMaintenanceDate || null,
-
-          installationDate:
-            instance.hardware?.installationDate || null,
-
-          hasInsurance:
-            instance.hardware?.hasInsurance || false,
-
-          insuranceTerm:
-            instance.hardware?.insuranceTerm || null,
-
-          costs: {
-            maintenanceCost:
-              instance.hardware?.costs?.maintenanceCost || null,
-
-            warrantyRenewalCost:
-              instance.hardware?.costs?.warrantyRenewalCost || null,
-
-            insuranceCost:
-              instance.hardware?.costs?.insuranceCost || null
-          }
-        }
-      : undefined,
-
-    software: isSoftware
-      ? {
-          renewalDate:
-            instance.software?.renewalDate || null,
-
-          lastUsedDate:
-            instance.software?.lastUsedDate || null,
-
-          installationDate:
-            instance.software?.installationDate || null,
-
-          costs: {
-            renewalCost:
-              instance.software?.costs?.renewalCost || null
-          }
-        }
-      : undefined
-  },
-
- date: effectiveUpgradeDate,
-  notes: upgradeNotes || "Asset upgraded",
-
-metadata: {
-  upgradedBy: req.user.id,
-
-  upgradeDescription:
-    upgradeDescription || "General upgrade",
-
-  upgradeDate: effectiveUpgradeDate,
-  upgradeCost: normalizedUpgradeCost,
-  from: beforeSnapshot,
-
-  to: afterSnapshot,
-
-  upgrade: {
-    previousCondition: beforeSnapshot.condition,
-    newCondition: afterSnapshot.condition
-  }
-}
-});
+instance.lifecycle.push(
+  ...lifecycleEntries
+);
 
     /* =============================
        💾 SAVE

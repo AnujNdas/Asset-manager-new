@@ -11,17 +11,59 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
 
   const fieldConfig = [
     // 🔸 HARDWARE COSTS
-...(isHardware ? [
-  { name: "maintenanceCost", label: "Maintenance Cost", type: "number" },
-  { name: "warrantyRenewalCost", label: "Warranty Renewal Cost", type: "number" },
+...(isHardware
+  ? [
+      {
+        name: "maintenanceCost",
+        label: "Maintenance Cost",
+        type: "number",
+      },
+      {
+        name: "warrantyRenewalCost",
+        label: "Warranty Renewal Cost",
+        type: "number",
+      },
+      {
+        name: "insuranceCost",
+        label: "Insurance Cost",
+        type: "number",
+      },
 
-  // ✅ NEW
-  { name: "newWarrantyPurchaseDate", label: "Warranty Purchase Date", type: "date" },
-  { name: "newWarrantyExpiry", label: "Warranty Expiry", type: "date" },
+      {
+        name: "newWarrantyPurchaseDate",
+        label: "Warranty Purchase Date",
+        type: "date",
+      },
+      {
+        name: "newWarrantyExpiry",
+        label: "Warranty Expiry",
+        type: "date",
+      },
 
-  { name: "newMaintenanceDate", label: "Next Maintenance", type: "date" },
-  { name: "newInstallationDate", label: "Installation Date", type: "date" }
-] : []),
+      {
+        name: "newInsurancePurchaseDate",
+        label: "Insurance Purchase Date",
+        type: "date",
+      },
+      {
+        name: "newInsuranceExpiry",
+        label: "Insurance Expiry",
+        type: "date",
+      },
+
+      {
+        name: "newMaintenanceDate",
+        label: "Next Maintenance Date",
+        type: "date",
+      },
+
+      {
+        name: "newInstallationDate",
+        label: "Installation Date",
+        type: "date",
+      },
+    ]
+  : []),
     // 🔸 SOFTWARE
     ...(isSoftware ? [
       { name: "renewalCost", label: "Renewal Cost", type: "number" },
@@ -29,8 +71,7 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
       { name: "newLastUsedDate", label: "Last Used Date", type: "date" },
       { name: "newInstallationDate", label: "Installation Date", type: "date" }
     ] : [])
-  ];
-
+  ]
   /* =============================
      🔹 INITIAL STATE
   ============================== */
@@ -117,19 +158,23 @@ const payload = {
       ? Number(form.insuranceCost) || 0
       : 0,
 
-    newInsurancePurchaseDate:
-      form.hasInsurance
-        ? form.newInsurancePurchaseDate || undefined
-        : undefined,
+newWarrantyPurchaseDate:
+  form.newWarrantyPurchaseDate || undefined,
 
-    newWarrantyExpiry:
-      form.newWarrantyExpiry || undefined,
+newWarrantyExpiry:
+  form.newWarrantyExpiry || undefined,
 
-    newMaintenanceDate:
-      form.newMaintenanceDate || undefined,
+newInsurancePurchaseDate:
+  form.newInsurancePurchaseDate || undefined,
 
-    newInstallationDate:
-      form.newInstallationDate || undefined
+newInsuranceExpiry:
+  form.newInsuranceExpiry || undefined,
+
+newMaintenanceDate:
+  form.newMaintenanceDate || undefined,
+
+newInstallationDate:
+  form.newInstallationDate || undefined,
   }),
 
   ...(isSoftware && {
