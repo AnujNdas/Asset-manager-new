@@ -216,8 +216,50 @@ return;
       refresh();
       onClose();
     } catch (err) {
-      console.error(err);
-    }
+  console.error(err);
+
+  const message =
+    err?.response?.data?.message ||
+    err?.message ||
+    "Something went wrong";
+
+  // Renewal / Maintenance / Insurance / Warranty
+  if (
+    message.includes("Maintenance can only be recorded") ||
+    message.includes("Warranty renewal can only be recorded") ||
+    message.includes("Insurance renewal can only be recorded") ||
+    message.includes("License renewal can only be recorded")
+  ) {
+    ThemeSwal.fire({
+      icon: "warning",
+      title: "Renewal Not Due Yet",
+      text: message,
+    });
+
+    return;
+  }
+
+  // Upgrade-specific validation
+  if (
+    message.includes("upgrade") ||
+    message.includes("Upgrade")
+  ) {
+    ThemeSwal.fire({
+      icon: "warning",
+      title: "Upgrade Validation",
+      text: message,
+    });
+
+    return;
+  }
+
+  // Generic error
+  ThemeSwal.fire({
+    icon: "error",
+    title: "Update Failed",
+    text: message,
+  });
+}
   };
 
   /* =============================
