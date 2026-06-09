@@ -9,111 +9,154 @@ const UpgradeModal = ({ instance, onClose, refresh }) => {
      🔹 FIELD CONFIG (DYNAMIC)
   ============================== */
 
-  const fieldConfig = [
-    // 🔸 HARDWARE COSTS
-...(isHardware
-  ? [
-      {
-        name: "maintenanceCost",
-        label: "Maintenance Cost",
-        type: "number",
-      },
-      {
-        name: "warrantyRenewalCost",
-        label: "Warranty Renewal Cost",
-        type: "number",
-      },
-      {
-        name: "insuranceCost",
-        label: "Insurance Cost",
-        type: "number",
-      },
+const fieldConfig = [
+  ...(isHardware
+    ? [
+        {
+          name: "maintenanceCost",
+          label: "Maintenance Cost",
+          type: "number",
+          current:
+            instance?.hardware?.costs?.maintenanceCost?.amount || 0,
+        },
+        {
+          name: "warrantyRenewalCost",
+          label: "Warranty Renewal Cost",
+          type: "number",
+          current:
+            instance?.hardware?.costs?.warrantyRenewalCost?.amount || 0,
+        },
+        {
+          name: "insuranceCost",
+          label: "Insurance Cost",
+          type: "number",
+          current:
+            instance?.hardware?.costs?.insuranceCost?.amount || 0,
+        },
 
-      {
-        name: "newWarrantyPurchaseDate",
-        label: "Warranty Purchase Date",
-        type: "date",
-      },
-      {
-        name: "newWarrantyExpiry",
-        label: "Warranty Expiry",
-        type: "date",
-      },
+        {
+          name: "newWarrantyPurchaseDate",
+          label: "Warranty Purchase Date",
+          type: "date",
+          current:
+            instance?.hardware?.warrantyPurchaseDate?.split("T")[0] || "-",
+        },
+        {
+          name: "newWarrantyExpiry",
+          label: "Warranty Expiry",
+          type: "date",
+          current:
+            instance?.hardware?.warrantyExpiry?.split("T")[0] || "-",
+        },
 
-      {
-        name: "newInsurancePurchaseDate",
-        label: "Insurance Purchase Date",
-        type: "date",
-      },
-      {
-        name: "newInsuranceExpiry",
-        label: "Insurance Expiry",
-        type: "date",
-      },
+        {
+          name: "newInsurancePurchaseDate",
+          label: "Insurance Purchase Date",
+          type: "date",
+          current:
+            instance?.hardware?.insurancePurchaseDate?.split("T")[0] || "-",
+        },
+        {
+          name: "newInsuranceExpiry",
+          label: "Insurance Expiry",
+          type: "date",
+          current:
+            instance?.hardware?.insuranceExpiry?.split("T")[0] || "-",
+        },
 
-      {
-        name: "newMaintenanceDate",
-        label: "Next Maintenance Date",
-        type: "date",
-      },
+        {
+          name: "newMaintenanceDate",
+          label: "Next Maintenance Date",
+          type: "date",
+          current:
+            instance?.hardware?.nextMaintenanceDate?.split("T")[0] || "-",
+        },
 
-      {
-        name: "newInstallationDate",
-        label: "Installation Date",
-        type: "date",
-      },
-    ]
-  : []),
-    // 🔸 SOFTWARE
-    ...(isSoftware ? [
-      { name: "renewalCost", label: "Renewal Cost", type: "number" },
-      { name: "newRenewalDate", label: "Renewal Date", type: "date" },
-      { name: "newLastUsedDate", label: "Last Used Date", type: "date" },
-      { name: "newInstallationDate", label: "Installation Date", type: "date" }
-    ] : [])
-  ]
+        {
+          name: "newInstallationDate",
+          label: "Installation Date",
+          type: "date",
+          current:
+            instance?.hardware?.installationDate?.split("T")[0] || "-",
+        },
+      ]
+    : []),
+
+  ...(isSoftware
+    ? [
+        {
+          name: "renewalCost",
+          label: "Renewal Cost",
+          type: "number",
+          current:
+            instance?.software?.costs?.renewalCost?.amount || 0,
+        },
+        {
+          name: "newRenewalDate",
+          label: "Renewal Date",
+          type: "date",
+          current:
+            instance?.software?.renewalDate?.split("T")[0] || "-",
+        },
+        {
+          name: "newLastUsedDate",
+          label: "Last Used Date",
+          type: "date",
+          current:
+            instance?.software?.lastUsedDate?.split("T")[0] || "-",
+        },
+        {
+          name: "newInstallationDate",
+          label: "Installation Date",
+          type: "date",
+          current:
+            instance?.software?.installationDate?.split("T")[0] || "-",
+        },
+      ]
+    : []),
+];  
   /* =============================
      🔹 INITIAL STATE
   ============================== */
+  // SOFTWARE CURRENT VALUES
+const currentRenewalCost =
+  instance?.software?.costs?.renewalCost?.amount || 0;
 
+const currentRenewalDate =
+  instance?.software?.renewalDate?.split("T")[0] || "";
+
+// HARDWARE CURRENT VALUES
+const currentMaintenanceCost =
+  instance?.hardware?.costs?.maintenanceCost?.amount || 0;
+
+const currentWarrantyCost =
+  instance?.hardware?.costs?.warrantyRenewalCost?.amount || 0;
+
+const currentInsuranceCost =
+  instance?.hardware?.costs?.insuranceCost?.amount || 0;
 const [form, setForm] = useState({
   // ❌ REMOVE currency
 
-  maintenanceCost:
-    instance?.hardware?.costs?.maintenanceCost?.amount || "",
+ maintenanceCost: "",
+warrantyRenewalCost: "",
+insuranceCost: "",
 
-  warrantyRenewalCost:
-    instance?.hardware?.costs?.warrantyRenewalCost?.amount || "",
+renewalCost: "",
 
-  insuranceCost:
-    instance?.hardware?.costs?.insuranceCost?.amount || "",
+newWarrantyPurchaseDate: "",
+newInsurancePurchaseDate: "",
 
-  renewalCost:
-    instance?.software?.costs?.renewalCost?.amount || "",
+newWarrantyExpiry: "",
+newInsuranceExpiry: "",
 
-  // ✅ NEW DATES
-  newWarrantyPurchaseDate:
-    instance?.hardware?.warrantyPurchaseDate?.split("T")[0] || "",
+newMaintenanceDate: "",
 
-    hasInsurance: instance?.hardware?.hasInsurance || false,
+newRenewalDate: "",
+hasInsurance:
+  instance?.hardware?.hasInsurance || false,
 
-    insuranceTerm: instance?.hardware?.insuranceTerm || "1_year",
-
-    newInsurancePurchaseDate:
-      instance?.hardware?.insurancePurchaseDate?.split("T")[0] || "",
-
-  newWarrantyExpiry:
-    instance?.hardware?.warrantyExpiry?.split("T")[0] || "",
-
-  newInsuranceExpiry:
-    instance?.hardware?.insuranceExpiry?.split("T")[0] || "",
-
-  newMaintenanceDate:
-    instance?.hardware?.nextMaintenanceDate?.split("T")[0] || "",
-
-  newRenewalDate:
-    instance?.software?.renewalDate?.split("T")[0] || "",
-
+insuranceTerm:
+  instance?.hardware?.insuranceTerm || "1_year",
   newLastUsedDate:
     instance?.software?.lastUsedDate?.split("T")[0] || "",
 
@@ -143,69 +186,93 @@ const [form, setForm] = useState({
   const handleSubmit = async () => {
     try {
 const payload = {
-  ...(isHardware && {
-    maintenanceCost:
-  form.maintenanceCost !== ""
-    ? Number(form.maintenanceCost)
-    : undefined,
-
-    warrantyRenewalCost:
-  form.warrantyRenewalCost !== ""
-    ? Number(form.warrantyRenewalCost)
-    : undefined,
-
-    hasInsurance: form.hasInsurance,
-
-    insuranceTerm: form.insuranceTerm,
-
-   insuranceCost:
-  form.insuranceCost !== ""
-    ? Number(form.insuranceCost)
-    : undefined,
-
-newWarrantyPurchaseDate:
-  form.newWarrantyPurchaseDate || undefined,
-
-newWarrantyExpiry:
-  form.newWarrantyExpiry || undefined,
-
-newInsurancePurchaseDate:
-  form.newInsurancePurchaseDate || undefined,
-
-newInsuranceExpiry:
-  form.newInsuranceExpiry || undefined,
-
-newMaintenanceDate:
-  form.newMaintenanceDate || undefined,
-
-newInstallationDate:
-  form.newInstallationDate || undefined,
-  }),
-
-  ...(isSoftware && {
-    renewalCost:
-  form.renewalCost !== ""
-    ? Number(form.renewalCost)
-    : undefined,
-
-    newRenewalDate:
-      form.newRenewalDate || undefined,
-
-    newLastUsedDate:
-      form.newLastUsedDate || undefined,
-
-    newInstallationDate:
-      form.newInstallationDate || undefined
-  }),
-
   condition: form.condition || undefined,
-  upgradeDescription: form.upgradeDescription || undefined,
-  upgradeNotes: form.upgradeNotes || undefined,
-    upgradeDate:
+
+  upgradeDescription:
+    form.upgradeDescription || undefined,
+
+  upgradeNotes:
+    form.upgradeNotes || undefined,
+
+  upgradeDate:
     form.upgradeDate || undefined,
-     upgradeCost:
+
+  upgradeCost:
     Number(form.upgradeCost) || 0,
 };
+if (isHardware) {
+  if (form.maintenanceCost !== "") {
+    payload.maintenanceCost =
+      Number(form.maintenanceCost);
+  }
+
+  if (form.warrantyRenewalCost !== "") {
+    payload.warrantyRenewalCost =
+      Number(form.warrantyRenewalCost);
+  }
+
+  if (form.insuranceCost !== "") {
+    payload.insuranceCost =
+      Number(form.insuranceCost);
+  }
+
+  payload.hasInsurance =
+    form.hasInsurance;
+
+  payload.insuranceTerm =
+    form.insuranceTerm;
+
+  if (form.newWarrantyPurchaseDate) {
+    payload.newWarrantyPurchaseDate =
+      form.newWarrantyPurchaseDate;
+  }
+
+  if (form.newWarrantyExpiry) {
+    payload.newWarrantyExpiry =
+      form.newWarrantyExpiry;
+  }
+
+  if (form.newInsurancePurchaseDate) {
+    payload.newInsurancePurchaseDate =
+      form.newInsurancePurchaseDate;
+  }
+
+  if (form.newInsuranceExpiry) {
+    payload.newInsuranceExpiry =
+      form.newInsuranceExpiry;
+  }
+
+  if (form.newMaintenanceDate) {
+    payload.newMaintenanceDate =
+      form.newMaintenanceDate;
+  }
+
+  if (form.newInstallationDate) {
+    payload.newInstallationDate =
+      form.newInstallationDate;
+  }
+}
+if (isSoftware) {
+  if (form.renewalCost !== "") {
+    payload.renewalCost =
+      Number(form.renewalCost);
+  }
+
+  if (form.newRenewalDate) {
+    payload.newRenewalDate =
+      form.newRenewalDate;
+  }
+
+  if (form.newLastUsedDate) {
+    payload.newLastUsedDate =
+      form.newLastUsedDate;
+  }
+
+  if (form.newInstallationDate) {
+    payload.newInstallationDate =
+      form.newInstallationDate;
+  }
+}
 if (
   form.upgradeCost > 0 &&
   !form.upgradeDescription.trim()
@@ -365,6 +432,9 @@ return;
             .map((field) => (
               <div className="input-group" key={field.name}>
                 <label>{field.label}</label>
+                      <small className="current-value">
+        Current: {field.current}
+      </small>
                 <input
                   type={field.type}
                   name={field.name}
