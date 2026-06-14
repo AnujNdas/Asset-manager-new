@@ -59,7 +59,7 @@
     require("./controllers/subscriptionController").handleWebhook
   );
   const allowedOrigins = [
-    "https://api.assetpegasus.com",
+    "https://assetpegasus.com",
     "https://asset-manager-new.vercel.app",
     "http://localhost:3000",
   ];
