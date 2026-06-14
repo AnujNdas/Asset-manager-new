@@ -5,7 +5,8 @@ import TenantRoutes from "./routes/TenantRoutes";
 import SuperAdminRoutes from "./routes/SuperAdminRoutes";
 import AffiliateRoutes from "./routes/AffiliateRoutes";
 
-import TrackInstance from "./pages/TrackInstance";
+import TrackInstance from "./Pages/TrackInstance"; 
+import MainSite from "./Pages/MainSite"; 
 import { Toaster } from "react-hot-toast";
 
 import "./App.css";
@@ -70,6 +71,14 @@ const App = () => {
           {/* =========================
               AFFILIATE APPLY
           ========================== */}
+          <Route
+            path="/"
+            element={
+              <SuspenseWrapper>
+                < MainSite/>
+              </SuspenseWrapper>
+            }
+          />
           <Route
             path="/affiliate/apply"
             element={

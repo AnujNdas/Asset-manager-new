@@ -1,15 +1,15 @@
 import React from "react";
 import "../Page_styles/OnboardingSlider.css";
-import slide1 from "../images/1.png";
-import slide2 from "../images/2.png";
-import slide3 from "../images/3.png";
-import slide4 from "../images/4.png";
-import slide5 from "../images/5.png";
-import slide6 from "../images/6.png";
-import slide7 from "../images/7.png";
-import slide8 from "../images/8.png";
-import slide9 from "../images/9.png";
-import slide10 from "../images/10.png";
+import slide1 from "../Images/1.png";
+import slide2 from "../Images/2.png";
+import slide3 from "../Images/3.png";
+import slide4 from "../Images/4.png";
+import slide5 from "../Images/5.png";
+import slide6 from "../Images/6.png";
+import slide7 from "../Images/7.png";
+import slide8 from "../Images/8.png";
+import slide9 from "../Images/9.png";
+import slide10 from "../Images/10.png";
 export default function OnboardingSliderPage({ onClose }) {
 const slides = [
   {

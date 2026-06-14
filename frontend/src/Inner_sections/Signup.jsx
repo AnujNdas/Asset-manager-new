@@ -5,7 +5,7 @@ import { Link, useNavigate , useSearchParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock, faPerson } from '@fortawesome/free-solid-svg-icons';
-import ThemeSwal from '../utils/SwalTheme';
+import ThemeSwal from '../utils/swalTheme';
 import AuthService from '../Services/AuthService';
 import {
   trackAffiliateVisit,

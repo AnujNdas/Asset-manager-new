@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Loader from "../../Components/Loader";
-import ThemeSwal from "../../utils/SwalTheme";
+import ThemeSwal from "../../utils/swalTheme";
 
 import {
   getAffiliateProfileSettings,

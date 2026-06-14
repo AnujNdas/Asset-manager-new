@@ -17,7 +17,7 @@ import {
 // import {} from "../services/departmentService";
 import "../Page_styles/Employee.css";
 import Pagination from "../Components/Pagination";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import Loader from "../Components/Loader";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";

@@ -1,4 +1,4 @@
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import {
   revokeInvite,
 } from "../Services/ApiServices";

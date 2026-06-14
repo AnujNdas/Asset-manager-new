@@ -42,7 +42,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
 if (allowedRoles && !allowedRoles.includes(decoded.role)) {
 
   setTimeout(() => {
-    import("../utils/SwalTheme").then(({ default: ThemeSwal }) => {
+    import("../utils/swalTheme").then(({ default: ThemeSwal }) => {
       ThemeSwal.fire({
         icon: "error",
         title: "Access Denied",

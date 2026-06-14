@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 import "../Page_styles/Profiledropdown.css";

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import axiosInstance from "../Services/axiosInstance";
 import Loader from "../Components/Loader";
 import "../Page_styles/MyProfile.css";

@@ -3,7 +3,7 @@ import React, {
   useState,
 } from "react";
 
-import ThemeSwal from "../../utils/SwalTheme";
+import ThemeSwal from "../../utils/swalTheme";
 
 import {
   getAffiliatePreferences,

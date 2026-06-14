@@ -8,11 +8,11 @@ import {
   createHardwareAsset,
   bulkUploadHardwareAssets,
 } from "../Services/ApiServices";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import Papa from "papaparse";
 import "../Page_styles/SoftwareCapture.css";
 import * as XLSX from "xlsx";
-import getErrorMessage from "../Utils/getErrorMessage";
+import getErrorMessage from "../utils/getErrorMessage";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";

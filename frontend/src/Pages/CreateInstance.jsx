@@ -11,7 +11,7 @@ import {
   bulkUploadInstances,
 } from "../Services/ApiServices";
 import Select from "react-select";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import { getErrorMessage } from "../utils/getErrorMessage";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";

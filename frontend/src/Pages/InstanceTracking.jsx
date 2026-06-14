@@ -7,13 +7,13 @@ import InstanceCard from "../Components/InstanceCard";
 import ReassignModal from "../Components/ReassignModal";
 import HistoryModal from "../Components/HistoryModal";
 import UpgradeModal from "../Components/UpgradeModal";
-import QRScanner from "../Components/Qrscanner";
+import QRScanner from "../Components/QRScanner";
 import {
   getTrackedInstances,
   getInstanceHistory,
 } from "../Services/ApiServices";
 import Loader from "../Components/Loader";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";

@@ -6,7 +6,7 @@
   import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
   import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
   import AuthService from '../Services/AuthService';
-  import ThemeSwal from '../utils/SwalTheme';
+  import ThemeSwal from '../utils/swalTheme';
   import Loader from "../Components/Loader";
   import { useSubscription } from '../Context/SubscriptionContext';
   const Login = ({ setProfileUser }) => {
@@ -71,7 +71,7 @@ if (role === "super-admin") {
 
   await refreshSubscription();
 
-  navigate("/");
+  navigate("/panel");
 }
 
     } catch (error) {

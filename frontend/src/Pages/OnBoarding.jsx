@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import axiosInstance from "../Services/axiosInstance";
 import "../Page_styles/OnBoarding.css";
 const Onboarding = () => {

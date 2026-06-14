@@ -2,7 +2,7 @@ import axios from "axios";
 import { progressController } from "../Components/ProgressController";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/api`;
-console.log("ACTIVE API URL =", process.env.REACT_APP_API_URL);
+console.log("ACTIVE API URL =",API_URL);
 
 if (!API_URL) {
   throw new Error("API base URL is missing. Check .env.local");

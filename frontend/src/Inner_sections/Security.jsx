@@ -2,7 +2,7 @@ import React , { useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import "../Page_styles/Security.css"
-import ThemeSwal from '../utils/SwalTheme'
+import ThemeSwal from '../utils/swalTheme'
 import AuthService from '../Services/AuthService'
 const Security = () => {
   const navigate = useNavigate()

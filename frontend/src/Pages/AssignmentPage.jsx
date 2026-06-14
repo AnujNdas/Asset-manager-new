@@ -1,6 +1,6 @@
 // ✅ src/Pages/AssignmentPage.jsx
 import React, { useEffect, useState } from "react";
-import ThemeSwal from "../utils/SwalTheme";
+import ThemeSwal from "../utils/swalTheme";
 import "../Page_styles/AssignmentPage.css";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
