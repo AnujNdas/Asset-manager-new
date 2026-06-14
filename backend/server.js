@@ -59,7 +59,7 @@
     require("./controllers/subscriptionController").handleWebhook
   );
   const allowedOrigins = [
-    "https://assets.socialflylive.com",
+    "https://api.assetpegasus.com",
     "https://asset-manager-new.vercel.app",
     "http://localhost:3000",
   ];
