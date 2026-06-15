@@ -14,7 +14,7 @@ const LandingPage = () => {
       {/* NAVBAR */}
       <nav className="navbar">
         <div className="logo">
-          AssetManager Pro
+          Asset Pegasus
         </div>
 
         <div className="nav-actions">
@@ -46,11 +46,11 @@ const LandingPage = () => {
 
           <div className="hero-buttons">
             <button className="signup-btn">
-              Get Started
+              Try For Free →
             </button>
 
             <button className="account-btn">
-              View Demo
+              Explore Features
             </button>
           </div>
         </div>
@@ -81,23 +81,23 @@ const LandingPage = () => {
       <section className="stats">
 
         <div className="stat-card">
-          <h2>10K+</h2>
-          <p>Assets Managed</p>
+          <h2>2</h2>
+          <p>Type Of Assets</p>
         </div>
 
         <div className="stat-card">
-          <h2>500+</h2>
-          <p>Organizations</p>
+          <h2>100%</h2>
+          <p>GDPR & HIPAA Complaint</p>
         </div>
 
         <div className="stat-card">
-          <h2>99.9%</h2>
-          <p>System Uptime</p>
+          <h2>100%</h2>
+          <p>Track Full Lifecycle</p>
         </div>
 
         <div className="stat-card">
-          <h2>24/7</h2>
-          <p>Support</p>
+          <h2>2 in 1</h2>
+          <p>Budget Friendly Saas</p>
         </div>
 
       </section>
@@ -107,59 +107,53 @@ const LandingPage = () => {
       <section className="features">
 
         <h2>
-          Everything You Need
+          Soluition For Every Industry
         </h2>
+        <p>Different industries manage assets in different ways. Socialfly provides flexible asset management solutions that adapt to the needs of various industries. </p>
 
         <div className="feature-grid">
 
           <div className="feature-card">
-            <h3>Hardware Tracking</h3>
+            <h3>Healthcare Asset Tracking</h3>
             <p>
-              Track laptops, desktops,
-              servers, networking devices
-              and peripherals.
+            The healthcare industry is a dynamic and time sensitive world and every second counts. The hospital or clinic is dealing with thousands of critical assets every day, from infusion pumps and ventilators to wheelchairs, monitors, laptop computers and diagnostic equipment. Equipment may be lost, unused, and late for maintenance or in short supply when needed. Healthcare asset tracking software of today is valuable in providing a real time view of equipment, minimizing operational delays, enhancing compliance and enabling improved patient care. 
+
             </p>
           </div>
 
           <div className="feature-card">
-            <h3>Software Management</h3>
+            <h3>Manufacturing Asset Management</h3>
             <p>
-              Manage licenses,
-              subscriptions and software
-              renewals.
+            There are hundreds or thousands of assets managed by manufacturing companies every day. The availability of IT infrastructure, tools, spare parts, production equipment and machines are important to track efficiently, as are operational machines or their tools. 
             </p>
           </div>
 
           <div className="feature-card">
-            <h3>Asset Assignment</h3>
+            <h3>Education Asset Management</h3>
             <p>
-              Assign assets to employees
-              and monitor utilization.
+            Today’s education management handle so much more than a class and books. These are common components in schools, colleges, universities, and training centres that can be daily affected by their day-to-day operations including Laptop computers, Tablets, lab equipment, projectors, smart boards, library inventory, furniture, sporting goods, servers, and also facility infrastructure. Tracking and management of these assets is time consuming, inefficient and costly without a central system.  
             </p>
           </div>
 
           <div className="feature-card">
-            <h3>Cost Tracking</h3>
+            <h3>Restaurant & Hospitality Asset Management </h3>
             <p>
-              Track purchase costs,
-              maintenance and ownership
-              expenses.
+            Speed, efficiency, consistency and amazing customer experiences are the lifeblood of the restaurant and hospitality sector. Whether it’s restaurants, cafés, hotels or resorts, they maintain hundreds of assets on a daily basis, from equipment and point of sale to refrigeration, furniture, HVAC, housekeeping and IT assets, etc. etc.
             </p>
           </div>
 
           <div className="feature-card">
-            <h3>Warranty Monitoring</h3>
+            <h3>Construction Equipment Tracking</h3>
             <p>
-              Never miss warranty
-              expiration dates again.
+              
+The construction industry is in a fast-paced business with the constant movement of equipment, machinery, tools and vehicles between construction jobs, storage yards, and jobs in operation. These assets can be hard to oversee manually and quite often result in delays, lost equipment, downtime and increased operating expenses. A construction and equipment tracking can be effective in terms of complete asset visibility across the business and better productivity, safety and efficiency.
             </p>
           </div>
 
           <div className="feature-card">
-            <h3>Analytics</h3>
+            <h3>Travel & Transportation Logistics</h3>
             <p>
-              Powerful reports and
-              lifecycle analytics.
+            Travel and transportation relies on a fast-paced business where efficiency, visibility and coordination in real time are essential. Over thousands of assets are being moved daily by logistics providers, fleet operators, cargo companies, public transport, travel providers and distribution systems. These include vehicles; goods containers; weather or other sensors, as well as warehouse equipment, operative tools, IT systems and maintenance systems. 
             </p>
           </div>
 
@@ -182,7 +176,7 @@ const LandingPage = () => {
         </p>
 
         <button className="signup-btn">
-          Start Free Trial
+        7 Days Free Trial
         </button>
 
       </section>
@@ -190,7 +184,7 @@ const LandingPage = () => {
       {/* FOOTER */}
 
       <footer className="footer">
-        © 2026 AssetManager Pro.
+        © 2026 AssetPegasus.
         All Rights Reserved.
       </footer>
 
