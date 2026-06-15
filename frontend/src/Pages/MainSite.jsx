@@ -37,17 +37,12 @@ const LandingPage = () => {
 
         <div className="hero-content">
           <h1>
-            Modern IT Asset Management
-            For Growing Businesses
+          Asset Management Software with Insurance Tracking
           </h1>
 
-          <p>
-            Track hardware, software,
-            licenses, warranties,
-            maintenance costs and
-            employee assignments from
-            a single platform.
-          </p>
+          <h2>
+          Hardware Asset Management, IT Asset Management Software, ITAM.Software, Asset Tracking Software USA
+          </h2>
 
           <div className="hero-buttons">
             <button className="signup-btn">
