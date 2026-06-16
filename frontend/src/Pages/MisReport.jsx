@@ -224,10 +224,10 @@ const auditAccuracy =
     activeTab === "hardware"
       ? viewMode === "summary"
         ? hardwareSummary
-        : hardwareInstances
+        : hardwareFindings
       : viewMode === "summary"
       ? softwareSummary
-      : softwareInstances;
+      : softwareFindings;
 
   // ================= FILTER (ONLY SUMMARY) =================
   let currentData =
