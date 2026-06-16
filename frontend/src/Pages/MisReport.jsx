@@ -15,7 +15,7 @@ import {
 const MisReport = () => {
 
   const [activeTab, setActiveTab] = useState("hardware");
-  const [viewMode, setViewMode] = useState("summary");
+  const [viewMode, setViewMode] = useState("overview");
 
   const [hardware, setHardware] = useState([]);
   const [software, setSoftware] = useState([]);
@@ -107,53 +107,117 @@ const MisReport = () => {
     inStock: a.assetQuantity - a.inUse,
     purchaseDate: a.purchaseDetails?.purchaseDate || null,
   }));
-
-  const hardwareInstances = hardware.flatMap((asset) => {
+  const hardwareFindings = hardware.flatMap((asset) => {
     const assignmentMap = {};
+  
     asset.assignmentRecords?.forEach((a) => {
       assignmentMap[String(a.assetInstanceId)] = a;
     });
-
-    return (asset.instances || []).map((inst) => ({
-      assetName: inst.deviceName,
-      instanceCode: inst.instanceCode,
-      model: inst.hardware?.modelNo,
-      status: inst.status,
-      condition: inst.condition,
-      location: inst.location,
-      warranty: inst.warranty?.expiryDate,
-      assignedTo:
-        assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
-      department:
-        assignmentMap[String(inst._id)]?.department?.name || "-",
-      cost: inst.hardware?.purchaseCost.amount || null,
-    }));
+  
+    return (asset.instances || []).map((inst) => {
+      const assignedTo =
+        assignmentMap[String(inst._id)]?.employee?.name ||
+        "Unassigned";
+  
+      const department =
+        assignmentMap[String(inst._id)]?.department?.name ||
+        "-";
+  
+      let auditStatus = "Verified";
+      let finding = "No Issues";
+  
+      if (assignedTo === "Unassigned") {
+        auditStatus = "Issue";
+        finding = "Asset Not Assigned";
+      }
+  
+      if (
+        inst.condition === "damaged" ||
+        inst.condition === "repair"
+      ) {
+        auditStatus = "Critical";
+        finding = "Condition Issue";
+      }
+  
+      return {
+        instanceCode: inst.instanceCode,
+        assetName: inst.deviceName,
+        status: inst.status,
+        condition: inst.condition,
+        assignedTo,
+        department,
+        auditStatus,
+        finding,
+      };
+    });
   });
 
-const softwareInstances = software.flatMap((asset) => {
-  const assignmentMap = {};
-  asset.assignmentRecords?.forEach((a) => {
-    assignmentMap[String(a.assetInstanceId)] = a;
+  const softwareFindings = software.flatMap((asset) => {
+    const assignmentMap = {};
+  
+    asset.assignmentRecords?.forEach((a) => {
+      assignmentMap[String(a.assetInstanceId)] = a;
+    });
+  
+    return (asset.instances || []).map((inst) => {
+      const assignedTo =
+        assignmentMap[String(inst._id)]?.employee?.name ||
+        "Unassigned";
+  
+      let auditStatus = "Verified";
+      let finding = "No Issues";
+  
+      if (assignedTo === "Unassigned") {
+        auditStatus = "Issue";
+        finding = "License Not Assigned";
+      }
+  
+      const renewalDate = inst.software?.renewalDate;
+  
+      if (
+        renewalDate &&
+        new Date(renewalDate) < new Date()
+      ) {
+        auditStatus = "Critical";
+        finding = "License Expired";
+      }
+  
+      return {
+        assetName: inst.deviceName,
+        licenseKey: inst.software?.licenseKey,
+        licenseNumber: inst.software?.licenseNumber,
+        expiry: renewalDate,
+        assignedTo,
+        auditStatus,
+        finding,
+      };
+    });
   });
+  const findings =
+  activeTab === "hardware"
+    ? hardwareFindings
+    : softwareFindings;
 
-  return (asset.instances || []).map((inst) => ({
-    assetName: inst.deviceName,
-    instanceCode: inst.instanceCode,
-    licenseKey: inst.software?.licenseKey,
-    licenseNumber: inst.software?.licenseNumber,
-    status: inst.status,
-    location: inst.location,
-    expiry: inst.software?.renewalDate,
-    assignedTo:
-      assignmentMap[String(inst._id)]?.employee?.name || "Unassigned",
+const totalAssets = findings.length;
 
-    // ❌ OLD
-    // cost: asset.assetCost?.baseTotalAmount || 0,
+const verifiedAssets = findings.filter(
+  (f) => f.auditStatus === "Verified"
+).length;
 
-    // ✅ NEW
-    cost: inst.software?.purchaseCost.amount || null,
-  }));
-});
+const issueAssets = findings.filter(
+  (f) => f.auditStatus === "Issue"
+).length;
+
+const criticalAssets = findings.filter(
+  (f) => f.auditStatus === "Critical"
+).length;
+
+const auditAccuracy =
+  totalAssets > 0
+    ? Math.round(
+        (verifiedAssets / totalAssets) * 100
+      )
+    : 0;
 
   // ================= DATA SWITCH =================
   let baseData =
@@ -256,45 +320,58 @@ const softwareInstances = software.flatMap((asset) => {
 
       {/* HEADER */}
       <div className="report-header">
-        <h2>Asset MIS Report</h2>
-        <div className="header-actions">
-          <button onClick={exportData} className="misbutton">
-            Export Excel
-          </button>
-        </div>
-      </div>
+  <div>
+    <h2>Audit Center</h2>
+    <p>
+      Review asset verification, assignment accuracy,
+      condition status and audit findings.
+    </p>
+  </div>
+
+  <div className="header-actions">
+    <button>Export Audit Report</button>
+  </div>
+</div>
 
       {/* MAIN TABS */}
-      <div className="navs">
-        <button
-          className={activeTab === "hardware" ? "active-tab" : ""}
-          onClick={() => setActiveTab("hardware")}
-        >
-          Hardware
-        </button>
-        <button
-          className={activeTab === "software" ? "active-tab" : ""}
-          onClick={() => setActiveTab("software")}
-        >
-          Software
-        </button>
-      </div>
+      <button
+  className={viewMode === "overview" ? "active-tab" : ""}
+  onClick={() => setViewMode("overview")}
+>
+  Audit Overview
+</button>
+
+<button
+  className={viewMode === "findings" ? "active-tab" : ""}
+  onClick={() => setViewMode("findings")}
+>
+  Audit Findings
+</button>
 
       {/* SUB TABS */}
       <div className="sub-tabs">
-        <button
-          className={viewMode === "summary" ? "active-tab" : ""}
-          onClick={() => setViewMode("summary")}
-        >
-          Summary
-        </button>
-        <button
-          className={viewMode === "instance" ? "active-tab" : ""}
-          onClick={() => setViewMode("instance")}
-        >
-          Instances
-        </button>
-      </div>
+  <button
+    className={
+      viewMode === "overview"
+        ? "active-tab"
+        : ""
+    }
+    onClick={() => setViewMode("overview")}
+  >
+    Audit Overview
+  </button>
+
+  <button
+    className={
+      viewMode === "findings"
+        ? "active-tab"
+        : ""
+    }
+    onClick={() => setViewMode("findings")}
+  >
+    Audit Findings
+  </button>
+</div>
 
       {/* FILTERS (ONLY SUMMARY) */}
       {viewMode === "summary" && (
@@ -330,6 +407,36 @@ const softwareInstances = software.flatMap((asset) => {
           />
         </div>
       )}
+      {viewMode === "overview" && (
+  <div className="audit-overview-grid">
+
+    <div className="audit-card">
+      <h3>Total Assets</h3>
+      <span>{totalAssets}</span>
+    </div>
+
+    <div className="audit-card">
+      <h3>Verified</h3>
+      <span>{verifiedAssets}</span>
+    </div>
+
+    <div className="audit-card">
+      <h3>Issues</h3>
+      <span>{issueAssets}</span>
+    </div>
+
+    <div className="audit-card">
+      <h3>Critical</h3>
+      <span>{criticalAssets}</span>
+    </div>
+
+    <div className="audit-card">
+      <h3>Audit Accuracy</h3>
+      <span>{auditAccuracy}%</span>
+    </div>
+
+  </div>
+)}
 
       {/* TABLE */}
    <div className="table-wrapper">
@@ -341,12 +448,14 @@ const softwareInstances = software.flatMap((asset) => {
               {/* HARDWARE */}
               {activeTab === "hardware" && viewMode === "summary" && (
                 <>
-                  <th>Asset</th>
-                  <th>Category</th>
-                  <th>In Use</th>
-                  <th>Stock</th>
-                  <th>Location</th>
-                  <th>Purchase Date</th>
+  <th>Instance</th>
+  <th>Asset</th>
+  <th>Status</th>
+  <th>Condition</th>
+  <th>Assigned To</th>
+  <th>Department</th>
+  <th>Audit Status</th>
+  <th>Finding</th>
                 </>
               )}
 
@@ -363,14 +472,15 @@ const softwareInstances = software.flatMap((asset) => {
                 </>
               )}
                 {activeTab === "software" && viewMode === "summary" && (
-  <>
-    <th>Asset</th>
-    <th>Category</th>
-    <th>In Use</th>
-    <th>Stock</th>
-    <th>Location</th>
-    <th>Purchase Date</th>
-  </>
+                  <>
+  <th>Asset</th>
+  <th>License Key</th>
+  <th>License No</th>
+  <th>Expiry</th>
+  <th>Assigned To</th>
+  <th>Audit Status</th>
+  <th>Finding</th>
+</>
 )}
 
               {/* SOFTWARE */}
@@ -407,28 +517,38 @@ const softwareInstances = software.flatMap((asset) => {
                 {/* HARDWARE INSTANCE */}
                 {activeTab === "hardware" && viewMode === "instance" && (
                   <>
-                    <td>{row.instanceCode}</td>
-                    <td>{row.assetName}</td>
-                    <td>{row.model}</td>
-                    <td>{row.status}</td>
-                    <td>{row.condition}</td>
-                    <td>{row.assignedTo}</td>
-                    <td>{row.department}</td>
-  <td>{formatCost(row.cost)}</td>
+  <td>{row.instanceCode}</td>
+  <td>{row.assetName}</td>
+  <td>{row.status}</td>
+  <td>{row.condition}</td>
+  <td>{row.assignedTo}</td>
+  <td>{row.department}</td>
 
-                  </>
+  <td>
+    <span className={`audit-status ${row.auditStatus.toLowerCase()}`}>
+      {row.auditStatus}
+    </span>
+  </td>
+
+  <td>{row.finding}</td>
+</> 
                 )}
                 {activeTab === "software" && viewMode === "summary" && (
-  <>
-    <td>{row.assetName}</td>
-    <td>{row.category}</td>
-    <td>{row.inUse}</td>
-    <td>{row.inStock}</td>
-    <td>{row.location}</td>
-    <td>
-      {formatDate(row.purchaseDate)}
-    </td>
-  </>
+                  <>
+  <td>{row.assetName}</td>
+  <td>{row.licenseKey}</td>
+  <td>{row.licenseNumber}</td>
+  <td>{formatDate(row.expiry)}</td>
+  <td>{row.assignedTo}</td>
+
+  <td>
+    <span className={`audit-status ${row.auditStatus.toLowerCase()}`}>
+      {row.auditStatus}
+    </span>
+  </td>
+
+  <td>{row.finding}</td>
+</>
 )}
                 {/* SOFTWARE INSTANCE */}
                 {activeTab === "software" && viewMode === "instance" && (
