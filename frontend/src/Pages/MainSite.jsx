@@ -1,6 +1,14 @@
 import "../Page_styles/MainSite.css";
 import { useState } from "react";
+import { FaWhatsapp, FaTelegramPlane } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaGoogle,
+  FaPinterestP,
+} from "react-icons/fa";
 import { FiBox, FiMonitor } from "react-icons/fi";
 const LandingPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -15,6 +23,13 @@ const LandingPage = () => {
   const handleSignupClick = () => {
     navigate("/user/signup")
   }
+  const headings = [
+    "Manage All types of Assets From One Place — Hardware, Software & Cloud.",
+    "No Tracking — Privacy Policy.",
+    "Instant Asset Insights/Reports that Scale with Business.",
+    "Track Maintenance, Warranty & Insurance",
+  ];
+
   const faqData = [
     {
       question: "Why do businesses need asset tracking software?",
@@ -51,6 +66,19 @@ const leftItems = [
 ];
 
 const rightItems = [
+  "🚚 Transport",
+  "🛠 Equipment & Tools",
+  "📍 Electronics",
+  "🎧 Accessories",
+];
+const leftItemssoftware = [
+  "💻 User End Devices",
+  "🔒 Security & Safety",
+  "🏭 Machinery",
+  "🤖 Robotics",
+];
+
+const rightItemssoftware = [
   "🚚 Transport",
   "🛠 Equipment & Tools",
   "📍 Electronics",
@@ -217,6 +245,40 @@ const rightItems = [
         </div>
 
       </section>
+      <section className="asset-showcase">
+      <div className="asset-showcase-container">
+        <h2 className="asset-showcase-title">
+          AssetPegasus
+          <br />
+          Machine & IT asset lifecycle management platform
+          <br />
+          (Asset Management System)
+        </h2>
+
+        <div className="asset-showcase-content">
+          {/* Left Side */}
+          <div className="asset-showcase-left">
+            <ul className="asset-feature-list">
+              {features.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+
+            <button className="asset-showcase-btn">
+              Free Trial
+            </button>
+          </div>
+
+          {/* Right Side */}
+          <div className="asset-showcase-right">
+            <img
+              src="/images/dashboard-preview.png"
+              alt="AssetPegasus Dashboard"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
       <section className="asset-info-section">
       <div className="asset-info-container">
 
@@ -365,14 +427,14 @@ const rightItems = [
       <section className="hardware-section">
 
 <h2 className="hardware-title">
-  Manage All Types Of Hardwares
+  Manage All Types Of Softwares
 </h2>
 
 <div className="hardware-content">
 
   {/* LEFT */}
   <div className="hardware-column">
-    {leftItems.map((item, index) => (
+    {leftItemssoftware.map((item, index) => (
       <div key={index} className="hardware-item">
         {item}
       </div>
@@ -389,7 +451,7 @@ const rightItems = [
 
   {/* RIGHT */}
   <div className="hardware-column">
-    {rightItems.map((item, index) => (
+    {rightItemssoftware.map((item, index) => (
       <div key={index} className="hardware-item">
         {item}
       </div>
@@ -498,6 +560,43 @@ The construction industry is in a fast-paced business with the constant movement
 
         </div>
       </section>
+      <section className="hardware-section">
+
+<h2 className="hardware-title">
+  Manage All Types Of Hardwares
+</h2>
+
+<div className="hardware-content">
+
+  {/* LEFT */}
+  <div className="hardware-column">
+    {leftItems.map((item, index) => (
+      <div key={index} className="hardware-item">
+        {item}
+      </div>
+    ))}
+  </div>
+
+  {/* CENTER */}
+  <div className="hardware-image-card">
+    <img
+      src="/images/hardware-types.png"
+      alt="Hardware Categories"
+    />
+  </div>
+
+  {/* RIGHT */}
+  <div className="hardware-column">
+    {rightItems.map((item, index) => (
+      <div key={index} className="hardware-item">
+        {item}
+      </div>
+    ))}
+  </div>
+
+</div>
+
+</section>
       <section className="comparison-section">
       <div className="comparison-container">
 
@@ -582,6 +681,66 @@ The construction industry is in a fast-paced business with the constant movement
 
       </div>
     </section>
+    <section className="about-contact-section">
+      {/* TOP SECTION */}
+      <div className="about-section-content">
+        <h2 className="about-main-title">
+          8+ Years of Building Digital Success Stories.
+        </h2>
+
+        <p className="about-text">
+          Small, Medium & Big Organizations require a simple flexible and
+          scalable asset management platform which capable of managing complex
+          asset environments.
+        </p>
+
+        <p className="about-text">
+          <span className="highlight-link">
+            HAM & ITAM
+          </span>{" "}
+          we bring all that expertise into a single SaaS (Software as Service)
+          platform that helps to Manage Businesses & Individuals.
+        </p>
+
+        <p className="about-text">
+          Recognition by a trusted research platform like{" "}
+          <span className="highlight-link">Goodfirms</span>,{" "}
+          <span className="highlight-link">G2</span>,{" "}
+          <span className="highlight-link">Saashub</span>,{" "}
+          <span className="highlight-link">Product Hunt</span>,{" "}
+          <span className="highlight-link">SourceForge</span> & Others
+        </p>
+
+        <button className="about-btn">
+          About Us
+        </button>
+      </div>
+
+      {/* CONTACT SECTION */}
+      <div className="contact-section">
+        <h3 className="contact-title">
+          Contact Us
+        </h3>
+
+        <div className="contact-buttons">
+          <a
+            href="#"
+            className="contact-btn"
+          >
+            <FaWhatsapp />
+            <span>WhatsApp</span>
+          </a>
+
+          <a
+            href="#"
+            className="contact-btn"
+          >
+            <FaTelegramPlane />
+            <span>Telegram</span>
+          </a>
+        </div>
+      </div>
+    </section>
       {/* CTA */}
 
       <section className="cta">
@@ -641,11 +800,67 @@ The construction industry is in a fast-paced business with the constant movement
     </section>
 
       {/* FOOTER */}
-
       <footer className="footer">
-        © 2026 AssetPegasus.
-        All Rights Reserved.
-      </footer>
+      <div className="footer-container">
+
+        {/* Left Section */}
+        <div className="footer-column footer-left">
+          <h3>Contact</h3>
+
+          <button className="footer-btn">
+            About
+          </button>
+
+          <div className="social-icons">
+            <a href="#">
+              <FaFacebookF />
+            </a>
+
+            <a href="#">
+              <FaInstagram />
+            </a>
+
+            <a href="#">
+              <FaLinkedinIn />
+            </a>
+
+            <a href="#">
+              <FaGoogle />
+            </a>
+
+            <a href="#">
+              <FaPinterestP />
+            </a>
+          </div>
+        </div>
+
+        {/* Center Section */}
+        <div className="footer-column footer-center">
+          <a href="#">Terms and Conditions</a>
+          <a href="#">Global Privacy Policy</a>
+
+          <div className="copyright">
+            © 2026 SOCIALFLY. All Rights Reserved.
+          </div>
+        </div>
+
+        {/* Right Section */}
+        <div className="footer-column footer-right">
+          <a href="#">
+            IT Asset Management Software
+          </a>
+
+          <a href="#">
+            Machinery Assets Management Software
+          </a>
+
+          <p className="footer-email">
+            Email - info@socialflylive.com
+          </p>
+        </div>
+
+      </div>
+    </footer>
 
     </div>
   );
