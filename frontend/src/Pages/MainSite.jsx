@@ -8,7 +8,34 @@ const LandingPage = () => {
   const handleSignupClick = () => {
     navigate("/user/signup")
   }
-
+  const faqData = [
+    {
+      question: "Why do businesses need asset tracking software?",
+      answer:
+        "Asset tracking software helps organizations monitor assets, reduce losses, improve accountability, streamline audits, and optimize maintenance schedules.",
+    },
+    {
+      question: "How does asset lifecycle management improve operations?",
+      answer:
+        "Lifecycle management gives complete visibility into procurement, deployment, maintenance, upgrades, and retirement of assets, reducing operational costs.",
+    },
+    {
+      question:
+        "Can asset management software track assets across multiple locations?",
+      answer:
+        "Yes. AssetPegasus provides centralized visibility for assets across offices, warehouses, branches, and remote sites.",
+    },
+    {
+      question: "What is asset management software?",
+      answer:
+        "Asset management software is a platform used to track, manage, monitor, and optimize physical and digital assets throughout their lifecycle.",
+    },
+    {
+      question: "What is AssetPegasus?",
+      answer:
+        "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
+    },
+  ];
 const leftItems = [
   "💻 User End Devices",
   "🔒 Security & Safety",
@@ -78,6 +105,44 @@ const rightItems = [
       c2: "Basic Tracking",
     },
   ];
+  const impacts = [
+    {
+      title: "Reduce IT Costs by Up to 40%",
+      description:
+        "AssetPegasus helps organizations eliminate waste by providing accurate visibility into software licenses, hardware utilization and cloud resource consumption. Companies often discover unused licenses and idle assets within the first month of implementation, significantly reducing operational costs.",
+    },
+    {
+      title: "Improve Asset Visibility",
+      description:
+        "Gain complete visibility into every asset across locations, departments and employees. Track lifecycle, ownership and utilization from one centralized dashboard.",
+    },
+    {
+      title: "Increase Team Productivity",
+      description:
+        "Reduce manual tracking, paperwork and spreadsheets. Teams spend less time searching for assets and more time focusing on business operations.",
+    },
+    {
+      title: "Enhance Compliance",
+      description:
+        "Maintain audit-ready records, monitor renewals and track regulatory requirements such as GDPR, HIPAA and internal governance policies.",
+    },
+    {
+      title: "Reduce Security Risks",
+      description:
+        "Identify untracked assets, expired software, unsupported devices and compliance gaps before they become security vulnerabilities.",
+    },
+  ];
+  
+  const featuresSpecial = [
+    "☁️ Cloud, Hybrid & On Premise Deployment Options.",
+    "🛡️ GDPR & HIPAA Compliant.",
+    "💳 No Credit Card Required. Start with 7 Days Free Trial.",
+    "🎯 Track Every Single Asset Across Its Full Lifecycle.",
+    "🚨 Proactive Alerts for Security Risks, Expirations & Changes.",
+    "🤖 Automate License Reporting and Renewals.",
+    "⏱️ Unlock Modern Inventory & Best Visibility.",
+  ];
+  
   return (
     <div className="landing-page">
 
@@ -145,6 +210,102 @@ const rightItems = [
         </div>
 
       </section>
+      <section className="asset-info-section">
+      <div className="asset-info-container">
+
+        <h2 className="asset-info-title">
+          Complete Asset Tracking Platform for All Types Businesses
+        </h2>
+
+        <p className="asset-info-text">
+          In 2026 Organizations manage hundreds or thousands of assets
+          including computers, laptops, tablets, mobile devices,
+          machinery, tools, operational equipment with transport assets
+          and all Digital Assets like Softwares, Domains, SSL
+          certificates & much more. Without proper tracking systems,
+          it becomes difficult for businesses to know where assets are
+          located, how they are being used and other valuable information.
+        </p>
+
+        <p className="asset-info-text">
+          Asset tracking software helps organizations monitor asset
+          renewals, maintenance dates, insurance policies, locations,
+          assigned personnel, and status across their entire organization.
+        </p>
+
+        <p className="asset-info-text">
+          AssetPegasus provides a centralized asset tracking platform
+          that allows organizations to monitor assets from a single
+          dashboard. Using technologies such as QR codes and mobile
+          tracking, teams can update asset records, locate assets and
+          track them in real time.
+        </p>
+
+      </div>
+    </section>
+    <section className="impact-section">
+      <div className="impact-container">
+
+        {/* LEFT SIDE */}
+        <div className="impact-left">
+
+          <h2>Best Features</h2>
+
+          <div className="feature-list">
+            {featuresSpecial.map((item, index) => (
+              <div key={index} className="feature-item">
+                {item}
+              </div>
+            ))}
+          </div>
+
+          <button className="trial-btn">
+            Free Trial
+          </button>
+
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div className="impact-right">
+
+          <h2>
+            The Business Impact of AssetPegasus
+          </h2>
+
+          <p className="impact-subtitle">
+            AssetPegasus does not just improve IT operations,
+            it delivers measurable business outcomes that
+            affect the entire organization.
+          </p>
+
+          <div className="impact-card">
+
+            <h3>
+              {impacts[active].title}
+            </h3>
+
+            <p>
+              {impacts[active].description}
+            </p>
+
+          </div>
+
+          <div className="impact-dots">
+            {impacts.map((_, index) => (
+              <button
+                key={index}
+                className={`dot ${
+                  active === index ? "active" : ""
+                }`}
+                onClick={() => setActive(index)}
+              />
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+    </section>
 
       {/* STATS */}
 
@@ -171,6 +332,29 @@ const rightItems = [
         </div>
 
       </section>
+      <section className="cloud-machinery-section">
+      <div className="cloud-machinery-container">
+
+        <h2 className="cloud-machinery-title">
+          Cloud Based Machinery Assets Management — Access From Anywhere
+        </h2>
+
+        <p className="cloud-machinery-text">
+          <strong>AssetPegasus</strong> is a hardware management system that is a
+          fully cloud based solution. No software needs to be installed on the
+          local machines, no servers to be maintained and no data to be backed
+          up manually.
+        </p>
+
+        <p className="cloud-machinery-text">
+          Your whole inventory of hardware assets can be accessed from any
+          location, anywhere in the world, under the protection of any device
+          and providing distributed teams, remote IT directors, and
+          organizations with multiple sites equal access as a one-office team.
+        </p>
+
+      </div>
+    </section>
       <section className="hardware-section">
 
 <h2 className="hardware-title">
@@ -208,6 +392,48 @@ const rightItems = [
 </div>
 
 </section>
+<section className="product-features-section">
+      <div className="product-features-container">
+
+        <h2 className="product-features-title">
+          Product Features
+        </h2>
+
+        <div className="product-features-grid">
+
+          {/* IT Assets */}
+          <div className="feature-card">
+            <div className="feature-icon">
+              <FiBox />
+            </div>
+
+            <h3>IT Asset Management</h3>
+
+            <p>
+              Manage All types of Digital Assets From One Place —
+              <strong> Softwares, Servers, Domains & Clouds</strong> etc.
+            </p>
+          </div>
+
+          {/* Equipment Assets */}
+          <div className="feature-card">
+            <div className="feature-icon">
+              <FiMonitor />
+            </div>
+
+            <h3>Equipment Asset Management</h3>
+
+            <p>
+              Manage All types of Physical Assets From One Place —
+              <strong> Machine, Equipment, Electronics & Transport</strong>
+              {" "}assets etc.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
       {/* FEATURES */}
 
       <section className="features">
@@ -369,6 +595,43 @@ The construction industry is in a fast-paced business with the constant movement
         </button>
 
       </section>
+      <section className="faq-section">
+      <div className="faq-container">
+        <h2 className="faq-title">
+          FAQ (Frequently Asked Questions)
+        </h2>
+
+        <div className="faq-list">
+          {faqData.map((item, index) => (
+            <div
+              className={`faq-item ${
+                activeIndex === index ? "active" : ""
+              }`}
+              key={index}
+            >
+              <button
+                className="faq-question"
+                onClick={() => toggleFAQ(index)}
+              >
+                <span className="faq-icon">
+                  {activeIndex === index ? "▼" : "▶"}
+                </span>
+
+                <span>{item.question}</span>
+              </button>
+
+              <div
+                className={`faq-answer ${
+                  activeIndex === index ? "show" : ""
+                }`}
+              >
+                <p>{item.answer}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
 
       {/* FOOTER */}
 

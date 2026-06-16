@@ -157,10 +157,12 @@
   
   .feature-card h3 {
     margin-bottom: 1rem;
+    text-align: center;
   }
   
   .feature-card p {
     color: var(--text-secondary);
+    text-align: center;
   }
   
   /* CTA */
@@ -182,7 +184,7 @@
   /* ComparisonSection.css */
 
 .comparison-section {
-  background: #2d3442;
+  background: #222831;
   padding: 100px 20px;
   color: #f6e7d2;
 }
@@ -249,8 +251,8 @@
 }
 
 .pegasus-col {
-  background: #18212d;
-  color: #f3d7ab;
+  background: #393E46;
+  color: #DFD0B8;
   font-weight: 700;
 }
 
@@ -354,7 +356,7 @@
 ========================= */
 
 .hardware-section {
-  background: #353c47;
+  background: #222831;
   padding: 70px 5%;
   overflow: hidden;
 }
@@ -488,6 +490,373 @@
     padding: 20px;
   }
 }
+/* =====================================
+   SECTION
+===================================== */
+
+.product-features-section {
+  background: #3d4450;
+  padding: 90px 5%;
+}
+
+/* =====================================
+   CONTAINER
+===================================== */
+
+.product-features-container {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* =====================================
+   TITLE
+===================================== */
+
+.product-features-title {
+  text-align: center;
+  color: #ead8bf;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 70px;
+}
+
+/* =====================================
+   GRID
+===================================== */
+
+.product-features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 45px;
+}
+
+/* =====================================
+   CARD
+===================================== */
+
+.feature-card {
+  background: #404754;
+
+  padding: 45px 35px;
+
+  border-radius: 6px;
+
+  text-align: center;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.25),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+}
+
+/* =====================================
+   ICON
+===================================== */
+
+.feature-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 3.4rem;
+  color: #ead8bf;
+
+  margin-bottom: 25px;
+}
+
+/* =====================================
+   HEADING
+===================================== */
+
+.feature-card h3 {
+  color: #ead8bf;
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+/* =====================================
+   TEXT
+===================================== */
+
+.feature-card p {
+  color: #ead8bf;
+  font-size: 1.3rem;
+  line-height: 1.8;
+  max-width: 700px;
+  margin: auto;
+}
+
+.feature-card strong {
+  font-weight: 700;
+}
+
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 992px) {
+
+  .product-features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-features-title {
+    font-size: 2.5rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.8rem;
+  }
+
+  .feature-card p {
+    font-size: 1.1rem;
+  }
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 768px) {
+
+  .product-features-section {
+    padding: 70px 20px;
+  }
+
+  .product-features-title {
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+
+  .feature-card {
+    padding: 30px 20px;
+  }
+
+  .feature-icon {
+    font-size: 2.7rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.5rem;
+  }
+
+  .feature-card p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+}
+/* ==================================
+   SECTION
+================================== */
+
+.asset-info-section {
+  background: linear-gradient(
+    90deg,
+    #273142 0%,
+    #39414e 100%
+  );
+
+  padding: 100px 5%;
+}
+
+/* ==================================
+   CONTAINER
+================================== */
+
+.asset-info-container {
+  max-width: 1700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ==================================
+   TITLE
+================================== */
+
+.asset-info-title {
+  color: #ead8bf;
+
+  font-size: 3.2rem;
+  font-weight: 700;
+
+  line-height: 1.3;
+
+  margin-bottom: 50px;
+}
+
+/* ==================================
+   PARAGRAPHS
+================================== */
+
+.asset-info-text {
+  color: #ead8bf;
+
+  font-size: 1.55rem;
+  font-weight: 500;
+
+  line-height: 1.8;
+
+  max-width: 1700px;
+  margin: 0 auto 45px;
+}
+
+.asset-info-text:last-child {
+  margin-bottom: 0;
+}
+
+/* ==================================
+   TABLET
+================================== */
+
+@media (max-width: 1200px) {
+  .asset-info-title {
+    font-size: 2.5rem;
+  }
+
+  .asset-info-text {
+    font-size: 1.25rem;
+    line-height: 1.7;
+  }
+}
+
+/* ==================================
+   MOBILE
+================================== */
+
+@media (max-width: 768px) {
+  .asset-info-section {
+    padding: 70px 20px;
+  }
+
+  .asset-info-title {
+    font-size: 1.9rem;
+    margin-bottom: 30px;
+  }
+
+  .asset-info-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+  }
+}
+
+/* ==================================
+   SMALL MOBILE
+================================== */
+
+@media (max-width: 480px) {
+  .asset-info-title {
+    font-size: 1.6rem;
+  }
+
+  .asset-info-text {
+    font-size: 0.95rem;
+  }
+}
+.cloud-machinery-section {
+  width: 100%;
+  padding: 100px 20px;
+  background: linear-gradient(
+    90deg,
+    #202938 0%,
+    #394250 50%,
+    #2c3442 100%
+  );
+}
+
+.cloud-machinery-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cloud-machinery-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ead9bf;
+  margin-bottom: 50px;
+  line-height: 1.25;
+}
+
+.cloud-machinery-text {
+  max-width: 1700px;
+  margin: 0 auto 50px;
+  color: #ead9bf;
+  font-size: 1.6rem;
+  line-height: 1.9;
+  font-weight: 500;
+}
+
+.cloud-machinery-text strong {
+  font-weight: 700;
+}
+
+.cloud-machinery-text:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================
+   Large Screens
+========================== */
+
+@media (max-width: 1200px) {
+  .cloud-machinery-title {
+    font-size: 2.5rem;
+  }
+
+  .cloud-machinery-text {
+    font-size: 1.35rem;
+  }
+}
+
+/* ==========================
+   Tablets
+========================== */
+
+@media (max-width: 768px) {
+  .cloud-machinery-section {
+    padding: 80px 20px;
+  }
+
+  .cloud-machinery-title {
+    font-size: 2rem;
+    margin-bottom: 35px;
+  }
+
+  .cloud-machinery-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 35px;
+  }
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 480px) {
+  .cloud-machinery-section {
+    padding: 60px 18px;
+  }
+
+  .cloud-machinery-title {
+    font-size: 1.6rem;
+    line-height: 1.4;
+    margin-bottom: 25px;
+  }
+
+  .cloud-machinery-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+  }
+}
   /* FOOTER */
   
   .footer {
@@ -516,7 +885,177 @@
       font-size: 3rem;
     }
   }
+  .faq-section {
+    width: 100%;
+    padding: 80px 10px;
+    background: #3b4350;
+  }
   
+  .faq-container {
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .faq-title {
+    color: #ead9bf;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 50px;
+    padding-left: 40px;
+  }
+  
+  /* =====================
+     FAQ LIST
+  ===================== */
+  
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  
+  /* =====================
+     FAQ ITEM
+  ===================== */
+  
+  .faq-item {
+    border: 1px solid rgba(234, 217, 191, 0.8);
+    overflow: hidden;
+    background: transparent;
+  }
+  
+  /* =====================
+     QUESTION
+  ===================== */
+  
+  .faq-question {
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      #3b4350 0%,
+      #273142 50%,
+      #1c2430 100%
+    );
+  
+    border: none;
+    color: #ead9bf;
+  
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  
+    padding: 16px 20px;
+    cursor: pointer;
+  
+    font-size: 1.85rem;
+    font-weight: 700;
+    text-align: left;
+  
+    transition: all 0.3s ease;
+  }
+  
+  .faq-question:hover {
+    background: linear-gradient(
+      90deg,
+      #414957 0%,
+      #2d384a 50%,
+      #202938 100%
+    );
+  }
+  
+  .faq-icon {
+    min-width: 18px;
+    font-size: 1rem;
+    color: #ead9bf;
+  }
+  
+  /* =====================
+     ANSWER
+  ===================== */
+  
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+  
+    transition: all 0.35s ease;
+  
+    background: rgba(20, 27, 38, 0.4);
+  }
+  
+  .faq-answer.show {
+    max-height: 300px;
+  }
+  
+  .faq-answer p {
+    color: #ead9bf;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    padding: 25px;
+  }
+  
+  /* =====================
+     TABLET
+  ===================== */
+  
+  @media (max-width: 992px) {
+    .faq-title {
+      font-size: 2.3rem;
+      padding-left: 15px;
+    }
+  
+    .faq-question {
+      font-size: 1.35rem;
+      padding: 15px;
+    }
+  }
+  
+  /* =====================
+     MOBILE
+  ===================== */
+  
+  @media (max-width: 768px) {
+    .faq-section {
+      padding: 60px 12px;
+    }
+  
+    .faq-title {
+      font-size: 1.9rem;
+      text-align: center;
+      padding-left: 0;
+      margin-bottom: 35px;
+    }
+  
+    .faq-question {
+      font-size: 1.05rem;
+      gap: 10px;
+      padding: 14px;
+    }
+  
+    .faq-answer p {
+      font-size: 0.95rem;
+      padding: 18px;
+    }
+  }
+  
+  /* =====================
+     SMALL MOBILE
+  ===================== */
+  
+  @media (max-width: 480px) {
+    .faq-title {
+      font-size: 1.6rem;
+    }
+  
+    .faq-question {
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+  
+    .faq-answer p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+  }
   /* MOBILE */
   
   @media (max-width: 768px) {
