@@ -1,5 +1,7 @@
 import "../Page_styles/MainSite.css";
+import { useState } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { FiBox, FiMonitor } from "react-icons/fi";
 const LandingPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [active, setActive] = useState(0);
