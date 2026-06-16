@@ -1,6 +1,11 @@
 import "../Page_styles/MainSite.css";
 import { useNavigate } from "react-router-dom";
 const LandingPage = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [active, setActive] = useState(0);
+  const toggleFAQ = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
   const navigate = useNavigate()
   const handleSigninClick = () => {
     navigate("/user/login")
