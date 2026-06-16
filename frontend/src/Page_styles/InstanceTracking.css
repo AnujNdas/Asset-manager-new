@@ -952,7 +952,28 @@
 .btn-cancel {
   min-width: 120px;
 }
+.modal-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
 
+.modal-tabs button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #393e46;
+  color: #dfd0b8;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.modal-tabs button.active {
+  background: #948979;
+  color: #222831;
+}
 /* ===========================
    TABLET
 =========================== */

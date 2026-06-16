@@ -4,6 +4,7 @@ import ThemeSwal from "../utils/swalTheme";
 const UpgradeModal = ({ instance, onClose, refresh }) => {
   const isHardware = instance?.assetType === "hardware";
   const isSoftware = instance?.assetType === "software";
+  const [activeTab, setActiveTab] = useState("renewal");
 
   /* =============================
      🔹 FIELD CONFIG (DYNAMIC)
@@ -345,10 +346,80 @@ return;
       <div className="modal">
 
         <h2>Upgrade Asset</h2>
+        <div className="modal-tabs">
+  <button
+    type="button"
+    className={activeTab === "renewal" ? "active" : ""}
+    onClick={() => setActiveTab("renewal")}
+  >
+    Renewals
+  </button>
 
-        {/* ✅ CURRENCY */}
-{/* ✅ CURRENCY (READ ONLY) */}
-<div className="input-group">
+  <button
+    type="button"
+    className={activeTab === "upgrade" ? "active" : ""}
+    onClick={() => setActiveTab("upgrade")}
+  >
+    Upgrades
+  </button>
+</div>
+{activeTab === "upgrade" && (
+  <>
+    <div className="input-group">
+      <label>Condition</label>
+
+      <select
+        name="condition"
+        value={form.condition}
+        onChange={handleChange}
+      >
+        <option value="new">New</option>
+        <option value="used">Used</option>
+        <option value="damaged">Damaged</option>
+        <option value="stolen">Stolen</option>
+        <option value="broken">Broken</option>
+        <option value="repaired(in)">Repaired(IN)</option>
+        <option value="repaired(out)">Repaired(OUT)</option>
+      </select>
+    </div>
+
+    <div className="input-group">
+      <label>Upgrade Cost</label>
+
+      <input
+        type="number"
+        name="upgradeCost"
+        value={form.upgradeCost}
+        onChange={handleChange}
+      />
+    </div>
+
+    <div className="input-group">
+      <label>Upgrade Details</label>
+
+      <textarea
+        name="upgradeDescription"
+        value={form.upgradeDescription}
+        onChange={handleChange}
+        rows={3}
+      />
+    </div>
+
+    <div className="input-group">
+      <label>Upgrade Date</label>
+
+      <input
+        type="date"
+        name="upgradeDate"
+        value={form.upgradeDate}
+        onChange={handleChange}
+      />
+    </div>
+  </>
+)}
+{( activeTab == "renewal" && (
+  <>
+  <div className="input-group">
   <label>Currency</label>
 
   <input
@@ -444,63 +515,17 @@ return;
               </div>
             ))}
         </div>
-
-        {/* ✅ CONDITION */}
-        <div className="input-group">
-          <label>Condition</label>
-          <select
-            name="condition"
-            value={form.condition}
-            onChange={handleChange}
-          >
-           <option value="new">New</option>
-                <option value="used">Used</option>
-                <option value="damaged">Damaged</option>
-                <option value="stolen">Stolen</option>
-                <option value="broken">Broken</option>
-                <option value="repaired(in)">Repaired(IN)</option>
-                <option value="repaired(out)">Repaired(OUT)</option>
-          </select>
-        </div>
-        <div className="input-group">
-  <label>Upgrade Cost</label>
-
-  <input
-    type="number"
-    name="upgradeCost"
-    value={form.upgradeCost}
-    onChange={handleChange}
-    placeholder="Cost of upgrade"
-  />
-</div>
-        <div className="input-group">
-
-          <label>Upgrade Details</label>
-<textarea
-  name="upgradeDescription"
-  placeholder="Describe the upgrade"
-  value={form.upgradeDescription}
-  onChange={handleChange}
-  rows={3}
-/>
-        </div>
-        <div>
-  <label>Upgrade Date</label>
-
-<input
-  type="date"
-  name="upgradeDate"
-  value={form.upgradeDate}
-  onChange={handleChange}
-/>
-</div>
+        </>
+))}
 
         {/* ACTIONS */}
         <div className="modal-actions">
           <button onClick={onClose} className="btn-cancel">Cancel</button>
 
           <button onClick={handleSubmit} className="btn-save">
-            Apply Upgrade 
+          {activeTab === "renewal"
+  ? "Apply Renewal"
+  : "Apply Upgrade"}
           </button>
         </div>
 
