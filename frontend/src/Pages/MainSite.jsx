@@ -259,7 +259,7 @@ const rightItemssoftware = [
           {/* Left Side */}
           <div className="asset-showcase-left">
             <ul className="asset-feature-list">
-              {features.map((item, index) => (
+              {headings.map((item, index) => (
                 <li key={index}>{item}</li>
               ))}
             </ul>
