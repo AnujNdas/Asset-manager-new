@@ -8,6 +8,76 @@ const LandingPage = () => {
   const handleSignupClick = () => {
     navigate("/user/signup")
   }
+
+const leftItems = [
+  "💻 User End Devices",
+  "🔒 Security & Safety",
+  "🏭 Machinery",
+  "🤖 Robotics",
+];
+
+const rightItems = [
+  "🚚 Transport",
+  "🛠 Equipment & Tools",
+  "📍 Electronics",
+  "🎧 Accessories",
+];
+  const features = [
+    {
+      label: "Annual Cost (Top Plan)",
+      c1: "$18,000-$100,000+/year",
+      ap: "$768-$960/year",
+      c2: "$5,500-$6,000/year",
+    },
+    {
+      label: "Maintenance Scheduling",
+      c1: "Standard Workflows",
+      ap: "Full Advanced Scheduling",
+      c2: "Basic Workflows",
+    },
+    {
+      label: "Insurance Tracking",
+      c1: "Custom Setup",
+      ap: "Included",
+      c2: "Not Available",
+    },
+    {
+      label: "Cloud Asset Management",
+      c1: "Partial Visibility",
+      ap: "Unified Visibility",
+      c2: "Not Available",
+    },
+    {
+      label: "HIPAA Support",
+      c1: "Limited Support",
+      ap: "Supported",
+      c2: "Not Available",
+    },
+    {
+      label: "GDPR Support",
+      c1: "Partial Support",
+      ap: "Supported",
+      c2: "Not Available",
+    },
+    {
+      label: "Multi Location Tracking",
+      c1: "Standard",
+      ap: "Advanced",
+      c2: "Limited",
+    },
+    {
+      label: "Software License Tracking",
+      c1: "Included",
+      ap: "Advanced Visibility",
+      c2: "Limited",
+    },
+    {
+      label: "Machinery Management",
+      c1: "Limited Support",
+      ap: "Full Support",
+      c2: "Basic Tracking",
+    },
+  ];
   return (
     <div className="landing-page">
 
@@ -101,7 +171,43 @@ const LandingPage = () => {
         </div>
 
       </section>
+      <section className="hardware-section">
 
+<h2 className="hardware-title">
+  Manage All Types Of Hardwares
+</h2>
+
+<div className="hardware-content">
+
+  {/* LEFT */}
+  <div className="hardware-column">
+    {leftItems.map((item, index) => (
+      <div key={index} className="hardware-item">
+        {item}
+      </div>
+    ))}
+  </div>
+
+  {/* CENTER */}
+  <div className="hardware-image-card">
+    <img
+      src="/images/hardware-types.png"
+      alt="Hardware Categories"
+    />
+  </div>
+
+  {/* RIGHT */}
+  <div className="hardware-column">
+    {rightItems.map((item, index) => (
+      <div key={index} className="hardware-item">
+        {item}
+      </div>
+    ))}
+  </div>
+
+</div>
+
+</section>
       {/* FEATURES */}
 
       <section className="features">
@@ -159,7 +265,90 @@ The construction industry is in a fast-paced business with the constant movement
 
         </div>
       </section>
+      <section className="comparison-section">
+      <div className="comparison-container">
 
+        <h2>
+          Why Businesses Choose
+          <span> AssetPegasus</span>
+        </h2>
+
+        {/* DESKTOP TABLE */}
+        <div className="comparison-table-wrapper">
+
+          <div className="comparison-table">
+
+            <div className="table-head">
+              <div>Features</div>
+              <div>Competitor 1</div>
+              <div className="pegasus-col">
+                AssetPegasus
+              </div>
+              <div>Competitor 2</div>
+            </div>
+
+            {features.map((item, index) => (
+              <div
+                className="table-row"
+                key={index}
+              >
+                <div className="feature-name">
+                  {item.label}
+                </div>
+
+                <div>{item.c1}</div>
+
+                <div className="pegasus-col">
+                  {item.ap}
+                </div>
+
+                <div>{item.c2}</div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+        {/* MOBILE CARDS */}
+        <div className="comparison-mobile">
+
+          <div className="mobile-card">
+            <h3>Competitor 1</h3>
+
+            {features.map((item, index) => (
+              <div key={index} className="mobile-row">
+                <span>{item.label}</span>
+                <strong>{item.c1}</strong>
+              </div>
+            ))}
+          </div>
+
+          <div className="mobile-card featured">
+            <h3>AssetPegasus</h3>
+
+            {features.map((item, index) => (
+              <div key={index} className="mobile-row">
+                <span>{item.label}</span>
+                <strong>{item.ap}</strong>
+              </div>
+            ))}
+          </div>
+
+          <div className="mobile-card">
+            <h3>Competitor 2</h3>
+
+            {features.map((item, index) => (
+              <div key={index} className="mobile-row">
+                <span>{item.label}</span>
+                <strong>{item.c2}</strong>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+    </section>
       {/* CTA */}
 
       <section className="cta">
