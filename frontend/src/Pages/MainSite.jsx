@@ -184,7 +184,7 @@ const rightItemssoftware = [
       {/* NAVBAR */}
       <nav className="navbar">
         <div className="logo">
-          Asset Pegasus
+          <img src="/images/Logo2.png" alt="AssetPegasus Logo" height="150" />
         </div>
 
         <div className="nav-actions">
@@ -207,12 +207,13 @@ const rightItemssoftware = [
 
         <div className="hero-content">
           <h1>
-          Asset Management Software with Insurance Tracking
+          Track Every IT Asset, Software License, and Machinery 
           </h1>
 
           <h2>
-          Hardware Asset Management, IT Asset Management Software, ITAM.Software, Asset Tracking Software USA
+          Stop losing money on Zombie SaaS subscriptions and untracked hardware.
           </h2>
+          <p>Assetpegasus unites your physical and digital assets so you stay compliant and cut overhead by up to 40%.</p>
 
           <div className="hero-buttons">
             <button className="signup-btn">
@@ -228,33 +229,25 @@ const rightItemssoftware = [
         <div className="hero-images">
 
           <img
-            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
+            src="/images/AssetPegasusDashboard.webp"
             alt="IT Infrastructure"
-          />
-
-          <img
-            src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
-            alt="Dashboard"
-          />
-
-          <img
-            src="https://images.unsplash.com/photo-1551434678-e076c223a692"
-            alt="IT Team"
           />
 
         </div>
 
       </section>
       <section className="asset-showcase">
-      <div className="asset-showcase-container">
-        <h2 className="asset-showcase-title">
-          AssetPegasus
-          <br />
-          Machine & IT asset lifecycle management platform
-          <br />
-          (Asset Management System)
+        <div className="asset-showcase-information">
+           <h2 className="asset-showcase-title">
+          Asset Management Software to Track and Manage Every Asset
         </h2>
+        <p>Assetpegasus provides a powerful asset management software platform that helps organizations track equipment, monitor asset lifecycle data, manage inventory, and automate maintenance workflows from one centralized system. Gain real time visibility into your assets, reduce operational downtime, and maintain complete control over resources across departments and locations.</p>
 
+          </div>
+      <div className="asset-showcase-container">
+       
+          <h2>AssetPegasus
+Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         <div className="asset-showcase-content">
           {/* Left Side */}
           <div className="asset-showcase-left">
@@ -272,7 +265,7 @@ const rightItemssoftware = [
           {/* Right Side */}
           <div className="asset-showcase-right">
             <img
-              src="/images/dashboard-preview.png"
+              src="/images/AssetPegasusinfo.webp"
               alt="AssetPegasus Dashboard"
             />
           </div>
@@ -283,7 +276,7 @@ const rightItemssoftware = [
       <div className="asset-info-container">
 
         <h2 className="asset-info-title">
-          Complete Asset Tracking Platform for All Types Businesses
+          Complete Asset Tracking System
         </h2>
 
         <p className="asset-info-text">
@@ -427,7 +420,7 @@ const rightItemssoftware = [
       <section className="hardware-section">
 
 <h2 className="hardware-title">
-  Manage All Types Of Softwares
+  Manage All Types Of Hardwares
 </h2>
 
 <div className="hardware-content">
@@ -442,12 +435,18 @@ const rightItemssoftware = [
   </div>
 
   {/* CENTER */}
-  <div className="hardware-image-card">
-    <img
-      src="/images/hardware-types.png"
-      alt="Hardware Categories"
-    />
-  </div>
+<div className="hardware-image-card">
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="hardware-video"
+  >
+    <source src="/videos/hardware.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
 
   {/* RIGHT */}
   <div className="hardware-column">
@@ -517,8 +516,7 @@ const rightItemssoftware = [
           <div className="feature-card">
             <h3>Healthcare Asset Tracking</h3>
             <p>
-            The healthcare industry is a dynamic and time sensitive world and every second counts. The hospital or clinic is dealing with thousands of critical assets every day, from infusion pumps and ventilators to wheelchairs, monitors, laptop computers and diagnostic equipment. Equipment may be lost, unused, and late for maintenance or in short supply when needed. Healthcare asset tracking software of today is valuable in providing a real time view of equipment, minimizing operational delays, enhancing compliance and enabling improved patient care. 
-
+            The healthcare industry is a dynamic and time sensitive world and every second counts. The hospital or clinic is dealing with thousands of critical assets every day, from infusion pumps and ventilators to wheelchairs, monitors, laptop computers and diagnostic equipment.
             </p>
           </div>
 
@@ -532,14 +530,14 @@ const rightItemssoftware = [
           <div className="feature-card">
             <h3>Education Asset Management</h3>
             <p>
-            Today’s education management handle so much more than a class and books. These are common components in schools, colleges, universities, and training centres that can be daily affected by their day-to-day operations including Laptop computers, Tablets, lab equipment, projectors, smart boards, library inventory, furniture, sporting goods, servers, and also facility infrastructure. Tracking and management of these assets is time consuming, inefficient and costly without a central system.  
+            Today’s education management handle so much more than a class and books. These are common components in schools, colleges, universities, and training centres that can be daily affected by their day-to-day operations including Laptop computers, Tablets, lab equipment, projectors, smart boards.
             </p>
           </div>
 
           <div className="feature-card">
             <h3>Restaurant & Hospitality Asset Management </h3>
             <p>
-            Speed, efficiency, consistency and amazing customer experiences are the lifeblood of the restaurant and hospitality sector. Whether it’s restaurants, cafés, hotels or resorts, they maintain hundreds of assets on a daily basis, from equipment and point of sale to refrigeration, furniture, HVAC, housekeeping and IT assets, etc. etc.
+            Speed, efficiency, consistency and amazing customer experiences are the lifeblood of the restaurant and hospitality sector. Whether it’s restaurants, cafés, hotels or resorts, they maintain hundreds of assets on a daily basis.
             </p>
           </div>
 
@@ -547,14 +545,14 @@ const rightItemssoftware = [
             <h3>Construction Equipment Tracking</h3>
             <p>
               
-The construction industry is in a fast-paced business with the constant movement of equipment, machinery, tools and vehicles between construction jobs, storage yards, and jobs in operation. These assets can be hard to oversee manually and quite often result in delays, lost equipment, downtime and increased operating expenses. A construction and equipment tracking can be effective in terms of complete asset visibility across the business and better productivity, safety and efficiency.
+The construction industry is in a fast-paced business with the constant movement of equipment, machinery, tools and vehicles between construction jobs, storage yards, and jobs in operation. These assets can be hard to oversee manually and quite often result in delays, lost equipment, downtime and increased operating expenses.
             </p>
           </div>
 
           <div className="feature-card">
             <h3>Travel & Transportation Logistics</h3>
             <p>
-            Travel and transportation relies on a fast-paced business where efficiency, visibility and coordination in real time are essential. Over thousands of assets are being moved daily by logistics providers, fleet operators, cargo companies, public transport, travel providers and distribution systems. These include vehicles; goods containers; weather or other sensors, as well as warehouse equipment, operative tools, IT systems and maintenance systems. 
+            Travel and transportation relies on a fast-paced business where efficiency, visibility and coordination in real time are essential. Over thousands of assets are being moved daily by logistics providers, fleet operators, cargo companies, public transport, travel providers and distribution systems.
             </p>
           </div>
 
@@ -563,7 +561,7 @@ The construction industry is in a fast-paced business with the constant movement
       <section className="hardware-section">
 
 <h2 className="hardware-title">
-  Manage All Types Of Hardwares
+  Manage All Types Of Softwares
 </h2>
 
 <div className="hardware-content">
@@ -578,12 +576,18 @@ The construction industry is in a fast-paced business with the constant movement
   </div>
 
   {/* CENTER */}
-  <div className="hardware-image-card">
-    <img
-      src="/images/hardware-types.png"
-      alt="Hardware Categories"
-    />
-  </div>
+<div className="hardware-image-card">
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="hardware-video"
+  >
+    <source src="/videos/software.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
 
   {/* RIGHT */}
   <div className="hardware-column">
