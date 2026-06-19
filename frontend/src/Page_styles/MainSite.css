@@ -449,7 +449,7 @@
 @media (max-width: 1200px) {
 
   .hardware-content {
-    grid-template-columns: 1fr;
+    /* grid-template-columns: 1fr; */
     gap: 40px;
   }
 

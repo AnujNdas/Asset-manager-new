@@ -229,7 +229,7 @@ const rightItemssoftware = [
         <div className="hero-images">
 
           <img
-            src="/images/AssetPegasusDashboard.webp"
+            src="/images/AssetpegasusDashboard.webp"
             alt="IT Infrastructure"
           />
 
@@ -265,7 +265,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
           {/* Right Side */}
           <div className="asset-showcase-right">
             <img
-              src="/images/AssetPegasusinfo.webp"
+              src="/images/Assetpegasusinfo.webp"
               alt="AssetPegasus Dashboard"
             />
           </div>
