@@ -1553,6 +1553,7 @@ p {
   .impact-subtitle {
     font-size: 1rem;
     line-height: 1.8;
+    text-align: center;
   }
 
   .trial-btn {
@@ -1609,6 +1610,19 @@ p {
   ===================== */
   
   @media (max-width: 480px) {
+    .asset-showcase-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .asset-showcase {
+      padding: 0px 6%;
+    }
+    .asset-showcase-information {
+      margin-bottom: 60px;
+    }
+    .asset-showcase-btn { 
+      margin: auto;
+    }
     .faq-title {
       font-size: 1.6rem;
     }
