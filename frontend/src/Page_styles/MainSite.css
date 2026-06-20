@@ -1,5 +1,5 @@
 :root {
-    --bg-primary: #222831;
+    --bg-primary: #32363E;
     --bg-secondary: #393E46;
     --text-primary: #DFD0B8;
     --text-secondary: #948979;
@@ -75,14 +75,14 @@
   }
   
   .hero-content h1 {
-    font-size: 2rem;
+    font-size: 48px;
     line-height: 1.2;
     margin-bottom: 1rem;
     text-align: center; 
   }
   
   .hero-content h2 {
-    font-size: 1rem;
+    font-size: 28px;
     line-height: 1.2;
     margin-bottom: 1rem;
     text-align: center; 
@@ -146,18 +146,20 @@
   
   .features {
     padding: 5rem 5%;
+    background: #32363E;
   }
   
   .features h2 {
     text-align: center;
-    margin-bottom: 3rem;
-    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 30px;
   }
   
   .feature-grid {
     display: grid;
     grid-template-columns: repeat(3,1fr);
     gap: 1.5rem;
+    margin-top: 40px;
   }
   
   .feature-card {
@@ -368,7 +370,7 @@
 ========================= */
 
 .hardware-section {
-  background: #222831;
+  background: #32363E;
   padding: 70px 5%;
   overflow: hidden;
 }
@@ -379,7 +381,7 @@
 
 .hardware-title {
   text-align: center;
-  font-size: 3rem;
+  font-size: 30px;
   font-weight: 700;
   color: #ead7bd;
   margin-bottom: 60px;
@@ -405,7 +407,7 @@
   justify-content: center;
   align-items: center;
 
-  background: #222831;
+  /* background: #222831; */
 
   border-radius: 24px;
 
@@ -509,7 +511,7 @@
 ===================================== */
 
 .product-features-section {
-  background: #222831;
+  /* background: #222831; */
   padding: 90px 5%;
 }
 
@@ -557,10 +559,7 @@
 
   text-align: center;
 
-  box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.25),
-    0 8px 20px rgba(0, 0, 0, 0.15);
-
+box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
   transition: all 0.3s ease;
 }
 .about-section-content { 
@@ -573,7 +572,7 @@
   margin-bottom: 50px;
 }
 .about-text { 
-  font-size: 1.5rem;
+  font-size: 17px;
 }
 .about-btn {
   background: #393E46;
@@ -608,7 +607,7 @@
 
 .feature-card h3 {
   color: #ead8bf;
-  font-size: 2.2rem;
+  font-size: 24px;
   font-weight: 600;
   margin-bottom: 25px;
 }
@@ -619,7 +618,7 @@
 
 .feature-card p {
   color: #ead8bf;
-  font-size: 1.3rem;
+  font-size: 17px;
   line-height: 1.8;
   max-width: 700px;
   margin: auto;
@@ -703,7 +702,7 @@
 ================================== */
 
 .asset-info-section {
-  background: #222831;
+  /* background: #222831; */
 
   padding: 100px 5%;
 }
@@ -725,7 +724,7 @@
 .asset-info-title {
   color: #ead8bf;
 
-  font-size: 3.2rem;
+  font-size: 30px;
   font-weight: 700;
 
   line-height: 1.3;
@@ -740,13 +739,12 @@
 .asset-info-text {
   color: #ead8bf;
 
-  font-size: 1.55rem;
+  font-size: 17px;
   font-weight: 500;
 
   line-height: 1.8;
 
   max-width: 1700px;
-  margin: 0 auto 45px;
 }
 
 .asset-info-text:last-child {
@@ -805,7 +803,7 @@
 .cloud-machinery-section {
   width: 100%;
   padding: 100px 20px;
-  background: #222831;
+  /* background: #222831; */
 }
 
 .cloud-machinery-container {
@@ -826,7 +824,7 @@
   max-width: 1700px;
   margin: 0 auto 50px;
   color: #ead9bf;
-  font-size: 1.6rem;
+  font-size: 17px;
   line-height: 1.9;
   font-weight: 500;
 }
@@ -926,7 +924,7 @@
   .faq-section {
     width: 100%;
     padding: 80px 10px;
-    background: #222831;
+    /* background: #222831;  */
   }
   
   .faq-container {
@@ -936,7 +934,7 @@
   
   .faq-title {
     color: #ead9bf;
-    font-size: 3rem;
+    font-size: 30px;
     font-weight: 700;
     margin-bottom: 50px;
     padding-left: 40px;
@@ -968,12 +966,7 @@
   
   .faq-question {
     width: 100%;
-    background: linear-gradient(
-      90deg,
-      #3b4350 0%,
-      #273142 50%,
-      #1c2430 100%
-    );
+    background: #393E46;
   
     border: none;
     color: #ead9bf;
@@ -1035,7 +1028,7 @@
 ================================ */
 
 .impact-section {
-  background: #222831;
+  /* background: #222831; */
   padding: 90px 5%;
 }
 .hardware-image-card {
@@ -1070,7 +1063,7 @@
 .impact-left h2 {
   text-align: center;
   color: #ead8bf;
-  font-size: 3rem;
+  font-size: 24px;
   margin-bottom: 60px;
 }
 
@@ -1082,7 +1075,7 @@
 
 .feature-item {
   color: #ead8bf;
-  font-size: 1.5rem;
+  font-size: 17px;
   line-height: 1.6;
   font-weight: 500;
 }
@@ -1129,13 +1122,13 @@
 
 .impact-right h2 {
   color: #ead8bf;
-  font-size: 3.2rem;
+  font-size: 30px;
   margin-bottom: 30px;
 }
 
 .impact-subtitle {
   color: #ead8bf;
-  font-size: 1.4rem;
+  font-size: 17px;
   line-height: 1.8;
   margin-bottom: 70px;
 }
@@ -1147,7 +1140,7 @@
 
 .impact-card h3 {
   color: #ead8bf;
-  font-size: 3rem;
+  font-size: 30px;
   font-weight: 700;
 
   margin-bottom: 35px;
@@ -1155,7 +1148,7 @@
 
 .impact-card p {
   color: #ead8bf;
-  font-size: 1.45rem;
+  font-size: 17px;
   line-height: 2;
   font-weight: 500;
 }
@@ -1188,7 +1181,7 @@
   background: #000;
 }
 .asset-showcase {
-  background: #222831;
+  /* background: #222831; */
 
   padding: 80px 6%;
 }
@@ -1235,7 +1228,7 @@ p {
 
 .asset-feature-list li {
   color: #DFD0B8;
-  font-size: 1.5rem;
+  font-size: 17px;
   line-height: 1.8;
   margin-bottom: 25px;
   font-weight: 500;
@@ -1286,17 +1279,13 @@ p {
   display: block;
 }
 .footer {
-  background: linear-gradient(
-    90deg,
-    #1f2734 0%,
-    #2d3543 50%,
-    #3f4652 100%
-  );
 
   padding: 70px 5% 35px;
   color: #e7d8be;
 }
-
+.about-contact-section {
+  margin-top : 70px;
+}
 .footer-container {
   max-width: 1600px;
   margin: 0 auto;
