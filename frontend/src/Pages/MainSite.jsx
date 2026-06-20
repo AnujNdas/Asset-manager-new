@@ -72,17 +72,17 @@ const rightItems = [
   "🎧 Accessories",
 ];
 const leftItemssoftware = [
-  "💻 User End Devices",
-  "🔒 Security & Safety",
-  "🏭 Machinery",
-  "🤖 Robotics",
+  "💻Operating System",
+  "🔒 SaaS (Software As a Service)",
+  "🖧 Server & Cloud",
+  "💿 Desktop Applications",
 ];
 
 const rightItemssoftware = [
-  "🚚 Transport",
-  "🛠 Equipment & Tools",
-  "📍 Electronics",
-  "🎧 Accessories",
+  "🧩 Digital Accessories",
+  "✏️ Creative & Design",
+  "🏛️ Enterprise System",
+  "📊 Data & Infrastucture",
 ];
   const features = [
     {
@@ -427,7 +427,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
   {/* LEFT */}
   <div className="hardware-column">
-    {leftItemssoftware.map((item, index) => (
+    {leftItems.map((item, index) => (
       <div key={index} className="hardware-item">
         {item}
       </div>
@@ -450,7 +450,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
   {/* RIGHT */}
   <div className="hardware-column">
-    {rightItemssoftware.map((item, index) => (
+    {rightItems.map((item, index) => (
       <div key={index} className="hardware-item">
         {item}
       </div>
@@ -568,7 +568,7 @@ The construction industry is in a fast-paced business with the constant movement
 
   {/* LEFT */}
   <div className="hardware-column">
-    {leftItems.map((item, index) => (
+    {leftItemssoftware.map((item, index) => (
       <div key={index} className="hardware-item">
         {item}
       </div>
@@ -591,7 +591,7 @@ The construction industry is in a fast-paced business with the constant movement
 
   {/* RIGHT */}
   <div className="hardware-column">
-    {rightItems.map((item, index) => (
+    {rightItemssoftware.map((item, index) => (
       <div key={index} className="hardware-item">
         {item}
       </div>
