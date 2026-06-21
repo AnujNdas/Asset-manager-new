@@ -42,9 +42,9 @@ const handleEducation = () => {
     "Track Maintenance, Warranty & Insurance",
   ];
 const showcaseImages = [
-  "/images/Assetpegasushealthcare.webp",
-  "/images/Assetpegasusconstruction.webp",
-  "/images/Assetpegasusinfo.webp",
+  "/images/healthcare.webp",
+  "/images/construction.webp",
+  "/images/info.webp",
 ];
 const [currentSlide, setCurrentSlide] = useState(0);
 const [transitionEnabled, setTransitionEnabled] = useState(true);
