@@ -581,6 +581,7 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
   padding: 15px 30px;
   border-radius: 8px;
   margin : auto;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .feature-card:hover {
   transform: translateY(-8px);
@@ -641,6 +642,7 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
 .contact-buttons a {
   padding: 15px 30px;
   background: #393E46;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 /* =====================================
    TABLET
@@ -1261,22 +1263,68 @@ p {
 }
 
 .asset-showcase-right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  width: 100%;
 }
 
-.asset-showcase-right img {
+.showcase-slider {
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.6s ease-in-out;
+}
+.showcase-image {
   width: 100%;
-  max-width: 1200px;
-
-  border-radius: 8px;
-
-  box-shadow:
-    0 20px 50px rgba(0,0,0,0.4),
-    0 0 40px rgba(0,0,0,0.25);
-
+  height: auto;
+  border-radius: 16px;
   display: block;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 20px;
+  z-index: 2;
+}
+
+.slider-btn.prev {
+  left: 12px;
+}
+
+.slider-btn.next {
+  right: 12px;
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.active-dot {
+  background: #2563eb;
+  transform: scale(1.2);
 }
 .footer {
 

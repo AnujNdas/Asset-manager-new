@@ -1,5 +1,5 @@
 import "../Page_styles/MainSite.css";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { FaWhatsapp, FaTelegramPlane } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {
@@ -23,13 +23,62 @@ const LandingPage = () => {
   const handleSignupClick = () => {
     navigate("/user/signup")
   }
+const handleAboutClick = () => {
+  window.open("https://socialflylive.com/about/", "_blank");
+};
+const handleHealthCare = () => {
+  window.open("https://socialflylive.com/healthcare-asset-tracking/")
+}
+const handleManufacturing = () => {
+  window.open("https://socialflylive.com/manufacturing-asset-management-software/")
+}
+const handleEducation = () => {
+  window.open("https://socialflylive.com/education-asset-management/")
+}
   const headings = [
     "Manage All types of Assets From One Place — Hardware, Software & Cloud.",
     "No Tracking — Privacy Policy.",
     "Instant Asset Insights/Reports that Scale with Business.",
     "Track Maintenance, Warranty & Insurance",
   ];
+const showcaseImages = [
+  "/images/Assetpegasushealthcare.webp",
+  "/images/Assetpegasusconstruction.webp",
+  "/images/Assetpegasusinfo.webp",
+];
+const [currentSlide, setCurrentSlide] = useState(0);
+const [transitionEnabled, setTransitionEnabled] = useState(true);
+const slides = [...showcaseImages, showcaseImages[0]];
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentSlide((prev) => prev + 1);
+  }, 3000);
 
+  return () => clearInterval(interval);
+}, []);
+useEffect(() => {
+  if (currentSlide === showcaseImages.length) {
+    const timeout = setTimeout(() => {
+      setTransitionEnabled(false);
+      setCurrentSlide(0);
+
+      setTimeout(() => {
+        setTransitionEnabled(true);
+      }, 50);
+    }, 800);
+
+    return () => clearTimeout(timeout);
+  }
+}, [currentSlide]);
+const nextSlide = () => {
+  setCurrentSlide((prev) => (prev + 1) % showcaseImages.length);
+};
+
+const prevSlide = () => {
+  setCurrentSlide(
+    (prev) => (prev - 1 + showcaseImages.length) % showcaseImages.length
+  );
+};
   const faqData = [
     {
       question: "Why do businesses need asset tracking software?",
@@ -56,7 +105,22 @@ const LandingPage = () => {
       question: "What is AssetPegasus?",
       answer:
         "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
-    },
+      },
+      {
+        question: "What's the best asset management software with insurance tracking?",
+        answer:
+          "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
+      },
+      {
+        question: "What's a good Asset Panda alternative for mid-market companies?",
+        answer:
+          "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
+      },
+      {
+        question: "What's cheaper than ServiceNow for IT asset management?",
+        answer:
+          "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
+      },
   ];
 const leftItems = [
   "💻 User End Devices",
@@ -216,7 +280,7 @@ const rightItemssoftware = [
           <p>Assetpegasus unites your physical and digital assets so you stay compliant and cut overhead by up to 40%.</p>
 
           <div className="hero-buttons">
-            <button className="signup-btn">
+            <button className="signup-btn" onClick={handleSignupClick}>
               Try For Free →
             </button>
 
@@ -257,18 +321,34 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
               ))}
             </ul>
 
-            <button className="asset-showcase-btn">
+            <button className="asset-showcase-btn" onClick={handleSignupClick}>
               Free Trial
             </button>
           </div>
 
           {/* Right Side */}
-          <div className="asset-showcase-right">
-            <img
-              src="/images/Assetpegasusinfo.webp"
-              alt="AssetPegasus Dashboard"
-            />
-          </div>
+<div className="asset-showcase-right">
+<div className="showcase-slider">
+<div
+  className="slider-track"
+  style={{
+    transform: `translateX(-${currentSlide * 100}%)`,
+    transition: transitionEnabled
+      ? "transform 0.8s ease-in-out"
+      : "none",
+  }}
+>
+  {slides.map((image, index) => (
+    <img
+      key={index}
+      src={image}
+      alt={`Slide ${index + 1}`}
+      className="showcase-image"
+    />
+  ))}
+</div>
+</div>
+</div>
         </div>
       </div>
     </section>
@@ -321,7 +401,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
             ))}
           </div>
 
-          <button className="trial-btn">
+          <button className="trial-btn" onClick={handleSignupClick}>
             Free Trial
           </button>
 
@@ -513,21 +593,21 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
         <div className="feature-grid">
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleHealthCare}>
             <h3>Healthcare Asset Tracking</h3>
             <p>
             The healthcare industry is a dynamic and time sensitive world and every second counts. The hospital or clinic is dealing with thousands of critical assets every day, from infusion pumps and ventilators to wheelchairs, monitors, laptop computers and diagnostic equipment.
             </p>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleManufacturing}>
             <h3>Manufacturing Asset Management</h3>
             <p>
             There are hundreds or thousands of assets managed by manufacturing companies every day. The availability of IT infrastructure, tools, spare parts, production equipment and machines are important to track efficiently, as are operational machines or their tools. 
             </p>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleEducation}>
             <h3>Education Asset Management</h3>
             <p>
             Today’s education management handle so much more than a class and books. These are common components in schools, colleges, universities, and training centres that can be daily affected by their day-to-day operations including Laptop computers, Tablets, lab equipment, projectors, smart boards.
@@ -715,7 +795,7 @@ The construction industry is in a fast-paced business with the constant movement
           <span className="highlight-link">SourceForge</span> & Others
         </p>
 
-        <button className="about-btn">
+        <button className="about-btn" onClick={handleAboutClick}>
           About Us
         </button>
       </div>
@@ -760,7 +840,7 @@ The construction industry is in a fast-paced business with the constant movement
           operational efficiency.
         </p>
 
-        <button className="signup-btn">
+        <button className="signup-btn" onClick={handleSignupClick}>
         7 Days Free Trial
         </button>
 
@@ -843,9 +923,6 @@ The construction industry is in a fast-paced business with the constant movement
           <a href="#">Terms and Conditions</a>
           <a href="#">Global Privacy Policy</a>
 
-          <div className="copyright">
-            © 2026 SOCIALFLY. All Rights Reserved.
-          </div>
         </div>
 
         {/* Right Section */}
@@ -861,7 +938,12 @@ The construction industry is in a fast-paced business with the constant movement
           <p className="footer-email">
             Email - info@socialflylive.com
           </p>
+                  
+          <div className="copyright">
+            © 2026 SOCIALFLY. All Rights Reserved.
+          </div>
         </div>
+
 
       </div>
     </footer>
