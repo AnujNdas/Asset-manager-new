@@ -2,6 +2,7 @@ import "../Page_styles/MainSite.css";
 import { useState , useEffect } from "react";
 import { FaWhatsapp, FaTelegramPlane } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   FaFacebookF,
   FaInstagram,
@@ -9,6 +10,14 @@ import {
   FaGoogle,
   FaPinterestP,
 } from "react-icons/fa";
+import {
+  faClipboard,
+  faLineChart,
+  faClipboardCheck,
+  faRestroom,
+  faTrain,
+  faKitchenSet,
+} from "@fortawesome/free-solid-svg-icons";
 import { FiBox, FiMonitor } from "react-icons/fi";
 const LandingPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -594,45 +603,51 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         <div className="feature-grid">
 
           <div className="feature-card" onClick={handleHealthCare}>
+            <span><FontAwesomeIcon icon={faLineChart} /></span>
             <h3>Healthcare Asset Tracking</h3>
             <p>
-            The healthcare industry is a dynamic and time sensitive world and every second counts. The hospital or clinic is dealing with thousands of critical assets every day, from infusion pumps and ventilators to wheelchairs, monitors, laptop computers and diagnostic equipment.
+            Track critical medical devices, diagnostic equipment, and IT systems.
+            </p><p> Maintain regulatory compliance and ensure patient-care equipment is always maintained, covered, and accounted for.
+→ Healthcare Asset Tracking
             </p>
           </div>
 
           <div className="feature-card" onClick={handleManufacturing}>
+            <span><FontAwesomeIcon icon={faClipboard}/></span>
             <h3>Manufacturing Asset Management</h3>
             <p>
-            There are hundreds or thousands of assets managed by manufacturing companies every day. The availability of IT infrastructure, tools, spare parts, production equipment and machines are important to track efficiently, as are operational machines or their tools. 
+           Manage production machinery, tools, and operational equipment across factory floors and multiple facilities.</p> <p> Track maintenance cycles and insurance coverage on high-value equipment.
             </p>
           </div>
 
           <div className="feature-card" onClick={handleEducation}>
+            <span><FontAwesomeIcon icon={faClipboardCheck} /></span>
             <h3>Education Asset Management</h3>
             <p>
-            Today’s education management handle so much more than a class and books. These are common components in schools, colleges, universities, and training centres that can be daily affected by their day-to-day operations including Laptop computers, Tablets, lab equipment, projectors, smart boards.
+            From campus IT labs to sports equipment and classroom tech — manage assets across multiple campuses, assign to departments, and track renewal cycles all in one platform.
             </p>
           </div>
 
           <div className="feature-card">
+            <span><FontAwesomeIcon icon={faRestroom} /></span>
             <h3>Restaurant & Hospitality Asset Management </h3>
             <p>
-            Speed, efficiency, consistency and amazing customer experiences are the lifeblood of the restaurant and hospitality sector. Whether it’s restaurants, cafés, hotels or resorts, they maintain hundreds of assets on a daily basis.
+            Track kitchen equipment, POS systems, HVAC units, and furniture across multiple locations.</p> <p> Prevent costly equipment failures with proactive maintenance and warranty management.
             </p>
           </div>
 
           <div className="feature-card">
+            <span><FontAwesomeIcon icon={faKitchenSet} /></span>
             <h3>Construction Equipment Tracking</h3>
-            <p>
-              
-The construction industry is in a fast-paced business with the constant movement of equipment, machinery, tools and vehicles between construction jobs, storage yards, and jobs in operation. These assets can be hard to oversee manually and quite often result in delays, lost equipment, downtime and increased operating expenses.
+            <p>Track kitchen equipment, POS systems, HVAC units, and furniture across multiple locations.</p> <p> Prevent costly equipment failures with proactive maintenance and warranty management.
             </p>
           </div>
 
           <div className="feature-card">
+            <span><FontAwesomeIcon icon={faTrain} /></span>
             <h3>Travel & Transportation Logistics</h3>
             <p>
-            Travel and transportation relies on a fast-paced business where efficiency, visibility and coordination in real time are essential. Over thousands of assets are being moved daily by logistics providers, fleet operators, cargo companies, public transport, travel providers and distribution systems.
+              Manage fleets, ground equipment, and transit infrastructure. </p> <p>Real-time visibility into vehicle status, service schedules, and insurance policies — all in one dashboard.
             </p>
           </div>
 
@@ -939,13 +954,13 @@ The construction industry is in a fast-paced business with the constant movement
             Email - info@socialflylive.com
           </p>
                   
-          <div className="copyright">
-            © 2026 SOCIALFLY. All Rights Reserved.
-          </div>
         </div>
 
 
       </div>
+          <div className="copyright">
+            © 2026 SOCIALFLY. All Rights Reserved.
+          </div>
     </footer>
 
     </div>

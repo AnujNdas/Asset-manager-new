@@ -47,7 +47,7 @@
   .account-btn {
     border: none;
     cursor: pointer;
-    padding: 0.9rem 1.5rem;
+    padding: 5px 10px;
     border-radius: 10px;
     font-weight: 600;
   }
@@ -167,7 +167,15 @@
     padding: 2rem;
     border-radius: 20px;
   }
-  
+  .feature-card span {
+    padding: 20px;
+    font-size: 40px;
+    border-radius: 40px;
+    margin-bottom: 20px;
+  }
+  .feature-card span:hover {
+    background : #222831
+  }
   .feature-card h3 {
     margin-bottom: 1rem;
     text-align: center;
@@ -434,7 +442,7 @@
 
 .hardware-item {
   color: #ead7bd;
-  font-size: 1.3rem;
+  font-size: 15px;
   font-weight: 600;
 
   display: flex;
@@ -462,14 +470,9 @@
   }
 
   .hardware-column {
-    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-  }
-
-  .hardware-item {
-    font-size: 1.1rem;
   }
 
   .hardware-title {
@@ -598,8 +601,8 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
 
   font-size: 3.4rem;
   color: #ead8bf;
-
   margin-bottom: 25px;
+
 }
 
 /* =====================================
@@ -611,6 +614,7 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 25px;
+    margin-top: 25px
 }
 
 /* =====================================
@@ -623,6 +627,7 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
   line-height: 1.8;
   max-width: 700px;
   margin: auto;
+  margin-top: 20px;
 }
 
 .feature-card strong {
@@ -638,6 +643,9 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
 .contact-buttons {
   display: flex;
   gap: 20px;
+}
+.faq-question span {
+  font-size: 17px;
 }
 .contact-buttons a {
   padding: 15px 30px;
@@ -977,7 +985,7 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
     align-items: center;
     gap: 15px;
   
-    padding: 16px 20px;
+    padding: 10px 10px;
     cursor: pointer;
   
     font-size: 1.85rem;
@@ -1095,9 +1103,9 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
   border: none;
   border-radius: 50px;
 
-  padding: 18px 40px;
+  padding: 5px 10px;
 
-  font-size: 1.4rem;
+  font-size: 15px;
   font-weight: 700;
 
   cursor: pointer;
@@ -1327,8 +1335,9 @@ p {
   transform: scale(1.2);
 }
 .footer {
-
-  padding: 70px 5% 35px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 5% 35px;
   color: #e7d8be;
 }
 .about-contact-section {
@@ -1339,6 +1348,7 @@ p {
   margin: 0 auto;
 
   display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 60px;
   place-items: center;
   /* align-items: start; */
@@ -1351,7 +1361,7 @@ p {
 
 .footer-column h3 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 17px;
   font-weight: 600;
   margin-bottom: 18px;
   color: #e7d8be;
@@ -1366,21 +1376,16 @@ p {
   height: 58px;
 
   background: transparent;
-  border: 1px solid #e7d8be;
+  border: none;
   border-radius: 4px;
 
   color: #e7d8be;
-  font-size: 1.6rem;
+  font-size: 17px;
   font-weight: 600;
 
   cursor: pointer;
   transition: 0.3s;
 }
-
-.footer-btn:hover {
-  background: rgba(231, 216, 190, 0.08);
-}
-
 /* =====================
    SOCIAL ICONS
 ===================== */
@@ -1428,7 +1433,7 @@ p {
   color: #e7d8be;
   text-decoration: none;
 
-  font-size: 1.8rem;
+  font-size: 15px;
   font-weight: 500;
   justify-content: center;
 
@@ -1443,7 +1448,7 @@ p {
 
   text-align: center;
 
-  font-size: 1.4rem;
+  font-size: 15px;
   color: #e7d8be;
 
   text-decoration: underline;
@@ -1461,7 +1466,7 @@ p {
   color: #e7d8be;
   text-decoration: none;
   justify-content: center;
-  font-size: 1.8rem;
+  font-size: 15px;
   font-weight: 500;
 
   margin-bottom: 24px;
@@ -1474,7 +1479,7 @@ p {
 
 .footer-email {
 
-  font-size: 1.8rem;
+  font-size: 15px;
   text-align: center;
   color: #e7d8be;
 }
@@ -1485,8 +1490,7 @@ p {
 
 @media (max-width: 1100px) {
   .footer-container {
-    grid-template-columns: 1fr;
-    gap: 70px;
+    gap: 20px;
   }
 
   .footer-column {
@@ -1518,7 +1522,10 @@ p {
   .footer {
     padding: 50px 20px 30px;
   }
-
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
   .footer-column h3 {
     font-size: 1.6rem;
   }
@@ -1550,6 +1557,10 @@ p {
     height: 40px;
     font-size: 1rem;
   }
+    .impact-container {
+      grid-template-columns: 1fr;
+    gap: 40px;
+  }
 }
 /* ===============================
    TABLET
@@ -1557,8 +1568,7 @@ p {
 
 @media (max-width: 1200px) {
   .impact-container {
-    grid-template-columns: 1fr;
-    gap: 80px;
+    gap: 40px;
   }
 
   .impact-left h2,
@@ -1602,6 +1612,7 @@ p {
     font-size: 1rem;
     line-height: 1.8;
     text-align: center;
+    justify-content: center;
   }
 
   .trial-btn {
