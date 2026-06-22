@@ -951,18 +951,18 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
         {/* Center Section */}
         <div className="footer-column footer-center">
-          <a href="#">Terms and Conditions</a>
-          <a href="#">Global Privacy Policy</a>
+          <a href="https://socialflylive.com/terms-and-conditions/">Terms and Conditions</a>
+          <a href="https://socialflylive.com/global-privacy-policy/">Global Privacy Policy</a>
 
         </div>
 
         {/* Right Section */}
         <div className="footer-column footer-right">
-          <a href="#">
+          <a href="https://socialflylive.com/it-asset-management-itam-software/">
             IT Asset Management Software
           </a>
 
-          <a href="#">
+          <a href="https://socialflylive.com/machinery-assets-management/">
             Machinery Assets Management Software
           </a>
 

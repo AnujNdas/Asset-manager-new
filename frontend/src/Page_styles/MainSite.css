@@ -1339,6 +1339,7 @@ padding: 15px 30px;
   flex-direction: column;
   padding: 30px 5% 35px;
   color: #e7d8be;
+  gap:30px;
 }
 .about-contact-section {
   margin-top : 70px;
@@ -1391,8 +1392,6 @@ padding: 15px 30px;
 ===================== */
 
 .social-icons {
-  margin-top: 90px;
-
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -1499,10 +1498,6 @@ padding: 15px 30px;
 
   .footer-btn {
     max-width: 500px;
-  }
-
-  .social-icons {
-    margin-top: 40px;
   }
 
   .footer-email {
@@ -1704,7 +1699,10 @@ padding: 15px 30px;
       flex-direction: column;
       gap: 1rem;
     }
-  
+    .hardware-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
     .hero-content h1 {
       font-size: 2.3rem;
     }
