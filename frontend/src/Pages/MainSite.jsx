@@ -44,6 +44,22 @@ const handleManufacturing = () => {
 const handleEducation = () => {
   window.open("https://socialflylive.com/education-asset-management/")
 }
+const handleConstructionClick = () => {
+  window.open("https://socialflylive.com/construction-equipment-tracking/")
+}
+const handleTravelClick = () => {
+  window.open("https://socialflylive.com/travel-transportation-asset-management/")
+}
+const handleHospitalityManagement = () => {
+  window.open("https://socialflylive.com/restaurant-hospitality-asset-management/")
+}
+const handleProductClick = () => {
+  window.open("https://socialflylive.com/it-asset-management-itam-software/")
+}
+const handleProductClick2 = () => {
+  window.open("https://socialflylive.com/machinery-assets-management/")
+}
+
   const headings = [
     "Manage All types of Assets From One Place — Hardware, Software & Cloud.",
     "No Tracking — Privacy Policy.",
@@ -559,7 +575,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         <div className="product-features-grid">
 
           {/* IT Assets */}
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleProductClick}>
             <div className="feature-icon">
               <FiBox />
             </div>
@@ -573,7 +589,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
           </div>
 
           {/* Equipment Assets */}
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleProductClick2}>
             <div className="feature-icon">
               <FiMonitor />
             </div>
@@ -628,7 +644,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
             </p>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleHospitalityManagement}>
             <span><FontAwesomeIcon icon={faRestroom} /></span>
             <h3>Restaurant & Hospitality Asset Management </h3>
             <p>
@@ -636,14 +652,14 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
             </p>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleConstructionClick}>
             <span><FontAwesomeIcon icon={faKitchenSet} /></span>
             <h3>Construction Equipment Tracking</h3>
-            <p>Track kitchen equipment, POS systems, HVAC units, and furniture across multiple locations.</p> <p> Prevent costly equipment failures with proactive maintenance and warranty management.
+            <p>Heavy equipment moves between job sites. Know where every piece of machinery is, when it's due for service, and whether it's covered — before you move it or need to claim it. 
             </p>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleTravelClick}>
             <span><FontAwesomeIcon icon={faTrain} /></span>
             <h3>Travel & Transportation Logistics</h3>
             <p>
@@ -823,10 +839,10 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
         <div className="contact-buttons">
           <a
-            href="#"
+            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0"
             className="contact-btn"
           >
-            <FaWhatsapp />
+            <FaWhatsapp />  
             <span>WhatsApp</span>
           </a>
 
@@ -906,28 +922,28 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         <div className="footer-column footer-left">
           <h3>Contact</h3>
 
-          <button className="footer-btn">
+          <button className="footer-btn" onClick={handleAboutClick}>
             About
           </button>
 
           <div className="social-icons">
-            <a href="#">
+            <a href="https://www.facebook.com/socialflylive/">
               <FaFacebookF />
             </a>
 
-            <a href="#">
+            <a href="https://www.instagram.com/socialflylive">
               <FaInstagram />
             </a>
 
-            <a href="#">
+            <a href="https://www.linkedin.com/company/socialflylive/">
               <FaLinkedinIn />
             </a>
 
-            <a href="#">
+            <a href="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D">
               <FaGoogle />
             </a>
 
-            <a href="#">
+            <a href="https://in.pinterest.com/socialflylive/">
               <FaPinterestP />
             </a>
           </div>
@@ -951,7 +967,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
           </a>
 
           <p className="footer-email">
-            Email - info@socialflylive.com
+            Email - info@assetpegasus.com
           </p>
                   
         </div>
@@ -959,7 +975,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
       </div>
           <div className="copyright">
-            © 2026 SOCIALFLY. All Rights Reserved.
+            © 2026 ASSETPEGAUS. All Rights Reserved.
           </div>
     </footer>
 
