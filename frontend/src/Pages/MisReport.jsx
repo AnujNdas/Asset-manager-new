@@ -12,7 +12,7 @@ import FinancialAudit from "../Components/Audit/FinancialOverview";
 import AssetInventoryTable from "../Components/Audit/AssetInventoryTable";
 import LifecycleAudit from "../Components/Audit/LifecycleTimeline";
 
-import "./AuditPage.css";
+import "../Page_styles/AuditPage.css";
 
 const AuditPage = () => {
   const [dashboard, setDashboard] = useState({});
