@@ -35,6 +35,7 @@
   const publicRoutes = require("./routes/publicRoutes");
   const affiliateRoutes = require("./routes/affiliateRoutes");
   const errorHandler = require("./Middleware/errorHandler");
+  const auditRoutes = require("./routes/auditRoutes");
   // ✅ Import User model for Super Admin seeding
   const User = require("./models/User");
 
@@ -120,6 +121,7 @@
   app.use("/api/instance-assets", instanceRoutes);
   app.use("/api/tracking", trackingRoutes);
   app.use("/api/track", publicRoutes);
+  app.use("/api/audit", auditRoutes);
   app.use(
     "/api/affiliate",
     affiliateRoutes
