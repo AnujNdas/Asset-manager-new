@@ -15,17 +15,17 @@ router.get(
 );
 router.get(
   "/financial",
-  authenticationToken(["admin" , "user"]),
+  authenticateToken(["admin" , "user"]),
   getFinancialAudit
 );
 router.get(
     "/assets",
-    authenticationToken(["admin" , "user"]),
+    authenticateToken(["admin" , "user"]),
     getAuditAssets
 );
 router.get(
     "/lifecycle",
-    authenticationToken(["admin" , "user"]),
+    authenticateToken(["admin" , "user"]),
   getLifecycleAudit
 );
 module.exports = router;
