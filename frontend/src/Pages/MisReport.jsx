@@ -7,7 +7,7 @@ import {
   getLifecycleAudit,
 } from "../Services/ApiServices";
 
-import AuditOverviewCards from "../Components/Audit/AuditOverviewCards";
+import AuditOverviewCards from "../Components/Audit/AuditOverviewCard";
 import FinancialAudit from "../Components/Audit/FinancialOverview";
 import AssetInventoryTable from "../Components/Audit/AssetInventoryTable";
 import LifecycleAudit from "../Components/Audit/LifecycleTimeline";
