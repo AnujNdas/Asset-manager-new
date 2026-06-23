@@ -10,7 +10,7 @@ import {
 import AuditOverviewCards from "../Components/Audit/AuditOverviewCard";
 import FinancialAudit from "../Components/Audit/FinancialOverview";
 import AssetInventoryTable from "../Components/Audit/AuditInventoryTable";
-import LifecycleAudit from "../Components/Audit/LifecycleTimeline";
+import LifecycleAudit from "../Components/Audit/LifecycleOverview";
 
 import "../Page_styles/AuditPage.css";
 
