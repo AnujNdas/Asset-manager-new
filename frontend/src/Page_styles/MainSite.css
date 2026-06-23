@@ -1467,7 +1467,8 @@ width: 2rem;
 }
 .icons-and-mails {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 0 70px;
   width: 100%;
   align-items: center;
 }
