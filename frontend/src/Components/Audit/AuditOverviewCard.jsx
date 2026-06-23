@@ -1,5 +1,4 @@
 import React from "react";
-import "./AuditOverviewCards.css";
 
 const AuditOverviewCards = ({ data }) => {
   const cards = [
