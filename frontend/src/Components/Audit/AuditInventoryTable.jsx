@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import "./AssetInventoryTable.css";
+
 
 const AssetInventoryTable = ({ assets = [] }) => {
   const [search, setSearch] = useState("");
