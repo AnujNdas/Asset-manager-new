@@ -458,17 +458,16 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
           </div>
 
           <div className="impact-dots">
-            {impacts.map((_, index) => (
-              <button
-                key={index}
-                className={`dot ${
-                  active === index ? "active" : ""
-                }`}
-                onClick={() => setActive(index)}
-              />
-            ))}
-          </div>
-
+  {impacts.map((_, index) => (
+    <button
+      key={index}
+      className={`dot ${active === index ? "active" : ""}`}
+      onClick={() => setActive(index)}
+      aria-label={`View impact slide ${index + 1}`}
+      aria-current={active === index ? "true" : "false"}
+    />
+  ))}
+</div>
         </div>
 
       </div>
@@ -919,34 +918,13 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
       <div className="footer-container">
 
         {/* Left Section */}
+        <div className="contact-and-links">
         <div className="footer-column footer-left">
-          <h3>Contact</h3>
+          <a href="https://socialflylive.com/contact/">Contact</a>
 
-          <button className="footer-btn" onClick={handleAboutClick}>
-            About
-          </button>
+          <a href="https://socialflylive.com/about/">About Us</a>
 
-          <div className="social-icons">
-            <a href="https://www.facebook.com/socialflylive/">
-              <FaFacebookF />
-            </a>
 
-            <a href="https://www.instagram.com/socialflylive">
-              <FaInstagram />
-            </a>
-
-            <a href="https://www.linkedin.com/company/socialflylive/">
-              <FaLinkedinIn />
-            </a>
-
-            <a href="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D">
-              <FaGoogle />
-            </a>
-
-            <a href="https://in.pinterest.com/socialflylive/">
-              <FaPinterestP />
-            </a>
-          </div>
         </div>
 
         {/* Center Section */}
@@ -966,16 +944,38 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
             Machinery Assets Management Software
           </a>
 
-          <p className="footer-email">
-            Email - info@assetpegasus.com
-          </p>
                   
         </div>
+        </div>
+          <div className="icons-and-mails">
+                      <div className="social-icons">
+            <a href="https://www.facebook.com/socialflylive/" aria-label="Facebook">
+              <FaFacebookF />
+            </a>
 
+            <a href="https://www.instagram.com/socialflylive" aria-label="Instagram">
+              <FaInstagram />
+            </a>
 
+            <a href="https://www.linkedin.com/company/socialflylive/" aria-label="LinkedIn">
+              <FaLinkedinIn />
+            </a>
+
+            <a href="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D" aria-label="Google Maps">
+              <FaGoogle />
+            </a>
+
+            <a href="https://in.pinterest.com/socialflylive/" aria-label="Pinterest">
+              <FaPinterestP />
+            </a>
+          </div>
+          <p className="footer-email">
+            Email: <a href="mailto:info@assetpegasus.com">info@assetpegasus.com</a>
+          </p>
+        </div>
       </div>
           <div className="copyright">
-            © 2026 ASSETPEGAUS. All Rights Reserved.
+            © 2026 SOCIALFLY. All Rights Reserved.
           </div>
     </footer>
 

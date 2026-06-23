@@ -105,7 +105,7 @@ const { totals, upcoming, analytics, costBreakdown } = data;
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-  <h1 className="dashboard-title">Admin Dashboard</h1>
+  <h2 className="dashboard-title">Admin Dashboard</h2>
 </div>
 
       {/* ================= TOP METRICS ================= */}
