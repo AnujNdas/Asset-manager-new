@@ -67,7 +67,7 @@ const AuditPage = () => {
 
       <div className="audit-header">
         <div>
-          <h1>Audit & Compliance Center</h1>
+          <h2>Audit & Compliance Center</h2>
 
           <p>
             Track asset utilization, lifecycle history,

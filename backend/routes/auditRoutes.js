@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const authenticationToken = require("../Middleware/Authentication-token");
 const {
   getAuditDashboard,
     getFinancialAudit,
@@ -10,18 +10,22 @@ const {
 
 router.get(
   "/dashboard",
+  authenticateToken(["admin", "user"]),
   getAuditDashboard
 );
 router.get(
   "/financial",
+  authenticationToken(["admin" , "user"]),
   getFinancialAudit
 );
 router.get(
-  "/assets",
-  getAuditAssets
+    "/assets",
+    authenticationToken(["admin" , "user"]),
+    getAuditAssets
 );
 router.get(
-  "/lifecycle",
+    "/lifecycle",
+    authenticationToken(["admin" , "user"]),
   getLifecycleAudit
 );
 module.exports = router;
