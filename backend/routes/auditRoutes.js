@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticationToken = require("../Middleware/Authentication-token");
+const authenticateToken = require("../Middleware/Authentication-token");
 const {
   getAuditDashboard,
     getFinancialAudit,
