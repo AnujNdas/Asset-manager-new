@@ -79,7 +79,7 @@ export default function AffiliateApply() {
           />
         </div>
 
-        <h2>Become an Affiliate Partner</h2>
+        <h1>Become an Affiliate Partner</h1>
 
         <p className="affiliate-subtitle">
           Help businesses discover our asset management platform

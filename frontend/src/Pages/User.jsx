@@ -16,6 +16,14 @@ const User = ({ removeUser }) => {
 
         {/* LEFT SIDE */}
         <div className="auth-left">
+          <div className="back-home">
+  <button
+    className="return-btn"
+    onClick={() => navigate("/")}
+  >
+    ← Back to Home
+  </button>
+</div>
           <div className="dash-logo">
             <img
               src="/images/Logo.png"
@@ -79,11 +87,11 @@ const User = ({ removeUser }) => {
         {/* RIGHT SIDE */}
         <div className="auth-right">
           <div className="right-content">
-
-            <h1>
+                <h1> Asset Pegasus</h1>
+            <p>
               Complete Asset Management <br />
               (Hardware & Software)
-            </h1>
+            </p>
 
             <p>
               Log in to access your AMS dashboard and manage your team.

@@ -94,7 +94,7 @@
     opacity: 0.9;
     text-align: center;
     margin: 0;
-    color: #948979;
+    color: #DFD0B8;
   }
 
   /* Tabs */
@@ -182,7 +182,32 @@
 .affiliate-btn:hover {
   transform: scale(1.03);
 }
+.back-home {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
 
+.return-btn {
+  background: #DFD0B8;
+  border: none;
+  color: #222831;
+
+  padding: 8px 14px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  background: #DFD0B8;
+  color: #222831;
+}
 /* =========================
    MOBILE
 ========================= */
@@ -206,6 +231,9 @@
 
     .auth-right {
       display: none;
+    }
+    .back-home {
+      justify-content: center;
     }
   }
   @media (max-width: 500px) {
