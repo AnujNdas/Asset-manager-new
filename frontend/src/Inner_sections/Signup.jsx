@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faLock, faPerson } from '@fortawesome/free-solid-svg-icons';
 import ThemeSwal from '../utils/swalTheme';
+import { Helmet } from 'react-helmet-async';
 import AuthService from '../Services/AuthService';
 import {
   trackAffiliateVisit,
@@ -275,6 +276,20 @@ if (!verifyRes.user.organizationOnboarded) {
 };
 
   return (
+    <>
+    <Helmet>
+  <title>Sign Up | AssetPegasus</title>
+
+  <meta
+    name="description"
+    content="Create your AssetPegasus account."
+  />
+
+  <link
+    rel="canonical"
+    href="https://assetpegasus.com/user/signup"
+  />
+</Helmet>
     <div className="auth-page">
       <div className="auth-card">
         {/* Brand panel */}
@@ -341,6 +356,7 @@ Must contain 8+ characters, uppercase, lowercase, number and special character.
         </form>
       </div>
     </div>
+    </>
   );
 };
 

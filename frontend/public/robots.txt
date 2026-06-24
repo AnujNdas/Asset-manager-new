@@ -1,3 +1,12 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+User-agent: *
+
+Allow: /
+
+Disallow: /panel/
+Disallow: /super-admin/
+Disallow: /affiliate/dashboard/
+Disallow: /onboarding/
+
+Sitemap: https://assetpegasus.com/sitemap.xml

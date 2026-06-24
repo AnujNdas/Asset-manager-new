@@ -9,6 +9,7 @@
   import ThemeSwal from '../utils/swalTheme';
   import Loader from "../Components/Loader";
   import { useSubscription } from '../Context/SubscriptionContext';
+  import { Helmet } from 'react-helmet-async';
   const Login = ({ setProfileUser }) => {
   const { refreshSubscription } = useSubscription();
 
@@ -89,6 +90,32 @@ if (role === "super-admin") {
 
     return (
       <>
+      <Helmet>
+        <title>Login | AssetPegasus</title>
+
+        <meta
+          name="description"
+          content="Login to your AssetPegasus account."
+        />
+
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/user/login"
+        />
+
+        <meta property="og:title" content="Login | AssetPegasus" />
+
+        <meta
+          property="og:description"
+          content="Login to your AssetPegasus account."
+        />
+
+        <meta
+          property="og:url"
+          content="https://assetpegasus.com/user/login"
+        />
+      </Helmet>
+
     {loading && (
     <div className="loader-overlay">
       <Loader type="login" apiDone={apiDone}/>

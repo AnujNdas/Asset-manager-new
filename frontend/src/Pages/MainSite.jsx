@@ -3,6 +3,9 @@ import { useState , useEffect } from "react";
 import { FaWhatsapp, FaTelegramPlane } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Helmet } from "react-helmet-async";
+
+
 import {
   FaFacebookF,
   FaInstagram,
@@ -268,6 +271,38 @@ const rightItemssoftware = [
   ];
   
   return (
+    <>
+    <Helmet>
+  <title>
+    AssetPegasus | IT Asset Management Software
+  </title>
+
+  <meta property="og:type" content="website" />
+  <meta
+    name="description"
+    content="Track hardware, software licenses, maintenance schedules, warranties, insurance policies and asset lifecycle."
+  />
+
+  <meta
+    property="og:title"
+    content="AssetPegasus Asset Management System"
+  />
+
+  <meta
+    property="og:description"
+    content="Manage hardware, software, maintenance, warranties and insurance from one platform."
+  />
+
+  <meta
+    property="og:image"
+    content="https://assetpegasus.com/images/assets.png"
+  />
+
+  <link
+    rel="canonical"
+    href="https://assetpegasus.com/"
+  />
+</Helmet>
     <div className="landing-page">
 
       {/* NAVBAR */}
@@ -980,6 +1015,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
     </footer>
 
     </div>
+    </>
   );
 };
 

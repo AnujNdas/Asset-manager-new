@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Page_styles/AffiliateApply.css";
 import AuthService from "../Services/AuthService";
+
 export default function AffiliateApply() {
   const navigate = useNavigate();
 
@@ -50,6 +51,22 @@ export default function AffiliateApply() {
   };
 
   return (
+    <>
+    <Helmet>
+  <title>
+    Affiliate Program | AssetPegasus
+  </title>
+
+  <meta
+    name="description"
+    content="Join the AssetPegasus affiliate program and earn commissions by referring businesses."
+  />
+
+  <link
+    rel="canonical"
+    href="https://assetpegasus.com/affiliate/apply"
+  />
+</Helmet>
     <div className="affiliate-page">
 
       {/* LEFT */}
@@ -215,5 +232,6 @@ export default function AffiliateApply() {
       </div>
 
     </div>
+    </>
   );
 }
