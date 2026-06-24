@@ -1,7 +1,7 @@
 export default function AffiliatePayouts() {
   return (
     <div>
-      <h1>Affiliate Payouts</h1>
+      <h2>Affiliate Payouts</h2>
     </div>
   );
 }

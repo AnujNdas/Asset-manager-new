@@ -129,7 +129,7 @@ const fetchEarnings = async () => {
       <div className="affiliate-header">
 
         <div>
-          <h1>Affiliate Earnings</h1>
+          <h2>Affiliate Earnings</h2>
 
           <p>
             Track referrals, commissions,

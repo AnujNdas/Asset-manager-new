@@ -7,7 +7,7 @@ const AffiliateSettingsLayout = () => {
     <div className="affiliate-settings-page">
 
       <div className="affiliate-settings-header">
-        <h1>Affiliate Settings</h1>
+        <h2>Affiliate Settings</h2>
         <p>
           Manage your profile, payouts and preferences.
         </p>

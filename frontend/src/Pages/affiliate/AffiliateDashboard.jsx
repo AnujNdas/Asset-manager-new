@@ -70,11 +70,11 @@ const AffiliateDashboard = () => {
             AFFILIATE PROGRAM
           </span>
 
-          <h1>
+          <h2>
             Welcome back,
             <br />
             {affiliate?.fullName}
-          </h1>
+          </h2>
 
           <p>
             Share your referral link and
