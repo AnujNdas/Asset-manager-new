@@ -280,14 +280,29 @@ if (!verifyRes.user.organizationOnboarded) {
     <Helmet>
   <title>Sign Up | AssetPegasus</title>
 
-  <meta
-    name="description"
-    content="Create your AssetPegasus account."
-  />
+<meta
+  name="description"
+  content="Create an AssetPegasus account and start tracking IT assets, machinery, software subscriptions, warranties, maintenance, and insurance records."
+/>
+    <meta name="twitter:card" content="summary_large_image" />
 
+<meta
+  name="twitter:title"
+  content="AssetPegasus"
+/>
+
+<meta
+  name="twitter:description"
+  content="Track hardware, software, licenses and machinery."
+/>
+
+<meta
+  name="twitter:image"
+  content="https://assetpegasus.com/images/Logo.png"
+/>
   <link
     rel="canonical"
-    href="https://assetpegasus.com/user/signup"
+    href="https://assetpegasus.com/user/signup/"
   />
 </Helmet>
     <div className="auth-page">

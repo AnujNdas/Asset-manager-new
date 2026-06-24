@@ -288,16 +288,32 @@ const rightItemssoftware = [
     content="AssetPegasus Asset Management System"
   />
 
+<meta property="og:site_name" content="AssetPegasus" />
+
+<meta
+  property="og:image"
+  content="https://assetpegasus.com/images/Logo2.png"
+/>
   <meta
     property="og:description"
     content="Manage hardware, software, maintenance, warranties and insurance from one platform."
   />
+  <meta name="twitter:card" content="summary_large_image" />
 
-  <meta
-    property="og:image"
-    content="https://assetpegasus.com/images/assets.png"
-  />
+<meta
+  name="twitter:title"
+  content="AssetPegasus"
+/>
 
+<meta
+  name="twitter:description"
+  content="Track hardware, software, licenses and machinery."
+/>
+
+<meta
+  name="twitter:image"
+  content="https://assetpegasus.com/images/Logo.png"
+/>
   <link
     rel="canonical"
     href="https://assetpegasus.com/"

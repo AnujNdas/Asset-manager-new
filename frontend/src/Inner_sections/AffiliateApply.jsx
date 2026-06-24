@@ -57,14 +57,30 @@ export default function AffiliateApply() {
     Affiliate Program | AssetPegasus
   </title>
 
-  <meta
-    name="description"
-    content="Join the AssetPegasus affiliate program and earn commissions by referring businesses."
-  />
+<meta
+  name="description"
+  content="Join the AssetPegasus affiliate program and earn recurring commissions by referring businesses to our asset management software platform."
+/>
+<meta name="twitter:card" content="summary_large_image" />
+
+<meta
+  name="twitter:title"
+  content="AssetPegasus"
+/>
+
+<meta
+  name="twitter:description"
+  content="Track hardware, software, licenses and machinery."
+/>
+
+<meta
+  name="twitter:image"
+  content="https://assetpegasus.com/images/Logo.png"
+/>
 
   <link
     rel="canonical"
-    href="https://assetpegasus.com/affiliate/apply"
+    href="https://assetpegasus.com/affiliate/apply/"
   />
 </Helmet>
     <div className="affiliate-page">

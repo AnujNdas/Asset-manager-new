@@ -93,14 +93,14 @@ if (role === "super-admin") {
       <Helmet>
         <title>Login | AssetPegasus</title>
 
-        <meta
-          name="description"
-          content="Login to your AssetPegasus account."
-        />
+<meta
+  name="description"
+  content="Login to AssetPegasus to manage hardware assets, software licenses, warranties, maintenance schedules, and business inventory from one platform."
+/>
 
         <link
           rel="canonical"
-          href="https://assetpegasus.com/user/login"
+          href="https://assetpegasus.com/user/login/"
         />
 
         <meta property="og:title" content="Login | AssetPegasus" />
@@ -114,6 +114,22 @@ if (role === "super-admin") {
           property="og:url"
           content="https://assetpegasus.com/user/login"
         />
+        <meta name="twitter:card" content="summary_large_image" />
+
+<meta
+  name="twitter:title"
+  content="AssetPegasus"
+/>
+
+<meta
+  name="twitter:description"
+  content="Track hardware, software, licenses and machinery."
+/>
+
+<meta
+  name="twitter:image"
+  content="https://assetpegasus.com/images/Logo.png"
+/>
       </Helmet>
 
     {loading && (
