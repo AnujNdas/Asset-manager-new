@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Page_styles/AffiliateApply.css";
 import AuthService from "../Services/AuthService";
-
+import { Helmet } from "react-helmet-async";
 export default function AffiliateApply() {
   const navigate = useNavigate();
 
