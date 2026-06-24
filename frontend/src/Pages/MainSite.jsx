@@ -312,7 +312,7 @@ const rightItemssoftware = [
 
 <meta
   name="twitter:image"
-  content="https://assetpegasus.com/images/Logo.png"
+  content="https://assetpegasus.com/images/Logo2.png"
 />
   <link
     rel="canonical"

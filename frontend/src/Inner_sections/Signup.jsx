@@ -277,35 +277,72 @@ if (!verifyRes.user.organizationOnboarded) {
 
   return (
     <>
-    <Helmet>
+<Helmet>
   <title>Sign Up | AssetPegasus</title>
 
-<meta
-  name="description"
-  content="Create an AssetPegasus account and start tracking IT assets, machinery, software subscriptions, warranties, maintenance, and insurance records."
-/>
-    <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="description"
+    content="Create an AssetPegasus account and start tracking IT assets, machinery, software subscriptions, warranties, maintenance, and insurance records."
+  />
 
-<meta
-  name="twitter:title"
-  content="AssetPegasus"
-/>
-
-<meta
-  name="twitter:description"
-  content="Track hardware, software, licenses and machinery."
-/>
-
-<meta
-  name="twitter:image"
-  content="https://assetpegasus.com/images/Logo.png"
-/>
   <link
     rel="canonical"
     href="https://assetpegasus.com/user/signup/"
   />
+
+  {/* Open Graph */}
+  <meta
+    property="og:title"
+    content="Sign Up | AssetPegasus"
+  />
+
+  <meta
+    property="og:description"
+    content="Create an AssetPegasus account and start tracking IT assets, machinery, software subscriptions, warranties, maintenance, and insurance records."
+  />
+
+  <meta
+    property="og:url"
+    content="https://assetpegasus.com/user/signup/"
+  />
+
+  <meta
+    property="og:image"
+    content="https://assetpegasus.com/images/Logo2.png"
+  />
+
+  <meta
+    property="og:type"
+    content="website"
+  />
+
+  {/* Twitter */}
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  />
+
+  <meta
+    name="twitter:title"
+    content="Sign Up | AssetPegasus"
+  />
+
+  <meta
+    name="twitter:description"
+    content="Create an AssetPegasus account and start tracking IT assets, software licenses, machinery, warranties, and maintenance records."
+  />
+
+  <meta
+    name="twitter:image"
+    content="https://assetpegasus.com/images/Logo2.png"
+  />
 </Helmet>
     <div className="auth-page">
+      <div className="seo-links">
+  <Link to="/">Home</Link>
+  <Link to="/user/login/">Login</Link>
+  <Link to="/affiliate/apply/">Affiliate Program</Link>
+</div>
       <div className="auth-card">
         {/* Brand panel */}
         {/* <aside className="brand-panel">

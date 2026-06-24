@@ -102,33 +102,38 @@ if (role === "super-admin") {
           rel="canonical"
           href="https://assetpegasus.com/user/login/"
         />
-
-        <meta property="og:title" content="Login | AssetPegasus" />
-
-        <meta
-          property="og:description"
-          content="Login to your AssetPegasus account."
-        />
-
-        <meta
-          property="og:url"
-          content="https://assetpegasus.com/user/login"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
+<meta property="og:title" content="Login | AssetPegasus" />
 
 <meta
+  property="og:description"
+  content="Login to AssetPegasus to manage hardware assets, software licenses, warranties, maintenance schedules, and business inventory."
+/>
+
+<meta
+  property="og:url"
+  content="https://assetpegasus.com/user/login/"
+/>
+
+<meta
+  property="og:image"
+  content="https://assetpegasus.com/images/Logo2.png"
+/>
+
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta
   name="twitter:title"
-  content="AssetPegasus"
+  content="Login | AssetPegasus"
 />
 
 <meta
   name="twitter:description"
-  content="Track hardware, software, licenses and machinery."
+  content="Login to AssetPegasus to manage assets and licenses."
 />
 
 <meta
   name="twitter:image"
-  content="https://assetpegasus.com/images/Logo.png"
+  content="https://assetpegasus.com/images/Logo2.png"
 />
       </Helmet>
 
@@ -138,6 +143,11 @@ if (role === "super-admin") {
     </div>
   )}
       <div className="auth-page">
+        <div className="seo-links">
+  <Link to="/">Home</Link>
+  <Link to="/user/signup/">Create Account</Link>
+  <Link to="/affiliate/apply/">Affiliate Program</Link>
+</div>
         <div className="auth-card">
           {/* Brand / Welcome panel (left on desktop, stacked on mobile) */}
           {/* <aside className="brand-panel">

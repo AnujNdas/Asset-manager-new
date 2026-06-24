@@ -52,35 +52,71 @@ export default function AffiliateApply() {
 
   return (
     <>
-    <Helmet>
+<Helmet>
   <title>
     Affiliate Program | AssetPegasus
   </title>
 
-<meta
-  name="description"
-  content="Join the AssetPegasus affiliate program and earn recurring commissions by referring businesses to our asset management software platform."
-/>
-<meta name="twitter:card" content="summary_large_image" />
-
-<meta
-  name="twitter:title"
-  content="AssetPegasus"
-/>
-
-<meta
-  name="twitter:description"
-  content="Track hardware, software, licenses and machinery."
-/>
-
-<meta
-  name="twitter:image"
-  content="https://assetpegasus.com/images/Logo.png"
-/>
+  <meta
+    name="description"
+    content="Join the AssetPegasus Affiliate Program and earn recurring commissions by referring businesses to our asset management software platform."
+  />
 
   <link
     rel="canonical"
     href="https://assetpegasus.com/affiliate/apply/"
+  />
+
+  {/* Open Graph */}
+  <meta
+    property="og:type"
+    content="website"
+  />
+
+  <meta
+    property="og:title"
+    content="Affiliate Program | AssetPegasus"
+  />
+
+  <meta
+    property="og:description"
+    content="Become an AssetPegasus affiliate partner and earn commissions for successful referrals."
+  />
+
+  <meta
+    property="og:url"
+    content="https://assetpegasus.com/affiliate/apply/"
+  />
+
+  <meta
+    property="og:image"
+    content="https://assetpegasus.com/images/Logo2.png"
+  />
+
+  <meta
+    property="og:site_name"
+    content="AssetPegasus"
+  />
+
+  {/* Twitter */}
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  />
+
+  <meta
+    name="twitter:title"
+    content="Affiliate Program | AssetPegasus"
+  />
+
+  <meta
+    name="twitter:description"
+    content="Become an AssetPegasus affiliate partner and earn commissions for successful referrals."
+  />
+
+  <meta
+    name="twitter:image"
+    content="https://assetpegasus.com/images/Logo2.png"
   />
 </Helmet>
     <div className="affiliate-page">
