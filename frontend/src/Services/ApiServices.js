@@ -531,37 +531,7 @@ export const deleteAssetInstance = async (
 
 export const getAuditDashboard = async () => {
   const { data } = await axiosInstance.get(
-    "/audit/dashboard"
-  );
-
-  return data;
-};
-
-export const getFinancialAudit = async () => {
-  const { data } = await axiosInstance.get(
-    "/audit/financial"
-  );
-
-  return data;
-};
-
-export const getAuditAssets = async (params = {}) => {
-  const { data } = await axiosInstance.get(
-    "/audit/assets",
-    {
-      params,
-    }
-  );
-
-  return data;
-};
-
-export const getLifecycleAudit = async (params = {}) => {
-  const { data } = await axiosInstance.get(
-    "/audit/lifecycle",
-    {
-      params,
-    }
+    "/audit/"
   );
 
   return data;

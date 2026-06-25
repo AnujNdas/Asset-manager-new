@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 
 import {
   getAuditDashboard,
-  getFinancialAudit,
-  getAuditAssets,
-  getLifecycleAudit,
 } from "../Services/ApiServices";
 
 import "../Page_styles/AuditPage.css";
 
 const AuditPage = () => {
-  const [dashboard, setDashboard] = useState({});
-  const [financial, setFinancial] = useState({});
-  const [assets, setAssets] = useState([]);
-  const [lifecycle, setLifecycle] = useState([]);
+  const [auditData, setAuditData] = useState({
+  summary: {},
+  financial: {},
+  assets: [],
+  assignments: [],
+  warranty: [],
+  insurance: [],
+  maintenance: [],
+  lifecycle: [],
+  departments: [],
+  topExpensiveAssets: []
+}); 
 
   const [loading, setLoading] = useState(true);
 
@@ -23,22 +28,9 @@ const AuditPage = () => {
 
   const loadAuditData = async () => {
     try {
-      const [
-        dashboardRes,
-        financialRes,
-        assetsRes,
-        lifecycleRes,
-      ] = await Promise.all([
-        getAuditDashboard(),
-        getFinancialAudit(),
-        getAuditAssets(),
-        getLifecycleAudit(),
-      ]);
+const res = await getAuditDashboard();
 
-      setDashboard(dashboardRes?.data || {});
-      setFinancial(financialRes?.data || {});
-      setAssets(assetsRes?.data || []);
-      setLifecycle(lifecycleRes?.data || []);
+setAuditData(res?.data || {});
     } catch (error) {
       console.error(error);
     } finally {
@@ -50,43 +42,66 @@ const AuditPage = () => {
     loadAuditData();
   }, []);
   useEffect(() => {
-  console.log("Dashboard", dashboard);
-  console.log("Financial", financial);
-  console.log("Assets", assets);
-  console.log("Lifecycle", lifecycle);
-}, [dashboard, financial, assets, lifecycle]);
+  console.log(auditData);
+}, [auditData]);
+const summary = auditData.summary || {};
+
+const financial = auditData.financial || {};
+
+const assets = auditData.assets || [];
+
+const assignments =
+  auditData.assignments || [];
+
+const warranty =
+  auditData.warranty || [];
+
+const insurance =
+  auditData.insurance || [];
+
+const maintenance =
+  auditData.maintenance || [];
+
+const lifecycle =
+  auditData.lifecycle || [];
+
+const departments =
+  auditData.departments || [];
+
+const topExpensiveAssets =
+  auditData.topExpensiveAssets || [];
 const stats = [
   {
     title: "Total Assets",
-    value: dashboard.totalAssets
+    value: summary.totalAssets || 0
   },
   {
     title: "Assigned",
-    value: dashboard.assignedAssets
+    value: summary.assignedAssets || 0
   },
   {
     title: "Unassigned",
-    value: dashboard.unassignedAssets
+    value: summary.unassignedAssets || 0
   },
   {
     title: "Warranty Expired",
-    value: dashboard.warrantyExpired
+    value: summary.warrantyExpired || 0
+  },
+  {
+    title: "Insurance Expired",
+    value: summary.insuranceExpired || 0
   },
   {
     title: "Maintenance Due",
-    value: dashboard.maintenanceDue
-  },
-  {
-    title: "Failed Audit",
-    value: dashboard.failedAssets
+    value: summary.maintenanceDue || 0
   },
   {
     title: "Purchase Cost",
-    value: `₹${dashboard.totalPurchaseCost}`
+    value: `₹${summary.purchaseCost || 0}`
   },
   {
-    title: "Renewal Cost",
-    value: `₹${dashboard.totalRenewalCost}`
+    title: "Total Ownership",
+    value: `₹${financial.totalOwnershipCost || 0}`
   }
 ];
 
@@ -126,18 +141,33 @@ const stats = [
           </tr>
         </thead>
 
-        <tbody>
+<tbody>
 
-          {assets.map((asset) => (
-            <tr key={asset.instanceId}>
-              <td>{asset.assetCode}</td>
-              <td>{asset.assetName}</td>
-              <td>{asset.instanceCode}</td>
-              <td>{asset.assetType}</td>
-            </tr>
-          ))}
+{assets.map(asset => (
 
-        </tbody>
+<tr key={asset.instanceId}>
+
+<td>{asset.assetCode}</td>
+
+<td>{asset.assetName}</td>
+
+<td>{asset.instanceCode}</td>
+
+<td>{asset.assetType}</td>
+
+<td>{asset.location}</td>
+
+<td>{asset.status}</td>
+
+<td>{asset.condition}</td>
+
+<td>${asset.totalCost}</td>
+
+</tr>
+
+))}
+
+</tbody>
 
       </table>
     </div>
@@ -155,15 +185,29 @@ const renderDepartment = () => {
   return (
     <div className="audit-card-grid">
 
-      <div className="audit-mini-card">
-        <h4>Hardware Assets</h4>
-        <span>{hardware}</span>
-      </div>
+<table className="audit-table">
 
-      <div className="audit-mini-card">
-        <h4>Software Assets</h4>
-        <span>{software}</span>
-      </div>
+<thead>
+<tr>
+<th>Department</th>
+<th>Assets</th>
+</tr>
+</thead>
+
+<tbody>
+
+{departments.map(dept => (
+
+<tr key={dept.name}>
+<td>{dept.name}</td>
+<td>{dept.count}</td>
+</tr>
+
+))}
+
+</tbody>
+
+</table>
 
     </div>
   );
@@ -171,76 +215,154 @@ const renderDepartment = () => {
 const renderWarranty = () => (
   <div className="audit-report-grid">
 
-    <div className="audit-report-card">
-      <h3>Warranty Expired</h3>
-      <span>
-        {dashboard.warrantyExpired}
-      </span>
-    </div>
+<table className="audit-table">
 
-    <div className="audit-report-card">
-      <h3>Warranty Cost</h3>
-      <span>
-        ₹{financial.summary?.warrantyCost || 0}
-      </span>
-    </div>
+<thead>
+<tr>
+<th>Asset</th>
+<th>Instance</th>
+<th>Location</th>
+<th>Condition</th>
+<th>Expiry</th>
+<th>Cost</th>
+</tr>
+</thead>
+
+<tbody>
+
+{warranty.map(item => (
+
+<tr key={item.instanceId}>
+<td>{item.assetName}</td>
+<td>{item.instanceCode}</td>
+<td>{item.location}</td>
+<td>{item.condition}</td>
+<td>{new Date(item.expiryDate).toLocaleDateString()}</td>
+<td>${item.totalCost}</td>
+</tr>
+
+))}
+
+</tbody>
+
+</table>
 
   </div>
 );
 const renderInsurance = () => (
   <div className="audit-report-grid">
 
-    <div className="audit-report-card">
-      <h3>Insurance Expired</h3>
-      <span>
-        {dashboard.insuranceExpired}
-      </span>
-    </div>
+<tbody>
 
-    <div className="audit-report-card">
-      <h3>Total Insurance Cost</h3>
-      <span>
-        ₹{financial.summary?.insuranceCost || 0}
-      </span>
-    </div>
+{insurance.map(item => (
+
+<tr key={item.instanceId}>
+
+<td>{item.assetName}</td>
+
+<td>{item.instanceCode}</td>
+
+<td>{item.location}</td>
+
+<td>{item.coverageType?.join(", ")}</td>
+
+<td>
+  {new Date(
+    item.insuranceExpiry
+  ).toLocaleDateString()}
+</td>
+
+<td>${item.totalCost}</td>
+
+</tr>
+
+))}
+
+</tbody>
 
   </div>
 );
 const renderMaintenance = () => (
   <div className="audit-report-grid">
+<tbody>
 
-    <div className="audit-report-card">
-      <h3>Maintenance Due</h3>
-      <span>
-        {dashboard.maintenanceDue}
-      </span>
-    </div>
+{maintenance.map(item => (
 
-    <div className="audit-report-card">
-      <h3>Total Maintenance Cost</h3>
-      <span>
-        ₹{financial.summary?.maintenanceCost}
-      </span>
-    </div>
+<tr key={item.instanceId}>
+
+<td>{item.assetName}</td>
+
+<td>{item.instanceCode}</td>
+
+<td>{item.location}</td>
+
+<td>{item.condition}</td>
+
+<td>
+  {new Date(
+    item.nextMaintenanceDate
+  ).toLocaleDateString()}
+</td>
+
+<td>₹{item.maintenanceCost}</td>
+
+</tr>
+
+))}
+
+</tbody>
 
   </div>
 );
 const renderAssignment = () => (
   <div className="audit-report-grid">
 
-    <div className="audit-report-card">
-      <h3>Assigned Assets</h3>
-      <span>
-        {dashboard.assignedAssets}
-      </span>
-    </div>
+<table className="audit-table">
 
-    <div className="audit-report-card">
-      <h3>Unassigned Assets</h3>
-      <span>
-        {dashboard.unassignedAssets}
-      </span>
-    </div>
+<thead>
+<tr>
+<th>Employee</th>
+<th>Department</th>
+<th>Location</th>
+<th>Status</th>
+<th>Assigned</th>
+<th>Returned</th>
+</tr>
+</thead>
+
+<tbody>
+
+{assignments.map(item => (
+
+<tr key={item.assignmentId}>
+
+<td>{item.employee}</td>
+
+<td>{item.department}</td>
+
+<td>{item.location}</td>
+
+<td>{item.status}</td>
+
+<td>
+{new Date(item.assignedAt)
+.toLocaleDateString()}
+</td>
+
+<td>
+{item.returnedAt
+? new Date(item.returnedAt)
+.toLocaleDateString()
+: "-"}
+</td>
+
+</tr>
+
+))}
+
+</tbody>
+
+</table>
 
   </div>
 );
@@ -259,15 +381,28 @@ const renderLifecycle = () => (
 
       <tbody>
 
-        {lifecycle.slice(0, 50).map((item, index) => (
-          <tr key={index}>
-            <td>{item.assetName}</td>
-            <td>{item.instanceCode}</td>
-            <td>{item.assetType}</td>
-          </tr>
-        ))}
+{lifecycle.map((item,index) => (
 
-      </tbody>
+<tr key={index}>
+
+<td>{item.assetName}</td>
+
+<td>{item.eventType}</td>
+
+<td>{item.title}</td>
+
+<td>{item.performedBy}</td>
+
+<td>
+{new Date(item.date)
+.toLocaleDateString()}
+</td>
+
+</tr>
+
+))}
+
+</tbody>
 
     </table>
 
@@ -280,28 +415,30 @@ const renderFinancial = () => (
       <div className="financial-card">
         <h4>Purchase Cost</h4>
         <h2>
-          ₹{financial.summary.purchaseCost}
+          ${financial?.summary?.purchaseCost ?? 0}
         </h2>
       </div>
 
       <div className="financial-card">
         <h4>Maintenance Cost</h4>
         <h2>
-          ₹{financial.summary.maintenanceCost}
+          ${financial?.summary?.maintenanceCost ?? 0}
+
+
         </h2>
       </div>
 
       <div className="financial-card">
         <h4>Renewal Cost</h4>
         <h2>
-          ₹{financial.summary.renewalCost}
+${financial?.summary?.renewalCost ?? 0}
         </h2>
       </div>
 
       <div className="financial-card">
         <h4>Total Ownership</h4>
         <h2>
-          ₹{financial.summary.totalOwnershipCost}
+${financial?.summary?.totalOwnershipCost ?? 0}
         </h2>
       </div>
 
@@ -325,26 +462,19 @@ const renderFinancial = () => (
 
         <tbody>
 
-          {financial.topExpensiveAssets.map(
-            (asset) => (
-              <tr
-                key={asset.instanceId}
-              >
-                <td>
-                  {asset.deviceName ||
-                   asset.instanceCode}
-                </td>
+{topExpensiveAssets.map(asset => (
 
-                <td>
-                  {asset.assetType}
-                </td>
+<tr key={asset.instanceId}>
 
-                <td>
-                  ₹{asset.totalCost}
-                </td>
-              </tr>
-            )
-          )}
+<td>{asset.assetName}</td>
+
+<td>{asset.instanceCode}</td>
+
+<td>${asset.totalCost}</td>
+
+</tr>
+
+))}
 
         </tbody>
 
