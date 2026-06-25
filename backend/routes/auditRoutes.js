@@ -2,30 +2,13 @@ const express = require("express");
 const router = express.Router();
 const authenticateToken = require("../Middleware/Authentication-token");
 const {
-  getAuditDashboard,
-    getFinancialAudit,
-    getAuditAssets,
-    getLifecycleAudit
+  getCompleteAuditDashboard
 } = require("../controllers/auditControllers");
 
 router.get(
-  "/dashboard",
+  "/",
   authenticateToken(["admin", "user"]),
-  getAuditDashboard
+  getCompleteAuditDashboard
 );
-router.get(
-  "/financial",
-  authenticateToken(["admin" , "user"]),
-  getFinancialAudit
-);
-router.get(
-    "/assets",
-    authenticateToken(["admin" , "user"]),
-    getAuditAssets
-);
-router.get(
-    "/lifecycle",
-    authenticateToken(["admin" , "user"]),
-  getLifecycleAudit
-);
+
 module.exports = router;
