@@ -60,7 +60,7 @@ const getCompleteAuditDashboard = async (req, res) => {
 
     const departmentMap = {};
     const assetLookup = {};
-
+    const employeeMap = {};
     for (const inst of assetInstances) {
 
       const hardware = inst.hardware || {};
@@ -378,144 +378,231 @@ response.maintenance.push({
       );
     }
 
-    for (const assign of assignments) {
+for (const assign of assignments) {
 
-      stats.assignedAssets++;
+    stats.assignedAssets++;
 
-      const dept =
-        assign.departmentId
-          ?.departmentName ||
+    const dept =
+        assign.departmentId?.departmentName ||
         "Unknown";
 
-      if (!departmentMap[dept]) {
-        departmentMap[dept] = 0;
-      }
+    const empId =
+        assign.employeeId?._id?.toString();
 
+    const asset =
+        assetLookup[
+            assign.assetInstanceId?.toString()
+        ];
 
-if (!departmentMap[dept]) {
+    //---------------------------------------------------
+    // Assignment Report
+    //---------------------------------------------------
 
-    departmentMap[dept] = {
+    response.assignments.push({
 
-        name: dept,
+        assignmentId: assign._id,
 
-        totalAssets: 0,
+        assetInstanceId: asset?.instanceId,
 
-        totalValue: 0,
+        assetCode: asset?.assetCode,
+        assetName: asset?.assetName,
+        instanceCode: asset?.instanceCode,
+        assetType: asset?.assetType,
+        deviceName: asset?.deviceName,
 
-        activeAssignments: 0,
+        employee: assign.employeeId?.name,
+        employeeCode:
+            assign.employeeId?.employeeCode,
+        email:
+            assign.employeeId?.email,
 
-        returnedAssignments: 0,
+        department: dept,
 
-        employees: [],
+        location:
+            assign.location,
 
-        assets: []
-    };
+        status:
+            assign.status,
 
-}
+        assignedAt:
+            assign.assignedAt,
 
-const asset =
-    assetLookup[
-        assign.assetInstanceId?.toString()
-    ];
+        returnedAt:
+            assign.returnedAt,
 
-departmentMap[dept].totalAssets++;
+        assignedBy:
+            assign.assignedBy?.name,
 
-if (assign.status === "assigned") {
+        returnedBy:
+            assign.returnedBy?.name,
 
-    departmentMap[dept].activeAssignments++;
+        totalCost:
+            asset?.totalCost || 0
+    });
 
-}
+    //---------------------------------------------------
+    // Department
+    //---------------------------------------------------
 
-if (assign.status === "returned") {
+    if (!departmentMap[dept]) {
 
-    departmentMap[dept].returnedAssignments++;
+        departmentMap[dept] = {
 
-}
+            name: dept,
 
-if (asset) {
+            totalAssets: 0,
 
-    departmentMap[dept].totalValue +=
-        asset.totalCost;
+            totalValue: 0,
 
-    departmentMap[dept].assets.push({
+            activeAssignments: 0,
 
-        ...asset,
+            returnedAssignments: 0,
 
-        assignedAt: assign.assignedAt,
+            employees: {},
 
-        returnedAt: assign.returnedAt,
+            assets: []
 
-        assignmentStatus: assign.status
+        };
+
+    }
+
+    const department =
+        departmentMap[dept];
+
+    department.totalAssets++;
+
+    if (assign.status === "assigned") {
+
+        department.activeAssignments++;
+
+    } else {
+
+        department.returnedAssignments++;
+
+    }
+
+    if (asset) {
+
+        department.totalValue +=
+            asset.totalCost;
+
+        department.assets.push({
+
+            ...asset,
+
+            assignedAt:
+                assign.assignedAt,
+
+            returnedAt:
+                assign.returnedAt,
+
+            assignmentStatus:
+                assign.status,
+
+            employee:
+                assign.employeeId?.name
+
+        });
+
+    }
+
+    //---------------------------------------------------
+    // Employee
+    //---------------------------------------------------
+
+    if (!department.employees[empId]) {
+
+        department.employees[empId] = {
+
+            employeeId: empId,
+
+            employeeName:
+                assign.employeeId?.name,
+
+            employeeCode:
+                assign.employeeId?.employeeCode,
+
+            email:
+                assign.employeeId?.email,
+
+            totalAssets: 0,
+
+            activeAssets: 0,
+
+            returnedAssets: 0,
+
+            totalValue: 0,
+
+            assignedAssets: []
+
+        };
+
+    }
+
+    const employee =
+        department.employees[empId];
+
+    employee.totalAssets++;
+
+    if (assign.status === "assigned") {
+
+        employee.activeAssets++;
+
+    } else {
+
+        employee.returnedAssets++;
+
+    }
+
+    employee.totalValue +=
+        asset?.totalCost || 0;
+
+    employee.assignedAssets.push({
+
+        assignmentId: assign._id,
+
+        assetCode:
+            asset?.assetCode,
+
+        assetName:
+            asset?.assetName,
+
+        instanceCode:
+            asset?.instanceCode,
+
+        assetType:
+            asset?.assetType,
+
+        deviceName:
+            asset?.deviceName,
+
+        totalCost:
+            asset?.totalCost || 0,
+
+        status:
+            assign.status,
+
+        assignedAt:
+            assign.assignedAt,
+
+        returnedAt:
+            assign.returnedAt,
+
+        assignedBy:
+            assign.assignedBy?.name,
+
+        returnedBy:
+            assign.returnedBy?.name
 
     });
 
 }
+Object.values(departmentMap).forEach(dept => {
 
-departmentMap[dept].employees.push({
-
-    employeeId: assign.employeeId?._id,
-
-    employeeName: assign.employeeId?.name,
-
-    employeeCode: assign.employeeId?.employeeCode,
-
-    email: assign.employeeId?.email,
-
-    assignedAsset: asset?.assetName,
-
-    instanceCode: asset?.instanceCode,
-
-    assetType: asset?.assetType,
-
-    totalCost: asset?.totalCost || 0,
-
-    assignedAt: assign.assignedAt,
-
-    returnedAt: assign.returnedAt,
-
-    status: assign.status
+    dept.employees =
+        Object.values(dept.employees);
 
 });
-
-      response.assignments.push({
-        assignmentId: assign._id,
-
-        assetInstanceId:
-          assign.assetInstanceId,
-
-        employee:
-          assign.employeeId?.name,
-
-        employeeCode:
-          assign.employeeId
-            ?.employeeCode,
-
-        email:
-          assign.employeeId?.email,
-
-        department:
-          assign.departmentId
-            ?.departmentName,
-
-        location:
-          assign.location,
-
-        status:
-          assign.status,
-
-        assignedAt:
-          assign.assignedAt,
-
-        returnedAt:
-          assign.returnedAt,
-
-        assignedBy:
-          assign.assignedBy?.name,
-
-        returnedBy:
-          assign.returnedBy?.name
-      });
-    }
 
     stats.unassignedAssets =
       stats.totalAssets -
@@ -560,11 +647,8 @@ departmentMap[dept].employees.push({
         )
         .slice(0, 10);
 
-    response.departments =
-Object.values(departmentMap);(([name, count]) => ({
-        name,
-        count
-      }));
+response.departments =
+    Object.values(departmentMap);
 
     response.charts = {
       assetTypes: {

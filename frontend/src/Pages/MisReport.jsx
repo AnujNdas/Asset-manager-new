@@ -354,43 +354,110 @@ const renderDepartment = () => (
 
   </div>
 );
-const renderWarranty = () => (
-  <div className="audit-report-grid">
+const renderWarranty = () => {
+  const today = new Date();
 
-<table className="audit-table">
+  return (
+    <div className="audit-table-wrapper">
+      <table className="audit-table">
 
-<thead>
-<tr>
-<th>Asset</th>
-<th>Instance</th>
-<th>Location</th>
-<th>Condition</th>
-<th>Expiry</th>
-<th>Cost</th>
-</tr>
-</thead>
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Asset Details</th>
+            <th>Location</th>
+            <th>Cost</th>
+            <th>Warranty</th> 
+            <th>Status</th>
+          </tr>
+        </thead>
 
-<tbody>
+        <tbody>
 
-{warranty.map(item => (
+          {warranty.map(item => {
 
-<tr key={item.instanceId}>
-<td>{item.assetName}</td>
-<td>{item.instanceCode}</td>
-<td>{item.location}</td>
-<td>{item.condition}</td>
-<td>{new Date(item.expiryDate).toLocaleDateString()}</td>
-<td>${item.totalCost}</td>
-</tr>
+            const expiry = new Date(item.expiryDate);
 
-))}
+            const daysLeft = Math.ceil(
+              (expiry - today) /
+              (1000 * 60 * 60 * 24)
+            );
 
-</tbody>
+            return (
+              <tr key={item.instanceId}>
 
-</table>
+                <td>
+                  <strong>{item.assetName}</strong>
+                  <br />
+                  <small>{item.assetCode}</small>
+                </td>
 
+                <td>
+                  <div><strong>Device:</strong> {item.deviceName}</div>
+                  <div><strong>Instance:</strong> {item.instanceCode}</div>
+                  <div><strong>Serial:</strong> {item.serialNumber}</div>
+                  <div><strong>Model:</strong> {item.modelNo}</div>
+                </td>
+
+                <td>
+                  <div>{item.location}</div>
+                  <small>{item.condition}</small>
+                </td>
+                <td>
+                                      <div>
+    <strong>Warranty Cost:</strong><br />
+    ${item.warrantyCost?.toLocaleString() || 0}
   </div>
-);
+                </td>
+                <td>
+                  <div>
+                    <strong>Purchased:</strong><br />
+                    {new Date(item.purchaseDate).toLocaleDateString()}
+                  </div>
+
+                  <div>
+                    <strong>Installed:</strong><br />
+                    {new Date(item.installationDate).toLocaleDateString()}
+                  </div>
+
+                  <div>
+                    <strong>Expires:</strong><br />
+                    {expiry.toLocaleDateString()}
+                  </div>
+
+                </td>
+
+                <td>
+                  <span
+                    className={
+                      daysLeft < 0
+                        ? "status-expired"
+                        : "status-active"
+                    }
+                  >
+                    {daysLeft < 0
+                      ? `${Math.abs(daysLeft)} Days Expired`
+                      : `${daysLeft} Days Left`}
+                  </span>
+
+                  <br />
+
+                  <small>
+                    {item.status}
+                  </small>
+                </td>
+
+              </tr>
+            );
+
+          })}
+
+        </tbody>
+
+      </table>
+    </div>
+  );
+};
 const renderInsurance = () => (
   <div className="audit-report-grid">
 
@@ -571,21 +638,18 @@ const renderMaintenance = () => (
     ? new Date(item.nextMaintenanceDate)
         .toLocaleDateString()
     : "-"}
-</td>
-
-<td>
-  <span className={status.className}>
+      {/* <span className={status.className}>
     {status.label}
-  </span>
+  </span> */}
 </td>
 
-<td>
+{/* <td>
   {days === null
     ? "-"
     : days < 0
     ? `${Math.abs(days)} Days Overdue`
     : `${days} Days`}
-</td>
+</td> */}
 
 <td>
   {formatCurrency(item.maintenanceCost)}
