@@ -6,101 +6,115 @@ const getCompleteAuditDashboard = async (req, res) => {
     const organizationId = req.user.organizationId;
 
     const [
-      assetInstances,
-      assignments
-    ] = await Promise.all([
-      AssetInstance.find({ organizationId })
+    assetInstances,
+    assignments
+] = await Promise.all([
+    AssetInstance.find({ organizationId })
         .populate("assetId")
-        .populate("createdBy", "name email")
-        .populate("lifecycle.performedBy", "name email")
+        .populate("createdBy","name email")
+        .populate("lifecycle.performedBy","name email")
         .lean(),
 
-      AssetAssignment.find({ organizationId })
-        .populate("employeeId", "name employeeCode email")
-        .populate("departmentId", "departmentName")
-        .populate("assignedBy", "name")
-        .populate("returnedBy", "name")
+    AssetAssignment.find({ organizationId })
+        .populate("departmentId","departmentName")
+        .populate("employeeId","name employeeCode email")
+        .populate("assignedBy","name")
+        .populate("returnedBy","name")
         .lean()
-    ]);
+]);
 
-    const now = new Date();
+const response = {
 
-    const response = {
-      summary: {},
-      financial: {},
-      assets: [],
-      assignments: [],
-      warranty: [],
-      insurance: [],
-      maintenance: [],
-      lifecycle: [],
-      departments: [],
-      topExpensiveAssets: [],
-      charts: {}
-    };
+    summary:{},
 
-    let stats = {
-      totalAssets: 0,
-      assignedAssets: 0,
-      unassignedAssets: 0,
-      maintenanceDue: 0,
-      warrantyExpired: 0,
-      insuranceExpired: 0,
-      brokenAssets: 0,
-      missingAssets: 0,
-      purchaseCost: 0,
-      maintenanceCost: 0,
-      insuranceCost: 0,
-      renewalCost: 0,
-      warrantyCost: 0,
-      upgradeCost: 0
-    };
+    departments:[],
 
-    let expensiveAssets = [];
+    assignments:[],
 
-    const departmentMap = {};
-    const assetLookup = {};
-    const employeeMap = {};
-    for (const inst of assetInstances) {
+    warranty:[],
 
-      const hardware = inst.hardware || {};
-      const software = inst.software || {};
+    insurance:[],
 
-      const purchaseCost =
+    maintenance:[],
+
+    lifecycle:[],
+
+    financial:{},
+
+    charts:{}
+};
+
+const now = new Date();
+
+const assetLookup = {};
+const warranty = [];
+const insurance = [];
+const maintenance = [];
+const lifecycle = [];
+const financial = [];
+const stats = {
+  totalAssets: 0,
+  hardwareAssets: 0,
+  softwareAssets: 0,
+
+  assignedAssets: 0,
+  availableAssets: 0,
+
+  brokenAssets: 0,
+  missingAssets: 0,
+
+  warrantyExpired: 0,
+  insuranceExpired: 0,
+  maintenanceDue: 0,
+
+  purchaseCost: 0,
+  maintenanceCost: 0,
+  insuranceCost: 0,
+  warrantyCost: 0,
+  renewalCost: 0,
+  upgradeCost: 0,
+  totalOwnershipCost: 0
+};
+
+for (const inst of assetInstances) {
+
+    const hardware = inst.hardware || {};
+    const software = inst.software || {};
+
+    const purchaseCost =
         Number(
-          hardware.purchaseCost?.amount ||
-          software.purchaseCost?.amount
+            hardware.purchaseCost?.amount ??
+            software.purchaseCost?.amount
         ) || 0;
 
-      const maintenanceCost =
+    const maintenanceCost =
         Number(
-          hardware.costs?.maintenanceCost?.amount
+            hardware.costs?.maintenanceCost?.amount
         ) || 0;
 
-      const insuranceCost =
+    const insuranceCost =
         Number(
-          hardware.costs?.insuranceCost?.amount
+            hardware.costs?.insuranceCost?.amount
         ) || 0;
 
-      const warrantyCost =
+    const warrantyCost =
         Number(
-          hardware.costs?.warrantyRenewalCost?.amount
+            hardware.costs?.warrantyRenewalCost?.amount
         ) || 0;
 
-      const renewalCost =
+    const renewalCost =
         Number(
-          software.costs?.renewalCost?.amount
+            software.costs?.renewalCost?.amount
         ) || 0;
 
-      const upgradeCost =
+    const upgradeCost =
         (inst.upgrades || []).reduce(
-          (sum, up) =>
-            sum +
-            (Number(up.cost?.amount) || 0),
-          0
+            (sum, upgrade) =>
+                sum + (Number(upgrade.cost?.amount) || 0),
+            0
         );
 
-      const totalCost =
+    const totalCost =
         purchaseCost +
         maintenanceCost +
         insuranceCost +
@@ -108,458 +122,579 @@ const getCompleteAuditDashboard = async (req, res) => {
         renewalCost +
         upgradeCost;
 
-      stats.totalAssets++;
+        stats.totalAssets++;
 
-      stats.purchaseCost += purchaseCost;
-      stats.maintenanceCost += maintenanceCost;
-      stats.insuranceCost += insuranceCost;
-      stats.renewalCost += renewalCost;
-      stats.warrantyCost += warrantyCost;
-      stats.upgradeCost += upgradeCost;
+if (inst.assetType === "hardware")
+    stats.hardwareAssets++;
 
-      if (inst.condition === "broken")
-        stats.brokenAssets++;
+if (inst.assetType === "software")
+    stats.softwareAssets++;
 
-      if (
-        inst.condition === "missing" ||
-        inst.condition === "stolen"
-      )
-        stats.missingAssets++;
+if (
+    inst.condition === "broken"
+)
+    stats.brokenAssets++;
 
-      if (
-        hardware.warrantyExpiry &&
-        new Date(
-          hardware.warrantyExpiry
-        ) < now
-      ) {
-        stats.warrantyExpired++;
+if (
+    inst.condition === "missing" ||
+    inst.condition === "stolen"
+)
+    stats.missingAssets++;
 
-response.warranty.push({
-  instanceId: inst._id,
+stats.purchaseCost += purchaseCost;
+stats.maintenanceCost += maintenanceCost;
+stats.insuranceCost += insuranceCost;
+stats.warrantyCost += warrantyCost;
+stats.renewalCost += renewalCost;
+stats.upgradeCost += upgradeCost;
+if (
+    hardware.warrantyExpiry &&
+    new Date(hardware.warrantyExpiry) < now
+) {
+    stats.warrantyExpired++;
+}
 
-  assetCode: inst.assetId?.assetCode,
-  assetName: inst.assetId?.assetName,
-  assetType: inst.assetType,
+if (
+    hardware.insuranceExpiry &&
+    new Date(hardware.insuranceExpiry) < now
+) {
+    stats.insuranceExpired++;
+}
 
-  instanceCode: inst.instanceCode,
-
-  deviceName: inst.deviceName,
-
-  serialNumber: hardware.serialNumber,
-  modelNo: hardware.modelNo,
-
-  location: inst.location,
-
-  status: inst.status,
-  condition: inst.condition,
-
-  purchaseDate: hardware.purchaseDate,
-  installationDate: hardware.installationDate,
-
-  expiryDate: hardware.warrantyExpiry,
-
-  warrantyCost,
-
-  createdAt: inst.createdAt
-});
-      }
-
-      if (
-        hardware.insuranceExpiry &&
-        new Date(
-          hardware.insuranceExpiry
-        ) < now
-      ) {
-        stats.insuranceExpired++;
-
-        response.insurance.push({
-          instanceId: inst._id,
-          instanceCode: inst.instanceCode,
-          assetName:
-            inst.assetId?.assetName,
-          deviceName: inst.deviceName,
-          insuranceExpiry:
-            hardware.insuranceExpiry,
-          coverageType:
-            hardware.coverageType,
-          location: inst.location,
-          totalCost
-        });
-      }
-
-      if (
-        hardware.nextMaintenanceDate &&
-        new Date(
-          hardware.nextMaintenanceDate
-        ) <= now
-      ) {
-        stats.maintenanceDue++;
-
-response.maintenance.push({
-  instanceId: inst._id,
-
-  assetId: inst.assetId?._id,
-
-  assetCode: inst.assetId?.assetCode,
-
-  assetName: inst.assetId?.assetName,
-
-  deviceName: inst.deviceName,
-
-  instanceCode: inst.instanceCode,
-
-  assetType: inst.assetType,
-
-  location: inst.location,
-
-  status: inst.status,
-
-  condition: inst.condition,
-
-  serialNumber: hardware.serialNumber,
-
-  modelNo: hardware.modelNo,
-
-  specifications: hardware.specifications,
-
-  purchaseDate: hardware.purchaseDate,
-
-  installationDate: hardware.installationDate,
-
-  nextMaintenanceDate:
-    hardware.nextMaintenanceDate,
-
-  maintenanceCost,
-
-  purchaseCost,
-
-  insuranceCost,
-
-  warrantyCost,
-
-  renewalCost,
-
-  upgradeCost,
-
-  totalCost,
-
-  createdBy:
-    inst.createdBy?.name,
-
-  createdAt:
-    inst.createdAt,
-
-  updatedAt:
-    inst.updatedAt,
-
-  assignedTo:
-    inst.assignedTo?.employeeName || null,
-
-  assignedEmployeeId:
-    inst.assignedTo?.employeeId || null,
-
-  upgrades:
-    inst.upgrades || []
-});
-      }
-      assetLookup[inst._id.toString()] = {
+if (
+    hardware.nextMaintenanceDate &&
+    new Date(hardware.nextMaintenanceDate) <= now
+) {
+    stats.maintenanceDue++;
+}
+const asset = {
     instanceId: inst._id,
+    assetId: inst.assetId?._id,
     assetCode: inst.assetId?.assetCode,
     assetName: inst.assetId?.assetName,
-    instanceCode: inst.instanceCode,
     assetType: inst.assetType,
-    deviceName: inst.deviceName,
+    instanceCode: inst.instanceCode,
+    deviceName: inst.deviceName || null,
+    serialNumber: hardware.serialNumber || null,
+    modelNo: hardware.modelNo || null,
+    specifications: hardware.specifications || null,
+    licenseKey: software.licenseKey || null,
+    licenseNumber: software.licenseNumber || null,
     location: inst.location,
-    condition: inst.condition,
     status: inst.status,
+    condition: inst.condition,
+    purchaseDate:
+        hardware.purchaseDate ||
+        software.purchaseDate,
+    installationDate:
+        hardware.installationDate ||
+        software.installationDate,
+    warrantyExpiry:
+        hardware.warrantyExpiry || null,
+    insuranceExpiry:
+        hardware.insuranceExpiry || null,
+    renewalDate:
+        software.renewalDate || null,
+    nextMaintenanceDate:
+        hardware.nextMaintenanceDate || null,
     purchaseCost,
     maintenanceCost,
     insuranceCost,
     warrantyCost,
     renewalCost,
     upgradeCost,
-    totalCost
-};  
-      response.assets.push({
-        instanceId: inst._id,
+    totalCost,
+    lifecycle: inst.lifecycle || [],
+    upgrades: inst.upgrades || [],
+    createdBy: inst.createdBy?.name,
+    createdAt: inst.createdAt,
+    updatedAt: inst.updatedAt
+};
 
-        assetCode:
-          inst.assetId?.assetCode,
+assetLookup[inst._id.toString()] = asset;
+if (asset.warrantyExpiry) {
 
-        assetName:
-          inst.assetId?.assetName,
+    warranty.push({
 
-        instanceCode:
-          inst.instanceCode,
+        instanceId: asset.instanceId,
 
-        assetType:
-          inst.assetType,
+        assetId: asset.assetId,
 
-        deviceName:
-          inst.deviceName,
+        assetCode: asset.assetCode,
 
-        location:
-          inst.location,
+        assetName: asset.assetName,
 
-        condition:
-          inst.condition,
+        instanceCode: asset.instanceCode,
 
-        status:
-          inst.status,
+        assetType: asset.assetType,
 
-        purchaseDate:
-          hardware.purchaseDate ||
-          software.purchaseDate,
+        deviceName: asset.deviceName,
 
-        purchaseCost,
+        serialNumber: asset.serialNumber,
 
-        maintenanceCost,
+        modelNo: asset.modelNo,
 
-        insuranceCost,
+        location: asset.location,
 
-        warrantyCost,
+        status: asset.status,
 
-        renewalCost,
+        condition: asset.condition,
 
-        upgradeCost,
+        purchaseDate: asset.purchaseDate,
 
-        totalCost,
+        installationDate: asset.installationDate,
 
-        serialNumber:
-          hardware.serialNumber,
+        expiryDate: asset.warrantyExpiry,
 
-        modelNo:
-          hardware.modelNo,
+        warrantyCost: asset.warrantyCost,
 
-        specifications:
-          hardware.specifications,
+        totalCost: asset.totalCost
 
-        licenseKey:
-          software.licenseKey,
-
-        licenseNumber:
-          software.licenseNumber
-      });
-
-      expensiveAssets.push({
-        instanceId: inst._id,
-        assetName:
-          inst.assetId?.assetName,
-        instanceCode:
-          inst.instanceCode,
-        totalCost
-      });
-
-      (inst.lifecycle || []).forEach(
-        (event) => {
-          response.lifecycle.push({
-            instanceId: inst._id,
-            instanceCode:
-              inst.instanceCode,
-            assetName:
-              inst.assetId?.assetName,
-            assetType:
-              inst.assetType,
-            eventType:
-              event.eventType,
-            title:
-              event.title,
-            description:
-              event.description,
-            performedBy:
-              event.performedBy?.name ||
-              "System",
-            date:
-              event.date,
-            metadata:
-              event.metadata
-          });
-        }
-      );
-    }
-
-for (const assign of assignments) {
-
-    stats.assignedAssets++;
-
-    const dept =
-        assign.departmentId?.departmentName ||
-        "Unknown";
-
-    const empId =
-        assign.employeeId?._id?.toString();
-
-    const asset =
-        assetLookup[
-            assign.assetInstanceId?.toString()
-        ];
-
-    //---------------------------------------------------
-    // Assignment Report
-    //---------------------------------------------------
-
-    response.assignments.push({
-
-        assignmentId: assign._id,
-
-        assetInstanceId: asset?.instanceId,
-
-        assetCode: asset?.assetCode,
-        assetName: asset?.assetName,
-        instanceCode: asset?.instanceCode,
-        assetType: asset?.assetType,
-        deviceName: asset?.deviceName,
-
-        employee: assign.employeeId?.name,
-        employeeCode:
-            assign.employeeId?.employeeCode,
-        email:
-            assign.employeeId?.email,
-
-        department: dept,
-
-        location:
-            assign.location,
-
-        status:
-            assign.status,
-
-        assignedAt:
-            assign.assignedAt,
-
-        returnedAt:
-            assign.returnedAt,
-
-        assignedBy:
-            assign.assignedBy?.name,
-
-        returnedBy:
-            assign.returnedBy?.name,
-
-        totalCost:
-            asset?.totalCost || 0
     });
 
-    //---------------------------------------------------
-    // Department
-    //---------------------------------------------------
+}
 
-    if (!departmentMap[dept]) {
+if (asset.insuranceExpiry) {
 
-        departmentMap[dept] = {
+    insurance.push({
 
-            name: dept,
+        instanceId: asset.instanceId,
 
-            totalAssets: 0,
+        assetCode: asset.assetCode,
 
-            totalValue: 0,
+        assetName: asset.assetName,
 
-            activeAssignments: 0,
+        instanceCode: asset.instanceCode,
 
-            returnedAssignments: 0,
+        assetType: asset.assetType,
 
-            employees: {},
+        deviceName: asset.deviceName,
 
-            assets: []
+        serialNumber: asset.serialNumber,
 
-        };
+        modelNo: asset.modelNo,
 
-    }
+        location: asset.location,
 
-    const department =
-        departmentMap[dept];
+        status: asset.status,
+
+        condition: asset.condition,
+
+        purchaseDate: asset.purchaseDate,
+
+        insuranceExpiry: asset.insuranceExpiry,
+
+        insuranceCost: asset.insuranceCost,
+
+        totalCost: asset.totalCost
+
+    });
+
+}
+
+if (
+    asset.assetType === "hardware" &&
+    asset.nextMaintenanceDate
+) {
+
+    maintenance.push({
+
+        instanceId: asset.instanceId,
+
+        assetCode: asset.assetCode,
+
+        assetName: asset.assetName,
+
+        instanceCode: asset.instanceCode,
+
+        deviceName: asset.deviceName,
+
+        serialNumber: asset.serialNumber,
+
+        modelNo: asset.modelNo,
+
+        specifications: asset.specifications,
+
+        location: asset.location,
+
+        status: asset.status,
+
+        condition: asset.condition,
+
+        purchaseDate: asset.purchaseDate,
+
+        installationDate: asset.installationDate,
+
+        nextMaintenanceDate:
+            asset.nextMaintenanceDate,
+
+        purchaseCost: asset.purchaseCost,
+
+        maintenanceCost: asset.maintenanceCost,
+
+        insuranceCost: asset.insuranceCost,
+
+        warrantyCost: asset.warrantyCost,
+
+        upgradeCost: asset.upgradeCost,
+
+        totalCost: asset.totalCost,
+
+        upgrades: asset.upgrades
+
+    });
+
+}
+
+asset.lifecycle.forEach(event => {
+
+    lifecycle.push({
+
+        instanceId: asset.instanceId,
+
+        assetCode: asset.assetCode,
+
+        assetName: asset.assetName,
+
+        instanceCode: asset.instanceCode,
+
+        assetType: asset.assetType,
+
+        deviceName: asset.deviceName,
+
+        eventType: event.eventType,
+
+        category: event.category,
+
+        title: event.title,
+
+        description: event.description,
+
+        performedBy:
+            event.performedBy?.name ||
+
+            "System",
+
+        date: event.date,
+
+        metadata: event.metadata
+
+    });
+
+});
+
+financial.push({
+
+    ...asset,
+
+    purchaseCost: asset.purchaseCost,
+
+    maintenanceCost: asset.maintenanceCost,
+
+    insuranceCost: asset.insuranceCost,
+
+    warrantyCost: asset.warrantyCost,
+
+    renewalCost: asset.renewalCost,
+
+    upgradeCost: asset.upgradeCost,
+
+    totalCost: asset.totalCost
+
+});
+}
+stats.totalOwnershipCost =
+    stats.purchaseCost +
+    stats.maintenanceCost +
+    stats.insuranceCost +
+    stats.warrantyCost +
+    stats.renewalCost +
+    stats.upgradeCost;
+
+    const activeAssignments = {
+    assigned: 0,
+    returned: 0
+};
+stats.assignedAssets =
+    activeAssignments.assigned;
+
+stats.availableAssets =
+    stats.totalAssets -
+    activeAssignments.assigned;
+const departmentMap = {};
+    for (const assign of assignments) {
+
+const asset =
+    assetLookup[
+        assign.assetInstanceId?.toString()
+    ];
+
+if (!asset) continue;
+    const departmentName =
+    assign.departmentId?.departmentName ||
+    "Unknown";
+
+const departmentId =
+    assign.departmentId?._id?.toString() ||
+    "unknown";
+
+const employeeId =
+    assign.employeeId?._id?.toString();
+    if (!departmentMap[departmentId]) {
+
+    departmentMap[departmentId] = {
+
+        departmentId,
+
+        departmentName,
+
+        totalEmployees: 0,
+
+        totalAssignments: 0,
+
+        activeAssignments: 0,
+
+        returnedAssignments: 0,
+
+        totalAssets: 0,
+
+        totalValue: 0,
+
+        employees: {},
+
+        assets: {},
+
+        assignmentHistory: []
+
+    };
+
+}
+const department =
+    departmentMap[departmentId];
+
+department.totalAssignments++;
+
+if (
+    assign.status === "active" ||
+    assign.status === "assigned"
+) {
+
+    department.activeAssignments++;
+
+} else {
+
+    department.returnedAssignments++;
+
+}
+if (
+    !department.assets[
+        asset.instanceId
+    ]
+) {
+
+    department.assets[
+        asset.instanceId
+    ] = {
+
+        instanceId:
+            asset.instanceId,
+
+        assetCode:
+            asset.assetCode,
+
+        assetName:
+            asset.assetName,
+
+        instanceCode:
+            asset.instanceCode,
+
+        assetType:
+            asset.assetType,
+
+        deviceName:
+            asset.deviceName,
+
+        location:
+            asset.location,
+
+        condition:
+            asset.condition,
+
+        status:
+            asset.status,
+
+        totalCost:
+            asset.totalCost
+
+    };
 
     department.totalAssets++;
 
-    if (assign.status === "assigned") {
+    department.totalValue +=
+        asset.totalCost;
 
-        department.activeAssignments++;
+}
+if (
+    !department.employees[
+        employeeId
+    ]
+) {
 
-    } else {
+    department.employees[
+        employeeId
+    ] = {
 
-        department.returnedAssignments++;
+        employeeId,
 
-    }
+        employeeName:
+            assign.employeeId?.name,
 
-    if (asset) {
+        employeeCode:
+            assign.employeeId?.employeeCode,
 
-        department.totalValue +=
-            asset.totalCost;
+        email:
+            assign.employeeId?.email,
 
-        department.assets.push({
+        activeAssets: 0,
 
-            ...asset,
+        returnedAssets: 0,
 
-            assignedAt:
-                assign.assignedAt,
+        totalAssignments: 0,
 
-            returnedAt:
-                assign.returnedAt,
+        currentAssets: []
 
-            assignmentStatus:
-                assign.status,
+    };
 
-            employee:
-                assign.employeeId?.name
+    department.totalEmployees++;
 
-        });
+}
+const employee =
+    department.employees[
+        employeeId
+    ];
 
-    }
+employee.totalAssignments++;
 
-    //---------------------------------------------------
-    // Employee
-    //---------------------------------------------------
+if (
+    assign.status === "active" ||
+    assign.status === "assigned"
+) {
 
-    if (!department.employees[empId]) {
+    employee.activeAssets++;
 
-        department.employees[empId] = {
+    employee.currentAssets.push({
 
-            employeeId: empId,
+        instanceId:
+            asset.instanceId,
 
-            employeeName:
-                assign.employeeId?.name,
+        assetName:
+            asset.assetName,
 
-            employeeCode:
-                assign.employeeId?.employeeCode,
+        instanceCode:
+            asset.instanceCode,
 
-            email:
-                assign.employeeId?.email,
+        assetCode:
+            asset.assetCode
 
-            totalAssets: 0,
+    });
 
-            activeAssets: 0,
+} else {
 
-            returnedAssets: 0,
+    employee.returnedAssets++;
 
-            totalValue: 0,
+}
+department.assignmentHistory.push({
 
-            assignedAssets: []
+    assignmentId:
+        assign._id,
 
-        };
+    employeeName:
+        assign.employeeId?.name,
 
-    }
+    employeeCode:
+        assign.employeeId?.employeeCode,
 
-    const employee =
-        department.employees[empId];
+    assetName:
+        asset.assetName,
 
-    employee.totalAssets++;
+    instanceCode:
+        asset.instanceCode,
 
-    if (assign.status === "assigned") {
+    assignedAt:
+        assign.assignedAt,
 
-        employee.activeAssets++;
+    returnedAt:
+        assign.returnedAt,
 
-    } else {
+    assignedBy:
+        assign.assignedBy?.name,
 
-        employee.returnedAssets++;
+    returnedBy:
+        assign.returnedBy?.name,
 
-    }
+    location:
+        assign.location,
 
-    employee.totalValue +=
-        asset?.totalCost || 0;
+    status:
+        assign.status
 
-    employee.assignedAssets.push({
+});
+    response.assignments.push({
+
+        //-----------------------------------
+        // Assignment
+        //-----------------------------------
 
         assignmentId: assign._id,
+
+        assignmentStatus: assign.status,
+
+        assignedAt: assign.assignedAt,
+
+        returnedAt: assign.returnedAt,
+
+        assignedBy:
+            assign.assignedBy?.name || null,
+
+        returnedBy:
+            assign.returnedBy?.name || null,
+
+        assignmentLocation:
+            assign.location,
+
+        //-----------------------------------
+        // Employee
+        //-----------------------------------
+
+        employeeId:
+            assign.employeeId?._id,
+
+        employeeName:
+            assign.employeeId?.name,
+
+        employeeCode:
+            assign.employeeId?.employeeCode,
+
+        employeeEmail:
+            assign.employeeId?.email,
+
+        department:
+            assign.departmentId?.departmentName ||
+
+            "Unknown",
+
+        //-----------------------------------
+        // Instance
+        //-----------------------------------
+
+        instanceId:
+            asset?.instanceId,
+
+        instanceCode:
+            asset?.instanceCode,
+
+        assetId:
+            asset?.assetId,
 
         assetCode:
             asset?.assetCode,
@@ -567,124 +702,126 @@ for (const assign of assignments) {
         assetName:
             asset?.assetName,
 
-        instanceCode:
-            asset?.instanceCode,
-
         assetType:
             asset?.assetType,
 
         deviceName:
             asset?.deviceName,
 
-        totalCost:
-            asset?.totalCost || 0,
+        serialNumber:
+            asset?.serialNumber,
+
+        modelNo:
+            asset?.modelNo,
+
+        condition:
+            asset?.condition,
 
         status:
-            assign.status,
+            asset?.status,
 
-        assignedAt:
-            assign.assignedAt,
+        //-----------------------------------
+        // Dates
+        //-----------------------------------
 
-        returnedAt:
-            assign.returnedAt,
+        purchaseDate:
+            asset?.purchaseDate,
 
-        assignedBy:
-            assign.assignedBy?.name,
+        installationDate:
+            asset?.installationDate,
 
-        returnedBy:
-            assign.returnedBy?.name
+        warrantyExpiry:
+            asset?.warrantyExpiry,
 
+        insuranceExpiry:
+            asset?.insuranceExpiry,
+
+        renewalDate:
+            asset?.renewalDate,
+
+        nextMaintenanceDate:
+            asset?.nextMaintenanceDate,
+
+        //-----------------------------------
+        // Costs
+        //-----------------------------------
+
+        purchaseCost:
+            asset?.purchaseCost || 0,
+
+        maintenanceCost:
+            asset?.maintenanceCost || 0,
+
+        insuranceCost:
+            asset?.insuranceCost || 0,
+
+        warrantyCost:
+            asset?.warrantyCost || 0,
+
+        renewalCost:
+            asset?.renewalCost || 0,
+
+        upgradeCost:
+            asset?.upgradeCost || 0,
+
+        totalCost:
+            asset?.totalCost || 0
     });
-
+    if (
+    assign.status === "active" ||
+    assign.status === "assigned"
+) {
+    activeAssignments.assigned++;
+} else {
+    activeAssignments.returned++;
 }
-Object.values(departmentMap).forEach(dept => {
-
-    dept.employees =
-        Object.values(dept.employees);
-
-});
-
-    stats.unassignedAssets =
-      stats.totalAssets -
-      stats.assignedAssets;
-
-    response.summary = stats;
-
-    response.financial = {
-      totalOwnershipCost:
-        stats.purchaseCost +
-        stats.maintenanceCost +
-        stats.insuranceCost +
-        stats.renewalCost +
-        stats.warrantyCost +
-        stats.upgradeCost,
-
-      purchaseCost:
-        stats.purchaseCost,
-
-      maintenanceCost:
-        stats.maintenanceCost,
-
-      insuranceCost:
-        stats.insuranceCost,
-
-      renewalCost:
-        stats.renewalCost,
-
-      warrantyCost:
-        stats.warrantyCost,
-
-      upgradeCost:
-        stats.upgradeCost
-    };
-
-    response.topExpensiveAssets =
-      expensiveAssets
-        .sort(
-          (a, b) =>
-            b.totalCost -
-            a.totalCost
-        )
-        .slice(0, 10);
-
+}
 response.departments =
-    Object.values(departmentMap);
+    Object.values(departmentMap).map(
+        department => ({
 
-    response.charts = {
-      assetTypes: {
-        hardware:
-          assetInstances.filter(
-            a =>
-              a.assetType ===
-              "hardware"
-          ).length,
+            ...department,
 
-        software:
-          assetInstances.filter(
-            a =>
-              a.assetType ===
-              "software"
-          ).length
-      },
+            employees:
+                Object.values(
+                    department.employees
+                ),
 
-      conditions: {
-        broken:
-          stats.brokenAssets,
+            assets:
+                Object.values(
+                    department.assets
+                )
 
-        missing:
-          stats.missingAssets,
+        })
+    );
 
-        active:
-          stats.totalAssets -
-          stats.brokenAssets -
-          stats.missingAssets
-      }
-    };
+response.warranty = warranty;
 
-    return res.status(200).json({
-      success: true,
-      data: response
-    });
+response.insurance = insurance;
+
+response.maintenance = maintenance;
+
+response.lifecycle = lifecycle;
+
+response.financial = {
+
+    summary: stats,
+
+    instances: financial
+
+};
+
+response.summary = {
+
+    ...stats,
+
+    assets: Object.values(assetLookup)
+
+};
+return res.status(200).json({
+    success: true,
+    data: response
+});
 
   } catch (error) {
     return res.status(500).json({
