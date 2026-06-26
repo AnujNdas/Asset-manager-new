@@ -321,8 +321,6 @@ const getCompleteAuditDashboard = async (req, res) => {
         departmentMap[dept] = 0;
       }
 
-      const dept =
-    assign.departmentId?.departmentName || "Unknown";
 
 if (!departmentMap[dept]) {
 
