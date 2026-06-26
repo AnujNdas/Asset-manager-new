@@ -162,7 +162,7 @@
 }
 
 .financial-card {
-  background: white;
+  background: #393E46;
   border-radius: 16px;
   padding: 22px;
   box-shadow: 0 3px 12px rgba(0,0,0,.06);
@@ -183,7 +183,7 @@
 }
 
 .department-card {
-  background: white;
+  /* background: white; */
   border-radius: 14px;
   padding: 24px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);

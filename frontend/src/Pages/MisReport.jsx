@@ -48,7 +48,7 @@ const summary = auditData.summary || {};
 
 const financial = auditData.financial || {};
 
-const assets = auditData.assets || [];
+const assets = auditData.summary?.assets || [];
 
 const assignments =
   auditData.assignments || [];
@@ -73,36 +73,52 @@ const topExpensiveAssets =
 const stats = [
   {
     title: "Total Assets",
-    value: summary.totalAssets || 0
+    value: summary.totalAssets || 0,
+  },
+  {
+    title: "Hardware Assets",
+    value: summary.hardwareAssets || 0,
+  },
+  {
+    title: "Software Assets",
+    value: summary.softwareAssets || 0,
   },
   {
     title: "Assigned",
-    value: summary.assignedAssets || 0
+    value: summary.assignedAssets || 0,
   },
   {
-    title: "Unassigned",
-    value: summary.unassignedAssets || 0
+    title: "Available",
+    value: summary.availableAssets || 0,
+  },
+  {
+    title: "Broken",
+    value: summary.brokenAssets || 0,
+  },
+  {
+    title: "Missing",
+    value: summary.missingAssets || 0,
   },
   {
     title: "Warranty Expired",
-    value: summary.warrantyExpired || 0
+    value: summary.warrantyExpired || 0,
   },
   {
     title: "Insurance Expired",
-    value: summary.insuranceExpired || 0
+    value: summary.insuranceExpired || 0,
   },
   {
     title: "Maintenance Due",
-    value: summary.maintenanceDue || 0
+    value: summary.maintenanceDue || 0,
   },
   {
     title: "Purchase Cost",
-    value: `$${summary.purchaseCost || 0}`
+    value: `$${summary.purchaseCost}`,
   },
   {
-    title: "Total Ownership",
-    value: `$${financial.totalOwnershipCost || 0}`
-  }
+    title: "Ownership Cost",
+    value: `$${summary.totalOwnershipCost}`,
+  },
 ];
 
   const tabs = [
@@ -132,18 +148,20 @@ const stats = [
     <div className="audit-table-wrapper">
       <table className="audit-table">
 
-        <thead>
-          <tr>
-            <th>Asset Code</th>
-            <th>Name</th>
-            <th>Instance Code</th>
-            <th>Type</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Condition</th>
-            <th>Total Cost</th>
-          </tr>
-        </thead>
+<thead>
+  <tr>
+    <th>Asset</th>
+    <th>Instance</th>
+    <th>Type</th>
+    <th>Location</th>
+    <th>Status</th>
+    <th>Condition</th>
+    <th>Purchase Date</th>
+    <th>Purchase Cost</th>
+    <th>Upgrade Cost</th>
+    <th>Total Cost</th>
+  </tr>
+</thead>
 
 <tbody>
 
@@ -151,9 +169,11 @@ const stats = [
 
 <tr key={asset.instanceId}>
 
-<td>{asset.assetCode}</td>
-
-<td>{asset.assetName}</td>
+<td>
+    <strong>{asset.assetName}</strong>
+    <br />
+    <small>{asset.assetCode}</small>
+</td>
 
 <td>{asset.instanceCode}</td>
 
@@ -165,7 +185,27 @@ const stats = [
 
 <td>{asset.condition}</td>
 
-<td>${asset.totalCost}</td>
+<td>
+{
+asset.purchaseDate
+? new Date(asset.purchaseDate).toLocaleDateString()
+: "-"
+}
+</td>
+
+<td>
+${asset.purchaseCost.toLocaleString()}
+</td>
+
+<td>
+${asset.upgradeCost.toLocaleString()}
+</td>
+
+<td>
+<strong>
+${asset.totalCost.toLocaleString()}
+</strong>
+</td>
 
 </tr>
 
@@ -182,7 +222,7 @@ const renderDepartment = () => (
 
     {departments.map((dept) => (
       <div
-        key={dept.name}
+        key={dept.departmentId}
         className="department-card"
       >
 
@@ -190,7 +230,7 @@ const renderDepartment = () => (
 
         <div className="department-header">
           <div>
-            <h2>{dept.name}</h2>
+            <h2>{dept.departmentName}</h2>
 
             <p>
               Complete Department Audit
@@ -251,35 +291,31 @@ const renderDepartment = () => (
               </tr>
             </thead>
 
-            <tbody>
+<tbody>
+  {dept.assets.map(asset => (
+    <tr key={asset.instanceId}>
+      <td>
+        <strong>{asset.assetName}</strong>
+        <br />
+        <small>{asset.assetCode}</small>
+      </td>
 
-              {dept.assets.map((asset) => (
+      <td>{asset.instanceCode}</td>
 
-                <tr key={asset.instanceId}>
+      <td>{asset.assetType}</td>
 
-                  <td>{asset.assetName}</td>
+      <td>{asset.location}</td>
 
-                  <td>{asset.assetCode}</td>
+      <td>{asset.status}</td>
 
-                  <td>{asset.instanceCode}</td>
+      <td>{asset.condition}</td>
 
-                  <td>{asset.assetType}</td>
-
-                  <td>{asset.location}</td>
-
-                  <td>{asset.status}</td>
-
-                  <td>{asset.condition}</td>
-
-                  <td>
-                    ${asset.totalCost.toLocaleString()}
-                  </td>
-
-                </tr>
-
-              ))}
-
-            </tbody>
+      <td>
+        ${(asset.totalCost ?? 0).toLocaleString()}
+      </td>
+    </tr>
+  ))}
+</tbody>
 
           </table>
 
@@ -313,42 +349,102 @@ const renderDepartment = () => (
 
               </tr>
 
-            </thead>
+            </thead><thead>
+<tr>
+    <th>Employee</th>
+    <th>Code</th>
+    <th>Email</th>
+    <th>Total Assets</th>
+    <th>Active</th>
+    <th>Returned</th>
+    <th>Total Value</th>
+</tr>
+</thead>
 
-            <tbody>
+<tbody>
 
-              {dept.employees.map((emp, index) => (
+{dept.employees.map(emp => (
 
-                <tr
-                  key={`${emp.employeeId}-${index}`}
-                >
+<tr key={emp.employeeId}>
 
-                  <td>{emp.employeeName}</td>
+<td>{emp.employeeName}</td>
 
-                  <td>{emp.employeeCode}</td>
+<td>{emp.employeeCode}</td>
 
-                  <td>{emp.email}</td>
+<td>{emp.email}</td>
 
-                  <td>{emp.assignedAsset}</td>
+<td>{emp.totalAssets}</td>
 
-                  <td>{emp.instanceCode}</td>
+<td>{emp.activeAssets}</td>
 
-                  <td>{emp.status}</td>
+<td>{emp.returnedAssets}</td>
 
-                  <td>
-                    ${emp.totalCost.toLocaleString()}
-                  </td>
+<td>${(emp.totalValue ?? 0).toLocaleString()}</td>
 
-                </tr>
+</tr>
 
-              ))}
+))}
 
-            </tbody>
+</tbody>
 
           </table>
 
         </div>
+  <div className="audit-table-wrapper">
 
+<h3>Assignment History</h3>
+
+<table className="audit-table">
+
+<thead>
+<tr>
+<th>Employee</th>
+<th>Asset</th>
+<th>Instance</th>
+<th>Status</th>
+<th>Assigned</th>
+<th>Returned</th>
+<th>Location</th>
+</tr>
+</thead>
+
+<tbody>
+
+{dept.assignmentHistory.map(record => (
+
+<tr key={record.assignmentId}>
+
+<td>{record.employeeName}</td>
+
+<td>{record.assetName}</td>
+
+<td>{record.instanceCode}</td>
+
+<td>{record.status}</td>
+
+<td>
+{record.assignedAt
+? new Date(record.assignedAt).toLocaleDateString()
+: "-"}
+</td>
+
+<td>
+{record.returnedAt
+? new Date(record.returnedAt).toLocaleDateString()
+: "-"}
+</td>
+
+<td>{record.location}</td>
+
+</tr>
+
+))}
+
+</tbody>
+
+</table>
+
+</div>
       </div>
     ))}
 
@@ -361,99 +457,157 @@ const renderWarranty = () => {
     <div className="audit-table-wrapper">
       <table className="audit-table">
 
-        <thead>
-          <tr>
-            <th>Asset</th>
-            <th>Asset Details</th>
-            <th>Location</th>
-            <th>Cost</th>
-            <th>Warranty</th> 
-            <th>Status</th>
-          </tr>
-        </thead>
+<thead>
+  <tr>
+    <th>Asset</th>
+    <th>Instance Details</th>
+    <th>Location</th>
+    <th>Warranty</th>
+    <th>Cost</th>
+    <th>Status</th>
+  </tr>
+</thead>
 
-        <tbody>
+<tbody>
+  {warranty.map((item) => {
 
-          {warranty.map(item => {
+    const expiry = new Date(item.expiryDate);
 
-            const expiry = new Date(item.expiryDate);
+    const today = new Date();
 
-            const daysLeft = Math.ceil(
-              (expiry - today) /
-              (1000 * 60 * 60 * 24)
-            );
+    const daysLeft = Math.ceil(
+      (expiry - today) / (1000 * 60 * 60 * 24)
+    );
 
-            return (
-              <tr key={item.instanceId}>
+    return (
+      <tr key={item.instanceId}>
 
-                <td>
-                  <strong>{item.assetName}</strong>
-                  <br />
-                  <small>{item.assetCode}</small>
-                </td>
+        {/* Asset */}
 
-                <td>
-                  <div><strong>Device:</strong> {item.deviceName}</div>
-                  <div><strong>Instance:</strong> {item.instanceCode}</div>
-                  <div><strong>Serial:</strong> {item.serialNumber}</div>
-                  <div><strong>Model:</strong> {item.modelNo}</div>
-                </td>
+        <td>
+          <strong>{item.assetName}</strong>
+          <br />
+          <small>{item.assetCode}</small>
+          <br />
+          <small>{item.assetType.toUpperCase()}</small>
+        </td>
 
-                <td>
-                  <div>{item.location}</div>
-                  <small>{item.condition}</small>
-                </td>
-                <td>
-                                      <div>
-    <strong>Warranty Cost:</strong><br />
-    ${item.warrantyCost?.toLocaleString() || 0}
-  </div>
-                </td>
-                <td>
-                  <div>
-                    <strong>Purchased:</strong><br />
-                    {new Date(item.purchaseDate).toLocaleDateString()}
-                  </div>
+        {/* Instance */}
 
-                  <div>
-                    <strong>Installed:</strong><br />
-                    {new Date(item.installationDate).toLocaleDateString()}
-                  </div>
+        <td>
+          <div>
+            <strong>Instance:</strong> {item.instanceCode}
+          </div>
 
-                  <div>
-                    <strong>Expires:</strong><br />
-                    {expiry.toLocaleDateString()}
-                  </div>
+          {item.deviceName && (
+            <div>
+              <strong>Device:</strong> {item.deviceName}
+            </div>
+          )}
 
-                </td>
+          {item.serialNumber && (
+            <div>
+              <strong>Serial:</strong> {item.serialNumber}
+            </div>
+          )}
 
-                <td>
-                  <span
-                    className={
-                      daysLeft < 0
-                        ? "status-expired"
-                        : "status-active"
-                    }
-                  >
-                    {daysLeft < 0
-                      ? `${Math.abs(daysLeft)} Days Expired`
-                      : `${daysLeft} Days Left`}
-                  </span>
+          {item.modelNo && (
+            <div>
+              <strong>Model:</strong> {item.modelNo}
+            </div>
+          )}
+        </td>
 
-                  <br />
+        {/* Location */}
 
-                  <small>
-                    {item.status}
-                  </small>
-                </td>
+        <td>
+          <div>{item.location}</div>
 
-              </tr>
-            );
+          <small>
+            {item.condition}
+          </small>
+        </td>
 
-          })}
+        {/* Warranty */}
 
-        </tbody>
+        <td>
 
+          <div>
+            <strong>Purchased</strong>
+            <br />
+            {item.purchaseDate
+              ? new Date(item.purchaseDate).toLocaleDateString()
+              : "-"}
+          </div>
+
+          <br />
+
+          <div>
+            <strong>Installed</strong>
+            <br />
+            {item.installationDate
+              ? new Date(item.installationDate).toLocaleDateString()
+              : "-"}
+          </div>
+
+          <br />
+
+          <div>
+            <strong>Expires</strong>
+            <br />
+            {expiry.toLocaleDateString()}
+          </div>
+
+        </td>
+
+        {/* Cost */}
+
+        <td>
+
+          <div>
+            <strong>Warranty</strong>
+            <br />
+            ${(item.warrantyCost ?? 0).toLocaleString()}
+          </div>
+
+          <br />
+
+          <div>
+            <strong>Total</strong>
+            <br />
+            ${(item.totalCost ?? 0).toLocaleString()}
+          </div>
+
+        </td>
+
+        {/* Status */}
+
+        <td>
+
+          <span
+            className={
+              daysLeft < 0
+                ? "status-expired"
+                : daysLeft <= 30
+                ? "status-warning"
+                : "status-active"
+            }
+          >
+            {daysLeft < 0
+              ? `${Math.abs(daysLeft)} Days Expired`
+              : `${daysLeft} Days Left`}
+          </span>
+
+          <br />
+
+          <small>{item.status}</small>
+
+        </td>
+
+      </tr>
+    );
+  })}
+</tbody>
       </table>
     </div>
   );
@@ -546,224 +700,519 @@ const renderMaintenance = () => (
     <table className="audit-table">
 
       <thead>
-
         <tr>
-
           <th>Asset</th>
-
-          <th>Code</th>
-
-          <th>Instance</th>
-
-          <th>Type</th>
-
-          <th>Device</th>
-
-          <th>Serial No.</th>
-
-          <th>Model</th>
-
+          <th>Instance Details</th>
           <th>Location</th>
-
-
-          <th>Condition</th>
-
-          <th>Purchase</th>
-
-          <th>Installation</th>
-
-          <th>Next Maintenance</th>
-
-          <th>Maintenance Cost</th>
-
-          <th>Total Value</th>
-
+          <th>Maintenance</th>
+          <th>Costs</th>
           <th>Upgrades</th>
-
         </tr>
-
       </thead>
 
-<tbody>
+      <tbody>
 
-{maintenance.map((item) => {
+        {maintenance.map(item => {
 
-  const days = getDaysRemaining(
-    item.nextMaintenanceDate
-  );
+          const days =
+            getDaysRemaining(
+              item.nextMaintenanceDate
+            );
 
-  const status =
-    getMaintenanceStatus(
-      item.nextMaintenanceDate
-    );
+          const status =
+            getMaintenanceStatus(
+              item.nextMaintenanceDate
+            );
 
-  return (
+          return (
 
-<tr key={item.instanceId}>
+            <tr key={item.instanceId}>
 
-<td>{item.assetName}</td>
+              {/* Asset */}
 
-<td>{item.assetCode}</td>
+              <td>
 
-<td>{item.instanceCode}</td>
+                <strong>{item.assetName}</strong>
 
-<td>{item.assetType}</td>
+                <br />
 
-<td>{item.deviceName}</td>
+                <small>{item.assetCode}</small>
 
-<td>{item.serialNumber}</td>
+                <br />
 
-<td>{item.modelNo}</td>
+                <small>{item.assetType}</small>
 
-<td>{item.location}</td>
+              </td>
 
-<td>{item.condition}</td>
+              {/* Instance */}
 
-<td>
-  {item.purchaseDate
-    ? new Date(item.purchaseDate)
-        .toLocaleDateString()
-    : "-"}
-</td>
+              <td>
 
-<td>
-  {item.installationDate
-    ? new Date(item.installationDate)
-        .toLocaleDateString()
-    : "-"}
-</td>
+                <div>
+                  <strong>Instance:</strong> {item.instanceCode}
+                </div>
 
-<td>
-  {item.nextMaintenanceDate
-    ? new Date(item.nextMaintenanceDate)
-        .toLocaleDateString()
-    : "-"}
-      {/* <span className={status.className}>
-    {status.label}
-  </span> */}
-</td>
+                {item.deviceName && (
+                  <div>
+                    <strong>Device:</strong> {item.deviceName}
+                  </div>
+                )}
 
-{/* <td>
-  {days === null
-    ? "-"
-    : days < 0
-    ? `${Math.abs(days)} Days Overdue`
-    : `${days} Days`}
-</td> */}
+                {item.serialNumber && (
+                  <div>
+                    <strong>Serial:</strong> {item.serialNumber}
+                  </div>
+                )}
 
-<td>
-  {formatCurrency(item.maintenanceCost)}
-</td>
+                {item.modelNo && (
+                  <div>
+                    <strong>Model:</strong> {item.modelNo}
+                  </div>
+                )}
 
-<td>
-  {formatCurrency(item.totalCost)}
-</td>
+                {item.specifications && (
+                  <div>
+                    <strong>Specs:</strong> {item.specifications}
+                  </div>
+                )}
 
-<td>
-  {item.upgrades?.length || 0}
-</td>
+              </td>
 
-</tr>
+              {/* Location */}
 
-  );
+              <td>
 
-})}
+                <div>{item.location}</div>
 
-</tbody>
+                <small>
+                  {item.condition}
+                </small>
+
+                <br />
+
+                <small>{item.status}</small>
+
+              </td>
+
+              {/* Maintenance */}
+
+              <td>
+
+                <div>
+
+                  <strong>Purchase</strong>
+
+                  <br />
+
+                  {item.purchaseDate
+                    ? new Date(
+                        item.purchaseDate
+                      ).toLocaleDateString()
+                    : "-"}
+
+                </div>
+
+                <br />
+
+                <div>
+
+                  <strong>Installed</strong>
+
+                  <br />
+
+                  {item.installationDate
+                    ? new Date(
+                        item.installationDate
+                      ).toLocaleDateString()
+                    : "-"}
+
+                </div>
+
+                <br />
+
+                <div>
+
+                  <strong>Next Service</strong>
+
+                  <br />
+
+                  {item.nextMaintenanceDate
+                    ? new Date(
+                        item.nextMaintenanceDate
+                      ).toLocaleDateString()
+                    : "-"}
+
+                </div>
+
+                <br />
+
+                <span className={status.className}>
+                  {status.label}
+                </span>
+
+                <br />
+
+                <small>
+
+                  {days === null
+                    ? "-"
+                    : days < 0
+                    ? `${Math.abs(days)} Days Overdue`
+                    : `${days} Days Left`}
+
+                </small>
+
+              </td>
+
+              {/* Costs */}
+
+              <td>
+
+                <div>
+
+                  <strong>Purchase</strong>
+
+                  <br />
+
+                  {formatCurrency(
+                    item.purchaseCost
+                  )}
+
+                </div>
+
+                <br />
+
+                <div>
+
+                  <strong>Maintenance</strong>
+
+                  <br />
+
+                  {formatCurrency(
+                    item.maintenanceCost
+                  )}
+
+                </div>
+
+                <br />
+
+                <div>
+
+                  <strong>Warranty</strong>
+
+                  <br />
+
+                  {formatCurrency(
+                    item.warrantyCost
+                  )}
+
+                </div>
+
+                <br />
+
+                <div>
+
+                  <strong>Upgrade</strong>
+
+                  <br />
+
+                  {formatCurrency(
+                    item.upgradeCost
+                  )}
+
+                </div>
+
+                <hr />
+
+                <strong>
+
+                  {formatCurrency(
+                    item.totalCost
+                  )}
+
+                </strong>
+
+              </td>
+
+              {/* Upgrades */}
+
+              <td>
+
+                <strong>
+
+                  {item.upgrades?.length || 0}
+
+                </strong>
+
+                <br />
+
+                {item.upgrades?.length > 0 &&
+
+                  item.upgrades
+                    .slice(0, 3)
+                    .map((upgrade, index) => (
+
+                      <div key={index}>
+
+                        • {upgrade.description}
+
+                        <br />
+
+                        <small>
+
+                          {new Date(
+                            upgrade.date
+                          ).toLocaleDateString()}
+
+                        </small>
+
+                      </div>
+
+                    ))}
+
+                {item.upgrades?.length > 3 && (
+
+                  <small>
+
+                    +{item.upgrades.length - 3} more
+
+                  </small>
+
+                )}
+
+              </td>
+
+            </tr>
+
+          );
+
+        })}
+
+      </tbody>
 
     </table>
 
   </div>
 );
 const renderAssignment = () => (
-  <div className="audit-report-grid">
+  <div className="audit-table-wrapper">
 
-<table className="audit-table">
+    <h3>Assignment Audit</h3>
 
-<thead>
-<tr>
-<th>Employee</th>
-<th>Department</th>
-<th>Location</th>
-<th>Status</th>
-<th>Assigned</th>
-<th>Returned</th>
-</tr>
-</thead>
+    <table className="audit-table">
 
-<tbody>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Asset</th>
+          <th>Department</th>
+          <th>Assignment</th>
+          <th>Dates</th>
+          <th>Asset Status</th>
+          <th>Total Value</th>
+        </tr>
+      </thead>
 
-{assignments.map(item => (
+      <tbody>
 
-<tr key={item.assignmentId}>
+        {assignments.map(item => (
 
-<td>{item.employee}</td>
+          <tr key={item.assignmentId}>
 
-<td>{item.department}</td>
+            {/* Employee */}
 
-<td>{item.location}</td>
+            <td>
+              <strong>{item.employeeName}</strong>
+              <br />
+              <small>{item.employeeCode}</small>
+              <br />
+              <small>{item.employeeEmail}</small>
+            </td>
 
-<td>{item.status}</td>
+            {/* Asset */}
 
-<td>
-{new Date(item.assignedAt)
-.toLocaleDateString()}
-</td>
+            <td>
+              <strong>{item.assetName}</strong>
+              <br />
+              <small>{item.assetCode}</small>
 
-<td>
-{item.returnedAt
-? new Date(item.returnedAt)
-.toLocaleDateString()
-: "-"}
-</td>
+              <br />
 
-</tr>
+              <small>
+                {item.instanceCode}
+              </small>
 
-))}
+              <br />
 
-</tbody>
+              <small>
+                {item.deviceName}
+              </small>
+            </td>
 
-</table>
+            {/* Department */}
+
+            <td>
+              {item.department}
+            </td>
+
+            {/* Assignment */}
+
+            <td>
+
+              <div>
+                <strong>Status:</strong> {item.assignmentStatus}
+              </div>
+
+              <div>
+                <strong>Location:</strong> {item.assignmentLocation}
+              </div>
+
+              <div>
+                <strong>Assigned By:</strong>{" "}
+                {item.assignedBy || "-"}
+              </div>
+
+              <div>
+                <strong>Returned By:</strong>{" "}
+                {item.returnedBy || "-"}
+              </div>
+
+            </td>
+
+            {/* Dates */}
+
+            <td>
+
+              <div>
+                <strong>Assigned</strong>
+                <br />
+                {item.assignedAt
+                  ? new Date(item.assignedAt).toLocaleDateString()
+                  : "-"}
+              </div>
+
+              <br />
+
+              <div>
+                <strong>Returned</strong>
+                <br />
+                {item.returnedAt
+                  ? new Date(item.returnedAt).toLocaleDateString()
+                  : "-"}
+              </div>
+
+            </td>
+
+            {/* Asset Status */}
+
+            <td>
+
+              <div>
+                <strong>{item.status}</strong>
+              </div>
+
+              <small>
+                {item.condition}
+              </small>
+
+            </td>
+
+            {/* Value */}
+
+            <td>
+
+              <strong>
+                ${Number(item.totalCost || 0).toLocaleString()}
+              </strong>
+
+            </td>
+
+          </tr>
+
+        ))}
+
+      </tbody>
+
+    </table>
 
   </div>
 );
 const renderLifecycle = () => (
   <div className="audit-table-wrapper">
 
+    <h3>Asset Lifecycle History</h3>
+
     <table className="audit-table">
 
       <thead>
         <tr>
           <th>Asset</th>
-          <th>Code</th>
-          <th>Type</th>
+          <th>Event</th>
+          <th>Description</th>
+          <th>Performed By</th>
+          <th>Date</th>
         </tr>
       </thead>
 
       <tbody>
 
-{lifecycle.map((item,index) => (
+        {lifecycle.map((item, index) => (
 
-<tr key={index}>
+          <tr key={`${item.instanceId}-${index}`}>
 
-<td>{item.assetName}</td>
+            <td>
 
-<td>{item.eventType}</td>
+              <strong>{item.assetName}</strong>
 
-<td>{item.title}</td>
+              <br />
 
-<td>{item.performedBy}</td>
+              <small>{item.assetCode}</small>
 
-<td>
-{new Date(item.date)
-.toLocaleDateString()}
-</td>
+              <br />
 
-</tr>
+              <small>{item.instanceCode}</small>
 
-))}
+              <br />
 
-</tbody>
+              <small>{item.deviceName || "-"}</small>
+
+            </td>
+
+            <td>
+
+              <strong>{item.title}</strong>
+
+              <br />
+
+              <small>{item.eventType}</small>
+
+            </td>
+
+            <td>
+
+              {item.description || "-"}
+
+            </td>
+
+            <td>
+
+              {item.performedBy || "System"}
+
+            </td>
+
+            <td>
+
+              {item.date
+                ? new Date(item.date).toLocaleString()
+                : "-"}
+
+            </td>
+
+          </tr>
+
+        ))}
+
+      </tbody>
 
     </table>
 
@@ -771,39 +1220,57 @@ const renderLifecycle = () => (
 );
 const renderFinancial = () => (
   <>
-    <div className="financial-grid">
+<div className="financial-grid">
 
-      <div className="financial-card">
-        <h4>Purchase Cost</h4>
-        <h2>
-          ${financial?.summary?.purchaseCost ?? 0}
-        </h2>
-      </div>
+  <div className="financial-card">
+    <h5>Purchase Cost</h5>
+    <h2>${financial.summary.purchaseCost.toLocaleString()}</h2>
+    <span>Initial Asset Investment</span>
+  </div>
 
-      <div className="financial-card">
-        <h4>Maintenance Cost</h4>
-        <h2>
-          ${financial?.summary?.maintenanceCost ?? 0}
+  <div className="financial-card">
+    <h5>Maintenance</h5>
+    <h2>${financial.summary.maintenanceCost.toLocaleString()}</h2>
+    <span>Repairs & Servicing</span>
+  </div>
 
+  <div className="financial-card">
+    <h5>Warranty</h5>
+    <h2>${financial.summary.warrantyCost.toLocaleString()}</h2>
+    <span>Warranty Renewals</span>
+  </div>
 
-        </h2>
-      </div>
+  <div className="financial-card">
+    <h5>Insurance</h5>
+    <h2>${financial.summary.insuranceCost.toLocaleString()}</h2>
+    <span>Insurance Premiums</span>
+  </div>
 
-      <div className="financial-card">
-        <h4>Renewal Cost</h4>
-        <h2>
-${financial?.summary?.renewalCost ?? 0}
-        </h2>
-      </div>
+  <div className="financial-card">
+    <h5>Renewals</h5>
+    <h2>${financial.summary.renewalCost.toLocaleString()}</h2>
+    <span>Software Licenses</span>
+  </div>
 
-      <div className="financial-card">
-        <h4>Total Ownership</h4>
-        <h2>
-${financial?.summary?.totalOwnershipCost ?? 0}
-        </h2>
-      </div>
+  <div className="financial-card">
+    <h5>Upgrades</h5>
+    <h2>${financial.summary.upgradeCost.toLocaleString()}</h2>
+    <span>Hardware & Software Upgrades</span>
+  </div>
 
-    </div>
+  <div className="financial-card">
+    <h5>Total Assets</h5>
+    <h2>{financial.summary.totalAssets}</h2>
+    <span>Tracked Assets</span>
+  </div>
+
+  <div className="financial-card highlight">
+    <h5>Total Ownership Cost</h5>
+    <h2>${financial.summary.totalOwnershipCost.toLocaleString()}</h2>
+    <span>Overall Asset Investment</span>
+  </div>
+
+</div>
 
     <div className="audit-table-wrapper">
 
@@ -813,31 +1280,83 @@ ${financial?.summary?.totalOwnershipCost ?? 0}
 
       <table className="audit-table">
 
-        <thead>
-          <tr>
-            <th>Asset</th>
-            <th>Type</th>
-            <th>Total Cost</th>
-          </tr>
-        </thead>
+<thead>
 
-        <tbody>
+<tr>
 
-{topExpensiveAssets.map(asset => (
+<th>Asset</th>
+
+<th>Type</th>
+
+<th>Purchase</th>
+
+<th>Maintenance</th>
+
+<th>Warranty</th>
+
+<th>Insurance</th>
+
+<th>Renewal</th>
+
+<th>Upgrade</th>
+
+<th>Total</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{financial.instances
+.sort((a,b)=>b.totalCost-a.totalCost)
+.map(asset=>(
 
 <tr key={asset.instanceId}>
 
-<td>{asset.assetName}</td>
+<td>
 
-<td>{asset.instanceCode}</td>
+<strong>{asset.assetName}</strong>
 
-<td>${asset.totalCost}</td>
+<br/>
+
+<small>{asset.assetCode}</small>
+
+<br/>
+
+<small>{asset.instanceCode}</small>
+
+</td>
+
+<td>{asset.assetType}</td>
+
+<td>${asset.purchaseCost.toLocaleString()}</td>
+
+<td>${asset.maintenanceCost.toLocaleString()}</td>
+
+<td>${asset.warrantyCost.toLocaleString()}</td>
+
+<td>${asset.insuranceCost.toLocaleString()}</td>
+
+<td>${asset.renewalCost.toLocaleString()}</td>
+
+<td>${asset.upgradeCost.toLocaleString()}</td>
+
+<td>
+
+<strong>
+
+${asset.totalCost.toLocaleString()}
+
+</strong>
+
+</td>
 
 </tr>
 
 ))}
 
-        </tbody>
+</tbody>
 
       </table>
 
