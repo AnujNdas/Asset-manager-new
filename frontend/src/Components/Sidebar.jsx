@@ -84,7 +84,7 @@ useEffect(() => {
               {/* Dashboard */}
               <li>
                 <NavLink
-                  to="/"
+                  to="/dashboard"
                   onClick={closeSidebar}
                   className={({ isActive }) => (isActive ? "active" : "")}
                 >
@@ -147,7 +147,7 @@ useEffect(() => {
                   className={({ isActive }) => (isActive ? "active" : "")}
                 >
                   <FontAwesomeIcon icon={faReceipt} style={{ width: "25%" }} />
-                  <span className="tab-text">MIS Report</span>
+                  <span className="tab-text">Audit Report</span>
                 </NavLink>
               </li>
 

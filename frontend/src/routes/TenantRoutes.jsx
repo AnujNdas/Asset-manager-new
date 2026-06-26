@@ -39,7 +39,7 @@ const TenantRoutes = ({ profileUser }) => (
         {/* 🔒 SUBSCRIPTION PROTECTED */}
         <Route element={<SubscriptionGate />}>
          <Route path="/" element={<MainSite/>}/>
-          <Route path="/panel" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assetCapture" element={<AssetCapture />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/setting/*" element={<Setting />} />

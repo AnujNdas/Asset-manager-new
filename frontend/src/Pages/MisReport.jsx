@@ -97,11 +97,11 @@ const stats = [
   },
   {
     title: "Purchase Cost",
-    value: `₹${summary.purchaseCost || 0}`
+    value: `$${summary.purchaseCost || 0}`
   },
   {
     title: "Total Ownership",
-    value: `₹${financial.totalOwnershipCost || 0}`
+    value: `$${financial.totalOwnershipCost || 0}`
   }
 ];
 
@@ -138,6 +138,10 @@ const stats = [
             <th>Name</th>
             <th>Instance Code</th>
             <th>Type</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Condition</th>
+            <th>Total Cost</th>
           </tr>
         </thead>
 

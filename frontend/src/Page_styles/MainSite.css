@@ -1451,7 +1451,7 @@ width: 2rem;
 .copyright {
 
   text-align: center;
-
+  cursor: pointer;
   font-size: 15px;
   color: #e7d8be;
 

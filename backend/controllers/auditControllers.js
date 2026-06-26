@@ -59,6 +59,7 @@ const getCompleteAuditDashboard = async (req, res) => {
     let expensiveAssets = [];
 
     const departmentMap = {};
+    const assetLookup = {};
 
     for (const inst of assetInstances) {
 
@@ -191,7 +192,24 @@ const getCompleteAuditDashboard = async (req, res) => {
           condition: inst.condition
         });
       }
-
+      assetLookup[inst._id.toString()] = {
+    instanceId: inst._id,
+    assetCode: inst.assetId?.assetCode,
+    assetName: inst.assetId?.assetName,
+    instanceCode: inst.instanceCode,
+    assetType: inst.assetType,
+    deviceName: inst.deviceName,
+    location: inst.location,
+    condition: inst.condition,
+    status: inst.status,
+    purchaseCost,
+    maintenanceCost,
+    insuranceCost,
+    warrantyCost,
+    renewalCost,
+    upgradeCost,
+    totalCost
+};  
       response.assets.push({
         instanceId: inst._id,
 
@@ -303,7 +321,93 @@ const getCompleteAuditDashboard = async (req, res) => {
         departmentMap[dept] = 0;
       }
 
-      departmentMap[dept]++;
+      const dept =
+    assign.departmentId?.departmentName || "Unknown";
+
+if (!departmentMap[dept]) {
+
+    departmentMap[dept] = {
+
+        name: dept,
+
+        totalAssets: 0,
+
+        totalValue: 0,
+
+        activeAssignments: 0,
+
+        returnedAssignments: 0,
+
+        employees: [],
+
+        assets: []
+    };
+
+}
+
+const asset =
+    assetLookup[
+        assign.assetInstanceId?.toString()
+    ];
+
+departmentMap[dept].totalAssets++;
+
+if (assign.status === "assigned") {
+
+    departmentMap[dept].activeAssignments++;
+
+}
+
+if (assign.status === "returned") {
+
+    departmentMap[dept].returnedAssignments++;
+
+}
+
+if (asset) {
+
+    departmentMap[dept].totalValue +=
+        asset.totalCost;
+
+    departmentMap[dept].assets.push({
+
+        ...asset,
+
+        assignedAt: assign.assignedAt,
+
+        returnedAt: assign.returnedAt,
+
+        assignmentStatus: assign.status
+
+    });
+
+}
+
+departmentMap[dept].employees.push({
+
+    employeeId: assign.employeeId?._id,
+
+    employeeName: assign.employeeId?.name,
+
+    employeeCode: assign.employeeId?.employeeCode,
+
+    email: assign.employeeId?.email,
+
+    assignedAsset: asset?.assetName,
+
+    instanceCode: asset?.instanceCode,
+
+    assetType: asset?.assetType,
+
+    totalCost: asset?.totalCost || 0,
+
+    assignedAt: assign.assignedAt,
+
+    returnedAt: assign.returnedAt,
+
+    status: assign.status
+
+});
 
       response.assignments.push({
         assignmentId: assign._id,
@@ -389,9 +493,7 @@ const getCompleteAuditDashboard = async (req, res) => {
         .slice(0, 10);
 
     response.departments =
-      Object.entries(
-        departmentMap
-      ).map(([name, count]) => ({
+Object.values(departmentMap);(([name, count]) => ({
         name,
         count
       }));
