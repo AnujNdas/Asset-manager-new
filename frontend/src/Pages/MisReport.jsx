@@ -177,45 +177,183 @@ const stats = [
     </div>
   </>
 );
-const renderDepartment = () => {
-  const hardware = assets.filter(
-    a => a.assetType === "hardware"
-  ).length;
+const renderDepartment = () => (
+  <div className="department-container">
 
-  const software = assets.filter(
-    a => a.assetType === "software"
-  ).length;
+    {departments.map((dept) => (
+      <div
+        key={dept.name}
+        className="department-card"
+      >
 
-  return (
-    <div className="audit-card-grid">
+        {/* Header */}
 
-<table className="audit-table">
+        <div className="department-header">
+          <div>
+            <h2>{dept.name}</h2>
 
-<thead>
-<tr>
-<th>Department</th>
-<th>Assets</th>
-</tr>
-</thead>
+            <p>
+              Complete Department Audit
+            </p>
+          </div>
 
-<tbody>
+          <div className="department-value">
+            ₹{dept.totalValue.toLocaleString()}
+          </div>
+        </div>
 
-{departments.map(dept => (
+        {/* Summary */}
 
-<tr key={dept.name}>
-<td>{dept.name}</td>
-<td>{dept.count}</td>
-</tr>
+        <div className="department-summary">
 
-))}
+          <div className="summary-box">
+            <span>Total Assets</span>
+            <h3>{dept.totalAssets}</h3>
+          </div>
 
-</tbody>
+          <div className="summary-box">
+            <span>Active Assignments</span>
+            <h3>{dept.activeAssignments}</h3>
+          </div>
 
-</table>
+          <div className="summary-box">
+            <span>Returned</span>
+            <h3>{dept.returnedAssignments}</h3>
+          </div>
 
-    </div>
-  );
-};
+          <div className="summary-box">
+            <span>Total Value</span>
+            <h3>
+              ${dept.totalValue.toLocaleString()}
+            </h3>
+          </div>
+
+        </div>
+
+        {/* Assets */}
+
+        <div className="audit-table-wrapper">
+
+          <h3>Assets</h3>
+
+          <table className="audit-table">
+
+            <thead>
+              <tr>
+                <th>Asset</th>
+                <th>Code</th>
+                <th>Instance</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Condition</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              {dept.assets.map((asset) => (
+
+                <tr key={asset.instanceId}>
+
+                  <td>{asset.assetName}</td>
+
+                  <td>{asset.assetCode}</td>
+
+                  <td>{asset.instanceCode}</td>
+
+                  <td>{asset.assetType}</td>
+
+                  <td>{asset.location}</td>
+
+                  <td>{asset.status}</td>
+
+                  <td>{asset.condition}</td>
+
+                  <td>
+                    ${asset.totalCost.toLocaleString()}
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+        {/* Employees */}
+
+        <div className="audit-table-wrapper">
+
+          <h3>Employees</h3>
+
+          <table className="audit-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Employee</th>
+
+                <th>Code</th>
+
+                <th>Email</th>
+
+                <th>Assigned Asset</th>
+
+                <th>Instance</th>
+
+                <th>Status</th>
+
+                <th>Value</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {dept.employees.map((emp, index) => (
+
+                <tr
+                  key={`${emp.employeeId}-${index}`}
+                >
+
+                  <td>{emp.employeeName}</td>
+
+                  <td>{emp.employeeCode}</td>
+
+                  <td>{emp.email}</td>
+
+                  <td>{emp.assignedAsset}</td>
+
+                  <td>{emp.instanceCode}</td>
+
+                  <td>{emp.status}</td>
+
+                  <td>
+                    ${emp.totalCost.toLocaleString()}
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+    ))}
+
+  </div>
+);
 const renderWarranty = () => (
   <div className="audit-report-grid">
 

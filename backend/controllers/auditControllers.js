@@ -179,18 +179,72 @@ const getCompleteAuditDashboard = async (req, res) => {
       ) {
         stats.maintenanceDue++;
 
-        response.maintenance.push({
-          instanceId: inst._id,
-          assetName:
-            inst.assetId?.assetName,
-          instanceCode:
-            inst.instanceCode,
-          nextMaintenanceDate:
-            hardware.nextMaintenanceDate,
-          maintenanceCost,
-          location: inst.location,
-          condition: inst.condition
-        });
+response.maintenance.push({
+  instanceId: inst._id,
+
+  assetId: inst.assetId?._id,
+
+  assetCode: inst.assetId?.assetCode,
+
+  assetName: inst.assetId?.assetName,
+
+  deviceName: inst.deviceName,
+
+  instanceCode: inst.instanceCode,
+
+  assetType: inst.assetType,
+
+  location: inst.location,
+
+  status: inst.status,
+
+  condition: inst.condition,
+
+  serialNumber: hardware.serialNumber,
+
+  modelNo: hardware.modelNo,
+
+  specifications: hardware.specifications,
+
+  purchaseDate: hardware.purchaseDate,
+
+  installationDate: hardware.installationDate,
+
+  nextMaintenanceDate:
+    hardware.nextMaintenanceDate,
+
+  maintenanceCost,
+
+  purchaseCost,
+
+  insuranceCost,
+
+  warrantyCost,
+
+  renewalCost,
+
+  upgradeCost,
+
+  totalCost,
+
+  createdBy:
+    inst.createdBy?.name,
+
+  createdAt:
+    inst.createdAt,
+
+  updatedAt:
+    inst.updatedAt,
+
+  assignedTo:
+    inst.assignedTo?.employeeName || null,
+
+  assignedEmployeeId:
+    inst.assignedTo?.employeeId || null,
+
+  upgrades:
+    inst.upgrades || []
+});
       }
       assetLookup[inst._id.toString()] = {
     instanceId: inst._id,
