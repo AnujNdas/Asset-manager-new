@@ -26,7 +26,7 @@ const User = ({ removeUser }) => {
 </div>
           <div className="dash-logo">
             <img
-              src="/images/Logo.png"
+              src="/images/Logo2.png"
               alt="Socialfly Logo"
               width="100"
               height="100"

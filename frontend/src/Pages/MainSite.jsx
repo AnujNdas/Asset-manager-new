@@ -62,7 +62,9 @@ const handleProductClick = () => {
 const handleProductClick2 = () => {
   window.open("https://socialflylive.com/machinery-assets-management/")
 }
-
+const handleCopyright = () => {
+  window.open("https://socialflylive.com/")
+}
   const headings = [
     "Manage All types of Assets From One Place — Hardware, Software & Cloud.",
     "No Tracking — Privacy Policy.",
@@ -1025,7 +1027,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
           </p>
         </div>
       </div>
-          <div className="copyright">
+          <div className="copyright" onClick={handleCopyright}>
             © 2026 SOCIALFLY. All Rights Reserved.
           </div>
     </footer>
