@@ -134,18 +134,34 @@ const getCompleteAuditDashboard = async (req, res) => {
       ) {
         stats.warrantyExpired++;
 
-        response.warranty.push({
-          instanceId: inst._id,
-          instanceCode: inst.instanceCode,
-          assetName:
-            inst.assetId?.assetName,
-          deviceName: inst.deviceName,
-          expiryDate:
-            hardware.warrantyExpiry,
-          location: inst.location,
-          condition: inst.condition,
-          totalCost
-        });
+response.warranty.push({
+  instanceId: inst._id,
+
+  assetCode: inst.assetId?.assetCode,
+  assetName: inst.assetId?.assetName,
+  assetType: inst.assetType,
+
+  instanceCode: inst.instanceCode,
+
+  deviceName: inst.deviceName,
+
+  serialNumber: hardware.serialNumber,
+  modelNo: hardware.modelNo,
+
+  location: inst.location,
+
+  status: inst.status,
+  condition: inst.condition,
+
+  purchaseDate: hardware.purchaseDate,
+  installationDate: hardware.installationDate,
+
+  expiryDate: hardware.warrantyExpiry,
+
+  warrantyCost,
+
+  createdAt: inst.createdAt
+});
       }
 
       if (

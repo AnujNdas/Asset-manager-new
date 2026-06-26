@@ -72,7 +72,7 @@ if (role === "super-admin") {
 
   await refreshSubscription();
 
-  navigate("/panel");
+  navigate("/dashboard");
 }
 
     } catch (error) {

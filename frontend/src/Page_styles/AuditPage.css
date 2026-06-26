@@ -232,6 +232,41 @@
   border-left: 5px solid #2563eb;
   box-shadow: 0 2px 10px rgba(0,0,0,.05);
 }
+.status-red{
+    background:#ffe6e6;
+    color:#d32f2f;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.82rem;
+    font-weight:600;
+}
+
+.status-yellow{
+    background:#fff6db;
+    color:#b8860b;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.82rem;
+    font-weight:600;
+}
+
+.status-green{
+    background:#e8f8ef;
+    color:#2e7d32;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.82rem;
+    font-weight:600;
+}
+
+.status-gray{
+    background:#ececec;
+    color:#666;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.82rem;
+    font-weight:600;
+}
 @media (max-width: 1024px){
 
 .audit-header{

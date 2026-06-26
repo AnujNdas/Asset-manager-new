@@ -424,35 +424,190 @@ const renderInsurance = () => (
 
   </div>
 );
+// Helper Functions 
+const getDaysRemaining = (date) => {
+  if (!date) return null;
+
+  const today = new Date();
+
+  const target = new Date(date);
+
+  today.setHours(0, 0, 0, 0);
+  target.setHours(0, 0, 0, 0);
+
+  return Math.ceil(
+    (target - today) / (1000 * 60 * 60 * 24)
+  );
+};
+
+const getMaintenanceStatus = (date) => {
+  if (!date)
+    return {
+      label: "Not Scheduled",
+      className: "status-gray",
+    };
+
+  const days = getDaysRemaining(date);
+
+  if (days < 0)
+    return {
+      label: "Overdue",
+      className: "status-red",
+    };
+
+  if (days <= 30)
+    return {
+      label: "Due Soon",
+      className: "status-yellow",
+    };
+
+  return {
+    label: "Scheduled",
+    className: "status-green",
+  };
+};
+
+const formatCurrency = (amount) =>
+  `₹${Number(amount || 0).toLocaleString()}`;
+
+
 const renderMaintenance = () => (
-  <div className="audit-report-grid">
+  <div className="audit-table-wrapper">
+
+    <h3>Maintenance Audit</h3>
+
+    <table className="audit-table">
+
+      <thead>
+
+        <tr>
+
+          <th>Asset</th>
+
+          <th>Code</th>
+
+          <th>Instance</th>
+
+          <th>Type</th>
+
+          <th>Device</th>
+
+          <th>Serial No.</th>
+
+          <th>Model</th>
+
+          <th>Location</th>
+
+
+          <th>Condition</th>
+
+          <th>Purchase</th>
+
+          <th>Installation</th>
+
+          <th>Next Maintenance</th>
+
+          <th>Maintenance Cost</th>
+
+          <th>Total Value</th>
+
+          <th>Upgrades</th>
+
+        </tr>
+
+      </thead>
+
 <tbody>
 
-{maintenance.map(item => (
+{maintenance.map((item) => {
+
+  const days = getDaysRemaining(
+    item.nextMaintenanceDate
+  );
+
+  const status =
+    getMaintenanceStatus(
+      item.nextMaintenanceDate
+    );
+
+  return (
 
 <tr key={item.instanceId}>
 
 <td>{item.assetName}</td>
 
+<td>{item.assetCode}</td>
+
 <td>{item.instanceCode}</td>
+
+<td>{item.assetType}</td>
+
+<td>{item.deviceName}</td>
+
+<td>{item.serialNumber}</td>
+
+<td>{item.modelNo}</td>
 
 <td>{item.location}</td>
 
 <td>{item.condition}</td>
 
 <td>
-  {new Date(
-    item.nextMaintenanceDate
-  ).toLocaleDateString()}
+  {item.purchaseDate
+    ? new Date(item.purchaseDate)
+        .toLocaleDateString()
+    : "-"}
 </td>
 
-<td>₹{item.maintenanceCost}</td>
+<td>
+  {item.installationDate
+    ? new Date(item.installationDate)
+        .toLocaleDateString()
+    : "-"}
+</td>
+
+<td>
+  {item.nextMaintenanceDate
+    ? new Date(item.nextMaintenanceDate)
+        .toLocaleDateString()
+    : "-"}
+</td>
+
+<td>
+  <span className={status.className}>
+    {status.label}
+  </span>
+</td>
+
+<td>
+  {days === null
+    ? "-"
+    : days < 0
+    ? `${Math.abs(days)} Days Overdue`
+    : `${days} Days`}
+</td>
+
+<td>
+  {formatCurrency(item.maintenanceCost)}
+</td>
+
+<td>
+  {formatCurrency(item.totalCost)}
+</td>
+
+<td>
+  {item.upgrades?.length || 0}
+</td>
 
 </tr>
 
-))}
+  );
+
+})}
 
 </tbody>
+
+    </table>
 
   </div>
 );
