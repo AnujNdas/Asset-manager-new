@@ -19,12 +19,18 @@ const AuditPage = () => {
   departments: [],
   topExpensiveAssets: []
 }); 
-
+  const [expandedDepartment, setExpandedDepartment] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [selectedYear, setSelectedYear] = useState("All");
   const [assetType, setAssetType] = useState("hardware");
-
   const [activeTab, setActiveTab] = useState("summary");
+  const showYearFilter = [
+  "financial",
+  "warranty",
+  "insurance",
+  "maintenance",
+  "lifecycle"
+].includes(activeTab);
 
   const loadAuditData = async () => {
     try {
@@ -44,10 +50,27 @@ setAuditData(res?.data || {});
   useEffect(() => {
   console.log(auditData);
 }, [auditData]);
+const currentYear = new Date().getFullYear();
+
+const yearOptions = [
+  "All",
+  ...Array.from(
+    { length: currentYear - 2015 },
+    (_, i) => (2020 + i).toString()
+  )
+];
 const summary = auditData.summary || {};
 
 const financial = auditData.financial || {};
-
+const filteredFinancial =
+  selectedYear === "All"
+    ? financial.instances
+    : financial.instances.filter(item =>
+        item.purchaseDate &&
+        new Date(item.purchaseDate)
+          .getFullYear()
+          .toString() === selectedYear
+      );
 const assets = auditData.summary?.assets || [];
 
 const assignments =
@@ -220,235 +243,142 @@ ${asset.totalCost.toLocaleString()}
 const renderDepartment = () => (
   <div className="department-container">
 
-    {departments.map((dept) => (
-      <div
-        key={dept.departmentId}
-        className="department-card"
-      >
+<div className="audit-table-wrapper">
+  <table className="audit-table">
 
-        {/* Header */}
+    <thead>
+      <tr>
+        <th>Department</th>
+        <th>Employees</th>
+        <th>Assets</th>
+        <th>Assigned</th>
+        <th>Total Value</th>
+        <th>Asset Preview</th>
+      </tr>
+    </thead>
 
-        <div className="department-header">
-          <div>
-            <h2>{dept.departmentName}</h2>
+    <tbody>
 
-            <p>
-              Complete Department Audit
-            </p>
-          </div>
+      {departments.map((dept) => (
 
-          <div className="department-value">
-            ₹{dept.totalValue.toLocaleString()}
-          </div>
-        </div>
+        <React.Fragment key={dept.departmentId}>
 
-        {/* Summary */}
+          {/* Main Row */}
 
-        <div className="department-summary">
+          <tr
+  className="expandable-row"
+  onClick={() =>
+    setExpandedDepartment(
+      expandedDepartment === dept.departmentId
+        ? null
+        : dept.departmentId
+    )
+  }
+>
+            <td>{dept.departmentName}</td>
 
-          <div className="summary-box">
-            <span>Total Assets</span>
-            <h3>{dept.totalAssets}</h3>
-          </div>
+            <td>{dept.totalEmployees}</td>
 
-          <div className="summary-box">
-            <span>Active Assignments</span>
-            <h3>{dept.activeAssignments}</h3>
-          </div>
+            <td>{dept.totalAssets}</td>
 
-          <div className="summary-box">
-            <span>Returned</span>
-            <h3>{dept.returnedAssignments}</h3>
-          </div>
+            <td>{dept.activeAssignments}</td>
 
-          <div className="summary-box">
-            <span>Total Value</span>
-            <h3>
-              ${dept.totalValue.toLocaleString()}
-            </h3>
-          </div>
+            <td>${dept.totalValue.toLocaleString()}</td>
 
-        </div>
+            <td>
+              {dept.assets
+                .slice(0, 2)
+                .map(asset => asset.assetName)
+                .join(", ")}
+              {dept.assets.length > 2 && "..."}
+            </td>
 
-        {/* Assets */}
+          </tr>
 
-        <div className="audit-table-wrapper">
+          {/* Expanded Row */}
 
-          <h3>Assets</h3>
+          {expandedDepartment === dept.departmentId && (
 
-          <table className="audit-table">
+            <tr>
 
-            <thead>
-              <tr>
-                <th>Asset</th>
-                <th>Code</th>
-                <th>Instance</th>
-                <th>Type</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Condition</th>
-                <th>Value</th>
-              </tr>
-            </thead>
+              <td colSpan={6}>
 
-<tbody>
-  {dept.assets.map(asset => (
-    <tr key={asset.instanceId}>
-      <td>
-        <strong>{asset.assetName}</strong>
-        <br />
-        <small>{asset.assetCode}</small>
-      </td>
+                <div className="department-expanded">
 
-      <td>{asset.instanceCode}</td>
+                  <div className="expanded-section">
 
-      <td>{asset.assetType}</td>
+                    <h4>Employees</h4>
 
-      <td>{asset.location}</td>
+                    {dept.employees.map(emp => (
 
-      <td>{asset.status}</td>
+                      <div
+                        key={emp.employeeId}
+                        className="employee-card"
+                      >
+                        <strong>{emp.employeeName}</strong>
 
-      <td>{asset.condition}</td>
+                        <div>{emp.employeeCode}</div>
 
-      <td>
-        ${(asset.totalCost ?? 0).toLocaleString()}
-      </td>
-    </tr>
-  ))}
-</tbody>
+                        <div>
+                          Active Assets: {emp.activeAssets}
+                        </div>
 
-          </table>
+                        <div>
+                          Returned: {emp.returnedAssets}
+                        </div>
 
-        </div>
+                      </div>
 
-        {/* Employees */}
+                    ))}
 
-        <div className="audit-table-wrapper">
+                  </div>
 
-          <h3>Employees</h3>
+                  <div className="expanded-section">
 
-          <table className="audit-table">
+                    <h4>Assets</h4>
 
-            <thead>
+                    {dept.assets.map(asset => (
 
-              <tr>
+                      <div
+                        key={asset.instanceId}
+                        className="asset-card"
+                      >
+                        <strong>{asset.assetName}</strong>
 
-                <th>Employee</th>
+                        <div>{asset.instanceCode}</div>
 
-                <th>Code</th>
+                        <div>{asset.assetType}</div>
 
-                <th>Email</th>
+                        <div>{asset.status}</div>
 
-                <th>Assigned Asset</th>
+                        <div>
+                          ${asset.totalCost.toLocaleString()}
+                        </div>
 
-                <th>Instance</th>
+                      </div>
 
-                <th>Status</th>
+                    ))}
 
-                <th>Value</th>
+                  </div>
 
-              </tr>
+                </div>
 
-            </thead><thead>
-<tr>
-    <th>Employee</th>
-    <th>Code</th>
-    <th>Email</th>
-    <th>Total Assets</th>
-    <th>Active</th>
-    <th>Returned</th>
-    <th>Total Value</th>
-</tr>
-</thead>
+              </td>
 
-<tbody>
+            </tr>
 
-{dept.employees.map(emp => (
+          )}
 
-<tr key={emp.employeeId}>
+        </React.Fragment>
 
-<td>{emp.employeeName}</td>
+      ))}
 
-<td>{emp.employeeCode}</td>
+    </tbody>
 
-<td>{emp.email}</td>
-
-<td>{emp.totalAssets}</td>
-
-<td>{emp.activeAssets}</td>
-
-<td>{emp.returnedAssets}</td>
-
-<td>${(emp.totalValue ?? 0).toLocaleString()}</td>
-
-</tr>
-
-))}
-
-</tbody>
-
-          </table>
-
-        </div>
-  <div className="audit-table-wrapper">
-
-<h3>Assignment History</h3>
-
-<table className="audit-table">
-
-<thead>
-<tr>
-<th>Employee</th>
-<th>Asset</th>
-<th>Instance</th>
-<th>Status</th>
-<th>Assigned</th>
-<th>Returned</th>
-<th>Location</th>
-</tr>
-</thead>
-
-<tbody>
-
-{dept.assignmentHistory.map(record => (
-
-<tr key={record.assignmentId}>
-
-<td>{record.employeeName}</td>
-
-<td>{record.assetName}</td>
-
-<td>{record.instanceCode}</td>
-
-<td>{record.status}</td>
-
-<td>
-{record.assignedAt
-? new Date(record.assignedAt).toLocaleDateString()
-: "-"}
-</td>
-
-<td>
-{record.returnedAt
-? new Date(record.returnedAt).toLocaleDateString()
-: "-"}
-</td>
-
-<td>{record.location}</td>
-
-</tr>
-
-))}
-
-</tbody>
-
-</table>
-
+  </table>
 </div>
-      </div>
-    ))}
 
-  </div>
+      </div>
 );
 const renderWarranty = () => {
   const today = new Date();
@@ -1308,7 +1238,7 @@ const renderFinancial = () => (
 
 <tbody>
 
-{financial.instances
+{filteredFinancial
 .sort((a,b)=>b.totalCost-a.totalCost)
 .map(asset=>(
 
@@ -1458,21 +1388,26 @@ ${asset.totalCost.toLocaleString()}
 
       {/* FILTER BAR */}
 
-        <div className="audit-filters">
+<div className="audit-filters">
 
-          <select>
-            <option>Category</option>
-          </select>
+  {showYearFilter && (
+    <select
+      value={selectedYear}
+      onChange={(e) =>
+        setSelectedYear(e.target.value)
+      }
+    >
+      {yearOptions.map(year => (
+        <option key={year} value={year}>
+          {year === "All"
+            ? "All Years"
+            : year}
+        </option>
+      ))}
+    </select>
+  )}
 
-          <select>
-            <option>Location</option>
-          </select>
-
-          <input type="date" />
-
-          <input type="date" />
-
-        </div>
+</div>
 
       {/* CONTENT */}
 

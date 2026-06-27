@@ -287,7 +287,7 @@ const rightItemssoftware = [
 
   <meta
     property="og:title"
-    content="AssetPegasus Asset Management System"
+    content="Machine & It asset management software"
   />
 
 <meta property="og:site_name" content="AssetPegasus" />
