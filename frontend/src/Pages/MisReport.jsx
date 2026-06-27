@@ -1419,34 +1419,6 @@ ${asset.totalCost.toLocaleString()}
 
       </div>
 
-      {/* HARDWARE / SOFTWARE */}
-
-      <div className="audit-switch">
-
-        <button
-          className={
-            assetType === "hardware"
-              ? "switch-btn active"
-              : "switch-btn"
-          }
-          onClick={() => setAssetType("hardware")}
-        >
-          Hardware
-        </button>
-
-        <button
-          className={
-            assetType === "software"
-              ? "switch-btn active"
-              : "switch-btn"
-          }
-          onClick={() => setAssetType("software")}
-        >
-          Software
-        </button>
-
-      </div>
-
       {/* KPI GRID */}
 
       <div className="audit-stats-grid">
@@ -1486,21 +1458,21 @@ ${asset.totalCost.toLocaleString()}
 
       {/* FILTER BAR */}
 
-      <div className="audit-filters">
+        <div className="audit-filters">
 
-        <select>
-          <option>Category</option>
-        </select>
+          <select>
+            <option>Category</option>
+          </select>
 
-        <select>
-          <option>Location</option>
-        </select>
+          <select>
+            <option>Location</option>
+          </select>
 
-        <input type="date" />
+          <input type="date" />
 
-        <input type="date" />
+          <input type="date" />
 
-      </div>
+        </div>
 
       {/* CONTENT */}
 

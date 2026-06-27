@@ -16,7 +16,7 @@ const getCompleteAuditDashboard = async (req, res) => {
         .lean(),
 
     AssetAssignment.find({ organizationId })
-        .populate("departmentId","departmentName")
+        .populate("departmentId", "name")
         .populate("employeeId","name employeeCode email")
         .populate("assignedBy","name")
         .populate("returnedBy","name")
@@ -430,10 +430,9 @@ const asset =
     ];
 
 if (!asset) continue;
-    const departmentName =
-    assign.departmentId?.departmentName ||
+const departmentName =
+    assign.departmentId?.name ||
     "Unknown";
-
 const departmentId =
     assign.departmentId?._id?.toString() ||
     "unknown";
@@ -679,9 +678,8 @@ department.assignmentHistory.push({
             assign.employeeId?.email,
 
         department:
-            assign.departmentId?.departmentName ||
-
-            "Unknown",
+                assign.departmentId?.name ||
+                "Unknown",
 
         //-----------------------------------
         // Instance
