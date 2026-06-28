@@ -5,7 +5,8 @@ import {
 } from "../Services/ApiServices";
 
 import "../Page_styles/AuditPage.css";
-
+import { exportAuditPDF } from "../utils/exportPdfFile";
+import { exportAuditExcel } from "../utils/exportExcelFile";
 const AuditPage = () => {
   const [auditData, setAuditData] = useState({
   summary: {},
@@ -50,43 +51,400 @@ setAuditData(res?.data || {});
   useEffect(() => {
   console.log(auditData);
 }, [auditData]);
+
+// PDf and Excel Download Functions 
+const handleDownloadPDF = () => {
+
+  switch (activeTab) {
+
+    case "summary":
+
+      exportAuditPDF({
+        title: "Summary Audit",
+        filters: {
+          Year: selectedYear
+        },
+        columns: [
+          "Asset",
+          "Instance",
+          "Type",
+          "Location",
+          "Status",
+          "Condition",
+          "Purchase Date",
+          "Purchase Cost",
+          "Upgrade Cost",
+          "Total Cost"
+        ],
+        data: assets.map(asset => [
+          asset.assetName,
+          asset.instanceCode,
+          asset.assetType,
+          asset.location,
+          asset.status,
+          asset.condition,
+          asset.purchaseDate
+            ? new Date(asset.purchaseDate).toLocaleDateString()
+            : "-",
+            asset.purchaseCost,
+            asset.upgradeCost,
+          asset.totalCost
+        ])
+      });
+
+      break;
+
+    case "financial":
+
+      exportAuditPDF({
+        title: "Financial Audit",
+        filters: {
+          Year: selectedYear
+        },
+        columns: [
+          "Asset",
+          "Type",
+          "Purchase",
+          "Maintenance",
+          "Warranty",
+          "Insurance",
+          "Renewal",
+          "Upgrade",
+          "Total"
+
+        ],
+        data: filteredFinancial.map(asset => [
+          asset.assetName,
+          asset.assetType,
+          asset.purchaseCost,
+          asset.maintenanceCost,
+          asset.warrantyCost,
+          asset.insuranceCost,
+          asset.renewalCost,
+          asset.upgradeCost,
+          asset.totalCost
+        ])
+      });
+
+      break;
+
+    case "warranty":
+
+      exportAuditPDF({
+        title: "Warranty Audit",
+        filters: {
+          Year: selectedYear
+        },
+        columns: [
+          "Asset",
+          "Instance",
+          "Location",
+          "Warranty Dates",
+          "Cost",
+          "Status"
+        ],
+        data: filteredWarranty.map(item => [
+          item.assetName,
+          item.instanceCode,
+          item.location,
+          item.warrantyPurchaseDate,
+          item.warrantyCost,
+          item.status
+        ])
+      });
+
+      break;
+      case "maintenance" :
+
+      exportAuditPDF({
+        title: "Maintanence Audit",
+        filters: {
+          Year: selectedYear
+        },
+        columns: [
+          "Asset",
+          "Instance",
+          "Location",
+          "Maintanence Dates",
+          "Cost",
+          "Upgrades"
+        ],
+        data: filteredMaintenance.map(item => [
+          item.assetName,
+          item.instanceCode,
+          item.location,
+          item.nextMaintanenceDate,
+          item.maintenanceCost,
+          item.upgrades
+        ])
+      })
+
+      case "assignment" : 
+
+      exportAuditPDF({
+        title: "Assignment Audit",
+        columns: [
+          "Employee",
+          "Asset",
+          "Department",
+          "Assignment",
+          "Dates",
+          "Asset Status",
+          "Total Value"
+        ],
+        data: assignments.map(item => [
+          item.employeeName,
+          item.deviceName,
+          item.department,
+          item.assignedBy,
+          item.status,
+          item.totalCost
+        ])
+      })
+
+      case "department" : 
+
+      exportAuditPDF({
+        title: "Department Audit",
+        columns: [
+          "Department",
+          "Employees",
+          "Assets",
+          "Assigned",
+          "Total Value",
+          "Asset Preview"
+        ],
+        data: departments.map(item => [
+          item.departmentName,
+          item.totalEmployees,
+          item.totalAssets,
+          item.activeAssignments,
+          item.totalValue,
+          item.deviceName,
+        ])
+      });
+
+         case "lifecycle" : 
+
+      exportAuditPDF({
+        title: "Lifecycle Audit",
+        filters: {
+          Year: selectedYear
+        },
+        columns: [
+          "Asset",
+          "Event",
+          "Description",
+          "Performed By",
+          "Date",
+        ],
+        data: filteredLifecycle.map(item => [
+          item.deviceName,
+          item.eventType,
+          item.description,
+          item.performedBy,
+          item.date
+        ])
+      })
+    // Remaining tabs...
+
+  }
+
+};
+
+const handleDownloadExcel = () => {
+
+  switch (activeTab) {
+
+    case "summary":
+
+      exportAuditExcel({
+        title: "Summary Audit",
+        data: assets
+      });
+
+      break;
+
+    case "financial":
+
+      exportAuditExcel({
+        title: "Financial Audit",
+        data: filteredFinancial
+      });
+
+      break;
+
+    case "warranty":
+
+      exportAuditExcel({
+        title: "Warranty Audit",
+        data: filteredWarranty
+      });
+
+      break;
+
+    case "maintenance":
+
+      exportAuditExcel({
+        title: "Maintenance Audit",
+        data: filteredMaintenance
+      });
+
+      break;
+
+    case "insurance":
+
+      exportAuditExcel({
+        title: "Insurance Audit",
+        data: filteredInsurance
+      });
+
+      break;
+
+    case "lifecycle":
+
+      exportAuditExcel({
+        title: "Lifecycle Audit",
+        data: filteredLifecycle
+      });
+
+      break;
+
+    case "assignment":
+
+      exportAuditExcel({
+        title: "Assignment Audit",
+        data: assignments
+      });
+
+      break;
+
+    case "department":
+
+      exportAuditExcel({
+        title: "Department Audit",
+        data: departments
+      });
+
+      break;
+
+  }
+
+};
+const startYear = 2010;
 const currentYear = new Date().getFullYear();
 
 const yearOptions = [
   "All",
   ...Array.from(
-    { length: currentYear - 2015 },
-    (_, i) => (2020 + i).toString()
+    { length: currentYear - startYear + 1 },
+    (_, i) => (startYear + i).toString()
   )
 ];
 const summary = auditData.summary || {};
 
 const financial = auditData.financial || {};
+
+const financialInstances = financial.instances ?? [];
+
 const filteredFinancial =
   selectedYear === "All"
-    ? financial.instances
-    : financial.instances.filter(item =>
-        item.purchaseDate &&
-        new Date(item.purchaseDate)
-          .getFullYear()
-          .toString() === selectedYear
-      );
+    ? financialInstances
+    : financialInstances.filter((item) => {
+        if (!item.purchaseDate) return false;
+
+        return (
+          new Date(item.purchaseDate)
+            .getFullYear()
+            .toString() === selectedYear
+        );
+      });
+      const filteredFinancialSummary = filteredFinancial.reduce(
+  (acc, asset) => {
+    acc.purchaseCost += asset.purchaseCost || 0;
+    acc.maintenanceCost += asset.maintenanceCost || 0;
+    acc.warrantyCost += asset.warrantyCost || 0;
+    acc.insuranceCost += asset.insuranceCost || 0;
+    acc.renewalCost += asset.renewalCost || 0;
+    acc.upgradeCost += asset.upgradeCost || 0;
+    acc.totalOwnershipCost += asset.totalCost || 0;
+    acc.totalAssets++;
+
+    return acc;
+  },
+  {
+    purchaseCost: 0,
+    maintenanceCost: 0,
+    warrantyCost: 0,
+    insuranceCost: 0,
+    renewalCost: 0,
+    upgradeCost: 0,
+    totalOwnershipCost: 0,
+    totalAssets: 0
+  }
+);
 const assets = auditData.summary?.assets || [];
 
 const assignments =
   auditData.assignments || [];
 
-const warranty =
-  auditData.warranty || [];
+const warranty = auditData.warranty || [];
 
-const insurance =
-  auditData.insurance || [];
+const filteredWarranty =
+  selectedYear === "All"
+    ? warranty
+    : warranty.filter(item => {
+        if (!item.expiryDate) return false;
 
-const maintenance =
-  auditData.maintenance || [];
+        return (
+          new Date(item.expiryDate)
+            .getFullYear()
+            .toString() === selectedYear
+        );
+      });
 
-const lifecycle =
-  auditData.lifecycle || [];
+const insurance = auditData.insurance || [];
+
+const filteredInsurance =
+  selectedYear === "All"
+    ? insurance
+    : insurance.filter(item => {
+        if (!item.expiryDate) return false;
+
+        return (
+          new Date(item.expiryDate)
+            .getFullYear()
+            .toString() === selectedYear
+        );
+      });
+const maintenance = auditData.maintenance || [];
+
+const filteredMaintenance =
+  selectedYear === "All"
+    ? maintenance
+    : maintenance.filter(item => {
+        if (!item.nextMaintenanceDate) return false;
+
+        return (
+          new Date(item.nextMaintenanceDate)
+            .getFullYear()
+            .toString() === selectedYear
+        );
+      });
+const lifecycle = auditData.lifecycle || [];
+
+const filteredLifecycle =
+  selectedYear === "All"
+    ? lifecycle
+    : lifecycle.filter(item => {
+        if (!item.purchaseDate) return false;
+
+        return (
+          new Date(item.purchaseDate)
+            .getFullYear()
+            .toString() === selectedYear
+        );
+      });
 
 const departments =
   auditData.departments || [];
@@ -399,7 +757,7 @@ const renderWarranty = () => {
 </thead>
 
 <tbody>
-  {warranty.map((item) => {
+  {filteredWarranty .map((item) => {
 
     const expiry = new Date(item.expiryDate);
 
@@ -547,7 +905,7 @@ const renderInsurance = () => (
 
 <tbody>
 
-{insurance.map(item => (
+{filteredInsurance.map(item => (
 
 <tr key={item.instanceId}>
 
@@ -642,7 +1000,7 @@ const renderMaintenance = () => (
 
       <tbody>
 
-        {maintenance.map(item => {
+        {filteredMaintenance.map(item => {
 
           const days =
             getDaysRemaining(
@@ -1086,7 +1444,7 @@ const renderLifecycle = () => (
 
       <tbody>
 
-        {lifecycle.map((item, index) => (
+        {filteredLifecycle.map((item, index) => (
 
           <tr key={`${item.instanceId}-${index}`}>
 
@@ -1154,49 +1512,49 @@ const renderFinancial = () => (
 
   <div className="financial-card">
     <h5>Purchase Cost</h5>
-    <h2>${financial.summary.purchaseCost.toLocaleString()}</h2>
+    <h2>${filteredFinancialSummary.purchaseCost.toLocaleString()}</h2>
     <span>Initial Asset Investment</span>
   </div>
 
   <div className="financial-card">
     <h5>Maintenance</h5>
-    <h2>${financial.summary.maintenanceCost.toLocaleString()}</h2>
+    <h2>${filteredFinancialSummary.maintenanceCost.toLocaleString()}</h2>
     <span>Repairs & Servicing</span>
   </div>
 
   <div className="financial-card">
     <h5>Warranty</h5>
-    <h2>${financial.summary.warrantyCost.toLocaleString()}</h2>
+    <h2>${filteredFinancialSummary.warrantyCost.toLocaleString()}</h2>
     <span>Warranty Renewals</span>
   </div>
 
   <div className="financial-card">
     <h5>Insurance</h5>
-    <h2>${financial.summary.insuranceCost.toLocaleString()}</h2>
+    <h2>${filteredFinancialSummary.insuranceCost.toLocaleString()}</h2>
     <span>Insurance Premiums</span>
   </div>
 
   <div className="financial-card">
     <h5>Renewals</h5>
-    <h2>${financial.summary.renewalCost.toLocaleString()}</h2>
+    <h2>${filteredFinancialSummary.renewalCost.toLocaleString()}</h2>
     <span>Software Licenses</span>
   </div>
 
   <div className="financial-card">
     <h5>Upgrades</h5>
-    <h2>${financial.summary.upgradeCost.toLocaleString()}</h2>
+    <h2>${filteredFinancialSummary.upgradeCost.toLocaleString()}</h2>
     <span>Hardware & Software Upgrades</span>
   </div>
 
   <div className="financial-card">
     <h5>Total Assets</h5>
-    <h2>{financial.summary.totalAssets}</h2>
+    <h2>{filteredFinancialSummary.totalAssets}</h2>
     <span>Tracked Assets</span>
   </div>
 
   <div className="financial-card highlight">
     <h5>Total Ownership Cost</h5>
-    <h2>${financial.summary.totalOwnershipCost.toLocaleString()}</h2>
+    <h2>${filteredFinancialSummary.totalOwnershipCost.toLocaleString()}</h2>
     <span>Overall Asset Investment</span>
   </div>
 
@@ -1405,7 +1763,18 @@ ${asset.totalCost.toLocaleString()}
         </option>
       ))}
     </select>
-  )}
+  )} 
+    <div className="audit-actions">
+
+        <button onClick={handleDownloadPDF} className="pdf-btn">
+            Export PDF
+        </button>
+
+        <button onClick={handleDownloadExcel} className="excel-btn">
+            Export Excel
+        </button> 
+
+    </div>
 
 </div>
 

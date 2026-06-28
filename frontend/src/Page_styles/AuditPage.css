@@ -267,6 +267,18 @@
     font-size:.82rem;
     font-weight:600;
 }
+.pdf-btn , .excel-btn {
+  background: #DFD0B8;
+  color: #222831;
+  padding : 10px;
+  font-size: 17px;
+  border: none;
+  border-radius: 10px;
+}
+.audit-actions {
+  display: flex;
+  gap: 20px;
+}
 @media (max-width: 1024px){
 
 .audit-header{
