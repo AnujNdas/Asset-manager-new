@@ -106,7 +106,7 @@ if (role === "super-admin") {
 
 <meta
   property="og:description"
-  content="Login to AssetPegasus to manage hardware assets, software licenses, warranties, maintenance schedules, and business inventory."
+  content="Login to AssetPegasus to manage hardware assets, software licenses, warranties, maintenance schedules, and business inventory from one platform."
 />
 
 <meta
@@ -116,7 +116,7 @@ if (role === "super-admin") {
 
 <meta
   property="og:image"
-  content="https://assetpegasus.com/images/Logo2.png"
+  content="https://assetpegasus.com/images/Login.webp"
 />
 
 <meta property="og:type" content="website" />
@@ -128,12 +128,12 @@ if (role === "super-admin") {
 
 <meta
   name="twitter:description"
-  content="Login to AssetPegasus to manage assets and licenses."
+  content="Login to AssetPegasus to manage hardware assets, software licenses, warranties, maintenance schedules, and business inventory from one platform."
 />
 
 <meta
   name="twitter:image"
-  content="https://assetpegasus.com/images/Logo2.png"
+  content="hhttps://assetpegasus.com/images/Login.webp"
 />
       </Helmet>
 

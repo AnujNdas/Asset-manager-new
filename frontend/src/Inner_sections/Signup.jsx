@@ -278,6 +278,7 @@ if (!verifyRes.user.organizationOnboarded) {
   return (
     <>
 <Helmet>
+  
   <title>Sign Up | AssetPegasus</title>
 
   <meta
@@ -291,6 +292,10 @@ if (!verifyRes.user.organizationOnboarded) {
   />
 
   {/* Open Graph */}
+  <meta
+  property="og:site_name"
+  content="AssetPegasus"
+/>
   <meta
     property="og:title"
     content="Sign Up | AssetPegasus"
@@ -308,7 +313,7 @@ if (!verifyRes.user.organizationOnboarded) {
 
   <meta
     property="og:image"
-    content="https://assetpegasus.com/images/Logo2.png"
+    content="https://assetpegasus.com/images/Signup.webp"
   />
 
   <meta
@@ -329,12 +334,12 @@ if (!verifyRes.user.organizationOnboarded) {
 
   <meta
     name="twitter:description"
-    content="Create an AssetPegasus account and start tracking IT assets, software licenses, machinery, warranties, and maintenance records."
+    content="Create an AssetPegasus account and start tracking IT assets, machinery, software subscriptions, warranties, maintenance, and insurance records."
   />
 
   <meta
     name="twitter:image"
-    content="https://assetpegasus.com/images/Logo2.png"
+    content="https://assetpegasus.com/images/Signup.webp"
   />
 </Helmet>
     <div className="auth-page">

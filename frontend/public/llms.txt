@@ -1,0 +1,33 @@
+# AssetPegasus
+
+AssetPegasus is a cloud-based IT asset management software that helps organizations manage hardware assets, software licenses, warranties, maintenance schedules, insurance records, audits, and asset lifecycle from a centralized dashboard.
+
+Website:
+https://assetpegasus.com/
+
+Product:
+IT Asset Management Software
+
+Key Features:
+- IT Asset Tracking
+- Software License Management
+- Warranty Management
+- Maintenance Scheduling
+- Insurance Tracking
+- Asset Audit Management
+- Employee Asset Assignment
+- Inventory Management
+- QR Code & Barcode Support
+- Reporting & Analytics
+
+Primary Pages:
+https://assetpegasus.com/
+https://assetpegasus.com/features
+https://assetpegasus.com/pricing
+https://assetpegasus.com/contact
+
+Documentation:
+https://assetpegasus.com/docs
+
+Support:
+https://assetpegasus.com/contact

@@ -109,49 +109,48 @@ const prevSlide = () => {
     (prev) => (prev - 1 + showcaseImages.length) % showcaseImages.length
   );
 };
-  const faqData = [
-    {
-      question: "Why do businesses need asset tracking software?",
-      answer:
-        "Asset tracking software helps organizations monitor assets, reduce losses, improve accountability, streamline audits, and optimize maintenance schedules.",
-    },
-    {
-      question: "How does asset lifecycle management improve operations?",
-      answer:
-        "Lifecycle management gives complete visibility into procurement, deployment, maintenance, upgrades, and retirement of assets, reducing operational costs.",
-    },
-    {
-      question:
-        "Can asset management software track assets across multiple locations?",
-      answer:
-        "Yes. AssetPegasus provides centralized visibility for assets across offices, warehouses, branches, and remote sites.",
-    },
-    {
-      question: "What is asset management software?",
-      answer:
-        "Asset management software is a platform used to track, manage, monitor, and optimize physical and digital assets throughout their lifecycle.",
-    },
-    {
-      question: "What is AssetPegasus?",
-      answer:
-        "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
-      },
-      {
-        question: "What's the best asset management software with insurance tracking?",
-        answer:
-          "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
-      },
-      {
-        question: "What's a good Asset Panda alternative for mid-market companies?",
-        answer:
-          "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
-      },
-      {
-        question: "What's cheaper than ServiceNow for IT asset management?",
-        answer:
-          "AssetPegasus is a cloud-based asset management platform that helps businesses manage hardware, software, machinery, equipment, licenses, insurance, maintenance, and more from a single dashboard.",
-      },
-  ];
+const faqData = [
+  {
+    question: "Why do businesses need asset tracking software?",
+    answer:
+      "Asset tracking software helps organizations monitor equipment, reduce losses, improve accountability, simplify audits, and optimize maintenance throughout the asset lifecycle.",
+  },
+  {
+    question: "How does asset lifecycle management improve operations?",
+    answer:
+      "Asset lifecycle management provides visibility from procurement and deployment through maintenance and retirement, helping businesses reduce costs and make informed replacement decisions.",
+  },
+  {
+    question: "Can asset management software track assets across multiple locations?",
+    answer:
+      "Yes. AssetPegasus provides centralized asset visibility across offices, warehouses, manufacturing facilities, branches, and remote locations from a single dashboard.",
+  },
+  {
+    question: "What is asset management software?",
+    answer:
+      "Asset management software enables organizations to track, monitor, maintain, and optimize physical and digital assets while improving operational efficiency and compliance.",
+  },
+  {
+    question: "What is AssetPegasus?",
+    answer:
+      "AssetPegasus is a cloud-based asset management platform that helps businesses manage IT assets, machinery, software licenses, warranties, maintenance schedules, insurance records, and inventory from a centralized dashboard.",
+  },
+  {
+    question: "What's the best asset management software with insurance tracking?",
+    answer:
+      "AssetPegasus includes built-in insurance tracking alongside warranty management, maintenance scheduling, software license management, and complete asset lifecycle monitoring, making it suitable for organizations that need all asset information in one place.",
+  },
+  {
+    question: "What's a good Asset Panda alternative for mid-market companies?",
+    answer:
+      "AssetPegasus offers an alternative for growing businesses by combining asset tracking, inventory management, maintenance scheduling, warranty monitoring, and software license management in a centralized, user-friendly platform.",
+  },
+  {
+    question: "What's cheaper than ServiceNow for IT asset management?",
+    answer:
+      "Businesses looking for a more affordable IT asset management solution can evaluate AssetPegasus for features such as hardware tracking, software license management, maintenance planning, audit support, and asset lifecycle management without the complexity of enterprise ITSM platforms.",
+  },
+];
 const leftItems = [
   "💻 User End Devices",
   "🔒 Security & Safety",
@@ -275,6 +274,101 @@ const rightItemssoftware = [
   return (
     <>
     <Helmet>
+       <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "AssetPegasus",
+      applicationCategory: "BusinessApplication",
+      applicationSubCategory: "IT Asset Management Software",
+      operatingSystem: "Web",
+      url: "https://assetpegasus.com",
+      image: "https://assetpegasus.com/images/AssetpegasusDashboard.webp",
+      description:
+        "AssetPegasus is an IT asset management platform for tracking hardware, software, warranties, maintenance schedules, insurance, and asset lifecycle.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "AssetPegasus",
+        url: "https://assetpegasus.com",
+      },
+      featureList: [
+        "Asset Tracking",
+        "Software License Management",
+        "Warranty Management",
+        "Maintenance Scheduling",
+        "Insurance Tracking",
+        "Audit Management",
+        "Employee Asset Assignment",
+        "Inventory Management"
+      ]
+    })}
+  </script>
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is AssetPegasus?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "AssetPegasus is a cloud-based IT asset management platform for tracking hardware, software, warranties, maintenance schedules, and inventory."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "Can I track software licenses?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. AssetPegasus allows you to monitor software licenses, renewals, expirations, and compliance from a centralized dashboard."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "Does AssetPegasus support warranty tracking?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. You can monitor warranty periods, expiry dates, and maintenance schedules for every asset."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "Is there a free trial?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. AssetPegasus offers a 7-day free trial with no credit card required."
+          }
+        }
+      ]
+    })}
+  </script>
+  <script type="application/ld+json">
+{JSON.stringify({
+  "@context":"https://schema.org",
+  "@type":"Organization",
+  name:"AssetPegasus",
+  url:"https://assetpegasus.com",
+  logo:"https://assetpegasus.com/images/Logo2.png",
+  sameAs:[
+    "https://www.linkedin.com/company/assetpegasus",
+    "https://x.com/assetpegasus"
+  ]
+})}
+</script>
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  name:"AssetPegasus",
+  url:"https://assetpegasus.com"
+})}
+</script>
   <title>
     AssetPegasus | IT Asset Management Software
   </title>
@@ -282,39 +376,39 @@ const rightItemssoftware = [
   <meta property="og:type" content="website" />
   <meta
     name="description"
-    content="Track hardware, software licenses, maintenance schedules, warranties, insurance policies and asset lifecycle."
+    content="Manage hardware & software assets — maintenance, warranties, insurance & renewals from one dashboard. GDPR & HIPAA compliant. 7-day free trial — no credit card needed."
   />
 
   <meta
     property="og:title"
-    content="Machine & It asset management software"
+    content="AssetPegasus | IT Asset Management Software"
   />
 
 <meta property="og:site_name" content="AssetPegasus" />
 
 <meta
   property="og:image"
-  content="https://assetpegasus.com/images/Logo2.png"
+  content="https://assetpegasus.com/images/AssetpegasusDashboard.webp"
 />
   <meta
     property="og:description"
-    content="Manage hardware, software, maintenance, warranties and insurance from one platform."
+    content="Manage hardware & software assets — maintenance, warranties, insurance & renewals from one dashboard. GDPR & HIPAA compliant. 7-day free trial — no credit card needed.."
   />
   <meta name="twitter:card" content="summary_large_image" />
 
 <meta
   name="twitter:title"
-  content="AssetPegasus"
+  content="AssetPegasus | IT Asset Management Software"
 />
 
 <meta
   name="twitter:description"
-  content="Track hardware, software, licenses and machinery."
+  content="Manage hardware & software assets — maintenance, warranties, insurance & renewals from one dashboard. GDPR & HIPAA compliant. 7-day free trial — no credit card needed."
 />
 
 <meta
   name="twitter:image"
-  content="https://assetpegasus.com/images/Logo2.png"
+  content="https://assetpegasus.com/images/AssetpegasusDashboard.webp"
 />
   <link
     rel="canonical"
