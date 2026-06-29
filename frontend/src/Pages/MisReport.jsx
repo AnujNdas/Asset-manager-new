@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   getAuditDashboard,
 } from "../Services/ApiServices";
-
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import "../Page_styles/AuditPage.css";
 import { exportAuditPDF } from "../utils/exportPdfFile";
 import { exportAuditExcel } from "../utils/exportExcelFile";
@@ -21,6 +21,12 @@ const AuditPage = () => {
   topExpensiveAssets: []
 }); 
   const [expandedDepartment, setExpandedDepartment] = useState(null);
+  const [expandedLifecycle, setExpandedLifecycle] =
+useState(null);
+const [expandedSummary, setExpandedSummary] = useState(null);
+const [expandedWarranty, setExpandedWarranty] = useState(null);
+const [expandedMaintenance, setExpandedMaintenance] = useState(null);
+const [expandedAssignment, setExpandedAssignment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState("All");
   const [assetType, setAssetType] = useState("hardware");
@@ -432,15 +438,15 @@ const filteredMaintenance =
         );
       });
 const lifecycle = auditData.lifecycle || [];
-
 const filteredLifecycle =
   selectedYear === "All"
     ? lifecycle
     : lifecycle.filter(item => {
-        if (!item.purchaseDate) return false;
+// console.log("filter item", item);
+        if (!item.metadata?.snapshot?.hardware?.purchaseDate) return false;
 
         return (
-          new Date(item.purchaseDate)
+          new Date(item.metadata?.snapshot?.hardware?.purchaseDate)
             .getFullYear()
             .toString() === selectedYear
         );
@@ -520,81 +526,147 @@ const stats = [
       </div>
     );
   }
-  const renderSummary = () => (
+
+
+const renderSummary = () => (
   <>
     <div className="audit-section-header">
       <h3>Asset Inventory Overview</h3>
     </div>
 
     <div className="audit-table-wrapper">
+
       <table className="audit-table">
 
-<thead>
-  <tr>
-    <th>Asset</th>
-    <th>Instance</th>
-    <th>Type</th>
-    <th>Location</th>
-    <th>Status</th>
-    <th>Condition</th>
-    <th>Purchase Date</th>
-    <th>Purchase Cost</th>
-    <th>Upgrade Cost</th>
-    <th>Total Cost</th>
-  </tr>
-</thead>
+        <thead>
+          <tr>
+            <th>Details</th>
+            <th>Asset</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Location</th>
+            <th>Total Cost</th>
+          </tr>
+        </thead>
 
-<tbody>
+        <tbody>
 
-{assets.map(asset => (
+          {assets.map(asset => (
 
-<tr key={asset.instanceId}>
+            <React.Fragment key={asset.instanceId}>
 
-<td>
-    <strong>{asset.assetName}</strong>
-    <br />
-    <small>{asset.assetCode}</small>
-</td>
+              <tr>
 
-<td>{asset.instanceCode}</td>
+                <td>
 
-<td>{asset.assetType}</td>
+                  <button
+                    type="button"
+                    className="expand-btn"
+                    onClick={() =>
+                      setExpandedSummary(
+                        expandedSummary === asset.instanceId
+                          ? null
+                          : asset.instanceId
+                      )
+                    }
+                  >
+                    {expandedSummary === asset.instanceId
+                      ? <FiChevronUp />
+                      : <FiChevronDown />}
+                  </button>
 
-<td>{asset.location}</td>
+                </td>
 
-<td>{asset.status}</td>
+                <td>
+                  <strong>{asset.assetName}</strong>
+                  <br />
+                  <small>{asset.assetCode}</small>
+                </td>
 
-<td>{asset.condition}</td>
+                <td>{asset.assetType}</td>
 
-<td>
-{
-asset.purchaseDate
-? new Date(asset.purchaseDate).toLocaleDateString()
-: "-"
-}
-</td>
+                <td>{asset.status}</td>
 
-<td>
-${asset.purchaseCost.toLocaleString()}
-</td>
+                <td>{asset.location}</td>
 
-<td>
-${asset.upgradeCost.toLocaleString()}
-</td>
+                <td>
+                  <strong>
+                    ${asset.totalCost.toLocaleString()}
+                  </strong>
+                </td>
 
-<td>
-<strong>
-${asset.totalCost.toLocaleString()}
-</strong>
-</td>
+              </tr>
 
-</tr>
+              {expandedSummary === asset.instanceId && (
 
-))}
+                <tr>
 
-</tbody>
+                  <td colSpan={6}>
+
+                    <table className="audit-table">
+
+                      <thead>
+                        <tr>
+                          <th>Asset Code</th>
+                          <th>Instance</th>
+                          <th>Condition</th>
+                          <th>Purchase Date</th>
+                          <th>Purchase Cost</th>
+                          <th>Upgrade Cost</th>
+                          <th>Total Cost</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                        <tr>
+
+                          <td>{asset.assetCode}</td>
+
+                          <td>{asset.instanceCode}</td>
+
+                          <td>{asset.condition}</td>
+
+                          <td>
+                            {asset.purchaseDate
+                              ? new Date(asset.purchaseDate).toLocaleDateString()
+                              : "-"}
+                          </td>
+
+                          <td>
+                            ${asset.purchaseCost.toLocaleString()}
+                          </td>
+
+                          <td>
+                            ${asset.upgradeCost.toLocaleString()}
+                          </td>
+
+                          <td>
+                            <strong>
+                              ${asset.totalCost.toLocaleString()}
+                            </strong>
+                          </td>
+
+                        </tr>
+
+                      </tbody>
+
+                    </table>
+
+                  </td>
+
+                </tr>
+
+              )}
+
+            </React.Fragment>
+
+          ))}
+
+        </tbody>
 
       </table>
+
     </div>
   </>
 );
@@ -606,12 +678,11 @@ const renderDepartment = () => (
 
     <thead>
       <tr>
+        <th>Details</th>
         <th>Department</th>
         <th>Employees</th>
         <th>Assets</th>
-        <th>Assigned</th>
         <th>Total Value</th>
-        <th>Asset Preview</th>
       </tr>
     </thead>
 
@@ -633,99 +704,124 @@ const renderDepartment = () => (
     )
   }
 >
+    <td><button
+    className="expand-btn"
+    onClick={(e)=>{
+        e.stopPropagation();
+        setExpandedDepartment(
+            expandedDepartment===dept.departmentId
+            ? null
+            : dept.departmentId
+        );
+    }}
+>
+    {expandedDepartment===dept.departmentId
+        ? <FiChevronUp/>
+        : <FiChevronDown/>
+    }
+</button></td>
+
             <td>{dept.departmentName}</td>
 
             <td>{dept.totalEmployees}</td>
 
             <td>{dept.totalAssets}</td>
 
-            <td>{dept.activeAssignments}</td>
-
             <td>${dept.totalValue.toLocaleString()}</td>
 
-            <td>
-              {dept.assets
-                .slice(0, 2)
-                .map(asset => asset.assetName)
-                .join(", ")}
-              {dept.assets.length > 2 && "..."}
-            </td>
+
 
           </tr>
 
           {/* Expanded Row */}
 
-          {expandedDepartment === dept.departmentId && (
+{expandedDepartment === dept.departmentId && (
 
-            <tr>
+<tr className="department-expand-row">
 
-              <td colSpan={6}>
+<td colSpan={7}>
 
-                <div className="department-expanded">
+<div className="department-details">
 
-                  <div className="expanded-section">
+<h4>Department Assignment Details</h4>
 
-                    <h4>Employees</h4>
+<table className="audit-table">
 
-                    {dept.employees.map(emp => (
+<thead>
 
-                      <div
-                        key={emp.employeeId}
-                        className="employee-card"
-                      >
-                        <strong>{emp.employeeName}</strong>
+<tr>
 
-                        <div>{emp.employeeCode}</div>
+<th>Employee</th>
 
-                        <div>
-                          Active Assets: {emp.activeAssets}
-                        </div>
+<th>Asset</th>
 
-                        <div>
-                          Returned: {emp.returnedAssets}
-                        </div>
+<th>Instance</th>
 
-                      </div>
+<th>Status</th>
 
-                    ))}
+<th>Assigned</th>
 
-                  </div>
+<th>Value</th>
 
-                  <div className="expanded-section">
+</tr>
 
-                    <h4>Assets</h4>
+</thead>
 
-                    {dept.assets.map(asset => (
+<tbody>
 
-                      <div
-                        key={asset.instanceId}
-                        className="asset-card"
-                      >
-                        <strong>{asset.assetName}</strong>
+{dept.assignmentHistory.map(record=>(
 
-                        <div>{asset.instanceCode}</div>
+<tr key={record.assignmentId}>
 
-                        <div>{asset.assetType}</div>
+<td>{record.employeeName}</td>
 
-                        <div>{asset.status}</div>
+<td>{record.assetName}</td>
 
-                        <div>
-                          ${asset.totalCost.toLocaleString()}
-                        </div>
+<td>{record.instanceCode}</td>
 
-                      </div>
+<td>
 
-                    ))}
+<span className={`status ${record.status}`}>
 
-                  </div>
+{record.status}
 
-                </div>
+</span>
 
-              </td>
+</td>
 
-            </tr>
+<td>
 
-          )}
+{record.assignedAt
+? new Date(record.assignedAt).toLocaleDateString()
+: "-"}
+
+</td>
+
+<td>
+
+${(
+dept.assets.find(
+a=>a.instanceCode===record.instanceCode
+)?.totalCost ?? 0
+).toLocaleString()}
+
+</td>
+
+</tr>
+
+))}
+
+</tbody>
+
+</table>
+
+</div>
+
+</td>
+
+</tr>
+
+)}
 
         </React.Fragment>
 
@@ -747,128 +843,66 @@ const renderWarranty = () => {
 
 <thead>
   <tr>
+    <th>Details</th>
     <th>Asset</th>
-    <th>Instance Details</th>
-    <th>Location</th>
-    <th>Warranty</th>
-    <th>Cost</th>
+    <th>Type</th>
+    <th>Warranty Expiry</th>
     <th>Status</th>
+    <th>Total Cost</th>
   </tr>
 </thead>
 
 <tbody>
-  {filteredWarranty .map((item) => {
 
-    const expiry = new Date(item.expiryDate);
+{filteredWarranty.map(item => {
 
-    const today = new Date();
+  const expiry = new Date(item.expiryDate);
 
-    const daysLeft = Math.ceil(
-      (expiry - today) / (1000 * 60 * 60 * 24)
-    );
+  const daysLeft = Math.ceil(
+    (expiry - new Date()) / (1000 * 60 * 60 * 24)
+  );
 
-    return (
-      <tr key={item.instanceId}>
+  return (
 
-        {/* Asset */}
+    <React.Fragment key={item.instanceId}>
+
+      {/* Summary Row */}
+
+      <tr>
 
         <td>
+
+          <button
+            type="button"
+            className="expand-btn"
+            onClick={() =>
+              setExpandedWarranty(
+                expandedWarranty === item.instanceId
+                  ? null
+                  : item.instanceId
+              )
+            }
+          >
+            {expandedWarranty === item.instanceId
+              ? <FiChevronUp />
+              : <FiChevronDown />}
+          </button>
+
+        </td>
+
+        <td>
+
           <strong>{item.assetName}</strong>
+
           <br />
+
           <small>{item.assetCode}</small>
-          <br />
-          <small>{item.assetType.toUpperCase()}</small>
-        </td>
-
-        {/* Instance */}
-
-        <td>
-          <div>
-            <strong>Instance:</strong> {item.instanceCode}
-          </div>
-
-          {item.deviceName && (
-            <div>
-              <strong>Device:</strong> {item.deviceName}
-            </div>
-          )}
-
-          {item.serialNumber && (
-            <div>
-              <strong>Serial:</strong> {item.serialNumber}
-            </div>
-          )}
-
-          {item.modelNo && (
-            <div>
-              <strong>Model:</strong> {item.modelNo}
-            </div>
-          )}
-        </td>
-
-        {/* Location */}
-
-        <td>
-          <div>{item.location}</div>
-
-          <small>
-            {item.condition}
-          </small>
-        </td>
-
-        {/* Warranty */}
-
-        <td>
-
-          <div>
-            <strong>Purchased</strong>
-            <br />
-            {item.purchaseDate
-              ? new Date(item.purchaseDate).toLocaleDateString()
-              : "-"}
-          </div>
-
-          <br />
-
-          <div>
-            <strong>Installed</strong>
-            <br />
-            {item.installationDate
-              ? new Date(item.installationDate).toLocaleDateString()
-              : "-"}
-          </div>
-
-          <br />
-
-          <div>
-            <strong>Expires</strong>
-            <br />
-            {expiry.toLocaleDateString()}
-          </div>
 
         </td>
 
-        {/* Cost */}
+        <td>{item.assetType}</td>
 
-        <td>
-
-          <div>
-            <strong>Warranty</strong>
-            <br />
-            ${(item.warrantyCost ?? 0).toLocaleString()}
-          </div>
-
-          <br />
-
-          <div>
-            <strong>Total</strong>
-            <br />
-            ${(item.totalCost ?? 0).toLocaleString()}
-          </div>
-
-        </td>
-
-        {/* Status */}
+        <td>{expiry.toLocaleDateString()}</td>
 
         <td>
 
@@ -886,15 +920,98 @@ const renderWarranty = () => {
               : `${daysLeft} Days Left`}
           </span>
 
-          <br />
+        </td>
 
-          <small>{item.status}</small>
-
+        <td>
+          <strong>
+            ${(item.totalCost ?? 0).toLocaleString()}
+          </strong>
         </td>
 
       </tr>
-    );
-  })}
+
+      {/* Expanded Row */}
+
+      {expandedWarranty === item.instanceId && (
+
+        <tr>
+
+          <td colSpan={6}>
+
+            <table className="audit-table">
+
+              <thead>
+
+                <tr>
+                  <th>Instance</th>
+                  <th>Device</th>
+                  <th>Location</th>
+                  <th>Purchase</th>
+                  <th>Installation</th>
+                  <th>Warranty</th>
+                  <th>Warranty Cost</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+
+                  <td>
+                    {item.instanceCode}
+                    <br />
+                    <small>{item.serialNumber}</small>
+                    <br />
+                    <small>{item.modelNo}</small>
+                  </td>
+
+                  <td>{item.deviceName || "-"}</td>
+
+                  <td>
+                    {item.location}
+                    <br />
+                    <small>{item.condition}</small>
+                  </td>
+
+                  <td>
+                    {item.purchaseDate
+                      ? new Date(item.purchaseDate).toLocaleDateString()
+                      : "-"}
+                  </td>
+
+                  <td>
+                    {item.installationDate
+                      ? new Date(item.installationDate).toLocaleDateString()
+                      : "-"}
+                  </td>
+
+                  <td>
+                    {expiry.toLocaleDateString()}
+                  </td>
+
+                  <td>
+                    ${(item.warrantyCost ?? 0).toLocaleString()}
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </td>
+
+        </tr>
+
+      )}
+
+    </React.Fragment>
+
+  );
+
+})}
+
 </tbody>
       </table>
     </div>
@@ -902,7 +1019,17 @@ const renderWarranty = () => {
 };
 const renderInsurance = () => (
   <div className="audit-report-grid">
-
+<table className="audit-table">
+<thead>
+  <tr>
+    <th>Details</th>
+    <th>Asset</th>
+    <th>Type</th>
+    <th>Warranty Expiry</th>
+    <th>Status</th>
+    <th>Total Cost</th>
+  </tr>
+</thead>
 <tbody>
 
 {filteredInsurance.map(item => (
@@ -930,7 +1057,7 @@ const renderInsurance = () => (
 ))}
 
 </tbody>
-
+</table>
   </div>
 );
 // Helper Functions 
@@ -989,8 +1116,8 @@ const renderMaintenance = () => (
 
       <thead>
         <tr>
+          <th>Details</th>
           <th>Asset</th>
-          <th>Instance Details</th>
           <th>Location</th>
           <th>Maintenance</th>
           <th>Costs</th>
@@ -998,285 +1125,296 @@ const renderMaintenance = () => (
         </tr>
       </thead>
 
-      <tbody>
+<tbody>
 
-        {filteredMaintenance.map(item => {
+  {filteredMaintenance.map(item => {
 
-          const days =
-            getDaysRemaining(
-              item.nextMaintenanceDate
-            );
+    const days = getDaysRemaining(item.nextMaintenanceDate);
+    const status = getMaintenanceStatus(item.nextMaintenanceDate);
 
-          const status =
-            getMaintenanceStatus(
-              item.nextMaintenanceDate
-            );
+    return (
 
-          return (
+      <React.Fragment key={item.instanceId}>
 
-            <tr key={item.instanceId}>
+        {/* Summary Row */}
 
-              {/* Asset */}
+        <tr>
 
-              <td>
+          <td>
 
-                <strong>{item.assetName}</strong>
+            <button
+              type="button"
+              className="expand-btn"
+              onClick={() =>
+                setExpandedMaintenance(
+                  expandedMaintenance === item.instanceId
+                    ? null
+                    : item.instanceId
+                )
+              }
+            >
+              {expandedMaintenance === item.instanceId
+                ? <FiChevronUp />
+                : <FiChevronDown />}
+            </button>
 
-                <br />
 
-                <small>{item.assetCode}</small>
+          </td>
+          <td>
+            <strong>{item.assetName}</strong>
 
-                <br />
+            <br />
 
-                <small>{item.assetType}</small>
+            <small>{item.assetCode}</small>
+            </td>
 
-              </td>
+          <td>
+            {item.location}
+          </td>
 
-              {/* Instance */}
+          <td>
 
-              <td>
+            <span className={status.className}>
+              {status.label}
+            </span>
 
-                <div>
-                  <strong>Instance:</strong> {item.instanceCode}
-                </div>
+            <br />
 
-                {item.deviceName && (
-                  <div>
-                    <strong>Device:</strong> {item.deviceName}
-                  </div>
-                )}
+            <small>
+              {days === null
+                ? "-"
+                : days < 0
+                ? `${Math.abs(days)} Days Overdue`
+                : `${days} Days Left`}
+            </small>
 
-                {item.serialNumber && (
-                  <div>
-                    <strong>Serial:</strong> {item.serialNumber}
-                  </div>
-                )}
+          </td>
 
-                {item.modelNo && (
-                  <div>
-                    <strong>Model:</strong> {item.modelNo}
-                  </div>
-                )}
 
-                {item.specifications && (
-                  <div>
-                    <strong>Specs:</strong> {item.specifications}
-                  </div>
-                )}
+          <td>
+            <strong>
+              {formatCurrency(item.totalCost)}
+            </strong>
+          </td>
+          <td>
+            {item.upgrades?.length || 0}
+          </td>
 
-              </td>
+        </tr>
 
-              {/* Location */}
+        {/* Expanded Row */}
 
-              <td>
+        {expandedMaintenance === item.instanceId && (
 
-                <div>{item.location}</div>
+          <tr>
 
-                <small>
-                  {item.condition}
-                </small>
+            <td colSpan={6}>
 
-                <br />
+              <table className="audit-table">
 
-                <small>{item.status}</small>
+                <thead>
 
-              </td>
+                  <tr>
 
-              {/* Maintenance */}
+                    <th>Instance</th>
 
-              <td>
+                    <th>Device</th>
 
-                <div>
+                    <th>Maintenance</th>
 
-                  <strong>Purchase</strong>
+                    <th>Costs</th>
 
-                  <br />
+                    <th>Upgrades</th>
 
-                  {item.purchaseDate
-                    ? new Date(
-                        item.purchaseDate
-                      ).toLocaleDateString()
-                    : "-"}
+                  </tr>
 
-                </div>
+                </thead>
 
-                <br />
+                <tbody>
 
-                <div>
+                  <tr>
 
-                  <strong>Installed</strong>
+                    {/* Instance */}
 
-                  <br />
+                    <td>
 
-                  {item.installationDate
-                    ? new Date(
-                        item.installationDate
-                      ).toLocaleDateString()
-                    : "-"}
+                      <strong>{item.instanceCode}</strong>
 
-                </div>
+                      <br />
 
-                <br />
+                      <small>{item.serialNumber}</small>
 
-                <div>
+                      <br />
 
-                  <strong>Next Service</strong>
+                      <small>{item.modelNo}</small>
 
-                  <br />
+                      <br />
 
-                  {item.nextMaintenanceDate
-                    ? new Date(
-                        item.nextMaintenanceDate
-                      ).toLocaleDateString()
-                    : "-"}
+                      <small>{item.specifications}</small>
 
-                </div>
+                    </td>
 
-                <br />
+                    {/* Device */}
 
-                <span className={status.className}>
-                  {status.label}
-                </span>
+                    <td>
 
-                <br />
+                      <div>
+                        <strong>Device:</strong> {item.deviceName || "-"}
+                      </div>
 
-                <small>
+                      <div>
+                        <strong>Location:</strong> {item.location}
+                      </div>
 
-                  {days === null
-                    ? "-"
-                    : days < 0
-                    ? `${Math.abs(days)} Days Overdue`
-                    : `${days} Days Left`}
+                      <div>
+                        <strong>Condition:</strong> {item.condition}
+                      </div>
 
-                </small>
+                      <div>
+                        <strong>Status:</strong> {item.status}
+                      </div>
 
-              </td>
+                    </td>
 
-              {/* Costs */}
+                    {/* Dates */}
 
-              <td>
+                    <td>
 
-                <div>
+                      <div>
 
-                  <strong>Purchase</strong>
-
-                  <br />
-
-                  {formatCurrency(
-                    item.purchaseCost
-                  )}
-
-                </div>
-
-                <br />
-
-                <div>
-
-                  <strong>Maintenance</strong>
-
-                  <br />
-
-                  {formatCurrency(
-                    item.maintenanceCost
-                  )}
-
-                </div>
-
-                <br />
-
-                <div>
-
-                  <strong>Warranty</strong>
-
-                  <br />
-
-                  {formatCurrency(
-                    item.warrantyCost
-                  )}
-
-                </div>
-
-                <br />
-
-                <div>
-
-                  <strong>Upgrade</strong>
-
-                  <br />
-
-                  {formatCurrency(
-                    item.upgradeCost
-                  )}
-
-                </div>
-
-                <hr />
-
-                <strong>
-
-                  {formatCurrency(
-                    item.totalCost
-                  )}
-
-                </strong>
-
-              </td>
-
-              {/* Upgrades */}
-
-              <td>
-
-                <strong>
-
-                  {item.upgrades?.length || 0}
-
-                </strong>
-
-                <br />
-
-                {item.upgrades?.length > 0 &&
-
-                  item.upgrades
-                    .slice(0, 3)
-                    .map((upgrade, index) => (
-
-                      <div key={index}>
-
-                        • {upgrade.description}
+                        <strong>Purchase</strong>
 
                         <br />
 
-                        <small>
-
-                          {new Date(
-                            upgrade.date
-                          ).toLocaleDateString()}
-
-                        </small>
+                        {item.purchaseDate
+                          ? new Date(item.purchaseDate).toLocaleDateString()
+                          : "-"}
 
                       </div>
 
-                    ))}
+                      <br />
 
-                {item.upgrades?.length > 3 && (
+                      <div>
 
-                  <small>
+                        <strong>Installed</strong>
 
-                    +{item.upgrades.length - 3} more
+                        <br />
 
-                  </small>
+                        {item.installationDate
+                          ? new Date(item.installationDate).toLocaleDateString()
+                          : "-"}
 
-                )}
+                      </div>
 
-              </td>
+                      <br />
 
-            </tr>
+                      <div>
 
-          );
+                        <strong>Next Service</strong>
 
-        })}
+                        <br />
 
-      </tbody>
+                        {item.nextMaintenanceDate
+                          ? new Date(item.nextMaintenanceDate).toLocaleDateString()
+                          : "-"}
+
+                      </div>
+
+                    </td>
+
+                    {/* Costs */}
+
+                    <td>
+
+                      <div>
+                        Purchase : {formatCurrency(item.purchaseCost)}
+                      </div>
+
+                      <div>
+                        Maintenance : {formatCurrency(item.maintenanceCost)}
+                      </div>
+
+                      <div>
+                        Warranty : {formatCurrency(item.warrantyCost)}
+                      </div>
+
+                      <div>
+                        Upgrade : {formatCurrency(item.upgradeCost)}
+                      </div>
+
+                      <hr />
+
+                      <strong>
+                        Total : {formatCurrency(item.totalCost)}
+                      </strong>
+
+                    </td>
+
+                    {/* Upgrades */}
+
+                    <td>
+
+                      {item.upgrades?.length ? (
+
+                        item.upgrades.map((upgrade, index) => (
+
+                          <div
+                            key={index}
+                            style={{ marginBottom: "10px" }}
+                          >
+
+                            <strong>
+                              {upgrade.description}
+                            </strong>
+
+                            <br />
+
+                            <small>
+                              {upgrade.date
+                                ? new Date(upgrade.date).toLocaleDateString()
+                                : "-"}
+                            </small>
+
+                            {upgrade.cost && (
+                              <>
+                                <br />
+                                <small>
+                                  Cost: {formatCurrency(upgrade.cost)}
+                                </small>
+                              </>
+                            )}
+
+                          </div>
+
+                        ))
+
+                      ) : (
+
+                        <span>No upgrades</span>
+
+                      )}
+
+                    </td>
+
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+            </td>
+
+          </tr>
+
+        )}
+
+      </React.Fragment>
+
+    );
+
+  })}
+
+</tbody>
 
     </table>
 
@@ -1289,142 +1427,348 @@ const renderAssignment = () => (
 
     <table className="audit-table">
 
-      <thead>
-        <tr>
-          <th>Employee</th>
-          <th>Asset</th>
-          <th>Department</th>
-          <th>Assignment</th>
-          <th>Dates</th>
-          <th>Asset Status</th>
-          <th>Total Value</th>
-        </tr>
-      </thead>
+<thead>
+<tr>
+  <th>Details</th>
+  <th>Employee</th>
+  <th>Asset</th>
+  <th>Department</th>
+  <th>Status</th>
+  <th>Assigned</th>
+  <th>Total Value</th>
+</tr>
+</thead>
 
-      <tbody>
+<tbody>
 
-        {assignments.map(item => (
+{assignments.map(item => (
 
-          <tr key={item.assignmentId}>
+<React.Fragment key={item.assignmentId}>
 
-            {/* Employee */}
+<tr>
 
-            <td>
-              <strong>{item.employeeName}</strong>
-              <br />
-              <small>{item.employeeCode}</small>
-              <br />
-              <small>{item.employeeEmail}</small>
-            </td>
+<td>
 
-            {/* Asset */}
+<button
+className="expand-btn"
+onClick={() =>
+setExpandedAssignment(
+expandedAssignment === item.assignmentId
+? null
+: item.assignmentId
+)
+}
+>
+{
+expandedAssignment === item.assignmentId
+? <FiChevronUp/>
+: <FiChevronDown/>
+}
+</button>
 
-            <td>
-              <strong>{item.assetName}</strong>
-              <br />
-              <small>{item.assetCode}</small>
+</td>
 
-              <br />
+<td>
 
-              <small>
-                {item.instanceCode}
-              </small>
+<strong>{item.employeeName}</strong>
 
-              <br />
+<br/>
 
-              <small>
-                {item.deviceName}
-              </small>
-            </td>
+<small>{item.employeeCode}</small>
 
-            {/* Department */}
+</td>
 
-            <td>
-              {item.department}
-            </td>
+<td>
 
-            {/* Assignment */}
+<strong>{item.assetName}</strong>
 
-            <td>
+<br/>
 
-              <div>
-                <strong>Status:</strong> {item.assignmentStatus}
-              </div>
+<small>{item.instanceCode}</small>
 
-              <div>
-                <strong>Location:</strong> {item.assignmentLocation}
-              </div>
+</td>
 
-              <div>
-                <strong>Assigned By:</strong>{" "}
-                {item.assignedBy || "-"}
-              </div>
+<td>{item.department}</td>
 
-              <div>
-                <strong>Returned By:</strong>{" "}
-                {item.returnedBy || "-"}
-              </div>
+<td>{item.assignmentStatus}</td>
 
-            </td>
+<td>
 
-            {/* Dates */}
+{
+item.assignedAt
+? new Date(item.assignedAt).toLocaleDateString()
+: "-"
+}
 
-            <td>
+</td>
 
-              <div>
-                <strong>Assigned</strong>
-                <br />
-                {item.assignedAt
-                  ? new Date(item.assignedAt).toLocaleDateString()
-                  : "-"}
-              </div>
+<td>
 
-              <br />
+<strong>
 
-              <div>
-                <strong>Returned</strong>
-                <br />
-                {item.returnedAt
-                  ? new Date(item.returnedAt).toLocaleDateString()
-                  : "-"}
-              </div>
+${Number(item.totalCost || 0).toLocaleString()}
 
-            </td>
+</strong>
 
-            {/* Asset Status */}
+</td>
 
-            <td>
+</tr>
 
-              <div>
-                <strong>{item.status}</strong>
-              </div>
+{expandedAssignment === item.assignmentId && (
 
-              <small>
-                {item.condition}
-              </small>
+<tr>
 
-            </td>
+<td colSpan={7}>
 
-            {/* Value */}
+<div className="expanded-panel">
 
-            <td>
+<table className="audit-table nested-table">
 
-              <strong>
-                ${Number(item.totalCost || 0).toLocaleString()}
-              </strong>
+<thead>
 
-            </td>
+<tr>
 
-          </tr>
+<th>Employee Details</th>
 
-        ))}
+<th>Asset Details</th>
 
-      </tbody>
+<th>Assignment Details</th>
+
+<th>Dates</th>
+
+<th>Asset Status</th>
+
+<th>Financial</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+
+<div><strong>Name:</strong> {item.employeeName}</div>
+
+<div><strong>Code:</strong> {item.employeeCode}</div>
+
+<div><strong>Email:</strong> {item.employeeEmail}</div>
+
+<div><strong>Department:</strong> {item.department}</div>
+
+</td>
+
+<td>
+
+<div><strong>Asset:</strong> {item.assetName}</div>
+
+<div><strong>Code:</strong> {item.assetCode}</div>
+
+<div><strong>Instance:</strong> {item.instanceCode}</div>
+
+<div><strong>Device:</strong> {item.deviceName || "-"}</div>
+
+<div><strong>Serial:</strong> {item.serialNumber || "-"}</div>
+
+<div><strong>Model:</strong> {item.modelNo || "-"}</div>
+
+</td>
+
+<td>
+
+<div><strong>Status:</strong> {item.assignmentStatus}</div>
+
+<div><strong>Location:</strong> {item.assignmentLocation}</div>
+
+<div><strong>Assigned By:</strong> {item.assignedBy || "-"}</div>
+
+<div><strong>Returned By:</strong> {item.returnedBy || "-"}</div>
+
+</td>
+
+<td>
+
+<div>
+
+<strong>Assigned</strong>
+
+<br/>
+
+{
+item.assignedAt
+? new Date(item.assignedAt).toLocaleString()
+: "-"
+}
+
+</div>
+
+<br/>
+
+<div>
+
+<strong>Returned</strong>
+
+<br/>
+
+{
+item.returnedAt
+? new Date(item.returnedAt).toLocaleString()
+: "-"
+}
+
+</div>
+
+</td>
+
+<td>
+
+<div><strong>Status:</strong> {item.status}</div>
+
+<div><strong>Condition:</strong> {item.condition}</div>
+
+</td>
+
+<td>
+
+<div>
+
+<strong>Purchase</strong>
+
+<br/>
+
+${Number(item.purchaseCost || 0).toLocaleString()}
+
+</div>
+
+<br/>
+
+<div>
+
+<strong>Maintenance</strong>
+
+<br/>
+
+${Number(item.maintenanceCost || 0).toLocaleString()}
+
+</div>
+
+<br/>
+
+<div>
+
+<strong>Warranty</strong>
+
+<br/>
+
+${Number(item.warrantyCost || 0).toLocaleString()}
+
+</div>
+
+<br/>
+
+<div>
+
+<strong>Insurance</strong>
+
+<br/>
+
+${Number(item.insuranceCost || 0).toLocaleString()}
+
+</div>
+
+<br/>
+
+<div>
+
+<strong>Total</strong>
+
+<br/>
+
+${Number(item.totalCost || 0).toLocaleString()}
+
+</div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</td>
+
+</tr>
+
+)}
+
+</React.Fragment>
+
+))}
+
+</tbody>
 
     </table>
 
   </div>
 );
+
+// Grouping the instances 
+const lifecycleAssets = Object.values(
+
+  filteredLifecycle.reduce((acc, item) => {
+
+    if (!acc[item.instanceId]) {
+
+      acc[item.instanceId] = {
+
+        instanceId: item.instanceId,
+
+        assetName: item.assetName,
+
+        assetCode: item.assetCode,
+
+        instanceCode: item.instanceCode,
+
+        assetType: item.assetType,
+
+        deviceName: item.deviceName,
+
+        status: item.metadata?.status || "-",
+
+        createdAt: item.createdAt,
+
+        lastActivity: item.date,
+        purchaseDate: item.metadata?.snapshot?.hardware?.purchaseDate,
+
+        events: []
+
+      };
+
+    }
+
+    acc[item.instanceId].events.push(item);
+
+    if (
+      new Date(item.date) >
+      new Date(acc[item.instanceId].lastActivity)
+    ) {
+
+      acc[item.instanceId].lastActivity = item.date;
+
+    }
+
+    return acc;
+
+  }, {})
+
+);
+
+
 const renderLifecycle = () => (
   <div className="audit-table-wrapper">
 
@@ -1434,69 +1778,133 @@ const renderLifecycle = () => (
 
       <thead>
         <tr>
+          <th>Details</th>
           <th>Asset</th>
-          <th>Event</th>
-          <th>Description</th>
-          <th>Performed By</th>
-          <th>Date</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Events</th>
+          <th>Purchased</th>
+          <th>Last Activity</th>
         </tr>
       </thead>
 
       <tbody>
 
-        {filteredLifecycle.map((item, index) => (
+        {lifecycleAssets.map((asset) => (
 
-          <tr key={`${item.instanceId}-${index}`}>
+          <React.Fragment key={asset.instanceId}>
 
-            <td>
+            {/* Main Row */}
 
-              <strong>{item.assetName}</strong>
+            <tr>
 
-              <br />
+              <td>
+                <button
+                  type="button"
+                  className="expand-btn"
+                  onClick={() =>
+                    setExpandedLifecycle(
+                      expandedLifecycle === asset.instanceId
+                        ? null
+                        : asset.instanceId
+                    )
+                  }
+                >
+                  {expandedLifecycle === asset.instanceId
+                    ? <FiChevronUp />
+                    : <FiChevronDown />}
+                </button>
+              </td>
 
-              <small>{item.assetCode}</small>
+              <td>
+                <strong>{asset.assetName}</strong>
+                <br />
+                <small>{asset.assetCode}</small>
+                <br />
+                <small>{asset.instanceCode}</small>
+              </td>
 
-              <br />
+              <td>{asset.assetType}</td>
 
-              <small>{item.instanceCode}</small>
+              <td>{asset.status}</td>
 
-              <br />
+              <td>{asset.events?.length || 0}</td>
 
-              <small>{item.deviceName || "-"}</small>
+              <td>
+                {asset.purchaseDate}
+              </td>
 
-            </td>
+              <td>
+                {asset.lastActivity
+                  ? new Date(asset.lastActivity).toLocaleDateString()
+                  : "-"}
+              </td>
 
-            <td>
+            </tr>
 
-              <strong>{item.title}</strong>
+            {/* Expanded Row */}
 
-              <br />
+            {expandedLifecycle === asset.instanceId && (
 
-              <small>{item.eventType}</small>
+              <tr>
 
-            </td>
+                <td colSpan={7}>
 
-            <td>
+                  <table className="audit-table">
 
-              {item.description || "-"}
+                    <thead>
+                      <tr>
+                        <th>Event</th>
+                        <th>Description</th>
+                        <th>Performed By</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
 
-            </td>
+                    <tbody>
 
-            <td>
+                      {(asset.events || [])
+                        .slice()
+                        .sort(
+                          (a, b) =>
+                            new Date(a.date).getTime() -
+                            new Date(b.date).getTime()
+                        )
+                        .map((event, index) => (
 
-              {item.performedBy || "System"}
+                          <tr key={index}>
 
-            </td>
+                            <td>
+                              <strong>{event.title}</strong>
+                              <br />
+                              <small>{event.eventType}</small>
+                            </td>
 
-            <td>
+                            <td>{event.description}</td>
 
-              {item.date
-                ? new Date(item.date).toLocaleString()
-                : "-"}
+                            <td>{event.performedBy || "System"}</td>
 
-            </td>
+                            <td>
+                              {event.date
+                                ? new Date(event.date).toLocaleString()
+                                : "-"}
+                            </td>
 
-          </tr>
+                          </tr>
+
+                        ))}
+
+                    </tbody>
+
+                  </table>
+
+                </td>
+
+              </tr>
+
+            )}
+
+          </React.Fragment>
 
         ))}
 

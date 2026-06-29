@@ -370,7 +370,7 @@ const rightItemssoftware = [
 })}
 </script>
   <title>
-    AssetPegasus | IT Asset Management Software
+    AssetPegasus | Machine & It asset Tracking & management software
   </title>
 
   <meta property="og:type" content="website" />
@@ -381,7 +381,7 @@ const rightItemssoftware = [
 
   <meta
     property="og:title"
-    content="AssetPegasus | IT Asset Management Software"
+    content="AssetPegasus | Machine & It asset Tracking & management software"
   />
 
 <meta property="og:site_name" content="AssetPegasus" />
@@ -398,7 +398,7 @@ const rightItemssoftware = [
 
 <meta
   name="twitter:title"
-  content="AssetPegasus | IT Asset Management Software"
+  content="AssetPegasus | Machine & It asset Tracking & management software"
 />
 
 <meta

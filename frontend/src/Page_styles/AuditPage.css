@@ -279,6 +279,38 @@
   display: flex;
   gap: 20px;
 }
+.expand-column{
+    width:60px;
+    text-align:center;
+}
+
+.expand-btn{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#2d3748;
+    color:#fff;
+    transition:.2s;
+}
+
+.expand-btn:hover{
+    background:#3d4f69;
+}
+
+.department-expand-row td{
+    padding:20px;
+    background:#1f2937;
+}
+
+.department-details h4{
+    margin-bottom:15px;
+}
+
+.department-details .audit-table{
+    margin-top:0;
+}
 @media (max-width: 1024px){
 
 .audit-header{

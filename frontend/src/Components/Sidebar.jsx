@@ -73,7 +73,7 @@ useEffect(() => {
           <div className="sidebar-heading">
             <div className="title-head">
               <div className="logo-wrapper">
-                <img src={image} alt="Logo" className="app-logo" />
+                <img src="/images/Logo2.png" alt="Logo" className="app-logo" />
               </div>
             </div>
           </div>
