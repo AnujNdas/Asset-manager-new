@@ -67,7 +67,7 @@ const handleCopyright = () => {
 }
   const headings = [
     "Manage All types of Assets From One Place — Hardware, Software & Cloud.",
-    "No Tracking — Privacy Policy.",
+    "Privacy-first — no behavioural tracking.",
     "Instant Asset Insights/Reports that Scale with Business.",
     "Track Maintenance, Warranty & Insurance",
   ];
@@ -1122,7 +1122,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </div>
       </div>
           <div className="copyright" onClick={handleCopyright}>
-            © 2026 SOCIALFLY. All Rights Reserved.
+            © 2026 ASSETPEGASUS. All Rights Reserved.
           </div>
     </footer>
 
