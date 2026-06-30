@@ -22,7 +22,7 @@ root.render(
       {/* <ProgressProvider> */}
         <NotificationProvider>
           <CurrencyProvider>
-      <AnalyticsTracker />
+      {/* <AnalyticsTracker /> */}
       <TourProvider>
         <HelmetProvider>
           <App />
