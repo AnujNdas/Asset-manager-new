@@ -79,30 +79,30 @@ const showcaseImages = [
 const [currentSlide, setCurrentSlide] = useState(0);
 const [transitionEnabled, setTransitionEnabled] = useState(true);
 const slides = [...showcaseImages, showcaseImages[0]];
-// useEffect(() => {
-//   const interval = setInterval(() => {
-//     setCurrentSlide((prev) => prev + 1);
-//   }, 3000);
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentSlide((prev) => prev + 1);
+  }, 3000);
 
-//   return () => clearInterval(interval);
-// }, []);
-// useEffect(() => {
-//   if (currentSlide === showcaseImages.length) {
-//     const timeout = setTimeout(() => {
-//       setTransitionEnabled(false);
-//       setCurrentSlide(0);
+  return () => clearInterval(interval);
+}, []);
+useEffect(() => {
+  if (currentSlide === showcaseImages.length) {
+    const timeout = setTimeout(() => {
+      setTransitionEnabled(false);
+      setCurrentSlide(0);
 
-//       setTimeout(() => {
-//         setTransitionEnabled(true);
-//       }, 50);
-//     }, 800);
+      setTimeout(() => {
+        setTransitionEnabled(true);
+      }, 50);
+    }, 800);
 
-//     return () => clearTimeout(timeout);
-//   }
-// }, [currentSlide]);
-// const nextSlide = () => {
-//   setCurrentSlide((prev) => (prev + 1) % showcaseImages.length);
-// };
+    return () => clearTimeout(timeout);
+  }
+}, [currentSlide]);
+const nextSlide = () => {
+  setCurrentSlide((prev) => (prev + 1) % showcaseImages.length);
+};
 
 const prevSlide = () => {
   setCurrentSlide(
