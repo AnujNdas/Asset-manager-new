@@ -1142,22 +1142,30 @@ insuranceCost: {
                       }
                     />
                   </div>
-                  <div className="form-group">
-                    <label>Insurance Term</label>
-                    <select
-                      value={bulkValues.insuranceTerm}
-                      onChange={(e) =>
-                        setBulkValues({
-                          ...bulkValues,
-                          insuranceTerm: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="6_months">6 Months</option>
-                      <option value="1_year">1 Year</option>
-                      <option value="3_years">3 Years</option>
-                    </select>
-                  </div>
+<div className="form-group">
+  <label>Insurance Term</label>
+  <select
+    value={bulkValues.insuranceTerm}
+    onChange={(e) =>
+      setBulkValues({
+        ...bulkValues,
+        insuranceTerm: e.target.value,
+      })
+    }
+  >
+    <option value="6_months">6 Months</option>
+    <option value="1_year">1 Year</option>
+    <option value="2_years">2 Years</option>
+    <option value="3_years">3 Years</option>
+    <option value="4_years">4 Years</option>
+    <option value="5_years">5 Years</option>
+    <option value="6_years">6 Years</option>
+    <option value="7_years">7 Years</option>
+    <option value="8_years">8 Years</option>
+    <option value="9_years">9 Years</option>
+    <option value="10_years">10 Years</option>
+  </select>
+</div>
                   <div className="form-group">
                     <label>Insurance Cost</label>
                     <input
@@ -1607,9 +1615,17 @@ insuranceCost: {
                                 )
                               }
                             >
-                              <option value="6_months">6 Months</option>
-                              <option value="1_year">1 Year</option>
-                              <option value="3_years">3 Years</option>
+<option value="6_months">6 Months</option>
+<option value="1_year">1 Year</option>
+<option value="2_years">2 Years</option>
+<option value="3_years">3 Years</option>
+<option value="4_years">4 Years</option>
+<option value="5_years">5 Years</option>
+<option value="6_years">6 Years</option>
+<option value="7_years">7 Years</option>
+<option value="8_years">8 Years</option>
+<option value="9_years">9 Years</option>
+<option value="10_years">10 Years</option>
                             </select>
                           </div>
                           {/* <div>

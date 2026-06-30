@@ -1189,25 +1189,13 @@ const upgrades = inst.upgrades || [];
 if (hasInsurance && insurancePurchaseDate) {
   const expiry = new Date(insurancePurchaseDate);
 
-  switch (insuranceTerm) {
-    case "6_months":
-      expiry.setMonth(expiry.getMonth() + 6);
-      break;
-
-    case "1_year":
-      expiry.setFullYear(
-        expiry.getFullYear() + 1
-      );
-      break;
-
-    case "3_years":
-      expiry.setFullYear(
-        expiry.getFullYear() + 3
-      );
-      break;
-
-    default:
-      break;
+  if (insuranceTerm === "6_months") {
+    expiry.setMonth(expiry.getMonth() + 6);
+  } else {
+    const years = parseInt(insuranceTerm); // "3_years" -> 3, "10_years" -> 10
+    if (!isNaN(years)) {
+      expiry.setFullYear(expiry.getFullYear() + years);
+    }
   }
 
   insuranceExpiry = expiry;
@@ -1811,17 +1799,23 @@ const parseDateSafe = (d) => {
     : date;
 };
 
-  const calculateInsuranceExpiry = (date, term) => {
-    if (!date) return null;
-    const d = new Date(date);
+const calculateInsuranceExpiry = (date, term) => {
+  if (!date) return null;
 
-    if (term === "6_months") d.setMonth(d.getMonth() + 6);
-    if (term === "1_year") d.setFullYear(d.getFullYear() + 1);
-    if (term === "3_years") d.setFullYear(d.getFullYear() + 3);
+  const d = new Date(date);
 
-    return d;
-  };
+  if (term === "6_months") {
+    d.setMonth(d.getMonth() + 6);
+  } else {
+    const years = parseInt(term, 10); // "1_year" -> 1, "3_years" -> 3, "10_years" -> 10
 
+    if (!isNaN(years)) {
+      d.setFullYear(d.getFullYear() + years);
+    }
+  }
+
+  return d;
+};
   const generateSerial = () =>
     `${asset.assetCode}-SN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 

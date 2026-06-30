@@ -109,11 +109,23 @@ hardware: {
       public_id: String
     },
     hasInsurance: Boolean,
-    insuranceTerm: {
-      type: String,
-      enum: ["6_months", "1_year", "3_years"],
-      default: "1_year"
-    },
+insuranceTerm: {
+  type: String,
+  enum: [
+    "6_months",
+    "1_year",
+    "2_years",
+    "3_years",
+    "4_years",
+    "5_years",
+    "6_years",
+    "7_years",
+    "8_years",
+    "9_years",
+    "10_years"
+  ],
+  default: "1_year"
+},
     coverageType: {
       type: [String],
       enum: [
