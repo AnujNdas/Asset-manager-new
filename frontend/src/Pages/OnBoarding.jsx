@@ -6,16 +6,16 @@ import "../Page_styles/OnBoarding.css";
 const Onboarding = () => {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    organizationName: "",
-    organizationType: "",
-    department: "",
-    designation: "",
-    country: "",
-    city: "",
-    officeLocation: "",
-  });
-
+const [formData, setFormData] = useState({
+  organizationName: "",
+  organizationType: "",
+  department: "",
+  designation: "",
+  country: "",
+  city: "",
+  officeLocation: "",
+  currency: "USD", // default
+});
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -98,7 +98,23 @@ const handleSubmit = async () => {
         placeholder="Country"
         onChange={handleChange}
       />
-
+      <select
+  name="currency"
+  value={formData.currency}
+  onChange={handleChange}
+>
+  <option value="USD">US Dollar (USD)</option>
+  <option value="EUR">Euro (EUR)</option>
+  <option value="GBP">British Pound (GBP)</option>
+  <option value="INR">Indian Rupee (INR)</option>
+  <option value="JPY">Japanese Yen (JPY)</option>
+  <option value="AUD">Australian Dollar (AUD)</option>
+  <option value="CAD">Canadian Dollar (CAD)</option>
+  <option value="CHF">Swiss Franc (CHF)</option>
+  <option value="CNY">Chinese Yuan (CNY)</option>
+  <option value="SGD">Singapore Dollar (SGD)</option>
+  <option value="AED">UAE Dirham (AED)</option>
+</select>
       <input
         name="city"
         placeholder="City"

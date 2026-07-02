@@ -4,50 +4,120 @@ const User = require("../models/User");
 const authenticateToken = require("../Middleware/Authentication-token");
 const upload = require("../config/multer");
 const cloudinary = require("../config/cloudinary");
+const mongoose = require("mongoose");
+const Organization = require("../models/Organization");
+router.put(
+  "/onboarding",
+  authenticateToken(),
+  async (req, res) => {
+    const session = await mongoose.startSession();
 
-  router.put(
-    "/onboarding",
-    authenticateToken(),
-    async (req, res) => {
-      try {
-        const onboardingFields = [
-          "organizationName",
-          "organizationType",
-          "department",
-          "designation",
-          "workEmail",
-          "country",
-          "city",
-          "officeLocation"
-        ];
+    try {
+      session.startTransaction();
 
-        const updateData = {};
-        onboardingFields.forEach(field => {
-          if (req.body[field] !== undefined) {
-            updateData[field] = req.body[field];
-          }
-        });
+      /* ==========================
+         USER UPDATE
+      ========================== */
 
-        updateData.onboardingCompleted = true;
-        console.log("Onboarding req.user:", req.user);
+      const userFields = [
+        "department",
+        "designation",
+        "workEmail",
+      ];
 
-        const user = await User.findByIdAndUpdate(
-          req.user.id,
-          { $set: updateData },
-          { new: true }
-        ).select("-password");
+      const userUpdate = {};
 
-        res.json({
-          success: true,
-          user
-        });
-      } catch (err) {
-        console.error("Onboarding error:", err);
-        res.status(500).json({ error: "Onboarding failed" });
+      userFields.forEach((field) => {
+        if (req.body[field] !== undefined) {
+          userUpdate[field] = req.body[field];
+        }
+      });
+
+      userUpdate.onboardingCompleted = true;
+
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        { $set: userUpdate },
+        {
+          new: true,
+          session,
+        }
+      ).select("-password");
+
+      if (!user) {
+        throw new Error("User not found");
       }
-    }
-  );
 
+      /* ==========================
+         ORGANIZATION UPDATE
+      ========================== */
+
+/* ==========================
+   ORGANIZATION UPDATE
+========================== */
+
+const organizationFields = [
+  "organizationType",
+  "country",
+  "city",
+  "officeLocation",
+  "currency",
+];
+
+const organizationUpdate = {};
+
+organizationFields.forEach((field) => {
+  if (req.body[field] !== undefined) {
+    organizationUpdate[field] = req.body[field];
+  }
+});
+
+if (req.body.organizationName !== undefined) {
+  organizationUpdate.name = req.body.organizationName;
+}
+
+organizationUpdate.onboardingCompleted = true;
+
+const organization = await Organization.findByIdAndUpdate(
+  user.organizationId,
+  { $set: organizationUpdate },
+  {
+    new: true,
+    session,
+  }
+).select(
+  "name orgCode organizationType country city officeLocation currency onboardingCompleted status"
+);
+
+if (!organization) {
+  throw new Error("Organization not found");
+}
+
+      /* ==========================
+         COMMIT
+      ========================== */
+
+      await session.commitTransaction();
+      session.endSession();
+
+res.json({
+  success: true,
+  user,
+  organization,
+});
+    } catch (err) {
+      await session.abortTransaction();
+      session.endSession();
+
+      console.error("Onboarding error:", err);
+
+      res.status(500).json({
+        success: false,
+        error: err.message || "Onboarding failed",
+      });
+    }
+  }
+);
 router.put(
   "/update",
   authenticateToken(),

@@ -54,7 +54,15 @@ const organizationSchema = new mongoose.Schema(
     officeLocation: {
       type: String,
       default: "",
-    }
+    },
+      // ✅ New field
+currency: {
+  type: String,
+  required: true,
+  default: "USD",
+  uppercase: true,
+  trim: true,
+}
 
   },
   { timestamps: true }

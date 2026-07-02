@@ -379,7 +379,11 @@ if (
 
     await session.commitTransaction();
     session.endSession();
-
+    const organizationResponse = await Organization.findById(
+  organization._id
+).select(
+  "name orgCode organizationType country city officeLocation currency onboardingCompleted status"
+);
     /* ======================================
        🔹 JWT
     ====================================== */
@@ -399,23 +403,24 @@ if (
       }
     );
 
-    return res.status(201).json({
-      success: true,
+return res.status(201).json({
+  success: true,
 
-      token,
+  token,
 
-      user: {
-        id: newUser._id,
-        email: newUser.email,
-        role: newUser.role,
+  user: {
+    id: newUser._id,
+    email: newUser.email,
+    role: newUser.role,
 
-        organizationId:
-          organization._id,
+    organizationId: organization._id,
 
-        organizationOnboarded:
-          organization.onboardingCompleted
-      }
-    });
+    organizationOnboarded:
+      organizationResponse.onboardingCompleted,
+  },
+
+  organization: organizationResponse,
+});
 
   } catch (err) {
 
@@ -465,10 +470,11 @@ let organization = null;
 
 if (user.organizationId) {
 
-  organization =
-    await Organization.findById(
-      user.organizationId
-    );
+organization = await Organization.findById(
+  user.organizationId
+).select(
+  "name orgCode organizationType country city officeLocation currency onboardingCompleted status"
+);
 }
 const rolesWithoutOrg = [
   "super-admin",
@@ -570,6 +576,7 @@ await sendNotification({
   organizationOnboardingCompleted:
     organization?.onboardingCompleted || false,
 },
+organization,
     });
 
   } catch (error) {

@@ -41,7 +41,10 @@ role: {
   department: { type: String, default: "" },
   designation: { type: String, default: "" },
   workEmail: { type: String, default: "" },
-
+ onboardingCompleted: {
+      type: Boolean,
+      default: false,
+    },
   // Two-Factor Authentication fields
   tfaEnabled: { type: Boolean, default: false },
   tfaOTP: { type: String },              // Store the current OTP
