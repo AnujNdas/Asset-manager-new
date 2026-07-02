@@ -26,7 +26,10 @@ import { getErrorMessage } from "../utils/getErrorMessage";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
+import { useOrganization } from "../Context/OrganizationContext";
 const SoftwareAssetList = () => {
+  const { organization } = useOrganization();
+  const currency = organization?.currency;
   const { registerTour } = useTour();
   const driverObj = driver({
   showProgress: true,
@@ -187,7 +190,6 @@ const getCategoryUI = (categoryName = "") => {
   const [stepIndex, setStepIndex] = useState(0);
 
   const navigate = useNavigate();
-  const { currency, convertFromBase, loadingRates } = useCurrency();
 useEffect(() => {
   if (!gridRef.current) return;
 
@@ -302,15 +304,6 @@ purchaseDetails: {
 
   });
 };
-
-const formatMoney = (costObj) => {
-  if (!costObj || typeof costObj !== "object") return "0";
-
-  return `${CURRENCY_SYMBOLS[currency]} ${convertFromBase(
-    Number(costObj.baseAmount || 0)
-  ).toLocaleString()}`;
-};
-
 
 const handleInstanceEditOpen = (inst) => {
   console.log("Editing instance:", inst);
@@ -595,7 +588,7 @@ useEffect(() => {
 selectedAsset?.assignmentRecords?.forEach(assign => {
   assignmentMap[assign.assetInstanceId] = assign;
 });
-  if (loading || loadingRates)
+  if (loading)
     return <Loader type="inventory" apiDone={apiDone} />;
 const mapInstanceData = (inst, assignment) => {
   const isHardware = inst.assetType === "hardware";
@@ -924,7 +917,6 @@ const mapInstanceData = (inst, assignment) => {
 <InstanceCard
   key={inst._id}
   inst={inst}
-  convertFromBase={convertFromBase}
   assignment={assignmentMap[String(inst._id)]}
      // ✅ correct prop name
   onEdit={handleInstanceEditOpen}

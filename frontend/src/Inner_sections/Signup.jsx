@@ -228,7 +228,8 @@ await ThemeSwal.fire({
   "auth",
   JSON.stringify({
     token: verifyRes.token,
-    user: verifyRes.user
+    user: verifyRes.user,
+    organization: verifyRes.organization,
   })
 );
 

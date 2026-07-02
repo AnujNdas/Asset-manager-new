@@ -27,7 +27,10 @@ import Pagination from "../Components/Pagination";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
+import { useOrganization } from "../Context/OrganizationContext";
 const HardwareAssetList = () => {
+  const { organization } = useOrganization();
+  const currency = organization?.currency;
     const { registerTour } = useTour();
   const navigate = useNavigate();
       const gridRef = useRef(null);
@@ -117,7 +120,6 @@ const [instanceForm, setInstanceForm] = useState({});
   const [apiDone, setApiDone] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 const [itemsPerPage, setItemsPerPage] = useState(6);
-  const { currency, convertFromBase, loadingRates } = useCurrency();
 
   const driverObj = driver({
   showProgress: true,
@@ -282,9 +284,6 @@ useEffect(() => {
   setLoading(false);
 }
   };
-const getCost = (costObj) => {
-  return convertFromBase(Number(costObj?.amount || 0));
-};
  const getAssetTotals = (asset) => {
     const instances = asset.instances || [];
 
@@ -512,7 +511,7 @@ const paginatedAssets = filteredAssets.slice(
   (currentPage - 1) * itemsPerPage,
   currentPage * itemsPerPage
 );
-  if (loading || loadingRates)
+  if (loading)
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
     <div className="inventory-container">
@@ -776,7 +775,6 @@ const paginatedAssets = filteredAssets.slice(
         key={inst._id}
         inst={inst}
          assignment={assignmentMap[String(inst._id)]}
-         convertFromBase={convertFromBase}
         onEdit={() => {
           setEditInstance(inst);
           setInstanceForm({

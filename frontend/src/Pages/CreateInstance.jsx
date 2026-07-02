@@ -16,6 +16,7 @@ import { getErrorMessage } from "../utils/getErrorMessage";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
+import { useOrganization } from "../Context/OrganizationContext"
 const customSelectStyles = {
   control: (base, state) => ({
     ...base,
@@ -96,6 +97,8 @@ const coverageOptions = [
   { label: "None", value: "none" },
 ];
 const CreateInstances = () => {
+  const { organization } = useOrganization();
+  const currency = organization.currency
   const { registerTour } = useTour();
   const downloadTemplate = (type) => {
     let data = [];
@@ -178,7 +181,6 @@ const CreateInstances = () => {
     deviceName: "",
     // shared
     purchaseCost: "",
-    currency: "USD",
     vendor: "",
     purchaseDate: "",
     upgrades: [],
@@ -258,7 +260,6 @@ const CreateInstances = () => {
           specifications: "",
 
           purchaseCost: "",
-          currency: "USD",
 
           // hardware
           warrantyDate: "",
@@ -485,23 +486,22 @@ const handleUpgradeChange = (
             purchaseCost: row.purchaseCost
               ? {
                   amount: Number(row.purchaseCost) || 0,
-                  currency: "USD",
                 }
               : null,
             costs: {
               maintenanceCost: {
                 amount: Number(row.maintenanceCost) || 0,
-                currency: "USD",
+
               },
 
               warrantyRenewalCost: {
                 amount: Number(row.warrantyRenewalCost) || 0,
-                currency: "USD",
+
               },
 
               insuranceCost: {
                 amount: Number(row.insuranceCost) || 0,
-                currency: "USD",
+
               },
             },
           },
@@ -520,14 +520,12 @@ const handleUpgradeChange = (
             purchaseCost: row.purchaseCost
               ? {
                   amount: Number(row.purchaseCost) || 0,
-                  currency: "USD",
                 }
               : null,
 
             costs: {
               renewalCost: {
                 amount: Number(row.renewalCost) || 0,
-                currency: "USD",
               },
             },
           },
@@ -586,7 +584,6 @@ const handleUpgradeChange = (
   bulkValues.purchaseCost != null
     ? {
         amount: Number(bulkValues.purchaseCost) || 0,
-        currency: "USD",
       }
     : inst.purchaseCost,
       vendor: bulkValues.vendor || inst.vendor,
@@ -614,7 +611,6 @@ const handleUpgradeChange = (
   bulkValues.maintenanceCost != null
     ? {
         amount: Number(bulkValues.maintenanceCost) || 0,
-        currency: "USD",
       }
     : inst.maintenanceCost,
 
@@ -622,7 +618,6 @@ warrantyRenewalCost:
   bulkValues.warrantyRenewalCost != null
     ? {
         amount: Number(bulkValues.warrantyRenewalCost) || 0,
-        currency: "USD",
       }
     : inst.warrantyRenewalCost,
 
@@ -630,7 +625,6 @@ insuranceCost:
   bulkValues.insuranceCost != null
     ? {
         amount: Number(bulkValues.insuranceCost) || 0,
-        currency: "USD",
       }
     : inst.insuranceCost,
       }),
@@ -648,7 +642,6 @@ insuranceCost:
   bulkValues.renewalCost != null
     ? {
         amount: Number(bulkValues.renewalCost) || 0,
-        currency: "USD",
       }
     : inst.renewalCost,
       }),
@@ -761,13 +754,11 @@ if (
 purchaseCost: inst.purchaseCost
   ? {
       amount: Number(inst.purchaseCost?.amount) || 0,
-      currency: inst.purchaseCost?.currency || "USD",
     }
   : null,
 costs: {
 renewalCost: {
   amount: Number(inst.renewalCost?.amount) || 0,
-  currency: inst.renewalCost?.currency || "USD",
 },
 },
             },
@@ -801,24 +792,20 @@ renewalCost: {
 purchaseCost: inst.purchaseCost
   ? {
       amount: Number(inst.purchaseCost?.amount) || 0,
-      currency: inst.purchaseCost?.currency || "USD",
     }
   : null,
 
 costs: {
 maintenanceCost: {
   amount: Number(inst.maintenanceCost?.amount) || 0,
-  currency: inst.maintenanceCost?.currency || "USD",
 },
 
 warrantyRenewalCost: {
   amount: Number(inst.warrantyRenewalCost?.amount) || 0,
-  currency: inst.warrantyRenewalCost?.currency || "USD",
 },
 
 insuranceCost: {
   amount: Number(inst.insuranceCost?.amount) || 0,
-  currency: inst.insuranceCost?.currency || "USD",
 },
 
 
@@ -994,7 +981,7 @@ insuranceCost: {
 
             <input
               type="text"
-              value="USD"
+              value={currency || "NA"}
               disabled
               className="disabled-input"
             />

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { upgradeInstance } from "../Services/ApiServices";
 import ThemeSwal from "../utils/swalTheme";
+import { useOrganization } from "../Context/OrganizationContext";
 const UpgradeModal = ({ instance, onClose, refresh }) => {
+  const { organization } = useOrganization();
+  const currency = organization?.currency;
   const isHardware = instance?.assetType === "hardware";
   const isSoftware = instance?.assetType === "software";
   const [activeTab, setActiveTab] = useState("renewal");
@@ -424,7 +427,7 @@ return;
 
   <input
     type="text"
-    value="USD"
+    value={currency || "NA"}
     readOnly
     className="readonly-input"
   />

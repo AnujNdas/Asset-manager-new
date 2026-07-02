@@ -12,7 +12,7 @@ import AnalyticsTracker from './Components/AnalyticsTracker';
 import { SubscriptionProvider } from "./Context/SubscriptionContext";
 import { TourProvider } from "./Context/TourContext";
 import { HelmetProvider } from "react-helmet-async";
-
+import { OrganizationProvider } from "./Context/OrganizationContext";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -25,7 +25,9 @@ root.render(
       <AnalyticsTracker />
       <TourProvider>
         <HelmetProvider>
+          <OrganizationProvider>
           <App />
+          </OrganizationProvider>
           </HelmetProvider>
       </TourProvider>
           </CurrencyProvider>

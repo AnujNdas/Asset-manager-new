@@ -37,7 +37,8 @@
         "auth",
         JSON.stringify({
           token: response.token,
-          user: response.user
+          user: response.user,
+          organization: response.organization,
         })
       );
 

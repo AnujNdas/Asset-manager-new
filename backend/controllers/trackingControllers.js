@@ -557,7 +557,15 @@ const upgradeInstance = async (req, res) => {
       // 🔹 Common
       condition
     } = req.body;
+    const organization = await Organization.findById(
+  req.user.organizationId
+).select("currency");
 
+if (!organization) {
+  throw new Error("Organization not found");
+}
+
+const currency = organization.currency;
     const instance = await mongoose.model("AssetInstance")
       .findOne({
         _id: id,
@@ -595,7 +603,7 @@ const formatDate = (date) => {
 };
 const normalizedUpgradeCost = {
   amount: Number(upgradeCost) || 0,
-  currency: "USD"
+  currency
 };
    if (
   maintenanceCost !== undefined &&
@@ -682,14 +690,14 @@ if (
       if (maintenanceCost !== undefined) {
         instance.hardware.costs.maintenanceCost = {
   amount: Number(maintenanceCost) || 0,
-  currency: "USD"
+  currency
 };
       }
 
       if (warrantyRenewalCost !== undefined) {
         instance.hardware.costs.warrantyRenewalCost = {
   amount: Number(warrantyRenewalCost) || 0,
-  currency: "USD"
+  currency
 };
 }
       // 📅 Dates
@@ -715,7 +723,7 @@ if (hasInsurance === false) {
   instance.hardware.insuranceExpiry = undefined;
   instance.hardware.costs.insuranceCost = {
   amount: 0,
-  currency: "USD"
+  currency
 };
 }
 
@@ -756,7 +764,7 @@ if (hasInsurance === true) {
   if (insuranceCost !== undefined) {
   instance.hardware.costs.insuranceCost = {
     amount: Number(insuranceCost) || 0,
-    currency: "USD"
+    currency
   };
 }
 }
@@ -778,7 +786,7 @@ if (hasInsurance === true) {
       if (renewalCost !== undefined) {
         instance.software.costs.renewalCost = {
   amount: Number(renewalCost) || 0,
-  currency: "USD"
+  currency
 };
       }
       // 📅 Dates
@@ -894,7 +902,7 @@ if (
 
     cost: {
       amount: Number(maintenanceCost) || 0,
-      currency: "USD"
+      currency
     }
   });
 }
@@ -918,7 +926,7 @@ if (
       amount:
         Number(warrantyRenewalCost) || 0,
 
-      currency: "USD"
+      currency
     }
   });
 }
@@ -942,7 +950,7 @@ if (
       amount:
         Number(insuranceCost) || 0,
 
-      currency: "USD"
+      currency
     }
   });
 }
@@ -965,7 +973,7 @@ if (
       amount:
         Number(renewalCost) || 0,
 
-      currency: "USD"
+      currency
     }
   });
 }

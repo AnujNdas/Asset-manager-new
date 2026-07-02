@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useTour } from "../Context/TourContext";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { CURRENCY_SYMBOLS } from "../utils/currency.js";
+import { useOrganization } from "../Context/OrganizationContext";
 const formatDate = (date) => {
   if (!date) return "-";
   const d = new Date(date);
@@ -12,6 +14,9 @@ const formatDate = (date) => {
 
 
 const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
+  const { organization } = useOrganization();
+  const currency = organization?.currency || "USD";
+  const currencySymbol = CURRENCY_SYMBOLS[currency] || "$";
   console.log("Rendering InstanceCard for:", instance);
   const { registerTour } = useTour();
     const driverObj = driver({
@@ -104,10 +109,6 @@ const latestUpgrade =
 // Latest upgrade cost
 const latestUpgradeCost =
   latestUpgrade?.metadata?.upgradeCost?.amount || 0;
-
-const latestUpgradeCurrency =
-  latestUpgrade?.metadata?.upgradeCost?.currency || "USD";
-
 // Total upgrade cost
 const totalUpgradeCost = upgradeEvents.reduce(
   (sum, event) =>
@@ -148,8 +149,8 @@ const totalUpgradeCost = upgradeEvents.reduce(
           </p>
           <p className="value">
             {isSoftware
-            ? `${sw.costs?.renewalCost?.currency} ${sw.costs?.renewalCost?.amount}`
-            : `${hw.costs?.maintenanceCost?.currency} ${hw.costs?.maintenanceCost?.amount}`}
+            ? `${currencySymbol} ${sw.costs?.renewalCost?.amount}`
+            : `${currencySymbol} ${hw.costs?.maintenanceCost?.amount}`}
           </p>
         </div>
 
@@ -158,7 +159,7 @@ const totalUpgradeCost = upgradeEvents.reduce(
           <div>
             <p className="label">Warranty Cost</p>
             <p className="value">
-              {hw.costs?.warrantyRenewalCost?.currency} {hw.costs?.warrantyRenewalCost?.amount}
+              {currencySymbol} {hw.costs?.warrantyRenewalCost?.amount}
             </p>
           </div>
         )}
@@ -168,7 +169,7 @@ const totalUpgradeCost = upgradeEvents.reduce(
           <div>
             <p className="label">Insurance Cost</p>
             <p className="value">
-              {hw.costs?.insuranceCost?.currency} {hw.costs?.insuranceCost?.amount}
+              {currencySymbol} {hw.costs?.insuranceCost?.amount}
             </p>
           </div>
         )}
@@ -178,8 +179,8 @@ const totalUpgradeCost = upgradeEvents.reduce(
           <p className="label">Purchase Cost</p>
           <p className="value">
             {isSoftware
-              ? `${sw.purchaseCost?.currency} ${sw.purchaseCost?.amount}`
-              : `${hw.purchaseCost?.currency} ${hw.purchaseCost?.amount}`}
+              ? `${currencySymbol} ${sw.purchaseCost?.amount}`
+              : `${currencySymbol} ${hw.purchaseCost?.amount}`}
           </p>
         </div>
 
@@ -262,7 +263,7 @@ const totalUpgradeCost = upgradeEvents.reduce(
 <div>
   <p className="label">Last Upgrade Cost</p>
   <p className="value">
-    {latestUpgradeCurrency} {latestUpgradeCost}
+    {currencySymbol} {latestUpgradeCost}
   </p>
 </div>
 
@@ -270,7 +271,7 @@ const totalUpgradeCost = upgradeEvents.reduce(
 <div>
   <p className="label">Total Upgrade Cost</p>
   <p className="value">
-    {latestUpgradeCurrency} {totalUpgradeCost}
+    {currencySymbol} {totalUpgradeCost}
   </p>
 </div>
 

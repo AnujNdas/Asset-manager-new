@@ -1001,7 +1001,19 @@ const calculateInsuranceExpiry = (purchaseDate, term) => {
 const createAssetInstance = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const organizationId = req.user.organizationId;
+  const organization = await Organization.findById(
+  organizationId
+).select("currency");
 
+if (!organization) {
+  throw new AppError(
+    "Organization not found",
+    404,
+    "ORG_NOT_FOUND"
+  );
+}
+
+const currency = organization.currency;
   const { assetId, instances } = req.body;
 
   if (!instances || instances.length === 0) {
@@ -1157,13 +1169,13 @@ const purchaseCost =
         amount: Number(
           inst.hardware?.purchaseCost?.amount || 0
         ),
-        currency: "USD"
+        currency,
       }
     : {
         amount: Number(
           inst.software?.purchaseCost?.amount || 0
         ),
-        currency: "USD"
+        currency
       };
   
 /* ================= INSURANCE ================= */
@@ -1172,7 +1184,7 @@ const insuranceCost = {
   amount: Number(
     inst.hardware?.costs?.insuranceCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 };
 const insuranceTerm =
   inst.hardware?.insuranceTerm || null;
@@ -1395,14 +1407,14 @@ const maintenanceCost = {
   amount: Number(
     inst.hardware?.costs?.maintenanceCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 };
 
 const warrantyRenewalCost = {
   amount: Number(
     inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 };
 
 
@@ -1485,7 +1497,7 @@ renewalCost: {
   amount: Number(
     inst.software?.costs?.renewalCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 }
   }
 }
@@ -1690,7 +1702,19 @@ const updateAssetInstance = asyncHandler(async (req, res, next) => {
 const bulkUploadInstances = asyncHandler(async (req, res, next) => {
   const userId = req.user?.id;
   const organizationId = req.user?.organizationId;
+  const organization = await Organization.findById(
+  organizationId
+).select("currency");
 
+if (!organization) {
+  throw new AppError(
+    "Organization not found",
+    404,
+    "ORG_NOT_FOUND"
+  );
+}
+
+const currency = organization.currency;
   if (!userId || !organizationId) {
     throw new AppError("Unauthorized", 401, "UNAUTHORIZED");
   }
@@ -1867,13 +1891,13 @@ const purchaseCost =
         amount: Number(
           inst.hardware?.purchaseCost?.amount || 0
         ),
-        currency: "USD"
+        currency
       }
     : {
         amount: Number(
           inst.software?.purchaseCost?.amount || 0
         ),
-        currency: "USD"
+        currency
       };
       /* ---------------- HARDWARE ---------------- */
       if (assetType === "hardware") {
@@ -1908,21 +1932,21 @@ const maintenanceCost = {
   amount: Number(
     inst.hardware?.costs?.maintenanceCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 };
 
 const warrantyRenewalCost = {
   amount: Number(
     inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 };
 
 const insuranceCost = {
   amount: Number(
     inst.hardware?.costs?.insuranceCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 };
         validInstances.push({
           organizationId,
@@ -1994,7 +2018,7 @@ const renewalCost = {
   amount: Number(
     inst.software?.costs?.renewalCost?.amount || 0
   ),
-  currency: "USD"
+  currency
 };
           const renewalDate = parseDateSafe(inst.software?.renewalDate);
           const installationDate = parseDateSafe(inst.software?.installationDate);

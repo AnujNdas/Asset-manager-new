@@ -6,6 +6,7 @@ import Loader from "../Components/Loader";
 import "../Page_styles/MyProfile.css";
 import profile from "../Images/default_profile.png";
 const MyProfile = () => {
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -13,12 +14,12 @@ const MyProfile = () => {
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [user, setUser] = useState(null);
   const [avatarFile, setAvatarFile] = useState(null);
-
+  const [organization, setOrganization] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
     profileTitle: "",
     phone: "",
-
+    currency: "", // default
     organizationName: "",
     organizationType: "",
     department: "",
@@ -44,25 +45,36 @@ useEffect(() => {
     try {
       const res = await axiosInstance.get("/user/me");
 
-      const userData = res.data.user; // ✅ FIX
+const userData = res.data.user;
+const organizationData = res.data.organization;
 
-      setUser(userData);
+setUser(userData);
+setOrganization(organizationData);
 
-      setFormData({
-        fullName: userData.fullName || "",
-        profileTitle: userData.profileTitle || "",
-        phone: userData.phone || "",
+setFormData({
+  // User
+  fullName: userData.fullName || "",
+  profileTitle: userData.profileTitle || "",
+  phone: userData.phone || "",
 
-        organizationName: userData.organizationName || "",
-        organizationType: userData.organizationType || "",
-        department: userData.department || "",
-        designation: userData.designation || "",
-        workEmail: userData.workEmail || "",
+  department: userData.department || "",
+  designation: userData.designation || "",
+  workEmail: userData.workEmail || "",
 
-        country: userData.country || "",
-        city: userData.city || "",
-        officeLocation: userData.officeLocation || "",
-      });
+  // Organization
+  organizationName: organizationData?.name || "",
+  organizationType:
+    organizationData?.organizationType || "",
+  currency:
+    organizationData?.currency || "USD",
+
+  country:
+    organizationData?.country || "",
+  city:
+    organizationData?.city || "",
+  officeLocation:
+    organizationData?.officeLocation || "",
+});
     } catch (err) {
       console.error("Profile fetch failed:", err);
       // ❌ DO NOT force redirect here
@@ -93,8 +105,18 @@ useEffect(() => {
       const res = await axiosInstance.put("/user/update", data);
 
       setUser(res.data.user);
+      setOrganization(res.data.organization);
       setAvatarFile(null);
+      const auth = JSON.parse(localStorage.getItem("auth"));
 
+localStorage.setItem(
+  "auth",
+  JSON.stringify({
+    ...auth,
+    user: res.data.user,
+    organization: res.data.organization,
+  })
+);
       ThemeSwal.fire("Updated", "Profile updated successfully", "success");
     } catch (err) {
       ThemeSwal.fire("Error", "Profile update failed", "error");
@@ -103,7 +125,9 @@ useEffect(() => {
       setSaving(false);
     }
   };
-
+  const canManageOrganization =
+  user?.role === "admin" ||
+  user?.role === "super-admin";
   if (loading) return <Loader />;
 
   // -----------------------------
@@ -191,6 +215,7 @@ useEffect(() => {
 
         <select
           name="organizationType"
+          disabled={!canManageOrganization} 
           value={formData.organizationType}
           onChange={handleChange}
         >
@@ -201,7 +226,23 @@ useEffect(() => {
           <option value="NGO">NGO</option>
           <option value="Other">Other</option>
         </select>
-
+        <select
+  name="currency"
+  value={formData.currency}
+  onChange={handleChange}
+>
+  <option value="USD">USD - US Dollar</option>
+  <option value="EUR">EUR - Euro</option>
+  <option value="GBP">GBP - British Pound</option>
+  <option value="INR">INR - Indian Rupee</option>
+  <option value="JPY">JPY - Japanese Yen</option>
+  <option value="AUD">AUD - Australian Dollar</option>
+  <option value="CAD">CAD - Canadian Dollar</option>
+  <option value="CHF">CHF - Swiss Franc</option>
+  <option value="CNY">CNY - Chinese Yuan</option>
+  <option value="SGD">SGD - Singapore Dollar</option>
+  <option value="AED">AED - UAE Dirham</option>
+</select>
         <input
           name="department"
           value={formData.department}

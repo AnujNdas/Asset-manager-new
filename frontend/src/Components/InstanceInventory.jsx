@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../Component_styles/InstanceInventory.css";
-
+import { useOrganization } from "../Context/OrganizationContext";
 const InstanceCard = ({
   inst,
   assignment,
@@ -10,6 +10,8 @@ const InstanceCard = ({
   onDelete,
   onUnassign // ✅ NEW PROP
 }) => {
+  const { organization } = useOrganization();
+  const currency = organization?.currency;
 
   const [loading, setLoading] = useState(false);
 
@@ -23,10 +25,6 @@ const InstanceCard = ({
 
 /* ================= COST HELPERS ================= */
 
-const currency =
-  hw.purchaseCost?.currency ||
-  sw.purchaseCost?.currency ||
-  "USD";
 
 const formatCostValue = (costObj) => {
   if (!costObj) {
