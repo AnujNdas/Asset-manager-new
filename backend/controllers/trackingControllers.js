@@ -1,6 +1,6 @@
 // GET /instances/tracking
 const mongoose = require("mongoose")
-
+const Organization = require("../models/Organization");
 const getTrackedInstances = async (req, res) => {
   try {
     const { type, status, search } = req.query;
