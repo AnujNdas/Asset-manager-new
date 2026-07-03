@@ -119,12 +119,13 @@ const CreateInstances = () => {
           insuranceId: "Optional",
           insurancePurchaseDate: "YYYY-MM-DD",
           insuranceTerm: "6_months / 1_year / 3_years",
-          coverageType: "comma separated (e.g. comprehensive,fire_lightning)",
           nextMaintenanceDate: "YYYY-MM-DD",
           purchaseCost: "Number",
           maintenanceCost: "Number",
           warrantyRenewalCost: "Number",
           insuranceCost: "Number",
+          coverageType:
+"Allowed: comprehensive, accidental_damage, third_party, theft_burglary, fire_lightning, natural_disasters, vandalism, business_interruption, transit_marine_cargo, cyber_physical_damage, electrical_surge, mechanical_breakdown, other, none"
         },
       ];
     } else {
