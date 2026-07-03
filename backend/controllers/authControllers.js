@@ -918,7 +918,8 @@ const resetPreview = async (req, res) => {
       locations,
       statuses,
       units,
-      departments
+      departments,
+      employees
     ] = await Promise.all([
       Asset.countDocuments({ organizationId }),
       AssetAssignment.countDocuments({ organizationId }),
@@ -928,7 +929,8 @@ const resetPreview = async (req, res) => {
       Location.countDocuments({ organizationId }),
       Status.countDocuments({ organizationId }),
       Unit.countDocuments({ organizationId }),
-      Department.countDocuments({ organizationId })
+      Department.countDocuments({ organizationId }),
+      Employee.countDocuments({ organizationId })
     ]);
 
     return res.status(200).json({

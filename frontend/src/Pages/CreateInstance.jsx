@@ -932,8 +932,8 @@ insuranceCost: {
               <option value="damaged">Damaged</option>
               <option value="stolen">Stolen</option>
               <option value="broken">Broken</option>
-              <option value="repaired(in)">Repaired(IN)</option>
-              <option value="repaired(out)">Repaired(OUT)</option>
+              <option value="repaired(in)">Repair(IN)</option>
+              <option value="repaired(out)">Repair(OUT)</option>
             </select>
           </div>
           <div className="form-group">
@@ -1360,8 +1360,8 @@ insuranceCost: {
                   <option value="damaged">Damaged</option>
                   <option value="stolen">Stolen</option>
                   <option value="broken">Broken</option>
-                  <option value="repaired(in)">Repaired(IN)</option>
-                  <option value="repaired(out)">Repaired(OUT)</option>
+                  <option value="repaired(in)">Repair(IN)</option>
+                  <option value="repaired(out)">Repair(OUT)</option>
                 </select>
               </div>
               <div className="input-group">
