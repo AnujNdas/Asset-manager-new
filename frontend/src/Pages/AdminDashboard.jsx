@@ -14,6 +14,8 @@ import { scaleLinear } from "d3-scale";
 import {  useMemo } from "react";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
+import { useOrganization } from "../Context/OrganizationContext";
+import { CURRENCY_SYMBOLS } from "../utils/currency.js";
 import {
   ResponsiveContainer,
   BarChart,
@@ -55,6 +57,8 @@ const COUNTRY_NAME_MAP = {
 
 
 const AdminDashboard = () => {
+  const { organization } = useOrganization();
+  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
   console.log("AdminDashboard mounted");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -112,20 +116,20 @@ const { totals, upcoming, analytics, costBreakdown } = data;
       <div className="metrics-grid">
 <MetricCard
   title="Total Valuation"
-  value={`$ ${totals.overallValuation.toLocaleString()}`}
+  value={`${currencySymbol} ${totals.overallValuation.toLocaleString()}`}
 />
 
 <MetricCard
   title="Software Assets"
   value={totals.softwareCount}
-  sub={`${totals.softwareInstances} Instances • $ ${totals.softwarePurchaseValue.toLocaleString()}`}
+  sub={`${totals.softwareInstances} Instances • ${currencySymbol} ${totals.softwarePurchaseValue.toLocaleString()}`}
   redirectTo="/inventory?software"
 />
 
 <MetricCard
   title="Hardware Assets"
   value={totals.hardwareCount}
-  sub={`${totals.hardwareInstances} Instances • $ ${totals.hardwarePurchaseValue.toLocaleString()}`}
+  sub={`${totals.hardwareInstances} Instances • ${currencySymbol} ${totals.hardwarePurchaseValue.toLocaleString()}`}
   redirectTo="/inventory?hardware"
 />
 
@@ -353,6 +357,8 @@ const AnalyticsCard = ({
   valueKey,
   redirectTo
 }) => {
+  const { organization } = useOrganization();
+  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
   const navigate = useNavigate();
 
   const getValue = (obj, path) =>
@@ -374,7 +380,7 @@ const AnalyticsCard = ({
               <span>{getValue(item, labelKey)}</span>
 
               <span className="value-text">
-                $ {rawValue.toLocaleString()}
+                {currencySymbol} {rawValue.toLocaleString()}
               </span>
             </div>
           );
@@ -640,6 +646,9 @@ const formatCurrency = (value) => {
   }
 };
 const SpendByCategoryBarChart = ({ data }) => {
+  const { organization } = useOrganization();
+  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
+  // const [selected, setSelected] = useState(data[0]);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
@@ -675,7 +684,7 @@ const chartData = data.map((item) => ({
           </div>
 
           <div style={{ color: "#DFD0B8", fontWeight: 500 }}>
-$ {formatCurrency(payload[0].payload.totalSpend)}
+{currencySymbol} {formatCurrency(payload[0].payload.totalSpend)}
           </div>
         </div>
       );
@@ -718,7 +727,7 @@ $ {formatCurrency(payload[0].payload.totalSpend)}
         <XAxis
           type="number"
           tick={{ fontSize: 10 }}
-          tickFormatter={(value) => `$${formatCurrency(value)}`}
+          tickFormatter={(value) => `${currencySymbol} ${formatCurrency(value)}`}
         />
 
 <YAxis
@@ -740,7 +749,7 @@ $ {formatCurrency(payload[0].payload.totalSpend)}
         />
 
 <YAxis
-  tickFormatter={(value) => `$${formatCurrency(value)}`}
+  tickFormatter={(value) => `${currencySymbol} ${formatCurrency(value)}`}
 />
       </>
     )}
@@ -770,7 +779,7 @@ $ {formatCurrency(payload[0].payload.totalSpend)}
 <LabelList
   dataKey="totalSpend"
   position="top"
-  formatter={(value) => `$${formatCurrency(value)}`}
+  formatter={(value) => `${currencySymbol} ${formatCurrency(value)}`}
 />
       )}
     </Bar>
@@ -781,6 +790,8 @@ $ {formatCurrency(payload[0].payload.totalSpend)}
 };
 
 const CostBreakdownCard = ({ title, items }) => {
+  const { organization } = useOrganization();
+  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
   if (!items || items.length === 0) {
     return (
       <div className="card">
@@ -801,7 +812,7 @@ const CostBreakdownCard = ({ title, items }) => {
               <span>{item.instanceName}</span>
 
               <span className="value-text">
-                $ {(item.cost || 0).toLocaleString()}
+                {currencySymbol} {(item.cost || 0).toLocaleString()}
               </span>
             </div>
           );

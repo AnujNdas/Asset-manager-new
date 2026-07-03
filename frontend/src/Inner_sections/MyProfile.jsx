@@ -5,7 +5,10 @@ import axiosInstance from "../Services/axiosInstance";
 import Loader from "../Components/Loader";
 import "../Page_styles/MyProfile.css";
 import profile from "../Images/default_profile.png";
+import { useOrganization } from "../Context/OrganizationContext";
+
 const MyProfile = () => {
+  const { organization, setOrganization } = useOrganization();
 
   const navigate = useNavigate();
 
@@ -14,7 +17,6 @@ const MyProfile = () => {
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [user, setUser] = useState(null);
   const [avatarFile, setAvatarFile] = useState(null);
-  const [organization, setOrganization] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
     profileTitle: "",
@@ -102,22 +104,20 @@ setFormData({
       Object.entries(formData).forEach(([k, v]) => data.append(k, v));
       if (avatarFile) data.append("avatar", avatarFile);
 
-      const res = await axiosInstance.put("/user/update", data);
+     const res = await axiosInstance.put("/user/update", data);
 
-      setUser(res.data.user);
-      setOrganization(res.data.organization);
-      setAvatarFile(null);
-      const auth = JSON.parse(localStorage.getItem("auth"));
+setUser(res.data.user);
 
-localStorage.setItem(
-  "auth",
-  JSON.stringify({
-    ...auth,
-    user: res.data.user,
-    organization: res.data.organization,
-  })
+// Update the global context
+setOrganization(res.data.organization);
+
+setAvatarFile(null);
+
+ThemeSwal.fire(
+  "Updated",
+  "Profile updated successfully",
+  "success"
 );
-      ThemeSwal.fire("Updated", "Profile updated successfully", "success");
     } catch (err) {
       ThemeSwal.fire("Error", "Profile update failed", "error");
       console.log("Profile update error:", err);
@@ -125,6 +125,42 @@ localStorage.setItem(
       setSaving(false);
     }
   };
+
+  const handleCurrencyChange = async (e) => {
+  const newCurrency = e.target.value;
+
+  // No change
+  if (newCurrency === formData.currency) return;
+
+  const result = await ThemeSwal.fire({
+    title: "Change Organization Currency?",
+    html: `
+      <div style="text-align:left">
+        <p><strong>This change affects your entire organization.</strong></p>
+        <br/>
+        <ul style="padding-left:20px">
+          <li>All monetary values will be displayed in <b>${newCurrency}</b>.</li>
+          <li>Existing asset costs will automatically use the new organization currency.</li>
+          <li>This change is visible to all users in your organization.</li>
+        </ul>
+        <br/>
+        <p>Do you want to continue?</p>
+      </div>
+    `,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, Change Currency",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
+  });
+
+  if (!result.isConfirmed) return;
+
+  setFormData((prev) => ({
+    ...prev,
+    currency: newCurrency,
+  }));
+};
   const canManageOrganization =
   user?.role === "admin" ||
   user?.role === "super-admin";
@@ -226,10 +262,10 @@ localStorage.setItem(
           <option value="NGO">NGO</option>
           <option value="Other">Other</option>
         </select>
-        <select
+<select
   name="currency"
   value={formData.currency}
-  onChange={handleChange}
+  onChange={handleCurrencyChange}
 >
   <option value="USD">USD - US Dollar</option>
   <option value="EUR">EUR - Euro</option>

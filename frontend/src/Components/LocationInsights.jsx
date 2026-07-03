@@ -2,11 +2,11 @@ import React, { useState, useMemo } from "react";
 import "../Component_styles/LocationInsights.css";
 import { useCurrency } from "../Context/CurrencyContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency";
-
+import { useOrganization } from "../Context/OrganizationContext";
 const LocationInsights = ({ items = [] }) => {
+  const { organization } = useOrganization();
+  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
   const [selected, setSelected] = useState(items[0]);
-
-  const { currency, convertFromBase } = useCurrency();
 
   // 🔥 Update selected if data changes
   React.useEffect(() => {
@@ -52,7 +52,7 @@ const LocationInsights = ({ items = [] }) => {
               </div>
 
               <div className="loc-value">
-                {CURRENCY_SYMBOLS[currency]}{" "}
+                {currencySymbol}{" "}
                 {loc.value || 0}
               </div>
             </div>
@@ -111,7 +111,7 @@ const LocationInsights = ({ items = [] }) => {
               <div>
                 <p>Total Value</p>
                 <strong>
-                  {CURRENCY_SYMBOLS[currency]}{" "}
+                  {currencySymbol}{" "}
                   {selected.value || 0}
                 </strong>
               </div>
@@ -119,21 +119,21 @@ const LocationInsights = ({ items = [] }) => {
               <div>
                 <p>Maintenance</p>
                 <span>
-                  {CURRENCY_SYMBOLS[currency]}{" "}{selected.costs?.maintenance || 0}
+                  {currencySymbol}{" "}{selected.costs?.maintenance || 0}
                 </span>
               </div>
 
               <div>
                 <p>Warranty</p>
                 <span>
-                  {CURRENCY_SYMBOLS[currency]}{" "}{selected.costs?.warranty || 0}
+                  {currencySymbol}{" "}{selected.costs?.warranty || 0}
                 </span>
               </div>
 
               <div>
                 <p>Insurance</p>
                 <span>
-                  {CURRENCY_SYMBOLS[currency]}{" "}{selected.costs?.insurance || 0}
+                  {currencySymbol}{" "}{selected.costs?.insurance || 0}
                 </span>
               </div>
             </div>
