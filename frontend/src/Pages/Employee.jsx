@@ -5,8 +5,6 @@ import React, {
 } from "react";
 import EmployeeTable from "../Components/employee/EmployeeTable";
 import EmployeeModal from "../Components/employee/EmployeeModal";
-import { useCurrency } from "../Context/CurrencyContext";
-import { CURRENCY_SYMBOLS } from "../Components/CurrencyFilter";
 import { 
   getEmployees, 
   getDepartments,
@@ -23,12 +21,15 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useOrganization } from "../Context/OrganizationContext";
+import { CURRENCY_SYMBOLS } from "../utils/currency.js";
 const EmployeePage = () => {
+  const { organization } = useOrganization();
+  const CurrencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
   const location = useLocation();
   const navigate = useNavigate();
 
   const { registerTour, startTour } = useTour();
-   const { currency, convertFromBase, loadingRates } = useCurrency();
   const [loading , setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -229,7 +230,6 @@ const totalEmpPages = Math.ceil(
   filteredEmployees.length / employeesPerPage
 );
 if (loading) return <Loader />
-if (loadingRates) return <Loader />;
   return (
     <div className="employee-page">
       <div className="employee-header">
@@ -299,7 +299,7 @@ if (loadingRates) return <Loader />;
       <p>Assets: {hardware.assetCount || 0}</p>
       <p>Instances: {hardware.instanceCount || 0}</p>
       <p>
-  Value: {currency}{" "}
+  Value: {CurrencySymbol}{" "}
   {hardware.totalCost || 0}
 </p>
     </div>
@@ -309,7 +309,7 @@ if (loadingRates) return <Loader />;
       <p>Assets: {software.assetCount || 0}</p>
       <p>Instances: {software.instanceCount || 0}</p>
       <p>
-  Value: {currency}{" "}
+  Value: {CurrencySymbol}{" "}
   {software.totalCost || 0}
 </p>
     </div>
@@ -319,7 +319,7 @@ if (loadingRates) return <Loader />;
   {/* ✅ FIXED POSITION */}
 <div className="total-cost">
   Total Asset Value: 
-  {currency} {" "}{totalCost}
+  {CurrencySymbol} {" "}{totalCost}
 </div>
 </div>
       );

@@ -292,58 +292,79 @@ if (asset.insuranceExpiry) {
 
 }
 
+// Hardware
 if (
-    asset.assetType === "hardware" &&
-    asset.nextMaintenanceDate
+  asset.assetType === "hardware" &&
+  asset.nextMaintenanceDate
 ) {
+  maintenance.push({
+    type: "maintenance",
+    assetType: "hardware",
 
-    maintenance.push({
+    instanceId: asset.instanceId,
+    assetCode: asset.assetCode,
+    assetName: asset.assetName,
+    instanceCode: asset.instanceCode,
 
-        instanceId: asset.instanceId,
+    deviceName: asset.deviceName,
+    serialNumber: asset.serialNumber,
+    modelNo: asset.modelNo,
+    specifications: asset.specifications,
 
-        assetCode: asset.assetCode,
+    location: asset.location,
+    status: asset.status,
+    condition: asset.condition,
 
-        assetName: asset.assetName,
+    purchaseDate: asset.purchaseDate,
+    installationDate: asset.installationDate,
 
-        instanceCode: asset.instanceCode,
+    eventDate: asset.nextMaintenanceDate, // unified field
+    nextMaintenanceDate: asset.nextMaintenanceDate,
 
-        deviceName: asset.deviceName,
+    purchaseCost: asset.purchaseCost,
+    maintenanceCost: asset.maintenanceCost,
+    insuranceCost: asset.insuranceCost,
+    warrantyCost: asset.warrantyCost,
+    upgradeCost: asset.upgradeCost,
+    totalCost: asset.totalCost,
 
-        serialNumber: asset.serialNumber,
+    upgrades: asset.upgrades,
+  });
+}
 
-        modelNo: asset.modelNo,
+// Software
+if (
+  asset.assetType === "software" &&
+  asset.renewalDate
+) {
+  maintenance.push({
+    type: "renewal",
+    assetType: "software",
 
-        specifications: asset.specifications,
+    instanceId: asset.instanceId,
+    assetCode: asset.assetCode,
+    assetName: asset.assetName,
+    instanceCode: asset.instanceCode,
 
-        location: asset.location,
+    deviceName: asset.deviceName,
+    licenseKey: asset.licenseKey,
+    licenseNumber: asset.licenseNumber,
 
-        status: asset.status,
+    location: asset.location,
+    status: asset.status,
 
-        condition: asset.condition,
+    purchaseDate: asset.purchaseDate,
+    installationDate: asset.installationDate,
 
-        purchaseDate: asset.purchaseDate,
+    eventDate: asset.renewalDate, // same field used for sorting/filtering
+    renewalDate: asset.renewalDate,
 
-        installationDate: asset.installationDate,
+    purchaseCost: asset.purchaseCost,
+    renewalCost: asset.renewalCost,
+    totalCost: asset.totalCost,
 
-        nextMaintenanceDate:
-            asset.nextMaintenanceDate,
-
-        purchaseCost: asset.purchaseCost,
-
-        maintenanceCost: asset.maintenanceCost,
-
-        insuranceCost: asset.insuranceCost,
-
-        warrantyCost: asset.warrantyCost,
-
-        upgradeCost: asset.upgradeCost,
-
-        totalCost: asset.totalCost,
-
-        upgrades: asset.upgrades
-
-    });
-
+    upgrades: asset.upgrades,
+  });
 }
 
 asset.lifecycle.forEach(event => {

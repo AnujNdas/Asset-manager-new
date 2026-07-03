@@ -621,67 +621,180 @@ const renderSummary = () => (
 
               </tr>
 
-              {expandedSummary === asset.instanceId && (
+{expandedSummary === asset.instanceId && (
 
-                <tr>
+<tr>
 
-                  <td colSpan={6}>
+<td colSpan={6}>
 
-                    <table className="audit-table">
+<div className="asset-details-card">
 
-                      <thead>
-                        <tr>
-                          <th>Asset Code</th>
-                          <th>Instance</th>
-                          <th>Condition</th>
-                          <th>Purchase Date</th>
-                          <th>Purchase Cost</th>
-                          <th>Upgrade Cost</th>
-                          <th>Total Cost</th>
-                        </tr>
-                      </thead>
+<div className="asset-details-header">
 
-                      <tbody>
+<h4>
+{asset.assetType === "hardware"
+? "Hardware Details"
+: "Software Details"}
+</h4>
 
-                        <tr>
+<span className="asset-status">
+{asset.status}
+</span>
 
-                          <td>{asset.assetCode}</td>
+</div>
 
-                          <td>{asset.instanceCode}</td>
+<div className="asset-details-grid">
 
-                          <td>{asset.condition}</td>
+{/* Common */}
 
-                          <td>
-                            {asset.purchaseDate
-                              ? new Date(asset.purchaseDate).toLocaleDateString()
-                              : "-"}
-                          </td>
+<div>
+<label>Instance Code</label>
+<p>{asset.instanceCode}</p>
+</div>
 
-                          <td>
-                            ${asset.purchaseCost.toLocaleString()}
-                          </td>
+<div>
+<label>Device Name</label>
+<p>{asset.deviceName || "-"}</p>
+</div>
 
-                          <td>
-                            ${asset.upgradeCost.toLocaleString()}
-                          </td>
+<div>
+<label>Purchase Date</label>
+<p>
+{asset.purchaseDate
+? new Date(asset.purchaseDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-                          <td>
-                            <strong>
-                              ${asset.totalCost.toLocaleString()}
-                            </strong>
-                          </td>
+<div>
+<label>Installation Date</label>
+<p>
+{asset.installationDate
+? new Date(asset.installationDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-                        </tr>
+<div>
+<label>Purchase Cost</label>
+<p>${asset.purchaseCost.toLocaleString()}</p>
+</div>
 
-                      </tbody>
+<div>
+<label>Total Cost</label>
+<p>
+<strong>
+${asset.totalCost.toLocaleString()}
+</strong>
+</p>
+</div>
 
-                    </table>
+{/* Hardware */}
 
-                  </td>
+{asset.assetType === "hardware" && (
+<>
 
-                </tr>
+<div>
+<label>Serial Number</label>
+<p>{asset.serialNumber || "-"}</p>
+</div>
 
-              )}
+<div>
+<label>Model No.</label>
+<p>{asset.modelNo || "-"}</p>
+</div>
+
+<div>
+<label>Specification</label>
+<p>{asset.specifications || "-"}</p>
+</div>
+
+<div>
+<label>Next Maintenance</label>
+<p>
+{asset.nextMaintenanceDate
+? new Date(asset.nextMaintenanceDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
+
+<div>
+<label>Warranty Expiry</label>
+<p>
+{asset.warrantyExpiry
+? new Date(asset.warrantyExpiry).toLocaleDateString()
+: "-"}
+</p>
+</div>
+
+<div>
+<label>Insurance Expiry</label>
+<p>
+{asset.insuranceExpiry
+? new Date(asset.insuranceExpiry).toLocaleDateString()
+: "-"}
+</p>
+</div>
+
+<div>
+<label>Maintenance Cost</label>
+<p>${asset.maintenanceCost.toLocaleString()}</p>
+</div>
+
+<div>
+<label>Insurance Cost</label>
+<p>${asset.insuranceCost.toLocaleString()}</p>
+</div>
+
+<div>
+<label>Upgrade Cost</label>
+<p>${asset.upgradeCost.toLocaleString()}</p>
+</div>
+
+</>
+)}
+
+{/* Software */}
+
+{asset.assetType === "software" && (
+<>
+
+<div>
+<label>License Key</label>
+<p>{asset.licenseKey || "-"}</p>
+</div>
+
+<div>
+<label>License Number</label>
+<p>{asset.licenseNumber || "-"}</p>
+</div>
+
+<div>
+<label>Renewal Date</label>
+<p>
+{asset.renewalDate
+? new Date(asset.renewalDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
+
+<div>
+<label>Renewal Cost</label>
+<p>${asset.renewalCost.toLocaleString()}</p>
+</div>
+
+</>
+)}
+
+</div>
+
+</div>
+
+</td>
+
+</tr>
+
+)}
 
             </React.Fragment>
 
@@ -761,83 +874,99 @@ const renderDepartment = () => (
 
 {expandedDepartment === dept.departmentId && (
 
-<tr className="department-expand-row">
-
-<td colSpan={7}>
-
-<div className="department-details">
-
-<h4>Department Assignment Details</h4>
-
-<table className="audit-table">
-
-<thead>
-
 <tr>
 
-<th>Employee</th>
+<td colSpan={5}>
 
-<th>Asset</th>
+<div className="asset-details-card">
 
-<th>Instance</th>
+<div className="asset-details-header">
 
-<th>Status</th>
+<h4>{dept.departmentName}</h4>
 
-<th>Assigned</th>
-
-<th>Value</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{dept.assignmentHistory.map(record=>(
-
-<tr key={record.assignmentId}>
-
-<td>{record.employeeName}</td>
-
-<td>{record.assetName}</td>
-
-<td>{record.instanceCode}</td>
-
-<td>
-
-<span className={`status ${record.status}`}>
-
-{record.status}
-
+<span className="asset-status">
+{dept.totalEmployees} Employees • {dept.activeAssignments} Active Assignments
 </span>
 
-</td>
+</div>
 
-<td>
+{dept.assignmentHistory.map(record => {
 
+const asset = dept.assets.find(
+a => a.instanceCode === record.instanceCode
+);
+
+return (
+  <div className="asset-details-section">
+<div
+key={record.assignmentId}
+className="asset-details-grid"
+style={{ marginBottom: "20px" }}
+>
+
+<div>
+<label>Employee</label>
+<p>{record.employeeName}</p>
+</div>
+
+<div>
+<label>Employee Code</label>
+<p>{record.employeeCode}</p>
+</div>
+
+<div>
+<label>Asset</label>
+<p>{record.assetName}</p>
+</div>
+
+<div>
+<label>Instance</label>
+<p>{record.instanceCode}</p>
+</div>
+
+<div>
+<label>Status</label>
+<p>{record.status}</p>
+</div>
+
+<div>
+<label>Assigned Date</label>
+<p>
 {record.assignedAt
 ? new Date(record.assignedAt).toLocaleDateString()
 : "-"}
+</p>
+</div>
 
-</td>
+<div>
+<label>Returned Date</label>
+<p>
+{record.returnedAt
+? new Date(record.returnedAt).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-<td>
+<div>
+<label>Location</label>
+<p>{record.location || "-"}</p>
+</div>
 
-${(
-dept.assets.find(
-a=>a.instanceCode===record.instanceCode
-)?.totalCost ?? 0
-).toLocaleString()}
+<div>
+<label>Asset Value</label>
+<p>
+<strong>
+${(asset?.totalCost ?? 0).toLocaleString()}
+</strong>
+</p>
+</div>
 
-</td>
+</div>
+</div>
 
-</tr>
+);
 
-))}
-
-</tbody>
-
-</table>
+})}
 
 </div>
 
@@ -846,7 +975,6 @@ a=>a.instanceCode===record.instanceCode
 </tr>
 
 )}
-
         </React.Fragment>
 
       ))}

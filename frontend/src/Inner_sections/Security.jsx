@@ -49,7 +49,7 @@ const handleResetData = async () => {
       icon: "warning",
       html: `
         <ul style="text-align:left;font-size:14px;">
-          <li><b>Assets:</b> ${previewRes.preview.assets}</li>
+          <li><b>Hardware Assets:</b> ${previewRes.preview.assets}</li>
           <li><b>Assignments:</b> ${previewRes.preview.assignments}</li>
           <li><b>Support Tickets:</b> ${previewRes.preview.tickets}</li>
           <li><b>Software Assets:</b> ${previewRes.preview.softwareAssets}</li>
@@ -59,6 +59,7 @@ const handleResetData = async () => {
           <li><b>Units:</b> ${previewRes.preview.units}</li>
           <li><b>Units:</b> ${previewRes.preview.units}</li>
           <li><b>Departments:</b> ${previewRes.preview.departments}</li>
+          <li><b>Team Members:</b> ${previewRes.preview.employees}</li>
         </ul>
         <p style="margin-top:10px;color:#d32f2f;">
           This action cannot be undone.
