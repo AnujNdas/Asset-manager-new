@@ -944,7 +944,8 @@ const resetPreview = async (req, res) => {
         locations,
         statuses,
         units,
-        departments
+        departments,
+        employees
       }
     });
   } catch (error) {
