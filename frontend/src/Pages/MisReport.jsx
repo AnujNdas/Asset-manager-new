@@ -27,6 +27,7 @@ const [expandedSummary, setExpandedSummary] = useState(null);
 const [expandedWarranty, setExpandedWarranty] = useState(null);
 const [expandedMaintenance, setExpandedMaintenance] = useState(null);
 const [expandedAssignment, setExpandedAssignment] = useState(null);
+const [selectedAssetType, setSelectedAssetType] = useState("All");
   const [loading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState("All");
   const [assetType, setAssetType] = useState("hardware");
@@ -353,18 +354,24 @@ const financial = auditData.financial || {};
 
 const financialInstances = financial.instances ?? [];
 
-const filteredFinancial =
-  selectedYear === "All"
-    ? financialInstances
-    : financialInstances.filter((item) => {
-        if (!item.purchaseDate) return false;
+const filteredFinancial = financialInstances.filter(item => {
 
-        return (
-          new Date(item.purchaseDate)
-            .getFullYear()
-            .toString() === selectedYear
-        );
-      });
+  const yearMatch =
+    selectedYear === "All" ||
+    (
+      item.purchaseDate &&
+      new Date(item.purchaseDate)
+        .getFullYear()
+        .toString() === selectedYear
+    );
+
+  const typeMatch =
+    selectedAssetType === "All" ||
+    item.assetType === selectedAssetType;
+
+  return yearMatch && typeMatch;
+
+});
       const filteredFinancialSummary = filteredFinancial.reduce(
   (acc, asset) => {
     acc.purchaseCost += asset.purchaseCost || 0;
@@ -390,9 +397,21 @@ const filteredFinancial =
   }
 );
 const assets = auditData.summary?.assets || [];
+const filteredAssets = assets.filter(item =>
+
+  selectedAssetType === "All" ||
+  item.assetType === selectedAssetType
+
+);
 
 const assignments =
   auditData.assignments || [];
+  const filteredAssignments = assignments.filter(item =>
+
+  selectedAssetType === "All" ||
+  item.assetType === selectedAssetType
+
+);
 
 const warranty = auditData.warranty || [];
 
@@ -438,19 +457,24 @@ const filteredMaintenance =
         );
       });
 const lifecycle = auditData.lifecycle || [];
-const filteredLifecycle =
-  selectedYear === "All"
-    ? lifecycle
-    : lifecycle.filter(item => {
-// console.log("filter item", item);
-        if (!item.metadata?.snapshot?.hardware?.purchaseDate) return false;
+const filteredLifecycle = lifecycle.filter(item => {
 
-        return (
-          new Date(item.metadata?.snapshot?.hardware?.purchaseDate)
-            .getFullYear()
-            .toString() === selectedYear
-        );
-      });
+  const yearMatch =
+    selectedYear === "All" ||
+    (
+      item.purchaseDate &&
+      new Date(item.purchaseDate)
+        .getFullYear()
+        .toString() === selectedYear
+    );
+
+  const typeMatch =
+    selectedAssetType === "All" ||
+    item.assetType === selectedAssetType;
+
+  return yearMatch && typeMatch;
+
+});
 
 const departments =
   auditData.departments || [];
@@ -551,7 +575,7 @@ const renderSummary = () => (
 
         <tbody>
 
-          {assets.map(asset => (
+          {filteredAssets.map(asset => (
 
             <React.Fragment key={asset.instanceId}>
 
@@ -1441,7 +1465,7 @@ const renderAssignment = () => (
 
 <tbody>
 
-{assignments.map(item => (
+{filteredAssignments.map(item => (
 
 <React.Fragment key={item.assignmentId}>
 
@@ -2172,6 +2196,15 @@ ${asset.totalCost.toLocaleString()}
       ))}
     </select>
   )} 
+
+    <select
+    value={selectedAssetType}
+    onChange={(e) => setSelectedAssetType(e.target.value)}
+  >
+    <option value="All">All Assets</option>
+    <option value="hardware">Hardware</option>
+    <option value="software">Software</option>
+  </select>
     <div className="audit-actions">
 
         <button onClick={handleDownloadPDF} className="pdf-btn">
