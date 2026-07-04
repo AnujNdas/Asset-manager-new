@@ -1356,209 +1356,258 @@ const renderMaintenance = () => (
 
         {/* Expanded Row */}
 
-        {expandedMaintenance === item.instanceId && (
+{expandedMaintenance === item.instanceId && (
 
-          <tr>
+<tr>
 
-            <td colSpan={6}>
+<td colSpan={6}>
 
-              <table className="audit-table">
+<div className="asset-details-card">
 
-                <thead>
+<div className="asset-details-header">
 
-                  <tr>
+<h4>
+{item.assetName}
+</h4>
 
-                    <th>Instance</th>
+<span className="asset-status">
 
-                    <th>Device</th>
+{item.assetType === "hardware"
+? "Hardware"
+: "Software"}
 
-                    <th>Maintenance</th>
+</span>
+
+</div>
 
-                    <th>Costs</th>
+{/* General Information */}
+
+<div className="asset-details-grid">
+
+<div>
+<label>Instance Code</label>
+<p>{item.instanceCode}</p>
+</div>
 
-                    <th>Upgrades</th>
+<div>
+<label>Device</label>
+<p>{item.deviceName || "-"}</p>
+</div>
 
-                  </tr>
+<div>
+<label>Location</label>
+<p>{item.location}</p>
+</div>
 
-                </thead>
+<div>
+<label>Status</label>
+<p>{item.status}</p>
+</div>
 
-                <tbody>
+<div>
+<label>Purchase Date</label>
+<p>
+{item.purchaseDate
+? new Date(item.purchaseDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-                  <tr>
+<div>
+<label>Installation Date</label>
+<p>
+{item.installationDate
+? new Date(item.installationDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-                    {/* Instance */}
+<div>
+<label>Total Cost</label>
+<p>{formatCurrency(item.totalCost)}</p>
+</div>
 
-                    <td>
+</div>
 
-                      <strong>{item.instanceCode}</strong>
+{/* Hardware */}
 
-                      <br />
+{item.assetType === "hardware" && (
 
-                      <small>{item.serialNumber}</small>
+<div className="asset-details-grid">
 
-                      <br />
+<div>
+<label>Serial Number</label>
+<p>{item.serialNumber || "-"}</p>
+</div>
 
-                      <small>{item.modelNo}</small>
+<div>
+<label>Model Number</label>
+<p>{item.modelNo || "-"}</p>
+</div>
 
-                      <br />
+<div>
+<label>Specifications</label>
+<p>{item.specifications || "-"}</p>
+</div>
 
-                      <small>{item.specifications}</small>
+<div>
+<label>Condition</label>
+<p>{item.condition}</p>
+</div>
 
-                    </td>
+<div>
+<label>Next Maintenance</label>
+<p>
+{item.nextMaintenanceDate
+? new Date(item.nextMaintenanceDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-                    {/* Device */}
+<div>
+<label>Maintenance Cost</label>
+<p>{formatCurrency(item.maintenanceCost)}</p>
+</div>
 
-                    <td>
+<div>
+<label>Warranty Cost</label>
+<p>{formatCurrency(item.warrantyCost)}</p>
+</div>
 
-                      <div>
-                        <strong>Device:</strong> {item.deviceName || "-"}
-                      </div>
+<div>
+<label>Insurance Cost</label>
+<p>{formatCurrency(item.insuranceCost)}</p>
+</div>
 
-                      <div>
-                        <strong>Location:</strong> {item.location}
-                      </div>
+<div>
+<label>Upgrade Cost</label>
+<p>{formatCurrency(item.upgradeCost)}</p>
+</div>
 
-                      <div>
-                        <strong>Condition:</strong> {item.condition}
-                      </div>
+</div>
+
+)}
+
+{/* Software */}
+
+{item.assetType === "software" && (
+
+<div className="asset-details-grid">
+
+<div>
+<label>License Key</label>
+<p>{item.licenseKey || "-"}</p>
+</div>
 
-                      <div>
-                        <strong>Status:</strong> {item.status}
-                      </div>
+<div>
+<label>License Number</label>
+<p>{item.licenseNumber || "-"}</p>
+</div>
 
-                    </td>
+<div>
+<label>Renewal Date</label>
+<p>
+{item.renewalDate
+? new Date(item.renewalDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-                    {/* Dates */}
+<div>
+<label>Renewal Cost</label>
+<p>{formatCurrency(item.renewalCost)}</p>
+</div>
 
-                    <td>
+</div>
 
-                      <div>
+)}
 
-                        <strong>Purchase</strong>
+{/* Cost Breakdown */}
 
-                        <br />
+<div className="asset-details-grid">
 
-                        {item.purchaseDate
-                          ? new Date(item.purchaseDate).toLocaleDateString()
-                          : "-"}
+<div>
+<label>Purchase Cost</label>
+<p>{formatCurrency(item.purchaseCost)}</p>
+</div>
 
-                      </div>
+<div>
+<label>Maintenance Cost</label>
+<p>{formatCurrency(item.maintenanceCost || 0)}</p>
+</div>
 
-                      <br />
+<div>
+<label>Warranty Cost</label>
+<p>{formatCurrency(item.warrantyCost || 0)}</p>
+</div>
 
-                      <div>
+<div>
+<label>Insurance Cost</label>
+<p>{formatCurrency(item.insuranceCost || 0)}</p>
+</div>
 
-                        <strong>Installed</strong>
+<div>
+<label>Renewal Cost</label>
+<p>{formatCurrency(item.renewalCost || 0)}</p>
+</div>
 
-                        <br />
+<div>
+<label>Upgrade Cost</label>
+<p>{formatCurrency(item.upgradeCost || 0)}</p>
+</div>
 
-                        {item.installationDate
-                          ? new Date(item.installationDate).toLocaleDateString()
-                          : "-"}
+</div>
 
-                      </div>
+{/* Upgrades */}
 
-                      <br />
+{item.upgrades?.length > 0 && (
 
-                      <div>
+<>
 
-                        <strong>Next Service</strong>
+<h4 style={{marginTop:25}}>Upgrade History</h4>
 
-                        <br />
+{item.upgrades.map((upgrade,index)=>(
 
-                        {item.nextMaintenanceDate
-                          ? new Date(item.nextMaintenanceDate).toLocaleDateString()
-                          : "-"}
+<div
+key={index}
+className="asset-details-grid"
+style={{marginBottom:"18px"}}
+>
 
-                      </div>
+<div>
+<label>Description</label>
+<p>{upgrade.description}</p>
+</div>
 
-                    </td>
+<div>
+<label>Date</label>
+<p>
+{upgrade.date
+? new Date(upgrade.date).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-                    {/* Costs */}
+<div>
+<label>Cost</label>
+<p>{formatCurrency(upgrade.cost || 0)}</p>
+</div>
 
-                    <td>
+</div>
 
-                      <div>
-                        Purchase : {formatCurrency(item.purchaseCost)}
-                      </div>
+))}
 
-                      <div>
-                        Maintenance : {formatCurrency(item.maintenanceCost)}
-                      </div>
+</>
 
-                      <div>
-                        Warranty : {formatCurrency(item.warrantyCost)}
-                      </div>
+)}
 
-                      <div>
-                        Upgrade : {formatCurrency(item.upgradeCost)}
-                      </div>
+</div>
 
-                      <hr />
+</td>
 
-                      <strong>
-                        Total : {formatCurrency(item.totalCost)}
-                      </strong>
+</tr>
 
-                    </td>
-
-                    {/* Upgrades */}
-
-                    <td>
-
-                      {item.upgrades?.length ? (
-
-                        item.upgrades.map((upgrade, index) => (
-
-                          <div
-                            key={index}
-                            style={{ marginBottom: "10px" }}
-                          >
-
-                            <strong>
-                              {upgrade.description}
-                            </strong>
-
-                            <br />
-
-                            <small>
-                              {upgrade.date
-                                ? new Date(upgrade.date).toLocaleDateString()
-                                : "-"}
-                            </small>
-
-                            {upgrade.cost && (
-                              <>
-                                <br />
-                                <small>
-                                  Cost: {formatCurrency(upgrade.cost)}
-                                </small>
-                              </>
-                            )}
-
-                          </div>
-
-                        ))
-
-                      ) : (
-
-                        <span>No upgrades</span>
-
-                      )}
-
-                    </td>
-
-                  </tr>
-
-                </tbody>
-
-              </table>
-
-            </td>
-
-          </tr>
-
-        )}
+)}
 
       </React.Fragment>
 
