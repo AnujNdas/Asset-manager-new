@@ -27,69 +27,11 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
 import { useOrganization } from "../Context/OrganizationContext";
-const SoftwareAssetList = () => {
+const SoftwareAssetList = ({ highlightAsset }) => {
   const { organization } = useOrganization();
   const currency = organization?.currency;
   const { registerTour } = useTour();
-  const driverObj = driver({
-  showProgress: true,
-  animate: true,
-  smoothScroll: true,
-  allowClose: true,
 
-  overlayColor: "rgba(0,0,0,0.75)",
-
-  popoverClass: "custom-driver-popover",
-
-  steps: [
-    {
-      element: ".tour-search",
-      popover: {
-        title: "Search Assets",
-        description: "Search and quickly find Software assets.",
-        side: "bottom",
-        align: "start",
-      },
-    },
-
-    {
-      element: ".tour-card",
-      popover: {
-        title: "Asset Cards",
-        description:
-          "Each card represents a Software asset with important details.",
-        side: "bottom",
-      },
-    },
-
-    {
-      element: ".tour-view",
-      popover: {
-        title: "View Instances",
-        description: "View all instances of this Software asset.",
-        side: "bottom",
-      },
-    },
-
-    {
-      element: ".tour-edit",
-      popover: {
-        title: "Edit Asset",
-        description: "Edit Software details anytime.",
-        side: "bottom",
-      },
-    },
-
-    {
-      element: ".tour-assign",
-      popover: {
-        title: "Assign Asset",
-        description: "Assign this Software to Team members.",
-        side: "bottom",
-      },
-    },
-  ],
-});
     const gridRef = useRef(null);
 const CATEGORY_CONFIG = {
 
@@ -226,7 +168,7 @@ useEffect(() => {
     window.removeEventListener("resize", calculate);
   };
 }, []);
-// useEffect(() => {
+
 //   const seen = localStorage.getItem("inventoryTourSeen");
 
 //   if (!seen) {
@@ -702,7 +644,7 @@ const mapInstanceData = (inst, assignment) => {
             return (
             <motion.div
   key={asset._id}
-  className="inventory-card tour-card"
+  className={`inventory-card tour-card ${highlightAsset === asset._id ? "highlight" : ""}`}
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
 >

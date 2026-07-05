@@ -7,7 +7,11 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import "../Page_styles/AuditPage.css";
 import { exportAuditPDF } from "../utils/exportPdfFile";
 import { exportAuditExcel } from "../utils/exportExcelFile";
+import { useOrganization } from "../Context/OrganizationContext";
+import { CURRENCY_SYMBOLS } from "../utils/currency.js";
 const AuditPage = () => {
+  const { organization } = useOrganization();
+  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "NA";
   const [auditData, setAuditData] = useState({
   summary: {},
   financial: {},
@@ -1084,79 +1088,209 @@ const renderWarranty = () => {
 
       {/* Expanded Row */}
 
-      {expandedWarranty === item.instanceId && (
+{expandedWarranty === item.instanceId && (
 
-        <tr>
+<tr>
 
-          <td colSpan={6}>
+<td colSpan={6}>
 
-            <table className="audit-table">
+<div className="asset-details-card">
 
-              <thead>
+<div className="asset-details-header">
 
-                <tr>
-                  <th>Instance</th>
-                  <th>Device</th>
-                  <th>Location</th>
-                  <th>Purchase</th>
-                  <th>Installation</th>
-                  <th>Warranty</th>
-                  <th>Warranty Cost</th>
-                </tr>
+<h4>{item.assetName}</h4>
 
-              </thead>
+<span className="asset-status">
 
-              <tbody>
+{item.assetType === "hardware"
+? "Hardware"
+: "Software"}
 
-                <tr>
+</span>
 
-                  <td>
-                    {item.instanceCode}
-                    <br />
-                    <small>{item.serialNumber}</small>
-                    <br />
-                    <small>{item.modelNo}</small>
-                  </td>
+</div>
 
-                  <td>{item.deviceName || "-"}</td>
+{/* General Information */}
 
-                  <td>
-                    {item.location}
-                    <br />
-                    <small>{item.condition}</small>
-                  </td>
+<div className="asset-details-grid">
 
-                  <td>
-                    {item.purchaseDate
-                      ? new Date(item.purchaseDate).toLocaleDateString()
-                      : "-"}
-                  </td>
+<div>
+<label>Instance Code</label>
+<p>{item.instanceCode}</p>
+</div>
 
-                  <td>
-                    {item.installationDate
-                      ? new Date(item.installationDate).toLocaleDateString()
-                      : "-"}
-                  </td>
+<div>
+<label>Device</label>
+<p>{item.deviceName || "-"}</p>
+</div>
 
-                  <td>
-                    {expiry.toLocaleDateString()}
-                  </td>
+<div>
+<label>Location</label>
+<p>{item.location}</p>
+</div>
 
-                  <td>
-                    ${(item.warrantyCost ?? 0).toLocaleString()}
-                  </td>
+<div>
+<label>Status</label>
+<p>{item.status}</p>
+</div>
 
-                </tr>
+<div>
+<label>Purchase Date</label>
+<p>
+{item.purchaseDate
+? new Date(item.purchaseDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-              </tbody>
+<div>
+<label>Installation Date</label>
+<p>
+{item.installationDate
+? new Date(item.installationDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
 
-            </table>
+<div>
+<label>Total Cost</label>
+<p>
+<strong>
+${(item.totalCost ?? 0).toLocaleString()}
+</strong>
+</p>
+</div>
+<div>
+<label>Condition</label>
+<p>{item.condition}</p>
+</div>
+<div>
+<label>Purchase Cost</label>
+<p>${(item.purchaseCost ?? 0).toLocaleString()}</p>
+</div>
 
-          </td>
+<div>
+<label>Warranty Cost</label>
+<p>${(item.warrantyCost ?? 0).toLocaleString()}</p>
+</div>
 
-        </tr>
+<div>
+<label>Total Cost</label>
+<p>
+<strong>
+${(item.totalCost ?? 0).toLocaleString()}
+</strong>
+</p>
+</div>
 
-      )}
+<div>
+<label>Warranty Status</label>
+
+<p
+className={
+daysLeft < 0
+? "status-expired"
+: daysLeft <= 30
+? "status-warning"
+: "status-active"
+}
+>
+
+{daysLeft < 0
+? `${Math.abs(daysLeft)} Days Expired`
+: `${daysLeft} Days Left`}
+
+</p>
+
+</div>
+
+</div>
+
+{/* Hardware */}
+
+{item.assetType === "hardware" && (
+
+<div className="asset-details-grid">
+
+<div>
+<label>Serial Number</label>
+<p>{item.serialNumber || "-"}</p>
+</div>
+
+<div>
+<label>Model Number</label>
+<p>{item.modelNo || "-"}</p>
+</div>
+
+<div>
+<label>Specifications</label>
+<p>{item.specifications || "-"}</p>
+</div>
+
+
+
+<div>
+<label>Warranty Expiry</label>
+<p>{expiry.toLocaleDateString()}</p>
+</div>
+{/* 
+<div>
+<label>Warranty Cost</label>
+<p>${(item.warrantyCost ?? 0).toLocaleString()}</p>
+</div> */}
+
+</div>
+
+)}
+
+{/* Software */}
+
+{item.assetType === "software" && (
+
+<div className="asset-details-grid">
+
+<div>
+<label>License Key</label>
+<p>{item.licenseKey || "-"}</p>
+</div>
+
+<div>
+<label>License Number</label>
+<p>{item.licenseNumber || "-"}</p>
+</div>
+
+<div>
+<label>Renewal Date</label>
+<p>
+{item.renewalDate
+? new Date(item.renewalDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
+
+<div>
+<label>Renewal Cost</label>
+<p>${(item.renewalCost ?? 0).toLocaleString()}</p>
+</div>
+
+</div>
+
+)}
+
+{/* Warranty Summary */}
+
+<div className="asset-details-grid">
+
+
+</div>
+
+</div>
+
+</td>
+
+</tr>
+
+)}
 
     </React.Fragment>
 
@@ -1256,7 +1390,7 @@ const getMaintenanceStatus = (date) => {
 };
 
 const formatCurrency = (amount) =>
-  `₹${Number(amount || 0).toLocaleString()}`;
+  `${currencySymbol} ${Number(amount || 0).toLocaleString()}`;
 
 
 const renderMaintenance = () => (
@@ -1421,6 +1555,10 @@ const renderMaintenance = () => (
 : "-"}
 </p>
 </div>
+<div>
+  <label>Purchase Cost</label>
+  <p>{formatCurrency(item.purchaseCost)}</p>
+</div>
 
 <div>
 <label>Total Cost</label>
@@ -1479,10 +1617,10 @@ const renderMaintenance = () => (
 <p>{formatCurrency(item.insuranceCost)}</p>
 </div>
 
-<div>
+{/* <div>
 <label>Upgrade Cost</label>
 <p>{formatCurrency(item.upgradeCost)}</p>
-</div>
+</div> */}
 
 </div>
 
@@ -1523,7 +1661,7 @@ const renderMaintenance = () => (
 )}
 
 {/* Cost Breakdown */}
-
+{/* 
 <div className="asset-details-grid">
 
 <div>
@@ -1556,7 +1694,7 @@ const renderMaintenance = () => (
 <p>{formatCurrency(item.upgradeCost || 0)}</p>
 </div>
 
-</div>
+</div> */}
 
 {/* Upgrades */}
 
@@ -1590,7 +1728,7 @@ style={{marginBottom:"18px"}}
 
 <div>
 <label>Cost</label>
-<p>{formatCurrency(upgrade.cost || 0)}</p>
+<p>{formatCurrency(upgrade.cost.amount || 0)}</p>
 </div>
 
 </div>
@@ -1714,190 +1852,221 @@ ${Number(item.totalCost || 0).toLocaleString()}
 </td>
 
 </tr>
-
 {expandedAssignment === item.assignmentId && (
 
 <tr>
 
 <td colSpan={7}>
 
-<div className="expanded-panel">
+<div className="asset-details-card">
 
-<table className="audit-table nested-table">
+<div className="asset-details-header">
 
-<thead>
+<h4>{item.assetName}</h4>
 
-<tr>
+<span className="asset-status">
+{item.assetType === "hardware"
+? "Hardware"
+: "Software"}
+</span>
 
-<th>Employee Details</th>
+</div>
 
-<th>Asset Details</th>
+{/* General Information */}
 
-<th>Assignment Details</th>
-
-<th>Dates</th>
-
-<th>Asset Status</th>
-
-<th>Financial</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td>
-
-<div><strong>Name:</strong> {item.employeeName}</div>
-
-<div><strong>Code:</strong> {item.employeeCode}</div>
-
-<div><strong>Email:</strong> {item.employeeEmail}</div>
-
-<div><strong>Department:</strong> {item.department}</div>
-
-</td>
-
-<td>
-
-<div><strong>Asset:</strong> {item.assetName}</div>
-
-<div><strong>Code:</strong> {item.assetCode}</div>
-
-<div><strong>Instance:</strong> {item.instanceCode}</div>
-
-<div><strong>Device:</strong> {item.deviceName || "-"}</div>
-
-<div><strong>Serial:</strong> {item.serialNumber || "-"}</div>
-
-<div><strong>Model:</strong> {item.modelNo || "-"}</div>
-
-</td>
-
-<td>
-
-<div><strong>Status:</strong> {item.assignmentStatus}</div>
-
-<div><strong>Location:</strong> {item.assignmentLocation}</div>
-
-<div><strong>Assigned By:</strong> {item.assignedBy || "-"}</div>
-
-<div><strong>Returned By:</strong> {item.returnedBy || "-"}</div>
-
-</td>
-
-<td>
+<div className="asset-details-grid">
 
 <div>
+<label>Employee</label>
+<p>{item.employeeName}</p>
+</div>
 
-<strong>Assigned</strong>
+<div>
+<label>Employee Code</label>
+<p>{item.employeeCode}</p>
+</div>
 
-<br/>
+<div>
+<label>Email</label>
+<p>{item.employeeEmail || "-"}</p>
+</div>
 
-{
-item.assignedAt
+<div>
+<label>Department</label>
+<p>{item.department}</p>
+</div>
+
+<div>
+<label>Assignment Status</label>
+<p>{item.assignmentStatus}</p>
+</div>
+
+<div>
+<label>Asset Status</label>
+<p>{item.status}</p>
+</div>
+
+<div>
+<label>Condition</label>
+<p>{item.condition}</p>
+</div>
+
+<div>
+<label>Location</label>
+<p>{item.assignmentLocation || "-"}</p>
+</div>
+
+</div>
+
+{/* Asset Information */}
+
+<div className="asset-details-grid">
+
+<div>
+<label>Asset Name</label>
+<p>{item.assetName}</p>
+</div>
+
+{/* <div>
+<label>Asset Code</label>
+<p>{item.assetCode}</p>
+</div> */}
+
+<div>
+<label>Instance Code</label>
+<p>{item.instanceCode}</p>
+</div>
+
+<div>
+<label>Device</label>
+<p>{item.deviceName || "-"}</p>
+</div>
+
+{item.assetType === "hardware" && (
+
+<>
+
+<div>
+<label>Serial Number</label>
+<p>{item.serialNumber || "-"}</p>
+</div>
+
+<div>
+<label>Model Number</label>
+<p>{item.modelNo || "-"}</p>
+</div>
+
+<div>
+<label>Specifications</label>
+<p>{item.specifications || "-"}</p>
+</div>
+  
+<div>
+<label>Purchase Cost</label>
+<p>{formatCurrency(item.purchaseCost || 0).toLocaleString()}</p>
+</div>
+
+<div>
+<label>Maintenance Cost</label>
+<p>{formatCurrency(item.maintenanceCost || 0).toLocaleString()}</p>
+</div>
+
+<div>
+<label>Warranty Cost</label>
+<p>{formatCurrency(item.warrantyCost || 0).toLocaleString()}</p>
+</div>
+
+<div>
+<label>Insurance Cost</label>
+<p>{formatCurrency(item.insuranceCost || 0).toLocaleString()}</p>
+</div>
+
+<div>
+<label>Upgrade Cost</label>
+<p>{formatCurrency(item.upgradeCost || 0).toLocaleString()}</p>
+</div>
+<div>
+<label>Total Cost</label>
+<p>
+<strong>
+{formatCurrency(item.totalCost || 0).toLocaleString()}
+</strong>
+</p>
+</div>
+
+</>
+
+)}
+
+{item.assetType === "software" && (
+
+<>
+
+<div>
+<label>License Key</label>
+<p>{item.licenseKey || "-"}</p>
+</div>
+
+<div>
+<label>License Number</label>
+<p>{item.licenseNumber || "-"}</p>
+</div>
+
+<div>
+<label>Renewal Date</label>
+<p>
+{item.renewalDate
+? new Date(item.renewalDate).toLocaleDateString()
+: "-"}
+</p>
+</div>
+
+<div>
+<label>Renewal Cost</label>
+<p>{formatCurrency(item.renewalCost || 0).toLocaleString()}</p>
+</div>
+
+</>
+
+)}
+
+</div>
+
+{/* Assignment Timeline */}
+
+<div className="asset-details-grid">
+
+<div>
+<label>Assigned Date</label>
+<p>
+{item.assignedAt
 ? new Date(item.assignedAt).toLocaleString()
-: "-"
-}
-
+: "-"}
+</p>
 </div>
 
-<br/>
-
 <div>
-
-<strong>Returned</strong>
-
-<br/>
-
-{
-item.returnedAt
+<label>Returned Date</label>
+<p>
+{item.returnedAt
 ? new Date(item.returnedAt).toLocaleString()
-: "-"
-}
-
+: "-"}
+</p>
 </div>
-
-</td>
-
-<td>
-
-<div><strong>Status:</strong> {item.status}</div>
-
-<div><strong>Condition:</strong> {item.condition}</div>
-
-</td>
-
-<td>
 
 <div>
-
-<strong>Purchase</strong>
-
-<br/>
-
-${Number(item.purchaseCost || 0).toLocaleString()}
-
+<label>Assigned By</label>
+<p>{item.assignedBy || "-"}</p>
 </div>
-
-<br/>
 
 <div>
-
-<strong>Maintenance</strong>
-
-<br/>
-
-${Number(item.maintenanceCost || 0).toLocaleString()}
+<label>Returned By</label>
+<p>{item.returnedBy || "-"}</p>
+</div>
 
 </div>
 
-<br/>
-
-<div>
-
-<strong>Warranty</strong>
-
-<br/>
-
-${Number(item.warrantyCost || 0).toLocaleString()}
-
-</div>
-
-<br/>
-
-<div>
-
-<strong>Insurance</strong>
-
-<br/>
-
-${Number(item.insuranceCost || 0).toLocaleString()}
-
-</div>
-
-<br/>
-
-<div>
-
-<strong>Total</strong>
-
-<br/>
-
-${Number(item.totalCost || 0).toLocaleString()}
-
-</div>
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
+{/* Financial */}
 
 </div>
 
@@ -2045,65 +2214,220 @@ const renderLifecycle = () => (
 
             {/* Expanded Row */}
 
-            {expandedLifecycle === asset.instanceId && (
+{expandedLifecycle === asset.instanceId && (
 
-              <tr>
+<tr>
 
-                <td colSpan={7}>
+<td colSpan={7}>
 
-                  <table className="audit-table">
+<div className="asset-details-card">
 
-                    <thead>
-                      <tr>
-                        <th>Event</th>
-                        <th>Description</th>
-                        <th>Performed By</th>
-                        <th>Date</th>
-                      </tr>
-                    </thead>
+<div className="asset-details-header">
 
-                    <tbody>
+<h4>{asset.assetName}</h4>
 
-                      {(asset.events || [])
-                        .slice()
-                        .sort(
-                          (a, b) =>
-                            new Date(a.date).getTime() -
-                            new Date(b.date).getTime()
-                        )
-                        .map((event, index) => (
+<span className="asset-status">
 
-                          <tr key={index}>
+{asset.assetType === "hardware"
+  ? "Hardware"
+  : "Software"}
 
-                            <td>
-                              <strong>{event.title}</strong>
-                              <br />
-                              <small>{event.eventType}</small>
-                            </td>
+</span>
 
-                            <td>{event.description}</td>
+</div>
 
-                            <td>{event.performedBy || "System"}</td>
+{/* General Information */}
 
-                            <td>
-                              {event.date
-                                ? new Date(event.date).toLocaleString()
-                                : "-"}
-                            </td>
+<div className="asset-details-grid">
 
-                          </tr>
+<div>
+<label>Asset Name</label>
+<p>{asset.assetName}</p>
+</div>
 
-                        ))}
+<div>
+<label>Asset Code</label>
+<p>{asset.assetCode}</p>
+</div>
 
-                    </tbody>
+<div>
+<label>Instance Code</label>
+<p>{asset.instanceCode}</p>
+</div>
 
-                  </table>
+<div>
+<label>Asset Type</label>
+<p>{asset.assetType}</p>
+</div>
 
-                </td>
+<div>
+<label>Status</label>
+<p>{asset.status}</p>
+</div>
 
-              </tr>
+<div>
+<label>Purchase Date</label>
+<p>
+{asset.purchaseDate
+  ? new Date(asset.purchaseDate).toLocaleDateString()
+  : "-"}
+</p>
+</div>
 
-            )}
+<div>
+<label>Last Activity</label>
+<p>
+{asset.lastActivity
+  ? new Date(asset.lastActivity).toLocaleString()
+  : "-"}
+</p>
+</div>
+
+<div>
+<label>Total Events</label>
+<p>{asset.events?.length || 0}</p>
+</div>
+
+</div>
+
+{/* Hardware Details */}
+
+{asset.assetType === "hardware" && (
+
+<div className="asset-details-grid">
+
+<div>
+<label>Device</label>
+<p>{asset.deviceName || "-"}</p>
+</div>
+
+<div>
+<label>Serial Number</label>
+<p>{asset.serialNumber || "-"}</p>
+</div>
+
+<div>
+<label>Model Number</label>
+<p>{asset.modelNo || "-"}</p>
+</div>
+
+<div>
+<label>Specifications</label>
+<p>{asset.specifications || "-"}</p>
+</div>
+
+<div>
+<label>Location</label>
+<p>{asset.location || "-"}</p>
+</div>
+
+<div>
+<label>Condition</label>
+<p>{asset.condition || "-"}</p>
+</div>
+
+</div>
+
+)}
+
+{/* Software Details */}
+
+{asset.assetType === "software" && (
+
+<div className="asset-details-grid">
+
+<div>
+<label>Device</label>
+<p>{asset.deviceName || "-"}</p>
+</div>
+
+<div>
+<label>License Key</label>
+<p>{asset.licenseKey || "-"}</p>
+</div>
+
+<div>
+<label>License Number</label>
+<p>{asset.licenseNumber || "-"}</p>
+</div>
+
+<div>
+<label>Renewal Date</label>
+<p>
+{asset.renewalDate
+  ? new Date(asset.renewalDate).toLocaleDateString()
+  : "-"}
+</p>
+</div>
+
+<div>
+<label>Location</label>
+<p>{asset.location || "-"}</p>
+</div>
+
+</div>
+
+)}
+
+{/* Lifecycle Timeline */}
+
+<h4 style={{ marginTop: 25 }}>Lifecycle Timeline</h4>
+
+{(asset.events || [])
+  .slice()
+  .sort(
+    (a, b) =>
+      new Date(a.date).getTime() -
+      new Date(b.date).getTime()
+  )
+  .map((event, index) => (
+
+<div
+key={index}
+className="asset-details-grid"
+style={{ marginBottom: "18px" }}
+>
+
+<div>
+<label>Event</label>
+<p>{event.title}</p>
+</div>
+
+<div>
+<label>Type</label>
+<p>{event.eventType}</p>
+</div>
+
+<div>
+<label>Description</label>
+<p>{event.description || "-"}</p>
+</div>
+
+<div>
+<label>Performed By</label>
+<p>{event.performedBy || "System"}</p>
+</div>
+
+<div>
+<label>Date</label>
+<p>
+{event.date
+  ? new Date(event.date).toLocaleString()
+  : "-"}
+</p>
+</div>
+
+</div>
+
+))}
+
+</div>
+
+</td>
+
+</tr>
+
+)}
 
           </React.Fragment>
 

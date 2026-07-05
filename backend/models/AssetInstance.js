@@ -186,35 +186,38 @@ software: {
   /* 🔹 LIFECYCLE (KEEP AS IS - GOOD DESIGN) */
 lifecycle: [
   {
-    eventType: {
-      type: String,
-      enum: [
-        "created",
-        "updated",
-        "assigned",
-        "reassigned",
-        "returned",
-        "maintenance",
-        "upgraded",
-        "status_changed",
-        "condition_changed",
-        "retired",
-        "disposed"
-      ],
-      required: true
-    },
+eventType: {
+  type: String,
+  enum: [
+    "created",
+    "updated",
+    "assigned",
+    "reassigned",
+    "returned",
+    "maintenance",
+    "warranty_renewal",
+    "insurance_renewal",
+    "upgraded",
+    "status_changed",
+    "condition_changed",
+    "retired",
+    "disposed"
+  ],
+  required: true
+},
 
-    category: {
-      type: String,
-      enum: [
-        "instance",
-        "assignment",
-        "maintenance",
-        "upgrade",
-        "system"
-      ],
-      default: "instance"
-    },
+  category: {
+  type: String,
+  enum: [
+    "instance",
+    "assignment",
+    "maintenance",
+    "upgrade",
+    "service",
+    "system"
+  ],
+  default: "instance"
+},
 
     title: {
       type: String,

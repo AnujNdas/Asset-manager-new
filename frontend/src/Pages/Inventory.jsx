@@ -6,14 +6,23 @@ import "../Page_styles/Inventory.css";
 
 const Inventory = () => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState("hardware");
 
-  useEffect(() => {
-    const tabFromURL = new URLSearchParams(location.search).get("tab");
-    if (tabFromURL) {
-      setActiveTab(tabFromURL);
-    }
-  }, [location.search]);
+const [activeTab, setActiveTab] = useState("hardware");
+const [highlightAsset, setHighlightAsset] = useState(null);
+
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+
+  const tab = params.get("tab");
+  const highlight = params.get("highlight");
+
+  if (tab) {
+    setActiveTab(tab);
+  }
+
+  setHighlightAsset(highlight);
+}, [location.search]);  
+
 
   return (
     <div className="inventory-container">
@@ -43,8 +52,8 @@ const Inventory = () => {
 
       {/* Tab Content */}
       <div className="tab-content">
-        {activeTab === "hardware" && <HardwareAssetList />}
-        {activeTab === "software" && <SoftwareAssetList />}
+        {activeTab === "hardware" && <HardwareAssetList highlightAsset={highlightAsset} />}
+        {activeTab === "software" && <SoftwareAssetList highlightAsset={highlightAsset} />}
       </div>
     </div>
   );

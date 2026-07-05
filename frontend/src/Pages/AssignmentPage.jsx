@@ -19,6 +19,8 @@ import { getErrorMessage } from "../utils/getErrorMessage";
     import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
+import { useNavigate } from "react-router-dom";
+
 const steps = [
   "Category",
   "Assets",
@@ -28,6 +30,7 @@ const steps = [
 ];
 
 const AssignmentPage = () => {
+  const navigate = useNavigate();
   const { registerTour } = useTour();
   const { currency, convertFromBase, loadingRates } = useCurrency();
   const [step, setStep] = useState(0);
@@ -156,94 +159,6 @@ useEffect(() => {
 
   /* ================= Tour guide ================= */
 
-      const driverObj = driver({
-        showProgress: true,
-        animate: true,
-        smoothScroll: true,
-        allowClose: true,
-    
-        overlayColor: "rgba(0,0,0,0.75)",
-    
-        popoverClass: "custom-driver-popover",
-    
-        steps: [
-                  {
-            element: ".tour-steps",
-            popover: {
-              title: "Steps",
-              description:
-                "Shows step by step for assigning instances.",
-              side: "bottom",
-            },
-          },
-          {
-            element: ".tour-info",
-            popover: {
-              title: "Instance Information",
-              description: "Contains Instance Information and Availability.",
-              side: "bottom",
-              align: "start",
-            },
-          },
-    
-          {
-            element: ".tour-next",
-            popover: {
-              title: "Next",
-              description:
-                "After selecting click next to move on.",
-              side: "bottom",
-            },
-          },
-          {
-            element: ".tour-back",
-            popover: {
-              title: "Back",
-              description:
-                "Go back to the previous step.",
-              side: "bottom",
-            },
-          },
-  
-          {
-            element: ".tour-bulk",
-            popover: {
-              title: "Bulk input area",
-              description:
-                "After filling the input fields click on the apply to all button.",
-              side: "bottom",
-            },
-          },
-          {
-            element: ".tour-create",
-            popover: {
-              title: "Create Button",
-              description:
-                "Click to create instances.",
-              side: "bottom",
-            },
-          },
-        ],
-      });
-    
-      useEffect(() => {
-        const seen = localStorage.getItem("inventoryTourSeen");
-      
-        if (!seen) {
-          setTimeout(() => {
-            driverObj.drive();
-      
-            localStorage.setItem(
-              "inventoryTourSeen",
-              "true"
-            );
-          }, 1000);
-        }
-      }, []);
-      useEffect(() => {
-      registerTour(driverObj);
-    }, []);
-  
 
   /* ================= STEP 1 ================= */
   const selectCategory = async (cat) => {
@@ -366,12 +281,19 @@ const payload = selectedInstances.map((inst) => ({
     try {
       setLoading(true);
 
-      await assignAssetsFromStock({
-        assignments: payload
-      });
+   await assignAssetsFromStock({
+  assignments: payload
+});
 
-      ThemeSwal.fire("Success", "Instances assigned successfully", "success");
+ThemeSwal.fire(
+  "Success",
+  "Instances assigned successfully",
+  "success"
+);
 
+navigate(
+  `/inventory?tab=${selectedAsset.assetType}&highlight=${selectedAsset._id}`
+);
       resetAll();
     }catch (err) {
   ThemeSwal.fire("Error", getErrorMessage(err, "Assignment failed"), "error");

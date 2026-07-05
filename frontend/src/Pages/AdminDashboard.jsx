@@ -58,7 +58,7 @@ const COUNTRY_NAME_MAP = {
 
 const AdminDashboard = () => {
   const { organization } = useOrganization();
-  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
+  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "NA";
   console.log("AdminDashboard mounted");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

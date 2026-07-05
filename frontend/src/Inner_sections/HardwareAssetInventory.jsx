@@ -121,65 +121,6 @@ const [instanceForm, setInstanceForm] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
 const [itemsPerPage, setItemsPerPage] = useState(6);
 
-  const driverObj = driver({
-  showProgress: true,
-  animate: true,
-  smoothScroll: true,
-  allowClose: true,
-
-  overlayColor: "rgba(0,0,0,0.75)",
-
-  popoverClass: "custom-driver-popover",
-
-  steps: [
-    {
-      element: ".tour-search",
-      popover: {
-        title: "Search Assets",
-        description: "Search and quickly find hardware assets.",
-        side: "bottom",
-        align: "start",
-      },
-    },
-
-    {
-      element: ".tour-card",
-      popover: {
-        title: "Asset Cards",
-        description:
-          "Each card represents a hardware asset with important details.",
-        side: "bottom",
-      },
-    },
-
-    {
-      element: ".tour-view",
-      popover: {
-        title: "View Instances",
-        description: "View all instances of this hardware asset.",
-        side: "bottom",
-      },
-    },
-
-    {
-      element: ".tour-edit",
-      popover: {
-        title: "Edit Asset",
-        description: "Edit hardware details anytime.",
-        side: "bottom",
-      },
-    },
-
-    {
-      element: ".tour-assign",
-      popover: {
-        title: "Assign Asset",
-        description: "Assign this hardware to Team members.",
-        side: "bottom",
-      },
-    },
-  ],
-});
 
 useEffect(() => {
   if (!gridRef.current) return;
@@ -218,24 +159,6 @@ useEffect(() => {
   };
 }, []);
 
-// useEffect(() => {
-//   const seen = localStorage.getItem("inventoryTourSeen");
-
-//   if (!seen) {
-//     setTimeout(() => {
-//       driverObj.drive();
-
-//       localStorage.setItem(
-//         "inventoryTourSeen",
-//         "true"
-//       );
-//     }, 1000);
-//   }
-// }, []);
-
-// useEffect(() => {
-//   registerTour(driverObj);
-// }, []);
   useEffect(() => {
   fetchAll();
 }, []);
