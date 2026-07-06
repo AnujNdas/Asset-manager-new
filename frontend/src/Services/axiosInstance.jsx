@@ -82,7 +82,7 @@ if (status === 401) {
     !publicRoutes.includes(currentPath) &&
     !isResetRoute
   ) {
-    window.location.href = "/user/login";
+    window.location.href = "/";
   }
 
   return Promise.reject(error);
