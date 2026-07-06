@@ -1212,136 +1212,137 @@ if (hasInsurance && insurancePurchaseDate) {
 
   insuranceExpiry = expiry;
 }
-const lifecycle = [
-  {
-    eventType: "created",
+const purchaseDate =
+  assetType === "hardware"
+    ? inst.hardware?.purchaseDate
+    : inst.software?.purchaseDate;
 
-    category: "instance",
+const purchaseCost =
+  assetType === "hardware"
+    ? inst.hardware?.purchaseCost
+    : inst.software?.purchaseCost;
 
-    title: "Instance Created",
+const snapshot = {
+  assetType,
+  instanceCode,
+  deviceName: inst.deviceName || "-",
+  location: inst.location || "-",
+  status: "in_stock",
+  condition: inst.condition || "new",
 
-    description:
-      instances.length > 1
-        ? "Bulk instance upload"
-        : "Single instance created",
+  hardware:
+    assetType === "hardware"
+      ? {
+          serialNumber: inst.hardware?.serialNumber || "-",
+          modelNo: inst.hardware?.modelNo || "-",
+          specifications: inst.hardware?.specifications || "-",
+          purchaseDate: inst.hardware?.purchaseDate || null,
+          installationDate: inst.hardware?.installationDate || null,
+          warrantyPurchaseDate:
+            inst.hardware?.warrantyPurchaseDate || null,
+          warrantyExpiry:
+            inst.hardware?.warrantyExpiry || null,
+          insurancePurchaseDate:
+            inst.hardware?.insurancePurchaseDate || null,
+          insuranceExpiry:
+            inst.hardware?.insuranceExpiry || null,
+          nextMaintenanceDate:
+            inst.hardware?.nextMaintenanceDate || null,
+          hasInsurance,
+          insuranceTerm,
+          coverageType: coverageType || [],
+          purchaseCost:
+            inst.hardware?.purchaseCost || null,
+          costs: inst.hardware?.costs || {},
+        }
+      : null,
+
+  software:
+    assetType === "software"
+      ? {
+          licenseKey:
+            inst.software?.licenseKey || "-",
+          licenseNumber:
+            inst.software?.licenseNumber || "-",
+          purchaseDate:
+            inst.software?.purchaseDate || null,
+          installationDate:
+            inst.software?.installationDate || null,
+          renewalDate:
+            inst.software?.renewalDate || null,
+          lastUsedDate:
+            inst.software?.lastUsedDate || null,
+          purchaseCost:
+            inst.software?.purchaseCost || null,
+          costs:
+            inst.software?.costs || {},
+        }
+      : null,
+};
+
+const lifecycle = [];
+
+/* Purchase Event */
+if (purchaseDate) {
+  lifecycle.push({
+    eventType: "purchased",
+    category: "procurement",
+
+    title: "Asset Purchased",
+
+    description: `Asset purchased for ${
+      purchaseCost
+        ? `${purchaseCost.currency || "USD"} ${purchaseCost.amount}`
+        : "N/A"
+    }`,
 
     performedBy: userId,
 
-    date: new Date(),
+    date: new Date(purchaseDate),
 
-   metadata: {
-  assetId: asset._id,
-
-  assetName: asset.assetName,
-
-  assetType,
-
-  instanceCode,
-
-  deviceName: inst.deviceName || "-",
-
-  location: inst.location || "-",
-
-  status: "in_stock",
-
-  condition: inst.condition || "new",
-
-  snapshot: {
-    assetType,
-
-    instanceCode,
-
-    deviceName:
-      inst.deviceName || "-",
-
-    location:
-      inst.location || "-",
-
-    status: "in_stock",
-
-    condition:
-      inst.condition || "new",
-
-    hardware:
-      assetType === "hardware"
-        ? {
-            serialNumber:
-              inst.hardware?.serialNumber || "-",
-
-            modelNo:
-              inst.hardware?.modelNo || "-",
-
-            specifications:
-              inst.hardware?.specifications || "-",
-
-            purchaseDate:
-              inst.hardware?.purchaseDate || null,
-
-            installationDate:
-              inst.hardware?.installationDate || null,
-
-            warrantyPurchaseDate:
-              inst.hardware?.warrantyPurchaseDate || null,
-
-            warrantyExpiry:
-              inst.hardware?.warrantyExpiry || null,
-
-            insurancePurchaseDate:
-              inst.hardware?.insurancePurchaseDate || null,
-
-            insuranceExpiry:
-              inst.hardware?.insuranceExpiry || null,
-
-            nextMaintenanceDate:
-              inst.hardware?.nextMaintenanceDate || null,
-
-            hasInsurance,
-
-            insuranceTerm,
-
-            coverageType:
-              coverageType || [],
-
-            purchaseCost:
-              inst.hardware?.purchaseCost || null,
-
-            costs:
-              inst.hardware?.costs || {}
-          }
-        : null,
-
-    software:
-      assetType === "software"
-        ? {
-            licenseKey:
-              inst.software?.licenseKey || "-",
-
-            licenseNumber:
-              inst.software?.licenseNumber || "-",
-
-            purchaseDate:
-              inst.software?.purchaseDate || null,
-
-            installationDate:
-              inst.software?.installationDate || null,
-
-            renewalDate:
-              inst.software?.renewalDate || null,
-
-            lastUsedDate:
-              inst.software?.lastUsedDate || null,
-
-            purchaseCost:
-              inst.software?.purchaseCost || null,
-
-            costs:
-              inst.software?.costs || {}
-          }
-        : null
-  }
+    metadata: {
+      assetId: asset._id,
+      assetName: asset.assetName,
+      assetType,
+      instanceCode,
+      deviceName: inst.deviceName || "-",
+      location: inst.location || "-",
+      purchaseDate,
+      purchaseCost,
+      snapshot,
+    },
+  });
 }
-  }
-];
+
+/* Registration Event */
+lifecycle.push({
+  eventType: "created",
+  category: "instance",
+
+  title: "Instance Registered",
+
+  description:
+    instances.length > 1
+      ? "Bulk instance upload"
+      : "Instance added to AssetPegasus",
+
+  performedBy: userId,
+
+  date: new Date(),
+
+  metadata: {
+    assetId: asset._id,
+    assetName: asset.assetName,
+    assetType,
+    instanceCode,
+    deviceName: inst.deviceName || "-",
+    location: inst.location || "-",
+    status: "in_stock",
+    condition: inst.condition || "new",
+    snapshot,
+  },
+});
+
 upgrades.forEach((upgrade) => {
   lifecycle.push({
     eventType: "upgraded",

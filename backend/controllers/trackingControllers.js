@@ -457,12 +457,12 @@ upgrade: {
     };
   })
 
-  .sort((a, b) => {
-    if (!a.recordDateISO) return 1;
-    if (!b.recordDateISO) return -1;
+.sort((a, b) => {
+  if (!a.recordDateISO) return 1;
+  if (!b.recordDateISO) return -1;
 
-    return b.recordDateISO - a.recordDateISO;
-  })
+  return a.recordDateISO.getTime() - b.recordDateISO.getTime();
+})
 
   .map(({ recordDateISO, ...rest }) => rest);
 

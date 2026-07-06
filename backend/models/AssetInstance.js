@@ -189,6 +189,7 @@ lifecycle: [
 eventType: {
   type: String,
   enum: [
+    "purchased",
     "created",
     "updated",
     "assigned",
@@ -209,6 +210,7 @@ eventType: {
   category: {
   type: String,
   enum: [
+    "procurement",
     "instance",
     "assignment",
     "maintenance",
