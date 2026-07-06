@@ -507,85 +507,119 @@ const currencyCode = costObj?.currency || "USD";
   );
 
   return (
-    <div className="review">
+<div className="review">
 
-      <h3>Review Assignment</h3>
+  <div className="review-header">
+    <h3>Review Assignment</h3>
+    <span className="review-badge">Final Step</span>
+  </div>
 
-      {/* CATEGORY */}
-      <div className="review-section">
-        <p><b>Category:</b> {selectedCategory?.categoryName || "-"}</p>
+  {/* CATEGORY */}
+  <div className="review-card">
+    <h4>Category</h4>
+    <p><strong>Category:</strong> {selectedCategory?.categoryName || "-"}</p>
+  </div>
+
+  {/* ASSET */}
+  <div className="review-card">
+    <h4>Asset Information</h4>
+
+    <div className="review-grid">
+      <div>
+        <span>Asset :- </span>
+        <p>{selectedAsset?.name || "-"}</p>
       </div>
 
-      {/* ASSET */}
-      <div className="review-section">
-        <p><b>Asset:</b> {selectedAsset?.name || "-"}</p>
-        <p><b>Asset Type:</b> {capitalize(selectedAsset?.assetType) || "-"}</p>
+      <div>
+        <span>Asset Type :- </span>
+        <p>{capitalize(selectedAsset?.assetType) || "-"}</p>
       </div>
+    </div>
+  </div>
 
-      {/* INSTANCES */}
-      <div className="review-section">
-        <p><b>Total Instances:</b> {selectedInstances.length}</p>
+  {/* INSTANCES */}
+  <div className="review-card">
+    <h4>
+      Selected Instances
+      <span className="instance-count">
+        {selectedInstances.length}
+      </span>
+    </h4>
 
-        <div className="review-instance-list">
-          {selectedInstances.map((inst) => (
-            <div key={inst._id} className="review-instance-item">
-              <p>Device Name :- </p><span>{inst.deviceName}</span>
-            </div>
-          ))}
+    <div className="review-instance-list">
+      {selectedInstances.map((inst) => (
+        <div
+          key={inst._id}
+          className="review-instance-item"
+        >
+          <span>Device</span>
+          <strong>{inst.deviceName}</strong>
         </div>
+      ))}
+    </div>
+  </div>
+
+  {/* ASSIGNMENT */}
+  <div className="review-card">
+    <h4>Assignment Details</h4>
+
+    <div className="review-grid">
+
+      <div>
+        <span>Department</span>
+        <p>{selectedDepartment?.name || "-"}</p>
       </div>
 
-      {/* ASSIGNMENT INFO */}
-      <div className="review-section">
-        <p>
-          <b>Department:</b>{" "}
-          {selectedDepartment?.name || "-"}
-        </p>
-
-        <p>
-          <b>Employee:</b>{" "}
-          {selectedEmployee?.name || "-"}
-        </p>
-
-        <p>
-          <b>Location:</b>{" "}
-          {capitalize(assignmentData.location) || "-"}
-        </p>
-        <p>
-  <b>Assignment Date:</b>{" "}
-  {assignmentData.assignmentDate || "-"}
-</p>
+      <div>
+        <span>Employee</span>
+        <p>{selectedEmployee?.name || "-"}</p>
       </div>
 
-      {/* SOFTWARE DEVICE INFO */}
-      {selectedAsset?.assetType === "software" && (
-        <div className="review-section">
+      <div>
+        <span>Location</span>
+        <p>{capitalize(assignmentData.location) || "-"}</p>
+      </div>
 
-          <h4>Device Information</h4>
-
-          <p>
-            <b>Device Name:</b>{" "}
-            {assignmentData.deviceName || "-"}
-          </p>
-
-          <p>
-            <b>Serial Number:</b>{" "}
-            {assignmentData.serialNumber || "-"}
-          </p>
-
-          <p>
-            <b>Model:</b>{" "}
-            {assignmentData.model || "-"}
-          </p>
-
-        </div>
-      )}
-
-      <button onClick={handleSubmit}>
-        {loading ? "Assigning..." : "Confirm Assignment"}
-      </button>
+      <div>
+        <span>Assignment Date</span>
+        <p>{assignmentData.assignmentDate || "-"}</p>
+      </div>
 
     </div>
+  </div>
+
+  {selectedAsset?.assetType === "software" && (
+    <div className="review-card">
+
+      <h4>Device Information</h4>
+
+      <div className="review-grid">
+
+        <div>
+          <span>Device Name</span>
+          <p>{assignmentData.deviceName || "-"}</p>
+        </div>
+
+        <div>
+          <span>Serial Number</span>
+          <p>{assignmentData.serialNumber || "-"}</p>
+        </div>
+
+        <div>
+          <span>Model</span>
+          <p>{assignmentData.model || "-"}</p>
+        </div>
+
+      </div>
+
+    </div>
+  )}
+
+  <button className="review-submit" onClick={handleSubmit}>
+    {loading ? "Assigning..." : "Confirm Assignment"}
+  </button>
+
+</div>
   );
 
 })()}
