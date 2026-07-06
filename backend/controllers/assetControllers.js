@@ -1212,15 +1212,15 @@ if (hasInsurance && insurancePurchaseDate) {
 
   insuranceExpiry = expiry;
 }
-const purchaseDate =
-  assetType === "hardware"
-    ? inst.hardware?.purchaseDate
-    : inst.software?.purchaseDate;
+// const purchaseDate =
+//   assetType === "hardware"
+//     ? inst.hardware?.purchaseDate
+//     : inst.software?.purchaseDate;
 
-const purchaseCost =
-  assetType === "hardware"
-    ? inst.hardware?.purchaseCost
-    : inst.software?.purchaseCost;
+// const purchaseCost =
+//   assetType === "hardware"
+//     ? inst.hardware?.purchaseCost
+//     : inst.software?.purchaseCost;
 
 const snapshot = {
   assetType,
