@@ -1,289 +1,364 @@
 // src/Pages/AffiliateApply.jsx
 
-import React, { useState } from "react";
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "../Page_styles/AffiliateApply.css";
+// import AuthService from "../Services/AuthService";
+// import { Helmet } from "react-helmet-async";
+// export default function AffiliateApply() {
+//   const navigate = useNavigate();
+
+//   const [formData, setFormData] = useState({
+//     fullName: "",
+//     email: "",
+//     password: "",
+//     phone: "",
+//     website: "",
+//     audienceType: "",
+//     promotionMethod: "",
+//   });
+
+//   const [loading, setLoading] = useState(false);
+
+//   const handleChange = (e) => {
+//     setFormData((prev) => ({
+//       ...prev,
+//       [e.target.name]: e.target.value,
+//     }));
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     try {
+//       setLoading(true);
+
+//       // 🔥 API CALL HERE
+//       await AuthService.applyAffiliate(formData);
+
+//       // await applyAffiliate(formData)
+
+//       alert("Affiliate application submitted!");
+
+//       navigate("/user/login");
+
+//     } catch (err) {
+//       console.error(err);
+//       alert("Failed to submit application");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <>
+// <Helmet>
+//   <title>
+//     Affiliate Program | AssetPegasus
+//   </title>
+
+//   <meta
+//     name="description"
+//     content="Join the AssetPegasus Affiliate Program and earn recurring commissions by referring businesses to our asset management software platform."
+//   />
+
+//   <link
+//     rel="canonical"
+//     href="https://assetpegasus.com/affiliate/apply/"
+//   />
+
+//   {/* Open Graph */}
+//   <meta
+//     property="og:type"
+//     content="website"
+//   />
+
+//   <meta
+//     property="og:title"
+//     content="Affiliate Program | AssetPegasus"
+//   />
+
+//   <meta
+//     property="og:description"
+//     content="Become an AssetPegasus affiliate partner and earn commissions for successful referrals."
+//   />
+
+//   <meta
+//     property="og:url"
+//     content="https://assetpegasus.com/affiliate/apply/"
+//   />
+
+//   <meta
+//     property="og:image"
+//     content="https://assetpegasus.com/images/Logo2.png"
+//   />
+
+//   <meta
+//     property="og:site_name"
+//     content="AssetPegasus"
+//   />
+
+//   {/* Twitter */}
+//   <meta
+//     name="twitter:card"
+//     content="summary_large_image"
+//   />
+
+//   <meta
+//     name="twitter:title"
+//     content="Affiliate Program | AssetPegasus"
+//   />
+
+//   <meta
+//     name="twitter:description"
+//     content="Become an AssetPegasus affiliate partner and earn commissions for successful referrals."
+//   />
+
+//   <meta
+//     name="twitter:image"
+//     content="https://assetpegasus.com/images/Logo2.png"
+//   />
+// </Helmet>
+//     <div className="affiliate-page">
+
+//       {/* LEFT */}
+//       <div className="affiliate-left">
+
+//         <div className="affiliate-logo">
+//           <img
+//             src="/images/Logo.png"
+//             alt="Logo"
+//           />
+//         </div>
+
+//         <h1>Become an Affiliate Partner</h1>
+
+//         <p className="affiliate-subtitle">
+//           Help businesses discover our asset management platform
+//           and earn commissions for successful referrals.
+//         </p>
+
+//         <div className="affiliate-benefits">
+
+//           <div className="benefit-card">
+//             <h3>💰 Earn Commissions</h3>
+//             <p>
+//               Get rewarded for every successful subscription referral.
+//             </p>
+//           </div>
+
+//           <div className="benefit-card">
+//             <h3>📈 Real-Time Tracking</h3>
+//             <p>
+//               Monitor clicks, signups, conversions, and payouts.
+//             </p>
+//           </div>
+
+//           <div className="benefit-card">
+//             <h3>🚀 Scale With Us</h3>
+//             <p>
+//               Promote a growing SaaS platform trusted by organizations.
+//             </p>
+//           </div>
+
+//         </div>
+
+//       </div>
+
+//       {/* RIGHT */}
+//       <div className="affiliate-right">
+
+//         <form
+//           className="affiliate-form"
+//           onSubmit={handleSubmit}
+//         >
+
+//           <h2>Affiliate Application</h2>
+
+//           <div className="affiliate-grid">
+
+//             <div className="input-group">
+//               <label>Full Name *</label>
+//               <input
+//                 type="text"
+//                 name="fullName"
+//                 value={formData.fullName}
+//                 onChange={handleChange}
+//                 required
+//               />
+//             </div>
+
+//             <div className="input-group">
+//               <label>Email *</label>
+//               <input
+//                 type="email"
+//                 name="email"
+//                 value={formData.email}
+//                 onChange={handleChange}
+//                 required
+//               />
+//             </div>
+
+//             <div className="input-group">
+//               <label>Password *</label>
+//               <input
+//                 type="password"
+//                 name="password"
+//                 value={formData.password}
+//                 onChange={handleChange}
+//                 required
+//               />
+//             </div>
+
+//             <div className="input-group">
+//               <label>Phone Number</label>
+//               <input
+//                 type="text"
+//                 name="phone"
+//                 value={formData.phone}
+//                 onChange={handleChange}
+//               />
+//             </div>
+
+//             <div className="input-group">
+//               <label>Website / Portfolio</label>
+//               <input
+//                 type="text"
+//                 name="website"
+//                 value={formData.website}
+//                 onChange={handleChange}
+//               />
+//             </div>
+
+//             <div className="input-group">
+//               <label>Audience Type</label>
+
+//               <select
+//                 name="audienceType"
+//                 value={formData.audienceType}
+//                 onChange={handleChange}
+//               >
+//                 <option value="">Select</option>
+//                 <option value="linkedin">LinkedIn Audience</option>
+//                 <option value="youtube">YouTube Audience</option>
+//                 <option value="blog">Blog / Website</option>
+//                 <option value="agency">Agency Clients</option>
+//                 <option value="community">Community</option>
+//                 <option value="other">Other</option>
+//               </select>
+//             </div>
+
+//           </div>
+
+//           <div className="input-group">
+//             <label>How will you promote us?</label>
+
+//             <textarea
+//               rows="5"
+//               name="promotionMethod"
+//               value={formData.promotionMethod}
+//               onChange={handleChange}
+//             />
+//           </div>
+
+//           <button
+//             type="submit"
+//             className="affiliate-submit"
+//             disabled={loading}
+//           >
+//             {loading
+//               ? "Submitting..."
+//               : "Submit Application"}
+//           </button>
+
+//           <button
+//             type="button"
+//             className="back-btn"
+//             onClick={() => navigate("/user/login")}
+//           >
+//             Back to Login
+//           </button>
+
+//         </form>
+
+//       </div>
+
+//     </div>
+//     </>
+//   );
+// }
+import React from "react";
+import { Helmet } from "react-helmet-async";
+import { FaRocket, FaClock, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../Page_styles/AffiliateApply.css";
-import AuthService from "../Services/AuthService";
-import { Helmet } from "react-helmet-async";
+
 export default function AffiliateApply() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    phone: "",
-    website: "",
-    audienceType: "",
-    promotionMethod: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-
-      // 🔥 API CALL HERE
-      await AuthService.applyAffiliate(formData);
-
-      // await applyAffiliate(formData)
-
-      alert("Affiliate application submitted!");
-
-      navigate("/user/login");
-
-    } catch (err) {
-      console.error(err);
-      alert("Failed to submit application");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
-<Helmet>
-  <title>
-    Affiliate Program | AssetPegasus
-  </title>
+      <Helmet>
+        <title>Affiliate Program | AssetPegasus</title>
 
-  <meta
-    name="description"
-    content="Join the AssetPegasus Affiliate Program and earn recurring commissions by referring businesses to our asset management software platform."
-  />
+        <meta
+          name="description"
+          content="The AssetPegasus Affiliate Program is launching soon. Stay tuned for exciting partnership opportunities."
+        />
 
-  <link
-    rel="canonical"
-    href="https://assetpegasus.com/affiliate/apply/"
-  />
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/affiliate/apply/"
+        />
+      </Helmet>
 
-  {/* Open Graph */}
-  <meta
-    property="og:type"
-    content="website"
-  />
+      <div className="affiliate-coming-page">
 
-  <meta
-    property="og:title"
-    content="Affiliate Program | AssetPegasus"
-  />
+        <div className="glow glow1"></div>
+        <div className="glow glow2"></div>
 
-  <meta
-    property="og:description"
-    content="Become an AssetPegasus affiliate partner and earn commissions for successful referrals."
-  />
+        <div className="coming-card">
 
-  <meta
-    property="og:url"
-    content="https://assetpegasus.com/affiliate/apply/"
-  />
-
-  <meta
-    property="og:image"
-    content="https://assetpegasus.com/images/Logo2.png"
-  />
-
-  <meta
-    property="og:site_name"
-    content="AssetPegasus"
-  />
-
-  {/* Twitter */}
-  <meta
-    name="twitter:card"
-    content="summary_large_image"
-  />
-
-  <meta
-    name="twitter:title"
-    content="Affiliate Program | AssetPegasus"
-  />
-
-  <meta
-    name="twitter:description"
-    content="Become an AssetPegasus affiliate partner and earn commissions for successful referrals."
-  />
-
-  <meta
-    name="twitter:image"
-    content="https://assetpegasus.com/images/Logo2.png"
-  />
-</Helmet>
-    <div className="affiliate-page">
-
-      {/* LEFT */}
-      <div className="affiliate-left">
-
-        <div className="affiliate-logo">
-          <img
-            src="/images/Logo.png"
-            alt="Logo"
-          />
-        </div>
-
-        <h1>Become an Affiliate Partner</h1>
-
-        <p className="affiliate-subtitle">
-          Help businesses discover our asset management platform
-          and earn commissions for successful referrals.
-        </p>
-
-        <div className="affiliate-benefits">
-
-          <div className="benefit-card">
-            <h3>💰 Earn Commissions</h3>
-            <p>
-              Get rewarded for every successful subscription referral.
-            </p>
+          <div className="rocket-wrapper">
+            <FaRocket className="rocket" />
           </div>
 
-          <div className="benefit-card">
-            <h3>📈 Real-Time Tracking</h3>
-            <p>
-              Monitor clicks, signups, conversions, and payouts.
-            </p>
-          </div>
+          <span className="coming-badge">
+            <FaClock />
+            Launching Soon
+          </span>
 
-          <div className="benefit-card">
-            <h3>🚀 Scale With Us</h3>
-            <p>
-              Promote a growing SaaS platform trusted by organizations.
-            </p>
-          </div>
+          <h1>Affiliate Program</h1>
 
-        </div>
+          <h2>
+            Something exciting is on the way 🚀
+          </h2>
 
-      </div>
+          <p>
+            We're putting the finishing touches on the
+            AssetPegasus Affiliate Program.
+            Soon you'll be able to earn recurring commissions,
+            track referrals, and grow with us.
+          </p>
 
-      {/* RIGHT */}
-      <div className="affiliate-right">
-
-        <form
-          className="affiliate-form"
-          onSubmit={handleSubmit}
-        >
-
-          <h2>Affiliate Application</h2>
-
-          <div className="affiliate-grid">
-
-            <div className="input-group">
-              <label>Full Name *</label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Email *</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Password *</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Phone Number</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Website / Portfolio</label>
-              <input
-                type="text"
-                name="website"
-                value={formData.website}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Audience Type</label>
-
-              <select
-                name="audienceType"
-                value={formData.audienceType}
-                onChange={handleChange}
-              >
-                <option value="">Select</option>
-                <option value="linkedin">LinkedIn Audience</option>
-                <option value="youtube">YouTube Audience</option>
-                <option value="blog">Blog / Website</option>
-                <option value="agency">Agency Clients</option>
-                <option value="community">Community</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-          </div>
-
-          <div className="input-group">
-            <label>How will you promote us?</label>
-
-            <textarea
-              rows="5"
-              name="promotionMethod"
-              value={formData.promotionMethod}
-              onChange={handleChange}
-            />
+          <div className="feature-list">
+            <div>✓ Recurring Commissions</div>
+            <div>✓ Referral Dashboard</div>
+            <div>✓ Real-Time Analytics</div>
+            <div>✓ Fast Monthly Payouts</div>
           </div>
 
           <button
-            type="submit"
-            className="affiliate-submit"
-            disabled={loading}
-          >
-            {loading
-              ? "Submitting..."
-              : "Submit Application"}
-          </button>
-
-          <button
-            type="button"
-            className="back-btn"
+            className="return-home"
             onClick={() => navigate("/user/login")}
           >
+            <FaArrowLeft />
             Back to Login
           </button>
 
-        </form>
+        </div>
 
       </div>
-
-    </div>
     </>
   );
 }

@@ -408,8 +408,6 @@ const assignAssetInstance = asyncHandler(async (req, res, next) => {
         employeeName: employee.name
       };
 
-      instance.location = location;
-
 instance.lifecycle.push({
   eventType: "assigned",
 

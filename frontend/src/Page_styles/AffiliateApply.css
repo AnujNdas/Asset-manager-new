@@ -1,4 +1,3 @@
-/* src/Page_styles/AffiliateApply.css */
 
 .affiliate-page {
   min-height: 100vh;
@@ -371,4 +370,157 @@
     padding: 11px;
   }
 
+}
+.affiliate-coming-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #222831, #393E46, #111827);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  padding: 30px;
+}
+
+.coming-card {
+  width: 100%;
+  max-width: 700px;
+  background: #222831;
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 24px;
+  padding: 60px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.coming-badge {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 50px;
+  background: rgba(207, 207, 207, 0.15);
+  color: #DFD0B8;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.coming-card h1 {
+  color: #DFD0B8;
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.coming-card h2 {
+  color: #948979;
+  margin-bottom: 20px;
+}
+
+.coming-card p {
+  color: #948979;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.feature-list {
+  margin: 40px 0;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 18px;
+}
+
+.feature-list div {
+  background: rgba(255,255,255,.05);
+  padding: 18px;
+  border-radius: 12px;
+  color: #DFD0B8;
+}
+
+.return-home {
+  background: linear-gradient(135deg,#DFD0B8,#948979);
+  color: #222831;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: .3s;
+}
+
+.back-home:hover {
+  transform: translateY(-4px);
+}
+
+.rocket-wrapper {
+  margin-bottom: 30px;
+}
+
+.rocket {
+  font-size: 80px;
+  color: #DFD0B8;
+  animation: floatRocket 3s ease-in-out infinite;
+}
+
+@keyframes floatRocket {
+  0%,100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.glow1 {
+  width: 320px;
+  height: 320px;
+  background: #7c3aed;
+  top: -80px;
+  left: -100px;
+  opacity: .25;
+  animation: pulse 8s infinite;
+}
+
+.glow2 {
+  width: 380px;
+  height: 380px;
+  background: #2563eb;
+  right: -120px;
+  bottom: -120px;
+  opacity: .2;
+  animation: pulse 10s infinite;
+}
+
+@keyframes pulse {
+  0%,100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+@media (max-width:768px){
+
+  .coming-card{
+    padding:40px 25px;
+  }
+
+  .coming-card h1{
+    font-size:2.2rem;
+  }
+
+  .feature-list{
+    grid-template-columns:1fr;
+  }
 }
