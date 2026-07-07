@@ -1194,7 +1194,7 @@ ${(item.totalCost ?? 0).toLocaleString()}
 </div>
 
 <div>
-<label>Warranty Cost</label>
+<label>Warranty Purchase Cost</label>
 <p>${(item.warrantyCost ?? 0).toLocaleString()}</p>
 </div>
 

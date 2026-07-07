@@ -25,6 +25,22 @@ const tabs = [
   { name: "Department", key: "department", path: "/classification/department" },
   // { name: "Status", key: "status", path: "/classification/status" },
 ];
+const getArrayFromResponse = (res) => {
+  if (Array.isArray(res)) return res;
+
+  if (Array.isArray(res?.data)) return res.data;
+
+  if (Array.isArray(res?.data?.data)) return res.data.data;
+
+  if (Array.isArray(res?.locations)) return res.locations;
+  if (Array.isArray(res?.units)) return res.units;
+  if (Array.isArray(res?.categories)) return res.categories;
+  if (Array.isArray(res?.departments)) return res.departments;
+  if (Array.isArray(res?.statuses)) return res.statuses;
+
+  console.error("Unknown API response:", res);
+  return [];
+};
 const preloadMap = {
   location: () => import("../Inner_sections/Location"),
   unit: () => import("../Inner_sections/Unit"),
@@ -48,30 +64,45 @@ const Classification = () => {
       let fileName = "";
 
       // Fetch only the active tab's data
-      switch (activeTab.key) {
-        case "location":
-          data = await getLocations();
-          fileName = "locations";
-          break;
-        case "unit":
-          data = await getUnits();
-          fileName = "units";
-          break;
-        case "category":
-          data = await getCategories();
-          fileName = "categories";
-          break;
-        case "status":
-          data = await getStatuses();
-          fileName = "statuses";
-          break;
-        case "department":
-          data = await getDepartments();
-          fileName = "departments";
-          break;
-        default:
-          return Swal.fire("Error", "Unknown tab selected!", "error");
-      }
+switch (activeTab.key) {
+  case "location": {
+    const res = await getLocations();
+    data = getArrayFromResponse(res);
+    fileName = "locations";
+    break;
+  }
+
+  case "unit": {
+    const res = await getUnits();
+    data = getArrayFromResponse(res);
+    fileName = "units";
+    break;
+  }
+
+  case "category": {
+    const res = await getCategories();
+    data = getArrayFromResponse(res);
+    fileName = "categories";
+    break;
+  }
+
+  case "department": {
+    const res = await getDepartments();
+    data = getArrayFromResponse(res);
+    fileName = "departments";
+    break;
+  }
+
+  case "status": {
+    const res = await getStatuses();
+    data = getArrayFromResponse(res);
+    fileName = "statuses";
+    break;
+  }
+
+  default:
+    return Swal.fire("Error", "Unknown tab selected!", "error");
+}
 
       // Export based on selected format
       if (format === "csv") {
@@ -88,30 +119,33 @@ const Classification = () => {
   };
 
   // CSV EXPORT
-  const exportCSV = (rows, fileName) => {
-    if (!rows.length) {
-      return Swal.fire("Empty", "No data to export!", "warning");
-    }
+const exportExcel = (rows, fileName) => {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return Swal.fire("Empty", "No data to export!", "warning");
+  }
 
-    const headers = Object.keys(rows[0]).join(",");
-    const csvRows = rows.map((row) => Object.values(row).join(",")).join("\n");
+  const sheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, sheet, fileName);
+  XLSX.writeFile(workbook, `${fileName}.xlsx`);
+};
 
-    const csv = `${headers}\n${csvRows}`;
+const exportCSV = (rows, fileName) => {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return Swal.fire("Empty", "No data to export!", "warning");
+  }
 
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${fileName}.csv`;
-    link.click();
-  };
+  const headers = Object.keys(rows[0]).join(",");
+  const csvRows = rows.map((row) => Object.values(row).join(",")).join("\n");
 
-  // EXCEL EXPORT
-  const exportExcel = (rows, fileName) => {
-    const sheet = XLSX.utils.json_to_sheet(rows);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, sheet, fileName);
-    XLSX.writeFile(workbook, `${fileName}.xlsx`);
-  };
+  const csv = `${headers}\n${csvRows}`;
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${fileName}.csv`;
+  link.click();
+};
 
   return (
     <div className="classification_container">

@@ -38,79 +38,79 @@ const { registerTour, startTour } = useTour();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-        const driverObj = driver({
-        showProgress: true,
-        animate: true,
-        smoothScroll: true,
-        allowClose: true,
+//         const driverObj = driver({
+//         showProgress: true,
+//         animate: true,
+//         smoothScroll: true,
+//         allowClose: true,
     
-        overlayColor: "rgba(0,0,0,0.75)",
+//         overlayColor: "rgba(0,0,0,0.75)",
     
-        popoverClass: "custom-driver-popover",
+//         popoverClass: "custom-driver-popover",
     
-        steps: [
-          {
-            element: ".tour-search",
-            popover: {
-              title: "Search",
-              description: "Search for classification.",
-              side: "bottom",
-              align: "start",
-            },
-          },
+//         steps: [
+//           {
+//             element: ".tour-search",
+//             popover: {
+//               title: "Search",
+//               description: "Search for classification.",
+//               side: "bottom",
+//               align: "start",
+//             },
+//           },
     
-          {
-            element: ".tour-add",
-            popover: {
-              title: "Add",
-              description:
-                "Add New ones.",
-              side: "bottom",
-            },
-          },
-{
-  element: ".tour-info",
-  popover: {
-    title: "Info",
-    description:
-      "You can edit & delete from here.",
-    side: "bottom",
+//           {
+//             element: ".tour-add",
+//             popover: {
+//               title: "Add",
+//               description:
+//                 "Add New ones.",
+//               side: "bottom",
+//             },
+//           },
+// {
+//   element: ".tour-info",
+//   popover: {
+//     title: "Info",
+//     description:
+//       "You can edit & delete from here.",
+//     side: "bottom",
 
-    onNextClick: () => {
+//     onNextClick: () => {
 
-      driverObj.destroy();
+//       driverObj.destroy();
 
-      localStorage.setItem(
-        "classificationTourSeen",
-        "true"
-      );
+//       localStorage.setItem(
+//         "classificationTourSeen",
+//         "true"
+//       );
 
-      navigate("/employee", {
-        state: {
-          startGuide: true,
-        },
-      });
+//       navigate("/employee", {
+//         state: {
+//           startGuide: true,
+//         },
+//       });
 
-    },
-  },
-},
-        ],
-      });
+//     },
+//   },
+// },
+//         ],
+//       });
     
-useEffect(() => {
-  const shouldStart =
-    location.state?.startGuide &&
-    !localStorage.getItem("classificationTourSeen");
+// useEffect(() => {
+//   const shouldStart =
+//     location.state?.startGuide &&
+//     !localStorage.getItem("classificationTourSeen");
 
-  if (shouldStart) {
-    setTimeout(() => {
-      driverObj.drive();
-    }, 700);
-  }
-}, []);
-      useEffect(() => {
-      registerTour(driverObj);
-    }, []);
+//   if (shouldStart) {
+//     setTimeout(() => {
+//       driverObj.drive();
+//     }, 700);
+//   }
+// }, []);
+//       useEffect(() => {
+//       registerTour(driverObj);
+//     }, []);
 
   useEffect(() => {
     fetchItems();

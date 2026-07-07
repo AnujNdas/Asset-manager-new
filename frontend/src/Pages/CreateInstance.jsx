@@ -559,6 +559,7 @@ const handleUpgradeChange = (
           `✅ ${inserted} imported, ${skipped} skipped`,
           "success",
         );
+        navigate("/inventory");
       } else {
         ThemeSwal.fire("Error", res.message || "Import failed", "error");
       }
