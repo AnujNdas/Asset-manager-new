@@ -75,12 +75,91 @@ const stats = {
   upgradeCost: 0,
   totalOwnershipCost: 0
 };
-
 for (const inst of assetInstances) {
 
     const hardware = inst.hardware || {};
     const software = inst.software || {};
 
+    const yearlyMap = {};
+
+    const addCost = (date, field, amount) => {
+
+        if (!date || !amount) return;
+
+        const year = new Date(date).getFullYear();
+
+        if (!yearlyMap[year]) {
+
+            yearlyMap[year] = {
+                year,
+                purchaseCost: 0,
+                maintenanceCost: 0,
+                warrantyCost: 0,
+                insuranceCost: 0,
+                renewalCost: 0,
+                upgradeCost: 0,
+                totalCost: 0
+            };
+
+        }
+
+        amount = Number(amount);
+
+        yearlyMap[year][field] += amount;
+        yearlyMap[year].totalCost += amount;
+
+    };
+    if (inst.assetType === "hardware") {
+
+    addCost(
+        hardware.purchaseDate,
+        "purchaseCost",
+        hardware.purchaseCost?.amount
+    );
+
+    addCost(
+        hardware.nextMaintenanceDate,
+        "maintenanceCost",
+        hardware.costs?.maintenanceCost?.amount
+    );
+
+    addCost(
+        hardware.warrantyExpiry,
+        "warrantyCost",
+        hardware.costs?.warrantyRenewalCost?.amount
+    );
+
+    addCost(
+        hardware.insurancePurchaseDate,
+        "insuranceCost",
+        hardware.costs?.insuranceCost?.amount
+    );
+
+}
+if (inst.assetType === "software") {
+
+    addCost(
+        software.purchaseDate,
+        "purchaseCost",
+        software.purchaseCost?.amount
+    );
+
+    addCost(
+        software.renewalDate,
+        "renewalCost",
+        software.costs?.renewalCost?.amount
+    );
+
+}
+(inst.upgrades || []).forEach(upgrade => {
+
+    addCost(
+        upgrade.date,
+        "upgradeCost",
+        upgrade.cost?.amount || upgrade.cost
+    );
+
+});
     const purchaseCost =
         Number(
             hardware.purchaseCost?.amount ??
@@ -403,7 +482,9 @@ asset.lifecycle.forEach(event => {
     });
 
 });
-
+const yearlyCosts = Object.values(yearlyMap).sort(
+    (a, b) => a.year - b.year
+);
 financial.push({
 
     ...asset,
@@ -420,8 +501,8 @@ financial.push({
 
     upgradeCost: asset.upgradeCost,
 
-    totalCost: asset.totalCost
-
+    totalCost: asset.totalCost,
+    yearlyCosts
 });
 }
 stats.totalOwnershipCost =
