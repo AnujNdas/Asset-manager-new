@@ -1908,6 +1908,7 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
         const insurancePurchaseDate = hasInsurance
           ? parseDateSafe(inst.hardware?.insurancePurchaseDate)
           : null;
+       
 
         const insuranceTerm = hasInsurance
           ? inst.hardware?.insuranceTerm || "1_year"
@@ -1934,7 +1935,7 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
           ),
           currency
         };
-
+         const warrantyPurchaseDate = parseDateSafe(inst.hardware?.warrantyPurchaseDate);
         const warrantyRenewalCost = {
           amount: Number(
             inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
@@ -2043,7 +2044,7 @@ if (purchaseDate) {
             purchaseDate,
             nextMaintenanceDate,
             installationDate: parseDateSafe(inst.hardware?.installationDate),
-
+            warrantyPurchaseDate,
             warrantyExpiry: parseDateSafe(inst.hardware?.warrantyExpiry),
             purchaseCost,
             hasInsurance,

@@ -270,6 +270,8 @@ const asset = {
         software.installationDate,
     warrantyExpiry:
         hardware.warrantyExpiry || null,
+    warrantyPurchaseDate:
+        hardware.warrantyPurchaseDate || null,
     insuranceExpiry:
         hardware.insuranceExpiry || null,
     renewalDate:
@@ -339,6 +341,7 @@ if (asset.warrantyExpiry) {
         condition: asset.condition,
 
         purchaseDate: asset.purchaseDate,
+        warrantyPurchaseDate: asset.warrantyPurchaseDate,
 
         installationDate: asset.installationDate,
 

@@ -24,8 +24,9 @@ const AuditPage = () => {
   departments: [],
   topExpensiveAssets: []
 }); 
-  const [expandedDepartment, setExpandedDepartment] = useState(null);
-  const [expandedFinancial, setExpandedFinancial] = useState(null);
+const [expandedFinancial, setExpandedFinancial] = useState(null);
+const [expandedDepartment, setExpandedDepartment] = useState(null);
+const [expandedInsurance, setExpandedInsurance] = useState(null);
   const [expandedLifecycle, setExpandedLifecycle] =
 useState(null);
 const [expandedSummary, setExpandedSummary] = useState(null);
@@ -449,18 +450,24 @@ const filteredInsurance =
       });
 const maintenance = auditData.maintenance || [];
 
-const filteredMaintenance =
-  selectedYear === "All"
-    ? maintenance
-    : maintenance.filter(item => {
-        if (!item.nextMaintenanceDate) return false;
+const filteredMaintenance = maintenance.filter(item => {
 
-        return (
-          new Date(item.nextMaintenanceDate)
-            .getFullYear()
-            .toString() === selectedYear
-        );
-      });
+  const yearMatch =
+    selectedYear === "All" ||
+    (
+      item.eventDate &&
+      new Date(item.eventDate)
+        .getFullYear()
+        .toString() === selectedYear
+    );
+
+  const typeMatch =
+    selectedAssetType === "All" ||
+    item.assetType === selectedAssetType;
+
+  return yearMatch && typeMatch;
+
+});
 const lifecycle = auditData.lifecycle || [];
 const filteredLifecycle = lifecycle.filter(item => {
 
@@ -574,7 +581,7 @@ const renderSummary = () => (
             <th>Type</th>
             <th>Status</th>
             <th>Location</th>
-            <th>Total Cost</th>
+            <th>Purchase Date</th>
           </tr>
         </thead>
 
@@ -620,7 +627,9 @@ const renderSummary = () => (
 
                 <td>
                   <strong>
-                    ${asset.totalCost.toLocaleString()}
+                    {asset.purchaseDate
+                      ? new Date(asset.purchaseDate).toLocaleDateString()
+                      : "-"}
                   </strong>
                 </td>
 
@@ -1003,8 +1012,8 @@ const renderWarranty = () => {
     <th>Details</th>
     <th>Asset</th>
     <th>Type</th>
+    <th>Warranty Purchase</th>
     <th>Warranty Expiry</th>
-    <th>Status</th>
     <th>Total Cost</th>
   </tr>
 </thead>
@@ -1050,34 +1059,13 @@ const renderWarranty = () => {
         <td>
 
           <strong>{item.assetName}</strong>
-
-          <br />
-
-          <small>{item.assetCode}</small>
-
         </td>
 
         <td>{item.assetType}</td>
 
+        <td>{item.warrantyPurchaseDate ? new Date(item.warrantyPurchaseDate).toLocaleDateString() : "-"}</td>
+
         <td>{expiry.toLocaleDateString()}</td>
-
-        <td>
-
-          <span
-            className={
-              daysLeft < 0
-                ? "status-expired"
-                : daysLeft <= 30
-                ? "status-warning"
-                : "status-active"
-            }
-          >
-            {daysLeft < 0
-              ? `${Math.abs(daysLeft)} Days Expired`
-              : `${daysLeft} Days Left`}
-          </span>
-
-        </td>
 
         <td>
           <strong>
@@ -1100,6 +1088,7 @@ const renderWarranty = () => {
 <div className="asset-details-header">
 
 <h4>{item.assetName}</h4>
+<p>{item.assetCode}</p>
 
 <span className="asset-status">
 
@@ -1112,6 +1101,208 @@ const renderWarranty = () => {
 </div>
 
 {/* General Information */}
+
+{/* Year-wise Warranty Cost */}
+
+{item.yearlyWarranty?.length > 0 && (
+
+  <>
+
+    <h4 style={{ marginTop: 30 }}>
+      Warranty Cost History
+    </h4>
+
+    <div className="yearly-cost-grid">
+
+      {item.yearlyWarranty.map((year) => (
+
+        <div
+          className="year-card"
+          key={year.year}
+        >
+
+          <h4>Year :- {year.year}</h4>
+
+          <div className="year-row">
+
+            <span>Purchase Cost</span>
+
+            <span>
+              {formatCurrency(year.purchaseCost || 0)}
+            </span>
+
+          </div>
+
+          <div className="year-row">
+
+            <span>Warranty Cost</span>
+
+            <span>
+              {formatCurrency(year.warrantyCost || 0)}
+            </span>
+
+          </div>
+
+          <div className="year-total">
+
+            Total :
+            {" "}
+            {formatCurrency(year.totalCost || 0)}
+
+          </div>
+
+        </div>
+
+      ))}
+
+    </div>
+
+  </>
+
+)}
+{/* Warranty Summary */}
+
+</div>
+
+</td>
+
+</tr>
+
+)}
+
+    </React.Fragment>
+
+  );
+
+})}
+
+</tbody>
+      </table>
+    </div>
+  );
+};
+const renderInsurance = () => (
+  <div className="audit-report-grid">
+<table className="audit-table">
+<thead>
+<tr>
+  <th>Details</th>
+  <th>Asset</th>
+  <th>Type</th>
+  <th>Insurance Expiry</th>
+  <th>Status</th>
+  <th>Total Cost</th>
+</tr>
+</thead>
+
+<tbody>
+
+{filteredInsurance.map(item => {
+
+const expiry = new Date(item.insuranceExpiry);
+
+const daysLeft = Math.ceil(
+  (expiry - new Date()) /
+  (1000 * 60 * 60 * 24)
+);
+
+return (
+
+<React.Fragment key={item.instanceId}>
+
+<tr>
+
+<td>
+
+<button
+className="expand-btn"
+onClick={()=>
+setExpandedInsurance(
+expandedInsurance===item.instanceId
+? null
+: item.instanceId
+)
+}
+>
+
+{
+expandedInsurance===item.instanceId
+? <FiChevronUp/>
+: <FiChevronDown/>
+}
+
+</button>
+
+</td>
+
+<td>
+
+<strong>{item.assetName}</strong>
+
+<br/>
+
+<small>{item.assetCode}</small>
+
+</td>
+
+<td>{item.assetType}</td>
+
+<td>
+
+{expiry.toLocaleDateString()}
+
+</td>
+
+<td>
+
+<span
+className={
+daysLeft < 0
+? "status-expired"
+: daysLeft <= 30
+? "status-warning"
+: "status-active"
+}
+>
+
+{
+daysLeft < 0
+? `${Math.abs(daysLeft)} Days Expired`
+: `${daysLeft} Days Left`
+}
+
+</span>
+
+</td>
+
+<td>
+
+<strong>
+
+{formatCurrency(item.totalCost)}
+
+</strong>
+
+</td>
+
+</tr>
+{expandedInsurance === item.instanceId && (
+
+<tr>
+
+<td colSpan={6}>
+
+<div className="asset-details-card">
+
+<div className="asset-details-header">
+
+<h4>{item.assetName}</h4>
+
+<span className="asset-status">
+  {item.assetType === "hardware" ? "Hardware" : "Software"}
+</span>
+
+</div>
 
 <div className="asset-details-grid">
 
@@ -1145,65 +1336,88 @@ const renderWarranty = () => {
 </div>
 
 <div>
-<label>Installation Date</label>
+<label>Insurance Expiry</label>
 <p>
-{item.installationDate
-? new Date(item.installationDate).toLocaleDateString()
+{item.insuranceExpiry
+? new Date(item.insuranceExpiry).toLocaleDateString()
 : "-"}
 </p>
 </div>
-<div>
-<label>Warranty Expiry</label>
-<p>{expiry.toLocaleDateString()}</p>
-</div>
-<div>
-<label>Warranty Status</label>
 
-<p
-className={
-daysLeft < 0
-? "status-expired"
-: daysLeft <= 30
-? "status-warning"
-: "status-active"
-}
->
-
-{daysLeft < 0
-? `${Math.abs(daysLeft)} Days Expired`
-: `${daysLeft} Days Left`}
-
-</p>
-
-</div>
 <div>
 <label>Condition</label>
 <p>{item.condition}</p>
 </div>
+
 <div>
 <label>Total Cost</label>
-<p>
-<strong>
-{formatCurrency(item.totalCost ?? 0)}
-</strong>
-</p>
+<p>{formatCurrency(item.totalCost)}</p>
 </div>
 
 <div>
 <label>Purchase Cost</label>
-<p>{formatCurrency(item.purchaseCost ?? 0)}</p>
+<p>{formatCurrency(item.purchaseCost)}</p>
 </div>
 
 <div>
-<label>Warranty Purchase Cost</label>
-<p>{formatCurrency(item.warrantyCost ?? 0)}</p>
+<label>Insurance Cost</label>
+<p>{formatCurrency(item.insuranceCost)}</p>
 </div>
 
+<div>
+<label>Model Number</label>
+<p>{item.modelNo || "-"}</p>
+</div>
 
+<div>
+<label>Serial Number</label>
+<p>{item.serialNumber || "-"}</p>
+</div>
 
 </div>
 
-{/* Warranty Summary */}
+{item.yearlyInsurance?.length > 0 && (
+
+<>
+
+<h4 style={{ marginTop: 30 }}>
+Insurance Cost History
+</h4>
+
+<div className="yearly-cost-grid">
+
+{item.yearlyInsurance.map(year => (
+
+<div
+key={year.year}
+className="year-card"
+>
+
+<h4>{year.year}</h4>
+
+<div className="year-row">
+<span>Purchase</span>
+<span>{formatCurrency(year.purchaseCost || 0)}</span>
+</div>
+
+<div className="year-row">
+<span>Insurance</span>
+<span>{formatCurrency(year.insuranceCost || 0)}</span>
+</div>
+
+<div className="year-total">
+Total: {formatCurrency(year.totalCost || 0)}
+</div>
+
+</div>
+
+))}
+
+</div>
+
+</>
+
+)}
 
 </div>
 
@@ -1213,59 +1427,17 @@ daysLeft < 0
 
 )}
 
-    </React.Fragment>
+      </React.Fragment>
 
-  );
+    );
 
-})}
-
-</tbody>
-      </table>
-    </div>
-  );
-};
-const renderInsurance = () => (
-  <div className="audit-report-grid">
-<table className="audit-table">
-<thead>
-  <tr>
-    <th>Details</th>
-    <th>Asset</th>
-    <th>Type</th>
-    <th>Warranty Expiry</th>
-    <th>Status</th>
-    <th>Total Cost</th>
-  </tr>
-</thead>
-<tbody>
-
-{filteredInsurance.map(item => (
-
-<tr key={item.instanceId}>
-
-<td>{item.assetName}</td>
-
-<td>{item.instanceCode}</td>
-
-<td>{item.location}</td>
-
-<td>{item.coverageType?.join(", ")}</td>
-
-<td>
-  {new Date(
-    item.insuranceExpiry
-  ).toLocaleDateString()}
-</td>
-
-<td>${item.totalCost}</td>
-
-</tr>
-
-))}
+  })}
 
 </tbody>
+
 </table>
-  </div>
+
+</div>
 );
 // Helper Functions 
 const getDaysRemaining = (date) => {
@@ -1325,10 +1497,10 @@ const renderMaintenance = () => (
         <tr>
           <th>Details</th>
           <th>Asset</th>
-          <th>Location</th>
-          <th>Maintenance</th>
-          <th>Costs</th>
-          <th>Upgrades</th>
+          <th>Purchase Date</th>
+          <th>{assetType === "hardware" ? "Maintenance Date" : "Renewal Date"}</th>
+          <th>Purchase Cost</th>
+          <th>Days Left</th>
         </tr>
       </thead>
 
@@ -1338,7 +1510,10 @@ const renderMaintenance = () => (
 
     const days = getDaysRemaining(item.nextMaintenanceDate);
     const status = getMaintenanceStatus(item.nextMaintenanceDate);
-
+    const yearlyHistory =
+  item.assetType === "hardware"
+    ? item.yearlyMaintenance
+    : item.yearlyRenewal;
     return (
 
       <React.Fragment key={item.instanceId}>
@@ -1369,42 +1544,37 @@ const renderMaintenance = () => (
           </td>
           <td>
             <strong>{item.assetName}</strong>
-
-            <br />
-
-            <small>{item.assetCode}</small>
             </td>
 
           <td>
-            {item.location}
+            {item.purchaseDate
+              ? new Date(item.purchaseDate).toLocaleDateString()
+              : "-"}
           </td>
 
           <td>
-
-            <span className={status.className}>
-              {status.label}
-            </span>
-
-            <br />
-
-            <small>
-              {days === null
-                ? "-"
-                : days < 0
-                ? `${Math.abs(days)} Days Overdue`
-                : `${days} Days Left`}
-            </small>
+            {item.assetType === "hardware"
+              ? item.nextMaintenanceDate
+                ? new Date(item.nextMaintenanceDate).toLocaleDateString()
+                : "-"
+              : item.renewalDate
+                ? new Date(item.renewalDate).toLocaleDateString()
+                : "-"}
 
           </td>
 
 
           <td>
             <strong>
-              {formatCurrency(item.totalCost)}
+              {formatCurrency(item.purchaseCost)}
             </strong>
           </td>
           <td>
-            {item.upgrades?.length || 0}
+           {days === null
+                ? "-"
+                : days < 0
+                ? `${Math.abs(days)} Days Overdue`
+                : `${days} Days Left`}
           </td>
 
         </tr>
@@ -1424,6 +1594,7 @@ const renderMaintenance = () => (
 <h4>
 {item.assetName}
 </h4>
+<p>{item.assetCode}</p>
 
 <span className="asset-status">
 
@@ -1437,210 +1608,76 @@ const renderMaintenance = () => (
 
 {/* General Information */}
 
-<div className="asset-details-grid">
+{/* Maintenance Cost History */}
 
-<div>
-<label>Instance Code</label>
-<p>{item.instanceCode}</p>
+{yearlyHistory?.length > 0 && (
+
+  <>
+
+    <h4 style={{ marginTop: 30 }}>
+  {item.assetType === "hardware"
+    ? "Maintenance Cost History"
+    : "Renewal Cost History"}
+</h4>
+
+    <div className="yearly-cost-grid">
+
+      {yearlyHistory.map((year) => (
+
+        <div
+          key={year.year}
+          className="year-card"
+        >
+
+          <h4>{year.year}</h4>
+
+       <div className="year-row">
+  <span>Purchase</span>
+  <span>{formatCurrency(year.purchaseCost || 0)}</span>
 </div>
 
-<div>
-<label>Device</label>
-<p>{item.deviceName || "-"}</p>
+{item.assetType === "hardware" ? (
+  <>
+    <div className="year-row">
+      <span>Maintenance</span>
+      <span>{formatCurrency(year.maintenanceCost || 0)}</span>
+    </div>
+
+    <div className="year-row">
+      <span>Warranty</span>
+      <span>{formatCurrency(year.warrantyCost || 0)}</span>
+    </div>
+
+    <div className="year-row">
+      <span>Insurance</span>
+      <span>{formatCurrency(year.insuranceCost || 0)}</span>
+    </div>
+
+    <div className="year-row">
+      <span>Upgrade</span>
+      <span>{formatCurrency(year.upgradeCost || 0)}</span>
+    </div>
+  </>
+) : (
+  <div className="year-row">
+    <span>Renewal</span>
+    <span>{formatCurrency(year.renewalCost || 0)}</span>
+  </div>
+)}
+
+<div className="year-total">
+  Total : {formatCurrency(year.totalCost || 0)}
 </div>
+        </div>
 
-<div>
-<label>Location</label>
-<p>{item.location}</p>
-</div>
+      ))}
 
-<div>
-<label>Status</label>
-<p>{item.status}</p>
-</div>
+    </div>
 
-<div>
-<label>Purchase Date</label>
-<p>
-{item.purchaseDate
-? new Date(item.purchaseDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Installation Date</label>
-<p>
-{item.installationDate
-? new Date(item.installationDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
-<div>
-  <label>Purchase Cost</label>
-  <p>{formatCurrency(item.purchaseCost)}</p>
-</div>
-
-<div>
-<label>Total Cost</label>
-<p>{formatCurrency(item.totalCost)}</p>
-</div>
-
-</div>
-
-{/* Hardware */}
-
-{item.assetType === "hardware" && (
-
-<div className="asset-details-grid">
-
-<div>
-<label>Model Number</label>
-<p>{item.modelNo || "-"}</p>
-</div>
-
-
-
-<div>
-<label>Condition</label>
-<p>{item.condition}</p>
-</div>
-
-<div>
-<label>Next Maintenance</label>
-<p>
-{item.nextMaintenanceDate
-? new Date(item.nextMaintenanceDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Maintenance Cost</label>
-<p>{formatCurrency(item.maintenanceCost)}</p>
-</div>
-
-{/* <div>
-<label>Upgrade Cost</label>
-<p>{formatCurrency(item.upgradeCost)}</p>
-</div> */}
-
-</div>
+  </>
 
 )}
 
-{/* Software */}
-
-{item.assetType === "software" && (
-
-<div className="asset-details-grid">
-
-<div>
-<label>License Key</label>
-<p>{item.licenseKey || "-"}</p>
-</div>
-
-<div>
-<label>License Number</label>
-<p>{item.licenseNumber || "-"}</p>
-</div>
-
-<div>
-<label>Renewal Date</label>
-<p>
-{item.renewalDate
-? new Date(item.renewalDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Renewal Cost</label>
-<p>{formatCurrency(item.renewalCost)}</p>
-</div>
-
-</div>
-
-)}
-
-{/* Cost Breakdown */}
-{/* 
-<div className="asset-details-grid">
-
-<div>
-<label>Purchase Cost</label>
-<p>{formatCurrency(item.purchaseCost)}</p>
-</div>
-
-<div>
-<label>Maintenance Cost</label>
-<p>{formatCurrency(item.maintenanceCost || 0)}</p>
-</div>
-
-<div>
-<label>Warranty Cost</label>
-<p>{formatCurrency(item.warrantyCost || 0)}</p>
-</div>
-
-<div>
-<label>Insurance Cost</label>
-<p>{formatCurrency(item.insuranceCost || 0)}</p>
-</div>
-
-<div>
-<label>Renewal Cost</label>
-<p>{formatCurrency(item.renewalCost || 0)}</p>
-</div>
-
-<div>
-<label>Upgrade Cost</label>
-<p>{formatCurrency(item.upgradeCost || 0)}</p>
-</div>
-
-</div> */}
-
-{/* Upgrades */}
-
-{item.upgrades?.length > 0 && (
-
-<>
-
-<h4 style={{marginTop:25}}>Upgrade History</h4>
-
-{item.upgrades.map((upgrade,index)=>(
-
-<div
-key={index}
-className="asset-details-grid"
-style={{marginBottom:"18px"}}
->
-
-<div>
-<label>Description</label>
-<p>{upgrade.description}</p>
-</div>
-
-<div>
-<label>Date</label>
-<p>
-{upgrade.date
-? new Date(upgrade.date).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Cost</label>
-<p>{formatCurrency(upgrade.cost.amount || 0)}</p>
-</div>
-
-</div>
-
-))}
-
-</>
-
-)}
 
 </div>
 
