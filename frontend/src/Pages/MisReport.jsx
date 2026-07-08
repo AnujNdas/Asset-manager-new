@@ -25,6 +25,7 @@ const AuditPage = () => {
   topExpensiveAssets: []
 }); 
   const [expandedDepartment, setExpandedDepartment] = useState(null);
+  const [expandedFinancial, setExpandedFinancial] = useState(null);
   const [expandedLifecycle, setExpandedLifecycle] =
 useState(null);
 const [expandedSummary, setExpandedSummary] = useState(null);
@@ -1183,19 +1184,19 @@ daysLeft < 0
 <label>Total Cost</label>
 <p>
 <strong>
-${(item.totalCost ?? 0).toLocaleString()}
+{formatCurrency(item.totalCost ?? 0)}
 </strong>
 </p>
 </div>
 
 <div>
 <label>Purchase Cost</label>
-<p>${(item.purchaseCost ?? 0).toLocaleString()}</p>
+<p>{formatCurrency(item.purchaseCost ?? 0)}</p>
 </div>
 
 <div>
 <label>Warranty Purchase Cost</label>
-<p>${(item.warrantyCost ?? 0).toLocaleString()}</p>
+<p>{formatCurrency(item.warrantyCost ?? 0)}</p>
 </div>
 
 
@@ -2369,22 +2370,12 @@ const renderFinancial = () => (
 <thead>
 
 <tr>
-
+<th> Details </th>
 <th>Asset</th>
 
 <th>Type</th>
 
 <th>Purchase</th>
-
-<th>Maintenance</th>
-
-<th>Warranty</th>
-
-<th>Insurance</th>
-
-<th>Renewal</th>
-
-<th>Upgrade</th>
 
 <th>Total</th>
 
@@ -2395,50 +2386,128 @@ const renderFinancial = () => (
 <tbody>
 
 {filteredFinancial
-.sort((a,b)=>b.totalCost-a.totalCost)
-.map(asset=>(
+  .sort((a, b) => b.totalCost - a.totalCost)
+  .map(asset => (
 
-<tr key={asset.instanceId}>
+    <React.Fragment key={asset.instanceId}>
 
-<td>
+      {/* Summary Row */}
 
-<strong>{asset.assetName}</strong>
+      <tr>
 
-<br/>
+        <td>
 
-<small>{asset.assetCode}</small>
+          <button
+            type="button"
+            className="expand-btn"
+            onClick={() =>
+              setExpandedFinancial(
+                expandedFinancial === asset.instanceId
+                  ? null
+                  : asset.instanceId
+              )
+            }
+          >
+            {expandedFinancial === asset.instanceId
+              ? <FiChevronUp />
+              : <FiChevronDown />}
+          </button>
 
-<br/>
+        </td>
 
-<small>{asset.instanceCode}</small>
+        <td>
 
-</td>
+          <strong>{asset.assetName}</strong>
 
-<td>{asset.assetType}</td>
+          <br />
 
-<td>${asset.purchaseCost.toLocaleString()}</td>
+          <small>{asset.assetCode}</small>
 
-<td>${asset.maintenanceCost.toLocaleString()}</td>
+          <br />
 
-<td>${asset.warrantyCost.toLocaleString()}</td>
+          <small>{asset.instanceCode}</small>
 
-<td>${asset.insuranceCost.toLocaleString()}</td>
+        </td>
 
-<td>${asset.renewalCost.toLocaleString()}</td>
+        <td>{asset.assetType}</td>
 
-<td>${asset.upgradeCost.toLocaleString()}</td>
+        <td>
+          ${asset.purchaseCost.toLocaleString()}
+        </td>
 
-<td>
+        <td>
 
-<strong>
+          <strong>
+            ${asset.totalCost.toLocaleString()}
+          </strong>
 
-${asset.totalCost.toLocaleString()}
+        </td>
 
-</strong>
+      </tr>
 
-</td>
+      {/* Expanded Panel */}
 
-</tr>
+      {expandedFinancial === asset.instanceId && (
+
+        <tr>
+
+          <td colSpan={5}>
+
+<div className="yearly-cost-grid">
+
+{asset.yearlyCosts.map(year => (
+
+    <div className="year-card" key={year.year}>
+
+        <h4>Year :- {year.year}</h4>
+
+        <div className="year-row">
+            <span>Purchase</span>
+            <span>{formatCurrency(year.purchaseCost)}</span>
+        </div>
+
+        <div className="year-row">
+            <span>Maintenance</span>
+            <span>{formatCurrency(year.maintenanceCost)}</span>
+        </div>
+
+        <div className="year-row">
+            <span>Warranty</span>
+            <span>{formatCurrency(year.warrantyCost)}</span>
+        </div>
+
+        <div className="year-row">
+            <span>Insurance</span>
+            <span>{formatCurrency(year.insuranceCost)}</span>
+        </div>
+
+        <div className="year-row">
+            <span>Renewal</span>
+            <span>{formatCurrency(year.renewalCost)}</span>
+        </div>
+
+        <div className="year-row">
+            <span>Upgrade</span>
+            <span>{formatCurrency(year.upgradeCost)}</span>
+        </div>
+
+        <div className="year-total">
+            Total : {formatCurrency(year.totalCost)}
+        </div>
+
+    </div>
+
+))}
+
+</div>
+
+          </td>
+
+        </tr>
+
+      )}
+
+    </React.Fragment>
 
 ))}
 

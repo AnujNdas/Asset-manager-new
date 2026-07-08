@@ -291,6 +291,25 @@ const asset = {
 };
 
 assetLookup[inst._id.toString()] = asset;
+const yearlyWarranty = [];
+
+if (asset.purchaseDate) {
+  yearlyWarranty.push({
+    year: new Date(asset.purchaseDate).getFullYear(),
+    purchaseCost: asset.purchaseCost || 0,
+    warrantyCost: 0,
+    totalCost: asset.purchaseCost || 0,
+  });
+}
+
+if (asset.warrantyExpiry && asset.warrantyCost > 0) {
+  yearlyWarranty.push({
+    year: new Date(asset.warrantyExpiry).getFullYear(),
+    purchaseCost: 0,
+    warrantyCost: asset.warrantyCost || 0,
+    totalCost: asset.warrantyCost || 0,
+  });
+}
 if (asset.warrantyExpiry) {
 
     warranty.push({
@@ -327,12 +346,45 @@ if (asset.warrantyExpiry) {
 
         warrantyCost: asset.warrantyCost,
 
-        totalCost: asset.totalCost
+        totalCost: asset.totalCost,
+        yearlyWarranty
+
+    });
+
+}
+const yearlyInsurance = [];
+
+if (asset.purchaseDate) {
+
+    yearlyInsurance.push({
+
+        year: new Date(asset.purchaseDate).getFullYear(),
+
+        purchaseCost: asset.purchaseCost || 0,
+
+        insuranceCost: 0,
+
+        totalCost: asset.purchaseCost || 0
 
     });
 
 }
 
+if (asset.insuranceExpiry && asset.insuranceCost > 0) {
+
+    yearlyInsurance.push({
+
+        year: new Date(asset.insuranceExpiry).getFullYear(),
+
+        purchaseCost: 0,
+
+        insuranceCost: asset.insuranceCost || 0,
+
+        totalCost: asset.insuranceCost || 0
+
+    });
+
+}
 if (asset.insuranceExpiry) {
 
     insurance.push({
@@ -365,7 +417,8 @@ if (asset.insuranceExpiry) {
 
         insuranceCost: asset.insuranceCost,
 
-        totalCost: asset.totalCost
+        totalCost: asset.totalCost,
+        yearlyInsurance
 
     });
 
@@ -375,7 +428,120 @@ if (asset.insuranceExpiry) {
 if (
   asset.assetType === "hardware" &&
   asset.nextMaintenanceDate
-) {
+) { 
+    const yearlyMaintenance = [];
+
+if (asset.purchaseDate) {
+
+  yearlyMaintenance.push({
+
+    year: new Date(asset.purchaseDate).getFullYear(),
+
+    purchaseCost: asset.purchaseCost || 0,
+
+    maintenanceCost: 0,
+
+    warrantyCost: 0,
+
+    insuranceCost: 0,
+
+    upgradeCost: 0,
+
+    totalCost: asset.purchaseCost || 0
+
+  });
+
+}
+
+if (asset.nextMaintenanceDate && asset.maintenanceCost > 0) {
+
+  yearlyMaintenance.push({
+
+    year: new Date(asset.nextMaintenanceDate).getFullYear(),
+
+    purchaseCost: 0,
+
+    maintenanceCost: asset.maintenanceCost || 0,
+
+    warrantyCost: 0,
+
+    insuranceCost: 0,
+
+    upgradeCost: 0,
+
+    totalCost: asset.maintenanceCost || 0
+
+  });
+
+}
+
+if (asset.warrantyExpiry && asset.warrantyCost > 0) {
+
+  yearlyMaintenance.push({
+
+    year: new Date(asset.warrantyExpiry).getFullYear(),
+
+    purchaseCost: 0,
+
+    maintenanceCost: 0,
+
+    warrantyCost: asset.warrantyCost || 0,
+
+    insuranceCost: 0,
+
+    upgradeCost: 0,
+
+    totalCost: asset.warrantyCost || 0
+
+  });
+
+}
+
+if (asset.insuranceExpiry && asset.insuranceCost > 0) {
+
+  yearlyMaintenance.push({
+
+    year: new Date(asset.insuranceExpiry).getFullYear(),
+
+    purchaseCost: 0,
+
+    maintenanceCost: 0,
+
+    warrantyCost: 0,
+
+    insuranceCost: asset.insuranceCost || 0,
+
+    upgradeCost: 0,
+
+    totalCost: asset.insuranceCost || 0
+
+  });
+
+}
+
+asset.upgrades?.forEach(upgrade => {
+
+  if (!upgrade.date) return;
+
+  yearlyMaintenance.push({
+
+    year: new Date(upgrade.date).getFullYear(),
+
+    purchaseCost: 0,
+
+    maintenanceCost: 0,
+
+    warrantyCost: 0,
+
+    insuranceCost: 0,
+
+    upgradeCost: upgrade.cost || 0,
+
+    totalCost: upgrade.cost || 0
+
+  });
+
+});
   maintenance.push({
     type: "maintenance",
     assetType: "hardware",
@@ -408,6 +574,7 @@ if (
     totalCost: asset.totalCost,
 
     upgrades: asset.upgrades,
+    yearlyMaintenance
   });
 }
 
@@ -416,6 +583,39 @@ if (
   asset.assetType === "software" &&
   asset.renewalDate
 ) {
+    const yearlyRenewal = [];
+
+if (asset.purchaseDate) {
+
+  yearlyRenewal.push({
+
+    year: new Date(asset.purchaseDate).getFullYear(),
+
+    purchaseCost: asset.purchaseCost || 0,
+
+    renewalCost: 0,
+
+    totalCost: asset.purchaseCost || 0
+
+  });
+
+}
+
+if (asset.renewalDate && asset.renewalCost > 0) {
+
+  yearlyRenewal.push({
+
+    year: new Date(asset.renewalDate).getFullYear(),
+
+    purchaseCost: 0,
+
+    renewalCost: asset.renewalCost || 0,
+
+    totalCost: asset.renewalCost || 0
+
+  });
+
+}
   maintenance.push({
     type: "renewal",
     assetType: "software",
@@ -443,6 +643,7 @@ if (
     totalCost: asset.totalCost,
 
     upgrades: asset.upgrades,
+    yearlyRenewal
   });
 }
 

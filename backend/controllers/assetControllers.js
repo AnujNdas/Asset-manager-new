@@ -1,55 +1,55 @@
-  const Asset = require("../models/Asset");
-  const LastAssetCode = require("../models/LastAssetCode");
-  const AssetAssignment = require("../models/AssetAssignment");
-  // const unzipper = require("unzipper");
-  const sendNotification = require("../utils/notify");
-  const asyncHandler = require("../utils/asyncHandler");
-  const AppError = require("../utils/AppError");
-  const pricingTiers = require("../config/pricingTiers");
-  const Subscription = require("../models/Subscription");
-  const Category = require("../models/Category");
-  const Unit = require("../models/Unit");
-  const Location = require("../models/Location");
-  const Organization = require("../models/Organization");
-  const Status = require("../models/Status");
-  const SoftwareAsset = require("../models/SoftwareAsset");
-  const AssetInstance = require("../models/AssetInstance");
-  const convertToBase = require("../utils/convertToBase");
-  const buildVendor = require("../utils/buildVendor");
+const Asset = require("../models/Asset");
+const LastAssetCode = require("../models/LastAssetCode");
+const AssetAssignment = require("../models/AssetAssignment");
+// const unzipper = require("unzipper");
+const sendNotification = require("../utils/notify");
+const asyncHandler = require("../utils/asyncHandler");
+const AppError = require("../utils/AppError");
+const pricingTiers = require("../config/pricingTiers");
+const Subscription = require("../models/Subscription");
+const Category = require("../models/Category");
+const Unit = require("../models/Unit");
+const Location = require("../models/Location");
+const Organization = require("../models/Organization");
+const Status = require("../models/Status");
+const SoftwareAsset = require("../models/SoftwareAsset");
+const AssetInstance = require("../models/AssetInstance");
+const convertToBase = require("../utils/convertToBase");
+const buildVendor = require("../utils/buildVendor");
 const QRCode = require("qrcode");
-const cloudinary = require("../config/cloudinary"); 
+const cloudinary = require("../config/cloudinary");
 
-  const parseDate = (value) => {
-    if (!value) return null;
+const parseDate = (value) => {
+  if (!value) return null;
 
-    // Excel number
-    if (!isNaN(value)) {
-      const excelEpoch = new Date(Date.UTC(1899, 11, 30));
-      return new Date(excelEpoch.getTime() + Number(value) * 86400000);
-    }
+  // Excel number
+  if (!isNaN(value)) {
+    const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+    return new Date(excelEpoch.getTime() + Number(value) * 86400000);
+  }
 
-    const parsed = new Date(value);
-    return isNaN(parsed.getTime()) ? null : parsed;
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const buildMaintenance = (incoming = {}) => {
+  if (!incoming) return {};
+
+  return {
+    lastMaintenanceDate: incoming.lastMaintenanceDate
+      ? new Date(incoming.lastMaintenanceDate)
+      : null,
+    nextMaintenanceDate: incoming.nextMaintenanceDate
+      ? new Date(incoming.nextMaintenanceDate)
+      : null,
+    maintenanceTerm: incoming.maintenanceTerm || null,
+    maintenanceCost: Number(incoming.maintenanceCost || 0),
   };
-
-  const buildMaintenance = (incoming = {}) => {
-    if (!incoming) return {};
-
-    return {
-      lastMaintenanceDate: incoming.lastMaintenanceDate
-        ? new Date(incoming.lastMaintenanceDate)
-        : null,
-      nextMaintenanceDate: incoming.nextMaintenanceDate
-        ? new Date(incoming.nextMaintenanceDate)
-        : null,
-      maintenanceTerm: incoming.maintenanceTerm || null,
-      maintenanceCost: Number(incoming.maintenanceCost || 0),
-    };
-  };
-  const buildTracking = (incoming = {}) => ({
-    qrCode: incoming.qrCode || null,
-    assetTag: incoming.assetTag || null,
-  });
+};
+const buildTracking = (incoming = {}) => ({
+  qrCode: incoming.qrCode || null,
+  assetTag: incoming.assetTag || null,
+});
 const buildFinancialTracking = (type, assetCost, maintenance, warranty, insurance) => {
   const yearlyCost = assetCost?.totalAmount || 0;
 
@@ -63,50 +63,50 @@ const buildFinancialTracking = (type, assetCost, maintenance, warranty, insuranc
     insuranceTotalCost: insurance?.renewalCost || 0,
   };
 };
-  const buildInsurance = (incoming = {}, existing = {}) => ({
-    insuranceId: incoming.insuranceId ?? existing.insuranceId,
-    insuranceName: incoming.insuranceName ?? existing.insuranceName,
-    purchaseDate: incoming.purchaseDate ? new Date(incoming.purchaseDate) : existing.purchaseDate,
-    expiryDate: incoming.expiryDate ? new Date(incoming.expiryDate) : existing.expiryDate,
-    renewalCost: Number(incoming.renewalCost ?? existing.renewalCost ?? 0),
-    renewalTerm: incoming.renewalTerm ?? existing.renewalTerm,
-    nextRenewalDate: incoming.nextRenewalDate
-      ? new Date(incoming.nextRenewalDate)
-      : existing.nextRenewalDate
-  });
-  const buildWarranty = (incoming, existing = {}, dop) => {
-    if (!incoming) return existing;
+const buildInsurance = (incoming = {}, existing = {}) => ({
+  insuranceId: incoming.insuranceId ?? existing.insuranceId,
+  insuranceName: incoming.insuranceName ?? existing.insuranceName,
+  purchaseDate: incoming.purchaseDate ? new Date(incoming.purchaseDate) : existing.purchaseDate,
+  expiryDate: incoming.expiryDate ? new Date(incoming.expiryDate) : existing.expiryDate,
+  renewalCost: Number(incoming.renewalCost ?? existing.renewalCost ?? 0),
+  renewalTerm: incoming.renewalTerm ?? existing.renewalTerm,
+  nextRenewalDate: incoming.nextRenewalDate
+    ? new Date(incoming.nextRenewalDate)
+    : existing.nextRenewalDate
+});
+const buildWarranty = (incoming, existing = {}, dop) => {
+  if (!incoming) return existing;
 
-    const warranty = {
-      warrantyId: incoming.warrantyId ?? existing.warrantyId,
-      expiryDate: incoming.expiryDate
-        ? new Date(incoming.expiryDate)
-        : existing.expiryDate,
-    };
+  const warranty = {
+    warrantyId: incoming.warrantyId ?? existing.warrantyId,
+    expiryDate: incoming.expiryDate
+      ? new Date(incoming.expiryDate)
+      : existing.expiryDate,
+  };
 
-    if (dop && warranty.expiryDate) {
-      const dopDate = new Date(dop);
-      if (warranty.expiryDate < dopDate) {
-        throw new Error("Warranty expiry cannot be before purchase date (DOP)");
-      }
+  if (dop && warranty.expiryDate) {
+    const dopDate = new Date(dop);
+    if (warranty.expiryDate < dopDate) {
+      throw new Error("Warranty expiry cannot be before purchase date (DOP)");
     }
+  }
 
-    return warranty;
-  };
+  return warranty;
+};
 
-  const calculateAssetLifetime = (dop, doe) => {
-    if (!dop || !doe) return { value: 0, unit: "years" };
+const calculateAssetLifetime = (dop, doe) => {
+  if (!dop || !doe) return { value: 0, unit: "years" };
 
-    const diff = new Date(doe) - new Date(dop);
-    const years = Math.ceil(diff / (1000 * 60 * 60 * 24 * 365));
+  const diff = new Date(doe) - new Date(dop);
+  const years = Math.ceil(diff / (1000 * 60 * 60 * 24 * 365));
 
-    return { value: years, unit: "years" };
-  };
+  return { value: years, unit: "years" };
+};
 
-  // =======================================================================
-  // BULK UPLOAD
-  // =======================================================================
-  // ================= BULK UPLOAD =================
+// =======================================================================
+// BULK UPLOAD
+// =======================================================================
+// ================= BULK UPLOAD =================
 
 
 const bulkUploadAssets = asyncHandler(async (req, res, next) => {
@@ -334,10 +334,10 @@ const bulkUploadAssets = asyncHandler(async (req, res, next) => {
 
 
 
-  // =======================================================================
-  // ADD ASSET
-  // =======================================================================
-  // ================= ADD ASSET =================
+// =======================================================================
+// ADD ASSET
+// =======================================================================
+// ================= ADD ASSET =================
 
 const addAsset = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
@@ -348,7 +348,7 @@ const addAsset = asyncHandler(async (req, res, next) => {
     throw new AppError(
       "Organization context missing",
       403,
-      "ORG_CONTEXT_MISSING" 
+      "ORG_CONTEXT_MISSING"
     );
   }
 
@@ -443,12 +443,12 @@ const addAsset = asyncHandler(async (req, res, next) => {
     assetCode,
     assetQuantity,
     inUse: 0,
-financialTracking: {
-  totalAssetCost: 0,
-  monthlyCost: 0,
-  yearlyCost: 0,
-  maintenanceTotalCost: 0,
-} 
+    financialTracking: {
+      totalAssetCost: 0,
+      monthlyCost: 0,
+      yearlyCost: 0,
+      maintenanceTotalCost: 0,
+    }
   });
 
   const savedAsset = await newAsset.save();
@@ -474,10 +474,10 @@ financialTracking: {
 
 
 
-  // =======================================================================
-  // UPDATE ASSET
-  // =======================================================================
-  // ================= UPDATE ASSET =================
+// =======================================================================
+// UPDATE ASSET
+// =======================================================================
+// ================= UPDATE ASSET =================
 
 const updateAsset = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
@@ -608,9 +608,9 @@ const updateAsset = asyncHandler(async (req, res, next) => {
   });
 });
 
-  // =======================================================================
-  // DELETE ASSET
-  // =======================================================================
+// =======================================================================
+// DELETE ASSET
+// =======================================================================
 
 
 const deleteAsset = asyncHandler(async (req, res, next) => {
@@ -677,9 +677,9 @@ const deleteAsset = asyncHandler(async (req, res, next) => {
 
 
 
-  // =======================================================================
-  // GET ALL ASSETS
-  // =======================================================================
+// =======================================================================
+// GET ALL ASSETS
+// =======================================================================
 
 const getAllAssets = asyncHandler(async (req, res, next) => {
   const organizationId = req.user.organizationId;
@@ -795,55 +795,55 @@ const getAllAssets = asyncHandler(async (req, res, next) => {
     return "partially_in_use";
   };
 
-const calculateFinancials = (instances = []) => {
-  let totalCost = 0;
-  let yearlyCost = 0;
+  const calculateFinancials = (instances = []) => {
+    let totalCost = 0;
+    let yearlyCost = 0;
 
-  instances.forEach(inst => {
-    const hw = inst.hardware || {};
-    const sw = inst.software || {};
+    instances.forEach(inst => {
+      const hw = inst.hardware || {};
+      const sw = inst.software || {};
 
-    // 🔹 HARDWARE COSTS
-    const hwPurchase =
-      hw.purchaseCost?.amount || 0;
+      // 🔹 HARDWARE COSTS
+      const hwPurchase =
+        hw.purchaseCost?.amount || 0;
 
-    const hwMaintenance =
-      hw.costs?.maintenanceCost?.amount || 0;
+      const hwMaintenance =
+        hw.costs?.maintenanceCost?.amount || 0;
 
-    const hwInsurance =
-      hw.costs?.insuranceCost?.amount || 0;
+      const hwInsurance =
+        hw.costs?.insuranceCost?.amount || 0;
 
-    const hwWarranty =
-      hw.costs?.warrantyRenewalCost?.amount || 0;
+      const hwWarranty =
+        hw.costs?.warrantyRenewalCost?.amount || 0;
 
-    // 🔹 SOFTWARE COSTS
-    const swPurchase =
-      sw.purchaseCost?.amount || 0;
+      // 🔹 SOFTWARE COSTS
+      const swPurchase =
+        sw.purchaseCost?.amount || 0;
 
-    const swRenewal =
-      sw.costs?.renewalCost?.amount || 0;
+      const swRenewal =
+        sw.costs?.renewalCost?.amount || 0;
 
-    // 🔹 TOTAL COST
-    const instanceTotal =
-      hwPurchase +
-      hwMaintenance +
-      hwInsurance +
-      hwWarranty +
-      swPurchase +
-      swRenewal;
+      // 🔹 TOTAL COST
+      const instanceTotal =
+        hwPurchase +
+        hwMaintenance +
+        hwInsurance +
+        hwWarranty +
+        swPurchase +
+        swRenewal;
 
-    totalCost += instanceTotal;
+      totalCost += instanceTotal;
 
-    // 🔹 YEARLY COST
-    yearlyCost += instanceTotal;
-  });
+      // 🔹 YEARLY COST
+      yearlyCost += instanceTotal;
+    });
 
-  return {
-    totalCost,
-    yearlyCost,
-    monthlyCost: yearlyCost / 12
+    return {
+      totalCost,
+      yearlyCost,
+      monthlyCost: yearlyCost / 12
+    };
   };
-};
 
   /* ================= MERGE ================= */
   let enrichedAssets = assets.map(asset => {
@@ -944,9 +944,9 @@ const getAssetById = async (req, res, next) => {
 
 
 
-  // =======================================================================
-  // GENERATE ASSET CODE
-  // =======================================================================
+// =======================================================================
+// GENERATE ASSET CODE
+// =======================================================================
 const generateHardwareCode = async (organizationId, orgCode = "ORG") => {
   const counter = await LastAssetCode.findOneAndUpdate(
     { organizationId, key: "hardwareAsset" },
@@ -973,7 +973,7 @@ const generateBulkAssetCodes = async (organizationId, count, orgCode = "ORG") =>
 
   for (let i = start; i <= end; i++) {
     codes.push(`${orgCode}-AST-${String(i).padStart(3, "0")}`);
-  } 
+  }
   return codes;
 };
 const calculateInsuranceExpiry = (purchaseDate, term) => {
@@ -1002,18 +1002,18 @@ const createAssetInstance = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const organizationId = req.user.organizationId;
   const organization = await Organization.findById(
-  organizationId
-).select("currency");
+    organizationId
+  ).select("currency");
 
-if (!organization) {
-  throw new AppError(
-    "Organization not found",
-    404,
-    "ORG_NOT_FOUND"
-  );
-}
+  if (!organization) {
+    throw new AppError(
+      "Organization not found",
+      404,
+      "ORG_NOT_FOUND"
+    );
+  }
 
-const currency = organization.currency;
+  const currency = organization.currency;
   const { assetId, instances } = req.body;
 
   if (!instances || instances.length === 0) {
@@ -1044,69 +1044,69 @@ const currency = organization.currency;
   const assetType =
     assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
 
-    /* ================= SUBSCRIPTION LIMIT CHECK ================= */
+  /* ================= SUBSCRIPTION LIMIT CHECK ================= */
 
-const subscription = await Subscription.findOne({ organizationId });
+  const subscription = await Subscription.findOne({ organizationId });
 
-if (!subscription) {
-  throw new AppError(
-    "No active subscription",
-    403,
-    "NO_SUBSCRIPTION"
-  );
-}
+  if (!subscription) {
+    throw new AppError(
+      "No active subscription",
+      403,
+      "NO_SUBSCRIPTION"
+    );
+  }
 
-const tier = pricingTiers.find(t => t.key === subscription.tier);
+  const tier = pricingTiers.find(t => t.key === subscription.tier);
 
-if (!tier) {
-  throw new AppError(
-    "Invalid tier config",
-    500,
-    "INVALID_TIER"
-  );
-}
+  if (!tier) {
+    throw new AppError(
+      "Invalid tier config",
+      500,
+      "INVALID_TIER"
+    );
+  }
 
-/* ---------------- COUNT CURRENT INSTANCES ---------------- */
+  /* ---------------- COUNT CURRENT INSTANCES ---------------- */
 
-let currentCount;
+  let currentCount;
 
-if (assetType === "hardware") {
-  currentCount = await AssetInstance.countDocuments({
-    organizationId,
-    assetType: "hardware"
-  });
-} else {
-  currentCount = await AssetInstance.countDocuments({
-    organizationId,
-    assetType: "software"
-  });
-}
+  if (assetType === "hardware") {
+    currentCount = await AssetInstance.countDocuments({
+      organizationId,
+      assetType: "hardware"
+    });
+  } else {
+    currentCount = await AssetInstance.countDocuments({
+      organizationId,
+      assetType: "software"
+    });
+  }
 
-/* ---------------- GET LIMIT ---------------- */
+  /* ---------------- GET LIMIT ---------------- */
 
-const limit =
-  assetType === "hardware"
-    ? tier.hardwareAssets
-    : tier.softwareAssets;
+  const limit =
+    assetType === "hardware"
+      ? tier.hardwareAssets
+      : tier.softwareAssets;
 
-/* ---------------- VALIDATE LIMIT ---------------- */
+  /* ---------------- VALIDATE LIMIT ---------------- */
 
-if (
-  limit !== "unlimited" &&
-  currentCount + instances.length > limit
-) {
-  throw new AppError(
-    `${assetType} instance limit exceeded`,
-    403,
-    "INSTANCE_LIMIT_EXCEEDED",
-    null,
-    {
-      limit,
-      current: currentCount,
-      requested: instances.length
-    }
-  );
-}
+  if (
+    limit !== "unlimited" &&
+    currentCount + instances.length > limit
+  ) {
+    throw new AppError(
+      `${assetType} instance limit exceeded`,
+      403,
+      "INSTANCE_LIMIT_EXCEEDED",
+      null,
+      {
+        limit,
+        current: currentCount,
+        requested: instances.length
+      }
+    );
+  }
 
   /* ================= VALIDATION ================= */
   const errors = {};
@@ -1155,356 +1155,355 @@ if (
   };
 
   /* ================= CREATE INSTANCES ================= */
-const newInstances = [];
+  const newInstances = [];
 
-for (let index = 0; index < instances.length; index++) {
-  const inst = instances[index];
+  for (let index = 0; index < instances.length; index++) {
+    const inst = instances[index];
 
-  const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
-  const hasInsurance = inst.hardware?.hasInsurance ?? false;
+    const instanceCode = `${asset.assetCode}-${Date.now()}-${index}`;
+    const hasInsurance = inst.hardware?.hasInsurance ?? false;
 
-const purchaseCost =
-  assetType === "hardware"
-    ? {
-        amount: Number(
-          inst.hardware?.purchaseCost?.amount || 0
-        ),
-        currency,
+    const purchaseCost =
+      assetType === "hardware"
+        ? {
+          amount: Number(
+            inst.hardware?.purchaseCost?.amount || 0
+          ),
+          currency,
+        }
+        : {
+          amount: Number(
+            inst.software?.purchaseCost?.amount || 0
+          ),
+          currency
+        };
+
+    /* ================= INSURANCE ================= */
+
+    const insuranceCost = {
+      amount: Number(
+        inst.hardware?.costs?.insuranceCost?.amount || 0
+      ),
+      currency
+    };
+    const insuranceTerm =
+      inst.hardware?.insuranceTerm || null;
+
+    const insurancePurchaseDate =
+      inst.hardware?.insurancePurchaseDate || null;
+
+    const coverageType =
+      inst.hardware?.coverageType || [];
+
+    let insuranceExpiry = null;
+    const upgrades = inst.upgrades || [];
+    /* AUTO CALCULATE EXPIRY */
+    if (hasInsurance && insurancePurchaseDate) {
+      const expiry = new Date(insurancePurchaseDate);
+
+      if (insuranceTerm === "6_months") {
+        expiry.setMonth(expiry.getMonth() + 6);
+      } else {
+        const years = parseInt(insuranceTerm); // "3_years" -> 3, "10_years" -> 10
+        if (!isNaN(years)) {
+          expiry.setFullYear(expiry.getFullYear() + years);
+        }
       }
-    : {
-        amount: Number(
-          inst.software?.purchaseCost?.amount || 0
-        ),
-        currency
-      };
-  
-/* ================= INSURANCE ================= */
 
-const insuranceCost = {
-  amount: Number(
-    inst.hardware?.costs?.insuranceCost?.amount || 0
-  ),
-  currency
-};
-const insuranceTerm =
-  inst.hardware?.insuranceTerm || null;
-
-const insurancePurchaseDate =
-  inst.hardware?.insurancePurchaseDate || null;
-
-const coverageType =
-  inst.hardware?.coverageType || [];
-
-let insuranceExpiry = null;
-const upgrades = inst.upgrades || [];
-/* AUTO CALCULATE EXPIRY */
-if (hasInsurance && insurancePurchaseDate) {
-  const expiry = new Date(insurancePurchaseDate);
-
-  if (insuranceTerm === "6_months") {
-    expiry.setMonth(expiry.getMonth() + 6);
-  } else {
-    const years = parseInt(insuranceTerm); // "3_years" -> 3, "10_years" -> 10
-    if (!isNaN(years)) {
-      expiry.setFullYear(expiry.getFullYear() + years);
+      insuranceExpiry = expiry;
     }
-  }
+    // const purchaseDate =
+    //   assetType === "hardware"
+    //     ? inst.hardware?.purchaseDate
+    //     : inst.software?.purchaseDate;
 
-  insuranceExpiry = expiry;
-}
-// const purchaseDate =
-//   assetType === "hardware"
-//     ? inst.hardware?.purchaseDate
-//     : inst.software?.purchaseDate;
+    // const purchaseCost =
+    //   assetType === "hardware"
+    //     ? inst.hardware?.purchaseCost
+    //     : inst.software?.purchaseCost;
 
-// const purchaseCost =
-//   assetType === "hardware"
-//     ? inst.hardware?.purchaseCost
-//     : inst.software?.purchaseCost;
-
-const snapshot = {
-  assetType,
-  instanceCode,
-  deviceName: inst.deviceName || "-",
-  location: inst.location || "-",
-  status: "in_stock",
-  condition: inst.condition || "new",
-
-  hardware:
-    assetType === "hardware"
-      ? {
-          serialNumber: inst.hardware?.serialNumber || "-",
-          modelNo: inst.hardware?.modelNo || "-",
-          specifications: inst.hardware?.specifications || "-",
-          purchaseDate: inst.hardware?.purchaseDate || null,
-          installationDate: inst.hardware?.installationDate || null,
-          warrantyPurchaseDate:
-            inst.hardware?.warrantyPurchaseDate || null,
-          warrantyExpiry:
-            inst.hardware?.warrantyExpiry || null,
-          insurancePurchaseDate:
-            inst.hardware?.insurancePurchaseDate || null,
-          insuranceExpiry:
-            inst.hardware?.insuranceExpiry || null,
-          nextMaintenanceDate:
-            inst.hardware?.nextMaintenanceDate || null,
-          hasInsurance,
-          insuranceTerm,
-          coverageType: coverageType || [],
-          purchaseCost:
-            inst.hardware?.purchaseCost || null,
-          costs: inst.hardware?.costs || {},
-        }
-      : null,
-
-  software:
-    assetType === "software"
-      ? {
-          licenseKey:
-            inst.software?.licenseKey || "-",
-          licenseNumber:
-            inst.software?.licenseNumber || "-",
-          purchaseDate:
-            inst.software?.purchaseDate || null,
-          installationDate:
-            inst.software?.installationDate || null,
-          renewalDate:
-            inst.software?.renewalDate || null,
-          lastUsedDate:
-            inst.software?.lastUsedDate || null,
-          purchaseCost:
-            inst.software?.purchaseCost || null,
-          costs:
-            inst.software?.costs || {},
-        }
-      : null,
-};
-
-const lifecycle = [];
-
-/* Purchase Event */
-if (purchaseDate) {
-  lifecycle.push({
-    eventType: "purchased",
-    category: "procurement",
-
-    title: "Asset Purchased",
-
-    description: `Asset purchased for ${
-      purchaseCost
-        ? `${purchaseCost.currency || "USD"} ${purchaseCost.amount}`
-        : "N/A"
-    }`,
-
-    performedBy: userId,
-
-    date: new Date(purchaseDate),
-
-    metadata: {
-      assetId: asset._id,
-      assetName: asset.assetName,
+    const snapshot = {
       assetType,
       instanceCode,
       deviceName: inst.deviceName || "-",
       location: inst.location || "-",
-      purchaseDate,
-      purchaseCost,
-      snapshot,
-    },
-  });
-}
+      status: "in_stock",
+      condition: inst.condition || "new",
 
-/* Registration Event */
-lifecycle.push({
-  eventType: "created",
-  category: "instance",
+      hardware:
+        assetType === "hardware"
+          ? {
+            serialNumber: inst.hardware?.serialNumber || "-",
+            modelNo: inst.hardware?.modelNo || "-",
+            specifications: inst.hardware?.specifications || "-",
+            purchaseDate: inst.hardware?.purchaseDate || null,
+            installationDate: inst.hardware?.installationDate || null,
+            warrantyPurchaseDate:
+              inst.hardware?.warrantyPurchaseDate || null,
+            warrantyExpiry:
+              inst.hardware?.warrantyExpiry || null,
+            insurancePurchaseDate:
+              inst.hardware?.insurancePurchaseDate || null,
+            insuranceExpiry:
+              inst.hardware?.insuranceExpiry || null,
+            nextMaintenanceDate:
+              inst.hardware?.nextMaintenanceDate || null,
+            hasInsurance,
+            insuranceTerm,
+            coverageType: coverageType || [],
+            purchaseCost:
+              inst.hardware?.purchaseCost || null,
+            costs: inst.hardware?.costs || {},
+          }
+          : null,
 
-  title: "Instance Registered",
+      software:
+        assetType === "software"
+          ? {
+            licenseKey:
+              inst.software?.licenseKey || "-",
+            licenseNumber:
+              inst.software?.licenseNumber || "-",
+            purchaseDate:
+              inst.software?.purchaseDate || null,
+            installationDate:
+              inst.software?.installationDate || null,
+            renewalDate:
+              inst.software?.renewalDate || null,
+            lastUsedDate:
+              inst.software?.lastUsedDate || null,
+            purchaseCost:
+              inst.software?.purchaseCost || null,
+            costs:
+              inst.software?.costs || {},
+          }
+          : null,
+    };
 
-  description:
-    instances.length > 1
-      ? "Bulk instance upload"
-      : "Instance added to AssetPegasus",
+    const lifecycle = [];
 
-  performedBy: userId,
+    /* Purchase Event */
+    if (purchaseDate) {
+      lifecycle.push({
+        eventType: "purchased",
+        category: "procurement",
 
-  date: new Date(),
+        title: "Asset Purchased",
 
-  metadata: {
-    assetId: asset._id,
-    assetName: asset.assetName,
-    assetType,
-    instanceCode,
-    deviceName: inst.deviceName || "-",
-    location: inst.location || "-",
-    status: "in_stock",
-    condition: inst.condition || "new",
-    snapshot,
-  },
-});
+        description: `Asset purchased for ${purchaseCost
+            ? `${purchaseCost.currency || "USD"} ${purchaseCost.amount}`
+            : "N/A"
+          }`,
 
-upgrades.forEach((upgrade) => {
-  lifecycle.push({
-    eventType: "upgraded",
+        performedBy: userId,
 
-    category: "upgrade",
+        date: new Date(purchaseDate),
 
-    title:
-      upgrade.upgradeType
-        ? `${upgrade.upgradeType} Upgrade`
-        : "Historical Upgrade",
+        metadata: {
+          assetId: asset._id,
+          assetName: asset.assetName,
+          assetType,
+          instanceCode,
+          deviceName: inst.deviceName || "-",
+          location: inst.location || "-",
+          purchaseDate,
+          purchaseCost,
+          snapshot,
+        },
+      });
+    }
 
-    description:
-      upgrade.description ||
+    /* Registration Event */
+    lifecycle.push({
+      eventType: "created",
+      category: "instance",
 
-      `${upgrade.oldValue || ""} → ${upgrade.newValue || ""}`,
+      title: "Instance Registered",
 
-    performedBy:
-      upgrade.performedBy || userId,
+      description:
+        instances.length > 1
+          ? "Bulk instance upload"
+          : "Instance added to AssetPegasus",
 
-    date:
-      upgrade.date || new Date(),
+      performedBy: userId,
 
-    metadata: {
-      upgrade: {
-        upgradeType:
-          upgrade.upgradeType || "other",
+      date: new Date(),
+
+      metadata: {
+        assetId: asset._id,
+        assetName: asset.assetName,
+        assetType,
+        instanceCode,
+        deviceName: inst.deviceName || "-",
+        location: inst.location || "-",
+        status: "in_stock",
+        condition: inst.condition || "new",
+        snapshot,
+      },
+    });
+
+    upgrades.forEach((upgrade) => {
+      lifecycle.push({
+        eventType: "upgraded",
+
+        category: "upgrade",
+
+        title:
+          upgrade.upgradeType
+            ? `${upgrade.upgradeType} Upgrade`
+            : "Historical Upgrade",
 
         description:
-          upgrade.description || "",
-        newCondition:
-          upgrade.newCondition || null,
-        oldValue:
-          upgrade.oldValue || "",
+          upgrade.description ||
 
-        newValue:
-          upgrade.newValue || "",
+          `${upgrade.oldValue || ""} → ${upgrade.newValue || ""}`,
 
-        cost:
-          upgrade.cost || null,
+        performedBy:
+          upgrade.performedBy || userId,
 
-        notes:
-          upgrade.notes || ""
-      }
-    }
-  });
-});
-  const basePayload = {
-    organizationId,
-    assetId,
-    assetTypeRef,
-    assetType,
-    instanceCode,
-    deviceName: inst.deviceName || "",
-    location: inst.location,
-    status: "in_stock",
-    condition: inst.condition || "new",
-    lifecycle,
-    createdBy: userId
-  };
+        date:
+          upgrade.date || new Date(),
 
-  if (assetType === "hardware") {
-const maintenanceCost = {
-  amount: Number(
-    inst.hardware?.costs?.maintenanceCost?.amount || 0
-  ),
-  currency
-};
+        metadata: {
+          upgrade: {
+            upgradeType:
+              upgrade.upgradeType || "other",
 
-const warrantyRenewalCost = {
-  amount: Number(
-    inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
-  ),
-  currency
-};
+            description:
+              upgrade.description || "",
+            newCondition:
+              upgrade.newCondition || null,
+            oldValue:
+              upgrade.oldValue || "",
 
+            newValue:
+              upgrade.newValue || "",
 
-newInstances.push({
-  ...basePayload,
-  upgrades,
-  hardware: {
-    serialNumber:
-      inst.hardware?.serialNumber ||
-      generateSerial(asset, index),
+            cost:
+              upgrade.cost || null,
 
-    modelNo:
-      inst.hardware?.modelNo || "",
-
-    specifications:
-      inst.hardware?.specifications || "",
-
-    purchaseDate:
-      inst.hardware?.purchaseDate || null,
-
-    installationDate:
-      inst.hardware?.installationDate || null,
-
-    warrantyPurchaseDate:
-      inst.hardware?.warrantyPurchaseDate || null,
-
-    warrantyExpiry:
-      inst.hardware?.warrantyExpiry || null,
-
-    nextMaintenanceDate:
-      inst.hardware?.nextMaintenanceDate || null,
-
-    hasInsurance,
-
-    insuranceTerm:
-      hasInsurance
-        ? insuranceTerm
-        : null,
-
-    insurancePurchaseDate:
-      hasInsurance
-        ? insurancePurchaseDate
-        : null,
-
-    insuranceExpiry:
-      hasInsurance
-        ? insuranceExpiry
-        : null,
-
-coverageType:
-  hasInsurance
-    ? coverageType
-    : [],
-
-    purchaseCost,
-
-    costs: {
-      maintenanceCost,
-      warrantyRenewalCost,
-      insuranceCost
-    }
-  }
-});
-  } else {
-    newInstances.push({
-      ...basePayload,
-      upgrades,
-      software: {
-  licenseKey: inst.software?.licenseKey || "",
-  licenseNumber: inst.software?.licenseNumber || "",
-  purchaseDate: inst.software?.purchaseDate || null,
-  installationDate: inst.software?.installationDate || null,
-  renewalDate: inst.software?.renewalDate || null,
-  lastUsedDate: inst.software?.lastUsedDate || null,
-
-  purchaseCost,
-
-  costs: {
-renewalCost: {
-  amount: Number(
-    inst.software?.costs?.renewalCost?.amount || 0
-  ),
-  currency
-}
-  }
-}
+            notes:
+              upgrade.notes || ""
+          }
+        }
+      });
     });
+    const basePayload = {
+      organizationId,
+      assetId,
+      assetTypeRef,
+      assetType,
+      instanceCode,
+      deviceName: inst.deviceName || "",
+      location: inst.location,
+      status: "in_stock",
+      condition: inst.condition || "new",
+      lifecycle,
+      createdBy: userId
+    };
+
+    if (assetType === "hardware") {
+      const maintenanceCost = {
+        amount: Number(
+          inst.hardware?.costs?.maintenanceCost?.amount || 0
+        ),
+        currency
+      };
+
+      const warrantyRenewalCost = {
+        amount: Number(
+          inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
+        ),
+        currency
+      };
+
+
+      newInstances.push({
+        ...basePayload,
+        upgrades,
+        hardware: {
+          serialNumber:
+            inst.hardware?.serialNumber ||
+            generateSerial(asset, index),
+
+          modelNo:
+            inst.hardware?.modelNo || "",
+
+          specifications:
+            inst.hardware?.specifications || "",
+
+          purchaseDate:
+            inst.hardware?.purchaseDate || null,
+
+          installationDate:
+            inst.hardware?.installationDate || null,
+
+          warrantyPurchaseDate:
+            inst.hardware?.warrantyPurchaseDate || null,
+
+          warrantyExpiry:
+            inst.hardware?.warrantyExpiry || null,
+
+          nextMaintenanceDate:
+            inst.hardware?.nextMaintenanceDate || null,
+
+          hasInsurance,
+
+          insuranceTerm:
+            hasInsurance
+              ? insuranceTerm
+              : null,
+
+          insurancePurchaseDate:
+            hasInsurance
+              ? insurancePurchaseDate
+              : null,
+
+          insuranceExpiry:
+            hasInsurance
+              ? insuranceExpiry
+              : null,
+
+          coverageType:
+            hasInsurance
+              ? coverageType
+              : [],
+
+          purchaseCost,
+
+          costs: {
+            maintenanceCost,
+            warrantyRenewalCost,
+            insuranceCost
+          }
+        }
+      });
+    } else {
+      newInstances.push({
+        ...basePayload,
+        upgrades,
+        software: {
+          licenseKey: inst.software?.licenseKey || "",
+          licenseNumber: inst.software?.licenseNumber || "",
+          purchaseDate: inst.software?.purchaseDate || null,
+          installationDate: inst.software?.installationDate || null,
+          renewalDate: inst.software?.renewalDate || null,
+          lastUsedDate: inst.software?.lastUsedDate || null,
+
+          purchaseCost,
+
+          costs: {
+            renewalCost: {
+              amount: Number(
+                inst.software?.costs?.renewalCost?.amount || 0
+              ),
+              currency
+            }
+          }
+        }
+      });
+    }
   }
-}
 
   const saved = await AssetInstance.insertMany(newInstances);
 
@@ -1537,58 +1536,58 @@ renewalCost: {
   );
 
   /* ================= UPDATE PARENT COST ================= */
-const aggregation = await AssetInstance.aggregate([
-  {
-    $match: { assetId: asset._id, organizationId }
-  },
-  {
-    $group: {
-      _id: null,
+  const aggregation = await AssetInstance.aggregate([
+    {
+      $match: { assetId: asset._id, organizationId }
+    },
+    {
+      $group: {
+        _id: null,
 
-      // 🔹 TOTAL COST (ALL COSTS COMBINED)
-      totalCost: {
-        $sum: {
-          $add: [
-            { $ifNull: ["$hardware.purchaseCost.amount", 0] },
-            { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
-            { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
-            { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
+        // 🔹 TOTAL COST (ALL COSTS COMBINED)
+        totalCost: {
+          $sum: {
+            $add: [
+              { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+              { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
+              { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
+              { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
 
-            { $ifNull: ["$software.purchaseCost.amount", 0] },
-            { $ifNull: ["$software.costs.renewalCost.amount", 0] }
-          ]
-        }
-      },
+              { $ifNull: ["$software.purchaseCost.amount", 0] },
+              { $ifNull: ["$software.costs.renewalCost.amount", 0] }
+            ]
+          }
+        },
 
-      // 🔹 YEARLY COST ONLY (recurring)
-      yearlyCost: {
-        $sum: {
-          $add: [
-            { $ifNull: ["$hardware.purchaseCost.amount", 0] },
-            { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
-            { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
-            { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
+        // 🔹 YEARLY COST ONLY (recurring)
+        yearlyCost: {
+          $sum: {
+            $add: [
+              { $ifNull: ["$hardware.purchaseCost.amount", 0] },
+              { $ifNull: ["$hardware.costs.maintenanceCost.amount", 0] },
+              { $ifNull: ["$hardware.costs.insuranceCost.amount", 0] },
+              { $ifNull: ["$hardware.costs.warrantyRenewalCost.amount", 0] },
 
-            { $ifNull: ["$software.purchaseCost.amount", 0] }, // since yearly license
-            { $ifNull: ["$software.costs.renewalCost.amount", 0] }
-          ]
+              { $ifNull: ["$software.purchaseCost.amount", 0] }, // since yearly license
+              { $ifNull: ["$software.costs.renewalCost.amount", 0] }
+            ]
+          }
         }
       }
     }
-  }
-]);
+  ]);
 
 
-const totalCost = aggregation[0]?.totalCost || 0;
-const yearlyCost = aggregation[0]?.yearlyCost || 0;
-const monthlyCost = yearlyCost / 12;
+  const totalCost = aggregation[0]?.totalCost || 0;
+  const yearlyCost = aggregation[0]?.yearlyCost || 0;
+  const monthlyCost = yearlyCost / 12;
 
-await (assetType === "hardware" ? Asset : SoftwareAsset)
-  .findByIdAndUpdate(asset._id, {
-    "financialTracking.totalCost": totalCost,
-    "financialTracking.yearlyCost": yearlyCost,
-    "financialTracking.monthlyCost": monthlyCost
-  });
+  await (assetType === "hardware" ? Asset : SoftwareAsset)
+    .findByIdAndUpdate(asset._id, {
+      "financialTracking.totalCost": totalCost,
+      "financialTracking.yearlyCost": yearlyCost,
+      "financialTracking.monthlyCost": monthlyCost
+    });
 
   // ✅ FINAL RESPONSE
   res.status(201).json({
@@ -1704,18 +1703,18 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
   const userId = req.user?.id;
   const organizationId = req.user?.organizationId;
   const organization = await Organization.findById(
-  organizationId
-).select("currency");
+    organizationId
+  ).select("currency");
 
-if (!organization) {
-  throw new AppError(
-    "Organization not found",
-    404,
-    "ORG_NOT_FOUND"
-  );
-}
+  if (!organization) {
+    throw new AppError(
+      "Organization not found",
+      404,
+      "ORG_NOT_FOUND"
+    );
+  }
 
-const currency = organization.currency;
+  const currency = organization.currency;
   if (!userId || !organizationId) {
     throw new AppError("Unauthorized", 401, "UNAUTHORIZED");
   }
@@ -1749,25 +1748,25 @@ const currency = organization.currency;
   let assetTypeRef = "Asset";
   /* ================= SUBSCRIPTION LIMIT CHECK ================= */
 
-const subscription = await Subscription.findOne({ organizationId });
+  const subscription = await Subscription.findOne({ organizationId });
 
-if (!subscription) {
-  throw new AppError(
-    "No active subscription",
-    403,
-    "NO_SUBSCRIPTION"
-  );
-}
+  if (!subscription) {
+    throw new AppError(
+      "No active subscription",
+      403,
+      "NO_SUBSCRIPTION"
+    );
+  }
 
-const tier = pricingTiers.find(t => t.key === subscription.tier);
+  const tier = pricingTiers.find(t => t.key === subscription.tier);
 
-if (!tier) {
-  throw new AppError(
-    "Invalid subscription tier",
-    500,
-    "INVALID_TIER"
-  );
-}
+  if (!tier) {
+    throw new AppError(
+      "Invalid subscription tier",
+      500,
+      "INVALID_TIER"
+    );
+  }
   if (!asset) {
     asset = await SoftwareAsset.findOne({ _id: assetId, organizationId });
     assetTypeRef = "SoftwareAsset";
@@ -1801,46 +1800,46 @@ if (!tier) {
   /* ================= HELPERS ================= */
   const normalize = (v) => v?.toString().trim();
 
-const parseDateSafe = (d) => {
-  if (!d) return null;
+  const parseDateSafe = (d) => {
+    if (!d) return null;
 
-  // Excel serial date
-  if (typeof d === "number") {
-    const excelEpoch = new Date(
-      Date.UTC(1899, 11, 30)
-    );
+    // Excel serial date
+    if (typeof d === "number") {
+      const excelEpoch = new Date(
+        Date.UTC(1899, 11, 30)
+      );
 
-    excelEpoch.setUTCDate(
-      excelEpoch.getUTCDate() + d
-    );
+      excelEpoch.setUTCDate(
+        excelEpoch.getUTCDate() + d
+      );
 
-    return excelEpoch;
-  }
-
-  const date = new Date(d);
-
-  return isNaN(date.getTime())
-    ? null
-    : date;
-};
-
-const calculateInsuranceExpiry = (date, term) => {
-  if (!date) return null;
-
-  const d = new Date(date);
-
-  if (term === "6_months") {
-    d.setMonth(d.getMonth() + 6);
-  } else {
-    const years = parseInt(term, 10); // "1_year" -> 1, "3_years" -> 3, "10_years" -> 10
-
-    if (!isNaN(years)) {
-      d.setFullYear(d.getFullYear() + years);
+      return excelEpoch;
     }
-  }
 
-  return d;
-};
+    const date = new Date(d);
+
+    return isNaN(date.getTime())
+      ? null
+      : date;
+  };
+
+  const calculateInsuranceExpiry = (date, term) => {
+    if (!date) return null;
+
+    const d = new Date(date);
+
+    if (term === "6_months") {
+      d.setMonth(d.getMonth() + 6);
+    } else {
+      const years = parseInt(term, 10); // "1_year" -> 1, "3_years" -> 3, "10_years" -> 10
+
+      if (!isNaN(years)) {
+        d.setFullYear(d.getFullYear() + years);
+      }
+    }
+
+    return d;
+  };
   const generateSerial = () =>
     `${asset.assetCode}-SN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 
@@ -1853,24 +1852,24 @@ const calculateInsuranceExpiry = (date, term) => {
     try {
       const row = index + 2;
 
-let serialNumber = null;
+      let serialNumber = null;
 
-if (assetType === "hardware") {
+      if (assetType === "hardware") {
 
-  serialNumber = normalize(
-    inst.hardware?.serialNumber
-  );
+        serialNumber = normalize(
+          inst.hardware?.serialNumber
+        );
 
-  if (!serialNumber) {
-    serialNumber = generateSerial();
-  }
+        if (!serialNumber) {
+          serialNumber = generateSerial();
+        }
 
-  if (generatedSerials.has(serialNumber)) {
-    throw new Error("Duplicate serial in request");
-  }
+        if (generatedSerials.has(serialNumber)) {
+          throw new Error("Duplicate serial in request");
+        }
 
-  generatedSerials.add(serialNumber);
-}
+        generatedSerials.add(serialNumber);
+      }
 
       if (!inst.location) {
         throw new Error("Location is required");
@@ -1881,74 +1880,149 @@ if (assetType === "hardware") {
       const instanceCode = `${asset.assetCode}-${Date.now()}-${Math.random()
         .toString(36)
         .slice(2, 6)}`;
-        const purchaseDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.purchaseDate) : parseDateSafe(inst.software?.purchaseDate);
-const nextMaintenanceDate =
-  assetType === "hardware"
-    ? parseDateSafe(inst.hardware?.nextMaintenanceDate)
-    : null;
-const purchaseCost =
-  assetType === "hardware"
-    ? {
-        amount: Number(
-          inst.hardware?.purchaseCost?.amount || 0
-        ),
-        currency
-      }
-    : {
-        amount: Number(
-          inst.software?.purchaseCost?.amount || 0
-        ),
-        currency
-      };
+      const purchaseDate = assetType === "hardware" ? parseDateSafe(inst.hardware?.purchaseDate) : parseDateSafe(inst.software?.purchaseDate);
+      const nextMaintenanceDate =
+        assetType === "hardware"
+          ? parseDateSafe(inst.hardware?.nextMaintenanceDate)
+          : null;
+      const purchaseCost =
+        assetType === "hardware"
+          ? {
+            amount: Number(
+              inst.hardware?.purchaseCost?.amount || 0
+            ),
+            currency
+          }
+          : {
+            amount: Number(
+              inst.software?.purchaseCost?.amount || 0
+            ),
+            currency
+          };
       /* ---------------- HARDWARE ---------------- */
       if (assetType === "hardware") {
-const hasInsurance =
-  inst.hardware?.hasInsurance === true ||
-  inst.hardware?.hasInsurance === "true";
+        const hasInsurance =
+          inst.hardware?.hasInsurance === true ||
+          inst.hardware?.hasInsurance === "true";
 
-const insurancePurchaseDate = hasInsurance
-  ? parseDateSafe(inst.hardware?.insurancePurchaseDate)
-  : null;
+        const insurancePurchaseDate = hasInsurance
+          ? parseDateSafe(inst.hardware?.insurancePurchaseDate)
+          : null;
 
-const insuranceTerm = hasInsurance
-  ? inst.hardware?.insuranceTerm || "1_year"
-  : null;
+        const insuranceTerm = hasInsurance
+          ? inst.hardware?.insuranceTerm || "1_year"
+          : null;
 
-const coverageType = hasInsurance
-  ? inst.hardware?.coverageType || ["comprehensive"]
-  : [];
+        const coverageType = hasInsurance
+          ? inst.hardware?.coverageType || ["comprehensive"]
+          : [];
 
-const insuranceExpiry =
-  hasInsurance && insurancePurchaseDate
-    ? calculateInsuranceExpiry(
-        insurancePurchaseDate,
-        insuranceTerm
-      )
-    : null;
+        const insuranceExpiry =
+          hasInsurance && insurancePurchaseDate
+            ? calculateInsuranceExpiry(
+              insurancePurchaseDate,
+              insuranceTerm
+            )
+            : null;
 
-const insuranceId = hasInsurance
-  ? normalize(inst.hardware?.insuranceId)
-  : null;
-const maintenanceCost = {
-  amount: Number(
-    inst.hardware?.costs?.maintenanceCost?.amount || 0
-  ),
-  currency
-};
+        const insuranceId = hasInsurance
+          ? normalize(inst.hardware?.insuranceId)
+          : null;
+        const maintenanceCost = {
+          amount: Number(
+            inst.hardware?.costs?.maintenanceCost?.amount || 0
+          ),
+          currency
+        };
 
-const warrantyRenewalCost = {
-  amount: Number(
-    inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
-  ),
-  currency
-};
+        const warrantyRenewalCost = {
+          amount: Number(
+            inst.hardware?.costs?.warrantyRenewalCost?.amount || 0
+          ),
+          currency
+        };
 
-const insuranceCost = {
-  amount: Number(
-    inst.hardware?.costs?.insuranceCost?.amount || 0
-  ),
-  currency
-};
+        const insuranceCost = {
+          amount: Number(
+            inst.hardware?.costs?.insuranceCost?.amount || 0
+          ),
+          currency
+        };
+        const lifecycle = [
+  {
+    eventType: "created",
+
+    category: "instance",
+
+    title: "Instance Created",
+
+    description: "Bulk instance upload",
+
+    performedBy: userId,
+
+    date: new Date(),
+
+    metadata: {
+      source: "bulk_upload",
+
+      assetId: asset._id,
+
+      assetName: asset.assetName,
+
+      assetType,
+
+      instanceCode,
+
+      deviceName: inst.deviceName || "-",
+
+      location,
+
+      snapshot
+    }
+  }
+];
+
+if (purchaseDate) {
+  lifecycle.push({
+    eventType: "purchased",
+
+    category: "procurement",
+
+    title: "Asset Purchased",
+
+    description: `Asset purchased for ${
+      purchaseCost
+        ? `${purchaseCost.amount}`
+        : "N/A"
+    }`,
+
+    performedBy: userId,
+
+    date: purchaseDate,
+
+    metadata: {
+      source: "bulk_upload",
+
+      assetId: asset._id,
+
+      assetName: asset.assetName,
+
+      assetType,
+
+      instanceCode,
+
+      deviceName: inst.deviceName || "-",
+
+      location,
+
+      purchaseDate,
+
+      purchaseCost,
+
+      snapshot
+    }
+  });
+}
         validInstances.push({
           organizationId,
           assetId,
@@ -1986,28 +2060,8 @@ const insuranceCost = {
                 : null
             }
           },
-
-lifecycle: [
-  {
-    eventType: "created",
-
-    category: "instance",
-
-    title: "Instance Created",
-
-    description: "Bulk instance upload",
-
-    performedBy: userId,
-
-    date: new Date(),
-
-    metadata: {
-      source: "bulk_upload",
-      assetId: asset._id,
-      assetType
-    }
-  }
-],
+          
+          lifecycle,
 
           createdBy: userId
         });
@@ -2015,14 +2069,61 @@ lifecycle: [
 
       /* ---------------- SOFTWARE ---------------- */
       else {
-const renewalCost = {
-  amount: Number(
-    inst.software?.costs?.renewalCost?.amount || 0
-  ),
-  currency
-};
-          const renewalDate = parseDateSafe(inst.software?.renewalDate);
-          const installationDate = parseDateSafe(inst.software?.installationDate);
+        const lifecycle = [
+  {
+    eventType: "created",
+    category: "instance",
+    title: "Instance Created",
+    description: "Bulk instance upload",
+    performedBy: userId,
+    date: new Date(),
+    metadata: {
+      source: "bulk_upload",
+      assetId: asset._id,
+      assetName: asset.assetName,
+      assetType,
+      instanceCode,
+      deviceName: inst.deviceName || "-",
+      location,
+      snapshot
+    }
+  }
+];
+
+if (purchaseDate) {
+  lifecycle.push({
+    eventType: "purchased",
+    category: "procurement",
+    title: "Asset Purchased",
+    description: `Asset purchased for ${
+      purchaseCost
+        ? `${purchaseCost.amount}`
+        : "N/A"
+    }`,
+    performedBy: userId,
+    date: purchaseDate,
+    metadata: {
+      source: "bulk_upload",
+      assetId: asset._id,
+      assetName: asset.assetName,
+      assetType,
+      instanceCode,
+      deviceName: inst.deviceName || "-",
+      location,
+      purchaseDate,
+      purchaseCost,
+      snapshot
+    }
+  });
+}
+        const renewalCost = {
+          amount: Number(
+            inst.software?.costs?.renewalCost?.amount || 0
+          ),
+          currency
+        };
+        const renewalDate = parseDateSafe(inst.software?.renewalDate);
+        const installationDate = parseDateSafe(inst.software?.installationDate);
         validInstances.push({
           organizationId,
           assetId,
@@ -2043,33 +2144,11 @@ const renewalCost = {
               normalize(inst.software?.licenseNumber) || "",
             installationDate,
             renewalDate,
-            costs : {
+            costs: {
               renewalCost
             },
             purchaseCost
           },
-
-lifecycle: [
-  {
-    eventType: "created",
-
-    category: "instance",
-
-    title: "Instance Created",
-
-    description: "Bulk instance upload",
-
-    performedBy: userId,
-
-    date: new Date(),
-
-    metadata: {
-      source: "bulk_upload",
-      assetId: asset._id,
-      assetType
-    }
-  }
-],
 
           createdBy: userId
         });
@@ -2085,41 +2164,41 @@ lifecycle: [
   }
   /* ================= INSTANCE LIMIT VALIDATION ================= */
 
-let currentCount;
+  let currentCount;
 
-if (assetType === "hardware") {
-  currentCount = await AssetInstance.countDocuments({
-    organizationId,
-    assetType: "hardware"
-  });
-} else {
-  currentCount = await AssetInstance.countDocuments({
-    organizationId,
-    assetType: "software"
-  });
-}
+  if (assetType === "hardware") {
+    currentCount = await AssetInstance.countDocuments({
+      organizationId,
+      assetType: "hardware"
+    });
+  } else {
+    currentCount = await AssetInstance.countDocuments({
+      organizationId,
+      assetType: "software"
+    });
+  }
 
-const limit =
-  assetType === "hardware"
-    ? tier.hardwareAssets
-    : tier.softwareAssets;
+  const limit =
+    assetType === "hardware"
+      ? tier.hardwareAssets
+      : tier.softwareAssets;
 
-if (
-  limit !== "unlimited" &&
-  currentCount + validInstances.length > limit
-) {
-  throw new AppError(
-    `${assetType} instance limit exceeded`,
-    403,
-    "INSTANCE_LIMIT_EXCEEDED",
-    null,
-    {
-      limit,
-      current: currentCount,
-      attempted: validInstances.length
-    }
-  );
-}
+  if (
+    limit !== "unlimited" &&
+    currentCount + validInstances.length > limit
+  ) {
+    throw new AppError(
+      `${assetType} instance limit exceeded`,
+      403,
+      "INSTANCE_LIMIT_EXCEEDED",
+      null,
+      {
+        limit,
+        current: currentCount,
+        attempted: validInstances.length
+      }
+    );
+  }
   /* ================= SERIAL DB CHECK ================= */
   const existingSerials = await AssetInstance.find({
     organizationId,
@@ -2135,71 +2214,71 @@ if (
   }
 
   /* ================= INSERT ================= */
-let inserted = [];
+  let inserted = [];
 
-console.log("VALID INSTANCES:", validInstances.length);
+  console.log("VALID INSTANCES:", validInstances.length);
 
-try {
-  console.log("BEFORE INSERT", validInstances.length);
-  if (validInstances.length) {
-    console.log(
-  "MODEL:",
-  AssetInstance.modelName
-);
+  try {
+    console.log("BEFORE INSERT", validInstances.length);
+    if (validInstances.length) {
+      console.log(
+        "MODEL:",
+        AssetInstance.modelName
+      );
 
-console.log(
-  "COLLECTION:",
-  AssetInstance.collection.name
-);
+      console.log(
+        "COLLECTION:",
+        AssetInstance.collection.name
+      );
 
-console.log(
-  "FIRST DOC:"
-);
+      console.log(
+        "FIRST DOC:"
+      );
 
-console.dir(
-  validInstances[0],
-  { depth: null }
-);
-    inserted = await AssetInstance.insertMany(
-      validInstances,
-      {
-        ordered: false
-      }
-    );
-    console.log("INSERT RESULT:", inserted);
-    
-    console.log(
-      "INSERTED COUNT:",
-      inserted.length
-    );
+      console.dir(
+        validInstances[0],
+        { depth: null }
+      );
+      inserted = await AssetInstance.insertMany(
+        validInstances,
+        {
+          ordered: false
+        }
+      );
+      console.log("INSERT RESULT:", inserted);
 
-    console.log(
-      "INSERTED DOCS:",
-      inserted.map(i => i._id)
-    );
-  }
+      console.log(
+        "INSERTED COUNT:",
+        inserted.length
+      );
 
-} catch (err) {
+      console.log(
+        "INSERTED DOCS:",
+        inserted.map(i => i._id)
+      );
+    }
 
-  console.error(
-    "INSERT MANY ERROR:"
-  );
+  } catch (err) {
 
-  console.error(err);
-
-  if (err.writeErrors) {
     console.error(
-      "WRITE ERRORS:"
+      "INSERT MANY ERROR:"
     );
 
-    console.dir(
-      err.writeErrors,
-      { depth: null }
-    );
+    console.error(err);
+
+    if (err.writeErrors) {
+      console.error(
+        "WRITE ERRORS:"
+      );
+
+      console.dir(
+        err.writeErrors,
+        { depth: null }
+      );
+    }
+
+    throw err;
   }
-
-  throw err;
-}
   /* ================= RESPONSE ================= */
   res.status(200).json({
     success: true,
@@ -2228,20 +2307,20 @@ const deleteInstance = async (req, res) => {
       });
     }
     console.log("DELETE INSTANCE DATA");
-console.log({
-  id: instance._id,
-  status: instance.status,
-  assignedTo: instance.assignedTo,
-  type: typeof instance.assignedTo,
-});
+    console.log({
+      id: instance._id,
+      status: instance.status,
+      assignedTo: instance.assignedTo,
+      type: typeof instance.assignedTo,
+    });
     // Optional safety check
-if (instance.status === "in_use") {
-  return res.status(400).json({
-    success: false,
-    message:
-      "Cannot delete an assigned instance. Unassign first.",
-  });
-}
+    if (instance.status === "in_use") {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Cannot delete an assigned instance. Unassign first.",
+      });
+    }
 
     await AssetInstance.findByIdAndDelete(id);
 
@@ -2283,15 +2362,15 @@ const formatCost = async (cost) => {
     convertedAt: new Date()
   };
 };
-  module.exports = {
-    addAsset,
-    updateAsset,
-    deleteAsset,
-    getAllAssets,
-    bulkUploadInstances,
-    bulkUploadAssets,
-    createAssetInstance,
-    getAssetById,
-    updateAssetInstance,
-    deleteInstance
-  };
+module.exports = {
+  addAsset,
+  updateAsset,
+  deleteAsset,
+  getAllAssets,
+  bulkUploadInstances,
+  bulkUploadAssets,
+  createAssetInstance,
+  getAssetById,
+  updateAssetInstance,
+  deleteInstance
+};
