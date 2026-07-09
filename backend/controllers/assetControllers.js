@@ -1212,10 +1212,10 @@ const createAssetInstance = asyncHandler(async (req, res, next) => {
 
       insuranceExpiry = expiry;
     }
-    // const purchaseDate =
-    //   assetType === "hardware"
-    //     ? inst.hardware?.purchaseDate
-    //     : inst.software?.purchaseDate;
+    const purchaseDate =
+      assetType === "hardware"
+        ? inst.hardware?.purchaseDate
+        : inst.software?.purchaseDate;
 
     // const purchaseCost =
     //   assetType === "hardware"
