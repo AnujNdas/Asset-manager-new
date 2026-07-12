@@ -1011,9 +1011,10 @@ pushLifecycleEvent({
 });
 }
 const hasUpgrade =
-  upgradeDescription?.trim() ||
-  condition;
-
+  !!upgradeDescription?.trim() ||
+  upgradeCost !== undefined ||
+  upgradeDate;
+  
 if (hasUpgrade) {
   lifecycleEntries.push({
     eventType: "upgraded",
