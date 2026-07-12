@@ -207,19 +207,17 @@ insuranceTerm:
     try {
 const payload = {
   condition: form.condition || undefined,
-
-  upgradeDescription:
-    form.upgradeDescription || undefined,
-
-  upgradeNotes:
-    form.upgradeNotes || undefined,
-
-  upgradeDate:
-    form.upgradeDate || undefined,
-
-  upgradeCost:
-    Number(form.upgradeCost) || 0,
 };
+const isUpgrade =
+form.upgradeDescription?.trim() ||
+Number(form.upgradeCost) > 0;
+
+if (isUpgrade) {
+payload.upgradeDescription = form.upgradeDescription.trim();
+payload.upgradeNotes = form.upgradeNotes || undefined;
+payload.upgradeDate = form.upgradeDate || undefined;
+payload.upgradeCost = Number(form.upgradeCost) || 0;
+}
 if (isHardware) {
   if (form.maintenancePerformedOn) {
   payload.maintenancePerformedOn =
