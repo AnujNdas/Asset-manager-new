@@ -523,6 +523,7 @@ upgrade: {
 // PUT /instances/:id/upgrade
 
 const upgradeInstance = async (req, res) => {
+  console.log(req.body);
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -1014,7 +1015,7 @@ const hasUpgrade =
   !!upgradeDescription?.trim() ||
   upgradeCost !== undefined ||
   upgradeDate;
-  
+
 if (hasUpgrade) {
   lifecycleEntries.push({
     eventType: "upgraded",
