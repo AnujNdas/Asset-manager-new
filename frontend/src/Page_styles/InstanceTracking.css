@@ -974,6 +974,49 @@
   background: #948979;
   color: #222831;
 }
+.upgrade-section{
+    margin-bottom:28px;
+    padding:22px;
+    border:1px solid #948979;
+    border-radius:14px;
+    background:#222831;
+}
+
+.section-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+    padding-bottom:12px;
+    border-bottom:1px solid #DFD0B8;
+}
+
+.section-header svg{
+    font-size:22px;
+    color:#DFD0B8;
+}
+
+.section-header h3{
+    margin:0;
+    margin-bottom: 0px !important;
+    font-size:18px;
+    font-weight:600;
+}
+
+.current-value,
+.input-group small{
+    display:block;
+    color:#777;
+    margin-bottom:6px;
+    font-size:13px;
+    font-style:italic;
+}
+
+.grid-2{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
 /* ===========================
    TABLET
 =========================== */

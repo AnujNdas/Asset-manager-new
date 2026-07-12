@@ -17,7 +17,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
   const { organization } = useOrganization();
   const currency = organization?.currency || "USD";
   const currencySymbol = CURRENCY_SYMBOLS[currency] || "$";
-  console.log("Rendering InstanceCard for:", instance);
+  // console.log("Rendering InstanceCard for:", instance);
   const { registerTour } = useTour();
     const driverObj = driver({
       showProgress: true,
@@ -92,7 +92,7 @@ const InstanceCard = ({ instance, onReassign, onHistory, onUpgrade }) => {
   const hw = instance.hardware || {};
   const sw = instance.software || {};
   const assignment = instance.assignment;
-  console.log(instance.assignment);
+  // console.log(instance.assignment);
 
   // Get all upgrade lifecycle entries
 const upgradeEvents =

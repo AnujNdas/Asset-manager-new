@@ -548,7 +548,13 @@ const upgradeInstance = async (req, res) => {
       newInstallationDate,
       newWarrantyPurchaseDate,     // ✅ ADDED
       newInsurancePurchaseDate,    // ✅ ADDED
+      // 🔹 Hardware Event Dates
+maintenancePerformedOn,
+warrantyRenewedOn,
+insuranceRenewedOn,
 
+// 🔹 Software Event Dates
+licenseRenewedOn,
       // 🔹 Software Dates
       newRenewalDate,
       newLastUsedDate,
@@ -858,13 +864,18 @@ const pushLifecycleEvent = ({
   title,
   action,
   description,
-  cost = null
+  cost = null,
+  eventDate
 }) => {
+
   lifecycleEntries.push({
+
     eventType,
+
     category: "service",
 
     title,
+
     description,
 
     performedBy: req.user.id,
@@ -872,110 +883,132 @@ const pushLifecycleEvent = ({
     action,
 
     from: beforeSnapshot,
+
     to: afterSnapshot,
 
-    date: effectiveUpgradeDate,
+    date:
+      eventDate && !isNaN(new Date(eventDate))
+        ? new Date(eventDate)
+        : new Date(),
 
     notes: upgradeNotes || "",
 
     metadata: {
+
       performedBy: req.user.id,
 
       cost,
 
       from: beforeSnapshot,
+
       to: afterSnapshot
+
     }
+
   });
+
 };
 if (
   maintenanceCost !== undefined ||
   newMaintenanceDate
 ) {
-  pushLifecycleEvent({
-    eventType: "maintenance",
-    title: "Maintenance Performed",
-    action: "MAINTENANCE",
-    description:
-      upgradeDescription ||
-      "Maintenance performed",
+pushLifecycleEvent({
 
-    cost: {
-      amount: Number(maintenanceCost) || 0,
-      currency
-    }
-  });
+  eventType: "maintenance",
+
+  title: "Maintenance Performed",
+
+  action: "MAINTENANCE",
+
+  description:
+    upgradeDescription ||
+    "Maintenance performed",
+
+  eventDate: maintenancePerformedOn,
+
+  cost: {
+    amount: Number(maintenanceCost) || 0,
+    currency
+  }
+
+});
 }
 if (
   warrantyRenewalCost !== undefined ||
   newWarrantyExpiry ||
   newWarrantyPurchaseDate
 ) {
-  pushLifecycleEvent({
-    eventType: "warranty_renewal",
+pushLifecycleEvent({
 
-    title: "Warranty Renewed",
+  eventType: "warranty_renewal",
 
-    action: "WARRANTY_RENEWAL",
+  title: "Warranty Renewed",
 
-    description:
-      upgradeDescription ||
-      "Warranty renewed",
+  action: "WARRANTY_RENEWAL",
 
-    cost: {
-      amount:
-        Number(warrantyRenewalCost) || 0,
+  description:
+    upgradeDescription ||
+    "Warranty renewed",
 
-      currency
-    }
-  });
+  eventDate: warrantyRenewedOn,
+
+  cost: {
+    amount: Number(warrantyRenewalCost) || 0,
+    currency
+  }
+
+});
 }
 if (
   insuranceCost !== undefined ||
   newInsuranceExpiry ||
   newInsurancePurchaseDate
 ) {
-  pushLifecycleEvent({
-    eventType: "insurance_renewal",
+pushLifecycleEvent({
 
-    title: "Insurance Renewed",
+  eventType: "insurance_renewal",
 
-    action: "INSURANCE_RENEWAL",
+  title: "Insurance Renewed",
 
-    description:
-      upgradeDescription ||
-      "Insurance renewed",
+  action: "INSURANCE_RENEWAL",
 
-    cost: {
-      amount:
-        Number(insuranceCost) || 0,
+  description:
+    upgradeDescription ||
+    "Insurance renewed",
 
-      currency
-    }
-  });
+  eventDate: insuranceRenewedOn,
+
+  cost: {
+    amount: Number(insuranceCost) || 0,
+    currency
+  }
+
+});
 }
 if (
   renewalCost !== undefined ||
   newRenewalDate
 ) {
-  pushLifecycleEvent({
-    eventType: "license_renewal",
+pushLifecycleEvent({
 
-    title: "License Renewed",
+  eventType: "license_renewal",
 
-    action: "LICENSE_RENEWAL",
+  title: "License Renewed",
 
-    description:
-      upgradeDescription ||
-      "License renewed",
+  action: "LICENSE_RENEWAL",
 
-    cost: {
-      amount:
-        Number(renewalCost) || 0,
+  description:
+    upgradeDescription ||
+    "License renewed",
 
-      currency
-    }
-  });
+  eventDate: licenseRenewedOn,
+
+  cost: {
+    amount: Number(renewalCost) || 0,
+    currency
+  }
+
+});
 }
 const hasUpgrade =
   upgradeDescription?.trim() ||
