@@ -1027,7 +1027,7 @@ const renderWarranty = () => {
   const daysLeft = Math.ceil(
     (expiry - new Date()) / (1000 * 60 * 60 * 24)
   );
-
+  
   return (
 
     <React.Fragment key={item.instanceId}>
@@ -1113,47 +1113,54 @@ const renderWarranty = () => {
     </h4>
 
     <div className="yearly-cost-grid">
+{item.yearlyWarranty.map((year) => {
 
-      {item.yearlyWarranty.map((year) => (
+  const currentYear = new Date().getFullYear();
 
-        <div
-          className="year-card"
-          key={year.year}
-        >
+let badge = null;
 
-          <h4>Year :- {year.year}</h4>
+if (year.year > currentYear) {
+  badge = { text: "Upcoming", className: "upcoming" };
+} else if (year.year === currentYear) {
+  badge = { text: "Current", className: "current" };
+} else {
+  badge = { text: "Completed", className: "completed" };
+}
+  const isUpcoming = year.year > currentYear;
 
-          <div className="year-row">
+  return (
 
-            <span>Purchase Cost</span>
+    <div
+      className="year-card"
+      key={year.year}
+    >
 
-            <span>
-              {formatCurrency(year.purchaseCost || 0)}
-            </span>
+  <span className={`year-badge ${badge.className}`}>
+    {badge.text}
+  </span>
+ <div className="year-card-header">
+  <h4>Year :- {year.year}</h4>
+</div>
 
-          </div>
+      <div className="year-row">
+        <span>Purchase Cost</span>
+        <span>{formatCurrency(year.purchaseCost || 0)}</span>
+      </div>
 
-          <div className="year-row">
+      <div className="year-row">
+        <span>Warranty Cost</span>
+        <span>{formatCurrency(year.warrantyCost || 0)}</span>
+      </div>
 
-            <span>Warranty Cost</span>
+      <div className="year-total">
+        Total : {formatCurrency(year.totalCost || 0)}
+      </div>
 
-            <span>
-              {formatCurrency(year.warrantyCost || 0)}
-            </span>
+    </div>
 
-          </div>
+  );
 
-          <div className="year-total">
-
-            Total :
-            {" "}
-            {formatCurrency(year.totalCost || 0)}
-
-          </div>
-
-        </div>
-
-      ))}
+})}
 
     </div>
 
@@ -1622,55 +1629,87 @@ const renderMaintenance = () => (
 
     <div className="yearly-cost-grid">
 
-      {yearlyHistory.map((year) => (
+{yearlyHistory.map((year) => {
 
-        <div
-          key={year.year}
-          className="year-card"
-        >
+  const currentYear = new Date().getFullYear();
 
-          <h4>{year.year}</h4>
+  let badge = null;
 
-       <div className="year-row">
-  <span>Purchase</span>
-  <span>{formatCurrency(year.purchaseCost || 0)}</span>
-</div>
+  if (year.year > currentYear) {
+    badge = {
+      text: "Upcoming",
+      className: "upcoming",
+    };
+  } else if (year.year === currentYear) {
+    badge = {
+      text: "Current",
+      className: "current",
+    };
+  } else {
+    badge = {
+      text: "Completed",
+      className: "completed",
+    };
+  }
 
-{item.assetType === "hardware" ? (
-  <>
-    <div className="year-row">
-      <span>Maintenance</span>
-      <span>{formatCurrency(year.maintenanceCost || 0)}</span>
-    </div>
+  return (
 
-    <div className="year-row">
-      <span>Warranty</span>
-      <span>{formatCurrency(year.warrantyCost || 0)}</span>
-    </div>
+    <div
+      key={year.year}
+      className="year-card"
+    >
 
-    <div className="year-row">
-      <span>Insurance</span>
-      <span>{formatCurrency(year.insuranceCost || 0)}</span>
-    </div>
+      <span className={`year-badge ${badge.className}`}>
+        {badge.text}
+      </span>
 
-    <div className="year-row">
-      <span>Upgrade</span>
-      <span>{formatCurrency(year.upgradeCost || 0)}</span>
-    </div>
-  </>
-) : (
-  <div className="year-row">
-    <span>Renewal</span>
-    <span>{formatCurrency(year.renewalCost || 0)}</span>
-  </div>
-)}
+      <div className="year-card-header">
+        <h4>Year :- {year.year}</h4>
+      </div>
 
-<div className="year-total">
-  Total : {formatCurrency(year.totalCost || 0)}
-</div>
+      <div className="year-row">
+        <span>Purchase</span>
+        <span>{formatCurrency(year.purchaseCost || 0)}</span>
+      </div>
+
+      {item.assetType === "hardware" ? (
+        <>
+          <div className="year-row">
+            <span>Maintenance</span>
+            <span>{formatCurrency(year.maintenanceCost || 0)}</span>
+          </div>
+
+          <div className="year-row">
+            <span>Warranty</span>
+            <span>{formatCurrency(year.warrantyCost || 0)}</span>
+          </div>
+
+          <div className="year-row">
+            <span>Insurance</span>
+            <span>{formatCurrency(year.insuranceCost || 0)}</span>
+          </div>
+
+          <div className="year-row">
+            <span>Upgrade</span>
+            <span>{formatCurrency(year.upgradeCost || 0)}</span>
+          </div>
+        </>
+      ) : (
+        <div className="year-row">
+          <span>Renewal</span>
+          <span>{formatCurrency(year.renewalCost || 0)}</span>
         </div>
+      )}
 
-      ))}
+      <div className="year-total">
+        Total : {formatCurrency(year.totalCost || 0)}
+      </div>
+
+    </div>
+
+  );
+
+})}
 
     </div>
 

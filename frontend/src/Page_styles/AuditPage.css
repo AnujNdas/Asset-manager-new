@@ -413,6 +413,27 @@
     border-top:1px solid #ddd;
     font-weight:600;
 }
+.year-badge {
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  position: relative;
+  top: -15%;
+}
+.year-badge.upcoming{
+    background:#DFD0B8;
+    color:#222831;
+}
+
+.year-badge.current{
+    background:#4aCf50;
+    color:#222831;
+}
+
+.year-badge.completed{
+    background:#6b7280;
+    color:#fff;
+}
 @media (max-width: 1024px){
 
 .audit-header{

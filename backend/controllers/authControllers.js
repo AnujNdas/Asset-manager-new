@@ -79,14 +79,55 @@ const sendOtp = async (req, res) => {
     await Otp.deleteMany({ email });
     await Otp.create({ email, otp });
 
-    const html = `
-      <div style="font-family:sans-serif;padding:10px;">
-        <h2>Your OTP Code</h2>
-        <p>Use the code below to verify your account:</p>
-        <h1 style="letter-spacing:5px;">${otp}</h1>
-        <p>This code will expire in 5 minutes.</p>
-      </div>
-    `;
+   const html = `
+<div style="font-family:Arial,sans-serif;background:#f4f4f4;padding:30px;">
+  <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:10px;padding:40px;text-align:center;">
+
+    <img
+      src="https://assetpegasus.com/images/logo2.png"
+      alt="Asset Pegasus"
+      style="width:180px;margin-bottom:20px;"
+    />
+
+    <h2 style="color:#333;margin-bottom:10px;">
+      Verify Your Email
+    </h2>
+
+    <p style="color:#666;font-size:15px;">
+      We received your request for a verification code.
+    </p>
+
+    <div style="
+      display:inline-block;
+      margin:25px 0;
+      padding:15px 30px;
+      background:#6C63FF;
+      color:#fff;
+      font-size:32px;
+      font-weight:bold;
+      letter-spacing:8px;
+      border-radius:8px;
+    ">
+      ${otp}
+    </div>
+
+    <p style="color:#555;">
+      This code will expire in <strong>5 minutes</strong>.
+    </p>
+
+    <p style="font-size:13px;color:#999;margin-top:30px;">
+      Never share this code with anyone. Asset Pegasus will never ask for your OTP.
+    </p>
+
+    <hr style="margin:30px 0;border:none;border-top:1px solid #eee;" />
+
+    <p style="font-size:12px;color:#999;">
+      © ${new Date().getFullYear()} Asset Pegasus. All rights reserved.
+    </p>
+
+  </div>
+</div>
+`;
 
     await sendBrevoEmail(email, "Your OTP for Signup", html);
     res.status(200).json({ success: true, message: "OTP sent successfully" });
