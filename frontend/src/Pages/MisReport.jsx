@@ -2056,7 +2056,7 @@ const lifecycleAssets = Object.values(
         instanceId: item.instanceId,
 
         assetName: item.assetName,
-
+        purchase : item.purchaseDate,
         assetCode: item.assetCode,
 
         instanceCode: item.instanceCode,
@@ -2065,12 +2065,12 @@ const lifecycleAssets = Object.values(
 
         deviceName: item.deviceName,
 
-        status: item.metadata?.status || "-",
+        status: item.status || "-",
 
         createdAt: item.createdAt,
 
         lastActivity: item.date,
-        purchaseDate: item.metadata?.snapshot?.hardware?.purchaseDate,
+        // purchaseDate: item.metadata?.snapshot?.hardware?.purchaseDate,
 
         events: []
 
@@ -2095,7 +2095,6 @@ const lifecycleAssets = Object.values(
 
 );
 
-
 const renderLifecycle = () => (
   <div className="audit-table-wrapper">
 
@@ -2118,7 +2117,6 @@ const renderLifecycle = () => (
       <tbody>
 
         {lifecycleAssets.map((asset) => (
-
           <React.Fragment key={asset.instanceId}>
 
             {/* Main Row */}
@@ -2158,7 +2156,7 @@ const renderLifecycle = () => (
               <td>{asset.events?.length || 0}</td>
 
               <td>
-                {asset.purchaseDate}
+                {asset.purchase.toLocaleDateString}
               </td>
 
               <td>
@@ -2225,8 +2223,8 @@ const renderLifecycle = () => (
 <div>
 <label>Purchase Date</label>
 <p>
-{asset.purchaseDate
-  ? new Date(asset.purchaseDate).toLocaleDateString()
+{asset.purchase
+  ? new Date(asset.purchase).toLocaleDateString()
   : "-"}
 </p>
 </div>
@@ -2243,7 +2241,7 @@ const renderLifecycle = () => (
 
 {/* Hardware Details */}
 
-{asset.assetType === "hardware" && (
+{/* {asset.assetType === "hardware" && (
 
 <div className="asset-details-grid">
 
@@ -2270,7 +2268,7 @@ const renderLifecycle = () => (
 
 </div>
 
-)}
+)} */}
 
 {/* Software Details */}
 

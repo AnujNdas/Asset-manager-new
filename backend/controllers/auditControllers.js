@@ -359,34 +359,40 @@ const yearlyInsurance = [];
 
 if (asset.purchaseDate) {
 
+    const purchaseYear = new Date(asset.purchaseDate).getFullYear();
+
+    const insurancePurchasedSameYear =
+        asset.insurancePurchaseDate &&
+        new Date(asset.insurancePurchaseDate).getFullYear() === purchaseYear;
+
+    const insuranceCost = insurancePurchasedSameYear
+        ? asset.insuranceCost || 0
+        : 0;
+
     yearlyInsurance.push({
-
-        year: new Date(asset.purchaseDate).getFullYear(),
-
+        year: purchaseYear,
         purchaseCost: asset.purchaseCost || 0,
-
-        insuranceCost: 0,
-
-        totalCost: asset.purchaseCost || 0
-
+        insuranceCost,
+        totalCost:
+            (asset.purchaseCost || 0) +
+            insuranceCost
     });
 
 }
 
-if (asset.insuranceExpiry && asset.insuranceCost > 0) {
-
+if (
+    asset.insuranceExpiry &&
+    asset.insuranceCost > 0 &&
+    asset.insurancePurchaseDate &&
+    new Date(asset.insuranceExpiry).getFullYear() !==
+    new Date(asset.insurancePurchaseDate).getFullYear()
+) {
     yearlyInsurance.push({
-
         year: new Date(asset.insuranceExpiry).getFullYear(),
-
         purchaseCost: 0,
-
-        insuranceCost: asset.insuranceCost || 0,
-
-        totalCost: asset.insuranceCost || 0
-
+        insuranceCost: asset.insuranceCost,
+        totalCost: asset.insuranceCost
     });
-
 }
 if (asset.insuranceExpiry) {
 
