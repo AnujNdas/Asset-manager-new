@@ -9,6 +9,7 @@ import { exportAuditPDF } from "../utils/exportPdfFile";
 import { exportAuditExcel } from "../utils/exportExcelFile";
 import { useOrganization } from "../Context/OrganizationContext";
 import { CURRENCY_SYMBOLS } from "../utils/currency.js";
+import Loader from "../Components/Loader.jsx"
 const AuditPage = () => {
   const { organization } = useOrganization();
   const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "NA";
@@ -2657,7 +2658,10 @@ const renderFinancial = () => (
       default:
          return null;
    }
+   setLoading(false)
 };
+
+if (loading) return <Loader/>
   return (
     <div className="audit-page">
 
