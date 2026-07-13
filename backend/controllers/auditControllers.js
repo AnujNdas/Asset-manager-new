@@ -272,6 +272,8 @@ const asset = {
         hardware.warrantyExpiry || null,
     warrantyPurchaseDate:
         hardware.warrantyPurchaseDate || null,
+    insurancePurchaseDate:
+        hardware.insurancePurchaseDate || null,
     insuranceExpiry:
         hardware.insuranceExpiry || null,
     renewalDate:
