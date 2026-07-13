@@ -428,7 +428,7 @@ if (asset.insuranceExpiry) {
         insuranceExpiry: asset.insuranceExpiry,
 
         insuranceCost: asset.insuranceCost,
-        coverageType : asset.coverageType
+        coverageType : asset.coverageType,
         totalCost: asset.totalCost,
         yearlyInsurance
 
