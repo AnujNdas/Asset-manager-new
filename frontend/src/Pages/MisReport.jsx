@@ -1380,6 +1380,11 @@ daysLeft < 0
 <label>Serial Number</label>
 <p>{item.serialNumber || "-"}</p>
 </div>
+<div>
+<label>Coverage Types</label>
+<p>{item.coverageType || "-"}</p>
+</div>
+
 
 </div>
 

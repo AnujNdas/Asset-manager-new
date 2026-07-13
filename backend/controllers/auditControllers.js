@@ -416,7 +416,7 @@ if (asset.insuranceExpiry) {
         serialNumber: asset.serialNumber,
 
         modelNo: asset.modelNo,
-
+        purchaseCost : asset.purchaseCost,
         location: asset.location,
 
         status: asset.status,
