@@ -1398,32 +1398,63 @@ Insurance Cost History
 
 <div className="yearly-cost-grid">
 
-{item.yearlyInsurance.map(year => (
+{item.yearlyInsurance.map((year) => {
 
-<div
-key={year.year}
-className="year-card"
->
+  const currentYear = new Date().getFullYear();
 
-<h4>{year.year}</h4>
+  let badge = null;
 
-<div className="year-row">
-<span>Purchase</span>
-<span>{formatCurrency(year.purchaseCost || 0)}</span>
-</div>
+  if (year.year > currentYear) {
+    badge = {
+      text: "Upcoming",
+      className: "upcoming",
+    };
+  } else if (year.year === currentYear) {
+    badge = {
+      text: "Current",
+      className: "current",
+    };
+  } else {
+    badge = {
+      text: "Completed",
+      className: "completed",
+    };
+  }
 
-<div className="year-row">
-<span>Insurance</span>
-<span>{formatCurrency(year.insuranceCost || 0)}</span>
-</div>
+  return (
 
-<div className="year-total">
-Total: {formatCurrency(year.totalCost || 0)}
-</div>
+    <div
+      key={year.year}
+      className="year-card"
+    >
 
-</div>
+      <span className={`year-badge ${badge.className}`}>
+        {badge.text}
+      </span>
 
-))}
+      <div className="year-card-header">
+        <h4>Year :- {year.year}</h4>
+      </div>
+
+      <div className="year-row">
+        <span>Purchase</span>
+        <span>{formatCurrency(year.purchaseCost || 0)}</span>
+      </div>
+
+      <div className="year-row">
+        <span>Insurance</span>
+        <span>{formatCurrency(year.insuranceCost || 0)}</span>
+      </div>
+
+      <div className="year-total">
+        Total : {formatCurrency(year.totalCost || 0)}
+      </div>
+
+    </div>
+
+  );
+
+})}
 
 </div>
 

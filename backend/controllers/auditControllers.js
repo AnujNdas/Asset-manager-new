@@ -299,12 +299,34 @@ assetLookup[inst._id.toString()] = asset;
 const yearlyWarranty = [];
 
 if (asset.purchaseDate) {
-  yearlyWarranty.push({
-    year: new Date(asset.purchaseDate).getFullYear(),
-    purchaseCost: asset.purchaseCost || 0,
-    warrantyCost: 0,
-    totalCost: asset.purchaseCost || 0,
-  });
+
+    const purchaseYear = new Date(asset.purchaseDate).getFullYear();
+    const expiryYear = asset.warrantyExpiry
+        ? new Date(asset.warrantyExpiry).getFullYear()
+        : null;
+
+    yearlyWarranty.push({
+        year: purchaseYear,
+        purchaseCost: asset.purchaseCost || 0,
+        warrantyCost: asset.warrantyCost || 0,
+        totalCost:
+            (asset.purchaseCost || 0) +
+            (asset.warrantyCost || 0),
+    });
+
+    if (
+        expiryYear &&
+        expiryYear !== purchaseYear &&
+        asset.warrantyCost > 0
+    ) {
+        yearlyWarranty.push({
+            year: expiryYear,
+            purchaseCost: 0,
+            warrantyCost: asset.warrantyCost,
+            totalCost: asset.warrantyCost,
+        });
+    }
+
 }
 
 if (asset.warrantyExpiry && asset.warrantyCost > 0) {
