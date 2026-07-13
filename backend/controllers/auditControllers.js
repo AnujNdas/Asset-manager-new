@@ -330,6 +330,12 @@ if (asset.purchaseDate) {
 }
 
 if (asset.warrantyExpiry && asset.warrantyCost > 0) {
+    console.log({
+  purchaseCost: asset.purchaseCost,
+  warrantyCost: asset.warrantyCost,
+  hardware: asset.hardware?.costs?.warrantyRenewalCost,
+  costs: asset.costs,
+});
   yearlyWarranty.push({
     year: new Date(asset.warrantyExpiry).getFullYear(),
     purchaseCost: 0,
