@@ -313,7 +313,7 @@ if (asset.purchaseDate) {
             (asset.purchaseCost || 0) +
             (asset.warrantyCost || 0),
     });
-
+    console.log("yearlyWarranty =", yearlyWarranty);
     if (
         expiryYear &&
         expiryYear !== purchaseYear &&
