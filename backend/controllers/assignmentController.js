@@ -239,9 +239,9 @@ const getInstancesByAsset = async (req, res) => {
   status 
   deviceName 
   hardware.serialNumber
-  hardware.specification 
+  hardware.specifications 
   hardware.purchaseCost 
-  software.specification 
+  software.specifications 
   software.purchaseCost
 `)
       .lean();
