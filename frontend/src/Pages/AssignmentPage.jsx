@@ -505,7 +505,8 @@ const currencyCode = costObj?.currency || "USD";
   const selectedEmployee = employees.find(
     e => e._id === assignmentData.employee
   );
-
+  console.log("Selected Asset", selectedAsset);
+console.log("Selected Instances", selectedInstances);
   return (
 <div className="review">
 
@@ -548,13 +549,34 @@ const currencyCode = costObj?.currency || "USD";
 
     <div className="review-instance-list">
       {selectedInstances.map((inst) => (
+        <>
         <div
           key={inst._id}
           className="review-instance-item"
         >
-          <span>Device</span>
-          <strong>{inst.deviceName}</strong>
+       <div>
+            <span>Instance Name</span>
+            <p>{inst.deviceName || "-"}</p>
+          </div>
+
+
+          <div>
+            <span>Specification</span>
+            <p>{inst.hardware?.specifications || "-"}</p>
+          </div>
+
+          <div>
+            <span>Purchase Cost</span>
+            <p>
+              {inst.hardware?.purchaseCost
+                ? `${inst.hardware.purchaseCost.currency} ${inst.hardware.purchaseCost.amount}`
+                : inst.software?.purchaseCost
+                ? `${inst.software.purchaseCost.currency} ${inst.software.purchaseCost.amount}`
+                : "-"}
+            </p>
+          </div>
         </div>
+        </>
       ))}
     </div>
   </div>
