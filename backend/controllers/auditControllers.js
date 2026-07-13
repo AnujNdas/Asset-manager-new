@@ -673,7 +673,8 @@ asset.lifecycle.forEach(event => {
         title: event.title,
 
         description: event.description,
-
+        purchaseDate : asset.purchaseDate,
+        status : asset.status,
         performedBy:
             event.performedBy?.name ||
 

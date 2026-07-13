@@ -505,8 +505,6 @@ const currencyCode = costObj?.currency || "USD";
   const selectedEmployee = employees.find(
     e => e._id === assignmentData.employee
   );
-  console.log("Selected Asset", selectedAsset);
-console.log("Selected Instances", selectedInstances);
   return (
 <div className="review">
 
@@ -547,38 +545,49 @@ console.log("Selected Instances", selectedInstances);
       </span>
     </h4>
 
-    <div className="review-instance-list">
-      {selectedInstances.map((inst) => (
-        <>
-        <div
-          key={inst._id}
-          className="review-instance-item"
-        >
-       <div>
-            <span>Instance Name</span>
-            <p>{inst.deviceName || "-"}</p>
-          </div>
+<div className="review-instance-list">
+  {selectedInstances.map((inst) => (
+    <div
+      key={inst._id}
+      className="review-instance-card"
+    >
+      <div className="review-instance-title">
+        <h5>{inst.deviceName || "Unnamed Device"}</h5>
+        <span>{inst.instanceCode}</span>
+      </div>
 
+      <div className="review-instance-grid">
 
-          <div>
-            <span>Specification</span>
-            <p>{inst.hardware?.specifications || "-"}</p>
-          </div>
-
-          <div>
-            <span>Purchase Cost</span>
-            <p>
-              {inst.hardware?.purchaseCost
-                ? `${inst.hardware.purchaseCost.currency} ${inst.hardware.purchaseCost.amount}`
-                : inst.software?.purchaseCost
-                ? `${inst.software.purchaseCost.currency} ${inst.software.purchaseCost.amount}`
-                : "-"}
-            </p>
-          </div>
+        <div className="review-item">
+          <label>Location</label>
+          <p>{inst.location || "-"}</p>
         </div>
-        </>
-      ))}
+
+        <div className="review-item">
+          <label>Specification</label>
+          <p>{inst.hardware?.specifications || "-"}</p>
+        </div>
+
+        <div className="review-item">
+          <label>Purchase Cost</label>
+          <p>
+            {inst.hardware?.purchaseCost
+              ? `${inst.hardware.purchaseCost.currency} ${inst.hardware.purchaseCost.amount}`
+              : inst.software?.purchaseCost
+              ? `${inst.software.purchaseCost.currency} ${inst.software.purchaseCost.amount}`
+              : "-"}
+          </p>
+        </div>
+
+        <div className="review-item">
+          <label>Status</label>
+          <p>{capitalize(inst.status)}</p>
+        </div>
+
+      </div>
     </div>
+  ))}
+</div>
   </div>
 
   {/* ASSIGNMENT */}
