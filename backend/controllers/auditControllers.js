@@ -262,6 +262,7 @@ const asset = {
     location: inst.location,
     status: inst.status,
     condition: inst.condition,
+    coverageType : inst.hardware?.coverageType || [],
     purchaseDate:
         hardware.purchaseDate ||
         software.purchaseDate,
@@ -427,7 +428,7 @@ if (asset.insuranceExpiry) {
         insuranceExpiry: asset.insuranceExpiry,
 
         insuranceCost: asset.insuranceCost,
-
+        coverageType : asset.coverageType
         totalCost: asset.totalCost,
         yearlyInsurance
 
