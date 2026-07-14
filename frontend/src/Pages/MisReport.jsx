@@ -1141,7 +1141,7 @@ if (year.year > currentYear) {
   </span>
  <div className="year-card-header">
   <h4>Year :- {year.year}</h4>
-  <p>(item.warrantyPurchaseDate).toLocaleDateString</p>
+  <p>{item.warrantyPurchaseDate ? (item.warrantyPurchaseDate).toLocaleDateString() : "-"}</p>
 </div>
 
       <div className="year-row">
@@ -1437,7 +1437,7 @@ Insurance Cost History
       <div className="year-card-header">
         <h4>Year :- {year.year}</h4>
         <p>
-          {item.insurance}
+          {item.insurancePurchaseDate ? new Date(item.insurancePurchaseDate).toLocaleDateString() : "-"}
         </p>
       </div>
 

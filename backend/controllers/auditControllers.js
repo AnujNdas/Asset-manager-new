@@ -341,14 +341,14 @@ if (asset.warrantyExpiry && asset.warrantyCost > 0) {
     purchaseCost: 0,
     warrantyCost: asset.warrantyCost || 0,
     totalCost: asset.warrantyCost || 0,
-    warrantyPurchaseDate : asset.warrantyPurchaseDate
-  });
+});
 }
 if (asset.warrantyExpiry) {
-
+    
     warranty.push({
-
+        
         instanceId: asset.instanceId,
+        warrantyPurchaseDate : asset.warrantyPurchaseDate,
 
         assetId: asset.assetId,
 
@@ -439,7 +439,7 @@ if (asset.insuranceExpiry) {
         instanceCode: asset.instanceCode,
         
         insurancePurchaseDate : asset.insurancePurchaseDate,
-        
+
         assetType: asset.assetType,
 
         deviceName: asset.deviceName,
