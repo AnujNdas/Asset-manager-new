@@ -394,10 +394,13 @@
     padding:18px;
     background:#393E46;
 }
-
+.year-card-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #DFD0B8;
+}
 .year-card h4{
     margin-bottom:15px;
-    border-bottom:1px solid #948979;
     padding-bottom:8px;
 }
 
