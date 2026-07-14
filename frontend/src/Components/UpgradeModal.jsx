@@ -567,8 +567,11 @@ const softwareRenewalDue = isDue(
 
         </div>
             <div className="input-group">
+              
   <label>Maintenance Performed On</label>
-
+                  <small style={{opacity: "0"}}>
+                    adjustment
+          </small>
   <input
     type="date"
     name="maintenancePerformedOn"
@@ -678,7 +681,9 @@ const softwareRenewalDue = isDue(
           <div className="input-group">
 
             <label>Insurance Term</label>
-
+                <small style={{opacity: "0"}}>
+                    adjustment
+          </small>
           <select
     name="insuranceTerm"
     value={form.insuranceTerm}
@@ -753,7 +758,9 @@ const softwareRenewalDue = isDue(
           </div>
           <div className="input-group">
   <label>Insurance Renewed On</label>
-
+          <small style={{opacity: "0"}}>
+                    adjustment
+          </small>
   <input
     type="date"
     name="insuranceRenewedOn"

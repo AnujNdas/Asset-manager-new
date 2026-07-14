@@ -1114,55 +1114,72 @@ const renderWarranty = () => {
     </h4>
 
     <div className="yearly-cost-grid">
-{item.yearlyWarranty.map((year) => {
+{item.yearlyWarranty
+  ?.slice()
+  .sort((a, b) => b.year - a.year) // Latest → Oldest
+  .map((year) => {
 
-  const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear();
 
-let badge = null;
+    let badge;
 
-if (year.year > currentYear) {
-  badge = { text: "Upcoming", className: "upcoming" };
-} else if (year.year === currentYear) {
-  badge = { text: "Current", className: "current" };
-} else {
-  badge = { text: "Completed", className: "completed" };
-}
-  const isUpcoming = year.year > currentYear;
+    if (year.year > currentYear) {
+      badge = {
+        text: "Upcoming",
+        className: "upcoming",
+      };
+    } else if (year.year === currentYear) {
+      badge = {
+        text: "Current",
+        className: "current",
+      };
+    } else {
+      badge = {
+        text: "Completed",
+        className: "completed",
+      };
+    }
 
-  return (
+    return (
 
-    <div
-      className="year-card"
-      key={year.year}
-    >
+      <div
+        className="year-card"
+        key={year.year}
+      >
 
-  <span className={`year-badge ${badge.className}`}>
-    {badge.text}
-  </span>
- <div className="year-card-header">
-  <h4>Year :- {year.year}</h4>
-  <p>{item.warrantyPurchaseDate ? new Date(item.warrantyPurchaseDate).toLocaleDateString() : "-"}</p>
-</div>
+        <span className={`year-badge ${badge.className}`}>
+          {badge.text}
+        </span>
 
-      <div className="year-row">
-        <span>Purchase Cost</span>
-        <span>{formatCurrency(year.purchaseCost || 0)}</span>
+        <div className="year-card-header">
+          <h4>Year :- {year.year}</h4>
+
+          <p>
+            {item.warrantyPurchaseDate
+              ? formatDate(item.warrantyPurchaseDate)
+              : "-"}
+          </p>
+        </div>
+
+        <div className="year-row">
+          <span>Purchase Cost</span>
+          <span>{formatCurrency(year.purchaseCost || 0)}</span>
+        </div>
+
+        <div className="year-row">
+          <span>Warranty Cost</span>
+          <span>{formatCurrency(year.warrantyCost || 0)}</span>
+        </div>
+
+        <div className="year-total">
+          Total : {formatCurrency(year.totalCost || 0)}
+        </div>
+
       </div>
 
-      <div className="year-row">
-        <span>Warranty Cost</span>
-        <span>{formatCurrency(year.warrantyCost || 0)}</span>
-      </div>
+    );
 
-      <div className="year-total">
-        Total : {formatCurrency(year.totalCost || 0)}
-      </div>
-
-    </div>
-
-  );
-
-})}
+  })}
 
     </div>
 
@@ -1189,6 +1206,19 @@ if (year.year > currentYear) {
       </table>
     </div>
   );
+};
+const formatDate = (date) => {
+  if (!date) return "-";
+
+  const d = new Date(date);
+
+  if (isNaN(d.getTime())) return "-";
+
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+
+  return `${day}/${month}/${year}`;
 };
 const renderInsurance = () => (
   <div className="audit-report-grid">
@@ -1400,66 +1430,72 @@ Insurance Cost History
 
 <div className="yearly-cost-grid">
 
-{item.yearlyInsurance.map((year) => {
+{item.yearlyInsurance
+  ?.slice()
+  .sort((a, b) => b.year - a.year) // Latest year first
+  .map((year) => {
 
-  const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear();
 
-  let badge = null;
+    let badge;
 
-  if (year.year > currentYear) {
-    badge = {
-      text: "Upcoming",
-      className: "upcoming",
-    };
-  } else if (year.year === currentYear) {
-    badge = {
-      text: "Current",
-      className: "current",
-    };
-  } else {
-    badge = {
-      text: "Completed",
-      className: "completed",
-    };
-  }
+    if (year.year > currentYear) {
+      badge = {
+        text: "Upcoming",
+        className: "upcoming",
+      };
+    } else if (year.year === currentYear) {
+      badge = {
+        text: "Current",
+        className: "current",
+      };
+    } else {
+      badge = {
+        text: "Completed",
+        className: "completed",
+      };
+    }
 
-  return (
+    return (
 
-    <div
-      key={year.year}
-      className="year-card"
-    >
+      <div
+        key={year.year}
+        className="year-card"
+      >
 
-      <span className={`year-badge ${badge.className}`}>
-        {badge.text}
-      </span>
+        <span className={`year-badge ${badge.className}`}>
+          {badge.text}
+        </span>
 
-      <div className="year-card-header">
-        <h4>Year :- {year.year}</h4>
-        <p>
-          {item.insurancePurchaseDate ? new Date(item.insurancePurchaseDate).toLocaleDateString() : "-"}
-        </p>
+        <div className="year-card-header">
+          <h4>Year :- {year.year}</h4>
+
+          <p>
+            {item.insurancePurchaseDate
+              ? formatDate(item.insurancePurchaseDate)
+              : "-"}
+          </p>
+        </div>
+
+        <div className="year-row">
+          <span>Purchase</span>
+          <span>{formatCurrency(year.purchaseCost || 0)}</span>
+        </div>
+
+        <div className="year-row">
+          <span>Insurance</span>
+          <span>{formatCurrency(year.insuranceCost || 0)}</span>
+        </div>
+
+        <div className="year-total">
+          Total : {formatCurrency(year.totalCost || 0)}
+        </div>
+
       </div>
 
-      <div className="year-row">
-        <span>Purchase</span>
-        <span>{formatCurrency(year.purchaseCost || 0)}</span>
-      </div>
+    );
 
-      <div className="year-row">
-        <span>Insurance</span>
-        <span>{formatCurrency(year.insuranceCost || 0)}</span>
-      </div>
-
-      <div className="year-total">
-        Total : {formatCurrency(year.totalCost || 0)}
-      </div>
-
-    </div>
-
-  );
-
-})}
+  })}
 
 </div>
 
@@ -2575,49 +2611,84 @@ const renderFinancial = () => (
 
 <div className="yearly-cost-grid">
 
-{asset.yearlyCosts.map(year => (
+{asset.yearlyCosts
+  ?.slice()
+  .sort((a, b) => b.year - a.year) // Latest year first
+  .map((year) => {
 
-    <div className="year-card" key={year.year}>
+    const currentYear = new Date().getFullYear();
+
+    let badge;
+
+    if (year.year > currentYear) {
+      badge = {
+        text: "Upcoming",
+        className: "upcoming",
+      };
+    } else if (year.year === currentYear) {
+      badge = {
+        text: "Current",
+        className: "current",
+      };
+    } else {
+      badge = {
+        text: "Completed",
+        className: "completed",
+      };
+    }
+
+    return (
+
+      <div
+        className="year-card"
+        key={year.year}
+      >
+
+        <span className={`year-badge ${badge.className}`}>
+          {badge.text}
+        </span>
 
         <h4>Year :- {year.year}</h4>
 
         <div className="year-row">
-            <span>Purchase</span>
-            <span>{formatCurrency(year.purchaseCost)}</span>
+          <span>Purchase</span>
+          <span>{formatCurrency(year.purchaseCost)}</span>
         </div>
 
         <div className="year-row">
-            <span>Maintenance</span>
-            <span>{formatCurrency(year.maintenanceCost)}</span>
+          <span>Maintenance</span>
+          <span>{formatCurrency(year.maintenanceCost)}</span>
         </div>
 
         <div className="year-row">
-            <span>Warranty</span>
-            <span>{formatCurrency(year.warrantyCost)}</span>
+          <span>Warranty</span>
+          <span>{formatCurrency(year.warrantyCost)}</span>
         </div>
 
         <div className="year-row">
-            <span>Insurance</span>
-            <span>{formatCurrency(year.insuranceCost)}</span>
+          <span>Insurance</span>
+          <span>{formatCurrency(year.insuranceCost)}</span>
         </div>
 
         <div className="year-row">
-            <span>Renewal</span>
-            <span>{formatCurrency(year.renewalCost)}</span>
+          <span>Renewal</span>
+          <span>{formatCurrency(year.renewalCost)}</span>
         </div>
 
         <div className="year-row">
-            <span>Upgrade</span>
-            <span>{formatCurrency(year.upgradeCost)}</span>
+          <span>Upgrade</span>
+          <span>{formatCurrency(year.upgradeCost)}</span>
         </div>
 
         <div className="year-total">
-            Total : {formatCurrency(year.totalCost)}
+          Total : {formatCurrency(year.totalCost)}
         </div>
 
-    </div>
+      </div>
 
-))}
+    );
+
+  })}
 
 </div>
 
