@@ -424,21 +424,21 @@ if (
         purchaseCost: 0,
         insuranceCost: asset.insuranceCost,
         totalCost: asset.insuranceCost,
-        insurancePurchaseDate : asset.insurancePurchaseDate
     });
 }
 if (asset.insuranceExpiry) {
-
+    
     insurance.push({
-
+        
         instanceId: asset.instanceId,
-
+        
         assetCode: asset.assetCode,
-
+        
         assetName: asset.assetName,
-
+        
         instanceCode: asset.instanceCode,
-
+        
+        insurancePurchaseDate : asset.insurancePurchaseDate
         assetType: asset.assetType,
 
         deviceName: asset.deviceName,
@@ -641,8 +641,8 @@ if (asset.purchaseDate) {
 
     totalCost: asset.purchaseCost || 0,
     purchaseDate : asset.purchaseDate
-
   });
+
 
 }
 

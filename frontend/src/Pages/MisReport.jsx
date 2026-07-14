@@ -1436,6 +1436,9 @@ Insurance Cost History
 
       <div className="year-card-header">
         <h4>Year :- {year.year}</h4>
+        <p>
+          {item.insurance}
+        </p>
       </div>
 
       <div className="year-row">
@@ -1703,6 +1706,9 @@ const renderMaintenance = () => (
 
       <div className="year-card-header">
         <h4>Year :- {year.year}</h4>
+           <p>{item.purchaseDate
+              ? new Date(item.purchaseDate).toLocaleDateString()
+              : "-"}</p>
       </div>
 
       <div className="year-row">
