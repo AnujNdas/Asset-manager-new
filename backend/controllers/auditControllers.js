@@ -438,7 +438,8 @@ if (asset.insuranceExpiry) {
         
         instanceCode: asset.instanceCode,
         
-        insurancePurchaseDate : asset.insurancePurchaseDate
+        insurancePurchaseDate : asset.insurancePurchaseDate,
+        
         assetType: asset.assetType,
 
         deviceName: asset.deviceName,
