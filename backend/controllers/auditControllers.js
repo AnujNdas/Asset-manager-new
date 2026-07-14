@@ -341,6 +341,7 @@ if (asset.warrantyExpiry && asset.warrantyCost > 0) {
     purchaseCost: 0,
     warrantyCost: asset.warrantyCost || 0,
     totalCost: asset.warrantyCost || 0,
+    warrantyPurchaseDate : asset.warrantyPurchaseDate
   });
 }
 if (asset.warrantyExpiry) {
@@ -422,7 +423,8 @@ if (
         year: new Date(asset.insuranceExpiry).getFullYear(),
         purchaseCost: 0,
         insuranceCost: asset.insuranceCost,
-        totalCost: asset.insuranceCost
+        totalCost: asset.insuranceCost,
+        insurancePurchaseDate : asset.insurancePurchaseDate
     });
 }
 if (asset.insuranceExpiry) {
@@ -487,7 +489,9 @@ if (asset.purchaseDate) {
 
     upgradeCost: 0,
 
-    totalCost: asset.purchaseCost || 0
+    totalCost: asset.purchaseCost || 0,
+
+    purchaseDate : asset.puchaseDate
 
   });
 
@@ -635,7 +639,8 @@ if (asset.purchaseDate) {
 
     renewalCost: 0,
 
-    totalCost: asset.purchaseCost || 0
+    totalCost: asset.purchaseCost || 0,
+    purchaseDate : asset.purchaseDate
 
   });
 
