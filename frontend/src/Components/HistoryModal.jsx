@@ -12,13 +12,7 @@ const fetchHistory = async () => {
 
     console.log("HISTORY DATA:", res);
 
-    const sortedHistory = (res.data || []).sort((a, b) => {
-  const dateA = new Date(a.recordDate || a.date || 0).getTime();
-  const dateB = new Date(b.recordDate || b.date || 0).getTime();
-  return dateB - dateA; // newest → oldest
-});
-
-setHistory(sortedHistory);
+    setHistory(res.data || []);     // ✅ correct
     setSummary(res.summary || null);
 
   } catch (err) {
