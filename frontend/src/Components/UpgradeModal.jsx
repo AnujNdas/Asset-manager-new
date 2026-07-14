@@ -388,6 +388,13 @@ const warrantyDue = isDue(
 const insuranceDue = isDue(
   instance?.hardware?.insuranceExpiry
 );
+const firstInsurance =
+  !instance?.hardware?.insurancePurchaseDate &&
+  !instance?.hardware?.insuranceExpiry;
+
+const canEditInsurance =
+  form.hasInsurance &&
+  (firstInsurance || insuranceDue);
 
 const softwareRenewalDue = isDue(
   instance?.software?.renewalDate
@@ -676,11 +683,19 @@ const softwareRenewalDue = isDue(
     name="insuranceTerm"
     value={form.insuranceTerm}
     onChange={handleChange}
-    disabled={!insuranceDue}
+    disabled={!canEditInsurance}
 >
-              <option value="6_months">6 Months</option>
-              <option value="1_year">1 Year</option>
-              <option value="3_years">3 Years</option>
+          <option value="6_months">6 Months</option>
+    <option value="1_year">1 Year</option>
+    <option value="2_years">2 Years</option>
+    <option value="3_years">3 Years</option>
+    <option value="4_years">4 Years</option>
+    <option value="5_years">5 Years</option>
+    <option value="6_years">6 Years</option>
+    <option value="7_years">7 Years</option>
+    <option value="8_years">8 Years</option>
+    <option value="9_years">9 Years</option>
+    <option value="10_years">10 Years</option>
             </select>
 
           </div>
@@ -698,7 +713,7 @@ const softwareRenewalDue = isDue(
               name="insuranceCost"
               value={form.insuranceCost}
               onChange={handleChange}
-              disabled={!insuranceDue}
+              disabled={!canEditInsurance}
             />
 
           </div>
@@ -714,7 +729,7 @@ const softwareRenewalDue = isDue(
               name="newInsurancePurchaseDate"
               value={form.newInsurancePurchaseDate}
               onChange={handleChange}
-              disabled={!insuranceDue}
+              disabled={!canEditInsurance}
             />
 
           </div>
@@ -732,7 +747,7 @@ const softwareRenewalDue = isDue(
               name="newInsuranceExpiry"
               value={form.newInsuranceExpiry}
               onChange={handleChange}
-              disabled={!insuranceDue}
+              disabled={!canEditInsurance}
             />
 
           </div>
