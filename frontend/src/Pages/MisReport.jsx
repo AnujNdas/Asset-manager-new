@@ -1670,7 +1670,9 @@ const renderMaintenance = () => (
 
     <div className="yearly-cost-grid">
 
-{yearlyHistory.map((year) => {
+{[...yearlyHistory]
+  .sort((a, b) => a.year - b.year) // oldest → newest
+  .map((year) => {
 
   const currentYear = new Date().getFullYear();
 
