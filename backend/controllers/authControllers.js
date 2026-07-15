@@ -24,12 +24,12 @@ const Notification = require("../models/Notification");
 const Organization = require("../models/Organization");
 const Subscription = require("../models/Subscription");
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const SENDER_EMAIL = "socialflylive@gmail.com";
 const AffiliateProfile = require("../models/AffiliateProfile");
 const AffiliateReferral = require("../models/AffiliateReferral");
 const OrganizationInvite = require("../models/OrganizationInvite");
 const seedOrganizationDefaults = require("../services/seedOrganizationDefaults");
 const sendNotification = require("../utils/notify");
+const SENDER_EMAIL = process.env.SENDER_EMAIL;
 /* ---------------------------------- UTIL ---------------------------------- */
 async function sendBrevoEmail(to, subject, html) {
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
