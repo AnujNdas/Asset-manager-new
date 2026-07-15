@@ -474,95 +474,48 @@ if (
 ) { 
     const yearlyMaintenance = [];
 
+const yearlyMaintenance = [];
+
+// Purchase entry
 if (asset.purchaseDate) {
-
-  yearlyMaintenance.push({
-
-    year: new Date(asset.purchaseDate).getFullYear(),
-
-    purchaseCost: asset.purchaseCost || 0,
-
-    maintenanceCost: 0,
-
-    warrantyCost: 0,
-
-    insuranceCost: 0,
-
-    upgradeCost: 0,
-
-    totalCost: asset.purchaseCost || 0,
-
-    purchaseDate : asset.puchaseDate
-
-  });
-
+    yearlyMaintenance.push({
+        year: new Date(asset.purchaseDate).getFullYear(),
+        purchaseCost: asset.purchaseCost || 0,
+        maintenanceCost: 0,
+        warrantyCost: 0,
+        insuranceCost: 0,
+        upgradeCost: 0,
+        totalCost: asset.purchaseCost || 0,
+        purchaseDate: asset.purchaseDate
+    });
 }
 
-if (asset.nextMaintenanceDate && asset.maintenanceCost > 0) {
+// Maintenance history
+(asset.lifecycle || [])
+    .filter(item => item.eventType === "maintenance")
+    .forEach(item => {
 
-  yearlyMaintenance.push({
+        yearlyMaintenance.push({
+            year: new Date(item.date).getFullYear(),
 
-    year: new Date(asset.nextMaintenanceDate).getFullYear(),
+            purchaseCost: 0,
 
-    purchaseCost: 0,
+            maintenanceCost:
+                item.metadata?.cost?.amount ||
+                item.metadata?.to?.costs?.maintenanceCost ||
+                0,
 
-    maintenanceCost: asset.maintenanceCost || 0,
+            warrantyCost: 0,
+            insuranceCost: 0,
+            upgradeCost: 0,
 
-    warrantyCost: 0,
+            totalCost:
+                item.metadata?.cost?.amount ||
+                item.metadata?.to?.costs?.maintenanceCost ||
+                0
+        });
 
-    insuranceCost: 0,
-
-    upgradeCost: 0,
-
-    totalCost: asset.maintenanceCost || 0
-
-  });
-
-}
-
-if (asset.warrantyExpiry && asset.warrantyCost > 0) {
-
-  yearlyMaintenance.push({
-
-    year: new Date(asset.warrantyExpiry).getFullYear(),
-
-    purchaseCost: 0,
-
-    maintenanceCost: 0,
-
-    warrantyCost: asset.warrantyCost || 0,
-
-    insuranceCost: 0,
-
-    upgradeCost: 0,
-
-    totalCost: asset.warrantyCost || 0
-
-  });
-
-}
-
-if (asset.insuranceExpiry && asset.insuranceCost > 0) {
-
-  yearlyMaintenance.push({
-
-    year: new Date(asset.insuranceExpiry).getFullYear(),
-
-    purchaseCost: 0,
-
-    maintenanceCost: 0,
-
-    warrantyCost: 0,
-
-    insuranceCost: asset.insuranceCost || 0,
-
-    upgradeCost: 0,
-
-    totalCost: asset.insuranceCost || 0
-
-  });
-
-}
+    });
 
 asset.upgrades?.forEach(upgrade => {
 
