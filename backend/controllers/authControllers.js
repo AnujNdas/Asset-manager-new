@@ -80,54 +80,178 @@ const sendOtp = async (req, res) => {
     await Otp.deleteMany({ email });
     await Otp.create({ email, otp });
 
-   const html = `
-<div style="font-family:Arial,sans-serif;background:#f4f4f4;padding:30px;">
-  <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:10px;padding:40px;text-align:center;">
+const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Your OTP</title>
+</head>
 
-    <img
-      src="https://assetpegasus.com/images/logo2.png"
-      alt="Asset Pegasus"
-      style="width:180px;margin-bottom:20px;"
-    />
+<body style="
+  margin:0;
+  padding:40px;
+  background:#f5f7fb;
+  font-family:Arial,Helvetica,sans-serif;
+">
 
-    <h2 style="color:#333;margin-bottom:10px;">
-      Verify Your Email
-    </h2>
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  style="max-width:620px;margin:auto;background:#ffffff;border-radius:12px;padding:40px;border:1px solid #e8e8e8;"
+>
 
-    <p style="color:#666;font-size:15px;">
-      We received your request for a verification code.
-    </p>
+<tr>
+<td align="center">
 
-    <div style="
-      display:inline-block;
-      margin:25px 0;
-      padding:15px 30px;
-      background:#6C63FF;
-      color:#fff;
-      font-size:32px;
-      font-weight:bold;
-      letter-spacing:8px;
-      border-radius:8px;
-    ">
-      ${otp}
-    </div>
+<img
+src="https://assetpegasus.com/images/logo2.png"
+alt="Asset Pegasus"
+style="width:180px;margin-bottom:30px;"
+/>
 
-    <p style="color:#555;">
-      This code will expire in <strong>5 minutes</strong>.
-    </p>
+</td>
+</tr>
 
-    <p style="font-size:13px;color:#999;margin-top:30px;">
-      Never share this code with anyone. Asset Pegasus will never ask for your OTP.
-    </p>
+<tr>
+<td>
 
-    <hr style="margin:30px 0;border:none;border-top:1px solid #eee;" />
+<h1 style="
+margin:0;
+font-size:30px;
+font-weight:700;
+color:#222;
+">
+Your single-use code
+</h1>
 
-    <p style="font-size:12px;color:#999;">
-      © ${new Date().getFullYear()} Asset Pegasus. All rights reserved.
-    </p>
+<p style="
+margin:8px 0 35px;
+font-size:17px;
+color:#666;
+">
+Asset Pegasus account team
+</p>
 
-  </div>
+<p style="
+font-size:16px;
+color:#333;
+line-height:28px;
+">
+Hi <strong>${email}</strong>,
+</p>
+
+<p style="
+font-size:16px;
+line-height:28px;
+color:#444;
+">
+We received your request for a single-use verification code to access your
+Asset Pegasus account.
+</p>
+
+<div
+style="
+margin:40px auto;
+text-align:center;
+"
+>
+
+<span
+style="
+display:inline-block;
+background:#6C63FF;
+color:#ffffff;
+padding:18px 40px;
+font-size:38px;
+font-weight:bold;
+letter-spacing:10px;
+border-radius:10px;
+"
+>
+${otp}
+</span>
+
 </div>
+
+<p style="
+font-size:16px;
+line-height:28px;
+color:#444;
+">
+This verification code will expire in
+<strong>5 minutes</strong>.
+</p>
+
+<p style="
+font-size:15px;
+line-height:26px;
+color:#555;
+background:#fafafa;
+border-left:4px solid #6C63FF;
+padding:15px 18px;
+margin-top:30px;
+">
+Only enter this code on an official Asset Pegasus website.
+Never share this code with anyone. Asset Pegasus will never ask for your OTP
+outside an official platform.
+</p>
+
+<p style="
+margin-top:40px;
+font-size:16px;
+color:#333;
+">
+Thanks,
+</p>
+
+<p style="
+font-size:16px;
+font-weight:bold;
+margin-top:4px;
+color:#222;
+">
+The Asset Pegasus Account Team
+</p>
+
+<hr style="
+margin:35px 0;
+border:none;
+border-top:1px solid #ececec;
+">
+
+<p style="
+font-size:13px;
+color:#777;
+">
+<a
+href="https://assetpegasus.com/privacy-policy"
+style="
+color:#6C63FF;
+text-decoration:none;
+font-weight:600;
+"
+>
+Privacy Statement
+</a>
+</p>
+
+<p style="
+font-size:13px;
+color:#999;
+margin-top:25px;
+">
+© ${new Date().getFullYear()} Asset Pegasus. All rights reserved.
+</p>
+
+</td>
+</tr>
+
+</table>
+
+</body>
+</html>
 `;
 
     await sendBrevoEmail(email, "Your OTP for Signup", html);

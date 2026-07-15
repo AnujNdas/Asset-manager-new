@@ -393,63 +393,63 @@ const formatCost = (costObj) => {
 
 )}
           {/* HARDWARE DETAILS */}
+{item.hardware && (
 
-          {item.hardware && (
+  <div className="hardware-grid">
 
-            <div className="hardware-grid">
+    <div className="hardware-item">
+      <label>Model</label>
+      <span>{item.hardware.modelNo}</span>
+    </div>
 
-              <div className="hardware-item">
+    <div className="hardware-item">
+      <label>Serial</label>
+      <span>{item.hardware.serialNumber}</span>
+    </div>
 
-                <label>Model</label>
+    <div className="hardware-item">
+      <label>Warranty</label>
+      <span>{item.hardware.warrantyExpiry}</span>
+    </div>
 
-                <span>
-                  {item.hardware.modelNo}
-                </span>
+    <div className="hardware-item">
+      <label>Maintenance</label>
+      <span>{item.hardware.nextMaintenanceDate}</span>
+    </div>
 
-              </div>
+    {/* Insurance */}
 
-              <div className="hardware-item">
+    <div className="hardware-item">
+      <label>Insurance Purchase</label>
+      <span>
+        {item.hardware.insurancePurchaseDate || "-"}
+      </span>
+    </div>
 
-                <label>Serial</label>
+    <div className="hardware-item">
+      <label>Insurance Expiry</label>
+      <span>
+        {item.hardware.insuranceExpiry || "-"}
+      </span>
+    </div>
 
-                <span>
-                  {
-                    item.hardware
-                      .serialNumber
-                  }
-                </span>
+    <div className="hardware-item">
+      <label>Insurance Term</label>
+      <span>
+        {item.hardware.insuranceTerm || "-"}
+      </span>
+    </div>
 
-              </div>
+    <div className="hardware-item">
+      <label>Has Insurance</label>
+      <span>
+        {item.hardware.hasInsurance ? "Yes" : "No"}
+      </span>
+    </div>
 
-              <div className="hardware-item">
+  </div>
 
-                <label>Warranty</label>
-
-                <span>
-                  {
-                    item.hardware
-                      .warrantyExpiry
-                  }
-                </span>
-
-              </div>
-
-              <div className="hardware-item">
-
-                <label>Maintenance</label>
-
-                <span>
-                  {
-                    item.hardware
-                      .nextMaintenanceDate
-                  }
-                </span>
-
-              </div>
-
-            </div>
-
-          )}
+)}
 
           {/* SOFTWARE DETAILS */}
 

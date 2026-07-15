@@ -375,7 +375,29 @@ hardware: instance.hardware
         snapshot.hardware?.costs?.maintenanceCost?.amount ??
         snapshotCosts.maintenanceCost ??
         instance.hardware?.costs?.maintenanceCost?.amount ??
-        null
+        null,
+          insurancePurchaseDate: formatDate(
+        snapshot.hardware?.insurancePurchaseDate ||
+        snapshotDates.insurancePurchaseDate ||
+        instance.hardware?.insurancePurchaseDate
+      ),
+
+      insuranceExpiry: formatDate(
+        snapshot.hardware?.insuranceExpiry ||
+        snapshotDates.insuranceExpiry ||
+        instance.hardware?.insuranceExpiry
+      ),
+
+      insuranceTerm:
+        snapshot.hardware?.insuranceTerm ||
+        meta.insuranceTerm ||
+        instance.hardware?.insuranceTerm ||
+        "-",
+
+      hasInsurance:
+        snapshot.hardware?.hasInsurance ??
+        instance.hardware?.hasInsurance ??
+        false,
     }
   : null,
 
