@@ -298,51 +298,47 @@ const asset = {
 assetLookup[inst._id.toString()] = asset;
 const yearlyWarranty = [];
 
+const warrantyMap = {};
+
+// Purchase
 if (asset.purchaseDate) {
+    const year = new Date(asset.purchaseDate).getFullYear();
 
-    const purchaseYear = new Date(asset.purchaseDate).getFullYear();
-    const expiryYear = asset.warrantyExpiry
-        ? new Date(asset.warrantyExpiry).getFullYear()
-        : null;
-
-    yearlyWarranty.push({
-        year: purchaseYear,
+    warrantyMap[year] = {
+        year,
         purchaseCost: asset.purchaseCost || 0,
-        warrantyCost: asset.warrantyCost || 0,
-        totalCost:
-            (asset.purchaseCost || 0) +
-            (asset.warrantyCost || 0),
+        warrantyCost: 0,
+        totalCost: asset.purchaseCost || 0
+    };
+}
+
+// Warranty renewals
+(asset.lifecycle || [])
+    .filter(item => item.eventType === "warranty_renewal")
+    .forEach(item => {
+
+        const year = new Date(item.date).getFullYear();
+
+        if (!warrantyMap[year]) {
+            warrantyMap[year] = {
+                year,
+                purchaseCost: 0,
+                warrantyCost: 0,
+                totalCost: 0
+            };
+        }
+
+        const amount =
+            item.metadata?.cost?.amount ??
+            item.metadata?.to?.costs?.warrantyRenewalCost ??
+            0;
+
+        warrantyMap[year].warrantyCost += amount;
+        warrantyMap[year].totalCost += amount;
     });
-    console.log("yearlyWarranty =", yearlyWarranty);
-    if (
-        expiryYear &&
-        expiryYear !== purchaseYear &&
-        asset.warrantyCost > 0
-    ) {
-        yearlyWarranty.push({
-            year: expiryYear,
-            purchaseCost: 0,
-            warrantyCost: asset.warrantyCost,
-            totalCost: asset.warrantyCost,
-        });
-    }
 
-}
-
-if (asset.warrantyExpiry && asset.warrantyCost > 0) {
-    console.log({
-  purchaseCost: asset.purchaseCost,
-  warrantyCost: asset.warrantyCost,
-  hardware: asset.hardware?.costs?.warrantyRenewalCost,
-  costs: asset.costs,
-});
-  yearlyWarranty.push({
-    year: new Date(asset.warrantyExpiry).getFullYear(),
-    purchaseCost: 0,
-    warrantyCost: asset.warrantyCost || 0,
-    totalCost: asset.warrantyCost || 0,
-});
-}
+const yearlyWarranty = Object.values(warrantyMap)
+    .sort((a, b) => a.year - b.year);
 if (asset.warrantyExpiry) {
     
     warranty.push({

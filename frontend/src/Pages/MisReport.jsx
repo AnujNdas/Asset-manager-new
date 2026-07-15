@@ -1430,72 +1430,64 @@ Insurance Cost History
 
 <div className="yearly-cost-grid">
 
-{item.yearlyInsurance
-  ?.slice()
-  .sort((a, b) => b.year - a.year) // Latest year first
-  .map((year) => {
+{item.yearlyInsurance?.map((year) => {
 
-    const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
-    let badge;
+  let badge;
 
-    if (year.year > currentYear) {
-      badge = {
-        text: "Upcoming",
-        className: "upcoming",
-      };
-    } else if (year.year === currentYear) {
-      badge = {
-        text: "Current",
-        className: "current",
-      };
-    } else {
-      badge = {
-        text: "Completed",
-        className: "completed",
-      };
-    }
+  if (year.year > currentYear) {
+    badge = {
+      text: "Upcoming",
+      className: "upcoming",
+    };
+  } else if (year.year === currentYear) {
+    badge = {
+      text: "Current",
+      className: "current",
+    };
+  } else {
+    badge = {
+      text: "Completed",
+      className: "completed",
+    };
+  }
 
-    return (
+  return (
+    <div key={year.year} className="year-card">
 
-      <div
-        key={year.year}
-        className="year-card"
-      >
+      <span className={`year-badge ${badge.className}`}>
+        {badge.text}
+      </span>
 
-        <span className={`year-badge ${badge.className}`}>
-          {badge.text}
-        </span>
+      <div className="year-card-header">
+        <h4>Year :- {year.year}</h4>
 
-        <div className="year-card-header">
-          <h4>Year :- {year.year}</h4>
-
-          <p>
-            {item.insurancePurchaseDate
-              ? formatDate(item.insurancePurchaseDate)
-              : "-"}
-          </p>
-        </div>
-
-        <div className="year-row">
-          <span>Purchase</span>
-          <span>{formatCurrency(year.purchaseCost || 0)}</span>
-        </div>
-
-        <div className="year-row">
-          <span>Insurance</span>
-          <span>{formatCurrency(year.insuranceCost || 0)}</span>
-        </div>
-
-        <div className="year-total">
-          Total : {formatCurrency(year.totalCost || 0)}
-        </div>
-
+        <p>
+          {item.insurancePurchaseDate
+            ? formatDate(item.insurancePurchaseDate)
+            : "-"}
+        </p>
       </div>
 
-    );
+      <div className="year-row">
+        <span>Purchase</span>
+        <span>{formatCurrency(year.purchaseCost || 0)}</span>
+      </div>
 
-  })}
+      <div className="year-row">
+        <span>Insurance</span>
+        <span>{formatCurrency(year.insuranceCost || 0)}</span>
+      </div>
+
+      <div className="year-total">
+        Total : {formatCurrency(year.totalCost || 0)}
+      </div>
+
+    </div>
+  );
+
+})}
 
 </div>
 
