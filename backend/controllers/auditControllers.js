@@ -474,7 +474,6 @@ if (
 ) { 
     const yearlyMaintenance = [];
 
-const yearlyMaintenance = [];
 
 // Purchase entry
 if (asset.purchaseDate) {
