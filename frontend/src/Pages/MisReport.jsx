@@ -1114,10 +1114,7 @@ const renderWarranty = () => {
     </h4>
 
     <div className="yearly-cost-grid">
-{item.yearlyWarranty
-  ?.slice()
-  .sort((a, b) => b.year - a.year) // Latest → Oldest
-  .map((year) => {
+{item.yearlyWarranty.map((year) => {
 
     const currentYear = new Date().getFullYear();
 
@@ -2603,10 +2600,7 @@ const renderFinancial = () => (
 
 <div className="yearly-cost-grid">
 
-{asset.yearlyCosts
-  ?.slice()
-  .sort((a, b) => b.year - a.year) // Latest year first
-  .map((year) => {
+{asset.yearlyCosts.map((year) => {
 
     const currentYear = new Date().getFullYear();
 
