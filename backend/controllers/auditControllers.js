@@ -428,7 +428,7 @@ if (asset.purchaseDate) {
 
 const yearlyInsurance = Object.values(insuranceMap)
     .sort((a, b) => a.year - b.year);
-
+console.log("Yearly Insurance:", yearlyInsurance);
 // Hardware
 if (
   asset.assetType === "hardware" &&
