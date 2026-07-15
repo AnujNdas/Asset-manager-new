@@ -428,6 +428,42 @@ if (asset.purchaseDate) {
 
 const yearlyInsurance = Object.values(insuranceMap)
     .sort((a, b) => a.year - b.year);
+if (asset.insuranceExpiry) {
+
+    insurance.push({
+
+        instanceId: asset.instanceId,
+        assetId: asset.assetId,
+
+        assetCode: asset.assetCode,
+        assetName: asset.assetName,
+        instanceCode: asset.instanceCode,
+
+        assetType: asset.assetType,
+
+        deviceName: asset.deviceName,
+        serialNumber: asset.serialNumber,
+        modelNo: asset.modelNo,
+
+        location: asset.location,
+        status: asset.status,
+        condition: asset.condition,
+
+        purchaseDate: asset.purchaseDate,
+        insurancePurchaseDate: asset.insurancePurchaseDate,
+        insuranceExpiry: asset.insuranceExpiry,
+
+        purchaseCost: asset.purchaseCost,
+        insuranceCost: asset.insuranceCost,
+        coverageType: asset.coverageType,
+
+        totalCost: asset.totalCost,
+
+        yearlyInsurance
+
+    });
+
+}
 console.log("Yearly Insurance ->", yearlyInsurance);
 // Hardware
 if (
