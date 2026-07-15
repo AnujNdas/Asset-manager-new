@@ -516,29 +516,29 @@ if (asset.purchaseDate) {
 
     });
 
-asset.upgrades?.forEach(upgrade => {
+// asset.upgrades?.forEach(upgrade => {
 
-  if (!upgrade.date) return;
+//   if (!upgrade.date) return;
 
-  yearlyMaintenance.push({
+//   yearlyMaintenance.push({
 
-    year: new Date(upgrade.date).getFullYear(),
+//     year: new Date(upgrade.date).getFullYear(),
 
-    purchaseCost: 0,
+//     purchaseCost: 0,
 
-    maintenanceCost: 0,
+//     maintenanceCost: 0,
 
-    warrantyCost: 0,
+//     warrantyCost: 0,
 
-    insuranceCost: 0,
+//     insuranceCost: 0,
 
-    upgradeCost: upgrade.cost || 0,
+//     upgradeCost: upgrade.cost || 0,
 
-    totalCost: upgrade.cost || 0
+//     totalCost: upgrade.cost || 0
 
-  });
+//   });
 
-});
+// });
   maintenance.push({
     type: "maintenance",
     assetType: "hardware",
