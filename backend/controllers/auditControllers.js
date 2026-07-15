@@ -296,7 +296,7 @@ const asset = {
 };
 
 assetLookup[inst._id.toString()] = asset;
-const yearlyWarranty = [];
+
 
 const warrantyMap = {};
 
