@@ -46,7 +46,8 @@ async function sendBrevoEmail(to, subject, html) {
       htmlContent: html
     })
   });
-
+  const responseBody = await response.text();
+console.log("Brevo Response:", response.status, responseBody);
   if (!response.ok) {
     const errorData = await response.json();
     console.error("❌ Brevo send error:", errorData);
