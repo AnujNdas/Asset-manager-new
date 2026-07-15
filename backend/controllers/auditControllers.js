@@ -387,85 +387,47 @@ if (asset.warrantyExpiry) {
     });
 
 }
-const yearlyInsurance = [];
+const insuranceMap = {};
 
+// Purchase
 if (asset.purchaseDate) {
+    const year = new Date(asset.purchaseDate).getFullYear();
 
-    const purchaseYear = new Date(asset.purchaseDate).getFullYear();
-
-    const insurancePurchasedSameYear =
-        asset.insurancePurchaseDate &&
-        new Date(asset.insurancePurchaseDate).getFullYear() === purchaseYear;
-
-    const insuranceCost = insurancePurchasedSameYear
-        ? asset.insuranceCost || 0
-        : 0;
-
-    yearlyInsurance.push({
-        year: purchaseYear,
+    insuranceMap[year] = {
+        year,
         purchaseCost: asset.purchaseCost || 0,
-        insuranceCost,
-        totalCost:
-            (asset.purchaseCost || 0) +
-            insuranceCost
-    });
-
+        insuranceCost: 0,
+        totalCost: asset.purchaseCost || 0
+    };
 }
 
-if (
-    asset.insuranceExpiry &&
-    asset.insuranceCost > 0 &&
-    asset.insurancePurchaseDate &&
-    new Date(asset.insuranceExpiry).getFullYear() !==
-    new Date(asset.insurancePurchaseDate).getFullYear()
-) {
-    yearlyInsurance.push({
-        year: new Date(asset.insuranceExpiry).getFullYear(),
-        purchaseCost: 0,
-        insuranceCost: asset.insuranceCost,
-        totalCost: asset.insuranceCost,
-    });
-}
-if (asset.insuranceExpiry) {
-    
-    insurance.push({
-        
-        instanceId: asset.instanceId,
-        
-        assetCode: asset.assetCode,
-        
-        assetName: asset.assetName,
-        
-        instanceCode: asset.instanceCode,
-        
-        insurancePurchaseDate : asset.insurancePurchaseDate,
+// Insurance renewals
+(asset.lifecycle || [])
+    .filter(item => item.eventType === "insurance_renewal")
+    .forEach(item => {
 
-        assetType: asset.assetType,
+        const year = new Date(item.date).getFullYear();
 
-        deviceName: asset.deviceName,
+        if (!insuranceMap[year]) {
+            insuranceMap[year] = {
+                year,
+                purchaseCost: 0,
+                insuranceCost: 0,
+                totalCost: 0
+            };
+        }
 
-        serialNumber: asset.serialNumber,
+        const amount =
+            item.metadata?.cost?.amount ??
+            item.metadata?.to?.costs?.insuranceCost ??
+            0;
 
-        modelNo: asset.modelNo,
-        purchaseCost : asset.purchaseCost,
-        location: asset.location,
-
-        status: asset.status,
-
-        condition: asset.condition,
-
-        purchaseDate: asset.purchaseDate,
-
-        insuranceExpiry: asset.insuranceExpiry,
-
-        insuranceCost: asset.insuranceCost,
-        coverageType : asset.coverageType,
-        totalCost: asset.totalCost,
-        yearlyInsurance
-
+        insuranceMap[year].insuranceCost += amount;
+        insuranceMap[year].totalCost += amount;
     });
 
-}
+const yearlyInsurance = Object.values(insuranceMap)
+    .sort((a, b) => a.year - b.year);
 
 // Hardware
 if (
