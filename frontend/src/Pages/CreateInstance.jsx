@@ -723,10 +723,10 @@ if (
 
   const handleSubmit = async () => {
     if (!validate()) return;
-
+    console.log("btn clicked")
     try {
       setLoading(true);
-
+      console.log("AFTER LOADING");
       const activeInstances = instances.filter((inst) => {
         return (
           inst.deviceName?.trim() ||
@@ -736,7 +736,7 @@ if (
           inst.purchaseCost
         );
       });
-
+      console.log("ACTIVE INSTANCES", activeInstances);
       const payload = activeInstances.map((inst) => {
         if (isSoftware) {
           return {
@@ -815,7 +815,9 @@ insuranceCost: {
           },
         };
       });
+      console.log("PAYLOAD", payload);
 
+console.log("BEFORE API");
       await createAssetInstances({
         assetId,
         instances: payload,

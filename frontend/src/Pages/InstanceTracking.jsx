@@ -30,56 +30,56 @@ const InstanceTracking = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [highlightedId, setHighlightedId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const driverObj = driver({
-    showProgress: true,
-    animate: true,
-    smoothScroll: true,
-    allowClose: true,
+  // const driverObj = driver({
+  //   showProgress: true,
+  //   animate: true,
+  //   smoothScroll: true,
+  //   allowClose: true,
 
-    overlayColor: "rgba(0,0,0,0.75)",
+  //   overlayColor: "rgba(0,0,0,0.75)",
 
-    popoverClass: "custom-driver-popover",
+  //   popoverClass: "custom-driver-popover",
 
-    steps: [
-      {
-        element: ".tour-filter",
-        popover: {
-          title: "Filter Instances",
-          description: "You can select the type of the instances you want to track.",
-          side: "bottom",
-          align: "start",
-        },
-      },
+  //   steps: [
+  //     {
+  //       element: ".tour-filter",
+  //       popover: {
+  //         title: "Filter Instances",
+  //         description: "You can select the type of the instances you want to track.",
+  //         side: "bottom",
+  //         align: "start",
+  //       },
+  //     },
 
-      {
-        element: ".tour-scan",
-        popover: {
-          title: "Scan and view instances",
-          description:
-            "Click and scan the instance Qr from the inventory.",
-          side: "bottom",
-        },
-      },
-    ],
-  });
+  //     {
+  //       element: ".tour-scan",
+  //       popover: {
+  //         title: "Scan and view instances",
+  //         description:
+  //           "Click and scan the instance Qr from the inventory.",
+  //         side: "bottom",
+  //       },
+  //     },
+  //   ],
+  // });
 
-  useEffect(() => {
-    const seen = localStorage.getItem("inventoryTourSeen");
+//   useEffect(() => {
+//     const seen = localStorage.getItem("inventoryTourSeen");
   
-    if (!seen) {
-      setTimeout(() => {
-        driverObj.drive();
+//     if (!seen) {
+//       setTimeout(() => {
+//         driverObj.drive();
   
-        localStorage.setItem(
-          "inventoryTourSeen",
-          "true"
-        );
-      }, 1000);
-    }
-  }, []);
-  useEffect(() => {
-  registerTour(driverObj);
-}, []);
+//         localStorage.setItem(
+//           "inventoryTourSeen",
+//           "true"
+//         );
+//       }, 1000);
+//     }
+//   }, []);
+//   useEffect(() => {
+//   registerTour(driverObj);
+// }, []);
   useEffect(() => {
     if (!highlightedId) return;
 
@@ -195,13 +195,13 @@ const filteredInstances = instances.filter((inst) => {
       onChange={(e) => setSearchTerm(e.target.value)}
     />
   </div>
+
+        <div className="right-actions">
         <select value={filterType} onChange={handleFilterChange}>
           <option value="all">All Assets</option>
           <option value="hardware">Hardware</option>
           <option value="software">Software</option>
         </select>
-
-        <div className="right-actions">
           <button className="scan-btn tour-scan" onClick={() => setShowScanner(true)}>
             Scan QR
           </button>

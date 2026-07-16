@@ -752,7 +752,7 @@ const softwareRenewalDue = isDue(
               name="newInsuranceExpiry"
               value={form.newInsuranceExpiry}
               onChange={handleChange}
-              disabled={!canEditInsurance}
+              disabled
             />
 
           </div>

@@ -403,17 +403,17 @@ const formatCost = (costObj) => {
     </div>
 
     <div className="hardware-item">
-      <label>Serial</label>
-      <span>{item.hardware.serialNumber}</span>
+      <label>Asset Name</label>
+      <span>{item.deviceName}</span>
     </div>
 
     <div className="hardware-item">
-      <label>Warranty</label>
+      <label>Warranty Expiry</label>
       <span>{item.hardware.warrantyExpiry}</span>
     </div>
 
     <div className="hardware-item">
-      <label>Maintenance</label>
+      <label>Next Maintenance</label>
       <span>{item.hardware.nextMaintenanceDate}</span>
     </div>
 

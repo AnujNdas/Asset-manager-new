@@ -271,6 +271,7 @@ const history = (instance.lifecycle || [])
 
     const meta = item.metadata || {};
     const snapshot = meta.snapshot || {};
+    const isCreatedEvent = item.eventType === "created";
     /* =============================
    HISTORICAL SNAPSHOT
 ============================= */
@@ -358,46 +359,54 @@ hardware: instance.hardware
         "-",
 
       warrantyExpiry: formatDate(
-        snapshot.hardware?.warrantyExpiry ||
-        snapshotDates.warrantyExpiry ||
-        instance.hardware?.warrantyExpiry
+        isCreatedEvent
+          ? instance.hardware?.warrantyExpiry
+          : snapshot.hardware?.warrantyExpiry ||
+            snapshotDates.warrantyExpiry
       ),
 
       nextMaintenanceDate: formatDate(
-        snapshot.hardware?.nextMaintenanceDate ||
-        snapshotDates.maintenanceDate ||
-        instance.hardware?.nextMaintenanceDate
+        isCreatedEvent
+          ? instance.hardware?.nextMaintenanceDate
+          : snapshot.hardware?.nextMaintenanceDate ||
+            snapshotDates.maintenanceDate
       ),
 
       maintenanceStatus,
 
       maintenanceCost:
-        snapshot.hardware?.costs?.maintenanceCost?.amount ??
-        snapshotCosts.maintenanceCost ??
-        instance.hardware?.costs?.maintenanceCost?.amount ??
-        null,
-          insurancePurchaseDate: formatDate(
-        snapshot.hardware?.insurancePurchaseDate ||
-        snapshotDates.insurancePurchaseDate ||
-        instance.hardware?.insurancePurchaseDate
+        isCreatedEvent
+          ? instance.hardware?.costs?.maintenanceCost?.amount ?? null
+          : snapshot.hardware?.costs?.maintenanceCost?.amount ??
+            snapshotCosts.maintenanceCost ??
+            null,
+
+      insurancePurchaseDate: formatDate(
+        isCreatedEvent
+          ? instance.hardware?.insurancePurchaseDate
+          : snapshot.hardware?.insurancePurchaseDate ||
+            snapshotDates.insurancePurchaseDate
       ),
 
       insuranceExpiry: formatDate(
-        snapshot.hardware?.insuranceExpiry ||
-        snapshotDates.insuranceExpiry ||
-        instance.hardware?.insuranceExpiry
+        isCreatedEvent
+          ? instance.hardware?.insuranceExpiry
+          : snapshot.hardware?.insuranceExpiry ||
+            snapshotDates.insuranceExpiry
       ),
 
       insuranceTerm:
-        snapshot.hardware?.insuranceTerm ||
-        meta.insuranceTerm ||
-        instance.hardware?.insuranceTerm ||
-        "-",
+        isCreatedEvent
+          ? instance.hardware?.insuranceTerm
+          : snapshot.hardware?.insuranceTerm ||
+            meta.insuranceTerm ||
+            "-",
 
       hasInsurance:
-        snapshot.hardware?.hasInsurance ??
-        instance.hardware?.hasInsurance ??
-        false,
+        isCreatedEvent
+          ? instance.hardware?.hasInsurance
+          : snapshot.hardware?.hasInsurance ??
+            false,
     }
   : null,
 
@@ -414,16 +423,18 @@ software: instance.software
         "-",
 
       renewalDate: formatDate(
-        snapshot.software?.renewalDate ||
-        snapshotDates.renewalDate ||
-        instance.software?.renewalDate
+        isCreatedEvent
+          ? instance.software?.renewalDate
+          : snapshot.software?.renewalDate ||
+            snapshotDates.renewalDate
       ),
 
       renewalCost:
-        snapshot.software?.costs?.renewalCost?.amount ??
-        snapshotCosts.renewalCost ??
-        instance.software?.costs?.renewalCost?.amount ??
-        null
+        isCreatedEvent
+          ? instance.software?.costs?.renewalCost?.amount ?? null
+          : snapshot.software?.costs?.renewalCost?.amount ??
+            snapshotCosts.renewalCost ??
+            null
     }
   : null,
 /* =============================
@@ -760,34 +771,32 @@ if (hasInsurance === true) {
     instance.hardware.insuranceTerm = insuranceTerm;
   }
 
-  if (newInsurancePurchaseDate) {
-    instance.hardware.insurancePurchaseDate = newInsurancePurchaseDate;
+if (newInsurancePurchaseDate) {
 
-    // 🔥 AUTO CALCULATE EXPIRY
-    const purchaseDate = new Date(newInsurancePurchaseDate);
-    let expiry = new Date(purchaseDate);
+  instance.hardware.insurancePurchaseDate = newInsurancePurchaseDate;
 
-    switch (insuranceTerm || instance.hardware.insuranceTerm) {
-      case "6_months":
-        expiry.setMonth(expiry.getMonth() + 6);
-        break;
-      case "1_year":
-        expiry.setFullYear(expiry.getFullYear() + 1);
-        break;
-      case "3_years":
-        expiry.setFullYear(expiry.getFullYear() + 3);
-        break;
-      default:
-        break;
+  const purchase = new Date(newInsurancePurchaseDate);
+  const expiry = new Date(purchase);
+
+  const term = insuranceTerm || instance.hardware.insuranceTerm;
+
+  if (term === "6_months") {
+
+    expiry.setMonth(expiry.getMonth() + 6);
+
+  } else {
+
+    const years = parseInt(term); // "3_years" -> 3
+
+    if (!isNaN(years)) {
+      expiry.setFullYear(expiry.getFullYear() + years);
     }
 
-    instance.hardware.insuranceExpiry = expiry;
   }
 
-  // Optional manual override (if provided)
-  if (newInsuranceExpiry) {
-    instance.hardware.insuranceExpiry = newInsuranceExpiry;
-  }
+  instance.hardware.insuranceExpiry = expiry;
+}
+
   if (insuranceCost !== undefined) {
   instance.hardware.costs.insuranceCost = {
     amount: Number(insuranceCost) || 0,

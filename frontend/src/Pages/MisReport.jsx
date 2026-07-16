@@ -2640,6 +2640,7 @@ const renderFinancial = () => (
           <span>Purchase</span>
           <span>{formatCurrency(year.purchaseCost)}</span>
         </div>
+        
 
         <div className="year-row">
           <span>Maintenance</span>
@@ -2656,10 +2657,12 @@ const renderFinancial = () => (
           <span>{formatCurrency(year.insuranceCost)}</span>
         </div>
 
-        <div className="year-row">
-          <span>Renewal</span>
-          <span>{formatCurrency(year.renewalCost)}</span>
-        </div>
+      {asset.assetType === "software" && (
+  <div className="year-row">
+    <span>Renewal</span>
+    <span>{formatCurrency(year.renewalCost)}</span>
+  </div>
+)}
 
         <div className="year-row">
           <span>Upgrade</span>
