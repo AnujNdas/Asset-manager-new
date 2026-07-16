@@ -1749,7 +1749,7 @@ const renderMaintenance = () => (
             <span>Maintenance</span>
             <span>{formatCurrency(year.maintenanceCost || 0)}</span>
           </div>
-
+{/* 
           <div className="year-row">
             <span>Warranty</span>
             <span>{formatCurrency(year.warrantyCost || 0)}</span>
@@ -1763,7 +1763,7 @@ const renderMaintenance = () => (
           <div className="year-row">
             <span>Upgrade</span>
             <span>{formatCurrency(year.upgradeCost || 0)}</span>
-          </div>
+          </div> */}
         </>
       ) : (
         <div className="year-row">
