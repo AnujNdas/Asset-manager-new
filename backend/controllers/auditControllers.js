@@ -109,7 +109,8 @@ for (const inst of assetInstances) {
         yearlyMap[year].totalCost += amount;
 
     };
-    if (inst.assetType === "hardware") {
+ // Purchase
+if (inst.assetType === "hardware") {
 
     addCost(
         hardware.purchaseDate,
@@ -117,26 +118,7 @@ for (const inst of assetInstances) {
         hardware.purchaseCost?.amount
     );
 
-    addCost(
-        hardware.nextMaintenanceDate,
-        "maintenanceCost",
-        hardware.costs?.maintenanceCost?.amount
-    );
-
-    addCost(
-        hardware.warrantyExpiry,
-        "warrantyCost",
-        hardware.costs?.warrantyRenewalCost?.amount
-    );
-
-    addCost(
-        hardware.insurancePurchaseDate,
-        "insuranceCost",
-        hardware.costs?.insuranceCost?.amount
-    );
-
-}
-if (inst.assetType === "software") {
+} else {
 
     addCost(
         software.purchaseDate,
@@ -144,19 +126,73 @@ if (inst.assetType === "software") {
         software.purchaseCost?.amount
     );
 
-    addCost(
-        software.renewalDate,
-        "renewalCost",
-        software.costs?.renewalCost?.amount
-    );
-
 }
+
+// Lifecycle events
+(inst.lifecycle || []).forEach(event => {
+
+    switch (event.eventType) {
+
+        case "maintenance":
+            addCost(
+                event.date,
+                "maintenanceCost",
+                event.metadata?.cost?.amount ??
+                event.metadata?.to?.costs?.maintenanceCost ??
+                0
+            );
+            break;
+
+        case "warranty_renewal":
+            addCost(
+                event.date,
+                "warrantyCost",
+                event.metadata?.cost?.amount ??
+                event.metadata?.to?.costs?.warrantyRenewalCost ??
+                0
+            );
+            break;
+
+        case "insurance_renewal":
+            addCost(
+                event.date,
+                "insuranceCost",
+                event.metadata?.cost?.amount ??
+                event.metadata?.to?.costs?.insuranceCost ??
+                0
+            );
+            break;
+
+        case "software_renewal":
+            addCost(
+                event.date,
+                "renewalCost",
+                event.metadata?.cost?.amount ??
+                event.metadata?.to?.costs?.renewalCost ??
+                0
+            );
+            break;
+
+        case "upgrade":
+            addCost(
+                event.date,
+                "upgradeCost",
+                event.metadata?.cost?.amount ??
+                0
+            );
+            break;
+
+    }
+
+});
+
+// Legacy upgrade array (only if you still use it)
 (inst.upgrades || []).forEach(upgrade => {
 
     addCost(
         upgrade.date,
         "upgradeCost",
-        upgrade.cost?.amount || upgrade.cost
+        upgrade.cost?.amount || upgrade.cost || 0
     );
 
 });
