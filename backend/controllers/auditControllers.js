@@ -173,29 +173,21 @@ if (inst.assetType === "hardware") {
             );
             break;
 
-        case "upgrade":
-            addCost(
-                event.date,
-                "upgradeCost",
-                event.metadata?.cost?.amount ??
-                0
-            );
-            break;
+case "upgrade":
+case "upgraded":
+    addCost(
+        event.date,
+        "upgradeCost",
+        event.metadata?.upgradeCost?.amount ??
+        event.metadata?.cost?.amount ??
+        0
+    );
+    break;
 
     }
 
 });
 
-// Legacy upgrade array (only if you still use it)
-(inst.upgrades || []).forEach(upgrade => {
-
-    addCost(
-        upgrade.date,
-        "upgradeCost",
-        upgrade.cost?.amount || upgrade.cost || 0
-    );
-
-});
     const purchaseCost =
         Number(
             hardware.purchaseCost?.amount ??
