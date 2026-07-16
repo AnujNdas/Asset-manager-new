@@ -715,6 +715,7 @@ asset.lifecycle.forEach(event => {
 const yearlyCosts = Object.values(yearlyMap).sort(
     (a, b) => a.year - b.year
 );
+console.log(yearlyCosts)
 financial.push({
 
     ...asset,
