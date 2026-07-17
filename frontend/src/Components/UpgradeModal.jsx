@@ -872,8 +872,7 @@ const softwareRenewalDue = isDue(
             />
 
           </div>
-
-          {/* <div className="input-group">
+       <div className="input-group">
 
             <label>Expiry Date</label>
 
@@ -889,7 +888,8 @@ const softwareRenewalDue = isDue(
               disabled
             />
 
-          </div> */}
+          </div>
+   
           <div className="input-group">
   <label>Insurance Renewed On</label>
           <small style={{opacity: "0"}}>

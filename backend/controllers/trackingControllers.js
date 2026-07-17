@@ -408,12 +408,20 @@ insurance: {
   ),
 
   term:
+    meta.insurance?.insuranceTerm ||
     snapshot.hardware?.insuranceTerm ||
     instance.hardware?.insuranceTerm,
 
   hasInsurance:
+    meta.insurance?.hasInsurance ??
     snapshot.hardware?.hasInsurance ??
     instance.hardware?.hasInsurance,
+
+  coverageType:
+    meta.insurance?.coverageType ||
+    snapshot.hardware?.coverageType ||
+    instance.hardware?.coverageType ||
+    [],
 
   cost:
     snapshotCosts.insuranceCost ??
