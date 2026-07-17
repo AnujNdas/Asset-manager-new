@@ -30,6 +30,17 @@ const customSelectStyles = {
       borderColor: "#DFD0B8",
     },
   }),
+  menu: (provided) => ({
+...provided,
+zIndex: 9999,
+}),
+
+menuList: (provided) => ({
+...provided,
+maxHeight: "100px", // Reduce dropdown height
+paddingTop: 0,
+paddingBottom: 0,
+}),
 
   menu: (base) => ({
     ...base,
@@ -1097,6 +1108,7 @@ console.log("BEFORE API");
                       className="react-select-container"
                       classNamePrefix="react-select"
                       options={coverageOptions}
+                      
                       value={coverageOptions.filter((opt) =>
                         (bulkValues.coverageType || []).includes(opt.value),
                       )}
