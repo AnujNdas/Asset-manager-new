@@ -666,6 +666,7 @@ const upgradeInstance = async (req, res) => {
       upgradeDate,   // ✅ NEW
       // 🔹 Hardware Dates
       hasInsurance,
+      coverageType,
       insuranceTerm,
       newWarrantyExpiry,
       newInsuranceExpiry,
@@ -863,7 +864,9 @@ if (hasInsurance === true) {
   if (insuranceTerm) {
     instance.hardware.insuranceTerm = insuranceTerm;
   }
-
+  if (coverageType) {
+  instance.hardware.coverageType = coverageType;
+}
 if (newInsurancePurchaseDate) {
 
   instance.hardware.insurancePurchaseDate = newInsurancePurchaseDate;

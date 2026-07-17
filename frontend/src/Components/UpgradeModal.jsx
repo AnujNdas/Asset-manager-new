@@ -11,6 +11,16 @@ import {
   FaLaptop,
 } from "react-icons/fa";
 const UpgradeModal = ({ instance, onClose, refresh }) => {
+  const coverageOptions = [
+  { value: "accidental_damage", label: "Accidental Damage" },
+  { value: "theft", label: "Theft" },
+  { value: "fire", label: "Fire" },
+  { value: "flood", label: "Flood" },
+  { value: "natural_disaster", label: "Natural Disaster" },
+  { value: "electrical_damage", label: "Electrical Damage" },
+  { value: "liquid_damage", label: "Liquid Damage" },
+  { value: "none", label: "None" },
+];
   console.log(instance)
   const { organization } = useOrganization();
   const currency = organization?.currency;
@@ -184,7 +194,8 @@ insuranceTerm:
     instance?.hardware?.installationDate?.split("T")[0] ||
     instance?.software?.installationDate?.split("T")[0] ||
     "",
-
+  coverageType:
+  instance?.hardware?.coverageType || [],
   condition: instance?.condition || "",
   upgradeDescription: "",
   upgradeNotes: "",
@@ -283,6 +294,9 @@ if (form.insuranceRenewedOn) {
     payload.newInstallationDate =
       form.newInstallationDate;
   }
+  if (form.coverageType?.length) {
+  payload.coverageType = form.coverageType;
+}
 }
 if (isSoftware) {
 if (form.licenseRenewedOn) {
@@ -704,6 +718,41 @@ const softwareRenewalDue = isDue(
             </select>
 
           </div>
+          <div className="input-group">
+
+  <label>Coverage Type</label>
+
+  <Select
+    isMulti
+    styles={customSelectStyles}
+    className="react-select-container"
+    classNamePrefix="react-select"
+    options={coverageOptions}
+    isDisabled={!canEditInsurance}
+    value={coverageOptions.filter((opt) =>
+      (form.coverageType || []).includes(opt.value)
+    )}
+    onChange={(selected, actionMeta) => {
+      let values = selected
+        ? selected.map((s) => s.value)
+        : [];
+
+      const lastSelected = actionMeta?.option?.value;
+
+      if (lastSelected === "none") {
+        values = ["none"];
+      } else {
+        values = values.filter((v) => v !== "none");
+      }
+
+      setForm({
+        ...form,
+        coverageType: values,
+      });
+    }}
+  />
+
+</div>
 
           <div className="input-group">
 

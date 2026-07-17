@@ -479,7 +479,7 @@ const formatCost = (costObj) => {
 
     <div className="hardware-item">
       <label>Maintenance Cost</label>
-      <span>{item.maintenance?.cost}</span>
+      <span>{formatCost(item.maintenance?.cost)}</span>
     </div>
 
     <div className="hardware-item">
@@ -506,7 +506,7 @@ const formatCost = (costObj) => {
 
     <div className="hardware-item">
       <label>Renewal Cost</label>
-      <span>{item.warranty?.cost}</span>
+      <span>{formatCost(item.warranty?.cost)}</span>
     </div>
 
     <div className="hardware-item">
@@ -538,7 +538,7 @@ const formatCost = (costObj) => {
 
     <div className="hardware-item">
       <label>Insurance Cost</label>
-      <span>{formatCost(item.cost)}</span>
+      <span>{formatCost(item.insurance?.cost)}</span>
     </div>
 
     <div className="hardware-item">
@@ -558,7 +558,7 @@ const formatCost = (costObj) => {
 
     <div className="hardware-item">
       <label>Insurance Term</label>
-      <span>{item.hardware?.insuranceTerm || "-"}</span>
+      <span>{item.insurance?.term || "-"}</span>
     </div>
 
     {/* <div className="hardware-item">
