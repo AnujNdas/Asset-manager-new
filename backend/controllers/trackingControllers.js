@@ -1,6 +1,8 @@
 // GET /instances/tracking
 const mongoose = require("mongoose")
 const Organization = require("../models/Organization");
+
+
 const getTrackedInstances = async (req, res) => {
   try {
     const { type, status, search } = req.query;
@@ -341,6 +343,97 @@ condition:
       meta.condition ||
       instance.condition ||
       "-",
+      /* =============================
+   PURCHASE
+============================= */
+
+purchaseDate: formatDate(
+  meta.purchaseDate ||
+  snapshot.hardware?.purchaseDate ||
+  snapshot.software?.purchaseDate ||
+  instance.hardware?.purchaseDate ||
+  instance.software?.purchaseDate
+),
+
+purchaseCost:
+  meta.purchaseCost ||
+  snapshot.hardware?.purchaseCost ||
+  snapshot.software?.purchaseCost ||
+  instance.hardware?.purchaseCost ||
+  instance.software?.purchaseCost ||
+  null,
+  warranty: {
+  purchaseDate: formatDate(
+    snapshotDates.warrantyPurchaseDate ||
+    snapshot.hardware?.warrantyPurchaseDate ||
+    instance.hardware?.warrantyPurchaseDate
+  ),
+
+  expiry: formatDate(
+    snapshotDates.warrantyExpiry ||
+    snapshot.hardware?.warrantyExpiry ||
+    instance.hardware?.warrantyExpiry
+  ),
+
+  cost:
+    snapshotCosts.warrantyRenewalCost ??
+    snapshot.hardware?.costs?.warrantyRenewalCost?.amount ??
+    instance.hardware?.costs?.warrantyRenewalCost?.amount ??
+    null
+},
+maintenance: {
+  date: formatDate(
+    snapshotDates.maintenanceDate ||
+    snapshot.hardware?.nextMaintenanceDate ||
+    instance.hardware?.nextMaintenanceDate
+  ),
+
+  cost:
+    snapshotCosts.maintenanceCost ??
+    snapshot.hardware?.costs?.maintenanceCost?.amount ??
+    instance.hardware?.costs?.maintenanceCost?.amount ??
+    null
+},
+insurance: {
+  purchaseDate: formatDate(
+    snapshotDates.insurancePurchaseDate ||
+    snapshot.hardware?.insurancePurchaseDate ||
+    instance.hardware?.insurancePurchaseDate
+  ),
+
+  expiry: formatDate(
+    snapshotDates.insuranceExpiry ||
+    snapshot.hardware?.insuranceExpiry ||
+    instance.hardware?.insuranceExpiry
+  ),
+
+  term:
+    snapshot.hardware?.insuranceTerm ||
+    instance.hardware?.insuranceTerm,
+
+  hasInsurance:
+    snapshot.hardware?.hasInsurance ??
+    instance.hardware?.hasInsurance,
+
+  cost:
+    snapshotCosts.insuranceCost ??
+    snapshot.hardware?.costs?.insuranceCost?.amount ??
+    instance.hardware?.costs?.insuranceCost?.amount ??
+    null
+},
+renewal: {
+  renewalDate: formatDate(
+    snapshotDates.renewalDate ||
+    snapshot.software?.renewalDate ||
+    instance.software?.renewalDate
+  ),
+
+  cost:
+    snapshotCosts.renewalCost ??
+    snapshot.software?.costs?.renewalCost?.amount ??
+    instance.software?.costs?.renewalCost?.amount ??
+    null
+},
       /* =============================
          HARDWARE
       ============================== */

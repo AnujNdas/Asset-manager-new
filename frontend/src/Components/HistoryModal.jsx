@@ -5,7 +5,7 @@ const HistoryModal = ({ instance, onClose }) => {
   const [history, setHistory] = useState([]);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
 const fetchHistory = async () => {
   try {
     const res = await getInstanceHistory(instance._id);
@@ -172,8 +172,19 @@ const formatCost = (costObj) => {
 
   {history?.length ? (
 
-    history.map((item, index) => (
-
+    history.map((item, index) => {
+      console.log(item)
+      const isCreated = item.action === "CREATED";
+      const isPurchased = item.action === "PURCHASED";
+      const isMaintenance = item.action === "MAINTENANCE";
+      const isWarranty = item.action === "WARRANTY_RENEWAL";
+      const isInsurance = item.action === "INSURANCE_RENEWAL";
+      const isUpgrade = item.action === "UPGRADED";
+      const isAssigned = item.action === "ASSIGNED";
+      const isReassigned = item.action === "REASSIGNED";
+      const isReturned = item.action === "RETURNED";
+      const isRenewal = item.action === "RENEWAL";
+      return (
       <div
         key={index}
         className={`timeline-event ${item.action?.toLowerCase()}`}
@@ -392,65 +403,405 @@ const formatCost = (costObj) => {
   </div>
 
 )}
-          {/* HARDWARE DETAILS */}
-{item.hardware && (
+
+{isCreated && item.hardware && (
+
+<div className="hardware-grid">
+
+  <div className="hardware-item">
+    <label>Model</label>
+    <span>{item.hardware.modelNo}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Asset Name</label>
+    <span>{item.deviceName}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Warranty Expiry</label>
+    <span>{item.hardware.warrantyExpiry}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Next Maintenance</label>
+    <span>{item.hardware.nextMaintenanceDate}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Insurance Purchase</label>
+    <span>{item.hardware.insurancePurchaseDate}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Insurance Expiry</label>
+    <span>{item.hardware.insuranceExpiry}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Insurance Term</label>
+    <span>{item.hardware.insuranceTerm}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Has Insurance</label>
+    <span>{item.hardware.hasInsurance ? "Yes" : "No"}</span>
+  </div>
+
+</div>
+
+)}
+{isPurchased && (
+
+<div className="hardware-grid">
+
+  <div className="hardware-item">
+    <label>Purchase Cost</label>
+    <span>{formatCost(item.purchaseCost?.amount)}</span>
+  </div>
+
+  <div className="hardware-item">
+    <label>Purchase Date</label>
+    <span>{formatDate(item.purchaseDate)}</span>
+  </div>
+
+</div>
+
+)}
+{isMaintenance && (
 
   <div className="hardware-grid">
 
     <div className="hardware-item">
-      <label>Model</label>
-      <span>{item.hardware.modelNo}</span>
+      <label>Maintenance Performed</label>
+      <span>{item.recordDate}</span>
     </div>
 
     <div className="hardware-item">
-      <label>Asset Name</label>
-      <span>{item.deviceName}</span>
+      <label>Maintenance Cost</label>
+      <span>{formatCost(item.cost)}</span>
     </div>
 
     <div className="hardware-item">
-      <label>Warranty Expiry</label>
-      <span>{item.hardware.warrantyExpiry}</span>
+      <label>Previous Due Date</label>
+      <span>{formatDate(item.from?.dates?.maintenanceDate) || "-"}</span>
     </div>
 
     <div className="hardware-item">
       <label>Next Maintenance</label>
-      <span>{item.hardware.nextMaintenanceDate}</span>
-    </div>
-
-    {/* Insurance */}
-
-    <div className="hardware-item">
-      <label>Insurance Purchase</label>
-      <span>
-        {item.hardware.insurancePurchaseDate || "-"}
-      </span>
-    </div>
-
-    <div className="hardware-item">
-      <label>Insurance Expiry</label>
-      <span>
-        {item.hardware.insuranceExpiry || "-"}
-      </span>
-    </div>
-
-    <div className="hardware-item">
-      <label>Insurance Term</label>
-      <span>
-        {item.hardware.insuranceTerm || "-"}
-      </span>
-    </div>
-
-    <div className="hardware-item">
-      <label>Has Insurance</label>
-      <span>
-        {item.hardware.hasInsurance ? "Yes" : "No"}
-      </span>
+      <span>{formatDate(item.to?.dates?.maintenanceDate) || "-"}</span>
     </div>
 
   </div>
 
 )}
+{isWarranty && (
 
+  <div className="hardware-grid">
+
+    <div className="hardware-item">
+      <label>Renewal Date</label>
+      <span>{item.recordDate}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Renewal Cost</label>
+      <span>{formatCost(item.cost)}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Previous Warranty Expiry</label>
+      <span>{formatDate(item.from?.dates?.warrantyExpiry) || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>New Warranty Expiry</label>
+      <span>{formatDate(item.to?.dates?.warrantyExpiry) || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Warranty Purchase Date</label>
+      <span>{formatDate(item.to?.dates?.warrantyPurchaseDate) || "-"}</span>
+    </div>
+
+  </div>
+
+)}
+{isInsurance && (
+
+  <div className="hardware-grid">
+
+    <div className="hardware-item">
+      <label>Renewal Date</label>
+      <span>{item.recordDate}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Insurance Cost</label>
+      <span>{formatCost(item.cost)}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Previous Insurance Expiry</label>
+      <span>{item.from?.dates?.insuranceExpiry || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>New Insurance Expiry</label>
+      <span>{item.to?.dates?.insuranceExpiry || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Insurance Purchase Date</label>
+      <span>{item.to?.dates?.insurancePurchaseDate || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Insurance Term</label>
+      <span>{item.hardware?.insuranceTerm || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Has Insurance</label>
+      <span>{item.hardware?.hasInsurance ? "Yes" : "No"}</span>
+    </div>
+
+  </div>
+
+)}
+{isRenewal && item.software && (
+
+  <div className="hardware-grid">
+
+    <div className="hardware-item">
+      <label>Renewal Date</label>
+      <span>{item.recordDate}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Renewal Cost</label>
+      <span>{formatCost(item.cost)}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>License Number</label>
+      <span>{item.software.licenseNumber || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Previous Renewal</label>
+      <span>{item.from?.dates?.renewalDate || "-"}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Next Renewal</label>
+      <span>{item.to?.dates?.renewalDate || "-"}</span>
+    </div>
+
+  </div>
+
+)}
+{isAssigned && (
+
+  <div className="user-card">
+
+    <div>
+      <strong>Employee</strong>
+      <span>{item.assignedTo?.employeeName || "-"}</span>
+    </div>
+
+    <div>
+      <strong>Employee ID</strong>
+      <span>{item.assignedTo?.employeeId || "-"}</span>
+    </div>
+
+    <div>
+      <strong>Department</strong>
+      <span>{item.assignedTo?.departmentName || "-"}</span>
+    </div>
+
+    <div>
+      <strong>Location</strong>
+      <span>{item.location || "-"}</span>
+    </div>
+
+    <div>
+      <strong>Assigned On</strong>
+      <span>{item.recordDate}</span>
+    </div>
+
+  </div>
+
+)}
+{isReassigned && (
+
+<>
+  <div className="transfer-card">
+
+    <div className="transfer-user">
+
+      <small>From</small>
+
+      <strong>
+        {item.reassignedFrom?.employeeName || "-"}
+      </strong>
+
+      <span>
+        {item.reassignedFrom?.departmentName || "-"}
+      </span>
+
+    </div>
+
+    <div className="transfer-arrow">
+      →
+    </div>
+
+    <div className="transfer-user">
+
+      <small>To</small>
+
+      <strong>
+        {item.assignedTo?.employeeName || "-"}
+      </strong>
+
+      <span>
+        {item.assignedTo?.departmentName || "-"}
+      </span>
+
+    </div>
+
+  </div>
+
+  <div className="hardware-grid">
+
+    <div className="hardware-item">
+      <label>New Location</label>
+      <span>{item.location}</span>
+    </div>
+
+    <div className="hardware-item">
+      <label>Transfer Date</label>
+      <span>{item.recordDate}</span>
+    </div>
+
+  </div>
+
+</>
+
+)}
+{isReturned && (
+
+<div className="user-card">
+
+  <div>
+    <strong>Returned By</strong>
+    <span>{item.from?.employeeName || "-"}</span>
+  </div>
+
+  <div>
+    <strong>Department</strong>
+    <span>{item.from?.departmentName || "-"}</span>
+  </div>
+
+  <div>
+    <strong>Returned On</strong>
+    <span>{item.recordDate}</span>
+  </div>
+
+  <div>
+    <strong>Current Status</strong>
+    <span>{item.status}</span>
+  </div>
+
+</div>
+
+)}
+{isUpgrade && (
+
+<>
+  {/* Basic Upgrade Information */}
+  <div className="upgrade-card">
+
+    <div className="upgrade-row">
+      <span>Upgrade Date</span>
+      <strong>{item.recordDate}</strong>
+    </div>
+
+    <div className="upgrade-row">
+      <span>Previous Condition</span>
+      <strong>{item.upgrade?.previousCondition || "-"}</strong>
+    </div>
+
+    <div className="upgrade-row">
+      <span>New Condition</span>
+      <strong>{item.upgrade?.newCondition || "-"}</strong>
+    </div>
+
+    {item.upgrade?.description && (
+      <div className="upgrade-row">
+        <span>Description</span>
+        <strong>{item.upgrade.description}</strong>
+      </div>
+    )}
+
+  </div>
+
+  {/* Changes */}
+  <div className="hardware-grid">
+
+    {/* Maintenance Cost */}
+    {item.from?.costs?.maintenanceCost !== item.to?.costs?.maintenanceCost && (
+      <div className="hardware-item">
+        <label>Maintenance Cost</label>
+        <span>
+          {formatCost({ amount: item.from.costs.maintenanceCost })}
+          {" → "}
+          {formatCost({ amount: item.to.costs.maintenanceCost })}
+        </span>
+      </div>
+    )}
+
+    {/* Warranty Cost */}
+    {item.from?.costs?.warrantyRenewalCost !== item.to?.costs?.warrantyRenewalCost && (
+      <div className="hardware-item">
+        <label>Warranty Cost</label>
+        <span>
+          {formatCost({ amount: item.from.costs.warrantyRenewalCost })}
+          {" → "}
+          {formatCost({ amount: item.to.costs.warrantyRenewalCost })}
+        </span>
+      </div>
+    )}
+
+    {/* Insurance Cost */}
+    {item.from?.costs?.insuranceCost !== item.to?.costs?.insuranceCost && (
+      <div className="hardware-item">
+        <label>Insurance Cost</label>
+        <span>
+          {formatCost({ amount: item.from.costs.insuranceCost })}
+          {" → "}
+          {formatCost({ amount: item.to.costs.insuranceCost })}
+        </span>
+      </div>
+    )}
+
+    {/* Software Renewal */}
+    {item.from?.costs?.renewalCost !== item.to?.costs?.renewalCost && (
+      <div className="hardware-item">
+        <label>Renewal Cost</label>
+        <span>
+          {formatCost({ amount: item.from.costs.renewalCost })}
+          {" → "}
+          {formatCost({ amount: item.to.costs.renewalCost })}
+        </span>
+      </div>
+    )}
+
+  </div>
+
+</>
+
+)}
           {/* SOFTWARE DETAILS */}
 
           {item.software && (
@@ -490,8 +841,9 @@ const formatCost = (costObj) => {
         </div>
 
       </div>
+      )
 
-    ))
+})
 
   ) : (
 
