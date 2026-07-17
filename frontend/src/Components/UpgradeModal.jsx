@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { upgradeInstance } from "../Services/ApiServices";
 import ThemeSwal from "../utils/swalTheme";
 import { useOrganization } from "../Context/OrganizationContext";
+import Select from "react-select";
 import {
   FaTools,
   FaShieldAlt,
@@ -10,17 +11,98 @@ import {
   FaSyncAlt,
   FaLaptop,
 } from "react-icons/fa";
-const UpgradeModal = ({ instance, onClose, refresh }) => {
-  const coverageOptions = [
-  { value: "accidental_damage", label: "Accidental Damage" },
-  { value: "theft", label: "Theft" },
-  { value: "fire", label: "Fire" },
-  { value: "flood", label: "Flood" },
-  { value: "natural_disaster", label: "Natural Disaster" },
-  { value: "electrical_damage", label: "Electrical Damage" },
-  { value: "liquid_damage", label: "Liquid Damage" },
-  { value: "none", label: "None" },
+const customSelectStyles = {
+  control: (base, state) => ({
+    ...base,
+    backgroundColor: "#222831",
+    borderColor: state.isFocused ? "#DFD0B8" : "#393E46",
+    boxShadow: "none",
+    minHeight: "42px",
+    color: "#DFD0B8",
+
+    "&:hover": {
+      borderColor: "#DFD0B8",
+    },
+  }),
+  menu: (provided) => ({
+...provided,
+zIndex: 9999,
+}),
+
+menuList: (provided) => ({
+...provided,
+maxHeight: "100px", // Reduce dropdown height
+paddingTop: 0,
+paddingBottom: 0,
+}),
+
+  menu: (base) => ({
+    ...base,
+    backgroundColor: "#222831",
+    color: "#DFD0B8",
+    zIndex: 9999,
+  }),
+
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isFocused ? "#393E46" : "#222831",
+    color: "#DFD0B8",
+    cursor: "pointer",
+  }),
+
+  multiValue: (base) => ({
+    ...base,
+    backgroundColor: "#393E46",
+  }),
+
+  multiValueLabel: (base) => ({
+    ...base,
+    color: "#DFD0B8",
+  }),
+
+  multiValueRemove: (base) => ({
+    ...base,
+    color: "#DFD0B8",
+
+    "&:hover": {
+      backgroundColor: "#ff4d4f",
+      color: "#fff",
+    },
+  }),
+
+  input: (base) => ({
+    ...base,
+    color: "#DFD0B8",
+  }),
+
+  placeholder: (base) => ({
+    ...base,
+    color: "#A0A0A0",
+  }),
+
+  singleValue: (base) => ({
+    ...base,
+    color: "#DFD0B8",
+  }),
+};
+const coverageOptions = [
+  { label: "Comprehensive", value: "comprehensive" },
+  { label: "Accidental Damage", value: "accidental_damage" },
+  { label: "Third Party", value: "third_party" },
+  { label: "Theft & Burglary", value: "theft_burglary" },
+  { label: "Fire & Lightning", value: "fire_lightning" },
+  { label: "Natural Disasters", value: "natural_disasters" },
+  { label: "Vandalism", value: "vandalism" },
+  { label: "Business Interruption", value: "business_interruption" },
+  { label: "Transit / Marine Cargo", value: "transit_marine_cargo" },
+  { label: "Cyber-Physical Damage", value: "cyber_physical_damage" },
+  { label: "Electrical Surge", value: "electrical_surge" },
+  { label: "Mechanical Breakdown", value: "mechanical_breakdown" },
+  { label: "Other", value: "other" },
+  { label: "None", value: "none" },
 ];
+const UpgradeModal = ({ instance, onClose, refresh }) => {
+  console.log("Select =", Select);
   console.log(instance)
   const { organization } = useOrganization();
   const currency = organization?.currency;
@@ -721,6 +803,9 @@ const softwareRenewalDue = isDue(
           <div className="input-group">
 
   <label>Coverage Type</label>
+   <small style={{opacity: "0"}}>
+                    adjustment
+          </small>
 
   <Select
     isMulti
@@ -788,7 +873,7 @@ const softwareRenewalDue = isDue(
 
           </div>
 
-          <div className="input-group">
+          {/* <div className="input-group">
 
             <label>Expiry Date</label>
 
@@ -804,7 +889,7 @@ const softwareRenewalDue = isDue(
               disabled
             />
 
-          </div>
+          </div> */}
           <div className="input-group">
   <label>Insurance Renewed On</label>
           <small style={{opacity: "0"}}>
