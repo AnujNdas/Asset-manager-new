@@ -543,17 +543,17 @@ const formatCost = (costObj) => {
 
     <div className="hardware-item">
       <label>Previous Insurance Expiry</label>
-      <span>{item.from?.dates?.insuranceExpiry || "-"}</span>
+      <span>{formatDate(item.from?.dates?.insuranceExpiry || "-")}</span>
     </div>
 
     <div className="hardware-item">
       <label>New Insurance Expiry</label>
-      <span>{item.to?.dates?.insuranceExpiry || "-"}</span>
+      <span>{formatDate(item.to?.dates?.insuranceExpiry || "-")}</span>
     </div>
 
     <div className="hardware-item">
       <label>Insurance Purchase Date</label>
-      <span>{item.to?.dates?.insurancePurchaseDate || "-"}</span>
+      <span>{formatDate(item.to?.dates?.insurancePurchaseDate || "-")}</span>
     </div>
 
     <div className="hardware-item">
@@ -561,10 +561,10 @@ const formatCost = (costObj) => {
       <span>{item.hardware?.insuranceTerm || "-"}</span>
     </div>
 
-    <div className="hardware-item">
+    {/* <div className="hardware-item">
       <label>Has Insurance</label>
       <span>{item.hardware?.hasInsurance ? "Yes" : "No"}</span>
-    </div>
+    </div> */}
 
   </div>
 

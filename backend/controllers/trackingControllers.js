@@ -1087,26 +1087,37 @@ if (
   newInsuranceExpiry ||
   newInsurancePurchaseDate
 ) {
-pushLifecycleEvent({
+  pushLifecycleEvent({
+    eventType: "insurance_renewal",
 
-  eventType: "insurance_renewal",
+    title: "Insurance Renewed",
 
-  title: "Insurance Renewed",
+    action: "INSURANCE_RENEWAL",
 
-  action: "INSURANCE_RENEWAL",
+    description:
+      upgradeDescription ||
+      "Insurance renewed",
 
-  description:
-    upgradeDescription ||
-    "Insurance renewed",
+    eventDate: insuranceRenewedOn,
 
-  eventDate: insuranceRenewedOn,
+    cost: {
+      amount: Number(insuranceCost) || 0,
+      currency
+    }
+  });
 
-  cost: {
-    amount: Number(insuranceCost) || 0,
-    currency
-  }
+  // add extra metadata
+  lifecycleEntries[lifecycleEntries.length - 1].metadata = {
+    ...lifecycleEntries[lifecycleEntries.length - 1].metadata,
 
-});
+    insurance: {
+      hasInsurance: instance.hardware?.hasInsurance,
+      insuranceTerm: instance.hardware?.insuranceTerm,
+      coverageType: instance.hardware?.coverageType || [],
+      purchaseDate: instance.hardware?.insurancePurchaseDate,
+      expiryDate: instance.hardware?.insuranceExpiry
+    }
+  };
 }
 if (
   renewalCost !== undefined ||
