@@ -1949,6 +1949,24 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
           ),
           currency
         };
+        const snapshot = {
+  status: "in_stock",
+  condition: inst.condition || "new",
+  location,
+  deviceName: normalize(inst.deviceName) || "",
+  hardware: {
+    serialNumber,
+    modelNo: normalize(inst.hardware?.modelNo) || "",
+    specifications: normalize(inst.hardware?.specifications) || "",
+    purchaseDate,
+    installationDate: parseDateSafe(inst.hardware?.installationDate),
+    warrantyPurchaseDate,
+    warrantyExpiry: parseDateSafe(inst.hardware?.warrantyExpiry),
+    nextMaintenanceDate,
+    purchaseCost,
+    hasInsurance
+  }
+};
         const lifecycle = [
   {
     eventType: "created",
