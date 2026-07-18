@@ -56,10 +56,10 @@ paddingBottom: 0,
     cursor: "pointer",
   }),
 
-  multiValue: (base) => ({
-    ...base,
-    backgroundColor: "#393E46",
-  }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: "#393E46",
+    }),
 
   multiValueLabel: (base) => ({
     ...base,

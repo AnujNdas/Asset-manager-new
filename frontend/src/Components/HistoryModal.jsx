@@ -561,10 +561,24 @@ const formatCost = (costObj) => {
       <span>{item.insurance?.term || "-"}</span>
     </div>
 
-    {/* <div className="hardware-item">
+    <div className="hardware-item">
       <label>Has Insurance</label>
-      <span>{item.hardware?.hasInsurance ? "Yes" : "No"}</span>
-    </div> */}
+      <span>{item.insurance?.hasInsurance ? "Yes" : "No"}</span>
+    </div>
+ <div className="hardware-item">
+  <label>Coverage Type</label>
+  <span>
+    {item.insurance?.coverageType?.length
+      ? item.insurance.coverageType
+          .map(type =>
+            type
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, c => c.toUpperCase())
+          )
+          .join(", ")
+      : "-"}
+  </span>
+</div>
 
   </div>
 
