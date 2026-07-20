@@ -117,42 +117,42 @@ const CreateInstances = () => {
     if (type === "hardware") {
       data = [
         {
-          deviceName: "Optional",
-          location: "Required",
-          condition: "new/used/damaged",
-          modelNo: "Optional",
-          specifications: "Optional",
-          purchaseDate: "YYYY-MM-DD",
-          installationDate: "YYYY-MM-DD",
-          warrantyPurchaseDate: "YYYY-MM-DD",
-          warrantyExpiry: "YYYY-MM-DD",
-          hasInsurance: "true/false",
-          insuranceId: "Optional",
-          insurancePurchaseDate: "YYYY-MM-DD",
-          insuranceTerm: "6_months / 1_year / 3_years",
-          nextMaintenanceDate: "YYYY-MM-DD",
-          purchaseCost: "Number",
-          maintenanceCost: "Number",
-          warrantyRenewalCost: "Number",
-          insuranceCost: "Number",
-          coverageType:
+          DeviceName: "Optional",
+          Location: "Required",
+          Condition: "new/used/damaged",
+          ModelNo: "Optional",
+          Specifications: "Optional",
+          PurchaseDate: "YYYY-MM-DD",
+          InstallationDate: "YYYY-MM-DD",
+          WarrantyPurchaseDate: "YYYY-MM-DD",
+          WarrantyExpiry: "YYYY-MM-DD",
+          HasInsurance: "true/false",
+          InsuranceId: "Optional",
+          InsurancePurchaseDate: "YYYY-MM-DD",
+          InsuranceTerm: "6_months / 1_year / 3_years",
+          NextMaintenanceDate: "YYYY-MM-DD",
+          PurchaseCost: "Number",
+          MaintenanceCost: "Number",
+          WarrantyRenewalCost: "Number",
+          InsuranceCost: "Number",
+          CoverageType:
 "Allowed: comprehensive, accidental_damage, third_party, theft_burglary, fire_lightning, natural_disasters, vandalism, business_interruption, transit_marine_cargo, cyber_physical_damage, electrical_surge, mechanical_breakdown, other, none"
         },
       ];
     } else {
       data = [
         {
-          deviceName: "Optional",
-          location: "New York",
-          condition: "new",
-          licenseKey: "XXXX-YYYY-ZZZZ",
-          licenseNumber: "LIC-001",
-          purchaseDate: "2026-01-01",
-          installationDate: "2026-01-02",
-          renewalDate: "2027-01-01",
-          lastUsedDate: "2026-04-01",
-          purchaseCost: 10000,
-          renewalCost: 2000,
+          DeviceName: "Optional",
+          Location: "New York",
+          Condition: "new",
+          LicenseKey: "XXXX-YYYY-ZZZZ",
+          LicenseNumber: "LIC-001",
+          PurchaseDate: "2026-01-01",
+          InstallationDate: "2026-01-02",
+          RenewalDate: "2027-01-01",
+          LastUsedDate: "2026-04-01",
+          PurchaseCost: 10000,
+          RenewalCost: 2000,
         },
       ];
     }
@@ -462,9 +462,38 @@ const handleUpgradeChange = (
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
 
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-        defval: "", // prevents undefined
-      });
+      const normalizeKey = (key) =>
+  key
+    .trim()
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .map((word, index) => {
+      if (index === 0) {
+        return (
+          word.charAt(0).toLowerCase() +
+          word.slice(1)
+        );
+      }
+
+      return (
+        word.charAt(0).toUpperCase() +
+        word.slice(1)
+      );
+    })
+    .join("");
+
+const jsonData = XLSX.utils
+  .sheet_to_json(worksheet, {
+    defval: "",
+  })
+  .map((row) =>
+    Object.fromEntries(
+      Object.entries(row).map(([key, value]) => [
+        normalizeKey(key),
+        value,
+      ])
+    )
+  );
 
       const payload = jsonData.map((row) => ({
         deviceName: row.deviceName || "",

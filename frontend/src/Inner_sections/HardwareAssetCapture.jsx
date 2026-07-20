@@ -17,33 +17,46 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useTour } from "../Context/TourContext";
 const downloadTemplate = () => {
+const data = [
+  {
+    assetName: "Dell Laptop",
+    assetCategory: "Electronics",
+    associateUnit: "Piece",
+    locationName: "Paris, France",
+    type: "one_time",
+    assetQuantity: 10,
+    dateOfPurchase: "2026-04-01",
+    vendorName: "Dell India",
+    vendorContact: "9876543210",
+    vendorEmail: "support@dell.com",
+  },
+];
 
-  const data = [
-    {
-      assetName: "Dell Laptop",
-      assetCategory: "Electronics",
-      associateUnit: "Piece",
-      locationName: "Paris, France", 
+const worksheet = XLSX.utils.json_to_sheet(data);
 
-      type: "one_time", // one_time / maintenance
+const capitalizeHeader = (str) =>
+  str
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (c) => c.toUpperCase());
 
-      assetQuantity: 10,
+Object.keys(data[0]).forEach((key, index) => {
+  const cell = XLSX.utils.encode_cell({ r: 0, c: index });
+  worksheet[cell].v = capitalizeHeader(key);
+});
 
-      DateOfPurchase: "2026-04-01",
+const workbook = XLSX.utils.book_new();
 
-      vendorName: "Dell India",
-      vendorContact: "9876543210",
-      vendorEmail: "support@dell.com",
-    },
-  ];
+XLSX.utils.book_append_sheet(
+  workbook,
+  worksheet,
+  "Hardware Template"
+);
 
-  const worksheet = XLSX.utils.json_to_sheet(data);
-  const workbook = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Hardware Template");
-
-  XLSX.writeFile(workbook, "hardware_asset_template.xlsx");
-};
+XLSX.writeFile(
+  workbook,
+  "hardware_asset_template.xlsx"
+);
+}
 export const SUPPORTED_CURRENCIES = [
   { code: "USD", label: "US Dollar", symbol: "$" },
   { code: "INR", label: "Indian Rupee", symbol: "₹" },
@@ -246,28 +259,31 @@ const handleImport = async () => {
       const workbook = XLSX.read(data);
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      jsonData = XLSX.utils.sheet_to_json(sheet, {
-        defval: "", // avoid undefined
-      });
-    }
-          /* =============================
-        🧠 NORMALIZE KEYS (ADD HERE)
-      ============================= */
-      const normalizeKeys = (data) => {
-        return data.map(row => ({
-          assetName: row.assetName || row.AssetName,
-          assetCategory: row.assetCategory || row.Category,
-          associateUnit: row.associateUnit || row.Unit,
-          locationName: row.locationName || row.BillingLocation,
-          type: row.type,
-          assetQuantity: row.assetQuantity,
-          DateOfPurchase: row.DateOfPurchase,
-          vendorName: row.vendorName,
-          vendorContact: row.vendorContact,
-          vendorEmail: row.vendorEmail,
-        }));
-      };
+   const normalizeKey = (key) =>
+  key
+    .trim()
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .map((word, index) =>
+      index === 0
+        ? word.charAt(0).toLowerCase() + word.slice(1)
+        : word.charAt(0).toUpperCase() + word.slice(1)
+    )
+    .join("");
 
+jsonData = XLSX.utils
+  .sheet_to_json(sheet, {
+    defval: "",
+  })
+  .map((row) =>
+    Object.fromEntries(
+      Object.entries(row).map(([key, value]) => [
+        normalizeKey(key),
+        value,
+      ])
+    )
+  );
+    }
     /* =============================
        🚀 SEND TO BACKEND
     ============================== */
