@@ -65,6 +65,9 @@ const handleProductClick2 = () => {
 const handleCopyright = () => {
   window.open("https://socialflylive.com/")
 }
+const handleTutorialClick = () => {
+  window.open("https://youtu.be/M4L6AeK-ckY")
+}
   const headings = [
     "Manage All types of Assets From One Place — Hardware, Software & Cloud.",
     "Privacy-first — no behavioural tracking.",
@@ -428,6 +431,9 @@ const rightItemssoftware = [
             My Account
           </button> */}
 
+          <button className="signin-btn" onClick={handleTutorialClick}>
+            Tutorial
+          </button>
           <button className="signin-btn" onClick={handleSigninClick}>
             Sign In
           </button>
