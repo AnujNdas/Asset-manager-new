@@ -391,7 +391,7 @@ const rightItemssoftware = [
 
 <meta
   property="og:image"
-  content="https://assetpegasus.com/images/Home.webp"
+  content="https://assetpegasus.com/images/Dashboard.webp"
 />
   <meta
     property="og:description"
@@ -411,7 +411,7 @@ const rightItemssoftware = [
 
 <meta
   name="twitter:image"
-  content="https://assetpegasus.com/images/Home.webp"
+  content="https://assetpegasus.com/images/Dashboard.webp"
 />
   <link
     rel="canonical"
