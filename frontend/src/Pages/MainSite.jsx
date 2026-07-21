@@ -373,18 +373,18 @@ const rightItemssoftware = [
 })}
 </script>
   <title>
-    AssetPegasus | IT Asset Management Software for Hardware, Software & Equipment
+    AssetPegasus | IT Asset Management Software
   </title>
 
   <meta property="og:type" content="website" />
   <meta
     name="description"
-    content="Manage hardware & software assets — maintenance, warranties, insurance & renewals from one dashboard. GDPR & HIPAA compliant. 7-day free trial — no credit card needed."
+    content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus. Cloud-based IT asset management software with inventory, audits and a free 7-day trial.."
   />
 
   <meta
     property="og:title"
-    content="AssetPegasus | IT Asset Management Software for Hardware, Software & Equipment"
+    content="AssetPegasus | IT Asset Management Software"
   />
 
 <meta property="og:site_name" content="AssetPegasus" />
@@ -395,18 +395,18 @@ const rightItemssoftware = [
 />
   <meta
     property="og:description"
-    content="Manage hardware & software assets — maintenance, warranties, insurance & renewals from one dashboard. GDPR & HIPAA compliant. 7-day free trial — no credit card needed.."
+    content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus. Cloud-based IT asset management software with inventory, audits and a free 7-day trial."
   />
   <meta name="twitter:card" content="summary_large_image" />
 
 <meta
   name="twitter:title"
-  content="AssetPegasus | IT Asset Management Software for Hardware, Software & Equipment"
+  content="AssetPegasus | IT Asset Management Software"
 />
 
 <meta
   name="twitter:description"
-  content="Manage hardware & software assets — maintenance, warranties, insurance & renewals from one dashboard. GDPR & HIPAA compliant. 7-day free trial — no credit card needed."
+  content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus. Cloud-based IT asset management software with inventory, audits and a free 7-day trial."
 />
 
 <meta
