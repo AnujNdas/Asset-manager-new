@@ -7,11 +7,12 @@ const AnalyticsTracker = () => {
   useEffect(() => {
     if (!window.gtag) return;
 
-    window.gtag("event", "page_view", {
+    window.gtag("config", "G-TMF1BPM9HK", {
       page_path: location.pathname + location.search,
+      page_title: document.title,
+      page_location: window.location.href,
     });
-
-  }, [location.pathname, location.search]);
+  }, [location]);
 
   return null;
 };
