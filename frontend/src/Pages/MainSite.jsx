@@ -631,22 +631,22 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
       <section className="stats">
 
         <div className="stat-card">
-          <h2>2</h2>
+          <p className="text-5xl font-bold">100%</p>
           <p>Type Of Assets</p>
         </div>
 
         <div className="stat-card">
-          <h2>100%</h2>
+          <p className="text-5xl font-bold">100%</p>
           <p>GDPR & HIPAA Complaint</p>
         </div>
 
         <div className="stat-card">
-          <h2>100%</h2>
+          <p className="text-5xl font-bold">100%</p>
           <p>Track Full Lifecycle</p>
         </div>
 
         <div className="stat-card">
-          <h2>2 in 1</h2>
+          <p className="text-5xl font-bold">100%</p>
           <p>Budget Friendly Saas</p>
         </div>
 
