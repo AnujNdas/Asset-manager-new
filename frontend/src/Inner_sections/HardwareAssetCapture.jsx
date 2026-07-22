@@ -301,9 +301,9 @@ jsonData = XLSX.utils
         `,
         icon: res.data.skipped > 0 ? "warning" : "success"
       });
-
       setShowImport(false);
       setImportFile(null);
+      navigate("/instance-assets");
     } else {
       ThemeSwal.fire("Error", res.message, "error");
     }

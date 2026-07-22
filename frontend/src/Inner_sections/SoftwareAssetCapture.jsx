@@ -373,6 +373,7 @@ if (res.success) {
   });
   setShowImport(false);
   setImportFile(null);
+  navigate("/instance-assets");
 } else {
       ThemeSwal.fire("Error", res.message, "error");
     }
