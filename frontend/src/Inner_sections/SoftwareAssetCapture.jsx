@@ -371,7 +371,6 @@ if (res.success) {
       confirmButton: "my-confirm-btn",
     },
   });
-  navigate('/inventory')
   setShowImport(false);
   setImportFile(null);
 } else {

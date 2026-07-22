@@ -109,7 +109,7 @@ hardware: {
       public_id: String
     },
     hasInsurance: Boolean,
-insuranceTerm: {
+    insuranceTerm: {
   type: String,
   enum: [
     "6_months",
@@ -126,8 +126,8 @@ insuranceTerm: {
   ],
   default: "1_year"
 },
-    coverageType: {
-      type: [String],
+coverageType: {
+  type: [String],
       enum: [
     "comprehensive",
     "accidental_damage",
@@ -144,16 +144,16 @@ insuranceTerm: {
     "mechanical_breakdown",
     "none"
   ],
-      default: ["comprehensive"]
-    },
-    nextMaintenanceDate: Date,
-    purchaseCost: costSchema,
-    costs: {
-      maintenanceCost: costSchema,
-      warrantyRenewalCost: costSchema,
-      insuranceCost: costSchema,
-      upgradeCost: costSchema,
-    }
+  default: ["comprehensive"]
+},
+nextMaintenanceDate: Date,
+purchaseCost: costSchema,
+costs: {
+  maintenanceCost: costSchema,
+  warrantyRenewalCost: costSchema,
+  insuranceCost: costSchema,
+  upgradeCost: costSchema,
+}
   }, { _id: false }),
 
   default: undefined   // 🔥 CRITICAL FIX
@@ -163,6 +163,7 @@ insuranceTerm: {
 software: {
   type: new mongoose.Schema({
     licenseKey: String,
+    specifications: String,
     licenseNumber: String,
     purchaseDate: Date,
     installationDate: Date,
