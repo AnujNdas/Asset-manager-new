@@ -268,7 +268,9 @@ const upsert = async (Model, name, map) => {
     );
   }
 
-        const purchaseDate = parseDate(asset.DateOfPurchase);
+        const purchaseDate = parseDate(
+  asset.DateOfPurchase ?? asset.dateOfPurchase
+);
         const expiryDate = parseDate(asset.DateOfExpiry);
 
   if (!purchaseDate) {
