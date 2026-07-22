@@ -209,7 +209,9 @@ const bulkUploadAssets = asyncHandler(async (req, res, next) => {
       if (!locationId)
         locationId = await upsert(Location, asset.locationName, locationMap);
 
-      const dop = parseDate(asset.DateOfPurchase);
+              const purchaseDate = parseDate(
+                    asset.DateOfPurchase ?? asset.dateOfPurchase
+                  );
       const doe = parseDate(asset.DateOfExpiry);
 
       if (!dop) throw new Error("Invalid purchase date");
@@ -2143,6 +2145,26 @@ if (purchaseDate) {
         };
         const renewalDate = parseDateSafe(inst.software?.renewalDate);
         const installationDate = parseDateSafe(inst.software?.installationDate);
+        const snapshot = {
+  status: "in_stock",
+  condition: inst.condition || "new",
+  location,
+  deviceName: normalize(inst.deviceName) || "",
+
+  software: {
+    licenseKey: normalize(inst.software?.licenseKey) || "",
+    licenseNumber: normalize(inst.software?.licenseNumber) || "",
+    specifications:
+      normalize(inst.software?.specifications) || "",
+    purchaseDate,
+    installationDate,
+    renewalDate,
+    purchaseCost,
+    costs: {
+      renewalCost,
+    },
+  },
+};
         validInstances.push({
           organizationId,
           assetId,
@@ -2168,7 +2190,7 @@ if (purchaseDate) {
             },
             purchaseCost
           },
-
+          lifecycle,
           createdBy: userId
         });
       }
