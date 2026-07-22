@@ -136,7 +136,7 @@ const CreateInstances = () => {
           WarrantyRenewalCost: "Number",
           InsuranceCost: "Number",
           CoverageType:
-"Allowed: comprehensive, accidental_damage, third_party, theft_burglary, fire_lightning, natural_disasters, vandalism, business_interruption, transit_marine_cargo, cyber_physical_damage, electrical_surge, mechanical_breakdown, other, none"
+          "Allowed: comprehensive, accidental_damage, third_party, theft_burglary, fire_lightning, natural_disasters, vandalism, business_interruption, transit_marine_cargo, cyber_physical_damage, electrical_surge, mechanical_breakdown, other, none"
         },
       ];
     } else {
@@ -145,6 +145,7 @@ const CreateInstances = () => {
           DeviceName: "Optional",
           Location: "New York",
           Condition: "new",
+          Specifications: "Optional",
           LicenseKey: "XXXX-YYYY-ZZZZ",
           LicenseNumber: "LIC-001",
           PurchaseDate: "2026-01-01",
@@ -552,7 +553,7 @@ const jsonData = XLSX.utils
           software: {
             licenseKey: row.licenseKey || "",
             licenseNumber: row.licenseNumber || "",
-
+            specifications:row.specifications || "",
             purchaseDate: row.purchaseDate || null,
             installationDate: row.installationDate || null,
             renewalDate: row.renewalDate || null,
@@ -787,7 +788,7 @@ if (
               licenseKey: inst.licenseKey || "",
               licenseNumber: inst.licenseNumber || "",
               vendor: inst.vendor || "",
-
+              specifications : inst.specifications || "",
               purchaseDate: inst.purchaseDate || null,
               installationDate: inst.installationDate || null,
               renewalDate: inst.renewalDate || null,
