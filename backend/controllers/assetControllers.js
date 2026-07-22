@@ -2175,12 +2175,12 @@ if (purchaseDate) {
           assetType,
 
           instanceCode,
+          deviceName: normalize(inst.deviceName) || "",
           location,
           condition: (inst.condition || "new").toLowerCase(),
           status: "in_stock",
 
           software: {
-            deviceName: normalize(inst.deviceName) || "",
             purchaseDate,
             licenseKey: normalize(inst.software?.licenseKey) || "",
             purchaseDate: parseDateSafe(inst.software?.purchaseDate),
