@@ -1967,20 +1967,7 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
     nextMaintenanceDate,
     purchaseCost,
     hasInsurance
-  },
-   software: {
-    licenseKey: normalize(inst.software?.licenseKey) || "",
-    licenseNumber: normalize(inst.software?.licenseNumber) || "",
-    specifications:
-      normalize(inst.software?.specifications) || "",
-    purchaseDate,
-    installationDate,
-    renewalDate,
-    purchaseCost,
-    costs: {
-      renewalCost,
-    },
-  },
+  }
 };
         const lifecycle = [
   {
@@ -2125,6 +2112,26 @@ if (purchaseDate) {
 ];
 
 if (purchaseDate) {
+          const snapshot = {
+  status: "in_stock",
+  condition: inst.condition || "new",
+  location,
+  deviceName: normalize(inst.deviceName) || "",
+
+  software: {
+    licenseKey: normalize(inst.software?.licenseKey) || "",
+    licenseNumber: normalize(inst.software?.licenseNumber) || "",
+    specifications:
+      normalize(inst.software?.specifications) || "",
+    purchaseDate,
+    installationDate,
+    renewalDate,
+    purchaseCost,
+    costs: {
+      renewalCost,
+    },
+  },
+};
   lifecycle.push({
     eventType: "purchased",
     category: "procurement",
@@ -2158,6 +2165,7 @@ if (purchaseDate) {
         };
         const renewalDate = parseDateSafe(inst.software?.renewalDate);
         const installationDate = parseDateSafe(inst.software?.installationDate);
+
         validInstances.push({
           organizationId,
           assetId,
