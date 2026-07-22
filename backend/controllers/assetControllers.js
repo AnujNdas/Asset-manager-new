@@ -2187,6 +2187,8 @@ if (purchaseDate) {
             licenseNumber:
               normalize(inst.software?.licenseNumber) || "",
             installationDate,
+            specifications:
+      normalize(inst.software?.specifications) || "",
             renewalDate,
             costs: {
               renewalCost
