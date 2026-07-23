@@ -209,7 +209,7 @@ const bulkUploadAssets = asyncHandler(async (req, res, next) => {
       if (!locationId)
         locationId = await upsert(Location, asset.locationName, locationMap);
 
-              const purchaseDate = parseDate(
+              const dop = parseDate(
                     asset.DateOfPurchase ?? asset.dateOfPurchase
                   );
       const doe = parseDate(asset.DateOfExpiry);

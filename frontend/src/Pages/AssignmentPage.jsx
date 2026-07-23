@@ -563,10 +563,14 @@ const currencyCode = costObj?.currency || "USD";
           <p>{inst.location || "-"}</p>
         </div>
 
-        <div className="review-item">
-          <label>Specification</label>
-          <p>{inst.hardware?.specifications || "-"}</p>
-        </div>
+    <div className="review-item">
+  <label>Specification</label>
+  <p>
+    {selectedAsset.assetType === "hardware"
+      ? inst.hardware?.specifications ?? "-"
+      : inst.software?.specifications ?? "-"}
+  </p>
+</div>
 
         <div className="review-item">
           <label>Purchase Cost</label>
