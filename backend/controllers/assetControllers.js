@@ -2072,7 +2072,7 @@ if (purchaseDate) {
             insuranceTerm,
             insuranceExpiry,
             insuranceId,
-            coverageType,
+            // coverageType,
             costs: {
               maintenanceCost,
               warrantyRenewalCost,
