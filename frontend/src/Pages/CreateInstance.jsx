@@ -515,6 +515,7 @@ const jsonData = XLSX.utils
             warrantyExpiry: row.warrantyExpiry || null,
             ...(row.hasInsurance === "true" || row.hasInsurance === true
               ? {
+                  hasInsurance:true,
                   insuranceId: row.insuranceId || "",
                   insurancePurchaseDate: row.insurancePurchaseDate || null,
                   insuranceTerm: row.insuranceTerm || "1_year",
