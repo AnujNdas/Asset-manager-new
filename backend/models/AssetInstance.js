@@ -199,6 +199,7 @@ eventType: {
     "maintenance",
     "warranty_renewal",
     "insurance_renewal",
+    "license_renewal",
     "upgraded",
     "status_changed",
     "condition_changed",

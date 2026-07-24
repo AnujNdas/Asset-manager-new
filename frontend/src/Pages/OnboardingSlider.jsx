@@ -160,10 +160,19 @@ const slides = [
         <div className="main-grid">
           {/* Left Content */}
           <div className="left-content">
-            <div className="step-badge">
+            {/* <div className="step-badge">
               Step {currentSlide + 1} of {slides.length}
-            </div>
-
+            </div> */}
+                    {/* Bottom Indicators */}
+        <div className="bottom-indicators">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={index === currentSlide ? "indicator active-indicator" : "indicator"}
+            />
+          ))}
+        </div>
             <div className="text-content">
               <h2 className="main-title">
                 {activeSlide.title}
@@ -178,27 +187,7 @@ const slides = [
               </p>
             </div>
 
-            {/* Features */}
-            <div className="feature-grid">
-              {[
-                "Real-Time Tracking",
-                "Employee Assignment",
-                "Inventory Monitoring",
-                "Analytics Dashboard",
-              ].map((feature, index) => (
-                <div
-                  key={index}
-                  className="feature-card"
-                >
-                  <div className="feature-item">
-                    <div className="feature-dot" />
-                    <span className="feature-text">
-                      {feature}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+
 
             {/* Controls */}
             <div className="button-group">
@@ -262,16 +251,30 @@ const slides = [
           </div>
         </div>
 
-        {/* Bottom Indicators */}
-        <div className="bottom-indicators">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={index === currentSlide ? "indicator active-indicator" : "indicator"}
-            />
-          ))}
-        </div>
+            {/* Features */}
+            {/* <div className="design-grid">
+              {[
+                "Real-Time Tracking",
+                "Employee Assignment",
+                "Inventory Monitoring",
+                "Analytics Dashboard",
+              ].map((feature, index) => (
+                <div
+                  key={index}
+                  className="design-card"
+                >
+                  <div className="feature-item">
+                    <div className="feature-dot" />
+                    <span className="feature-text">
+                      {feature}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div> */}
+
+
+
       </div>
     </div>
   );
