@@ -2260,105 +2260,154 @@ if (purchaseDate) {
   }
 
   /* ================= INSERT ================= */
-  let inserted = [];
+/* ================= INSERT ================= */
 
-  console.log("VALID INSTANCES:", validInstances.length);
-  console.log(
-    validInstances.map(v => ({
-        device: v.deviceName,
-        serial: v.hardware?.serialNumber
-    }))
-);
-  try {
-    console.log("BEFORE INSERT", validInstances.length);
-    if (validInstances.length) {
-      console.log(
-        "MODEL:",
-        AssetInstance.modelName
-      );
+console.log("\n================ INSERT START ================");
 
-      console.log(
-        "COLLECTION:",
-        AssetInstance.collection.name
-      );
+console.log("VALID INSTANCES:", validInstances.length);
 
-      console.log(
-        "FIRST DOC:"
-      );
-
-      console.dir(
-        validInstances[0],
-        { depth: null }
-      );
-const inserted = await AssetInstance.collection.insertMany(
-  validInstances,
-  { ordered: false }
+console.table(
+  validInstances.map((v, i) => ({
+    index: i,
+    device: v.deviceName,
+    instanceCode: v.instanceCode,
+    serial: v.hardware?.serialNumber,
+    assetId: String(v.assetId),
+    organizationId: String(v.organizationId),
+  }))
 );
 
-console.dir(inserted, { depth: null });
-      console.log("INSERT RESULT:", inserted);
+try {
 
-      console.log(
-        "INSERTED COUNT:",
-        inserted.length
-      );
+  console.log("Collection before insert:",
+    await AssetInstance.countDocuments({ organizationId })
+  );
 
-      console.log(
-        "INSERTED DOCS:",
-        inserted.map(i => i._id)
-      );
+  // Check for duplicate instance codes in request
+  const duplicateInstanceCodes = validInstances.filter(
+    (v, i, arr) =>
+      arr.findIndex(x => x.instanceCode === v.instanceCode) !== i
+  );
+
+  if (duplicateInstanceCodes.length) {
+    console.log("DUPLICATE INSTANCE CODES FOUND:");
+    console.dir(duplicateInstanceCodes, { depth: null });
+  }
+
+  // Check for duplicate serials in request
+  const duplicateSerials = validInstances.filter(
+    (v, i, arr) =>
+      arr.findIndex(
+        x => x.hardware?.serialNumber === v.hardware?.serialNumber
+      ) !== i
+  );
+
+  if (duplicateSerials.length) {
+    console.log("DUPLICATE SERIALS FOUND:");
+    console.dir(duplicateSerials, { depth: null });
+  }
+
+  console.log("\nINSERTING...");
+
+  const result = await AssetInstance.collection.insertMany(
+    validInstances,
+    {
+      ordered: false
     }
+  );
+
+  console.log("\n========== RAW INSERT RESULT ==========");
+  console.dir(result, { depth: null });
+
+  console.log("Inserted Count:", result.insertedCount);
+
+  console.log("Inserted IDs:");
+  console.dir(result.insertedIds, { depth: null });
+
+  const allDocs = await AssetInstance.find({
+    organizationId,
+    assetId
+  })
+    .select(
+      "deviceName instanceCode hardware.serialNumber createdAt"
+    )
+    .sort({ createdAt: -1 })
+    .lean();
+
+  console.log("\n========== DOCUMENTS AFTER INSERT ==========");
+  console.table(
+    allDocs.map(x => ({
+      device: x.deviceName,
+      instanceCode: x.instanceCode,
+      serial: x.hardware?.serialNumber,
+    }))
+  );
+
+  console.log(
+    "Collection Count After Insert:",
+    await AssetInstance.countDocuments({ organizationId })
+  );
+
+  return res.status(200).json({
+    success: true,
+    message: "Bulk instance upload completed",
+    data: {
+      inserted: result.insertedCount,
+      skipped: invalidRows.length,
+      invalidRows
+    }
+  });
 
 } catch (err) {
 
-  console.error("========== INSERT MANY ERROR ==========");
+  console.log("\n========== INSERT ERROR ==========");
 
-  console.error("Error Name:", err.name);
-  console.error("Message:", err.message);
+  console.log("Name:", err.name);
+  console.log("Message:", err.message);
+  console.log("Code:", err.code);
 
-  console.error("Inserted Docs:");
-  console.dir(err.insertedDocs, { depth: null });
+  console.dir(err, { depth: null });
 
-  console.error("Write Errors:");
+  if (err.writeErrors) {
 
-  if (err.writeErrors && err.writeErrors.length) {
+    console.log("\nWRITE ERRORS:");
 
-    err.writeErrors.forEach((e, i) => {
+    err.writeErrors.forEach((e, index) => {
 
-      console.log(`\n------ WRITE ERROR ${i + 1} ------`);
+      console.log(`\n----- ERROR ${index + 1} -----`);
 
       console.log("Index:", e.index);
-
       console.log("Code:", e.code);
-
       console.log("Message:", e.errmsg || e.message);
 
-      console.log("Failed Document:");
-
-      console.dir(e.err?.op || e.op, {
+      console.dir(e.op || e.err?.op, {
         depth: null,
       });
 
     });
 
-  } else {
-
-    console.log("No writeErrors found.");
-
   }
+
+  const allDocs = await AssetInstance.find({
+    organizationId,
+    assetId
+  })
+    .select(
+      "deviceName instanceCode hardware.serialNumber"
+    )
+    .lean();
+
+  console.log("\n========== DOCUMENTS CURRENTLY IN DB ==========");
+  console.table(
+    allDocs.map(x => ({
+      device: x.deviceName,
+      instanceCode: x.instanceCode,
+      serial: x.hardware?.serialNumber,
+    }))
+  );
 
   throw err;
 }
-  /* ================= RESPONSE ================= */
-  res.status(200).json({
-    success: true,
-    message: "Bulk instance upload completed",
-    data: {
-      inserted: inserted.length,
-      skipped: invalidRows.length,
-      invalidRows
-    }
-  });
 });
 
 const deleteInstance = async (req, res) => {
