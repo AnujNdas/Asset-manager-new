@@ -305,7 +305,7 @@ const bulkUploadAssets = asyncHandler(async (req, res, next) => {
 
   /* ================= INSERT ================= */
   let inserted = 0;
-
+  
   if (finalAssets.length > 0) {
     const result = await Asset.insertMany(finalAssets);
     inserted = result.length;
@@ -2263,7 +2263,12 @@ if (purchaseDate) {
   let inserted = [];
 
   console.log("VALID INSTANCES:", validInstances.length);
-
+  console.log(
+    validInstances.map(v => ({
+        device: v.deviceName,
+        serial: v.hardware?.serialNumber
+    }))
+);
   try {
     console.log("BEFORE INSERT", validInstances.length);
     if (validInstances.length) {
