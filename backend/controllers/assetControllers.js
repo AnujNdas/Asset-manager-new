@@ -2309,55 +2309,58 @@ try {
 
   console.log("\nINSERTING...");
 
-  const result = await AssetInstance.insertMany(
-    validInstances,
-    {
-      ordered: false
-    }
-  );
+const inserted = await AssetInstance.insertMany(
+  validInstances,
+  {
+    ordered: false
+  }
+);
 
-  console.log("\n========== RAW INSERT RESULT ==========");
-  console.dir(result, { depth: null });
+console.log("\n========== RAW INSERT RESULT ==========");
+console.log("Inserted Count:", inserted.length);
 
-  console.log("Inserted Count:", result.insertedCount);
+console.log("Inserted IDs:");
+console.dir(
+  inserted.map(doc => doc._id),
+  { depth: null }
+);
 
-  console.log("Inserted IDs:");
-  console.dir(result.insertedIds, { depth: null });
+const allDocs = await AssetInstance.find({
+  organizationId,
+  assetId
+})
+  .select(
+    "deviceName instanceCode hardware.serialNumber createdAt"
+  )
+  .sort({ createdAt: -1 })
+  .lean();
 
-  const allDocs = await AssetInstance.find({
+console.log("\n========== DOCUMENTS AFTER INSERT ==========");
+console.table(
+  allDocs.map(x => ({
+    device: x.deviceName,
+    instanceCode: x.instanceCode,
+    serial: x.hardware?.serialNumber,
+  }))
+);
+
+console.log(
+  "Collection Count After Insert:",
+  await AssetInstance.countDocuments({
     organizationId,
-    assetId
+    assetId,
   })
-    .select(
-      "deviceName instanceCode hardware.serialNumber createdAt"
-    )
-    .sort({ createdAt: -1 })
-    .lean();
+);
 
-  console.log("\n========== DOCUMENTS AFTER INSERT ==========");
-  console.table(
-    allDocs.map(x => ({
-      device: x.deviceName,
-      instanceCode: x.instanceCode,
-      serial: x.hardware?.serialNumber,
-    }))
-  );
-
-  console.log(
-    "Collection Count After Insert:",
-    await AssetInstance.countDocuments({ organizationId })
-  );
-
-  return res.status(200).json({
-    success: true,
-    message: "Bulk instance upload completed",
-    data: {
-      inserted: result.insertedCount,
-      skipped: invalidRows.length,
-      invalidRows
-    }
-  });
-
+return res.status(200).json({
+  success: true,
+  message: "Bulk instance upload completed",
+  data: {
+    inserted: inserted.length,
+    skipped: invalidRows.length,
+    invalidRows
+  }
+});
 } catch (err) {
 
   console.log("\n========== INSERT ERROR ==========");
