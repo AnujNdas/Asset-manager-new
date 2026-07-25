@@ -2250,7 +2250,7 @@ if (purchaseDate) {
     organizationId,
     "hardware.serialNumber": { $in: [...generatedSerials] }
   });
-
+  console.log(await AssetInstance.collection.indexes());
   if (existingSerials.length > 0) {
     throw new AppError(
       "Serial already exists in system",
