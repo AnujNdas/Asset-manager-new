@@ -379,7 +379,7 @@ const rightItemssoftware = [
   <meta property="og:type" content="website" />
   <meta
     name="description"
-    content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus. Cloud-based IT asset management software with inventory, audits and a free 7-day trial.."
+    content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus and a free 7-day trial.."
   />
 
   <meta
@@ -395,7 +395,7 @@ const rightItemssoftware = [
 />
   <meta
     property="og:description"
-    content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus. Cloud-based IT asset management software with inventory, audits and a free 7-day trial."
+    content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus and a free 7-day trial."
   />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -406,7 +406,7 @@ const rightItemssoftware = [
 
 <meta
   name="twitter:description"
-  content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus. Cloud-based IT asset management software with inventory, audits and a free 7-day trial."
+  content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus and a free 7-day trial."
 />
 
 <meta
@@ -631,22 +631,22 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
       <section className="stats">
 
         <div className="stat-card">
-          <p className="text-5xl font-bold">100%</p>
+          <p className="text-5xl">100%</p>
           <p>Type Of Assets</p>
         </div>
 
         <div className="stat-card">
-          <p className="text-5xl font-bold">100%</p>
+          <p className="text-5xl">100%</p>
           <p>GDPR & HIPAA Complaint</p>
         </div>
 
         <div className="stat-card">
-          <p className="text-5xl font-bold">100%</p>
+          <p className="text-5xl">100%</p>
           <p>Track Full Lifecycle</p>
         </div>
 
         <div className="stat-card">
-          <p className="text-5xl font-bold">100%</p>
+          <p className="text-5xl">100%</p>
           <p>Budget Friendly Saas</p>
         </div>
 

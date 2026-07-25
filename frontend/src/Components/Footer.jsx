@@ -17,7 +17,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            AssetPegasus - Business Management System
+            SOCIALFLY. All Rights Reserved.
           </a>
         </div>
       </div>
