@@ -2309,7 +2309,7 @@ try {
 
   console.log("\nINSERTING...");
 
-  const result = await AssetInstance.collection.insertMany(
+  const result = await AssetInstance.insertMany(
     validInstances,
     {
       ordered: false
