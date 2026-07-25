@@ -2304,27 +2304,46 @@ if (purchaseDate) {
       );
     }
 
-  } catch (err) {
+} catch (err) {
 
-    console.error(
-      "INSERT MANY ERROR:"
-    );
+  console.error("========== INSERT MANY ERROR ==========");
 
-    console.error(err);
+  console.error("Error Name:", err.name);
+  console.error("Message:", err.message);
 
-    if (err.writeErrors) {
-      console.error(
-        "WRITE ERRORS:"
-      );
+  console.error("Inserted Docs:");
+  console.dir(err.insertedDocs, { depth: null });
 
-      console.dir(
-        err.writeErrors,
-        { depth: null }
-      );
-    }
+  console.error("Write Errors:");
 
-    throw err;
+  if (err.writeErrors && err.writeErrors.length) {
+
+    err.writeErrors.forEach((e, i) => {
+
+      console.log(`\n------ WRITE ERROR ${i + 1} ------`);
+
+      console.log("Index:", e.index);
+
+      console.log("Code:", e.code);
+
+      console.log("Message:", e.errmsg || e.message);
+
+      console.log("Failed Document:");
+
+      console.dir(e.err?.op || e.op, {
+        depth: null,
+      });
+
+    });
+
+  } else {
+
+    console.log("No writeErrors found.");
+
   }
+
+  throw err;
+}
   /* ================= RESPONSE ================= */
   res.status(200).json({
     success: true,
