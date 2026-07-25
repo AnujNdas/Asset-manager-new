@@ -2290,12 +2290,12 @@ if (purchaseDate) {
         validInstances[0],
         { depth: null }
       );
-      inserted = await AssetInstance.insertMany(
-        validInstances,
-        {
-          ordered: false
-        }
-      );
+const inserted = await AssetInstance.collection.insertMany(
+  validInstances,
+  { ordered: false }
+);
+
+console.dir(inserted, { depth: null });
       console.log("INSERT RESULT:", inserted);
 
       console.log(
