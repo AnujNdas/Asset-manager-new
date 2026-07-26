@@ -1218,7 +1218,7 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 const renderInsurance = () => (
-  <div className="audit-report-grid">
+  <div className="audit-table-wrapper">
 <table className="audit-table">
 <thead>
 <tr>

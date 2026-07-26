@@ -452,9 +452,9 @@ const rightItemssoftware = [
           Track Every IT Asset, Software License, and Machinery 
           </h1>
 
-          <h2>
+          <p>
           Stop losing money on Zombie SaaS subscriptions and untracked hardware.
-          </h2>
+          </p>
           <p>Assetpegasus unites your physical and digital assets so you stay compliant and cut overhead by up to 40%.</p>
 
           <div className="hero-buttons">
@@ -600,9 +600,9 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
           <div className="impact-card">
 
-            <h3>
+            <p>
               {impacts[active].title}
-            </h3>
+            </p>
 
             <p>
               {impacts[active].description}
@@ -912,7 +912,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         <div className="comparison-mobile">
 
           <div className="mobile-card">
-            <h3>Competitor 1</h3>
+            <strong>Competitor 1</strong>
 
             {features.map((item, index) => (
               <div key={index} className="mobile-row">
@@ -923,7 +923,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
           </div>
 
           <div className="mobile-card featured">
-            <h3>AssetPegasus</h3>
+            <strong>AssetPegasus</strong>
 
             {features.map((item, index) => (
               <div key={index} className="mobile-row">
@@ -934,7 +934,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
           </div>
 
           <div className="mobile-card">
-            <h3>Competitor 2</h3>
+            <strong>Competitor 2</strong>
 
             {features.map((item, index) => (
               <div key={index} className="mobile-row">

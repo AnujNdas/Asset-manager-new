@@ -10,7 +10,9 @@
   import Loader from "../Components/Loader";
   import { useSubscription } from '../Context/SubscriptionContext';
   import { Helmet } from 'react-helmet-async';
+  import { useOrganization } from '../Context/OrganizationContext';
   const Login = ({ setProfileUser }) => {
+    const {setOrganization } = useOrganization();
   const { refreshSubscription } = useSubscription();
 
     const [email, setEmail] = useState("");
@@ -41,7 +43,7 @@
           organization: response.organization,
         })
       );
-
+      setOrganization(response.organization);
       ThemeSwal.fire({
         title: "Success",
         text: "Login successful",

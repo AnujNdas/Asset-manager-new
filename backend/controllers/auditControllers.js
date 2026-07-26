@@ -332,12 +332,19 @@ const warrantyMap = {};
 if (asset.purchaseDate) {
     const year = new Date(asset.purchaseDate).getFullYear();
 
-    warrantyMap[year] = {
-        year,
-        purchaseCost: asset.purchaseCost || 0,
-        warrantyCost: 0,
-        totalCost: asset.purchaseCost || 0
-    };
+const initialWarrantyCost =
+    asset.warrantyCost ||
+    asset.hardware?.costs?.warrantyRenewalCost?.amount ||
+    0;
+
+warrantyMap[year] = {
+    year,
+    purchaseCost: asset.purchaseCost || 0,
+    warrantyCost: initialWarrantyCost,
+    totalCost:
+        (asset.purchaseCost || 0) +
+        initialWarrantyCost
+};
 }
 
 // Warranty renewals
@@ -417,11 +424,18 @@ const insuranceMap = {};
 if (asset.purchaseDate) {
     const year = new Date(asset.purchaseDate).getFullYear();
 
+ const initialInsuranceCost =
+        asset.insuranceCost ||
+        asset.hardware?.costs?.insuranceCost?.amount ||
+        0;
+
     insuranceMap[year] = {
         year,
         purchaseCost: asset.purchaseCost || 0,
-        insuranceCost: 0,
-        totalCost: asset.purchaseCost || 0
+        insuranceCost: initialInsuranceCost,
+        totalCost:
+            (asset.purchaseCost || 0) +
+            initialInsuranceCost
     };
 }
 

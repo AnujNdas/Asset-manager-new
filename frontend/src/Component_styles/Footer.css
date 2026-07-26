@@ -1,4 +1,4 @@
-.footer {
+.footer-card {
   width: 100%;
   background: #222831;
   color: #555;
@@ -40,4 +40,7 @@
     font-size : 8px;
     padding : 0;
   }
+}
+@media (max-width: 768px) {
+  .footer-card { display: none;}
 }

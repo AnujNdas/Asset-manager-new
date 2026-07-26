@@ -908,7 +908,7 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
   
   .footer {
     text-align: center;
-    padding: 2rem;
+    /* padding: 2rem; */
     color: var(--text-secondary);
   }
   
@@ -1337,7 +1337,7 @@ padding: 15px 30px;
 .footer {
   display: flex;
   flex-direction: column;
-  padding: 30px 2% 15px;
+  /* padding: 30px 2% 15px; */
   color: #e7d8be;
   gap:30px;
 }

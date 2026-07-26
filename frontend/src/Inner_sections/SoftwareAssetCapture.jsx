@@ -29,7 +29,6 @@ const downloadTemplate = () => {
       vendorName: "Adobe Inc.",
       vendorContact: "1234567890",
       vendorEmail: "support@adobe.com",
-      renewalTerm: "1_year",
     },
   ];
 
