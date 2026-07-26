@@ -306,7 +306,7 @@ const handleDelete = () => {
               <div className="card-box">
                 <h5>Validity</h5>
                 <p><span>Expiry Date:</span> {formatDate(sw.renewalDate)}</p>
-                <p><span>Last Used Date:</span> {formatDate(sw.lastUsedDate)}</p>
+                {/* <p><span>Last Used Date:</span> {formatDate(sw.lastUsedDate)}</p> */}
               </div>
             </>
           )}

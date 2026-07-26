@@ -218,16 +218,6 @@ const totalUpgradeCost = upgradeEvents.reduce(
           </div>
         )}
 
-        {/* LAST USED (SOFTWARE) */}
-        {isSoftware && (
-          <div>
-            <p className="label">Last Used</p>
-            <p className="value">
-              {formatDate(sw.lastUsedDate)}
-            </p>
-          </div>
-        )}
-
         {/* ASSIGNED PERSON */}
         <div>
           <p className="label">Assigned To</p>
