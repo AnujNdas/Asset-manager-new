@@ -112,6 +112,42 @@ const prevSlide = () => {
     (prev) => (prev - 1 + showcaseImages.length) % showcaseImages.length
   );
 };
+
+const blogs = [
+  {
+    id: 1,
+    image:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900",
+    title:
+      "How Businesses Lose Insurance Claims Due to Missing Asset Records",
+    author: "Poll Ghosh",
+    date: "July 24, 2026",
+  },
+  {
+    id: 2,
+    image:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?w=900",
+    title: "Asset Condition & Lifecycle Tracking Software",
+    author: "Poll Ghosh",
+    date: "July 20, 2026",
+  },
+  {
+    id: 3,
+    image:
+      "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900",
+    title: "Why 2026 Scammers No Longer Break In, They Log In.",
+    author: "Sourav Das",
+    date: "June 6, 2026",
+  },
+  {
+    id: 4,
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900",
+    title: "How Poor Maintenance Scheduling Shortens Server Lifespans",
+    author: "Anuj Das",
+    date: "May 26, 2026",
+  },
+];
 const faqData = [
   {
     question: "Why do businesses need asset tracking software?",
@@ -1059,6 +1095,36 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
                 }`}
               >
                 <p>{item.answer}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    <section className="blog-section">
+      <div className="container">
+        <h2 className="heading">Blogs</h2>
+
+        <div className="blog-grid">
+          {blogs.map((blog) => (
+            <div className="blog-card" key={blog.id}>
+              <div className="blog-image">
+                <img src={blog.image} alt={blog.title} />
+              </div>
+
+              <div className="blog-content">
+                <h3>{blog.title}</h3>
+
+                <p className="meta">
+                  By <span>{blog.author}</span>
+                  <span className="dot">•</span>
+                  {blog.date}
+                </p>
+
+                <button className="read-btn">
+                  READ MORE
+                  <span>→</span>
+                </button>
               </div>
             </div>
           ))}
