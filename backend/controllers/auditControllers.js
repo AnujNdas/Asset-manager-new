@@ -1100,6 +1100,9 @@ response.summary = {
     assets: Object.values(assetLookup)
 
 };
+response.assignments = assignmentHistory;
+
+response.yearlyAssignments = yearlyAssignmentHistory;
 return res.status(200).json({
     success: true,
     data: response
