@@ -301,7 +301,7 @@
 
 .department-expand-row td{
     padding:20px;
-    background:#1f2937;
+    background:#DFD0B8;
 }
 
 .department-details h4{
@@ -436,6 +436,101 @@
 .year-badge.completed{
     background:#6b7280;
     color:#fff;
+}
+.assignment-panel{
+    padding:25px;
+    background:#393E46;
+    border-radius:18px;
+}
+
+.assignment-summary{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-bottom:20px;
+    margin-bottom:25px;
+    border-bottom:1px solid #DFD0B8;
+}
+
+.assignment-summary h3{
+    margin:0;
+    font-size:24px;
+    color:#DFD0B8;
+}
+
+.assignment-summary p{
+    margin-top:6px;
+    color:#DFD0B8;
+}
+
+.assignment-status{
+    background:#4aCf50;
+    color:#222831;
+    padding:8px 18px;
+    border-radius:50px;
+    font-weight:600;
+}
+
+.assignment-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.assignment-card{
+    background:#222831;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 6px 20px rgba(0,0,0,.06);
+}
+
+.assignment-card h4{
+    margin:0 0 20px;
+    color:#DFD0B8;
+    font-size:18px;
+}
+
+.info-item{
+    margin-bottom:18px;
+}
+
+.info-item:last-child{
+    margin-bottom:0;
+}
+
+.info-item span{
+    display:block;
+    font-size:13px;
+    color:#6b7280;
+    margin-bottom:4px;
+}
+
+.info-item strong{
+    color:#111827;
+    font-size:15px;
+    word-break:break-word;
+}
+
+@media(max-width:1100px){
+
+.assignment-grid{
+    grid-template-columns:1fr 1fr;
+}
+
+}
+
+@media(max-width:768px){
+
+.assignment-grid{
+    grid-template-columns:1fr;
+}
+
+.assignment-summary{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:15px;
+}
+
 }
 @media (max-width: 1024px){
 

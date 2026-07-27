@@ -1905,201 +1905,135 @@ item.assignedAt
 {expandedAssignment === item.assignmentId && (
 
 <tr>
+  <td colSpan={7}>
+    <div className="assignment-panel">
 
-<td colSpan={7}>
+      <div className="assignment-summary">
 
-<div className="asset-details-card">
+        <div>
+          <h3>{item.employeeName}</h3>
 
-<div className="asset-details-header">
+          <p>
+            {item.department} • {item.assignmentLocation} • {item.employeeCode}
+          </p>
+        </div>
 
-<h4>{item.assetName}</h4>
+        <span className={`assignment-status ${item.assignmentStatus}`}>
+          {item.assignmentStatus}
+        </span>
 
-<span className="asset-status">
-{item.assetType === "hardware"
-? "Hardware"
-: "Software"}
-</span>
+      </div>
 
-</div>
+      <div className="assignment-grid">
 
-{/* General Information */}
+        {/* Employee */}
 
-<div className="asset-details-grid">
+        <div className="assignment-card">
 
-<div>
-<label>Employee</label>
-<p>{item.employeeName}</p>
-</div>
+          <h4>👤 Employee</h4>
 
-<div>
-<label>Employee Code</label>
-<p>{item.employeeCode}</p>
-</div>
+          <div className="info-item">
+            <span>Name</span>
+            <strong>{item.employeeName}</strong>
+          </div>
 
-<div>
-<label>Email</label>
-<p>{item.employeeEmail || "-"}</p>
-</div>
+          <div className="info-item">
+            <span>Employee Code</span>
+            <strong>{item.employeeCode}</strong>
+          </div>
 
-<div>
-<label>Department</label>
-<p>{item.department}</p>
-</div>
+          <div className="info-item">
+            <span>Email</span>
+            <strong>{item.employeeEmail || "-"}</strong>
+          </div>
 
-<div>
-<label>Assignment Status</label>
-<p>{item.assignmentStatus}</p>
-</div>
+          <div className="info-item">
+            <span>Department</span>
+            <strong>{item.department}</strong>
+          </div>
 
-<div>
-<label>Asset Status</label>
-<p>{item.status}</p>
-</div>
+        </div>
 
-<div>
-<label>Condition</label>
-<p>{item.condition}</p>
-</div>
+        {/* Asset */}
 
-<div>
-<label>Location</label>
-<p>{item.assignmentLocation || "-"}</p>
-</div>
+        <div className="assignment-card">
 
-</div>
+          <h4>🖥 Asset</h4>
 
-{/* Asset Information */}
+          <div className="info-item">
+            <span>Asset</span>
+            <strong>{item.assetName}</strong>
+          </div>
 
-<div className="asset-details-grid">
+          <div className="info-item">
+            <span>Device</span>
+            <strong>{item.deviceName || "-"}</strong>
+          </div>
 
-<div>
-<label>Asset Name</label>
-<p>{item.assetName}</p>
-</div>
+          <div className="info-item">
+            <span>Asset Code</span>
+            <strong>{item.assetCode}</strong>
+          </div>
 
-{/* <div>
-<label>Asset Code</label>
-<p>{item.assetCode}</p>
-</div> */}
+          <div className="info-item">
+            <span>Instance</span>
+            <strong>{item.instanceCode}</strong>
+          </div>
 
-<div>
-<label>Instance Code</label>
-<p>{item.instanceCode}</p>
-</div>
+          {item.assetType === "hardware" && (
+            <div className="info-item">
+              <span>Serial Number</span>
+              <strong>{item.serialNumber}</strong>
+            </div>
+          )}
 
-<div>
-<label>Device</label>
-<p>{item.deviceName || "-"}</p>
-</div>
+        </div>
 
-{item.assetType === "hardware" && (
+        {/* Assignment */}
 
-<>
-<div>
-<label>Model Number</label>
-<p>{item.modelNo || "-"}</p>
-</div>
+        <div className="assignment-card">
 
-<div>
-<label>Specifications</label>
-<p>{item.specifications || "-"}</p>
-</div>
-  
-<div>
-<label>Purchase Cost</label>
-<p>{formatCurrency(item.purchaseCost || 0).toLocaleString()}</p>
-</div>
-<div>
-<label>Upgrade Cost</label>
-<p>{formatCurrency(item.upgradeCost || 0).toLocaleString()}</p>
-</div>
-<div>
-<label>Total Cost</label>
-<p>
-<strong>
-{formatCurrency(item.totalCost || 0).toLocaleString()}
-</strong>
-</p>
-</div>
+          <h4>📅 Assignment</h4>
 
-</>
+          <div className="info-item">
+            <span>Status</span>
+            <strong>{item.assignmentStatus}</strong>
+          </div>
 
-)}
+          <div className="info-item">
+            <span>Assigned</span>
+            <strong>
+              {item.assignedAt
+                ? new Date(item.assignedAt).toLocaleDateString()
+                : "-"}
+            </strong>
+          </div>
 
-{item.assetType === "software" && (
+          <div className="info-item">
+            <span>Returned</span>
+            <strong>
+              {item.returnedAt
+                ? new Date(item.returnedAt).toLocaleDateString()
+                : "-"}
+            </strong>
+          </div>
 
-<>
+          <div className="info-item">
+            <span>Assigned By</span>
+            <strong>{item.assignedBy || "-"}</strong>
+          </div>
 
-<div>
-<label>License Key</label>
-<p>{item.licenseKey || "-"}</p>
-</div>
+          <div className="info-item">
+            <span>Returned By</span>
+            <strong>{item.returnedBy || "-"}</strong>
+          </div>
 
-<div>
-<label>License Number</label>
-<p>{item.licenseNumber || "-"}</p>
-</div>
+        </div>
 
-<div>
-<label>Renewal Date</label>
-<p>
-{item.renewalDate
-? new Date(item.renewalDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
+      </div>
 
-<div>
-<label>Renewal Cost</label>
-<p>{formatCurrency(item.renewalCost || 0).toLocaleString()}</p>
-</div>
-
-</>
-
-)}
-
-</div>
-
-{/* Assignment Timeline */}
-
-<div className="asset-details-grid">
-
-<div>
-<label>Assigned Date</label>
-<p>
-{item.assignedAt
-? new Date(item.assignedAt).toLocaleString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Returned Date</label>
-<p>
-{item.returnedAt
-? new Date(item.returnedAt).toLocaleString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Assigned By</label>
-<p>{item.assignedBy || "-"}</p>
-</div>
-
-<div>
-<label>Returned By</label>
-<p>{item.returnedBy || "-"}</p>
-</div>
-
-</div>
-
-{/* Financial */}
-
-</div>
-
-</td>
-
+    </div>
+  </td>
 </tr>
 
 )}

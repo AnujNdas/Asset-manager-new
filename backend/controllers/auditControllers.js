@@ -977,133 +977,78 @@ department.assignmentHistory.push({
         assign.status
 
 });
-    response.assignments.push({
+const assignmentHistory = [];
 
-        //-----------------------------------
-        // Assignment
-        //-----------------------------------
+(asset.lifecycle || []).forEach(event => {
 
-        assignmentId: assign._id,
+    if (!["assigned", "reassigned", "returned"].includes(event.eventType))
+        return;
 
-        assignmentStatus: assign.status,
+    const to = event.metadata?.to || {};
+    const from = event.metadata?.from || {};
+    const assignedTo = to.assignedTo || {};
 
-        assignedAt: assign.assignedAt,
+    assignmentHistory.push({
 
-        returnedAt: assign.returnedAt,
+        year: new Date(event.date).getFullYear(),
 
-        assignedBy:
-            assign.assignedBy?.name || null,
+        eventType: event.eventType,
 
-        returnedBy:
-            assign.returnedBy?.name || null,
+        date: event.date,
 
-        assignmentLocation:
-            assign.location,
+        fromEmployee: from.employeeName || null,
+        fromDepartment: from.departmentName || null,
+        fromLocation: from.location || null,
 
-        //-----------------------------------
-        // Employee
-        //-----------------------------------
+        toEmployee:
+            assignedTo.employeeName ||
+            to.employeeName ||
+            null,
+
+        toDepartment:
+            assignedTo.departmentName ||
+            to.departmentName ||
+            null,
+
+        toLocation:
+            to.location || null,
 
         employeeId:
-            assign.employeeId?._id,
-
-        employeeName:
-            assign.employeeId?.name,
-
-        employeeCode:
-            assign.employeeId?.employeeCode,
-
-        employeeEmail:
-            assign.employeeId?.email,
-
-        department:
-                assign.departmentId?.name ||
-                "Unknown",
-
-        //-----------------------------------
-        // Instance
-        //-----------------------------------
-
-        instanceId:
-            asset?.instanceId,
-
-        instanceCode:
-            asset?.instanceCode,
-
-        assetId:
-            asset?.assetId,
-
-        assetCode:
-            asset?.assetCode,
-
-        assetName:
-            asset?.assetName,
-
-        assetType:
-            asset?.assetType,
-
-        deviceName:
-            asset?.deviceName,
-
-        serialNumber:
-            asset?.serialNumber,
-
-        modelNo:
-            asset?.modelNo,
-
-        condition:
-            asset?.condition,
+            assignedTo.employeeId ||
+            to.employeeId ||
+            null,
 
         status:
-            asset?.status,
+            to.status || asset.status,
 
-        //-----------------------------------
-        // Dates
-        //-----------------------------------
+        condition:
+            to.condition || asset.condition,
 
-        purchaseDate:
-            asset?.purchaseDate,
+        performedBy:
+            event.performedBy
 
-        installationDate:
-            asset?.installationDate,
-
-        warrantyExpiry:
-            asset?.warrantyExpiry,
-
-        insuranceExpiry:
-            asset?.insuranceExpiry,
-
-        renewalDate:
-            asset?.renewalDate,
-
-        nextMaintenanceDate:
-            asset?.nextMaintenanceDate,
-
-        //-----------------------------------
-        // Costs
-        //-----------------------------------
-
-        purchaseCost:
-            asset?.purchaseCost || 0,
-
-        maintenanceCost:
-            asset?.maintenanceCost || 0,
-
-        insuranceCost:
-            asset?.insuranceCost || 0,
-
-        warrantyCost:
-            asset?.warrantyCost || 0,
-
-        renewalCost:
-            asset?.renewalCost || 0,
-
-        upgradeCost:
-            asset?.upgradeCost || 0,
-
-        totalCost:
-            asset?.totalCost || 0
     });
+
+});
+const yearlyAssignments = {};
+
+assignmentHistory.forEach(item => {
+
+    if (!yearlyAssignments[item.year]) {
+
+        yearlyAssignments[item.year] = {
+            year: item.year,
+            events: []
+        };
+
+    }
+
+    yearlyAssignments[item.year].events.push(item);
+
+});
+const yearlyAssignmentHistory =
+    Object.values(yearlyAssignments)
+          .sort((a,b)=>a.year-b.year);
     if (
     assign.status === "active" ||
     assign.status === "assigned"

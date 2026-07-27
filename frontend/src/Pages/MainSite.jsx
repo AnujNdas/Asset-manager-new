@@ -461,7 +461,61 @@ const rightItemssoftware = [
         <div className="logo">
           <img src="/images/Logo2.png" alt="AssetPegasus Logo" height="150" />
         </div>
+           <ul className="nav-menu">
+    <li>
+      <a href="/">Home</a>
+    </li>
 
+    <li className="dropdown">
+      <a href="#features">
+        Features
+        <span>▼</span>
+      </a>
+
+      <ul className="dropdown-menu">
+        <li><a href="/features/it-asset-management">IT Asset Management</a></li>
+        <li><a href="/features/hardware-asset-management">Hardware Asset Management</a></li>
+        <li><a href="/features/software-asset-management">Software Asset Management</a></li>
+        <li><a href="/features/equipment-asset-management">Equipment Asset Management</a></li>
+        <li><a href="/features/inventory-tracking">Inventory Tracking</a></li>
+        <li><a href="/features/barcode-scanner">Barcode & QR Scanner</a></li>
+        <li><a href="/features/auditing">Asset Auditing</a></li>
+        <li><a href="/features/reports">Reports & Analytics</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="/pricing">Pricing</a>
+    </li>
+
+    <li className="dropdown">
+      <a href="#solutions">
+        Solutions
+        <span>▼</span>
+      </a>
+
+      <ul className="dropdown-menu">
+        <li><a href="/solutions/healthcare">Healthcare</a></li>
+        <li><a href="/solutions/manufacturing">Manufacturing</a></li>
+        <li><a href="/solutions/education">Education</a></li>
+        <li><a href="/solutions/hospitality">Hospitality</a></li>
+        <li><a href="/solutions/construction">Construction</a></li>
+        <li><a href="/solutions/transportation">Transportation</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="/about">About</a>
+    </li>
+
+    <li>
+      <a href="/blog">Blog</a>
+    </li>
+
+    <li>
+      <a href="/contact">Contact</a>
+    </li>
+  </ul>
         <div className="nav-actions">
           {/* <button className="account-btn">
             My Account
@@ -488,7 +542,7 @@ const rightItemssoftware = [
           Track Every IT Asset, Software License, and Machinery 
           </h1>
 
-          <p>
+          <p style={{ fontSize : "20px", fontWeight : "600"}}>
           Stop losing money on Zombie SaaS subscriptions and untracked hardware.
           </p>
           <p>Assetpegasus unites your physical and digital assets so you stay compliant and cut overhead by up to 40%.</p>
