@@ -1159,7 +1159,6 @@ response.warranty = warranty;
 response.insurance = insurance;
 
 response.maintenance = maintenance;
-response.assignmentAudit = assignmentAuditArray;
 response.lifecycle = lifecycle;
 
 response.financial = {
