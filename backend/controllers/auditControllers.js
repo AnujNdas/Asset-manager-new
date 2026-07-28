@@ -1051,9 +1051,7 @@ assignmentHistory.forEach(item => {
     yearlyAssignments[item.year].events.push(item);
 
 });
-const yearlyAssignmentHistory =
-    Object.values(yearlyAssignments)
-          .sort((a,b)=>a.year-b.year);
+
     if (
     assign.status === "active" ||
     assign.status === "assigned"
@@ -1063,6 +1061,9 @@ const yearlyAssignmentHistory =
     activeAssignments.returned++;
 }
 }
+const yearlyAssignmentHistory =
+    Object.values(yearlyAssignments)
+          .sort((a,b)=>a.year-b.year);
 response.departments =
     Object.values(departmentMap).map(
         department => ({
