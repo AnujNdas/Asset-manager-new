@@ -510,7 +510,351 @@
     font-size:15px;
     word-break:break-word;
 }
+/* =========================================
+   Assignment Panel
+========================================= */
 
+.assignment-panel {
+    /* background: #fff; */
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 24px;
+    margin: 18px 0;
+}
+
+.assignment-history h4 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #DFD0B8;
+    font-weight: 700;
+}
+
+/* Timeline */
+
+.assignment-history {
+    position: relative;
+}
+
+.assignment-history::before {
+    content: "";
+    position: absolute;
+    left: 23px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #948979;
+}
+
+.history-card {
+    position: relative;
+    margin-left: 55px;
+    margin-bottom: 30px;
+    /* background: #fafafa; */
+    border: 1px solid #DFD0B8;
+    border-radius: 12px;
+    padding: 20px;
+    transition: .25s;
+}
+
+.history-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+.history-card:last-child {
+    margin-bottom: 0;
+}
+
+/* Timeline dot */
+
+.history-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: -44px;
+
+    top: 22px;
+
+    width: 18px;
+
+    height: 18px;
+
+    border-radius: 50%;
+
+    background: #DFD0B8;
+
+    border: 4px solid #222831;
+
+    box-shadow: 0 0 0 2px #DFD0B8;
+}
+
+/* Header */
+
+.history-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+/* Event Badge */
+
+.history-badge {
+
+    padding: 6px 14px;
+
+    border-radius: 30px;
+
+    font-size: .8rem;
+
+    font-weight: 600;
+
+    text-transform: capitalize;
+
+    color: #222831;
+}
+
+.history-badge.assigned {
+    background: #4aCf50;
+}
+
+.history-badge.reassigned {
+    background: #f59e0b;
+}
+
+.history-badge.returned {
+    background: #ef4444;
+}
+
+/* Info Rows */
+
+.history-row {
+
+    display: grid;
+
+    grid-template-columns: repeat(2,1fr);
+
+    gap: 18px;
+
+    margin-top: 18px;
+}
+
+.history-row div,
+.history-transfer > div {
+
+    background: #393E46;
+
+    /* border: 1px solid #ececec; */
+
+    border-radius: 10px;
+
+    padding: 14px;
+}
+
+.history-row label,
+.history-transfer label {
+
+    display: block;
+
+    font-size: .78rem;
+
+    color: #DFD0B8;
+
+    margin-bottom: 6px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+}
+
+.history-row strong,
+.history-transfer strong {
+
+    display: block;
+
+    color: #DFD0B8;
+
+    font-size: 1rem;
+
+    margin-bottom: 4px;
+}
+
+.history-row span,
+.history-transfer span {
+
+    display: block;
+
+    color: #DFD0B8;
+
+    font-size: .9rem;
+}
+
+.history-row small,
+.history-transfer small {
+
+    display: block;
+
+    margin-top: 6px;
+
+    color: #DFD0B8;
+}
+
+/* Transfer */
+
+.history-transfer {
+
+    display: grid;
+
+    grid-template-columns: 1fr 70px 1fr;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 18px;
+}
+
+.history-arrow {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 32px;
+
+    color: #DFD0B8;
+
+    font-weight: bold;
+}
+
+/* Empty */
+
+.timeline-empty {
+
+    text-align: center;
+
+    padding: 30px;
+
+    color: #888;
+
+    border: 1px dashed #ccc;
+
+    border-radius: 10px;
+}
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media (max-width:992px){
+
+    .assignment-panel{
+        padding:18px;
+    }
+
+    .history-row{
+        grid-template-columns:1fr;
+    }
+
+    .history-transfer{
+
+        grid-template-columns:1fr;
+    }
+
+    .history-arrow{
+
+        transform:rotate(90deg);
+
+        font-size:26px;
+
+        margin:6px 0;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .history-card{
+
+        margin-left:35px;
+
+        padding:16px;
+    }
+
+    .assignment-history::before{
+        left:14px;
+    }
+
+    .history-card::before{
+
+        left:-29px;
+
+        width:14px;
+
+        height:14px;
+    }
+
+    .history-top{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+}
+
+@media (max-width:480px){
+
+    .assignment-panel{
+
+        padding:14px;
+
+        border-radius:10px;
+    }
+
+    .history-card{
+
+        margin-left:25px;
+
+        padding:14px;
+    }
+
+    .assignment-history::before{
+        left:10px;
+    }
+
+    .history-card::before{
+
+        left:-20px;
+
+        width:12px;
+
+        height:12px;
+    }
+
+    .history-row div,
+    .history-transfer > div{
+
+        padding:12px;
+    }
+
+    .history-arrow{
+
+        font-size:22px;
+    }
+
+}
 @media(max-width:1100px){
 
 .assignment-grid{

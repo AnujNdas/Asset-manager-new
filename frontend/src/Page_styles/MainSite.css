@@ -1684,7 +1684,7 @@ width: 2rem;
 
 /* Dropdown */
 
-.dropdown-menu {
+/* .dropdown-menu {
     position: absolute;
     top: 120%;
     left: 0;
@@ -1700,7 +1700,7 @@ width: 2rem;
     transform: translateY(10px);
 
     transition: .25s;
-}
+} */
 
 .dropdown:hover .dropdown-menu {
     opacity: 1;

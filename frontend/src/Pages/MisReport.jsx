@@ -410,16 +410,12 @@ const filteredAssets = assets.filter(item =>
   item.assetType === selectedAssetType
 
 );
+const assignments = auditData.assignmentAudit || [];
 
-const assignments =
-  auditData.assignments || [];
-  const filteredAssignments = assignments.filter(item =>
-
+const filteredAssignments = assignments.filter(item =>
   selectedAssetType === "All" ||
   item.assetType === selectedAssetType
-
 );
-
 const warranty = auditData.warranty || [];
 
 const filteredWarranty =
@@ -1816,233 +1812,241 @@ const renderAssignment = () => (
 
     <table className="audit-table">
 
-<thead>
-<tr>
-  <th>Details</th>
-  <th>Employee</th>
-  <th>Asset</th>
-  <th>Department</th>
-  <th>Status</th>
-  <th>Assigned</th>
-  <th>Total Value</th>
-</tr>
-</thead>
+      <thead>
+        <tr>
+          <th>Details</th>
+          <th>Asset</th>
+          <th>Type</th>
+          <th>Current Status</th>
+          <th>Purchase Date</th>
+          <th>Total Cost</th>
+        </tr>
+      </thead>
 
-<tbody>
+      <tbody>
 
-{filteredAssignments.map(item => (
+        {assignments.map((item) => (
 
-<React.Fragment key={item.assignmentId}>
+          <React.Fragment key={item.instanceId}>
 
-<tr>
+            <tr>
 
-<td>
+              <td>
+                <button
+                  className="expand-btn"
+                  onClick={() =>
+                    setExpandedAssignment(
+                      expandedAssignment === item.instanceId
+                        ? null
+                        : item.instanceId
+                    )
+                  }
+                >
+                  {expandedAssignment === item.instanceId
+                    ? <FiChevronUp />
+                    : <FiChevronDown />}
+                </button>
+              </td>
 
-<button
-className="expand-btn"
-onClick={() =>
-setExpandedAssignment(
-expandedAssignment === item.assignmentId
-? null
-: item.assignmentId
-)
-}
->
-{
-expandedAssignment === item.assignmentId
-? <FiChevronUp/>
-: <FiChevronDown/>
-}
-</button>
+              {/* <td>
+                <strong>{item.assetName}</strong>
+                <br />
+                <small>{item.instanceCode}</small>
+              </td> */}
+                <td>
+                  {item.deviceName}
+                </td>
+              <td>
+                {item.assetType}
+              </td>
 
-</td>
+              <td>
+                {item.status}
+              </td>
 
-<td>
+              <td>
+                {item.purchaseDate
+                  ? new Date(item.purchaseDate).toLocaleDateString()
+                  : "-"}
+              </td>
 
-<strong>{item.employeeName}</strong>
+              <td>
+                <strong>
+                  {formatCurrency(item.totalCost || 0)}
+                </strong>
+              </td>
 
-<br/>
+            </tr>
 
-<small>{item.employeeCode}</small>
+            {expandedAssignment === item.instanceId && (
 
-</td>
+              <tr>
 
-<td>
+                <td colSpan={5}>
 
-<strong>{item.assetName}</strong>
+   <div className="assignment-history">
+              
+  <h4>Assignment History</h4>
 
-<br/>
+  {item.assignmentHistory.map((history, index) => (
 
-<small>{item.instanceCode}</small>
+    <div className="history-card" key={index}>
 
-</td>
+      <div className="history-top">
 
-<td>{item.department}</td>
+        <span className={`history-badge ${history.eventType}`}>
+          {history.eventType.replace("_"," ")}
+        </span>
 
-<td>{item.assignmentStatus}</td>
-
-<td>
-
-{
-item.assignedAt
-? new Date(item.assignedAt).toLocaleDateString()
-: "-"
-}
-
-</td>
-
-<td>
-
-<strong>
-
-{formatCurrency(item.totalCost || 0).toLocaleString()}
-
-</strong>
-
-</td>
-
-</tr>
-{expandedAssignment === item.assignmentId && (
-
-<tr>
-  <td colSpan={7}>
-    <div className="assignment-panel">
-
-      <div className="assignment-summary">
-
-        <div>
-          <h3>{item.employeeName}</h3>
-
-          <p>
-            {item.department} • {item.assignmentLocation} • {item.employeeCode}
-          </p>
-        </div>
-
-        <span className={`assignment-status ${item.assignmentStatus}`}>
-          {item.assignmentStatus}
+        <span>
+          {new Date(history.date).toLocaleDateString()}
         </span>
 
       </div>
 
-      <div className="assignment-grid">
+      {history.eventType === "assigned" && (
 
-        {/* Employee */}
+        <>
 
-        <div className="assignment-card">
+          <div className="history-row">
 
-          <h4>👤 Employee</h4>
+            <div>
 
-          <div className="info-item">
-            <span>Name</span>
-            <strong>{item.employeeName}</strong>
-          </div>
+              <label>Assigned From</label>
 
-          <div className="info-item">
-            <span>Employee Code</span>
-            <strong>{item.employeeCode}</strong>
-          </div>
+              <strong>
 
-          <div className="info-item">
-            <span>Email</span>
-            <strong>{item.employeeEmail || "-"}</strong>
-          </div>
+                {history.from.location || "Inventory"}
 
-          <div className="info-item">
-            <span>Department</span>
-            <strong>{item.department}</strong>
-          </div>
+              </strong>
 
-        </div>
-
-        {/* Asset */}
-
-        <div className="assignment-card">
-
-          <h4>🖥 Asset</h4>
-
-          <div className="info-item">
-            <span>Asset</span>
-            <strong>{item.assetName}</strong>
-          </div>
-
-          <div className="info-item">
-            <span>Device</span>
-            <strong>{item.deviceName || "-"}</strong>
-          </div>
-
-          <div className="info-item">
-            <span>Asset Code</span>
-            <strong>{item.assetCode}</strong>
-          </div>
-
-          <div className="info-item">
-            <span>Instance</span>
-            <strong>{item.instanceCode}</strong>
-          </div>
-
-          {item.assetType === "hardware" && (
-            <div className="info-item">
-              <span>Serial Number</span>
-              <strong>{item.serialNumber}</strong>
             </div>
-          )}
 
-        </div>
+            <div>
 
-        {/* Assignment */}
+              <label>Assigned To</label>
 
-        <div className="assignment-card">
+              <strong>
 
-          <h4>📅 Assignment</h4>
+                {history.to.employeeName}
 
-          <div className="info-item">
-            <span>Status</span>
-            <strong>{item.assignmentStatus}</strong>
+              </strong>
+
+            </div>
+
           </div>
 
-          <div className="info-item">
-            <span>Assigned</span>
-            <strong>
-              {item.assignedAt
-                ? new Date(item.assignedAt).toLocaleDateString()
-                : "-"}
-            </strong>
+          <div className="history-row">
+
+            <div>
+
+              <label>Department</label>
+
+              <span>{history.to.department}</span>
+
+            </div>
+
+            <div>
+
+              <label>Location</label>
+
+              <span>{history.to.location}</span>
+
+            </div>
+
           </div>
 
-          <div className="info-item">
-            <span>Returned</span>
-            <strong>
-              {item.returnedAt
-                ? new Date(item.returnedAt).toLocaleDateString()
-                : "-"}
-            </strong>
+        </>
+
+      )}
+
+      {history.eventType === "reassigned" && (
+
+        <>
+
+          <div className="history-transfer">
+
+            <div>
+
+              <label>From</label>
+
+              <strong>{history.from.employeeName}</strong>
+
+              <span>{history.from.department}</span>
+
+              <small>{history.from.location}</small>
+
+            </div>
+
+            <div className="history-arrow">
+
+              →
+
+            </div>
+
+            <div>
+
+              <label>To</label>
+
+              <strong>{history.to.employeeName}</strong>
+
+              <span>{history.to.department}</span>
+
+              <small>{history.to.location}</small>
+
+            </div>
+
           </div>
 
-          <div className="info-item">
-            <span>Assigned By</span>
-            <strong>{item.assignedBy || "-"}</strong>
+        </>
+
+      )}
+
+      {history.eventType === "returned" && (
+
+        <>
+
+          <div className="history-row">
+
+            <div>
+
+              <label>Returned From</label>
+
+              <strong>{history.from.employeeName}</strong>
+
+            </div>
+
+            <div>
+
+              <label>Returned To</label>
+
+              <strong>Inventory</strong>
+
+            </div>
+
           </div>
 
-          <div className="info-item">
-            <span>Returned By</span>
-            <strong>{item.returnedBy || "-"}</strong>
-          </div>
+        </>
 
-        </div>
-
-      </div>
+      )}
 
     </div>
-  </td>
-</tr>
 
-)}
+  ))}
 
-</React.Fragment>
+</div>
 
-))}
+                </td>
 
-</tbody>
+              </tr>
+
+            )}
+
+          </React.Fragment>
+
+        ))}
+
+      </tbody>
 
     </table>
 
