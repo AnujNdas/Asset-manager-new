@@ -761,6 +761,8 @@ stats.availableAssets =
     stats.totalAssets -
     activeAssignments.assigned;
 const departmentMap = {};
+const assignmentHistory = [];
+const yearlyAssignments = {};
     for (const assign of assignments) {
 
 const asset =
@@ -977,8 +979,7 @@ department.assignmentHistory.push({
         assign.status
 
 });
-const assignmentHistory = [];
-const yearlyAssignments = {};
+
 (asset.lifecycle || []).forEach(event => {
 
     if (!["assigned", "reassigned", "returned"].includes(event.eventType))
