@@ -978,7 +978,7 @@ department.assignmentHistory.push({
 
 });
 const assignmentHistory = [];
-
+const yearlyAssignments = {};
 (asset.lifecycle || []).forEach(event => {
 
     if (!["assigned", "reassigned", "returned"].includes(event.eventType))
@@ -988,8 +988,7 @@ const assignmentHistory = [];
     const from = event.metadata?.from || {};
     const assignedTo = to.assignedTo || {};
 
-    assignmentHistory.push({
-
+    const history = {
         year: new Date(event.date).getFullYear(),
 
         eventType: event.eventType,
@@ -1010,27 +1009,32 @@ const assignmentHistory = [];
             to.departmentName ||
             null,
 
-        toLocation:
-            to.location || null,
+        toLocation: to.location || null,
 
         employeeId:
             assignedTo.employeeId ||
             to.employeeId ||
             null,
 
-        status:
-            to.status || asset.status,
+        status: to.status || asset.status,
 
-        condition:
-            to.condition || asset.condition,
+        condition: to.condition || asset.condition,
 
-        performedBy:
-            event.performedBy
+        performedBy: event.performedBy
+    };
 
-    });
+    assignmentHistory.push(history);
+
+    if (!yearlyAssignments[history.year]) {
+        yearlyAssignments[history.year] = {
+            year: history.year,
+            events: []
+        };
+    }
+
+    yearlyAssignments[history.year].events.push(history);
 
 });
-const yearlyAssignments = {};
 
 assignmentHistory.forEach(item => {
 
