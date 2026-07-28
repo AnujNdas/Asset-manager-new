@@ -761,8 +761,7 @@ stats.availableAssets =
     stats.totalAssets -
     activeAssignments.assigned;
 const departmentMap = {};
-const assignmentHistory = [];
-const yearlyAssignments = {};
+response.assignmentAudit = [];
     for (const assign of assignments) {
 
 const asset =
@@ -979,78 +978,159 @@ department.assignmentHistory.push({
         assign.status
 
 });
+const assignmentAudit = {
+    //-----------------------------------
+    // Asset Information
+    //-----------------------------------
+
+    instanceId: asset.instanceId,
+
+    assetId: asset.assetId,
+
+    assetCode: asset.assetCode,
+
+    assetName: asset.assetName,
+
+    assetType: asset.assetType,
+
+    instanceCode: asset.instanceCode,
+
+    deviceName: asset.deviceName,
+
+    serialNumber: asset.serialNumber,
+
+    modelNo: asset.modelNo,
+
+    location: asset.location,
+
+    status: asset.status,
+
+    condition: asset.condition,
+
+    //-----------------------------------
+    // Dates
+    //-----------------------------------
+
+    purchaseDate: asset.purchaseDate,
+
+    installationDate: asset.installationDate,
+
+    warrantyExpiry: asset.warrantyExpiry,
+
+    insuranceExpiry: asset.insuranceExpiry,
+
+    nextMaintenanceDate: asset.nextMaintenanceDate,
+
+    //-----------------------------------
+    // Costs
+    //-----------------------------------
+
+    purchaseCost: asset.purchaseCost || 0,
+
+    maintenanceCost: asset.maintenanceCost || 0,
+
+    warrantyCost: asset.warrantyCost || 0,
+
+    insuranceCost: asset.insuranceCost || 0,
+
+    renewalCost: asset.renewalCost || 0,
+
+    upgradeCost: asset.upgradeCost || 0,
+
+    totalCost: asset.totalCost || 0,
+
+    //-----------------------------------
+    // Timeline
+    //-----------------------------------
+
+    assignmentHistory: []
+};
 
 (asset.lifecycle || []).forEach(event => {
 
     if (!["assigned", "reassigned", "returned"].includes(event.eventType))
         return;
 
-    const to = event.metadata?.to || {};
     const from = event.metadata?.from || {};
+    const to = event.metadata?.to || {};
+
     const assignedTo = to.assignedTo || {};
 
-    const history = {
+    assignmentAudit.assignmentHistory.push({
+
         year: new Date(event.date).getFullYear(),
 
         eventType: event.eventType,
 
         date: event.date,
 
-        fromEmployee: from.employeeName || null,
-        fromDepartment: from.departmentName || null,
-        fromLocation: from.location || null,
+        //-----------------------------------
+        // From
+        //-----------------------------------
 
-        toEmployee:
-            assignedTo.employeeName ||
-            to.employeeName ||
-            null,
+        from: {
 
-        toDepartment:
-            assignedTo.departmentName ||
-            to.departmentName ||
-            null,
+            employeeId:
+                from.employeeId || null,
 
-        toLocation: to.location || null,
+            employeeName:
+                from.employeeName || null,
 
-        employeeId:
-            assignedTo.employeeId ||
-            to.employeeId ||
-            null,
+            department:
+                from.departmentName || null,
 
-        status: to.status || asset.status,
+            location:
+                from.location || null
 
-        condition: to.condition || asset.condition,
+        },
 
-        performedBy: event.performedBy
-    };
+        //-----------------------------------
+        // To
+        //-----------------------------------
 
-    assignmentHistory.push(history);
+        to: {
 
-    if (!yearlyAssignments[history.year]) {
-        yearlyAssignments[history.year] = {
-            year: history.year,
-            events: []
-        };
-    }
+            employeeId:
+                assignedTo.employeeId ||
+                to.employeeId ||
+                null,
 
-    yearlyAssignments[history.year].events.push(history);
+            employeeName:
+                assignedTo.employeeName ||
+                to.employeeName ||
+                null,
+
+            department:
+                assignedTo.departmentName ||
+                to.departmentName ||
+                null,
+
+            location:
+                to.location || null
+
+        },
+
+        //-----------------------------------
+        // Snapshot
+        //-----------------------------------
+
+        status:
+            to.status || asset.status,
+
+        condition:
+            to.condition || asset.condition,
+
+        performedBy:
+            event.performedBy
+    });
 
 });
 
-assignmentHistory.forEach(item => {
+assignmentAudit.assignmentHistory.sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+);
 
-    if (!yearlyAssignments[item.year]) {
-
-        yearlyAssignments[item.year] = {
-            year: item.year,
-            events: []
-        };
-
-    }
-
-    yearlyAssignments[item.year].events.push(item);
-
-});
+response.assignmentAudit.push(assignmentAudit);
 
     if (
     assign.status === "active" ||
@@ -1061,9 +1141,6 @@ assignmentHistory.forEach(item => {
     activeAssignments.returned++;
 }
 }
-const yearlyAssignmentHistory =
-    Object.values(yearlyAssignments)
-          .sort((a,b)=>a.year-b.year);
 response.departments =
     Object.values(departmentMap).map(
         department => ({
@@ -1088,7 +1165,7 @@ response.warranty = warranty;
 response.insurance = insurance;
 
 response.maintenance = maintenance;
-
+response.assignmentAudit = assignmentAuditArray;
 response.lifecycle = lifecycle;
 
 response.financial = {
@@ -1106,9 +1183,6 @@ response.summary = {
     assets: Object.values(assetLookup)
 
 };
-response.assignments = assignmentHistory;
-
-response.yearlyAssignments = yearlyAssignmentHistory;
 return res.status(200).json({
     success: true,
     data: response
