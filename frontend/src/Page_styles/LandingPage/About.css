@@ -48,7 +48,7 @@ z-index:2;
 
 .about-title{
 text-align:center;
-font-size:44px;
+font-size:2rem;
 font-weight:700;
 color:#ead8b9;
 margin-bottom:45px;
@@ -62,7 +62,7 @@ box-shadow:0 18px 40px rgba(0,0,0,.18);
 }
 
 .about-card p{
-font-size:31px;
+font-size:24px;
 line-height:1.8;
 color:#ead8b9;
 margin-bottom:40px;
@@ -78,13 +78,14 @@ margin:70px 0 40px;
 }
 
 .product-title h3{
-font-size:48px;
+font-size:2rem;
 color:#ead8b9;
+font-weight: 600;
 margin-bottom:10px;
 }
 
 .product-title h4{
-font-size:36px;
+font-size:24px;
 font-weight:500;
 color:#ead8b9;
 }
@@ -95,7 +96,7 @@ margin-bottom:70px;
 }
 
 .about-card li{
-font-size:28px;
+font-size:24px;
 line-height:2;
 color:#ead8b9;
 }
@@ -163,7 +164,7 @@ transform:translateY(-10px);
 
 .value-card h3{
 
-font-size:2.2rem;
+font-size:24px;
 color:#ecd9b8;
 margin-bottom:25px;
 font-weight:700;
@@ -172,7 +173,7 @@ font-weight:700;
 
 .value-card p{
 
-font-size:1.45rem;
+font-size:17px;
 line-height:1.8;
 color:#ecd9b8;
 
@@ -209,7 +210,7 @@ margin:auto;
 .section-title{
 
 text-align:center;
-font-size:60px;
+font-size:2rem;
 font-weight:700;
 color:#ead7b6;
 margin-bottom:70px;
@@ -305,7 +306,7 @@ margin-bottom:18px;
 
 .story-title{
 
-font-size:3rem;
+font-size:2rem;
 font-weight:700;
 color:#ead8b9;
 margin-bottom:45px;
@@ -315,7 +316,7 @@ line-height:1.4;
 
 .story-content p{
 
-font-size:1.15rem;
+font-size:17px;
 line-height:2;
 color:#ead8b9;
 margin-bottom:28px;
@@ -409,7 +410,7 @@ text-align:center;
 
 .social-title{
 
-font-size:3.5rem;
+font-size:2rem;
 font-weight:700;
 color:#ead8b9;
 margin-bottom:45px;
@@ -488,7 +489,7 @@ color:#252c36;
 
 padding:16px 40px;
 
-font-size:1.5rem;
+font-size:17px;
 
 font-weight:600;
 
@@ -530,7 +531,7 @@ gap:40px;
 /* ========================= */
 
 .cta-title{
-font-size:4rem;
+font-size:2rem;
 font-weight:700;
 color:#ead8b9;
 line-height:1.2;
@@ -557,7 +558,7 @@ border-radius:50px;
 
 color:#ead8b9;
 
-font-size:2rem;
+font-size:17px;
 font-weight:600;
 
 cursor:pointer;

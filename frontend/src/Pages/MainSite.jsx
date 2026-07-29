@@ -84,6 +84,14 @@ const showcaseImages = [
 const [currentSlide, setCurrentSlide] = useState(0);
 const [transitionEnabled, setTransitionEnabled] = useState(true);
 const slides = [...showcaseImages, showcaseImages[0]];
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setActive((prev) => (prev + 1) % impacts.length);
+  }, 3000);
+
+  return () => clearTimeout(timer);
+}, [active]);
 useEffect(() => {
   const interval = setInterval(() => {
     setCurrentSlide((prev) => prev + 1);
