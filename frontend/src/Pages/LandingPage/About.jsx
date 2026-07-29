@@ -313,7 +313,7 @@ export default function About() {
 
         {/* Top Icons */}
 
-        <div className="social-icons">
+        <div className="social-icons-row">
 
           <a href="#"><FaFacebookF /></a>
 
@@ -331,7 +331,7 @@ export default function About() {
 
         {/* Button */}
 
-        <button className="contact-btn">
+        <button className="contact-user-btn">
           Contact Us
         </button>
 

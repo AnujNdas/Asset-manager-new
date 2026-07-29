@@ -8,6 +8,7 @@ import AffiliateRoutes from "./routes/AffiliateRoutes";
 import TrackInstance from "./Pages/TrackInstance"; 
 import MainSite from "./Pages/MainSite"; 
 import About from "./Pages/LandingPage/About"
+import Contact from "./Pages/LandingPage/Contact";
 import { Toaster } from "react-hot-toast";
 
 import "./App.css";
@@ -85,6 +86,14 @@ const App = () => {
             element={
               <SuspenseWrapper>
                 < About/>
+              </SuspenseWrapper>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <SuspenseWrapper>
+                < Contact/>
               </SuspenseWrapper>
             }
           />

@@ -259,7 +259,7 @@ margin-bottom:30px;
 
 .feature-card h3{
 
-font-size:2.5rem;
+font-size:24px;
 font-weight:700;
 color:#ead7b6;
 margin-bottom:28px;
@@ -268,7 +268,7 @@ margin-bottom:28px;
 
 .feature-card p{
 
-font-size:1.45rem;
+font-size:17px;
 line-height:1.8;
 color:#ead7b6;
 
@@ -418,7 +418,7 @@ margin-bottom:45px;
 
 /*==========================*/
 
-.social-icons,
+.social-icons-row,
 .chat-icons{
 
 display:flex;
@@ -431,7 +431,7 @@ flex-wrap:wrap;
 
 /*==========================*/
 
-.social-icons{
+.social-icons-row{
 
 margin-bottom:45px;
 
@@ -447,7 +447,7 @@ margin-top:45px;
 
 /*==========================*/
 
-.social-icons a,
+.social-icons-row a,
 .chat-icons a{
 
 width:72px;
@@ -473,7 +473,7 @@ box-shadow:0 8px 20px rgba(0,0,0,.20);
 
 }
 
-.social-icons a:hover,
+.social-icons-row a:hover,
 .chat-icons a:hover{
 
 transform:translateY(-8px);
@@ -484,7 +484,7 @@ color:#252c36;
 
 /*==========================*/
 
-.contact-btn{
+.contact-user-btn{
 
 padding:16px 40px;
 
@@ -506,7 +506,7 @@ transition:.35s;
 
 }
 
-.contact-btn:hover{
+.contact-user-btn:hover{
 
 background:#ead8b9;
 color:#252c36;
@@ -717,7 +717,7 @@ margin-bottom:35px;
 
 }
 
-.social-icons a,
+.social-icons-row a,
 .chat-icons a{
 
 width:60px;
@@ -748,13 +748,13 @@ font-size:1.9rem;
 
 }
 
-.social-icons{
+.social-icons-row{
 
 gap:12px;
 
 }
 
-.social-icons a,
+.social-icons-row a,
 .chat-icons a{
 
 width:52px;
@@ -888,17 +888,6 @@ padding:45px 35px;
 
 }
 
-.feature-card h3{
-
-font-size:2rem;
-
-}
-
-.feature-card p{
-
-font-size:1.2rem;
-
-}
 
 .feature-icon{
 

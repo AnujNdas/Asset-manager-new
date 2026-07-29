@@ -4,6 +4,7 @@ import { FaWhatsapp, FaTelegramPlane } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Helmet } from "react-helmet-async";
+import { FiMenu, FiX } from "react-icons/fi";
 
 
 import {
@@ -25,6 +26,7 @@ import { FiBox, FiMonitor } from "react-icons/fi";
 const LandingPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [active, setActive] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
@@ -122,6 +124,7 @@ const blogs = [
       "How Businesses Lose Insurance Claims Due to Missing Asset Records",
     author: "Poll Ghosh",
     date: "July 24, 2026",
+    link: "https://socialflylive.com/how-businesses-lose-insurance-claims/"
   },
   {
     id: 2,
@@ -130,6 +133,7 @@ const blogs = [
     title: "Asset Condition & Lifecycle Tracking Software",
     author: "Poll Ghosh",
     date: "July 20, 2026",
+    link: "https://socialflylive.com/asset-condition-lifecycle-tracking-software/"
   },
   {
     id: 3,
@@ -138,6 +142,7 @@ const blogs = [
     title: "Why 2026 Scammers No Longer Break In, They Log In.",
     author: "Sourav Das",
     date: "June 6, 2026",
+    link: "https://socialflylive.com/why-2026-scammers-no-longer-break-in-they-log-in/"
   },
   {
     id: 4,
@@ -146,7 +151,8 @@ const blogs = [
     title: "How Poor Maintenance Scheduling Shortens Server Lifespans",
     author: "Anuj Das",
     date: "May 26, 2026",
-  },
+    link: "https://socialflylive.com/how-poor-maintenance-shortens-server-lifespans/"
+  }
 ];
 const faqData = [
   {
@@ -466,7 +472,7 @@ const rightItemssoftware = [
       <a href="/">Home</a>
     </li>
 
-    <li className="dropdown">
+    {/* <li className="dropdown">
       <a href="#features">
         Features
         <span>▼</span>
@@ -482,13 +488,13 @@ const rightItemssoftware = [
         <li><a href="/features/auditing">Asset Auditing</a></li>
         <li><a href="/features/reports">Reports & Analytics</a></li>
       </ul>
-    </li>
+    </li> */}
 
-    <li>
+    {/* <li>
       <a href="/pricing">Pricing</a>
-    </li>
+    </li> */}
 
-    <li className="dropdown">
+    {/* <li className="dropdown">
       <a href="#solutions">
         Solutions
         <span>▼</span>
@@ -502,15 +508,15 @@ const rightItemssoftware = [
         <li><a href="/solutions/construction">Construction</a></li>
         <li><a href="/solutions/transportation">Transportation</a></li>
       </ul>
-    </li>
+    </li> */}
 
     <li>
       <a href="/about">About</a>
     </li>
 
-    <li>
+    {/* <li>
       <a href="/blog">Blog</a>
-    </li>
+    </li> */}
 
     <li>
       <a href="/contact">Contact</a>
@@ -532,8 +538,69 @@ const rightItemssoftware = [
             Sign Up
           </button>
         </div>
+          <button
+    className="menu-toggle"
+    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+  >
+    {mobileMenuOpen ? <FiX /> : <FiMenu />}
+  </button>
       </nav>
+            <div className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}>
 
+    <a
+        href="/"
+        onClick={() => setMobileMenuOpen(false)}
+    >
+        Home
+    </a>
+
+    <a
+        href="/about"
+        onClick={() => setMobileMenuOpen(false)}
+    >
+        About
+    </a>
+
+    <a
+        href="/contact"
+        onClick={() => setMobileMenuOpen(false)}
+    >
+        Contact
+    </a>
+
+    <hr />
+
+    <button
+        className="signin-btn"
+        onClick={() => {
+            handleTutorialClick();
+            setMobileMenuOpen(false);
+        }}
+    >
+        Tutorial
+    </button>
+
+    <button
+        className="signin-btn"
+        onClick={() => {
+            handleSigninClick();
+            setMobileMenuOpen(false);
+        }}
+    >
+        Sign In
+    </button>
+
+    <button
+        className="signup-btn"
+        onClick={() => {
+            handleSignupClick();
+            setMobileMenuOpen(false);
+        }}
+    >
+        Sign Up
+    </button>
+
+</div>
       {/* HERO */}
       <section className="hero">
 
@@ -1175,10 +1242,15 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
                   {blog.date}
                 </p>
 
-                <button className="read-btn">
-                  READ MORE
-                  <span>→</span>
-                </button>
+               <a
+  href={blog.link}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="read-btn"
+>
+  READ MORE
+  <span>→</span>
+</a>
               </div>
             </div>
           ))}
@@ -1193,9 +1265,9 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         {/* Left Section */}
         <div className="contact-and-links">
         <div className="footer-column footer-left">
-          <a href="https://socialflylive.com/contact/">Contact</a>
+          <a href="/contact">Contact</a>
 
-          <a href="https://socialflylive.com/about/">About Us</a>
+          <a href="/about">About Us</a>
 
 
         </div>
