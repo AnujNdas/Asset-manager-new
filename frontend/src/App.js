@@ -10,7 +10,7 @@ import MainSite from "./Pages/MainSite";
 import About from "./Pages/LandingPage/About"
 import Contact from "./Pages/LandingPage/Contact";
 import { Toaster } from "react-hot-toast";
-
+import MainLayout from "./layout/MainLayout";
 import "./App.css";
 
 import UpgradePage from "./Pages/UpgradePage";
@@ -68,35 +68,30 @@ const App = () => {
   return (
     <>
       <main>
-        <Routes>
 
           {/* =========================
               AFFILIATE APPLY
           ========================== */}
-          <Route
-            path="/"
-            element={
-              <SuspenseWrapper>
-                < MainSite/>
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <SuspenseWrapper>
-                < About/>
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <SuspenseWrapper>
-                < Contact/>
-              </SuspenseWrapper>
-            }
-          />
+          <Routes>
+
+  <Route element={<MainLayout />}>
+
+      <Route
+          path="/"
+          element={<MainSite />}
+      />
+
+      <Route
+          path="/about"
+          element={<About />}
+      />
+
+      <Route
+          path="/contact"
+          element={<Contact />}
+      />
+
+  </Route>
           <Route
             path="/affiliate/apply"
             element={

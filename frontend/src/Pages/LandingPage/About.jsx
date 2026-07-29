@@ -51,9 +51,8 @@ export default function About() {
 
           <p>
             Socialfly is a Software Company in Kolkata. Founded in 2020.
-            We've spent the last <strong>8+ years creating custom software,
-            websites, mobile apps, and complete digital marketing solutions</strong>
-            for businesses across industries.
+            We've spent the last 8+ years creating custom software,
+            websites, mobile apps, and complete digital marketing solutions for businesses across industries.
           </p>
 
           <p>
