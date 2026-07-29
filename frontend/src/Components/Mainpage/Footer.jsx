@@ -145,7 +145,7 @@ const Footer = () => {
         className="copyright"
         onClick={handleCopyright}
       >
-        © 2026 ASSETPEGASUS. All Rights Reserved.
+        © 2026 Socialfly. All Rights Reserved.
       </div>
 
     </footer>
