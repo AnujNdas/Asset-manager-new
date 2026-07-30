@@ -30,14 +30,14 @@
 
 .navbar {
     width: 100%;
-    padding: 16px 4%;
+    padding: 5px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 30px;
     flex-wrap: nowrap;
     position: relative;
-    background: #393E46;
+    background: #32363E;
 }
 
 .logo img {

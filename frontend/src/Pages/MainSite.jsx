@@ -334,16 +334,22 @@ const rightItemssoftware = [
       name: "AssetPegasus",
       applicationCategory: "BusinessApplication",
       applicationSubCategory: "IT Asset Management Software",
-      operatingSystem: "Web",
+      operatingSystem: "Web-based, Cloud",
       url: "https://assetpegasus.com",
       image: "https://assetpegasus.com/images/AssetpegasusDashboard.webp",
       description:
         "AssetPegasus is an IT asset management platform for tracking hardware, software, warranties, maintenance schedules, insurance, and asset lifecycle.",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-      },
+offers: {
+  "@type": "Offer",
+  price: "0",
+  priceCurrency: "USD",
+  availability: "https://schema.org/InStock"
+},
+aggregateRating: {
+  "@type": "AggregateRating",
+  ratingValue: "4.8",
+  ratingCount: "24"
+},
       publisher: {
         "@type": "Organization",
         name: "AssetPegasus",
@@ -411,15 +417,43 @@ const rightItemssoftware = [
   sameAs:[
     "https://www.linkedin.com/company/assetpegasus",
     "https://x.com/assetpegasus"
-  ]
+  ],
+  description:
+"Cloud-based IT Asset Management Software",
+
+contactPoint: {
+  "@type":"ContactPoint",
+  email:"info@assetpegasus.com",
+  contactType:"Customer Support"
+}
 })}
 </script>
 <script type="application/ld+json">
 {JSON.stringify({
   "@context":"https://schema.org",
-  "@type":"WebSite",
-  name:"AssetPegasus",
-  url:"https://assetpegasus.com"
+  "@type":"WebPage",
+  name:"AssetPegasus | IT Asset Management Software",
+  url:"https://assetpegasus.com/",
+  description:
+    "Track hardware, software, warranties, maintenance, insurance and machinery.",
+  isPartOf:{
+    "@type":"WebSite",
+    name:"AssetPegasus",
+    url:"https://assetpegasus.com"
+  }
+})}
+</script>
+<script type="application/ld+json">
+{JSON.stringify({
+ "@context":"https://schema.org",
+ "@type":"WebSite",
+ name:"AssetPegasus",
+ url:"https://assetpegasus.com",
+ inLanguage:"en",
+ publisher:{
+   "@type":"Organization",
+   name:"AssetPegasus"
+ }
 })}
 </script>
   <title>
@@ -438,7 +472,10 @@ const rightItemssoftware = [
   />
 
 <meta property="og:site_name" content="AssetPegasus" />
-
+<meta
+property="og:url"
+content="https://assetpegasus.com/"
+/>
 <meta
   property="og:image"
   content="https://assetpegasus.com/images/Dashboard.webp"
@@ -448,7 +485,10 @@ const rightItemssoftware = [
     content="Track hardware, software, machinery, warranties and maintenance with AssetPegasus and a free 7-day trial."
   />
   <meta name="twitter:card" content="summary_large_image" />
-
+  <meta
+name="twitter:site"
+content="@assetpegasus"
+/>
 <meta
   name="twitter:title"
   content="AssetPegasus | IT Asset Management Software"
