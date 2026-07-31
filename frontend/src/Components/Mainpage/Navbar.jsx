@@ -48,6 +48,9 @@ const Navbar = () => {
           <li>
             <Link to="/contact">Contact</Link>
           </li>
+          <li>
+            <Link to="/terms">Terms & Condition</Link>
+          </li>
         </ul>
 
         <div className="nav-actions">
@@ -92,6 +95,9 @@ const Navbar = () => {
 
         <Link to="/contact" onClick={closeMenu}>
           Contact
+        </Link>
+        <Link to="/terms" onClick={closeMenu}>
+          Term & Condition
         </Link>
 
         <hr />

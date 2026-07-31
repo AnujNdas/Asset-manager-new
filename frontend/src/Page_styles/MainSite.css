@@ -1875,7 +1875,7 @@ font-size:15px;
     /* display: flex; */
     flex-direction: row;
     align-items: center;
-    gap: 12px;
+    gap: 25px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -1884,7 +1884,7 @@ font-size:15px;
 
 .nav-menu > li {
     position: relative;
-    width: 80px;
+    width: auto;
 }
 
 .nav-menu > li > a {
@@ -1899,7 +1899,8 @@ font-size:15px;
 }
 
 .nav-menu > li > a:hover {
-    color: #948979;
+  text-decoration: underline;
+  background: #32363E;
 }
 
 .nav-menu span {

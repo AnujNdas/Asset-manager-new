@@ -21,6 +21,7 @@ import Loader from "./Components/Loader";
 import "./Component_styles/ClassificationComponent.css";
 
 import AffiliateApply from "./Inner_sections/AffiliateApply";
+import Terms from "./Pages/LandingPage/Terms&Condition";
 
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
@@ -89,6 +90,10 @@ const App = () => {
       <Route
           path="/contact"
           element={<Contact />}
+      />
+      <Route
+          path="/terms"
+          element={<Terms />}
       />
 
   </Route>
