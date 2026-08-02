@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
 export default function LoginActivity() {
   const [logs, setLogs] = useState([]);
   const [search, setSearch] = useState("");
-
+const [expandedUser, setExpandedUser] = useState(null);
   useEffect(() => {
     fetchLogs();
   }, []);
@@ -35,12 +35,14 @@ export default function LoginActivity() {
     }
   };
 
-  const filtered = useMemo(() => {
-    if (!search) return logs;
-    return logs.filter((log) =>
-      log?.userId?.email?.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [search, logs]);
+const filtered = useMemo(() => {
+  if (!search) return logs;
+
+  return logs.filter(user =>
+    user.email?.toLowerCase().includes(search.toLowerCase()) ||
+    user.username?.toLowerCase().includes(search.toLowerCase())
+  );
+}, [logs, search]);
 
   const uniqueCountries = new Set(logs.map(l => l.country)).size;
 
@@ -53,33 +55,53 @@ export default function LoginActivity() {
 
       {/* ===== Summary Cards ===== */}
       <div className="summary-grid">
-        <div className="summary-card">
-          <h4>Total Logins</h4>
-          <p>{logs.length}</p>
-        </div>
+<div className="summary-card">
+    <h4>Total Users</h4>
+    <p>{logs.length}</p>
+</div>
 
-        <div className="summary-card">
-          <h4>Unique Countries</h4>
-          <p>{uniqueCountries}</p>
-        </div>
+<div className="summary-card">
+    <h4>Total Logins</h4>
+    <p>
+        {logs.reduce(
+            (total, user) => total + user.history.length,
+            0
+        )}
+    </p>
+</div>
 
-        <div className="summary-card">
-          <h4>Unique Users</h4>
-          <p>{new Set(logs.map(l => l.userId?._id)).size}</p>
-        </div>
+<div className="summary-card">
+    <h4>Unique Organizations</h4>
+    <p>
+        {
+            new Set(
+                logs.map(user => user.organization)
+            ).size
+        }
+    </p>
+</div>
 
-        <div className="summary-card">
-          <h4>Active Today</h4>
-          <p>
-            {
-              logs.filter(
-                l =>
-                  new Date(l.createdAt).toDateString() ===
-                  new Date().toDateString()
-              ).length
-            }
-          </p>
-        </div>
+<div className="summary-card">
+    <h4>Today's Logins</h4>
+    <p>
+        {
+            logs.reduce((count, user) => {
+
+                return (
+                    count +
+                    user.history.filter(
+                        h =>
+                            new Date(
+                                h.loginAt
+                            ).toDateString() ===
+                            new Date().toDateString()
+                    ).length
+                );
+
+            }, 0)
+        }
+    </p>
+</div>
       </div>
 
       {/* ===== Map Section (Placeholder) ===== */}
@@ -93,29 +115,53 @@ export default function LoginActivity() {
       attribution='&copy; OpenStreetMap contributors'
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
     />
+{
+filtered
+.filter(user =>
+    user.history.length &&
+    user.history[0].latitude &&
+    user.history[0].longitude
+)
+.map(user => {
 
-    {filtered
-      .filter((log) => log.latitude && log.longitude)
+    const latest = user.history[0];
 
-      .map((log) => (
+    return (
+
         <Marker
-          key={log._id}
-          position={[log.latitude, log.longitude]}
-
+            key={user.userId}
+            position={[
+                latest.latitude,
+                latest.longitude
+            ]}
         >
-          <Popup>
-            <strong>{log.userId?.username}</strong>
-            <br />
-            {log.userId?.email}
-            <br />
-            IP: {log.ipAddress}
-            <br />
-            {log.city}, {log.country}
-            <br />
-            {new Date(log.createdAt).toLocaleString()}
-          </Popup>
+
+            <Popup>
+
+                <strong>{user.username}</strong>
+
+                <br/>
+
+                {user.email}
+
+                <br/>
+
+                {latest.city}
+
+                <br/>
+
+                {new Date(
+                    latest.loginAt
+                ).toLocaleString()}
+
+            </Popup>
+
         </Marker>
-      ))}
+
+    );
+
+})
+}
   </MapContainer>
 </div>
 
@@ -130,33 +176,216 @@ export default function LoginActivity() {
       </div>
 
       {/* ===== Activity Cards ===== */}
-      <div className="activity-grid">
-        {filtered.map((log) => (
-          <div className="activity-card" key={log._id}>
-            <div className="activity-top">
-              <div>
-                <h4>{log.userId?.username}</h4>
-                <span>{log.userId?.email}</span>
-              </div>
-              <div className="badge">
-                {log.country || "Unknown"}
-              </div>
-            </div>
+<div className="activity-grid">
 
-            <div className="activity-body">
-              <p><strong>IP:</strong> {log.ipAddress}</p>
-              <p><strong>City:</strong> {log.city || "-"}</p>
-              <p><strong>ISP:</strong> {log.isp || "-"}</p>
-              <p><strong>Org:</strong> {log.organizationId?.name || "-"}</p>
-              <p><strong>Browser:</strong> {log.userAgent}</p>
-            </div>
+{filtered.map(user => {
 
-            <div className="activity-footer">
-              {new Date(log.createdAt).toLocaleString()}
-            </div>
-          </div>
-        ))}
-      </div>
+const latest = user.history[0];
+
+return (
+
+<div
+className="activity-card"
+key={user.userId}
+>
+
+<div className="activity-top">
+
+<div>
+
+<h3>{user.username}</h3>
+
+<p>{user.email}</p>
+<p><strong>Country:</strong> {latest.country}</p>
+<p><strong>Region:</strong> {latest.region}</p>
+<p><strong>City:</strong> {latest.city}</p>
+</div>
+
+<button
+className="expand-btn"
+onClick={() =>
+setExpandedUser(
+
+expandedUser === user.userId
+? null
+: user.userId
+
+)
+}
+>
+
+{
+expandedUser === user.userId
+
+? "Hide History"
+
+: "View History"
+
+}
+
+</button>
+
+</div>
+
+<div className="activity-body">
+
+<p>
+
+<strong>Role:</strong>
+
+{user.role}
+
+</p>
+
+<p>
+
+<strong>Organization:</strong>
+
+{user.organization || "-"}
+
+</p>
+
+<p>
+
+<strong>Last Login:</strong>
+
+{new Date(
+user.lastLogin
+).toLocaleString()}
+
+</p>
+
+<p>
+
+<strong>Latest IP:</strong>
+
+{user.latestIP}
+
+</p>
+
+<p>
+
+<strong>Latest City:</strong>
+
+{user.latestCity}
+
+</p>
+
+<p>
+
+<strong>Latest Browser:</strong>
+
+{user.latestBrowser}
+
+</p>
+
+</div>
+
+{
+expandedUser === user.userId && (
+
+<div className="login-history">
+
+<h4>
+
+Login History
+
+</h4>
+
+<div className="timeline">
+
+{
+
+user.history.map(login => (
+
+<div
+className="timeline-item"
+key={login.id}
+>
+
+<div className="timeline-dot"/>
+
+<div className="timeline-content">
+
+<div className="timeline-header">
+
+<strong>
+
+{
+
+new Date(
+login.loginAt
+).toLocaleString()
+
+}
+
+</strong>
+
+</div>
+
+<p>
+
+IP:
+
+{login.ip}
+
+</p>
+
+<p>
+
+City:
+
+{login.city}
+
+</p>
+
+<p>
+
+ISP:
+
+{login.isp}
+
+</p>
+
+<p>
+
+Browser:
+
+{login.browser}
+
+</p>
+
+<p>
+
+Organization:
+
+{login.organization || "-"}
+
+</p>
+
+</div>
+
+</div>
+
+))
+
+}
+
+</div>
+
+</div>
+
+)
+
+}
+
+</div>
+
+);
+
+})}
+
+</div>
 
     </div>
   );

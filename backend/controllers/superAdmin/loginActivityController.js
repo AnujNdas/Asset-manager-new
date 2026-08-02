@@ -35,27 +35,34 @@ const getLoginActivity = async (req, res) => {
       }
 
       users[id].history.push({
-        id: log._id,
 
-        loginAt: log.createdAt,
+    id: log._id,
 
-        ip: log.ip,
+    loginAt: log.createdAt,
 
-        city: log.city,
+    ip: log.ipAddress,
 
-        isp: log.isp,
+    city: log.city,
 
-        organization:
-          log.organizationId?.name || null,
+    region: log.region,
 
-        browser: log.browser,
+    country: log.country,
 
-        os: log.os,
+    latitude: log.latitude,
 
-        device: log.device,
+    longitude: log.longitude,
 
-        userAgent: log.userAgent,
-      });
+    isp: log.isp,
+
+    browser: log.browser,
+
+    os: log.os,
+
+    device: log.device,
+
+    userAgent: log.userAgent
+
+});
     });
 
     return res.json({
