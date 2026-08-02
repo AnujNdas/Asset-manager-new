@@ -1,24 +1,75 @@
 const LoginActivity = require("../../models/LoginActivity");
+
 const getLoginActivity = async (req, res) => {
   try {
     const logs = await LoginActivity.find()
       .populate("userId", "username email role")
       .populate("organizationId", "name")
-      .sort({ createdAt: -1 })
-      .limit(200);
+      .sort({ createdAt: -1 });
 
-    res.status(200).json({
-      success: true,
-      data: logs,
+    const users = {};
+
+    logs.forEach((log) => {
+      if (!log.userId) return;
+
+      const id = log.userId._id.toString();
+
+      if (!users[id]) {
+        users[id] = {
+          userId: id,
+          username: log.userId.username,
+          email: log.userId.email,
+          role: log.userId.role,
+          organization:
+            log.organizationId?.name || null,
+
+          lastLogin: log.createdAt,
+
+          latestIP: log.ip,
+          latestCity: log.city,
+          latestISP: log.isp,
+          latestBrowser: log.browser,
+
+          history: [],
+        };
+      }
+
+      users[id].history.push({
+        id: log._id,
+
+        loginAt: log.createdAt,
+
+        ip: log.ip,
+
+        city: log.city,
+
+        isp: log.isp,
+
+        organization:
+          log.organizationId?.name || null,
+
+        browser: log.browser,
+
+        os: log.os,
+
+        device: log.device,
+
+        userAgent: log.userAgent,
+      });
     });
-  } catch (error) {
-    console.error("Login Activity Fetch Error:", error);
-    res.status(500).json({
+
+    return res.json({
+      success: true,
+      data: Object.values(users),
+    });
+  } catch (err) {
+    return res.status(500).json({
       success: false,
-      error: "Failed to fetch login activity",
+      error: err.message,
     });
   }
 };
+
 module.exports = {
   getLoginActivity,
-};  
+};
