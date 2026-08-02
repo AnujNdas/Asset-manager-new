@@ -6,7 +6,6 @@ import {
   FaGoogle,
   FaPinterestP,
 } from "react-icons/fa";
-
 const Footer = () => {
   const handleCopyright = () => {
     window.open("https://socialflylive.com/", "_blank");
@@ -36,14 +35,12 @@ const Footer = () => {
 
           <div className="footer-column footer-center">
 
-            <a
-              href="https://socialflylive.com/terms-and-conditions/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Terms and Conditions
-            </a>
-
+       <Link
+  to="/terms"
+  onClick={() => window.scrollTo(0, 0)}
+>
+  Terms and Conditions
+</Link>
             <a
               href="https://socialflylive.com/global-privacy-policy/"
               target="_blank"
