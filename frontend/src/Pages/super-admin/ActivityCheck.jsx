@@ -21,6 +21,7 @@ export default function LoginActivity() {
   const [logs, setLogs] = useState([]);
   const [search, setSearch] = useState("");
 const [expandedUser, setExpandedUser] = useState(null);
+const [selectedUser, setSelectedUser] = useState(null);
   useEffect(() => {
     fetchLogs();
   }, []);
@@ -203,25 +204,10 @@ key={user.userId}
 
 <button
 className="expand-btn"
-onClick={() =>
-setExpandedUser(
-
-expandedUser === user.userId
-? null
-: user.userId
-
-)
-}
+onClick={() => setSelectedUser(user)}
 >
 
-{
-expandedUser === user.userId
-
-? "Hide History"
-
-: "View History"
-
-}
+View History
 
 </button>
 
@@ -281,22 +267,51 @@ user.lastLogin
 
 </div>
 
-{
-expandedUser === user.userId && (
+</div>
 
-<div className="login-history">
+);
 
-<h4>
+})}
 
-Login History
+</div>
+{selectedUser && (
 
-</h4>
+<div
+className="history-modal-overlay"
+onClick={() => setSelectedUser(null)}
+>
+
+<div
+className="history-modal"
+onClick={(e) => e.stopPropagation()}
+>
+
+<div className="history-modal-header">
+
+<div>
+
+<h2>{selectedUser.username}</h2>
+
+<p>{selectedUser.email}</p>
+
+</div>
+
+<button
+className="close-modal"
+onClick={() => setSelectedUser(null)}
+>
+
+✕
+
+</button>
+
+</div>
+
+<div className="history-modal-body">
 
 <div className="timeline">
 
-{
-
-user.history.map(login => (
+{selectedUser.history.map(login => (
 
 <div
 className="timeline-item"
@@ -312,11 +327,8 @@ key={login.id}
 <strong>
 
 {
-
-new Date(
-login.loginAt
-).toLocaleString()
-
+new Date(login.loginAt)
+.toLocaleString()
 }
 
 </strong>
@@ -325,39 +337,45 @@ login.loginAt
 
 <p>
 
-IP:
-
-{login.ip}
+<b>IP:</b> {login.ip}
 
 </p>
 
 <p>
 
-City:
-
-{login.city}
+<b>Country:</b> {login.country}
 
 </p>
 
 <p>
 
-ISP:
-
-{login.isp}
+<b>Region:</b> {login.region}
 
 </p>
 
 <p>
 
-Browser:
-
-{login.browser}
+<b>City:</b> {login.city}
 
 </p>
 
 <p>
 
-Organization:
+<b>ISP:</b> {login.isp}
+
+</p>
+
+<p>
+
+<b>Browser:</b> {login.browser}
+
+</p>
+
+<p>
+
+<b>Organization:</b>
+
+{" "}
 
 {login.organization || "-"}
 
@@ -367,26 +385,17 @@ Organization:
 
 </div>
 
-))
-
-}
+))}
 
 </div>
 
 </div>
 
-)
-
-}
+</div>
 
 </div>
 
-);
-
-})}
-
-</div>
-
+)}
     </div>
   );
 }

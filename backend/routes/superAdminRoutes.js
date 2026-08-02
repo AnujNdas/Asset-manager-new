@@ -9,6 +9,9 @@ const {getSettings, updateSettings , resolveAffiliateTicket} = require("../contr
 // const { getGAAnalytics } = require("../controllers/superAdmin/gaAnalysisController");
 const { getLoginActivity } = require("../controllers/superAdmin/loginActivityController");
 const { getAffiliateTickets} = require("../controllers/affiliate/affiliateTicket");
+const {
+  healthCheck,
+} = require("../controllers/superAdmin/healthController");
 
 
 /* ================= DASHBOARD ================= */
@@ -45,4 +48,7 @@ router.patch(
   authenticateToken(["super-admin"]),
   resolveAffiliateTicket
 );
+
+router.get("/", healthCheck);
+
 module.exports = router;
