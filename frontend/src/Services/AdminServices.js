@@ -109,3 +109,9 @@ export const getLoginActivity = async () => {
   );
   return res.data;
 };
+export const getRouteHealth = async () => {
+  const res = await axiosInstance.get(
+    "/super-admin/",
+  );
+  return res.data;
+};

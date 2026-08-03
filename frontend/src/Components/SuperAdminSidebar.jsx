@@ -7,6 +7,7 @@ const links = [
   // { to: "/super-admin/analytics", label: "Analytics" },
   { to: "/super-admin/tickets", label: "Tickets" },
   { to: "/super-admin/activity", label: "Activity" },
+  { to: "/super-admin/health", label: "health" },
 ];
 const handleClick = () => {
   localStorage.removeItem("superAdminToken");

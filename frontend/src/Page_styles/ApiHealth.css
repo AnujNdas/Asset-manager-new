@@ -1,0 +1,687 @@
+/* ===========================
+   API HEALTH DASHBOARD
+=========================== */
+
+.api-health{
+    width:100%;
+    padding:30px;
+    background:#f6f8fb;
+    min-height:100vh;
+    box-sizing:border-box;
+}
+
+.api-header h2{
+    font-size:2rem;
+    font-weight:700;
+    color:#1d2939;
+    margin-bottom:25px;
+}
+
+
+/* ===========================
+   SUMMARY CARDS
+=========================== */
+
+.summary-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.summary-card{
+    background:#fff;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    border-left:6px solid transparent;
+    transition:.25s;
+}
+
+.summary-card:hover{
+    transform:translateY(-4px);
+}
+
+.summary-card h3{
+    font-size:16px;
+    color:#667085;
+    margin-bottom:15px;
+}
+
+.summary-card p{
+    font-size:2rem;
+    font-weight:700;
+    color:#101828;
+}
+
+.summary-card.healthy{
+    border-color:#22c55e;
+}
+
+.summary-card.moderate{
+    border-color:#facc15;
+}
+
+.summary-card.slow{
+    border-color:#f97316;
+}
+
+.summary-card.critical{
+    border-color:#ef4444;
+}
+
+
+/* ===========================
+   FILTERS
+=========================== */
+
+.filters{
+    display:flex;
+    gap:18px;
+    margin-bottom:30px;
+}
+
+.filters input{
+    flex:1;
+    padding:14px 18px;
+    border-radius:12px;
+    border:1px solid #d0d5dd;
+    outline:none;
+    font-size:15px;
+    transition:.25s;
+}
+
+.filters input:focus{
+    border-color:#7c3aed;
+}
+
+.filters select{
+    width:180px;
+    border-radius:12px;
+    border:1px solid #d0d5dd;
+    padding:14px;
+    outline:none;
+    cursor:pointer;
+}
+
+
+/* ===========================
+   ROUTE GRID
+=========================== */
+
+.route-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(420px,1fr));
+    gap:22px;
+}
+
+
+/* ===========================
+   ROUTE CARD
+=========================== */
+
+.route-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    box-shadow:0 10px 28px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.route-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+
+.route-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.route-name{
+
+    font-size:17px;
+
+    font-weight:700;
+
+    color:#111827;
+
+    word-break:break-word;
+
+}
+
+.route-method{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:6px 12px;
+
+    border-radius:30px;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+
+/* ===========================
+   STATUS BADGE
+=========================== */
+
+.health{
+
+    padding:8px 16px;
+
+    border-radius:30px;
+
+    color:#fff;
+
+    font-weight:700;
+
+    font-size:13px;
+
+}
+
+.health.Healthy{
+
+    background:#22c55e;
+
+}
+
+.health.Moderate{
+
+    background:#f59e0b;
+
+}
+
+.health.Slow{
+
+    background:#ea580c;
+
+}
+
+.health.Critical{
+
+    background:#dc2626;
+
+}
+
+
+/* ===========================
+   ROUTE STATS
+=========================== */
+
+.route-stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:14px;
+
+    margin:20px 0;
+
+}
+
+.stat{
+
+    background:#f9fafb;
+
+    border-radius:12px;
+
+    padding:12px;
+
+}
+
+.stat h4{
+
+    font-size:12px;
+
+    color:#6b7280;
+
+    margin-bottom:6px;
+
+}
+
+.stat p{
+
+    font-size:17px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+
+/* ===========================
+   EXPAND BUTTON
+=========================== */
+
+.expand-btn{
+
+    width:100%;
+
+    margin-top:18px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#7c3aed;
+
+    color:#fff;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.expand-btn:hover{
+
+    background:#6d28d9;
+
+}
+
+
+/* ===========================
+   HISTORY SECTION
+=========================== */
+
+.history{
+
+    margin-top:22px;
+
+    border-top:1px solid #e5e7eb;
+
+    padding-top:20px;
+
+}
+
+.history h4{
+
+    margin-bottom:18px;
+
+    color:#1f2937;
+
+}
+
+
+/* ===========================
+   TIMELINE
+=========================== */
+
+.timeline{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.timeline-item{
+
+    position:relative;
+
+    display:flex;
+
+    gap:15px;
+
+}
+
+.timeline-dot{
+
+    width:14px;
+
+    height:14px;
+
+    border-radius:50%;
+
+    background:#7c3aed;
+
+    margin-top:5px;
+
+    flex-shrink:0;
+
+}
+
+.timeline-content{
+
+    flex:1;
+
+    background:#f8fafc;
+
+    border-radius:12px;
+
+    padding:14px;
+
+}
+
+.timeline-content strong{
+
+    display:block;
+
+    margin-bottom:8px;
+
+}
+
+.timeline-content p{
+
+    margin:5px 0;
+
+    font-size:14px;
+
+    color:#475467;
+
+}
+
+
+/* ===========================
+   HISTORY RESPONSE TABLE
+=========================== */
+
+.history-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:15px;
+
+}
+
+.history-table th{
+
+    background:#f8fafc;
+
+    padding:10px;
+
+    text-align:left;
+
+    font-size:13px;
+
+}
+
+.history-table td{
+
+    padding:10px;
+
+    border-top:1px solid #eee;
+
+    font-size:14px;
+
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:1200px){
+
+.route-grid{
+
+grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
+
+}
+
+}
+
+@media(max-width:992px){
+
+.filters{
+
+flex-direction:column;
+
+}
+
+.filters select{
+
+width:100%;
+
+}
+
+.route-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.api-health{
+
+padding:18px;
+
+}
+
+.api-header h2{
+
+font-size:1.6rem;
+
+}
+
+.summary-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+.route-stats{
+
+grid-template-columns:1fr;
+
+}
+
+.route-top{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:10px;
+
+}
+
+}
+
+@media(max-width:480px){
+
+.summary-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.summary-card{
+
+padding:18px;
+
+}
+
+.summary-card p{
+
+font-size:1.6rem;
+
+}
+
+.route-card{
+
+padding:18px;
+
+}
+
+.timeline-item{
+
+flex-direction:column;
+
+}
+
+.timeline-dot{
+
+display:none;
+
+}
+
+.timeline-content{
+
+padding:12px;
+
+}
+
+.filters input,
+
+.filters select{
+
+font-size:14px;
+
+padding:12px;
+
+}
+
+}
+.route-modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    padding:20px;
+}
+
+.route-modal{
+    width:min(1100px,95vw);
+    max-height:90vh;
+    overflow-y:auto;
+    background:#fff;
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 25px 80px rgba(0,0,0,.25);
+    animation:modalIn .25s ease;
+}
+
+@keyframes modalIn{
+    from{
+        transform:translateY(20px);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.close-btn{
+    border:none;
+    background:#ef4444;
+    color:#fff;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.modal-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+    margin-bottom:30px;
+}
+
+.modal-grid>div{
+    background:#f8fafc;
+    border-radius:12px;
+    padding:15px;
+}
+
+.modal-grid strong{
+    display:block;
+    color:#64748b;
+    margin-bottom:8px;
+}
+
+.history-title{
+    margin:20px 0;
+}
+
+.history-table{
+    overflow-x:auto;
+}
+
+.history-table table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.history-table th{
+    background:#f1f5f9;
+    padding:12px;
+    text-align:left;
+}
+
+.history-table td{
+    padding:12px;
+    border-top:1px solid #e5e7eb;
+}
+
+.status-badge{
+    padding:5px 12px;
+    border-radius:20px;
+    color:#fff;
+    font-size:.85rem;
+}
+
+.status-badge.healthy{
+    background:#22c55e;
+}
+
+.status-badge.warning{
+    background:#f59e0b;
+}
+
+.status-badge.critical{
+    background:#ef4444;
+}

@@ -9,6 +9,7 @@ const Tenants = lazy(() => import("../Pages/super-admin/Tenant"));
 const Settings = lazy(() => import("../Pages/super-admin/SuperAdminSetting"));
 const SuperAdminTickets = lazy(() => import("../Pages/super-admin/SuperAdminTicket"));
 const LoginActivity = lazy(() => import("../Pages/super-admin/ActivityCheck"));
+const HealthMonitor = lazy(() => import("../Pages/super-admin/HealthMonitor"))
 // const Analytics = lazy(() => import("../Pages/super-admin/Analytics"));
 
 const SuperAdminRoutes = () => (
@@ -67,6 +68,14 @@ const SuperAdminRoutes = () => (
         element={
           <Suspense fallback={<div>Loading...</div>}>
             <LoginActivity />
+          </Suspense>
+        }
+      />
+      <Route
+        path="health"
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <HealthMonitor />
           </Suspense>
         }
       />
