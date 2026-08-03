@@ -36,6 +36,7 @@
   const affiliateRoutes = require("./routes/affiliateRoutes");
   const errorHandler = require("./Middleware/errorHandler");
   const auditRoutes = require("./routes/auditRoutes");
+  const { routeMonitor } = require("./Middleware/routeMonitor")
   // ✅ Import User model for Super Admin seeding
   const User = require("./models/User");
 
@@ -90,7 +91,7 @@
   app.use(express.json({ limit: "10mb" })); // <-- replace bodyParser.json()
   app.use(express.urlencoded({ extended: true }));
   // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
+  app.use(routeMonitor);
   app.get("/", (req, res) => {
     res.send("Asset management API is running...");
   });

@@ -10,7 +10,7 @@ const {getSettings, updateSettings , resolveAffiliateTicket} = require("../contr
 const { getLoginActivity } = require("../controllers/superAdmin/loginActivityController");
 const { getAffiliateTickets} = require("../controllers/affiliate/affiliateTicket");
 const {
-  healthCheck,
+  getRouteHealth,
 } = require("../controllers/superAdmin/healthController");
 
 
