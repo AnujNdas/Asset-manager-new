@@ -43,6 +43,21 @@ const handleAboutClick = () => {
 const handleHealthCare = () => {
   window.open("https://socialflylive.com/healthcare-asset-tracking/")
 }
+const handleGoodFirms = () => {
+  window.open("https://www.goodfirms.co/company/socialfly-live")
+}
+const handleG2 = () => {
+  window.open("https://www.g2.com/products/machine-it-assets-management-system/reviews")
+}
+const handleTrustPilot = () => {
+  window.open("https://www.trustpilot.com/review/assetpegasus.com")
+}
+const handleProductHunt = () => {
+  window.open("https://www.producthunt.com/@socialflylive ")
+}
+const handleSaasHub = () => {
+  window.open("https://www.saashub.com/assetpegasus")
+}
 const handleManufacturing = () => {
   window.open("https://socialflylive.com/manufacturing-asset-management-software/")
 }
@@ -457,7 +472,7 @@ contactPoint: {
 })}
 </script>
   <title>
-    AssetPegasus | IT Asset Management Software
+    Machine & IT asset management System
   </title>
 
   <meta property="og:type" content="website" />
@@ -468,7 +483,7 @@ contactPoint: {
 
   <meta
     property="og:title"
-    content="AssetPegasus | IT Asset Management Software"
+    content="Machine & IT asset management System"
   />
 
 <meta property="og:site_name" content="AssetPegasus" />
@@ -491,7 +506,7 @@ content="@assetpegasus"
 />
 <meta
   name="twitter:title"
-  content="AssetPegasus | IT Asset Management Software"
+  content="Machine & IT asset management System"
 />
 
 <meta
@@ -1036,11 +1051,11 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
         <p className="about-text">
           Recognition by a trusted research platform like{" "}
-          <span className="highlight-link">Goodfirms</span>,{" "}
-          <span className="highlight-link">G2</span>,{" "}
-          <span className="highlight-link">Saashub</span>,{" "}
-          <span className="highlight-link">Product Hunt</span>,{" "}
-          <span className="highlight-link">SourceForge</span> & Others
+          <span className="highlight-link" onClick={handleGoodFirms}>Goodfirms</span>,{" "}
+          <span className="highlight-link" onClick={handleG2}>G2</span>,{" "}
+          <span className="highlight-link" onClick={handleSaasHub}>Saashub</span>,{" "}
+          <span className="highlight-link" onClick={handleProductHunt}>Product Hunt</span>,{" "}
+          <span className="highlight-link" onClick={handleTrustPilot}>TrustPilot</span> & Others
         </p>
 
         <button className="about-btn" onClick={handleAboutClick}>

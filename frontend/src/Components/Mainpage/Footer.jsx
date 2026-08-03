@@ -21,11 +21,11 @@ const Footer = () => {
 
           <div className="footer-column footer-left">
 
-            <Link to="/contact">
+            <Link to="/contact" onClick={() => window.scrollTo(0, 0)}>
               Contact
             </Link>
 
-            <Link to="/about">
+            <Link to="/about" onClick={() => window.scrollTo(0, 0)}>
               About Us
             </Link>
 

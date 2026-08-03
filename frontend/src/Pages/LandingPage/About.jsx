@@ -314,15 +314,15 @@ export default function About() {
 
         <div className="social-icons-row">
 
-          <a href="#"><FaFacebookF /></a>
+          <a href="https://www.facebook.com/socialflylive/"><FaFacebookF /></a>
 
-          <a href="#"><FaGoogle /></a>
+          <a href="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"><FaGoogle /></a>
 
-          <a href="#"><FaInstagram /></a>
+          <a href="https://www.instagram.com/socialflylive"><FaInstagram /></a>
 
-          <a href="#"><FaLinkedinIn /></a>
+          <a href="https://www.linkedin.com/company/socialflylive/"><FaLinkedinIn /></a>
 
-          <a href="#"><FaPinterestP /></a>
+          <a href="https://in.pinterest.com/socialflylive/"><FaPinterestP /></a>
 
           <a href="#"><FaThermometer /></a>
 
@@ -338,11 +338,13 @@ export default function About() {
 
         <div className="chat-icons">
 
-          <a href="#">
-            <FaWhatsapp />
-          </a>
+             <a
+            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp">
+              <FaWhatsapp />
+            </a>
 
-          <a href="#">
+          <a
+            href="https://t.me/Socialflylive" >
             <FaTelegramPlane />
           </a>
 
@@ -356,7 +358,7 @@ export default function About() {
       <div className="cta-container">
 
         <h2 className="cta-title">
-          Asset Management System
+          Machine & IT asset management System
         </h2>
 
         <button className="cta-btn">
