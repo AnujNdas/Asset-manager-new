@@ -49,6 +49,6 @@ router.patch(
   resolveAffiliateTicket
 );
 
-router.get("/", healthCheck);
+router.get("/", getRouteHealth);
 
 module.exports = router;
