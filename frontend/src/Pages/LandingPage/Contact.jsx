@@ -9,6 +9,7 @@ import {
   FaWhatsapp,
   FaTelegramPlane,
 } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 import "../../Page_styles/LandingPage/Contact.css"
 export default function Contact() {
   return (
