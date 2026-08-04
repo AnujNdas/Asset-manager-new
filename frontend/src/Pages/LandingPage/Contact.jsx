@@ -13,11 +13,66 @@ import "../../Page_styles/LandingPage/Contact.css"
 export default function Contact() {
   return (
     <>
+    <Helmet>
+  <title>Contact AssetPegasus | IT Asset Management Software</title>
+
+  <meta
+    name="description"
+    content="Contact AssetPegasus, our mission, and how we help organizations manage IT assets, software licenses, warranties, and inventory."
+  />
+
+  <meta property="og:type" content="website" />
+
+  <meta
+    property="og:title"
+    content="Contact AssetPegasus"
+  />
+
+  <meta
+    property="og:description"
+    content="Contact us and Lets Change the system."
+  />
+
+  <meta
+    property="og:image"
+    content="https://assetpegasus.com/images/Dashboard.webp"
+  />
+
+  <meta
+    property="og:url"
+    content="https://assetpegasus.com/contact"
+  />
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  />
+
+  <meta
+    name="twitter:title"
+    content="Contact AssetPegasus"
+  />
+
+  <meta
+    name="twitter:description"
+    content="Contact us and Lets Change the system."
+  />
+
+  <meta
+    name="twitter:image"
+    content="https://assetpegasus.com/images/Dashboard.webp"
+  />
+
+  <link
+    rel="canonical"
+    href="https://assetpegasus.com/contact"
+  />
+</Helmet>
     <section className="contact">
 
       <div className="contact-top">
 
-        <h2>Contact</h2>
+        <h1>Contact</h1>
 
         <p>
           We'd love to hear from you. Whether you're curious about

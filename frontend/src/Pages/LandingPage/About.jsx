@@ -36,16 +36,72 @@ const values = [
 
 export default function About() {
   return (
+    
     <>
+    <Helmet>
+  <title>About AssetPegasus | IT Asset Management Software</title>
+
+  <meta
+    name="description"
+    content="Learn about AssetPegasus, our mission, and how we help organizations manage IT assets, software licenses, warranties, and inventory."
+  />
+
+  <meta property="og:type" content="website" />
+
+  <meta
+    property="og:title"
+    content="About AssetPegasus"
+  />
+
+  <meta
+    property="og:description"
+    content="Learn more about AssetPegasus and our mission."
+  />
+
+  <meta
+    property="og:image"
+    content="https://assetpegasus.com/images/Dashboard.webp"
+  />
+
+  <meta
+    property="og:url"
+    content="https://assetpegasus.com/about"
+  />
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  />
+
+  <meta
+    name="twitter:title"
+    content="About AssetPegasus"
+  />
+
+  <meta
+    name="twitter:description"
+    content="Learn more about AssetPegasus and our mission."
+  />
+
+  <meta
+    name="twitter:image"
+    content="https://assetpegasus.com/images/Dashboard.webp"
+  />
+
+  <link
+    rel="canonical"
+    href="https://assetpegasus.com/about"
+  />
+</Helmet>
     <section className="about">
 
       <div className="about-wave"></div>
 
       <div className="about-container">
 
-        <h2 className="about-title">
+        <h1 className="about-title">
           About Socialfly
-        </h2>
+        </h1>
 
         <div className="about-card">
 
