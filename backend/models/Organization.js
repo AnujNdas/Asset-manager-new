@@ -77,11 +77,27 @@ scheduledDeletionAt: {
     type: Date,
     default: null,
 },
-autoCleanup: {
-    type: Boolean,
-    default: true,
+
+finalReminderSentAt: {
+    type: Date,
+    default: null,
 },
 
+cleanupReason: {
+    type: String,
+    enum: ["NO_USERS", "INACTIVE_ADMIN", null],
+    default: null,
+},
+
+status: {
+    type: String,
+    enum: [
+        "active",
+        "inactive",
+        "pending_deletion"
+    ],
+    default: "active",
+},
   },
   { timestamps: true }
 );
