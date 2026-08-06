@@ -56,9 +56,15 @@ const cleanupInactiveOrganizations = async () => {
                     .select("email username");
 
                 if (!admin) {
-                    console.log("Creator no longer exists.");
-                    continue;
-                }
+
+    console.log(
+        `${org.name} has no creator. Deleting immediately.`
+    );
+
+    await deleteOrganizationData(org._id);
+
+    continue;
+}
 
                 inactiveDays = ageDays;
                 reason = "NO_USERS";
