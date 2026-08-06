@@ -62,7 +62,25 @@ currency: {
   default: "USD",
   uppercase: true,
   trim: true,
-}
+},
+lastActivityAt: {
+    type: Date,
+    default: null,
+},
+
+warningEmailSentAt: {
+    type: Date,
+    default: null,
+},
+
+scheduledDeletionAt: {
+    type: Date,
+    default: null,
+},
+autoCleanup: {
+    type: Boolean,
+    default: true,
+},
 
   },
   { timestamps: true }

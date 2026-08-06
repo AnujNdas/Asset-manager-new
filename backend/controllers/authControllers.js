@@ -713,7 +713,24 @@ try {
       { _id: user._id },
       { lastActive: new Date() }
     );
+    // Update organization's last activity
+if (user.organizationId) {
+  await Organization.updateOne(
+    { _id: user.organizationId },
+    {
+      $set: {
+        lastActivityAt: new Date(),
 
+        // User became active again
+        warningEmailSentAt: null,
+        scheduledDeletionAt: null,
+
+        // Optional: reactivate automatically
+        status: "active",
+      },
+    }
+  );
+}
 await sendNotification({
   req,
   userId: user._id,
