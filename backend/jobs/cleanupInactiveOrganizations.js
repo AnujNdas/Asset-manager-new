@@ -1,5 +1,5 @@
 const Organization = require("../models/Organization");
-
+const User = require("../models/User");
 const cleanupInactiveOrganizations = async () => {
 
     try {
@@ -12,32 +12,74 @@ const cleanupInactiveOrganizations = async () => {
 
         const cutoff = new Date(now.getTime() - THIRTY_DAYS);
 
-        const organizations = await Organization.find({
-            autoCleanup: true
-        });
+const organizations = await Organization.find();
 
-        console.log(`Found ${organizations.length} organizations`);
+console.log(`Found ${organizations.length} organizations`);
+for (const org of organizations) {
 
-        for (const org of organizations) {
+    console.log(`\nChecking organization: ${org.name}`);
 
-            if (!org.lastActivityAt) {
+    const users = await User.find({
+        organizationId: org._id
+    }).select(
+        "username email role lastActive createdAt"
+    );
 
-                console.log(
-                    `${org.name} has never been active`
-                );
+    // --------------------------
+    // No users at all
+    // --------------------------
 
-                continue;
-            }
+    if (users.length === 0) {
 
-            if (org.lastActivityAt < cutoff) {
+        console.log("No users found.");
 
-                console.log(
-                    `${org.name} inactive since ${org.lastActivityAt}`
-                );
+        // We'll delete these later.
+        continue;
+    }
 
-            }
+    // --------------------------
+    // Find the admin
+    // --------------------------
 
-        }
+    const admin =
+        users.find(u => u.role === "admin") ||
+        users[0];
+
+    console.log(
+        `Admin: ${admin.email}`
+    );
+
+    // --------------------------
+    // Determine last activity
+    // --------------------------
+
+    const lastActivity =
+        admin.lastActive || admin.createdAt;
+
+    const inactiveDays = Math.floor(
+        (Date.now() - new Date(lastActivity).getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+
+    console.log(
+        `Inactive for ${inactiveDays} days`
+    );
+
+    if (inactiveDays >= 30) {
+
+        console.log(
+            `${org.name} is INACTIVE`
+        );
+
+    } else {
+
+        console.log(
+            `${org.name} is ACTIVE`
+        );
+
+    }
+
+}
 
     }
     catch (err) {
