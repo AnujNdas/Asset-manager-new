@@ -997,7 +997,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
             {features.map((item, index) => (
               <div key={index} className="mobile-row">
                 <span>{item.label}</span>
-                <strong>{item.c1}</strong>
+                <span>{item.c1}</span>
               </div>
             ))}
           </div>
@@ -1008,7 +1008,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
             {features.map((item, index) => (
               <div key={index} className="mobile-row">
                 <span>{item.label}</span>
-                <strong>{item.ap}</strong>
+                <span>{item.ap}</span>
               </div>
             ))}
           </div>
