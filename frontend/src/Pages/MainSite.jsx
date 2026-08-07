@@ -739,7 +739,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </h2>
 
         <p className="cloud-machinery-text">
-          <strong>AssetPegasus</strong> is a hardware management system that is a
+          AssetPegasus is a hardware management system that is a
           fully cloud based solution. No software needs to be installed on the
           local machines, no servers to be maintained and no data to be backed
           up manually.
@@ -816,7 +816,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
             <p>
               Manage All types of Digital Assets From One Place —
-              <strong> Softwares, Servers, Domains & Clouds</strong> etc.
+               Softwares, Servers, Domains & Clouds etc.
             </p>
           </div>
 
@@ -830,7 +830,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
             <p>
               Manage All types of Physical Assets From One Place —
-              <strong> Machine, Equipment, Electronics & Transport</strong>
+               Machine, Equipment, Electronics & Transport
               {" "}assets etc.
             </p>
           </div>
