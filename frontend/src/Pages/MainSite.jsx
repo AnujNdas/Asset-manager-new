@@ -147,7 +147,8 @@ const blogs = [
       "How Businesses Lose Insurance Claims Due to Missing Asset Records",
     author: "Poll Ghosh",
     date: "July 24, 2026",
-    link: "https://socialflylive.com/how-businesses-lose-insurance-claims/"
+    link: "https://socialflylive.com/how-businesses-lose-insurance-claims/",
+     cta: "Read about insurance claims"
   },
   {
     id: 2,
@@ -156,7 +157,8 @@ const blogs = [
     title: "Asset Condition & Lifecycle Tracking Software",
     author: "Poll Ghosh",
     date: "July 20, 2026",
-    link: "https://socialflylive.com/asset-condition-lifecycle-tracking-software/"
+    link: "https://socialflylive.com/asset-condition-lifecycle-tracking-software/",
+     cta: "Explore lifecycle tracking"
   },
   {
     id: 3,
@@ -165,7 +167,8 @@ const blogs = [
     title: "Why 2026 Scammers No Longer Break In, They Log In.",
     author: "Sourav Das",
     date: "June 6, 2026",
-    link: "https://socialflylive.com/why-2026-scammers-no-longer-break-in-they-log-in/"
+    link: "https://socialflylive.com/why-2026-scammers-no-longer-break-in-they-log-in/",
+     cta: "Read the security insights"
   },
   {
     id: 4,
@@ -174,7 +177,8 @@ const blogs = [
     title: "How Poor Maintenance Scheduling Shortens Server Lifespans",
     author: "Anuj Das",
     date: "May 26, 2026",
-    link: "https://socialflylive.com/how-poor-maintenance-shortens-server-lifespans/"
+    link: "https://socialflylive.com/how-poor-maintenance-shortens-server-lifespans/",
+     cta: "Explore maintenance planning"
   }
 ];
 const faqData = [
@@ -812,7 +816,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
               <FiBox />
             </div>
 
-            <h3>IT Asset Management</h3>
+            <p style={{ fontWeight : "700"}}>IT Asset Management</p>
 
             <p>
               Manage All types of Digital Assets From One Place —
@@ -826,7 +830,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
               <FiMonitor />
             </div>
 
-            <h3>Equipment Asset Management</h3>
+            <p style={{ fontWeight : "700"}}>Equipment Asset Management</p>
 
             <p>
               Manage All types of Physical Assets From One Place —
@@ -852,7 +856,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
           <div className="feature-card" onClick={handleHealthCare}>
             <span><FontAwesomeIcon icon={faLineChart} /></span>
-            <h3>Healthcare Asset Tracking</h3>
+            <p style={{ fontWeight : "700"}}>Healthcare Asset Tracking</p>
             <p>
             Track critical medical devices, diagnostic equipment, and IT systems.
             </p><p> Maintain regulatory compliance and ensure patient-care equipment is always maintained, covered, and accounted for.
@@ -862,7 +866,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
           <div className="feature-card" onClick={handleManufacturing}>
             <span><FontAwesomeIcon icon={faClipboard}/></span>
-            <h3>Manufacturing Asset Management</h3>
+            <p style={{ fontWeight : "700"}}>Manufacturing Asset Management</p>
             <p>
            Manage production machinery, tools, and operational equipment across factory floors and multiple facilities.</p> <p> Track maintenance cycles and insurance coverage on high-value equipment.
             </p>
@@ -870,7 +874,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
           <div className="feature-card" onClick={handleEducation}>
             <span><FontAwesomeIcon icon={faClipboardCheck} /></span>
-            <h3>Education Asset Management</h3>
+            <p style={{ fontWeight : "700"}}>Education Asset Management</p>
             <p>
             From campus IT labs to sports equipment and classroom tech — manage assets across multiple campuses, assign to departments, and track renewal cycles all in one platform.
             </p>
@@ -878,7 +882,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
           <div className="feature-card" onClick={handleHospitalityManagement}>
             <span><FontAwesomeIcon icon={faRestroom} /></span>
-            <h3>Restaurant & Hospitality Asset Management </h3>
+            <p style={{ fontWeight : "700"}}>Restaurant & Hospitality Asset Management </p>
             <p>
             Track kitchen equipment, POS systems, HVAC units, and furniture across multiple locations.</p> <p> Prevent costly equipment failures with proactive maintenance and warranty management.
             </p>
@@ -886,14 +890,14 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
           <div className="feature-card" onClick={handleConstructionClick}>
             <span><FontAwesomeIcon icon={faKitchenSet} /></span>
-            <h3>Construction Equipment Tracking</h3>
+            <p style={{ fontWeight : "700"}}>Construction Equipment Tracking</p>
             <p>Heavy equipment moves between job sites. Know where every piece of machinery is, when it's due for service, and whether it's covered — before you move it or need to claim it. 
             </p>
           </div>
 
           <div className="feature-card" onClick={handleTravelClick}>
             <span><FontAwesomeIcon icon={faTrain} /></span>
-            <h3>Travel & Transportation Logistics</h3>
+            <p style={{ fontWeight : "700"}}>Travel & Transportation Logistics</p>
             <p>
               Manage fleets, ground equipment, and transit infrastructure. </p> <p>Real-time visibility into vehicle status, service schedules, and insurance policies — all in one dashboard.
             </p>
@@ -1165,14 +1169,14 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
                   {blog.date}
                 </p>
 
-               <a
+<a
   href={blog.link}
   target="_blank"
   rel="noopener noreferrer"
   className="read-btn"
 >
-  READ MORE
-  <span>→</span>
+  {blog.cta}
+  <span aria-hidden="true">→</span>
 </a>
               </div>
             </div>
