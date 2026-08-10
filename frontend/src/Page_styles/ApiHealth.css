@@ -4,8 +4,8 @@
 
 .api-health{
     width:100%;
-    padding:30px;
-    background:#f6f8fb;
+    /* padding:30px; */
+    /* background:#f6f8fb; */
     min-height:100vh;
     box-sizing:border-box;
 }
@@ -481,12 +481,6 @@ grid-template-columns:1fr;
 }
 
 @media(max-width:768px){
-
-.api-health{
-
-padding:18px;
-
-}
 
 .api-header h2{
 

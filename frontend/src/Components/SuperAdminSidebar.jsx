@@ -17,7 +17,7 @@ const SuperAdminSidebar = () => {
   return (
     <aside className="sa-sidebar">
       <div className="sa-sidebar__header">Super Admin</div>
-
+      <div className="sa-panel">
       <nav className="sa-sidebar__nav">
         {links.map((link) => (
           <NavLink
@@ -30,8 +30,11 @@ const SuperAdminSidebar = () => {
             {link.label}
           </NavLink>
         ))}
-        <button className="Logout-btn" onClick={handleClick}>Logout</button>
       </nav>
+      <div className="sa-actions">
+        <button className="Logout-btn" onClick={handleClick}>Logout</button>
+        </div>
+      </div>
     </aside>
   );
 };

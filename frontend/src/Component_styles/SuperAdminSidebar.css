@@ -1,17 +1,19 @@
 .sa-sidebar {
   /* width: 260px; */
-  height: 100vh;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  /* height: 100vh; */
+  background-color: #F7F8FF;
+  /* border-right: 1px solid #e5e7eb; */
   display: flex;
   flex-direction: column;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
 }
 
 .sa-sidebar__header {
   padding: 20px 24px;
   font-size: 20px;
   font-weight: 700;
-  color: #111827;
+  color: #6958C0;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -31,13 +33,35 @@
   color: #374151;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
+  
 }
 
 .sa-sidebar__link:hover {
-  background-color: #f3f4f6;
+  background-color: #F7F8FF;
+  color:#6958C0;
+  
 }
 
 .sa-sidebar__link.active {
-  background-color: #2563eb;
+  background-color: #6958C0;
   color: #ffffff;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+.Logout-btn { 
+  background: #060606;
+  color: #f5f5f5;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: none;
+  width: 100%;
+}
+.sa-panel { 
+  display: flex;
+  height: 90%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.sa-actions {
+  padding: 16px;
 }
