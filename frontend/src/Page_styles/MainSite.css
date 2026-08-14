@@ -2042,6 +2042,9 @@ font-size:15px;
     flex-direction: column;
   }
 }
+.dropdown-toggle::after {
+  display: none !important;
+}
 /* =====================
    TABLET
 ===================== */

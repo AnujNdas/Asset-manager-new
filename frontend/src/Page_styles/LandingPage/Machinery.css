@@ -1,0 +1,4807 @@
+.machinery-hero {
+  position: relative;
+  min-height: 560px;
+  width: 100%;
+  overflow: hidden;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  display: flex;
+  justify-content: center;
+
+  isolation: isolate;
+}
+
+
+/* =========================================
+   CLIPPED BACKGROUND SHAPES
+========================================= */
+
+.hero-shape {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+/* Back mountain layer */
+
+.hero-shape-back {
+  bottom: 0;
+  height: 310px;
+
+  background: #414852;
+
+  clip-path: polygon(
+    0 25%,
+    16% 38%,
+    32% 18%,
+    47% 36%,
+    63% 12%,
+    78% 30%,
+    100% 8%,
+    100% 100%,
+    0 100%
+  );
+}
+
+
+/* Front mountain layer */
+
+.hero-shape-front {
+  bottom: 0;
+  height: 285px;
+
+  background: #353b45;
+
+  clip-path: polygon(
+    0 20%,
+    7% 30%,
+    18% 34%,
+    31% 20%,
+    44% 30%,
+    60% 24%,
+    73% 18%,
+    86% 27%,
+    100% 20%,
+    100% 100%,
+    0 100%
+  );
+
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.machinery-hero-content {
+  width: min(1100px, 92%);
+  min-height: 560px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  position: relative;
+  z-index: 2;
+}
+
+
+/* =========================================
+   MAIN H1
+========================================= */
+
+.machinery-hero h1 {
+  margin: 48px 0 0;
+
+  font-size: 2rem;
+  line-height: 1.25;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+
+  letter-spacing: 0.2px;
+}
+
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+.machinery-breadcrumb {
+  margin-top: 260px;
+  margin-bottom: 0;
+  width: 400px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #efd8bd;
+  text-align: center;
+}
+
+
+.machinery-breadcrumb a {
+  color: #efd8bd;
+  display: inline;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  transition: opacity 0.2s ease;
+}
+
+
+.machinery-breadcrumb a:hover {
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   HERO DESCRIPTION
+========================================= */
+
+.machinery-hero-description {
+  max-width: 700px;
+
+  margin: 44px 0 0;
+
+  font-size: 17px;
+  line-height: 1.7;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   SECTION HEADINGS
+   Use this class for headings in sections
+   below the hero.
+========================================= */
+
+.machinery-section-heading {
+  font-size: 24px;
+  line-height: 1.3;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+
+  margin: 0;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .machinery-hero {
+    min-height: 500px;
+  }
+
+  .machinery-hero-content {
+    min-height: 500px;
+  }
+
+  .machinery-breadcrumb {
+    margin-top: 210px;
+    font-size: 15px;
+  }
+
+  .machinery-hero h1 {
+    margin-top: 35px;
+
+    font-size: 2rem;
+  }
+
+  .machinery-hero-description {
+    margin-top: 30px;
+
+    font-size: 17px;
+
+    max-width: 90%;
+  }
+
+  .hero-shape-back {
+    height: 270px;
+  }
+
+  .hero-shape-front {
+    height: 245px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .machinery-hero {
+    min-height: 470px;
+  }
+
+  .machinery-hero-content {
+    min-height: 470px;
+    width: 90%;
+  }
+
+  .machinery-breadcrumb {
+    margin-top: 185px;
+
+    font-size: 14px;
+  }
+
+  .machinery-hero h1 {
+    margin-top: 30px;
+
+    font-size: 2rem;
+  }
+
+  .machinery-hero-description {
+    margin-top: 25px;
+
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .hero-shape-back {
+    height: 240px;
+  }
+
+  .hero-shape-front {
+    height: 220px;
+  }
+}
+
+/* Section 2 related css here  */
+.machinery-section-2 {
+  position: relative;
+
+  width: 100%;
+
+  padding: 80px 20px;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.machinery-section-2-inner {
+  width: min(1200px, 94%);
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   SECTION HEADING
+========================================= */
+
+.machinery-section-2-title {
+  margin: 0 auto 55px;
+
+  max-width: 900px;
+
+  text-align: center;
+
+  font-size: 24px;
+
+  line-height: 1.45;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.machinery-section-2-content {
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(320px, 0.85fr)
+    minmax(500px, 1.5fr);
+
+  align-items: center;
+
+  gap: 60px;
+}
+
+
+/* =========================================
+   FEATURES
+========================================= */
+
+.machinery-features {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 28px;
+}
+
+
+.machinery-feature {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  min-height: 55px;
+}
+
+
+.feature-icon {
+
+  flex-shrink: 0;
+
+  font-size: 18px;
+
+  line-height: 1.5;
+}
+
+
+.machinery-feature p {
+
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.65;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   FREE TRIAL FEATURE
+========================================= */
+
+.machinery-feature:last-child p {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.feature-separator {
+
+  opacity: 0.7;
+
+  margin: 0 2px;
+}
+
+
+/* =========================================
+   DASHBOARD IMAGE
+========================================= */
+
+.machinery-product-image {
+
+  position: relative;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  border-radius: 2px;
+
+  background: #414852;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(239, 216, 189, 0.05);
+}
+
+
+.machinery-product-image img {
+
+  display: block;
+
+  width: 100%;
+
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* =========================================
+   GLASS EFFECT
+========================================= */
+
+.machinery-feature {
+
+  padding: 16px 18px;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(65, 72, 82, 0.65),
+      rgba(53, 59, 69, 0.35)
+    );
+
+  border: 1px solid rgba(239, 216, 189, 0.08);
+
+  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.machinery-feature {
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+
+.machinery-feature:hover {
+
+  transform: translateX(5px);
+
+  border-color:
+    rgba(239, 216, 189, 0.18);
+
+  background:
+    rgba(65, 72, 82, 0.75);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .machinery-section-2 {
+
+    padding: 65px 20px;
+  }
+
+
+  .machinery-section-2-content {
+
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+  }
+
+
+  .machinery-features {
+
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    width: 100%;
+  }
+
+
+  .machinery-product-image {
+
+    max-width: 800px;
+
+    margin: 0 auto;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .machinery-section-2 {
+
+    padding: 55px 16px;
+  }
+
+
+  .machinery-section-2-inner {
+
+    width: 100%;
+  }
+
+
+  .machinery-section-2-title {
+
+    margin-bottom: 35px;
+
+    font-size: 24px;
+
+    line-height: 1.4;
+  }
+
+
+  .machinery-features {
+
+    gap: 18px;
+  }
+
+
+  .machinery-feature {
+
+    padding: 14px;
+
+    border-radius: 10px;
+  }
+
+
+  .machinery-feature p {
+
+    font-size: 17px;
+
+    line-height: 1.55;
+  }
+
+
+  .desktop-only {
+
+    display: none;
+  }
+}
+
+/* Section 3 related css here  */
+
+.asset-management-section-3 {
+  width: 100%;
+  min-height: 650px;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  padding: 70px 20px 90px;
+
+  overflow: hidden;
+}
+
+
+.asset-management-section-3-inner {
+  width: min(1150px, 94%);
+  margin: 0 auto;
+}
+
+
+/* =====================================================
+   TOP ASSET TYPE CAROUSEL
+===================================================== */
+
+.asset-type-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-height: 100px;
+
+  text-align: center;
+}
+
+
+.asset-type-title {
+  font-size: 24px;
+  line-height: 1.3;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+
+  animation: assetTypeFade 0.6s ease;
+}
+
+
+.asset-type-dots {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 65px;
+}
+
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  border: 1px solid #111820;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.carousel-dot.active {
+  background: #111820;
+
+  transform: scale(1.05);
+}
+
+
+@keyframes assetTypeFade {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =====================================================
+   MAIN HEADING
+===================================================== */
+
+.asset-management-section-3-heading {
+  margin: 50px auto 0;
+
+  max-width: 900px;
+
+  text-align: center;
+
+  font-size: 24px;
+
+  line-height: 1.4;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.asset-management-section-3-content {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  align-items: center;
+
+  gap: 70px;
+
+  margin-top: 90px;
+}
+
+
+/* =====================================================
+   LEFT — BEST FEATURES
+===================================================== */
+
+.asset-management-best-features {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+  max-width: 500px;
+
+  margin: 0 auto;
+}
+
+
+.asset-management-best-features h3 {
+
+  margin: 0;
+
+  font-size: 24px;
+
+  line-height: 1.3;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+}
+
+
+.asset-feature-icons {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 4px;
+
+  margin-top: 8px;
+
+  font-size: 19px;
+}
+
+
+.asset-feature-icons span {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+}
+
+
+/* Feature description */
+
+.asset-management-best-features p {
+
+  margin: 18px auto 0;
+
+  max-width: 470px;
+
+  font-size: 17px;
+
+  line-height: 1.55;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =====================================================
+   SIGN UP BUTTON
+===================================================== */
+
+.asset-management-signup {
+
+  margin-top: 30px;
+
+  padding: 11px 20px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: #222a34;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  font-weight: 400;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.asset-management-signup:hover {
+
+  background: #414852;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+/* =====================================================
+   RIGHT FEATURE CAROUSEL
+===================================================== */
+
+.asset-tracking-carousel {
+
+  min-height: 250px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+/* Current feature */
+
+.asset-tracking-feature {
+
+  min-height: 140px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  animation: trackingFeatureFade 0.65s ease;
+}
+
+
+.asset-tracking-feature h3 {
+
+  margin: 0;
+
+  font-size: 24px;
+
+  line-height: 1.3;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+}
+
+
+.asset-tracking-feature p {
+
+  max-width: 520px;
+
+  margin: 22px 0 0;
+
+  font-size: 17px;
+
+  line-height: 1.6;
+
+  color: #efd8bd;
+}
+
+
+@keyframes trackingFeatureFade {
+
+  from {
+    opacity: 0;
+
+    transform: translateX(18px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =====================================================
+   BOTTOM RIGHT DOTS
+===================================================== */
+
+.tracking-feature-dots {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  margin-top: 30px;
+}
+
+
+.tracking-dot {
+
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #151a20;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.tracking-dot.active {
+
+  background: #151a20;
+
+  transform: scale(1.05);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 850px) {
+
+  .asset-management-section-3 {
+
+    padding: 60px 18px 75px;
+  }
+
+
+  .asset-management-section-3-content {
+
+    grid-template-columns: 1fr;
+
+    gap: 70px;
+
+    margin-top: 65px;
+  }
+
+
+  .asset-management-best-features {
+
+    max-width: 600px;
+  }
+
+
+  .asset-tracking-carousel {
+
+    min-height: 220px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .asset-management-section-3 {
+
+    padding: 50px 16px 65px;
+  }
+
+
+  .asset-type-title {
+
+    font-size: 24px;
+  }
+
+
+  .asset-type-dots {
+
+    margin-top: 45px;
+  }
+
+
+  .asset-management-section-3-heading {
+
+    margin-top: 45px;
+
+    font-size: 24px;
+  }
+
+
+  .asset-management-section-3-content {
+
+    margin-top: 55px;
+
+    gap: 55px;
+  }
+
+
+  .asset-management-best-features h3 {
+
+    font-size: 24px;
+  }
+
+
+  .asset-management-best-features p {
+
+    font-size: 17px;
+
+    line-height: 1.55;
+  }
+
+
+  .asset-tracking-feature h3 {
+
+    font-size: 24px;
+  }
+
+
+  .asset-tracking-feature p {
+
+    font-size: 17px;
+  }
+
+}
+
+/* section 4 realted css  */
+
+.section4 {
+  width: 100%;
+  min-height: 520px;
+
+  background: #353b45;
+
+  display: flex;
+  align-items: center;
+
+  padding: 70px 40px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.section4-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(280px, 0.8fr)
+    minmax(500px, 1.4fr);
+
+  align-items: center;
+
+  gap: 60px;
+}
+
+
+/* =========================================
+   LEFT CONTENT
+========================================= */
+
+.section4-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.section4-feature {
+  width: 100%;
+  max-width: 430px;
+
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* ICON */
+
+.section4-icon {
+  font-size: 24px;
+
+  margin-bottom: 10px;
+
+  line-height: 1;
+}
+
+
+/* HEADING */
+
+.section4-feature h2 {
+  margin: 0 0 12px;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+
+  line-height: 1.3;
+
+  font-weight: 600;
+}
+
+
+/* DESCRIPTION */
+
+.section4-feature p {
+  margin: 0;
+
+  max-width: 430px;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  font-weight: 400;
+}
+
+
+/* =========================================
+   IMAGE CAROUSEL
+========================================= */
+
+.section4-carousel {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+}
+
+
+/* IMAGE WRAPPER */
+
+.section4-image-wrapper {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  background: #414852;
+
+  border-radius: 2px;
+}
+
+
+/* IMAGES */
+
+.section4-image {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  opacity: 0;
+
+  transform: scale(1.02);
+
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+
+/* ACTIVE IMAGE */
+
+.section4-image.active {
+  opacity: 1;
+
+  transform: scale(1);
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section4-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+
+.section4-dot {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #efd8bd;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.section4-dot:hover {
+  transform: scale(1.2);
+}
+
+
+.section4-dot.active {
+  background: #efd8bd;
+
+  transform: scale(1.15);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .section4 {
+    padding: 60px 30px;
+  }
+
+  .section4-container {
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+
+    max-width: 700px;
+  }
+
+  .section4-feature {
+    min-height: auto;
+
+    max-width: 600px;
+  }
+
+  .section4-carousel {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section4 {
+    padding: 50px 20px;
+  }
+
+  .section4-container {
+    gap: 35px;
+  }
+
+  .section4-feature h2 {
+    font-size: 24px;
+  }
+
+  .section4-feature p {
+    font-size: 17px;
+
+    line-height: 1.6;
+  }
+
+  .section4-image-wrapper {
+    aspect-ratio: 16 / 10;
+  }
+
+}
+
+
+/* section 5 related css here  */
+
+.machinery-warranty-section {
+  width: 100%;
+  min-height: 520px;
+
+  /* background: #353b45; */
+  color: #efd8bd;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 80px 40px;
+
+  box-sizing: border-box;
+}
+
+
+.warranty-container {
+  width: 100%;
+  max-width: 1200px;
+
+  display: grid;
+  grid-template-columns: 42% 58%;
+
+  align-items: center;
+
+  gap: 40px;
+}
+
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.warranty-features {
+  text-align: left;
+  padding: 20px 30px;
+}
+
+
+.warranty-features h3 {
+  font-size: 20px;
+  font-weight: 400;
+
+  margin-bottom: 30px;
+
+  color: #efd8bd;
+}
+
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  margin-bottom: 28px;
+}
+
+
+.feature-icon {
+  font-size: 18px;
+
+  min-width: 20px;
+
+  line-height: 1.5;
+}
+
+
+.feature-item p {
+  margin: 0;
+
+  font-size: 17px;
+  line-height: 1.7;
+
+  color: #efd8bd;
+}
+
+
+.warranty-cta {
+  margin-top: 15px;
+
+  padding: 12px 25px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #222831;
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.warranty-cta:hover {
+  background: #414852;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.warranty-content {
+  min-height: 380px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+
+.warranty-content h2 {
+  margin: 0 0 55px;
+
+  font-size: 24px;
+  line-height: 1.5;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================
+   CAROUSEL
+========================= */
+
+.warranty-carousel {
+  width: 100%;
+
+  min-height: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+
+.warranty-slide {
+  width: 90%;
+
+  animation: warrantyFade 0.7s ease;
+}
+
+
+.warranty-slide h3 {
+  margin: 0 0 20px;
+
+  font-size: 24px;
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+.warranty-slide p {
+  margin: 0 auto;
+
+  max-width: 520px;
+
+  font-size: 17px;
+  line-height: 1.8;
+
+  color: #efd8bd;
+}
+
+
+/* =========================
+   DOTS
+========================= */
+
+.warranty-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 35px;
+}
+
+
+.warranty-dot {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #20252c;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+
+.warranty-dot.active {
+  background: #20252c;
+
+  transform: scale(1.15);
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes warrantyFade {
+
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .warranty-container {
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+  }
+
+
+  .warranty-features {
+    text-align: center;
+  }
+
+
+  .feature-item {
+    justify-content: center;
+
+    text-align: left;
+
+    max-width: 500px;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  .warranty-content {
+    min-height: 350px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .machinery-warranty-section {
+    padding: 60px 20px;
+  }
+
+
+  .warranty-features {
+    padding: 10px;
+  }
+
+
+  .warranty-content h2 {
+    margin-bottom: 35px;
+
+    font-size: 24px;
+  }
+
+
+  .warranty-slide h3 {
+    font-size: 21px;
+  }
+
+
+  .feature-item p,
+  .warranty-slide p {
+    font-size: 17px;
+  }
+
+
+  .warranty-cta {
+    font-size: 16px;
+  }
+
+}
+
+/* section 6 css here  */
+
+.section6-stats {
+  width: 100%;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  padding: 32px 30px;
+
+  box-sizing: border-box;
+
+  border-top: 1px solid #414852;
+  border-bottom: 1px solid #414852;
+}
+
+
+.section6-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  align-items: center;
+}
+
+
+/* =========================
+   STAT
+========================= */
+
+.section6-stat {
+  text-align: center;
+
+  padding: 0 25px;
+
+  position: relative;
+}
+
+
+/* Vertical separators */
+
+.section6-stat:not(:last-child)::after {
+  content: "";
+
+  position: absolute;
+
+  right: 0;
+  top: 15%;
+
+  width: 1px;
+  height: 70%;
+
+  background: #414852;
+}
+
+
+/* =========================
+   VALUE
+========================= */
+
+.section6-value {
+  font-size: 44px;
+
+  line-height: 1.1;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+
+  margin-bottom: 14px;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.section6-label {
+  margin: 0 auto;
+
+  max-width: 190px;
+
+  font-size: 17px;
+
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .section6-container {
+    grid-template-columns: repeat(2, 1fr);
+
+    row-gap: 35px;
+  }
+
+
+  .section6-stat:nth-child(2)::after {
+    display: none;
+  }
+
+
+  .section6-stat:nth-child(3)::after {
+    display: block;
+  }
+
+
+  .section6-value {
+    font-size: 38px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+  .section6-stats {
+    padding: 40px 20px;
+  }
+
+
+  .section6-container {
+    grid-template-columns: 1fr 1fr;
+
+    row-gap: 30px;
+  }
+
+
+  .section6-stat {
+    padding: 0 10px;
+  }
+
+
+  .section6-stat::after {
+    display: none !important;
+  }
+
+
+  .section6-value {
+    font-size: 32px;
+  }
+
+
+  .section6-label {
+    font-size: 15px;
+
+    max-width: 150px;
+  }
+
+}
+
+/* section 7 css here  */
+
+
+.maintenance-section {
+  width: 100%;
+  min-height: 520px;
+
+  /* background: #353b45; */
+  color: #efd8bd;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 80px 40px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.maintenance-container {
+  width: 100%;
+  max-width: 1200px;
+
+  display: grid;
+  grid-template-columns: 45% 55%;
+
+  align-items: center;
+
+  gap: 35px;
+}
+
+
+/* =========================
+   LEFT
+========================= */
+
+.maintenance-features {
+  padding: 10px 20px;
+
+  text-align: left;
+}
+
+
+.maintenance-features h3 {
+  margin: 0 0 28px;
+
+  text-align: center;
+
+  font-size: 20px;
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+.maintenance-feature {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-bottom: 25px;
+}
+
+
+.maintenance-feature span {
+  flex-shrink: 0;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+}
+
+
+.maintenance-feature p {
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.maintenance-cta {
+  display: block;
+
+  margin: 28px auto 0;
+
+  padding: 12px 22px;
+
+  border: none;
+
+  border-radius: 30px;
+
+  background: #222831;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.maintenance-cta:hover {
+  background: #414852;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================
+   RIGHT
+========================= */
+
+.maintenance-content {
+  min-height: 390px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+
+.maintenance-content h2 {
+  margin: 0 0 40px;
+
+  font-size: 24px;
+
+  line-height: 1.5;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================
+   CAROUSEL
+========================= */
+
+.maintenance-carousel {
+  width: 100%;
+
+  min-height: 160px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+
+.maintenance-slide {
+  width: 90%;
+
+  max-width: 550px;
+
+  animation: maintenanceFade 0.7s ease;
+}
+
+
+.maintenance-slide h3 {
+  margin: 0 0 20px;
+
+  font-size: 20px;
+
+  line-height: 1.5;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+.maintenance-slide p {
+  margin: 0 auto;
+
+  max-width: 520px;
+
+  font-size: 17px;
+
+  line-height: 1.8;
+
+  color: #efd8bd;
+}
+
+
+/* =========================
+   DOTS
+========================= */
+
+.maintenance-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 30px;
+}
+
+
+.maintenance-dot {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #20252c;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+
+.maintenance-dot.active {
+  background: #20252c;
+
+  transform: scale(1.15);
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes maintenanceFade {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .maintenance-container {
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+  }
+
+
+  .maintenance-features {
+    max-width: 600px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+
+
+  .maintenance-content {
+    min-height: 350px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .maintenance-section {
+    padding: 60px 20px;
+  }
+
+
+  .maintenance-features {
+    padding: 0;
+  }
+
+
+  .maintenance-feature p {
+    font-size: 17px;
+  }
+
+
+  .maintenance-content h2 {
+    font-size: 24px;
+
+    margin-bottom: 30px;
+  }
+
+
+  .maintenance-slide h3 {
+    font-size: 20px;
+  }
+
+
+  .maintenance-slide p {
+    font-size: 17px;
+  }
+
+}
+
+/* section 8 css here  */
+
+.section8 {
+  position: relative;
+
+  width: 100%;
+  min-height: 520px;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 90px 30px 70px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CLIPPED BACKGROUND
+========================================= */
+
+.section8-clip-bg {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 120px;
+
+  background: #414852;
+
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 55%,
+    90% 35%,
+    81% 58%,
+    70% 32%,
+    63% 70%,
+    52% 48%,
+    42% 70%,
+    31% 45%,
+    18% 73%,
+    0 42%
+  );
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.section8-container {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 900px;
+
+  min-height: 350px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   SLIDE
+========================================= */
+
+.section8-slide {
+  width: 100%;
+
+  animation: section8Fade 0.8s ease;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.section8-slide h2 {
+  margin: 0 0 20px;
+
+  font-size: 24px;
+
+  line-height: 1.4;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.section8-slide p {
+  margin: 0;
+
+  max-width: 780px;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section8-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 75px;
+}
+
+
+.section8-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #171b20;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.section8-dot.active {
+  background: #171b20;
+
+  transform: scale(1.1);
+}
+
+
+/* =========================================
+   SLIDE ANIMATION
+========================================= */
+
+@keyframes section8Fade {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .section8 {
+    min-height: 500px;
+
+    padding: 100px 30px 60px;
+  }
+
+
+  .section8-container {
+    min-height: 340px;
+  }
+
+
+  .section8-slide p {
+    max-width: 700px;
+  }
+
+
+  .section8-dots {
+    margin-top: 60px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section8 {
+    min-height: 560px;
+
+    padding: 100px 22px 60px;
+  }
+
+
+  .section8-clip-bg {
+    height: 100px;
+  }
+
+
+  .section8-slide h2 {
+    font-size: 24px;
+
+    line-height: 1.4;
+  }
+
+
+  .section8-slide p {
+    font-size: 17px;
+
+    line-height: 1.65;
+  }
+
+
+  .section8-dots {
+    margin-top: 55px;
+  }
+
+}
+
+/* section 9 css here  */
+
+.section9 {
+  width: 100%;
+  min-height: 500px;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 75px 40px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.section9-container {
+  width: 100%;
+  max-width: 1200px;
+
+  display: grid;
+
+  grid-template-columns: 45% 55%;
+
+  align-items: center;
+
+  gap: 35px;
+}
+
+
+/* =========================================
+   LEFT
+========================================= */
+
+.section9-features {
+  padding: 10px 20px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+}
+
+
+.section9-features h3 {
+  width: 100%;
+
+  margin: 0 0 28px;
+
+  text-align: center;
+
+  font-size: 20px;
+
+  line-height: 1.4;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   FEATURE ITEM
+========================================= */
+
+.section9-feature {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 9px;
+
+  width: 100%;
+
+  margin-bottom: 22px;
+}
+
+
+.section9-feature span {
+  flex-shrink: 0;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+}
+
+
+.section9-feature p {
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   CTA
+========================================= */
+
+.section9-cta {
+  align-self: center;
+
+  margin-top: 25px;
+
+  padding: 11px 18px;
+
+  border: none;
+
+  border-radius: 3px;
+
+  background: #222831;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.section9-cta:hover {
+  background: #414852;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT CONTENT
+========================================= */
+
+.section9-content {
+  min-height: 390px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   SLIDE
+========================================= */
+
+.section9-slide {
+  width: 100%;
+
+  max-width: 570px;
+
+  min-height: 220px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  animation: section9Fade 0.7s ease;
+}
+
+
+/* =========================================
+   SLIDE HEADING
+========================================= */
+
+.section9-slide h2 {
+  margin: 0 0 35px;
+
+  font-size: 24px;
+
+  line-height: 1.5;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   SLIDE TEXT
+========================================= */
+
+.section9-slide p {
+  margin: 0;
+
+  max-width: 530px;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section9-dots {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 25px;
+}
+
+
+.section9-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #171b20;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.section9-dot.active {
+  background: #171b20;
+
+  transform: scale(1.1);
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes section9Fade {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .section9-container {
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+  }
+
+
+  .section9-features {
+    width: 100%;
+
+    max-width: 600px;
+
+    margin: 0 auto;
+  }
+
+
+  .section9-content {
+    min-height: 350px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section9 {
+    padding: 60px 20px;
+  }
+
+
+  .section9-features {
+    padding: 0;
+  }
+
+
+  .section9-feature p {
+    font-size: 17px;
+
+    line-height: 1.65;
+  }
+
+
+  .section9-slide h2 {
+    font-size: 24px;
+
+    margin-bottom: 25px;
+  }
+
+
+  .section9-slide p {
+    font-size: 17px;
+
+    line-height: 1.65;
+  }
+
+
+  .section9-content {
+    min-height: 360px;
+  }
+
+}
+
+/* section 10 css here  */
+
+.machinery-section10 {
+  position: relative;
+  background: #353b45;
+  color: #efd8bd;
+  padding: 90px 20px;
+  overflow: hidden;
+}
+
+/* Optional clipped background layer */
+.machinery-section10::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+
+  background: #414852;
+
+  clip-path: polygon(
+    0 0,
+    18% 30%,
+    36% 8%,
+    52% 40%,
+    70% 15%,
+    86% 35%,
+    100% 8%,
+    100% 0
+  );
+}
+
+.section10-container {
+  position: relative;
+  z-index: 1;
+
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 70px;
+}
+
+/* LEFT */
+
+.section10-content h2 {
+  margin: 0 0 28px;
+
+  font-size: 24px;
+  line-height: 1.4;
+  color: #efd8bd;
+}
+
+.section10-content p {
+  margin: 0 0 28px;
+
+  font-size: 17px;
+  line-height: 1.65;
+  color: #efd8bd;
+}
+
+/* RIGHT IMAGE */
+
+.section10-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section10-image img {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 4px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .section10-container {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .section10-content {
+    text-align: center;
+  }
+
+  .section10-image {
+    order: 2;
+  }
+
+  .section10-image img {
+    max-width: 650px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .machinery-section10 {
+    padding: 70px 18px;
+  }
+
+  .section10-container {
+    gap: 35px;
+  }
+
+  .section10-content h2 {
+    font-size: 24px;
+  }
+
+  .section10-content p {
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+}
+
+/* section 11 css  */
+.machinery-section11 {
+  position: relative;
+
+  width: 100%;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  padding: 80px 20px;
+
+  overflow: hidden;
+}
+
+
+/* ================================
+   CONTAINER
+================================ */
+
+.section11-container {
+
+  position: relative;
+  z-index: 2;
+
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  align-items: center;
+
+  gap: 70px;
+}
+
+
+/* ================================
+   LEFT FEATURES
+================================ */
+
+.section11-features {
+
+  width: 100%;
+}
+
+
+.section11-features h3 {
+
+  margin: 0 0 24px;
+
+  font-size: 18px;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+
+  text-align: center;
+}
+
+
+/* ================================
+   FEATURE ITEM
+================================ */
+
+.section11-feature {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 9px;
+
+  margin-bottom: 22px;
+}
+
+
+.section11-feature span {
+
+  flex-shrink: 0;
+
+  font-size: 18px;
+
+  line-height: 1.6;
+}
+
+
+.section11-feature p {
+
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.65;
+
+  color: #efd8bd;
+}
+
+
+/* ================================
+   CTA
+================================ */
+
+.section11-cta {
+
+  margin-top: 10px;
+
+  margin-left: 160px;
+
+  border: none;
+
+  padding: 11px 22px;
+
+  border-radius: 25px;
+
+  background: #222831;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.section11-cta:hover {
+
+  background: #414852;
+
+  transform: translateY(-2px);
+}
+
+
+/* ================================
+   RIGHT CAROUSEL
+================================ */
+
+.section11-carousel {
+
+  min-height: 360px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+
+.section11-slide {
+
+  width: 100%;
+
+  max-width: 520px;
+
+  animation: section11Fade 0.7s ease;
+}
+
+
+.section11-slide h2 {
+
+  margin: 0 0 32px;
+
+  font-size: 24px;
+
+  line-height: 1.45;
+
+  color: #efd8bd;
+}
+
+
+.section11-slide p {
+
+  margin: 0 auto;
+
+  max-width: 470px;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+}
+
+
+/* ================================
+   CAROUSEL DOTS
+================================ */
+
+.section11-dots {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 55px;
+}
+
+
+.section11-dot {
+
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #222831;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.section11-dot.active {
+
+  background: #222831;
+
+  transform: scale(1.15);
+}
+
+
+/* ================================
+   SLIDE ANIMATION
+================================ */
+
+@keyframes section11Fade {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateX(20px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+  }
+
+}
+
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 900px) {
+
+  .section11-container {
+
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+
+  }
+
+
+  .section11-features {
+
+    max-width: 650px;
+
+    margin: 0 auto;
+
+  }
+
+
+  .section11-carousel {
+
+    min-height: 300px;
+
+  }
+
+
+  .section11-cta {
+
+    margin-left: 0;
+
+    display: block;
+
+    margin-right: auto;
+
+    margin-left: auto;
+
+  }
+
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 600px) {
+
+  .machinery-section11 {
+
+    padding: 65px 18px;
+
+  }
+
+
+  .section11-container {
+
+    gap: 35px;
+
+  }
+
+
+  .section11-features h3 {
+
+    font-size: 18px;
+
+  }
+
+
+  .section11-feature p {
+
+    font-size: 17px;
+
+  }
+
+
+  .section11-slide h2 {
+
+    font-size: 24px;
+
+  }
+
+
+  .section11-slide p {
+
+    font-size: 17px;
+
+  }
+
+
+  .section11-carousel {
+
+    min-height: 320px;
+
+  }
+
+}
+
+/* section 12 css here  */
+
+.section12 {
+  position: relative;
+
+  width: 100%;
+
+  padding: 90px 20px;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.section12-container {
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  align-items: center;
+
+  gap: 70px;
+}
+
+
+/* =========================================
+   LEFT CONTENT
+========================================= */
+
+.section12-content {
+
+  max-width: 590px;
+}
+
+
+.section12-content h2 {
+
+  margin: 0 0 28px;
+
+  color: #efd8bd;
+
+  font-size: 2rem;
+
+  line-height: 1.35;
+
+  font-weight: 500;
+}
+
+
+.section12-content p {
+
+  margin: 0 0 25px;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   RIGHT IMAGE
+========================================= */
+
+.section12-image {
+
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+
+.section12-image img {
+
+  display: block;
+
+  width: 100%;
+
+  max-width: 500px;
+
+  height: auto;
+
+  border-radius: 18px;
+
+  object-fit: contain;
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.28);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+
+.section12-image img:hover {
+
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 950px) {
+
+  .section12-container {
+
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+
+  }
+
+  .section12-content {
+
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    text-align: center;
+
+  }
+
+  .section12-image {
+
+    max-width: 650px;
+
+    margin: 0 auto;
+
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section12 {
+
+    padding: 65px 18px;
+
+  }
+
+  .section12-content h2 {
+
+    font-size: 2rem;
+
+  }
+
+  .section12-content p {
+
+    font-size: 17px;
+
+    line-height: 1.65;
+
+  }
+
+  .section12-image img {
+
+    border-radius: 14px;
+
+  }
+
+}
+
+/* section 13 css here  */
+
+/* =========================================
+   SECTION 13
+========================================= */
+
+.section13 {
+  position: relative;
+
+  width: 100%;
+
+  padding: 75px 20px;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.section13-container {
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 70px;
+}
+
+
+/* =========================================
+   COLUMNS
+========================================= */
+
+.section13-column {
+
+  min-width: 0;
+}
+
+
+/* =========================================
+   HEADINGS
+========================================= */
+
+.section13-column h2 {
+
+  margin: 0 0 25px;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+
+  line-height: 1.35;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   LIST
+========================================= */
+
+.section13-column ul {
+
+  list-style: none;
+
+  padding: 0;
+
+  margin: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 25px;
+}
+
+
+.section13-column li {
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  line-height: 1.55;
+
+  font-weight: 400;
+}
+
+
+/* =========================================
+   SUBTLE HOVER
+========================================= */
+
+.section13-column li {
+
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+
+.section13-column li:hover {
+
+  transform: translateX(5px);
+
+  opacity: 0.85;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 850px) {
+
+  .section13 {
+
+    padding: 65px 25px;
+
+  }
+
+  .section13-container {
+
+    gap: 45px;
+
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+  .section13 {
+
+    padding: 60px 20px;
+
+  }
+
+  .section13-container {
+
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+
+  }
+
+  .section13-column h2 {
+
+    font-size: 24px;
+
+    margin-bottom: 22px;
+
+  }
+
+  .section13-column ul {
+
+    gap: 20px;
+
+  }
+
+  .section13-column li {
+
+    font-size: 17px;
+
+  }
+
+}
+
+/* section 14 css here  */
+
+.machinery-cloud-section {
+  width: 100%;
+  /* background: #353b45; */
+  color: #efd8bd;
+  padding: 70px 20px;
+  box-sizing: border-box;
+}
+
+.machinery-cloud-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.machinery-cloud-content h2 {
+  margin: 0 0 28px;
+  font-size: 24px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: #efd8bd;
+}
+
+.machinery-cloud-content p {
+  margin: 0 0 28px;
+  font-size: 17px;
+  line-height: 1.7;
+  font-weight: 400;
+  color: #efd8bd;
+}
+
+.machinery-cloud-content p:last-child {
+  margin-bottom: 0;
+}
+
+.highlight-text {
+  font-weight: 600;
+  color: #efd8bd;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .machinery-cloud-section {
+    padding: 55px 20px;
+  }
+
+  .machinery-cloud-content h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .machinery-cloud-content p {
+    font-size: 17px;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .machinery-cloud-section {
+    padding: 45px 16px;
+  }
+
+  .machinery-cloud-content h2 {
+    font-size: 24px;
+  }
+
+  .machinery-cloud-content p {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+}
+
+/* section 15 css here  */
+
+.machinery-choose-section {
+  width: 100%;
+  background: #353b45;
+  color: #efd8bd;
+  padding: 75px 30px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.machinery-choose-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 40% 60%;
+  align-items: center;
+  gap: 40px;
+}
+
+
+/* =========================================
+   LEFT FEATURES
+========================================= */
+
+.machinery-features {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+}
+
+.features-label {
+  width: 100%;
+  max-width: 390px;
+
+  margin: 0 0 25px;
+
+  font-size: 17px;
+  line-height: 1.5;
+  color: #efd8bd;
+  text-align: center;
+}
+
+.machinery-features ul {
+  width: 100%;
+  max-width: 420px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.machinery-features li {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin-bottom: 27px;
+
+  font-size: 17px;
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+.feature-icon {
+  flex-shrink: 0;
+  font-size: 17px;
+}
+
+
+/* =========================================
+   CTA
+========================================= */
+
+.machinery-trial-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 5px;
+
+  padding: 11px 20px;
+
+  border-radius: 25px;
+
+  background: #252d37;
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  font-size: 17px;
+  font-weight: 400;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.machinery-trial-btn:hover {
+  background: #414852;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.machinery-info-carousel {
+  width: 100%;
+  min-width: 0;
+
+  text-align: center;
+}
+
+.machinery-info-carousel h2 {
+  margin: 0 0 35px;
+
+  font-size: 24px;
+  line-height: 1.45;
+
+  color: #efd8bd;
+  font-weight: 600;
+}
+
+
+/* =========================================
+   CAROUSEL WINDOW
+========================================= */
+
+.carousel-window {
+  width: 100%;
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+
+  width: 100%;
+
+  transition: transform 0.7s ease-in-out;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 5px 30px 10px;
+}
+
+.carousel-slide h3 {
+  margin: 0 0 22px;
+
+  font-size: 24px;
+  line-height: 1.4;
+
+  color: #efd8bd;
+  font-weight: 600;
+}
+
+.carousel-slide p {
+  margin: 0 auto;
+
+  max-width: 570px;
+
+  font-size: 17px;
+  line-height: 1.7;
+
+  color: #efd8bd;
+  font-weight: 400;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 30px;
+}
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: 1px solid #1e252e;
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.carousel-dot.active {
+  background: #1e252e;
+  transform: scale(1.15);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .machinery-choose-container {
+    grid-template-columns: 1fr;
+    gap: 55px;
+  }
+
+  .machinery-features {
+    align-items: center;
+  }
+
+  .machinery-info-carousel {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .machinery-choose-section {
+    padding: 55px 20px;
+  }
+
+  .machinery-choose-container {
+    gap: 45px;
+  }
+
+  .machinery-info-carousel h2 {
+    font-size: 24px;
+  }
+
+  .carousel-slide {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .carousel-slide h3 {
+    font-size: 24px;
+  }
+
+  .machinery-features li {
+    font-size: 17px;
+  }
+
+}
+
+/* section 15 css here  */
+
+.why-businesses-section {
+  width: 100%;
+  /* background: #353b45; */
+  color: #efd8bd;
+
+  padding: 70px 20px;
+
+  box-sizing: border-box;
+}
+
+.why-businesses-content {
+  width: 100%;
+  max-width: 1050px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   MAIN HEADING
+========================================= */
+
+.why-businesses-content h2 {
+  margin: 0 0 32px;
+
+  font-size: 24px;
+  line-height: 1.4;
+
+  font-weight: 600;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   SUB HEADING
+========================================= */
+
+.why-businesses-content h3 {
+  margin: 0 0 32px;
+
+  font-size: 20px;
+  line-height: 1.5;
+
+  font-weight: 600;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   PARAGRAPHS
+========================================= */
+
+.why-businesses-content p {
+  max-width: 950px;
+
+  margin: 0 auto 28px;
+
+  font-size: 17px;
+  line-height: 1.7;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   HAM & ITAM LINK
+========================================= */
+
+.ham-link {
+  color: #efd8bd;
+    display: inline-block;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+
+  transition: opacity 0.25s ease;
+}
+
+.ham-link:hover {
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   ABOUT BUTTON
+========================================= */
+
+.about-us-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 5px;
+
+  padding: 10px 18px;
+
+  background: #252d37;
+  color: #efd8bd;
+
+  border-radius: 2px;
+  width: 200px;
+  text-decoration: none;
+
+  font-size: 17px;
+  font-weight: 400;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.about-us-btn:hover {
+  background: #414852;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .why-businesses-section {
+    padding: 55px 20px;
+  }
+
+  .why-businesses-content h2 {
+    font-size: 24px;
+  }
+
+  .why-businesses-content h3 {
+    font-size: 20px;
+  }
+
+  .why-businesses-content p {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+}
+
+/* section 16 css here  */
+
+.asset-categories-section {
+  width: 100%;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  padding: 55px 25px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.asset-categories-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    minmax(300px, 1.3fr)
+    1fr;
+
+  align-items: center;
+
+  gap: 35px;
+}
+
+
+/* =========================================
+   CATEGORY COLUMNS
+========================================= */
+
+.asset-category-column {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 34px;
+}
+
+
+/* =========================================
+   CATEGORY ITEM
+========================================= */
+
+.asset-category-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  line-height: 1.5;
+
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+
+  cursor: default;
+}
+
+
+/* =========================================
+   LEFT ALIGNMENT
+========================================= */
+
+.left-column {
+  align-items: flex-start;
+
+  padding-left: 35px;
+}
+
+
+/* =========================================
+   RIGHT ALIGNMENT
+========================================= */
+
+.right-column {
+  align-items: flex-start;
+
+  padding-left: 35px;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.asset-category-icon {
+  width: 25px;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 17px;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.asset-category-title {
+  font-size: 17px;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.asset-category-item:hover {
+  transform: translateX(5px);
+
+  opacity: 0.85;
+}
+
+
+/* =========================================
+   CENTER VIDEO
+========================================= */
+
+.asset-category-video {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+}
+
+
+.asset-category-video video {
+  display: block;
+
+  width: 100%;
+
+  max-width: 430px;
+
+  height: auto;
+
+  object-fit: contain;
+}
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .asset-categories-container {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 35px;
+  }
+
+  .asset-category-video {
+    grid-column: 1 / -1;
+
+    grid-row: 1;
+
+    max-width: 600px;
+
+    margin: 0 auto;
+  }
+
+  .left-column {
+    grid-column: 1;
+
+    grid-row: 2;
+
+    padding-left: 20px;
+  }
+
+  .right-column {
+    grid-column: 2;
+
+    grid-row: 2;
+
+    padding-left: 20px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .asset-categories-section {
+    padding: 45px 20px;
+  }
+
+  .asset-categories-container {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 35px;
+  }
+
+  .asset-category-video {
+    order: 1;
+
+    width: 100%;
+
+    padding: 15px;
+  }
+
+  .left-column {
+    order: 2;
+
+    width: 100%;
+
+    padding-left: 10px;
+
+    gap: 22px;
+  }
+
+  .right-column {
+    order: 3;
+
+    width: 100%;
+
+    padding-left: 10px;
+
+    gap: 22px;
+  }
+
+  .asset-category-item {
+    font-size: 17px;
+  }
+
+}
+
+/* section 17 css here  */
+
+/* =========================================
+   SECTION 17
+========================================= */
+
+.section17 {
+  width: 100%;
+  overflow: hidden;
+
+  background: #353b45;
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   TOP PRICING AREA
+========================================= */
+
+.section17-pricing {
+  position: relative;
+
+  min-height: 325px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  padding-top: 25px;
+
+  background: #353b45;
+
+  box-sizing: border-box;
+
+  /*
+    Angled bottom edge
+  */
+
+  z-index: 2;
+}
+
+
+/* =========================================
+   PRICING LABEL
+========================================= */
+
+.section17-pricing-label {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 9px 16px;
+
+  background: #252d37;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+  font-weight: 400;
+
+  border-radius: 2px;
+}
+
+
+/* =========================================
+   PRICING CARD
+========================================= */
+
+.section17-pricing-card {
+  width: 450px;
+  max-width: calc(100% - 40px);
+
+  min-height: 190px;
+
+  margin-top: 35px;
+
+  padding: 22px 25px;
+
+  box-sizing: border-box;
+
+  background: #414852;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 35px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.section17-icon {
+  width: 48px;
+  height: 48px;
+
+  margin-bottom: 12px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #efd8bd;
+
+  font-size: 48px;
+
+  line-height: 1;
+}
+
+
+/* =========================================
+   CARD HEADING
+========================================= */
+
+.section17-pricing-card h2 {
+  margin: 0 0 15px;
+
+  font-size: 24px;
+
+  line-height: 1.4;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   CARD TEXT
+========================================= */
+
+.section17-pricing-card p {
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.55;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   CTA SECTION
+========================================= */
+
+.section17-cta {
+  min-height: 255px;
+
+  /* margin-top: -25px;  */
+
+  padding: 100px 6% 55px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+
+  background: #414852;
+
+  /*
+    Opposite angled top edge
+  */
+  clip-path: polygon(
+    0 18%,
+    25% 10%,
+    50% 18%,
+    75% 10%,
+    100% 18%,
+    100% 100%,
+    0 100%
+  );
+
+  position: relative;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   CTA HEADING
+========================================= */
+
+.section17-cta h2 {
+  margin: 0;
+
+  font-size: 24px;
+
+  line-height: 1.4;
+
+  font-weight: 500;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   SIGNUP BUTTON
+========================================= */
+
+.section17-signup {
+  min-width: 290px;
+
+  padding: 14px 30px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  box-sizing: border-box;
+
+  background: #252d37;
+
+  color: #efd8bd;
+
+  border-radius: 30px;
+
+  text-decoration: none;
+
+  font-size: 17px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.section17-signup span {
+  font-size: 22px;
+
+  line-height: 1;
+}
+
+
+.section17-signup:hover {
+  background: #353b45;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .section17-cta {
+    padding-left: 35px;
+    padding-right: 35px;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    text-align: center;
+
+    gap: 25px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section17-pricing {
+    min-height: 350px;
+  }
+
+
+  .section17-pricing-card {
+    width: calc(100% - 30px);
+
+    margin-top: 30px;
+
+    padding: 20px 15px;
+  }
+
+
+  .section17-pricing-card h2 {
+    font-size: 24px;
+  }
+
+
+  .section17-pricing-card p {
+    font-size: 17px;
+  }
+
+
+  .section17-cta {
+    min-height: 300px;
+
+    margin-top: -30px;
+
+    padding: 95px 20px 45px;
+
+    clip-path: polygon(
+      0 12%,
+      25% 7%,
+      50% 12%,
+      75% 7%,
+      100% 12%,
+      100% 100%,
+      0 100%
+    );
+  }
+
+
+  .section17-cta h2 {
+    font-size: 24px;
+  }
+
+
+  .section17-signup {
+    width: 100%;
+
+    min-width: 0;
+
+    max-width: 330px;
+  }
+
+}

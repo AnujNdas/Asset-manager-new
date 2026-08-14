@@ -143,9 +143,7 @@ export default function About() {
           </ul>
 
           <p className="bottom-text">
-            We believe businesses shouldn't juggle multiple tools.
-            <strong> AssetPegasus unites your assets into one smart platform</strong>
-            designed for growth.
+            We think companies shouldn't handle several tools at once. AssetPegasus unites your assets into a single , intelligent platform built for expansion.
           </p>
 
         </div>
@@ -228,7 +226,7 @@ export default function About() {
       </div>
 
     </section>
-     <section className="founder-story">
+     {/* <section className="founder-story">
 
       <div className="story-container">
 
@@ -358,7 +356,7 @@ export default function About() {
 
       </div>
 
-    </section>
+    </section> */}
     <section className="social-section">
 
       <div className="social-container">

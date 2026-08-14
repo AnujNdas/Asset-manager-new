@@ -1,0 +1,4489 @@
+/* =========================================
+   ITAM HERO
+========================================= */
+
+.itam-hero {
+  width: 100%;
+  overflow: hidden;
+  color: #efd8bd;
+  background: #414852;
+}
+
+
+/* =========================================
+   TOP DARK AREA
+========================================= */
+
+.itam-hero-top {
+  position: relative;
+
+  min-height: 275px;
+
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: center;
+
+  padding: 80px 20px 0;
+
+  box-sizing: border-box;
+
+  background: #353b45;
+
+  z-index: 2;
+
+  /*
+    Zig-zag bottom edge
+  */
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 86%,
+    85% 80%,
+    63% 86%,
+    47% 78%,
+    33% 86%,
+    18% 82%,
+    10% 88%,
+    0 82%
+  );
+}
+
+
+/* =========================================
+   MAIN H1
+========================================= */
+
+.itam-hero-top h1 {
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 0;
+
+  text-align: center;
+
+  color: #efd8bd;
+
+  font-size: 2rem;
+
+  line-height: 1.45;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   LOWER SECTION
+========================================= */
+
+.itam-hero-bottom {
+  position: relative;
+
+  min-height: 325px;
+
+  margin-top: -35px;
+
+  padding: 125px 20px 60px;
+
+  box-sizing: border-box;
+
+  background: #414852;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.itam-hero-content {
+  width: 100%;
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+.itam-breadcrumb {
+  margin-bottom: 45px;
+
+  font-size: 17px;
+
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+.itam-breadcrumb a {
+  color: #efd8bd;
+    display: inline-block;
+  text-decoration: underline;
+
+  text-underline-offset: 3px;
+}
+
+.itam-breadcrumb a:hover {
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   LOWER HEADING
+========================================= */
+
+.itam-hero-content h2 {
+  margin: 0 auto;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+
+  line-height: 1.7;
+
+  font-weight: 500;
+}
+ .itam-hero-content p {
+    margin-top: 60px;
+ }
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+  .itam-hero-top {
+    min-height: 260px;
+
+    padding-top: 25px;
+
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 87%,
+      80% 82%,
+      62% 88%,
+      45% 80%,
+      30% 87%,
+      15% 82%,
+      0 87%
+    );
+  }
+
+
+  .itam-hero-top h1 {
+    font-size: 2rem;
+
+    line-height: 1.45;
+  }
+
+
+  .itam-hero-bottom {
+    min-height: 330px;
+
+    padding-top: 115px;
+  }
+
+
+  .itam-hero-content h2 {
+    font-size: 24px;
+
+    line-height: 1.6;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .itam-hero-top {
+    min-height: 245px;
+
+    padding: 25px 18px 0;
+
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 88%,
+      78% 83%,
+      58% 90%,
+      40% 82%,
+      22% 89%,
+      0 83%
+    );
+  }
+
+
+  .itam-hero-top h1 {
+    font-size: 2rem;
+
+    line-height: 1.4;
+  }
+
+
+  .itam-hero-bottom {
+    min-height: 330px;
+
+    margin-top: -25px;
+
+    padding: 105px 18px 50px;
+  }
+
+
+  .itam-breadcrumb {
+    margin-bottom: 35px;
+
+    font-size: 17px;
+  }
+
+
+  .itam-hero-content h2 {
+    font-size: 24px;
+
+    line-height: 1.55;
+  }
+
+}
+
+/* section 2 css here  */
+
+.itam-impact-section {
+  width: 100%;
+  min-height: 600px;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  display: flex;
+  align-items: center;
+
+  padding: 70px 5%;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.itam-impact-container {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 42% 58%;
+
+  gap: 50px;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.itam-features {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  padding: 20px;
+}
+
+.itam-features h2 {
+  font-size: 24px;
+
+  font-weight: 600;
+
+  margin: 0 0 38px;
+
+  color: #efd8bd;
+}
+
+
+.itam-feature-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 24px;
+}
+
+
+.itam-feature-list p {
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.5;
+
+  color: #efd8bd;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.itam-trial-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 36px;
+
+  padding: 12px 24px;
+
+  border-radius: 28px;
+
+  background: #222831;
+
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  font-size: 17px;
+
+  font-weight: 500;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.itam-trial-button:hover {
+  background: #414852;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.itam-impact-carousel {
+  min-height: 450px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 30px 40px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   SLIDE
+========================================= */
+
+.itam-slide-wrapper {
+  width: 100%;
+
+  min-height: 390px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.itam-slide {
+  width: 100%;
+
+  text-align: center;
+
+  animation: itamSlideIn 0.7s ease;
+}
+
+
+@keyframes itamSlideIn {
+
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   SLIDE TITLE
+========================================= */
+
+.itam-slide h2 {
+  font-size: 24px;
+
+  line-height: 1.35;
+
+  font-weight: 600;
+
+  color: #efd8bd;
+
+  margin: 0 0 28px;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.itam-slide-intro {
+  max-width: 700px;
+
+  margin: 0 auto 45px;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   SLIDE SUB HEADING
+========================================= */
+
+.itam-slide h3 {
+  font-size: 24px;
+
+  line-height: 1.4;
+
+  font-weight: 600;
+
+  color: #efd8bd;
+
+  margin: 0 0 18px;
+}
+
+
+/* =========================================
+   SLIDE CONTENT
+========================================= */
+
+.itam-slide-text {
+  max-width: 650px;
+
+  margin: 0 auto;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   CAROUSEL DOTS
+========================================= */
+
+.itam-carousel-dots {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 25px;
+}
+
+
+.itam-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #222831;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.itam-dot.active {
+  background: #222831;
+
+  transform: scale(1.15);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .itam-impact-container {
+    grid-template-columns: 1fr;
+
+    gap: 60px;
+  }
+
+  .itam-features {
+    align-items: center;
+
+    text-align: center;
+  }
+
+  .itam-impact-carousel {
+    padding: 20px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .itam-impact-section {
+    padding: 55px 20px;
+  }
+
+  .itam-features h2,
+  .itam-slide h2,
+  .itam-slide h3 {
+    font-size: 24px;
+  }
+
+  .itam-feature-list p,
+  .itam-slide-intro,
+  .itam-slide-text {
+    font-size: 17px;
+  }
+
+  .itam-impact-carousel {
+    min-height: 500px;
+  }
+
+  .itam-slide-wrapper {
+    min-height: 430px;
+  }
+
+}
+
+/* section 3 css here  */
+
+/* =========================================
+   SECTION 3
+========================================= */
+
+.itam-section-3 {
+  width: 100%;
+  min-height: 580px;
+  padding: 45px 30px 55px;
+
+  background: #414852;
+  color: #efd8bd;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   INTRO TEXT
+========================================= */
+
+.itam-section-3-intro {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto 55px;
+
+  text-align: center;
+}
+
+
+.itam-section-3-intro p {
+  margin: 0 0 25px;
+
+  font-size: 17px;
+  line-height: 1.65;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   MAIN TWO COLUMN AREA
+========================================= */
+
+.itam-section-3-content {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 36% 64%;
+
+  align-items: center;
+
+  gap: 35px;
+}
+
+
+/* =========================================
+   LEFT FEATURE AREA
+========================================= */
+
+.itam-section-3-features {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  min-height: 330px;
+}
+
+
+.itam-feature-item {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+  padding: 10px 0;
+}
+
+
+.itam-feature-icon {
+  width: 45px;
+  height: 45px;
+
+  margin-bottom: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #efd8bd;
+
+  font-size: 22px;
+}
+
+
+.itam-feature-item p {
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.6;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.itam-section-3-image {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+.itam-section-3-image img {
+  display: block;
+
+  width: 100%;
+  max-width: 650px;
+
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .itam-section-3 {
+    padding: 40px 25px 50px;
+  }
+
+
+  .itam-section-3-content {
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+  }
+
+
+  .itam-section-3-features {
+    min-height: auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+  }
+
+
+  .itam-section-3-image img {
+    max-width: 700px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .itam-section-3 {
+    padding: 35px 18px 45px;
+  }
+
+
+  .itam-section-3-intro {
+    margin-bottom: 35px;
+  }
+
+
+  .itam-section-3-intro p {
+    font-size: 17px;
+
+    line-height: 1.55;
+
+    margin-bottom: 22px;
+  }
+
+
+  .itam-section-3-content {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+
+  .itam-section-3-features {
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+  }
+
+
+  .itam-feature-item {
+    padding: 5px 0;
+  }
+
+
+  .itam-feature-icon {
+    font-size: 20px;
+
+    margin-bottom: 5px;
+  }
+
+
+  .itam-feature-item p {
+    font-size: 17px;
+
+    line-height: 1.5;
+  }
+
+
+  .itam-section-3-image {
+    width: 100%;
+  }
+
+
+  .itam-section-3-image img {
+    width: 100%;
+  }
+
+}
+
+/* =====================================================
+   SECTION 4
+===================================================== */
+
+.itam-users-section {
+  position: relative;
+  width: 100%;
+  min-height: 620px;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  padding: 30px 40px 70px;
+
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   TOP CAROUSEL
+===================================================== */
+
+.section4-top-carousel {
+  width: 100%;
+  text-align: center;
+
+  margin-bottom: 25px;
+}
+
+.top-carousel-window {
+  width: 100%;
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  overflow: hidden;
+}
+
+.top-carousel-track {
+  display: flex;
+
+  width: 100%;
+
+  transition: transform 0.7s ease-in-out;
+}
+
+.top-carousel-slide {
+  min-width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 55px;
+}
+
+.top-carousel-slide h3 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #efd8bd;
+}
+
+
+/* =====================================================
+   TOP DOTS
+===================================================== */
+
+.section4-top-dots,
+.section4-industry-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 12px;
+}
+
+.section4-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #20252c;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.section4-dot.active {
+  background: #20252c;
+
+  transform: scale(1.05);
+}
+
+
+/* =====================================================
+   MAIN HEADING
+===================================================== */
+
+.section4-main-heading {
+  margin: 30px 0 20px;
+
+  text-align: center;
+
+  font-size: 24px;
+  font-weight: 600;
+
+  color: #efd8bd;
+}
+
+
+/* =====================================================
+   MAIN TWO COLUMN AREA
+===================================================== */
+
+.section4-content {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 35px auto 0;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 60px;
+
+  align-items: center;
+}
+
+
+/* =====================================================
+   LEFT SIDE
+===================================================== */
+
+.section4-left {
+  text-align: center;
+
+  padding: 20px 25px;
+}
+
+.section4-left p {
+  margin: 0 auto;
+
+  max-width: 470px;
+
+  font-size: 17px;
+  line-height: 1.65;
+
+  color: #efd8bd;
+}
+
+.section4-signup-btn {
+  margin-top: 25px;
+
+  padding: 11px 22px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #20262f;
+  color: #efd8bd;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.section4-signup-btn:hover {
+  background: #292f39;
+
+  transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   RIGHT CAROUSEL
+===================================================== */
+
+.section4-right {
+  width: 100%;
+
+  overflow: hidden;
+
+  text-align: center;
+}
+
+.industry-carousel-window {
+  width: 100%;
+
+  overflow: hidden;
+}
+
+.industry-carousel-track {
+  display: flex;
+
+  width: 100%;
+
+  transition: transform 0.7s ease-in-out;
+}
+
+.industry-slide {
+  min-width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 15px 30px;
+}
+
+.industry-slide h3 {
+  margin: 0 auto 20px;
+
+  max-width: 500px;
+
+  font-size: 24px;
+  line-height: 1.35;
+
+  color: #efd8bd;
+}
+
+.industry-slide p {
+  margin: 0 auto;
+
+  max-width: 500px;
+
+  font-size: 17px;
+  line-height: 1.65;
+
+  color: #efd8bd;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .itam-users-section {
+    padding: 30px 25px 60px;
+  }
+
+  .section4-content {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .section4-left {
+    padding: 10px;
+  }
+
+  .section4-right {
+    padding: 0;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .itam-users-section {
+    padding: 25px 15px 50px;
+  }
+
+  .section4-main-heading {
+    font-size: 24px;
+  }
+
+  .top-carousel-slide h3 {
+    font-size: 17px;
+  }
+
+  .industry-slide h3 {
+    font-size: 24px;
+  }
+
+  .section4-left p,
+  .industry-slide p {
+    font-size: 17px;
+  }
+
+}
+
+
+/* ==========================================
+   SECTION 5
+========================================== */
+
+.itam-section-5 {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 640px;
+
+  padding: 50px 60px 105px;
+
+  box-sizing: border-box;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* ==========================================
+   BOTTOM CLIPPED SHAPE
+========================================== */
+
+.itam-section-5::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+
+  height: 90px;
+
+  background: #252c36;
+
+  clip-path: polygon(
+    0 38%,
+    10% 68%,
+    19% 88%,
+    27% 55%,
+    34% 25%,
+    43% 63%,
+    52% 78%,
+    60% 55%,
+    70% 35%,
+    82% 8%,
+    91% 42%,
+    100% 67%,
+    100% 100%,
+    0 100%
+  );
+
+  z-index: 0;
+}
+
+
+/* ==========================================
+   CONTENT
+========================================== */
+
+.itam-section-5-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+
+  max-width: 1250px;
+
+  min-height: 535px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* ==========================================
+   SLIDE
+========================================== */
+
+.itam-section-5-slide {
+  width: 100%;
+
+  max-width: 800px;
+
+  text-align: center;
+
+  animation: section5Fade 0.55s ease;
+}
+
+
+@keyframes section5Fade {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* ==========================================
+   HEADING
+========================================== */
+
+.itam-section-5-slide h2 {
+  margin: 0 0 90px;
+
+  font-size: 24px;
+
+  line-height: 1.45;
+
+  color: #efd8bd;
+
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   DESCRIPTION
+========================================== */
+
+.itam-section-5-slide p {
+  max-width: 780px;
+
+  margin: 0 auto;
+
+  font-size: 17px;
+
+  line-height: 1.65;
+
+  color: #efd8bd;
+}
+
+
+/* ==========================================
+   DOTS
+========================================== */
+
+.itam-section-5-dots {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  margin-top: 125px;
+}
+
+
+.itam-section-5-dots button {
+  width: 9px;
+
+  height: 9px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #858b93;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.itam-section-5-dots button.active {
+  background: #efd8bd;
+
+  transform: scale(1.1);
+}
+
+
+/* ==========================================
+   CTA BUTTON
+========================================== */
+
+.itam-section-5-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-top: 16px;
+
+  padding: 10px 16px;
+
+  background: #414852;
+
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  font-size: 17px;
+
+  line-height: 1.2;
+
+  border-radius: 2px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.itam-section-5-button:hover {
+  background: #252c36;
+
+  transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   ARROWS
+========================================== */
+
+.itam-section-5-arrow {
+  position: absolute;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 30px;
+
+  height: 44px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 2px;
+
+  background: #d9dde2;
+
+  color: #171c23;
+
+  font-size: 30px;
+
+  line-height: 40px;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  z-index: 5;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.itam-section-5-arrow:hover {
+  background: #efd8bd;
+
+  transform: translateY(-50%) scale(1.04);
+}
+
+
+.itam-section-5-arrow-left {
+  left: 0;
+}
+
+
+.itam-section-5-arrow-right {
+  right: 0;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+  .itam-section-5 {
+    padding: 50px 60px 105px;
+  }
+
+  .itam-section-5-slide {
+    max-width: 700px;
+  }
+
+  .itam-section-5-slide h2 {
+    margin-bottom: 65px;
+  }
+
+  .itam-section-5-dots {
+    margin-top: 90px;
+  }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+
+  .itam-section-5 {
+    min-height: 650px;
+
+    padding: 45px 45px 105px;
+  }
+
+
+  .itam-section-5-content {
+    min-height: 540px;
+  }
+
+
+  .itam-section-5-slide h2 {
+    margin-bottom: 45px;
+
+    font-size: 24px;
+
+    line-height: 1.5;
+  }
+
+
+  .itam-section-5-slide p {
+    font-size: 17px;
+
+    line-height: 1.6;
+  }
+
+
+  .itam-section-5-dots {
+    margin-top: 65px;
+  }
+
+
+  .itam-section-5-arrow {
+    width: 28px;
+
+    height: 40px;
+
+    font-size: 27px;
+  }
+
+
+  .itam-section-5-arrow-left {
+    left: 0;
+  }
+
+
+  .itam-section-5-arrow-right {
+    right: 0;
+  }
+
+
+  .itam-section-5::after {
+    height: 85px;
+
+    clip-path: polygon(
+      0 35%,
+      12% 62%,
+      25% 82%,
+      38% 50%,
+      50% 72%,
+      63% 42%,
+      76% 65%,
+      88% 30%,
+      100% 60%,
+      100% 100%,
+      0 100%
+    );
+  }
+
+}
+
+/* =========================================
+   SECTION 6
+========================================= */
+
+.section6 {
+  width: 100%;
+
+  background: #252c36;
+  color: #efd8bd;
+
+  padding: 45px 30px 55px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.section6-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 34% 66%;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+/* =========================================
+   LEFT FEATURES
+========================================= */
+
+.section6-features {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 42px;
+
+  text-align: center;
+}
+
+
+.section6-feature {
+  width: 100%;
+}
+
+
+.section6-icon {
+  height: 28px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 7px;
+
+  font-size: 18px;
+}
+
+
+.section6-feature h3 {
+  margin: 0 0 7px;
+
+  font-size: 17px;
+
+  line-height: 1.35;
+
+  color: #efd8bd;
+
+  font-weight: 600;
+}
+
+
+.section6-feature p {
+  max-width: 350px;
+
+  margin: 0 auto;
+
+  font-size: 17px;
+
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.section6-carousel {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   IMAGE WINDOW
+========================================= */
+
+.section6-image-window {
+  width: 100%;
+
+  overflow: hidden;
+}
+
+
+.section6-image-track {
+  display: flex;
+
+  width: 100%;
+
+  transition: transform 0.7s ease-in-out;
+}
+
+
+.section6-slide {
+  min-width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+
+.section6-slide img {
+  width: 100%;
+
+  max-width: 650px;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section6-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 18px;
+}
+
+
+.section6-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #1f252d;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.section6-dot.active {
+  background: #1f252d;
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .section6-container {
+    grid-template-columns: 1fr;
+
+    gap: 40px;
+  }
+
+  .section6-features {
+    gap: 30px;
+  }
+
+  .section6-feature p {
+    max-width: 500px;
+  }
+
+  .section6-carousel {
+    width: 90%;
+
+    margin: 0 auto;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section6 {
+    padding: 40px 15px 50px;
+  }
+
+  .section6-container {
+    grid-template-columns: 1fr;
+  }
+
+  .section6-features {
+    gap: 30px;
+  }
+
+  .section6-feature h3 {
+    font-size: 17px;
+  }
+
+  .section6-feature p {
+    font-size: 17px;
+  }
+
+  .section6-carousel {
+    width: 100%;
+  }
+
+}
+
+/* =========================================
+   SECTION 7
+========================================= */
+
+.section7 {
+  width: 100%;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  padding: 65px 30px 55px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.section7-container {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  align-items: start;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   STAT
+========================================= */
+
+.section7-stat {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: flex-start;
+}
+
+
+/* =========================================
+   LARGE NUMBER
+========================================= */
+
+.section7-number {
+  font-size: 48px;
+
+  line-height: 1;
+
+  font-weight: 400;
+
+  color: #efd8bd;
+
+  margin-bottom: 14px;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.section7-stat p {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  letter-spacing: 0.5px;
+
+  font-weight: 400;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .section7 {
+    padding: 55px 20px 45px;
+  }
+
+  .section7-container {
+    grid-template-columns: repeat(2, 1fr);
+
+    row-gap: 45px;
+  }
+
+  .section7-number {
+    font-size: 42px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+
+  .section7 {
+    padding: 45px 15px;
+  }
+
+  .section7-container {
+    grid-template-columns: 1fr 1fr;
+
+    row-gap: 35px;
+  }
+
+  .section7-number {
+    font-size: 36px;
+  }
+
+  .section7-stat p {
+    font-size: 14px;
+  }
+
+}
+
+/* =========================================
+   SECTION 8
+========================================= */
+
+.section8 {
+  width: 100%;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  padding: 70px 30px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.section8-container {
+  width: 100%;
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 43% 57%;
+
+
+  align-items: center;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.section8-left {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  min-height: 500px;
+}
+
+
+.section8-left h2 {
+  margin: 0 0 20px;
+
+  color: #efd8bd;
+
+  font-size: 30px;
+
+  line-height: 1.2;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   STAGE LIST
+========================================= */
+
+.section8-stage-list {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+
+.section8-stage {
+  width: fit-content;
+
+  padding: 12px 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #efd8bd;
+
+  font-family: inherit;
+
+  font-size: 16px;
+
+  line-height: 1.4;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.section8-stage:hover {
+  opacity: 0.8;
+
+  transform: translateX(4px);
+}
+
+
+.section8-stage.active {
+  opacity: 1;
+
+  transform: translateX(5px);
+}
+
+
+/* =========================================
+   CTA
+========================================= */
+
+.section8-cta {
+  margin-top: 45px;
+
+  padding: 12px 20px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: #222831;
+
+  color: #efd8bd;
+
+  font-family: inherit;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.section8-cta:hover {
+  background: #414852;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.section8-right {
+  width: 100%;
+
+  min-height: 500px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   TOP CAROUSEL
+========================================= */
+
+.section8-top-carousel {
+  width: 100%;
+
+  min-height: 260px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: flex-start;
+}
+
+
+.section8-slide {
+  width: 100%;
+
+  animation: section8Fade 0.6s ease;
+}
+
+
+@keyframes section8Fade {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+.section8-top-carousel h3 {
+  margin: 0 0 18px;
+
+  color: #efd8bd;
+
+  font-size: 30px;
+
+  line-height: 1.25;
+
+  font-weight: 600;
+}
+
+
+.section8-top-carousel p {
+  max-width: 500px;
+
+  margin: 0 auto;
+
+  color: #efd8bd;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section8-dots {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin: 5px 0 45px;
+}
+
+
+.section8-dot {
+  width: 9px;
+
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #222831;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.section8-dot.active {
+  background: #222831;
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================
+   BOTTOM CAROUSEL
+========================================= */
+
+.section8-bottom-carousel {
+  width: 100%;
+
+  min-height: 180px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: flex-start;
+}
+
+
+.section8-bottom-carousel p {
+  max-width: 500px;
+
+  margin: 0 auto;
+
+  color: #efd8bd;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+}
+
+
+.section8-secondary-title {
+  font-weight: 600;
+}
+
+
+.section8-label {
+  margin-top: 3px !important;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .section8 {
+    padding: 60px 25px;
+  }
+
+  .section8-container {
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+  }
+
+  .section8-left {
+    align-items: center;
+
+    text-align: center;
+
+    min-height: auto;
+  }
+
+  .section8-left h2 {
+    font-size: 28px;
+  }
+
+  .section8-stage {
+    width: 100%;
+
+    text-align: center;
+  }
+
+  .section8-right {
+    min-height: auto;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section8 {
+    padding: 50px 18px;
+  }
+
+  .section8-left h2 {
+    font-size: 24px;
+  }
+
+  .section8-top-carousel h3 {
+    font-size: 24px;
+  }
+
+  .section8-top-carousel p,
+  .section8-bottom-carousel p {
+    font-size: 17px;
+  }
+
+  .section8-stage {
+    font-size: 15px;
+  }
+
+  .section8-cta {
+    margin-top: 30px;
+  }
+
+  .section8-dots {
+    margin-bottom: 30px;
+  }
+
+}
+
+
+/* ==========================================
+   SECTION 9
+========================================== */
+
+.itam-section-9 {
+  position: relative;
+
+  width: 100%;
+  min-height: 615px;
+
+  padding: 55px 70px 110px;
+
+  box-sizing: border-box;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* ==========================================
+   BOTTOM CLIPPED BACKGROUND
+========================================== */
+
+.itam-section-9::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 90px;
+
+  background: #252c36;
+
+  clip-path: polygon(
+    0 38%,
+    10% 68%,
+    19% 88%,
+    27% 55%,
+    34% 25%,
+    43% 63%,
+    52% 78%,
+    60% 55%,
+    70% 35%,
+    82% 8%,
+    91% 42%,
+    100% 67%,
+    100% 100%,
+    0 100%
+  );
+
+  z-index: 0;
+}
+
+
+/* ==========================================
+   CONTENT WRAPPER
+========================================== */
+
+.itam-section-9-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+  max-width: 1250px;
+
+  min-height: 500px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ==========================================
+   SLIDE
+========================================== */
+
+.itam-section-9-slide {
+  width: 100%;
+  max-width: 780px;
+
+  text-align: center;
+
+  animation: itamSection9Fade 0.55s ease;
+}
+
+
+@keyframes itamSection9Fade {
+
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+/* section 9 css here  */
+
+/* ==========================================
+   HEADING
+========================================== */
+
+.itam-section-9-slide h2 {
+  margin: 0 0 42px;
+
+  font-size: 24px;
+
+  line-height: 1.45;
+
+  color: #efd8bd;
+
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   DESCRIPTION
+========================================== */
+
+.itam-section-9-slide p {
+  margin: 0 auto;
+
+  max-width: 760px;
+
+  font-size: 17px;
+
+  line-height: 1.65;
+
+  color: #efd8bd;
+}
+
+
+/* ==========================================
+   ARROWS
+========================================== */
+
+.itam-section-9-arrow {
+  position: absolute;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 30px;
+  height: 43px;
+
+  padding: 0;
+
+  border: none;
+
+  background: #d9dde2;
+
+  color: #171c23;
+
+  font-size: 30px;
+
+  line-height: 38px;
+
+  cursor: pointer;
+
+  border-radius: 2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 5;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.itam-section-9-arrow:hover {
+  background: #efd8bd;
+
+  transform: translateY(-50%) scale(1.04);
+}
+
+
+.itam-section-9-arrow-left {
+  left: 0;
+}
+
+
+.itam-section-9-arrow-right {
+  right: 0;
+}
+
+
+/* ==========================================
+   DOTS
+========================================== */
+
+.itam-section-9-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 68px;
+}
+
+
+.itam-section-9-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #858b93;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.itam-section-9-dot.active {
+  background: #efd8bd;
+
+  transform: scale(1.1);
+}
+
+
+/* ==========================================
+   CTA
+========================================== */
+
+.itam-section-9-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 16px;
+
+  min-width: 125px;
+
+  padding: 10px 16px;
+
+  border: 1px solid #efd8bd;
+
+  background: transparent;
+
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  font-size: 17px;
+
+  line-height: 1.2;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+
+.itam-section-9-button:hover {
+  background: #efd8bd;
+
+  color: #353b45;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+  .itam-section-9 {
+    padding: 50px 60px 105px;
+  }
+
+
+  .itam-section-9-content {
+    min-height: 510px;
+  }
+
+
+  .itam-section-9-slide {
+    max-width: 680px;
+  }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+
+  .itam-section-9 {
+    min-height: 620px;
+
+    padding: 45px 45px 105px;
+  }
+
+
+  .itam-section-9-content {
+    min-height: 520px;
+  }
+
+
+  .itam-section-9-slide {
+    max-width: 100%;
+  }
+
+
+  .itam-section-9-slide h2 {
+    margin-bottom: 30px;
+
+    font-size: 24px;
+
+    line-height: 1.5;
+  }
+
+
+  .itam-section-9-slide p {
+    font-size: 17px;
+
+    line-height: 1.6;
+  }
+
+
+  .itam-section-9-arrow {
+    width: 28px;
+    height: 40px;
+
+    font-size: 27px;
+  }
+
+
+  .itam-section-9-arrow-left {
+    left: 0;
+  }
+
+
+  .itam-section-9-arrow-right {
+    right: 0;
+  }
+
+
+  .itam-section-9-dots {
+    margin-top: 45px;
+  }
+
+
+  .itam-section-9::after {
+    height: 85px;
+
+    clip-path: polygon(
+      0 35%,
+      12% 62%,
+      25% 82%,
+      38% 50%,
+      50% 72%,
+      63% 42%,
+      76% 65%,
+      88% 30%,
+      100% 60%,
+      100% 100%,
+      0 100%
+    );
+  }
+
+}
+/* ==========================================
+   SECTION 10
+========================================== */
+
+.itam-section-10 {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 640px;
+
+  padding: 60px 55px;
+
+  box-sizing: border-box;
+
+  background: #252c36;
+
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.itam-section-10-container {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+
+  max-width: 1250px;
+
+  min-height: 520px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 45% 55%;
+
+  align-items: center;
+
+}
+
+
+/* ==========================================
+   LEFT SIDE
+========================================== */
+
+.itam-section-10-left {
+
+  padding: 20px 35px 20px 15px;
+
+  box-sizing: border-box;
+
+}
+
+
+.itam-section-10-left h2 {
+
+  margin: 0 0 22px;
+
+  font-size: 24px;
+
+  line-height: 1.4;
+
+  color: #efd8bd;
+
+}
+
+
+/* ==========================================
+   FEATURES
+========================================== */
+
+.itam-section-10-features {
+
+  list-style: none;
+
+  padding: 0;
+
+  margin: 0;
+
+}
+
+
+.itam-section-10-features li {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 22px;
+
+  font-size: 17px;
+
+  line-height: 1.4;
+
+  color: #efd8bd;
+
+}
+
+
+.itam-section-10-features li span {
+
+  width: 22px;
+
+  min-width: 22px;
+
+  font-size: 17px;
+
+  text-align: center;
+
+}
+
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.itam-section-10-button {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-top: 12px;
+
+  padding: 11px 18px;
+
+  border-radius: 25px;
+
+  background: #222a34;
+
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  font-size: 17px;
+
+  line-height: 1.2;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+
+}
+
+
+.itam-section-10-button:hover {
+
+  background: #1b222b;
+
+  transform: translateY(-2px);
+
+}
+
+
+/* ==========================================
+   RIGHT SIDE
+========================================== */
+
+.itam-section-10-right {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 0;
+
+}
+
+
+/* ==========================================
+   CAROUSEL
+========================================== */
+
+.itam-section-10-carousel {
+
+  width: 100%;
+
+  max-width: 600px;
+
+  text-align: center;
+
+  animation: section10Fade 0.6s ease;
+
+}
+
+
+@keyframes section10Fade {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateY(12px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+  }
+
+}
+
+
+/* ==========================================
+   CAROUSEL HEADING
+========================================== */
+
+.itam-section-10-carousel h2 {
+
+  margin: 0 auto 22px;
+
+  max-width: 430px;
+
+  font-size: 24px;
+
+  line-height: 1.55;
+
+  color: #efd8bd;
+
+}
+
+
+/* ==========================================
+   TOP DESCRIPTION
+========================================== */
+
+.itam-section-10-description {
+
+  margin: 0 auto;
+
+  max-width: 500px;
+
+  font-size: 17px;
+
+  line-height: 1.55;
+
+  color: #efd8bd;
+
+}
+
+
+/* ==========================================
+   DOTS
+========================================== */
+
+.itam-section-10-dots {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin: 70px 0 34px;
+
+}
+
+
+.itam-section-10-dots button {
+
+  width: 9px;
+
+  height: 9px;
+
+  padding: 0;
+
+  border: 1px solid #1e242d;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+}
+
+
+.itam-section-10-dots button.active {
+
+  background: #1d232c;
+
+}
+
+
+/* ==========================================
+   BOTTOM DESCRIPTION
+========================================== */
+
+.itam-section-10-bottom-text {
+
+  margin: 0 auto;
+
+  max-width: 500px;
+
+  font-size: 17px;
+
+  line-height: 1.55;
+
+  color: #efd8bd;
+
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+  .itam-section-10 {
+
+    padding: 50px 30px;
+
+  }
+
+
+  .itam-section-10-container {
+
+    grid-template-columns: 1fr 1fr;
+
+  }
+
+
+  .itam-section-10-left {
+
+    padding-right: 25px;
+
+  }
+
+
+  .itam-section-10-carousel {
+
+    max-width: 500px;
+
+  }
+
+
+  .itam-section-10-dots {
+
+    margin-top: 45px;
+
+  }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 700px) {
+
+  .itam-section-10 {
+
+    padding: 50px 22px;
+
+  }
+
+
+  .itam-section-10-container {
+
+    grid-template-columns: 1fr;
+
+    gap: 55px;
+
+  }
+
+
+  .itam-section-10-left {
+
+    padding: 0;
+
+    text-align: center;
+
+  }
+
+
+  .itam-section-10-left h2 {
+
+    font-size: 24px;
+
+  }
+
+
+  .itam-section-10-features {
+
+    display: inline-block;
+
+    text-align: left;
+
+  }
+
+
+  .itam-section-10-features li {
+
+    font-size: 17px;
+
+  }
+
+
+  .itam-section-10-button {
+
+    margin-top: 5px;
+
+  }
+
+
+  .itam-section-10-right {
+
+    width: 100%;
+
+  }
+
+
+  .itam-section-10-carousel {
+
+    max-width: 100%;
+
+  }
+
+
+  .itam-section-10-carousel h2 {
+
+    font-size: 24px;
+
+  }
+
+
+  .itam-section-10-description,
+
+  .itam-section-10-bottom-text {
+
+    font-size: 17px;
+
+  }
+
+
+  .itam-section-10-dots {
+
+    margin: 40px 0 30px;
+
+  }
+
+}
+
+/* ==========================================
+   SECTION 12
+========================================== */
+
+.itam-section-12 {
+  position: relative;
+
+  width: 100%;
+  min-height: 620px;
+
+  padding: 32px 30px 120px;
+
+  box-sizing: border-box;
+
+  background: #252c36;
+
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* ==========================================
+   DARK CLIPPED BOTTOM
+========================================== */
+
+.itam-section-12::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 95px;
+
+  background: #252c36;
+
+  clip-path: polygon(
+    0 35%,
+    7% 55%,
+    15% 72%,
+    23% 52%,
+    31% 42%,
+    40% 60%,
+    48% 78%,
+    58% 55%,
+    66% 70%,
+    75% 42%,
+    82% 58%,
+    90% 28%,
+    100% 55%,
+    100% 100%,
+    0 100%
+  );
+
+  z-index: 0;
+}
+
+
+/* ==========================================
+   CONTENT
+========================================== */
+
+.itam-section-12-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+
+/* ==========================================
+   MAIN HEADING
+========================================== */
+
+.itam-section-12-content h2 {
+  margin: 0;
+
+  text-align: center;
+
+  font-size: 24px;
+
+  line-height: 1.7;
+
+  color: #efd8bd;
+}
+
+
+/* ==========================================
+   TWO COLUMNS
+========================================== */
+
+.itam-section-12-columns {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 55px;
+
+  margin-top: 58px;
+}
+
+
+/* ==========================================
+   COLUMN
+========================================== */
+
+.itam-section-12-column {
+  width: 100%;
+}
+
+
+/* ==========================================
+   PARAGRAPHS
+========================================== */
+
+.itam-section-12-column p {
+  margin: 0;
+
+  font-size: 17px;
+
+  line-height: 1.6;
+
+  color: #efd8bd;
+}
+
+
+/* ==========================================
+   LIST
+========================================== */
+
+.itam-section-12-column ul {
+  margin: 10px 0 0;
+
+  padding-left: 30px;
+
+  color: #efd8bd;
+}
+
+
+.itam-section-12-column li {
+  margin-bottom: 5px;
+
+  font-size: 17px;
+
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+  .itam-section-12 {
+    min-height: auto;
+
+    padding: 35px 25px 120px;
+  }
+
+
+  .itam-section-12-columns {
+    gap: 35px;
+
+    margin-top: 45px;
+  }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+
+  .itam-section-12 {
+    padding: 35px 20px 120px;
+  }
+
+
+  .itam-section-12-content h2 {
+    font-size: 24px;
+
+    line-height: 1.5;
+  }
+
+
+  .itam-section-12-columns {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+
+    margin-top: 40px;
+  }
+
+
+  .itam-section-12-column p,
+  .itam-section-12-column li {
+    font-size: 17px;
+  }
+
+
+  .itam-section-12::after {
+    height: 85px;
+
+    clip-path: polygon(
+      0 30%,
+      15% 55%,
+      30% 38%,
+      45% 65%,
+      60% 42%,
+      75% 60%,
+      88% 30%,
+      100% 55%,
+      100% 100%,
+      0 100%
+    );
+  }
+
+}
+
+/* =========================================
+   SOFTWARE ASSETS SECTION 13 
+========================================= */
+
+.software-assets-section {
+  position: relative;
+
+  width: 100%;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  padding: 120px 20px 80px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TOP CLIP-PATH TRANSITION
+========================================= */
+
+.software-assets-top-wave {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+
+  height: 90px;
+
+  background: #222831;
+
+  clip-path: polygon(
+    0 0,
+    0 25%,
+    15% 48%,
+    30% 30%,
+    45% 58%,
+    60% 35%,
+    75% 52%,
+    90% 22%,
+    100% 40%,
+    100% 0
+  );
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.software-assets-container {
+  position: relative;
+
+  width: 100%;
+
+  max-width: 1250px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   SECTION TITLE
+========================================= */
+
+.software-assets-container > h2 {
+  margin: 0 0 45px;
+
+  text-align: center;
+
+  color: #efd8bd;
+
+  font-size: 40px;
+
+  line-height: 1.2;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.software-assets-grid {
+  display: grid;
+
+  grid-template-columns: repeat(6, 1fr);
+
+  gap: 30px;
+
+  align-items: start;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.software-asset-card {
+  grid-column: span 2;
+
+  min-height: 250px;
+
+  padding: 35px 25px 30px;
+
+  border-radius: 9px;
+
+  background: #414852;
+
+  color: #efd8bd;
+
+  text-align: center;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 18px 35px rgba(20, 25, 32, 0.22);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+
+.software-asset-card:hover {
+  transform: translateY(-6px);
+
+  background: #454c56;
+
+  box-shadow: 0 22px 40px rgba(20, 25, 32, 0.3);
+}
+
+
+/* =========================================
+   WIDE CARDS
+========================================= */
+
+.software-asset-card-wide {
+  grid-column: span 3;
+
+  min-height: 225px;
+}
+
+
+/* =========================================
+   ICONS
+========================================= */
+
+.software-asset-icons {
+  min-height: 35px;
+
+  margin-bottom: 12px;
+
+  color: #efd8bd;
+
+  font-size: 22px;
+
+  line-height: 1.3;
+
+  letter-spacing: 3px;
+}
+
+
+/* =========================================
+   CARD TITLE
+========================================= */
+
+.software-asset-card h3 {
+  margin: 0 0 12px;
+
+  color: #efd8bd;
+
+  font-size: 23px;
+
+  line-height: 1.25;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   CARD CONTENT
+========================================= */
+
+.software-asset-card p {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 15px;
+
+  line-height: 1.55;
+
+  font-weight: 400;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .software-assets-section {
+    padding: 110px 20px 70px;
+  }
+
+  .software-assets-container > h2 {
+    font-size: 34px;
+  }
+
+  .software-assets-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 25px;
+  }
+
+  .software-asset-card,
+  .software-asset-card-wide {
+    grid-column: span 1;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+  .software-assets-section {
+    padding: 95px 15px 60px;
+  }
+
+  .software-assets-top-wave {
+    height: 70px;
+  }
+
+  .software-assets-container > h2 {
+    font-size: 28px;
+
+    margin-bottom: 30px;
+  }
+
+  .software-assets-grid {
+    grid-template-columns: 1fr;
+
+    gap: 20px;
+  }
+
+  .software-asset-card,
+  .software-asset-card-wide {
+    grid-column: span 1;
+
+    min-height: auto;
+
+    padding: 30px 20px;
+  }
+
+  .software-asset-card h3 {
+    font-size: 21px;
+  }
+
+  .software-asset-card p {
+    font-size: 15px;
+  }
+
+}
+
+/* =========================================
+   SECTION 14 - WHY CHOOSE ASSETPEGASUS
+========================================= */
+
+.why-choose-section {
+  position: relative;
+  width: 100%;
+  min-height: 540px;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 70px 30px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  /* Rounded upper container like the screenshot */
+  border-radius: 10px 10px 0 0;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.why-choose-content {
+  width: 100%;
+  max-width: 1100px;
+
+  text-align: center;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   MAIN HEADING
+========================================= */
+
+.why-choose-content h2 {
+  margin: 0 0 35px;
+
+  font-size: 32px;
+  line-height: 1.25;
+
+  color: #efd8bd;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   SUB HEADING
+========================================= */
+
+.why-choose-content h3 {
+  margin: 0 0 30px;
+
+  font-size: 24px;
+  line-height: 1.35;
+
+  color: #efd8bd;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   INTRO TEXT
+========================================= */
+
+.intro-text {
+  max-width: 950px;
+
+  margin: 0 auto;
+
+  font-size: 17px;
+  line-height: 1.65;
+
+  color: #efd8bd;
+
+  font-weight: 400;
+}
+
+
+/* =========================================
+   ASSETPEGASUS BLOCK
+========================================= */
+
+.assetpegasus-info {
+  margin-top: 65px;
+}
+
+.assetpegasus-info h3 {
+  margin-bottom: 20px;
+
+  font-size: 24px;
+  line-height: 1.35;
+
+  color: #efd8bd;
+
+  font-weight: 600;
+}
+
+
+.assetpegasus-info p {
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  font-size: 17px;
+  line-height: 1.65;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   HAM & ITAM LINK
+========================================= */
+
+.assetpegasus-info a {
+  color: #efd8bd;
+}
+
+.assetpegasus-info p a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  display: inline-block;
+  font-weight: 500;
+}
+
+
+/* =========================================
+   ABOUT BUTTON
+========================================= */
+
+.about-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 30px;
+
+  padding: 10px 18px;
+  width: 200px;
+  background: #222831;
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  font-size: 17px;
+  font-weight: 400;
+
+  border-radius: 2px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.about-btn:hover {
+  background: #2b323c;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .why-choose-section {
+    min-height: auto;
+
+    padding: 55px 20px;
+  }
+
+  .why-choose-content h2 {
+    font-size: 28px;
+  }
+
+  .why-choose-content h3,
+  .assetpegasus-info h3 {
+    font-size: 24px;
+  }
+
+  .intro-text,
+  .assetpegasus-info p {
+    font-size: 17px;
+  }
+
+  .assetpegasus-info {
+    margin-top: 50px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .why-choose-section {
+    padding: 45px 18px;
+  }
+
+  .why-choose-content h2 {
+    font-size: 26px;
+  }
+
+  .why-choose-content h3,
+  .assetpegasus-info h3 {
+    font-size: 22px;
+  }
+
+  .intro-text,
+  .assetpegasus-info p {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+}
+
+/* section 15 css here  */
+
+.section15 {
+  position: relative;
+  width: 100%;
+  min-height: 580px;
+
+  background: #414852;
+  color: #efd8bd;
+
+  padding: 25px 6% 70px;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =========================================
+   TOP HEADER
+========================================= */
+
+.section15-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 125px;
+}
+
+.section15-header h2 {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 2rem;
+  font-weight: 500;
+
+  line-height: 1.3;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+========================================= */
+
+.section15-signup {
+  width: 290px;
+  height: 52px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #222831;
+  color: #efd8bd;
+
+  font-size: 17px;
+  font-family: inherit;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+.section15-signup span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.section15-signup:hover {
+  background: #292f38;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   VISIT
+========================================= */
+
+.section15-visit {
+  margin-bottom: 75px;
+}
+
+.section15-visit p {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+  font-weight: 500;
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.section15-card {
+  width: 440px;
+  min-height: 185px;
+
+  padding: 28px 35px;
+
+  background: #414852;
+
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 25px 35px rgba(0, 0, 0, 0.25);
+
+  position: relative;
+}
+
+
+/*
+   Slight glass / raised appearance
+*/
+
+.section15-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: rgba(255, 255, 255, 0.015);
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.section15-icon {
+  font-size: 42px;
+
+  line-height: 1;
+
+  margin-bottom: 20px;
+
+  filter: grayscale(100%);
+}
+
+
+/* =========================================
+   CARD HEADING
+========================================= */
+
+.section15-card h2 {
+  margin: 0 0 18px;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+  font-weight: 500;
+
+  line-height: 1.3;
+}
+
+
+/* =========================================
+   CARD TEXT
+========================================= */
+
+.section15-card p {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .section15 {
+    min-height: 520px;
+
+    padding: 25px 20px 60px;
+  }
+
+  .section15-header {
+    flex-direction: column;
+    gap: 25px;
+
+    margin-bottom: 80px;
+
+    text-align: center;
+  }
+
+  .section15-header h2 {
+    font-size: 2rem;
+  }
+
+  .section15-signup {
+    width: 250px;
+  }
+
+  .section15-visit {
+    margin-bottom: 55px;
+  }
+
+  .section15-card {
+    width: min(440px, 90%);
+    padding: 25px 20px;
+  }
+
+  .section15-card h2 {
+    font-size: 24px;
+  }
+
+  .section15-card p {
+    font-size: 17px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .section15 {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .section15-header h2 {
+    font-size: 1.7rem;
+  }
+
+  .section15-card {
+    width: 100%;
+  }
+
+  .section15-card p br {
+    display: none;
+  }
+}
+
+/* =========================================
+   SECTION 16
+========================================= */
+
+.industry-assets-section {
+  width: 100%;
+  min-height: 500px;
+
+  box-sizing: border-box;
+
+  padding: 45px 30px 70px;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   SECTION HEADING
+========================================= */
+
+.industry-assets-section h2 {
+  margin: 0 0 45px;
+
+  text-align: center;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+  line-height: 1.3;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   CARDS CONTAINER
+========================================= */
+
+.industry-assets-grid {
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  gap: 28px;
+}
+
+
+/* =========================================
+   INDUSTRY CARD
+========================================= */
+
+.industry-card {
+  width: 135px;
+  min-height: 230px;
+
+  padding: 25px 14px 28px;
+
+  box-sizing: border-box;
+
+  background: #353b45;
+
+  color: #efd8bd;
+
+  text-align: center;
+
+  border-radius: 0 0 27px 27px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  box-shadow:
+    0 22px 30px rgba(0, 0, 0, 0.27);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+/* =========================================
+   STAGGERED HEIGHTS
+========================================= */
+
+.industry-card-1 {
+  min-height: 255px;
+}
+
+.industry-card-2 {
+  min-height: 320px;
+}
+
+.industry-card-3 {
+  min-height: 220px;
+}
+
+.industry-card-4 {
+  min-height: 255px;
+}
+
+.industry-card-5 {
+  min-height: 288px;
+}
+
+.industry-card-6 {
+  min-height: 288px;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.industry-icon {
+  width: 65px;
+  height: 65px;
+
+  margin-bottom: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #efd8bd;
+
+  font-size: 43px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   CARD TEXT
+========================================= */
+
+.industry-card p {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+  line-height: 1.9;
+
+  font-weight: 500;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.industry-card:hover {
+  transform: translateY(-7px);
+
+  box-shadow:
+    0 28px 38px rgba(0, 0, 0, 0.34);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .industry-assets-grid {
+    gap: 16px;
+  }
+
+  .industry-card {
+    width: 125px;
+  }
+
+  .industry-icon {
+    font-size: 38px;
+  }
+}
+
+
+@media (max-width: 750px) {
+
+  .industry-assets-section {
+    padding: 45px 20px 60px;
+  }
+
+  .industry-assets-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    max-width: 600px;
+
+    gap: 20px;
+  }
+
+  .industry-card,
+  .industry-card-1,
+  .industry-card-2,
+  .industry-card-3,
+  .industry-card-4,
+  .industry-card-5,
+  .industry-card-6 {
+    width: 100%;
+    min-height: 240px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .industry-assets-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+  }
+
+  .industry-card,
+  .industry-card-1,
+  .industry-card-2,
+  .industry-card-3,
+  .industry-card-4,
+  .industry-card-5,
+  .industry-card-6 {
+    min-height: 230px;
+  }
+
+  .industry-assets-section h2 {
+    font-size: 24px;
+  }
+
+  .industry-icon {
+    font-size: 36px;
+  }
+
+  .industry-card p {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+}

@@ -80,14 +80,14 @@ const Navbar = () => {
             {openDropdown === "features" && (
               <div className="dropdown-menu-navbar">
                 <Link
-                  to="/asset-management"
+                  to="/machinery"
                   onClick={closeMenu}
                 >
                   Machinery Asset Management Software
                 </Link>
 
                 <Link
-                  to="/software-license-management"
+                  to="/itam-management"
                   onClick={closeMenu}
                 >
                   IT Asset Management Software

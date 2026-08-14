@@ -17,10 +17,10 @@ export default function Contact() {
     <Helmet>
   <title>Contact AssetPegasus | IT Asset Management Software</title>
 
-  <meta
-    name="description"
-    content="Contact AssetPegasus, our mission, and how we help organizations manage IT assets, software licenses, warranties, and inventory."
-  />
+<meta
+  name="description"
+  content="Contact AssetPegasus for information about IT asset management, software license management, inventory tracking, warranties, and asset lifecycle management."
+/>
 
   <meta property="og:type" content="website" />
 
@@ -29,10 +29,10 @@ export default function Contact() {
     content="Contact AssetPegasus"
   />
 
-  <meta
-    property="og:description"
-    content="Contact us and Lets Change the system."
-  />
+<meta
+  property="og:description"
+  content="Contact AssetPegasus to learn more about IT asset management, software licenses, inventory tracking, and asset lifecycle management."
+/>
 
   <meta
     property="og:image"
@@ -54,10 +54,10 @@ export default function Contact() {
     content="Contact AssetPegasus"
   />
 
-  <meta
-    name="twitter:description"
-    content="Contact us and Lets Change the system."
-  />
+<meta
+  name="twitter:description"
+  content="Contact AssetPegasus to learn more about IT asset management, software licenses, inventory tracking, and asset lifecycle management."
+/>
 
   <meta
     name="twitter:image"
@@ -73,12 +73,10 @@ export default function Contact() {
 
       <div className="contact-top">
 
-        <h1>Contact</h1>
+        <h1 style={{ color : "#DFD0B8", fontSize : "2rem"}}>Contact</h1>
 
         <p>
-          We'd love to hear from you. Whether you're curious about
-          Socialfly features or our other services, contact us.
-          Our team is here to help.
+          Whether you want to explore AssetPegasus features, learn how our platform can simplify asset management, or discuss your requirements, our team is ready to help.
         </p>
 
       </div>
@@ -118,12 +116,11 @@ export default function Contact() {
         <div className="contact-info">
 
           <h3>
-            Have questions or need help?
+            Have questions or need assistance?
           </h3>
 
           <p>
-            Use the form to reach out and we will be
-            in touch with you as quickly as possible.
+            Fill out the form below and our team will get back to you as soon as possible. We're here to help with any questions or requirements you may have.
           </p>
 
         </div>
@@ -170,8 +167,7 @@ export default function Contact() {
         <div className="feedback">
 
           <h2>
-            Your Feedback is extremely valuable for us.
-            <span> Drop us a Text.</span>
+            Your feedback means a lot to us. <span>Share your thoughts with us.</span>
           </h2>
 
           <div className="chat-icons">
