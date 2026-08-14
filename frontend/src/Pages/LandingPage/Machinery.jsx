@@ -2,7 +2,7 @@ import React from "react";
 import { useState , useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../Page_styles/LandingPage/Machinery.css"
-
+import { Helmet } from "react-helmet-async";
 const assetTypes = [
   "Electronic Assets Management",
   "Machinery Assets Management",

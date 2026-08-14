@@ -1,6 +1,7 @@
 import React from 'react'
 import "../../Page_styles/LandingPage/ItAsset.css"
 import { useState , useEffect } from 'react';
+import { Helmet } from "react-helmet-async";
 import {
   FaBriefcase,
   FaCoins,
