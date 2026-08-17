@@ -24,6 +24,7 @@ import AffiliateApply from "./Inner_sections/AffiliateApply";
 import Terms from "./Pages/LandingPage/Terms&Condition";
 import MachineryHero from "./Pages/LandingPage/Machinery";
 import ItAsswt from "./Pages/LandingPage/ItAsswt";
+import Manufacturing from "./Pages/LandingPage/Manufacturing";
 
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
@@ -104,6 +105,10 @@ const App = () => {
       <Route
           path="/itam-management"
           element={<ItAsswt />}
+      />
+      <Route
+          path="/manufacturing-software"
+          element={<Manufacturing />}
       />
 
   </Route>

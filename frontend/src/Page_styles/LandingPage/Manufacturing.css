@@ -1,0 +1,2927 @@
+/* section 1 css here  */
+
+.manufacturing-hero {
+  position: relative;
+
+  width: 100%;
+  min-height: 580px;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TOP DARK HERO
+========================================= */
+
+.manufacturing-hero-top {
+  position: relative;
+
+  min-height: 285px;
+
+  background: #222831;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  padding: 45px 20px 100px;
+
+  box-sizing: border-box;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   ZIG-ZAG CLIP PATH
+========================================= */
+
+.manufacturing-hero-top::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -1px;
+
+  width: 100%;
+  height: 70px;
+
+  background: #353b45;
+
+  clip-path: polygon(
+    0 35%,
+    10% 62%,
+    18% 82%,
+    32% 55%,
+    46% 32%,
+    60% 70%,
+    73% 50%,
+    84% 24%,
+    100% 62%,
+    100% 100%,
+    0 100%
+  );
+
+  z-index: 2;
+}
+
+
+/* =========================================
+   MAIN H1
+========================================= */
+
+.manufacturing-hero-top h1 {
+  margin: 0;
+
+  max-width: 950px;
+
+  text-align: center;
+
+  color: #efd8bd;
+
+  font-size: 2rem;
+  line-height: 1.45;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   LOWER CONTENT
+========================================= */
+
+.manufacturing-hero-bottom {
+  position: relative;
+
+  min-height: 295px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 95px 20px 60px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  z-index: 3;
+}
+
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+.manufacturing-breadcrumb {
+  margin-bottom: 48px;
+
+  font-size: 17px;
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+.manufacturing-breadcrumb a {
+  color: #efd8bd;
+    display: inline-block
+    ;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+/* =========================================
+   LOWER HEADING
+========================================= */
+
+.manufacturing-hero-bottom h2 {
+  max-width: 900px;
+
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+  line-height: 1.55;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+  .manufacturing-hero {
+    min-height: 560px;
+  }
+
+  .manufacturing-hero-top {
+    min-height: 270px;
+
+    padding: 40px 20px 90px;
+  }
+
+  .manufacturing-hero-top h1 {
+    font-size: 2rem;
+    line-height: 1.4;
+  }
+
+  .manufacturing-hero-top::after {
+    height: 65px;
+  }
+
+  .manufacturing-hero-bottom {
+    padding-top: 85px;
+  }
+
+  .manufacturing-hero-bottom h2 {
+    font-size: 24px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .manufacturing-hero {
+    min-height: 540px;
+  }
+
+  .manufacturing-hero-top {
+    min-height: 260px;
+
+    padding: 35px 18px 80px;
+  }
+
+  .manufacturing-hero-top h1 {
+    font-size: 2rem;
+    line-height: 1.35;
+  }
+
+  .manufacturing-hero-top::after {
+    height: 60px;
+
+    clip-path: polygon(
+      0 35%,
+      18% 65%,
+      35% 42%,
+      52% 72%,
+      70% 40%,
+      85% 62%,
+      100% 35%,
+      100% 100%,
+      0 100%
+    );
+  }
+
+  .manufacturing-hero-bottom {
+    padding: 75px 18px 50px;
+  }
+
+  .manufacturing-breadcrumb {
+    margin-bottom: 40px;
+
+    font-size: 17px;
+  }
+
+  .manufacturing-hero-bottom h2 {
+    font-size: 24px;
+    line-height: 1.45;
+  }
+
+}
+
+/* section 2 css here  */
+
+.manufacturing-section-2 {
+  width: 100%;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  padding: 45px 0 0;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TEXT CONTENT
+========================================= */
+
+.manufacturing-section-2-content {
+  width: min(950px, 92%);
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+
+.manufacturing-section-2-content p {
+  margin: 0 0 28px;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+  line-height: 1.6;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   DASHBOARD IMAGE
+========================================= */
+
+.manufacturing-section-2-image {
+  width: 100%;
+
+  margin-top: 45px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+
+.manufacturing-section-2-image img {
+  display: block;
+
+  width: min(1200px, 100%);
+
+  height: auto;
+
+  object-fit: contain;
+
+  border-radius: 2px;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+  .manufacturing-section-2 {
+    padding-top: 40px;
+  }
+
+  .manufacturing-section-2-content {
+    width: 90%;
+  }
+
+  .manufacturing-section-2-content p {
+    font-size: 17px;
+    line-height: 1.55;
+
+    margin-bottom: 25px;
+  }
+
+  .manufacturing-section-2-image {
+    margin-top: 35px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .manufacturing-section-2 {
+    padding-top: 35px;
+  }
+
+  .manufacturing-section-2-content {
+    width: 90%;
+  }
+
+  .manufacturing-section-2-content p {
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .manufacturing-section-2-image {
+    margin-top: 25px;
+  }
+
+  .manufacturing-section-2-image img {
+    width: 100%;
+  }
+
+}
+
+
+/* section 3 css here  */
+
+.manufacturing-section-3 {
+  width: 100%;
+
+  min-height: 560px;
+
+  box-sizing: border-box;
+
+  padding: 35px 35px 55px;
+
+  background: #353b45;
+  color: #efd8bd;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   MAIN GRID
+========================================= */
+
+.manufacturing-section-3-grid {
+  width: min(1100px, 100%);
+
+  min-height: 470px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 70px;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   LEFT FEATURES
+========================================= */
+
+.manufacturing-features {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+}
+
+
+.manufacturing-features h2 {
+  width: 100%;
+
+  margin: 0 0 28px;
+
+  text-align: center;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+  line-height: 1.35;
+
+  font-weight: 500;
+}
+
+
+.manufacturing-features ul {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+
+.manufacturing-features li {
+  margin-bottom: 24px;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  line-height: 1.45;
+
+  font-weight: 500;
+}
+
+
+.manufacturing-trial-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin: 8px auto 0;
+
+  padding: 11px 20px;
+
+  background: #222831;
+
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  border-radius: 25px;
+
+  font-size: 17px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.manufacturing-trial-button:hover {
+  background: #292f38;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.manufacturing-carousel {
+  min-height: 470px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+
+.manufacturing-carousel > h2 {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+
+  line-height: 1.35;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+========================================= */
+
+.manufacturing-signup-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 15px;
+
+  padding: 10px 22px;
+
+  background: #222831;
+
+  color: #efd8bd;
+
+  text-decoration: none;
+
+  border-radius: 3px;
+
+  font-size: 17px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.manufacturing-signup-button:hover {
+  background: #292f38;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   CAROUSEL CONTENT
+========================================= */
+
+.manufacturing-carousel-content {
+  width: 100%;
+
+  min-height: 330px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+.manufacturing-slide {
+  width: min(470px, 100%);
+
+  animation: manufacturingSlideIn 0.6s ease;
+}
+
+
+.manufacturing-slide h3 {
+  margin: 0 0 18px;
+
+  color: #efd8bd;
+
+  font-size: 24px;
+
+  line-height: 1.35;
+
+  font-weight: 500;
+}
+
+
+.manufacturing-slide p {
+  margin: 0;
+
+  color: #efd8bd;
+
+  font-size: 17px;
+
+  line-height: 1.55;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.manufacturing-carousel-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: auto;
+}
+
+
+.manufacturing-carousel-dots button {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border: 1px solid #222831;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.manufacturing-carousel-dots button.active {
+  background: #222831;
+
+  transform: scale(1.1);
+}
+
+
+/* =========================================
+   SLIDE ANIMATION
+========================================= */
+
+@keyframes manufacturingSlideIn {
+
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .manufacturing-section-3 {
+    padding: 45px 25px 55px;
+  }
+
+  .manufacturing-section-3-grid {
+    grid-template-columns: 1fr;
+
+    gap: 55px;
+  }
+
+  .manufacturing-features {
+    align-items: center;
+  }
+
+  .manufacturing-features li {
+    text-align: left;
+  }
+
+  .manufacturing-carousel {
+    min-height: 430px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .manufacturing-section-3 {
+    padding: 40px 18px 50px;
+  }
+
+  .manufacturing-section-3-grid {
+    gap: 45px;
+  }
+
+  .manufacturing-features h2,
+  .manufacturing-carousel > h2,
+  .manufacturing-slide h3 {
+    font-size: 24px;
+  }
+
+  .manufacturing-features li,
+  .manufacturing-slide p,
+  .manufacturing-trial-button,
+  .manufacturing-signup-button {
+    font-size: 17px;
+  }
+
+  .manufacturing-carousel-content {
+    min-height: 350px;
+  }
+
+} 
+
+/* section 4 css here  */
+
+.manufacturing-industrial-section {
+  width: 100%;
+  min-height: 390px;
+  background: #414852;
+  color: #efd8bd;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 55px 35px;
+  box-sizing: border-box;
+}
+
+.industrial-content {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.industrial-content h2 {
+  margin: 0 0 22px;
+  font-size: 24px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: #efd8bd;
+}
+
+.industrial-content p {
+  margin: 0 auto 28px;
+  max-width: 1180px;
+
+  font-size: 17px;
+  line-height: 1.55;
+  color: #efd8bd;
+}
+
+.industrial-content p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .manufacturing-industrial-section {
+    min-height: auto;
+    padding: 50px 25px;
+  }
+
+  .industrial-content h2 {
+    font-size: 24px;
+  }
+
+  .industrial-content p {
+    font-size: 17px;
+    line-height: 1.55;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .manufacturing-industrial-section {
+    padding: 45px 18px;
+  }
+
+  .industrial-content h2 {
+    font-size: 24px;
+    line-height: 1.35;
+    margin-bottom: 20px;
+  }
+
+  .industrial-content p {
+    font-size: 17px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+}
+
+/* section 5 css here  */
+
+.manufacturing-section-five {
+  width: 100%;
+  min-height: 620px;
+
+  background: #414852;
+  color: #efd8bd;
+
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TOP SECTION
+========================================= */
+
+.section-five-top {
+  width: 100%;
+  min-height: 385px;
+
+  display: grid;
+  grid-template-columns: 55% 45%;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   LEFT FEATURES
+========================================= */
+
+.section-five-features {
+  padding: 25px 35px 30px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 27px;
+
+  text-align: center;
+}
+
+
+.manufacturing-feature {
+  width: 100%;
+  max-width: 560px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.feature-icon {
+  font-size: 19px;
+  line-height: 1;
+
+  margin-bottom: 8px;
+}
+
+
+.manufacturing-feature h2 {
+  margin: 0 0 8px;
+
+  font-size: 24px;
+  line-height: 1.25;
+
+  color: #efd8bd;
+}
+
+
+.manufacturing-feature p {
+  margin: 0;
+
+  font-size: 17px;
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   RIGHT DESCRIPTION
+========================================= */
+
+.section-five-description {
+  padding: 45px 45px 40px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+.section-five-description p {
+  max-width: 470px;
+
+  margin: 0;
+
+  font-size: 17px;
+  line-height: 1.55;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   BOTTOM CAROUSEL
+========================================= */
+
+.section-five-carousel {
+  position: relative;
+
+  width: 100%;
+  min-height: 235px;
+
+  background: #353b45;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 35px 25px 55px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   CAROUSEL CONTENT
+========================================= */
+
+.carousel-content {
+  width: 100%;
+  max-width: 700px;
+
+  min-height: 100px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+.carousel-content h2 {
+  margin: 0 0 15px;
+
+  font-size: 24px;
+  line-height: 1.3;
+
+  color: #efd8bd;
+}
+
+
+.carousel-content p {
+  margin: 0;
+
+  max-width: 650px;
+
+  font-size: 17px;
+  line-height: 1.5;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   CAROUSEL DOTS
+========================================= */
+
+.carousel-dots {
+  position: absolute;
+
+  bottom: 18px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+  margin: 0;
+
+  border: 1px solid #1e242c;
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.carousel-dot.active {
+  background: #1e242c;
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .section-five-top {
+    grid-template-columns: 1fr;
+  }
+
+
+  .section-five-features {
+    padding: 40px 25px 25px;
+  }
+
+
+  .section-five-description {
+    padding: 20px 30px 40px;
+  }
+
+
+  .section-five-carousel {
+    min-height: 240px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .manufacturing-section-five {
+    min-height: auto;
+  }
+
+
+  .section-five-top {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .section-five-features {
+    padding: 40px 18px 25px;
+
+    gap: 30px;
+  }
+
+
+  .manufacturing-feature h2 {
+    font-size: 24px;
+  }
+
+
+  .manufacturing-feature p {
+    font-size: 17px;
+  }
+
+
+  .section-five-description {
+    padding: 25px 20px 45px;
+  }
+
+
+  .section-five-description p {
+    font-size: 17px;
+  }
+
+
+  .section-five-carousel {
+    min-height: 260px;
+
+    padding: 35px 20px 60px;
+  }
+
+
+  .carousel-content h2 {
+    font-size: 24px;
+  }
+
+
+  .carousel-content p {
+    font-size: 17px;
+  }
+}
+
+/* ================================
+   SECTION 6
+================================ */
+
+.manufacturing-section-six {
+  width: 100%;
+  min-height: 590px;
+
+  background: #30353d;
+
+  display: grid;
+  grid-template-columns: 46% 54%;
+
+  align-items: center;
+
+  padding: 70px 45px;
+
+  box-sizing: border-box;
+
+  color: #dfd0b8;
+}
+
+
+/* ================================
+   LEFT SIDE
+================================ */
+
+.section-six-features {
+  width: 100%;
+  max-width: 470px;
+
+  margin: 0 auto;
+}
+
+.section-six-features h2 {
+  font-size: 22px;
+  line-height: 1.3;
+
+  text-align: center;
+
+  margin-bottom: 28px;
+
+  color: #dfd0b8;
+}
+
+
+.section-six-feature {
+  margin-bottom: 32px;
+}
+
+
+.section-six-feature h3 {
+  margin: 0 0 6px;
+
+  font-size: 17px;
+  line-height: 1.4;
+
+  color: #dfd0b8;
+}
+
+
+.section-six-feature h3 span {
+  margin-right: 8px;
+
+  font-size: 20px;
+}
+
+
+.section-six-feature p {
+  margin: 0;
+
+  padding-left: 18px;
+
+  font-size: 16px;
+  line-height: 1.7;
+
+  color: #dfd0b8;
+}
+
+
+/* ================================
+   RIGHT CAROUSEL
+================================ */
+
+.section-six-carousel {
+  width: 100%;
+  max-width: 500px;
+
+  margin: 0 auto;
+
+  text-align: center;
+
+  min-height: 390px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+.section-six-slide {
+  width: 100%;
+
+  animation: sectionSixFade 0.6s ease;
+}
+
+
+.section-six-slide h2 {
+  font-size: 28px;
+  line-height: 1.3;
+
+  margin: 0 0 24px;
+
+  color: #dfd0b8;
+}
+
+
+.section-six-slide p {
+  font-size: 16px;
+  line-height: 1.75;
+
+  margin: 0 auto;
+
+  color: #dfd0b8;
+
+  max-width: 470px;
+}
+
+
+/* ================================
+   DOTS
+================================ */
+
+.section-six-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 38px;
+}
+
+
+.section-six-dots button {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #555b64;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+
+.section-six-dots button.active {
+  background: #111820;
+
+  border-color: #111820;
+}
+
+
+/* ================================
+   SIGN UP
+================================ */
+
+.section-six-signup {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 18px;
+
+  padding: 11px 20px;
+
+  border-radius: 25px;
+
+  background: #202731;
+
+  color: #dfd0b8;
+
+  text-decoration: none;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+
+.section-six-signup:hover {
+  background: #171d25;
+}
+
+
+/* ================================
+   ANIMATION
+================================ */
+
+@keyframes sectionSixFade {
+
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 900px) {
+
+  .manufacturing-section-six {
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+
+    padding: 60px 25px;
+  }
+
+  .section-six-features {
+    max-width: 650px;
+  }
+
+  .section-six-carousel {
+    max-width: 650px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .manufacturing-section-six {
+    padding: 50px 20px;
+  }
+
+  .section-six-features h2 {
+    font-size: 20px;
+  }
+
+  .section-six-feature h3 {
+    font-size: 16px;
+  }
+
+  .section-six-feature p {
+    font-size: 15px;
+  }
+
+  .section-six-slide h2 {
+    font-size: 24px;
+  }
+
+  .section-six-slide p {
+    font-size: 15px;
+  }
+
+}
+/* =========================================
+   SECTION 7
+========================================= */
+
+.manufacturing-section-seven {
+  position: relative;
+
+  width: 100%;
+  min-height: 610px;
+
+  background: #222831;
+
+  overflow: hidden;
+
+  padding-top: 42px;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.section-seven-content {
+  position: relative;
+  z-index: 10;
+
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: 0 30px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.section-seven-heading {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 30px;
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+/* =========================================
+   CAROUSEL
+========================================= */
+
+.section-seven-carousel {
+  min-height: 230px;
+
+  margin-top: 65px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
+.section-seven-slide {
+  width: 100%;
+  max-width: 850px;
+
+  animation: sectionSevenFade 0.6s ease;
+}
+
+
+.section-seven-slide h3 {
+  margin: 0 0 18px;
+
+  color: #DFD0B8;
+
+  font-size: 30px;
+  font-weight: 700;
+}
+
+
+.section-seven-slide p {
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  color: #DFD0B8;
+
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section-seven-dots {
+  position: relative;
+  z-index: 20;
+
+  display: flex;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 50px;
+}
+
+
+.section-seven-dots button {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #9da1a5;
+
+  cursor: pointer;
+}
+
+
+.section-seven-dots button.active {
+  background: #111820;
+}
+
+
+/* =========================================
+   SIGN IN
+========================================= */
+
+.section-seven-signin {
+  position: relative;
+  z-index: 20;
+
+  display: inline-flex;
+
+  width: auto;
+
+  margin-top: 16px;
+
+  padding: 10px 17px;
+
+  background: #393E46;
+
+  color: #DFD0B8;
+
+  text-decoration: none;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  border-radius: 2px;
+}
+
+
+/* =========================================
+   BOTTOM MOUNTAIN CLIP PATH
+========================================= */
+
+/* BACK MOUNTAIN */
+
+.manufacturing-section-seven::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 95px;
+
+  z-index: 2;
+
+  background: #393E46;
+
+  clip-path: polygon(
+    0 42%,
+    10% 68%,
+    21% 52%,
+    33% 82%,
+    47% 58%,
+    60% 80%,
+    73% 50%,
+    83% 72%,
+    100% 45%,
+    100% 100%,
+    0 100%
+  );
+
+}
+
+
+/* FRONT DARK MOUNTAIN */
+
+.manufacturing-section-seven::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 75px;
+
+  z-index: 3;
+
+  /* background: #1B222C; */
+
+  clip-path: polygon(
+    0 0,
+    10% 28%,
+    18% 55%,
+    33% 25%,
+    47% 58%,
+    60% 27%,
+    74% 55%,
+    82% 25%,
+    100% 48%,
+    100% 100%,
+    0 100%
+  );
+
+}
+
+
+/* =========================================
+   CAROUSEL ANIMATION
+========================================= */
+
+@keyframes sectionSevenFade {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+/* =========================================
+   SECTION 8
+========================================= */
+
+.manufacturing-section-eight {
+  position: relative;
+
+  width: 100%;
+  min-height: 590px;
+
+  background: #393E46;
+
+  padding: 70px 35px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.section-eight-grid {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 34% 66%;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.section-eight-features {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 48px;
+
+  text-align: center;
+}
+
+
+.section-eight-feature {
+  color: #DFD0B8;
+}
+
+
+.section-eight-icon {
+  font-size: 20px;
+
+  margin-bottom: 8px;
+}
+
+
+.section-eight-feature h3 {
+  margin: 0 0 8px;
+
+  color: #DFD0B8;
+
+  font-size: 19px;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+.section-eight-feature p {
+  max-width: 380px;
+
+  margin: 0 auto;
+
+  color: #DFD0B8;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.section-eight-carousel {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 0;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.section-eight-image-wrapper {
+  width: 100%;
+
+  max-width: 700px;
+
+  height: 320px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+
+.section-eight-image {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+
+  animation: sectionEightImageFade 0.6s ease;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section-eight-dots {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 35px;
+}
+
+
+.section-eight-dots button {
+  width: 9px;
+
+  height: 9px;
+
+  padding: 0;
+
+  border: 1px solid #151a20;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+
+.section-eight-dots button.active {
+  background: #151a20;
+}
+
+
+/* =========================================
+   IMAGE ANIMATION
+========================================= */
+
+@keyframes sectionEightImageFade {
+
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .section-eight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-eight-features {
+    gap: 35px;
+  }
+
+  .section-eight-carousel {
+    margin-top: 30px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .manufacturing-section-eight {
+    padding: 50px 20px;
+  }
+
+  .section-eight-image-wrapper {
+    height: 230px;
+  }
+
+  .section-eight-feature h3 {
+    font-size: 18px;
+  }
+
+  .section-eight-feature p {
+    font-size: 15px;
+  }
+
+}
+
+/* =========================================
+   SECTION 9 — TRUST STATISTICS
+========================================= */
+
+.manufacturing-section-nine {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 200px;
+
+  background: #222831;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 35px 40px;
+
+  box-sizing: border-box;
+
+  border-bottom: 3px solid #393E46;
+}
+
+
+/* =========================================
+   STATS CONTAINER
+========================================= */
+
+.section-nine-stats {
+  width: 100%;
+
+  max-width: 1100px;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  align-items: center;
+
+  justify-items: center;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   INDIVIDUAL STAT
+========================================= */
+
+.section-nine-stat {
+  width: 100%;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   NUMBER
+========================================= */
+
+.section-nine-stat h2 {
+  margin: 0 0 8px;
+
+  color: #DFD0B8;
+
+  font-size: 48px;
+
+  font-weight: 500;
+
+  line-height: 1.1;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.section-nine-stat p {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  line-height: 1.5;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+  .section-nine-stats {
+    grid-template-columns: repeat(2, 1fr);
+
+    row-gap: 35px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .manufacturing-section-nine {
+    padding: 40px 20px;
+  }
+
+  .section-nine-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .section-nine-stat h2 {
+    font-size: 42px;
+  }
+
+}
+
+/* =========================================
+   SECTION 10
+========================================= */
+
+.manufacturing-section-ten {
+  position: relative;
+
+  width: 100%;
+  min-height: 560px;
+
+  background: #393E46;
+
+  padding: 55px 55px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.section-ten-grid {
+  width: 100%;
+  max-width: 1150px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 44% 56%;
+
+  align-items: center;
+
+  gap: 30px;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.section-ten-lifecycle {
+  color: #DFD0B8;
+}
+
+
+.section-ten-lifecycle h2 {
+  margin: 0 0 18px;
+
+  color: #DFD0B8;
+
+  font-size: 29px;
+
+  font-weight: 500;
+
+  line-height: 1.35;
+}
+
+
+.section-ten-complete {
+  margin: 0 0 30px;
+
+  color: #DFD0B8;
+
+  font-size: 15px;
+
+  font-weight: 500;
+}
+
+
+.section-ten-stage {
+  margin-bottom: 30px;
+
+  color: #DFD0B8;
+
+  font-size: 16px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.section-ten-carousel {
+  position: relative;
+
+  min-height: 430px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+.section-ten-signin {
+  /* position: absolute; */
+  width : 200px;
+  top: 0;
+  right: 35px;
+
+  padding: 11px 20px;
+
+  background: #222831;
+
+  color: #DFD0B8;
+
+  text-decoration: none;
+
+  border-radius: 25px;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   SLIDE
+========================================= */
+
+.section-ten-slide {
+  width: 100%;
+
+  max-width: 500px;
+
+  margin-top: 30px;
+
+  animation: sectionTenFade 0.6s ease;
+}
+
+
+.section-ten-slide h3 {
+  margin: 0 0 18px;
+
+  color: #DFD0B8;
+
+  font-size: 29px;
+
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+
+.section-ten-slide p {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 16px;
+
+  font-weight: 500;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.section-ten-dots {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 50px;
+}
+
+
+.section-ten-dots button {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: 1px solid #161b21;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+
+.section-ten-dots button.active {
+  background: #161b21;
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes sectionTenFade {
+
+  from {
+    opacity: 0;
+
+    transform: translateX(15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+  .manufacturing-section-ten {
+    padding: 50px 25px;
+  }
+
+  .section-ten-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-ten-carousel {
+    min-height: 400px;
+  }
+
+  .section-ten-signin {
+    right: 0;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .section-ten-lifecycle h2 {
+    font-size: 25px;
+  }
+
+  .section-ten-slide h3 {
+    font-size: 25px;
+  }
+
+  .section-ten-slide p {
+    font-size: 15px;
+  }
+
+}
+
+/* section 11 css here  */
+
+.manufacturing-section-11 {
+  position: relative;
+  min-height: 500px;
+  padding: 70px 30px;
+  background: #222831;
+  color: #DFD0B8;
+  text-align: center;
+  overflow: hidden;
+}
+
+.manufacturing-section-11 h2 {
+  margin: 0 0 55px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #DFD0B8;
+}
+
+.manufacturing-industry-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.manufacturing-industry-card {
+  width: 170px;
+  min-height: 250px;
+  padding: 30px 18px;
+  border-radius: 0 0 25px 25px;
+  background: #222831;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  box-shadow: 0 25px 30px rgba(0, 0, 0, 0.28);
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.manufacturing-industry-card:nth-child(2),
+.manufacturing-industry-card:nth-child(4) {
+  margin-top: 20px;
+}
+
+.manufacturing-industry-card:hover {
+  transform: translateY(-10px);
+}
+
+.industry-icon {
+  width: 72px;
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 22px;
+
+  border-radius: 50%;
+  background: #222831;
+
+  font-size: 38px;
+}
+
+.manufacturing-industry-card h3 {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #DFD0B8;
+}
+
+/* =========================================================
+   SECTION 12
+========================================================= */
+
+.manufacturing-section-12 {
+  width: 100%;
+  min-height: 380px;
+
+  background: #2f353f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 60px 40px;
+
+  box-sizing: border-box;
+}
+
+.manufacturing-section-12-content {
+  width: 100%;
+  max-width: 1100px;
+
+  text-align: center;
+
+  color: #dfd0b8;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* MAIN HEADING */
+
+.manufacturing-section-12-content h2 {
+  margin: 0 0 20px;
+
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #dfd0b8;
+}
+
+
+/* SUB HEADING */
+
+.manufacturing-section-12-content h3 {
+  margin: 0 0 32px;
+
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 600;
+
+  color: #dfd0b8;
+}
+
+
+/* FIRST DESCRIPTION */
+
+.section-12-intro {
+  max-width: 950px;
+
+  margin: 0 0 30px;
+
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* SECOND DESCRIPTION */
+
+.section-12-description {
+  max-width: 900px;
+
+  margin: 0 0 32px;
+
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* HAM & ITAM LINK */
+
+.section-12-description a {
+  color: #dfd0b8;
+
+  font-weight: 700;
+
+  text-decoration: underline;
+
+  transition: color 0.2s ease;
+}
+
+.section-12-description a:hover {
+  color: #ffffff;
+}
+
+
+/* ABOUT BUTTON */
+
+.section-12-button {
+  display: inline-flex;
+  width: 200px;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 100px;
+  padding: 11px 18px;
+
+  background: #222831;
+  color: #dfd0b8;
+
+  text-decoration: none;
+
+  border-radius: 2px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.section-12-button:hover {
+  background: #1d232b;
+  transform: translateY(-2px);
+}
+
+/* ================================
+   SECTION 13
+================================ */
+
+.manufacturing-section-13 {
+  min-height: 400px;
+  background: #393e46;
+  color: #dfd0b8;
+  padding: 55px 8% 30px;
+  box-sizing: border-box;
+}
+
+
+/* ---------- TOP ---------- */
+
+.section-13-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.section-13-header h2 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.45;
+  font-weight: 700;
+  text-align: center;
+  flex: 1;
+}
+
+
+/* ---------- SIGN UP ---------- */
+
+.section-13-signup {
+  width: 150px;
+  min-width: 150px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  margin-top: 5px;
+
+  background: #222831;
+  color: #dfd0b8;
+
+  border-radius: 30px;
+
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+
+  transition: 0.3s ease;
+}
+
+.section-13-signup span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.section-13-signup:hover {
+  background: #1c222b;
+  transform: translateY(-2px);
+}
+
+
+/* ---------- VISIT ---------- */
+
+.section-13-visit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 105px;
+}
+
+.section-13-visit span {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+
+/* ---------- OPTIONS ---------- */
+
+.section-13-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 35px;
+  gap: 40px;
+}
+
+.section-13-option {
+  width: 310px;
+  min-height: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px 16px;
+  box-sizing: border-box;
+
+  background: #222831;
+  color: #dfd0b8;
+
+  text-decoration: none;
+
+  border-radius: 3px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  transition: 0.3s ease;
+}
+
+.section-13-option:hover {
+  background: #1c222b;
+  transform: translateY(-2px);
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+
+  .manufacturing-section-13 {
+    min-height: auto;
+    padding: 45px 20px 35px;
+  }
+
+  .section-13-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section-13-header h2 {
+    font-size: 27px;
+  }
+
+  .section-13-signup {
+    margin-top: 10px;
+  }
+
+  .section-13-visit {
+    margin-top: 65px;
+  }
+
+  .section-13-options {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+  }
+
+  .section-13-option {
+    width: 100%;
+  }
+}
+
+/* section 14 css here  */
+
+/* =========================================================
+   SECTION 14 — MANUFACTURING FAQ
+========================================================= */
+
+.manufacturing-faq-section {
+  width: 100%;
+  min-height: 365px;
+
+  box-sizing: border-box;
+  padding: 42px 18px 45px;
+
+  background: #222831;
+  color: #DFD0B8;
+}
+
+
+/* ---------- FAQ HEADING ---------- */
+
+.manufacturing-faq-section > h2 {
+  margin: 0 0 30px 27px;
+
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #DFD0B8;
+}
+
+
+/* ---------- FAQ LIST ---------- */
+
+.manufacturing-faq-list {
+  width: 100%;
+  max-width: 965px;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+/* ---------- FAQ ITEM ---------- */
+
+.manufacturing-faq-item {
+  width: 100%;
+
+  border: 1px solid #DFD0B8;
+
+  box-sizing: border-box;
+
+  color: #DFD0B8;
+
+  background: transparent;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* ---------- QUESTION ---------- */
+
+.manufacturing-faq-item summary {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 30px;
+
+  padding: 4px 15px 4px 20px;
+
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  list-style: none;
+
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 600;
+
+  color: #DFD0B8;
+}
+
+
+/* Remove browser's default triangle */
+
+.manufacturing-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+
+/* ---------- CUSTOM ARROW ---------- */
+
+.manufacturing-faq-item summary::before {
+  content: "";
+
+  position: absolute;
+
+  left: 1px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 0;
+  height: 0;
+
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 10px solid #DFD0B8;
+
+  transition: transform 0.25s ease;
+}
+
+
+/* ---------- OPEN STATE ---------- */
+
+.manufacturing-faq-item[open] {
+  background: rgba(34, 40, 49, 0.35);
+}
+
+.manufacturing-faq-item[open] summary::before {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+
+/* ---------- ANSWER ---------- */
+
+.manufacturing-faq-item p {
+  margin: 0;
+
+  padding: 15px 30px 18px 35px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.35);
+
+  font-size: 15px;
+  line-height: 1.7;
+  font-weight: 500;
+
+  color: #DFD0B8;
+}
+
+
+/* ---------- HOVER ---------- */
+
+.manufacturing-faq-item summary:hover {
+  background: rgba(34, 40, 49, 0.35);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .manufacturing-faq-section {
+    padding: 40px 15px;
+  }
+
+  .manufacturing-faq-section > h2 {
+    margin-left: 5px;
+
+    font-size: 28px;
+  }
+
+  .manufacturing-faq-list {
+    gap: 12px;
+  }
+
+  .manufacturing-faq-item summary {
+    font-size: 16px;
+    min-height: 34px;
+  }
+
+  .manufacturing-faq-item p {
+    font-size: 14px;
+    padding: 14px 22px 17px 30px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .manufacturing-faq-section {
+    padding: 35px 12px;
+  }
+
+  .manufacturing-faq-section > h2 {
+    margin-left: 3px;
+    margin-bottom: 24px;
+
+    font-size: 24px;
+  }
+
+  .manufacturing-faq-list {
+    gap: 10px;
+  }
+
+  .manufacturing-faq-item summary {
+    min-height: 38px;
+
+    padding: 6px 10px 6px 19px;
+
+    font-size: 14px;
+  }
+
+  .manufacturing-faq-item summary::before {
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+    border-left-width: 8px;
+  }
+
+  .manufacturing-faq-item p {
+    padding: 12px 15px 15px 25px;
+
+    font-size: 13px;
+    line-height: 1.6;
+  }
+}

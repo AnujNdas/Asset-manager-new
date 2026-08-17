@@ -4487,3 +4487,247 @@
     line-height: 1.65;
   }
 }
+
+/* section 17 css here  */
+
+.section17-faq {
+  width: 100%;
+
+  background: #414852;
+  color: #efd8bd;
+
+  padding: 30px 16px 45px;
+
+  box-sizing: border-box;
+}
+
+.section17-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.section17-title {
+  margin: 0 0 32px;
+
+  font-size: 32px;
+  line-height: 1.25;
+  font-weight: 600;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   FAQ LIST
+========================================= */
+
+.section17-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+
+/* =========================================
+   FAQ ITEM
+========================================= */
+
+.section17-item {
+  width: 100%;
+
+  border: 1px solid #efd8bd;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  transition: background 0.25s ease;
+}
+
+.section17-item-open {
+  background: rgba(30, 36, 44, 0.28);
+}
+
+
+/* =========================================
+   QUESTION
+========================================= */
+
+.section17-question {
+  width: 100%;
+
+  min-height: 30px;
+
+  padding: 4px 10px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #efd8bd;
+
+  text-align: left;
+
+  font-family: inherit;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.section17-arrow {
+  width: 12px;
+
+  flex-shrink: 0;
+
+  font-size: 12px;
+
+  color: #efd8bd;
+}
+
+
+/* =========================================
+   ANSWER
+========================================= */
+
+.section17-answer {
+  display: grid;
+
+  grid-template-rows: 0fr;
+
+  transition:
+    grid-template-rows 0.3s ease;
+}
+
+.section17-answer-open {
+  grid-template-rows: 1fr;
+}
+
+
+.section17-answer p {
+  min-height: 0;
+
+  overflow: hidden;
+
+  margin: 0;
+
+  padding: 0 38px;
+
+  color: #efd8bd;
+
+  font-size: 16px;
+  line-height: 1.6;
+
+  opacity: 0;
+
+  transition:
+    opacity 0.25s ease,
+    padding 0.3s ease;
+}
+
+
+.section17-answer-open p {
+  padding-top: 12px;
+  padding-bottom: 18px;
+
+  opacity: 1;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.section17-question:hover {
+  background: rgba(30, 36, 44, 0.2);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .section17-faq {
+    padding: 35px 20px 50px;
+  }
+
+  .section17-title {
+    font-size: 30px;
+  }
+
+  .section17-question {
+    font-size: 17px;
+  }
+
+  .section17-answer p {
+    font-size: 16px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .section17-faq {
+    padding: 35px 15px 45px;
+  }
+
+  .section17-title {
+    font-size: 27px;
+
+    margin-bottom: 25px;
+  }
+
+  .section17-list {
+    gap: 12px;
+  }
+
+  .section17-question {
+    min-height: 40px;
+
+    padding: 8px 10px;
+
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .section17-arrow {
+    font-size: 10px;
+  }
+
+  .section17-answer p {
+    padding-left: 30px;
+    padding-right: 18px;
+
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .section17-answer-open p {
+    padding-top: 10px;
+    padding-bottom: 16px;
+  }
+}

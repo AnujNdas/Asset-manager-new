@@ -8,6 +8,58 @@ const assetTypes = [
   "Machinery Assets Management",
   "Transport Asset Management",
 ];
+
+const faqData = [
+  {
+    question: "What is Machine asset management software?",
+    answer:
+      "Machine asset management software is a centralized system used to track, manage, and monitor physical machines and equipment throughout their entire lifecycle. It helps organizations record asset details such as purchase information, location, assignment, maintenance, warranty, insurance, operational status, and retirement."
+  },
+  {
+    question:
+      "What is the difference between hardware asset management and software asset management ?",
+    answer:
+      "Hardware asset management focuses on physical assets such as computers, machinery, equipment, servers, electronics, and other devices. Software asset management focuses on software licenses, subscriptions, applications, renewals, usage, and compliance. AssetPegasus can help organizations manage both physical and digital assets from a centralized platform."
+  },
+  {
+    question:
+      "What Machine assets should be tracked in an asset management system?",
+    answer:
+      "Organizations should track machines and equipment that are important to their operations, including production machinery, industrial equipment, tools, robotics, safety equipment, transport equipment, spare parts, and other physical assets. Important records can include asset identity, serial number, location, department, purchase cost, maintenance history, warranty, insurance, status, and lifecycle events."
+  },
+  {
+    question:
+      "Can hardware asset management software track warranty and insurance details?",
+    answer:
+      "Yes. Hardware asset management software can maintain warranty and insurance information alongside the asset record. Organizations can store policy details, coverage information, renewal dates, warranty periods, contract information, and related documents so important deadlines can be monitored more easily."
+  },
+  {
+    question:
+      "How does Machine asset tracking software help with maintenance management?",
+    answer:
+      "Machine asset tracking software provides a centralized record of maintenance activities and schedules. Teams can track previous maintenance, upcoming maintenance, service dates, maintenance costs, warranties, and other lifecycle events. Automated alerts can also help teams identify upcoming maintenance requirements and reduce the risk of missed service intervals."
+  },
+  {
+    question:
+      "Is AssetPegasus suitable for small businesses and IT teams without large budgets?",
+    answer:
+      "Yes. AssetPegasus is designed to be simple to use and scalable for organizations of different sizes. Small businesses can start with the assets and workflows they need and expand their asset management processes as the organization grows, without requiring a large dedicated IT asset management team."
+  },
+  {
+    question:
+      "Does AssetPegasus support hardware assets beyond standard IT equipment?",
+    answer:
+      "Yes. AssetPegasus is designed to manage more than traditional IT equipment. Organizations can use it to track machinery, industrial equipment, electronics, transport assets, tools, robotics, safety equipment, and other physical assets in addition to computers and standard IT hardware."
+  },
+  {
+    question:
+      "How is Machine asset management software different from using spreadsheets?",
+    answer:
+      "Spreadsheets can become difficult to maintain as the number of assets, locations, users, and lifecycle events increases. Machine asset management software provides a centralized system with structured asset records, assignments, locations, maintenance tracking, warranty and insurance information, alerts, reporting, and lifecycle visibility. This reduces manual tracking and makes asset information easier to access and manage."
+  }
+];
+
+
 const leftCategories = [
     {
       icon: "💻",
@@ -302,6 +354,7 @@ const MachineryHero = () => {
   const [currentSlide4, setCurrentSlide4] = useState(0);
   const [currentSlide5, setCurrentSlide5] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [openIndex, setOpenIndex] = useState(null);
   // ---------------------------------------
   // TOP ASSET TYPE CAROUSEL
   // ---------------------------------------
@@ -415,6 +468,23 @@ const MachineryHero = () => {
     return () => clearInterval(interval);
 
   }, []);
+
+const handleNavigateItam = () => {
+  window.open(
+    "/itam-management",
+    "_blank",
+    "noopener,noreferrer"
+  );
+};
+
+// section 18 faq 
+
+
+  const toggleFaq = (index) => {
+    setOpenIndex((current) =>
+      current === index ? null : index
+    );
+  };
   return (
     <>
     <Helmet>
@@ -728,7 +798,7 @@ const MachineryHero = () => {
       <div className="section4-container">
 
         {/* LEFT CONTENT */}
-        <div className="section4-content">
+        <div className="m-section4-content">
 
           <div className="section4-feature">
             <div className="section4-icon">
@@ -888,7 +958,7 @@ const MachineryHero = () => {
 
      <section className="section6-stats">
 
-      <div className="section6-container">
+      <div className="section7-container">
 
         {stats.map((stat, index) => (
           <div className="section6-stat" key={index}>
@@ -1019,7 +1089,7 @@ const MachineryHero = () => {
       {/* Clipped background decoration */}
       <div className="section8-clip-bg"></div>
 
-      <div className="section8-container">
+      <div className="m-section8-container">
 
         <div
           className="section8-slide"
@@ -1038,7 +1108,7 @@ const MachineryHero = () => {
 
 
         {/* Carousel dots */}
-        <div className="section8-dots">
+        <div className="m-section8-dots">
 
           {slides.map((_, index) => (
             <button
@@ -1709,7 +1779,7 @@ const MachineryHero = () => {
           Pricing
         </div>
 
-        <div className="section17-pricing-card">
+        <div className="section17-pricing-card" onClick={handleNavigateItam}>
 
           <div className="section17-icon">
             <span>◇</span>
@@ -1745,6 +1815,58 @@ const MachineryHero = () => {
           Sign Up Now
           <span>→</span>
         </a>
+
+      </div>
+
+    </section>
+
+    <section className="section18-faq">
+
+      <div className="section18-container">
+
+        <h2 className="section18-title">
+          FAQ (Frequently Asked Questions)
+        </h2>
+
+        <div className="section18-list">
+
+          {faqData.map((faq, index) => {
+            const isOpen = openIndex === index;
+
+            return (
+              <div
+                className={`section18-item ${
+                  isOpen ? "section18-item-open" : ""
+                }`}
+                key={index}
+              >
+
+                <button
+                  type="button"
+                  className="section18-question"
+                  onClick={() => toggleFaq(index)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="section18-arrow">
+                    {isOpen ? "▼" : "▶"}
+                  </span>
+
+                  <span>{faq.question}</span>
+                </button>
+
+                <div
+                  className={`section18-answer ${
+                    isOpen ? "section18-answer-open" : ""
+                  }`}
+                >
+                  <p>{faq.answer}</p>
+                </div>
+
+              </div>
+            );
+          })}
+
+        </div>
 
       </div>
 

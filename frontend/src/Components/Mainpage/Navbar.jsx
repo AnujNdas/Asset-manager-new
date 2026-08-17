@@ -114,7 +114,7 @@ const Navbar = () => {
 
             {openDropdown === "solutions" && (
               <div className="dropdown-menu-navbar">
-                <Link to="/blog" onClick={closeMenu}>
+                <Link to="/manufacturing-software" onClick={closeMenu}>
                   Manufacturing Asset Management Software
                 </Link>
 

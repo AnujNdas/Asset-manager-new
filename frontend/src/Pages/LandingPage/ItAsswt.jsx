@@ -14,6 +14,44 @@ import {
   FaCog,
 } from "react-icons/fa";
 
+const faqData = [
+  {
+    question:
+      "What is an IT Asset Management(ITAM) System / Software?",
+    answer:
+      "An IT Asset Management (ITAM) system is software used to track, manage, and monitor an organization's IT assets throughout their complete lifecycle. It provides a centralized record of hardware, software, licenses, users, locations, purchases, assignments, maintenance, renewals, and asset status."
+  },
+  {
+    question:
+      "What types of assets can AssetPegasus ITAM track?",
+    answer:
+      "AssetPegasus can track a wide range of IT and digital assets, including laptops, desktops, servers, monitors, networking equipment, software applications, software licenses, SaaS subscriptions, domains, cloud resources, and other technology assets. Organizations can maintain asset ownership, location, purchase, lifecycle, and compliance information in one place."
+  },
+  {
+    question:
+      "How does AssetPegasus help with software license compliance?",
+    answer:
+      "AssetPegasus helps organizations maintain visibility into software licenses, subscriptions, renewals, usage, and associated costs. Centralized license records and renewal alerts help teams identify upcoming expirations, avoid missed renewals, reduce unnecessary subscriptions, and maintain better control over software licensing requirements."
+  },
+  {
+    question:
+      "Do we need specialised IT skills to use this system?",
+    answer:
+      "No. AssetPegasus is designed with a simple and easy-to-use interface so that teams can manage assets without requiring specialized IT asset management expertise. Common activities such as adding assets, assigning equipment, tracking locations, reviewing lifecycle information, and monitoring alerts can be handled through the centralized dashboard."
+  },
+  {
+    question:
+      "What deployment options are available?",
+    answer:
+      "AssetPegasus can be offered through cloud-based deployment, allowing organizations to access their asset management system from anywhere. Depending on organizational requirements and data residency policies, deployment models can also include on-premise or hybrid environments where applicable."
+  },
+  {
+    question:
+      "Can AssetPegasus ITAM manage assets across multiple locations?",
+    answer:
+      "Yes. AssetPegasus can organize assets according to their locations, departments, users, and organizational units. This allows teams to maintain visibility across multiple offices, branches, facilities, and distributed locations while keeping asset information centralized."
+  }
+];
 
 const industries = [
   {
@@ -556,6 +594,7 @@ const ItAsswt = () => {
   const [industryIndex, setIndustryIndex] = useState(0);
   const [activeImage, setActiveImage] = useState(0);
   const [activeStage, setActiveStage] = useState(0);
+    const [openIndex, setOpenIndex] = useState(null);
     // section 2 carousel 
 
   useEffect(() => {
@@ -712,6 +751,15 @@ useEffect(() => {
     return () => clearInterval(interval);
 
   }, []);
+
+  // section 17 faq 
+
+
+  const toggleFaq = (index) => {
+    setOpenIndex((current) =>
+      current === index ? null : index
+    );
+  };
   return (
     <>
 
@@ -1948,6 +1996,58 @@ useEffect(() => {
             <p>{industry.title}</p>
           </div>
         ))}
+      </div>
+
+    </section>
+
+    <section className="section17-faq">
+
+      <div className="section17-container">
+
+        <h2 className="section17-title">
+          FAQ (Frequently Asked Questions)
+        </h2>
+
+        <div className="section17-list">
+
+          {faqData.map((faq, index) => {
+            const isOpen = openIndex === index;
+
+            return (
+              <div
+                className={`section17-item ${
+                  isOpen ? "section17-item-open" : ""
+                }`}
+                key={index}
+              >
+
+                <button
+                  type="button"
+                  className="section17-question"
+                  onClick={() => toggleFaq(index)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="section17-arrow">
+                    {isOpen ? "▼" : "▶"}
+                  </span>
+
+                  <span>{faq.question}</span>
+                </button>
+
+                <div
+                  className={`section17-answer ${
+                    isOpen ? "section17-answer-open" : ""
+                  }`}
+                >
+                  <p>{faq.answer}</p>
+                </div>
+
+              </div>
+            );
+          })}
+
+        </div>
+
       </div>
 
     </section>
