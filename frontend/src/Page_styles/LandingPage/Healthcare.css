@@ -1,0 +1,2486 @@
+/* =========================================
+   HEALTHCARE SECTION 1 - HERO
+========================================= */
+
+.healthcare-hero {
+  position: relative;
+  width: 100%;
+  min-height: 535px;
+
+  background: #222831;
+  color: #dfd0b8;
+
+  overflow: hidden;
+}
+
+/* =========================================
+   TOP TITLE
+========================================= */
+
+.healthcare-hero-title {
+  position: relative;
+  z-index: 3;
+
+  width: 100%;
+  padding-top: 40px;
+
+  text-align: center;
+}
+
+.healthcare-hero-title h1 {
+  margin: 0;
+
+  font-size: 56px;
+  line-height: 1.15;
+  font-weight: 700;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   BACK WAVE
+========================================= */
+
+.healthcare-hero-wave-back {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 255px;
+
+  height: 100px;
+
+  background: #2d333c;
+
+  clip-path: polygon(
+    0 35%,
+    8% 55%,
+    19% 70%,
+    33% 25%,
+    47% 55%,
+    60% 68%,
+    72% 35%,
+    82% 10%,
+    92% 35%,
+    100% 50%,
+    100% 100%,
+    0 100%
+  );
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   FRONT WAVE
+========================================= */
+
+.healthcare-hero-wave-front {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 240px;
+
+  height: 100px;
+
+  background: #393e46;
+
+  clip-path: polygon(
+    0 20%,
+    10% 70%,
+    28% 65%,
+    47% 15%,
+    62% 58%,
+    85% 25%,
+    100% 60%,
+    100% 100%,
+    0 100%
+  );
+
+  z-index: 2;
+}
+
+
+/* =========================================
+   LOWER HERO CONTENT
+========================================= */
+
+.healthcare-hero-bottom {
+  position: absolute;
+    background: #393e46;
+  z-index: 4;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+    height: 250px;
+  text-align: center;
+}
+
+
+/* breadcrumb */
+
+.healthcare-breadcrumb {
+  margin-bottom: 45px;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+.healthcare-breadcrumb a {
+  color: #dfd0b8;
+  text-decoration: underline;
+  display: inline-block;
+}
+
+.healthcare-breadcrumb span {
+  color: #dfd0b8;
+}
+
+
+/* subtitle */
+
+.healthcare-hero-bottom h2 {
+  margin: 0;
+
+  font-size: 29px;
+  line-height: 1.4;
+  font-weight: 700;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .healthcare-hero-title h1 {
+    font-size: 44px;
+  }
+
+  .healthcare-hero {
+    min-height: 500px;
+  }
+
+  .healthcare-hero-wave-back {
+    bottom: 240px;
+  }
+
+  .healthcare-hero-wave-front {
+    bottom: 225px;
+  }
+
+  .healthcare-hero-bottom h2 {
+    font-size: 25px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .healthcare-hero {
+    min-height: 470px;
+  }
+
+  .healthcare-hero-title {
+    padding: 30px 15px 0;
+  }
+
+  .healthcare-hero-title h1 {
+    font-size: 34px;
+  }
+
+  .healthcare-hero-wave-back {
+    bottom: 220px;
+    height: 80px;
+  }
+
+  .healthcare-hero-wave-front {
+    bottom: 210px;
+    height: 80px;
+  }
+
+  .healthcare-hero-bottom {
+    bottom: 25px;
+    padding: 0 15px;
+  }
+
+  .healthcare-breadcrumb {
+    margin-bottom: 30px;
+    font-size: 14px;
+  }
+
+  .healthcare-hero-bottom h2 {
+    font-size: 22px;
+  }
+}
+
+/* =========================================
+   HEALTHCARE SECTION 2
+========================================= */
+
+.healthcare-section-2 {
+  position: relative;
+
+  width: 100%;
+  padding: 30px 5px 0;
+
+  background: #393e46;
+  color: #dfd0b8;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.healthcare-section-2-content {
+  width: 96%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.healthcare-section-2-content p {
+  margin: 0;
+
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   DASHBOARD IMAGE
+========================================= */
+
+.healthcare-section-2-image {
+  width: 100%;
+
+  margin-top: 78px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.healthcare-section-2-image img {
+  display: block;
+
+  width: 100%;
+  max-width: 1000px;
+
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .healthcare-section-2 {
+    padding-top: 25px;
+  }
+
+  .healthcare-section-2-content {
+    width: 92%;
+  }
+
+  .healthcare-section-2-content p {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .healthcare-section-2-image {
+    margin-top: 50px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .healthcare-section-2 {
+    padding: 25px 15px 0;
+  }
+
+  .healthcare-section-2-content {
+    width: 100%;
+  }
+
+  .healthcare-section-2-content p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .healthcare-section-2-image {
+    margin-top: 35px;
+  }
+
+  .healthcare-section-2-image img {
+    width: 100%;
+  }
+
+}
+
+/* =========================================
+   HEALTHCARE SECTION 3
+========================================= */
+
+.healthcare-section-3 {
+  width: 100%;
+  min-height: 520px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 50px;
+
+  padding: 30px 50px 40px;
+
+  background: #2f353e;
+  color: #dfd0b8;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.healthcare-section-3-left {
+  padding-left: 10px;
+}
+
+.healthcare-section-3-left h2 {
+  margin: 0 0 30px;
+
+  font-size: 25px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+
+/* FEATURES LIST */
+
+.healthcare-section-3-features {
+  list-style: none;
+    height: 300px;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 23px;
+}
+
+.healthcare-section-3-features li {
+  font-size: 16px;
+  line-height: 1.35;
+
+  color: #dfd0b8;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 7px;
+}
+
+.healthcare-section-3-features li strong {
+  font-weight: 700;
+}
+
+
+/* TRIAL BUTTON */
+
+.healthcare-section-3-trial {
+  margin-top: 34px;
+  margin-left: 120px;
+
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #202833;
+  color: #dfd0b8;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.healthcare-section-3-trial:hover {
+  background: #171e27;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.healthcare-section-3-right {
+  text-align: center;
+
+  padding-top: 5px;
+}
+
+.healthcare-section-3-right h2 {
+  margin: 0;
+
+  font-size: 29px;
+  line-height: 1.25;
+
+  font-weight: 700;
+}
+
+
+/* SIGN UP */
+
+.healthcare-section-3-signup {
+  margin-top: 16px;
+
+  padding: 9px 20px;
+
+  border: none;
+
+  background: #202833;
+  color: #dfd0b8;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.healthcare-section-3-signup:hover {
+  background: #171e27;
+}
+
+
+/* DESCRIPTION */
+
+.healthcare-section-3-description {
+  max-width: 470px;
+
+  margin: 60px auto 0;
+}
+
+.healthcare-section-3-description p {
+  margin: 0 0 30px;
+
+  font-size: 16px;
+  line-height: 1.65;
+
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .healthcare-section-3 {
+    grid-template-columns: 1fr;
+
+    gap: 60px;
+
+    padding: 35px 25px 50px;
+  }
+
+  .healthcare-section-3-left {
+    padding-left: 0;
+  }
+
+  .healthcare-section-3-left h2 {
+    text-align: center;
+  }
+
+  .healthcare-section-3-trial {
+    margin-left: 0;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .healthcare-section-3-right h2 {
+    font-size: 26px;
+  }
+
+  .healthcare-section-3-description {
+    margin-top: 40px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .healthcare-section-3 {
+    padding: 30px 18px 40px;
+  }
+
+  .healthcare-section-3-left h2 {
+    font-size: 22px;
+  }
+
+  .healthcare-section-3-features {
+    gap: 18px;
+  }
+
+  .healthcare-section-3-features li {
+    font-size: 14px;
+  }
+
+  .healthcare-section-3-right h2 {
+    font-size: 23px;
+  }
+
+  .healthcare-section-3-description p {
+    font-size: 14px;
+  }
+
+}
+
+
+/* =========================================
+   HEALTHCARE SECTION 4
+========================================= */
+
+.healthcare-section-4 {
+  width: 100%;
+
+  background: #393e46;
+  color: #dfd0b8;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TOP CTA
+========================================= */
+
+.healthcare-section-4-top {
+  min-height: 188px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 40px;
+
+  background: #393e46;
+}
+
+.healthcare-section-4-top h2 {
+  margin: 0;
+
+  font-size: 30px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #dfd0b8;
+
+  text-align: center;
+}
+
+.healthcare-section-4-top h2 span {
+  font-weight: 500;
+}
+
+
+/* SIGN IN BUTTON */
+
+.healthcare-section-4-signin {
+  margin-top: 30px;
+
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #202833;
+  color: #dfd0b8;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.healthcare-section-4-signin:hover {
+  background: #171e27;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   BOTTOM CONTENT
+========================================= */
+
+.healthcare-section-4-bottom {
+  min-height: 305px;
+
+  padding: 22px 20px 25px;
+
+  background: #30363f;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+
+/* INTRO */
+
+.healthcare-section-4-intro {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   BENEFITS LIST
+========================================= */
+
+.healthcare-section-4-list {
+  list-style: none;
+
+  margin: 35px auto 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 27px;
+}
+
+.healthcare-section-4-list li {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+    justify-content: center;
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+.healthcare-section-4-list li span {
+  width: 20px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* =========================================
+   ENDING TEXT
+========================================= */
+
+.healthcare-section-4-ending {
+  margin: 12px 0 0;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #dfd0b8;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .healthcare-section-4-top {
+    min-height: 170px;
+    padding: 35px 20px 0;
+  }
+
+  .healthcare-section-4-top h2 {
+    font-size: 24px;
+  }
+
+  .healthcare-section-4-bottom {
+    min-height: auto;
+    padding: 25px 15px 30px;
+  }
+
+  .healthcare-section-4-intro {
+    font-size: 16px;
+  }
+
+  .healthcare-section-4-list {
+    margin-top: 30px;
+    gap: 20px;
+  }
+
+  .healthcare-section-4-list li {
+    font-size: 14px;
+  }
+
+  .healthcare-section-4-ending {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+
+/* =========================================
+   HEALTHCARE SECTION 5
+========================================= */
+
+.healthcare-section-5 {
+  width: 100%;
+
+  background: #2f353e;
+  color: #dfd0b8;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TOP HEADING
+========================================= */
+
+.healthcare-section-5-heading {
+  width: 100%;
+
+  padding: 35px 25px 25px;
+
+  background: #393e46;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+.healthcare-section-5-heading h2 {
+  margin: 0;
+
+  font-size: 25px;
+  line-height: 1.45;
+
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+.healthcare-section-5-heading strong {
+  font-weight: 700;
+}
+
+
+/* =========================================
+   MAIN TWO-COLUMN AREA
+========================================= */
+
+.healthcare-section-5-content {
+  width: 100%;
+
+  min-height: 400px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  align-items: center;
+
+  gap: 40px;
+
+  padding: 45px 40px 50px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.healthcare-section-5-left {
+  padding-left: 0;
+}
+
+.healthcare-section-5-left h3 {
+  margin: 0 0 28px;
+
+  font-size: 16px;
+  line-height: 1.4;
+
+  font-weight: 700;
+
+  color: #dfd0b8;
+}
+
+.healthcare-section-5-left ul {
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+}
+
+.healthcare-section-5-left li {
+  position: relative;
+
+  margin-bottom: 8px;
+  padding-left: 22px;
+
+  font-size: 15px;
+  line-height: 1.35;
+
+  color: #dfd0b8;
+}
+
+/* Green checkbox */
+
+.healthcare-section-5-left li::before {
+  content: "✓";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 17px;
+  height: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #00d000;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  line-height: 17px;
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.healthcare-section-5-right {
+  min-height: 340px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+/* SLIDE */
+
+.healthcare-section-5-slide {
+  width: 100%;
+  max-width: 450px;
+
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.healthcare-section-5-slide h2 {
+  margin: 0 0 20px;
+
+  font-size: 29px;
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  color: #dfd0b8;
+}
+
+.healthcare-section-5-slide p {
+  max-width: 420px;
+
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   CAROUSEL DOTS
+========================================= */
+
+.healthcare-section-5-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  margin-top: 12px;
+}
+
+.healthcare-section-5-dots span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  border: 1px solid #151b23;
+
+  background: transparent;
+
+  box-sizing: border-box;
+}
+
+.healthcare-section-5-dots span.active {
+  background: #151b23;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+========================================= */
+
+.healthcare-section-5-signup {
+  margin-top: 18px;
+
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #202833;
+
+  color: #dfd0b8;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.healthcare-section-5-signup:hover {
+  background: #171e27;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .healthcare-section-5-heading h2 {
+    font-size: 21px;
+  }
+
+  .healthcare-section-5-content {
+    grid-template-columns: 1fr;
+
+    padding: 40px 25px 45px;
+
+    gap: 30px;
+  }
+
+  .healthcare-section-5-left {
+    text-align: left;
+  }
+
+  .healthcare-section-5-right {
+    min-height: 350px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .healthcare-section-5-heading {
+    padding: 28px 15px 20px;
+  }
+
+  .healthcare-section-5-heading h2 {
+    font-size: 18px;
+  }
+
+  .healthcare-section-5-content {
+    padding: 30px 18px 40px;
+  }
+
+  .healthcare-section-5-left h3 {
+    font-size: 15px;
+  }
+
+  .healthcare-section-5-left li {
+    font-size: 14px;
+  }
+
+  .healthcare-section-5-slide h2 {
+    font-size: 25px;
+  }
+
+  .healthcare-section-5-slide p {
+    font-size: 14px;
+  }
+
+}
+
+/* =========================================
+   HEALTHCARE SECTION 6
+========================================= */
+
+.healthcare-section-6 {
+  position: relative;
+
+  width: 100%;
+  min-height: 520px;
+
+  background: #252c35;
+  color: #dfd0b8;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.healthcare-section-6-content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+
+  padding: 55px 30px 100px;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.healthcare-section-6-content > h2 {
+  margin: 0;
+
+  font-size: 28px;
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   SUBTITLE
+========================================= */
+
+.healthcare-section-6-subtitle {
+  margin: 16px 0 75px;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   CAROUSEL SLIDE
+========================================= */
+
+.healthcare-section-6-slide {
+  max-width: 800px;
+
+  min-height: 235px;
+
+  margin: 0 auto;
+}
+
+.healthcare-section-6-slide h3 {
+  margin: 0 0 18px;
+
+  font-size: 27px;
+  line-height: 1.5;
+
+  font-weight: 600;
+
+  color: #dfd0b8;
+}
+
+.healthcare-section-6-slide p {
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  font-size: 16px;
+  line-height: 1.75;
+
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.healthcare-section-6-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 15px;
+}
+
+.healthcare-section-6-dots span {
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: #92969b;
+
+  cursor: pointer;
+}
+
+.healthcare-section-6-dots span.active {
+  background: #dfd0b8;
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+.healthcare-section-6-signin {
+  margin-top: 16px;
+
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #3a4049;
+
+  color: #dfd0b8;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =========================================
+   BOTTOM CLIP-PATH
+========================================= */
+
+.healthcare-section-6-clip {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 85px;
+
+  background: #30363f;
+
+  clip-path: polygon(
+    0% 48%,
+    10% 68%,
+    20% 64%,
+    30% 30%,
+    40% 52%,
+    48% 42%,
+    60% 68%,
+    70% 48%,
+    82% 58%,
+    92% 35%,
+    100% 55%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+
+/* SECOND MOUNTAIN LAYER */
+
+.healthcare-section-6-clip::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 60px;
+
+  /* background: #252c35; */
+
+  clip-path: polygon(
+    0% 40%,
+    12% 70%,
+    27% 62%,
+    40% 28%,
+    52% 62%,
+    65% 38%,
+    80% 70%,
+    92% 48%,
+    100% 62%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .healthcare-section-6 {
+    min-height: 550px;
+  }
+
+  .healthcare-section-6-content {
+    padding: 40px 20px 100px;
+  }
+
+  .healthcare-section-6-content > h2 {
+    font-size: 23px;
+  }
+
+  .healthcare-section-6-subtitle {
+    margin-bottom: 45px;
+  }
+
+  .healthcare-section-6-slide h3 {
+    font-size: 21px;
+  }
+
+  .healthcare-section-6-slide p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .healthcare-section-6-clip {
+    height: 70px;
+  }
+}
+
+.healthcare-section-7 {
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 60px 40px;
+  box-sizing: border-box;
+
+  background: #3a3f47;
+}
+
+.healthcare-section-7-left {
+  width: 34%;
+  color: #ead9bd;
+}
+
+.healthcare-section-7-left p {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 35px;
+}
+
+.healthcare-section-7-left ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.healthcare-section-7-left li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 16px;
+
+  font-size: 17px;
+  font-weight: 500;
+  color: #ead9bd;
+}
+
+.healthcare-section-7-left li::before {
+  content: "✓";
+
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  width: 17px;
+  height: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #00c800;
+  color: white;
+
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+/* RIGHT */
+.healthcare-section-7-right {
+  width: 65%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.healthcare-section-7-image-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.healthcare-section-7-image-wrapper img {
+  width: 100%;
+  max-width: 650px;
+  height: 310px;
+
+  object-fit: contain;
+  display: block;
+
+  border-radius: 2px;
+}
+
+
+/* DOTS */
+.healthcare-section-7-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.healthcare-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: transparent;
+  border: 1px solid #111;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.healthcare-dot.active {
+  background: #111;
+}
+
+
+/* =========================
+   HEALTHCARE SECTION 8
+========================= */
+
+.healthcare-section-8 {
+  width: 100%;
+  min-height: 180px;
+
+  background: #222831;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 35px 40px;
+  box-sizing: border-box;
+
+  color: #eadcc5;
+}
+
+.healthcare-stat {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.healthcare-stat h2 {
+  margin: 0 0 8px;
+
+  font-size: 48px;
+  line-height: 1;
+
+  font-weight: 700;
+  color: #eadcc5;
+}
+
+.healthcare-stat p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  color: #eadcc5;
+}
+
+/* =========================
+   HEALTHCARE SECTION 9
+========================= */
+
+.healthcare-section-9 {
+  width: 100%;
+  min-height: 650px;
+
+  background: #343a43;
+  color: #eadcc5;
+
+  display: flex;
+  align-items: center;
+
+  padding: 55px 60px;
+  box-sizing: border-box;
+
+  gap: 50px;
+}
+
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.healthcare-section-9-left {
+  width: 50%;
+}
+
+.healthcare-section-9-intro {
+  margin: 0 0 55px;
+
+  font-size: 19px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+
+.healthcare-section-9-assets {
+  list-style-type: disc;
+  list-style-position: outside;
+  padding-left: 25px;
+  margin: 20px 0;
+}
+
+.healthcare-section-9-assets li {
+  display: list-item;
+  margin-bottom: 6px;
+}
+
+.healthcare-section-9-ending {
+  margin: 25px 0 0;
+  padding-left: 40px;
+
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+
+/* =========================
+   RIGHT CAROUSEL
+========================= */
+
+.healthcare-section-9-right {
+  width: 50%;
+  min-height: 480px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+.healthcare-section-9-slide {
+  width: 90%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.healthcare-section-9-slide h3 {
+  margin: 0 0 12px;
+
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+
+.healthcare-section-9-button {
+  border: none;
+  outline: none;
+
+  background: #202832;
+  color: #eadcc5;
+
+  padding: 11px 24px;
+
+  border-radius: 25px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  margin-bottom: 50px;
+}
+
+
+.healthcare-section-9-slide h2 {
+  margin: 0 0 18px;
+
+  font-size: 29px;
+  line-height: 1.3;
+
+  font-weight: 700;
+}
+
+
+.healthcare-section-9-slide p {
+  max-width: 470px;
+
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.65;
+
+  font-weight: 500;
+}
+
+
+/* =========================
+   CAROUSEL DOTS
+========================= */
+
+.healthcare-section-9-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 55px;
+}
+
+
+.healthcare-section-9-dots span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  border: 1px solid #1b222b;
+
+  background: transparent;
+
+  display: block;
+}
+
+
+.healthcare-section-9-dots span.active {
+  background: #111820;
+  border-color: #111820;
+}
+
+@media (max-width: 900px) {
+
+  .healthcare-section-9 {
+    flex-direction: column;
+
+    padding: 50px 30px;
+
+    gap: 40px;
+  }
+
+  .healthcare-section-9-left,
+  .healthcare-section-9-right {
+    width: 100%;
+  }
+
+  .healthcare-section-9-intro {
+    margin-bottom: 35px;
+  }
+
+  .healthcare-section-9-right {
+    min-height: 450px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .healthcare-section-9 {
+    padding: 40px 20px;
+  }
+
+  .healthcare-section-9-intro {
+    font-size: 17px;
+  }
+
+  .healthcare-section-9-assets {
+    font-size: 15px;
+    padding-left: 25px;
+  }
+
+  .healthcare-section-9-ending {
+    padding-left: 25px;
+    font-size: 15px;
+  }
+
+  .healthcare-section-9-slide h2 {
+    font-size: 24px;
+  }
+
+  .healthcare-section-9-slide p {
+    font-size: 15px;
+  }
+}
+.healthcare-section-10 {
+  position: relative;
+  min-height: 580px;
+  padding: 30px 20px 80px;
+  background: #252b34;
+  color: #eadcc3;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Heading */
+.healthcare-section-10 h2 {
+  margin: 0 0 18px;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+/* Intro paragraph */
+.healthcare-section-10-intro {
+  max-width: 1000px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* Middle heading */
+.healthcare-section-10-subtitle {
+  margin: 32px auto 25px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* Checklist */
+.healthcare-section-10-checklist {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Individual item */
+.healthcare-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/* Green square check icon */
+.check-icon {
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #00d000;
+  color: #000;
+
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+
+  border: 1px solid #111;
+}
+
+/* Staggered positioning exactly like your screenshot */
+.healthcare-check-1 {
+  margin-left: 0;
+}
+
+.healthcare-check-2 {
+  margin-left: 0;
+}
+
+.healthcare-check-3 {
+  margin-left: 55px;
+}
+
+.healthcare-check-4 {
+  margin-left: 55px;
+}
+
+.healthcare-check-5 {
+  margin-left: 110px;
+}
+
+.healthcare-check-6 {
+  margin-left: 0;
+}
+
+.healthcare-check-7 {
+  margin-left: 45px;
+}
+
+/* Ending text */
+.healthcare-section-10-ending {
+  max-width: 1050px;
+  margin: 32px auto 25px;
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* Button */
+.healthcare-section-10-button {
+  border: none;
+  padding: 10px 18px;
+
+  background: #3b414b;
+  color: #eadcc3;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.healthcare-section-10-button:hover {
+  background: #444b56;
+}
+
+
+/* ================================
+   SECTION 11
+================================ */
+
+.healthcare-section-11 {
+  position: relative;
+  width: 100%;
+  min-height: 495px;
+
+  background: #39404a;
+
+  color: #ead9bb;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 65px 25px 90px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* Main content */
+
+.healthcare-section-11-content {
+  width: 100%;
+  max-width: 1100px;
+
+  text-align: center;
+
+  margin: 0 auto;
+}
+
+
+/* Heading */
+
+.healthcare-section-11-content h2 {
+  margin: 0 0 18px;
+
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 700;
+
+  color: #ead9bb;
+}
+
+
+/* Paragraphs */
+
+.healthcare-section-11-content p {
+  margin: 0 auto 25px;
+
+  max-width: 950px;
+
+  font-size: 16px;
+  line-height: 1.65;
+  font-weight: 500;
+
+  color: #ead9bb;
+
+  text-align: center;
+}
+
+
+/* Last paragraph */
+
+.healthcare-section-11-content p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ================================
+   HEALTHCARE SECTION 12
+================================ */
+
+.healthcare-section-12 {
+  width: 100%;
+  min-height: 390px;
+  background: #222831;
+  color: #ead9bc;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 55px 30px;
+  box-sizing: border-box;
+}
+
+.healthcare-section-12-content {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Main heading */
+
+.healthcare-section-12 h2 {
+  margin: 0 0 18px;
+
+  font-size: 30px;
+  line-height: 1.25;
+  font-weight: 700;
+
+  color: #ead9bc;
+}
+
+/* Sub heading */
+
+.healthcare-section-12 h3 {
+  margin: 0 0 38px;
+
+  font-size: 21px;
+  line-height: 1.4;
+  font-weight: 700;
+
+  color: #ead9bc;
+}
+
+/* Paragraphs */
+
+.healthcare-section-12 p {
+  margin: 0 auto 28px;
+
+  max-width: 1000px;
+
+  font-size: 16px;
+  line-height: 1.65;
+  font-weight: 500;
+
+  color: #ead9bc;
+}
+
+/* HAM & ITAM link */
+
+.healthcare-section-12 p a {
+  color: #ead9bc;
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.healthcare-section-12 p a:hover {
+  color: #ffffff;
+}
+
+/* About Us button */
+
+.healthcare-section-12-btn {
+  margin-top: 8px;
+
+  padding: 10px 17px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #252c35;
+  color: #ead9bc;
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.healthcare-section-12-btn:hover {
+  background: #1e252e;
+  transform: translateY(-2px);
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+
+  .healthcare-section-12 {
+    min-height: auto;
+    padding: 50px 20px;
+  }
+
+  .healthcare-section-12 h2 {
+    font-size: 25px;
+  }
+
+  .healthcare-section-12 h3 {
+    font-size: 19px;
+    margin-bottom: 28px;
+  }
+
+  .healthcare-section-12 p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .healthcare-section-12 {
+    padding: 40px 15px;
+  }
+
+  .healthcare-section-12 h2 {
+    font-size: 22px;
+  }
+
+  .healthcare-section-12 h3 {
+    font-size: 17px;
+  }
+
+  .healthcare-section-12 p {
+    font-size: 14px;
+  }
+}
+
+
+/* =========================================
+   SECTION 13
+   ========================================= */
+
+.healthcare-section-13 {
+  width: 100%;
+  min-height: 450px;
+
+  background: #343a43;
+  color: #ead9bc;
+
+  padding: 75px 30px 55px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TOP ROW
+   ========================================= */
+
+.healthcare-section-13-top {
+  width: 100%;
+  max-width: 750px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 80px;
+}
+
+
+/* Heading */
+
+.healthcare-section-13-top h2 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #ead9bc;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+   ========================================= */
+
+.healthcare-section-13-signup {
+  min-width: 290px;
+
+  padding: 14px 28px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #222a33;
+  color: #ead9bc;
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.healthcare-section-13-signup span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.healthcare-section-13-signup:hover {
+  background: #1d242d;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   VISIT AREA
+   ========================================= */
+
+.healthcare-section-13-visit {
+  margin-top: 120px;
+
+  text-align: center;
+}
+
+
+/* Visit heading */
+
+.healthcare-section-13-visit h3 {
+  margin: 0 0 32px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #ead9bc;
+}
+
+
+/* =========================================
+   BOTTOM LINKS
+   ========================================= */
+
+.healthcare-section-13-links {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 180px;
+}
+
+
+/* Bottom buttons */
+
+.healthcare-section-13-links button {
+  border: none;
+  border-radius: 3px;
+
+  background: #222a33;
+  color: #ead9bc;
+
+  padding: 11px 16px;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.healthcare-section-13-links button:hover {
+  background: #1d242d;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+
+  .healthcare-section-13-top {
+    max-width: 700px;
+    gap: 50px;
+  }
+
+  .healthcare-section-13-top h2 {
+    font-size: 28px;
+  }
+
+  .healthcare-section-13-signup {
+    min-width: 240px;
+  }
+
+  .healthcare-section-13-links {
+    gap: 100px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 650px) {
+
+  .healthcare-section-13 {
+    padding: 55px 20px 45px;
+  }
+
+  .healthcare-section-13-top {
+    flex-direction: column;
+    gap: 25px;
+
+    text-align: center;
+  }
+
+  .healthcare-section-13-top h2 {
+    font-size: 25px;
+    white-space: normal;
+  }
+
+  .healthcare-section-13-signup {
+    min-width: 230px;
+  }
+
+  .healthcare-section-13-visit {
+    margin-top: 70px;
+  }
+
+  .healthcare-section-13-links {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .healthcare-section-13-links button {
+    width: 100%;
+    max-width: 300px;
+
+    white-space: normal;
+  }
+}
+
+
+/* =========================================
+   SECTION 14 - HEALTHCARE FAQ
+========================================= */
+
+.healthcare-section-14 {
+  width: 100%;
+  background: #222831;
+  color: #ead9bc;
+  padding: 20px 15px 35px;
+  box-sizing: border-box;
+}
+
+.healthcare-section-14-title {
+  margin: 0 0 32px 28px;
+
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  color: #ead9bc;
+  text-align: left;
+}
+
+.healthcare-faq {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.healthcare-faq-item {
+  width: 100%;
+  margin-bottom: 15px;
+
+  border: 1px solid #ddd5c5;
+  background: transparent;
+
+  box-sizing: border-box;
+}
+
+/* Question */
+.healthcare-faq-item summary {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 30px;
+  padding: 4px 15px 4px 20px;
+
+  cursor: pointer;
+  list-style: none;
+
+  color: #ead9bc;
+
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  box-sizing: border-box;
+}
+
+/* Remove default browser arrow */
+.healthcare-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.healthcare-faq-item summary::marker {
+  display: none;
+}
+
+/* Triangle arrow */
+.healthcare-faq-item summary::before {
+  content: "";
+
+  position: absolute;
+  left: 0;
+
+  width: 0;
+  height: 0;
+
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid #ead9bc;
+
+  transition: transform 0.25s ease;
+}
+
+/* Rotate arrow when opened */
+.healthcare-faq-item[open] summary::before {
+  transform: rotate(90deg);
+}
+
+/* Answer */
+.healthcare-faq-answer {
+  padding: 12px 20px 18px 35px;
+
+  color: #ead9bc;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.7;
+
+  border-top: 1px solid rgba(221, 213, 197, 0.35);
+}
+
+/* Hover */
+.healthcare-faq-item summary:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .healthcare-section-14 {
+    padding: 20px 10px 30px;
+  }
+
+  .healthcare-section-14-title {
+    margin-left: 10px;
+    margin-bottom: 25px;
+
+    font-size: 25px;
+  }
+
+  .healthcare-faq-item {
+    margin-bottom: 12px;
+  }
+
+  .healthcare-faq-item summary {
+    min-height: 30px;
+    padding: 5px 10px 5px 20px;
+
+    font-size: 16px;
+  }
+
+  .healthcare-faq-answer {
+    padding: 12px 15px 15px 30px;
+
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .healthcare-section-14-title {
+    font-size: 22px;
+  }
+
+  .healthcare-faq-item summary {
+    font-size: 14px;
+  }
+
+  .healthcare-faq-answer {
+    font-size: 13px;
+  }
+}

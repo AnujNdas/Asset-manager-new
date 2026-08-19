@@ -80,14 +80,14 @@ const Navbar = () => {
             {openDropdown === "features" && (
               <div className="dropdown-menu-navbar">
                 <Link
-                  to="/machinery"
+                  to="/machinery-management-software"
                   onClick={closeMenu}
                 >
                   Machinery Asset Management Software
                 </Link>
 
                 <Link
-                  to="/itam-management"
+                  to="/it-asset-management"
                   onClick={closeMenu}
                 >
                   IT Asset Management Software
@@ -114,15 +114,15 @@ const Navbar = () => {
 
             {openDropdown === "solutions" && (
               <div className="dropdown-menu-navbar">
-                <Link to="/manufacturing-software" onClick={closeMenu}>
+                <Link to="/manufacturing-asset-management-software" onClick={closeMenu}>
                   Manufacturing Asset Management Software
                 </Link>
 
-                <Link to="/tutorials" onClick={closeMenu}>
+                <Link to="/restaurant-hospitality-asset-management" onClick={closeMenu}>
                   Resturant Hospitality Asset Management 
                 </Link>
 
-                <Link to="/documentation" onClick={closeMenu}>
+                <Link to="/healthcare-asset-tracking" onClick={closeMenu}>
                   Healthcare Asset Tracking 
                 </Link>
 

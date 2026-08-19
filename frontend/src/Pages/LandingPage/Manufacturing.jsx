@@ -943,7 +943,7 @@ useEffect(() => {
 
     <div className="manufacturing-industry-card">
       <div className="industry-icon">🏭</div>
-      <h3>Manufacturing & Industrial</h3>
+      <h3>Resturant & Hospitality</h3>
     </div>
 
     <div className="manufacturing-industry-card">
@@ -1002,9 +1002,7 @@ useEffect(() => {
   <div className="section-13-header">
 
     <h2>
-      AssetPegasus – Asset Management
-      <br />
-      System
+      AssetPegasus – Asset Management System
     </h2>
 
     <a href="/signup" className="section-13-signup">
@@ -1020,14 +1018,14 @@ useEffect(() => {
   <div className="section-13-options">
 
     <a
-      href="/equipment-asset-management"
+      href="/machinery-management-software"
       className="section-13-option"
     >
       Equipment Asset Management System
     </a>
 
     <a
-      href="/itam-management"
+      href="/it-asset-management"
       className="section-13-option"
     >
       IT Asset Management System

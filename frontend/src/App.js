@@ -25,6 +25,9 @@ import Terms from "./Pages/LandingPage/Terms&Condition";
 import MachineryHero from "./Pages/LandingPage/Machinery";
 import ItAsswt from "./Pages/LandingPage/ItAsswt";
 import Manufacturing from "./Pages/LandingPage/Manufacturing";
+import Resturant from "./Pages/LandingPage/Resturant";
+import { HelmetData } from "react-helmet-async";
+import Healthcare from "./Pages/LandingPage/Healthcare";
 
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
@@ -99,16 +102,24 @@ const App = () => {
           element={<Terms />}
       />
       <Route
-          path="/machinery"
+          path="/machinery-management-software"
           element={<MachineryHero />}
       />
       <Route
-          path="/itam-management"
+          path="/it-asset-management"
           element={<ItAsswt />}
       />
       <Route
-          path="/manufacturing-software"
+          path="/manufacturing-asset-management-software"
           element={<Manufacturing />}
+      />
+      <Route
+          path="/restaurant-hospitality-asset-management"
+          element={<Resturant />}
+      />
+      <Route
+          path="/healthcare-asset-tracking"
+          element={<Healthcare />}
       />
 
   </Route>

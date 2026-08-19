@@ -471,7 +471,7 @@ const MachineryHero = () => {
 
 const handleNavigateItam = () => {
   window.open(
-    "/itam-management",
+    "/it-asset-management",
     "_blank",
     "noopener,noreferrer"
   );

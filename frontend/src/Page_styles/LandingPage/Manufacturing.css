@@ -2549,8 +2549,6 @@
 .section-13-header {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 40px;
 }
 
 .section-13-header h2 {

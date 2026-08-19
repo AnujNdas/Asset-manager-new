@@ -1,0 +1,2764 @@
+/* =========================================
+   SECTION 1 - MANUFACTURING HERO
+   ========================================= */
+
+.manufacturing-hero {
+  position: relative;
+  width: 100%;
+  min-height: 610px;
+  overflow: hidden;
+
+  /* Main lower background */
+  background: #393e46;
+
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   DARK TOP AREA
+   ========================================= */
+
+.manufacturing-hero-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 285px;
+
+  background: #222831;
+
+  z-index: 1;
+
+  /*
+    Jagged / mountain-like bottom edge
+    matching the screenshot
+  */
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 88%,
+
+    82% 76%,
+    61% 90%,
+    45% 82%,
+    28% 92%,
+    8% 86%,
+    0 82%
+  );
+}
+
+
+/* =========================================
+   MAIN HERO TITLE
+   ========================================= */
+
+.manufacturing-hero-top h1 {
+  margin: 0;
+
+  padding-top: 30px;
+
+  text-align: center;
+
+  color: #dfd0b8;
+
+  font-size: 58px;
+  line-height: 1.35;
+  font-weight: 700;
+
+  letter-spacing: -1px;
+}
+
+
+/* =========================================
+   LOWER HERO CONTENT
+   ========================================= */
+
+.manufacturing-hero-bottom {
+  position: relative;
+
+  z-index: 2;
+
+  min-height: 610px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 372px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   BREADCRUMB
+   ========================================= */
+
+.manufacturing-breadcrumb {
+  font-size: 16px;
+  line-height: 1.5;
+display: flex;
+  color: #dfd0b8;
+  margin-bottom: 45px;
+}
+
+.manufacturing-breadcrumb a {
+    padding: 0;
+  color: #dfd0b8;
+    display: inline-block;
+  text-decoration: underline;
+    width: 50px;
+  transition: opacity 0.2s ease;
+}
+
+.manufacturing-breadcrumb a:hover {
+  opacity: 0.7;
+}
+
+.manufacturing-breadcrumb span {
+  color: #dfd0b8;
+}
+
+
+/* =========================================
+   HERO SUBTITLE
+   ========================================= */
+
+.manufacturing-hero-bottom h2 {
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  color: #dfd0b8;
+
+  font-size: 29px;
+  line-height: 1.45;
+
+  font-weight: 700;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 1200px) {
+
+  .manufacturing-hero-top h1 {
+    font-size: 50px;
+  }
+
+  .manufacturing-hero-bottom h2 {
+    font-size: 27px;
+    max-width: 850px;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  .manufacturing-hero {
+    min-height: 570px;
+  }
+
+  .manufacturing-hero-top {
+    height: 260px;
+
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 88%,
+      80% 78%,
+      60% 90%,
+      40% 82%,
+      20% 91%,
+      0 82%
+    );
+  }
+
+  .manufacturing-hero-top h1 {
+    padding: 25px 20px 0;
+
+    font-size: 38px;
+    line-height: 1.3;
+  }
+
+  .manufacturing-hero-bottom {
+    min-height: 570px;
+
+    padding: 330px 20px 40px;
+  }
+
+  .manufacturing-breadcrumb {
+    font-size: 14px;
+
+    margin-bottom: 35px;
+  }
+
+  .manufacturing-hero-bottom h2 {
+    font-size: 23px;
+    line-height: 1.45;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .manufacturing-hero {
+    min-height: 560px;
+  }
+
+  .manufacturing-hero-top {
+    height: 245px;
+  }
+
+  .manufacturing-hero-top h1 {
+    padding-top: 25px;
+
+    font-size: 29px;
+    line-height: 1.3;
+  }
+
+  .manufacturing-hero-bottom {
+    padding-top: 315px;
+  }
+
+  .manufacturing-breadcrumb {
+    font-size: 13px;
+
+    margin-bottom: 30px;
+  }
+
+  .manufacturing-hero-bottom h2 {
+    font-size: 20px;
+    line-height: 1.45;
+  }
+}
+
+/* =========================================================
+   SECTION 2 — RESTAURANT & HOSPITALITY
+   ========================================================= */
+
+.hospitality-section-2 {
+  width: 100%;
+  min-height: 350px;
+
+  background: #393e46;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 55px 35px;
+  box-sizing: border-box;
+}
+
+.hospitality-section-2-content {
+  width: 100%;
+  max-width: 950px;
+
+  text-align: center;
+
+  color: #dfd0b8;
+
+  font-family: inherit;
+}
+
+.hospitality-section-2-content p {
+  margin: 0 0 28px;
+
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 500;
+
+  letter-spacing: 0.1px;
+}
+
+.hospitality-section-2-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================
+   SECTION 3 — DASHBOARD IMAGE
+========================================= */
+
+.hospitality-section-3 {
+  width: 100%;
+  min-height: 620px;
+
+  background: #393E46;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 70px 30px 90px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+.hospitality-section-3-content {
+  width: 100%;
+  max-width: 1100px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hospitality-dashboard-image {
+  width: 100%;
+  max-width: 1050px;
+  height: auto;
+
+  display: block;
+
+  border-radius: 4px;
+
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .hospitality-section-3 {
+    min-height: auto;
+    padding: 55px 20px 70px;
+  }
+
+  .hospitality-dashboard-image {
+    max-width: 100%;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .hospitality-section-3 {
+    padding: 40px 12px 55px;
+  }
+
+  .hospitality-dashboard-image {
+    border-radius: 3px;
+  }
+
+}
+
+
+/* =========================================================
+   SECTION 3
+========================================================= */
+
+.restaurant-section-3 {
+  width: 100%;
+  min-height: 520px;
+
+  background: #2f343d;
+  color: #dfd0b8;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  padding: 35px 40px 35px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+.restaurant-section-3-features {
+  padding: 0 20px 0 5px;
+}
+
+.restaurant-section-3-features h2 {
+  font-size: 24px;
+  text-align: center;
+
+  margin: 0 0 35px;
+
+  color: #dfd0b8;
+}
+
+
+.restaurant-section-3-features ul {
+  list-style: none;
+
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 26px;
+}
+
+
+.restaurant-section-3-features li {
+  font-size: 16px;
+  font-weight: 600;
+
+  color: #dfd0b8;
+
+  line-height: 1.5;
+}
+
+
+/* LEFT BUTTON */
+
+.restaurant-section-3-trial-btn {
+  display: inline-flex;
+
+  margin-top: 38px;
+  margin-left: 80px;
+
+  padding: 12px 24px;
+
+  background: #202732;
+  color: #dfd0b8;
+
+  text-decoration: none;
+
+  border-radius: 30px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+.restaurant-section-3-trial-btn:hover {
+  background: #252d38;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   RIGHT CAROUSEL
+========================================================= */
+
+.restaurant-section-3-carousel {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 5px 25px 20px;
+
+  min-width: 0;
+}
+
+
+/* TITLE */
+
+.restaurant-section-3-carousel h2 {
+  margin: 0;
+
+  color: #dfd0b8;
+
+  font-size: 30px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  max-width: 520px;
+}
+
+
+/* SIGN UP BUTTON */
+
+.restaurant-section-3-signup-btn {
+  display: inline-flex;
+
+  margin-top: 18px;
+
+  padding: 10px 20px;
+
+  background: #202732;
+  color: #dfd0b8;
+
+  text-decoration: none;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  border-radius: 3px;
+
+  transition: 0.25s ease;
+}
+
+.restaurant-section-3-signup-btn:hover {
+  background: #252d38;
+}
+
+
+/* =========================================================
+   CAROUSEL CONTENT
+========================================================= */
+
+.restaurant-section-3-carousel-content {
+  width: 100%;
+  max-width: 500px;
+
+  min-height: 230px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 35px;
+}
+
+
+.restaurant-section-3-slide {
+  width: 100%;
+
+  animation: restaurantSlideFade 0.45s ease;
+}
+
+
+.restaurant-section-3-slide p {
+  margin: 0;
+
+  color: #dfd0b8;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  line-height: 1.65;
+}
+
+
+/* CHECKMARK LINES */
+
+.restaurant-section-3-slide p span {
+  display: inline-block;
+
+  margin: 4px 0;
+}
+
+
+/* =========================================================
+   DOTS
+========================================================= */
+
+.restaurant-section-3-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 15px;
+}
+
+
+.restaurant-section-3-dots button {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #59606a;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+
+.restaurant-section-3-dots button.active {
+  background: #171c23;
+}
+
+
+/* =========================================================
+   SLIDE ANIMATION
+========================================================= */
+
+@keyframes restaurantSlideFade {
+
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+/* =========================================================
+   SECTION 5
+========================================================= */
+
+.hospitality-section-5 {
+  position: relative;
+  width: 100%;
+
+  background: #393e46;
+
+  color: #dfd0b8;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   TOP AREA
+========================================================= */
+
+.hospitality-section-5-top {
+  position: relative;
+
+  min-height: 285px;
+
+  padding: 42px 40px 75px;
+
+  box-sizing: border-box;
+
+  background: #393e46;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.hospitality-section-5-heading {
+  width: 100%;
+  max-width: 950px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.hospitality-section-5-heading h2 {
+  margin: 0 0 22px;
+
+  color: #dfd0b8;
+
+  font-size: 30px;
+  line-height: 1.35;
+
+  font-weight: 700;
+}
+
+.hospitality-section-5-heading p {
+  margin: 0 auto 28px;
+
+  max-width: 900px;
+
+  color: #dfd0b8;
+
+  font-size: 16px;
+  line-height: 1.6;
+
+  font-weight: 500;
+}
+
+.hospitality-section-5-heading p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   BOTTOM AREA
+========================================================= */
+
+.hospitality-section-5-bottom {
+  position: relative;
+
+  min-height: 245px;
+
+  background: #222831;
+
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+
+  gap: 60px;
+
+  padding: 55px 45px 40px;
+
+  box-sizing: border-box;
+
+  z-index: 1;
+}
+
+
+/* =========================================================
+   CLIP-PATH TRANSITION
+========================================================= */
+
+.hospitality-section-5-bottom::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: -42px;
+
+  width: 100%;
+  height: 65px;
+
+  background: #222831;
+
+  z-index: -1;
+
+  clip-path: polygon(
+    0 48%,
+    8% 70%,
+    18% 48%,
+    30% 78%,
+    42% 45%,
+    54% 70%,
+    67% 42%,
+    79% 68%,
+    91% 45%,
+    100% 62%,
+    100% 100%,
+    0 100%
+  );
+}
+
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+.hospitality-section-5-left {
+  color: #dfd0b8;
+
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.hospitality-section-5-left > p:first-child {
+  margin-top: 0;
+  margin-bottom: 28px;
+}
+
+.hospitality-section-5-left ul {
+  margin: 0 0 8px;
+
+  padding-left: 28px;
+}
+
+.hospitality-section-5-left li {
+  margin-bottom: 3px;
+
+  padding-left: 3px;
+}
+
+.hospitality-section-5-left > p:last-child {
+  margin-top: 0;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.hospitality-section-5-right {
+  color: #dfd0b8;
+
+  padding-right: 15px;
+}
+
+.hospitality-section-5-right h3 {
+  margin: -3px 0 27px;
+
+  font-size: 17px;
+  line-height: 1.4;
+
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.hospitality-section-5-right p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.6;
+
+  font-weight: 500;
+}
+
+.hospitality-arrow {
+  display: inline-block;
+
+  margin-right: 8px;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .hospitality-section-5-top {
+    padding: 40px 25px 65px;
+  }
+
+  .hospitality-section-5-heading h2 {
+    font-size: 27px;
+  }
+
+  .hospitality-section-5-bottom {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+
+    padding: 55px 30px 45px;
+  }
+
+  .hospitality-section-5-right {
+    padding-right: 0;
+  }
+
+  .hospitality-section-5-right h3 {
+    text-align: left;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .hospitality-section-5-top {
+    min-height: auto;
+
+    padding: 35px 18px 55px;
+  }
+
+  .hospitality-section-5-heading h2 {
+    font-size: 23px;
+  }
+
+  .hospitality-section-5-heading p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .hospitality-section-5-bottom {
+    padding: 50px 20px 40px;
+
+    gap: 30px;
+  }
+
+  .hospitality-section-5-left,
+  .hospitality-section-5-right p {
+    font-size: 14px;
+  }
+
+  .hospitality-section-5-right h3 {
+    font-size: 16px;
+  }
+}
+
+/* =========================================
+   SECTION 6
+========================================= */
+
+.restaurant-section-6 {
+  width: 100%;
+  min-height: 560px;
+
+  background: #393E46;
+  color: #DFD0B8;
+
+  padding: 55px 45px;
+
+  box-sizing: border-box;
+}
+
+.restaurant-section-6 h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+/* =========================================
+   GRID
+========================================= */
+
+.restaurant-section-6-grid {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 70px;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.restaurant-section-6-left {
+  padding: 20px 10px;
+}
+
+
+.restaurant-section-6-left h2 {
+  font-size: 22px;
+  line-height: 1.45;
+
+  font-weight: 700;
+
+  text-align: center;
+
+  margin-bottom: 25px;
+
+  color: #DFD0B8;
+}
+
+
+.restaurant-section-6-left ul {
+  margin: 0;
+  padding: 0 0 0 22px;
+  list-style:circle;
+}
+
+
+.restaurant-section-6-left li {
+  margin-bottom: 32px;
+
+  padding-left: 4px;
+    flex-direction: column;
+  font-size: 16px;
+
+  line-height: 1.65;
+  color: #DFD0B8;
+}
+
+
+.restaurant-section-6-left li::marker {
+  color: #DFD0B8;
+}
+
+
+.restaurant-section-6-left strong {
+  display: block;
+
+  font-size: 17px;
+
+  margin-bottom: 2px;
+
+  color: #DFD0B8;
+}
+
+
+.restaurant-section-6-left span {
+  display: block;
+
+  max-width: 430px;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.restaurant-section-6-carousel {
+  min-height: 440px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 20px 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   SLIDE
+========================================= */
+
+.restaurant-section-6-slide {
+  width: 100%;
+
+  min-height: 300px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  animation: restaurantSlideFade 0.5s ease;
+}
+
+
+@keyframes restaurantSlideFade {
+
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+
+.restaurant-section-6-slide h2 {
+  font-size: 28px;
+
+  line-height: 1.3;
+
+  margin: 0 0 25px;
+
+  color: #DFD0B8;
+
+  font-weight: 700;
+}
+
+
+.restaurant-section-6-slide-text {
+  max-width: 470px;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.restaurant-section-6-dots {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+
+.restaurant-section-6-dots button {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #DFD0B8;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  opacity: 0.7;
+}
+
+
+.restaurant-section-6-dots button.active {
+  background: #DFD0B8;
+
+  opacity: 1;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+========================================= */
+
+.restaurant-section-6-signup {
+  margin-top: 18px;
+
+  padding: 10px 20px;
+
+  background: #222831;
+
+  color: #DFD0B8;
+
+  text-decoration: none;
+
+  border-radius: 25px;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  transition: 0.3s ease;
+}
+
+
+.restaurant-section-6-signup:hover {
+  background: #DFD0B8;
+
+  color: #222831;
+}
+
+/* =========================================
+   SECTION 7
+========================================= */
+
+.restaurant-section-7 {
+  width: 100%;
+  min-height: 620px;
+
+  background: #222831;
+  color: #DFD0B8;
+
+  padding: 35px 30px 20px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.restaurant-section-7-header {
+  width: 100%;
+  max-width: 1000px;
+}
+
+
+.restaurant-section-7-header h2 {
+  margin: 0;
+
+  font-size: 29px;
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  color: #DFD0B8;
+}
+
+
+.restaurant-section-7-header p {
+  margin: 22px auto 0;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   CAROUSEL
+========================================= */
+
+.restaurant-section-7-carousel {
+  width: 100%;
+  max-width: 700px;
+
+  min-height: 390px;
+
+  margin-top: 55px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  animation: restaurantSection7Fade 0.5s ease;
+}
+
+
+@keyframes restaurantSection7Fade {
+
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   SLIDE TITLE
+========================================= */
+
+.restaurant-section-7-carousel h3 {
+  margin: 0 0 20px;
+
+  font-size: 30px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   SLIDE CONTENT
+========================================= */
+
+.restaurant-section-7-content {
+  font-size: 17px;
+
+  line-height: 1.6;
+
+  color: #DFD0B8;
+}
+
+
+.restaurant-section-7-content strong {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 18px;
+}
+
+
+/* =========================================
+   CHECK LIST
+========================================= */
+
+.restaurant-check-list {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  width: fit-content;
+
+  margin: 0 auto;
+
+  gap: 6px;
+
+  text-align: left;
+}
+
+
+.restaurant-check-list span {
+  font-size: 17px;
+
+  line-height: 1.45;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   BOTTOM TEXT
+========================================= */
+
+.restaurant-section-7-content p {
+  margin-top: 28px;
+
+  font-size: 17px;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.restaurant-section-7-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: -10px;
+}
+
+
+.restaurant-section-7-dots button {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: none;
+
+  background: #DFD0B8;
+
+  opacity: 0.6;
+
+  cursor: pointer;
+}
+
+
+.restaurant-section-7-dots button.active {
+  opacity: 1;
+
+  transform: scale(1.15);
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+.restaurant-section-7-signin {
+  display: inline-block;
+
+  margin-top: 18px;
+
+  padding: 9px 18px;
+
+  background: #393E46;
+
+  color: #DFD0B8;
+
+  text-decoration: none;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  border-radius: 2px;
+
+  transition: 0.25s ease;
+}
+
+
+.restaurant-section-7-signin:hover {
+  background: #DFD0B8;
+
+  color: #222831;
+}
+
+/* =========================================
+   SECTION 8
+========================================= */
+
+.hospitality-section-8 {
+  width: 100%;
+  min-height: 560px;
+
+  background: #393E46;
+  color: #DFD0B8;
+
+  padding: 28px 35px 25px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.hospitality-section-8-title {
+  text-align: center;
+
+  margin-bottom: 55px;
+}
+
+
+.hospitality-section-8-title h2 {
+  margin: 0;
+
+  font-size: 28px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   TWO COLUMN LAYOUT
+========================================= */
+
+.hospitality-section-8-content {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1.55fr;
+
+  align-items: center;
+
+  gap: 55px;
+
+  max-width: 1100px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   LEFT FEATURES
+========================================= */
+
+.hospitality-section-8-features {
+  padding-left: 10px;
+}
+
+
+.hospitality-section-8-features > p {
+  margin: 0 0 30px;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-check-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin-bottom: 34px;
+
+  font-size: 17px;
+
+  line-height: 1.4;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-check-item span:first-child {
+  font-size: 18px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.hospitality-section-8-carousel {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.hospitality-section-8-image-wrapper {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+
+  animation: hospitalitySection8Fade 0.5s ease;
+}
+
+
+.hospitality-section-8-image-wrapper img {
+  width: 100%;
+
+  max-width: 650px;
+
+  height: 310px;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+
+@keyframes hospitalitySection8Fade {
+
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.hospitality-section-8-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 42px;
+}
+
+
+.hospitality-section-8-dots button {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: 1px solid #222831;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.hospitality-section-8-dots button.active {
+  background: #222831;
+
+  transform: scale(1.1);
+}
+
+/* =========================================
+   SECTION 9
+========================================= */
+
+.hospitality-section-9 {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 390px;
+
+  background: #222831;
+
+  color: #DFD0B8;
+
+  overflow: hidden;
+
+  padding: 25px 35px 70px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TEXT
+========================================= */
+
+.hospitality-section-9-content {
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+
+.hospitality-section-9-content p {
+  margin: 0 0 28px;
+
+  font-size: 16px;
+
+  line-height: 1.55;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+.hospitality-section-9-stats {
+  max-width: 1100px;
+
+  margin: 70px auto 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 30px;
+
+  text-align: center;
+}
+
+
+.hospitality-stat h2 {
+  margin: 0 0 10px;
+
+  font-size: 46px;
+
+  line-height: 1;
+
+  font-weight: 500;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-stat p {
+  margin: 0;
+
+  font-size: 15px;
+
+  line-height: 1.55;
+
+  letter-spacing: 1px;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   SECTION 10
+========================================= */
+
+.hospitality-section-10 {
+  width: 100%;
+  min-height: 500px;
+
+  background: #393E46;
+  color: #DFD0B8;
+
+  padding: 48px 60px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   MAIN TWO COLUMN LAYOUT
+========================================= */
+
+.hospitality-section-10-content {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1.25fr;
+
+  gap: 70px;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.hospitality-section-10-left {
+  text-align: left;
+}
+
+
+.hospitality-section-10-left h2 {
+  margin: 0 0 20px;
+
+  font-size: 30px;
+
+  line-height: 1.2;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-section-10-left p {
+  margin: 0 0 28px;
+
+  font-size: 16px;
+   text-align: left;
+  line-height: 1.55;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-section-10-left ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 30px;
+}
+
+.hospitality-section-10-left ul li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+
+  color: #DFD0B8;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.hospitality-section-10-left ul li::before {
+  content: "•";
+
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.hospitality-section-10-ending {
+  margin-top: 32px !important;
+
+  margin-left: 30px;
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.hospitality-section-10-carousel {
+  position: relative;
+
+  min-height: 390px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+.hospitality-section-10-signup {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  padding: 11px 20px;
+
+  background: #222831;
+
+  color: #DFD0B8;
+
+  border-radius: 24px;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+
+.hospitality-section-10-signup:hover {
+  transform: translateY(-2px);
+
+  background: #1c222a;
+}
+
+
+/* =========================================
+   SLIDE
+========================================= */
+
+.hospitality-section-10-slide {
+  width: 100%;
+
+  max-width: 500px;
+
+  margin-top: 30px;
+
+  animation: hospitalitySection10Fade 0.5s ease;
+}
+
+
+.hospitality-section-10-slide h2 {
+  margin: 0 0 18px;
+
+  font-size: 29px;
+
+  line-height: 1.35;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-section-10-slide h3 {
+  margin: 0 0 28px;
+
+  font-size: 17px;
+
+  line-height: 1.4;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-section-10-slide p {
+  margin: 0 auto;
+
+  max-width: 450px;
+
+  font-size: 15px;
+
+  line-height: 1.65;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   FADE / SLIDE ANIMATION
+========================================= */
+
+@keyframes hospitalitySection10Fade {
+
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.hospitality-section-10-dots {
+  position: absolute;
+
+  bottom: 18px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+.hospitality-section-10-dots button {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: 1px solid #222831;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.hospitality-section-10-dots button.active {
+  background: #222831;
+
+  transform: scale(1.1);
+}
+
+/* =========================================
+   SECTION 11
+========================================= */
+
+.hospitality-section-11 {
+  width: 100%;
+
+  min-height: 540px;
+
+  box-sizing: border-box;
+
+  padding: 38px 30px 45px;
+
+  background: #222831;
+
+  color: #DFD0B8;
+
+  display: flex;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.hospitality-section-11-content {
+  width: 100%;
+
+  max-width: 1100px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.hospitality-section-11 h2 {
+  margin: 0 0 20px;
+
+  font-size: 29px;
+
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.hospitality-section-11-intro {
+  max-width: 950px;
+
+  margin: 0 auto 30px;
+
+  font-size: 15px;
+
+  line-height: 1.55;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   SUBTITLE
+========================================= */
+
+.hospitality-section-11-subtitle {
+  margin: 0 0 27px;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   CHECK LIST
+========================================= */
+
+.hospitality-section-11-list {
+    height: 300px;
+  list-style: none;
+
+  padding: 0;
+
+  margin: 0 auto 28px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.hospitality-section-11-list li {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  width: fit-content;
+
+
+  text-align: center;
+
+  font-size: 15px;
+
+  line-height: 1.45;
+
+  font-weight: 600;
+
+  color: #DFD0B8;
+}
+
+
+.hospitality-section-11-list li span {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 17px;
+
+  height: 17px;
+
+  margin-right: 7px;
+
+  background: #00d900;
+
+  color: #000;
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  line-height: 1;
+
+  border-radius: 1px;
+}
+
+
+/* =========================================
+   ENDING TEXT
+========================================= */
+
+.hospitality-section-11-ending {
+  max-width: 1050px;
+
+  margin: 30px auto 30px;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.hospitality-section-11-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 11px 18px;
+
+  background: #393E46;
+width: 200px;
+  color: #DFD0B8;
+
+  text-decoration: none;
+
+  border-radius: 3px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+
+.hospitality-section-11-button:hover {
+  background: #2d333b;
+
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   SECTION 12
+========================================= */
+
+.hospitality-section-12 {
+  position: relative;
+
+  width: 100%;
+  min-height: 430px;
+
+  background: #393E46;
+
+  color: #DFD0B8;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TOP CLIP-PATH LAYER
+========================================= */
+
+.hospitality-section-12-clip {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+
+  height: 110px;
+
+  background: #222831;
+
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 78%,
+    85% 64%,
+    82% 80%,
+    61% 91%,
+    47% 65%,
+    33% 87%,
+    19% 77%,
+    10% 96%,
+    0 76%
+  );
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.hospitality-section-12-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: 174px 30px 35px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.hospitality-section-12-content h2 {
+  margin: 0 0 12px;
+
+  font-size: 19px;
+
+  line-height: 1.35;
+
+  color: #DFD0B8;
+
+  font-weight: 700;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.hospitality-section-12-intro {
+  margin: 0 auto 27px;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   ASSET LIST / TEXT
+========================================= */
+
+.hospitality-section-12-assets {
+  max-width: 1050px;
+
+  margin: 0 auto;
+
+  font-size: 15px;
+
+  line-height: 1.65;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================
+   ENDING
+========================================= */
+
+.hospitality-section-12-ending {
+  margin: 27px auto 0;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  color: #DFD0B8;
+}
+
+/* =========================================
+   SECTION 13
+   ========================================= */
+
+.hospitality-section-13 {
+  width: 100%;
+  min-height: 390px;
+
+  background: #222831;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 60px 40px;
+  box-sizing: border-box;
+}
+
+
+.hospitality-section-13-content {
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 0 auto;
+
+  color: #dfd0b8;
+}
+
+
+/* MAIN HEADING */
+
+.hospitality-section-13-content h2 {
+  margin: 0 0 18px;
+
+  font-size: 32px;
+  line-height: 1.25;
+
+  font-weight: 700;
+
+  color: #dfd0b8;
+}
+
+
+/* SUB HEADING */
+
+.hospitality-section-13-content h3 {
+  margin: 0 0 32px;
+
+  font-size: 19px;
+  line-height: 1.4;
+
+  font-weight: 600;
+
+  color: #dfd0b8;
+}
+
+
+/* DESCRIPTION */
+
+.hospitality-section-13-content p {
+  margin: 0 auto 28px;
+
+  max-width: 930px;
+
+  font-size: 16px;
+  line-height: 1.65;
+
+  font-weight: 500;
+
+  color: #dfd0b8;
+}
+
+
+/* HAM & ITAM LINK */
+
+.hospitality-section-13-content p a {
+  color: #dfd0b8;
+    display: inline-block;
+  font-weight: 700;
+
+  text-decoration: underline;
+}
+
+
+/* ABOUT BUTTON */
+
+.hospitality-section-13-button {
+  display: inline-flex;
+width: 200px;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 4px;
+
+  padding: 10px 18px;
+
+  background: #393E46;
+
+  color: #dfd0b8;
+
+  text-decoration: none;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  border-radius: 2px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.hospitality-section-13-button:hover {
+  background: #1b2027;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   SECTION 14 - INDUSTRY CARDS
+   ========================================= */
+
+.hospitality-section-14 {
+  width: 100%;
+  min-height: 350px;
+
+  background: #393e46;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px 20px 65px;
+
+  box-sizing: border-box;
+}
+
+
+/* CARDS CONTAINER */
+
+.hospitality-industry-cards {
+  width: 100%;
+  max-width: 980px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  gap: 18px;
+
+  margin: 0 auto;
+}
+
+
+/* INDIVIDUAL CARD */
+
+.hospitality-industry-card {
+  width: 170px;
+  min-height: 235px;
+
+  flex: 0 0 170px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 28px 15px 25px;
+
+  box-sizing: border-box;
+
+  background: #393e46;
+
+  border-radius: 0 0 28px 28px;
+
+  color: #dfd0b8;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 18px 25px rgba(0, 0, 0, 0.20);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* STAGGERED CARDS */
+
+.hospitality-industry-card:nth-child(1) {
+  transform: translateY(-10px);
+}
+
+.hospitality-industry-card:nth-child(2) {
+  transform: translateY(10px);
+}
+
+.hospitality-industry-card:nth-child(3) {
+  transform: translateY(0);
+}
+
+.hospitality-industry-card:nth-child(4) {
+  transform: translateY(10px);
+}
+
+.hospitality-industry-card:nth-child(5) {
+  transform: translateY(0);
+}
+
+
+/* HOVER */
+
+.hospitality-industry-card:hover {
+  transform: translateY(-8px) !important;
+
+  background: #353a42;
+
+  box-shadow:
+    0 22px 32px rgba(0, 0, 0, 0.28);
+}
+
+
+/* ICON CIRCLE */
+
+.hospitality-industry-icon {
+  width: 82px;
+  height: 82px;
+
+  border-radius: 50%;
+
+  background: #222831;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  color: #dfd0b8;
+
+  font-size: 42px;
+  line-height: 1;
+
+  flex-shrink: 0;
+}
+
+
+/* CARD TITLE */
+
+.hospitality-industry-card h3 {
+  margin: 0;
+
+  color: #dfd0b8;
+
+  font-size: 20px;
+
+  line-height: 1.45;
+
+  font-weight: 600;
+
+  word-break: normal;
+}
+
+/* =========================
+   SECTION 15
+========================= */
+
+.manufacturing-section-15 {
+  width: 100%;
+  min-height: 450px;
+  background: #393e46;
+  color: #dfd0b8;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 70px 60px 40px;
+  box-sizing: border-box;
+}
+
+.manufacturing-section-15 h2 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.manufacturing-section-15 .section-15-visit {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 40px 0 0;
+}
+
+/* Bottom links */
+.manufacturing-section-15-links {
+  width: 85%;
+  display: flex;
+  justify-content: center;
+  gap: 180px; /* controls how close they are */
+  margin-top: 30px;
+}
+
+.manufacturing-section-15-links a {
+  display: inline-block;
+  padding: 12px 18px;
+    width: 200px;
+  background: #222831;
+  color: #dfd0b8;
+
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+
+  border-radius: 3px;
+  transition: 0.25s ease;
+}
+
+.manufacturing-section-15-links a:hover {
+  background: #2d333d;
+  transform: translateY(-2px);
+}
+
+/* ==============================
+   SECTION 16 - FAQ
+================================ */
+
+.hospitality-section-16 {
+  width: 100%;
+  background: #222831;
+  color: #dfd0b8;
+  padding: 40px 15px 55px;
+  box-sizing: border-box;
+}
+
+.hospitality-section-16 h2 {
+  margin: 0 0 32px 30px;
+
+  font-size: 30px;
+  font-weight: 700;
+  text-align: left;
+}
+
+/* FAQ container */
+
+.hospitality-faq {
+  width: 100%;
+}
+
+/* Individual FAQ */
+
+.hospitality-faq details {
+  width: 100%;
+  margin-bottom: 14px;
+
+  border: 1px solid #dfd0b8;
+  box-sizing: border-box;
+
+  background: transparent;
+}
+
+/* Question */
+
+.hospitality-faq summary {
+  position: relative;
+
+  padding: 5px 18px 5px 20px;
+
+  cursor: pointer;
+  list-style: none;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #dfd0b8;
+
+  min-height: 30px;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+/* Remove browser default arrow */
+
+.hospitality-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom triangle */
+
+.hospitality-faq summary::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+
+  width: 0;
+  height: 0;
+
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid #dfd0b8;
+}
+
+/* Rotate arrow when opened */
+
+.hospitality-faq details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+/* Answer */
+
+.hospitality-faq details p {
+  margin: 0;
+
+  padding: 14px 25px 18px 35px;
+
+  background: #222831;
+
+  color: #dfd0b8;
+
+  font-size: 15px;
+  line-height: 1.7;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.35);
+}
+
+/* Hover */
+
+.hospitality-faq details summary:hover {
+  background: rgba(34, 40, 49, 0.45);
+}
