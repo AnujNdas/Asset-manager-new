@@ -126,7 +126,7 @@ const Navbar = () => {
                   Healthcare Asset Tracking 
                 </Link>
 
-                <Link to="/faq" onClick={closeMenu}>
+                <Link to="/construction-equipment-tracking" onClick={closeMenu}>
                   Construction Equipment Tracking
                 </Link>
 

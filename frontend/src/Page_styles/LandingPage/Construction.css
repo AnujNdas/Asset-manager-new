@@ -1,0 +1,2957 @@
+/* =========================================
+   CONSTRUCTION SECTION 1
+========================================= */
+
+.construction-section-1 {
+  position: relative;
+  width: 100%;
+  min-height: 430px;
+
+  background: #343a40;
+  color: #ead9bc;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TOP DARK HERO
+========================================= */
+
+.construction-section-1-top {
+  position: relative;
+
+  width: 100%;
+  height: 270px;
+
+  background: #232a33;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   JAGGED CLIP-PATH
+========================================= */
+
+.construction-section-1-top::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -1px;
+
+  width: 100%;
+  height: 65px;
+
+  background: #343a40;
+
+  clip-path: polygon(
+    0% 55%,
+    8% 100%,
+    18% 90%,
+    28% 75%,
+    38% 90%,
+    46% 75%,
+    58% 100%,
+    68% 82%,
+    80% 88%,
+    90% 68%,
+    100% 88%,
+    100% 100%,
+    0% 100%
+  );
+
+  z-index: 2;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.construction-section-1-top h1 {
+  position: relative;
+  z-index: 3;
+
+  margin: 48px 20px 0;
+
+  color: #ead9bc;
+
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 1.15;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   LOWER SECTION
+========================================= */
+
+.construction-section-1-bottom {
+  position: relative;
+
+  min-height: 160px;
+
+  background: #343a40;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  padding-bottom: 38px;
+
+  z-index: 3;
+}
+
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+.construction-breadcrumb {
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  text-align: center;
+}
+
+.construction-breadcrumb a {
+  color: #ead9bc;
+    display: inline-block;
+  text-decoration: underline;
+
+  transition: opacity 0.2s ease;
+}
+
+.construction-breadcrumb a:hover {
+  opacity: 0.75;
+}
+
+.construction-breadcrumb span {
+  color: #ead9bc;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .construction-section-1 {
+    min-height: 400px;
+  }
+
+  .construction-section-1-top {
+    height: 255px;
+  }
+
+  .construction-section-1-top h1 {
+    font-size: 48px;
+  }
+
+  .construction-section-1-bottom {
+    min-height: 145px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .construction-section-1 {
+    min-height: 360px;
+  }
+
+  .construction-section-1-top {
+    height: 225px;
+  }
+
+  .construction-section-1-top h1 {
+    margin-top: 40px;
+
+    font-size: 36px;
+    line-height: 1.2;
+  }
+
+  .construction-section-1-top::after {
+    height: 50px;
+
+    clip-path: polygon(
+      0% 55%,
+      12% 100%,
+      25% 82%,
+      38% 90%,
+      50% 70%,
+      62% 100%,
+      75% 82%,
+      88% 68%,
+      100% 90%,
+      100% 100%,
+      0% 100%
+    );
+  }
+
+  .construction-section-1-bottom {
+    min-height: 135px;
+    padding-bottom: 30px;
+  }
+
+  .construction-breadcrumb {
+    font-size: 13px;
+  }
+}
+
+
+@media (max-width: 400px) {
+
+  .construction-section-1-top h1 {
+    font-size: 30px;
+  }
+
+  .construction-breadcrumb {
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   CONSTRUCTION SECTION 2
+========================================= */
+
+.construction-section-2 {
+  width: 100%;
+  background: #343a40;
+  color: #ead9bc;
+
+  padding: 36px 20px 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.construction-section-2-content {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.construction-section-2 h2 {
+  margin: 0 auto;
+
+  color: #ead9bc;
+
+  font-size: 29px;
+  font-weight: 700;
+
+  line-height: 1.4;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   TEXT CONTAINER
+========================================= */
+
+.construction-section-2-text {
+  margin-top: 112px;
+
+  width: 100%;
+}
+
+
+/* =========================================
+   PARAGRAPHS
+========================================= */
+
+.construction-section-2-text p {
+  margin: 0 auto;
+
+  max-width: 1160px;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  line-height: 1.65;
+
+  text-align: center;
+}
+
+
+/* Second paragraph */
+
+.construction-section-2-text p + p {
+  margin-top: 25px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .construction-section-2 {
+    padding: 32px 25px;
+  }
+
+  .construction-section-2 h2 {
+    font-size: 25px;
+  }
+
+  .construction-section-2-text {
+    margin-top: 75px;
+  }
+
+  .construction-section-2-text p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .construction-section-2 {
+    padding: 28px 18px;
+  }
+
+  .construction-section-2 h2 {
+    font-size: 22px;
+    line-height: 1.35;
+  }
+
+  .construction-section-2-text {
+    margin-top: 55px;
+  }
+
+  .construction-section-2-text p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .construction-section-2-text p + p {
+    margin-top: 22px;
+  }
+}
+
+/* =========================================
+   CONSTRUCTION SECTION 3
+========================================= */
+
+.construction-section-3 {
+  width: 100%;
+
+  background: #343a40;
+
+  padding: 35px 18px 40px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* =========================================
+   IMAGE WRAPPER
+========================================= */
+
+.construction-section-3-image-wrapper {
+  width: 100%;
+  max-width: 980px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* =========================================
+   DASHBOARD IMAGE
+========================================= */
+
+.construction-section-3-image {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-width: 100%;
+
+  object-fit: contain;
+
+  border-radius: 2px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .construction-section-3 {
+    padding: 30px 15px 35px;
+  }
+
+  .construction-section-3-image-wrapper {
+    max-width: 100%;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .construction-section-3 {
+    padding: 25px 10px 30px;
+  }
+
+  .construction-section-3-image {
+    width: 100%;
+  }
+}
+
+/* =========================================
+   CONSTRUCTION SECTION 4
+========================================= */
+
+.construction-section-4 {
+  width: 100%;
+  min-height: 510px;
+
+  background: #292f38;
+  color: #ead9bc;
+
+  display: flex;
+
+  box-sizing: border-box;
+
+  padding: 28px 35px 35px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.construction-section-4-left {
+  width: 50%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  box-sizing: border-box;
+}
+
+
+/* LEFT HEADING */
+
+.construction-section-4-left h2 {
+  width: 100%;
+
+  margin: 0 0 35px;
+
+  text-align: center;
+
+  font-size: 25px;
+  font-weight: 700;
+
+  color: #ead9bc;
+}
+
+
+/* LEFT LIST */
+
+.construction-section-4-left ul {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+
+/* LEFT ITEMS */
+
+.construction-section-4-left li {
+  margin-bottom: 25px;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  line-height: 1.4;
+}
+
+
+/* FREE TRIAL BUTTON */
+
+.construction-section-4-trial-btn {
+  margin-top: auto;
+  margin-left: 155px;
+
+  padding: 11px 20px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #222932;
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.construction-section-4-trial-btn:hover {
+  background: #1d232b;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.construction-section-4-right {
+  width: 50%;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   SLIDE
+========================================= */
+
+.construction-section-4-carousel {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+}
+
+
+.construction-section-4-slide {
+  width: 100%;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   CAROUSEL HEADING
+========================================= */
+
+.construction-section-4-slide > h2 {
+  margin: 0 0 17px;
+
+  color: #ead9bc;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+========================================= */
+
+.construction-section-4-signup-btn {
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #202730;
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =========================================
+   SLIDE CONTENT
+========================================= */
+
+.construction-section-4-slide-content {
+  margin-top: 50px;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* CONTENT HEADING */
+
+.construction-section-4-slide-content h3 {
+  margin: 0 0 20px;
+
+  color: #ead9bc;
+
+  font-size: 27px;
+  font-weight: 700;
+
+  line-height: 1.45;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   RIGHT CHECKLIST
+========================================= */
+
+.construction-section-4-slide-content ul {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  text-align: left;
+}
+
+
+.construction-section-4-slide-content li {
+  position: relative;
+
+  margin-bottom: 8px;
+  padding-left: 25px;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+
+/* GREEN CHECK */
+
+.construction-section-4-slide-content li::before {
+  content: "✓";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 17px;
+  height: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #00d000;
+  color: #111;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  line-height: 17px;
+}
+
+
+/* =========================================
+   CAROUSEL DOTS
+========================================= */
+
+.construction-section-4-dots {
+  position: absolute;
+
+  bottom: 12px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 7px;
+
+  align-items: center;
+}
+
+
+.construction-section-4-dot {
+  width: 8px;
+  height: 8px;
+
+  border: 1px solid #111820;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  box-sizing: border-box;
+}
+
+
+.construction-section-4-dot.active {
+  background: #111820;
+}
+
+@media (max-width: 900px) {
+
+  .construction-section-4 {
+    flex-direction: column;
+
+    padding: 30px 25px 40px;
+  }
+
+  .construction-section-4-left,
+  .construction-section-4-right {
+    width: 100%;
+  }
+
+  .construction-section-4-left {
+    align-items: center;
+  }
+
+  .construction-section-4-left li {
+    text-align: left;
+  }
+
+  .construction-section-4-trial-btn {
+    margin: 10px auto 35px;
+  }
+
+  .construction-section-4-right {
+    min-height: 430px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .construction-section-4 {
+    padding: 25px 18px 35px;
+  }
+
+  .construction-section-4-left h2 {
+    font-size: 22px;
+  }
+
+  .construction-section-4-left li {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .construction-section-4-slide > h2 {
+    font-size: 23px;
+  }
+
+  .construction-section-4-slide-content h3 {
+    font-size: 23px;
+  }
+
+  .construction-section-4-slide-content li {
+    font-size: 13px;
+  }
+}
+
+/* =========================================
+   CONSTRUCTION SECTION 5
+========================================= */
+
+.construction-section-5 {
+  width: 100%;
+  color: #ead9bc;
+  background: #343a40;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TOP SECTION
+========================================= */
+
+.construction-section-5-top {
+  width: 100%;
+  padding: 32px 25px 42px;
+
+  text-align: center;
+  box-sizing: border-box;
+}
+
+
+/* Heading */
+
+.construction-section-5-top h2 {
+  margin: 0 0 20px;
+
+  color: #ead9bc;
+
+  font-size: 29px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+
+/* Top paragraphs */
+
+.construction-section-5-top p {
+  max-width: 950px;
+
+  margin: 0 auto;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  line-height: 1.7;
+}
+
+
+/* Space between paragraphs */
+
+.construction-section-5-top p + p {
+  margin-top: 25px;
+}
+
+
+/* =========================================
+   BOTTOM SECTION
+========================================= */
+
+.construction-section-5-bottom {
+  width: 100%;
+
+  display: flex;
+
+  background: #292f38;
+
+  padding: 38px 25px 42px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.construction-section-5-left {
+  width: 58%;
+
+  padding-right: 55px;
+
+  box-sizing: border-box;
+}
+
+
+/* Left label */
+
+.construction-section-5-label {
+  margin: 20px 0 32px;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  line-height: 1.5;
+}
+
+
+/* Left paragraph */
+
+.construction-section-5-left > p:not(.construction-section-5-label) {
+  max-width: 560px;
+
+  margin: 0;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.construction-section-5-right {
+  width: 42%;
+
+  padding-left: 10px;
+
+  box-sizing: border-box;
+
+  text-align: left;
+}
+
+
+/* Right heading */
+
+.construction-section-5-right h3 {
+  margin: 0 0 30px;
+
+  color: #ead9bc;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+
+/* Right paragraph */
+
+.construction-section-5-right p {
+  max-width: 390px;
+
+  margin: 0 auto;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   ARROW
+========================================= */
+
+.construction-section-5-arrow {
+  display: inline-block;
+
+  margin-right: 8px;
+
+  font-size: 13px;
+
+  vertical-align: 1px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .construction-section-5-top {
+    padding: 30px 22px 38px;
+  }
+
+  .construction-section-5-top h2 {
+    font-size: 25px;
+  }
+
+  .construction-section-5-bottom {
+    flex-direction: column;
+
+    padding: 32px 22px 38px;
+  }
+
+  .construction-section-5-left,
+  .construction-section-5-right {
+    width: 100%;
+
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .construction-section-5-right {
+    margin-top: 40px;
+  }
+
+  .construction-section-5-left > p:not(.construction-section-5-label),
+  .construction-section-5-right p {
+    max-width: 650px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .construction-section-5-top {
+    padding: 25px 17px 32px;
+  }
+
+  .construction-section-5-top h2 {
+    font-size: 22px;
+  }
+
+  .construction-section-5-top p,
+  .construction-section-5-left > p:not(.construction-section-5-label),
+  .construction-section-5-right p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .construction-section-5-bottom {
+    padding: 28px 17px 32px;
+  }
+
+  .construction-section-5-right {
+    margin-top: 30px;
+  }
+}
+
+
+/* =========================================
+   SECTION 6
+========================================= */
+
+.construction-section-6 {
+  width: 100%;
+  background: #343a40;
+  color: #ead9bc;
+  overflow: hidden;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.construction-section-6-header {
+  width: 100%;
+  background: #3a4048;
+
+  padding: 25px 20px 18px;
+
+  box-sizing: border-box;
+}
+
+.construction-section-6-header h2 {
+  margin: 0;
+
+  text-align: center;
+
+  font-size: 29px;
+  font-weight: 700;
+
+  color: #ead9bc;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.construction-section-6-content {
+  width: 100%;
+
+  min-height: 505px;
+
+  display: flex;
+
+  box-sizing: border-box;
+
+  background: #292f38;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.construction-section-6-left {
+  width: 48%;
+
+  padding: 145px 30px 40px 42px;
+
+  box-sizing: border-box;
+}
+
+
+/* FEATURE */
+
+.construction-feature {
+  margin-bottom: 30px;
+}
+
+
+/* FEATURE TITLE */
+
+.construction-feature h3 {
+  margin: 0 0 7px;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+
+/* BULLET */
+
+.construction-feature h3 span {
+  display: inline-block;
+
+  margin-right: 8px;
+
+  font-size: 20px;
+}
+
+
+/* FEATURE DESCRIPTION */
+
+.construction-feature p {
+  margin: 0;
+
+  padding-left: 18px;
+
+  color: #ead9bc;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.construction-section-6-right {
+  width: 52%;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 42px;
+  padding-bottom: 60px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   CAROUSEL VIEWPORT
+========================================= */
+
+.construction-section-6-carousel {
+  width: 100%;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   SLIDE TRACK
+========================================= */
+
+.construction-section-6-track {
+  width: 100%;
+
+  display: flex;
+
+  transition: transform 0.6s ease-in-out;
+}
+
+
+/* =========================================
+   INDIVIDUAL SLIDE
+========================================= */
+
+.construction-section-6-slide {
+  flex: 0 0 100%;
+
+  width: 100%;
+
+  padding: 0 45px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+
+/* SLIDE TITLE */
+
+.construction-section-6-slide h2 {
+  margin: 0 0 18px;
+
+  color: #ead9bc;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+
+/* INTRO */
+
+.construction-section-6-intro {
+  max-width: 440px;
+
+  margin: 0 auto 25px;
+
+  color: #ead9bc;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   SLIDE LIST
+========================================= */
+
+.construction-section-6-slide ul {
+  width: fit-content;
+
+  max-width: 430px;
+
+  margin: 0 auto;
+
+  padding: 0;
+
+  list-style: none;
+
+  text-align: left;
+}
+
+
+.construction-section-6-slide li {
+  position: relative;
+
+  margin-bottom: 10px;
+
+  padding-left: 22px;
+
+  color: #ead9bc;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  line-height: 1.6;
+}
+
+
+/* Triangle before carousel list items */
+
+.construction-section-6-slide li::before {
+  content: "▶";
+
+  position: absolute;
+
+  left: 0;
+  top: 3px;
+
+  font-size: 10px;
+
+  color: #ead9bc;
+}
+
+
+/* =========================================
+   ENDING TEXT
+========================================= */
+
+.construction-section-6-ending {
+  max-width: 430px;
+
+  margin: 28px auto 0;
+
+  color: #ead9bc;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.construction-section-6-dots {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 22px;
+}
+
+
+.construction-section-6-dot {
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  border: 1px solid #151a20;
+
+  background: transparent;
+
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+
+.construction-section-6-dot.active {
+  background: #151a20;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+========================================= */
+
+.construction-section-6-signup {
+  margin-top: 16px;
+
+  padding: 11px 22px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: #202731;
+
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.construction-section-6-signup:hover {
+  background: #1d232b;
+
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   SECTION 7
+========================================= */
+
+.construction-section-7 {
+  position: relative;
+  min-height: 640px;
+  background: #202731;
+  color: #ead9bb;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: center;
+}
+
+
+/* Main content */
+
+.construction-section-7-content {
+  width: 100%;
+  max-width: 1100px;
+  padding: 14px 30px 150px;
+  position: relative;
+  z-index: 2;
+}
+
+
+/* Main heading */
+
+.construction-section-7-content h2 {
+  margin: 0 0 18px;
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ead9bb;
+}
+
+
+/* Intro paragraph */
+
+.construction-section-7-intro {
+  max-width: 1000px;
+  margin: 0 auto;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.8;
+  color: #ead9bb;
+}
+
+
+/* =========================================
+   CAROUSEL
+========================================= */
+
+.construction-section-7-carousel {
+  width: 760px;
+  max-width: 90%;
+  min-height: 330px;
+
+  margin: 65px auto 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* Slide */
+
+.construction-section-7-slide {
+  width: 100%;
+  min-height: 245px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  animation: constructionSection7Fade 0.5s ease;
+}
+
+
+/* Slide heading */
+
+.construction-section-7-slide h3 {
+  margin: 0 0 38px;
+
+  font-size: 29px;
+  line-height: 1.35;
+  font-weight: 700;
+
+  color: #ead9bb;
+}
+
+
+/* Slide text */
+
+.construction-section-7-slide p {
+  width: 700px;
+  max-width: 100%;
+
+  margin: 0 auto;
+
+  font-size: 18px;
+  line-height: 1.55;
+  font-weight: 500;
+
+  color: #ead9bb;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.construction-section-7-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+
+  margin-top: 25px;
+}
+
+
+.construction-section-7-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+
+  background: #8f9398;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+
+.construction-section-7-dot.active {
+  background: #d5d5d5;
+  transform: scale(1.15);
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+.construction-section-7-signin {
+  margin-top: 16px;
+
+  padding: 11px 20px;
+
+  border: none;
+  border-radius: 2px;
+
+  background: #3b424d;
+  color: #ead9bb;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.construction-section-7-signin:hover {
+  background: #454d59;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   BOTTOM MOUNTAIN CLIP
+========================================= */
+
+.construction-section-7-bottom-clip {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 62px;
+
+  background: #363d47;
+
+  clip-path: polygon(
+    0% 55%,
+    8% 82%,
+    17% 66%,
+    25% 91%,
+    33% 59%,
+    41% 82%,
+    50% 63%,
+    60% 88%,
+    69% 65%,
+    77% 86%,
+    86% 55%,
+    94% 76%,
+    100% 59%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes constructionSection7Fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .construction-section-7 {
+    min-height: 650px;
+  }
+
+  .construction-section-7-content {
+    padding: 25px 20px 130px;
+  }
+
+  .construction-section-7-content h2 {
+    font-size: 24px;
+  }
+
+  .construction-section-7-intro {
+    font-size: 14px;
+  }
+
+  .construction-section-7-carousel {
+    margin-top: 50px;
+    width: 100%;
+  }
+
+  .construction-section-7-slide h3 {
+    font-size: 23px;
+    margin-bottom: 28px;
+  }
+
+  .construction-section-7-slide p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .construction-section-7-bottom-clip {
+    height: 50px;
+  }
+}
+
+/* =========================================
+   SECTION 8
+========================================= */
+
+.construction-section-8 {
+  width: 100%;
+  min-height: 520px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 60px 7%;
+
+  box-sizing: border-box;
+
+  background: #363b43;
+
+  color: #eadcc3;
+
+  gap: 55px;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.construction-section-8-left {
+  width: 34%;
+  flex-shrink: 0;
+}
+
+.construction-section-8-left h2 {
+  font-size: 27px;
+  line-height: 1.3;
+  font-weight: 700;
+
+  margin: 0 0 75px;
+
+  color: #eadcc3;
+}
+
+
+.construction-section-8-list {
+  width: 100%;
+}
+
+.construction-section-8-list > p {
+  font-size: 16px;
+  font-weight: 500;
+
+  margin: 0 0 30px;
+
+  color: #eadcc3;
+}
+
+
+/* =========================================
+   CHECK ITEMS
+========================================= */
+
+.construction-section-8-item {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 25px;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  color: #eadcc3;
+}
+
+
+.construction-check {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #00d600;
+
+  color: #000;
+
+  font-size: 14px;
+  font-weight: 900;
+
+  line-height: 1;
+
+  border: 1px solid #000;
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.construction-section-8-right {
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.construction-section-8-image-wrapper {
+  position: relative;
+
+  width: 100%;
+  max-width: 635px;
+
+  height: 315px;
+
+  overflow: hidden;
+}
+
+
+.construction-section-8-image {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  opacity: 0;
+
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+
+  transform: scale(0.98);
+
+  pointer-events: none;
+}
+
+
+.construction-section-8-image.active {
+  opacity: 1;
+
+  transform: scale(1);
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.construction-section-8-dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 22px;
+}
+
+
+.construction-section-8-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #1d2229;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.construction-section-8-dot.active {
+  background: #171b20;
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .construction-section-8 {
+    flex-direction: column;
+
+    padding: 50px 25px;
+
+    gap: 45px;
+  }
+
+  .construction-section-8-left {
+    width: 100%;
+  }
+
+  .construction-section-8-left h2 {
+    text-align: center;
+
+    margin-bottom: 40px;
+  }
+
+  .construction-section-8-list {
+    max-width: 500px;
+
+    margin: 0 auto;
+  }
+
+  .construction-section-8-right {
+    width: 100%;
+  }
+
+  .construction-section-8-image-wrapper {
+    max-width: 700px;
+
+    height: 300px;
+  }
+}
+
+
+@media (max-width: 550px) {
+
+  .construction-section-8 {
+    padding: 40px 18px;
+  }
+
+  .construction-section-8-left h2 {
+    font-size: 23px;
+  }
+
+  .construction-section-8-item {
+    font-size: 14px;
+
+    margin-bottom: 18px;
+  }
+
+  .construction-section-8-image-wrapper {
+    height: 220px;
+  }
+}
+/* =========================================
+   CONSTRUCTION - SECTION 9
+========================================= */
+
+.construction-section-9 {
+  width: 100%;
+  min-height: 450px;
+
+  box-sizing: border-box;
+
+  padding: 35px 0 25px;
+
+  background: #222831;
+  color: #eadcc3;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.construction-section-9-content {
+  width: 100%;
+
+  text-align: center;
+
+  font-size: 15px;
+  line-height: 1.55;
+
+  font-weight: 500;
+
+  color: #eadcc3;
+}
+
+.construction-section-9-content p {
+  margin: 0 auto 30px;
+
+  max-width: 980px;
+}
+
+
+/* =========================================
+   STATISTICS
+========================================= */
+
+.construction-section-9-stats {
+  width: 100%;
+
+  margin-top: auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  align-items: start;
+}
+
+
+.construction-section-9-stat {
+  text-align: center;
+}
+
+
+.construction-section-9-stat h2 {
+  margin: 0 0 12px;
+
+  font-size: 48px;
+  line-height: 1;
+
+  font-weight: 500;
+
+  color: #eadcc3;
+}
+
+
+.construction-section-9-stat p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  font-weight: 500;
+
+  letter-spacing: 1px;
+
+  color: #eadcc3;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+  .construction-section-9 {
+    min-height: auto;
+
+    padding: 35px 20px 45px;
+  }
+
+  .construction-section-9-content {
+    font-size: 14px;
+  }
+
+  .construction-section-9-content p {
+    max-width: 100%;
+  }
+
+  .construction-section-9-stats {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 35px 10px;
+
+    margin-top: 30px;
+  }
+
+  .construction-section-9-stat h2 {
+    font-size: 40px;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .construction-section-9-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .construction-section-9-stat h2 {
+    font-size: 36px;
+  }
+}
+
+/* =========================================
+   SECTION 10 - ANALYTICS & REPORTING
+========================================= */
+
+.construction-section-10 {
+  width: 100%;
+  min-height: 500px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 55px 6%;
+
+  background: #3a4049;
+  color: #ead9bc;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.construction-section-10-left {
+  width: 42%;
+  text-align: left;
+}
+
+.construction-section-10-left h2 {
+  margin: 0 0 18px;
+
+  font-size: 30px;
+  font-weight: 700;
+
+  color: #ead9bc;
+}
+
+.construction-section-10-left p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.6;
+
+  color: #ead9bc;
+}
+
+.construction-section-10-left ul {
+  margin: 28px 0 0;
+  padding-left: 30px;
+}
+
+.construction-section-10-left li {
+  margin-bottom: 9px;
+
+  font-size: 16px;
+  line-height: 1.45;
+
+  color: #ead9bc;
+}
+
+.construction-section-10-bottom-text {
+  margin-top: 28px !important;
+  padding-left: 30px;
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.construction-section-10-right {
+  width: 42%;
+
+  min-height: 390px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  position: relative;
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+.construction-section-10-signin {
+  align-self: flex-end;
+
+  border: none;
+  border-radius: 25px;
+
+  padding: 11px 22px;
+
+  background: #202731;
+  color: #ead9bc;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.construction-section-10-signin:hover {
+  background: #252d38;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   CAROUSEL
+========================================= */
+
+.construction-section-10-carousel {
+  width: 100%;
+
+  margin-top: 45px;
+
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.construction-section-10-carousel > h2 {
+  max-width: 430px;
+
+  margin: 0 0 30px;
+
+  font-size: 28px;
+  line-height: 1.35;
+
+  color: #ead9bc;
+}
+
+.construction-section-10-slide {
+  max-width: 430px;
+}
+
+.construction-section-10-slide h3 {
+  margin: 0 0 12px;
+
+  font-size: 20px;
+  line-height: 1.4;
+
+  color: #ead9bc;
+}
+
+.construction-section-10-slide p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.6;
+
+  color: #ead9bc;
+}
+
+
+/* =========================================
+   CAROUSEL DOTS
+========================================= */
+
+.construction-section-10-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 25px;
+}
+
+.construction-section-10-dot {
+  width: 8px;
+  height: 8px;
+
+  padding: 0;
+
+  border: 1px solid #202731;
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.construction-section-10-dot.active {
+  background: #202731;
+  transform: scale(1.15);
+}
+
+/* ================================
+   SECTION 11
+================================ */
+
+.construction-section11 {
+  position: relative;
+  background: #252c35;
+  color: #ead9b9;
+  text-align: center;
+
+  padding: 28px 20px 105px;
+
+  overflow: hidden;
+
+  /* Bottom jagged clip */
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 92%,
+    96% 94%,
+    92% 92%,
+    87% 95%,
+    82% 93%,
+    77% 96%,
+    72% 94%,
+    67% 97%,
+    62% 94%,
+    57% 96%,
+    52% 93%,
+    47% 96%,
+    42% 93%,
+    37% 95%,
+    32% 92%,
+    27% 95%,
+    22% 93%,
+    17% 96%,
+    12% 93%,
+    7% 95%,
+    0 92%
+  );
+}
+
+
+/* Content */
+
+.construction-section11-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+
+/* Heading */
+
+.construction-section11 h2 {
+  margin: 0 0 22px;
+
+  font-size: 30px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+
+/* Main paragraph */
+
+.construction-section11 p {
+  margin: 0 auto;
+
+  max-width: 1100px;
+
+  font-size: 16px;
+  line-height: 1.65;
+  font-weight: 500;
+}
+
+
+/* Platform text */
+
+.section11-platform-text {
+  margin-top: 30px !important;
+  margin-bottom: 22px !important;
+}
+
+
+/* Features */
+
+.section11-features {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+.section11-features div {
+  transition: transform 0.2s ease;
+}
+
+.section11-features div:hover {
+  transform: translateX(3px);
+}
+
+
+/* Bottom description */
+
+.section11-description {
+  margin-top: 28px !important;
+  max-width: 1050px !important;
+}
+
+
+/* Button */
+
+.section11-btn {
+  margin-top: 30px;
+
+  padding: 11px 20px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #3b424c;
+  color: #ead9b9;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.section11-btn:hover {
+  background: #444c57;
+  transform: translateY(-2px);
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+
+  .construction-section11 {
+    padding: 25px 18px 90px;
+
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 94%,
+      90% 96%,
+      80% 94%,
+      70% 97%,
+      60% 94%,
+      50% 97%,
+      40% 94%,
+      30% 97%,
+      20% 94%,
+      10% 96%,
+      0 94%
+    );
+  }
+
+  .construction-section11 h2 {
+    font-size: 24px;
+  }
+
+  .construction-section11 p,
+  .section11-features {
+    font-size: 14px;
+  }
+
+  .section11-description {
+    margin-top: 25px !important;
+  }
+}
+
+/* ================= SECTION 12 ================= */
+
+.construction-section12 {
+  width: 100%;
+  min-height: 290px;
+  background: #3b4048;
+  color: #ead9bd;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  box-sizing: border-box;
+  padding: 55px 40px 65px;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.construction-section12-content {
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.construction-section12 h2 {
+  margin: 0 0 14px;
+
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.35;
+
+  color: #ead9bd;
+}
+
+.section12-subtitle {
+  margin: 0 0 27px;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+
+  color: #ead9bd;
+}
+
+.section12-assets {
+  margin: 0 auto 26px;
+
+  max-width: 1100px;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.7;
+
+  color: #ead9bd;
+}
+
+.section12-assets:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .construction-section12 {
+    min-height: auto;
+    padding: 45px 20px 50px;
+  }
+
+  .construction-section12 h2 {
+    font-size: 19px;
+  }
+
+  .section12-subtitle,
+  .section12-assets {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .construction-section12 {
+    padding: 40px 16px 45px;
+  }
+
+  .construction-section12 h2 {
+    font-size: 18px;
+  }
+
+  .section12-subtitle,
+  .section12-assets {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+
+/* ================================
+   SECTION 13
+================================ */
+
+.construction-section13 {
+  width: 100%;
+  min-height: 400px;
+
+  background: #3b4048;
+  color: #ead9bd;
+
+  padding: 55px 7% 50px;
+
+  box-sizing: border-box;
+}
+
+
+/* ================================
+   TOP ROW
+================================ */
+
+.construction-section13-top {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+}
+
+.construction-section13-top h2 {
+  margin: 0;
+
+  font-size: 31px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+/* ================================
+   SIGN UP BUTTON
+================================ */
+
+.construction-section13-signup {
+  width: 290px;
+  height: 50px;
+
+  border: none;
+  border-radius: 28px;
+
+  background: #202731;
+  color: #ead9bd;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.construction-section13-signup:hover {
+  background: #252e39;
+  transform: translateY(-2px);
+}
+
+.section13-arrow {
+  font-size: 22px;
+  line-height: 1;
+}
+
+
+/* ================================
+   VISIT AREA
+================================ */
+
+.construction-section13-content {
+  margin-top: 140px;
+
+  text-align: center;
+}
+
+.construction-section13-content h3 {
+  margin: 0 0 38px;
+
+  font-size: 20px;
+  font-weight: 600;
+
+  color: #ead9bd;
+}
+
+
+/* ================================
+   LINKS
+================================ */
+
+.construction-section13-links {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  max-width: 800px;
+
+  margin: 0 auto;
+
+  gap: 60px;
+}
+
+.construction-section13-link {
+  min-width: 310px;
+
+  padding: 11px 16px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #202731;
+  color: #ead9bd;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.construction-section13-link:hover {
+  background: #272f39;
+  transform: translateY(-2px);
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 850px) {
+
+  .construction-section13 {
+    padding: 45px 30px;
+  }
+
+  .construction-section13-top {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .construction-section13-content {
+    margin-top: 80px;
+  }
+
+  .construction-section13-links {
+    flex-direction: column;
+
+    gap: 20px;
+  }
+
+  .construction-section13-link {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .construction-section13 {
+    padding: 40px 20px;
+  }
+
+  .construction-section13-top h2 {
+    font-size: 25px;
+  }
+
+  .construction-section13-signup {
+    width: 250px;
+  }
+
+  .construction-section13-content {
+    margin-top: 65px;
+  }
+
+  .construction-section13-link {
+    min-width: 0;
+    font-size: 14px;
+  }
+}
+
+/* ========================================
+   SECTION 14 - FAQ
+======================================== */
+
+.construction-section14 {
+  width: 100%;
+  background: #222831;
+  color: #ead9bd;
+
+  padding: 28px 15px 45px;
+
+  box-sizing: border-box;
+}
+
+
+/* FAQ Heading */
+
+.construction-section14 h2 {
+  margin: 0 0 30px 30px;
+
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+/* FAQ Container */
+
+.construction-faq {
+  width: 100%;
+}
+
+
+/* Individual FAQ */
+
+.construction-faq details {
+  width: 100%;
+
+  margin-bottom: 15px;
+
+  border: 1px solid #ead9bd;
+
+  background: #303640;
+
+  box-sizing: border-box;
+}
+
+
+/* Question */
+
+.construction-faq summary {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 30px;
+
+  padding: 5px 20px 5px 20px;
+
+  cursor: pointer;
+
+  list-style: none;
+
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  color: #ead9bd;
+}
+
+
+/* Remove browser's default arrow */
+
+.construction-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+
+/* Custom triangle */
+
+.construction-faq summary::before {
+  content: "";
+
+  width: 0;
+  height: 0;
+
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid #ead9bd;
+
+  margin-right: 10px;
+
+  transition: transform 0.2s ease;
+}
+
+
+/* Rotate triangle when opened */
+
+.construction-faq details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+
+/* Answer */
+
+.construction-faq details p {
+  margin: 0;
+
+  padding: 18px 45px 20px;
+
+  border-top: 1px solid rgba(234, 217, 189, 0.35);
+
+  font-size: 15px;
+  line-height: 1.7;
+  font-weight: 500;
+
+  color: #ead9bd;
+
+  background: #343a43;
+}
+
+
+/* Hover */
+
+.construction-faq details:hover {
+  background: #343a43;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+
+  .construction-section14 {
+    padding: 25px 12px 40px;
+  }
+
+  .construction-section14 h2 {
+    margin-left: 15px;
+    margin-bottom: 25px;
+
+    font-size: 25px;
+  }
+
+  .construction-faq summary {
+    padding: 6px 12px;
+
+    font-size: 15px;
+  }
+
+  .construction-faq details p {
+    padding: 15px 25px;
+
+    font-size: 14px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .construction-section14 h2 {
+    margin-left: 5px;
+
+    font-size: 22px;
+  }
+
+  .construction-faq summary {
+    font-size: 14px;
+  }
+
+  .construction-faq details p {
+    padding: 14px 18px;
+
+    font-size: 13px;
+    line-height: 1.6;
+  }
+}

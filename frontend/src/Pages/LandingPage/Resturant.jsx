@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState , useEffect } from 'react';
 import "../../Page_styles/LandingPage/Resturant.css"
+import { FaHospital, FaToolbox } from 'react-icons/fa';
 
 const hospitalitySection10Items = [
   {
@@ -1184,7 +1185,7 @@ useEffect(() => {
     {/* CARD 2 */}
     <a href="/healthcare" className="hospitality-industry-card industry-card-raised">
       <div className="hospitality-industry-icon">
-        ∿
+        <FaHospital />
       </div>
 
       <h3>
@@ -1216,7 +1217,7 @@ useEffect(() => {
     {/* CARD 4 */}
     <a href="/construction" className="hospitality-industry-card industry-card-raised">
       <div className="hospitality-industry-icon">
-        🧰
+        <FaToolbox/>
       </div>
 
       <h3>

@@ -904,7 +904,7 @@ useEffect(() => {
 
     <button
       className="healthcare-section-13-signup"
-      onClick={() => window.location.href = "/signup"}
+      onClick={() => window.location.href = "/user/signup"}
     >
       Sign Up Now
       <span>→</span>
@@ -928,7 +928,7 @@ useEffect(() => {
 
       <button
         onClick={() =>
-          window.location.href = "/itam-management"
+          window.location.href = "/it-asset-management"
         }
       >
         IT Asset Management System

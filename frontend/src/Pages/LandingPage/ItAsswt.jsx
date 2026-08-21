@@ -642,25 +642,6 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, []);
 
-  // ==========================================
-  // PREVIOUS
-  // ==========================================
-
-  const handlePrevious2 = () => {
-    setCurrentSlide3((prev) =>
-      prev === 0 ? slides.length - 1 : prev - 1
-    );
-  };
-
-  // ==========================================
-  // NEXT
-  // ==========================================
-
-  const handleNext2 = () => {
-    setCurrentSlide3((prev) =>
-      prev === slides.length - 1 ? 0 : prev + 1
-    );
-  };
 
   const slide = slides2[currentSlide];
 
@@ -1215,29 +1196,6 @@ useEffect(() => {
     <section className="itam-section-5">
 
       <div className="itam-section-5-content">
-
-        {/* LEFT ARROW */}
-
-        <button
-          type="button"
-          className="itam-section-5-arrow itam-section-5-arrow-left"
-          onClick={handlePrevious2}
-          aria-label="Previous slide"
-        >
-          ‹
-        </button>
-
-
-        {/* RIGHT ARROW */}
-
-        <button
-          type="button"
-          className="itam-section-5-arrow itam-section-5-arrow-right"
-          onClick={handleNext2}
-          aria-label="Next slide"
-        >
-          ›
-        </button>
 
 
         {/* CAROUSEL */}
@@ -1949,7 +1907,7 @@ useEffect(() => {
       <div className="section15-header">
         <h2>IT Asset Management System</h2>
 
-        <button className="section15-signup">
+        <button className="section15-signup" >
           Sign Up Now
           <span>→</span>
         </button>

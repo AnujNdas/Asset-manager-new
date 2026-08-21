@@ -1555,17 +1555,19 @@
   list-style-position: outside;
   padding-left: 25px;
   margin: 20px 0;
+  align-items: center;
 }
 
 .healthcare-section-9-assets li {
   display: list-item;
   margin-bottom: 6px;
+   width: 300px;
 }
 
 .healthcare-section-9-ending {
   margin: 25px 0 0;
   padding-left: 40px;
-
+ 
   font-size: 16px;
   line-height: 1.6;
   font-weight: 600;

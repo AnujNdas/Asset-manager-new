@@ -28,6 +28,7 @@ import Manufacturing from "./Pages/LandingPage/Manufacturing";
 import Resturant from "./Pages/LandingPage/Resturant";
 import { HelmetData } from "react-helmet-async";
 import Healthcare from "./Pages/LandingPage/Healthcare";
+import Construction from "./Pages/LandingPage/Construction";
 
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
@@ -120,6 +121,10 @@ const App = () => {
       <Route
           path="/healthcare-asset-tracking"
           element={<Healthcare />}
+      />
+      <Route
+          path="/construction-equipment-tracking"
+          element={<Construction />}
       />
 
   </Route>
