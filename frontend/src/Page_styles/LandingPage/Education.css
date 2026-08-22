@@ -1,0 +1,3397 @@
+/* =========================================
+   EDUCATION PAGE - SECTION 1
+========================================= */
+
+.education-section1 {
+  width: 100%;
+  position: relative;
+
+  background: #3b4048;
+  color: #ead9bd;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TOP HERO
+========================================= */
+
+.education-section1-hero {
+  position: relative;
+
+  width: 100%;
+  height: 275px;
+
+  background: #202731;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  padding-top: 55px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.education-section1-hero h1 {
+  margin: 0;
+
+  width: 100%;
+
+  text-align: center;
+
+  font-size: 58px;
+  line-height: 1.15;
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+/* =========================================
+   POLYGON / CLIP-PATH TRANSITION
+========================================= */
+
+.education-section1-hero::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -1px;
+
+  width: 100%;
+  height: 55px;
+
+  background: #3b4048;
+
+  clip-path: polygon(
+    0% 35%,
+    10% 70%,
+    19% 55%,
+    30% 20%,
+    41% 55%,
+    48% 48%,
+    61% 73%,
+    73% 43%,
+    83% 60%,
+    91% 22%,
+    100% 58%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+
+/* =========================================
+   LOWER AREA
+========================================= */
+
+.education-section1-bottom {
+  position: relative;
+
+  width: 100%;
+  height: 175px;
+
+  background: #3b4048;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  padding-bottom: 38px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+.education-breadcrumb {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  color: #ead9bd;
+
+  text-align: center;
+}
+
+.education-breadcrumb a {
+  color: #ead9bd;
+  width: 50px;
+  padding: 0;
+    display: inline-block;
+  text-decoration: underline;
+
+  transition: opacity 0.2s ease;
+}
+
+.education-breadcrumb a:hover {
+  opacity: 0.75;
+}
+
+.education-breadcrumb span {
+  color: #ead9bd;
+  padding-left: 10px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .education-section1-hero {
+    height: 260px;
+    padding: 55px 25px 0;
+  }
+
+  .education-section1-hero h1 {
+    font-size: 48px;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .education-section1-hero {
+    height: 240px;
+
+    padding: 50px 20px 0;
+  }
+
+  .education-section1-hero h1 {
+    font-size: 38px;
+  }
+
+  .education-section1-bottom {
+    height: 150px;
+    padding-bottom: 32px;
+  }
+
+  .education-breadcrumb {
+    font-size: 14px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .education-section1-hero {
+    height: 220px;
+
+    padding: 45px 15px 0;
+  }
+
+  .education-section1-hero h1 {
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .education-section1-hero::after {
+    height: 45px;
+  }
+
+  .education-section1-bottom {
+    height: 125px;
+
+    padding: 0 15px 28px;
+  }
+
+  .education-breadcrumb {
+    font-size: 13px;
+  }
+
+}
+
+/* =========================================
+   EDUCATION PAGE - SECTION 2
+========================================= */
+
+.education-section2 {
+  width: 100%;
+
+  background: #3b4048;
+  color: #ead9bd;
+
+  padding: 28px 35px 68px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.education-section2 h2 {
+  margin: 0 auto;
+
+  max-width: 850px;
+
+  font-size: 28px;
+  line-height: 1.45;
+
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.education-section2 p {
+  max-width: 950px;
+
+  margin: 115px auto 0;
+
+  font-size: 16px;
+  line-height: 1.7;
+
+  font-weight: 500;
+
+  color: #ead9bd;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .education-section2 {
+    padding: 30px 25px 60px;
+  }
+
+  .education-section2 h2 {
+    font-size: 25px;
+  }
+
+  .education-section2 p {
+    margin-top: 80px;
+    max-width: 850px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .education-section2 {
+    padding: 25px 20px 50px;
+  }
+
+  .education-section2 h2 {
+    font-size: 22px;
+    line-height: 1.4;
+  }
+
+  .education-section2 p {
+    margin-top: 55px;
+
+    font-size: 14px;
+    line-height: 1.65;
+  }
+}
+
+
+@media (max-width: 400px) {
+
+  .education-section2 h2 {
+    font-size: 20px;
+  }
+
+  .education-section2 p {
+    font-size: 13px;
+  }
+
+}
+
+/* =========================================
+   EDUCATION PAGE - SECTION 3
+========================================= */
+
+.education-section3 {
+  width: 100%;
+
+  background: #3b4048;
+
+  padding: 0 18px 35px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* =========================================
+   DASHBOARD CONTAINER
+========================================= */
+
+.education-dashboard-wrapper {
+  width: 100%;
+  max-width: 970px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* =========================================
+   DASHBOARD IMAGE
+========================================= */
+
+.education-dashboard-image {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+
+  border-radius: 0;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .education-section3 {
+    padding: 0 15px 30px;
+  }
+
+  .education-dashboard-wrapper {
+    max-width: 100%;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .education-section3 {
+    padding: 0 10px 25px;
+  }
+
+}
+
+/* =====================================================
+   EDUCATION SECTION 4
+===================================================== */
+
+.education-section4 {
+  width: 100%;
+  min-height: 510px;
+
+  display: flex;
+  align-items: center;
+
+  background: #272d36;
+  color: #ead9bd;
+
+  padding: 35px 35px 45px;
+
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   LEFT SIDE
+===================================================== */
+
+.education-section4-left {
+  width: 50%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  padding-left: 10px;
+}
+
+
+.education-section4-left h2 {
+  width: 100%;
+
+  margin: 0 0 35px;
+
+  text-align: center;
+
+  font-size: 25px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+/* =====================================================
+   FEATURES LIST
+===================================================== */
+
+.education-best-features {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+
+.education-best-features li {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 25px;
+
+  font-size: 16px;
+  line-height: 1.4;
+
+  font-weight: 600;
+
+  color: #ead9bd;
+}
+
+
+.education-best-features li span {
+  width: 25px;
+
+  margin-right: 8px;
+
+  flex-shrink: 0;
+
+  text-align: center;
+
+  font-size: 15px;
+}
+
+
+/* =====================================================
+   FREE TRIAL BUTTON
+===================================================== */
+
+.education-free-trial-btn {
+  margin-top: 8px;
+  margin-left: 80px;
+
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #202731;
+  color: #ead9bd;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+
+.education-free-trial-btn:hover {
+  background: #171d25;
+  transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   RIGHT SIDE
+===================================================== */
+
+.education-section4-right {
+  width: 50%;
+  min-height: 430px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  position: relative;
+}
+
+
+.education-section4-right > h2 {
+  margin: 0;
+
+  font-size: 27px;
+  line-height: 1.4;
+
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+/* =====================================================
+   SIGN UP BUTTON
+===================================================== */
+
+.education-signup-btn {
+  margin-top: 18px;
+
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 2px;
+
+  background: #202731;
+  color: #ead9bd;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.education-signup-btn:hover {
+  background: #171d25;
+}
+
+
+/* =====================================================
+   CAROUSEL CONTENT
+===================================================== */
+
+.education-carousel-content {
+  width: 85%;
+
+  margin-top: 52px;
+
+  min-height: 150px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  justify-content: flex-start;
+}
+
+
+.education-carousel-content h3 {
+  margin: 0 0 17px;
+
+  font-size: 27px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+.education-carousel-content p {
+  max-width: 500px;
+
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.65;
+
+  font-weight: 500;
+
+  color: #ead9bd;
+}
+
+
+/* =====================================================
+   CAROUSEL DOTS
+===================================================== */
+
+.education-carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 22px;
+}
+
+
+.education-carousel-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: 1px solid #111820;
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+
+.education-carousel-dot.active {
+  background: #111820;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .education-section4 {
+    flex-direction: column;
+
+    padding: 40px 25px 50px;
+  }
+
+  .education-section4-left,
+  .education-section4-right {
+    width: 100%;
+  }
+
+  .education-section4-left {
+    padding-left: 0;
+  }
+
+  .education-section4-left h2 {
+    margin-bottom: 30px;
+  }
+
+  .education-free-trial-btn {
+    margin-left: 0;
+    align-self: center;
+  }
+
+  .education-section4-right {
+    margin-top: 50px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .education-section4 {
+    padding: 30px 20px 40px;
+  }
+
+  .education-section4-left h2 {
+    font-size: 22px;
+  }
+
+  .education-best-features li {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .education-section4-right > h2 {
+    font-size: 23px;
+  }
+
+  .education-carousel-content h3 {
+    font-size: 23px;
+  }
+
+  .education-carousel-content p {
+    font-size: 14px;
+  }
+
+}
+
+/* =====================================================
+   EDUCATION SECTION 5
+===================================================== */
+
+.education-section5 {
+  width: 100%;
+  min-height: 345px;
+
+  box-sizing: border-box;
+
+  background: #3a414b;
+  color: #ead9bd;
+
+  padding: 45px 30px 50px;
+
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =====================================================
+   HEADING
+===================================================== */
+
+.education-section5 h2 {
+  margin: 0 0 25px;
+
+  font-size: 31px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #ead9bd;
+}
+
+
+/* =====================================================
+   INTRO PARAGRAPH
+===================================================== */
+
+.education-section5-intro {
+  max-width: 930px;
+
+  margin: 0 auto;
+
+  font-size: 15.5px;
+  line-height: 1.6;
+
+  font-weight: 500;
+
+  color: #ead9bd;
+}
+
+
+/* =====================================================
+   LOWER CONTENT
+===================================================== */
+
+.education-section5-content {
+  max-width: 950px;
+
+  margin-top: 28px;
+
+  font-size: 15.5px;
+  line-height: 1.6;
+
+  font-weight: 500;
+
+  color: #ead9bd;
+}
+
+
+.education-section5-content p {
+  margin: 0 0 5px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .education-section5 {
+    padding: 40px 25px 45px;
+  }
+
+  .education-section5 h2 {
+    font-size: 27px;
+  }
+
+  .education-section5-intro,
+  .education-section5-content {
+    font-size: 15px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .education-section5 {
+    padding: 35px 18px 40px;
+  }
+
+  .education-section5 h2 {
+    font-size: 23px;
+  }
+
+  .education-section5-intro,
+  .education-section5-content {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+}
+
+/* =====================================================
+   EDUCATION SECTION 6
+===================================================== */
+
+.education-section6 {
+  width: 100%;
+  min-height: 375px;
+
+  box-sizing: border-box;
+
+  background: #222831;
+  color: #ead9bd;
+
+  padding: 48px 20px 55px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+.education-section6-intro {
+  margin: 0 0 16px;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  font-weight: 500;
+
+  color: #ead9bd;
+}
+
+
+/* =====================================================
+   LIST CONTAINER
+===================================================== */
+
+.education-section6-list {
+  position: relative;
+
+  width: 500px;
+  max-width: 100%;
+
+  padding-top: 34px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =====================================================
+   BRIEFCASE ICON
+===================================================== */
+
+.education-section6-list::before {
+  content: "💼";
+
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  font-size: 18px;
+  line-height: 1;
+}
+
+
+/* =====================================================
+   CHECK ITEMS
+===================================================== */
+
+.education-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 4px;
+
+  font-size: 17px;
+  line-height: 1.45;
+
+  font-weight: 500;
+
+  color: #ead9bd;
+
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   GREEN CHECK BOX
+===================================================== */
+
+.education-check {
+  width: 19px;
+  height: 19px;
+
+  flex: 0 0 19px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #00d000;
+
+  color: #000;
+
+  border: 1px solid #111;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  line-height: 1;
+}
+
+
+/* =====================================================
+   STEPPED INDENTATION
+===================================================== */
+
+.education-check-item.item-1 {
+  margin-left: 35px;
+}
+
+.education-check-item.item-2 {
+  margin-left: 52px;
+}
+
+.education-check-item.item-3 {
+  margin-left: 70px;
+}
+
+.education-check-item.item-4 {
+  margin-left: 30px;
+}
+
+.education-check-item.item-5 {
+  margin-left: 75px;
+}
+
+.education-check-item.item-6 {
+  margin-left: 48px;
+}
+
+.education-check-item.item-7 {
+  margin-left: 35px;
+}
+
+.education-check-item.item-8 {
+  margin-left: 0;
+}
+
+
+/* =====================================================
+   ITEM WITHOUT CHECKBOX
+===================================================== */
+
+.education-check-item.no-check {
+  margin-left: 35px;
+
+  padding-left: 0;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .education-section6 {
+    padding: 40px 15px 45px;
+  }
+
+  .education-section6-intro {
+    font-size: 14px;
+  }
+
+  .education-section6-list {
+    width: 100%;
+    padding-left: 5px;
+  }
+
+  .education-check-item {
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .education-check-item.item-1,
+  .education-check-item.item-2,
+  .education-check-item.item-3,
+  .education-check-item.item-4,
+  .education-check-item.item-5,
+  .education-check-item.item-6,
+  .education-check-item.item-7,
+  .education-check-item.item-8,
+  .education-check-item.no-check {
+    margin-left: 0;
+  }
+
+}
+
+/* ================================
+   SECTION 7
+================================ */
+
+.education-section7 {
+  width: 100%;
+  min-height: 460px;
+  background: #3a414b;
+  color: #eadcc4;
+  padding: 0 0 45px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* SECTION HEADING */
+
+.education-section7-title {
+  width: 100%;
+  margin: 0;
+  padding: 28px 20px 18px;
+  text-align: center;
+
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+
+  color: #eadcc4;
+  box-sizing: border-box;
+}
+
+/* MAIN TWO-COLUMN AREA */
+
+.education-section7-content {
+  width: 100%;
+  min-height: 390px;
+
+  display: grid;
+  grid-template-columns: 48% 52%;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+/* ================================
+   LEFT SIDE
+================================ */
+
+.education-section7-left {
+  padding: 45px 55px;
+  box-sizing: border-box;
+}
+
+.education-section7-left h3 {
+  max-width: 430px;
+  margin: 0 auto 20px;
+
+  text-align: center;
+
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 700;
+
+  color: #eadcc4;
+}
+
+.education-section7-left ul {
+  margin: 0;
+  padding-left: 25px;
+}
+
+.education-section7-left li {
+  margin-bottom: 28px;
+  padding-left: 2px;
+    flex-direction: column;
+  color: #eadcc4;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.education-section7-left li::marker {
+  color: #eadcc4;
+  font-size: 14px;
+}
+
+.education-section7-left li strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.education-section7-left li span {
+  display: block;
+
+  max-width: 400px;
+
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* ================================
+   RIGHT CAROUSEL
+================================ */
+
+.education-section7-right {
+  min-height: 360px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px 45px;
+
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* CAROUSEL CONTENT */
+
+.education-section7-carousel {
+  width: 100%;
+  max-width: 490px;
+  min-height: 230px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.education-section7-carousel h3 {
+  margin: 0 0 22px;
+
+  font-size: 28px;
+  line-height: 1.35;
+  font-weight: 700;
+
+  color: #eadcc4;
+}
+
+.education-section7-carousel p {
+  max-width: 470px;
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 500;
+
+  color: #eadcc4;
+}
+
+/* ================================
+   CAROUSEL DOTS
+================================ */
+
+.education-section7-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.education-section7-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+  border: 1px solid #1d2229;
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.education-section7-dot.active {
+  background: #171b20;
+  border-color: #171b20;
+}
+
+/* ================================
+   SIGN UP BUTTON
+================================ */
+
+.education-section7-signup {
+  border: none;
+  outline: none;
+
+  padding: 11px 22px;
+
+  border-radius: 24px;
+
+  background: #20262e;
+  color: #eadcc4;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.education-section7-signup:hover {
+  background: #1a1f26;
+  transform: translateY(-1px);
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 900px) {
+
+  .education-section7-content {
+    grid-template-columns: 1fr;
+  }
+
+  .education-section7-left {
+    padding: 35px 30px 15px;
+  }
+
+  .education-section7-right {
+    min-height: 350px;
+    padding: 20px 30px 40px;
+  }
+
+  .education-section7-carousel {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .education-section7 {
+    min-height: auto;
+  }
+
+  .education-section7-title {
+    font-size: 23px;
+    padding: 25px 15px;
+  }
+
+  .education-section7-left {
+    padding: 25px 20px;
+  }
+
+  .education-section7-left h3 {
+    font-size: 18px;
+  }
+
+  .education-section7-left li {
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+
+  .education-section7-left li span {
+    font-size: 14px;
+  }
+
+  .education-section7-right {
+    padding: 20px;
+  }
+
+  .education-section7-carousel h3 {
+    font-size: 23px;
+  }
+
+  .education-section7-carousel p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+/* ================================
+   EDUCATION SECTION 8
+================================ */
+
+.education-section8 {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  overflow: hidden;
+
+  background: #222934;
+
+  color: #ead9b9;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 45px 20px 100px;
+  box-sizing: border-box;
+}
+
+
+/* ================================
+   MAIN CONTENT
+================================ */
+
+.education-section8-content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 1100px;
+
+  text-align: center;
+}
+
+
+/* ================================
+   MAIN HEADING
+================================ */
+
+.education-section8-content h2 {
+  margin: 0;
+
+  font-size: 30px;
+  font-weight: 700;
+
+  color: #ead9b9;
+
+  line-height: 1.25;
+}
+
+
+/* ================================
+   CAROUSEL
+================================ */
+
+.education-section8-carousel {
+  width: 100%;
+  max-width: 850px;
+
+  min-height: 260px;
+
+  margin: 65px auto 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  text-align: center;
+}
+
+
+/* Carousel title */
+
+.education-section8-carousel h3 {
+  margin: 0 0 25px;
+
+  font-size: 30px;
+  font-weight: 700;
+
+  line-height: 1.3;
+
+  color: #ead9b9;
+}
+
+
+/* Carousel description */
+
+.education-section8-carousel p {
+  width: 100%;
+  max-width: 780px;
+
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 500;
+
+  line-height: 1.55;
+
+  color: #ead9b9;
+}
+
+
+/* ================================
+   DOTS
+================================ */
+
+.education-section8-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 40px;
+}
+
+
+.education-section8-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #777d84;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+
+.education-section8-dot.active {
+  background: #ead9b9;
+
+  transform: scale(1.15);
+}
+
+
+/* ================================
+   SIGN IN BUTTON
+================================ */
+
+.education-section8-signin {
+  margin-top: 18px;
+
+  padding: 11px 20px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #39414c;
+
+  color: #ead9b9;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.education-section8-signin:hover {
+  background: #454e5a;
+
+  transform: translateY(-2px);
+}
+
+
+/* ================================
+   BOTTOM CLIP-PATH
+================================ */
+
+.education-section8-wave {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 75px;
+
+  background: #39404a;
+
+  clip-path: polygon(
+    0% 55%,
+    10% 78%,
+    19% 68%,
+    29% 87%,
+    39% 60%,
+    49% 82%,
+    60% 62%,
+    70% 88%,
+    82% 45%,
+    91% 67%,
+    100% 52%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+
+/* Second darker layer */
+
+.education-section8-wave::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 45px;
+
+  background: #303741;
+
+  clip-path: polygon(
+    0% 50%,
+    10% 72%,
+    20% 60%,
+    30% 80%,
+    40% 54%,
+    50% 75%,
+    60% 55%,
+    70% 76%,
+    82% 42%,
+    92% 61%,
+    100% 48%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 768px) {
+
+  .education-section8 {
+    min-height: 560px;
+
+    padding: 40px 18px 90px;
+  }
+
+  .education-section8-content h2 {
+    font-size: 25px;
+  }
+
+  .education-section8-carousel {
+    margin-top: 50px;
+
+    min-height: 250px;
+  }
+
+  .education-section8-carousel h3 {
+    font-size: 25px;
+  }
+
+  .education-section8-carousel p {
+    font-size: 16px;
+
+    line-height: 1.5;
+  }
+
+  .education-section8-wave {
+    height: 65px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .education-section8 {
+    min-height: 540px;
+
+    padding: 35px 15px 80px;
+  }
+
+  .education-section8-content h2 {
+    font-size: 22px;
+  }
+
+  .education-section8-carousel {
+    margin-top: 45px;
+  }
+
+  .education-section8-carousel h3 {
+    font-size: 22px;
+
+    margin-bottom: 20px;
+  }
+
+  .education-section8-carousel p {
+    font-size: 15px;
+  }
+
+  .education-section8-dots {
+    margin-top: 30px;
+  }
+}
+
+/* =========================================
+   SECTION 9
+========================================= */
+
+.education-section9 {
+  width: 100%;
+  min-height: 520px;
+  background: #343a43;
+  color: #ead9b9;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 55px 0 35px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.education-section9-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 34% 66%;
+  align-items: center;
+
+  padding: 0 25px;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.education-section9-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding-right: 35px;
+}
+
+
+/* =========================================
+   FEATURE
+========================================= */
+
+.education-section9-feature {
+  text-align: center;
+
+  margin-bottom: 25px;
+
+  opacity: 0.45;
+  transform: scale(0.97);
+
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.education-section9-feature.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.education-section9-icon {
+  font-size: 18px;
+
+  width: 20px;
+  height: 20px;
+
+  margin: 0 auto 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =========================================
+   FEATURE TITLE
+========================================= */
+
+.education-section9-feature h3 {
+  margin: 0 0 5px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   FEATURE TEXT
+========================================= */
+
+.education-section9-feature p {
+  margin: 0 auto;
+
+  max-width: 330px;
+
+  font-size: 16px;
+  line-height: 1.55;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.education-section9-right {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* =========================================
+   IMAGE WRAPPER
+========================================= */
+
+.education-section9-image-wrapper {
+  width: 100%;
+  max-width: 640px;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.education-section9-image {
+  width: 100%;
+  height: auto;
+
+  max-height: 350px;
+
+  object-fit: contain;
+
+  display: block;
+
+  animation: educationSection9Fade 0.6s ease;
+}
+
+
+/* =========================================
+   IMAGE FADE
+========================================= */
+
+@keyframes educationSection9Fade {
+
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.education-section9-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 25px;
+}
+
+
+.education-section9-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #171b21;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.education-section9-dot.active {
+  background: #171b21;
+
+  transform: scale(1.1);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .education-section9 {
+    padding: 45px 0 30px;
+  }
+
+  .education-section9-container {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .education-section9-left {
+    padding-right: 0;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+
+  .education-section9-feature {
+    margin-bottom: 0;
+  }
+
+  .education-section9-feature h3 {
+    font-size: 16px;
+  }
+
+  .education-section9-feature p {
+    font-size: 14px;
+  }
+
+  .education-section9-image-wrapper {
+    max-width: 700px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .education-section9 {
+    min-height: auto;
+
+    padding: 40px 15px 30px;
+  }
+
+  .education-section9-container {
+    padding: 0;
+  }
+
+  .education-section9-left {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .education-section9-feature {
+    margin-bottom: 15px;
+  }
+
+  .education-section9-feature h3 {
+    font-size: 17px;
+  }
+
+  .education-section9-feature p {
+    font-size: 14px;
+
+    max-width: 300px;
+  }
+
+  .education-section9-image-wrapper {
+    width: 100%;
+  }
+
+  .education-section9-image {
+    max-height: 250px;
+  }
+
+  .education-section9-dots {
+    margin-top: 20px;
+  }
+
+}
+
+/* ================= SECTION 10 ================= */
+
+.education-section10 {
+  width: 100%;
+  min-height: 220px;
+  background: #242a33;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 55px 40px 25px;
+  box-sizing: border-box;
+}
+
+.education-stats-container {
+  width: 100%;
+  max-width: 1150px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  align-items: start;
+  text-align: center;
+
+  gap: 40px;
+}
+
+.education-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.education-stat h2 {
+  margin: 0;
+
+  font-size: 48px;
+  line-height: 1;
+
+  font-weight: 700;
+
+  color: #ead9b9;
+}
+
+.education-stat p {
+  margin: 14px 0 0;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  color: #ead9b9;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+  .education-stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 45px;
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .education-section10 {
+    padding: 45px 20px 30px;
+  }
+
+  .education-stats-container {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .education-stat h2 {
+    font-size: 42px;
+  }
+
+  .education-stat p {
+    font-size: 15px;
+  }
+
+}
+
+/* =========================================
+   EDUCATION SECTION 11
+========================================= */
+
+.education-section11 {
+  width: 100%;
+  min-height: 500px;
+
+  background: #343a43;
+  color: #ead9b9;
+
+  padding: 60px 45px 35px;
+
+  box-sizing: border-box;
+
+  position: relative;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.education-section11-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 48% 52%;
+
+  align-items: start;
+}
+
+
+/* =========================================
+   LEFT
+========================================= */
+
+.education-section11-left {
+  padding: 5px 50px 0 25px;
+}
+
+
+.education-section11-left h2 {
+  margin: 0;
+
+  max-width: 390px;
+
+  font-size: 29px;
+  font-weight: 500;
+
+  line-height: 1.4;
+
+  color: #ead9b9;
+}
+
+
+.education-section11-subtitle {
+  margin: 18px 0 0;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   LIFECYCLE
+========================================= */
+
+.education-section11-lifecycle {
+  margin-top: 34px;
+}
+
+
+.education-section11-lifecycle p {
+  margin: 0 0 8px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  line-height: 1.35;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   RIGHT
+========================================= */
+
+.education-section11-right {
+  padding: 0 20px 0 25px;
+
+  text-align: center;
+}
+
+
+.education-section11-right h3 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.35;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   FREE TRIAL
+========================================= */
+
+.education-section11-trial {
+  margin-top: 12px;
+
+  padding: 10px 19px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #202731;
+
+  color: #ead9b9;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.education-section11-trial:hover {
+  background: #171d25;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   ASSET LIST
+========================================= */
+
+.education-section11-assets {
+  margin-top: 60px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  width: fit-content;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  text-align: left;
+}
+
+
+.education-section11-asset {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 8px;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   GREEN CHECK
+========================================= */
+
+.education-section11-check {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #00c900;
+
+  border: 1px solid #111;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.education-section11-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 35px;
+}
+
+
+.education-section11-dot {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  border: 1px solid #171b21;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.education-section11-dot.active {
+  background: #171b21;
+
+  transform: scale(1.1);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .education-section11 {
+    padding: 50px 25px 35px;
+  }
+
+  .education-section11-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .education-section11-left {
+    padding-left: 5px;
+    padding-right: 25px;
+  }
+
+  .education-section11-right {
+    padding-left: 15px;
+    padding-right: 5px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+  .education-section11 {
+    padding: 45px 20px 30px;
+  }
+
+  .education-section11-container {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .education-section11-left {
+    padding: 0;
+    text-align: center;
+  }
+
+  .education-section11-left h2 {
+    max-width: none;
+
+    font-size: 25px;
+  }
+
+  .education-section11-lifecycle {
+    text-align: left;
+
+    width: fit-content;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .education-section11-right {
+    padding: 0;
+  }
+
+  .education-section11-assets {
+    margin-top: 35px;
+  }
+
+}
+
+
+/* =========================================
+   EDUCATION SECTION 12
+========================================= */
+
+.education-section12 {
+  width: 100%;
+  min-height: 520px;
+
+  background: #343a43;
+  color: #ead9b9;
+
+  padding: 45px 30px 25px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+
+.education-section12-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.education-section12-container h2 {
+  margin: 0;
+
+  font-size: 30px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.education-section12-intro {
+  max-width: 950px;
+
+  margin: 22px auto 0;
+
+  font-size: 17px;
+  line-height: 1.55;
+
+  font-weight: 600;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   SUBTITLE
+========================================= */
+
+.education-section12-subtitle {
+  max-width: 900px;
+
+  margin: 35px auto 0;
+
+  font-size: 15px;
+  line-height: 1.5;
+
+  font-weight: 500;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   CHECKLIST
+========================================= */
+
+.education-section12-list {
+  margin: 28px auto 0;
+
+  width: fit-content;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  text-align: left;
+}
+
+
+/* =========================================
+   CHECKLIST ITEM
+========================================= */
+
+.education-section12-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 8px;
+
+  font-size: 16px;
+  line-height: 1.35;
+
+  font-weight: 500;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   STAGGERED POSITIONS
+========================================= */
+
+.education-section12-item.item-1 {
+  margin-left: 0;
+}
+
+.education-section12-item.item-2 {
+  margin-left: 20px;
+}
+
+.education-section12-item.item-3 {
+  margin-left: 70px;
+}
+
+.education-section12-item.item-4 {
+  margin-left: 5px;
+}
+
+.education-section12-item.item-5 {
+  margin-left: 105px;
+}
+
+.education-section12-item.item-6 {
+  margin-left: 130px;
+}
+
+.education-section12-item.item-7 {
+  margin-left: 15px;
+}
+
+
+/* =========================================
+   GREEN CHECK
+========================================= */
+
+.education-check {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #00c900;
+
+  border: 1px solid #111;
+
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+
+/* =========================================
+   ABOUT US BUTTON
+========================================= */
+
+.education-section12-button {
+  margin-top: 25px;
+
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #242a33;
+
+  color: #ead9b9;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.education-section12-button:hover {
+  background: #1c222b;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+  .education-section12 {
+    padding: 40px 20px 30px;
+  }
+
+  .education-section12-container h2 {
+    font-size: 26px;
+  }
+
+  .education-section12-intro {
+    font-size: 15px;
+  }
+
+  .education-section12-item {
+    font-size: 15px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .education-section12 {
+    min-height: auto;
+  }
+
+  .education-section12-container h2 {
+    font-size: 23px;
+  }
+
+  .education-section12-intro {
+    font-size: 14px;
+  }
+
+  .education-section12-subtitle {
+    font-size: 14px;
+  }
+
+  .education-section12-list {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  /*
+    Remove desktop staggering on mobile
+    so the checklist does not overflow.
+  */
+
+  .education-section12-item.item-1,
+  .education-section12-item.item-2,
+  .education-section12-item.item-3,
+  .education-section12-item.item-4,
+  .education-section12-item.item-5,
+  .education-section12-item.item-6,
+  .education-section12-item.item-7 {
+    margin-left: 0;
+  }
+
+  .education-section12-item {
+    font-size: 14px;
+  }
+
+}
+
+/* =========================================
+   EDUCATION SECTION 13
+========================================= */
+
+.education-section13 {
+  width: 100%;
+  min-height: 460px;
+
+  box-sizing: border-box;
+
+  background: #343a43;
+  color: #ead9b9;
+
+  padding: 60px 50px 80px;
+}
+
+
+/* =========================================
+   TOP ROW
+========================================= */
+
+.education-section13-top {
+  width: 100%;
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 60px;
+}
+
+
+.education-section13-top h2 {
+  margin: 0;
+
+  font-size: 31px;
+  line-height: 1.3;
+
+  font-weight: 600;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   SIGN UP BUTTON
+========================================= */
+
+.education-section13-signup {
+  width: 290px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #202731;
+
+  color: #ead9b9;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  font-size: 17px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.education-section13-signup:hover {
+  background: #1b2129;
+
+  transform: translateY(-2px);
+}
+
+
+.education-section13-arrow {
+  font-size: 24px;
+
+  line-height: 1;
+}
+
+
+/* =========================================
+   CENTER CONTENT
+========================================= */
+
+.education-section13-content {
+  margin-top: 135px;
+
+  text-align: center;
+}
+
+
+.education-section13-content h3 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   BOTTOM LINKS
+========================================= */
+
+.education-section13-links {
+  width: 100%;
+
+  margin-top: 60px;
+
+  display: flex;
+
+  justify-content: center;
+
+  /*
+    Keep them close together like
+    the screenshot.
+  */
+  gap: 235px;
+}
+
+
+.education-section13-links button {
+  min-width: 310px;
+
+  padding: 11px 16px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #242a33;
+
+  color: #ead9b9;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.education-section13-links button:hover {
+  background: #1d232c;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .education-section13 {
+    padding: 50px 30px 70px;
+  }
+
+  .education-section13-top {
+    max-width: 750px;
+
+    gap: 35px;
+  }
+
+  .education-section13-top h2 {
+    font-size: 27px;
+  }
+
+  .education-section13-signup {
+    width: 250px;
+  }
+
+  .education-section13-links {
+    gap: 100px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+  .education-section13 {
+    min-height: auto;
+
+    padding: 45px 20px 60px;
+  }
+
+
+  .education-section13-top {
+    flex-direction: column;
+
+    gap: 25px;
+
+    text-align: center;
+  }
+
+
+  .education-section13-top h2 {
+    font-size: 25px;
+  }
+
+
+  .education-section13-signup {
+    width: 270px;
+  }
+
+
+  .education-section13-content {
+    margin-top: 80px;
+  }
+
+
+  .education-section13-links {
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-top: 35px;
+  }
+
+
+  .education-section13-links button {
+    width: 100%;
+
+    max-width: 330px;
+
+    min-width: 0;
+  }
+
+}
+
+/* =========================================
+   EDUCATION SECTION 14 - FAQ
+========================================= */
+
+.education-section14 {
+  width: 100%;
+
+  min-height: 390px;
+
+  box-sizing: border-box;
+
+  background: #343a43;
+
+  color: #ead9b9;
+
+  padding: 40px 20px 70px;
+}
+
+
+.education-section14-container {
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   FAQ HEADING
+========================================= */
+
+.education-section14-container h2 {
+  margin: 0 0 32px 28px;
+
+  font-size: 30px;
+
+  line-height: 1.3;
+
+  font-weight: 600;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   FAQ LIST
+========================================= */
+
+.education-faq {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+/* =========================================
+   FAQ ITEM
+========================================= */
+
+.education-faq details {
+  width: 100%;
+
+  border: 1px solid #ead9b9;
+
+  box-sizing: border-box;
+
+  background: transparent;
+}
+
+
+/* =========================================
+   QUESTION
+========================================= */
+
+.education-faq summary {
+  position: relative;
+
+  list-style: none;
+
+  cursor: pointer;
+
+  padding: 5px 15px 5px 18px;
+
+  min-height: 29px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  color: #ead9b9;
+
+  font-size: 17px;
+
+  line-height: 1.3;
+
+  font-weight: 600;
+}
+
+
+/* Remove browser default arrow */
+
+.education-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+
+/* =========================================
+   CUSTOM TRIANGLE
+========================================= */
+
+.education-faq summary::before {
+  content: "";
+
+  width: 0;
+  height: 0;
+
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+
+  border-left: 10px solid #ead9b9;
+
+  margin-right: 8px;
+
+  flex-shrink: 0;
+
+  transition: transform 0.2s ease;
+}
+
+
+/* Rotate arrow when opened */
+
+.education-faq details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+
+/* =========================================
+   ANSWER
+========================================= */
+
+.education-faq-answer {
+  padding: 15px 25px 18px 38px;
+
+  border-top: 1px solid rgba(234, 217, 185, 0.35);
+
+  color: #ead9b9;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  font-weight: 400;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.education-faq summary:hover {
+  background: rgba(32, 39, 49, 0.35);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .education-section14 {
+    padding: 35px 18px 55px;
+  }
+
+  .education-section14-container h2 {
+    margin-left: 10px;
+
+    font-size: 27px;
+  }
+
+  .education-faq summary {
+    font-size: 16px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .education-section14-container h2 {
+    margin-left: 0;
+
+    font-size: 23px;
+  }
+
+  .education-faq {
+    gap: 10px;
+  }
+
+  .education-faq summary {
+    padding: 8px 10px;
+
+    font-size: 14px;
+  }
+
+  .education-faq-answer {
+    padding: 12px 15px 15px 28px;
+
+    font-size: 13px;
+  }
+
+}
+
+/* =========================================
+   SECTION 15
+   OTHER INDUSTRIES
+========================================= */
+
+.industry-section15 {
+  width: 100%;
+  min-height: 470px;
+
+  box-sizing: border-box;
+
+  background: #343a43;
+
+  color: #ead9b9;
+
+  padding: 70px 30px 80px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.industry-section15 > h2 {
+  margin: 0 0 60px;
+
+  text-align: center;
+
+  font-size: 27px;
+
+  line-height: 1.3;
+
+  font-weight: 500;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   CARDS CONTAINER
+========================================= */
+
+.industry-section15-grid {
+  width: 100%;
+  max-width: 940px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: flex-start;
+
+  gap: 30px;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.industry-section15-card {
+  width: 165px;
+  min-width: 165px;
+
+  height: 215px;
+
+  box-sizing: border-box;
+
+  padding: 20px 12px 15px;
+
+  background: #343a43;
+
+  border-radius: 0 0 25px 25px;
+
+  box-shadow:
+    15px 18px 25px rgba(20, 25, 32, 0.55);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+
+/* =========================================
+   CARD HOVER
+========================================= */
+
+.industry-section15-card:hover {
+  transform: translateY(-8px);
+
+  background: #373e48;
+
+  box-shadow:
+    18px 25px 30px rgba(20, 25, 32, 0.7);
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.industry-section15-icon {
+  height: 70px;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 18px;
+}
+
+
+.industry-section15-icon span {
+  display: block;
+
+  font-size: 46px;
+
+  line-height: 1;
+
+  color: #ead9b9;
+}
+
+
+/* =========================================
+   CARD TEXT
+========================================= */
+
+.industry-section15-card h3 {
+  margin: 0;
+
+  color: #ead9b9;
+
+  font-size: 20px;
+
+  line-height: 1.6;
+
+  font-weight: 400;
+
+  word-break: normal;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 950px) {
+
+  .industry-section15-grid {
+    gap: 18px;
+  }
+
+  .industry-section15-card {
+    width: 155px;
+    min-width: 155px;
+  }
+
+  .industry-section15-card h3 {
+    font-size: 18px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 760px) {
+
+  .industry-section15 {
+    padding: 55px 20px 60px;
+  }
+
+  .industry-section15 > h2 {
+    margin-bottom: 40px;
+
+    font-size: 24px;
+  }
+
+  .industry-section15-grid {
+    flex-wrap: wrap;
+
+    gap: 25px;
+
+    max-width: 600px;
+  }
+
+  .industry-section15-card {
+    width: 170px;
+    min-width: 170px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 430px) {
+
+  .industry-section15-grid {
+    flex-direction: column;
+
+    align-items: center;
+  }
+
+  .industry-section15-card {
+    width: 210px;
+    min-width: 210px;
+  }
+
+}

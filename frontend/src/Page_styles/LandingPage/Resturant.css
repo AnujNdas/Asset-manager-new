@@ -154,7 +154,6 @@ display: flex;
 
   .manufacturing-hero-bottom h2 {
     font-size: 27px;
-    max-width: 850px;
   }
 }
 
@@ -486,9 +485,9 @@ display: flex;
 
 .restaurant-section-3-signup-btn {
   display: inline-flex;
-
+  width: 200px;
   margin-top: 18px;
-
+  justify-content: center;
   padding: 10px 20px;
 
   background: #202732;
@@ -1128,7 +1127,7 @@ display: flex;
 
 .restaurant-section-6-signup {
   margin-top: 18px;
-
+  width: 200px;
   padding: 10px 20px;
 
   background: #222831;
@@ -1136,7 +1135,7 @@ display: flex;
   color: #DFD0B8;
 
   text-decoration: none;
-
+  justify-content: center;
   border-radius: 25px;
 
   font-size: 16px;
@@ -1825,11 +1824,11 @@ display: flex;
 ========================================= */
 
 .hospitality-section-10-signup {
-  position: absolute;
+  justify-content: center;
 
   top: 0;
   right: 0;
-
+  width: 200px;
   padding: 11px 20px;
 
   background: #222831;

@@ -118,7 +118,7 @@
 
 .construction-breadcrumb {
   color: #ead9bc;
-
+  display: flex;
   font-size: 15px;
   font-weight: 500;
 
@@ -129,7 +129,8 @@
   color: #ead9bc;
     display: inline-block;
   text-decoration: underline;
-
+  width: 50px;
+  padding: 0;
   transition: opacity 0.2s ease;
 }
 
@@ -139,6 +140,7 @@
 
 .construction-breadcrumb span {
   color: #ead9bc;
+  padding-left: 10px;
 }
 
 
@@ -673,6 +675,7 @@
 
   font-size: 15px;
   font-weight: 600;
+  justify-content: center;
 }
 
 
@@ -681,7 +684,7 @@
 .construction-section-4-slide-content li::before {
   content: "✓";
 
-  position: absolute;
+  /* position: absolute; */
 
   left: 0;
   top: 0;
@@ -693,7 +696,7 @@
   align-items: center;
   justify-content: center;
 
-  background: #00d000;
+  background: #DFD0B8;
   color: #111;
 
   font-size: 13px;
@@ -1764,7 +1767,7 @@
   align-items: center;
   justify-content: center;
 
-  background: #00d600;
+  background: #DFD0B8;
 
   color: #000;
 
@@ -2135,7 +2138,7 @@
 
 .construction-section-10-left li {
   margin-bottom: 9px;
-
+  width: 200px;
   font-size: 16px;
   line-height: 1.45;
 
@@ -2171,8 +2174,7 @@
    SIGN IN BUTTON
 ========================================= */
 
-.construction-section-10-signin {
-  align-self: flex-end;
+.construction-section-10-signin { 
 
   border: none;
   border-radius: 25px;
@@ -2596,7 +2598,7 @@
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
   gap: 40px;
 }

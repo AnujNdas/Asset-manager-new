@@ -534,7 +534,7 @@
 
   align-items: center;
   justify-content: center;
-
+  width: 200px;
   margin-top: 15px;
 
   padding: 10px 22px;
@@ -2156,7 +2156,7 @@
   width : 200px;
   top: 0;
   right: 35px;
-
+  justify-content: center;
   padding: 11px 20px;
 
   background: #222831;
@@ -2618,7 +2618,7 @@
 
 .section-13-options {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 
   margin-top: 35px;

@@ -2907,7 +2907,7 @@
 
   border-radius: 25px;
 
-  background: #222a34;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -4003,10 +4003,10 @@
 
 .section15-header {
   width: 100%;
-
+  gap: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
   margin-bottom: 125px;
 }
@@ -4094,7 +4094,7 @@
   background: #414852;
 
   text-align: center;
-
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;

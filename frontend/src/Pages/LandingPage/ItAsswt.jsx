@@ -90,7 +90,7 @@ const softwareCategories = [
   {
     id: 1,
     title: "Operating Systems",
-    icons: "▢ ▢ ▢ ▢",
+    icons: "🖥️ 💻 📱 ☁️",
     content: (
       <>
         Windows, Linux Distributions
@@ -741,6 +741,14 @@ useEffect(() => {
       current === index ? null : index
     );
   };
+
+  const handleNavigateItam = () => {
+  window.open(
+    "/construction-equipment-tracking",
+    "_blank",
+    "noopener,noreferrer"
+  );
+};
   return (
     <>
 
@@ -1505,27 +1513,6 @@ useEffect(() => {
 
       <div className="itam-section-9-content">
 
-        {/* LEFT ARROW */}
-        <button
-          type="button"
-          className="itam-section-9-arrow itam-section-9-arrow-left"
-          onClick={handlePrevious}
-          aria-label="Previous slide"
-        >
-          ‹
-        </button>
-
-
-        {/* RIGHT ARROW */}
-        <button
-          type="button"
-          className="itam-section-9-arrow itam-section-9-arrow-right"
-          onClick={handleNext}
-          aria-label="Next slide"
-        >
-          ›
-        </button>
-
 
         {/* CAROUSEL CONTENT */}
         <div
@@ -1919,7 +1906,7 @@ useEffect(() => {
       </div>
 
       {/* MAIN CARD */}
-      <div className="section15-card">
+      <div className="section15-card" onClick={handleNavigateItam}>
 
         <div className="section15-icon">
           💻

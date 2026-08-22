@@ -385,7 +385,7 @@ useEffect(() => {
   {/* Dark top layer with clipped bottom */}
   <div className="manufacturing-hero-top">
     <h1>
-      Resturant & Hospitality Asset <br/> Management
+      Restaurant & Hospitality Asset <br/> Management
     </h1>
   </div>
 
@@ -394,7 +394,7 @@ useEffect(() => {
 
     <div className="manufacturing-breadcrumb">
       <a href="/">Home</a>
-      <span> - Manufacturing Asset Management Software</span>
+      <span> - Restaurant & Hospitality Asset Management</span>
     </div>
 
     <h2>

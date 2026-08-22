@@ -130,12 +130,12 @@ const Navbar = () => {
                   Construction Equipment Tracking
                 </Link>
 
-                <Link to="/case-studies" onClick={closeMenu}>
+                <Link to="/education-asset-management" onClick={closeMenu}>
                   Education Asset Management 
                 </Link>
 
                 <Link to="/help-center" onClick={closeMenu}>
-                  Travel&Transport Asset Management Software
+                  Travel & Transport Asset Management Software
                 </Link>
               </div>
             )}

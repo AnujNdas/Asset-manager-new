@@ -124,10 +124,10 @@
 
 .healthcare-breadcrumb {
   margin-bottom: 45px;
-
+  justify-content: center;
   font-size: 15px;
   font-weight: 500;
-
+  display: flex;
   color: #dfd0b8;
 }
 
@@ -135,6 +135,8 @@
   color: #dfd0b8;
   text-decoration: underline;
   display: inline-block;
+  width: 50px;
+  padding: 0;
 }
 
 .healthcare-breadcrumb span {
