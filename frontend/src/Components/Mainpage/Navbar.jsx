@@ -134,7 +134,7 @@ const Navbar = () => {
                   Education Asset Management 
                 </Link>
 
-                <Link to="/help-center" onClick={closeMenu}>
+                <Link to="/travel-transportation-asset-management" onClick={closeMenu}>
                   Travel & Transport Asset Management Software
                 </Link>
               </div>

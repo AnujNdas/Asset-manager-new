@@ -1,0 +1,2331 @@
+.travel-section1 {
+  position: relative;
+  min-height: 430px;
+  width: 100%;
+  overflow: hidden;
+
+  background: #3b414a;
+  color: #ead9bb;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Dark upper portion */
+.travel-section1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 265px;
+
+  background: #252c35;
+
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    86% 92%,
+    74% 96%,
+    61% 88%,
+    48% 94%,
+    34% 88%,
+    19% 96%,
+    0 90%
+  );
+
+  z-index: 0;
+}
+
+/* Middle/lower darker wave */
+.travel-section1::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 280px;
+
+  background: #303640;
+
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    86% 89%,
+    73% 94%,
+    61% 87%,
+    48% 93%,
+    34% 87%,
+    19% 94%,
+    0 88%
+  );
+
+  z-index: 1;
+}
+
+/* Keep content above clip-path layers */
+.travel-section1-content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  text-align: center;
+
+  padding-top: 18px;
+}
+
+.travel-section1-content h1 {
+  margin: 0 auto;
+
+  max-width: 1100px;
+
+  font-size: 48px;
+  line-height: 1.35;
+  font-weight: 700;
+
+  color: #ead9bb;
+}
+
+/* Breadcrumb */
+.travel-section1-breadcrumb {
+  position: absolute;
+  z-index: 3;
+
+  bottom: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #ead9bb;
+}
+
+.travel-section1-breadcrumb a {
+  color: #ead9bb;
+  width: 50px;
+  text-decoration: underline;
+}
+
+.travel-section1-breadcrumb span {
+  margin-left: 4px;
+}
+
+
+.travel-section2 {
+  width: 100%;
+  min-height: 500px;
+  background: #393f48;
+  color: #ead8b9;
+  padding: 25px 30px 45px;
+  box-sizing: border-box;
+}
+
+.travel-section2-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.travel-section2 h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 29px;
+  line-height: 1.4;
+  font-weight: 400;
+  color: #ead8b9;
+}
+
+.travel-section2 h2 strong {
+  font-weight: 700;
+}
+
+.travel-section2-content {
+  margin-top: 115px;
+  text-align: center;
+}
+
+.travel-section2-content p {
+  margin: 0 auto 27px;
+  max-width: 930px;
+
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 500;
+  color: #ead8b9;
+}
+
+.travel-section2-content p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .travel-section2 {
+    padding: 25px 20px 40px;
+  }
+
+  .travel-section2 h2 {
+    font-size: 24px;
+  }
+
+  .travel-section2-content {
+    margin-top: 70px;
+  }
+
+  .travel-section2-content p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+/* =========================
+   SECTION 3
+========================= */
+
+.travel-section3 {
+  width: 100%;
+  min-height: 560px;
+
+  background: #393f48;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 45px 25px 55px;
+
+  box-sizing: border-box;
+}
+
+
+/* Dashboard container */
+
+.travel-dashboard-wrapper {
+  width: 100%;
+  max-width: 970px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Dashboard image */
+
+.travel-dashboard-image {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+
+  border-radius: 1px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .travel-section3 {
+    min-height: auto;
+    padding: 40px 20px 45px;
+  }
+
+  .travel-dashboard-wrapper {
+    max-width: 850px;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .travel-section3 {
+    padding: 30px 12px 40px;
+  }
+
+  .travel-dashboard-wrapper {
+    width: 100%;
+  }
+
+  .travel-dashboard-image {
+    width: 100%;
+  }
+}
+
+/* =========================================
+   SECTION 4
+========================================= */
+
+.travel-section4 {
+  width: 100%;
+  min-height: 560px;
+
+  padding: 45px 40px 55px;
+
+  box-sizing: border-box;
+
+  background: #29303a;
+
+  color: #ead8b9;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1.15fr;
+
+  gap: 55px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   LEFT FEATURES
+========================================= */
+
+.travel-section4-features {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  padding-left: 10px;
+}
+
+
+.travel-section4-features h2 {
+  width: 100%;
+
+  margin: 0 0 35px;
+
+  text-align: center;
+
+  font-size: 26px;
+
+  font-weight: 700;
+
+  color: #ead8b9;
+}
+
+
+.travel-feature-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  width: 100%;
+
+  margin-bottom: 24px;
+}
+
+
+.travel-feature-item span {
+  width: 20px;
+
+  flex-shrink: 0;
+
+  font-size: 15px;
+
+  text-align: center;
+}
+
+
+.travel-feature-item p {
+  margin: 0;
+
+  font-size: 15px;
+
+  line-height: 1.4;
+
+  font-weight: 600;
+
+  color: #ead8b9;
+}
+
+
+/* =========================================
+   FREE TRIAL BUTTON
+========================================= */
+
+.travel-free-trial-btn {
+  margin-top: 10px;
+
+  padding: 11px 20px;
+
+  border: none;
+
+  border-radius: 25px;
+
+  background: #202731;
+
+  color: #ead8b9;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+
+.travel-free-trial-btn:hover {
+  background: #171d25;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================
+   RIGHT CAROUSEL
+========================================= */
+
+.travel-section4-carousel {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+
+/* =========================================
+   CAROUSEL TOP
+========================================= */
+
+.travel-carousel-top {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  margin-bottom: 45px;
+}
+
+
+.travel-carousel-top h2 {
+  margin: 0 0 16px;
+
+  font-size: 29px;
+
+  line-height: 1.3;
+
+  text-align: center;
+
+  color: #ead8b9;
+}
+
+
+.travel-signup-btn {
+  padding: 10px 19px;
+
+  border: none;
+
+  border-radius: 3px;
+
+  background: #202731;
+
+  color: #ead8b9;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =========================================
+   CAROUSEL WINDOW
+========================================= */
+
+.travel-carousel-window {
+  width: 100%;
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+
+/* =========================================
+   CAROUSEL TRACK
+========================================= */
+
+.travel-carousel-track {
+  display: flex;
+
+  width: 100%;
+
+  transition: transform 0.6s ease-in-out;
+}
+
+
+/* =========================================
+   EACH SLIDE
+========================================= */
+
+.travel-carousel-slide {
+  min-width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 0 35px;
+
+  text-align: center;
+}
+
+
+.travel-carousel-slide h2 {
+  margin: 0 0 22px;
+
+  font-size: 28px;
+
+  line-height: 1.35;
+
+  color: #ead8b9;
+}
+
+
+.travel-carousel-slide p {
+  margin: 0 auto;
+
+  max-width: 470px;
+
+  font-size: 15px;
+
+  line-height: 1.65;
+
+  font-weight: 500;
+
+  color: #ead8b9;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.travel-carousel-dots {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 55px;
+}
+
+
+.travel-carousel-dot {
+  width: 8px;
+
+  height: 8px;
+
+  padding: 0;
+
+  border: 1px solid #151b22;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+
+.travel-carousel-dot.active {
+  background: #151b22;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .travel-section4 {
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+
+    padding: 45px 30px 55px;
+  }
+
+  .travel-section4-features {
+    align-items: center;
+  }
+
+  .travel-feature-item {
+    max-width: 600px;
+  }
+
+  .travel-section4-carousel {
+    width: 100%;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .travel-section4 {
+    padding: 40px 18px 45px;
+  }
+
+  .travel-section4-features h2 {
+    font-size: 23px;
+  }
+
+  .travel-feature-item p {
+    font-size: 14px;
+  }
+
+  .travel-carousel-top h2 {
+    font-size: 24px;
+  }
+
+  .travel-carousel-slide {
+    padding: 0 10px;
+  }
+
+  .travel-carousel-slide h2 {
+    font-size: 23px;
+  }
+
+  .travel-carousel-slide p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .travel-carousel-dots {
+    margin-top: 35px;
+  }
+}
+
+/* =========================================
+   SECTION 5
+========================================= */
+
+.travel-section5 {
+  width: 100%;
+
+  background: #393f48;
+
+  color: #ead8b9;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.travel-section5-intro {
+  width: 100%;
+
+  padding: 35px 30px 40px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+
+.travel-section5-intro h2 {
+  margin: 0 auto 20px;
+
+  max-width: 900px;
+
+  font-size: 28px;
+
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  color: #ead8b9;
+}
+
+
+.travel-section5-intro p {
+  max-width: 930px;
+
+  margin: 0 auto 30px;
+
+  font-size: 15px;
+
+  line-height: 1.65;
+
+  font-weight: 500;
+
+  color: #ead8b9;
+}
+
+
+.travel-section5-intro p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================
+   BENEFITS AREA
+========================================= */
+
+.travel-section5-benefits {
+  width: 100%;
+
+  min-height: 360px;
+
+  padding: 30px 30px 35px;
+
+  box-sizing: border-box;
+
+  background: #29303a;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 32px;
+}
+
+
+/* =========================================
+   BENEFIT ITEM
+========================================= */
+
+.travel-section5-item {
+  width: 100%;
+
+  max-width: 760px;
+
+  text-align: center;
+}
+
+
+.travel-section5-icon {
+  margin-bottom: 7px;
+
+  font-size: 21px;
+
+  line-height: 1;
+}
+
+
+.travel-section5-item h3 {
+  margin: 0 0 12px;
+
+  font-size: 19px;
+
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  color: #ead8b9;
+}
+
+
+.travel-section5-item p {
+  margin: 0;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  font-weight: 500;
+
+  color: #ead8b9;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .travel-section5-intro {
+    padding: 30px 18px 35px;
+  }
+
+  .travel-section5-intro h2 {
+    font-size: 23px;
+  }
+
+  .travel-section5-intro p {
+    font-size: 14px;
+
+    line-height: 1.55;
+
+    margin-bottom: 25px;
+  }
+
+  .travel-section5-benefits {
+    padding: 30px 18px 35px;
+
+    gap: 30px;
+  }
+
+  .travel-section5-item h3 {
+    font-size: 17px;
+  }
+
+  .travel-section5-item p {
+    font-size: 14px;
+  }
+}       
+
+
+.travel-section6 {
+  width: 100%;
+  background: #393f48;
+  color: #ead8b9;
+}
+
+.travel-section6-title {
+  margin: 0;
+  padding: 20px;
+  /* background: #393f48; */
+
+  text-align: center;
+
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.travel-section6-content {
+  min-height: 510px;
+
+  padding: 50px 5% 35px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+
+  align-items: center;
+}
+
+
+/* LEFT */
+
+.travel-section6-left {
+  padding-left: 25px;
+}
+
+.travel-section6-left h3 {
+  margin-bottom: 25px;
+  font-size: 20px;
+}
+
+.travel-section6-left li {
+  margin-bottom: 28px;
+  flex-direction: column;
+}
+
+.travel-section6-left strong {
+  font-size: 16px;
+}
+
+.travel-section6-left p {
+  max-width: 400px;
+  margin: 5px 0 0;
+    text-align: left;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+
+/* RIGHT */
+
+.travel-section6-right {
+  min-height: 400px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.travel-section6-slide {
+  width: 100%;
+  max-width: 480px;
+
+  animation: slideFade 0.5s ease;
+}
+
+@keyframes slideFade {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.travel-section6-slide h3 {
+  font-size: 26px;
+  margin-bottom: 25px;
+}
+
+.travel-check-list {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  width: fit-content;
+
+  margin: auto;
+
+  gap: 8px;
+
+  text-align: left;
+}
+
+.travel-check-list div {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.travel-check-list p {
+  max-width: 400px;
+
+  margin: 30px auto 0;
+
+  text-align: center;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* DOTS */
+
+.travel-section6-dots {
+  display: flex;
+  gap: 7px;
+
+  margin-top: 25px;
+}
+
+.travel-section6-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  border: 1px solid #151b23;
+
+  cursor: pointer;
+}
+
+.travel-section6-dot.active {
+  background: #151b23;
+}
+
+
+/* BUTTON */
+
+.travel-section6-button {
+  margin-top: 15px;
+
+  padding: 10px 22px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: #1f2630;
+  color: #ead8b9;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .travel-section6-content {
+    grid-template-columns: 1fr;
+  }
+
+  .travel-section6-left {
+    padding-left: 0;
+  }
+
+  .travel-section6-left h3 {
+    text-align: center;
+  }
+
+}
+
+
+.travel-section7 {
+  width: 100%;
+  min-height: 530px;
+
+  padding: 55px 20px 35px;
+
+  box-sizing: border-box;
+
+  background: #222831;
+  color: #ead8b9;
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+
+/* TITLE */
+
+.travel-section7-title {
+  margin: 0 0 60px;
+
+  font-size: 25px;
+  font-weight: 700;
+
+  color: #ead8b9;
+}
+
+
+/* CAROUSEL */
+
+.travel-section7-carousel {
+  min-height: 330px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+.travel-section7-carousel h3 {
+  max-width: 750px;
+
+  margin: 0 auto 25px;
+
+  font-size: 27px;
+  line-height: 1.45;
+
+  animation: section7Fade 0.5s ease;
+}
+
+
+.travel-section7-intro {
+  max-width: 700px;
+
+  margin: 0 auto 25px;
+
+  font-size: 17px;
+  line-height: 1.55;
+
+  animation: section7Fade 0.5s ease;
+}
+
+
+/* LIST */
+
+.travel-section7-list {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  width: fit-content;
+
+  margin: 0 auto;
+
+  gap: 8px;
+
+  text-align: left;
+
+  animation: section7Fade 0.5s ease;
+}
+
+
+.travel-section7-list div {
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+
+/* ANIMATION */
+
+@keyframes section7Fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* DOTS */
+
+.travel-section7-dots {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 10px;
+}
+
+
+.travel-section7-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #a9a9a9;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.travel-section7-dot.active {
+  background: #ead8b9;
+
+  transform: scale(1.1);
+}
+
+
+/* BUTTON */
+
+.travel-section7-button {
+  margin-top: 15px;
+
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 3px;
+
+  background: #3b424c;
+
+  color: #ead8b9;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+
+.travel-section7-button:hover {
+  background: #222933;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .travel-section7 {
+    min-height: 550px;
+
+    padding: 40px 20px 30px;
+  }
+
+  .travel-section7-title {
+    margin-bottom: 35px;
+
+    font-size: 21px;
+  }
+
+  .travel-section7-carousel h3 {
+    font-size: 22px;
+  }
+
+  .travel-section7-intro {
+    font-size: 15px;
+  }
+
+  .travel-section7-list div {
+    font-size: 15px;
+  }
+
+}
+
+.travel-section8 {
+  position: relative;
+
+  width: 100%;
+  min-height: 560px;
+
+  background: #393f48;
+
+  color: #ead8b9;
+
+  overflow: hidden;
+
+  padding: 100px 20px 40px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TOP CLIP PATH
+========================================= */
+
+.travel-section8::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 70px;
+
+  background: #202732;
+
+  clip-path: polygon(
+    0 0,
+    10% 48%,
+    20% 34%,
+    30% 58%,
+    40% 42%,
+    50% 67%,
+    60% 45%,
+    70% 72%,
+    82% 48%,
+    92% 60%,
+    100% 38%,
+    100% 0
+  );
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.travel-section8-content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 35% 65%;
+
+  align-items: center;
+
+  gap: 25px;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.travel-section8-left {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+
+.travel-section8-feature {
+  max-width: 330px;
+
+  animation: section8Fade 0.5s ease;
+}
+
+
+.travel-section8-icon {
+  display: block;
+
+  font-size: 20px;
+
+  margin-bottom: 10px;
+}
+
+
+.travel-section8-feature h3 {
+  margin: 0 0 8px;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  color: #ead8b9;
+}
+
+
+.travel-section8-feature p {
+  margin: 0;
+
+  font-size: 16px;
+
+  line-height: 1.55;
+
+  color: #ead8b9;
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.travel-section8-right {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+.travel-section8-image-wrapper {
+  width: 100%;
+
+  max-width: 650px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+.travel-section8-image {
+  width: 100%;
+
+  max-width: 650px;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+
+  animation: section8ImageFade 0.6s ease;
+
+  border-radius: 2px;
+}
+
+
+/* =========================================
+   DOTS
+========================================= */
+
+.travel-section8-dots {
+  position: relative;
+
+  z-index: 3;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 55px;
+}
+
+
+.travel-section8-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  border: 1px solid #777;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+
+.travel-section8-dot.active {
+  background: #111;
+
+  border-color: #111;
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes section8Fade {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+@keyframes section8ImageFade {
+
+  from {
+    opacity: 0;
+
+    transform: translateX(15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .travel-section8 {
+    min-height: 600px;
+
+    padding-top: 90px;
+  }
+
+  .travel-section8-content {
+    grid-template-columns: 1fr;
+
+    gap: 40px;
+  }
+
+  .travel-section8-left {
+    order: 1;
+  }
+
+  .travel-section8-right {
+    order: 2;
+  }
+
+  .travel-section8-feature {
+    max-width: 500px;
+  }
+
+  .travel-section8-image-wrapper {
+    max-width: 700px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .travel-section8 {
+    min-height: 650px;
+
+    padding: 85px 15px 35px;
+  }
+
+  .travel-section8-content {
+    gap: 35px;
+  }
+
+  .travel-section8-feature h3 {
+    font-size: 17px;
+  }
+
+  .travel-section8-feature p {
+    font-size: 14px;
+  }
+
+  .travel-section8-image {
+    width: 100%;
+  }
+
+  .travel-section8-dots {
+    margin-top: 35px;
+  }
+
+}
+
+.travel-section9 {
+  width: 100%;
+  min-height: 220px;
+
+  background: #29303a;
+
+  display: flex;
+  align-items: center;
+
+  padding: 40px 30px;
+
+  box-sizing: border-box;
+}
+
+.travel-section9-stats {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  align-items: center;
+  text-align: center;
+}
+
+.travel-section9-stat h2 {
+  margin: 0 0 12px;
+
+  font-size: 48px;
+  line-height: 1;
+
+  font-weight: 600;
+
+  color: #ead8b9;
+}
+
+.travel-section9-stat p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.6;
+
+  font-weight: 600;
+
+  letter-spacing: 0.8px;
+
+  color: #ead8b9;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .travel-section9 {
+    padding: 45px 20px;
+  }
+
+  .travel-section9-stats {
+    grid-template-columns: repeat(2, 1fr);
+
+    row-gap: 40px;
+  }
+
+  .travel-section9-stat h2 {
+    font-size: 40px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+  .travel-section9 {
+    padding: 40px 15px;
+  }
+
+  .travel-section9-stats {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .travel-section9-stat h2 {
+    font-size: 38px;
+  }
+
+  .travel-section9-stat p {
+    font-size: 14px;
+  }
+
+}
+
+.travel-section10 {
+  width: 100%;
+  min-height: 470px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 50px;
+
+  padding: 65px 7%;
+
+  box-sizing: border-box;
+
+  background: #3b424c;
+
+  color: #ead8b9;
+}
+
+
+/* =========================
+   LEFT
+========================= */
+
+.travel-section10-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.travel-section10-left h2 {
+  margin: 0 0 15px;
+
+  font-size: 22px;
+  line-height: 1.45;
+
+  font-weight: 600;
+}
+
+.travel-section10-left h3 {
+  margin: 0 0 25px;
+
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.travel-section10-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.travel-section10-stages p {
+  margin: 0;
+    text-align: left;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.travel-section10-stages strong {
+  font-weight: 700;
+}
+
+
+/* =========================
+   RIGHT
+========================= */
+
+.travel-section10-right {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-height: 350px;
+
+  text-align: center;
+}
+
+
+/* FREE TRIAL */
+
+.travel-section10-trial {
+  align-self: flex-end;
+
+  border: none;
+  outline: none;
+
+  padding: 11px 20px;
+
+  border-radius: 25px;
+
+  background: #252c35;
+
+  color: #ead8b9;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* CAROUSEL CONTENT */
+
+.travel-section10-carousel {
+  width: 100%;
+  max-width: 480px;
+
+  margin-top: 50px;
+
+  min-height: 190px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.travel-section10-carousel h2 {
+  margin: 0 0 20px;
+
+  font-size: 28px;
+  line-height: 1.4;
+
+  font-weight: 700;
+
+  color: #ead8b9;
+}
+
+.travel-section10-carousel p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.65;
+
+  font-weight: 500;
+
+  color: #ead8b9;
+}
+
+
+/* =========================
+   DOTS
+========================= */
+
+.travel-section10-dots {
+  display: flex;
+
+  gap: 7px;
+
+  margin-top: 25px;
+}
+
+.travel-section10-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  border: 1px solid #1d232b;
+
+  background: transparent;
+}
+
+.travel-section10-dot.active {
+  background: #1d232b;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .travel-section10 {
+    grid-template-columns: 1fr;
+
+    padding: 50px 30px;
+
+    gap: 40px;
+  }
+
+  .travel-section10-right {
+    min-height: 350px;
+  }
+
+  .travel-section10-trial {
+    align-self: center;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+  .travel-section10 {
+    padding: 40px 20px;
+  }
+
+  .travel-section10-left h2 {
+    font-size: 20px;
+  }
+
+  .travel-section10-stages {
+    gap: 18px;
+  }
+
+  .travel-section10-carousel h2 {
+    font-size: 24px;
+  }
+
+  .travel-section10-carousel p {
+    font-size: 14px;
+  }
+
+}
+
+/* =========================
+   SECTION 11
+========================= */
+
+.travel-section11 {
+  width: 100%;
+  background: #222831;
+  color: #ead8b9;
+  overflow: hidden;
+}
+
+
+/* =========================
+   FUTURE SECTION
+========================= */
+
+.travel-section11-future {
+  padding: 45px 5% 30px;
+  text-align: center;
+}
+
+.travel-section11-future h2 {
+  margin: 0 0 20px;
+
+  font-size: 29px;
+  line-height: 1.3;
+
+  font-weight: 700;
+}
+
+.travel-section11-future p {
+  max-width: 930px;
+
+  margin: 0 auto 25px;
+
+  font-size: 15px;
+  line-height: 1.65;
+
+  font-weight: 500;
+}
+
+
+/* =========================
+   WHY SOCIALFLY
+========================= */
+
+.travel-section11-socialfly {
+  padding: 45px 5% 35px;
+
+  text-align: center;
+
+  background: #3b424c;
+}
+
+.travel-section11-socialfly h2 {
+  margin: 0 0 20px;
+
+  font-size: 30px;
+  line-height: 1.3;
+
+  font-weight: 700;
+}
+
+.travel-section11-socialfly h3 {
+  margin: 0 0 30px;
+
+  font-size: 18px;
+  line-height: 1.4;
+
+  font-weight: 700;
+}
+
+.travel-section11-socialfly p {
+  max-width: 920px;
+
+  margin: 0 auto 25px;
+
+  font-size: 15px;
+  line-height: 1.65;
+
+  font-weight: 500;
+}
+
+
+/* HAM & ITAM LINK */
+
+.travel-section11-socialfly a {
+  color: #ead8b9;
+    display: inline-block;
+  font-weight: 700;
+    width: 100px;
+  text-decoration: underline;
+}
+
+.travel-section11-socialfly a:hover {
+  opacity: 0.8;
+}
+
+
+/* =========================
+   ABOUT BUTTON
+========================= */
+
+.travel-section11-about-btn {
+  margin-top: 5px;
+
+  padding: 11px 20px;
+
+  border: none;
+  border-radius: 2px;
+
+  background: #252c35;
+
+  color: #ead8b9;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.travel-section11-about-btn:hover {
+  background: #1f252d;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .travel-section11-future {
+    padding: 40px 30px 25px;
+  }
+
+  .travel-section11-socialfly {
+    padding: 40px 30px 30px;
+  }
+
+  .travel-section11-future h2,
+  .travel-section11-socialfly h2 {
+    font-size: 26px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+  .travel-section11-future {
+    padding: 35px 20px 20px;
+  }
+
+  .travel-section11-socialfly {
+    padding: 35px 20px 30px;
+  }
+
+  .travel-section11-future h2,
+  .travel-section11-socialfly h2 {
+    font-size: 23px;
+  }
+
+  .travel-section11-future p,
+  .travel-section11-socialfly p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .travel-section11-socialfly h3 {
+    font-size: 16px;
+  }
+
+}
+
+/* =========================
+   SECTION 12
+========================= */
+
+.travel-section12 {
+  width: 100%;
+  min-height: 360px;
+
+  background: #3b424c;
+  color: #ead8b9;
+
+  padding: 70px 8% 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   TOP ROW
+========================= */
+
+.travel-section12-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    gap: 20px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.travel-section12-header h2 {
+  margin: 0;
+
+  font-size: 31px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   SIGN UP BUTTON
+========================= */
+
+.travel-section12-signup {
+  min-width: 150px;
+
+  padding: 13px 25px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #202731;
+  color: #ead8b9;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.travel-section12-signup span {
+  margin-left: 7px;
+  font-size: 18px;
+}
+
+.travel-section12-signup:hover {
+  background: #171d25;
+  transform: translateY(-2px);
+}
+
+
+/* =========================
+   VISIT
+========================= */
+
+.travel-section12 > h3 {
+  margin: 95px 0 38px;
+
+  text-align: center;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   TWO LINKS
+========================= */
+
+.travel-section12-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    gap: 20px;
+  max-width: 820px;
+
+  margin: 0 auto;
+}
+
+.travel-section12-links button {
+  padding: 11px 16px;
+
+  border: none;
+  border-radius: 2px;
+
+  background: #202731;
+  color: #ead8b9;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.travel-section12-links button:hover {
+  background: #171d25;
+  transform: translateY(-2px);
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .travel-section12 {
+    padding: 60px 30px 35px;
+  }
+
+  .travel-section12-header {
+    max-width: 700px;
+  }
+
+  .travel-section12-header h2 {
+    font-size: 27px;
+  }
+
+  .travel-section12-links {
+    max-width: 700px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .travel-section12 {
+    min-height: auto;
+    padding: 45px 20px 40px;
+  }
+
+  .travel-section12-header {
+    flex-direction: column;
+    gap: 25px;
+
+    text-align: center;
+  }
+
+  .travel-section12-header h2 {
+    font-size: 24px;
+  }
+
+  .travel-section12 > h3 {
+    margin: 65px 0 30px;
+  }
+
+  .travel-section12-links {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .travel-section12-links button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+}
+
+.travel-faq-section {
+  width: 100%;
+  background: #222831;
+  padding: 30px 20px 60px;
+  box-sizing: border-box;
+}
+
+.travel-faq-title {
+  margin: 0 0 32px 28px;
+  color: #eadcc2;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.travel-faq-container {
+  width: 100%;
+  max-width: 965px;
+  margin: 0 auto;
+}
+
+.travel-faq-item {
+  width: 100%;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.travel-faq-question {
+  width: 100%;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 8px;
+
+  background: transparent;
+  border: 1px solid #eadcc2;
+
+  color: #eadcc2;
+
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+
+  text-align: left;
+  cursor: pointer;
+
+  box-sizing: border-box;
+}
+
+.travel-faq-arrow {
+  width: 12px;
+  flex-shrink: 0;
+
+  color: #eadcc2;
+  font-size: 13px;
+}
+
+.travel-faq-answer {
+  border: 1px solid #eadcc2;
+  border-top: none;
+
+  padding: 16px 24px;
+
+  background: #303640;
+  color: #eadcc2;
+
+  font-size: 16px;
+  line-height: 1.7;
+
+  box-sizing: border-box;
+}
+
+.travel-faq-answer p {
+  margin: 0;
+}
+
+.travel-faq-item.active .travel-faq-question {
+  background: #303640;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .travel-faq-section {
+    padding: 25px 12px 45px;
+  }
+
+  .travel-faq-title {
+    margin-left: 0;
+    font-size: 26px;
+    text-align: left;
+  }
+
+  .travel-faq-question {
+    font-size: 15px;
+  }
+
+  .travel-faq-answer {
+    font-size: 14px;
+    padding: 14px 18px;
+  }
+}

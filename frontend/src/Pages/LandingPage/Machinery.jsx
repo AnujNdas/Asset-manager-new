@@ -736,6 +736,7 @@ const handleNavigateItam = () => {
             <button
               className="asset-management-signup"
               type="button"
+              onClick={() => window.location.href = "/user/signup"}
             >
               Sign Up Now
             </button>
