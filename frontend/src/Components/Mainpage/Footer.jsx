@@ -42,7 +42,7 @@ const Footer = () => {
   Terms and Conditions
 </Link>
             <a
-              href="https://socialflylive.com/global-privacy-policy/"
+              href="/global-privacy-policy"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -56,7 +56,7 @@ const Footer = () => {
           <div className="footer-column footer-right">
 
             <a
-              href="https://socialflylive.com/it-asset-management-itam-software/"
+              href="it-asset-management"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -64,7 +64,7 @@ const Footer = () => {
             </a>
 
             <a
-              href="https://socialflylive.com/machinery-assets-management/"
+              href="/machinery-management-software"
               target="_blank"
               rel="noopener noreferrer"
             >

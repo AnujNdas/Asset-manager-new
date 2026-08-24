@@ -146,6 +146,16 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
+          <li>
+            <Link to="/pricing" onClick={closeMenu}>
+              Pricing
+            </Link>
+          </li>
+          <li>
+            <Link to="/blog" onClick={closeMenu}>
+              Blog
+            </Link>
+          </li>
 
         </ul>
 

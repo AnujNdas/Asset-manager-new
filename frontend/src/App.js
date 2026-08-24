@@ -31,6 +31,9 @@ import Healthcare from "./Pages/LandingPage/Healthcare";
 import Construction from "./Pages/LandingPage/Construction";
 import Education from "./Pages/LandingPage/Education";
 import Transport from "./Pages/LandingPage/Transport";
+import GlobalPrivacy from "./Pages/LandingPage/GlobalPrivacy";
+import Pricing from "./Pages/LandingPage/Pricing";
+import BlogPage from "./Pages/LandingPage/BlogPage";
 
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
@@ -135,6 +138,18 @@ const App = () => {
       <Route
           path="/travel-transportation-asset-management"
           element={<Transport />}
+      />
+      <Route
+          path="/global-privacy-policy"
+          element={<GlobalPrivacy />}
+      />
+      <Route
+          path="/pricing"
+          element={<Pricing/>}
+      />
+      <Route
+          path="/blog"
+          element={<BlogPage/>}
       />
 
   </Route>

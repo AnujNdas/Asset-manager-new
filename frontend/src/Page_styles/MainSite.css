@@ -1524,7 +1524,7 @@ padding: 15px 30px;
 }
 .footer {
   padding: 40px 0px;
-  background: #393E46;
+  background: #222831;
   display: flex;
   flex-direction: column;
   /* padding: 30px 2% 15px; */
@@ -1636,6 +1636,11 @@ width: 2rem;
 
 .footer-center a:hover {
   text-decoration: underline;
+  background: #222831;
+}
+.footer-left a:hover {
+  text-decoration: underline;
+  background: #222831;
 }
 
 .copyright {
