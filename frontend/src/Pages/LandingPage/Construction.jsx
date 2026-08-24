@@ -3,6 +3,7 @@ import "../../Page_styles/LandingPage/Construction.css"
 
 import { useState , useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ProductFeatures from '../../Components/Mainpage/ProductFeature';
 
 const constructionSlides = [
   {
@@ -295,7 +296,7 @@ const handleSignIn = () => {
 
   <div className="construction-section-3-image-wrapper">
     <img
-      src="/images/construction.webp"
+      src="/images/Constructionpage.webp"
       alt="Construction Equipment Asset Management Dashboard"
       className="construction-section-3-image"
     />
@@ -937,6 +938,7 @@ const handleSignIn = () => {
   </div>
 </section>
 
+<ProductFeatures /> 
 {/* ================= SECTION 13 ================= */}
 <section className="construction-section13">
   <div className="construction-section13-top">

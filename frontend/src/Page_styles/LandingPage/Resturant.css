@@ -2496,7 +2496,7 @@ width: 200px;
 
   box-sizing: border-box;
 
-  background: #393e46;
+  background: #222831;
 
   border-radius: 0 0 28px 28px;
 
@@ -2541,9 +2541,7 @@ width: 200px;
 
 .hospitality-industry-card:hover {
   transform: translateY(-8px) !important;
-
-  background: #353a42;
-
+  background: #222831;
   box-shadow:
     0 22px 32px rgba(0, 0, 0, 0.28);
 }
@@ -2552,8 +2550,8 @@ width: 200px;
 /* ICON CIRCLE */
 
 .hospitality-industry-icon {
-  width: 82px;
-  height: 82px;
+  width: 62px;
+  height: 62px;
 
   border-radius: 50%;
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import "../../Page_styles/LandingPage/ItAsset.css"
 import { useState , useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
   FaBriefcase,
@@ -57,26 +58,32 @@ const industries = [
   {
     icon: <FaPlane />,
     title: "Travel & Transport Logistics",
+    url : "/travel-transportation-asset-management"
   },
   {
     icon: <FaUtensils />,
     title: "Restaurant & Hospitality Management",
+    url: "/restaurant-hospitality-asset-management"
   },
   {
     icon: <FaHeartbeat />,
     title: "Healthcare Asset Tracking",
+    url : "/healthcare-asset-tracking"
   },
   {
     icon: <FaClipboard />,
     title: "Education Asset Management",
+    url : "/education-asset-management"
   },
   {
     icon: <FaToolbox />,
     title: "Construction Equipment Tracking",
+    url : "/construction-equipment-tracking"
   },
   {
     icon: <FaCog />,
     title: "Manufacturing Asset Management",
+    url : "/manufacturing-asset-management-software"
   },
 ];
 
@@ -585,7 +592,7 @@ const leftCategories = [
   ];
 
 const ItAsswt = () => {
-
+  const navigate = useNavigate();
     const [activeSlide, setActiveSlide] = useState(0);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [currentSlide2, setCurrentSlide2] = useState(0);
@@ -1928,20 +1935,24 @@ useEffect(() => {
 
       <h2>Manage Assets across Industries</h2>
 
-      <div className="industry-assets-grid">
-        {industries.map((industry, index) => (
-          <div
-            className={`industry-card industry-card-${index + 1}`}
-            key={industry.title}
-          >
-            <div className="industry-icon">
-              {industry.icon}
-            </div>
-
-            <p>{industry.title}</p>
-          </div>
-        ))}
+<div className="industry-assets-grid">
+  {industries.map((industry, index) => (
+    <div
+      className={`industry-card industry-card-${index + 1}`}
+      key={industry.title}
+        onClick={() => {
+        navigate(industry.url);
+        window.scrollTo(0, 0);
+      }}
+    >
+      <div className="industry-icon">
+        {industry.icon}
       </div>
+
+      <p>{industry.title}</p>
+    </div>
+  ))}
+</div>
 
     </section>
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import "../../Page_styles/LandingPage/Healthcare.css"
 import { useState , useEffect } from 'react';
+import ProductFeatures from '../../Components/Mainpage/ProductFeature';
 
 
 const healthcareSlides = [
@@ -338,7 +339,7 @@ useEffect(() => {
   <div className="healthcare-section-2-image">
 
     <img
-      src="/images/healthcare.webp"
+      src="/images/Healthcarepage.webp"
       alt="Healthcare asset management dashboard"
     />
 
@@ -894,6 +895,8 @@ useEffect(() => {
 
   </div>
 </section>
+
+<ProductFeatures />
 
 
 <section className="healthcare-section-13">

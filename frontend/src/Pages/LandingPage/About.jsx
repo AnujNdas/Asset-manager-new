@@ -125,19 +125,19 @@ export default function About() {
 
           <ul>
             <li>
-              <strong>No Tracking</strong> — Privacy Policy.
+              No Tracking — Privacy Policy.
             </li>
 
             <li>
-              Track <strong>Renewals, Maintenance, Warranty & Insurance.</strong>
+              Track Renewals, Maintenance, Warranty & Insurance.
             </li>
 
             <li>
-              Track <strong>Complete Assets History.</strong>
+              Track Complete Assets History.
             </li>
 
             <li>
-              Instant <strong>Asset Insights/Reports</strong> that scale with
+              Instant Asset Insights/Reports that scale with
               business.
             </li>
           </ul>

@@ -4300,7 +4300,7 @@
 .industry-card {
   width: 135px;
   min-height: 230px;
-
+  cursor: pointer;
   padding: 25px 14px 28px;
 
   box-sizing: border-box;

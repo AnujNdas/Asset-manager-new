@@ -1,6 +1,7 @@
 import React from 'react'
 import "../../Page_styles/LandingPage/Transport.css"
 import { useState , useEffect } from 'react';
+import ProductFeatures from '../../Components/Mainpage/ProductFeature';
 
 const travelFaqs = [
   {
@@ -365,7 +366,7 @@ useEffect(() => {
 
   <div className="travel-dashboard-wrapper">
     <img
-      src="/images/info.webp"
+      src="/images/Transportpage.webp"
       alt="Travel and Transportation Asset Management Dashboard"
       className="travel-dashboard-image"
     />
@@ -974,6 +975,8 @@ useEffect(() => {
   </div>
 
 </section>
+
+<ProductFeatures /> 
 
 <section className="travel-section12">
 

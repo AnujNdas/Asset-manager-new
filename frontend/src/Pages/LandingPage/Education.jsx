@@ -1,7 +1,8 @@
 import React from 'react'
 import "../../Page_styles/LandingPage/Education.css"
 import { useState, useEffect } from 'react';
-import { FaBuilding, FaChrome, FaHospital, FaHouseUser } from "react-icons/fa";
+import { FaBuilding, FaChrome, FaHospital, FaToolbox } from "react-icons/fa";
+import ProductFeatures from '../../Components/Mainpage/ProductFeature';
 const educationSection11Slides = [
   {
     leftTitle: "Best Education Asset Management Software",
@@ -312,7 +313,7 @@ useEffect(() => {
 
   <div className="education-dashboard-wrapper">
     <img
-      src="/images/construction.webp"
+      src="/images/Educationpage.webp"
       alt="Education Asset Management Dashboard"
       className="education-dashboard-image"
     />
@@ -902,6 +903,8 @@ useEffect(() => {
 
 </section>
 
+<ProductFeatures />
+
 {/* ================= SECTION 13 ================= */}
 
 <section className="education-section13">
@@ -1060,10 +1063,10 @@ useEffect(() => {
     {/* Travel */}
     <div
       className="industry-section15-card"
-      onClick={() => window.location.href = "/travel-asset-management"}
+      onClick={() => window.location.href = "/travel-transportation-asset-management"}
     >
-      <div className="industry-section15-icon">
-        <span>✈</span>
+      <div className="hospitality-industry-icon">
+        ✈
       </div>
 
       <h3>
@@ -1077,11 +1080,12 @@ useEffect(() => {
     {/* Restaurant */}
     <div
       className="industry-section15-card"
-      onClick={() => window.location.href = "/restaurant-asset-management"}
+      onClick={() => window.location.href = "/restaurant-hospitality-asset-management"}
     >
-      <div className="industry-section15-icon">
-        <FaHouseUser/>
-      </div>
+     <div className="hospitality-industry-icon">
+           <FaHospital />
+         </div>
+   
 
       <h3>
         Restaurant<br />
@@ -1094,10 +1098,10 @@ useEffect(() => {
     {/* Healthcare */}
     <div
       className="industry-section15-card"
-      onClick={() => window.location.href = "/healthcare-asset-management"}
+      onClick={() => window.location.href = "/healthcare-asset-tracking"}
     >
-      <div className="industry-section15-icon">
-        <FaHospital/>
+      <div className="hospitality-industry-icon">
+        ▢
       </div>
 
       <h3>
@@ -1113,9 +1117,9 @@ useEffect(() => {
       className="industry-section15-card"
       onClick={() => window.location.href = "/construction-equipment-tracking"}
     >
-      <div className="industry-section15-icon">
-        <FaBuilding/>
-      </div>
+      <div className="hospitality-industry-icon">
+            <FaToolbox/>
+          </div>
 
       <h3>
         Construction<br />
@@ -1128,10 +1132,10 @@ useEffect(() => {
     {/* Manufacturing */}
     <div
       className="industry-section15-card"
-      onClick={() => window.location.href = "/manufacturing-asset-management"}
+      onClick={() => window.location.href = "/manufacturing-asset-management-software"}
     >
-      <div className="industry-section15-icon">
-        <FaChrome />
+    <div className="hospitality-industry-icon">
+        ⚙
       </div>
 
       <h3>

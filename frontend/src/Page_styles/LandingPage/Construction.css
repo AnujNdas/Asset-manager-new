@@ -1111,7 +1111,7 @@
 .construction-section-6-left {
   width: 48%;
 
-  padding: 145px 30px 40px 42px;
+  padding: 45px 30px 40px 42px;
 
   box-sizing: border-box;
 }
@@ -1153,7 +1153,7 @@
 
 .construction-feature p {
   margin: 0;
-
+  text-align: left;
   padding-left: 18px;
 
   color: #ead9bc;

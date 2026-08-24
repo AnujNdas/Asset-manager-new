@@ -2,6 +2,7 @@ import React from 'react'
 import { useState , useEffect } from 'react';
 import "../../Page_styles/LandingPage/Resturant.css"
 import { FaHospital, FaToolbox } from 'react-icons/fa';
+import ProductFeatures from '../../Components/Mainpage/ProductFeature';
 
 const hospitalitySection10Items = [
   {
@@ -436,7 +437,7 @@ useEffect(() => {
   <div className="hospitality-section-3-content">
 
     <img
-      src="/images/construction.webp"
+      src="/images/Resturantpage.webp"
       alt="Restaurant and hospitality asset management dashboard"
       className="hospitality-dashboard-image"
     />
@@ -1167,7 +1168,7 @@ useEffect(() => {
   <div className="hospitality-industry-cards">
 
     {/* CARD 1 */}
-    <a href="/travel-transportation" className="hospitality-industry-card">
+    <a href="/travel-transportation-asset-management" className="hospitality-industry-card">
       <div className="hospitality-industry-icon">
         ✈
       </div>
@@ -1183,7 +1184,7 @@ useEffect(() => {
 
 
     {/* CARD 2 */}
-    <a href="/healthcare" className="hospitality-industry-card industry-card-raised">
+    <a href="/healthcare-asset-tracking" className="hospitality-industry-card industry-card-raised">
       <div className="hospitality-industry-icon">
         <FaHospital />
       </div>
@@ -1199,7 +1200,7 @@ useEffect(() => {
 
 
     {/* CARD 3 */}
-    <a href="/education" className="hospitality-industry-card">
+    <a href="/education-asset-management" className="hospitality-industry-card">
       <div className="hospitality-industry-icon">
         ▢
       </div>
@@ -1215,7 +1216,7 @@ useEffect(() => {
 
 
     {/* CARD 4 */}
-    <a href="/construction" className="hospitality-industry-card industry-card-raised">
+    <a href="/construction-equipment-tracking" className="hospitality-industry-card industry-card-raised">
       <div className="hospitality-industry-icon">
         <FaToolbox/>
       </div>
@@ -1231,7 +1232,7 @@ useEffect(() => {
 
 
     {/* CARD 5 */}
-    <a href="/manufacturing" className="hospitality-industry-card">
+    <a href="/manufacturing-asset-management-software" className="hospitality-industry-card">
       <div className="hospitality-industry-icon">
         ⚙
       </div>
@@ -1248,6 +1249,8 @@ useEffect(() => {
   </div>
 
 </section>
+
+<ProductFeatures />
 
 <section className="manufacturing-section-15">
         <div className="manufacturing-section-15-links">

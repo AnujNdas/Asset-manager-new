@@ -1,6 +1,7 @@
 import React from 'react'
 import "../../Page_styles/LandingPage/Manufacturing.css"
 import { useEffect , useState } from 'react';
+import ProductFeatures from '../../Components/Mainpage/ProductFeature';
 
 
 const manufacturingFaqs = [
@@ -936,29 +937,29 @@ useEffect(() => {
 
   <div className="manufacturing-industry-grid">
 
-    <div className="manufacturing-industry-card">
+    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/travel-transportation-asset-management"}>
       <div className="industry-icon">✈️</div>
       <h3>Travel & Transportation Logistics</h3>
     </div>
 
-    <div className="manufacturing-industry-card">
+    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/restaurant-hospitality-asset-management"}>
       <div className="industry-icon">🏭</div>
       <h3>Resturant & Hospitality</h3>
     </div>
 
-    <div className="manufacturing-industry-card">
+    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/healthcare-asset-tracking"}>
       <div className="industry-icon">⚕️</div>
       <h3>Healthcare Asset Tracking</h3>
     </div>
 
-    <div className="manufacturing-industry-card">
+    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/construction-equipment-tracking"}>
       <div className="industry-icon">🏗️</div>
       <h3>Construction Equipment Tracking</h3>
     </div>
 
-    <div className="manufacturing-industry-card">
+    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/education-asset-management"}>
       <div className="industry-icon">🔧</div>
-      <h3>Engineering & Production</h3>
+      <h3>Education Asset Management</h3>
     </div>
 
   </div>
@@ -995,6 +996,8 @@ useEffect(() => {
   </div>
 
 </section>
+
+<ProductFeatures /> 
 
 {/* SECTION 13 */}
 <section className="manufacturing-section-13">

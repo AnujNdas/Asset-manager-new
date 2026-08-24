@@ -186,147 +186,162 @@ const Navbar = () => {
       </nav>
 
       {/* MOBILE MENU */}
-      <div
-        className={`mobile-menu ${
-          mobileMenuOpen ? "active" : ""
-        }`}
-      >
+{/* MOBILE MENU */}
+<div
+  className={`mobile-menu ${
+    mobileMenuOpen ? "active" : ""
+  }`}
+>
 
-        <Link to="/" onClick={closeMenu}>
-          Home
+  <Link to="/" onClick={closeMenu}>
+    Home
+  </Link>
+
+  <Link to="/about" onClick={closeMenu}>
+    About
+  </Link>
+
+
+  {/* MOBILE FEATURES */}
+  <div className="mobile-dropdown">
+
+    <button
+      className="mobile-dropdown-toggle"
+      onClick={() => toggleDropdown("mobile-features")}
+    >
+      <span>Features</span>
+
+      <FiChevronDown
+        className={
+          openDropdown === "mobile-features"
+            ? "chevron rotate"
+            : "chevron"
+        }
+      />
+    </button>
+
+    {openDropdown === "mobile-features" && (
+      <div className="mobile-dropdown-links">
+
+        <Link
+          to="/machinery-management-software"
+          onClick={closeMenu}
+        >
+          Machinery Asset Management Software
         </Link>
 
-        <Link to="/about" onClick={closeMenu}>
-          About
+        <Link
+          to="/it-asset-management"
+          onClick={closeMenu}
+        >
+          IT Asset Management Software
         </Link>
-
-        {/* MOBILE DROPDOWN 1 */}
-        <div className="mobile-dropdown">
-
-          <button
-            className="mobile-dropdown-toggle"
-            onClick={() => toggleDropdown("mobile-solutions")}
-          >
-            <span>Solutions</span>
-
-            <FiChevronDown
-              className={
-                openDropdown === "mobile-solutions"
-                  ? "chevron rotate"
-                  : "chevron"
-              }
-            />
-          </button>
-
-          {openDropdown === "mobile-solutions" && (
-            <div className="mobile-dropdown-links">
-
-              <Link
-                to="/asset-management"
-                onClick={closeMenu}
-              >
-                Asset Management
-              </Link>
-
-              <Link
-                to="/software-license-management"
-                onClick={closeMenu}
-              >
-                Software License Management
-              </Link>
-
-            </div>
-          )}
-
-        </div>
-
-        {/* MOBILE DROPDOWN 2 */}
-        <div className="mobile-dropdown">
-
-          <button
-            className="mobile-dropdown-toggle"
-            onClick={() => toggleDropdown("mobile-resources")}
-          >
-            <span>Resources</span>
-
-            <FiChevronDown
-              className={
-                openDropdown === "mobile-resources"
-                  ? "chevron rotate"
-                  : "chevron"
-              }
-            />
-          </button>
-
-          {openDropdown === "mobile-resources" && (
-            <div className="mobile-dropdown-links">
-
-              <Link to="/blog" onClick={closeMenu}>
-                Blog
-              </Link>
-
-              <Link to="/tutorials" onClick={closeMenu}>
-                Tutorials
-              </Link>
-
-              <Link
-                to="/documentation"
-                onClick={closeMenu}
-              >
-                Documentation
-              </Link>
-
-              <Link to="/faq" onClick={closeMenu}>
-                FAQ
-              </Link>
-
-              <Link
-                to="/case-studies"
-                onClick={closeMenu}
-              >
-                Case Studies
-              </Link>
-
-              <Link
-                to="/help-center"
-                onClick={closeMenu}
-              >
-                Help Center
-              </Link>
-
-            </div>
-          )}
-
-        </div>
-
-        <Link to="/contact" onClick={closeMenu}>
-          Contact
-        </Link>
-
-        <hr />
-
-        <button
-          className="signin-btn"
-          onClick={handleTutorialClick}
-        >
-          Tutorial
-        </button>
-
-        <button
-          className="signin-btn"
-          onClick={handleSigninClick}
-        >
-          Sign In
-        </button>
-
-        <button
-          className="signup-btn"
-          onClick={handleSignupClick}
-        >
-          Sign Up
-        </button>
 
       </div>
+    )}
+
+  </div>
+
+
+  {/* MOBILE SOLUTIONS */}
+  <div className="mobile-dropdown">
+
+    <button
+      className="mobile-dropdown-toggle"
+      onClick={() => toggleDropdown("mobile-solutions")}
+    >
+      <span>Solutions</span>
+
+      <FiChevronDown
+        className={
+          openDropdown === "mobile-solutions"
+            ? "chevron rotate"
+            : "chevron"
+        }
+      />
+    </button>
+
+    {openDropdown === "mobile-solutions" && (
+      <div className="mobile-dropdown-links">
+
+        <Link
+          to="/manufacturing-asset-management-software"
+          onClick={closeMenu}
+        >
+          Manufacturing Asset Management Software
+        </Link>
+
+        <Link
+          to="/restaurant-hospitality-asset-management"
+          onClick={closeMenu}
+        >
+          Restaurant Hospitality Asset Management
+        </Link>
+
+        <Link
+          to="/healthcare-asset-tracking"
+          onClick={closeMenu}
+        >
+          Healthcare Asset Tracking
+        </Link>
+
+        <Link
+          to="/construction-equipment-tracking"
+          onClick={closeMenu}
+        >
+          Construction Equipment Tracking
+        </Link>
+
+        <Link
+          to="/education-asset-management"
+          onClick={closeMenu}
+        >
+          Education Asset Management
+        </Link>
+
+        <Link
+          to="/travel-transportation-asset-management"
+          onClick={closeMenu}
+        >
+          Travel &amp; Transport Asset Management Software
+        </Link>
+
+      </div>
+    )}
+
+  </div>
+
+
+  <Link to="/contact" onClick={closeMenu}>
+    Contact
+  </Link>
+
+
+  <hr />
+
+
+  <button
+    className="signin-btn"
+    onClick={handleTutorialClick}
+  >
+    Tutorial
+  </button>
+
+  <button
+    className="signin-btn"
+    onClick={handleSigninClick}
+  >
+    Sign In
+  </button>
+
+  <button
+    className="signup-btn"
+    onClick={handleSignupClick}
+  >
+    Sign Up
+  </button>
+
+</div>
     </>
   );
 };

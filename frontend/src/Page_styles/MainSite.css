@@ -225,6 +225,7 @@
         padding:15px 24px;
 
         font-weight:500;
+        border-bottom: 1px solid #393E46;
 
     }
 
@@ -243,12 +244,6 @@
         border:0;
 
         border-top:1px solid rgba(255,255,255,.1);
-
-    }
-
-    .mobile-menu button{
-
-        margin:8px 20px;
 
     }
 
@@ -273,6 +268,7 @@
     border-radius: 10px;
     font-weight: 600;
     font-size: 14px;
+    margin-top: 10px;
   }
   
   .signup-btn {
@@ -351,7 +347,7 @@
   }
   
   .stat-card {
-    background: var(--bg-secondary);
+    background: #222831;
     padding: 2rem;
     border-radius: 15px;
     text-align: center;
@@ -1935,6 +1931,7 @@ font-size:15px;
 .chevron {
   font-size: 14px;
   transition: transform 0.2s ease;
+  color: #DFD0B8;
 }
 
 .chevron.rotate {
@@ -1989,7 +1986,7 @@ font-size:15px;
 
 .mobile-dropdown-toggle {
   width: 100%;
-
+  border-bottom: 1px solid #393E46;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2000,21 +1997,18 @@ font-size:15px;
   color: inherit;
   font: inherit;
 
-  padding: 12px 0;
+  padding: 15px 24px;
 
   cursor: pointer;
 }
-
+ .mobile-dropdown-toggle span { 
+  color: #DFD0B8;
+  font-size: 14px;
+ }
 .mobile-dropdown-links {
   display: flex;
   flex-direction: column;
-
-  padding-left: 20px;
   margin-bottom: 8px;
-}
-
-.mobile-dropdown-links a {
-  padding: 10px 0;
 }
 
 
