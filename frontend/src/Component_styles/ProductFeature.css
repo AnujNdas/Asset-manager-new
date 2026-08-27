@@ -47,7 +47,7 @@
 
 .product-feature-card {
   min-height: 255px;
-
+  cursor: pointer;
   padding: 38px 38px 32px;
 
   background: #202732;

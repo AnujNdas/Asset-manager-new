@@ -2483,7 +2483,7 @@ width: 200px;
 .hospitality-industry-card {
   width: 170px;
   min-height: 235px;
-
+  cursor: pointer;
   flex: 0 0 170px;
 
   display: flex;
@@ -2594,7 +2594,7 @@ width: 200px;
 
 .manufacturing-section-15 {
   width: 100%;
-  min-height: 450px;
+  min-height: 100px;
   background: #393e46;
   color: #dfd0b8;
 

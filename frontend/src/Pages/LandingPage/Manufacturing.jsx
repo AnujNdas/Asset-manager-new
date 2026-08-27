@@ -1014,7 +1014,7 @@ useEffect(() => {
 
   </div>
 
-  <div className="section-13-visit">
+  {/* <div className="section-13-visit">
     <span>Visit</span>
   </div>
 
@@ -1024,17 +1024,17 @@ useEffect(() => {
       href="/machinery-management-software"
       className="section-13-option"
     >
-      Equipment Asset Management System
+      Machinery Asset Management System
     </a>
 
     <a
       href="/it-asset-management"
       className="section-13-option"
     >
-      IT Asset Management System
+      IT Asset Management Software
     </a>
 
-  </div>
+  </div> */}
 
 </section>
 

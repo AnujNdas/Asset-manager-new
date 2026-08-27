@@ -957,7 +957,7 @@ const handleSignIn = () => {
 
   </div>
 
-  <div className="construction-section13-content">
+  {/* <div className="construction-section13-content">
 
     <h3>Visit</h3>
 
@@ -983,7 +983,7 @@ const handleSignIn = () => {
 
     </div>
 
-  </div>
+  </div> */}
 </section>
 
 {/* ================= SECTION 14 - FAQ ================= */}

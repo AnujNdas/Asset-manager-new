@@ -123,6 +123,14 @@ const Pricing = () => {
       };
        const plans = pricingData[billingCycle];
 
+
+
+       const handleCompetitor1 = () => {
+        window.open("https://socialflylive.com/assetpegasus-vs-asset-panda/")
+       }
+       const handleCompetitor2 = () => {
+        window.open("https://socialflylive.com/assetpegasus-vs-assettiger/")
+       }
   return (
     <>
     <section className="pricing-hero-section">
@@ -197,8 +205,8 @@ const Pricing = () => {
       </div>
 
       <div className="competitor-buttons">
-        <button>Competitor 1</button>
-        <button>Competitor 2</button>
+        <button onClick={handleCompetitor1}>Competitor 1</button>
+        <button onClick={handleCompetitor2}>Competitor 2</button>
       </div>
 
     </section>

@@ -160,16 +160,16 @@ const blogs = [
     link: "https://socialflylive.com/asset-condition-lifecycle-tracking-software/",
      cta: "Explore lifecycle tracking"
   },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900",
-    title: "Why 2026 Scammers No Longer Break In, They Log In.",
-    author: "Sourav Das",
-    date: "June 6, 2026",
-    link: "https://socialflylive.com/why-2026-scammers-no-longer-break-in-they-log-in/",
-     cta: "Read the security insights"
-  },
+  // {
+  //   id: 3,
+  //   image:
+  //     "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900",
+  //   title: "Why 2026 Scammers No Longer Break In, They Log In.",
+  //   author: "Sourav Das",
+  //   date: "June 6, 2026",
+  //   link: "https://socialflylive.com/why-2026-scammers-no-longer-break-in-they-log-in/",
+  //    cta: "Read the security insights"
+  // },
   {
     id: 4,
     image:

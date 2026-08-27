@@ -927,7 +927,7 @@ useEffect(() => {
 
   </div>
 
-
+{/* 
   <div className="education-section13-content">
 
     <h3>Visit</h3>
@@ -952,7 +952,7 @@ useEffect(() => {
 
     </div>
 
-  </div>
+  </div> */}
 
 </section>
 
@@ -1101,7 +1101,7 @@ useEffect(() => {
       onClick={() => window.location.href = "/healthcare-asset-tracking"}
     >
       <div className="hospitality-industry-icon">
-        ▢
+        <FaBuilding />
       </div>
 
       <h3>

@@ -2042,7 +2042,7 @@
 
 .travel-section12 {
   width: 100%;
-  min-height: 360px;
+  /* min-height: 360px; */
 
   background: #3b424c;
   color: #ead8b9;
@@ -2226,7 +2226,7 @@
 
 .travel-faq-section {
   width: 100%;
-  background: #222831;
+  /* background: #222831; */
   padding: 30px 20px 60px;
   box-sizing: border-box;
 }

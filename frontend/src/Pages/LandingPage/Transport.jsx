@@ -991,7 +991,7 @@ useEffect(() => {
     </button>
   </div>
 
-  <h3>Visit</h3>
+  {/* <h3>Visit</h3>
 
   <div className="travel-section12-links">
 
@@ -1007,7 +1007,7 @@ useEffect(() => {
       IT Asset Management System
     </button>
 
-  </div>
+  </div> */}
 
 </section>  
 

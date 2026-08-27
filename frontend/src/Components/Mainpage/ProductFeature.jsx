@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FiBox, FiMonitor } from "react-icons/fi";
 import "../../Component_styles/ProductFeature.css";
 
@@ -12,7 +13,9 @@ const ProductFeatures = ({
       assets etc.
     </>
   ),
-  physicalTitle = "Equipment Asset Management",
+  digitalUrl = "/it-asset-management",
+
+  physicalTitle = "Machinery Asset Management",
   physicalDescription = (
     <>
       Manage all types of <strong>Physical Assets</strong> from{" "}
@@ -20,7 +23,24 @@ const ProductFeatures = ({
       Transport assets.
     </>
   ),
+  physicalUrl = "/machinery-management-software",
 }) => {
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (url) => {
+    navigate(url);
+
+    // Wait for React Router to render the new page
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+    }, 0);
+  };
+
   return (
     <section className="product-features-section">
 
@@ -31,38 +51,32 @@ const ProductFeatures = ({
       <div className="product-features-grid">
 
         {/* DIGITAL ASSET */}
-        <div className="product-feature-card">
-
+        <div
+          className="product-feature-card"
+          onClick={() => handleNavigate(digitalUrl)}
+        >
           <div className="product-feature-icon">
             <FiBox />
           </div>
 
-          <h3>
-            {digitalTitle}
-          </h3>
+          <h3>{digitalTitle}</h3>
 
-          <p>
-            {digitalDescription}
-          </p>
-
+          <p>{digitalDescription}</p>
         </div>
 
 
         {/* PHYSICAL ASSET */}
-        <div className="product-feature-card">
-
+        <div
+          className="product-feature-card"
+          onClick={() => handleNavigate(physicalUrl)}
+        >
           <div className="product-feature-icon">
             <FiMonitor />
           </div>
 
-          <h3>
-            {physicalTitle}
-          </h3>
+          <h3>{physicalTitle}</h3>
 
-          <p>
-            {physicalDescription}
-          </p>
-
+          <p>{physicalDescription}</p>
         </div>
 
       </div>
@@ -70,5 +84,6 @@ const ProductFeatures = ({
     </section>
   );
 };
+
 
 export default ProductFeatures;

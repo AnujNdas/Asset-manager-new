@@ -915,7 +915,7 @@ useEffect(() => {
 
   </div>
 
-  <div className="healthcare-section-13-visit">
+  {/* <div className="healthcare-section-13-visit">
 
     <h3>Visit</h3>
 
@@ -939,7 +939,7 @@ useEffect(() => {
 
     </div>
 
-  </div>
+  </div> */}
 
 </section>
 

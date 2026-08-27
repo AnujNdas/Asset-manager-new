@@ -1262,19 +1262,19 @@ useEffect(() => {
 
         </div>
   
-  <div className="section-15-visit">
+  {/* <div className="section-15-visit">
     Visit
   </div>
 
   <div className="manufacturing-section-15-links">
     <a href="/equipment-management">
-      Equipment Asset Management System
+      Machinery Asset Management System
     </a>
 
     <a href="/itam-management">
-      IT Asset Management System
+      IT Asset Management Software
     </a>
-  </div>
+  </div> */}
 
 </section>
 
