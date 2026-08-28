@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Helmet } from "react-helmet-async";
 import { FiMenu, FiX } from "react-icons/fi";
 
-
+import { Link } from "react-router-dom";
 import {
   FaFacebookF,
   FaInstagram,
@@ -141,45 +141,56 @@ const prevSlide = () => {
 const blogs = [
   {
     id: 1,
+    slug: "businesses-lose-insurance-claims",
     image:
       "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900",
     title:
       "How Businesses Lose Insurance Claims Due to Missing Asset Records",
     author: "Poll Ghosh",
     date: "July 24, 2026",
-    link: "https://socialflylive.com/how-businesses-lose-insurance-claims/",
-     cta: "Read about insurance claims"
+    link:
+      "https://socialflylive.com/how-businesses-lose-insurance-claims/",
+    cta: "Read about insurance claims",
   },
+
   {
     id: 2,
+    slug: "asset-condition-lifecycle-tracking-software",
     image:
       "https://images.unsplash.com/photo-1518770660439-4636190af475?w=900",
     title: "Asset Condition & Lifecycle Tracking Software",
     author: "Poll Ghosh",
     date: "July 20, 2026",
-    link: "https://socialflylive.com/asset-condition-lifecycle-tracking-software/",
-     cta: "Explore lifecycle tracking"
+    link:
+      "https://socialflylive.com/asset-condition-lifecycle-tracking-software/",
+    cta: "Explore lifecycle tracking",
   },
+
   // {
   //   id: 3,
+  //   slug: "2026-scammers-log-in",
   //   image:
   //     "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=900",
   //   title: "Why 2026 Scammers No Longer Break In, They Log In.",
   //   author: "Sourav Das",
   //   date: "June 6, 2026",
-  //   link: "https://socialflylive.com/why-2026-scammers-no-longer-break-in-they-log-in/",
-  //    cta: "Read the security insights"
+  //   link:
+  //     "https://socialflylive.com/why-2026-scammers-no-longer-break-in-they-log-in/",
+  //   cta: "Read the security insights",
   // },
+
   {
     id: 4,
+    slug: "poor-maintenance-shortens-server-lifespans",
     image:
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900",
     title: "How Poor Maintenance Scheduling Shortens Server Lifespans",
     author: "Anuj Das",
     date: "May 26, 2026",
-    link: "https://socialflylive.com/how-poor-maintenance-shortens-server-lifespans/",
-     cta: "Explore maintenance planning"
-  }
+    link:
+      "https://socialflylive.com/how-poor-maintenance-shortens-server-lifespans/",
+    cta: "Explore maintenance planning",
+  },
 ];
 const faqData = [
   {
@@ -1149,41 +1160,69 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </div>
       </div>
     </section>
-    <section className="blog-section">
-      <div className="container">
-        <h2 className="heading">Blogs</h2>
+<section className="blog-section">
+  <div className="container">
 
-        <div className="blog-grid">
-          {blogs.map((blog) => (
-            <div className="blog-card" key={blog.id}>
-              <div className="blog-image">
-                <img src={blog.image} alt={blog.title} />
-              </div>
+    <h2 className="heading">
+      Blogs
+    </h2>
 
-              <div className="blog-content">
-                <h3>{blog.title}</h3>
+    <div className="blog-grid">
 
-                <p className="meta">
-                  By <span>{blog.author}</span>
-                  <span className="dot">•</span>
-                  {blog.date}
-                </p>
+      {blogs.map((blog) => (
 
-<a
-  href={blog.link}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="read-btn"
->
-  {blog.cta}
-  <span aria-hidden="true">→</span>
-</a>
-              </div>
-            </div>
-          ))}
+        <div
+          className="blog-card"
+          key={blog.id}
+        >
+
+          <div className="blog-image">
+            <img
+              src={blog.image}
+              alt={blog.title}
+            />
+          </div>
+
+
+          <div className="blog-content">
+
+            <h3>
+              {blog.title}
+            </h3>
+
+
+            <p className="meta">
+              By <span>{blog.author}</span>
+
+              <span className="dot">
+                •
+              </span>
+
+              {blog.date}
+            </p>
+
+
+            <Link
+              to={`/blog/${blog.slug}`}
+              className="read-btn"
+            >
+              {blog.cta}
+
+              <span aria-hidden="true">
+                →
+              </span>
+            </Link>
+
+          </div>
+
         </div>
-      </div>
-    </section>
+
+      ))}
+
+    </div>
+
+  </div>
+</section>
 
 
     </div>

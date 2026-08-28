@@ -83,18 +83,16 @@ const BlogPage = () => {
                   </h2>
 
 
-                  <a
-                    href={blog.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="blog-page-read-more"
-                  >
-                    {blog.cta}
+      <button
+  className="blog-page-read-more"
+  onClick={() => navigate(`/blog/${blog.slug}`)}
+>
+  {blog.cta}
 
-                    <span>
-                      →
-                    </span>
-                  </a>
+  <span>
+    →
+  </span>
+</button>
 
                 </div>
 

@@ -4,7 +4,7 @@ import { useEffect, useState, lazy, Suspense } from "react";
 import TenantRoutes from "./routes/TenantRoutes";
 import SuperAdminRoutes from "./routes/SuperAdminRoutes";
 import AffiliateRoutes from "./routes/AffiliateRoutes";
-
+import BlogDetails from "./Pages/LandingPage/BlogDetails";
 import TrackInstance from "./Pages/TrackInstance"; 
 import MainSite from "./Pages/MainSite"; 
 import About from "./Pages/LandingPage/About"
@@ -151,6 +151,10 @@ const App = () => {
           path="/blog"
           element={<BlogPage/>}
       />
+      <Route
+  path="/blog/:slug"
+  element={<BlogDetails />}
+/>
 
   </Route>
           <Route
