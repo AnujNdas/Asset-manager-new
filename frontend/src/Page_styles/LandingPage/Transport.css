@@ -370,9 +370,9 @@
 
 .travel-free-trial-btn {
   margin-top: 10px;
-
+  width: 300px;
   padding: 11px 20px;
-
+  justify-content: center;
   border: none;
 
   border-radius: 25px;
@@ -445,7 +445,8 @@
 
 .travel-signup-btn {
   padding: 10px 19px;
-
+  width: 200px;
+  justify-content: center;
   border: none;
 
   border-radius: 3px;
@@ -972,7 +973,8 @@
 
 .travel-section6-button {
   margin-top: 15px;
-
+  width: 200px;
+  justify-content: center;
   padding: 10px 22px;
 
   border: none;
@@ -1153,7 +1155,9 @@
 
 .travel-section7-button {
   margin-top: 15px;
-
+  width: 200px;
+  justify-content: center;
+  margin: 20px auto;
   padding: 10px 18px;
 
   border: none;
@@ -1711,9 +1715,9 @@
 
 /* FREE TRIAL */
 
-.travel-section10-trial {
-  align-self: flex-end;
-
+.travel-section10-trial { 
+  width: 200px;
+  justify-content: center;
   border: none;
   outline: none;
 
@@ -1941,8 +1945,6 @@
   color: #ead8b9;
     display: inline-block;
   font-weight: 700;
-    width: 100px;
-  text-decoration: underline;
 }
 
 .travel-section11-socialfly a:hover {
@@ -1956,7 +1958,7 @@
 
 .travel-section11-about-btn {
   margin-top: 5px;
-
+  width: 200px;
   padding: 11px 20px;
 
   border: none;
@@ -2079,8 +2081,8 @@
 ========================= */
 
 .travel-section12-signup {
-  min-width: 150px;
-
+  width: 200px;
+  
   padding: 13px 25px;
 
   border: none;

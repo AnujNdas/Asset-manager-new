@@ -2,7 +2,9 @@ import React from 'react'
 import "../../Page_styles/LandingPage/Transport.css"
 import { useState , useEffect } from 'react';
 import ProductFeatures from '../../Components/Mainpage/ProductFeature';
-
+import { FaBuilding, FaChrome, FaBook ,  FaHospital, FaToolbox } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 const travelFaqs = [
   {
     question: "What is Travel & Transportation asset management software?",
@@ -307,6 +309,124 @@ useEffect(() => {
   };
   return (
     <>
+    <Helmet>
+
+        {/* =========================
+            BASIC SEO
+        ========================= */}
+
+        <title>
+          Travel & Transportation Asset Management Software | AssetPegasus
+        </title>
+
+        <meta
+          name="description"
+          content="Manage and track transportation assets, vehicles, equipment, maintenance, locations, costs, assignments and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          name="keywords"
+          content="transportation asset management software, travel asset management software, transportation equipment tracking, fleet asset management, vehicle asset tracking, transportation asset tracking software, travel equipment management, transportation asset lifecycle management"
+        />
+
+        <meta
+          name="robots"
+          content="index, follow"
+        />
+
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/travel-transportation-asset-management"
+        />
+
+
+        {/* =========================
+            OPEN GRAPH
+        ========================= */}
+
+        <meta
+          property="og:type"
+          content="website"
+        />
+
+        <meta
+          property="og:title"
+          content="Travel & Transportation Asset Management Software | AssetPegasus"
+        />
+
+        <meta
+          property="og:description"
+          content="Track and manage transportation assets, vehicles, equipment, maintenance, locations, costs and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          property="og:url"
+          content="https://assetpegasus.com/travel-transportation-asset-management"
+        />
+
+        <meta
+          property="og:site_name"
+          content="AssetPegasus"
+        />
+
+        <meta
+          property="og:image"
+          content="https://assetpegasus.com/images/Transportpage.webp"
+        />
+
+        <meta
+          property="og:image:alt"
+          content="Travel and Transportation Asset Management Software"
+        />
+
+        <meta
+          property="og:image:width"
+          content="1200"
+        />
+
+        <meta
+          property="og:image:height"
+          content="630"
+        />
+
+
+        {/* =========================
+            TWITTER / X
+        ========================= */}
+
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+
+        <meta
+          name="twitter:title"
+          content="Travel & Transportation Asset Management Software | AssetPegasus"
+        />
+
+        <meta
+          name="twitter:description"
+          content="Manage and track transportation assets, vehicles, equipment, maintenance, locations, costs and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          name="twitter:url"
+          content="https://assetpegasus.com/travel-transportation-asset-management"
+        />
+
+        <meta
+          name="twitter:image"
+          content="https://assetpegasus.com/images/Transportpage.webp"
+        />
+
+        <meta
+          name="twitter:image:alt"
+          content="Travel and Transportation Asset Management Software"
+        />
+
+      </Helmet>
+
+
         <section className="travel-section1">
   <div className="travel-section1-content">
     <h1>
@@ -317,7 +437,10 @@ useEffect(() => {
   </div>
 
   <div className="travel-section1-breadcrumb">
-    <a href="/">Home</a>
+    <Link to="/" 
+    target="_blank"
+  rel="noopener noreferrer"
+  >Home</Link>
     <span> - </span>
     <span>Travel &amp; Transportation Asset Management Software</span>
   </div>
@@ -418,9 +541,12 @@ useEffect(() => {
       <p>Unlock Modern Inventory &amp; with Best Visibility.</p>
     </div>
 
-    <button className="travel-free-trial-btn">
+    <Link to="/user/signup"
+    target="_blank"
+  rel="noopener noreferrer"
+   className="travel-free-trial-btn">
       Free Trial — No Card Required
-    </button>
+    </Link>
 
   </div>
 
@@ -432,9 +558,12 @@ useEffect(() => {
 
       <h2>Free Trial — 7 Days</h2>
 
-      <button className="travel-signup-btn">
+      <Link to="/user/signup"
+      target="_blank"
+  rel="noopener noreferrer"
+   className="travel-signup-btn">
         Sign Up
-      </button>
+      </Link>
 
     </div>
 
@@ -666,12 +795,13 @@ useEffect(() => {
       </div>
 
 
-      <button
-        className="travel-section6-button"
-        onClick={() => window.location.href = "/user/signup"}
+      <Link
+        className="travel-section6-button" to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
       >
         Sign Up Now
-      </button>
+      </Link>
 
     </div>
 
@@ -725,12 +855,14 @@ useEffect(() => {
 
   {/* BUTTON */}
 
-  <button
+  <Link
     className="travel-section7-button"
-    onClick={() => window.location.href = "/user/signup"}
+    to="/user/signup"
+    target="_blank"
+  rel="noopener noreferrer"
   >
     Free Trial – No Card Required
-  </button>
+  </Link>
 
 </section>
 
@@ -875,9 +1007,11 @@ useEffect(() => {
   {/* RIGHT SIDE CAROUSEL */}
   <div className="travel-section10-right">
 
-    <button className="travel-section10-trial">
+    <Link className="travel-section10-trial" to="/user/signup"
+    target="_blank"
+  rel="noopener noreferrer">
       Free Trial
-    </button>
+    </Link>
 
     <div className="travel-section10-carousel">
 
@@ -965,12 +1099,14 @@ useEffect(() => {
       Manage Businesses & Individuals.
     </p>
 
-    <button
+    <Link
       className="travel-section11-about-btn"
-      onClick={() => window.location.href = "/about"}
+      target="_blank"
+  rel="noopener noreferrer"
+      to="/about"
     >
       About Us
-    </button>
+    </Link>
 
   </div>
 
@@ -978,17 +1114,121 @@ useEffect(() => {
 
 <ProductFeatures /> 
 
+<section className="hospitality-section-14">
+
+  <div className="hospitality-industry-cards">
+
+    {/* CARD 1 */}
+    <Link to="/education-asset-management" className="hospitality-industry-card"
+    target="_blank"
+  rel="noopener noreferrer"
+    >
+      <div className="hospitality-industry-icon">
+        <FaBook /> 
+      </div>
+
+      <h3>
+        Education
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+
+    {/* CARD 2 */}
+    <Link to="/healthcare-asset-tracking" className="hospitality-industry-card industry-card-raised"
+    target="_blank"
+  rel="noopener noreferrer"
+    >
+      <div className="hospitality-industry-icon">
+        <FaHospital />
+      </div>
+
+      <h3>
+        Healthcare
+        <br />
+        Asset
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 3 */}
+    <Link to="/construction-equipment-tracking" className="hospitality-industry-card"
+    target="_blank"
+  rel="noopener noreferrer"
+    >
+      <div className="hospitality-industry-icon">
+        <FaToolbox />
+      </div>
+
+      <h3>
+        Construction
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+
+    {/* CARD 4 */}
+    <Link to="/restaurant-hospitality-asset-management" className="hospitality-industry-card industry-card-raised"
+    target="_blank"
+  rel="noopener noreferrer"
+    >
+      <div className="hospitality-industry-icon">
+        <FaBuilding />
+      </div>
+
+      <h3>
+        Restaurant
+        <br />
+        Equipment
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 5 */}
+    <Link to="/manufacturing-asset-management-software" className="hospitality-industry-card"
+    target="_blank"
+  rel="noopener noreferrer"
+    >
+      <div className="hospitality-industry-icon">
+        ⚙
+      </div>
+
+      <h3>
+        Manufacturing
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+  </div>
+
+</section>
+
 <section className="travel-section12">
 
   <div className="travel-section12-header">
     <h2>Asset Management System</h2>
 
-    <button
+    <Link
       className="travel-section12-signup"
-      onClick={() => window.location.href = "/user/signup"}
+      to = "/user/signup"
+      target="_blank"
+  rel="noopener noreferrer"
     >
       Sign Up Now <span>→</span>
-    </button>
+    </Link>
   </div>
 
   {/* <h3>Visit</h3>

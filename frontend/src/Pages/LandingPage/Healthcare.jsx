@@ -2,7 +2,9 @@ import React from 'react'
 import "../../Page_styles/LandingPage/Healthcare.css"
 import { useState , useEffect } from 'react';
 import ProductFeatures from '../../Components/Mainpage/ProductFeature';
-
+import { FaBook, FaHospital, FaToolbox } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const healthcareSlides = [
   {
@@ -287,6 +289,124 @@ useEffect(() => {
 }, [healthcareSection9Slides.length]);
   return (
     <>
+
+    <Helmet>
+
+        {/* =========================
+            BASIC SEO
+        ========================= */}
+
+        <title>
+          Healthcare & Asset Tracking | AssetPegasus
+        </title>
+
+        <meta
+          name="description"
+          content="Manage restaurant and hospitality assets with AssetPegasus. Track kitchen equipment, machinery, maintenance, locations, costs, assignments and complete asset lifecycles from one platform."
+        />
+
+        <meta
+          name="keywords"
+          content="restaurant asset management software, hospitality asset management software, restaurant equipment tracking, kitchen equipment management, restaurant maintenance software, hospitality equipment tracking, restaurant asset tracking, equipment lifecycle management"
+        />
+
+        <meta
+          name="robots"
+          content="index, follow"
+        />
+
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/healthcare-asset-tracking"
+        />
+
+
+        {/* =========================
+            OPEN GRAPH
+        ========================= */}
+
+        <meta
+          property="og:type"
+          content="website"
+        />
+
+        <meta
+          property="og:title"
+          content="Healthcare & Asset Tracking Software | AssetPegasus"
+        />
+
+        <meta
+          property="og:description"
+          content="Track and manage restaurant and hospitality equipment, kitchen assets, maintenance, locations, costs and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          property="og:url"
+          content="https://assetpegasus.com/healthcare-asset-tracking"
+        />
+
+        <meta
+          property="og:site_name"
+          content="AssetPegasus"
+        />
+
+        {/* SHARE IMAGE */}
+        <meta
+          property="og:image"
+          content="https://assetpegasus.com/images/Healthcarepage.webp"
+        />
+
+        <meta
+          property="og:image:alt"
+          content="Restaurant and Hospitality Asset Management Software"
+        />
+
+        <meta
+          property="og:image:width"
+          content="1200"
+        />
+
+        <meta
+          property="og:image:height"
+          content="630"
+        />
+
+
+        {/* =========================
+            TWITTER / X
+        ========================= */}
+
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+        <meta
+  name="twitter:url"
+  content="https://assetpegasus.com/healthcare-asset-tracking"
+/>
+        <meta
+          name="twitter:title"
+          content="Healthcare & Asset Tracking Software | AssetPegasus"
+        />
+
+        <meta
+          name="twitter:description"
+          content="Manage restaurant equipment, kitchen assets, maintenance and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          name="twitter:image"
+          content="https://assetpegasus.com/images/Healthcarepage.webp"
+        />
+
+        <meta
+          name="twitter:image:alt"
+          content="Restaurant and Hospitality Asset Management Software"
+        />
+
+      </Helmet>
+
+
         <section className="healthcare-hero">
 
   <div className="healthcare-hero-title">
@@ -302,7 +422,8 @@ useEffect(() => {
   <div className="healthcare-hero-bottom">
 
     <div className="healthcare-breadcrumb">
-      <a href="/">Home</a>
+      <Link to="/"   target="_blank"
+  rel="noopener noreferrer">Home</Link>
       <span> - Healthcare Asset Tracking</span>
     </div>
 
@@ -386,9 +507,10 @@ useEffect(() => {
       </li>
     </ul>
 
-    <button className="healthcare-section-3-trial">
+    <Link className="healthcare-section-3-trial" to='/user/signup'   target="_blank"
+  rel="noopener noreferrer">
       Start Free Trial
-    </button>
+    </Link>
 
   </div>
 
@@ -398,9 +520,10 @@ useEffect(() => {
 
     <h2>What Is Healthcare Asset Tracking?</h2>
 
-    <button className="healthcare-section-3-signup">
+    <Link className="healthcare-section-3-signup" to='/user/signup'   target="_blank"
+  rel="noopener noreferrer">
       Sign Up
-    </button>
+    </Link>
 
     <div className="healthcare-section-3-description">
 
@@ -433,9 +556,10 @@ useEffect(() => {
       Free Trial <span>— No Card Required</span>
     </h2>
 
-    <button className="healthcare-section-4-signin">
+    <Link className="healthcare-section-4-signin" to="/user/signup"   target="_blank"
+  rel="noopener noreferrer">
       Sign In
-    </button>
+    </Link>
 
   </div>
 
@@ -539,9 +663,10 @@ useEffect(() => {
 </div>
 
 
-      <button className="healthcare-section-5-signup">
+      <Link className="healthcare-section-5-signup" to="/user/signup"   target="_blank"
+  rel="noopener noreferrer">
         Sign Up Now
-      </button>
+      </Link>
 
     </div>
 
@@ -593,9 +718,10 @@ useEffect(() => {
   ))}
 
 </div>
-    <button className="healthcare-section-6-signin">
-      Sign In Now
-    </button>
+    <Link className="healthcare-section-6-signin" to="/user/signup"   target="_blank"
+  rel="noopener noreferrer">
+      Sign Up Now
+    </Link>
 
   </div>
 
@@ -722,9 +848,10 @@ useEffect(() => {
       {healthcareSection9Slides[healthcareSection9Slide].title}
     </h3>
 
-    <button className="healthcare-section-9-button">
-      Sign In Now
-    </button>
+    <Link className="healthcare-section-9-button" to="/user/signup"   target="_blank"
+  rel="noopener noreferrer">
+      Sign Up Now
+    </Link>
 
     <h2>
       {healthcareSection9Slides[healthcareSection9Slide].heading}
@@ -818,9 +945,10 @@ useEffect(() => {
     software or cloud.
   </p>
 
-  <button className="healthcare-section-10-button">
-    Sign In Now
-  </button>
+  <Link className="healthcare-section-10-button" to="/user/signup"   target="_blank"
+  rel="noopener noreferrer">
+    Sign Up Now
+  </Link>
 
 </section>
 
@@ -879,25 +1007,125 @@ useEffect(() => {
     </p>
 
     <p>
-      <a href="/ham-itam">HAM &amp; ITAM</a> we bring all that expertise into
+      <Link href="/ham-itam">HAM &amp; ITAM</Link> we bring all that expertise into
       a single SaaS (Software as Service) platform that helps to Manage
       Businesses &amp;
       <br />
       Individuals.
     </p>
 
-    <button
+    <Link
       className="healthcare-section-12-btn"
-      onClick={() => window.location.href = "/about-us"}
+      to = "/about-us"
+        target="_blank"
+  rel="noopener noreferrer"
     >
       About Us
-    </button>
+    </Link>
 
   </div>
 </section>
 
 <ProductFeatures />
 
+<section className="hospitality-section-14">
+
+  <div className="hospitality-industry-cards">
+
+    {/* CARD 1 */}
+    <Link to="/travel-transportation-asset-management" 
+      target="_blank"
+  rel="noopener noreferrer"className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        ✈
+      </div>
+
+      <h3>
+        Travel &amp;
+        <br />
+        Transportation
+        <br />
+        Logistics
+      </h3>
+    </Link>
+
+
+    {/* CARD 2 */}
+    <Link to="/restaurant-hospitality-asset-management" 
+      target="_blank"
+  rel="noopener noreferrer"className="hospitality-industry-card industry-card-raised">
+      <div className="hospitality-industry-icon">
+        <FaHospital />
+      </div>
+
+      <h3>
+        Restaurant
+        <br />
+        Asset
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 3 */}
+    <Link to="/education-asset-management" 
+      target="_blank"
+  rel="noopener noreferrer"className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        <FaBook />
+      </div>
+
+      <h3>
+        Education
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+
+    {/* CARD 4 */}
+    <Link to="/construction-equipment-tracking" 
+      target="_blank"
+  rel="noopener noreferrer"
+  className="hospitality-industry-card industry-card-raised">
+      <div className="hospitality-industry-icon">
+        <FaToolbox/>
+      </div>
+
+      <h3>
+        Construction
+        <br />
+        Equipment
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 5 */}
+    <Link to="/manufacturing-asset-management-software"
+      target="_blank"
+  rel="noopener noreferrer"
+   className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        ⚙
+      </div>
+
+      <h3>
+        Manufacturing
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+  </div>
+
+</section>
 
 <section className="healthcare-section-13">
 
@@ -905,13 +1133,14 @@ useEffect(() => {
 
     <h2>Asset Management System</h2>
 
-    <button
-      className="healthcare-section-13-signup"
-      onClick={() => window.location.href = "/user/signup"}
+    <Link
+      className="healthcare-section-13-signup" to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
     >
       Sign Up Now
       <span>→</span>
-    </button>
+    </Link>
 
   </div>
 

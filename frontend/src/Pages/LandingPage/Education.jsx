@@ -1,8 +1,10 @@
 import React from 'react'
 import "../../Page_styles/LandingPage/Education.css"
 import { useState, useEffect } from 'react';
-import { FaBuilding, FaChrome, FaHospital, FaToolbox } from "react-icons/fa";
+import { FaBuilding, FaChrome, FaBook ,  FaHospital, FaToolbox } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 import ProductFeatures from '../../Components/Mainpage/ProductFeature';
+import { Helmet } from 'react-helmet-async';
 const educationSection11Slides = [
   {
     leftTitle: "Best Education Asset Management Software",
@@ -260,6 +262,124 @@ useEffect(() => {
   const slide = educationSection11Slides[activeSlide3];
   return (
     <>
+
+<Helmet>
+
+        {/* =========================
+            BASIC SEO
+        ========================= */}
+
+        <title>
+          Education & Asset Management Software | AssetPegasus
+        </title>
+
+        <meta
+          name="description"
+          content="Manage and track transportation assets, vehicles, equipment, maintenance, locations, costs, assignments and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          name="keywords"
+          content="transportation asset management software, travel asset management software, transportation equipment tracking, fleet asset management, vehicle asset tracking, transportation asset tracking software, travel equipment management, transportation asset lifecycle management"
+        />
+
+        <meta
+          name="robots"
+          content="index, follow"
+        />
+
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/education-asset-management"
+        />
+
+
+        {/* =========================
+            OPEN GRAPH
+        ========================= */}
+
+        <meta
+          property="og:type"
+          content="website"
+        />
+
+        <meta
+          property="og:title"
+          content="Education & Asset Management Software | AssetPegasus"
+        />
+
+        <meta
+          property="og:description"
+          content="Track and manage transportation assets, vehicles, equipment, maintenance, locations, costs and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          property="og:url"
+          content="https://assetpegasus.com/education-asset-management"
+        />
+
+        <meta
+          property="og:site_name"
+          content="AssetPegasus"
+        />
+
+        <meta
+          property="og:image"
+          content="https://assetpegasus.com/images/Educationpage.webp"
+        />
+
+        <meta
+          property="og:image:alt"
+          content="Education and Asset Management Software"
+        />
+
+        <meta
+          property="og:image:width"
+          content="1200"
+        />
+
+        <meta
+          property="og:image:height"
+          content="630"
+        />
+
+
+        {/* =========================
+            TWITTER / X
+        ========================= */}
+
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+
+        <meta
+          name="twitter:title"
+          content="Education & Asset Management Software | AssetPegasus"
+        />
+
+        <meta
+          name="twitter:description"
+          content="Manage and track transportation assets, vehicles, equipment, maintenance, locations, costs and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          name="twitter:url"
+          content="https://assetpegasus.com/education-asset-management"
+        />
+
+        <meta
+          name="twitter:image"
+          content="https://assetpegasus.com/images/Educationpage.webp"
+        />
+
+        <meta
+          name="twitter:image:alt"
+          content="Education and Asset Management Software"
+        />
+
+      </Helmet>
+
     {/* ================= SECTION 1 ================= */}
 
 <section className="education-section1">
@@ -275,7 +395,9 @@ useEffect(() => {
   <div className="education-section1-bottom">
 
     <div className="education-breadcrumb">
-      <a href="/">Home</a>
+      <Link to="/" 
+        target="_blank"
+  rel="noopener noreferrer">Home</Link>
       <span> - </span>
       <span>Education Asset Management</span>
     </div>
@@ -367,9 +489,12 @@ useEffect(() => {
 
         </ul>
 
-        <button className="education-free-trial-btn">
+        <Link to="/user/signup"
+          target="_blank"
+  rel="noopener noreferrer"
+        className="education-free-trial-btn">
           Free Trial – No Card Required
-        </button>
+        </Link>
 
       </div>
 
@@ -384,9 +509,12 @@ useEffect(() => {
           Management
         </h2>
 
-        <button className="education-signup-btn">
+        <Link to="/user/signup"
+          target="_blank"
+  rel="noopener noreferrer"
+   className="education-signup-btn">
           Sign Up
-        </button>
+        </Link>
 
         <div className="education-carousel-content">
 
@@ -582,14 +710,14 @@ useEffect(() => {
           </div>
 
           {/* BUTTON */}
-          <button
+          <Link
             className="education-section7-signup"
-            onClick={() => {
-              window.location.href = "/signup";
-            }}
+            to="/user/signup"
+              target="_blank"
+  rel="noopener noreferrer"
           >
             Sign Up Now
-          </button>
+          </Link>
 
         </div>
 
@@ -631,14 +759,14 @@ useEffect(() => {
           ))}
         </div>
 
-        <button
+        <Link
           className="education-section8-signin"
-          onClick={() => {
-            window.location.href = "/login";
-          }}
+          to="/user/signup"
+            target="_blank"
+  rel="noopener noreferrer"
         >
-          Sign In
-        </button>
+          Sign Up
+        </Link>
 
       </div>
 
@@ -767,14 +895,14 @@ useEffect(() => {
 
           <h3>{slide.rightTitle}</h3>
 
-          <button
+          <Link
             className="education-section11-trial"
-            onClick={() => {
-              window.location.href = "/signup";
-            }}
+            to="/user/signup"
+              target="_blank"
+  rel="noopener noreferrer"
           >
             Free Trial
-          </button>
+          </Link>
 
           <div className="education-section11-assets">
             {slide.assets.map((asset, index) => (
@@ -890,20 +1018,122 @@ useEffect(() => {
 
     </div>
 
-    <button
+    <Link
       className="education-section12-button"
-      onClick={() => {
-        window.location.href = "/about-us";
-      }}
+      to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
     >
       About Us
-    </button>
+    </Link>
 
   </div>
 
 </section>
 
 <ProductFeatures />
+
+<section className="hospitality-section-14">
+
+  <div className="hospitality-industry-cards">
+
+    {/* CARD 1 */}
+    <Link to="/travel-transportation-asset-management" 
+      target="_blank"
+  rel="noopener noreferrer"
+  className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        ✈
+      </div>
+
+      <h3>
+        Travel &amp;
+        <br />
+        Transportation
+        <br />
+        Logistics
+      </h3>
+    </Link>
+
+
+    {/* CARD 2 */}
+    <Link to="/healthcare-asset-tracking"
+    target="_blank"
+  rel="noopener noreferrer" 
+    className="hospitality-industry-card industry-card-raised">
+      <div className="hospitality-industry-icon">
+        <FaHospital />
+      </div>
+
+      <h3>
+        Healthcare
+        <br />
+        Asset
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 3 */}
+    <Link to="/construction-equipment-tracking"
+      target="_blank"
+  rel="noopener noreferrer"
+  className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        <FaToolbox />
+      </div>
+
+      <h3>
+        Construction
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+
+    {/* CARD 4 */}
+    <Link to="/restaurant-hospitality-asset-management" 
+    target="_blank"
+  rel="noopener noreferrer"
+  className="hospitality-industry-card industry-card-raised">
+      <div className="hospitality-industry-icon">
+        <FaBuilding />
+      </div>
+
+      <h3>
+        Restaurant
+        <br />
+        Equipment
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 5 */}
+    <Link to="/manufacturing-asset-management-software" 
+    target="_blank"
+  rel="noopener noreferrer"
+  className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        ⚙
+      </div>
+
+      <h3>
+        Manufacturing
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+  </div>
+
+</section>
 
 {/* ================= SECTION 13 ================= */}
 
@@ -915,15 +1145,15 @@ useEffect(() => {
       Asset Management System
     </h2>
 
-    <button
+    <Link
       className="education-section13-signup"
-      onClick={() => {
-        window.location.href = "/signup";
-      }}
+      to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
     >
       <span>Sign Up Now</span>
       <span className="education-section13-arrow">→</span>
-    </button>
+    </Link>
 
   </div>
 
@@ -1046,103 +1276,6 @@ useEffect(() => {
         </div>
       </details>
 
-    </div>
-
-  </div>
-
-</section>
-
-{/* ================= SECTION 15 ================= */}
-
-<section className="industry-section15">
-
-  <h2>Manage Assets across other Industries</h2>
-
-  <div className="industry-section15-grid">
-
-    {/* Travel */}
-    <div
-      className="industry-section15-card"
-      onClick={() => window.location.href = "/travel-transportation-asset-management"}
-    >
-      <div className="hospitality-industry-icon">
-        ✈
-      </div>
-
-      <h3>
-        Travel &<br />
-        Transportation<br />
-        Logistics
-      </h3>
-    </div>
-
-
-    {/* Restaurant */}
-    <div
-      className="industry-section15-card"
-      onClick={() => window.location.href = "/restaurant-hospitality-asset-management"}
-    >
-     <div className="hospitality-industry-icon">
-           <FaHospital />
-         </div>
-   
-
-      <h3>
-        Restaurant<br />
-        & Hospitality<br />
-        Management
-      </h3>
-    </div>
-
-
-    {/* Healthcare */}
-    <div
-      className="industry-section15-card"
-      onClick={() => window.location.href = "/healthcare-asset-tracking"}
-    >
-      <div className="hospitality-industry-icon">
-        <FaBuilding />
-      </div>
-
-      <h3>
-        Healthcare<br />
-        Asset<br />
-        Tracking
-      </h3>
-    </div>
-
-
-    {/* Construction */}
-    <div
-      className="industry-section15-card"
-      onClick={() => window.location.href = "/construction-equipment-tracking"}
-    >
-      <div className="hospitality-industry-icon">
-            <FaToolbox/>
-          </div>
-
-      <h3>
-        Construction<br />
-        Equipment<br />
-        Tracking
-      </h3>
-    </div>
-
-
-    {/* Manufacturing */}
-    <div
-      className="industry-section15-card"
-      onClick={() => window.location.href = "/manufacturing-asset-management-software"}
-    >
-    <div className="hospitality-industry-icon">
-        ⚙
-      </div>
-
-      <h3>
-        Manufacturing<br />
-        Asset<br />
-        Management
-      </h3>
     </div>
 
   </div>

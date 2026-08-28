@@ -2,7 +2,9 @@ import React from 'react'
 import "../../Page_styles/LandingPage/Manufacturing.css"
 import { useEffect , useState } from 'react';
 import ProductFeatures from '../../Components/Mainpage/ProductFeature';
-
+import { FaPlane , FaBuilding, FaHospital, FaToolbox, FaBook } from 'react-icons/fa';
+import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 
 const manufacturingFaqs = [
   {
@@ -223,6 +225,92 @@ useEffect(() => {
 }, []);
   return (
     <>
+
+     <Helmet>
+
+        {/* Primary SEO */}
+        <title>
+          Manufacturing Asset Management Software | AssetPegasus
+        </title>
+
+        <meta
+          name="description"
+          content="Manage manufacturing assets, machinery, equipment, maintenance, lifecycle, locations, assignments."
+        />
+
+        <meta
+          name="keywords"
+          content="manufacturing asset management software, manufacturing asset tracking, machinery asset management."
+        />
+
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/manufacturing-asset-management-software"
+        />
+
+
+        {/* Open Graph */}
+        <meta
+          property="og:title"
+          content="Manufacturing Asset Management Software | AssetPegasus"
+        />
+
+        <meta
+          property="og:description"
+          content="Track and manage manufacturing machinery, equipment and assets throughout their complete lifecycle with AssetPegasus."
+        />
+
+        <meta
+          property="og:type"
+          content="website"
+        />
+
+        <meta
+          property="og:url"
+          content="https://assetpegasus.com/manufacturing-asset-management-software"
+        />
+
+        <meta
+          property="og:image"
+          content="https://assetpegasus.com/images/Manufacturing.webp"
+        />
+
+        <meta
+          property="og:image:alt"
+          content="Manufacturing Asset Management Software"
+        />
+
+        <meta
+          property="og:site_name"
+          content="AssetPegasus"
+        />
+
+
+        {/* Twitter */}
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+
+        <meta
+          name="twitter:title"
+          content="Manufacturing Asset Management Software | AssetPegasus"
+        />
+
+        <meta
+          name="twitter:description"
+          content="Track manufacturing machinery, equipment, maintenance and asset lifecycle management with AssetPegasus."
+        />
+
+        <meta
+          name="twitter:image"
+          content="https://assetpegasus.com/images/Manufacturing.webp"
+        />
+
+      </Helmet>
+
+
+
     {/* section 1 here  */}
     <section className="manufacturing-hero">
 
@@ -241,7 +329,9 @@ useEffect(() => {
       <div className="manufacturing-hero-bottom">
 
         <div className="manufacturing-breadcrumb">
-          <a href="/">Home</a>
+          <Link to="/"
+           target="_blank"
+          rel="noopener noreferrer">Home</Link>
           <span> - Manufacturing Asset Management Software</span>
         </div>
 
@@ -325,12 +415,14 @@ useEffect(() => {
             </li>
           </ul>
 
-          <a
-            href="/signup"
+          <Link
+            to="/user/signup"
             className="manufacturing-trial-button"
+            target="_blank"
+  rel="noopener noreferrer"
           >
             Free Trial — Sign Up
-          </a>
+          </Link>
 
         </div>
 
@@ -342,12 +434,14 @@ useEffect(() => {
             Free Trial — 7 Days
           </h2>
 
-          <a
-            href="/signup"
+          <Link
+            to="/user/signup"
+            target="_blank"
+  rel="noopener noreferrer"
             className="manufacturing-signup-button"
           >
             Sign Up
-          </a>
+          </Link>
 
           <div className="manufacturing-carousel-content">
 
@@ -608,12 +702,14 @@ useEffect(() => {
 
 
     {/* SIGN UP */}
-    <a
-      href="/signup"
+    <Link
+      to="/user/signup"
+      target="_blank"
+  rel="noopener noreferrer"
       className="section-six-signup"
     >
       Sign Up Now
-    </a>
+    </Link>
 
   </div>
 
@@ -664,12 +760,14 @@ useEffect(() => {
 
     </div>
 
-    <a
-      href="/signin"
+    <Link
+      to="/user/signup"
+      target="_blank"
+  rel="noopener noreferrer"
       className="section-seven-signin"
     >
-      Sign In Now
-    </a>
+      Sign Up Now
+    </Link>
 
   </div>
 
@@ -880,12 +978,14 @@ useEffect(() => {
 
     <div className="section-ten-carousel">
 
-      <a
-        href="/signin"
+      <Link
+        to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
         className="section-ten-signin"
       >
         Sign In Now
-      </a>
+      </Link>
 
 
       <div
@@ -937,30 +1037,92 @@ useEffect(() => {
 
   <div className="manufacturing-industry-grid">
 
-    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/travel-transportation-asset-management"}>
-      <div className="industry-icon">✈️</div>
-      <h3>Travel & Transportation Logistics</h3>
-    </div>
+    <div
+  className="manufacturing-industry-card"
+  onClick={() =>
+    window.open(
+      "/travel-transportation-asset-management",
+      "_blank",
+      "noopener,noreferrer"
+    )
+  }
+>
+  <div className="industry-icon">✈</div>
+  <h3>Travel & Transportation Logistics</h3>
+</div>
 
-    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/restaurant-hospitality-asset-management"}>
-      <div className="industry-icon">🏭</div>
-      <h3>Resturant & Hospitality</h3>
-    </div>
 
-    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/healthcare-asset-tracking"}>
-      <div className="industry-icon">⚕️</div>
-      <h3>Healthcare Asset Tracking</h3>
-    </div>
+<div
+  className="manufacturing-industry-card"
+  onClick={() =>
+    window.open(
+      "/restaurant-hospitality-asset-management",
+      "_blank",
+      "noopener,noreferrer"
+    )
+  }
+>
+  <div className="industry-icon">
+    <FaBuilding />
+  </div>
 
-    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/construction-equipment-tracking"}>
-      <div className="industry-icon">🏗️</div>
-      <h3>Construction Equipment Tracking</h3>
-    </div>
+  <h3>Restaurant & Hospitality</h3>
+</div>
 
-    <div className="manufacturing-industry-card" onClick={() => window.location.href = "/education-asset-management"}>
-      <div className="industry-icon">🔧</div>
-      <h3>Education Asset Management</h3>
-    </div>
+
+<div
+  className="manufacturing-industry-card"
+  onClick={() =>
+    window.open(
+      "/healthcare-asset-tracking",
+      "_blank",
+      "noopener,noreferrer"
+    )
+  }
+>
+  <div className="industry-icon">
+    <FaHospital />
+  </div>
+
+  <h3>Healthcare Asset Tracking</h3>
+</div>
+
+
+<div
+  className="manufacturing-industry-card"
+  onClick={() =>
+    window.open(
+      "/construction-equipment-tracking",
+      "_blank",
+      "noopener,noreferrer"
+    )
+  }
+>
+  <div className="industry-icon">
+    <FaToolbox />
+  </div>
+
+  <h3>Construction Equipment Tracking</h3>
+</div>
+
+<div
+  className="manufacturing-industry-card"
+  onClick={() =>
+    window.open(
+      "/education-asset-management",
+      "_blank",
+      "noopener,noreferrer"
+    )
+  }
+>
+  <div className="industry-icon">
+    <FaBook />
+  </div>
+
+  <h3>
+    Education Asset Management
+  </h3>
+</div>
 
   </div>
 </section>
@@ -981,17 +1143,20 @@ useEffect(() => {
     </p>
 
     <p className="section-12-description">
-      <a href="/about">HAM &amp; ITAM</a> we bring all that expertise into
+      <Link to="/it-asset-management"   target="_blank"
+  rel="noopener noreferrer">HAM &amp; ITAM</Link> we bring all that expertise into
       a single SaaS (Software as Service) platform that helps to Manage
       Businesses &amp; Individuals.
     </p>
 
-    <a
-      href="/about"
+    <Link
+      to="/about"
+        target="_blank"
+  rel="noopener noreferrer"
       className="section-12-button"
     >
       About Us
-    </a>
+    </Link>
 
   </div>
 
@@ -1008,9 +1173,10 @@ useEffect(() => {
       AssetPegasus – Asset Management System
     </h2>
 
-    <a href="/signup" className="section-13-signup">
+    <Link to="/user/signup"   target="_blank"
+  rel="noopener noreferrer" className="section-13-signup">
       Sign Up Now <span>→</span>
-    </a>
+    </Link>
 
   </div>
 

@@ -2,9 +2,10 @@ import React from 'react'
 import "../../Page_styles/LandingPage/Construction.css"
 
 import { useState , useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ProductFeatures from '../../Components/Mainpage/ProductFeature';
-
+import { FaBook, FaHospital, FaBuilding } from 'react-icons/fa';
+import { Helmet } from 'react-helmet-async';
 const constructionSlides = [
   {
     title: "Free Trial — No Card Required",
@@ -230,6 +231,126 @@ const handleSignIn = () => {
 }
     return (
         <>
+
+        <Helmet>
+
+        {/* =========================
+            BASIC SEO
+        ========================= */}
+
+        <title>
+          Construction Equipment Tracking Software | AssetPegasus
+        </title>
+
+        <meta
+          name="description"
+          content="Track and manage construction equipment, machinery, maintenance, locations, costs, assignments and asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          name="keywords"
+          content="construction equipment tracking software, construction asset management software, construction equipment management, equipment tracking software, construction machinery tracking, heavy equipment management, construction asset tracking, equipment lifecycle management"
+        />
+
+        <meta
+          name="robots"
+          content="index, follow"
+        />
+
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/construction-equipment-tracking"
+        />
+
+
+        {/* =========================
+            OPEN GRAPH
+        ========================= */}
+
+        <meta
+          property="og:type"
+          content="website"
+        />
+
+        <meta
+          property="og:title"
+          content="Construction Equipment Tracking Software | AssetPegasus"
+        />
+
+        <meta
+          property="og:description"
+          content="Track and manage construction equipment, machinery, maintenance, locations, costs and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          property="og:url"
+          content="https://assetpegasus.com/construction-equipment-tracking"
+        />
+
+        <meta
+          property="og:site_name"
+          content="AssetPegasus"
+        />
+
+        <meta
+          property="og:image"
+          content="https://assetpegasus.com/images/construction.webp"
+        />
+
+        <meta
+          property="og:image:alt"
+          content="Construction Equipment Tracking Software"
+        />
+
+        <meta
+          property="og:image:width"
+          content="1200"
+        />
+
+        <meta
+          property="og:image:height"
+          content="630"
+        />
+
+
+        {/* =========================
+            TWITTER / X
+        ========================= */}
+
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+
+        <meta
+          name="twitter:title"
+          content="Construction Equipment Tracking Software | AssetPegasus"
+        />
+
+        <meta
+          name="twitter:description"
+          content="Track construction equipment, machinery, maintenance, locations, costs and complete asset lifecycles with AssetPegasus."
+        />
+
+        <meta
+          name="twitter:url"
+          content="https://assetpegasus.com/construction-equipment-tracking"
+        />
+
+        <meta
+          name="twitter:image"
+          content="https://assetpegasus.com/images/construction.webp"
+        />
+
+        <meta
+          name="twitter:image:alt"
+          content="Construction Equipment Tracking Software"
+        />
+
+      </Helmet>
+
+
+
             <section className="construction-section-1">
 
                 {/* Dark upper hero area */}
@@ -245,7 +366,8 @@ const handleSignIn = () => {
                 <div className="construction-section-1-bottom">
 
                     <div className="construction-breadcrumb">
-                        <a href="/">Home</a>
+                        <Link to="/"   target="_blank"
+  rel="noopener noreferrer">Home</Link>
                         <span> - </span>
                         <span>Construction Equipment Tracking</span>
                     </div>
@@ -321,9 +443,11 @@ const handleSignIn = () => {
       <li>⏱️ Unlock Modern Inventory &amp; with Best Visibility.</li>
     </ul>
 
-    <button className="construction-section-4-trial-btn">
+    <Link className="construction-section-4-trial-btn" to="/user/signup" 
+      target="_blank"
+  rel="noopener noreferrer">
       Free Trial
-    </button>
+    </Link>
 
   </div>
 
@@ -339,9 +463,12 @@ const handleSignIn = () => {
         {constructionSlides[constructionSlide].title}
       </h2>
 
-      <button className="construction-section-4-signup-btn">
+      <Link to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
+      className="construction-section-4-signup-btn">
         Sign Up
-      </button>
+      </Link>
 
       <div className="construction-section-4-slide-content">
 
@@ -595,9 +722,12 @@ const handleSignIn = () => {
 
 
       {/* SIGN UP */}
-      <button className="construction-section-6-signup">
+      <Link to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
+      className="construction-section-6-signup">
         Sign Up Now
-      </button>
+      </Link>
 
     </div>
 
@@ -648,12 +778,14 @@ const handleSignIn = () => {
         ))}
       </div>
 
-      <button
+      <Link
         className="construction-section-7-signin"
-        onClick={() => window.location.href = "/login"}
+          target="_blank"
+  rel="noopener noreferrer"
+  to="/user/signup"
       >
-        Sign In Now
-      </button>
+        Sign Up Now
+      </Link>
 
     </div>
 
@@ -825,12 +957,14 @@ const handleSignIn = () => {
   {/* RIGHT SIDE */}
   <div className="construction-section-10-right">
 
-    <button
+    <Link
       className="construction-section-10-signin"
-      onClick={handleSignIn}
+      to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
     >
       Sign In Now
-    </button>
+    </Link>
 
     <div className="construction-section-10-carousel">
 
@@ -906,9 +1040,12 @@ const handleSignIn = () => {
       delivery and construction operation modernization.
     </p>
 
-    <button className="section11-btn">
+    <Link to="/user/singup"
+      target="_blank"
+  rel="noopener noreferrer"
+    className="section11-btn">
       Sign In Now
-    </button>
+    </Link>
 
   </div>
 </section>
@@ -939,21 +1076,125 @@ const handleSignIn = () => {
 </section>
 
 <ProductFeatures /> 
+
+<section className="hospitality-section-14">
+
+  <div className="hospitality-industry-cards">
+
+    {/* CARD 1 */}
+    <Link to="/travel-transportation-asset-management"
+      target="_blank"
+  rel="noopener noreferrer"
+   className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        ✈
+      </div>
+
+      <h3>
+        Travel &amp;
+        <br />
+        Transportation
+        <br />
+        Logistics
+      </h3>
+    </Link>
+
+
+    {/* CARD 2 */}
+    <Link to="/healthcare-asset-tracking"
+      target="_blank"
+  rel="noopener noreferrer"
+   className="hospitality-industry-card industry-card-raised">
+      <div className="hospitality-industry-icon">
+        <FaHospital />
+      </div>
+
+      <h3>
+        Healthcare
+        <br />
+        Asset
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 3 */}
+    <Link to="/education-asset-management"
+      target="_blank"
+  rel="noopener noreferrer"
+   className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        <FaBook />
+      </div>
+
+      <h3>
+        Education
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+
+    {/* CARD 4 */}
+    <Link to="/restaurant-hospitality-asset-management"
+      target="_blank"
+  rel="noopener noreferrer"
+   className="hospitality-industry-card industry-card-raised">
+      <div className="hospitality-industry-icon">
+        <FaBuilding />
+      </div>
+
+      <h3>
+        Restaurant
+        <br />
+        Equipment
+        <br />
+        Tracking
+      </h3>
+    </Link>
+
+
+    {/* CARD 5 */}
+    <Link to="/manufacturing-asset-management-software"
+      target="_blank"
+  rel="noopener noreferrer"
+   className="hospitality-industry-card">
+      <div className="hospitality-industry-icon">
+        ⚙
+      </div>
+
+      <h3>
+        Manufacturing
+        <br />
+        Asset
+        <br />
+        Management
+      </h3>
+    </Link>
+
+  </div>
+
+</section>
+
+
 {/* ================= SECTION 13 ================= */}
 <section className="construction-section13">
   <div className="construction-section13-top">
 
     <h2>Asset Management System</h2>
 
-    <button
+    <Link
       className="construction-section13-signup"
-      onClick={() =>
-          window.location.href = "/user/signup"
-        }
+        target="_blank"
+  rel="noopener noreferrer"
+  to="/user/signup"
     >
       <span>Sign Up Now</span>
       <span className="section13-arrow">→</span>
-    </button>
+    </Link>
 
   </div>
 

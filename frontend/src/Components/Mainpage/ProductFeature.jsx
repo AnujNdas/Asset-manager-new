@@ -28,18 +28,13 @@ const ProductFeatures = ({
 
   const navigate = useNavigate();
 
-  const handleNavigate = (url) => {
-    navigate(url);
-
-    // Wait for React Router to render the new page
-    setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "instant",
-      });
-    }, 0);
-  };
+const handleNavigateNewTab = (url) => {
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
+};
 
   return (
     <section className="product-features-section">
@@ -53,7 +48,7 @@ const ProductFeatures = ({
         {/* DIGITAL ASSET */}
         <div
           className="product-feature-card"
-          onClick={() => handleNavigate(digitalUrl)}
+          onClick={() => handleNavigateNewTab(digitalUrl)}
         >
           <div className="product-feature-icon">
             <FiBox />
@@ -68,7 +63,7 @@ const ProductFeatures = ({
         {/* PHYSICAL ASSET */}
         <div
           className="product-feature-card"
-          onClick={() => handleNavigate(physicalUrl)}
+          onClick={() => handleNavigateNewTab(physicalUrl)}
         >
           <div className="product-feature-icon">
             <FiMonitor />

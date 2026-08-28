@@ -125,7 +125,7 @@
   color: #efd8bd;
     display: inline-block;
   text-decoration: underline;
-
+  width: 50px;
   text-underline-offset: 3px;
 }
 
@@ -1027,8 +1027,9 @@
 }
 
 .section4-signup-btn {
-  margin-top: 25px;
-
+  margin: 25px auto;
+  width: 200px;
+  justify-content: center;
   padding: 11px 22px;
 
   border: none;
@@ -2087,7 +2088,9 @@
 ========================================= */
 
 .section8-cta {
-  margin-top: 45px;
+  margin: 25px auto;
+  width: 200px;
+  justify-content: center;
 
   padding: 12px 20px;
 
@@ -4028,7 +4031,7 @@
 ========================================= */
 
 .section15-signup {
-  width: 290px;
+  width: 200px;
   height: 52px;
 
   border: none;

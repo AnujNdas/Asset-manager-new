@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState , useEffect } from 'react';
 import "../../Page_styles/LandingPage/Resturant.css"
-import { FaHospital, FaToolbox } from 'react-icons/fa';
+import { FaBook, FaHospital, FaToolbox } from 'react-icons/fa';
 import ProductFeatures from '../../Components/Mainpage/ProductFeature';
-
+import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 const hospitalitySection10Items = [
   {
     title: "Benefits of Restaurant & Hospitality Asset Management",
@@ -380,6 +381,110 @@ useEffect(() => {
   return (
     <>
 
+ <Helmet>
+
+  <title>
+    Restaurant Asset Management Software | AssetPegasus
+  </title>
+
+  <meta
+    name="description"
+    content="Manage restaurant and hospitality assets with AssetPegasus."
+  />
+
+  <meta
+    name="keywords"
+    content="restaurant asset management software, restaurant equipment tracking software, hospitality asset management, kitchen equipment tracking, restaurant maintenance software, hospitality equipment management"
+  />
+
+  <link
+    rel="canonical"
+    href="https://assetpegasus.com/restaurant-hospitality-asset-management"
+  />
+
+
+  {/* =========================
+      OPEN GRAPH
+  ========================= */}
+
+  <meta
+    property="og:title"
+    content="Restaurant Asset Management Software | AssetPegasus"
+  />
+
+  <meta
+    property="og:description"
+    content="Track restaurant and hospitality equipment, kitchen assets, maintenance, locations, costs and asset lifecycles with AssetPegasus."
+  />
+
+  <meta
+    property="og:type"
+    content="website"
+  />
+
+  <meta
+    property="og:url"
+    content="https://assetpegasus.com/restaurant-hospitality-asset-management"
+  />
+
+  <meta
+    property="og:site_name"
+    content="AssetPegasus"
+  />
+
+  <meta
+    property="og:image"
+    content="https://assetpegasus.com/images/Restaurantpage.webp"
+  />
+
+  <meta
+    property="og:image:alt"
+    content="Restaurant Asset Management Software"
+  />
+
+  <meta
+    property="og:image:width"
+    content="1200"
+  />
+
+  <meta
+    property="og:image:height"
+    content="630"
+  />
+
+
+  {/* =========================
+      TWITTER / X
+  ========================= */}
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  />
+
+  <meta
+    name="twitter:title"
+    content="Restaurant Asset Management Software | AssetPegasus"
+  />
+
+  <meta
+    name="twitter:description"
+    content="Manage restaurant equipment, kitchen assets, maintenance and complete asset lifecycles with AssetPegasus."
+  />
+
+  <meta
+    name="twitter:image"
+    content="https://assetpegasus.com/images/Restaurantpage.webp"
+  />
+
+  <meta
+    name="twitter:image:alt"
+    content="Restaurant Asset Management Software"
+  />
+
+</Helmet>
+
+
     {/* SECTION 1 */}
 <section className="manufacturing-hero">
 
@@ -394,7 +499,8 @@ useEffect(() => {
   <div className="manufacturing-hero-bottom">
 
     <div className="manufacturing-breadcrumb">
-      <a href="/">Home</a>
+      <Link to="/"   target="_blank"
+  rel="noopener noreferrer">Home</Link>
       <span> - Restaurant & Hospitality Asset Management</span>
     </div>
 
@@ -483,12 +589,14 @@ useEffect(() => {
       </li>
     </ul>
 
-    <a
-      href="/signup"
+    <Link
+      to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
       className="restaurant-section-3-trial-btn"
     >
       Free Trial — No Card Required
-    </a>
+    </Link>
 
   </div>
 
@@ -500,12 +608,14 @@ useEffect(() => {
       {restaurantCarouselItems[restaurantActiveSlide].title}
     </h2>
 
-    <a
-      href="/signup"
+    <Link
+      to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
       className="restaurant-section-3-signup-btn"
     >
       Sign Up
-    </a>
+    </Link>
 
     <div className="restaurant-section-3-carousel-content">
 
@@ -704,12 +814,14 @@ useEffect(() => {
 
 
       {/* SIGN UP */}
-      <a
-        href="/signup"
+      <Link
+        to="/user/signup"
+          target="_blank"
+  rel="noopener noreferrer"
         className="restaurant-section-6-signup"
       >
         Sign Up Now
-      </a>
+      </Link>
 
     </div>
 
@@ -774,12 +886,14 @@ useEffect(() => {
 
   {/* SIGN IN */}
 
-  <a
-    href="/signup"
+  <Link
+    to="/user/signup"
+      target="_blank"
+  rel="noopener noreferrer"
     className="restaurant-section-7-signin"
   >
     Sign In Now
-  </a>
+  </Link>
 
 </section>
 
@@ -954,12 +1068,14 @@ useEffect(() => {
 
     <div className="hospitality-section-10-carousel">
 
-      <a
-        href="/signup"
+      <Link
+        to="/user/signup"
+          target="_blank"
+  rel="noopener noreferrer"
         className="hospitality-section-10-signup"
       >
         Sign In Now
-      </a>
+      </Link>
 
 
       <div
@@ -1080,12 +1196,14 @@ useEffect(() => {
     </p>
 
 
-    <a
-      href="/signup"
+    <Link
+      to="/user/signup"
+        target="_blank"
+  rel="noopener noreferrer"
       className="hospitality-section-11-button"
     >
       Sign In Now
-    </a>
+    </Link>
 
   </div>
 
@@ -1151,12 +1269,14 @@ useEffect(() => {
       platform that helps to Manage Businesses &amp; Individuals.
     </p>
 
-    <a
-      href="/about"
+    <Link
+      to="/about"
+        target="_blank"
+  rel="noopener noreferrer"
       className="hospitality-section-13-button"
     >
       About Us
-    </a>
+    </Link>
 
   </div>
 
@@ -1168,7 +1288,9 @@ useEffect(() => {
   <div className="hospitality-industry-cards">
 
     {/* CARD 1 */}
-    <a href="/travel-transportation-asset-management" className="hospitality-industry-card">
+    <Link to="/travel-transportation-asset-management" 
+      target="_blank"
+  rel="noopener noreferrer"className="hospitality-industry-card">
       <div className="hospitality-industry-icon">
         ✈
       </div>
@@ -1180,11 +1302,13 @@ useEffect(() => {
         <br />
         Logistics
       </h3>
-    </a>
+    </Link>
 
 
     {/* CARD 2 */}
-    <a href="/healthcare-asset-tracking" className="hospitality-industry-card industry-card-raised">
+    <Link to="/healthcare-asset-tracking" 
+      target="_blank"
+  rel="noopener noreferrer"className="hospitality-industry-card industry-card-raised">
       <div className="hospitality-industry-icon">
         <FaHospital />
       </div>
@@ -1196,13 +1320,15 @@ useEffect(() => {
         <br />
         Tracking
       </h3>
-    </a>
+    </Link>
 
 
     {/* CARD 3 */}
-    <a href="/education-asset-management" className="hospitality-industry-card">
+    <Link to="/education-asset-management"
+      target="_blank"
+  rel="noopener noreferrer" className="hospitality-industry-card">
       <div className="hospitality-industry-icon">
-        ▢
+        <FaBook />
       </div>
 
       <h3>
@@ -1212,11 +1338,13 @@ useEffect(() => {
         <br />
         Management
       </h3>
-    </a>
+    </Link>
 
 
     {/* CARD 4 */}
-    <a href="/construction-equipment-tracking" className="hospitality-industry-card industry-card-raised">
+    <Link to="/construction-equipment-tracking" 
+      target="_blank"
+  rel="noopener noreferrer"className="hospitality-industry-card industry-card-raised">
       <div className="hospitality-industry-icon">
         <FaToolbox/>
       </div>
@@ -1228,11 +1356,13 @@ useEffect(() => {
         <br />
         Tracking
       </h3>
-    </a>
+    </Link>
 
 
     {/* CARD 5 */}
-    <a href="/manufacturing-asset-management-software" className="hospitality-industry-card">
+    <Link to="/manufacturing-asset-management-software" 
+      target="_blank"
+  rel="noopener noreferrer"className="hospitality-industry-card">
       <div className="hospitality-industry-icon">
         ⚙
       </div>
@@ -1244,7 +1374,7 @@ useEffect(() => {
         <br />
         Management
       </h3>
-    </a>
+    </Link>
 
   </div>
 
@@ -1256,9 +1386,10 @@ useEffect(() => {
         <div className="manufacturing-section-15-links">
         <h2>Asset Management System</h2>
 
-  <a href="/signup" className="section-15-signup">
+  <Link to="/user/signup" className="section-15-signup"   target="_blank"
+  rel="noopener noreferrer">
     Sign Up Now →
-  </a>
+  </Link>
 
         </div>
   

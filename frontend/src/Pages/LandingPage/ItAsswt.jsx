@@ -3,6 +3,7 @@ import "../../Page_styles/LandingPage/ItAsset.css"
 import { useState , useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { Link } from 'react-router-dom';
 import {
   FaBriefcase,
   FaCoins,
@@ -791,12 +792,12 @@ useEffect(() => {
 
   <meta
     property="og:image"
-    content="https://assetpegasus.com/images/info.webp"
+    content="https://assetpegasus.com/images/Itam.png"
   />
 
   <meta
     property="og:url"
-    content="https://assetpegasus.com/itam-management"
+    content="https://assetpegasus.com/it-asset-management"
   />
 
   <meta
@@ -816,12 +817,12 @@ useEffect(() => {
 
   <meta
     name="twitter:image"
-    content="https://assetpegasus.com/images/info.webp"
+    content="https://assetpegasus.com/images/Itam.png"
   />
 
   <link
     rel="canonical"
-    href="https://assetpegasus.com/itam-management"
+    href="https://assetpegasus.com/it-asset-management"
   />
 </Helmet>
 
@@ -852,7 +853,10 @@ useEffect(() => {
         <div className="itam-hero-content">
 
           <div className="itam-breadcrumb">
-            <a href="/">Home</a>
+            <Link to="/" 
+               target="_blank"
+  rel="noopener noreferrer"
+  >Home</Link>
             <span> - </span>
             <span>IT Asset Management Software</span>
           </div>
@@ -913,12 +917,14 @@ useEffect(() => {
 
           </div>
 
-          <a
-            href="/user/signup"
+          <Link
+            to="/user/signup"
+               target="_blank"
+  rel="noopener noreferrer"
             className="itam-trial-button"
           >
             Start 7 Day Free Trial
-          </a>
+          </Link>
 
         </div>
 
@@ -1140,14 +1146,14 @@ useEffect(() => {
             AssetPegasus ITAM is made for you.
           </p>
 
-          <button
+          <Link
             className="section4-signup-btn"
-            onClick={() => {
-              window.location.href = "/signup";
-            }}
+            to="/user/signup"
+               target="_blank"
+  rel="noopener noreferrer"
           >
             Sign Up Now
-          </button>
+          </Link>
 
         </div>
 
@@ -1252,12 +1258,14 @@ useEffect(() => {
 
           {/* CTA */}
 
-          <a
-            href="/user/signup"
+          <Link
+            to="/user/signup"
+               target="_blank"
+  rel="noopener noreferrer"
             className="itam-section-5-button"
           >
             Free Trial — No Card Required
-          </a>
+          </Link>
 
         </div>
 
@@ -1437,9 +1445,13 @@ useEffect(() => {
 
           </div>
 
-          <button className="section8-cta">
+          <Link className="section8-cta"
+          to="/user/signup"
+             target="_blank"
+  rel="noopener noreferrer"
+  >
             Start 7 Day Free Trial
-          </button>
+          </Link>
 
         </div>
 
@@ -1555,12 +1567,14 @@ useEffect(() => {
 
 
           {/* CTA */}
-          <a
-            href="/user/signup"
+          <Link
+            to="/user/signup"
+               target="_blank"
+  rel="noopener noreferrer"
             className="itam-section-9-button"
           >
             Sign Up Now
-          </a>
+          </Link>
 
         </div>
 
@@ -1619,12 +1633,14 @@ useEffect(() => {
           </ul>
 
 
-          <a
-            href="/user/signup"
+          <Link
+            to="/user/signup"
+               target="_blank"
+  rel="noopener noreferrer"
             className="itam-section-10-button"
           >
             Free Trial — No card Required
-          </a>
+          </Link>
 
         </div>
 
@@ -1882,14 +1898,19 @@ useEffect(() => {
           <h3>AssetPegasus</h3>
 
           <p>
-            <a href="/about">HAM & ITAM</a> we bring all that expertise into a
+            <Link to="/it-asset-management"
+               target="_blank"
+  rel="noopener noreferrer">HAM & ITAM</Link> we bring all that expertise into a
             single SaaS (Software as Service) platform that helps to Manage
             Businesses & Individuals.
           </p>
 
-          <a href="/about" className="about-btn">
+          <Link to="/about"
+             target="_blank"
+  rel="noopener noreferrer"
+   className="about-btn">
             About Us
-          </a>
+          </Link>
         </div>
 
       </div>
@@ -1901,10 +1922,12 @@ useEffect(() => {
       <div className="section15-header">
         <h2>IT Asset Management System</h2>
 
-        <button className="section15-signup" >
+        <Link className="section15-signup" to="/user/signup" 
+           target="_blank"
+  rel="noopener noreferrer">
           Sign Up Now
           <span>→</span>
-        </button>
+        </Link>
       </div>
 
       {/* CENTER LABEL */}
@@ -1941,7 +1964,7 @@ useEffect(() => {
       className={`industry-card industry-card-${index + 1}`}
       key={industry.title}
         onClick={() => {
-        navigate(industry.url);
+        window.open(industry.url);
         window.scrollTo(0, 0);
       }}
     >

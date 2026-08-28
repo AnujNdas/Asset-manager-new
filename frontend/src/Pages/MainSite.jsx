@@ -38,16 +38,16 @@ const LandingPage = () => {
     navigate("/user/signup")
   }
 const handleAboutClick = () => {
-  window.open("https://socialflylive.com/about/", "_blank");
+  window.open("/about", "_blank");
 };
 const handleHealthCare = () => {
-  window.open("https://socialflylive.com/healthcare-asset-tracking/")
+  navigate("/healthcare-asset-tracking")
 }
 const handleGoodFirms = () => {
   window.open("https://www.goodfirms.co/company/socialfly-live")
 }
 const handleG2 = () => {
-  window.open("https://www.g2.com/products/machine-it-assets-management-system/reviews")
+  navigate("/it-assets-management")
 }
 const handleTrustPilot = () => {
   window.open("https://www.trustpilot.com/review/assetpegasus.com")
@@ -59,25 +59,25 @@ const handleSaasHub = () => {
   window.open("https://www.saashub.com/assetpegasus")
 }
 const handleManufacturing = () => {
-  window.open("https://socialflylive.com/manufacturing-asset-management-software/")
+  navigate("/manufacturing-asset-management-software")
 }
 const handleEducation = () => {
-  window.open("https://socialflylive.com/education-asset-management/")
+  navigate("/education-asset-management")
 }
 const handleConstructionClick = () => {
-  window.open("https://socialflylive.com/construction-equipment-tracking/")
+  navigate("/construction-equipment-tracking")
 }
 const handleTravelClick = () => {
-  window.open("https://socialflylive.com/travel-transportation-asset-management/")
+  navigate("/travel-transportation-asset-management")
 }
 const handleHospitalityManagement = () => {
-  window.open("https://socialflylive.com/restaurant-hospitality-asset-management/")
+  navigate("/restaurant-hospitality-asset-management")
 }
 const handleProductClick = () => {
-  window.open("https://socialflylive.com/it-asset-management-itam-software/")
+  navigate("/it-asset-management")
 }
 const handleProductClick2 = () => {
-  window.open("https://socialflylive.com/machinery-assets-management/")
+  navigate("/machinery-assets-management")
 }
 const handleCopyright = () => {
   window.open("https://socialflylive.com/")

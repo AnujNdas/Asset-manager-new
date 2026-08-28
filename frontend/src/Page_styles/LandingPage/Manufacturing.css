@@ -2487,7 +2487,9 @@
 
 .section-12-description a {
   color: #dfd0b8;
-
+  width: 200px;
+  justify-content: center;
+  margin: auto;
   font-weight: 700;
 
   text-decoration: underline;

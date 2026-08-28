@@ -521,7 +521,8 @@
 .construction-section-4-trial-btn {
   margin-top: auto;
   margin-left: 155px;
-
+  width: 200px;
+  justify-content: center;
   padding: 11px 20px;
 
   border: none;
@@ -606,7 +607,9 @@
 
 .construction-section-4-signup-btn {
   padding: 10px 20px;
-
+    width: 200px;
+    margin: auto;
+  justify-content: center;
   border: none;
   border-radius: 3px;
 
@@ -1377,7 +1380,8 @@
 
 .construction-section-6-signup {
   margin-top: 16px;
-
+  width: 200px;
+  justify-content: center;
   padding: 11px 22px;
 
   border: none;
@@ -1563,7 +1567,8 @@
   margin-top: 16px;
 
   padding: 11px 20px;
-
+  width: 200px;
+  justify-content: center;
   border: none;
   border-radius: 2px;
 
@@ -2178,7 +2183,8 @@
 
   border: none;
   border-radius: 25px;
-
+  width: 200px;
+  justify-content: center;
   padding: 11px 22px;
 
   background: #202731;
@@ -2410,8 +2416,10 @@
   margin-top: 30px;
 
   padding: 11px 20px;
-
+  width: 200px;
+  justify-content: center;
   border: none;
+  margin: auto;
   border-radius: 3px;
 
   background: #3b424c;

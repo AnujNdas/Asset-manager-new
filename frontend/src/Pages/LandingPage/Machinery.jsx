@@ -3,12 +3,54 @@ import { useState , useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../Page_styles/LandingPage/Machinery.css"
 import { Helmet } from "react-helmet-async";
+import {
+  FaBriefcase,
+  FaCoins,
+  FaCalendarAlt,
+    FaPlane,
+  FaUtensils,
+  FaHeartbeat,
+  FaClipboard,
+  FaToolbox,
+  FaCog,
+} from "react-icons/fa";
 const assetTypes = [
   "Electronic Assets Management",
   "Machinery Assets Management",
   "Transport Asset Management",
 ];
-
+const industries = [
+  {
+    icon: <FaPlane />,
+    title: "Travel & Transport Logistics",
+    url : "/travel-transportation-asset-management"
+  },
+  {
+    icon: <FaUtensils />,
+    title: "Restaurant & Hospitality Management",
+    url: "/restaurant-hospitality-asset-management"
+  },
+  {
+    icon: <FaHeartbeat />,
+    title: "Healthcare Asset Tracking",
+    url : "/healthcare-asset-tracking"
+  },
+  {
+    icon: <FaClipboard />,
+    title: "Education Asset Management",
+    url : "/education-asset-management"
+  },
+  {
+    icon: <FaToolbox />,
+    title: "Construction Equipment Tracking",
+    url : "/construction-equipment-tracking"
+  },
+  {
+    icon: <FaCog />,
+    title: "Manufacturing Asset Management",
+    url : "/manufacturing-asset-management-software"
+  },
+];
 const faqData = [
   {
     question: "What is Machine asset management software?",
@@ -519,12 +561,12 @@ const handleNavigateItam = () => {
 
   <meta
     property="og:image"
-    content="https://assetpegasus.com/images/Dashboard.webp"
+    content="https://assetpegasus.com/images/Machinery.png"
   />
 
   <meta
     property="og:url"
-    content="https://assetpegasus.com/machinery"
+    content="https://assetpegasus.com/machinery-management-software"
   />
 
   <meta
@@ -544,12 +586,12 @@ const handleNavigateItam = () => {
 
   <meta
     name="twitter:image"
-    content="https://assetpegasus.com/images/Dashboard.webp"
+    content="https://assetpegasus.com/images/Machinery.png"
   />
 
   <link
     rel="canonical"
-    href="https://assetpegasus.com/machinery"
+    href="https://assetpegasus.com/machinery-management-software"
   />
 </Helmet>
 
@@ -567,7 +609,10 @@ const handleNavigateItam = () => {
         <h1>Machinery Assets Management</h1>
         {/* Breadcrumb */}
         <p className="machinery-breadcrumb">
-          <Link to="/">Home</Link>
+          <Link to="/"
+          target="_blank"
+  rel="noopener noreferrer"
+  >Home</Link>
           <span> - </span>
           Machinery Assets Management Software
         </p>
@@ -733,13 +778,14 @@ const handleNavigateItam = () => {
               Compliance Records.
             </p>
 
-            <button
+            <Link
               className="asset-management-signup"
-              type="button"
-              onClick={() => window.location.href = "/user/signup"}
+              to="/user/signup"
+              target="_blank"
+  rel="noopener noreferrer"
             >
               Sign Up Now
-            </button>
+            </Link>
 
           </div>
 
@@ -900,9 +946,14 @@ const handleNavigateItam = () => {
             </p>
           </div>
 
-          <button className="warranty-cta">
+          <Link 
+          to="/user/signup"
+             target="_blank"
+  rel="noopener noreferrer"
+   className="warranty-cta">
+         
             Start 7 Day Free Trial
-          </button>
+          </Link>
 
         </div>
 
@@ -1026,9 +1077,13 @@ const handleNavigateItam = () => {
             </p>
           </div>
 
-          <button className="maintenance-cta">
+          <Link 
+          to="/user/signup"
+             target="_blank"
+  rel="noopener noreferrer"
+   className="maintenance-cta">
             Free Trial – No Card Required
-          </button>
+          </Link>
 
         </div>
 
@@ -1177,12 +1232,14 @@ const handleNavigateItam = () => {
             </p>
           </div>
 
-          <button
-            type="button"
+          <Link
+          to="/user/signup"
+             target="_blank"
+  rel="noopener noreferrer"
             className="section9-cta"
           >
             Sign Up – Free Trial
-          </button>
+          </Link>
 
         </div>
 
@@ -1332,9 +1389,13 @@ const handleNavigateItam = () => {
             </p>
           </div>
 
-          <button className="section11-cta">
+          <Link 
+          to="/user/signup"
+             target="_blank"
+  rel="noopener noreferrer"
+   className="section11-cta">
             Free Trial
-          </button>
+          </Link>
 
         </div>
 
@@ -1569,12 +1630,14 @@ const handleNavigateItam = () => {
 
           </ul>
 
-          <a
-            href="/user/signup"
+          <Link
+            to="/user/signup"
+               target="_blank"
+  rel="noopener noreferrer"
             className="machinery-trial-btn"
           >
             Free Trial — Try Now
-          </a>
+          </Link>
 
         </div>
 
@@ -1668,23 +1731,27 @@ const handleNavigateItam = () => {
         </p>
 
         <p>
-          <a
-            href="/about"
+          <Link
+            to="/about"
+               target="_blank"
+  rel="noopener noreferrer"
             className="ham-link"
           >
             HAM &amp; ITAM
-          </a>{" "}
+          </Link>{" "}
           we bring all that expertise into a single SaaS
           (Software as Service) platform that helps to Manage Businesses &amp;
           Individuals.
         </p>
 
-        <a
-          href="/about"
+        <Link
+          to="/about"
+             target="_blank"
+  rel="noopener noreferrer"
           className="about-us-btn"
         >
           About Us
-        </a>
+        </Link>
 
       </div>
     </section>
@@ -1776,9 +1843,13 @@ const handleNavigateItam = () => {
 
       <div className="section17-pricing">
 
-        <div className="section17-pricing-label">
+        <Link
+        to="/pricing"
+           target="_blank"
+  rel="noopener noreferrer"
+   className="section17-pricing-label">
           Pricing
-        </div>
+        </Link>
 
         <div className="section17-pricing-card" onClick={handleNavigateItam}>
 
@@ -1809,18 +1880,43 @@ const handleNavigateItam = () => {
           Machinery Assets Management System
         </h2>
 
-        <a
-          href="/user/signup"
+        <Link
+          to="/user/signup"
+             target="_blank"
+  rel="noopener noreferrer" 
           className="section17-signup"
         >
           Sign Up Now
           <span>→</span>
-        </a>
+        </Link>
 
       </div>
 
     </section>
+            <section className="industry-assets-section">
 
+      <h2>Manage Assets across Industries</h2>
+
+<div className="industry-assets-grid">
+  {industries.map((industry, index) => (
+    <div
+      className={`industry-card industry-card-${index + 1}`}
+      key={industry.title}
+        onClick={() => {
+        window.open(industry.url);
+        window.scrollTo(0, 0);
+      }}
+    >
+      <div className="industry-icon">
+        {industry.icon}
+      </div>
+
+      <p>{industry.title}</p>
+    </div>
+  ))}
+</div>
+
+    </section>
     <section className="section18-faq">
 
       <div className="section18-container">

@@ -21,11 +21,13 @@ const Footer = () => {
 
           <div className="footer-column footer-left">
 
-            <Link to="/contact" onClick={() => window.scrollTo(0, 0)}>
+            <Link to="/contact"   target="_blank"
+  rel="noopener noreferrer">
               Contact
             </Link>
 
-            <Link to="/about" onClick={() => window.scrollTo(0, 0)}>
+            <Link to="/about"   target="_blank"
+  rel="noopener noreferrer">
               About Us
             </Link>
 
@@ -37,17 +39,18 @@ const Footer = () => {
 
        <Link
   to="/terms"
-  onClick={() => window.scrollTo(0, 0)}
+    target="_blank"
+  rel="noopener noreferrer"
 >
   Terms and Conditions
 </Link>
-            <a
-              href="/global-privacy-policy"
+            <Link
+              to="/global-privacy-policy"
               target="_blank"
               rel="noopener noreferrer"
             >
               Global Privacy Policy
-            </a>
+            </Link>
 
           </div>
 
@@ -55,21 +58,21 @@ const Footer = () => {
 
           <div className="footer-column footer-right">
 
-            <a
-              href="it-asset-management"
+            <Link
+              to="/it-asset-management"
               target="_blank"
               rel="noopener noreferrer"
             >
               IT Asset Management Software
-            </a>
+            </Link>
 
-            <a
-              href="/machinery-management-software"
+            <Link
+              to="/machinery-management-software"
               target="_blank"
               rel="noopener noreferrer"
             >
               Machinery Assets Management Software
-            </a>
+            </Link>
 
           </div>
 
@@ -79,59 +82,60 @@ const Footer = () => {
 
           <div className="social-icons">
 
-            <a
-              href="https://www.facebook.com/socialflylive/"
+            <Link
+              to="https://www.facebook.com/socialflylive/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
             >
               <FaFacebookF />
-            </a>
+            </Link>
 
-            <a
-              href="https://www.instagram.com/socialflylive"
+            <Link
+              to="https://www.instagram.com/socialflylive"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
             >
               <FaInstagram />
-            </a>
+            </Link>
 
-            <a
-              href="https://www.linkedin.com/company/socialflylive/"
+            <Link
+              to="https://www.linkedin.com/company/socialflylive/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
             >
               <FaLinkedinIn />
-            </a>
+            </Link>
 
-            <a
-              href="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"
+            <Link
+              to="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Google Maps"
             >
               <FaGoogle />
-            </a>
+            </Link>
 
-            <a
-              href="https://in.pinterest.com/socialflylive/"
+            <Link
+              to="https://in.pinterest.com/socialflylive/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Pinterest"
             >
               <FaPinterestP />
-            </a>
+            </Link>
 
           </div>
 
           <p className="footer-email">
             Email:
             {" "}
-            <a href="mailto:info@assetpegasus.com">
+            <Link to="mailto:info@assetpegasus.com"   target="_blank"
+  rel="noopener noreferrer">
               info@assetpegasus.com
-            </a>
+            </Link>
           </p>
 
         </div>
