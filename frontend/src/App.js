@@ -151,10 +151,10 @@ const App = () => {
           path="/blog"
           element={<BlogPage/>}
       />
-      <Route
+      {/* <Route
   path="/blog/:slug"
   element={<BlogDetails />}
-/>
+/> */}
 
   </Route>
           <Route
