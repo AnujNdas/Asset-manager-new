@@ -1160,7 +1160,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </div>
       </div>
     </section>
-<section className="blog-section">
+{/* <section className="blog-section">
   <div className="container">
 
     <h2 className="heading">
@@ -1222,7 +1222,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
     </div>
 
   </div>
-</section>
+</section> */}
 
 
     </div>
