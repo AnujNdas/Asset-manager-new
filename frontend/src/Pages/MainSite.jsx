@@ -544,7 +544,7 @@ content="@assetpegasus"
 
         <div className="hero-content">
           <h1>
-          Track Every IT Asset, Software License, and Machinery 
+          Track Every Machine & Equipment With IT Assets 
           </h1>
 
           <p style={{ fontSize : "20px", fontWeight : "600"}}>

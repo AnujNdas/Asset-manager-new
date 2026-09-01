@@ -341,177 +341,179 @@ const BlogDetails = () => {
             {/* ===============================================
                 INTRODUCTION
             =============================================== */}
+{(blog.introduction || blog.content?.introduction) && (
 
-            {blog.content?.introduction && (
+  <div className="blog-details-introduction">
 
-              <div className="blog-details-introduction">
+    <p>
+      {blog.introduction || blog.content?.introduction}
+    </p>
 
-                <p>
-                  {blog.content.introduction}
-                </p>
+  </div>
 
-              </div>
-
-            )}
+)}
 
 
             {/* ===============================================
                 CONTENT SECTIONS
             =============================================== */}
 
-{blog.sections?.map((section, sectionIndex) => (
-  <article
-    className="blog-details-section"
-    key={section.id || sectionIndex}
-  >
+  {blog.sections?.map((section, sectionIndex) => (
+    <article
+      className="blog-details-section"
+      key={section.id || sectionIndex}
+    >
 
-    {/* SECTION NUMBER */}
-    {section.number && (
-      <div className="blog-section-number">
-        {section.number}
-      </div>
-    )}
+      {/* SECTION NUMBER */}
+      {section.number && (
+        <div className="blog-section-number">
+          {section.number}
+        </div>
+      )}
 
-    {/* HEADING */}
-    {section.heading && (
-      <h2>
-        {section.heading}
-      </h2>
-    )}
+      {/* HEADING */}
+{(section.heading || section.title) && (
+  <h2>
+    {section.heading || section.title}
+  </h2>
+)}
 
-    {/* IMAGE */}
-    {section.image && (
-      <div className="blog-section-image">
-        <img
-          src={section.image}
-          alt={
-            section.imageAlt ||
-            section.heading ||
-            blog.title
-          }
-        />
-      </div>
-    )}
+      {/* IMAGE */}
+      {section.image && (
+        <div className="blog-section-image">
+          <img
+            src={section.image}
+            alt={
+              section.imageAlt ||
+              section.heading ||
+              blog.title
+            }
+          />
+        </div>
+      )}
 
-    {/* PARAGRAPHS */}
-    {section.paragraphs?.map((paragraph, index) => (
-      <p key={index}>
-        {paragraph}
-      </p>
-    ))}
+      {/* PARAGRAPHS */}
+      {section.paragraphs?.map((paragraph, index) => (
+        <p key={index}>
+          {paragraph}
+        </p>
+      ))}
 
-    {/* POINTS */}
-    {section.points?.length > 0 && (
-      <div className="blog-section-points">
+      {/* POINTS */}
+      {section.points?.length > 0 && (
+        <div className="blog-section-points">
 
-        {section.points.map((point, pointIndex) => (
-          <div
-            className="blog-section-point"
-            key={pointIndex}
-          >
+          {section.points.map((point, pointIndex) => (
+            <div
+              className="blog-section-point"
+              key={pointIndex}
+            >
 
-            {point.title && (
-              <h3>
-                {point.title}
-              </h3>
-            )}
+              {point.title && (
+                <h3>
+                  {point.title}
+                </h3>
+              )}
 
-            {(point.description || point.text) && (
-              <p>
-                {point.description || point.text}
-              </p>
-            )}
+              {(point.description || point.text) && (
+                <p>
+                  {point.description || point.text}
+                </p>
+              )}
 
-          </div>
-        ))}
+            </div>
+          ))}
 
-      </div>
-    )}
+        </div>
+      )}
 
-    {/* LIST */}
-    {section.list?.length > 0 && (
-      <ul className="blog-section-list">
+      {/* LIST */}
+      {section.list?.length > 0 && (
+        <ul className="blog-section-list">
 
-        {section.list.map((item, itemIndex) => (
-          <li key={itemIndex}>
+          {section.list.map((item, itemIndex) => (
+            <li
+  key={itemIndex}
+  className={item.description ? "has-description" : "simple-item"}
+>
 
-            {item.title && (
-              <strong>
-                {item.title}
-              </strong>
-            )}
+              {item.title && (
+                <strong>
+                  {item.title}
+                </strong>
+              )}
 
-            {item.description && (
-              <span>
-                {" — "}
-                {item.description}
-              </span>
-            )}
+              {item.description && (
+                <span>
+                  {" — "}
+                  {item.description}
+                </span>
+              )}
 
-          </li>
-        ))}
+            </li>
+          ))}
 
-      </ul>
-    )}
+        </ul>
+      )}
 
-    {/* TABLE */}
-    {section.table && (
-      <div className="blog-table-wrapper">
+      {/* TABLE */}
+      {section.table && (
+        <div className="blog-table-wrapper">
 
-        <table className="blog-details-table">
+          <table className="blog-details-table">
 
-          <thead>
-            <tr>
-              {section.table.headers?.map(
-                (header, headerIndex) => (
-                  <th key={headerIndex}>
-                    {header}
-                  </th>
+            <thead>
+              <tr>
+                {section.table.headers?.map(
+                  (header, headerIndex) => (
+                    <th key={headerIndex}>
+                      {header}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+
+            <tbody>
+              {section.table.rows?.map(
+                (row, rowIndex) => (
+                  <tr key={rowIndex}>
+
+                    {row.map(
+                      (cell, cellIndex) => (
+                        <td key={cellIndex}>
+                          {cell}
+                        </td>
+                      )
+                    )}
+
+                  </tr>
                 )
               )}
-            </tr>
-          </thead>
+            </tbody>
 
-          <tbody>
-            {section.table.rows?.map(
-              (row, rowIndex) => (
-                <tr key={rowIndex}>
+          </table>
 
-                  {row.map(
-                    (cell, cellIndex) => (
-                      <td key={cellIndex}>
-                        {cell}
-                      </td>
-                    )
-                  )}
+        </div>
+      )}
 
-                </tr>
-              )
-            )}
-          </tbody>
+      {/* TAKEAWAY */}
+      {section.takeaway && (
+        <div className="blog-takeaway">
 
-        </table>
+          <strong>
+            Key Takeaway
+          </strong>
 
-      </div>
-    )}
+          <p>
+            {section.takeaway}
+          </p>
 
-    {/* TAKEAWAY */}
-    {section.takeaway && (
-      <div className="blog-takeaway">
+        </div>
+      )}
 
-        <strong>
-          Key Takeaway
-        </strong>
-
-        <p>
-          {section.takeaway}
-        </p>
-
-      </div>
-    )}
-
-  </article>
-))}
+    </article>
+  ))}
 
 
             {/* =================================================
@@ -590,22 +592,21 @@ const BlogDetails = () => {
             {/* =================================================
                 CONCLUSION
             ================================================= */}
+{(blog.conclusion || blog.content?.conclusion) && (
 
-            {blog.content?.conclusion && (
+  <section className="blog-conclusion">
 
-              <section className="blog-conclusion">
+    <h2>
+      Conclusion
+    </h2>
 
-                <h2>
-                  Conclusion
-                </h2>
+    <p>
+      {blog.conclusion || blog.content?.conclusion}
+    </p>
 
-                <p>
-                  {blog.content.conclusion}
-                </p>
+  </section>
 
-              </section>
-
-            )}
+)}
 
 
             {/* =================================================
@@ -679,37 +680,38 @@ const BlogDetails = () => {
                 FINAL CTA
             ================================================= */}
 
-            {blog.finalCta && (
+{(blog.finalCta || blog.ctaSection) && (
 
-              <section className="blog-final-cta">
+  <section className="blog-final-cta">
 
-                <h2>
-                  {blog.finalCta.heading}
-                </h2>
+    <h2>
+      {blog.finalCta?.heading || blog.ctaSection?.title}
+    </h2>
 
-                <p>
-                  {blog.finalCta.text}
-                </p>
+    <p>
+      {blog.finalCta?.text || blog.ctaSection?.description}
+    </p>
 
+    <button
+      onClick={() =>
+        navigate(
+          blog.finalCta?.buttonLink ||
+          blog.ctaSection?.buttonLink
+        )
+      }
+    >
+      {blog.finalCta?.buttonText ||
+       blog.ctaSection?.buttonText}
 
-                <button
-                  onClick={() =>
-                    navigate(
-                      blog.finalCta.buttonLink
-                    )
-                  }
-                >
-                  {blog.finalCta.buttonText}
+      <span>
+        →
+      </span>
 
-                  <span>
-                    →
-                  </span>
+    </button>
 
-                </button>
+  </section>
 
-              </section>
-
-            )}
+)}
 
 
             {/* =================================================

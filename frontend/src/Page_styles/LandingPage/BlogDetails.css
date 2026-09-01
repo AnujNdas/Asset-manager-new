@@ -91,7 +91,7 @@
 }
 
 .blog-details-container {
-  /* width: min(900px, 100%); */
+  width: min(900px, 100%);
   margin: 0 auto;
 }
 
@@ -145,10 +145,11 @@
 
 .blog-details-quick-answer h2 {
   margin: 0 0 15px;
-
+  text-align: center;
   color: #DFD0B8;
 
   font-size: 24px;
+  font-weight: 600;
   line-height: 1.3;
 }
 
@@ -204,8 +205,8 @@
 
 .blog-details-section h2 {
   margin: 0 0 25px;
-
-  color: #DFD0B8;
+  text-align: center;
+  color: #DFD0B8; 
 
   font-size: clamp(28px, 4vw, 40px);
   line-height: 1.25;
@@ -286,9 +287,9 @@
 
 .blog-section-point h3 {
   margin: 0 0 10px;
-
+  text-align: center;
   color: #DFD0B8;
-
+  font-weight: 600;
   font-size: 19px;
   line-height: 1.4;
 }
@@ -309,29 +310,84 @@
 
 .blog-section-list {
   margin: 30px 0;
-  padding-left: 28px;
-
+  padding-left: 0;
+  list-style: none;
   color: rgba(223, 208, 184, 0.85);
 }
 
-.blog-section-list li {
-  margin-bottom: 14px;
-  flex-direction: column;
-  padding-left: 8px;
+/* ================================
+   COMMON LIST ITEM
+================================ */
 
+.blog-section-list li {
+  position: relative;
+  margin-bottom: 14px;
+  padding-left: 22px;
   font-size: 17px;
   line-height: 1.7;
 }
 
-.blog-section-list li::marker {
+/* Custom bullet */
+
+.blog-section-list .simple-item::before {
+  content: "•";
+  /* position: absolute; */
+  left: 4px;
+  top: 0;
   color: #DFD0B8;
+  font-size: 18px;
+  line-height: 1.7;
+  margin-right: 10px;
+}
+
+.blog-section-list .has-description::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  line-height: 1.7;
+  margin-right: 10px;
 }
 
 .blog-section-list strong {
   color: #DFD0B8;
+  font-weight: 600;
 }
 
+/* ================================
+   LIST WITH DESCRIPTION
+================================ */
 
+.blog-section-list li.has-description {
+  display: grid;
+  /* grid-template-columns: 260px 1fr; */
+  column-gap: 12px;
+  align-items: start;
+}
+
+.blog-section-list li.has-description strong {
+  display: block;
+}
+
+.blog-section-list li.has-description span {
+  display: block;
+  color: rgba(223, 208, 184, 0.85);
+}
+
+/* ================================
+   SIMPLE LIST
+================================ */
+
+.blog-section-list li.simple-item {
+  display: flex;
+  justify-content: center;
+}
+
+.blog-section-list li.simple-item strong {
+  display: inline;
+}
 /* =========================================================
    TABLE
 ========================================================= */
@@ -412,7 +468,7 @@
   display: block;
 
   margin-bottom: 10px;
-
+  text-align: center;
   color: #DFD0B8;
 
   font-size: 16px;
@@ -438,7 +494,7 @@
 
 .blog-comparison-section h2 {
   margin: 0 0 25px;
-
+  text-align: center;
   color: #DFD0B8;
 
   font-size: clamp(28px, 4vw, 40px);
@@ -460,7 +516,7 @@
 
 .blog-conclusion h2 {
   margin: 0 0 20px;
-
+  text-align: center;
   color: #DFD0B8;
 
   font-size: 32px;

@@ -31,7 +31,7 @@
 
 .hero-shape-back {
   bottom: 0;
-  height: 310px;
+  height: 400px;
 
   background: #393E46;
 
@@ -101,7 +101,7 @@
 .machinery-hero h1 {
   margin: 48px 0 0;
 
-  font-size: 2rem;
+  font-size: 48px;
   line-height: 1.25;
 
   font-weight: 500;
@@ -4199,7 +4199,7 @@
 .asset-categories-section {
   width: 100%;
 
-  background: #222831;
+  background: #31363E;
   color: #efd8bd;
 
   padding: 55px 25px;

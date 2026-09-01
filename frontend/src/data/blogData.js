@@ -470,56 +470,556 @@ export const blogs = [
   // =========================================================
   // BLOG 1
   // =========================================================
-  {
-    id: 1,
+{
+  id: 2,
 
-    slug: "preventative-maintenance-critical-healthcare-equipment",
+  slug: "ghost-assets-construction-sites",
 
-    image:
-      "/images/BlogImages/ghostBlog2.webp",
+  image:
+    "/images/BlogImages/ghostBlog2.webp",
 
-    title:
-      "Preventative Maintenance for Critical Healthcare Equipment: Avoiding ICU Downtime",
+  title:
+    "Ghost Assets on Construction Sites: How Moving Machinery Unnoticed Drains Profitability",
 
-    author: "Sourav Das",
+  author: "Poll Ghosh",
 
-    date: "July 2026",
+  date: "July 2026",
 
-    category: "Healthcare Asset Management",
+  category: "Construction Asset Management",
 
-    metaTitle:
-      "Preventative Maintenance for Critical Healthcare Equipment | AssetPegasus",
+  metaTitle:
+    "Ghost Assets on Construction Sites — How Untracked Equipment Drains Profitability",
 
-    metaDescription:
-      "Learn how preventative maintenance and asset lifecycle tracking help healthcare organizations reduce ICU equipment downtime and protect patient safety.",
+  metaDescription:
+    "Learn how ghost assets, untracked equipment movements, idle machinery, and poor asset visibility can increase rental costs and reduce construction profitability.",
 
-    cta: "Read the healthcare insights",
+  keywords: [
+    "ghost assets construction",
+    "construction equipment tracking",
+    "construction asset management software",
+    "construction equipment management",
+    "equipment tracking between jobsites",
+    "construction asset tracking",
+    "equipment rental cost reduction",
+    "construction equipment utilization",
+    "construction asset history",
+    "multi-site construction asset tracking",
+    "QR code equipment tracking",
+    "construction equipment management software"
+  ],
 
-    // ---------------------------------------------------------
-    // BLOG CONTENT
-    // ---------------------------------------------------------
+  cta:
+    "Read the construction insights",
 
-    content: [
-      {
-        type: "paragraph",
-        text:
-          "A ventilator that fails mid shift. An infusion pump that stalls during a critical dosage window. A patient monitor that goes dark without warning. In an Intensive Care Unit, equipment downtime isn't an inconvenience, it's a direct threat to patient safety, and in the worst cases, a matter of life and death."
-      },
+  // =====================================================
+  // QUICK ANSWER
+  // =====================================================
 
-      // Add the remaining content from your first PDF here
-    ],
+  quickAnswer:
+    "Ghost assets are construction assets whose real-world location, assignment, status, custody, or usage does not match the company's records. When excavators, loaders, generators, cranes, trucks, and tools move between jobsites without being properly recorded, companies can end up renting equipment they already own, purchasing duplicate machinery, leaving expensive assets idle, or delaying projects because equipment cannot be located quickly. Centralized construction asset management helps companies track what they own, where it is, who is responsible for it, and how it is being used.",
 
-    faqs: [
-      // Add FAQ data from first PDF here
-    ],
-  },
+  // =====================================================
+  // MAIN CONTENT
+  // =====================================================
+
+  sections: [
+
+    // -----------------------------------------------------
+    // SECTION 1
+    // -----------------------------------------------------
+
+    {
+      id: "what-are-ghost-assets",
+
+      heading:
+        "What Are Ghost Assets in Construction?",
+
+      paragraphs: [
+        "A ghost asset is an asset that exists in company records but whose real world status or location cannot be reliably confirmed.",
+
+        "For construction companies, ghost assets commonly appear when equipment is frequently moved between construction sites, equipment yards, warehouses, maintenance facilities, subcontractors, and rental locations.",
+
+        "When transfers are managed through spreadsheets, phone calls, emails, or memory, asset records can quickly become outdated.",
+
+        "The equipment hasn't disappeared. Visibility has disappeared."
+      ]
+    },
+
+
+    // -----------------------------------------------------
+    // SECTION 2
+    // -----------------------------------------------------
+
+    {
+      id: "profitability-impact",
+
+      heading:
+        "Why Ghost Assets Reduce Construction Profitability",
+
+      paragraphs: [
+        "Poor asset visibility can quietly increase construction costs by making it difficult to determine what equipment is actually available, where it is located, and whether it is being used."
+      ],
+
+      points: [
+
+        {
+          title:
+            "Unnecessary Equipment Rentals",
+
+          text:
+            "Suppose Project B needs an excavator. The asset register shows all company excavators as assigned to other projects, so the project manager rents one. Later, the company discovers that an excavator was actually sitting idle at another site. The business has paid for equipment it already owned."
+        },
+
+        {
+          title:
+            "Idle Machinery",
+
+          text:
+            "Construction equipment is expensive whether it is working or sitting unused. Idle machinery can continue generating depreciation, insurance costs, maintenance costs, financing costs, and storage expenses."
+        },
+
+        {
+          title:
+            "Duplicate Purchases",
+
+          text:
+            "When managers don't know what equipment is actually available, they may purchase or rent additional machinery unnecessarily. A centralized construction asset management system can help teams see what they already own before making another purchase."
+        },
+
+        {
+          title:
+            "Project Delays",
+
+          text:
+            "When equipment cannot be located quickly, crews may wait for machinery or replacement equipment. Even a few hours of downtime can affect project schedules and labor productivity."
+        }
+
+      ]
+    },
+
+
+    // -----------------------------------------------------
+    // SECTION 3
+    // -----------------------------------------------------
+
+    {
+      id: "equipment-tracking",
+
+      heading:
+        "Construction Equipment Tracking Is More Than GPS",
+
+      paragraphs: [
+        "Many companies think equipment tracking means GPS tracking.",
+
+        "GPS is useful for high-value mobile machinery, but construction asset tracking can go much further.",
+
+        "A complete system can track:"
+      ],
+
+      list: [
+
+        {
+          title: "Asset location",
+          description: ""
+        },
+
+        {
+          title: "Project assignment",
+          description: ""
+        },
+
+        {
+          title: "Asset transfers",
+          description: ""
+        },
+
+        {
+          title: "Responsible employee",
+          description: ""
+        },
+
+        {
+          title: "Equipment status",
+          description: ""
+        },
+
+        {
+          title: "Utilization",
+          description: ""
+        },
+
+        {
+          title: "Maintenance",
+          description: ""
+        },
+
+        {
+          title: "Warranty",
+          description: ""
+        },
+
+        {
+          title: "Insurance",
+          description: ""
+        },
+
+        {
+          title: "Documents",
+          description: ""
+        },
+
+        {
+          title: "Asset history",
+          description: ""
+        }
+
+      ],
+
+      paragraphsAfterList: [
+        "For smaller equipment, QR codes or barcodes can provide a simple way to identify and manage assets without installing expensive tracking hardware.",
+
+        "The objective is simple: Know what you own, where it is, who has it, and how it is being used."
+      ]
+    },
+
+
+    // -----------------------------------------------------
+    // SECTION 4
+    // -----------------------------------------------------
+
+    {
+      id: "asset-history",
+
+      heading:
+        "Why Asset History Matters",
+
+      paragraphs: [
+        "Knowing the current location of a machine is useful. Knowing where it has been is even more valuable.",
+
+        "For every equipment transfer, companies should ideally record:"
+      ],
+
+      list: [
+
+        {
+          title: "Previous Location",
+          description: ""
+        },
+
+        {
+          title: "New Location",
+          description: ""
+        },
+
+        {
+          title: "Date",
+          description: ""
+        },
+
+        {
+          title: "Project",
+          description: ""
+        },
+
+        {
+          title: "Responsible Person",
+          description: ""
+        },
+
+        {
+          title: "Condition",
+          description: ""
+        }
+
+      ],
+
+      paragraphsAfterList: [
+        "This creates an asset history that can help with audits, accountability, maintenance, project costing, equipment utilization, insurance claims, and warranty management.",
+
+        "If someone asks, \"Where was this machine last month?\", the answer shouldn't depend on someone's memory."
+      ]
+    },
+
+
+    // -----------------------------------------------------
+    // SECTION 5
+    // -----------------------------------------------------
+
+    {
+      id: "prevent-ghost-assets",
+
+      heading:
+        "How to Prevent Ghost Assets on Construction Sites",
+
+      paragraphs: [
+        "Construction companies can reduce ghost assets with a few basic processes."
+      ],
+
+      points: [
+
+        {
+          title:
+            "1. Give Every Asset a Unique ID",
+
+          text:
+            "Assign every machine, vehicle, tool, and equipment item a unique asset number."
+        },
+
+        {
+          title:
+            "2. Record Every Transfer",
+
+          text:
+            "Whenever equipment moves between projects, update its location and assignment."
+        },
+
+        {
+          title:
+            "3. Track Custody",
+
+          text:
+            "Record who is responsible for the equipment—not just where it is."
+        },
+
+        {
+          title:
+            "4. Monitor Idle Equipment",
+
+          text:
+            "Regularly identify machinery that is available but not being used."
+        },
+
+        {
+          title:
+            "5. Track Rental Equipment",
+
+          text:
+            "Record rental start dates, expected return dates, project assignments, and actual return dates."
+        },
+
+        {
+          title:
+            "Perform Regular Asset Audits",
+
+          text:
+            "Compare the physical equipment at each jobsite with the digital asset register. This helps identify missing, transferred, idle, or incorrectly assigned assets."
+        }
+
+      ]
+    },
+
+
+    // -----------------------------------------------------
+    // SECTION 6
+    // -----------------------------------------------------
+
+    {
+      id: "software-vs-excel",
+
+      heading:
+        "Construction Equipment Tracking Software vs. Excel",
+
+      paragraphs: [
+        "Excel can work for a small equipment inventory.",
+
+        "The problem appears when a company manages multiple projects and hundreds of assets.",
+
+        "The biggest advantage of dedicated construction asset tracking software is having one centralized source of truth."
+      ],
+
+      table: {
+
+        headers: [
+          "Requirement",
+          "Excel",
+          "Asset Management Software"
+        ],
+
+        rows: [
+
+          [
+            "Asset records",
+            "✓",
+            "✓"
+          ],
+
+          [
+            "Multi-site tracking",
+            "Limited",
+            "✓"
+          ],
+
+          [
+            "Transfer history",
+            "Manual",
+            "✓"
+          ],
+
+          [
+            "Asset custody",
+            "Manual",
+            "✓"
+          ],
+
+          [
+            "Maintenance tracking",
+            "Manual",
+            "✓"
+          ],
+
+          [
+            "Insurance tracking",
+            "Manual",
+            "✓"
+          ],
+
+          [
+            "Warranty tracking",
+            "Manual",
+            "✓"
+          ],
+
+          [
+            "Asset history",
+            "Difficult",
+            "✓"
+          ],
+
+          [
+            "Reporting",
+            "Manual",
+            "✓"
+          ]
+
+        ]
+      }
+    },
+
+
+    // -----------------------------------------------------
+    // SECTION 7
+    // -----------------------------------------------------
+
+    {
+      id: "assetpegasus",
+
+      heading:
+        "How AssetPegasus Helps",
+
+      paragraphs: [
+        "AssetPegasus helps organizations centralize their physical and digital asset information.",
+
+        "For construction companies, this can provide a structured way to manage equipment records, assignments, transfers, maintenance information, insurance, warranties, documentation, and asset history.",
+
+        "Instead of asking:",
+
+        "\"Where is our equipment?\"",
+
+        "your team can work toward a better question:",
+
+        "\"What equipment do we have, where is it assigned, who is responsible for it, and what is its current status?\"",
+
+        "Better visibility can lead to better equipment utilization, fewer unnecessary rentals, stronger accountability, and better asset-related decisions.",
+
+        "Know your assets. Track their movement. Monitor their utilization. Protect your investment."
+      ]
+    }
+
+  ],
+
+
+  // =====================================================
+  // FAQ
+  // =====================================================
+
+  faq: [
+
+    {
+      question:
+        "What is a ghost asset?",
+
+      answer:
+        "A ghost asset is an asset listed in company records whose actual location, assignment, status, or custody cannot be reliably confirmed."
+    },
+
+    {
+      question:
+        "How do ghost assets affect construction companies?",
+
+      answer:
+        "They can cause unnecessary rentals, duplicate purchases, idle equipment, inaccurate project costing, maintenance issues, and equipment-related delays."
+    },
+
+    {
+      question:
+        "How do you track construction equipment between jobsites?",
+
+      answer:
+        "Use centralized asset management software to record asset IDs, project assignments, locations, transfers, custodians, and equipment status. GPS, QR codes, barcodes, and telematics can provide additional tracking capabilities."
+    },
+
+    {
+      question:
+        "Can construction equipment be tracked without GPS?",
+
+      answer:
+        "Yes. QR codes, barcodes, RFID, check-in/check-out processes, transfer records, and regular physical audits can all be used for equipment tracking."
+    },
+
+    {
+      question:
+        "What should construction equipment tracking software include?",
+
+      answer:
+        "Important features include asset records, multi-site tracking, transfer history, equipment assignments, maintenance, insurance, warranty management, utilization tracking, documentation, and reporting."
+    },
+
+    {
+      question:
+        "How can construction companies reduce equipment rental costs?",
+
+      answer:
+        "Track equipment availability and utilization so project teams can identify existing underused machinery before renting or purchasing additional equipment."
+    }
+
+  ],
+
+
+  // =====================================================
+  // CONCLUSION
+  // =====================================================
+
+  conclusion:
+    "Better visibility can lead to better equipment utilization, fewer unnecessary rentals, stronger accountability, and better asset-related decisions.",
+
+
+  // =====================================================
+  // FINAL CTA
+  // =====================================================
+
+  finalCta: {
+
+    heading:
+      "Know Your Assets. Track Their Movement. Protect Your Investment.",
+
+    text:
+      "Centralize construction equipment records, assignments, transfers, maintenance, warranties, insurance, and asset history with AssetPegasus.",
+
+    buttonText:
+      "Start Free 7-Day Trial",
+
+    buttonLink:
+      "/user/signup"
+
+  }
+},
 
 
   // =========================================================
   // BLOG 2
   // =========================================================
   {
-    id: 2,
+    id: 3,
 
     slug:
       "why-restaurants-pay-twice-for-equipment-repairs",
@@ -573,12 +1073,18 @@ export const blogs = [
     sections: [
 
       {
-        heading:
-          'What Does It Mean to "Pay Twice" for Equipment Repairs?',
+         heading:
+    "Why Does This Happen So Often in Restaurants?",
 
-        paragraphs: [
-          "Restaurants pay twice for equipment repairs in two distinct ways, and most operators don't realize how often it happens:"
-        ],
+  paragraphs: [
+    "Restaurant equipment management is uniquely vulnerable to warranty leakage because of how the industry operates day to day.",
+
+    "Restaurant warranty losses are caused by fragmented recordkeeping and reactive repair decisions, not equipment failure itself.",
+
+    "Both scenarios drain capital that should never have left the business. Multiply this across a multi-location restaurant group, and the losses compound fast — one unaccounted warranty on a walk-in compressor can cost $2,000–$5,000 in avoidable out-of-pocket repair spend.",
+
+    "\"Paying twice\" means covering a repair bill that was already included in a manufacturer's warranty, plus the cost of the eventual proper fix when the rushed repair fails again."
+  ],
 
         points: [
           {
@@ -596,7 +1102,47 @@ export const blogs = [
         ]
       },
 
+      {
+  heading: "Root Cause: Why It Happens",
 
+  points: [
+    {
+      title: "No centralized warranty records",
+      text:
+        "Purchase receipts and warranty cards live in email, paper files, or a manager's memory."
+    },
+
+    {
+      title: "High staff turnover",
+      text:
+        "The person who bought the equipment and knew the warranty terms has often left."
+    },
+
+    {
+      title: "Emergency mindset",
+      text:
+        "A broken fryer during dinner service means calling whoever's available, not checking coverage."
+    },
+
+    {
+      title: "Multi-location complexity",
+      text:
+        "Regional managers can't see equipment purchase dates or warranty terms across sites."
+    },
+
+    {
+      title: "Manual expiration tracking",
+      text:
+        "Warranties lapse quietly with no alert before or after the coverage window closes."
+    },
+
+    {
+      title: "Vendor-driven repair calls",
+      text:
+        "Repair technicians have no incentive to check manufacturer warranty status before billing."
+    }
+  ]
+},
       {
         heading:
           "Why Does This Happen So Often in Restaurants?",
@@ -606,39 +1152,6 @@ export const blogs = [
           "Restaurant warranty losses are caused by fragmented recordkeeping and reactive repair decisions, not equipment failure itself.",
           "Both scenarios drain capital that should never have left the business. Multiply this across a multi-location restaurant group, and the losses compound fast — one unaccounted warranty on a walk-in compressor can cost $2,000–$5,000 in avoidable out-of-pocket repair spend."
         ],
-
-        points: [
-          {
-            title: "No centralized warranty records",
-            text:
-              "Purchase receipts and warranty cards live in email, paper files, or a manager's memory."
-          },
-          {
-            title: "High staff turnover",
-            text:
-              "The person who bought the equipment and knew the warranty terms has often left."
-          },
-          {
-            title: "Emergency mindset",
-            text:
-              "A broken fryer during dinner service means calling whoever's available, not checking coverage."
-          },
-          {
-            title: "Multi-location complexity",
-            text:
-              "Regional managers can't see equipment purchase dates or warranty terms across sites."
-          },
-          {
-            title: "Manual expiration tracking",
-            text:
-              "Warranties lapse quietly with no alert before or after the coverage window closes."
-          },
-          {
-            title: "Vendor-driven repair calls",
-            text:
-              "Repair technicians have no incentive to check manufacturer warranty status before billing."
-          }
-        ]
       },
 
 
@@ -646,11 +1159,13 @@ export const blogs = [
         heading:
           "What Does This Actually Cost Restaurants?",
 
-        paragraphs: [
-          "Commercial kitchen equipment is expensive to repair even when covered — walk-in refrigeration repairs commonly run $200–$1,500 per visit, while compressor or motor replacements can exceed $3,000. When that cost should have been a warranty claim instead of a cash payment, it becomes pure margin loss.",
-          "The true cost of a missed warranty isn't just the repair bill — it's the repair cost plus downtime, spoilage, and the risk of paying for the same failure twice."
-        ],
+  paragraphs: [
+    "Commercial kitchen equipment is expensive to repair even when covered — walk-in refrigeration repairs commonly run $200–$1,500 per visit, while compressor or motor replacements can exceed $3,000. When that cost should have been a warranty claim instead of a cash payment, it becomes pure margin loss.",
 
+    "The hidden costs stack further:",
+
+    "The true cost of a missed warranty isn't just the repair bill — it's the repair cost plus downtime, spoilage, and the risk of paying for the same failure twice."
+  ],
         points: [
           {
             title: "Emergency repair premiums",
