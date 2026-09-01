@@ -4,7 +4,7 @@
   width: 100%;
   overflow: hidden;
 
-  background: #353b45;
+  background: #222831;
   color: #efd8bd;
 
   display: flex;
@@ -33,7 +33,7 @@
   bottom: 0;
   height: 310px;
 
-  background: #414852;
+  background: #393E46;
 
   clip-path: polygon(
     0 25%,
@@ -55,7 +55,7 @@
   bottom: 0;
   height: 285px;
 
-  background: #353b45;
+  /* background: #353b45; */
 
   clip-path: polygon(
     0 20%,
@@ -268,7 +268,7 @@
 
   padding: 80px 20px;
 
-  background: #353b45;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -442,12 +442,7 @@
 
   border-radius: 12px;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(65, 72, 82, 0.65),
-      rgba(53, 59, 69, 0.35)
-    );
+  background: #222831;
 
   border: 1px solid rgba(239, 216, 189, 0.08);
 
@@ -582,7 +577,7 @@
   width: 100%;
   min-height: 650px;
 
-  background: #353b45;
+  background: #222831;
   color: #efd8bd;
 
   padding: 70px 20px 90px;
@@ -1074,7 +1069,7 @@
   width: 100%;
   min-height: 520px;
 
-  background: #353b45;
+  background: #393E46;
 
   display: flex;
   align-items: center;
@@ -1354,7 +1349,7 @@
   width: 100%;
   min-height: 520px;
 
-  /* background: #353b45; */
+  background: #222831;
   color: #efd8bd;
 
   display: flex;
@@ -1421,7 +1416,7 @@
 
 .feature-item p {
   margin: 0;
-
+  text-align: left;
   font-size: 17px;
   line-height: 1.7;
 
@@ -1438,7 +1433,7 @@
   border: none;
   border-radius: 30px;
 
-  background: #222831;
+  background: #393E46;
   color: #efd8bd;
 
   font-size: 17px;
@@ -1676,7 +1671,7 @@
 .section6-stats {
   width: 100%;
 
-  background: #353b45;
+  background: #393E46;
   color: #efd8bd;
 
   padding: 32px 30px;
@@ -1844,7 +1839,7 @@
   width: 100%;
   min-height: 520px;
 
-  /* background: #353b45; */
+  background: #222831;
   color: #efd8bd;
 
   display: flex;
@@ -1921,7 +1916,7 @@
   margin: 0;
 
   font-size: 17px;
-
+  text-align: left;
   line-height: 1.7;
 
   color: #efd8bd;
@@ -1944,7 +1939,7 @@
 
   border-radius: 30px;
 
-  background: #222831;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -2191,7 +2186,7 @@
   width: 100%;
   min-height: 520px;
 
-  background: #353b45;
+  background: #393E46 !important;
 
   color: #efd8bd;
 
@@ -2220,7 +2215,7 @@
   width: 100%;
   height: 120px;
 
-  background: #414852;
+  background: #222831;
 
   clip-path: polygon(
     0 0,
@@ -2452,7 +2447,7 @@
   width: 100%;
   min-height: 500px;
 
-  background: #353b45;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -2571,7 +2566,7 @@
 
   border-radius: 3px;
 
-  background: #222831;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -2811,7 +2806,7 @@
 
 .machinery-section10 {
   position: relative;
-  background: #353b45;
+  background: #393E46;
   color: #efd8bd;
   padding: 90px 20px;
   overflow: hidden;
@@ -2826,7 +2821,7 @@
   width: 100%;
   height: 90px;
 
-  background: #414852;
+  background: #222831;
 
   clip-path: polygon(
     0 0,
@@ -2949,7 +2944,7 @@
 
   width: 100%;
 
-  background: #353b45;
+  background: #222831;
   color: #efd8bd;
 
   padding: 80px 20px;
@@ -3051,7 +3046,6 @@
   margin-top: 10px;
   width: 200px;
   justify-content: center;
-  margin-left: 160px;
 
   border: none;
 
@@ -3059,7 +3053,7 @@
 
   border-radius: 25px;
 
-  background: #222831;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -3324,7 +3318,7 @@
 
   padding: 90px 20px;
 
-  background: #353b45;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -3518,7 +3512,7 @@
 
   padding: 75px 20px;
 
-  background: #353b45;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -3691,7 +3685,7 @@
 
 .machinery-cloud-section {
   width: 100%;
-  /* background: #353b45; */
+  background: #393E46;
   color: #efd8bd;
   padding: 70px 20px;
   box-sizing: border-box;
@@ -3774,7 +3768,7 @@
 
 .machinery-choose-section {
   width: 100%;
-  background: #353b45;
+  background: #222831;
   color: #efd8bd;
   padding: 75px 30px;
   box-sizing: border-box;
@@ -3861,7 +3855,7 @@
 
   border-radius: 25px;
 
-  background: #252d37;
+  background: #393E46;
   color: #efd8bd;
 
   text-decoration: none;
@@ -4052,7 +4046,7 @@
 
 .why-businesses-section {
   width: 100%;
-  /* background: #353b45; */
+  background: #393E46;
   color: #efd8bd;
 
   padding: 70px 20px;
@@ -4205,7 +4199,7 @@
 .asset-categories-section {
   width: 100%;
 
-  background: #32363E;
+  background: #222831;
   color: #efd8bd;
 
   padding: 55px 25px;
@@ -4475,7 +4469,7 @@
   width: 100%;
   overflow: hidden;
 
-  background: #353b45;
+  background: #393E46;
   color: #efd8bd;
 }
 
@@ -4639,7 +4633,7 @@
 
   gap: 40px;
 
-  background: #414852;
+  background: #222831;
 
   /*
     Opposite angled top edge
@@ -4695,7 +4689,7 @@
 
   box-sizing: border-box;
 
-  background: #252d37;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -4815,7 +4809,7 @@
 
 .section18-faq {
   width: 100%;
-  background: #414852;
+  background: #393E46;
   color: #efd8bd;
 
   padding: 50px 18px 62px;
@@ -4837,7 +4831,7 @@
 
 .section18-title {
   margin: 0 0 32px;
-
+  text-align: center;
   font-size: 32px;
   line-height: 1.25;
   font-weight: 600;

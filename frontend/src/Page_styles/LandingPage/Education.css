@@ -6,7 +6,7 @@
   width: 100%;
   position: relative;
 
-  background: #3b4048;
+  background: #393E46;
   color: #ead9bd;
 
   overflow: hidden;
@@ -23,7 +23,7 @@
   width: 100%;
   height: 275px;
 
-  background: #202731;
+  background: #222831;
 
   display: flex;
   align-items: flex-start;
@@ -71,7 +71,7 @@
   width: 100%;
   height: 55px;
 
-  background: #3b4048;
+  background: #393E46;
 
   clip-path: polygon(
     0% 35%,
@@ -101,7 +101,7 @@
   width: 100%;
   height: 175px;
 
-  background: #3b4048;
+  background: #393E46;
 
   display: flex;
   align-items: flex-end;
@@ -224,7 +224,7 @@
 .education-section2 {
   width: 100%;
 
-  background: #3b4048;
+  background: #393E46;
   color: #ead9bd;
 
   padding: 28px 35px 68px;
@@ -331,9 +331,9 @@
 .education-section3 {
   width: 100%;
 
-  background: #3b4048;
+  background: #222831;
 
-  padding: 0 18px 35px;
+  padding: 10px 18px 35px;
 
   box-sizing: border-box;
 
@@ -409,7 +409,7 @@
   display: flex;
   align-items: center;
 
-  background: #272d36;
+  background: #393E46;
   color: #ead9bd;
 
   padding: 35px 35px 45px;
@@ -737,7 +737,7 @@
 
   box-sizing: border-box;
 
-  background: #3a414b;
+  background: #222831;
   color: #ead9bd;
 
   padding: 45px 30px 50px;
@@ -857,7 +857,7 @@
 
   box-sizing: border-box;
 
-  background: #222831;
+  background: #393E46;
   color: #ead9bd;
 
   padding: 48px 20px 55px;
@@ -1065,7 +1065,7 @@
 .education-section7 {
   width: 100%;
   min-height: 460px;
-  background: #3a414b;
+  background: #222831;
   color: #eadcc4;
   padding: 0 0 45px;
   box-sizing: border-box;
@@ -1260,7 +1260,7 @@
 
   border-radius: 24px;
 
-  background: #20262e;
+  background: #393E46;
   color: #eadcc4;
 
   font-size: 16px;
@@ -1353,7 +1353,7 @@
   min-height: 600px;
   overflow: hidden;
 
-  background: #222934;
+  background: #393E46;
 
   color: #ead9b9;
 
@@ -1504,7 +1504,7 @@
   border: none;
   border-radius: 3px;
 
-  background: #39414c;
+  background: #222831;
 
   color: #ead9b9;
 
@@ -1539,7 +1539,7 @@
   width: 100%;
   height: 75px;
 
-  background: #39404a;
+  background: #222831;
 
   clip-path: polygon(
     0% 55%,
@@ -1572,7 +1572,7 @@
   width: 100%;
   height: 45px;
 
-  background: #303741;
+  background: #222831;
 
   clip-path: polygon(
     0% 50%,
@@ -1668,7 +1668,7 @@
 .education-section9 {
   width: 100%;
   min-height: 520px;
-  background: #343a43;
+  background: #222831;
   color: #ead9b9;
 
   display: flex;
@@ -1990,7 +1990,7 @@
 .education-section10 {
   width: 100%;
   min-height: 220px;
-  background: #242a33;
+  background: #222831;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2081,7 +2081,7 @@
   width: 100%;
   min-height: 500px;
 
-  background: #343a43;
+  background: #393E46;
   color: #ead9b9;
 
   padding: 60px 45px 35px;
@@ -2122,11 +2122,9 @@
 .education-section11-left h2 {
   margin: 0;
 
-  max-width: 390px;
-
   font-size: 29px;
   font-weight: 500;
-
+  text-align: center;
   line-height: 1.4;
 
   color: #ead9b9;
@@ -2412,7 +2410,7 @@
   width: 100%;
   min-height: 520px;
 
-  background: #343a43;
+  background: #222831;
   color: #ead9b9;
 
   padding: 45px 30px 25px;
@@ -2598,7 +2596,7 @@
   border: none;
   border-radius: 3px;
 
-  background: #242a33;
+  background: #393E46;
 
   color: #ead9b9;
 
@@ -2698,7 +2696,7 @@
 
   box-sizing: border-box;
 
-  background: #343a43;
+  background: #222831;
   color: #ead9b9;
 
   padding: 60px 50px 80px;
@@ -2750,7 +2748,7 @@
   border: none;
   border-radius: 30px;
 
-  background: #202731;
+  background: #393E46;
 
   color: #ead9b9;
 
@@ -2958,7 +2956,7 @@
 
   box-sizing: border-box;
 
-  background: #343a43;
+  background: #393E46;
 
   color: #ead9b9;
 
@@ -2986,7 +2984,7 @@
   line-height: 1.3;
 
   font-weight: 600;
-
+  text-align: center;
   color: #ead9b9;
 }
 

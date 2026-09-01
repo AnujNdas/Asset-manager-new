@@ -147,14 +147,14 @@ const App = () => {
           path="/pricing"
           element={<Pricing/>}
       />
-      {/* <Route
+      <Route
           path="/blog"
           element={<BlogPage/>}
-      /> */}
-      {/* <Route
+      />
+      <Route
   path="/blog/:slug"
   element={<BlogDetails />}
-/> */}
+/>
 
   </Route>
           <Route

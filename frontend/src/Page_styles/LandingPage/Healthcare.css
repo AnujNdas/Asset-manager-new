@@ -232,9 +232,9 @@
   position: relative;
 
   width: 100%;
-  padding: 30px 5px 0;
+  padding: 30px 0;
 
-  background: #393e46;
+  background: #222831;
   color: #dfd0b8;
 
   overflow: hidden;
@@ -271,7 +271,7 @@
 
 .healthcare-section-2-image {
   width: 100%;
-
+  background: #393e46;
   margin-top: 78px;
 
   display: flex;
@@ -357,7 +357,7 @@
 
   padding: 30px 50px 40px;
 
-  background: #2f353e;
+  background: #393e46;
   color: #dfd0b8;
 
   box-sizing: border-box;
@@ -397,15 +397,15 @@
 }
 
 .healthcare-section-3-features li {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.35;
-
+  flex-direction: column;
   color: #dfd0b8;
 
   display: flex;
-  align-items: flex-start;
+  /* align-items: flex-start;  */
 
-  gap: 7px;
+  /* gap: 7px; */
 }
 
 .healthcare-section-3-features li strong {
@@ -583,7 +583,7 @@
 .healthcare-section-4 {
   width: 100%;
 
-  background: #393e46;
+  background: #222831;
   color: #dfd0b8;
 
   overflow: hidden;
@@ -603,7 +603,7 @@
 
   padding-top: 40px;
 
-  background: #393e46;
+  /* background: #393e46; */
 }
 
 .healthcare-section-4-top h2 {
@@ -635,7 +635,7 @@
   border: none;
   border-radius: 25px;
 
-  background: #202833;
+  background: #393e46;
   color: #dfd0b8;
 
   font-size: 15px;
@@ -661,7 +661,7 @@
 
   padding: 22px 20px 25px;
 
-  background: #30363f;
+  /* background: #30363f; */
 
   text-align: center;
 
@@ -782,7 +782,7 @@
 .healthcare-section-5 {
   width: 100%;
 
-  background: #2f353e;
+  background: #393e46;
   color: #dfd0b8;
 
   overflow: hidden;
@@ -1101,7 +1101,7 @@
   width: 100%;
   min-height: 520px;
 
-  background: #252c35;
+  background: #222831;
   color: #dfd0b8;
 
   overflow: hidden;
@@ -1261,7 +1261,7 @@
   width: 100%;
   height: 85px;
 
-  background: #30363f;
+  background: #393e46;
 
   clip-path: polygon(
     0% 48%,
@@ -1358,7 +1358,7 @@
   padding: 60px 40px;
   box-sizing: border-box;
 
-  background: #3a3f47;
+  background: #393e46;
 }
 
 .healthcare-section-7-left {
@@ -1527,7 +1527,7 @@
   width: 100%;
   min-height: 650px;
 
-  background: #343a43;
+  background: #393e46;
   color: #eadcc5;
 
   display: flex;
@@ -1749,7 +1749,7 @@
   position: relative;
   min-height: 580px;
   padding: 30px 20px 80px;
-  background: #252b34;
+  background: #222831;
   color: #eadcc3;
   text-align: center;
   overflow: hidden;
@@ -1885,7 +1885,7 @@
   width: 100%;
   min-height: 495px;
 
-  background: #39404a;
+  background: #393e46;
 
   color: #ead9bb;
 
@@ -2113,7 +2113,7 @@
 .healthcare-section-13 {
   width: 100%;
 
-  background: #343a43;
+  background: #222831;
   color: #ead9bc;
 
   padding: 75px 30px 55px;
@@ -2340,7 +2340,7 @@
 
 .healthcare-section-14 {
   width: 100%;
-  background: #222831;
+  background: #393e46;
   color: #ead9bc;
   padding: 20px 15px 35px;
   box-sizing: border-box;
@@ -2348,13 +2348,12 @@
 
 .healthcare-section-14-title {
   margin: 0 0 32px 28px;
-
+  text-align: center;
   font-size: 30px;
   font-weight: 700;
   line-height: 1.2;
 
-  color: #ead9bc;
-  text-align: left;
+  color: #dfd0b8;
 }
 
 .healthcare-faq {

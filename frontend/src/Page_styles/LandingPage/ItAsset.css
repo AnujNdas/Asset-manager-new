@@ -6,7 +6,7 @@
   width: 100%;
   overflow: hidden;
   color: #efd8bd;
-  background: #414852;
+  background: #393E46;
 }
 
 
@@ -28,7 +28,7 @@
 
   box-sizing: border-box;
 
-  background: #353b45;
+  background: #222831;
 
   z-index: 2;
 
@@ -87,7 +87,7 @@
 
   box-sizing: border-box;
 
-  background: #414852;
+  background: #393E46;
 
   z-index: 1;
 }
@@ -262,7 +262,7 @@
   width: 100%;
   min-height: 600px;
 
-  background: #353b45;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -329,7 +329,7 @@
 
 .itam-feature-list p {
   margin: 0;
-
+  text-align: left;
   font-size: 17px;
 
   line-height: 1.5;
@@ -356,7 +356,7 @@
 
   border-radius: 28px;
 
-  background: #222831;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -622,7 +622,7 @@
   min-height: 580px;
   padding: 45px 30px 55px;
 
-  background: #414852;
+  background: #393E46;
   color: #efd8bd;
 
   box-sizing: border-box;
@@ -871,7 +871,7 @@
   width: 100%;
   min-height: 620px;
 
-  background: #353b45;
+  background: #222831;
   color: #efd8bd;
 
   padding: 30px 40px 70px;
@@ -1035,7 +1035,7 @@
   border: none;
   border-radius: 25px;
 
-  background: #20262f;
+  background: #393E46;
   color: #efd8bd;
 
   font-size: 16px;
@@ -1179,7 +1179,7 @@
 
   box-sizing: border-box;
 
-  background: #353b45;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -1203,7 +1203,7 @@
 
   height: 90px;
 
-  background: #252c36;
+  background: #222831;
 
   clip-path: polygon(
     0 38%,
@@ -1368,7 +1368,7 @@
 
 .itam-section-5-button {
   display: inline-flex;
-
+  width: 300px;
   align-items: center;
 
   justify-content: center;
@@ -1377,7 +1377,7 @@
 
   padding: 10px 16px;
 
-  background: #414852;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -1574,7 +1574,7 @@
 .section6 {
   width: 100%;
 
-  background: #252c36;
+  background: #222831;
   color: #efd8bd;
 
   padding: 45px 30px 55px;
@@ -1833,7 +1833,7 @@
 .section7 {
   width: 100%;
 
-  background: #353b45;
+  background: #222831;
   color: #efd8bd;
 
   padding: 65px 30px 55px;
@@ -1969,7 +1969,7 @@
 .section8 {
   width: 100%;
 
-  background: #353b45;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -2387,7 +2387,7 @@
 
   box-sizing: border-box;
 
-  background: #353b45;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -2410,7 +2410,7 @@
   width: 100%;
   height: 90px;
 
-  background: #252c36;
+  background: #393E46;
 
   clip-path: polygon(
     0 38%,
@@ -2634,13 +2634,13 @@
 
   margin-top: 16px;
 
-  min-width: 125px;
+  width: 200px;
 
   padding: 10px 16px;
 
   border: 1px solid #efd8bd;
 
-  background: transparent;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -2784,7 +2784,7 @@
 
   box-sizing: border-box;
 
-  background: #252c36;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -2910,7 +2910,7 @@
 
   border-radius: 25px;
 
-  background: #393E46;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -3249,7 +3249,7 @@
 
   box-sizing: border-box;
 
-  background: #252c36;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -3272,7 +3272,7 @@
   width: 100%;
   height: 95px;
 
-  background: #252c36;
+  background: #222831;
 
   clip-path: polygon(
     0 35%,
@@ -3475,7 +3475,7 @@
 
   width: 100%;
 
-  background: #353b45;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -3760,7 +3760,7 @@
   width: 100%;
   min-height: 540px;
 
-  background: #353b45;
+  background: #393E46 ;
   color: #efd8bd;
 
   display: flex;
@@ -3987,7 +3987,7 @@
   width: 100%;
   min-height: 580px;
 
-  background: #414852;
+  background: #222831;
   color: #efd8bd;
 
   padding: 25px 6% 70px;
@@ -4037,7 +4037,7 @@
   border: none;
   border-radius: 30px;
 
-  background: #222831;
+  background: #393E46;
   color: #efd8bd;
 
   font-size: 17px;
@@ -4253,7 +4253,7 @@
 
   padding: 45px 30px 70px;
 
-  background: #353b45;
+  background: #393E46;
   color: #efd8bd;
 
   overflow: hidden;
@@ -4301,14 +4301,14 @@
 ========================================= */
 
 .industry-card {
-  width: 135px;
+  /* width: 135px; */
   min-height: 230px;
   cursor: pointer;
   padding: 25px 14px 28px;
 
   box-sizing: border-box;
 
-  background: #353b45;
+  background: #222831;
 
   color: #efd8bd;
 
@@ -4496,7 +4496,7 @@
 .section17-faq {
   width: 100%;
 
-  background: #414852;
+  background: #393E46;
   color: #efd8bd;
 
   padding: 30px 16px 45px;
@@ -4522,7 +4522,7 @@
   font-size: 32px;
   line-height: 1.25;
   font-weight: 600;
-
+  text-align: center;
   color: #efd8bd;
 }
 

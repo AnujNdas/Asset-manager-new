@@ -249,7 +249,7 @@
 .manufacturing-section-2 {
   width: 100%;
 
-  background: #353b45;
+  background: #222831;
   color: #efd8bd;
 
   padding: 45px 0 0;
@@ -382,7 +382,7 @@
 
   padding: 35px 35px 55px;
 
-  background: #353b45;
+  background: #393E46;
   color: #efd8bd;
 
   overflow: hidden;
@@ -742,7 +742,7 @@
 .manufacturing-industrial-section {
   width: 100%;
   min-height: 390px;
-  background: #414852;
+  background: #222831;
   color: #efd8bd;
 
   display: flex;
@@ -831,7 +831,7 @@
   width: 100%;
   min-height: 620px;
 
-  background: #414852;
+  background: #393E46;
   color: #efd8bd;
 
   box-sizing: border-box;
@@ -947,7 +947,7 @@
   width: 100%;
   min-height: 235px;
 
-  background: #353b45;
+  /* background: #353b45; */
 
   display: flex;
   flex-direction: column;
@@ -1145,7 +1145,7 @@
   width: 100%;
   min-height: 590px;
 
-  background: #30353d;
+  background: #222831;
 
   display: grid;
   grid-template-columns: 46% 54%;
@@ -1323,7 +1323,7 @@
 
   border-radius: 25px;
 
-  background: #202731;
+  background: #393E46;
 
   color: #dfd0b8;
 
@@ -1422,7 +1422,7 @@
   width: 100%;
   min-height: 610px;
 
-  background: #222831;
+  background: #393E46;
 
   overflow: hidden;
 
@@ -1564,7 +1564,7 @@
 
   padding: 10px 17px;
 
-  background: #393E46;
+  background: #222831;
 
   color: #DFD0B8;
 
@@ -1632,7 +1632,7 @@
 
   z-index: 3;
 
-  /* background: #1B222C; */
+  background: #222831;
 
   clip-path: polygon(
     0 0,
@@ -1679,7 +1679,7 @@
   width: 100%;
   min-height: 590px;
 
-  background: #393E46;
+  background: #222831;
 
   padding: 70px 35px;
 
@@ -1925,7 +1925,7 @@
 
   min-height: 200px;
 
-  background: #222831;
+  background: #393E46;
 
   display: flex;
 
@@ -2050,7 +2050,7 @@
   width: 100%;
   min-height: 560px;
 
-  background: #393E46;
+  background: #222831;
 
   padding: 55px 55px;
 
@@ -2320,7 +2320,7 @@
   position: relative;
   min-height: 500px;
   padding: 70px 30px;
-  background: #222831;
+  background: #393E46;
   color: #DFD0B8;
   text-align: center;
   overflow: hidden;
@@ -2381,7 +2381,7 @@
   margin-bottom: 22px;
 
   border-radius: 50%;
-  background: #222831;
+  background: #393E46;
 
   font-size: 38px;
 }
@@ -2402,7 +2402,7 @@
   width: 100%;
   min-height: 380px;
 
-  background: #2f353f;
+  background: #222831;
 
   display: flex;
   justify-content: center;
@@ -2513,7 +2513,7 @@
   min-width: 100px;
   padding: 11px 18px;
 
-  background: #222831;
+  background: #393E46;
   color: #dfd0b8;
 
   text-decoration: none;
@@ -2538,7 +2538,7 @@
 ================================ */
 
 .manufacturing-section-13 {
-  min-height: 400px;
+  /* min-height: 400px; */
   background: #393e46;
   color: #dfd0b8;
   padding: 55px 8% 30px;
@@ -2550,7 +2550,8 @@
 
 .section-13-header {
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
 }
 
 .section-13-header h2 {
@@ -2559,7 +2560,7 @@
   line-height: 1.45;
   font-weight: 700;
   text-align: center;
-  flex: 1;
+  /* flex: 1; */
 }
 
 
@@ -2709,7 +2710,7 @@
   box-sizing: border-box;
   padding: 42px 18px 45px;
 
-  background: #222831;
+  background: #393E46;
   color: #DFD0B8;
 }
 
@@ -2718,7 +2719,7 @@
 
 .manufacturing-faq-section > h2 {
   margin: 0 0 30px 27px;
-
+  text-align: center;
   font-size: 32px;
   line-height: 1.2;
   font-weight: 700;

@@ -479,31 +479,31 @@ useEffect(() => {
 
     <ul className="healthcare-section-3-features">
       <li>
-        ☁️ <strong>Cloud, Hybrid & On Premise</strong> Deployment Options.
+         ☁️ Cloud, Hybrid & On Premise Deployment Options.
       </li>
 
       <li>
-        🛡️ <strong>GDPR & HIPAA</strong> Compliant.
+        🛡️ GDPR & HIPAA Compliant.
       </li>
 
       <li>
-        💳 <strong>No Credit Card Required.</strong> Start with 7 Days Free Trial.
+        💳 No Credit Card Required. Start with 7 Days Free Trial.
       </li>
 
       <li>
-        🎯 <strong>Track Every single Asset</strong> Across Its Full Lifecycle.
+        🎯 Track Every single Asset Across Its Full Lifecycle.
       </li>
 
       <li>
-        🚨 <strong>Proactive Alerts</strong> for Security Risks, Expirations & Changes.
+        🚨 Proactive Alerts for Security Risks, Expirations & Changes.
       </li>
 
       <li>
-        🤖 <strong>Automate License Reporting</strong> and Renewals.
+        🤖 Automate License Reporting and Renewals.
       </li>
 
       <li>
-        ⏱️ <strong>Unlock Modern Inventory</strong> & with Best Visibility.
+        ⏱️ Unlock Modern Inventory & with Best Visibility.
       </li>
     </ul>
 
