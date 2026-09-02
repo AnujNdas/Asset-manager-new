@@ -172,7 +172,7 @@
 
         background:transparent;
 
-        color:#fff;
+        color:#DFD0B8;
 
         font-size:30px;
 
@@ -2237,7 +2237,8 @@ font-size:15px;
   @media (max-width: 768px) {
   
     .navbar {
-      flex-direction: column;
+      flex-direction: row;
+      justify-content: space-between;
       gap: 1rem;
     }
     .hardware-content {

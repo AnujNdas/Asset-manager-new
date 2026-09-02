@@ -325,6 +325,12 @@ const Navbar = () => {
   <Link to="/contact" onClick={closeMenu}>
     Contact
   </Link>
+  <Link to="/pricing" onClick={closeMenu}>
+    Pricing
+  </Link>
+  <Link to="/blog" onClick={closeMenu}>
+    Blog
+  </Link>
 
 
   <hr />
