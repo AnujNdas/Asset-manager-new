@@ -481,7 +481,7 @@ export const blogs = [
   title:
     "Ghost Assets on Construction Sites: How Moving Machinery Unnoticed Drains Profitability",
 
-  author: "Poll Ghosh",
+  author: "Sourav Das",
 
   date: "July 2026",
 
@@ -1030,7 +1030,7 @@ export const blogs = [
     title:
       "Why Restaurants Pay Twice for Equipment Repairs (and How Warranty Tracking Saves Capital)",
 
-    author: "Poll Ghosh",
+    author: "Anuj Das",
 
     date: "July 2026",
 

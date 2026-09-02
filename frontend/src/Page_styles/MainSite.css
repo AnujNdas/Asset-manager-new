@@ -1904,7 +1904,7 @@ font-size:15px;
 
 .nav-menu > li > a:hover {
   text-decoration: underline;
-  background: #32363E;
+  background: #222831;
 }
 
 .nav-menu span {
@@ -2264,3 +2264,32 @@ font-size:15px;
       display: none;
     }
   }
+
+  /* =========================================
+   ASSETPEGASUS CUSTOM SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #222831;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #DFD0B8;
+  border-radius: 10px;
+  border: 2px solid #222831;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cfc09f;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #DFD0B8 #222831;
+}

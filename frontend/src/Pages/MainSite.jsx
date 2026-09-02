@@ -548,7 +548,7 @@ content="@assetpegasus"
           </h1>
 
           <p style={{ fontSize : "20px", fontWeight : "600"}}>
-          Track Insurance , Warranty , Renewal and Maintanence In One Dashboard.
+          Track Insurance, Warranty, Renewal and Maintanence In One Dashboard.
           </p>
           <p>Assetpegasus unites your physical and digital assets so you stay compliant and cut overhead by up to 40%.</p>
 
