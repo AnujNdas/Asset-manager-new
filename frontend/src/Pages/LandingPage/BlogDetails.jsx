@@ -776,9 +776,21 @@ const BlogDetails = () => {
 
     <div className="blog-more-grid">
 
-      {blogs
-        .filter((item) => item.slug !== blog.slug)
-        .map((item) => (
+      {(() => {
+
+        const currentIndex = blogs.findIndex(
+          (item) => item.id === blog.id
+        );
+
+        if (currentIndex === -1) return null;
+
+        const nextBlogs = [
+          blogs[(currentIndex + 1) % blogs.length],
+          blogs[(currentIndex + 2) % blogs.length],
+          blogs[(currentIndex + 3) % blogs.length],
+        ];
+
+        return nextBlogs.map((item) => (
 
           <article
             className="blog-more-card"
@@ -821,31 +833,36 @@ const BlogDetails = () => {
               </p>
 
 
-<button
-  className="blog-more-button"
-  onClick={() => {
-    const newTab = window.open(
-      `/blog/${item.slug}`,
-      "_blank"
-    );
+              <button
+                className="blog-more-button"
+                onClick={() => {
 
-    if (newTab) {
-      newTab.focus();
-    }
-  }}
->
-  {item.cta}
+                  const newTab = window.open(
+                    `/blog/${item.slug}`,
+                    "_blank"
+                  );
 
-  <span>
-    →
-  </span>
-</button>
+                  if (newTab) {
+                    newTab.focus();
+                  }
+
+                }}
+              >
+                {item.cta}
+
+                <span>
+                  →
+                </span>
+
+              </button>
 
             </div>
 
           </article>
 
-        ))}
+        ));
+
+      })()}
 
     </div>
 

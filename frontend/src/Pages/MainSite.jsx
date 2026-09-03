@@ -1171,9 +1171,10 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
       {blogs.map((blog) => (
 
-        <div
+        <Link
           className="blog-card"
           key={blog.id}
+          to={`/blog/${blog.slug}`}
         >
 
           <div className="blog-image">
@@ -1208,23 +1209,9 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
             </p>
 
-
-            <Link
-              to={`/blog/${blog.slug}`}
-              className="read-btn"
-            >
-
-              {blog.cta}
-
-              <span aria-hidden="true">
-                →
-              </span>
-
-            </Link>
-
           </div>
 
-        </div>
+        </Link>
 
       ))}
 

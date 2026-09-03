@@ -1722,6 +1722,7 @@ width: 2rem;
 
 .blog-card {
   transition: .35s;
+ flex-direction: column;
 }
 
 .blog-card:hover {
@@ -1754,6 +1755,7 @@ width: 2rem;
   line-height: 1.45;
   margin-bottom: 20px;
   font-weight: 500;
+  text-align: center;
 }
 
 .meta {

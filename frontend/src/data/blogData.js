@@ -458,10 +458,10 @@ export const blogs = [
         "Ready to reduce unplanned factory downtime?",
 
       description:
-        "Start a free 7-day trial with AssetPegasus and identify your maintenance gaps before they cause another shutdown.",
+        "Start a free 30-day trial with AssetPegasus and identify your maintenance gaps before they cause another shutdown.",
 
       buttonText:
-        "Start Free 7-Day Trial",
+        "Start Free 30-Day Trial",
 
       buttonLink:
         "/user/signup"
@@ -1006,7 +1006,7 @@ export const blogs = [
       "Centralize construction equipment records, assignments, transfers, maintenance, warranties, insurance, and asset history with AssetPegasus.",
 
     buttonText:
-      "Start Free 7-Day Trial",
+      "Start Free 30-Day Trial",
 
     buttonLink:
       "/user/signup"
@@ -1355,13 +1355,13 @@ export const blogs = [
 
     finalCta: {
       heading:
-        "Start a free 7-day trial with AssetPegasus",
+        "Start a free 30-day trial with AssetPegasus",
 
       text:
         "See which equipment warranties are active right now — before your next repair bill.",
 
       buttonText:
-        "Start Free 7-Day Trial",
+        "Start Free 30-Day Trial",
 
       buttonLink:
         "/user/signup"
@@ -1641,7 +1641,22 @@ export const blogs = [
 
           text:
             "Drivers or technicians can scan a QR code on a vehicle to instantly see its warranty status, service history, and next scheduled maintenance — before a repair shop is ever called."
-        }
+        },
+        {
+          title:
+            "7. Compliance-Ready Reporting",
+
+          text:
+            "AssetPegasus is built with GDPR- and HIPAA-aligned data handling, helping fleet operators stay audit-ready for regulatory and insurance reporting requirements."
+        },
+        {
+          title:
+            "8. Measurable Reduction in Total Cost of Ownership",
+
+          text:
+            "Fleet operators using centralized asset management platforms like AssetPegasus commonly report cutting operational and maintenance-related costs by up to 40%, largely by eliminating avoidable out-of-pocket repairs and extending vehicle lifespan."
+        },
+
 
       ]
     },
@@ -1765,46 +1780,6 @@ export const blogs = [
       ]
     },
 
-
-    // ===================================================
-    // SECTION 6
-    // ===================================================
-
-    {
-      id: "compliance",
-
-      number: 7,
-
-      heading:
-        "Compliance-Ready Reporting",
-
-      paragraphs: [
-
-        "AssetPegasus is built with GDPR- and HIPAA-aligned data handling, helping fleet operators stay audit-ready for regulatory and insurance reporting requirements."
-
-      ]
-    },
-
-
-    // ===================================================
-    // SECTION 7
-    // ===================================================
-
-    {
-      id: "total-cost-ownership",
-
-      number: 8,
-
-      heading:
-        "Measurable Reduction in Total Cost of Ownership",
-
-      paragraphs: [
-
-        "Fleet operators using centralized asset management platforms like AssetPegasus commonly report cutting operational and maintenance-related costs by up to 40%, largely by eliminating avoidable out-of-pocket repairs and extending vehicle lifespan."
-
-      ]
-    }
-
   ],
 
 
@@ -1888,13 +1863,13 @@ export const blogs = [
   finalCta: {
 
     heading:
-      "Start a free 7-day trial with AssetPegasus",
+      "Start a free 30-day trial with AssetPegasus",
 
     text:
       "Map your maintenance gaps before they cause another unplanned shutdown.",
 
     buttonText:
-      "Start Free 7-Day Trial",
+      "Start Free 30-Day Trial",
 
     buttonLink:
       "/user/signup"
@@ -1903,7 +1878,7 @@ export const blogs = [
 
 },
 {
-  id: 4,
+  id: 5,
 
   slug:
     "hidden-cost-missing-medical-equipment-hospitals-ghost-equipment",
@@ -2453,10 +2428,10 @@ export const blogs = [
       "Find Out How Much Ghost Equipment Is Hiding in Your Hospital",
 
     text:
-      "Start a free 7-day trial with AssetPegasus and identify missing, underutilized, and untracked medical equipment in your inventory.",
+      "Start a free 30-day trial with AssetPegasus and identify missing, underutilized, and untracked medical equipment in your inventory.",
 
     buttonText:
-      "Start Free 7-Day Trial",
+      "Start Free 30-Day Trial",
 
     buttonLink:
       "/user/signup"
