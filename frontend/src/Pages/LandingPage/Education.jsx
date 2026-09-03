@@ -464,7 +464,7 @@ useEffect(() => {
 
           <li>
             <span>💳</span>
-            No Credit Card Required. Start with 7 Days Free Trial.
+            No Credit Card Required. Start with 30 Days Free Trial.
           </li>
 
           <li>

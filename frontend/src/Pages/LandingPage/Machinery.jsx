@@ -952,7 +952,7 @@ const handleNavigateItam = () => {
   rel="noopener noreferrer"
    className="warranty-cta">
          
-            Start 7 Day Free Trial
+            Start 30 Days Free Trial
           </Link>
 
         </div>

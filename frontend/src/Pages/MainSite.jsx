@@ -347,7 +347,7 @@ const rightItemssoftware = [
   const featuresSpecial = [
     "☁️ Cloud, Hybrid & On Premise Deployment Options.",
     "🛡️ GDPR & HIPAA Compliant.",
-    "💳 No Credit Card Required. Start with 7 Days Free Trial.",
+    "💳 No Credit Card Required. Start with 30 Days Free Trial.",
     "🎯 Track Every Single Asset Across Its Full Lifecycle.",
     "🚨 Proactive Alerts for Security Risks, Expirations & Changes.",
     "🤖 Automate License Reporting and Renewals.",
@@ -1119,7 +1119,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </p>
 
         <button className="signup-btn" onClick={handleSignupClick}>
-        7 Days Free Trial
+        30 Days Free Trial
         </button>
 
       </section>

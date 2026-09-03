@@ -518,7 +518,7 @@ useEffect(() => {
 
     <div className="travel-feature-item">
       <span>💳</span>
-      <p>No Credit Card Required. Start with 7 Days Free Trial.</p>
+      <p>No Credit Card Required. Start with 30 Days Free Trial.</p>
     </div>
 
     <div className="travel-feature-item">
@@ -556,7 +556,7 @@ useEffect(() => {
 
     <div className="travel-carousel-top">
 
-      <h2>Free Trial — 7 Days</h2>
+      <h2>Free Trial — 30 Days</h2>
 
       <Link to="/user/signup"
       target="_blank"

@@ -436,7 +436,7 @@ const handleSignIn = () => {
     <ul>
       <li>☁️ Cloud, Hybrid &amp; On Premise Deployment Options.</li>
       <li>🛡️ GDPR &amp; HIPAA Compliant.</li>
-      <li>💳 No Credit Card Required. Start with 7 Days Free Trial.</li>
+      <li>💳 No Credit Card Required. Start with 30 Days Free Trial.</li>
       <li>🎯 Track Every single Asset Across Its Full Lifecycle.</li>
       <li>🚨 Proactive Alerts for Security Risks, Expirations &amp; Changes.</li>
       <li>🤖 Automate License Reporting and Renewals.</li>

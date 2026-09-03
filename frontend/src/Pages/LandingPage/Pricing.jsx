@@ -216,7 +216,7 @@ const Pricing = () => {
   <div className="pricing-trial-content">
 
     <div className="pricing-trial-text">
-      <span>7 Days Free Trial</span>
+      <span>30 Days Free Trial</span>
       <span> – Machine & IT asset lifecycle</span>
       <br />
       <span>management platform</span>

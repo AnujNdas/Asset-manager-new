@@ -923,7 +923,7 @@ useEffect(() => {
   rel="noopener noreferrer"
             className="itam-trial-button"
           >
-            Start 7 Day Free Trial
+            Start 30 Days Free Trial
           </Link>
 
         </div>
@@ -1450,7 +1450,7 @@ useEffect(() => {
              target="_blank"
   rel="noopener noreferrer"
   >
-            Start 7 Day Free Trial
+            Start 30 Days Free Trial
           </Link>
 
         </div>
