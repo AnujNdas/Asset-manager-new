@@ -1368,4 +1368,1100 @@ export const blogs = [
     }
   },
 
+  {
+  id: 4,
+
+  // =====================================================
+  // BASIC BLOG INFORMATION
+  // =====================================================
+
+  slug:
+    "how-fleet-owners-avoid-overpaying-for-repairs",
+
+  image:
+    "/images/BlogImages/fleetBlog2.webp",
+
+  title:
+    "How Fleet Owners Avoid Overpaying for Repairs with Integrated Policy & Warranty Management",
+
+  author: "Sourav Das",
+
+  date: "July 2026",
+
+  category:
+    "Logistics & Transport Asset Management",
+
+  cta:
+    "Read the fleet insights",
+
+
+  // =====================================================
+  // SEO
+  // =====================================================
+
+  metaTitle:
+    "Fleet Repair Cost Management — Stop Overpaying with Warranty Tracking",
+
+  metaDescription:
+    "Fleet owners overpay for repairs when warranty and insurance data are disconnected. Learn how integrated policy tracking cuts fleet maintenance costs.",
+
+  keywords: [
+
+    "fleet repair cost management",
+
+    "fleet warranty tracking",
+
+    "fleet maintenance software",
+
+    "avoid overpaying fleet repairs",
+
+    "vehicle warranty management software",
+
+    "fleet insurance policy tracking",
+
+    "commercial fleet maintenance costs",
+
+    "fleet asset lifecycle management",
+
+    "preventive maintenance for fleet vehicles",
+
+    "multi-vehicle warranty tracking",
+
+    "fleet total cost of ownership"
+
+  ],
+
+
+  // =====================================================
+  // QUICK ANSWER
+  // =====================================================
+
+  quickAnswer:
+    "Fleet owners overpay for repairs when vehicle warranty and insurance policy data are disconnected from day-to-day maintenance decisions. A driver reports a mechanical issue, the fleet manager sends the vehicle to the nearest shop, and the invoice gets paid — often without anyone checking whether the repair, part, or component was still covered under a manufacturer warranty, extended service contract, or insurance policy. Integrated policy and warranty management software solves this by linking every vehicle's coverage status directly to its maintenance record, so fleet managers can verify coverage before authorizing a single repair, not after the invoice has already been paid.",
+
+
+  // =====================================================
+  // MAIN CONTENT
+  // =====================================================
+
+  sections: [
+
+
+    // ===================================================
+    // SECTION 1
+    // ===================================================
+
+    {
+      id: "why-fleet-owners-overpay",
+
+      heading:
+        "Why Do Fleet Owners Overpay for Repairs?",
+
+      paragraphs: [
+
+        "Fleet repair overspend rarely comes from bad negotiating with repair shops. It comes from a structural gap between where coverage information lives and where repair decisions get made.",
+
+        "The most common causes include:"
+
+      ],
+
+      points: [
+
+        {
+          title:
+            "Warranty data lives outside the maintenance workflow",
+
+          text:
+            "Purchase records, extended warranties, and insurance policies sit in separate files, spreadsheets, or vendor portals that maintenance teams don't check in real time."
+        },
+
+        {
+          title:
+            "Decentralized fleets, decentralized decisions",
+
+          text:
+            "When vehicles are spread across regions or depots, local managers make repair calls without visibility into national fleet-level coverage."
+        },
+
+        {
+          title:
+            "High vehicle turnover",
+
+          text:
+            "As fleets add, replace, and retire vehicles, warranty and policy tracking gets outdated fast if it isn't automated."
+        },
+
+        {
+          title:
+            "Component-level coverage gets missed",
+
+          text:
+            "Warranties often cover specific parts — transmissions, drivetrains, and emissions systems — separately from the vehicle as a whole, and this nuance is easy to lose without a centralized system."
+        },
+
+        {
+          title:
+            "Time pressure drives fast decisions",
+
+          text:
+            "A down vehicle means lost routes and missed deliveries, so managers authorize repairs quickly rather than pausing to verify coverage."
+        }
+
+      ]
+    },
+
+
+    // ===================================================
+    // SECTION 2
+    // ===================================================
+
+    {
+      id: "repair-overspend-cost",
+
+      heading:
+        "What Does This Actually Cost a Fleet?",
+
+      paragraphs: [
+
+        "None of these causes are about vehicle condition. They're about information not reaching the person authorizing the repair invoice.",
+
+        "The financial impact scales directly with fleet size, and it compounds quietly over time.",
+
+        "For a fleet running even 50 vehicles, a handful of missed warranty claims per year can quietly cost tens of thousands of dollars — money that should never have left the business."
+
+      ],
+
+      table: {
+
+        headers: [
+          "Cost Category",
+          "Impact"
+        ],
+
+        rows: [
+
+          [
+            "Duplicate payment",
+            "Repairs covered under warranty get paid out of pocket anyway"
+          ],
+
+          [
+            "Lapsed coverage repairs",
+            "Warranties expire unnoticed, converting free repairs into full-cost invoices"
+          ],
+
+          [
+            "Component-level misses",
+            "Covered parts such as transmissions, engines, and emissions systems get billed as standard repairs"
+          ],
+
+          [
+            "Vehicle downtime",
+            "Delayed claims processing extends the time a vehicle is off the road"
+          ],
+
+          [
+            "Administrative overhead",
+            "Staff hours are spent manually verifying coverage after the fact, if at all"
+          ],
+
+          [
+            "Total cost of ownership",
+            "Untracked warranties inflate the real per-vehicle maintenance cost used for budgeting"
+          ]
+
+        ]
+      }
+    },
+
+
+    // ===================================================
+    // SECTION 3
+    // ===================================================
+
+    {
+      id: "integrated-policy-management",
+
+      heading:
+        "How Does Integrated Policy & Warranty Management Fix This?",
+
+      paragraphs: [
+
+        "The fix isn't better repair shop negotiation — it's connecting coverage data directly to the maintenance decision point.",
+
+        "This is exactly what a centralized asset management platform like AssetPegasus is built to do for fleet operations."
+
+      ],
+
+      points: [
+
+        {
+          title:
+            "1. Centralized Warranty and Insurance Records Per Vehicle",
+
+          text:
+            "AssetPegasus stores every vehicle's warranty terms, insurance policy details, and coverage expiration dates in one system, so any fleet manager can check coverage in seconds before authorizing a repair."
+        },
+
+        {
+          title:
+            "2. Full Vehicle Lifecycle Tracking",
+
+          text:
+            "Every vehicle gets a complete record — purchase date, service history, current condition, and assigned depot — replacing scattered spreadsheets with a single source of truth across the entire fleet."
+        },
+
+        {
+          title:
+            "3. Proactive Coverage Expiration Alerts",
+
+          text:
+            "Instead of discovering a lapsed warranty after paying a full-price repair bill, AssetPegasus sends automated alerts before coverage expires, giving fleet managers time to renew, extend, or budget for the change."
+        },
+
+        {
+          title:
+            "4. Automated Preventive Maintenance Scheduling",
+
+          text:
+            "AssetPegasus automates preventive maintenance scheduling so vehicles are serviced on time under warranty terms, which both keeps coverage valid and reduces breakdown frequency in the first place."
+        },
+
+        {
+          title:
+            "5. Multi-Depot, Cloud-Based Visibility",
+
+          text:
+            "For fleets spread across multiple depots or regions, AssetPegasus provides a single cloud dashboard showing every vehicle's maintenance status and coverage — no local installs, accessible from any device."
+        },
+
+        {
+          title:
+            "6. QR Code Tracking for Drivers and Technicians",
+
+          text:
+            "Drivers or technicians can scan a QR code on a vehicle to instantly see its warranty status, service history, and next scheduled maintenance — before a repair shop is ever called."
+        }
+
+      ]
+    },
+
+
+    // ===================================================
+    // SECTION 4
+    // ===================================================
+
+    {
+      id: "disconnected-vs-integrated",
+
+      heading:
+        "Disconnected Records vs. Integrated Policy Management",
+
+      table: {
+
+        headers: [
+          "Requirement",
+          "Disconnected Records",
+          "Integrated Management"
+        ],
+
+        rows: [
+
+          [
+            "Coverage check",
+            "Rarely done before repair authorization",
+            "Verified before repair is approved"
+          ],
+
+          [
+            "Vehicle visibility",
+            "Depot-by-depot, manual tracking",
+            "Centralized, fleet-wide dashboard"
+          ],
+
+          [
+            "Warranty capture",
+            "Frequently missed or expired unnoticed",
+            "Tracked with proactive alerts"
+          ],
+
+          [
+            "Maintenance timing",
+            "Reactive, after breakdown",
+            "Scheduled, preventive"
+          ],
+
+          [
+            "Cost predictability",
+            "Inconsistent, hard to budget",
+            "Clear, trackable total cost of ownership"
+          ]
+
+        ]
+      }
+    },
+
+
+    // ===================================================
+    // SECTION 5
+    // ===================================================
+
+    {
+      id: "fleet-checklist",
+
+      heading:
+        "A Simple Checklist for Fleet Owners to Start Cutting Repair Overspend",
+
+      paragraphs: [
+
+        "Fleet owners can start reducing repair overspend by making coverage verification part of the standard maintenance workflow."
+
+      ],
+
+      list: [
+
+        {
+          title:
+            "Consolidate every vehicle's warranty and insurance documents into one system",
+
+          description: ""
+        },
+
+        {
+          title:
+            "Set expiration alerts for all active warranties and policies before they lapse",
+
+          description: ""
+        },
+
+        {
+          title:
+            "Require coverage verification as a step before any repair invoice is approved",
+
+          description: ""
+        },
+
+        {
+          title:
+            "Track component-level warranties separately from whole-vehicle coverage",
+
+          description: ""
+        },
+
+        {
+          title:
+            "Review fleet-wide maintenance and repair cost data monthly, not annually",
+
+          description: ""
+        },
+
+        {
+          title:
+            "Standardize this process across every depot, not just headquarters",
+
+          description: ""
+        }
+
+      ]
+    },
+
+
+    // ===================================================
+    // SECTION 6
+    // ===================================================
+
+    {
+      id: "compliance",
+
+      number: 7,
+
+      heading:
+        "Compliance-Ready Reporting",
+
+      paragraphs: [
+
+        "AssetPegasus is built with GDPR- and HIPAA-aligned data handling, helping fleet operators stay audit-ready for regulatory and insurance reporting requirements."
+
+      ]
+    },
+
+
+    // ===================================================
+    // SECTION 7
+    // ===================================================
+
+    {
+      id: "total-cost-ownership",
+
+      number: 8,
+
+      heading:
+        "Measurable Reduction in Total Cost of Ownership",
+
+      paragraphs: [
+
+        "Fleet operators using centralized asset management platforms like AssetPegasus commonly report cutting operational and maintenance-related costs by up to 40%, largely by eliminating avoidable out-of-pocket repairs and extending vehicle lifespan."
+
+      ]
+    }
+
+  ],
+
+
+  // =====================================================
+  // FAQ
+  // =====================================================
+
+  faq: [
+
+    {
+      question:
+        "Why do fleet owners overpay for vehicle repairs?",
+
+      answer:
+        "Fleet owners overpay because warranty and insurance coverage data is often disconnected from the maintenance workflow, so repairs get authorized and paid before anyone checks whether the repair was already covered."
+    },
+
+    {
+      question:
+        "What is fleet warranty tracking software?",
+
+      answer:
+        "Fleet warranty tracking software centralizes every vehicle's warranty terms, insurance policy details, and expiration dates in one system, allowing fleet managers to verify coverage before authorizing a repair."
+    },
+
+    {
+      question:
+        "How much can fleets save by tracking warranties centrally?",
+
+      answer:
+        "Fleet operators using centralized asset management platforms commonly report reducing operational and maintenance-related costs by up to 40% by capturing warranty coverage and reducing avoidable repairs."
+    },
+
+    {
+      question:
+        "Can warranty tracking software manage multiple fleet depots?",
+
+      answer:
+        "Yes. Platforms like AssetPegasus provide a centralized cloud dashboard that tracks vehicle warranty status, maintenance history, and repair records across every depot or region in a fleet."
+    },
+
+    {
+      question:
+        "What is total cost of ownership in fleet management?",
+
+      answer:
+        "Total cost of ownership is the full cost of operating a vehicle over its lifecycle, including purchase price, maintenance, repairs, and depreciation. Untracked warranties inflate this figure by adding avoidable repair costs."
+    },
+
+    {
+      question:
+        "How does preventive maintenance reduce fleet repair costs?",
+
+      answer:
+        "Preventive maintenance keeps vehicles serviced on schedule, which both maintains warranty validity and reduces the frequency of breakdowns that lead to costly, unplanned repairs."
+    },
+
+    {
+      question:
+        "When should fleet managers check a vehicle's warranty status?",
+
+      answer:
+        "Fleet managers should check warranty status before authorizing any repair, ideally through a centralized system that displays coverage automatically rather than relying on manual lookup after a breakdown."
+    }
+
+  ],
+
+
+  // =====================================================
+  // CONCLUSION
+  // =====================================================
+
+  conclusion:
+    "Start a free 7-day trial with AssetPegasus to map your maintenance gaps before they cause another unplanned shutdown.",
+
+
+  // =====================================================
+  // FINAL CTA
+  // =====================================================
+
+  finalCta: {
+
+    heading:
+      "Start a free 7-day trial with AssetPegasus",
+
+    text:
+      "Map your maintenance gaps before they cause another unplanned shutdown.",
+
+    buttonText:
+      "Start Free 7-Day Trial",
+
+    buttonLink:
+      "/user/signup"
+
+  }
+
+},
+{
+  id: 4,
+
+  slug:
+    "hidden-cost-missing-medical-equipment-hospitals-ghost-equipment",
+
+  image:
+    "/images/BlogImages/equipmentBlog2.webp",
+
+  title:
+    'The Hidden Cost of Missing Medical Equipment: How Hospitals Lose Millions to "Ghost Equipment"',
+
+  author: "Sourav Das",
+
+  date: "July 2026",
+
+  category: "Healthcare Asset Management",
+
+  metaTitle:
+    "Ghost Equipment in Hospitals — Hidden Cost of Missing Medical Assets",
+
+  metaDescription:
+    'Hospitals lose millions to "ghost equipment" — assets that exist on paper but cannot be found. Learn why it happens and how tracking software fixes it.',
+
+  keywords: [
+    "ghost equipment hospitals",
+    "missing medical equipment cost",
+    "hospital asset tracking software",
+    "medical equipment management",
+    "hospital equipment inventory management",
+    "medical device tracking software",
+    "hospital asset lifecycle management",
+    "biomedical equipment tracking",
+    "hospital capital equipment loss",
+    "RFID medical equipment tracking",
+    "hospital equipment utilization rate"
+  ],
+
+  cta:
+    "Read the healthcare insights",
+
+  // =======================================================
+  // QUICK ANSWER
+  // =======================================================
+
+  quickAnswer:
+    "Ghost equipment refers to medical assets that still exist in a hospital's inventory or financial records but can no longer be physically located. These may include infusion pumps, monitors, wheelchairs, and other mobile devices that are moved between departments, lost in storage, or quietly disposed of without an updated record. Research indicates that 10–20% of a hospital's mobile assets are lost or stolen during their useful life, at an average replacement cost of roughly $3,000 per item. A typical 300-bed hospital can lose an estimated $1–2 million annually on missing equipment alone. Centralized, real-time asset tracking helps eliminate this visibility gap by maintaining an updated record of each device's location, condition, and lifecycle status.",
+
+  // =======================================================
+  // MAIN CONTENT
+  // =======================================================
+
+  sections: [
+
+    // -------------------------------------------------------
+    // SECTION 1
+    // -------------------------------------------------------
+
+    {
+      id: "what-is-ghost-equipment",
+
+      heading:
+        'What Is "Ghost Equipment" in Hospitals?',
+
+      paragraphs: [
+        "Ghost equipment is any medical asset that a hospital's records say it owns, but that staff cannot physically locate when needed.",
+
+        "It typically falls into three categories:"
+      ],
+
+      points: [
+
+        {
+          title:
+            "1. Misplaced Equipment",
+
+          text:
+            "Devices moved between units, floors, or departments without an updated location record."
+        },
+
+        {
+          title:
+            "2. Hoarded Equipment",
+
+          text:
+            "Staff who are tired of hunting for shared devices may quietly stash pumps or monitors in their own unit's supply closet as a rational, if inefficient, response to an unreliable system."
+        },
+
+        {
+          title:
+            "3. Disposed or Retired Equipment",
+
+          text:
+            "Assets removed from service but never formally taken off the books, causing them to continue appearing as active inventory."
+        }
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 2
+    // -------------------------------------------------------
+
+    {
+      id: "cost-of-ghost-equipment",
+
+      heading:
+        "How Much Does Ghost Equipment Actually Cost Hospitals?",
+
+      paragraphs: [
+        "The financial impact of ghost equipment is well documented across healthcare asset management research, and the losses can be much larger than administrators expect.",
+
+        "The result is a gap between the hospital's recorded asset count and its actual usable equipment — a gap that directly translates into wasted spending."
+      ],
+
+      table: {
+
+        headers: [
+          "Cost Category",
+          "Impact"
+        ],
+
+        rows: [
+
+          [
+            "Emergency equipment rental/replacement",
+            "~$3,000 per lost or stolen item, on average"
+          ],
+
+          [
+            "Duplicate purchasing",
+            "Hospitals overbuy 20–30% of devices to offset hidden inventory"
+          ],
+
+          [
+            "Clinical time loss",
+            "Up to 1 hour per shift searching, contributing to billions in lost productivity nationally"
+          ],
+
+          [
+            "Underutilization",
+            "Roughly 40% of equipment sits idle or duplicated"
+          ],
+
+          [
+            "Compliance and audit risk",
+            "Inability to verify equipment maintenance and calibration records"
+          ],
+
+          [
+            "Preventive maintenance gaps",
+            "Devices can be missed during scheduled servicing because their location is unknown"
+          ]
+        ]
+      },
+
+      paragraphsAfterTable: [
+        "10–20% of a hospital's mobile assets are lost or stolen during their useful life, at an average cost of about $3,000 per item.",
+
+        "A typical 300-bed hospital loses an estimated $1–2 million annually on missing equipment alone.",
+
+        "Nurses can spend up to an hour per shift searching for misplaced equipment, contributing to an estimated $14 billion in lost productivity across the U.S. healthcare industry each year.",
+
+        "Two out of five pieces of medical equipment — roughly 40% — are underutilized, while hospitals commonly purchase or rent 20–30% more devices than they actually need to compensate for equipment they cannot locate.",
+
+        "After installing a real-time location system, Texoma Medical Center discovered that 75% of its PCA pumps were actually available, even though staff believed 99% were unavailable. This finding led to roughly $88,000 in avoided pump replacement costs.",
+
+        "Santa Clara Valley Medical Center reported that 383 items valued at more than $11 million went missing between 2011 and 2014."
+      ],
+
+      takeaway:
+        "Ghost equipment creates a gap between what a hospital believes it owns and what is actually available, leading to unnecessary purchases, rentals, lost clinical time, underutilization, and compliance risks."
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 3
+    // -------------------------------------------------------
+
+    {
+      id: "why-ghost-equipment-happens",
+
+      heading:
+        "Why Does Ghost Equipment Keep Happening?",
+
+      paragraphs: [
+        "Ghost equipment is not caused by staff negligence. It is caused by the absence of a real-time tracking system in an environment where equipment moves constantly.",
+
+        "The most common root causes include:"
+      ],
+
+      points: [
+
+        {
+          title:
+            "Manual, Spreadsheet-Based Inventory",
+
+          text:
+            "Static records cannot keep up with equipment that moves dozens of times a day across a large healthcare facility."
+        },
+
+        {
+          title:
+            "No Standardized Check-In/Check-Out Process",
+
+          text:
+            "Devices leave storage without any digital trail showing where they went."
+        },
+
+        {
+          title:
+            "Fragmented Departmental Ownership",
+
+          text:
+            "Different units purchase and track equipment independently, creating limited hospital-wide visibility."
+        },
+
+        {
+          title:
+            "Hoarding as a Coping Mechanism",
+
+          text:
+            "When staff are not confident equipment will be available when needed, they may stash devices locally, which deepens the shortage system-wide."
+        },
+
+        {
+          title:
+            "Retired Assets Left on the Books",
+
+          text:
+            "Disposed equipment is not formally removed from inventory, inflating recorded asset counts that no longer reflect reality."
+        }
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 4
+    // -------------------------------------------------------
+
+    {
+      id: "eliminate-ghost-equipment",
+
+      heading:
+        "How Do Hospitals Eliminate Ghost Equipment?",
+
+      paragraphs: [
+        "The solution is shifting from static, manual inventory records to a centralized, continuously updated asset management system.",
+
+        "This is the visibility gap that a platform like AssetPegasus is designed to address for healthcare facilities."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 5
+    // -------------------------------------------------------
+
+    {
+      id: "full-equipment-lifecycle",
+
+      number: 1,
+
+      heading:
+        "Full Equipment Lifecycle Tracking",
+
+      paragraphs: [
+        "AssetPegasus maintains a single record for every medical asset, including purchase date, department assignment, service history, and current condition.",
+
+        "This replaces scattered spreadsheets with one accurate source of truth for hospital equipment."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 6
+    // -------------------------------------------------------
+
+    {
+      id: "real-time-location-status",
+
+      number: 2,
+
+      heading:
+        "Real-Time Location and Status Visibility",
+
+      paragraphs: [
+        "Instead of relying on staff memory or manual logs, AssetPegasus keeps equipment records continuously updated.",
+
+        "This directly addresses the visibility gap associated with lost, hoarded, and underutilized inventory."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 7
+    // -------------------------------------------------------
+
+    {
+      id: "qr-code-scanning",
+
+      number: 3,
+
+      heading:
+        "QR Code Scanning for Instant Verification",
+
+      paragraphs: [
+        "Staff can scan a QR code directly on a device to confirm its identity, location history, and maintenance status in seconds.",
+
+        "This turns equipment checks into a fast verification task instead of a floor-by-floor search."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 8
+    // -------------------------------------------------------
+
+    {
+      id: "preventive-maintenance",
+
+      number: 4,
+
+      heading:
+        "Automated Preventive Maintenance Scheduling",
+
+      paragraphs: [
+        "AssetPegasus automates maintenance scheduling so every tracked device can be serviced and calibrated on time.",
+
+        "This helps close the compliance gap created by equipment that maintenance teams cannot locate."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 9
+    // -------------------------------------------------------
+
+    {
+      id: "warranty-insurance",
+
+      number: 5,
+
+      heading:
+        "Warranty and Insurance Tracking",
+
+      paragraphs: [
+        "Built-in warranty and insurance tracking helps hospitals avoid paying out of pocket for repairs or replacements on equipment that is still covered.",
+
+        "This is especially important when missing equipment and poor asset visibility already make warranty information difficult to verify."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 10
+    // -------------------------------------------------------
+
+    {
+      id: "multi-department-dashboard",
+
+      number: 6,
+
+      heading:
+        "Multi-Department, Cloud-Based Dashboard",
+
+      paragraphs: [
+        "For hospitals and health systems with multiple facilities, AssetPegasus provides one cloud dashboard showing equipment status and location trends across departments and sites.",
+
+        "This gives healthcare organizations centralized visibility without requiring separate local systems."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 11
+    // -------------------------------------------------------
+
+    {
+      id: "compliance-documentation",
+
+      number: 7,
+
+      heading:
+        "Compliance-Ready Documentation",
+
+      paragraphs: [
+        "AssetPegasus is built with GDPR- and HIPAA-aligned data handling, helping hospitals stay audit-ready for equipment calibration, maintenance, and safety compliance requirements."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 12
+    // -------------------------------------------------------
+
+    {
+      id: "measurable-capital-savings",
+
+      number: 8,
+
+      heading:
+        "Measurable Capital Savings",
+
+      paragraphs: [
+        "Healthcare facilities using centralized asset management platforms like AssetPegasus commonly report cutting equipment-related operational costs by up to 40%.",
+
+        "Potential savings come from eliminating duplicate purchases, unnecessary rentals, and untracked equipment losses."
+      ]
+    },
+
+
+    // -------------------------------------------------------
+    // SECTION 13
+    // -------------------------------------------------------
+
+    {
+      id: "manual-vs-centralized-tracking",
+
+      heading:
+        "Manual Inventory vs. Centralized Asset Tracking",
+
+      table: {
+
+        headers: [
+          "Requirement",
+          "Manual/Spreadsheet Tracking",
+          "Centralized Tracking (AssetPegasus)"
+        ],
+
+        rows: [
+
+          [
+            "Location accuracy",
+            "Outdated within hours",
+            "Continuously updated"
+          ],
+
+          [
+            "Staff search time",
+            "Up to 1 hour per shift",
+            "Seconds via QR lookup"
+          ],
+
+          [
+            "Maintenance compliance",
+            "Frequently missed on lost assets",
+            "Automated, scheduled"
+          ],
+
+          [
+            "Warranty capture",
+            "Often missed",
+            "Tracked with proactive alerts"
+          ],
+
+          [
+            "Capital visibility",
+            "Fragmented by department",
+            "Unified across the facility"
+          ]
+        ]
+      }
+    }
+
+  ],
+
+
+  // =======================================================
+  // FAQ
+  // =======================================================
+
+  faqs: [
+
+    {
+      question:
+        "What is ghost equipment in a hospital?",
+
+      answer:
+        "Ghost equipment refers to medical assets that still appear in a hospital's inventory or financial records but cannot be physically located, often because they were misplaced, hoarded by a department, or disposed of without an updated record."
+    },
+
+    {
+      question:
+        "How much does ghost equipment cost hospitals?",
+
+      answer:
+        "Research shows that 10–20% of a hospital's mobile assets are lost or stolen during their useful life at roughly $3,000 per item, while a typical 300-bed hospital can lose an estimated $1–2 million annually on missing equipment alone."
+    },
+
+    {
+      question:
+        "Why is medical equipment hard to track in hospitals?",
+
+      answer:
+        "Mobile devices such as infusion pumps and monitors move between departments constantly. Without a centralized, real-time tracking system, manual or spreadsheet-based records quickly become outdated."
+    },
+
+    {
+      question:
+        "How does asset tracking software reduce hospital equipment loss?",
+
+      answer:
+        "Asset tracking software maintains a continuously updated record of each device's location, condition, and maintenance status. Tools such as QR code scanning can make equipment verification faster and more accurate."
+    },
+
+    {
+      question:
+        "Does ghost equipment affect patient care?",
+
+      answer:
+        "Yes. Nurses can spend up to an hour per shift searching for missing equipment, time that could otherwise be spent on direct patient care. Delays in locating critical devices can also affect care quality and discharge times."
+    },
+
+    {
+      question:
+        "Can asset tracking help hospitals stay compliant?",
+
+      answer:
+        "Yes. Centralized tracking keeps equipment maintenance, calibration, and warranty records current and accessible, supporting regulatory and safety audit requirements."
+    },
+
+    {
+      question:
+        "How much can hospitals save with centralized equipment management?",
+
+      answer:
+        "Healthcare facilities using centralized asset management platforms commonly report reducing equipment-related operational costs by up to 40% by eliminating ghost equipment, duplicate purchases, and unnecessary rentals."
+    }
+
+  ],
+
+
+  // =======================================================
+  // CONCLUSION
+  // =======================================================
+
+  conclusion:
+    "Ghost equipment is ultimately a visibility problem. Hospitals can reduce unnecessary purchases, rentals, equipment loss, clinical search time, and compliance gaps by maintaining a centralized and continuously updated record of every medical asset. With real-time tracking, QR-based identification, lifecycle management, maintenance scheduling, warranty tracking, and centralized reporting, healthcare organizations can bring their recorded inventory closer to the equipment actually available on the floor.",
+
+
+  // =======================================================
+  // FINAL CTA
+  // =======================================================
+
+  finalCta: {
+
+    heading:
+      "Find Out How Much Ghost Equipment Is Hiding in Your Hospital",
+
+    text:
+      "Start a free 7-day trial with AssetPegasus and identify missing, underutilized, and untracked medical equipment in your inventory.",
+
+    buttonText:
+      "Start Free 7-Day Trial",
+
+    buttonLink:
+      "/user/signup"
+
+  }
+},
+
 ];
