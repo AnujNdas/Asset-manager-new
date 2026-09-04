@@ -1169,51 +1169,47 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
     <div className="blog-grid">
 
-      {blogs.map((blog) => (
+{blogs.map((blog) => (
 
-        <Link
-          className="blog-card"
-          key={blog.id}
-          to={`/blog/${blog.slug}`}
-        >
+  <Link
+    className="blog-card"
+    key={blog.id}
+    to={`/blog/${blog.slug}`}
+         target="_blank"
+  rel="noopener noreferrer"
+  >
 
-          <div className="blog-image">
+    <div className="blog-image">
+      <img
+        src={blog.image}
+        alt={blog.title}
+      />
+    </div>
 
-            <img
-              src={blog.image}
-              alt={blog.title}
-            />
+    <div className="blog-content">
 
-          </div>
+      <h3>
+        {blog.title}
+      </h3>
 
+      <p className="meta">
+        By{" "}
+        <span>
+          {blog.author}
+        </span>
 
-          <div className="blog-content">
+        <span className="dot">
+          •
+        </span>
 
-            <h3>
-              {blog.title}
-            </h3>
+        {blog.date}
+      </p>
 
+    </div>
 
-            <p className="meta">
+  </Link>
 
-              By{" "}
-              <span>
-                {blog.author}
-              </span>
-
-              <span className="dot">
-                •
-              </span>
-
-              {blog.date}
-
-            </p>
-
-          </div>
-
-        </Link>
-
-      ))}
+))}
 
     </div>
 
