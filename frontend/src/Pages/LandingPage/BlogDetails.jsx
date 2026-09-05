@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-
+import { Link } from "react-router-dom";
 import { blogs } from "../../data/blogData";
 
 import {
@@ -321,21 +321,29 @@ const BlogDetails = () => {
                 QUICK ANSWER
             =============================================== */}
 
-            {blog.quickAnswer && (
+{blog.quickAnswer && (
 
-              <div className="blog-details-quick-answer">
+  <div className="blog-details-quick-answer">
 
-                <h2>
-                  Quick Answer
-                </h2>
+    <h2>
+      Quick Answer
+    </h2>
 
-                <p>
-                  {blog.quickAnswer}
-                </p>
+    {Array.isArray(blog.quickAnswer) ? (
+      blog.quickAnswer.map((paragraph, index) => (
+        <p key={index}>
+          {paragraph}
+        </p>
+      ))
+    ) : (
+      <p>
+        {blog.quickAnswer}
+      </p>
+    )}
 
-              </div>
+  </div>
 
-            )}
+)}
 
 
             {/* ===============================================
@@ -710,6 +718,32 @@ const BlogDetails = () => {
     </button>
 
   </section>
+
+)}
+
+{blog.internalLinks?.length > 0 && (
+
+  <div className="blog-internal-links">
+
+    {blog.internalLinks.map((item, index) => (
+
+      <Link
+        key={index}
+        to={item.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="blog-internal-link-button"
+      >
+        {item.text}
+
+        <span>
+          →
+        </span>
+      </Link>
+
+    ))}
+
+  </div>
 
 )}
 

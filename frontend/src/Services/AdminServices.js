@@ -117,7 +117,7 @@ export const getRouteHealth = async () => {
 };
 export const getSubscription = async () => {
   const res = await axiosInstance.get(
-    "/subscription",
+    "/super-admin/subscriptions",
   );
   return res.data;
 };
