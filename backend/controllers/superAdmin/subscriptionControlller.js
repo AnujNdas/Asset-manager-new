@@ -1,7 +1,7 @@
-const Subscription = require("../models/Subscription");
-const Organization = require("../models/Organization");
-const AffiliateReferral = require("../models/AffiliateReferral");
-const AffiliateProfile = require("../models/AffiliateProfile");
+const Subscription = require("../../models/Subscription");
+const Organization = require("../../models/Organization");
+const AffiliateReferral = require("../../models/AffiliateReferral");
+const AffiliateProfile = require("../../models/AffiliateProfile");
 
 
 /**
