@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const authenticateToken = require("../Middleware/Authentication-token");
-
+const { getSuperAdminSubscriptions } = require("../controllers/superAdmin/subscriptionControlller")
 const { getOverview } = require("../controllers/superAdmin/dashboardController");
 const { getAllOrganizations, createOrganization , getOrganizationById ,toggleOrganizationStatus , getOrganizationUsers  } = require("../controllers/superAdmin/organizationController");
 const {getSettings, updateSettings , resolveAffiliateTicket} = require("../controllers/superAdmin/settingController");
@@ -49,6 +49,12 @@ router.patch(
   resolveAffiliateTicket
 );
 
+
+
+router.get(
+  "/subscriptions",
+  getSuperAdminSubscriptions
+);
 router.get("/", getRouteHealth);
 
 module.exports = router;

@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 
 import ProtectedRoute from "../Components/ProtectedRoute";
 import SuperAdminLayout from "../layout/SuperAdminLayout";
+import Financial from "../Pages/super-admin/Financial";
 
 const Dashboard = lazy(() => import("../Pages/super-admin/SuperAdminDashboard"));
 const Tenants = lazy(() => import("../Pages/super-admin/Tenant"));
@@ -76,6 +77,14 @@ const SuperAdminRoutes = () => (
         element={
           <Suspense fallback={<div>Loading...</div>}>
             <HealthMonitor />
+          </Suspense>
+        }
+      />
+      <Route
+        path="financials"
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Financial/>
           </Suspense>
         }
       />

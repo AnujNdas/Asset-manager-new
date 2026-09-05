@@ -20,12 +20,6 @@ const organizationSchema = new mongoose.Schema(
       ref: "user",
     },
 
-    status: {
-      type: String,
-      enum: ["active", "suspended"],
-      default: "active",
-    },
-
     /* ==============================
        ✅ ORGANIZATION ONBOARDING
     ============================== */
