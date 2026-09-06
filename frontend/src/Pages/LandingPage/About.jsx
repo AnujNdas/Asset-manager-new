@@ -7,10 +7,10 @@ import {
   FaLinkedinIn,
   FaPinterestP,
   FaTwitter,
-  FaThreads,
   FaWhatsapp,
   FaTelegramPlane,
 } from "react-icons/fa";
+import { FaThreads } from "react-icons/fa6";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 const values = [
