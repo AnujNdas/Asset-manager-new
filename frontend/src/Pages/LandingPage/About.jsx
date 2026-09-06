@@ -39,10 +39,10 @@ const values = [
 export default function About() {
 
   const handleProductClick1 = () => {
-    window.open("https://assetpegasus/it-asset-management")
+    window.open("https://assetpegasus.com/it-asset-management")
   }
   const handleProductClick2 = () => {
-    window.open("https://assetpegasus/machinery-asset-management")
+    window.open("https://assetpegasus.com/machinery-asset-management")
   }
   return (
     
