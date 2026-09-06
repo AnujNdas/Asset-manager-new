@@ -43,7 +43,7 @@ const Navbar = () => {
 
         {/* LOGO */}
         <div className="logo">
-          <img src="/images/Logo2.png" alt="" />
+          <img src="/images/logo2.png" alt="" />
         </div>
 
         {/* DESKTOP NAVIGATION */}
