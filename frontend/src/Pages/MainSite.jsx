@@ -74,10 +74,10 @@ const handleHospitalityManagement = () => {
   navigate("/restaurant-hospitality-asset-management")
 }
 const handleProductClick = () => {
-  window.open("https://assetpegasus/it-asset-management")
+  window.open("https://assetpegasus.com/it-asset-management")
 }
 const handleProductClick2 = () => {
-  window.open("https://assetpegasus/machinery-assets-management")
+  window.open("https://assetpegasus.com/machinery-assets-management")
 }
 const handleCopyright = () => {
   window.open("https://socialflylive.com/")
