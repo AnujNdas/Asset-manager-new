@@ -3506,10 +3506,10 @@ quickAnswer: [
       "Manage Warranties, Calibrations, and Insurance in One System",
 
     text:
-      "Start a free 7-day trial with AssetPegasus and see your equipment's warranty, calibration, and insurance status in one dashboard today.",
+      "Start a free 30-day trial with AssetPegasus and see your equipment's warranty, calibration, and insurance status in one dashboard today.",
 
     buttonText:
-      "Start Free 7-Day Trial",
+      "Start Free 30-Day Trial",
 
     buttonLink:
       "/user/signup"

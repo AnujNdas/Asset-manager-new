@@ -39,7 +39,9 @@ const BlogPage = () => {
 
           <div className="blog-page-grid">
 
-            {blogs.map((blog) => (
+              {[...blogs]
+                .reverse()
+                .map((blog) => (
 
               <article
                 className="blog-page-card"

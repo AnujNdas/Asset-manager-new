@@ -6,12 +6,13 @@ import {
   FaInstagram,
   FaLinkedinIn,
   FaPinterestP,
-  FaThermometer,
   FaTwitter,
+  FaThreads,
   FaWhatsapp,
   FaTelegramPlane,
 } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 const values = [
   {
     title: "Innovation First",
@@ -36,6 +37,13 @@ const values = [
 ];
 
 export default function About() {
+
+  const handleProductClick1 = () => {
+    window.open("https://assetpegasus/it-asset-management")
+  }
+  const handleProductClick2 = () => {
+    window.open("https://assetpegasus/machinery-asset-management")
+  }
   return (
     
     <>
@@ -183,7 +191,7 @@ export default function About() {
 
         <div className="feature-grid">
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleProductClick1}>
 
             <div className="feature-icon">
               <FiBox />
@@ -202,7 +210,7 @@ export default function About() {
 
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card" onClick={handleProductClick2}>
 
             <div className="feature-icon">
               <FiMonitor />
@@ -369,17 +377,60 @@ export default function About() {
 
         <div className="social-icons-row">
 
-          <a href="https://www.facebook.com/socialflylive/"><FaFacebookF /></a>
 
-          <a href="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"><FaGoogle /></a>
+                        <Link
+                          to="https://www.facebook.com/socialflylive/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Facebook"
+                        >
+                          <FaFacebookF />
+                        </Link>
+               <Link
+              to="https://www.instagram.com/socialflylive"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <FaInstagram />
+            </Link>
 
-          <a href="https://www.instagram.com/socialflylive"><FaInstagram /></a>
 
-          <a href="https://www.linkedin.com/company/socialflylive/"><FaLinkedinIn /></a>
+            <Link
+              to="https://www.linkedin.com/company/socialflylive/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <FaLinkedinIn />
+            </Link>
 
-          <a href="https://in.pinterest.com/socialflylive/"><FaPinterestP /></a>
+            <Link
+              to="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Google Maps"
+            >
+              <FaGoogle />
+            </Link>
 
-          <a href="#"><FaThermometer /></a>
+            <Link
+              to="https://in.pinterest.com/socialflylive/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Pinterest"
+            >
+              <FaPinterestP />
+            </Link>
+                        <Link
+                          to="https://www.threads.com/@socialflylive"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Pinterest"
+                        >
+                          <FaThreads />
+                        </Link>
+
 
         </div>
 
@@ -393,15 +444,24 @@ export default function About() {
 
         <div className="chat-icons">
 
-             <a
-            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp">
+             <Link
+            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp"
+            
+                  target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Whatsapp"
+              >
               <FaWhatsapp />
-            </a>
+            </Link>
 
-          <a
-            href="https://t.me/Socialflylive" >
+          <Link
+            href="https://t.me/Socialflylive"
+                  target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Telegram"
+               >
             <FaTelegramPlane />
-          </a>
+          </Link>
 
         </div>
 

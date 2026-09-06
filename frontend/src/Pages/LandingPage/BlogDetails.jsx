@@ -71,7 +71,6 @@ const BlogDetails = () => {
         currentUrl
       )}`,
       "_blank",
-      "width=600,height=500"
     );
 
   };
@@ -84,7 +83,6 @@ const BlogDetails = () => {
         currentUrl
       )}`,
       "_blank",
-      "width=600,height=500"
     );
 
   };
@@ -98,8 +96,7 @@ const BlogDetails = () => {
       )}&text=${encodeURIComponent(
         blog.title
       )}`,
-      "_blank",
-      "width=600,height=500"
+      "_blank", 
     );
 
   };

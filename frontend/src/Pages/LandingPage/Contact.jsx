@@ -11,6 +11,8 @@ import {
 } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import "../../Page_styles/LandingPage/Contact.css"
+import { Link } from "react-router-dom";
+import { FaThreads } from "react-icons/fa6";
 export default function Contact() {
   return (
     <>
@@ -153,12 +155,58 @@ export default function Contact() {
 
           <div className="social-card">
 
-            <a href="https://www.facebook.com/socialflylive/"><FaFacebookF /></a>
-              <a href="https://www.instagram.com/socialflylive"><FaInstagram /></a>
-            <a href="https://www.linkedin.com/company/socialflylive/"><FaLinkedinIn /></a>
-            <a href="#"><FaAccusoft /></a>
-            <a href="https://in.pinterest.com/socialflylive/"><FaPinterestP /></a>
-            <a href="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"><FaGoogle /></a>
+                        <Link
+                          to="https://www.facebook.com/socialflylive/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Facebook"
+                        >
+                          <FaFacebookF />
+                        </Link>
+               <Link
+              to="https://www.instagram.com/socialflylive"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <FaInstagram />
+            </Link>
+
+
+            <Link
+              to="https://www.linkedin.com/company/socialflylive/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <FaLinkedinIn />
+            </Link>
+
+            <Link
+              to="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Google Maps"
+            >
+              <FaGoogle />
+            </Link>
+
+            <Link
+              to="https://in.pinterest.com/socialflylive/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Pinterest"
+            >
+              <FaPinterestP />
+            </Link>
+            <Link
+              to="https://www.threads.com/@socialflylive"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Pinterest"
+            >
+              <FaThreads />
+            </Link>
 
           </div>
 
@@ -172,15 +220,23 @@ export default function Contact() {
 
           <div className="chat-icons">
 
-            <a
-            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp">
+            <Link
+            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp"
+                  target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Whatsapp"
+              >
               <FaWhatsapp />
-            </a>
+            </Link>
 
-            <a
-            href="https://t.me/Socialflylive" className="telegram">
+            <Link
+            href="https://t.me/Socialflylive" className="telegram"
+                  target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Telegram"
+              >
               <FaTelegramPlane />
-            </a>
+            </Link>
 
           </div>
 

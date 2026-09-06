@@ -524,14 +524,14 @@ margin:auto;
 
 display:flex;
 align-items:center;
-justify-content:space-between;
+justify-content:space-around;
 gap:40px;
 }
 
 /* ========================= */
 
 .cta-title{
-font-size:2rem;
+font-size:24px;
 font-weight:700;
 color:#ead8b9;
 line-height:1.2;
@@ -591,10 +591,6 @@ Large Tablet
 
 @media(max-width:1200px){
 
-.cta-title{
-font-size:3rem;
-}
-
 .cta-btn{
 min-width:280px;
 height:68px;
@@ -638,7 +634,7 @@ padding:60px 18px;
 
 .cta-title{
 
-font-size:2rem;
+font-size:20px;
 
 }
 
