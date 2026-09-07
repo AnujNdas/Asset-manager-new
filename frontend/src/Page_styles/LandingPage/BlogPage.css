@@ -339,13 +339,11 @@
 
 .blog-section-2-content {
   width: 100%;
-  max-width: 960px;
 
   margin: 0 auto;
 
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
 
   gap: 55px;
 
@@ -414,7 +412,7 @@
 
   background: #202630;
 
-  color: #ffffff;
+  color: #DFD0B8;
 
   font-size: 15px;
 
@@ -466,8 +464,6 @@
 ========================================= */
 
 .blog-social-card a {
-  width: 28px;
-  height: 28px;
 
   display: flex;
 
@@ -510,9 +506,6 @@
 
   .blog-section-2-content {
     grid-template-columns: 1fr;
-
-    max-width: 600px;
-
     gap: 35px;
   }
 
@@ -537,16 +530,17 @@
 
   .blog-support-card {
     min-height: 170px;
+    width: 100%;
   }
 
   .blog-social-card {
-    gap: 18px;
-
+    gap: 8px;
+    width: 100%;
     padding: 22px 15px;
   }
 
   .blog-social-card a {
-    font-size: 23px;
+    font-size: 18px;
   }
 
 }

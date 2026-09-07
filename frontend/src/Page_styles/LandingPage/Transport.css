@@ -2316,7 +2316,28 @@
   .travel-faq-section {
     padding: 25px 12px 45px;
   }
-
+  .travel-section1-content h1 {
+    font-size: 24px;
+  }
+  .travel-feature-item {
+    justify-content: center;
+  }
+  .travel-section6-left li {
+    align-items: center;
+  }
+  .travel-section6-left p {
+    text-align: center;
+  }
+  .travel-check-list{
+    align-items: center;
+  }
+  .travel-section10-left {
+    align-items: center;
+  }
+  .travel-section1-breadcrumb {
+    width: 70%;
+    justify-content: center;
+  }
   .travel-faq-title {
     margin-left: 0;
     font-size: 26px;

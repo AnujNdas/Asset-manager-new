@@ -182,7 +182,7 @@ display: flex;
   .manufacturing-hero-top h1 {
     padding: 25px 20px 0;
 
-    font-size: 38px;
+    font-size: 20px;
     line-height: 1.3;
   }
 
@@ -218,7 +218,7 @@ display: flex;
   .manufacturing-hero-top h1 {
     padding-top: 25px;
 
-    font-size: 29px;
+    /* font-size: 29px; */
     line-height: 1.3;
   }
 
@@ -2622,7 +2622,7 @@ width: 200px;
 
 /* Bottom links */
 .manufacturing-section-15-links {
-  width: 85%;
+  /* width: 85%; */
   display: flex;
   justify-content: center;
   gap: 180px; /* controls how close they are */
@@ -2755,4 +2755,60 @@ width: 200px;
 
 .hospitality-faq details summary:hover {
   background: rgba(34, 40, 49, 0.45);
+}
+
+@media (max-width : 768px) {
+  .hospitality-section-8-content{
+    grid-template-columns: 1fr;
+  }
+  .hospitality-section-10-content{
+    grid-template-columns: 1fr;
+  }
+  .hospitality-section-10-left h2 {
+    text-align: center;
+  }
+    .hospitality-section-9-stats {
+    grid-template-columns: repeat(1 , 1fr);
+  }
+  .hospitality-industry-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+  }
+  .hospitality-industry-card { 
+    width: 100%;
+  }
+  .manufacturing-section-15-links {
+    justify-content: space-around;
+    gap: 20px;
+  }
+  .manufacturing-section-15 h2 {
+    font-size: 16px;
+  }
+  .restaurant-section-6-grid { 
+    grid-template-columns: 1fr;
+  }
+  .restaurant-section-3 { 
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .restaurant-section-3-features { 
+    padding: 0;
+  }
+  .restaurant-section-3-features ul {
+    gap: 10px;
+    height: 400px;
+  }
+  .restaurant-section-3-trial-btn { 
+    margin: 0;
+  }
+  .restaurant-section-6 { 
+    padding: 10px;
+  }
+  .restaurant-section-6-left ul {
+    padding : 0;
+  }
+  .hospitality-section-11-list { 
+    height: 400px;
+  }
 }

@@ -249,11 +249,11 @@ const GlobalPrivacy = () => {
   <div className="privacy-no-refund">
 
     <h2>
-      No Refund (Free 7-day trial)
+      No Refund (Free 30-day trial)
     </h2>
 
     <p>
-      We offer a 7 day free trial with full features.
+      We offer a 30 day free trial with full features.
       No payment is required during the trial period.
     </p>
 

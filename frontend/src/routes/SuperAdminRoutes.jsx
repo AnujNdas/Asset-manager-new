@@ -1,10 +1,12 @@
 import { Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-
+import { Navigate } from "react-router-dom";
 import ProtectedRoute from "../Components/ProtectedRoute";
 import SuperAdminLayout from "../layout/SuperAdminLayout";
 import Financial from "../Pages/super-admin/Financial";
-
+import RevenuePage from "../Pages/super-admin/Revenue";
+import ReferralsPage from "../Pages/super-admin/Referral";
+import SubscriptionsPage from "../Pages/super-admin/Subscription";
 const Dashboard = lazy(() => import("../Pages/super-admin/SuperAdminDashboard"));
 const Tenants = lazy(() => import("../Pages/super-admin/Tenant"));
 const Settings = lazy(() => import("../Pages/super-admin/SuperAdminSetting"));
@@ -87,7 +89,32 @@ const SuperAdminRoutes = () => (
             <Financial/>
           </Suspense>
         }
+      >
+         <Route
+    index
+    element={
+      <Navigate
+        to="subscriptions"
+        replace
       />
+    }
+  />
+
+  <Route
+    path="subscriptions"
+    element={<SubscriptionsPage />}
+  />
+
+  <Route
+    path="referrals"
+    element={<ReferralsPage />}
+  />
+
+  <Route
+    path="revenue"
+    element={<RevenuePage />}
+  />
+      </Route>
 
     </Route>
   </Route>

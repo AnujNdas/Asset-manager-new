@@ -207,7 +207,7 @@
   }
 
   .manufacturing-hero-top h1 {
-    font-size: 2rem;
+    font-size: 1rem;
     line-height: 1.35;
   }
 
@@ -2341,7 +2341,26 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+ @media ( max-width : 480px) {
+  .manufacturing-industry-grid {
+   
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items : center;
+  }
 
+
+ }
+ @media ( max-width : 768px) {
+  .manufacturing-industry-grid {
+   
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items : center;
+  }
+
+
+ }
 .manufacturing-industry-card {
   width: 170px;
   min-height: 250px;

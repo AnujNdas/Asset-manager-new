@@ -2925,7 +2925,28 @@
   .construction-section14 {
     padding: 25px 12px 40px;
   }
-
+  .construction-section-10 {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .construction-section-10-left h2 {
+    text-align: center;
+  }
+  .construction-section-6-content { 
+    flex-direction: column;
+  }
+  .construction-section-6-left { 
+    width: 100%;
+  }
+  .construction-section-6-right { 
+    width: 100%;
+  }
+  .construction-section-10-left { 
+    width: 100%;
+  }
+  .construction-section-10-right { 
+    width: 100%;
+  }
   .construction-section14 h2 {
     margin-left: 15px;
     margin-bottom: 25px;

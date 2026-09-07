@@ -119,7 +119,7 @@
 .machinery-breadcrumb {
   margin-top: 260px;
   margin-bottom: 0;
-  width: 400px;
+  /* width: 400px; */
   font-size: 17px;
   line-height: 1.5;
   color: #efd8bd;
@@ -211,10 +211,6 @@
     max-width: 90%;
   }
 
-  .hero-shape-back {
-    height: 270px;
-  }
-
   .hero-shape-front {
     height: 245px;
   }
@@ -251,9 +247,6 @@
     line-height: 1.6;
   }
 
-  .hero-shape-back {
-    height: 240px;
-  }
 
   .hero-shape-front {
     height: 220px;
@@ -559,7 +552,7 @@
 
   .machinery-feature p {
 
-    font-size: 17px;
+    font-size: 12px;
 
     line-height: 1.55;
   }
@@ -2917,22 +2910,26 @@
    MOBILE
 ========================= */
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
 
   .machinery-section10 {
-    padding: 70px 18px;
+    padding: 70px 0px;
+    width: 100%;
   }
-
+  .section10-content {
+    width: 100%;
+  }
   .section10-container {
     gap: 35px;
+    width: 100%;
   }
 
   .section10-content h2 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .section10-content p {
-    font-size: 17px;
+    font-size: 14px;
     line-height: 1.55;
   }
 
@@ -4411,12 +4408,14 @@
    MOBILE
 ========================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
 
   .asset-categories-section {
     padding: 45px 20px;
   }
-
+  .asset-category-column {
+    align-items: center;
+  }
   .asset-categories-container {
     display: flex;
 

@@ -37,12 +37,12 @@ const Terms = () => {
 
           <ul>
             <li>
-              <strong>Eligibility:</strong> You must be at least 18 years old or
+              <strong>Eligibility :</strong> You must be at least 18 years old or
               the legal age of majority in your jurisdiction.
             </li>
 
             <li>
-              <strong>Account Responsibility:</strong> You are responsible for
+              <strong>Account Responsibility :</strong> You are responsible for
               maintaining your login credentials and all activity under your
               account.
             </li>
@@ -56,23 +56,23 @@ const Terms = () => {
 
           <ul>
             <li>
-              <strong>No Recovery:</strong> Deleted data is permanently removed.
+              <strong>No Recovery :</strong> Deleted data is permanently removed.
             </li>
 
             <li>
-              <strong>Storage Optimization:</strong> We do not maintain archived
+              <strong>Storage Optimization :</strong> We do not maintain archived
               backups of deleted data.
             </li>
 
             <li>
-              <strong>User Backups:</strong> Export important data before
+              <strong>User Backups :</strong> Export important data before
               deletion.
             </li>
           </ul>
 
           <h2>Prohibited Use</h2>
 
-          <p>You agree not to:</p>
+          <p>You agree not to :</p>
 
           <ul>
             <li>Use the service for illegal purposes.</li>
@@ -88,12 +88,12 @@ const Terms = () => {
 
           <ul>
             <li>
-              <strong>Billing:</strong> Fees are charged according to your
+              <strong>Billing :</strong> Fees are charged according to your
               selected plan.
             </li>
 
             <li>
-              <strong>Auto Renewal:</strong> Subscriptions renew automatically
+              <strong>Auto Renewal :</strong> Subscriptions renew automatically
               unless cancelled.
             </li>
           </ul>
@@ -168,12 +168,12 @@ const Terms = () => {
 
           <ul>
             <li>
-              <strong>Support Email:</strong>
+              <strong>Support Email :</strong>
               <span> support@assetpegasus.com</span>
             </li>
 
             <li>
-              <strong>Mailing Address:</strong>
+              <strong>Mailing Address :</strong>
               <span> info@assetpegasus.com</span>
             </li>
           </ul>

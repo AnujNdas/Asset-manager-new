@@ -519,6 +519,7 @@
   border-radius: 18px;
   padding: 24px;
   margin-bottom: 24px;
+  text-align: center;
 }
 
 .mobile-card h3 {
@@ -612,6 +613,11 @@
   /* margin-bottom: 60px; */
 }
 
+@media (max-width : 768px) {
+  .hardware-title {
+    margin-bottom : 40px;
+  }
+}
 /* =========================
    LAYOUT
 ========================= */
@@ -787,6 +793,7 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
 }
 .about-text { 
   font-size: 17px;
+  padding: 0px 20px;
 }
 .about-btn {
   background: #393E46;
@@ -1410,6 +1417,12 @@ p {
   grid-template-columns: 450px 1fr;
   gap: 60px;
   align-items: center;
+}
+
+@media  (max-width : 768px) {
+  .asset-showcase-content {
+    grid-template-columns: none;
+  }
 }
 
 .asset-showcase-left {

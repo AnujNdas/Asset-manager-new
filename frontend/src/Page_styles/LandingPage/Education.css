@@ -3355,7 +3355,7 @@
    MOBILE
 ========================================= */
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
 
   .industry-section15 {
     padding: 55px 20px 60px;
@@ -3378,6 +3378,15 @@
   .industry-section15-card {
     width: 170px;
     min-width: 170px;
+  }
+  .education-section7-left ul {
+    padding: 0;
+  }
+  .education-section7-left li {
+    align-items: center;
+  }
+  .education-section7-left li span {
+    text-align: center;
   }
 
 }

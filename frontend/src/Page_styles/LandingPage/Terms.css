@@ -107,6 +107,7 @@ padding-left:20px;
 font-size:17px;
 line-height:1.5;
 margin-bottom:12px;
+justify-content: center;
 }
 
 .terms-card strong{
@@ -148,15 +149,21 @@ font-size:16px;
 .terms-card p{
 font-size:16px;
 line-height:1.8;
+
 }
 
 .terms-card ul{
-padding-left:16px;
+padding:0;
+align-items: center;
 }
 
 .terms-card li{
+flex-direction: column;
 font-size:16px;
 line-height:1.8;
+gap: 10px;
+width: 90%;
+align-items: center;
 }
 
 }
@@ -252,6 +259,8 @@ text-align:left;
 
 .contact-details li{
 font-size:17px;
+justify-content: center;
+gap: 10px;
 color:#ead9bc;
 margin-bottom:20px;
 line-height:1.7;
@@ -267,11 +276,12 @@ font-weight:400;
 
 /* Tablet */
 
-@media(max-width:992px){
+@media(max-width:1024px){
 
 .contactInfo h2{
 font-size:20px;
 }
+
 
 .contact-desc{
 font-size:16px;
@@ -321,6 +331,8 @@ text-align:center;
 .contact-details li{
 font-size:13px;
 word-break:break-word;
+justify-content: center;
+gap: 10px;
 }
 
 }

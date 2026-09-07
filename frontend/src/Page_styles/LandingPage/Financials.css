@@ -1,0 +1,169 @@
+/* BillingPage.css */
+
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.billing-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 28px;
+  background: #f8f9fc;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.billing-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+
+.billing-page-title {
+  margin: 0;
+
+  font-size: 28px;
+  font-weight: 700;
+
+  color: #1d2130;
+}
+
+
+.billing-page-subtitle {
+  margin: 7px 0 0;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: #74798b;
+}
+
+
+/* =========================================================
+   TABS WRAPPER
+========================================================= */
+
+.billing-tabs-wrapper {
+  width: 100%;
+
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  padding: 0 20px;
+
+  margin-bottom: 24px;
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.billing-tabs {
+  display: flex;
+  align-items: center;
+
+  gap: 34px;
+
+  min-height: 64px;
+}
+
+
+/* =========================================================
+   SINGLE TAB
+========================================================= */
+
+.billing-tab {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+    background: #6958C0;
+  gap: 8px;
+    justify-content: center;
+  min-height: 44px;
+
+  padding: 0 4px;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #ffffff;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.billing-tab:hover {
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   ACTIVE TAB
+========================================================= */
+
+.billing-tab-active {
+  color: #ffffff;
+  font-weight: 600;
+  background: #000;
+}
+
+
+
+/* =========================================================
+   PAGE CONTENT
+========================================================= */
+
+.billing-page-content {
+  width: 100%;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .billing-page {
+    padding: 18px;
+  }
+
+
+  .billing-page-title {
+    font-size: 23px;
+  }
+
+
+  .billing-tabs-wrapper {
+    padding: 0 12px;
+
+    overflow-x: auto;
+  }
+
+
+  .billing-tabs {
+    min-width: max-content;
+
+    gap: 22px;
+  }
+
+
+  .billing-tab {
+    font-size: 13px;
+  }
+
+}
