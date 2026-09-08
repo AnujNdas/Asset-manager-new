@@ -2965,6 +2965,20 @@
 
     font-size: 14px;
   }
+  .construction-section-10-left ul {
+    align-items: center;
+    padding: 0;
+  }
+  .construction-section-10-left li {
+    justify-content: center;
+  }
+  .construction-section-8-item { 
+    justify-content: center;
+  }
+  .construction-feature , .construction-feature p { 
+    text-align: center;
+    padding: 0;
+  }
 }
 
 

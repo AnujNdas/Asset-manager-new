@@ -2514,33 +2514,9 @@ width: 200px;
 }
 
 
-/* STAGGERED CARDS */
-
-.hospitality-industry-card:nth-child(1) {
-  transform: translateY(-10px);
-}
-
-.hospitality-industry-card:nth-child(2) {
-  transform: translateY(10px);
-}
-
-.hospitality-industry-card:nth-child(3) {
-  transform: translateY(0);
-}
-
-.hospitality-industry-card:nth-child(4) {
-  transform: translateY(10px);
-}
-
-.hospitality-industry-card:nth-child(5) {
-  transform: translateY(0);
-}
-
-
 /* HOVER */
 
 .hospitality-industry-card:hover {
-  transform: translateY(-8px) !important;
   background: #222831;
   box-shadow:
     0 22px 32px rgba(0, 0, 0, 0.28);
@@ -2777,6 +2753,7 @@ width: 200px;
   }
   .hospitality-industry-card { 
     width: 100%;
+    border-radius: 10px;
   }
   .manufacturing-section-15-links {
     justify-content: space-around;
@@ -2810,5 +2787,11 @@ width: 200px;
   }
   .hospitality-section-11-list { 
     height: 400px;
+  }
+}
+
+@media (max-width : 480px) {
+  .hospitality-industry-cards {
+    grid-template-columns: 1fr;
   }
 }

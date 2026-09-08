@@ -2159,7 +2159,7 @@
   justify-content: center;
   padding: 11px 20px;
 
-  background: #222831;
+  background: #393E46;
 
   color: #DFD0B8;
 
@@ -2341,26 +2341,7 @@
   max-width: 1200px;
   margin: 0 auto;
 }
- @media ( max-width : 480px) {
-  .manufacturing-industry-grid {
-   
-    display: grid;
-    grid-template-columns: 1fr;
-    place-items : center;
-  }
 
-
- }
- @media ( max-width : 768px) {
-  .manufacturing-industry-grid {
-   
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    place-items : center;
-  }
-
-
- }
 .manufacturing-industry-card {
   width: 170px;
   min-height: 250px;
@@ -2378,11 +2359,6 @@
   transition:
     transform 0.3s ease,
     background 0.3s ease;
-}
-
-.manufacturing-industry-card:nth-child(2),
-.manufacturing-industry-card:nth-child(4) {
-  margin-top: 20px;
 }
 
 .manufacturing-industry-card:hover {
@@ -2945,3 +2921,41 @@
     line-height: 1.6;
   }
 }
+ 
+ @media ( max-width : 768px) {
+  .manufacturing-industry-grid {
+   
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items : center;
+    gap: 20px;
+  }
+  .section-ten-lifecycle h2 {
+    text-align: center;
+  }
+  .section-ten-stage {
+    text-align: center;
+  }
+  .manufacturing-section-11 {
+    padding: 70px 10px;
+  }
+  .manufacturing-industry-card {
+    width: 100%;
+  }
+
+ }
+ @media ( max-width : 480px) {
+  .manufacturing-industry-grid {
+   
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items : center;
+    gap: 20px;
+  }
+  .manufacturing-industry-card {
+    width: 90%;
+    border-radius: 10px;
+
+  }
+
+ }

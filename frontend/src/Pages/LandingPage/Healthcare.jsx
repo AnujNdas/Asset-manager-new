@@ -940,7 +940,7 @@ useEffect(() => {
   </div>
 
   <p className="healthcare-section-10-ending">
-    Socialfly Asset Management System (SAMS) enables companies to reduce costs,
+    Socialfly Asset Management System (Asset Pegasus) enables companies to reduce costs,
     increase visibility and manage the entire asset lifecycle, either hardware,
     software or cloud.
   </p>
