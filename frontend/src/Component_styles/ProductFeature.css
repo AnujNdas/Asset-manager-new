@@ -146,11 +146,6 @@
     padding: 50px 25px;
   }
 
-  .product-features-title {
-    font-size: 38px;
-    margin-bottom: 50px;
-  }
-
   .product-features-grid {
     gap: 30px;
   }
@@ -197,4 +192,9 @@
     font-size: 15px;
   }
 
+}
+@media (max-width : 768px) {
+  .product-features-title {
+    font-size: 24px;
+  }
 }

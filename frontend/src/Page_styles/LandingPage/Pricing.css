@@ -6,7 +6,6 @@
   position: relative;
 
   width: 100%;
-  height: 440px;
 
   overflow: hidden;
 
@@ -14,7 +13,7 @@
     to bottom,
     #252c36 0%,
     #2d343e 55%,
-    #39404a 100%
+    #393E46 100%
   );
 
   color: #ead9bd;
@@ -44,79 +43,11 @@
 
 
 /* =========================================
-   MOUNTAIN / WAVE SHAPE
-========================================= */
-
-.pricing-hero-section::before {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: 160px;
-
-  width: 100%;
-  height: 80px;
-
-  background: #303741;
-
-  clip-path: polygon(
-    0% 45%,
-    10% 70%,
-    18% 60%,
-    32% 20%,
-    47% 58%,
-    59% 38%,
-    72% 60%,
-    82% 30%,
-    100% 65%,
-    100% 100%,
-    0% 100%
-  );
-
-  z-index: 1;
-}
-
-
-/* Second darker/lighter layer */
-
-.pricing-hero-section::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 195px;
-
-  background: #3a4049;
-
-  clip-path: polygon(
-    0% 18%,
-    10% 45%,
-    20% 35%,
-    33% 12%,
-    47% 34%,
-    59% 20%,
-    72% 40%,
-    84% 15%,
-    100% 40%,
-    100% 100%,
-    0% 100%
-  );
-
-  z-index: 1;
-}
-
-
-/* =========================================
    BREADCRUMB
 ========================================= */
 
 .pricing-hero-breadcrumb {
-  position: absolute;
+  /* position: absolute; */
 
   bottom: 38px;
 
@@ -151,11 +82,6 @@
 ========================================= */
 
 @media (max-width: 800px) {
-
-  .pricing-hero-section {
-    height: 400px;
-  }
-
   .pricing-hero-section h1 {
     font-size: 48px;
   }
@@ -211,7 +137,7 @@
 .pricing-section-2 {
   width: 100%;
   min-height: 170px;
-  background: #3b424c;
+  background: #393E46;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -251,7 +177,9 @@
   .pricing-section-2 {
     min-height: 150px;
   }
-
+  .pricing-trial-content {
+    flex-direction: column;
+  }
   .pricing-section-2-content {
     padding: 25px 15px;
   }
@@ -273,7 +201,7 @@
 .pricing-section {
   width: 100%;
   padding: 25px 14px 0;
-  background: #3d434d;
+  background: #393E46;
   box-sizing: border-box;
 }
 
@@ -406,6 +334,7 @@
     color: #DFD0B8;
     font-size: 14px;
     border: none;
+      box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 /* ================================
    RESPONSIVE
@@ -462,7 +391,7 @@
   width: 100%;
   min-height: 290px;
 
-  background: #292f38;
+  background: #393E46;
 
   display: flex;
   align-items: center;
@@ -514,7 +443,7 @@
 
   border: none;
   border-radius: 30px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   background: #202630;
   color: #eadcc5;
 

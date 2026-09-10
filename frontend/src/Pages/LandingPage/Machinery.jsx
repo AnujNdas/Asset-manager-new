@@ -1453,9 +1453,7 @@ const handleNavigateItam = () => {
         <div className="section12-content">
 
           <h2>
-            Machine Asset Management for Non
-            <br />
-            – IT Physical Equipment
+            Machine Asset Management for Non – IT Physical Equipment
           </h2>
 
           <p>

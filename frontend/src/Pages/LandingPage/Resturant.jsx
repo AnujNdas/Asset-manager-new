@@ -493,12 +493,7 @@ useEffect(() => {
     <h1>
       Restaurant & Hospitality Asset <br/> Management
     </h1>
-  </div>
-
-  {/* Lower content */}
-  <div className="manufacturing-hero-bottom">
-
-    <div className="manufacturing-breadcrumb">
+        <div className="manufacturing-breadcrumb">
       <Link to="/"   target="_blank"
   rel="noopener noreferrer">Home</Link>
       <span> - Restaurant & Hospitality Asset Management</span>
@@ -509,7 +504,6 @@ useEffect(() => {
       <br />
       that Scales With Your Business.
     </h2>
-
   </div>
 
 </section>

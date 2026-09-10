@@ -411,17 +411,9 @@ useEffect(() => {
 
   <div className="healthcare-hero-title">
     <h1>
-      Healthcare Asset Tracking Management
+      Healthcare Asset Tracking <br/> Management
     </h1>
-  </div>
-
-  {/* layered clip-path */}
-  <div className="healthcare-hero-wave healthcare-hero-wave-back"></div>
-  <div className="healthcare-hero-wave healthcare-hero-wave-front"></div>
-
-  <div className="healthcare-hero-bottom">
-
-    <div className="healthcare-breadcrumb">
+        <div className="healthcare-breadcrumb">
       <Link to="/"   target="_blank"
   rel="noopener noreferrer">Home</Link>
       <span> - Healthcare Asset Tracking</span>
@@ -432,8 +424,8 @@ useEffect(() => {
       <br />
       that Scales With Your Business.
     </h2>
-
   </div>
+
 
 </section>
 

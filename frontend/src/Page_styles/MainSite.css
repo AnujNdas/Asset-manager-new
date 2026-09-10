@@ -60,22 +60,6 @@
     }
 }
 
-/* =========================
-   Laptop
-========================= */
-
-@media (max-width: 1200px) {
-
-    .navbar {
-        padding: 14px 4%;
-        gap: 20px;
-    }
-
-    .logo img {
-        height: 60px;
-    }
-
-}
 
 /* =========================
    Tablet
@@ -151,11 +135,6 @@
     .nav-menu{
         display:none;
     }
-
-    .nav-actions{
-        display:none;
-    }
-
     .menu-toggle{
 
         display:flex;
@@ -269,6 +248,8 @@
     font-weight: 600;
     font-size: 14px;
     margin-top: 10px;
+      box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
   }
   
   .signup-btn {
@@ -359,6 +340,7 @@
   
   .stat-card p {
     color: #DFD0B8;
+    font-size: 24px;
   }
   
   /* FEATURES */
@@ -610,14 +592,10 @@
   font-size: 2rem;
   font-weight: 700;
   color: #ead7bd;
+  margin-bottom: 30px;
   /* margin-bottom: 60px; */
 }
 
-@media (max-width : 768px) {
-  .hardware-title {
-    margin-bottom : 40px;
-  }
-}
 /* =========================
    LAYOUT
 ========================= */
@@ -1291,8 +1269,9 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
 .trial-btn {
   margin-top: 60px;
 
-  background: #202938;
+  background: #222831;
   color: #ead8bf;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   border: none;
 border-radius: 10px;
@@ -1373,7 +1352,7 @@ padding: 15px 25px;
   height: 14px;
 
   border-radius: 50%;
-  border: 1px solid #1d2530;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -1381,7 +1360,7 @@ padding: 15px 25px;
 }
 
 .dot.active {
-  background: #000;
+  background: #948979;
 }
 .asset-showcase {
   /* background: #222831; */
@@ -1455,6 +1434,7 @@ p {
 padding: 15px 30px;
   border: none;
   border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   background: #393E46;
   color: #ead8bb;
@@ -1839,11 +1819,6 @@ grid-template-columns:1fr;
 gap:45px;
 }
 
-.heading{
-font-size:34px;
-margin-bottom:40px;
-}
-
 .blog-image img{
 height:250px;
 }
@@ -1862,34 +1837,6 @@ font-size:17px;
 
 }
 
-/* ---------- Small Mobile ---------- */
-
-@media(max-width:480px){
-
-.container{
-width:94%;
-}
-.nav-menu{
-  display: none !important;
-}
-.blog-image img{
-height:220px;
-}
-
-.heading{
-font-size:30px;
-}
-
-.blog-content h3{
-font-size:24px;
-line-height:1.5;
-}
-
-.meta{
-font-size:15px;
-}
-
-}
 .nav-menu {
     /* display: flex; */
     flex-direction: row;
@@ -2279,6 +2226,21 @@ font-size:15px;
     .nav-actions {
       display: none;
     }
+    .asset-showcase-title {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    .asset-showcase-container h2 {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    .asset-showcase-btn {
+      margin: auto;
+    }
+    .asset-info-title , .impact-left h2 , .impact-right h2 , .cloud-machinery-title , .hardware-title , .features h2 , .comparison-section h2 , .about-main-title , .faq-title , .heading {
+      font-size: 24px;
+    }
+
   }
 
   /* =========================================
@@ -2308,4 +2270,46 @@ font-size:15px;
 html {
   scrollbar-width: thin;
   scrollbar-color: #DFD0B8 #222831;
+}
+@media (max-width : 1024px) {
+  .nav-menu {
+    gap: 15px;
+    width: 500px;
+  }
+      .nav-actions{
+        display:none;
+    }
+
+}
+@media (max-width : 480px) {
+  .asset-feature-list {
+    padding: 15px;
+  }
+  .asset-feature-list li {
+    font-size: 14px;
+  }
+      .asset-info-title , .impact-left h2 , .impact-right h2 , .cloud-machinery-title , .hardware-title , .features h2 , .comparison-section h2 , .about-main-title , .faq-title , .heading {
+      font-size: 20px;
+    }
+    .faq-title { 
+      padding: 0;
+    }
+    .faq-question span {
+      font-size: 14px;
+    }
+    .hero-content h1 {
+      font-size: 28px;
+    }
+    .hero {
+      padding: 40px 20px;
+    }
+    .blog-content h3 , .meta {
+      font-size: 17px;
+      text-align: left;
+      padding: 0;
+    }
+    .blog-content {
+      padding: 0;
+    }
+
 }

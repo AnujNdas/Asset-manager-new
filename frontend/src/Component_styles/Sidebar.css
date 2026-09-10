@@ -369,9 +369,6 @@ a:hover {
   .title {
     display: none;
   }
-  .logo {
-    width: 100%;
-  }
 }
 @media (min-width: 1025px) {
   .sidebar-container {

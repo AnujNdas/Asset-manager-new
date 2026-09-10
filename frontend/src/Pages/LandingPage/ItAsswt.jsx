@@ -840,6 +840,14 @@ useEffect(() => {
           <br />
           Software — AssetPegasus
         </h1>
+                  <div className="itam-breadcrumb">
+            <Link to="/" 
+               target="_blank"
+  rel="noopener noreferrer"
+  >Home</Link>
+            <span> - </span>
+            <span>IT Asset Management Software</span>
+          </div>
 
       </div>
 
@@ -852,14 +860,7 @@ useEffect(() => {
 
         <div className="itam-hero-content">
 
-          <div className="itam-breadcrumb">
-            <Link to="/" 
-               target="_blank"
-  rel="noopener noreferrer"
-  >Home</Link>
-            <span> - </span>
-            <span>IT Asset Management Software</span>
-          </div>
+
 
           <h2>
             Simple IT Asset Management (ITAM) Software

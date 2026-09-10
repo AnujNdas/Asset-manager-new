@@ -21,16 +21,16 @@
   position: relative;
 
   width: 100%;
-  height: 275px;
+  height: 400px;
 
   background: #222831;
 
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-
+  align-items: center;
+  gap: 40px;
+  flex-direction: column;
   padding-top: 55px;
-
+  justify-content: center;
   box-sizing: border-box;
 
   overflow: hidden;
@@ -55,39 +55,8 @@
   color: #ead9bd;
 }
 
-
-/* =========================================
-   POLYGON / CLIP-PATH TRANSITION
-========================================= */
-
-.education-section1-hero::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: -1px;
-
-  width: 100%;
-  height: 55px;
-
-  background: #393E46;
-
-  clip-path: polygon(
-    0% 35%,
-    10% 70%,
-    19% 55%,
-    30% 20%,
-    41% 55%,
-    48% 48%,
-    61% 73%,
-    73% 43%,
-    83% 60%,
-    91% 22%,
-    100% 58%,
-    100% 100%,
-    0% 100%
-  );
+.education-section1 h2 {
+  text-align: center;
 }
 
 
@@ -143,48 +112,6 @@
 .education-breadcrumb span {
   color: #ead9bd;
   padding-left: 10px;
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 1000px) {
-
-  .education-section1-hero {
-    height: 260px;
-    padding: 55px 25px 0;
-  }
-
-  .education-section1-hero h1 {
-    font-size: 48px;
-  }
-
-}
-
-
-@media (max-width: 768px) {
-
-  .education-section1-hero {
-    height: 240px;
-
-    padding: 50px 20px 0;
-  }
-
-  .education-section1-hero h1 {
-    font-size: 38px;
-  }
-
-  .education-section1-bottom {
-    height: 150px;
-    padding-bottom: 32px;
-  }
-
-  .education-breadcrumb {
-    font-size: 14px;
-  }
-
 }
 
 
@@ -260,7 +187,7 @@
 .education-section2 p {
   max-width: 950px;
 
-  margin: 115px auto 0;
+  margin: auto 0;
 
   font-size: 16px;
   line-height: 1.7;
@@ -283,11 +210,6 @@
 
   .education-section2 h2 {
     font-size: 25px;
-  }
-
-  .education-section2 p {
-    margin-top: 80px;
-    max-width: 850px;
   }
 }
 
@@ -466,7 +388,7 @@
 .education-best-features li {
   display: flex;
   align-items: center;
-
+  justify-content: center;
   margin-bottom: 25px;
 
   font-size: 16px;
@@ -501,7 +423,7 @@
   width: 300px;
   justify-content: center;
   padding: 11px 18px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 25px;
 
@@ -562,9 +484,9 @@
   width: 200px;
   justify-content: center;
   padding: 10px 20px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
-  border-radius: 2px;
+  border-radius: 10px;
 
   background: #202731;
   color: #ead9bd;
@@ -647,7 +569,7 @@
 
   padding: 0;
 
-  border: 1px solid #111820;
+  border: 1px solid #DFD0B8;
   border-radius: 50%;
 
   background: transparent;
@@ -657,7 +579,7 @@
 
 
 .education-carousel-dot.active {
-  background: #111820;
+  background: #948979;
 }
 
 
@@ -893,14 +815,14 @@
 .education-section6-list {
   position: relative;
 
-  width: 500px;
+  width: 300px;
   max-width: 100%;
 
   padding-top: 34px;
 
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 
@@ -969,43 +891,6 @@
   font-weight: 700;
 
   line-height: 1;
-}
-
-
-/* =====================================================
-   STEPPED INDENTATION
-===================================================== */
-
-.education-check-item.item-1 {
-  margin-left: 35px;
-}
-
-.education-check-item.item-2 {
-  margin-left: 52px;
-}
-
-.education-check-item.item-3 {
-  margin-left: 70px;
-}
-
-.education-check-item.item-4 {
-  margin-left: 30px;
-}
-
-.education-check-item.item-5 {
-  margin-left: 75px;
-}
-
-.education-check-item.item-6 {
-  margin-left: 48px;
-}
-
-.education-check-item.item-7 {
-  margin-left: 35px;
-}
-
-.education-check-item.item-8 {
-  margin-left: 0;
 }
 
 
@@ -1234,7 +1119,7 @@
   height: 9px;
 
   padding: 0;
-  border: 1px solid #1d2229;
+  border: 1px solid #DFD0B8;
   border-radius: 50%;
 
   background: transparent;
@@ -1243,8 +1128,7 @@
 }
 
 .education-section7-dot.active {
-  background: #171b20;
-  border-color: #171b20;
+  background: #948979;
 }
 
 /* ================================
@@ -1257,7 +1141,7 @@
   width: 200px;
   justify-content: center;
   padding: 11px 22px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border-radius: 24px;
 
   background: #393E46;
@@ -1502,8 +1386,8 @@
   padding: 11px 20px;
 
   border: none;
-  border-radius: 3px;
-
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   background: #222831;
 
   color: #ead9b9;
@@ -1529,67 +1413,6 @@
 /* ================================
    BOTTOM CLIP-PATH
 ================================ */
-
-.education-section8-wave {
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 75px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0% 55%,
-    10% 78%,
-    19% 68%,
-    29% 87%,
-    39% 60%,
-    49% 82%,
-    60% 62%,
-    70% 88%,
-    82% 45%,
-    91% 67%,
-    100% 52%,
-    100% 100%,
-    0% 100%
-  );
-}
-
-
-/* Second darker layer */
-
-.education-section8-wave::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 45px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0% 50%,
-    10% 72%,
-    20% 60%,
-    30% 80%,
-    40% 54%,
-    50% 75%,
-    60% 55%,
-    70% 76%,
-    82% 42%,
-    92% 61%,
-    100% 48%,
-    100% 100%,
-    0% 100%
-  );
-}
 
 
 /* ================================
@@ -2041,16 +1864,6 @@
   color: #ead9b9;
 }
 
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 900px) {
-
-  .education-stats-container {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 45px;
-  }
-
-}
 
 @media (max-width: 550px) {
 
@@ -2195,7 +2008,7 @@
   justify-content: center;
   margin: 20px auto;
   padding: 10px 19px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 25px;
 
@@ -2310,7 +2123,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #171b21;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -2323,7 +2136,7 @@
 
 
 .education-section11-dot.active {
-  background: #171b21;
+  background: #948979;
 
   transform: scale(1.1);
 }
@@ -2488,7 +2301,7 @@
 .education-section12-list {
   margin: 28px auto 0;
 
-  width: fit-content;
+  width: 540px;
 
   display: flex;
   flex-direction: column;
@@ -2520,38 +2333,6 @@
   color: #ead9b9;
 }
 
-
-/* =========================================
-   STAGGERED POSITIONS
-========================================= */
-
-.education-section12-item.item-1 {
-  margin-left: 0;
-}
-
-.education-section12-item.item-2 {
-  margin-left: 20px;
-}
-
-.education-section12-item.item-3 {
-  margin-left: 70px;
-}
-
-.education-section12-item.item-4 {
-  margin-left: 5px;
-}
-
-.education-section12-item.item-5 {
-  margin-left: 105px;
-}
-
-.education-section12-item.item-6 {
-  margin-left: 130px;
-}
-
-.education-section12-item.item-7 {
-  margin-left: 15px;
-}
 
 
 /* =========================================
@@ -2594,10 +2375,10 @@
   padding: 10px 18px;
 
   border: none;
-  border-radius: 3px;
+  border-radius: 10px;
 
   background: #393E46;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   color: #ead9b9;
 
   font-size: 16px;
@@ -2714,7 +2495,7 @@
   margin: 0 auto;
 
   display: flex;
-
+  
   align-items: center;
 
   justify-content: space-between;
@@ -2742,7 +2523,7 @@
 .education-section13-signup {
   width: 200px;
   height: 52px;
-  
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   flex-shrink: 0;
 
   border: none;
@@ -2865,13 +2646,6 @@
   .education-section13 {
     padding: 50px 30px 70px;
   }
-
-  .education-section13-top {
-    max-width: 750px;
-
-    gap: 35px;
-  }
-
   .education-section13-top h2 {
     font-size: 27px;
   }
@@ -3356,7 +3130,19 @@
 ========================================= */
 
 @media (max-width: 768px) {
+  .education-section13-top {
+    flex-direction: column;
 
+  }
+  .education-stat h2 {
+    font-size: 28px;
+  }
+  .education-stat p {
+    font-size: 14px;
+  }
+  .education-section1-hero h1 {
+    font-size: 32px;
+  }
   .industry-section15 {
     padding: 55px 20px 60px;
   }

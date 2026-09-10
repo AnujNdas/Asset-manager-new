@@ -428,14 +428,10 @@ useEffect(() => {
 
 
         <section className="travel-section1">
-  <div className="travel-section1-content">
     <h1>
-      Travel &amp; Transportation Logistics Asset
-      <br />
-      Management
+      Travel &amp; Transportation Logistics Asset Management
     </h1>
-  </div>
-
+    
   <div className="travel-section1-breadcrumb">
     <Link to="/" 
     target="_blank"
@@ -444,17 +440,19 @@ useEffect(() => {
     <span> - </span>
     <span>Travel &amp; Transportation Asset Management Software</span>
   </div>
-</section>
-
-<section className="travel-section2">
-  <div className="travel-section2-container">
-
-    <h2>
+      <h2>
       AssetPegasus — <strong>Simple Travel &amp; Transportation Asset Management</strong>{" "}
       Software
       <br />
       <strong>that Scales With Your Business.</strong>
     </h2>
+
+</section>
+
+<section className="travel-section2">
+  <div className="travel-section2-container">
+
+
 
     <div className="travel-section2-content">
 

@@ -16,14 +16,12 @@
 
 .itam-hero-top {
   position: relative;
-
-  min-height: 275px;
-
+  height: 400px;
   display: flex;
-
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-
+  gap: 20px;
   padding: 80px 20px 0;
 
   box-sizing: border-box;
@@ -31,22 +29,6 @@
   background: #222831;
 
   z-index: 2;
-
-  /*
-    Zig-zag bottom edge
-  */
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 86%,
-    85% 80%,
-    63% 86%,
-    47% 78%,
-    33% 86%,
-    18% 82%,
-    10% 88%,
-    0 82%
-  );
 }
 
 
@@ -83,7 +65,7 @@
 
   margin-top: -35px;
 
-  padding: 125px 20px 60px;
+  padding: 75px 20px 60px;
 
   box-sizing: border-box;
 
@@ -153,52 +135,6 @@
     margin-top: 60px;
  }
 
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 768px) {
-
-  .itam-hero-top {
-    min-height: 260px;
-
-    padding-top: 25px;
-
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% 87%,
-      80% 82%,
-      62% 88%,
-      45% 80%,
-      30% 87%,
-      15% 82%,
-      0 87%
-    );
-  }
-
-
-  .itam-hero-top h1 {
-    font-size: 1rem;
-
-    line-height: 1.45;
-  }
-
-
-  .itam-hero-bottom {
-    min-height: 330px;
-
-    padding-top: 115px;
-  }
-
-
-  .itam-hero-content h2 {
-    font-size: 24px;
-
-    line-height: 1.6;
-  }
-
-}
 
 
 /* =========================================
@@ -339,10 +275,10 @@
 
 .itam-trial-button {
   display: inline-flex;
-
+  width: 300px;
   align-items: center;
   justify-content: center;
-
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   margin-top: 36px;
 
   padding: 12px 24px;
@@ -944,7 +880,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #20252c;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -956,7 +892,7 @@
 }
 
 .section4-dot.active {
-  background: #20252c;
+  background: #948979;
 
   transform: scale(1.05);
 }
@@ -1020,6 +956,7 @@
 }
 
 .section4-signup-btn {
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   margin: 25px auto;
   width: 200px;
   justify-content: center;
@@ -1180,43 +1117,6 @@
 }
 
 
-/* ==========================================
-   BOTTOM CLIPPED SHAPE
-========================================== */
-
-.itam-section-5::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-
-  height: 90px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 38%,
-    10% 68%,
-    19% 88%,
-    27% 55%,
-    34% 25%,
-    43% 63%,
-    52% 78%,
-    60% 55%,
-    70% 35%,
-    82% 8%,
-    91% 42%,
-    100% 67%,
-    100% 100%,
-    0 100%
-  );
-
-  z-index: 0;
-}
 
 
 /* ==========================================
@@ -1365,7 +1265,7 @@
   align-items: center;
 
   justify-content: center;
-
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   margin-top: 16px;
 
   padding: 10px 16px;
@@ -1380,7 +1280,7 @@
 
   line-height: 1.2;
 
-  border-radius: 2px;
+  border-radius: 10px;
 
   transition:
     background 0.25s ease,
@@ -1915,13 +1815,6 @@
   .section7 {
     padding: 55px 20px 45px;
   }
-
-  .section7-container {
-    grid-template-columns: repeat(2, 1fr);
-
-    row-gap: 45px;
-  }
-
   .section7-number {
     font-size: 42px;
   }
@@ -2082,9 +1975,9 @@
 
 .section8-cta {
   margin: 25px auto;
-  width: 200px;
+  width: 300px;
   justify-content: center;
-
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 12px 20px;
 
   border: none;
@@ -2226,7 +2119,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #222831;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -2239,7 +2132,7 @@
 
 
 .section8-dot.active {
-  background: #222831;
+  background: #948979;
 
   transform: scale(1.05);
 }
@@ -2387,43 +2280,6 @@
   overflow: hidden;
 }
 
-
-/* ==========================================
-   BOTTOM CLIPPED BACKGROUND
-========================================== */
-
-.itam-section-9::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 90px;
-
-  background: #393E46;
-
-  clip-path: polygon(
-    0 38%,
-    10% 68%,
-    19% 88%,
-    27% 55%,
-    34% 25%,
-    43% 63%,
-    52% 78%,
-    60% 55%,
-    70% 35%,
-    82% 8%,
-    91% 42%,
-    100% 67%,
-    100% 100%,
-    0 100%
-  );
-
-  z-index: 0;
-}
 
 
 /* ==========================================
@@ -2628,10 +2484,10 @@
   margin-top: 16px;
 
   width: 200px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  padding: 20px 16px;
 
-  padding: 10px 16px;
-
-  border: 1px solid #efd8bd;
+  /* border: 1px solid #efd8bd; */
 
   background: #393E46;
 
@@ -2891,14 +2747,13 @@
 
 .itam-section-10-button {
 
-  display: inline-flex;
-
   align-items: center;
 
+  width: 300px;
   justify-content: center;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;  
   margin-top: 12px;
-
+  margin: auto;
   padding: 11px 18px;
 
   border-radius: 25px;
@@ -3049,7 +2904,7 @@
 
   padding: 0;
 
-  border: 1px solid #1e242d;
+  border: 1px solid #DFD0B8;
 
   border-radius: 50%;
 
@@ -3062,7 +2917,7 @@
 
 .itam-section-10-dots button.active {
 
-  background: #1d232c;
+  background: #948979;
 
 }
 
@@ -3251,45 +3106,6 @@
 
 
 /* ==========================================
-   DARK CLIPPED BOTTOM
-========================================== */
-
-.itam-section-12::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 95px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 35%,
-    7% 55%,
-    15% 72%,
-    23% 52%,
-    31% 42%,
-    40% 60%,
-    48% 78%,
-    58% 55%,
-    66% 70%,
-    75% 42%,
-    82% 58%,
-    90% 28%,
-    100% 55%,
-    100% 100%,
-    0 100%
-  );
-
-  z-index: 0;
-}
-
-
-/* ==========================================
    CONTENT
 ========================================== */
 
@@ -3352,7 +3168,7 @@
 
 .itam-section-12-column p {
   margin: 0;
-
+  text-align: left;
   font-size: 17px;
 
   line-height: 1.6;
@@ -3368,7 +3184,7 @@
 .itam-section-12-column ul {
   margin: 10px 0 0;
 
-  padding-left: 30px;
+  /* padding-left: 30px; */
 
   color: #efd8bd;
 }
@@ -3573,7 +3389,7 @@
 
   border-radius: 9px;
 
-  background: #414852;
+  background: #393E46;
 
   color: #efd8bd;
 
@@ -3919,37 +3735,6 @@
 }
 
 
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 768px) {
-
-  .why-choose-section {
-    min-height: auto;
-
-    padding: 55px 20px;
-  }
-
-  .why-choose-content h2 {
-    font-size: 28px;
-  }
-
-  .why-choose-content h3,
-  .assetpegasus-info h3 {
-    font-size: 24px;
-  }
-
-  .intro-text,
-  .assetpegasus-info p {
-    font-size: 17px;
-  }
-
-  .assetpegasus-info {
-    margin-top: 50px;
-  }
-}
-
 
 @media (max-width: 480px) {
 
@@ -4026,7 +3811,7 @@
 .section15-signup {
   width: 200px;
   height: 52px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 30px;
 
@@ -4087,7 +3872,7 @@
 
   padding: 28px 35px;
 
-  background: #414852;
+  background: #393E46;
 
   text-align: center;
   cursor: pointer;
@@ -4169,49 +3954,6 @@
 /* =========================================
    RESPONSIVE
 ========================================= */
-
-@media (max-width: 768px) {
-
-  .section15 {
-    min-height: 520px;
-
-    padding: 25px 20px 60px;
-  }
-
-  .section15-header {
-    flex-direction: column;
-    gap: 25px;
-
-    margin-bottom: 80px;
-
-    text-align: center;
-  }
-
-  .section15-header h2 {
-    font-size: 2rem;
-  }
-
-  .section15-signup {
-    width: 250px;
-  }
-
-  .section15-visit {
-    margin-bottom: 55px;
-  }
-
-  .section15-card {
-    width: min(440px, 90%);
-    padding: 25px 20px;
-  }
-
-  .section15-card h2 {
-    font-size: 24px;
-  }
-
-  .section15-card p {
-    font-size: 17px;
-  }
-}
 
 
 @media (max-width: 480px) {
@@ -4321,36 +4063,6 @@
     box-shadow 0.3s ease;
 }
 
-
-/* =========================================
-   STAGGERED HEIGHTS
-========================================= */
-
-.industry-card-1 {
-  min-height: 255px;
-}
-
-.industry-card-2 {
-  min-height: 320px;
-}
-
-.industry-card-3 {
-  min-height: 220px;
-}
-
-.industry-card-4 {
-  min-height: 255px;
-}
-
-.industry-card-5 {
-  min-height: 288px;
-}
-
-.industry-card-6 {
-  min-height: 288px;
-}
-
-
 /* =========================================
    ICON
 ========================================= */
@@ -4402,54 +4114,6 @@
     0 28px 38px rgba(0, 0, 0, 0.34);
 }
 
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 900px) {
-
-  .industry-assets-grid {
-    gap: 16px;
-  }
-
-  .industry-card {
-    width: 125px;
-  }
-
-  .industry-icon {
-    font-size: 38px;
-  }
-}
-
-
-@media (max-width: 750px) {
-
-  .industry-assets-section {
-    padding: 45px 20px 60px;
-  }
-
-  .industry-assets-grid {
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    max-width: 600px;
-
-    gap: 20px;
-  }
-
-  .industry-card,
-  .industry-card-1,
-  .industry-card-2,
-  .industry-card-3,
-  .industry-card-4,
-  .industry-card-5,
-  .industry-card-6 {
-    width: 100%;
-    min-height: 240px;
-  }
-}
 
 
 @media (max-width: 480px) {
@@ -4726,4 +4390,124 @@
     padding-top: 10px;
     padding-bottom: 16px;
   }
+}
+
+
+@media (max-width: 768px) {
+
+  .section15 {
+    min-height: 520px;
+
+    padding: 25px 20px 60px;
+  }
+
+  .section15-header {
+    flex-direction: column;
+    gap: 25px;
+
+    margin-bottom: 80px;
+
+    text-align: center;
+  }
+  .industry-assets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .section15-header h2 {
+    font-size: 2rem;
+  }
+
+  .section15-signup {
+    width: 250px;
+  }
+
+  .section15-visit {
+    margin-bottom: 55px;
+  }
+
+  .section15-card {
+    width: min(440px, 90%);
+    padding: 25px 20px;
+  }
+
+  .section15-card h2 {
+    font-size: 24px;
+  }
+
+  .section15-card p {
+    font-size: 17px;
+  }
+}
+ @media ( max-width : 1024px) {
+  .industry-assets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+ }
+
+ @media (max-width: 768px) {
+
+  .itam-hero-top {
+    padding-top: 25px;
+  }
+
+
+  .itam-hero-top h1 {
+    font-size: 2rem;
+    line-height: 1.45;
+  }
+
+
+  .itam-hero-bottom {
+    min-height: 330px;
+
+    /* padding-top: 115px; */
+  }
+
+  .itam-breadcrumb span {
+    font-size: 17px;
+  }
+  .itam-hero-content h2 {
+    font-size: 24px;
+
+    line-height: 1.6;
+  }
+  .itam-feature-list p {
+    text-align: center;
+  }
+  .itam-section-10-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .itam-section-10-left h2 {
+    text-align: center;
+  }
+  .itam-section-10-features li {
+    justify-content: center;
+  }
+  
+  .why-choose-section {
+    min-height: auto;
+
+    padding: 55px 20px;
+  }
+
+  .why-choose-content h2 {
+    font-size: 28px;
+  }
+
+  .why-choose-content h3,
+  .assetpegasus-info h3 {
+    font-size: 24px;
+  }
+
+  .intro-text,
+  .assetpegasus-info p {
+    font-size: 17px;
+  }
+
+  .assetpegasus-info {
+    margin-top: 50px;
+  }
+
 }

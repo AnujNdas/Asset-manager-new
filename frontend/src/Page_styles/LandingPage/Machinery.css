@@ -31,21 +31,10 @@
 
 .hero-shape-back {
   bottom: 0;
-  height: 400px;
+  /* height: 400px; */
 
   background: #393E46;
 
-  clip-path: polygon(
-    0 25%,
-    16% 38%,
-    32% 18%,
-    47% 36%,
-    63% 12%,
-    78% 30%,
-    100% 8%,
-    100% 100%,
-    0 100%
-  );
 }
 
 
@@ -86,7 +75,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  justify-content: center;
   text-align: center;
 
   position: relative;
@@ -99,7 +88,6 @@
 ========================================= */
 
 .machinery-hero h1 {
-  margin: 48px 0 0;
 
   font-size: 48px;
   line-height: 1.25;
@@ -117,7 +105,7 @@
 ========================================= */
 
 .machinery-breadcrumb {
-  margin-top: 260px;
+  margin-top: 100px;
   margin-bottom: 0;
   /* width: 400px; */
   font-size: 17px;
@@ -128,6 +116,7 @@
 
 
 .machinery-breadcrumb a {
+  padding: 0;
   color: #efd8bd;
   display: inline;
   text-decoration: underline;
@@ -178,45 +167,6 @@
 }
 
 
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 768px) {
-
-  .machinery-hero {
-    min-height: 500px;
-  }
-
-  .machinery-hero-content {
-    min-height: 500px;
-  }
-
-  .machinery-breadcrumb {
-    margin-top: 210px;
-    font-size: 15px;
-  }
-
-  .machinery-hero h1 {
-    margin-top: 35px;
-
-    font-size: 2rem;
-  }
-
-  .machinery-hero-description {
-    margin-top: 30px;
-
-    font-size: 17px;
-
-    max-width: 90%;
-  }
-
-  .hero-shape-front {
-    height: 245px;
-  }
-}
-
-
 @media (max-width: 480px) {
 
   .machinery-hero {
@@ -229,13 +179,12 @@
   }
 
   .machinery-breadcrumb {
-    margin-top: 185px;
+    /* margin-top: 185px; */
 
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .machinery-hero h1 {
-    margin-top: 30px;
 
     font-size: 2rem;
   }
@@ -799,7 +748,8 @@
 
   border-radius: 25px;
 
-  background: #222a34;
+  background: #393E46;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   color: #efd8bd;
 
@@ -937,7 +887,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #151a20;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -951,7 +901,7 @@
 
 .tracking-dot.active {
 
-  background: #151a20;
+  background: #948979;
 
   transform: scale(1.05);
 }
@@ -1418,10 +1368,11 @@
 
 
 .warranty-cta {
-  margin-top: 15px;
+  margin: auto;
   width: 300px;
   justify-content: center;
   padding: 12px 25px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   border: none;
   border-radius: 30px;
@@ -1625,10 +1576,6 @@
 
 @media (max-width: 600px) {
 
-  .machinery-warranty-section {
-    padding: 60px 20px;
-  }
-
 
   .warranty-features {
     padding: 10px;
@@ -1816,13 +1763,6 @@
     font-size: 32px;
   }
 
-
-  .section6-label {
-    font-size: 15px;
-
-    max-width: 150px;
-  }
-
 }
 
 /* section 7 css here  */
@@ -1922,6 +1862,7 @@
 
 .maintenance-cta {
   display: block;
+  
   width: 300px;
   justify-content: center;
   margin: 28px auto 0;
@@ -1929,6 +1870,7 @@
   padding: 12px 22px;
 
   border: none;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   border-radius: 30px;
 
@@ -2198,35 +2140,6 @@
 /* =========================================
    CLIPPED BACKGROUND
 ========================================= */
-
-.section8-clip-bg {
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 120px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 55%,
-    90% 35%,
-    81% 58%,
-    70% 32%,
-    63% 70%,
-    52% 48%,
-    42% 70%,
-    31% 45%,
-    18% 73%,
-    0 42%
-  );
-
-  pointer-events: none;
-}
 
 
 /* =========================================
@@ -2534,7 +2447,7 @@
 
 .section9-feature p {
   margin: 0;
-
+  text-align: left;
   font-size: 17px;
 
   line-height: 1.7;
@@ -2554,6 +2467,7 @@
   margin-top: 25px;
 
   padding: 11px 18px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   border: none;
 
@@ -2683,7 +2597,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #171b20;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -2696,7 +2610,7 @@
 
 
 .section9-dot.active {
-  background: #171b20;
+  background: #948979;
 
   transform: scale(1.1);
 }
@@ -2805,29 +2719,6 @@
   overflow: hidden;
 }
 
-/* Optional clipped background layer */
-.machinery-section10::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 90px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 0,
-    18% 30%,
-    36% 8%,
-    52% 40%,
-    70% 15%,
-    86% 35%,
-    100% 8%,
-    100% 0
-  );
-}
-
 .section10-container {
   position: relative;
   z-index: 1;
@@ -2906,35 +2797,6 @@
 }
 
 
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 768px) {
-
-  .machinery-section10 {
-    padding: 70px 0px;
-    width: 100%;
-  }
-  .section10-content {
-    width: 100%;
-  }
-  .section10-container {
-    gap: 35px;
-    width: 100%;
-  }
-
-  .section10-content h2 {
-    font-size: 20px;
-  }
-
-  .section10-content p {
-    font-size: 14px;
-    line-height: 1.55;
-  }
-
-}
-
 /* section 11 css  */
 .machinery-section11 {
   position: relative;
@@ -3001,7 +2863,7 @@
 ================================ */
 
 .section11-feature {
-
+  width: 400px;
   display: flex;
 
   align-items: flex-start;
@@ -3025,7 +2887,7 @@
 .section11-feature p {
 
   margin: 0;
-
+  text-align: left;
   font-size: 17px;
 
   line-height: 1.65;
@@ -3039,13 +2901,13 @@
 ================================ */
 
 .section11-cta {
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   margin-top: 10px;
   width: 200px;
   justify-content: center;
 
   border: none;
-
+  text-align: center;
   padding: 11px 22px;
 
   border-radius: 25px;
@@ -3354,7 +3216,7 @@
 
 
 .section12-content h2 {
-
+  text-align: center;
   margin: 0 0 28px;
 
   color: #efd8bd;
@@ -3720,30 +3582,6 @@
 }
 
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-
-  .machinery-cloud-section {
-    padding: 55px 20px;
-  }
-
-  .machinery-cloud-content h2 {
-    font-size: 24px;
-    margin-bottom: 24px;
-  }
-
-  .machinery-cloud-content p {
-    font-size: 17px;
-    line-height: 1.65;
-    margin-bottom: 24px;
-  }
-
-}
-
-
 @media (max-width: 480px) {
 
   .machinery-cloud-section {
@@ -3845,6 +3683,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   margin-top: 5px;
 
@@ -4136,6 +3975,7 @@
 
 .about-us-btn {
   display: inline-flex;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   align-items: center;
   justify-content: center;
@@ -4404,59 +4244,8 @@
 }
 
 
-/* =========================================
-   MOBILE
-========================================= */
 
-@media (max-width: 768px) {
 
-  .asset-categories-section {
-    padding: 45px 20px;
-  }
-  .asset-category-column {
-    align-items: center;
-  }
-  .asset-categories-container {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 35px;
-  }
-
-  .asset-category-video {
-    order: 1;
-
-    width: 100%;
-
-    padding: 15px;
-  }
-
-  .left-column {
-    order: 2;
-
-    width: 100%;
-
-    padding-left: 10px;
-
-    gap: 22px;
-  }
-
-  .right-column {
-    order: 3;
-
-    width: 100%;
-
-    padding-left: 10px;
-
-    gap: 22px;
-  }
-
-  .asset-category-item {
-    font-size: 17px;
-  }
-
-}
 
 /* section 17 css here  */
 
@@ -4513,6 +4302,7 @@
   justify-content: center;
 
   padding: 9px 16px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
   background: #252d37;
 
@@ -4633,19 +4423,6 @@
 
   background: #222831;
 
-  /*
-    Opposite angled top edge
-  */
-  clip-path: polygon(
-    0 18%,
-    25% 10%,
-    50% 18%,
-    75% 10%,
-    100% 18%,
-    100% 100%,
-    0 100%
-  );
-
   position: relative;
 
   z-index: 1;
@@ -4675,7 +4452,7 @@
 
 .section17-signup {
   width: 200px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 14px 30px;
 
   display: inline-flex;
@@ -5047,4 +4824,144 @@
     padding-top: 10px;
     padding-bottom: 16px;
   }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .machinery-hero {
+    min-height: 500px;
+  }
+
+  .machinery-hero-content {
+    min-height: 500px;
+  }
+
+  .machinery-breadcrumb {
+    /* margin-top: 210px; */
+    font-size: 15px;
+  }
+
+  .machinery-hero h1 {
+
+    font-size: 2rem;
+  }
+
+  .machinery-hero-description {
+    margin-top: 30px;
+
+    font-size: 17px;
+
+    max-width: 90%;
+  }
+
+  .hero-shape-front {
+    height: 245px;
+  }
+  .machinery-warranty-section {
+    padding: 40px 0px;
+  }
+  .section9-feature {
+    justify-content: center;
+  }
+  .feature-item { 
+    flex-direction: column;
+    align-items: center;
+  }
+  .feature-item p {
+    text-align: center;
+  }
+  .asset-categories-section {
+    padding: 45px 20px;
+  }
+  .asset-category-column {
+    align-items: center;
+  }
+  .asset-categories-container {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 35px;
+  }
+
+  .asset-category-video {
+
+    width: 100%;
+
+    padding: 15px;
+  }
+
+  .left-column {
+
+    width: 100%;
+
+    padding-left: 10px;
+
+    gap: 22px;
+  }
+
+  .right-column {
+
+    width: 100%;
+
+    padding-left: 10px;
+
+    gap: 22px;
+  }
+
+  .asset-category-item {
+    font-size: 17px;
+  }
+
+  .section6-label {
+    font-size: 12px;
+  }
+  .section13-container {
+    grid-template-columns: 1fr;
+  }
+  .section13-column h2 {
+    text-align: center;
+  }
+  .section13-column li {
+    justify-content: center;
+  }
+  
+  .machinery-section10 {
+    padding: 70px 0px;
+    width: 100%;
+  }
+  .section10-content {
+    width: 100%;
+  }
+  .section10-container {
+    gap: 35px;
+    width: 100%;
+  }
+
+  .section10-content h2 {
+    font-size: 20px;
+  }
+
+  .section10-content p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .machinery-cloud-section {
+    padding: 55px 20px;
+  }
+
+  .machinery-cloud-content h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .machinery-cloud-content p {
+    font-size: 17px;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
 }

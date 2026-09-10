@@ -387,12 +387,8 @@ useEffect(() => {
   <div className="education-section1-hero">
 
     <h1>
-      Education Asset Management Software
+      Education Asset Management<br/> Software
     </h1>
-
-  </div>
-
-  <div className="education-section1-bottom">
 
     <div className="education-breadcrumb">
       <Link to="/" 
@@ -402,19 +398,19 @@ useEffect(() => {
       <span>Education Asset Management</span>
     </div>
 
+  <h2>
+    Simple Education Asset Management Software
+    <br />
+    that Scales With Your Business.
+  </h2>
   </div>
+
 
 </section>
 
 {/* ================= SECTION 2 ================= */}
 
 <section className="education-section2">
-
-  <h2>
-    Simple Education Asset Management Software
-    <br />
-    that Scales With Your Business.
-  </h2>
 
   <p>
     Today’s education management handle so much more than a class and books.

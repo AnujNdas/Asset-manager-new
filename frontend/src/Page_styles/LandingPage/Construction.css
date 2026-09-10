@@ -20,55 +20,20 @@
 
 .construction-section-1-top {
   position: relative;
-
-  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 100%;  
   height: 270px;
 
   background: #232a33;
 
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 
   z-index: 1;
 }
 
-
-/* =========================================
-   JAGGED CLIP-PATH
-========================================= */
-
-.construction-section-1-top::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: -1px;
-
-  width: 100%;
-  height: 65px;
-
-  background: #343a40;
-
-  clip-path: polygon(
-    0% 55%,
-    8% 100%,
-    18% 90%,
-    28% 75%,
-    38% 90%,
-    46% 75%,
-    58% 100%,
-    68% 82%,
-    80% 88%,
-    90% 68%,
-    100% 88%,
-    100% 100%,
-    0% 100%
-  );
-
-  z-index: 2;
-}
 
 
 /* =========================================
@@ -88,6 +53,10 @@
   line-height: 1.15;
 
   text-align: center;
+}
+.construction-section-1-top h2 {
+  text-align: center;
+  font-size: 24px;
 }
 
 
@@ -121,7 +90,7 @@
   display: flex;
   font-size: 15px;
   font-weight: 500;
-
+  justify-content: center;
   text-align: center;
 }
 
@@ -277,7 +246,6 @@
 ========================================= */
 
 .construction-section-2-text {
-  margin-top: 112px;
 
   width: 100%;
 }
@@ -322,10 +290,6 @@
 
   .construction-section-2 h2 {
     font-size: 25px;
-  }
-
-  .construction-section-2-text {
-    margin-top: 75px;
   }
 
   .construction-section-2-text p {
@@ -524,7 +488,7 @@
   width: 200px;
   justify-content: center;
   padding: 11px 20px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 25px;
 
@@ -611,8 +575,8 @@
     margin: auto;
   justify-content: center;
   border: none;
-  border-radius: 3px;
-
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   background: #202730;
   color: #ead9bc;
 
@@ -764,9 +728,6 @@
     align-items: center;
   }
 
-  .construction-section-4-left li {
-    text-align: left;
-  }
 
   .construction-section-4-trial-btn {
     margin: 10px auto 35px;
@@ -1358,7 +1319,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #151a20;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -1371,7 +1332,7 @@
 
 
 .construction-section-6-dot.active {
-  background: #151a20;
+  background: #948979;
 }
 
 
@@ -1384,7 +1345,7 @@
   width: 200px;
   justify-content: center;
   padding: 11px 22px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
 
   border-radius: 25px;
@@ -1544,7 +1505,7 @@
   border: none;
   border-radius: 50%;
 
-  background: #8f9398;
+  background: #DFD0B8;
 
   cursor: pointer;
 
@@ -1555,7 +1516,7 @@
 
 
 .construction-section-7-dot.active {
-  background: #d5d5d5;
+  background: #948979;
   transform: scale(1.15);
 }
 
@@ -1566,12 +1527,12 @@
 
 .construction-section-7-signin {
   margin-top: 16px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 11px 20px;
   width: 200px;
   justify-content: center;
   border: none;
-  border-radius: 2px;
+  border-radius: 10px;
 
   background: #3b424d;
   color: #ead9bb;
@@ -1590,41 +1551,6 @@
 .construction-section-7-signin:hover {
   background: #454d59;
   transform: translateY(-2px);
-}
-
-
-/* =========================================
-   BOTTOM MOUNTAIN CLIP
-========================================= */
-
-.construction-section-7-bottom-clip {
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 62px;
-
-  background: #393E46;
-
-  clip-path: polygon(
-    0% 55%,
-    8% 82%,
-    17% 66%,
-    25% 91%,
-    33% 59%,
-    41% 82%,
-    50% 63%,
-    60% 88%,
-    69% 65%,
-    77% 86%,
-    86% 55%,
-    94% 76%,
-    100% 59%,
-    100% 100%,
-    0% 100%
-  );
 }
 
 
@@ -1872,7 +1798,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #1d2229;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -1885,7 +1811,7 @@
 
 
 .construction-section-8-dot.active {
-  background: #171b20;
+  background: #948979;
 
   transform: scale(1.05);
 }
@@ -2063,15 +1989,6 @@
   .construction-section-9-content p {
     max-width: 100%;
   }
-
-  .construction-section-9-stats {
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 35px 10px;
-
-    margin-top: 30px;
-  }
-
   .construction-section-9-stat h2 {
     font-size: 40px;
   }
@@ -2181,7 +2098,7 @@
 ========================================= */
 
 .construction-section-10-signin { 
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 25px;
   width: 200px;
@@ -2280,7 +2197,7 @@
 
   padding: 0;
 
-  border: 1px solid #202731;
+  border: 1px solid #DFD0B8;
   border-radius: 50%;
 
   background: transparent;
@@ -2293,7 +2210,7 @@
 }
 
 .construction-section-10-dot.active {
-  background: #202731;
+  background: #948979;
   transform: scale(1.15);
 }
 
@@ -2414,14 +2331,13 @@
 /* Button */
 
 .section11-btn {
-  margin-top: 30px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 11px 20px;
   width: 200px;
   justify-content: center;
   border: none;
-  margin: auto;
-  border-radius: 3px;
+  margin: 30px auto;
+  border-radius: 10px;
 
   background: #3b424c;
   color: #ead9b9;
@@ -2446,41 +2362,7 @@
    RESPONSIVE
 ================================ */
 
-@media (max-width: 768px) {
 
-  .construction-section11 {
-    padding: 25px 18px 90px;
-
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% 94%,
-      90% 96%,
-      80% 94%,
-      70% 97%,
-      60% 94%,
-      50% 97%,
-      40% 94%,
-      30% 97%,
-      20% 94%,
-      10% 96%,
-      0 94%
-    );
-  }
-
-  .construction-section11 h2 {
-    font-size: 24px;
-  }
-
-  .construction-section11 p,
-  .section11-features {
-    font-size: 14px;
-  }
-
-  .section11-description {
-    margin-top: 25px !important;
-  }
-}
 
 /* ================= SECTION 12 ================= */
 
@@ -2630,7 +2512,7 @@
 .construction-section13-signup {
   width: 290px;
   height: 50px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 28px;
 
@@ -2921,6 +2803,23 @@
 ======================================== */
 
 @media (max-width: 768px) {
+.construction-section-9-stat h2 {
+  font-size: 28px ;
+}
+.construction-section-9-stat p {
+  font-size: 14px ;
+}
+  .construction-section-4-slide-content ul {
+    margin: auto;
+    width: 300px;
+  }
+  .construction-section-4-slide-content li {
+    justify-content: flex-start;
+    padding: 0;
+  }
+  .construction-section-4-left li {
+    justify-content: center;
+  }
 
   .construction-section14 {
     padding: 25px 12px 40px;
@@ -2973,12 +2872,34 @@
     justify-content: center;
   }
   .construction-section-8-item { 
-    justify-content: center;
+    justify-content: flex-start;
+    width: 300px;
+    margin: 20px auto;
+
   }
   .construction-feature , .construction-feature p { 
     text-align: center;
     padding: 0;
   }
+
+  .construction-section11 {
+    padding: 25px 18px 90px;
+  }
+
+  .construction-section11 h2 {
+    font-size: 24px;
+  }
+
+  .section11-features {
+    width: 430px;
+    margin: auto;
+    align-items: flex-start;
+  }
+
+  .section11-description {
+    margin-top: 25px !important;
+  }
+
 }
 
 

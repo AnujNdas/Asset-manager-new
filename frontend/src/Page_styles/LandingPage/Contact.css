@@ -446,7 +446,7 @@ margin-bottom:12px;
 margin-top:25px;
 
 background:#232b37;
-color:#fff;
+color: #DFD0B8;
 
 border:none;
 
@@ -545,7 +545,7 @@ font-weight:600;
 .feedback span{
 
 text-decoration:underline;
-color:#fff;
+/* color:#fff; */
 
 }
 
@@ -571,7 +571,7 @@ justify-content:center;
 align-items:center;
 
 font-size:24px;
-color:#fff;
+/* color:#fff; */
 
 transition:.35s;
 

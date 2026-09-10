@@ -3,85 +3,19 @@
   min-height: 430px;
   width: 100%;
   overflow: hidden;
-
-  background: #393E46;
+  padding-top: 30px;
+  background: #222831;
   color: #ead9bb;
-
+  gap: 30px;
   display: flex;
+  justify-content: center;
   flex-direction: column;
   align-items: center;
 }
 
-/* Dark upper portion */
-.travel-section1::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 265px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 100%,
-    86% 92%,
-    74% 96%,
-    61% 88%,
-    48% 94%,
-    34% 88%,
-    19% 96%,
-    0 90%
-  );
-
-  z-index: 0;
-}
-
-/* Middle/lower darker wave */
-.travel-section1::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 280px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 100%,
-    86% 89%,
-    73% 94%,
-    61% 87%,
-    48% 93%,
-    34% 87%,
-    19% 94%,
-    0 88%
-  );
-
-  z-index: 1;
-}
-
-/* Keep content above clip-path layers */
-.travel-section1-content {
-  position: relative;
-  z-index: 2;
-
-  width: 100%;
-  text-align: center;
-
-  padding-top: 18px;
-}
-
-.travel-section1-content h1 {
+.travel-section1 h1 {
   margin: 0 auto;
-
+  text-align: center;
   max-width: 1100px;
 
   font-size: 48px;
@@ -90,10 +24,14 @@
 
   color: #ead9bb;
 }
+.travel-section1 h2 {
+  text-align: center;
+  font-size : 28px;
+}
 
 /* Breadcrumb */
 .travel-section1-breadcrumb {
-  position: absolute;
+  /* position: absolute; */
   z-index: 3;
 
   bottom: 38px;
@@ -148,7 +86,7 @@
 }
 
 .travel-section2-content {
-  margin-top: 115px;
+  margin-top: 40px;
   text-align: center;
 }
 
@@ -176,10 +114,6 @@
 
   .travel-section2 h2 {
     font-size: 24px;
-  }
-
-  .travel-section2-content {
-    margin-top: 70px;
   }
 
   .travel-section2-content p {
@@ -374,7 +308,7 @@
   padding: 11px 20px;
   justify-content: center;
   border: none;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border-radius: 25px;
 
   background: #202731;
@@ -448,8 +382,8 @@
   width: 200px;
   justify-content: center;
   border: none;
-
-  border-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  border-radius: 10px;
 
   background: #202731;
 
@@ -554,7 +488,7 @@
 
   padding: 0;
 
-  border: 1px solid #151b22;
+  border: 1px solid #DFD0B8;
 
   border-radius: 50%;
 
@@ -565,7 +499,7 @@
 
 
 .travel-carousel-dot.active {
-  background: #151b22;
+  background: #948979;
 }
 
 
@@ -918,7 +852,7 @@
 
   align-items: flex-start;
 
-  width: fit-content;
+  width: 250px;
 
   margin: auto;
 
@@ -959,13 +893,13 @@
 
   border-radius: 50%;
 
-  border: 1px solid #151b23;
+  border: 1px solid #DFD0B8;
 
   cursor: pointer;
 }
 
 .travel-section6-dot.active {
-  background: #151b23;
+  background: #948979;
 }
 
 
@@ -976,7 +910,7 @@
   width: 200px;
   justify-content: center;
   padding: 10px 22px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 25px;
 
@@ -1159,9 +1093,9 @@
   justify-content: center;
   margin: 20px auto;
   padding: 10px 18px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
-  border-radius: 3px;
+  border-radius: 10px;
 
   background: #3b424c;
 
@@ -1228,39 +1162,6 @@
   box-sizing: border-box;
 }
 
-
-/* =========================================
-   TOP CLIP PATH
-========================================= */
-
-.travel-section8::before {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 70px;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 0,
-    10% 48%,
-    20% 34%,
-    30% 58%,
-    40% 42%,
-    50% 67%,
-    60% 45%,
-    70% 72%,
-    82% 48%,
-    92% 60%,
-    100% 38%,
-    100% 0
-  );
-}
 
 
 /* =========================================
@@ -1407,7 +1308,7 @@
 
   background: transparent;
 
-  border: 1px solid #777;
+  border: 1px solid #DFD0B8;
 
   cursor: pointer;
 
@@ -1416,9 +1317,7 @@
 
 
 .travel-section8-dot.active {
-  background: #111;
-
-  border-color: #111;
+  background: #948979;
 
   transform: scale(1.05);
 }
@@ -1595,16 +1494,6 @@
     padding: 45px 20px;
   }
 
-  .travel-section9-stats {
-    grid-template-columns: repeat(2, 1fr);
-
-    row-gap: 40px;
-  }
-
-  .travel-section9-stat h2 {
-    font-size: 40px;
-  }
-
 }
 
 
@@ -1731,7 +1620,7 @@
 
   font-size: 14px;
   font-weight: 600;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   cursor: pointer;
 }
 
@@ -1792,13 +1681,13 @@
 
   border-radius: 50%;
 
-  border: 1px solid #1d232b;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 }
 
 .travel-section10-dot.active {
-  background: #1d232b;
+  background: #948979;
 }
 
 
@@ -1960,9 +1849,9 @@
   margin-top: 5px;
   width: 200px;
   padding: 11px 20px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
-  border-radius: 2px;
+  border-radius: 10px;
 
   background: #393E46;
 
@@ -2084,16 +1973,16 @@
   width: 200px;
   
   padding: 13px 25px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   border-radius: 30px;
 
-  background: #202731;
+  background: #393E46;
   color: #ead8b9;
 
   font-size: 14px;
   font-weight: 600;
-
+  justify-content: center;
   cursor: pointer;
 
   transition: 0.25s ease;
@@ -2172,11 +2061,6 @@
   .travel-section12 {
     padding: 60px 30px 35px;
   }
-
-  .travel-section12-header {
-    max-width: 700px;
-  }
-
   .travel-section12-header h2 {
     font-size: 27px;
   }
@@ -2313,6 +2197,12 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .travel-section1 h1 {
+    font-size: 38px;
+  }
+  .travel-section1 h2 {
+    font-size: 24px;
+  }
   .travel-faq-section {
     padding: 25px 12px 45px;
   }
@@ -2328,22 +2218,19 @@
   .travel-section6-left p {
     text-align: center;
   }
-  .travel-check-list{
-    align-items: center;
-  }
+
   .travel-section10-left {
     align-items: center;
-  }
-  .travel-section1-breadcrumb {
-    width: 70%;
-    justify-content: center;
   }
   .travel-faq-title {
     margin-left: 0;
     font-size: 26px;
     text-align: left;
   }
+  .travel-section12-header {
+    flex-direction: column;
 
+  }
   .travel-faq-question {
     font-size: 15px;
   }

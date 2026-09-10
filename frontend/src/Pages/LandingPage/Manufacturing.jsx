@@ -323,19 +323,13 @@ useEffect(() => {
           Software for Modern Factories
         </h1>
 
-      </div>
-
-      {/* LOWER HERO CONTENT */}
-      <div className="manufacturing-hero-bottom">
-
-        <div className="manufacturing-breadcrumb">
+                <div className="manufacturing-breadcrumb">
           <Link to="/"
            target="_blank"
           rel="noopener noreferrer">Home</Link>
           <span> - Manufacturing Asset Management Software</span>
         </div>
-
-        <h2>
+                <h2>
           AssetPegasus – Simple Manufacturing Asset Management Software
           <br />
           that Scales With Your Business.

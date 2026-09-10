@@ -359,20 +359,20 @@ const handleSignIn = () => {
                     <h1>
                         Construction Equipment Tracking
                     </h1>
-
-                </div>
-
-                {/* Lower area with breadcrumb */}
-                <div className="construction-section-1-bottom">
-
-                    <div className="construction-breadcrumb">
+                                        <div className="construction-breadcrumb">
                         <Link to="/"   target="_blank"
   rel="noopener noreferrer">Home</Link>
                         <span> - </span>
                         <span>Construction Equipment Tracking</span>
                     </div>
+                        <h2>
+      AssetPegasus – Simple Construction Equipment Tracking
+      <br />
+      that Scales With Your Business.
+    </h2>
 
                 </div>
+
 
             </section>
 
@@ -380,11 +380,7 @@ const handleSignIn = () => {
 
   <div className="construction-section-2-content">
 
-    <h2>
-      AssetPegasus – Simple Construction Equipment Tracking
-      <br />
-      that Scales With Your Business.
-    </h2>
+
 
     <div className="construction-section-2-text">
 

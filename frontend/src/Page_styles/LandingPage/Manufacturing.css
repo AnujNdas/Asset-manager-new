@@ -4,7 +4,6 @@
   position: relative;
 
   width: 100%;
-  min-height: 580px;
 
   background: #353b45;
   color: #efd8bd;
@@ -20,12 +19,14 @@
 .manufacturing-hero-top {
   position: relative;
 
-  min-height: 285px;
+  height: 500px;
 
   background: #222831;
 
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
   justify-content: center;
 
   padding: 45px 20px 100px;
@@ -34,42 +35,6 @@
 
   z-index: 1;
 }
-
-
-/* =========================================
-   ZIG-ZAG CLIP PATH
-========================================= */
-
-.manufacturing-hero-top::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: -1px;
-
-  width: 100%;
-  height: 70px;
-
-  background: #353b45;
-
-  clip-path: polygon(
-    0 35%,
-    10% 62%,
-    18% 82%,
-    32% 55%,
-    46% 32%,
-    60% 70%,
-    73% 50%,
-    84% 24%,
-    100% 62%,
-    100% 100%,
-    0 100%
-  );
-
-  z-index: 2;
-}
-
 
 /* =========================================
    MAIN H1
@@ -88,6 +53,9 @@
   line-height: 1.45;
 
   font-weight: 500;
+}
+.manufacturing-hero-top h2 {
+  text-align: center;
 }
 
 
@@ -154,41 +122,6 @@
 }
 
 
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 768px) {
-
-  .manufacturing-hero {
-    min-height: 560px;
-  }
-
-  .manufacturing-hero-top {
-    min-height: 270px;
-
-    padding: 40px 20px 90px;
-  }
-
-  .manufacturing-hero-top h1 {
-    font-size: 2rem;
-    line-height: 1.4;
-  }
-
-  .manufacturing-hero-top::after {
-    height: 65px;
-  }
-
-  .manufacturing-hero-bottom {
-    padding-top: 85px;
-  }
-
-  .manufacturing-hero-bottom h2 {
-    font-size: 24px;
-  }
-
-}
-
 
 /* =========================================
    MOBILE
@@ -249,7 +182,7 @@
 .manufacturing-section-2 {
   width: 100%;
 
-  background: #222831;
+  background: #393E46;
   color: #efd8bd;
 
   padding: 45px 0 0;
@@ -463,8 +396,9 @@
 
 
 .manufacturing-trial-button {
-  display: inline-flex;
-
+  /* display: inline-flex; */
+  width: 300px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   align-items: center;
   justify-content: center;
 
@@ -530,8 +464,8 @@
 ========================================= */
 
 .manufacturing-signup-button {
-  display: inline-flex;
-
+  /* display: inline-flex; */
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   align-items: center;
   justify-content: center;
   width: 200px;
@@ -545,7 +479,7 @@
 
   text-decoration: none;
 
-  border-radius: 3px;
+  border-radius: 10px;
 
   font-size: 17px;
 
@@ -633,7 +567,7 @@
 
   padding: 0;
 
-  border: 1px solid #222831;
+  border: 1px solid #DFD0B8;
 
   border-radius: 50%;
 
@@ -648,7 +582,7 @@
 
 
 .manufacturing-carousel-dots button.active {
-  background: #222831;
+  background: #948979;
 
   transform: scale(1.1);
 }
@@ -1029,7 +963,7 @@
   padding: 0;
   margin: 0;
 
-  border: 1px solid #1e242c;
+  border: 1px solid #DFD0B8;
   border-radius: 50%;
 
   background: transparent;
@@ -1043,7 +977,7 @@
 
 
 .carousel-dot.active {
-  background: #1e242c;
+  background: #948979;
 
   transform: scale(1.05);
 }
@@ -1189,8 +1123,7 @@
 
 
 .section-six-feature h3 {
-  margin: 0 0 6px;
-
+  margin: 0 0 6px;  
   font-size: 17px;
   line-height: 1.4;
 
@@ -1292,7 +1225,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid #555b64;
+  border: 1px solid #DFD0B8;
 
   background: transparent;
 
@@ -1301,9 +1234,8 @@
 
 
 .section-six-dots button.active {
-  background: #111820;
+  background: #948979;
 
-  border-color: #111820;
 }
 
 
@@ -1312,11 +1244,11 @@
 ================================ */
 
 .section-six-signup {
-  display: inline-flex;
+  /* display: inline-flex; */
 
   align-items: center;
   justify-content: center;
-
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   margin-top: 18px;
 
   padding: 11px 20px;
@@ -1328,7 +1260,7 @@
   color: #dfd0b8;
 
   text-decoration: none;
-
+  width: 300px;
   font-size: 16px;
   font-weight: 600;
 
@@ -1537,14 +1469,14 @@
 
   border-radius: 50%;
 
-  background: #9da1a5;
-
+  background: transparent;
+  border: 1px solid #DFD0B8;
   cursor: pointer;
 }
 
 
 .section-seven-dots button.active {
-  background: #111820;
+  background: #948979;
 }
 
 
@@ -1555,7 +1487,7 @@
 .section-seven-signin {
   position: relative;
   z-index: 20;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   display: inline-flex;
 
   width: auto;
@@ -1573,82 +1505,9 @@
   font-size: 16px;
   font-weight: 600;
 
-  border-radius: 2px;
+  border-radius: 10px;
 }
 
-
-/* =========================================
-   BOTTOM MOUNTAIN CLIP PATH
-========================================= */
-
-/* BACK MOUNTAIN */
-
-.manufacturing-section-seven::before {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 95px;
-
-  z-index: 2;
-
-  background: #393E46;
-
-  clip-path: polygon(
-    0 42%,
-    10% 68%,
-    21% 52%,
-    33% 82%,
-    47% 58%,
-    60% 80%,
-    73% 50%,
-    83% 72%,
-    100% 45%,
-    100% 100%,
-    0 100%
-  );
-
-}
-
-
-/* FRONT DARK MOUNTAIN */
-
-.manufacturing-section-seven::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 75px;
-
-  z-index: 3;
-
-  background: #222831;
-
-  clip-path: polygon(
-    0 0,
-    10% 28%,
-    18% 55%,
-    33% 25%,
-    47% 58%,
-    60% 27%,
-    74% 55%,
-    82% 25%,
-    100% 48%,
-    100% 100%,
-    0 100%
-  );
-
-}
 
 
 /* =========================================
@@ -2009,21 +1868,6 @@
 }
 
 
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 800px) {
-
-  .section-nine-stats {
-    grid-template-columns: repeat(2, 1fr);
-
-    row-gap: 35px;
-  }
-
-}
-
-
 @media (max-width: 500px) {
 
   .manufacturing-section-nine {
@@ -2155,6 +1999,7 @@
   /* position: absolute; */
   width : 200px;
   top: 0;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   right: 35px;
   justify-content: center;
   padding: 11px 20px;
@@ -2237,7 +2082,7 @@
 
   padding: 0;
 
-  border: 1px solid #161b21;
+  border: 1px solid #DFD0B8;
 
   border-radius: 50%;
 
@@ -2248,7 +2093,7 @@
 
 
 .section-ten-dots button.active {
-  background: #161b21;
+  background: #948979;
 }
 
 
@@ -2504,7 +2349,7 @@
   width: 200px;
   align-items: center;
   justify-content: center;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   min-width: 100px;
   padding: 11px 18px;
 
@@ -2513,7 +2358,7 @@
 
   text-decoration: none;
 
-  border-radius: 2px;
+  border-radius: 10px;
 
   font-size: 16px;
   font-weight: 600;
@@ -2565,7 +2410,7 @@
   width: 150px;
   min-width: 150px;
   height: 42px;
-
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2576,7 +2421,7 @@
   background: #222831;
   color: #dfd0b8;
 
-  border-radius: 30px;
+  border-radius: 10px;
 
   text-decoration: none;
   font-size: 15px;
@@ -2923,6 +2768,12 @@
 }
  
  @media ( max-width : 768px) {
+    .section-six-feature h3 {
+    text-align: center;
+  }
+      .manufacturing-features li {
+        justify-content: center;
+      }
   .manufacturing-industry-grid {
    
     display: grid;
@@ -2941,6 +2792,16 @@
   }
   .manufacturing-industry-card {
     width: 100%;
+  }
+  .manufacturing-section-nine { 
+    padding: 25px 30px;
+  }
+
+  .section-nine-stat h2 {
+    font-size: 28px;
+  }
+  .section-nine-stat p {
+    font-size: 14px;
   }
 
  }

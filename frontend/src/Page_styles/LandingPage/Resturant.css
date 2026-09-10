@@ -14,42 +14,6 @@
   color: #dfd0b8;
 }
 
-
-/* =========================================
-   DARK TOP AREA
-   ========================================= */
-
-.manufacturing-hero-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 285px;
-
-  background: #222831;
-
-  z-index: 1;
-
-  /*
-    Jagged / mountain-like bottom edge
-    matching the screenshot
-  */
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 88%,
-
-    82% 76%,
-    61% 90%,
-    45% 82%,
-    28% 92%,
-    8% 86%,
-    0 82%
-  );
-}
-
-
 /* =========================================
    MAIN HERO TITLE
    ========================================= */
@@ -68,6 +32,10 @@
   font-weight: 700;
 
   letter-spacing: -1px;
+}
+
+.manufacturing-hero-top h2 {
+  font-size: 28px;
 }
 
 
@@ -158,52 +126,6 @@ display: flex;
 }
 
 
-@media (max-width: 768px) {
-
-  .manufacturing-hero {
-    min-height: 570px;
-  }
-
-  .manufacturing-hero-top {
-    height: 260px;
-
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% 88%,
-      80% 78%,
-      60% 90%,
-      40% 82%,
-      20% 91%,
-      0 82%
-    );
-  }
-
-  .manufacturing-hero-top h1 {
-    padding: 25px 20px 0;
-
-    font-size: 20px;
-    line-height: 1.3;
-  }
-
-  .manufacturing-hero-bottom {
-    min-height: 570px;
-
-    padding: 330px 20px 40px;
-  }
-
-  .manufacturing-breadcrumb {
-    font-size: 14px;
-
-    margin-bottom: 35px;
-  }
-
-  .manufacturing-hero-bottom h2 {
-    font-size: 23px;
-    line-height: 1.45;
-  }
-}
-
 
 @media (max-width: 480px) {
 
@@ -246,7 +168,7 @@ display: flex;
   width: 100%;
   min-height: 350px;
 
-  background: #222831;
+  background: #393E46;
 
   display: flex;
   align-items: center;
@@ -420,15 +342,16 @@ display: flex;
 /* LEFT BUTTON */
 
 .restaurant-section-3-trial-btn {
-  display: inline-flex;
+  /* display: inline-flex; */
 
   margin-top: 38px;
   margin-left: 80px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 12px 24px;
 
   background: #393E46;
   color: #dfd0b8;
+  width: 300px;
 
   text-decoration: none;
 
@@ -489,7 +412,7 @@ display: flex;
   margin-top: 18px;
   justify-content: center;
   padding: 10px 20px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   background: #393E46;
   color: #dfd0b8;
 
@@ -498,7 +421,7 @@ display: flex;
   font-size: 16px;
   font-weight: 600;
 
-  border-radius: 3px;
+  border-radius: 10px;
 
   transition: 0.25s ease;
 }
@@ -579,8 +502,8 @@ display: flex;
   border: none;
   border-radius: 50%;
 
-  background: #59606a;
-
+  background: transparent;
+  border: 1px solid #DFD0B8;
   cursor: pointer;
 
   transition: 0.25s ease;
@@ -588,7 +511,7 @@ display: flex;
 
 
 .restaurant-section-3-dots button.active {
-  background: #171c23;
+  background: #948979;
 }
 
 
@@ -845,9 +768,6 @@ display: flex;
     padding-right: 0;
   }
 
-  .hospitality-section-5-right h3 {
-    text-align: left;
-  }
 }
 
 
@@ -1129,7 +1049,7 @@ display: flex;
   margin-top: 18px;
   width: 200px;
   padding: 10px 20px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   background: #393E46;
 
   color: #DFD0B8;
@@ -1374,7 +1294,7 @@ display: flex;
   display: inline-block;
   width: 200px;
   margin-top: 18px;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 9px 18px;
 
   background: #222831;
@@ -1813,7 +1733,6 @@ display: flex;
 
   align-items: center;
 
-  justify-content: center;
 
   text-align: center;
 }
@@ -1825,13 +1744,13 @@ display: flex;
 
 .hospitality-section-10-signup {
   justify-content: center;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   top: 0;
   right: 0;
   width: 200px;
   padding: 11px 20px;
 
-  background: #222831;
+  background: #393E46;
 
   color: #DFD0B8;
 
@@ -2153,12 +2072,12 @@ display: flex;
   display: inline-flex;
 
   align-items: center;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   justify-content: center;
 
   padding: 11px 18px;
 
-  background: #393E46;
+  background: #222831;
 width: 200px;
   color: #DFD0B8;
 
@@ -2188,7 +2107,6 @@ width: 200px;
   position: relative;
 
   width: 100%;
-  min-height: 430px;
 
   background: #222831;
 
@@ -2197,40 +2115,6 @@ width: 200px;
   overflow: hidden;
 
   box-sizing: border-box;
-}
-
-
-/* =========================================
-   TOP CLIP-PATH LAYER
-========================================= */
-
-.hospitality-section-12-clip {
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-
-  height: 110px;
-
-  background: #393E46;
-
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 78%,
-    85% 64%,
-    82% 80%,
-    61% 91%,
-    47% 65%,
-    33% 87%,
-    19% 77%,
-    10% 96%,
-    0 76%
-  );
-
-  z-index: 1;
 }
 
 
@@ -2421,13 +2305,13 @@ width: 200px;
   background: #393E46;
 
   color: #dfd0b8;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   text-decoration: none;
 
   font-size: 16px;
   font-weight: 500;
 
-  border-radius: 2px;
+  border-radius: 10px;
 
   transition:
     background 0.25s ease,
@@ -2615,6 +2499,7 @@ width: 200px;
   text-decoration: none;
   font-size: 16px;
   font-weight: 600;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   transition: 0.25s ease;
 }
 
@@ -2733,8 +2618,31 @@ width: 200px;
   background: rgba(34, 40, 49, 0.45);
 }
 
-@media (max-width : 768px) {
-  .hospitality-section-8-content{
+
+@media (max-width : 480px) {
+  .hospitality-industry-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+
+  .hospitality-section-12-content { 
+    padding: 50px 10px;
+  }
+
+ .hospitality-check-item {
+  justify-content: center;
+ }
+.restaurant-section-6-left li {
+  align-items: center;
+}
+.restaurant-section-6-left span {
+  text-align: center;
+}
+   .hospitality-section-8-content{
     grid-template-columns: 1fr;
   }
   .hospitality-section-10-content{
@@ -2743,24 +2651,35 @@ width: 200px;
   .hospitality-section-10-left h2 {
     text-align: center;
   }
-    .hospitality-section-9-stats {
-    grid-template-columns: repeat(1 , 1fr);
-  }
   .hospitality-industry-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
     place-items: center;
+  }
+  .hospitality-stat h2 {
+    font-size: 28px;
+  }
+  .hospitality-stat p {
+    font-size: 14px;
+  }
+  .hospitality-section-10-left p {
+    text-align: center;
+  }
+  .hospitality-section-10-left ul {
+    width: 200px;
+    margin: auto;
   }
   .hospitality-industry-card { 
     width: 100%;
     border-radius: 10px;
   }
   .manufacturing-section-15-links {
-    justify-content: space-around;
+    flex-direction: column;
     gap: 20px;
+    align-items: center;
   }
   .manufacturing-section-15 h2 {
-    font-size: 16px;
+    font-size: 26px;
   }
   .restaurant-section-6-grid { 
     grid-template-columns: 1fr;
@@ -2773,11 +2692,11 @@ width: 200px;
     padding: 0;
   }
   .restaurant-section-3-features ul {
-    gap: 10px;
+    gap: 20px;
     height: 400px;
   }
   .restaurant-section-3-trial-btn { 
-    margin: 0;
+    margin: auto;
   }
   .restaurant-section-6 { 
     padding: 10px;
@@ -2786,12 +2705,42 @@ width: 200px;
     padding : 0;
   }
   .hospitality-section-11-list { 
-    height: 400px;
+    height: 300px;
+    width: 420px;
+    align-items: flex-start;
   }
-}
+  .manufacturing-hero {
+    min-height: 570px;
+  }
 
-@media (max-width : 480px) {
-  .hospitality-industry-cards {
-    grid-template-columns: 1fr;
+  .manufacturing-hero-top h1 {
+    padding: 25px 20px 0;
+
+    font-size: 38px;
+    line-height: 1.3;
+  }
+  .manufacturing-hero-top h2 {
+
+    font-size: 24px;
+  }
+  .restaurant-section-3-features li {
+    justify-content: center;
+  }
+
+  .manufacturing-hero-bottom {
+    min-height: 570px;
+
+    padding: 330px 20px 40px;
+  }
+
+  .manufacturing-breadcrumb {
+    font-size: 14px;
+
+    margin-bottom: 35px;
+  }
+
+  .manufacturing-hero-bottom h2 {
+    font-size: 23px;
+    line-height: 1.45;
   }
 }
