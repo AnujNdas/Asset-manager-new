@@ -138,59 +138,59 @@ const BlogPage = () => {
     {/* RIGHT - SOCIAL MEDIA */}
     <div className="blog-social-card">
 
-      <a
-        href="https://facebook.com"
+      <Link
+        to="https://www.facebook.com/socialflylive/"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Facebook"
       >
         <FaFacebook />
-      </a>
+      </Link>
 
-      <a
-        href="https://instagram.com"
+      <Link
+        to="https://www.instagram.com/socialflylive"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Instagram"
       >
         <FaInstagram />
-      </a>
+      </Link>
 
-      <a
-        href="https://linkedin.com"
+      <Link
+        to="https://www.linkedin.com/company/socialflylive/"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="LinkedIn"
       >
         <FaLinkedin />
-      </a>
+      </Link>
 
-      <a
-        href="https://threads.net"
+      <Link
+        to="https://www.threads.com/@socialflylive"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Threads"
       >
         <FaThreads />
-      </a>
+      </Link>
 
-      <a
-        href="https://pinterest.com"
+      <Link
+        to="https://in.pinterest.com/socialflylive/"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Pinterest"
       >
         <FaPinterest />
-      </a>
+      </Link>
 
-      <a
-        href="https://google.com"
+      <Link
+        to="https://www.google.com/maps/place/SocialTechner+%26+Socialfly/@43.932,-32.6777608,3z/data=!3m1!4b1!4m6!3m5!1s0x3a0275e10d495555:0x5fe8c0d82a4a28f!8m2!3d43.932!4d-32.6777608!16s%2Fg%2F11s8_1300s"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Google"
       >
         <FaGoogle />
-      </a>
+      </Link>
 
     </div>
 

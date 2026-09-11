@@ -1064,7 +1064,6 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         <p className="about-text">
           Recognition by trusted platforms like{" "}
           <span className="highlight-link" onClick={handleGoodFirms}>GoodFirms</span>,{" "}
-          <span className="highlight-link" onClick={handleG2}>G2</span>,{" "}
           <span className="highlight-link" onClick={handleSaasHub}>SaaSHub</span>,{" "}
           <span className="highlight-link" onClick={handleProductHunt}>Product Hunt</span>,{" "}
           <span className="highlight-link" onClick={handleTrustPilot}>Trustpilot</span> & Others
