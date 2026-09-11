@@ -1,6 +1,7 @@
 import React from "react";
 import { blogs } from "../../data/blogData";
 import "../../Page_styles/LandingPage/BlogPage.css";
+import { Link } from "react-router-dom";
 import {
   FaFacebook,
   FaInstagram,
