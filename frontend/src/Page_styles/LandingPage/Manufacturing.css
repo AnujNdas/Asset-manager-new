@@ -56,6 +56,7 @@
 }
 .manufacturing-hero-top h2 {
   text-align: center;
+  font-size: 32px;
 }
 
 
@@ -97,8 +98,8 @@
 
 .manufacturing-breadcrumb a {
   color: #efd8bd;
-    display: inline-block
-    ;
+    display: inline-block;
+    width: 50px;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -121,61 +122,6 @@
   font-weight: 500;
 }
 
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 480px) {
-
-  .manufacturing-hero {
-    min-height: 540px;
-  }
-
-  .manufacturing-hero-top {
-    min-height: 260px;
-
-    padding: 35px 18px 80px;
-  }
-
-  .manufacturing-hero-top h1 {
-    font-size: 1rem;
-    line-height: 1.35;
-  }
-
-  .manufacturing-hero-top::after {
-    height: 60px;
-
-    clip-path: polygon(
-      0 35%,
-      18% 65%,
-      35% 42%,
-      52% 72%,
-      70% 40%,
-      85% 62%,
-      100% 35%,
-      100% 100%,
-      0 100%
-    );
-  }
-
-  .manufacturing-hero-bottom {
-    padding: 75px 18px 50px;
-  }
-
-  .manufacturing-breadcrumb {
-    margin-bottom: 40px;
-
-    font-size: 17px;
-  }
-
-  .manufacturing-hero-bottom h2 {
-    font-size: 24px;
-    line-height: 1.45;
-  }
-
-}
 
 /* section 2 css here  */
 
@@ -1873,11 +1819,6 @@
   .manufacturing-section-nine {
     padding: 40px 20px;
   }
-
-  .section-nine-stats {
-    grid-template-columns: 1fr;
-  }
-
   .section-nine-stat h2 {
     font-size: 42px;
   }
@@ -2724,12 +2665,83 @@
 }
 
 
+ @media ( max-width : 768px) {
+    .section-six-feature h3 {
+    text-align: center;
+  }
+      .manufacturing-features li {
+        justify-content: flex-start;
+      }
+  .manufacturing-industry-grid {
+   
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items : center;
+    gap: 20px;
+  }
+  .section-ten-lifecycle h2 {
+    text-align: center;
+  }
+  .section-ten-stage {
+    text-align: center;
+  }
+  .manufacturing-section-11 {
+    padding: 70px 10px;
+  }
+  .manufacturing-industry-card {
+    width: 100%;
+  }
+  .manufacturing-section-nine { 
+    padding: 25px 30px;
+  }
+
+  .section-nine-stat h2 {
+    font-size: 28px;
+  }
+  .section-nine-stat p {
+    font-size: 14px;
+  }
+  .manufacturing-hero-top h2 {
+    font-size: 24px;
+  }
+  .manufacturing-breadcrumb {
+    margin: 0;
+  }
+
+ }
+
+ 
 /* =========================================================
    MOBILE
 ========================================================= */
 
 @media (max-width: 480px) {
 
+    .manufacturing-industry-grid {
+   
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items : center;
+    gap: 20px;
+  }
+    .manufacturing-hero-top h2 {
+    font-size: 20px;
+  }
+  .manufacturing-industry-card {
+    width: 90%;
+    border-radius: 10px;
+
+  }
+  .section-nine-stats {
+    grid-template-columns: repeat(2,1fr);
+    gap: 20px;
+  }
+  .manufacturing-hero-top {
+    padding: 20px 10px;
+  }
+  .manufacturing-hero-top h1 {
+    font-size: 28px;
+  }
   .manufacturing-faq-section {
     padding: 35px 12px;
   }
@@ -2765,58 +2777,8 @@
     font-size: 13px;
     line-height: 1.6;
   }
+  .manufacturing-breadcrumb {
+    font-size: 12px;
+  }
 }
  
- @media ( max-width : 768px) {
-    .section-six-feature h3 {
-    text-align: center;
-  }
-      .manufacturing-features li {
-        justify-content: center;
-      }
-  .manufacturing-industry-grid {
-   
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    place-items : center;
-    gap: 20px;
-  }
-  .section-ten-lifecycle h2 {
-    text-align: center;
-  }
-  .section-ten-stage {
-    text-align: center;
-  }
-  .manufacturing-section-11 {
-    padding: 70px 10px;
-  }
-  .manufacturing-industry-card {
-    width: 100%;
-  }
-  .manufacturing-section-nine { 
-    padding: 25px 30px;
-  }
-
-  .section-nine-stat h2 {
-    font-size: 28px;
-  }
-  .section-nine-stat p {
-    font-size: 14px;
-  }
-
- }
- @media ( max-width : 480px) {
-  .manufacturing-industry-grid {
-   
-    display: grid;
-    grid-template-columns: 1fr;
-    place-items : center;
-    gap: 20px;
-  }
-  .manufacturing-industry-card {
-    width: 90%;
-    border-radius: 10px;
-
-  }
-
- }

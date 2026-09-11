@@ -2240,3 +2240,21 @@
     padding: 14px 18px;
   }
 }
+@media (max-width : 480px) {
+  .travel-section1 {
+    padding: 20px 10px;
+  }
+  .travel-section1 h2 {
+    font-size: 20px;
+  }
+  .travel-section1 h1 {
+    font-size: 28px;
+  }
+  .travel-section1-breadcrumb {
+    font-size: 14px;
+  }
+  .travel-section9-stats {
+    grid-template-columns: repeat(2,1fr);
+    gap: 20px;
+  }
+}

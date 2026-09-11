@@ -4552,16 +4552,6 @@
     margin-top: -30px;
 
     padding: 95px 20px 45px;
-
-    clip-path: polygon(
-      0 12%,
-      25% 7%,
-      50% 12%,
-      75% 7%,
-      100% 12%,
-      100% 100%,
-      0 100%
-    );
   }
 
 
@@ -4964,4 +4954,17 @@
     margin-bottom: 24px;
   }
 
+}
+
+@media ( max-width : 480px) {
+  .machinery-hero-content h1 {
+    font-size: 28px;
+  }
+  .machinery-breadcrumb {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .machinery-hero-description {
+    font-size: 20px;
+  }
 }

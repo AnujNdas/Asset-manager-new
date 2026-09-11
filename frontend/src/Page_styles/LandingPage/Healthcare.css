@@ -5,7 +5,7 @@
 .healthcare-hero {
   position: relative;
   width: 100%;
-  min-height: 535px;
+  min-height: 350px;
 
   background: #222831;
   color: #dfd0b8;
@@ -168,44 +168,12 @@
     font-size: 44px;
   }
 
-  .healthcare-hero {
-    min-height: 500px;
-  }
-
   .healthcare-hero-bottom h2 {
     font-size: 25px;
   }
 }
 
 
-@media (max-width: 600px) {
-
-  .healthcare-hero {
-    min-height: 470px;
-  }
-
-  .healthcare-hero-title {
-    padding: 30px 15px 0;
-  }
-
-  .healthcare-hero-title h1 {
-    font-size: 34px;
-  }
-
-  .healthcare-hero-bottom {
-    bottom: 25px;
-    padding: 0 15px;
-  }
-
-  .healthcare-breadcrumb {
-    margin-bottom: 30px;
-    font-size: 14px;
-  }
-
-  .healthcare-hero-bottom h2 {
-    font-size: 22px;
-  }
-}
 
 /* =========================================
    HEALTHCARE SECTION 2
@@ -2438,7 +2406,16 @@
 
 
 @media (max-width: 480px) {
+  .healthcare-hero-title h1 {
+    font-size: 28px;
+  }
 
+  .healthcare-hero-title h2 {
+    font-size: 20px;
+  }
+  .healthcare-breadcrumb { 
+    font-size: 14px;
+  }
   .healthcare-section-14-title {
     font-size: 22px;
   }

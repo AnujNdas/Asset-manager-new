@@ -106,10 +106,6 @@
 
 @media (max-width: 600px) {
 
-  .pricing-hero-section {
-    height: 350px;
-  }
-
   .pricing-hero-section h1 {
     margin-top: 25px;
     font-size: 40px;

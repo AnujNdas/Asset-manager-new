@@ -835,8 +835,7 @@ useEffect(() => {
 
       <div className="itam-hero-top">
 
-        <h1>
-          Simple IT Asset Management (ITAM)
+        <h1>IT Asset Management (ITAM)
           <br />
           Software — AssetPegasus
         </h1>
@@ -848,6 +847,11 @@ useEffect(() => {
             <span> - </span>
             <span>IT Asset Management Software</span>
           </div>
+                      <h2>
+            Simple IT Asset Management (ITAM) Software
+            <br />
+            that Scales With Your Business — AssetPegasus
+          </h2>
 
       </div>
 
@@ -859,14 +863,6 @@ useEffect(() => {
       <div className="itam-hero-bottom">
 
         <div className="itam-hero-content">
-
-
-
-          <h2>
-            Simple IT Asset Management (ITAM) Software
-            <br />
-            that Scales With Your Business — AssetPegasus
-          </h2>
           <p>
             A comprehensive Simple IT Asset Management (ITAM) Software – AssetPegasus, which Track every hardware, software & cloud asset worldwide. Reduce costs, stay compliant, manage renewals from one smart dashboard.
           </p>

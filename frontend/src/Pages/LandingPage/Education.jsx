@@ -616,7 +616,8 @@ useEffect(() => {
           <span>Maintenance schedules</span>
         </div>
 
-        <div className="education-check-item item-7 no-check">
+        <div className="education-check-item item-7">
+          <span className="education-check">✓</span>
           <span>Asset allocation and transfers</span>
         </div>
 

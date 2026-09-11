@@ -115,34 +115,6 @@
 }
 
 
-@media (max-width: 480px) {
-
-  .education-section1-hero {
-    height: 220px;
-
-    padding: 45px 15px 0;
-  }
-
-  .education-section1-hero h1 {
-    font-size: 30px;
-    line-height: 1.2;
-  }
-
-  .education-section1-hero::after {
-    height: 45px;
-  }
-
-  .education-section1-bottom {
-    height: 125px;
-
-    padding: 0 15px 28px;
-  }
-
-  .education-breadcrumb {
-    font-size: 13px;
-  }
-
-}
 
 /* =========================================
    EDUCATION PAGE - SECTION 2
@@ -919,10 +891,7 @@
     font-size: 14px;
   }
 
-  .education-section6-list {
-    width: 100%;
-    padding-left: 5px;
-  }
+
 
   .education-check-item {
     font-size: 14px;
@@ -1864,27 +1833,6 @@
   color: #ead9b9;
 }
 
-
-@media (max-width: 550px) {
-
-  .education-section10 {
-    padding: 45px 20px 30px;
-  }
-
-  .education-stats-container {
-    grid-template-columns: 1fr;
-    gap: 35px;
-  }
-
-  .education-stat h2 {
-    font-size: 42px;
-  }
-
-  .education-stat p {
-    font-size: 15px;
-  }
-
-}
 
 /* =========================================
    EDUCATION SECTION 11
@@ -3182,7 +3130,7 @@
    SMALL MOBILE
 ========================================= */
 
-@media (max-width: 430px) {
+@media (max-width: 480px) {
 
   .industry-section15-grid {
     flex-direction: column;
@@ -3193,6 +3141,25 @@
   .industry-section15-card {
     width: 210px;
     min-width: 210px;
+  }
+  .education-section10 {
+    padding: 20px 10px;
+  }
+  .education-stats-container {
+    grid-template-columns: repeat(2 , 1fr);
+    gap: 20px;
+  }
+  .education-section1-hero h1 {
+    font-size: 28px;
+  }
+  .education-breadcrumb {
+    font-size: 14px;
+  }
+  .education-section1-hero h2 {
+    font-size: 20px;
+  }
+  .education-section1-hero {
+    padding: 20px 10px;
   }
 
 }

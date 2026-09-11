@@ -14,30 +14,6 @@
   color: #dfd0b8;
 }
 
-/* =========================================
-   MAIN HERO TITLE
-   ========================================= */
-
-.manufacturing-hero-top h1 {
-  margin: 0;
-
-  padding-top: 30px;
-
-  text-align: center;
-
-  color: #dfd0b8;
-
-  font-size: 58px;
-  line-height: 1.35;
-  font-weight: 700;
-
-  letter-spacing: -1px;
-}
-
-.manufacturing-hero-top h2 {
-  font-size: 28px;
-}
-
 
 /* =========================================
    LOWER HERO CONTENT
@@ -61,36 +37,6 @@
 
 
 /* =========================================
-   BREADCRUMB
-   ========================================= */
-
-.manufacturing-breadcrumb {
-  font-size: 16px;
-  line-height: 1.5;
-display: flex;
-  color: #dfd0b8;
-  margin-bottom: 45px;
-}
-
-.manufacturing-breadcrumb a {
-    padding: 0;
-  color: #dfd0b8;
-    display: inline-block;
-  text-decoration: underline;
-    width: 50px;
-  transition: opacity 0.2s ease;
-}
-
-.manufacturing-breadcrumb a:hover {
-  opacity: 0.7;
-}
-
-.manufacturing-breadcrumb span {
-  color: #dfd0b8;
-}
-
-
-/* =========================================
    HERO SUBTITLE
    ========================================= */
 
@@ -110,55 +56,8 @@ display: flex;
 }
 
 
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-
-@media (max-width: 1200px) {
-
-  .manufacturing-hero-top h1 {
-    font-size: 50px;
-  }
-
-  .manufacturing-hero-bottom h2 {
-    font-size: 27px;
-  }
-}
 
 
-
-@media (max-width: 480px) {
-
-  .manufacturing-hero {
-    min-height: 560px;
-  }
-
-  .manufacturing-hero-top {
-    height: 245px;
-  }
-
-  .manufacturing-hero-top h1 {
-    padding-top: 25px;
-
-    /* font-size: 29px; */
-    line-height: 1.3;
-  }
-
-  .manufacturing-hero-bottom {
-    padding-top: 315px;
-  }
-
-  .manufacturing-breadcrumb {
-    font-size: 13px;
-
-    margin-bottom: 30px;
-  }
-
-  .manufacturing-hero-bottom h2 {
-    font-size: 20px;
-    line-height: 1.45;
-  }
-}
 
 /* =========================================================
    SECTION 2 — RESTAURANT & HOSPITALITY
@@ -2619,11 +2518,6 @@ width: 200px;
 }
 
 
-@media (max-width : 480px) {
-  .hospitality-industry-cards {
-    grid-template-columns: 1fr;
-  }
-}
 
 
 
@@ -2709,38 +2603,29 @@ width: 200px;
     width: 420px;
     align-items: flex-start;
   }
-  .manufacturing-hero {
-    min-height: 570px;
-  }
 
-  .manufacturing-hero-top h1 {
-    padding: 25px 20px 0;
-
-    font-size: 38px;
-    line-height: 1.3;
-  }
-  .manufacturing-hero-top h2 {
-
-    font-size: 24px;
-  }
   .restaurant-section-3-features li {
     justify-content: center;
   }
 
-  .manufacturing-hero-bottom {
-    min-height: 570px;
-
-    padding: 330px 20px 40px;
-  }
-
-  .manufacturing-breadcrumb {
-    font-size: 14px;
-
-    margin-bottom: 35px;
-  }
-
-  .manufacturing-hero-bottom h2 {
-    font-size: 23px;
-    line-height: 1.45;
-  }
 }
+    @media (max-width : 480px) {
+      .hospitality-industry-cards {
+        grid-template-columns: 1fr;
+      }
+      .restaurant-section-3-features ul {
+        height: 500px;
+      }
+      .restaurant-section-3-features li {
+        justify-content: flex-start;
+      }
+      .hospitality-section-9 {
+        padding: 20px 10px;
+      }
+      .hospitality-section-9-stats {
+        gap: 10px;
+      }
+      .hospitality-section-11 {
+        padding: 20px 10px;
+      }
+    }

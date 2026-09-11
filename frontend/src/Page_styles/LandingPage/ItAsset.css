@@ -53,7 +53,10 @@
   font-weight: 500;
 }
 
-
+.itam-hero-top h2 {
+  font-size: 32px;
+  text-align: center;
+}
 /* =========================================
    LOWER SECTION
 ========================================= */
@@ -147,17 +150,6 @@
     min-height: 245px;
 
     padding: 25px 18px 0;
-
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% 88%,
-      78% 83%,
-      58% 90%,
-      40% 82%,
-      22% 89%,
-      0 83%
-    );
   }
 
 
@@ -4116,37 +4108,7 @@
 
 
 
-@media (max-width: 480px) {
 
-  .industry-assets-grid {
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 18px;
-  }
-
-  .industry-card,
-  .industry-card-1,
-  .industry-card-2,
-  .industry-card-3,
-  .industry-card-4,
-  .industry-card-5,
-  .industry-card-6 {
-    min-height: 230px;
-  }
-
-  .industry-assets-section h2 {
-    font-size: 24px;
-  }
-
-  .industry-icon {
-    font-size: 36px;
-  }
-
-  .industry-card p {
-    font-size: 17px;
-    line-height: 1.65;
-  }
-}
 
 /* section 17 css here  */
 
@@ -4510,4 +4472,47 @@
     margin-top: 50px;
   }
 
+}
+@media (max-width: 480px) {
+  .itam-hero-top h1 {
+    font-size: 28px;
+  }
+  .itam-breadcrumb {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+  .itam-breadcrumb span {
+    font-size: 14px;
+  }
+  .itam-hero-top h2 {
+    font-size: 20px;
+  }
+  .industry-assets-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+  }
+
+  .industry-card,
+  .industry-card-1,
+  .industry-card-2,
+  .industry-card-3,
+  .industry-card-4,
+  .industry-card-5,
+  .industry-card-6 {
+    min-height: 230px;
+  }
+
+  .industry-assets-section h2 {
+    font-size: 24px;
+  }
+
+  .industry-icon {
+    font-size: 36px;
+  }
+
+  .industry-card p {
+    font-size: 17px;
+    line-height: 1.65;
+  }
 }
