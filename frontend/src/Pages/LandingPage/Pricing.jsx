@@ -79,7 +79,7 @@ const Pricing = () => {
               "Check-in / Check-out Tracking",
               "SAML / SSO Security",
               "Dedicated Account Manager",
-              "Import & Export (xlsr,PDF etc.)",
+              "Import & Export (XLSX,PDF etc.)",
               "Email Support",
             ],
           },
@@ -97,7 +97,7 @@ const Pricing = () => {
               "Check-in / Check-out Tracking",
               "SAML / SSO Security",
               "Dedicated Account Manager",
-              "Import & Export (xlsr,PDF etc.)",
+              "Import & Export (XLSX,PDF etc.)",
               "Dedicated Support",
             ],
           },
@@ -115,7 +115,7 @@ const Pricing = () => {
               "Check-in / Check-out Tracking",
               "SAML / SSO Security",
               "Dedicated Account Manager",
-              "Import & Export (xlsr,PDF etc.)",
+              "Import & Export (XLSX,PDF etc.)",
               "Priority Support",
             ],
           },
@@ -150,7 +150,7 @@ const Pricing = () => {
     <h2>AssetPegasus</h2>
 
     <h3>
-      Machine &amp; IT asset lifecycle management platform
+      Machine &amp; IT Asset Lifecycle Management Platform
     </h3>
   </div>
 </section>
@@ -217,9 +217,9 @@ const Pricing = () => {
 
     <div className="pricing-trial-text">
       <span>30 Days Free Trial</span>
-      <span> – Machine & IT asset lifecycle</span>
+      <span> – Machine & IT Asset Lifecycle</span>
       <br />
-      <span>management platform</span>
+      <span>Management Platform</span>
     </div>
 
     <button

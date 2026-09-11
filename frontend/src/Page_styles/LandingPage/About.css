@@ -490,12 +490,14 @@ color:#252c36;
 padding:16px 40px;
 
 font-size:17px;
-
+width: 200px;
+margin: auto;
+justify-content: center;
 font-weight:600;
 
-color:#ead8b9;
+color:#222831;
 
-background:transparent;
+background:#DFD0B8;
 
 border:2px solid #ead8b9;
 
@@ -546,7 +548,7 @@ align-items:center;
 justify-content:center;
 gap:14px;
 
-min-width:320px;
+width:300px;
 height:74px;
 
 padding:0 45px;

@@ -502,21 +502,14 @@ display:flex;
 
 justify-content:center;
 align-items:center;
-
+background: #222831;
 font-size:28px;
 
-color:#fff;
+color:#DFD0B8;
 
 transition:.3s;
 
 }
-
-.social-card a:nth-child(1){background:#1877f2;}
-.social-card a:nth-child(2){background:#ff0077;}
-.social-card a:nth-child(3){background:#0a66c2;}
-.social-card a:nth-child(4){background:#000;}
-.social-card a:nth-child(5){background:#e60023;}
-.social-card a:nth-child(6){background:#f44336;}
 
 .social-card a:hover{
 

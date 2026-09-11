@@ -1,5 +1,5 @@
 import "../../Page_styles/LandingPage/About.css"
-import { FiBox, FiMonitor , FiArrowRight  } from "react-icons/fi";
+import { FiBox, FiMonitor, FiArrowRight } from "react-icons/fi";
 import {
   FaFacebookF,
   FaGoogle,
@@ -45,196 +45,194 @@ export default function About() {
     window.open("https://assetpegasus.com/machinery-asset-management")
   }
   return (
-    
+
     <>
-    <Helmet>
-  <title>About AssetPegasus | IT Asset Management Software</title>
+      <Helmet>
+        <title>About AssetPegasus | IT Asset Management Software</title>
 
-  <meta
-    name="description"
-    content="Learn about AssetPegasus, our mission, and how we help organizations manage IT assets, software licenses, warranties, and inventory."
-  />
+        <meta
+          name="description"
+          content="Learn about AssetPegasus, our mission, and how we help organizations manage IT assets, software licenses, warranties, and inventory."
+        />
 
-  <meta property="og:type" content="website" />
+        <meta property="og:type" content="website" />
 
-  <meta
-    property="og:title"
-    content="About AssetPegasus"
-  />
+        <meta
+          property="og:title"
+          content="About AssetPegasus"
+        />
 
-  <meta
-    property="og:description"
-    content="Learn more about AssetPegasus and our mission."
-  />
+        <meta
+          property="og:description"
+          content="Learn more about AssetPegasus and our mission."
+        />
 
-  <meta
-    property="og:image"
-    content="https://assetpegasus.com/images/Dashboard.webp"
-  />
+        <meta
+          property="og:image"
+          content="https://assetpegasus.com/images/Dashboard.webp"
+        />
 
-  <meta
-    property="og:url"
-    content="https://assetpegasus.com/about"
-  />
+        <meta
+          property="og:url"
+          content="https://assetpegasus.com/about"
+        />
 
-  <meta
-    name="twitter:card"
-    content="summary_large_image"
-  />
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
 
-  <meta
-    name="twitter:title"
-    content="About AssetPegasus"
-  />
+        <meta
+          name="twitter:title"
+          content="About AssetPegasus"
+        />
 
-  <meta
-    name="twitter:description"
-    content="Learn more about AssetPegasus and our mission."
-  />
+        <meta
+          name="twitter:description"
+          content="Learn more about AssetPegasus and our mission."
+        />
 
-  <meta
-    name="twitter:image"
-    content="https://assetpegasus.com/images/Dashboard.webp"
-  />
+        <meta
+          name="twitter:image"
+          content="https://assetpegasus.com/images/Dashboard.webp"
+        />
 
-  <link
-    rel="canonical"
-    href="https://assetpegasus.com/about"
-  />
-</Helmet>
-    <section className="about">
+        <link
+          rel="canonical"
+          href="https://assetpegasus.com/about"
+        />
+      </Helmet>
+      <section className="about">
 
-      <div className="about-wave"></div>
+        <div className="about-wave"></div>
 
-      <div className="about-container">
+        <div className="about-container">
 
-        <h1 className="about-title">
-          About Socialfly
-        </h1>
+          <h1 className="about-title">
+            About Asset Pegasus
+          </h1>
 
-        <div className="about-card">
-
-          <p>
-            Socialfly is a Software Company in Kolkata. Founded in 2020.
-            We've spent the last 8+ years creating custom software,
-            websites, mobile apps, and complete digital marketing solutions for businesses across industries.
-          </p>
-
-          <p>
-            Our very first SaaS is simple
-            <strong> Asset Management System</strong>
-            (Hardware &amp; Software)
-          </p>
-
-          <div className="product-title">
-            <h3>AssetPegasus</h3>
-            <h4>Machine + IT Asset Hybrid Nature</h4>
-          </div>
-
-          <ul>
-            <li>
-              No Tracking — Privacy Policy.
-            </li>
-
-            <li>
-              Track Renewals, Maintenance, Warranty & Insurance.
-            </li>
-
-            <li>
-              Track Complete Assets History.
-            </li>
-
-            <li>
-              Instant Asset Insights/Reports that scale with
-              business.
-            </li>
-          </ul>
-
-          <p className="bottom-text">
-            We think companies shouldn't handle several tools at once. AssetPegasus unites your assets into a single , intelligent platform built for expansion.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-     <section className="values-section">
-      <div className="container">
-
-        <h2 className="section-title">
-          Our Values
-        </h2>
-
-        <div className="values-grid">
-
-          {values.map((item, index) => (
-            <div className="value-card" key={index}>
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-            </div>
-          ))}
-
-        </div>
-
-      </div>
-    </section>
-
-    <section className="product-features">
-
-      <div className="container">
-
-        <h2 className="section-title">
-          Product Features
-        </h2>
-
-        <div className="feature-grid">
-
-          <div className="feature-card" onClick={handleProductClick1}>
-
-            <div className="feature-icon">
-              <FiBox />
-            </div>
-
-            <h3>IT Asset Management</h3>
+          <div className="about-card">
 
             <p>
-              Manage all types of
-              <strong> Digital Assets </strong>
-              from
-              <strong> one place </strong>
-              — Software, Servers, Domains &
-              Cloud assets etc.
+              Socialfly is a software company based in Kolkata, founded in 2020. Over the past 8+ years, we have created... custom software,
+              websites, mobile apps, and complete digital marketing solutions for businesses across industries.
             </p>
 
-          </div>
+            <p>
+              Our first SaaS product is a simple
+              <strong> Asset Management System</strong>
+              (Hardware &amp; Software)
+            </p>
 
-          <div className="feature-card" onClick={handleProductClick2}>
-
-            <div className="feature-icon">
-              <FiMonitor />
+            <div className="product-title">
+              <h3>AssetPegasus</h3>
+              <h4>Machine + IT Asset Hybrid Nature</h4>
             </div>
 
-            <h3>Equipment Asset Management</h3>
+            <ul>
+              <li>
+                No unnecessary tracking — see our Privacy Policy.
+              </li>
 
-            <p>
-              Manage all types of
-              <strong> Physical Assets </strong>
-              from
-              <strong> one place </strong>
-              — Machines, Equipment,
-              Electronics & Transport assets.
+              <li>
+                Track Renewals, Maintenance, Warranty & Insurance.
+              </li>
+
+              <li>
+                Track Complete asset History.
+              </li>
+
+              <li>
+                Instant asset insights and reports that scale with your business.
+              </li>
+            </ul>
+
+            <p className="bottom-text">
+              We think companies shouldn't handle several tools at once. AssetPegasus unites your assets into a single , intelligent platform built for expansion.
             </p>
 
           </div>
 
         </div>
 
-      </div>
+      </section>
 
-    </section>
-     {/* <section className="founder-story">
+      <section className="values-section">
+        <div className="container">
+
+          <h2 className="section-title">
+            Our Values
+          </h2>
+
+          <div className="values-grid">
+
+            {values.map((item, index) => (
+              <div className="value-card" key={index}>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </div>
+            ))}
+
+          </div>
+
+        </div>
+      </section>
+
+      <section className="product-features">
+
+        <div className="container">
+
+          <h2 className="section-title">
+            Product Features
+          </h2>
+
+          <div className="feature-grid">
+
+            <div className="feature-card" onClick={handleProductClick1}>
+
+              <div className="feature-icon">
+                <FiBox />
+              </div>
+
+              <h3>IT Asset Management</h3>
+
+              <p>
+                Manage all types of
+                <strong> Digital Assets </strong>
+                from
+                <strong> one place </strong>
+                — Software, Servers, Domains &
+                Cloud assets etc.
+              </p>
+
+            </div>
+
+            <div className="feature-card" onClick={handleProductClick2}>
+
+              <div className="feature-icon">
+                <FiMonitor />
+              </div>
+
+              <h3>Equipment Asset Management</h3>
+
+              <p>
+                Manage all types of
+                <strong> Physical Assets </strong>
+                from
+                <strong> one place </strong>
+                — Machines, Equipment,
+                Electronics & Transport assets.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+      {/* <section className="founder-story">
 
       <div className="story-container">
 
@@ -365,28 +363,28 @@ export default function About() {
       </div>
 
     </section> */}
-    <section className="social-section">
+      <section className="social-section">
 
-      <div className="social-container">
+        <div className="social-container">
 
-        <h2 className="social-title">
-          Our Social Media
-        </h2>
+          <h2 className="social-title">
+            Our Social Media
+          </h2>
 
-        {/* Top Icons */}
+          {/* Top Icons */}
 
-        <div className="social-icons-row">
+          <div className="social-icons-row">
 
 
-                        <Link
-                          to="https://www.facebook.com/socialflylive/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="Facebook"
-                        >
-                          <FaFacebookF />
-                        </Link>
-               <Link
+            <Link
+              to="https://www.facebook.com/socialflylive/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <FaFacebookF />
+            </Link>
+            <Link
               to="https://www.instagram.com/socialflylive"
               target="_blank"
               rel="noopener noreferrer"
@@ -422,67 +420,73 @@ export default function About() {
             >
               <FaPinterestP />
             </Link>
-                        <Link
-                          to="https://www.threads.com/@socialflylive"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="Pinterest"
-                        >
-                          <FaThreads />
-                        </Link>
+            <Link
+              to="https://www.threads.com/@socialflylive"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Pinterest"
+            >
+              <FaThreads />
+            </Link>
 
 
-        </div>
+          </div>
 
-        {/* Button */}
+          {/* Button */}
 
-        <button className="contact-user-btn">
-          Contact Us
-        </button>
+          <Link className="contact-user-btn" to="/contact" target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Whatsapp">
+            Contact Us
+          </Link>
 
-        {/* Bottom Icons */}
+          {/* Bottom Icons */}
 
-        <div className="chat-icons">
+          <div className="chat-icons">
 
-             <Link
-            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp"
-            
-                  target="_blank"
+            <Link
+              to="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp"
+
+              target="_blank"
               rel="noopener noreferrer"
               aria-label="Whatsapp"
-              >
+            >
               <FaWhatsapp />
             </Link>
 
-          <Link
-            href="https://t.me/Socialflylive"
-                  target="_blank"
+            <Link
+              to="https://t.me/Socialflylive"
+              target="_blank"
               rel="noopener noreferrer"
               aria-label="Telegram"
-               >
-            <FaTelegramPlane />
-          </Link>
+            >
+              <FaTelegramPlane />
+            </Link>
+
+          </div>
 
         </div>
 
-      </div>
+      </section>
 
-    </section>
+      <section className="cta-section">
+        <div className="cta-container">
 
-    <section className="cta-section">
-      <div className="cta-container">
+          <h2 className="cta-title">
+            Machine & IT asset management System
+          </h2>
 
-        <h2 className="cta-title">
-          Machine & IT asset management System
-        </h2>
+          <Link className="cta-btn" to="/user/signup"
+            target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Telegram"
+              >
+            <span>Sign Up</span>
+            <FiArrowRight />
+          </Link>
 
-        <button className="cta-btn">
-          <span>Sign Up</span>
-          <FiArrowRight />
-        </button>
-
-      </div>
-    </section>
+        </div>
+      </section>
     </>
   );
 }

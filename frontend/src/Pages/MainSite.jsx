@@ -50,13 +50,13 @@ const handleG2 = () => {
   navigate("/it-assets-management")
 }
 const handleTrustPilot = () => {
-  window.open("https://www.trustpilot.com/review/assetpegasus.com")
+  window.open("https://www.trustpilot.com/review/AssetPegasus.com")
 }
 const handleProductHunt = () => {
   window.open("https://www.producthunt.com/@socialflylive ")
 }
 const handleSaasHub = () => {
-  window.open("https://www.saashub.com/assetpegasus")
+  window.open("https://www.saashub.com/AssetPegasus")
 }
 const handleManufacturing = () => {
   navigate("/manufacturing-asset-management-software")
@@ -74,10 +74,10 @@ const handleHospitalityManagement = () => {
   navigate("/restaurant-hospitality-asset-management")
 }
 const handleProductClick = () => {
-  window.open("https://assetpegasus.com/it-asset-management")
+  window.open("https://AssetPegasus.com/it-asset-management")
 }
 const handleProductClick2 = () => {
-  window.open("https://assetpegasus.com/machinery-assets-management")
+  window.open("https://AssetPegasus.com/construction-equipment-tracking")
 }
 const handleCopyright = () => {
   window.open("https://socialflylive.com/")
@@ -249,7 +249,7 @@ const rightItems = [
 ];
 const leftItemssoftware = [
   "💻Operating System",
-  "🔒 SaaS (Software As a Service)",
+  "🔒 SaaS (Software as a Service)",
   "🖧 Server & Cloud",
   "💿 Desktop Applications",
 ];
@@ -365,8 +365,8 @@ const rightItemssoftware = [
       applicationCategory: "BusinessApplication",
       applicationSubCategory: "IT Asset Management Software",
       operatingSystem: "Web-based, Cloud",
-      url: "https://assetpegasus.com",
-      image: "https://assetpegasus.com/images/AssetpegasusDashboard.webp",
+      url: "https://AssetPegasus.com",
+      image: "https://AssetPegasus.com/images/AssetPegasusDashboard.webp",
       description:
         "AssetPegasus is an IT asset management platform for tracking hardware, software, warranties, maintenance schedules, insurance, and asset lifecycle.",
 offers: {
@@ -383,7 +383,7 @@ aggregateRating: {
       publisher: {
         "@type": "Organization",
         name: "AssetPegasus",
-        url: "https://assetpegasus.com",
+        url: "https://AssetPegasus.com",
       },
       featureList: [
         "Asset Tracking",
@@ -442,18 +442,18 @@ aggregateRating: {
   "@context":"https://schema.org",
   "@type":"Organization",
   name:"AssetPegasus",
-  url:"https://assetpegasus.com",
-  logo:"https://assetpegasus.com/images/Logo2.png",
+  url:"https://AssetPegasus.com",
+  logo:"https://AssetPegasus.com/images/Logo2.png",
   sameAs:[
-    "https://www.linkedin.com/company/assetpegasus",
-    "https://x.com/assetpegasus"
+    "https://www.linkedin.com/company/AssetPegasus",
+    "https://x.com/AssetPegasus"
   ],
   description:
 "Cloud-based IT Asset Management Software",
 
 contactPoint: {
   "@type":"ContactPoint",
-  email:"info@assetpegasus.com",
+  email:"info@AssetPegasus.com",
   contactType:"Customer Support"
 }
 })}
@@ -463,13 +463,13 @@ contactPoint: {
   "@context":"https://schema.org",
   "@type":"WebPage",
   name:"AssetPegasus | IT Asset Management Software",
-  url:"https://assetpegasus.com/",
+  url:"https://AssetPegasus.com/",
   description:
     "Track hardware, software, warranties, maintenance, insurance and machinery.",
   isPartOf:{
     "@type":"WebSite",
     name:"AssetPegasus",
-    url:"https://assetpegasus.com"
+    url:"https://AssetPegasus.com"
   }
 })}
 </script>
@@ -478,7 +478,7 @@ contactPoint: {
  "@context":"https://schema.org",
  "@type":"WebSite",
  name:"AssetPegasus",
- url:"https://assetpegasus.com",
+ url:"https://AssetPegasus.com",
  inLanguage:"en",
  publisher:{
    "@type":"Organization",
@@ -504,11 +504,11 @@ contactPoint: {
 <meta property="og:site_name" content="AssetPegasus" />
 <meta
 property="og:url"
-content="https://assetpegasus.com/"
+content="https://AssetPegasus.com/"
 />
 <meta
   property="og:image"
-  content="https://assetpegasus.com/images/Dashboard.webp"
+  content="https://AssetPegasus.com/images/Dashboard.webp"
 />
   <meta
     property="og:description"
@@ -517,7 +517,7 @@ content="https://assetpegasus.com/"
   <meta name="twitter:card" content="summary_large_image" />
   <meta
 name="twitter:site"
-content="@assetpegasus"
+content="@AssetPegasus"
 />
 <meta
   name="twitter:title"
@@ -531,11 +531,11 @@ content="@assetpegasus"
 
 <meta
   name="twitter:image"
-  content="https://assetpegasus.com/images/Dashboard.webp"
+  content="https://AssetPegasus.com/images/Dashboard.webp"
 />
   <link
     rel="canonical"
-    href="https://assetpegasus.com/"
+    href="https://AssetPegasus.com/"
   />
 </Helmet>
     <div className="landing-page">
@@ -550,7 +550,7 @@ content="@assetpegasus"
           <p style={{ fontSize : "20px", fontWeight : "600"}}>
           Track Insurance, Warranty, Renewal and Maintanence In One Dashboard.
           </p>
-          <p>Assetpegasus unites your physical and digital assets so you stay compliant and cut overhead by up to 40%.</p>
+          <p>AssetPegasus unites your physical and digital assets so you stay compliant and cut overhead by up to 40%.</p>
 
           <div className="hero-buttons">
             <button className="signup-btn" onClick={handleSignupClick}>
@@ -566,7 +566,7 @@ content="@assetpegasus"
         <div className="hero-images">
 
           <img
-            src="/images/AssetpegasusDashboard.webp"
+            src="/images/AssetPegasusDashboard.webp"
             alt="IT Infrastructure"
           />
 
@@ -578,7 +578,7 @@ content="@assetpegasus"
            <h2 className="asset-showcase-title">
           Asset Management Software to Track and Manage Every Asset
         </h2>
-        <p>Assetpegasus provides a powerful asset management software platform that helps organizations track equipment, monitor asset lifecycle data, manage inventory, and automate maintenance workflows from one centralized system. Gain real time visibility into your assets, reduce operational downtime, and maintain complete control over resources across departments and locations.</p>
+        <p>AssetPegasus provides a powerful asset management software platform that helps organizations track equipment, monitor asset lifecycle data, manage inventory, and automate maintenance workflows from one centralized system. Gain real time visibility into your assets, reduce operational downtime, and maintain complete control over resources across departments and locations.</p>
 
           </div>
       <div className="asset-showcase-container">
@@ -633,7 +633,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </h2>
 
         <p className="asset-info-text">
-          In 2026 Organizations manage hundreds or thousands of assets
+          In 2026 , organizations manage hundreds or thousands of assets
           including computers, laptops, tablets, mobile devices,
           machinery, tools, operational equipment with transport assets
           and all Digital Assets like Softwares, Domains, SSL
@@ -742,7 +742,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
         <div className="stat-card">
           <p className="text-5xl">100%</p>
-          <p>Budget Friendly Saas</p>
+          <p>Budget-Friendly SaaS</p>
         </div>
 
       </section>
@@ -755,16 +755,15 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
         <p className="cloud-machinery-text">
           AssetPegasus is a hardware management system that is a
-          fully cloud based solution. No software needs to be installed on the
+          fully cloud-based solution. No software needs to be installed on the
           local machines, no servers to be maintained and no data to be backed
           up manually.
         </p>
 
         <p className="cloud-machinery-text">
           Your whole inventory of hardware assets can be accessed from any
-          location, anywhere in the world, under the protection of any device
-          and providing distributed teams, remote IT directors, and
-          organizations with multiple sites equal access as a one-office team.
+          location, anywhere in the world, securely from any device
+          and giving distributed teams, remote IT directors, and multi-site organizations the same access as a single-office team.
         </p>
 
       </div>
@@ -845,7 +844,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
             <p>
               Manage All types of Physical Assets From One Place —
-               Machine, Equipment, Electronics & Transport
+               Machines, Equipment, Electronics & Transport
               {" "}assets etc.
             </p>
           </div>
@@ -1051,9 +1050,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </h2>
 
         <p className="about-text">
-          Small, Medium & Big Organizations require a simple flexible and
-          scalable asset management platform which capable of managing complex
-          asset environments.
+          Small, medium, and large organizations require a simple, flexible, and scalable asset management platform that is capable of managing... complex asset environments.
         </p>
 
         <p className="about-text">
@@ -1065,12 +1062,12 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
         </p>
 
         <p className="about-text">
-          Recognition by a trusted research platform like{" "}
-          <span className="highlight-link" onClick={handleGoodFirms}>Goodfirms</span>,{" "}
+          Recognition by trusted platforms like{" "}
+          <span className="highlight-link" onClick={handleGoodFirms}>GoodFirms</span>,{" "}
           <span className="highlight-link" onClick={handleG2}>G2</span>,{" "}
-          <span className="highlight-link" onClick={handleSaasHub}>Saashub</span>,{" "}
+          <span className="highlight-link" onClick={handleSaasHub}>SaaSHub</span>,{" "}
           <span className="highlight-link" onClick={handleProductHunt}>Product Hunt</span>,{" "}
-          <span className="highlight-link" onClick={handleTrustPilot}>TrustPilot</span> & Others
+          <span className="highlight-link" onClick={handleTrustPilot}>Trustpilot</span> & Others
         </p>
 
         <button className="about-btn" onClick={handleAboutClick}>
@@ -1171,6 +1168,7 @@ Machine & IT asset lifecycle management platform (Asset Management System)</h2>
 
   {[...blogs]
     .reverse()
+    .slice(0, 4)
     .map((blog) => (
 
       <Link

@@ -143,9 +143,9 @@ export default function Contact() {
 
             <h3>Technical Support</h3>
 
-            <p>Email- info@socialflylive.com</p>
+            <p>Email- assetpegasus@gmail.com</p>
 
-            <p>MON – FRI (Office Hours. IST)</p>
+            <p>MON – FRI (Office. IST)</p>
 
             <button>Contact Us</button>
 
@@ -221,7 +221,7 @@ export default function Contact() {
           <div className="chat-icons">
 
             <Link
-            href="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp"
+            to="https://api.whatsapp.com/send/?phone=9088665504&text&type=phone_number&app_absent=0" className="whatsapp"
                   target="_blank"
               rel="noopener noreferrer"
               aria-label="Whatsapp"
@@ -230,7 +230,7 @@ export default function Contact() {
             </Link>
 
             <Link
-            href="https://t.me/Socialflylive" className="telegram"
+            to="https://t.me/Socialflylive" className="telegram"
                   target="_blank"
               rel="noopener noreferrer"
               aria-label="Telegram"
@@ -243,8 +243,7 @@ export default function Contact() {
         </div>
 
         <h4 className="bottom-text">
-          Innovating Business Management Secure,
-          Scalable, Reliable
+         Innovating Business Management: Secure, Scalable, Reliable
         </h4>
 
       </div>
