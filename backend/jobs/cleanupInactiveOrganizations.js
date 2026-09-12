@@ -61,7 +61,7 @@ const cleanupInactiveOrganizations = async () => {
         `${org.name} has no creator. Deleting immediately.`
     );
 
-    await deleteOrganizationData(org._id);
+    await deleteOrganizationCompletely(org._id);
 
     continue;
 }
