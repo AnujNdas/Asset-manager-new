@@ -3,9 +3,14 @@ const razorpay = require("../config/razorpay");
 const razorpayPlans = require("../config/razorpayPlans");
 const pricingTiers = require("../config/pricingTiers");
 const Subscription = require("../models/Subscription");
+const RazorpayWebhookEvent = require(
+  "../models/RazorpayWebhookEvent"
+);
 const processAffiliateConversion = require("../utils/processAffiliateConversion");
 const isProduction = process.env.NODE_ENV === "production";
-
+const {
+  createSubscriptionHistory,
+} = require("../utils/SubscriptionHistory");
 /* ------------------------------------------------
    Utility: Resolve Razorpay Plan ID
 ------------------------------------------------ */
@@ -13,6 +18,22 @@ function getPlanId(tierKey, billingCycle) {
   const plan = razorpayPlans[tierKey]?.[billingCycle];
   if (!plan) return null;
   return isProduction ? plan.live : plan.test;
+}
+
+
+/* ------------------------------------------------
+   Utility: Resolve Plan Price
+------------------------------------------------ */
+function getPlanPrice(tierKey, billingCycle) {
+  const tier = pricingTiers.find(
+    (t) => t.key === tierKey
+  );
+
+  if (!tier) return 0;
+
+  return billingCycle === "yearly"
+    ? tier.priceYearly
+    : tier.priceMonthly;
 }
 
 /* ------------------------------------------------
@@ -259,7 +280,12 @@ const cancelAutoPay = async (req, res) => {
 
     subscription.cancelAtPeriodEnd = true;
     await subscription.save();
-
+    await createSubscriptionHistory({
+  subscription,
+  eventType: "cancellation_scheduled",
+  notes:
+    "Auto-pay cancelled. Subscription remains active until the current billing period ends.",
+});
     return res.json({
       success: true,
       message:
@@ -272,6 +298,23 @@ const cancelAutoPay = async (req, res) => {
     });
   }
 };
+
+
+/* ------------------------------------------------
+   Utility: Mark Razorpay Webhook as Processed
+------------------------------------------------ */
+async function markWebhookProcessed(eventId) {
+  await RazorpayWebhookEvent.updateOne(
+    { eventId },
+    {
+      $set: {
+        status: "processed",
+        processedAt: new Date(),
+      },
+    }
+  );
+}
+
 
 /* ------------------------------------------------
    Razorpay Webhook (Single Source of Truth)
@@ -299,17 +342,76 @@ const handleWebhook = async (req, res) => {
 
     console.log("✅ Webhook signature verified");
 
-    const parsedBody = JSON.parse(req.body.toString());
+  const parsedBody = JSON.parse(req.body.toString());
 
-    const event = parsedBody.event;
-    const entity = parsedBody.payload.subscription?.entity;
+const event = parsedBody.event;
+const eventId = parsedBody.id;
+const entity = parsedBody.payload.subscription?.entity;
+
+console.log("Webhook Event:", event);
+console.log("Webhook Event ID:", eventId);
+
+if (!eventId) {
+  console.error("❌ Razorpay webhook event ID is missing");
+
+  return res.status(400).send(
+    "Webhook event ID missing"
+  );
+}
+
+const existingEvent = await RazorpayWebhookEvent.findOne({
+  eventId,
+});
+
+if (existingEvent?.status === "processed") {
+  console.log(
+    "⚠️ Webhook already processed:",
+    eventId
+  );
+
+  return res.status(200).json({
+    received: true,
+    duplicate: true,
+  });
+}
+
+try {
+  await RazorpayWebhookEvent.create({
+    eventId,
+    event,
+    status: "processing",
+  });
+} catch (error) {
+  // A duplicate key error means another request inserted
+  // this event at nearly the same time.
+  if (error.code === 11000) {
+    console.log(
+      "⚠️ Duplicate webhook received during processing:",
+      eventId
+    );
+
+    return res.status(200).json({
+      received: true,
+      duplicate: true,
+    });
+  }
+
+  throw error;
+}
 
     console.log("Webhook Event:", event);
 
-    if (!entity) {
-      console.log("No subscription entity found in payload");
-      return res.status(200).json({ received: true });
-    }
+if (!entity) {
+  console.log("No subscription entity found in payload");
+
+  await markWebhookProcessed(eventId);
+
+  return res.status(200).json({
+    received: true,
+    ignored: true,
+    reason: "No subscription entity found",
+  });
+}
 
     console.log("Subscription ID from Razorpay:", entity.id);
 
@@ -320,10 +422,20 @@ const handleWebhook = async (req, res) => {
       ]
     });
 
-    if (!subscription) {
-      console.log("⚠️ Subscription not found in DB for:", entity.id);
-      return res.status(200).json({ received: true });
-    }
+if (!subscription) {
+  console.log(
+    "⚠️ Subscription not found in DB for:",
+    entity.id
+  );
+
+  await markWebhookProcessed(eventId);
+
+  return res.status(200).json({
+    received: true,
+    ignored: true,
+    reason: "Subscription not found",
+  });
+}
 
     console.log("Subscription found in DB:", subscription._id);
 
@@ -358,16 +470,43 @@ subscription.totalPaid =
 
 subscription.pendingUpgrade = null;
       } else {
-        console.log("No pending upgrade found");
-      }
+  console.log("No pending upgrade found");
+
+  // Fallback for subscriptions that already have
+  // tier + billingCycle but no pendingUpgrade.
+  const planPrice = getPlanPrice(
+    subscription.tier,
+    subscription.billingCycle
+  );
+
+  subscription.planPrice = planPrice;
+
+  subscription.currency =
+    subscription.currency || "USD";
+
+  console.log(
+    "Resolved existing subscription plan price:",
+    planPrice
+  );
+}
 
       subscription.status = "active";
       subscription.currentStart = new Date(entity.current_start * 1000);
       subscription.currentEnd = new Date(entity.current_end * 1000);
       subscription.pastDueAt = null;
 
-      await subscription.save();
-      if (
+await subscription.save();
+
+// Create subscription history
+await createSubscriptionHistory({
+  subscription,
+  eventType: "activated",
+  notes: subscription.tier === "trial"
+    ? "Trial subscription activated."
+    : `Subscription activated on ${subscription.tier} plan.`,
+});
+
+if (
   subscription.tier !== "trial" &&
   subscription.status === "active"
 ) {
@@ -395,40 +534,85 @@ subscription.lastPaymentAmount =
 subscription.totalPaid =
   (subscription.totalPaid || 0) +
   (subscription.planPrice || 0);
-      await subscription.save();
+await subscription.save();
 
-      console.log("✅ Subscription renewed and DB updated");
+await createSubscriptionHistory({
+  subscription,
+  eventType: "renewed",
+  notes: `Subscription renewed successfully for ${subscription.tier} ${subscription.billingCycle || ""}.`,
+});
+
+console.log(
+  "✅ Subscription renewed and DB updated"
+);
     }
 
     /* ---------------- Cancellation ---------------- */
 
-    if (event === "subscription.cancelled") {
-      console.log("Subscription cancelled event");
+/* ---------------- Cancellation ---------------- */
 
-      subscription.status = "cancelled";
-      subscription.cancelAtPeriodEnd = false;
+if (event === "subscription.cancelled") {
+  console.log(
+    "Subscription cancelled event"
+  );
 
-      await subscription.save();
+  subscription.status = "cancelled";
+  subscription.cancelAtPeriodEnd = false;
 
-      console.log("Subscription marked as cancelled in DB");
-    }
+  await subscription.save();
+
+  await createSubscriptionHistory({
+    subscription,
+    eventType: "cancelled",
+    notes: "Subscription cancelled by Razorpay.",
+  });
+
+  console.log(
+    "Subscription marked as cancelled in DB"
+  );
+}
 
     /* ---------------- Payment Failure ---------------- */
 
-    if (event === "payment.failed") {
-      console.log("Payment failed event received");
+/* ---------------- Payment Failure ---------------- */
 
-      subscription.status = "past_due";
-      subscription.pastDueAt = new Date();
+if (event === "payment.failed") {
+  console.log(
+    "Payment failed event received"
+  );
 
-      await subscription.save();
+  subscription.status = "past_due";
 
-      console.log("Subscription marked as past_due");
-    }
+  subscription.pastDueAt =
+    new Date();
 
-    console.log("----- WEBHOOK PROCESSING COMPLETE -----");
+  await subscription.save();
 
-    return res.status(200).json({ received: true });
+  await createSubscriptionHistory({
+    subscription,
+    eventType: "past_due",
+    notes:
+      "Payment failed. Subscription marked as past due.",
+  });
+
+  console.log(
+    "Subscription marked as past_due"
+  );
+}
+await markWebhookProcessed(eventId);
+
+console.log(
+  "✅ Webhook marked as processed:",
+  eventId
+);
+
+console.log(
+  "----- WEBHOOK PROCESSING COMPLETE -----"
+);
+
+return res.status(200).json({
+  received: true,
+});
 
   } catch (err) {
     console.error("Webhook processing error:", err);
