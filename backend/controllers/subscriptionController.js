@@ -205,12 +205,12 @@ const verifyPayment = async (req, res) => {
       });
     }
 
-    const generatedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(
-        `${razorpay_payment_id}|${razorpay_subscription_id}`
-      )
-      .digest("hex");
+const generatedSignature = crypto
+  .createHmac("sha256", process.env.RAZORPAY_SECRET)
+  .update(
+    `${razorpay_payment_id}|${razorpay_subscription_id}`
+  )
+  .digest("hex");
 
     if (generatedSignature !== razorpay_signature) {
       return res.status(400).json({
