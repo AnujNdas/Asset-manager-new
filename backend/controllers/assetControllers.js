@@ -142,7 +142,7 @@ const bulkUploadAssets = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const assetLimit = tier.assets;
+  const assetLimit = tier.totalAssetLimit;
 
   /* ================= INPUT ================= */
   const { assets, mode = "strict" } = req.body;
@@ -263,22 +263,39 @@ const bulkUploadAssets = asyncHandler(async (req, res, next) => {
   }
 
   /* ================= LIMIT CHECK ================= */
-  const currentCount = await Asset.countDocuments({ organizationId });
+// Count hardware assets
+const hardwareCount = await Asset.countDocuments({
+  organizationId
+});
 
-  let allowedAssets = tempAssets;
+// Count software assets
+const softwareCount = await Software.countDocuments({
+  organizationId
+});
 
-  if (assetLimit !== "unlimited") {
-    const available = assetLimit - currentCount;
+// Combined asset usage
+const currentCount = hardwareCount + softwareCount;
 
-    if (available <= 0) {
-      throw new AppError(
-        "Asset limit reached",
-        403,
-        "ASSET_LIMIT_REACHED",
-        null,
-        { limit: assetLimit, current: currentCount }
-      );
-    }
+let allowedAssets = tempAssets;
+
+if (assetLimit !== "unlimited") {
+  const available = assetLimit - currentCount;
+
+  if (available <= 0) {
+    throw new AppError(
+      "Asset limit reached",
+      403,
+      "ASSET_LIMIT_REACHED",
+      null,
+      {
+        limit: assetLimit,
+        current: currentCount,
+        hardware: hardwareCount,
+        software: softwareCount
+      }
+    );
+  }
+
 
     if (tempAssets.length > available) {
       allowedAssets = tempAssets.slice(0, available);
@@ -1058,57 +1075,47 @@ const createAssetInstance = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const tier = pricingTiers.find(t => t.key === subscription.tier);
+  const tier = pricingTiers.find(
+  t => t.key === subscription.tier
+);
 
-  if (!tier) {
-    throw new AppError(
-      "Invalid tier config",
-      500,
-      "INVALID_TIER"
-    );
-  }
+if (!tier) {
+  throw new AppError(
+    "Invalid tier config",
+    500,
+    "INVALID_TIER"
+  );
+}
 
-  /* ---------------- COUNT CURRENT INSTANCES ---------------- */
+/* ---------------- COUNT ALL CURRENT INSTANCES ---------------- */
 
-  let currentCount;
+const currentCount = await AssetInstance.countDocuments({
+  organizationId
+});
 
-  if (assetType === "hardware") {
-    currentCount = await AssetInstance.countDocuments({
-      organizationId,
-      assetType: "hardware"
-    });
-  } else {
-    currentCount = await AssetInstance.countDocuments({
-      organizationId,
-      assetType: "software"
-    });
-  }
+/* ---------------- GET COMBINED LIMIT ---------------- */
 
-  /* ---------------- GET LIMIT ---------------- */
+const limit = tier.totalAssetLimit;
 
-  const limit =
-    assetType === "hardware"
-      ? tier.hardwareAssets
-      : tier.softwareAssets;
+/* ---------------- VALIDATE COMBINED LIMIT ---------------- */
 
-  /* ---------------- VALIDATE LIMIT ---------------- */
-
-  if (
-    limit !== "unlimited" &&
-    currentCount + instances.length > limit
-  ) {
-    throw new AppError(
-      `${assetType} instance limit exceeded`,
-      403,
-      "INSTANCE_LIMIT_EXCEEDED",
-      null,
-      {
-        limit,
-        current: currentCount,
-        requested: instances.length
-      }
-    );
-  }
+if (
+  limit !== "unlimited" &&
+  currentCount + instances.length > limit
+) {
+  throw new AppError(
+    "Total asset instance limit exceeded",
+    403,
+    "INSTANCE_LIMIT_EXCEEDED",
+    null,
+    {
+      limit,
+      current: currentCount,
+      requested: instances.length,
+      remaining: Math.max(0, limit - currentCount)
+    }
+  );
+}
 
   /* ================= VALIDATION ================= */
   const errors = {};
@@ -1760,45 +1767,88 @@ const bulkUploadInstances = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const tier = pricingTiers.find(t => t.key === subscription.tier);
+ const tier = pricingTiers.find(
+  (t) => t.key === subscription.tier
+);
 
-  if (!tier) {
-    throw new AppError(
-      "Invalid subscription tier",
-      500,
-      "INVALID_TIER"
-    );
-  }
-  if (!asset) {
-    asset = await SoftwareAsset.findOne({ _id: assetId, organizationId });
-    assetTypeRef = "SoftwareAsset";
-  }
+if (!tier) {
+  throw new AppError(
+    "Invalid subscription tier",
+    500,
+    "INVALID_TIER"
+  );
+}
 
-  if (!asset) {
-    throw new AppError(
-      "Parent asset not found",
-      404,
-      "ASSET_NOT_FOUND"
-    );
-  }
+/* ================= FIND PARENT ASSET ================= */
 
-  const assetType =
-    assetTypeRef === "SoftwareAsset" ? "software" : "hardware";
-
-  /* ================= QUANTITY ================= */
-  const existingCount = await AssetInstance.countDocuments({
-    assetId,
+if (!asset) {
+  asset = await SoftwareAsset.findOne({
+    _id: assetId,
     organizationId,
   });
 
-  if (existingCount + parsedInstances.length > asset.assetQuantity) {
-    throw new AppError(
-      "Exceeds asset quantity",
-      400,
-      "QUANTITY_EXCEEDED"
-    );
-  }
+  assetTypeRef = "SoftwareAsset";
+}
 
+if (!asset) {
+  throw new AppError(
+    "Parent asset not found",
+    404,
+    "ASSET_NOT_FOUND"
+  );
+}
+
+const assetType =
+  assetTypeRef === "SoftwareAsset"
+    ? "software"
+    : "hardware";
+
+/* ================= PLAN INSTANCE LIMIT ================= */
+
+const totalInstanceLimit = tier.totalAssetLimit;
+
+const currentTotalInstances = await AssetInstance.countDocuments({
+  organizationId,
+});
+
+if (
+  totalInstanceLimit !== "unlimited" &&
+  currentTotalInstances + parsedInstances.length > totalInstanceLimit
+) {
+  throw new AppError(
+    "Total asset instance limit exceeded",
+    403,
+    "INSTANCE_LIMIT_EXCEEDED",
+    null,
+    {
+      limit: totalInstanceLimit,
+      current: currentTotalInstances,
+      requested: parsedInstances.length,
+      remaining: Math.max(
+        0,
+        totalInstanceLimit - currentTotalInstances
+      ),
+    }
+  );
+}
+
+/* ================= PARENT ASSET QUANTITY ================= */
+
+const existingCount = await AssetInstance.countDocuments({
+  assetId,
+  organizationId,
+});
+
+if (
+  existingCount + parsedInstances.length >
+  asset.assetQuantity
+) {
+  throw new AppError(
+    "Exceeds asset quantity",
+    400,
+    "QUANTITY_EXCEEDED"
+  );
+}
   /* ================= HELPERS ================= */
   const normalize = (v) => v?.toString().trim();
 
