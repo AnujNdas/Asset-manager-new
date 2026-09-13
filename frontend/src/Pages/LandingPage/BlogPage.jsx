@@ -11,9 +11,75 @@ import {
   FaGoogle,
 } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 const BlogPage = () => {
     const navigate = useNavigate();
   return (
+    <>
+            <Helmet>
+                <title>Blog AssetPegasus | IT Asset Management Software</title>
+        
+                <meta
+                  name="description"
+                  content="Learn about AssetPegasus, Blog Details And Plans For the Software."
+                />
+        
+                <meta property="og:type" content="website" />
+        
+                <meta
+                  property="og:title"
+                  content="Blog AssetPegasus"
+                />
+        
+                <meta
+                  property="og:description"
+                  content="Learn about AssetPegasus, Blog Details And Plans For the Software."
+                />
+        
+                <meta
+                  property="og:image"
+                  content="https://assetpegasus.com/images/Dashboard.webp"
+                />
+                <meta
+          property="og:image:alt"
+          content="AssetPegasus Blog Page"
+        />
+        
+        <meta
+          property="og:image:type"
+          content="image/webp"
+        />
+        
+                <meta
+                  property="og:url"
+                  content="https://assetpegasus.com/blog"
+                />
+        
+                <meta
+                  name="twitter:card"
+                  content="summary_large_image"
+                />
+        
+                <meta
+                  name="twitter:title"
+                  content="Blog AssetPegasus"
+                />
+        
+                <meta
+                  name="twitter:description"
+                  content="Learn about AssetPegasus, Blog Details And Plans For the Software."
+                />
+        
+                <meta
+                  name="twitter:image"
+                  content="https://assetpegasus.com/images/Dashboard.webp"
+                />
+        
+                <link
+                  rel="canonical"
+                  href="https://assetpegasus.com/blog"
+                />
+              </Helmet>
     <div className="blog-page">
 
       {/* =========================
@@ -200,6 +266,7 @@ const BlogPage = () => {
 </section>
 
     </div>
+    </>
   );
 };
 

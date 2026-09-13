@@ -40,7 +40,15 @@ export default function Contact() {
     property="og:image"
     content="https://assetpegasus.com/images/Dashboard.webp"
   />
+  <meta
+  property="og:image:alt"
+  content="AssetPegasus Contact"
+/>
 
+<meta
+  property="og:image:type"
+  content="image/webp"
+/>
   <meta
     property="og:url"
     content="https://assetpegasus.com/contact"

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../../Page_styles/LandingPage/Pricing.css"
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 const Pricing = () => {
     const navigate = useNavigate();
     const [billingCycle, setBillingCycle] = useState("yearly");
@@ -133,6 +134,70 @@ const Pricing = () => {
        }
   return (
     <>
+          <Helmet>
+            <title>Pricing AssetPegasus | IT Asset Management Software</title>
+    
+            <meta
+              name="description"
+              content="Learn about AssetPegasus, Pricing Details And Plans For the Software."
+            />
+    
+            <meta property="og:type" content="website" />
+    
+            <meta
+              property="og:title"
+              content="Pricing AssetPegasus"
+            />
+    
+            <meta
+              property="og:description"
+              content="Learn about AssetPegasus, Pricing Details And Plans For the Software."
+            />
+    
+            <meta
+              property="og:image"
+              content="https://assetpegasus.com/images/Dashboard.webp"
+            />
+            <meta
+      property="og:image:alt"
+      content="AssetPegasus Pricing Page"
+    />
+    
+    <meta
+      property="og:image:type"
+      content="image/webp"
+    />
+    
+            <meta
+              property="og:url"
+              content="https://assetpegasus.com/pricing"
+            />
+    
+            <meta
+              name="twitter:card"
+              content="summary_large_image"
+            />
+    
+            <meta
+              name="twitter:title"
+              content="Pricing AssetPegasus"
+            />
+    
+            <meta
+              name="twitter:description"
+              content="Learn about AssetPegasus, Pricing Details And Plans For the Software."
+            />
+    
+            <meta
+              name="twitter:image"
+              content="https://assetpegasus.com/images/Dashboard.webp"
+            />
+    
+            <link
+              rel="canonical"
+              href="https://assetpegasus.com/pricing"
+            />
+          </Helmet>
     <section className="pricing-hero-section">
 
   <h1>Pricing</h1>

@@ -71,6 +71,15 @@ export default function About() {
           property="og:image"
           content="https://assetpegasus.com/images/Dashboard.webp"
         />
+        <meta
+  property="og:image:alt"
+  content="AssetPegasus About Page"
+/>
+
+<meta
+  property="og:image:type"
+  content="image/webp"
+/>
 
         <meta
           property="og:url"

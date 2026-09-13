@@ -442,18 +442,18 @@ aggregateRating: {
   "@context":"https://schema.org",
   "@type":"Organization",
   name:"AssetPegasus",
-  url:"https://AssetPegasus.com",
-  logo:"https://AssetPegasus.com/images/Logo2.png",
+  url:"https://assetpegasus.com",
+  logo:"https://assetpegasus.com/images/Logo2.png",
   sameAs:[
-    "https://www.linkedin.com/company/AssetPegasus",
-    "https://x.com/AssetPegasus"
+    "https://www.linkedin.com/company/assetpegasus",
+    "https://x.com/assetpegasus"
   ],
   description:
 "Cloud-based IT Asset Management Software",
 
 contactPoint: {
   "@type":"ContactPoint",
-  email:"info@AssetPegasus.com",
+  email:"info@assetpegasus.com",
   contactType:"Customer Support"
 }
 })}
@@ -463,13 +463,13 @@ contactPoint: {
   "@context":"https://schema.org",
   "@type":"WebPage",
   name:"AssetPegasus | IT Asset Management Software",
-  url:"https://AssetPegasus.com/",
+  url:"https://assetpegasus.com/",
   description:
     "Track hardware, software, warranties, maintenance, insurance and machinery.",
   isPartOf:{
     "@type":"WebSite",
     name:"AssetPegasus",
-    url:"https://AssetPegasus.com"
+    url:"https://assetpegasus.com"
   }
 })}
 </script>
@@ -478,7 +478,7 @@ contactPoint: {
  "@context":"https://schema.org",
  "@type":"WebSite",
  name:"AssetPegasus",
- url:"https://AssetPegasus.com",
+ url:"https://assetpegasus.com",
  inLanguage:"en",
  publisher:{
    "@type":"Organization",
@@ -504,11 +504,20 @@ contactPoint: {
 <meta property="og:site_name" content="AssetPegasus" />
 <meta
 property="og:url"
-content="https://AssetPegasus.com/"
+content="https://assetpegasus.com/"
 />
 <meta
   property="og:image"
-  content="https://AssetPegasus.com/images/Dashboard.webp"
+  content="https://assetpegasus.com/images/Dashboard.webp"
+/>
+<meta
+  property="og:image:alt"
+  content="AssetPegasus asset management dashboard"
+/>
+
+<meta
+  property="og:image:type"
+  content="image/webp"
 />
   <meta
     property="og:description"
@@ -531,11 +540,12 @@ content="@AssetPegasus"
 
 <meta
   name="twitter:image"
-  content="https://AssetPegasus.com/images/Dashboard.webp"
+  content="https://assetpegasus.com/images/Dashboard.webp"
 />
+
   <link
     rel="canonical"
-    href="https://AssetPegasus.com/"
+    href="https://assetpegasus.com/"
   />
 </Helmet>
     <div className="landing-page">
