@@ -254,32 +254,54 @@ const handleOpenCheckoutPreview = async () => {
      CHECKOUT
   ------------------------- */
 
-  const handleCheckout = async () => {
+const handleCheckout = async () => {
+  try {
+    setLoading(true);
+    setError(null);
 
-    try {
+    const scriptLoaded = await loadRazorpayScript();
 
-      setLoading(true);
-      setError(null);
-      const scriptLoaded = await loadRazorpayScript();
+    if (!scriptLoaded) {
+      throw new Error("Failed to load Razorpay SDK");
+    }
 
-      if (!scriptLoaded) {
-        throw new Error("Failed to load Razorpay SDK");
-      }
-      const checkoutRes = await createCheckout({
-        tierKey: selectedTier,
-        billingCycle: billing
-      });
+    const checkoutRes = await createCheckout({
+      tierKey: selectedTier,
+      billingCycle: billing,
+    });
 
-      const { subscriptionId, razorpayKey } = checkoutRes;
+    const { subscriptionId, razorpayKey } = checkoutRes;
 
-      const options = {
+    if (!subscriptionId || !razorpayKey) {
+      throw new Error("Invalid Razorpay checkout response");
+    }
 
-        key: razorpayKey,
-        subscription_id: subscriptionId,
-        name: "Socialfly AMS",
-        description: `${selectedTier.toUpperCase()} Plan`,
+    const options = {
+      key: razorpayKey,
+      subscription_id: subscriptionId,
 
-        handler: async function (response) {
+      name: "AssetPegasus",
+      description: `${selectedTier.toUpperCase()} Plan`,
+
+      prefill: {
+        name: user?.fullName || "",
+        email: user?.email || "",
+        contact: user?.phone || "",
+      },
+
+      theme: {
+        color: "#2563eb",
+      },
+
+      handler: async function (response) {
+        try {
+          setLoading(true);
+
+          console.log("Razorpay payment response:", {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_subscription_id: response.razorpay_subscription_id,
+            hasSignature: Boolean(response.razorpay_signature),
+          });
 
           await verifyPayment(response);
 
@@ -287,34 +309,70 @@ const handleOpenCheckoutPreview = async () => {
 
           setUpgradeMode(false);
 
-          Swal.fire("Success", "Subscription activated.", "success");
+          Swal.fire(
+            "Payment Received",
+            "Your payment was verified. Subscription activation may take a few moments.",
+            "success"
+          );
+        } catch (error) {
+          console.error("Payment verification failed:", error);
 
+          setError(
+            error?.userMessage ||
+              error?.response?.data?.message ||
+              "Payment verification failed"
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+
+      modal: {
+        ondismiss: async () => {
+          try {
+            setLoading(false);
+
+            await removePendingUpgrade();
+            await loadSubscription();
+          } catch (error) {
+            console.error("Error while dismissing Razorpay checkout:", error);
+          }
         },
+      },
+    };
 
-       modal: {
-  ondismiss: async () => {
+    console.log("Opening Razorpay checkout:", {
+      keyLoaded: Boolean(options.key),
+      subscriptionId: options.subscription_id,
+      tier: selectedTier,
+      billingCycle: billing,
+    });
+
+    const rzp = new window.Razorpay(options);
+
+    rzp.on("payment.failed", function (response) {
+      console.error("Razorpay payment failed:", response.error);
+
+      setError(
+        response?.error?.description ||
+          "Payment failed. Please try another payment method."
+      );
+    });
+
+    rzp.open();
+  } catch (err) {
+    console.error("Checkout failed:", err);
+
+    setError(
+      err?.userMessage ||
+        err?.response?.data?.message ||
+        err?.message ||
+        "Checkout failed"
+    );
+  } finally {
     setLoading(false);
-    await removePendingUpgrade();
-    await loadSubscription();
   }
-}
-
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-
-    } catch (err) {
-
-      setError(err.userMessage || "Checkout failed");
-
-    } finally {
-
-      setLoading(false);
-
-    }
-
-  };
+};
 
   /* -------------------------
      CANCEL AUTOPAY

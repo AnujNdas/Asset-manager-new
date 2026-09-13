@@ -404,7 +404,7 @@ const MachineryHero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setAssetTypeIndex((prev) => (prev + 1) % assetTypes.length);
-    }, 3500);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -416,7 +416,7 @@ const MachineryHero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setFeatureIndex((prev) => (prev + 1) % trackingFeatures.length);
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -427,7 +427,7 @@ const MachineryHero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % section4Data.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -439,7 +439,7 @@ const MachineryHero = () => {
       setCurrentSlide((prev) =>
         (prev + 1) % carouselContent.length
       );
-    }, 4500);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -451,7 +451,7 @@ const MachineryHero = () => {
       setCurrentSlide2((prev) =>
         (prev + 1) % maintenanceSlides.length
       );
-    }, 4500);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -488,7 +488,7 @@ const MachineryHero = () => {
         (prev + 1) % renewalSlides.length
       );
 
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
 
@@ -505,7 +505,7 @@ const MachineryHero = () => {
         (prev + 1) % carouselItems.length
       );
 
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
 
@@ -1252,15 +1252,15 @@ const handleNavigateItam = () => {
 
           <div
             className="section9-slide"
-            key={currentSlide}
+            key={currentSlide4}
           >
 
             <h2>
-              {insuranceSlides[currentSlide].title}
+              {insuranceSlides[currentSlide4].title}
             </h2>
 
             <p>
-              {insuranceSlides[currentSlide].text}
+              {insuranceSlides[currentSlide4].text}
             </p>
 
           </div>
@@ -1278,11 +1278,11 @@ const handleNavigateItam = () => {
                 key={index}
                 type="button"
                 className={`section9-dot ${
-                  index === currentSlide
+                  index === currentSlide4
                     ? "active"
                     : ""
                 }`}
-                onClick={() => setCurrentSlide(index)}
+                onClick={() => setCurrentSlide4(index)}
                 aria-label={`Show insurance slide ${
                   index + 1
                 }`}

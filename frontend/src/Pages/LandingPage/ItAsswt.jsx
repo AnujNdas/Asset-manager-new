@@ -658,7 +658,7 @@ useEffect(() => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveImage((prev) => (prev + 1) % section6Images.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -1650,16 +1650,16 @@ useEffect(() => {
 
           <div
             className="itam-section-10-carousel"
-            key={currentSlide}
+            key={currentSlide2}
           >
 
             <h2>
-              {carouselItems[currentSlide].title}
+              {carouselItems[currentSlide2].title}
             </h2>
 
 
             <p className="itam-section-10-description">
-              {carouselItems[currentSlide].description}
+              {carouselItems[currentSlide2].description}
             </p>
 
 
@@ -1673,11 +1673,11 @@ useEffect(() => {
                   key={index}
                   type="button"
                   className={
-                    index === currentSlide
+                    index === currentSlide2
                       ? "active"
                       : ""
                   }
-                  onClick={() => setCurrentSlide(index)}
+                  onClick={() => setCurrentSlide2(index)}
                   aria-label={`Go to slide ${index + 1}`}
                 />
 

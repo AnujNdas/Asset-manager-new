@@ -890,8 +890,8 @@
 .carousel-dots {
   position: absolute;
 
-  bottom: 18px;
-  left: 50%;
+  /* bottom: 18px; */
+  left: 70%;
 
   transform: translateX(-50%);
 

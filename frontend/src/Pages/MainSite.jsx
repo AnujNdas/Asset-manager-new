@@ -566,7 +566,7 @@ content="@AssetPegasus"
         <div className="hero-images">
 
           <img
-            src="/images/AssetpegasusDashboard.webp"
+            src="/images/Dashboard.webp"
             alt="IT Infrastructure"
           />
 
