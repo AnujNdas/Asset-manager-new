@@ -336,7 +336,7 @@ useEffect(() => {
 
         <link
           rel="canonical"
-          href="https://assetpegasus.com/travel-transportation-asset-management"
+          href="https://assetpegasus.com/travel-transportation-asset-management/"
         />
 
 
@@ -1092,7 +1092,7 @@ useEffect(() => {
     </p>
 
     <p>
-      <a href="/ham-management">HAM & ITAM</a> we bring all that expertise
+      <a href="/it-asset-management">HAM & ITAM</a> we bring all that expertise
       into a single SaaS (Software as Service) platform that helps to
       Manage Businesses & Individuals.
     </p>

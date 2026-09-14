@@ -195,7 +195,7 @@ const Pricing = () => {
     
             <link
               rel="canonical"
-              href="https://assetpegasus.com/pricing"
+              href="https://assetpegasus.com/pricing/"
             />
           </Helmet>
     <section className="pricing-hero-section">

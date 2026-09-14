@@ -317,7 +317,7 @@ useEffect(() => {
 
         <link
           rel="canonical"
-          href="https://assetpegasus.com/healthcare-asset-tracking"
+          href="https://assetpegasus.com/healthcare-asset-tracking/"
         />
 
 
@@ -1008,7 +1008,7 @@ useEffect(() => {
 
     <Link
       className="healthcare-section-12-btn"
-      to = "/about-us"
+      to = "/about"
         target="_blank"
   rel="noopener noreferrer"
     >

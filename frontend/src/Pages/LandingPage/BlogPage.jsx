@@ -77,7 +77,7 @@ const BlogPage = () => {
         
                 <link
                   rel="canonical"
-                  href="https://assetpegasus.com/blog"
+                  href="https://assetpegasus.com/blog/"
                 />
               </Helmet>
     <div className="blog-page">

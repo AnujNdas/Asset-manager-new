@@ -362,7 +362,7 @@ if (!verifyRes.user.organizationOnboarded) {
         {/* Form panel */}
         <form className="form-panel" onSubmit={handleSignup}>
           <div className="form-header">
-            <h2>Create Account</h2>
+            <h1>Create Account</h1>
             <p className="form-sub">Fill in your details to get started</p>
           </div>
 

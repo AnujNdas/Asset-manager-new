@@ -399,7 +399,7 @@ useEffect(() => {
 
   <link
     rel="canonical"
-    href="https://assetpegasus.com/restaurant-hospitality-asset-management"
+    href="https://assetpegasus.com/restaurant-hospitality-asset-management/"
   />
 
 

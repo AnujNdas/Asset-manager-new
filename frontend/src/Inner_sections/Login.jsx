@@ -165,7 +165,7 @@ if (role === "super-admin") {
           <form className="form-panel" onSubmit={handlelogin}>
             <div className="form-header">
               {/* <img src={image} alt="Logo" className="form-logo" /> */}
-              <h2>Sign in</h2>
+              <h1>Sign in</h1>
             </div>
 
   {/*           <div className="social-row" aria-label="Social options">

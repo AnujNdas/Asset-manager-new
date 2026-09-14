@@ -259,7 +259,7 @@ const handleSignIn = () => {
 
         <link
           rel="canonical"
-          href="https://assetpegasus.com/construction-equipment-tracking"
+          href="https://assetpegasus.com/construction-equipment-tracking/"
         />
 
 

@@ -3527,7 +3527,7 @@ quickAnswer: [
         "Manufacturing Asset Management",
 
       link:
-        "/manufacturing-asset-management"
+        "/manufacturing-asset-management-software"
     }
   ]
 
@@ -5885,7 +5885,7 @@ quickAnswer: [
         "Manufacturing Asset Management",
 
       link:
-        "/manufacturing-asset-management"
+        "/manufacturing-asset-management-software"
     }
 
   ]

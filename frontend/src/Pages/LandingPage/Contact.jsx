@@ -51,7 +51,7 @@ export default function Contact() {
 />
   <meta
     property="og:url"
-    content="https://assetpegasus.com/contact"
+    content="https://assetpegasus.com/contact/"
   />
 
   <meta

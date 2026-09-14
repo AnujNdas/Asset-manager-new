@@ -822,7 +822,7 @@ useEffect(() => {
 
   <link
     rel="canonical"
-    href="https://assetpegasus.com/it-asset-management"
+    href="https://assetpegasus.com/it-asset-management/"
   />
 </Helmet>
 

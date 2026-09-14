@@ -61,8 +61,11 @@ const BlogDetails = () => {
   // SHARE
   // =========================================================
 
-  const currentUrl = window.location.href;
+const productionHostname = "https://assetpegasus.com";
 
+const canonicalUrl = `${productionHostname}/blog/${slug}/`;
+
+const currentUrl = window.location.href;
 
   const shareFacebook = () => {
 
@@ -150,93 +153,70 @@ const BlogDetails = () => {
           SEO
       ===================================================== */}
 
-      <Helmet>
+<Helmet>
+  <title>{blog.metaTitle || blog.title}</title>
 
-        <title>
-          {blog.metaTitle || blog.title}
-        </title>
+  <meta
+    name="description"
+    content={blog.metaDescription || blog.excerpt || ""}
+  />
 
-        <meta
-          name="description"
-          content={
-            blog.metaDescription ||
-            blog.excerpt ||
-            ""
-          }
-        />
+  {blog.keywords?.length > 0 && (
+    <meta
+      name="keywords"
+      content={blog.keywords.join(", ")}
+    />
+  )}
 
-        {blog.keywords?.length > 0 && (
-          <meta
-            name="keywords"
-            content={blog.keywords.join(", ")}
-          />
-        )}
+  <meta
+    property="og:title"
+    content={blog.metaTitle || blog.title}
+  />
 
-        <meta
-          property="og:title"
-          content={
-            blog.metaTitle ||
-            blog.title
-          }
-        />
+  <meta
+    property="og:description"
+    content={blog.metaDescription || blog.excerpt || ""}
+  />
 
-        <meta
-          property="og:description"
-          content={
-            blog.metaDescription ||
-            blog.excerpt ||
-            ""
-          }
-        />
+  <meta
+    property="og:image"
+    content={
+      blog.image?.startsWith("http")
+        ? blog.image
+        : `${productionHostname}${blog.image}`
+    }
+  />
 
-        <meta
-          property="og:image"
-          content={blog.image}
-        />
+  <meta property="og:type" content="article" />
 
-        <meta
-          property="og:type"
-          content="article"
-        />
+  <meta property="og:url" content={canonicalUrl} />
 
-        <meta
-          property="og:url"
-          content={currentUrl}
-        />
+  <meta name="twitter:card" content="summary_large_image" />
 
-        <meta
-          name="twitter:card"
-          content="summary_large_image"
-        />
+  <meta
+    name="twitter:title"
+    content={blog.metaTitle || blog.title}
+  />
 
-        <meta
-          name="twitter:title"
-          content={
-            blog.metaTitle ||
-            blog.title
-          }
-        />
+  <meta
+    name="twitter:description"
+    content={blog.metaDescription || blog.excerpt || ""}
+  />
 
-        <meta
-          name="twitter:description"
-          content={
-            blog.metaDescription ||
-            blog.excerpt ||
-            ""
-          }
-        />
+  <meta
+    name="twitter:image"
+    content={
+      blog.image?.startsWith("http")
+        ? blog.image
+        : `${productionHostname}${blog.image}`
+    }
+  />
 
-        <meta
-          name="twitter:image"
-          content={blog.image}
-        />
-
-        <link
-          rel="canonical"
-          href={currentUrl}
-        />
-
-      </Helmet>
+  <link
+    rel="canonical"
+    href={canonicalUrl}
+  />
+</Helmet>
 
 
       {/* =====================================================

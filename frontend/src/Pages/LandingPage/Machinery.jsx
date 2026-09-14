@@ -591,7 +591,7 @@ const handleNavigateItam = () => {
 
   <link
     rel="canonical"
-    href="https://assetpegasus.com/machinery-management-software"
+    href="https://assetpegasus.com/machinery-management-software/"
   />
 </Helmet>
 

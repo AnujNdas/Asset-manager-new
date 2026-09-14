@@ -25,72 +25,72 @@ const staticPages = [
     changefreq: "weekly"
   },
   {
-    url: "/about",
+    url: "/about/",
     priority: "0.8",
     changefreq: "monthly"
   },
   {
-    url: "/contact",
+    url: "/contact/",
     priority: "0.7",
     changefreq: "monthly"
   },
   {
-    url: "/terms",
+    url: "/terms/",
     priority: "0.5",
     changefreq: "yearly"
   },
   {
-    url: "/global-privacy-policy",
+    url: "/global-privacy-policy/",
     priority: "0.5",
     changefreq: "yearly"
   },
   {
-    url: "/pricing",
+    url: "/pricing/",
     priority: "0.9",
     changefreq: "weekly"
   },
   {
-    url: "/machinery-management-software",
+    url: "/machinery-management-software/",
     priority: "0.9",
     changefreq: "monthly"
   },
   {
-    url: "/it-asset-management",
+    url: "/it-asset-management/",
     priority: "0.9",
     changefreq: "monthly"
   },
   {
-    url: "/manufacturing-asset-management-software",
+    url: "/manufacturing-asset-management-software/",
     priority: "0.8",
     changefreq: "monthly"
   },
   {
-    url: "/restaurant-hospitality-asset-management",
+    url: "/restaurant-hospitality-asset-management/",
     priority: "0.8",
     changefreq: "monthly"
   },
   {
-    url: "/healthcare-asset-tracking",
+    url: "/healthcare-asset-tracking/",
     priority: "0.8",
     changefreq: "monthly"
   },
   {
-    url: "/construction-equipment-tracking",
+    url: "/construction-equipment-tracking/",
     priority: "0.8",
     changefreq: "monthly"
   },
   {
-    url: "/education-asset-management",
+    url: "/education-asset-management/",
     priority: "0.8",
     changefreq: "monthly"
   },
   {
-    url: "/travel-transportation-asset-management",
+    url: "/travel-transportation-asset-management/",
     priority: "0.8",
     changefreq: "monthly"
   },
   {
-    url: "/blog",
+    url: "/blog/",
     priority: "0.8",
     changefreq: "weekly"
   }
@@ -112,7 +112,7 @@ while ((match = blogRegex.exec(blogData)) !== null) {
   const date = match[2];
 
   blogEntries.push({
-    url: `/blog/${slug}`,
+    url: `/blog/${slug}/`,
     lastmod: convertDateToISO(date),
     priority: "0.7",
     changefreq: "monthly"

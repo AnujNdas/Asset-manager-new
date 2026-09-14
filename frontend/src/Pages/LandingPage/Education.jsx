@@ -290,7 +290,7 @@ useEffect(() => {
 
         <link
           rel="canonical"
-          href="https://assetpegasus.com/education-asset-management"
+          href="https://assetpegasus.com/education-asset-management/"
         />
 
 

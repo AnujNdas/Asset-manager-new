@@ -245,7 +245,7 @@ useEffect(() => {
 
         <link
           rel="canonical"
-          href="https://assetpegasus.com/manufacturing-asset-management-software"
+          href="https://assetpegasus.com/manufacturing-asset-management-software/"
         />
 
 
@@ -317,11 +317,11 @@ useEffect(() => {
       {/* TOP HERO */}
       <div className="manufacturing-hero-top">
 
-        <h1>
-          Manufacturing Asset Management
-          <br />
-          Software for Modern Factories
-        </h1>
+          <h1>
+            Manufacturing Asset Management
+            <br />
+            Software for Modern Factories
+          </h1>
 
                 <div className="manufacturing-breadcrumb">
           <Link to="/"

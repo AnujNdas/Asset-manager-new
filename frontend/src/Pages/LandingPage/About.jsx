@@ -108,7 +108,7 @@ export default function About() {
 
         <link
           rel="canonical"
-          href="https://assetpegasus.com/about"
+          href="https://assetpegasus.com/about/"
         />
       </Helmet>
       <section className="about">
