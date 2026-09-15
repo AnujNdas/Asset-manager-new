@@ -570,6 +570,8 @@ const handleWebhook = async (req, res) => {
       );
     }
 
+    console.log("📦 Raw webhook body:", req.body.toString("utf8"));
+
     const expectedSignature = crypto
       .createHmac("sha256", webhookSecret)
       .update(req.body)
@@ -596,9 +598,9 @@ const handleWebhook = async (req, res) => {
       `[${requestId}] Webhook signature verified`
     );
 
-    const parsedBody = JSON.parse(
-      req.body.toString("utf8")
-    );
+const parsedBody = JSON.parse(req.body.toString("utf8"));
+
+console.log("📦 Parsed webhook payload:", JSON.stringify(parsedBody, null, 2));
 
     event = parsedBody.event;
     eventId = parsedBody.id;
