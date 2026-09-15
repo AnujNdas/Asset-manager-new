@@ -65,19 +65,11 @@ router.get("/me", authenticateToken(), async (req, res) => {
 
     const orgId = subscription?.organizationId;
 
-const hardwareCount = orgId
+const totalAssetCount = orgId
   ? await AssetInstance.countDocuments({
       organizationId: orgId,
-      assetType: "hardware"
     })
-  : 0;
-
-const softwareCount = orgId
-  ? await AssetInstance.countDocuments({
-      organizationId: orgId,
-      assetType: "software"
-    })
-  : 0;
+  : 0;  
     const adminCount = orgId
       ? await User.countDocuments({
           organizationId: orgId,
@@ -104,29 +96,23 @@ const softwareCount = orgId
       pendingUpgrade: subscription?.pendingUpgrade || null,
 
       /* PLAN LIMITS */
-      limits: {
-        hardwareAssets:
-          tierConfig?.hardwareAssets === "unlimited"
-            ? Infinity
-            : tierConfig?.hardwareAssets || 0,
+limits: {
+  totalAssets:
+    tierConfig?.totalAssetLimit === "unlimited"
+      ? null
+      : tierConfig?.totalAssetLimit ?? 0,
 
-        softwareAssets:
-          tierConfig?.softwareAssets === "unlimited"
-            ? Infinity
-            : tierConfig?.softwareAssets || 0,
-
-        admins:
-          tierConfig?.admins === "unlimited"
-            ? Infinity
-            : tierConfig?.admins || 0
-      },
+  admins:
+    tierConfig?.admins === "unlimited"
+      ? null
+      : tierConfig?.admins ?? 0,
+},
 
       /* CURRENT USAGE */
-      usage: {
-        hardwareAssets: hardwareCount,
-        softwareAssets: softwareCount,
-        admins: adminCount
-      },
+usage: {
+  assets: totalAssetCount,
+  admins: adminCount,
+},
 
       isTrial: subscription?.status === "trialing"
     });

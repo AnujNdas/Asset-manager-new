@@ -417,111 +417,112 @@ const handleCheckout = async () => {
     return (
 <div className="current-plan-insights">
       {/* Current Plan Banner */}
-  <div className="current-plan-banner">
+<div className="current-plan-banner">
+  <div className="banner-grid">
+    <div>
+      <span className="label">Current Plan</span>
 
-    <div className="banner-grid">
-
-      <div>
-        <span className="label">Plan</span>
-        <span className="value">
-          {currentPlan?.name || activeTier?.toUpperCase()}
-        </span>
-      </div>
-
-      <div>
-        <span className="label">Status</span>
-        <span className={`value status-${subscription.status}`}>
-          {subscription.status}
-        </span>
-      </div>
-
-      <div>
-        <span className="label">Billing</span>
-        <span className="value">
-          {subscription.billingCycle || billing}
-        </span>
-      </div>
-        <div>
-          <span className="label">Days Remaining</span>
-          <span className="value">
-            {subscription.status === "active" || subscription.status === "trialing"
-              ? `${subscription.daysRemaining ?? "-"} days`
-              : "Expired"}
-          </span>
-        </div>
-
-
+      <span className="value">
+        {currentPlan?.name || activeTier?.toUpperCase()}
+      </span>
     </div>
 
+    <div>
+      <span className="label">Subscription Status</span>
+
+      <span className={`value status-${subscription.status}`}>
+        ● {subscription.status}
+      </span>
+    </div>
+
+    <div>
+      <span className="label">Billing Cycle</span>
+
+      <span className="value">
+        {subscription.billingCycle || billing}
+      </span>
+    </div>
+
+    <div>
+      <span className="label">Days Remaining</span>
+
+      <span className="value">
+        {subscription.status === "active" ||
+        subscription.status === "trialing"
+          ? `${subscription.daysRemaining ?? "-"} days`
+          : "Expired"}
+      </span>
+    </div>
   </div>
+</div>
   {/* Usage Limits */}
   <div className="plan-usage-section">
 
     <h3 className="section-title">Usage Limits</h3>
 
-    <div className="usage-grid">
+<div className="usage-grid">
+  <div className="usage-card">
+    <span className="usage-label">Total Assets</span>
 
-      <div className="usage-card">
-        <span className="usage-label">Hardware Assets</span>
-        <span className="usage-value">
-          {subscription.usage?.hardwareAssets || 0} / {subscription.limits?.hardwareAssets || "∞"}
-        </span>
+    <span className="usage-value">
+      {subscription.usage?.assets ?? 0} /{" "}
+      {subscription.limits?.totalAssets ?? "∞"}
+    </span>
 
-        <div className="usage-bar">
-          <div
-            className="usage-progress"
-            style={{
-              width: `${
-                subscription.limits?.hardwareAssets
-                  ? (subscription.usage?.hardwareAssets / subscription.limits.hardwareAssets) * 100
-                  : 0
-              }%`
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="usage-card">
-        <span className="usage-label">Software Assets</span>
-        <span className="usage-value">
-          {subscription.usage?.softwareAssets || 0} / {subscription.limits?.softwareAssets || "∞"}
-        </span>
-
-        <div className="usage-bar">
-          <div
-            className="usage-progress"
-            style={{
-              width: `${
-                subscription.limits?.softwareAssets
-                  ? (subscription.usage?.softwareAssets / subscription.limits.softwareAssets) * 100
-                  : 0
-              }%`
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="usage-card">
-        <span className="usage-label">Admin Users</span>
-        <span className="usage-value">
-          {subscription.usage?.admins || 0} / {subscription.limits?.admins || "∞"}
-        </span>
-
-        <div className="usage-bar">
-          <div
-            className="usage-progress"
-            style={{
-              width: `${
-                subscription.limits?.admins
-                  ? (subscription.usage?.admins / subscription.limits.admins) * 100
-                  : 0
-              }%`
-            }}
-          />
-        </div>
-      </div>
-
+    <div className="usage-bar">
+      <div
+        className="usage-progress"
+        style={{
+          width: `${
+            subscription.limits?.totalAssets
+              ? Math.min(
+                  100,
+                  ((subscription.usage?.assets ?? 0) /
+                    subscription.limits.totalAssets) *
+                    100
+                )
+              : 0
+          }%`,
+        }}
+      />
     </div>
+
+    <small className="usage-description">
+      Hardware and software combined
+    </small>
+  </div>
+
+  <div className="usage-card">
+    <span className="usage-label">Admin Users</span>
+
+    <span className="usage-value">
+      {subscription.usage?.admins ?? 0} /{" "}
+      {subscription.limits?.admins ?? "∞"}
+    </span>
+
+    <div className="usage-bar">
+      <div
+        className="usage-progress"
+        style={{
+          width: `${
+            subscription.limits?.admins
+              ? Math.min(
+                  100,
+                  ((subscription.usage?.admins ?? 0) /
+                    subscription.limits.admins) *
+                    100
+                )
+              : 0
+          }%`,
+        }}
+      />
+    </div>
+
+    <small className="usage-description">
+      Organization administrators
+    </small>
+  </div>
+</div>
 
   </div>
 
