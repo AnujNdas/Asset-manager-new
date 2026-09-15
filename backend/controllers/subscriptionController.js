@@ -627,42 +627,62 @@ const handleWebhook = async (req, res) => {
 
 const parsedBody = JSON.parse(req.body.toString("utf8"));
 
+console.log(
+  "📦 Parsed webhook payload:",
+  JSON.stringify(parsedBody, null, 2)
+);
+
+// --------------------------------------------------
+// Extract webhook data before using the variables
+// --------------------------------------------------
+
+event = parsedBody.event || null;
+
+const subscriptionEntity =
+  parsedBody.payload?.subscription?.entity || null;
+
+const paymentEntity =
+  parsedBody.payload?.payment?.entity || null;
+
+const orderEntity =
+  parsedBody.payload?.order?.entity || null;
+
+const invoiceEntity =
+  parsedBody.payload?.invoice?.entity || null;
+
+// Some events contain the subscription directly.
+// invoice.paid contains it inside invoice.entity.subscription_id.
+const razorpaySubscriptionId =
+  subscriptionEntity?.id ||
+  invoiceEntity?.subscription_id ||
+  null;
+
+// Razorpay payloads may not contain parsedBody.id.
+// Use a deterministic fallback for now.
+eventId =
+  parsedBody.id ||
+  `${event}:${razorpaySubscriptionId || "unknown"}:${parsedBody.created_at}`;
+
+// Diagnostic logging
 console.log("Webhook identifiers:", {
-  topLevelId: parsedBody.id,
-  event: parsedBody.event,
-  subscriptionId: parsedBody.payload?.subscription?.entity?.id,
-  createdAt: parsedBody.created_at,
+  topLevelId: parsedBody.id || null,
+  event,
+  subscriptionId: razorpaySubscriptionId,
+  paymentId: paymentEntity?.id || null,
+  invoiceId: invoiceEntity?.id || null,
+  createdAt: parsedBody.created_at || null,
 });
 
-console.log("📦 Parsed webhook payload:", JSON.stringify(parsedBody, null, 2));
-
-    event = parsedBody.event;
-    const eventId =
-  parsedBody.id ||
-  `${event}:${subscriptionEntity?.id || "unknown"}:${parsedBody.created_at}`;
-
-    const subscriptionEntity =
-      parsedBody.payload?.subscription?.entity || null;
-
-    const paymentEntity =
-      parsedBody.payload?.payment?.entity || null;
-
-    console.log(`[${requestId}] Webhook event information`, {
-      event,
-      eventId,
-      hasSubscriptionEntity: Boolean(
-        subscriptionEntity
-      ),
-      subscriptionId:
-        subscriptionEntity?.id || null,
-      subscriptionStatus:
-        subscriptionEntity?.status || null,
-      hasPaymentEntity: Boolean(paymentEntity),
-      paymentId: paymentEntity?.id || null,
-      paymentStatus:
-        paymentEntity?.status || null,
-    });
-
+console.log(`[${requestId}] Webhook event information`, {
+  event,
+  eventId,
+  hasSubscriptionEntity: Boolean(subscriptionEntity),
+  subscriptionId: razorpaySubscriptionId,
+  subscriptionStatus: subscriptionEntity?.status || null,
+  hasPaymentEntity: Boolean(paymentEntity),
+  paymentId: paymentEntity?.id || null,
+  paymentStatus: paymentEntity?.status || null,
+});
 if (!eventId) {
   console.error(`[${requestId}] Unable to create webhook event ID`);
   return res.status(400).json({
@@ -728,28 +748,21 @@ if (!eventId) {
     // Only subscription events have subscription.entity
     // --------------------------------------------------
 
-    if (!subscriptionEntity) {
-      console.warn(
-        `[${requestId}] No subscription entity found`,
-        {
-          event,
-          paymentId: paymentEntity?.id || null,
-        }
-      );
+if (!razorpaySubscriptionId) {
+  console.warn(
+    `[${requestId}] No subscription ID found in webhook`,
+    { event }
+  );
 
-      await markWebhookProcessed(eventId);
+  await markWebhookProcessed(eventId);
 
-      return res.status(200).json({
-        received: true,
-        ignored: true,
-        reason: "No subscription entity found",
-        event,
-      });
-    }
-
-    const razorpaySubscriptionId =
-      subscriptionEntity.id;
-
+  return res.status(200).json({
+    received: true,
+    ignored: true,
+    reason: "No subscription ID found",
+    event,
+  });
+}
     console.log(`[${requestId}] Looking up database subscription`, {
       razorpaySubscriptionId,
     });
@@ -1006,6 +1019,18 @@ if (!eventId) {
         notes: "Subscription cancelled by Razorpay.",
       });
     }
+
+    if (event === "invoice.paid") {
+  console.log(`[${requestId}] Invoice paid successfully`, {
+    invoiceId: invoiceEntity?.id || null,
+    paymentId: paymentEntity?.id || null,
+    subscriptionId: razorpaySubscriptionId,
+  });
+
+  // Acknowledge the event.
+  // Do not add to totalPaid here if subscription.charged
+  // also performs that accounting, or payment may be counted twice.
+}
 
     // ==================================================
     // PAYMENT FAILURE
