@@ -627,10 +627,19 @@ const handleWebhook = async (req, res) => {
 
 const parsedBody = JSON.parse(req.body.toString("utf8"));
 
+console.log("Webhook identifiers:", {
+  topLevelId: parsedBody.id,
+  event: parsedBody.event,
+  subscriptionId: parsedBody.payload?.subscription?.entity?.id,
+  createdAt: parsedBody.created_at,
+});
+
 console.log("📦 Parsed webhook payload:", JSON.stringify(parsedBody, null, 2));
 
     event = parsedBody.event;
-    eventId = parsedBody.id;
+    const eventId =
+  parsedBody.id ||
+  `${event}:${subscriptionEntity?.id || "unknown"}:${parsedBody.created_at}`;
 
     const subscriptionEntity =
       parsedBody.payload?.subscription?.entity || null;
@@ -654,15 +663,13 @@ console.log("📦 Parsed webhook payload:", JSON.stringify(parsedBody, null, 2))
         paymentEntity?.status || null,
     });
 
-    if (!eventId) {
-      console.error(
-        `[${requestId}] Webhook event ID missing`
-      );
-
-      return res.status(400).send(
-        "Webhook event ID missing"
-      );
-    }
+if (!eventId) {
+  console.error(`[${requestId}] Unable to create webhook event ID`);
+  return res.status(400).json({
+    success: false,
+    message: "Unable to identify webhook event",
+  });
+}
 
     const existingEvent =
       await RazorpayWebhookEvent.findOne({
