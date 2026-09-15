@@ -232,6 +232,18 @@ const createCheckout = async (req, res) => {
         billingCycle === "monthly" ? 60 : 5,
     });
 
+    console.log(`[${requestId}] Final Razorpay configuration`, {
+  nodeEnv: process.env.NODE_ENV,
+  isProduction,
+  selectedPlanId: planId,
+  tierKey,
+  billingCycle,
+  keyId: process.env.RAZORPAY_KEY_ID
+    ? `${process.env.RAZORPAY_KEY_ID.slice(0, 10)}...`
+    : null,
+  keySecretLoaded: Boolean(process.env.RAZORPAY_SECRET),
+});
+
     const razorpaySubscription =
       await razorpay.subscriptions.create({
         plan_id: planId,
