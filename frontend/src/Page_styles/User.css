@@ -76,6 +76,9 @@
   overflow: hidden;
   aspect-ratio: 16/9;
 }
+.dash-image img {
+  height: 220px;
+}
 
 .dash-logo img{
   width:100px;

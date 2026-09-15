@@ -149,7 +149,7 @@ router.post(
   cancelAutoPay
 );
 
-router.post("/webhook", handleWebhook);
+// router.post("/webhook", handleWebhook);
 router.get("/fix-sub", async (req, res) => {
   const razorSub = await razorpay.subscriptions.fetch("sub_SOFVQ7JIryQYZO");
 
