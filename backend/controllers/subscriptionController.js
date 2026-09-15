@@ -282,19 +282,34 @@ const createCheckout = async (req, res) => {
       razorpayKey: process.env.RAZORPAY_KEY_ID,
     });
   } catch (err) {
-    console.error(
-      `[${requestId}] Checkout failed`,
-      {
-        name: err.name,
-        message: err.message,
-        stack: err.stack,
-      }
-    );
+  console.error(`[${requestId}] Checkout failed - FULL ERROR:`);
+  console.dir(err, { depth: null });
 
-    return res.status(500).json({
-      message: "Subscription creation failed",
-    });
-  }
+  console.error(`[${requestId}] Checkout error details:`, {
+    typeofError: typeof err,
+    stringifiedError: JSON.stringify(err, null, 2),
+    name: err?.name,
+    message: err?.message,
+    error: err?.error,
+    description: err?.description,
+    code: err?.code,
+    statusCode: err?.statusCode,
+    response: err?.response,
+    responseData: err?.response?.data,
+    stack: err?.stack,
+  });
+
+  return res.status(500).json({
+    message: "Subscription creation failed",
+    error:
+      process.env.NODE_ENV === "development"
+        ? err?.error?.description ||
+          err?.description ||
+          err?.message ||
+          "Unknown Razorpay error"
+        : undefined,
+  });
+}
 };
 /* ------------------------------------------------
    Verify Payment (ONLY verifies signature)
