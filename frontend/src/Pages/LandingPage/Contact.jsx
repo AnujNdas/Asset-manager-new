@@ -76,7 +76,7 @@ export default function Contact() {
 
   <link
     rel="canonical"
-    href="https://assetpegasus.com/contact"
+    href="https://assetpegasus.com/contact/"
   />
 </Helmet>
     <section className="contact">
