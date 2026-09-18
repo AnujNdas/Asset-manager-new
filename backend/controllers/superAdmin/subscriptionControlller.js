@@ -2,7 +2,7 @@ const Subscription = require("../../models/Subscription");
 const Organization = require("../../models/Organization");
 const AffiliateReferral = require("../../models/AffiliateReferral");
 const AffiliateProfile = require("../../models/AffiliateProfile");
-
+const SubscriptionHistory = require("../../models/SubscriptionHistory")
 
 /**
  * ============================================================
@@ -40,7 +40,17 @@ const getSuperAdminSubscriptions = async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
+    const subscriptionIds = subscriptions.map(
+      subscription => subscription._id
+    );
 
+    const histories = await SubscriptionHistory.find({
+      subscriptionId: {
+        $in: subscriptionIds
+      }
+    })
+      .sort({ createdAt: -1 })
+      .lean();
     /*
      * ========================================================
      * 2. GET ORGANIZATIONS
@@ -143,6 +153,30 @@ const getSuperAdminSubscriptions = async (req, res) => {
 
 
     /*
+ * ========================================================
+ * 5. CREATE History MAP
+ * ========================================================
+ */
+
+    const historyMap = new Map();
+
+    histories.forEach(history => {
+
+      const subscriptionId =
+        history.subscriptionId?.toString();
+
+      if (!subscriptionId) {
+        return;
+      }
+
+      if (!historyMap.has(subscriptionId)) {
+        historyMap.set(subscriptionId, []);
+      }
+
+      historyMap.get(subscriptionId).push(history);
+    });
+
+    /*
      * ========================================================
      * 6. GET AFFILIATE PROFILES
      * ========================================================
@@ -205,21 +239,22 @@ const getSuperAdminSubscriptions = async (req, res) => {
       const affiliate =
         referral?.affiliateId
           ? affiliateMap.get(
-              referral.affiliateId.toString()
-            ) || null
+            referral.affiliateId.toString()
+          ) || null
           : null;
 
 
+      const history =
+        historyMap.get(
+          subscription._id.toString()
+        ) || [];
+
       return {
-
         subscription,
-
         organization,
-
         referral,
-
-        affiliate
-
+        affiliate,
+        history
       };
 
     });

@@ -41,7 +41,7 @@ const handleAboutClick = () => {
   window.open("/about", "_blank");
 };
 const handleHealthCare = () => {
-  navigate("/healthcare-asset-tracking")
+  window.open("https://assetpegasus.com/healthcare-asset-tracking")
 }
 const handleGoodFirms = () => {
   window.open("https://www.goodfirms.co/company/socialfly-live")
@@ -59,25 +59,25 @@ const handleSaasHub = () => {
   window.open("https://www.saashub.com/AssetPegasus")
 }
 const handleManufacturing = () => {
-  navigate("/manufacturing-asset-management-software")
+  window.open("https://assetpegasus.com/manufacturing-asset-management-software")
 }
 const handleEducation = () => {
-  navigate("/education-asset-management")
+  window.open("https://assetpegasus.com/education-asset-management")
 }
 const handleConstructionClick = () => {
-  navigate("/construction-equipment-tracking")
+  window.open("https://assetpegasus.com/construction-equipment-tracking")
 }
 const handleTravelClick = () => {
-  navigate("/travel-transportation-asset-management")
+  window.open("https://assetpegasus.com/travel-transportation-asset-management")
 }
 const handleHospitalityManagement = () => {
-  navigate("/restaurant-hospitality-asset-management")
+  window.open("https://assetpegasus.com/restaurant-hospitality-asset-management")
 }
 const handleProductClick = () => {
-  window.open("https://AssetPegasus.com/it-asset-management")
+  window.open("https://assetPegasus.com/it-asset-management")
 }
 const handleProductClick2 = () => {
-  window.open("https://AssetPegasus.com/construction-equipment-tracking")
+  window.open("https://assetPegasus.com/construction-equipment-tracking")
 }
 const handleCopyright = () => {
   window.open("https://socialflylive.com/")
