@@ -293,6 +293,10 @@
   display: block;
   margin: 28px auto 0;
   min-width: 220px;
+  box-shadow: 0px 2px 3px #DFD0B8;
+}
+.proceed:hover {
+  box-shadow: 0px 2px 3px #DFD0B8;
 }
 
 /* =========================================================
@@ -579,4 +583,456 @@
   .checkout-actions .btn {
     width: 100%;
   }
+}
+
+/* =========================================================
+   PLAN CARD
+========================================================= */
+
+.plan-card {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding: 28px 24px 24px;
+
+  background: #222831;
+  border: 1px solid rgba(148, 137, 121, 0.22);
+  border-radius: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   TOP ACCENT
+========================================================= */
+
+.plan-card::before {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 3px;
+
+  background: #DFD0B8;
+
+  opacity: 0;
+
+  transition: opacity 0.25s ease;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.plan-card:hover {
+  transform: translateY(-5px);
+
+  border-color: #DFD0B8;
+
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.22),
+    0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+.plan-card:hover::before {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   SELECTED CARD
+========================================================= */
+
+.plan-card.active {
+  border-color: #DFD0B8;
+
+  background: #343941;
+
+  box-shadow:
+    0 0 0 1px #DFD0B8,
+    0 14px 35px #948979,
+    0 6px 10px #DFD0B8;
+}
+
+.plan-card.active::before {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   PLAN TITLE
+========================================================= */
+
+.plan-card h3 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  letter-spacing: -0.3px;
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+
+  margin-top: 18px;
+  margin-bottom: 24px;
+
+  flex-wrap: wrap;
+}
+
+.plan-price .amount {
+  color: #DFD0B8;
+
+  font-size: 38px;
+  font-weight: 750;
+
+  line-height: 1;
+
+  letter-spacing: -1px;
+}
+
+.plan-price .duration {
+  color: #948979;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.plan-features {
+  list-style: none;
+
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 13px;
+
+  flex: 1;
+}
+
+.plan-features li {
+  position: relative;
+
+  padding-left: 25px;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  word-break: break-word;
+}
+
+.plan-features li::before {
+  content: "✓";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  color: #4ac54a;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   SELECT BUTTON
+========================================================= */
+
+.plan-card .btn-primary {
+  width: 100%;
+
+  margin-top: 26px;
+
+  padding: 12px 18px;
+
+  border: 1px solid #DFD0B8;
+  border-radius: 10px;
+
+  background: #DFD0B8;
+  color: #222831;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.plan-card .btn-primary:hover {
+  background: #948979;
+  border-color: #DFD0B8;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 3px 3px #DFD0B8;
+}
+
+.plan-card.active .btn-primary {
+  background: #DFD0B8;
+  border: 1px solid #222831;
+  box-shadow: none ;
+}
+
+
+/* =========================================================
+   RECOMMENDED BADGE
+========================================================= */
+
+.recommended-badge {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #4ac54a;
+  border: 1px solid #948979;
+
+  color: #222831;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+
+/* =========================================================
+   AFFILIATE BADGE
+========================================================= */
+
+.affiliate-badge {
+  display: inline-flex;
+  align-items: center;
+
+  width: fit-content;
+
+  margin-top: 12px;
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: rgba(34, 197, 94, 0.10);
+  border: 1px solid rgba(34, 197, 94, 0.28);
+
+  color: #86efac;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   AFFILIATE PRICE SPACING
+========================================================= */
+
+.plan-card:has(.affiliate-badge) .plan-price {
+  margin-top: 14px;
+}
+
+
+/* =========================================================
+   PLANS GRID
+========================================================= */
+
+.plans-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 22px;
+
+  align-items: stretch;
+
+  margin-top: 28px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .plans-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+  }
+
+  .plan-card {
+    padding: 24px 20px;
+  }
+
+  .plan-price .amount {
+    font-size: 34px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 680px) {
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+
+    margin-top: 22px;
+  }
+
+  .plan-card {
+    padding: 24px 20px 20px;
+
+    border-radius: 16px;
+  }
+
+  .plan-card h3 {
+    font-size: 20px;
+  }
+
+  .plan-price {
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+
+  .plan-price .amount {
+    font-size: 34px;
+  }
+
+  .plan-features {
+    gap: 11px;
+  }
+
+  .plan-features li {
+    font-size: 13.5px;
+  }
+
+  .plan-card .btn-primary {
+    margin-top: 22px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .plan-card {
+    padding: 21px 17px 18px;
+
+    border-radius: 14px;
+  }
+
+  .plan-card h3 {
+    font-size: 19px;
+  }
+
+  .plan-price .amount {
+    font-size: 31px;
+  }
+
+  .plan-price .duration {
+    font-size: 13px;
+  }
+
+  .plan-features li {
+    padding-left: 22px;
+
+    font-size: 13px;
+  }
+
+  .recommended-badge {
+    top: 13px;
+    right: 13px;
+
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .affiliate-badge {
+    font-size: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .plan-card,
+  .plan-card .btn-primary {
+    transition: none;
+  }
+
+  .plan-card:hover {
+    transform: none;
+  }
+
 }
