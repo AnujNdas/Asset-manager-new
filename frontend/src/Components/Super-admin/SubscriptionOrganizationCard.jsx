@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   Building2,
   CalendarDays,
@@ -10,8 +11,11 @@ import {
   CheckCircle2,
   PauseCircle,
   XCircle,
+  ChevronDown,
+  ChevronUp,
+  ArrowRight,
+  History,
 } from "lucide-react";
-
 const formatDate = (date) => {
   if (!date) return "—";
 
@@ -108,12 +112,20 @@ const SubscriptionOrganizationCard = ({
   data,
   onViewHistory,
 }) => {
+
+  const [showHistory, setShowHistory] = useState(false);
   const {
     subscription,
     organization,
     referral,
     affiliate,
   } = data || {};
+const history = Array.isArray(data?.history)
+  ? [...data.history].sort(
+      (a, b) =>
+        new Date(b.createdAt) - new Date(a.createdAt)
+    )
+  : [];
 
   if (!organization) {
     return null;
@@ -193,17 +205,166 @@ const SubscriptionOrganizationCard = ({
 
         </div>
 
-        <button
-          type="button"
-          className="subscription-history-btn"
-          onClick={() => onViewHistory?.(data)}
-        >
-          <Clock3 size={15} />
+<button
+  type="button"
+  className="subscription-history-btn"
+  onClick={() => setShowHistory((prev) => !prev)}
+>
+  <History size={15} />
 
-          View History
-        </button>
+  {showHistory ? "Hide History" : "View History"}
+
+  {showHistory ? (
+    <ChevronUp size={15} />
+  ) : (
+    <ChevronDown size={15} />
+  )}
+</button>
+      </div>
+
+      {showHistory && (
+  <div className="subscription-history-panel">
+
+    <div className="subscription-history-header">
+      <div>
+        <h4>Subscription History</h4>
+        <p>
+          Previous subscription events for this organization.
+        </p>
+      </div>
+
+      <span>
+        {history.length} {history.length === 1 ? "event" : "events"}
+      </span>
+    </div>
+
+    {history.length === 0 ? (
+      <div className="subscription-history-empty">
+        No subscription history available.
+      </div>
+    ) : (
+      <div className="subscription-history-list">
+
+        {history.map((item, index) => (
+
+          <div
+            key={item._id || index}
+            className="subscription-history-item"
+          >
+
+            {/* TIMELINE */}
+            <div className="subscription-history-timeline">
+
+              <div className="subscription-history-dot">
+                {getStatusIcon(item.status)}
+              </div>
+
+              {index !== history.length - 1 && (
+                <div className="subscription-history-line" />
+              )}
+
+            </div>
+
+            {/* EVENT CONTENT */}
+            <div className="subscription-history-content">
+
+              <div className="subscription-history-event-header">
+
+                <div>
+                  <strong>
+                    {getStatusLabel(item.eventType)}
+                  </strong>
+
+                  <span className="subscription-history-date">
+                    {formatDateTime(item.createdAt)}
+                  </span>
+                </div>
+
+                <span
+                  className={`subscription-status-badge subscription-status-${item.status}`}
+                >
+                  {getStatusIcon(item.status)}
+                  {getStatusLabel(item.status)}
+                </span>
+
+              </div>
+
+
+              <div className="subscription-history-details">
+
+                <div>
+                  <span>Plan</span>
+                  <strong>
+                    {getPlanLabel(item.tier)}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Billing</span>
+                  <strong>
+                    {getBillingLabel(item.billingCycle)}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Plan Price</span>
+                  <strong>
+                    {formatCurrency(
+                      item.planPrice,
+                      item.currency || currency
+                    )}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>Payment</span>
+                  <strong>
+                    {formatCurrency(
+                      item.lastPaymentAmount,
+                      item.currency || currency
+                    )}
+                  </strong>
+                </div>
+
+              </div>
+
+
+              {item.currentStart || item.currentEnd ? (
+                <div className="subscription-history-period">
+
+                  <CalendarDays size={14} />
+
+                  <span>
+                    {formatDate(item.currentStart)}
+                  </span>
+
+                  <ArrowRight size={14} />
+
+                  <span>
+                    {formatDate(item.currentEnd)}
+                  </span>
+
+                </div>
+              ) : null}
+
+
+              {item.notes && (
+                <div className="subscription-history-notes">
+                  {item.notes}
+                </div>
+              )}
+
+            </div>
+
+          </div>
+
+        ))}
 
       </div>
+    )}
+
+  </div>
+)}
 
 
       {/* =====================================================

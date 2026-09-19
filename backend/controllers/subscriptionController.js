@@ -14,10 +14,25 @@ const {
 /* ------------------------------------------------
    Utility: Resolve Razorpay Plan ID
 ------------------------------------------------ */
-function getPlanId(tierKey, billingCycle) {
-  const plan = razorpayPlans[tierKey]?.[billingCycle];
+function getPlanId(
+  tierKey,
+  billingCycle,
+  isAffiliate = false
+) {
+
+  const planKey =
+    isAffiliate
+      ? "affiliateYearly"
+      : billingCycle;
+
+  const plan =
+    razorpayPlans[tierKey]?.[planKey];
+
   if (!plan) return null;
-  return isProduction ? plan.live : plan.test;
+
+  return isProduction
+    ? plan.live
+    : plan.test;
 }
 
 
