@@ -23,9 +23,11 @@ module.exports = [
     totalAssetLimit: 2000,
     priceMonthly: 15,
     priceYearly: 12,
+    affiliatePriceYearly: 11.40,
+    affiliateAnnualPrice: 136.80,
     currency: "USD",
     popular: false,
-
+    
     features: [
       "Up to 2000 Assets",
       "Up to 1 Admin User",
@@ -41,18 +43,20 @@ module.exports = [
       "Email Support",
     ],
   },
-
+  
   {
     id: "tier_20_2500",
     key: "grow",
     name: "Grow",
     admins: 5,
  totalAssetLimit: 5000,
-    priceMonthly: 30,
-    priceYearly: 25,
-    currency: "USD",
-    popular: true,
-
+ priceMonthly: 30,
+ priceYearly: 25,
+ affiliatePriceYearly: 22.50,
+ affiliateAnnualPrice: 270,
+ currency: "USD",
+ popular: true,
+ 
     features: [
       "Up to 5000 Assets",
       "Up to 5 Admin Users",
@@ -77,6 +81,8 @@ module.exports = [
     totalAssetLimit: "unlimited",
     priceMonthly: 80,
     priceYearly: 75,
+    affiliatePriceYearly: 67.50,
+    affiliateAnnualPrice: 810,
     currency: "USD",
     popular: false,
 

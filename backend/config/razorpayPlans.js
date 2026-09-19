@@ -13,7 +13,7 @@ const plans = {
     },
 
     affiliateYearly: {
-      // test: "plan_Ss52JiOi6guTPp",
+      test: "plan_Te1l6h4Pj78p1q",
       live: "plan_Ss52JiOi6guTPp",
       price: 136.80,
     },
@@ -33,7 +33,7 @@ const plans = {
     },
 
     affiliateYearly: {
-      // test: "plan_Ss4x8zjj5EeuCC",
+      test: "plan_Te1lo4ZBSwNsn7",
       live: "plan_Ss4x8zjj5EeuCC",
       price: 270,
     },
@@ -53,7 +53,7 @@ const plans = {
     },
 
     affiliateYearly: {
-      // test: "plan_Ss4twfGIYQ95VX",
+      test: "plan_Te1mVQwjRzzRZX",
       live: "plan_Ss4twfGIYQ95VX",
       price: 810,
     },

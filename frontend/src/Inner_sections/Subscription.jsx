@@ -34,8 +34,9 @@ const loadRazorpayScript = () => {
 };
 const Subscription = () => {
 
-  const [tiers, setTiers] = useState([]);
-  const [billing, setBilling] = useState("monthly");
+const [tiers, setTiers] = useState([]);
+const [billing, setBilling] = useState("monthly");
+const [isAffiliate, setIsAffiliate] = useState(false);
   const [selectedTier, setSelectedTier] = useState(null);
   const [subscription, setSubscription] = useState(null);
   const [upgradeMode, setUpgradeMode] = useState(false);
@@ -73,30 +74,42 @@ const loadSubscription = async () => {
      INITIAL LOAD
   ------------------------- */
 
-  useEffect(() => {
+ useEffect(() => {
 
-    const init = async () => {
+  const init = async () => {
 
-      try {
+    try {
 
-        const tierRes = await getTiers();
-        setTiers(tierRes.tiers);
+      const tierRes = await getTiers();
 
-        const sub = await loadSubscription();
+      console.log("Pricing tiers:", tierRes);
+      console.log("Affiliate user:", tierRes.isAffiliate);
 
-        if (!sub) {
-          setSelectedTier(tierRes.tiers[0]?.key);
-        }
+      setTiers(tierRes.tiers);
 
-      } catch (err) {
-        console.error(err);
+      setIsAffiliate(Boolean(tierRes.isAffiliate));
+
+      if (tierRes.isAffiliate) {
+        setBilling("yearly");
       }
 
-    };
+      const sub = await loadSubscription();
 
-    init();
+      if (!sub) {
+        setSelectedTier(tierRes.tiers[0]?.key);
+      }
 
-  }, []);
+    } catch (err) {
+
+      console.error(err);
+
+    }
+
+  };
+
+  init();
+
+}, []);
 
   /* -------------------------
      PRICE PREVIEW
@@ -127,7 +140,13 @@ const loadSubscription = async () => {
       key: process.env.REACT_APP_RAZORPAY_KEY,
       subscription_id: pending.razorpaySubscriptionId,
       name: "Socialfly AMS",
-      description: `${pending.tier.toUpperCase()} Plan`,
+      description: `${selectedTier.toUpperCase()} Plan - ${
+  billing === "yearly" && isAffiliate
+    ? "Affiliate Annual"
+    : billing === "yearly"
+      ? "Annual"
+      : "Monthly"
+}`,
 
       handler: async function (response) {
 
@@ -697,54 +716,65 @@ return (
        STATE 3: Upgrade Mode
     ------------------------- */}
 
-    {!hasPendingUpgrade && upgradeMode && (
-      <>
-        <button
-          className="btn secondary"
-          onClick={() => {
-            setUpgradeMode(false);
-            setSelectedTier(null);
-          }}
-        >
-          ← Back to Current Plan
-        </button>
+{!hasPendingUpgrade && upgradeMode && (
+  <>
+    <button
+      className="btn secondary"
+      onClick={() => {
+        setUpgradeMode(false);
+        setSelectedTier(null);
+      }}
+    >
+      ← Back to Current Plan
+    </button>
 
-        <BillingToggle billing={billing} setBilling={setBilling} />
-
-        <PlanSelectionSection />
-
-{selectedTier && (
-  <button
-    className="btn primary proceed"
-    onClick={handleOpenCheckoutPreview}
-    disabled={loading}
-  >
-    {loading ? "Processing..." : "Proceed to Checkout"}
-  </button>
-)}
-      </>
+    {!isAffiliate && (
+      <BillingToggle
+        billing={billing}
+        setBilling={setBilling}
+      />
     )}
+
+    <PlanSelectionSection />
+
+    {selectedTier && (
+      <button
+        className="btn primary proceed"
+        onClick={handleOpenCheckoutPreview}
+        disabled={loading}
+      >
+        {loading ? "Processing..." : "Proceed to Checkout"}
+      </button>
+    )}
+  </>
+)}
 
     {/* -------------------------
        STATE 4: No Subscription
     ------------------------- */}
 
 {!hasPendingUpgrade && !isActive && !upgradeMode && (
-      <>
-        <BillingToggle billing={billing} setBilling={setBilling} />
-        <PlanSelectionSection />
-
-        {selectedTier && (
-          <button
-            className="btn primary proceed"
-            onClick={handleOpenCheckoutPreview}
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Proceed to Checkout"}
-          </button>
-        )}
-      </>
+  <>
+    {!isAffiliate && (
+      <BillingToggle
+        billing={billing}
+        setBilling={setBilling}
+      />
     )}
+
+    <PlanSelectionSection />
+
+    {selectedTier && (
+      <button
+        className="btn primary proceed"
+        onClick={handleOpenCheckoutPreview}
+        disabled={loading}
+      >
+        {loading ? "Processing..." : "Proceed to Checkout"}
+      </button>
+    )}
+  </>
+)}
 
     {error && <p className="error">{error}</p>}
 

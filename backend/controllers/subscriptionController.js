@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const razorpay = require("../config/razorpay");
 const razorpayPlans = require("../config/razorpayPlans");
 const pricingTiers = require("../config/pricingTiers");
+const AffiliateReferral = require("../models/AffiliateReferral")
 const Subscription = require("../models/Subscription");
 const RazorpayWebhookEvent = require(
   "../models/RazorpayWebhookEvent"
@@ -20,10 +21,14 @@ function getPlanId(
   isAffiliate = false
 ) {
 
-  const planKey =
-    isAffiliate
-      ? "affiliateYearly"
-      : billingCycle;
+  // Affiliate plans are yearly only
+  if (isAffiliate && billingCycle !== "yearly") {
+    return null;
+  }
+
+  const planKey = isAffiliate
+    ? "affiliateYearly"
+    : billingCycle;
 
   const plan =
     razorpayPlans[tierKey]?.[planKey];
@@ -54,26 +59,108 @@ function getPlanPrice(tierKey, billingCycle) {
 /* ------------------------------------------------
    Get Pricing Tiers
 ------------------------------------------------ */
-const getTiers = (req, res) => {
-  return res.json({
-    success: true,
-    tiers: pricingTiers
-      .filter((tier) => !tier.internal) // 🔥 hide internal tiers
-      .map((tier) => ({
-        id: tier.id,
-        key: tier.key,
-        name: tier.name,
-        users: tier.users,
-        assets: tier.assets,
-        features: tier.features,
-        popular: tier.popular,
-        prices: {
-          monthly: tier.priceMonthly,
-          yearly: tier.priceYearly,
-        },
-        currency: tier.currency,
-      })),
-  });
+const getTiers = async (req, res) => {
+  try {
+    let isAffiliate = false;
+
+    /* ==========================================
+       AFFILIATE DETECTION
+    ========================================== */
+
+    const referralToken =
+      req.signedCookies?.affiliate_ref;
+
+    if (referralToken) {
+      const affiliateReferral =
+        await AffiliateReferral.findOne({
+          referralToken,
+          status: {
+            $in: ["clicked", "signed_up"],
+          },
+          isFraud: false,
+        });
+
+      if (affiliateReferral) {
+        isAffiliate = true;
+      }
+    }
+
+    /* ==========================================
+       RETURN PLANS
+    ========================================== */
+
+    const tiers = pricingTiers
+      .filter((tier) => !tier.internal)
+      .map((tier) => {
+
+        if (isAffiliate) {
+
+          const affiliatePlan =
+            razorpayPlans[tier.key]?.affiliateYearly;
+
+          return {
+            id: tier.id,
+            key: tier.key,
+            name: tier.name,
+
+            users: tier.users,
+            assets: tier.assets,
+
+            features: tier.features,
+            popular: tier.popular,
+
+            prices: {
+              yearly: affiliatePlan?.price ?? null,
+            },
+
+            currency: tier.currency,
+
+            isAffiliate: true,
+            billingCycles: ["yearly"],
+          };
+        }
+
+        return {
+          id: tier.id,
+          key: tier.key,
+          name: tier.name,
+
+          users: tier.users,
+          assets: tier.assets,
+
+          features: tier.features,
+          popular: tier.popular,
+
+          prices: {
+            monthly: tier.priceMonthly,
+            yearly: tier.priceYearly,
+          },
+
+          currency: tier.currency,
+
+          isAffiliate: false,
+          billingCycles: ["monthly", "yearly"],
+        };
+      });
+
+    return res.json({
+      success: true,
+      isAffiliate,
+      tiers,
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Get pricing tiers error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to load pricing plans",
+    });
+  }
 };
 /* ------------------------------------------------
    Preview Price
@@ -120,110 +207,310 @@ const createCheckout = async (req, res) => {
 
   try {
     const orgId = req.user?.organizationId;
+    const userId = req.user?.id;
+
     const { tierKey, billingCycle } = req.body;
 
     console.log(`[${requestId}] Checkout started`, {
       orgId: String(orgId || ""),
+      userId: String(userId || ""),
       tierKey,
       billingCycle,
       nodeEnv: process.env.NODE_ENV,
       isProduction,
     });
 
+    /* ==========================================
+       VALIDATION
+    ========================================== */
+
     if (!orgId) {
-      console.error(`[${requestId}] Missing organizationId in user`);
       return res.status(401).json({
         message: "Organization information is missing",
       });
     }
 
-    if (!tierKey || !billingCycle) {
-      console.warn(`[${requestId}] Missing checkout parameters`, {
-        tierKey,
-        billingCycle,
+    if (!userId) {
+      return res.status(401).json({
+        message: "User information is missing",
       });
+    }
 
+    if (!tierKey || !billingCycle) {
       return res.status(400).json({
         message: "Missing parameters",
       });
     }
 
-    const planId = getPlanId(tierKey, billingCycle);
 
-    console.log(`[${requestId}] Resolved Razorpay plan`, {
-      tierKey,
-      billingCycle,
-      planId,
-      planIdFound: Boolean(planId),
-    });
+    /* ==========================================
+       AFFILIATE DETECTION
+    ========================================== */
 
-    if (!planId) {
-      console.error(`[${requestId}] Invalid Razorpay plan selection`, {
-        tierKey,
+    let affiliateReferral = null;
+    let isAffiliate = false;
+
+    const referralToken =
+      req.signedCookies?.affiliate_ref;
+
+    if (referralToken) {
+      affiliateReferral =
+        await AffiliateReferral.findOne({
+          referralToken,
+          referredUserId: userId,
+          organizationId: orgId,
+          status: "signed_up",
+          isFraud: false,
+        });
+
+      if (affiliateReferral) {
+        isAffiliate = true;
+      }
+    }
+
+
+    /* ==========================================
+       FALLBACK AFFILIATE DETECTION
+    ========================================== */
+
+    if (!affiliateReferral) {
+      affiliateReferral =
+        await AffiliateReferral.findOne({
+          referredUserId: userId,
+          organizationId: orgId,
+          status: "signed_up",
+          isFraud: false,
+        }).sort({
+          createdAt: -1,
+        });
+
+      if (affiliateReferral) {
+        isAffiliate = true;
+      }
+    }
+
+
+    console.log(
+      `[${requestId}] Affiliate checkout detection`,
+      {
+        userId: String(userId),
+        orgId: String(orgId),
+        isAffiliate,
+        affiliateReferralId:
+          affiliateReferral
+            ? String(affiliateReferral._id)
+            : null,
+        affiliateCode:
+          affiliateReferral?.affiliateCode || null,
         billingCycle,
-      });
+        tierKey,
+      }
+    );
 
+
+    /* ==========================================
+       AFFILIATE BILLING RESTRICTION
+    ========================================== */
+
+    if (
+      isAffiliate &&
+      billingCycle !== "yearly"
+    ) {
       return res.status(400).json({
-        message: "Invalid plan selection",
+        message:
+          "Affiliate pricing is available only for yearly plans.",
       });
     }
+
+
+    /* ==========================================
+       FIND PRICING TIER
+    ========================================== */
 
     const tier = pricingTiers.find(
       (t) => t.key === tierKey
     );
 
     if (!tier) {
-      console.error(`[${requestId}] Pricing tier not found`, {
-        tierKey,
-      });
+      console.error(
+        `[${requestId}] Pricing tier not found`,
+        {
+          tierKey,
+        }
+      );
 
       return res.status(400).json({
         message: "Invalid tier",
       });
     }
 
-    const amount =
-      billingCycle === "yearly"
-        ? tier.priceYearly
-        : tier.priceMonthly;
 
-    const currency = tier.currency || "USD";
+    /* ==========================================
+       RESOLVE RAZORPAY PLAN
+    ========================================== */
 
-    const subscription = await Subscription.findOne({
-      organizationId: orgId,
-    });
+    const planKey = isAffiliate
+      ? "affiliateYearly"
+      : billingCycle;
+
+    const selectedPlan =
+      razorpayPlans[tierKey]?.[planKey];
+
+    if (!selectedPlan) {
+      console.error(
+        `[${requestId}] Razorpay plan configuration missing`,
+        {
+          tierKey,
+          billingCycle,
+          isAffiliate,
+          planKey,
+        }
+      );
+
+      return res.status(400).json({
+        message: isAffiliate
+          ? "Affiliate yearly plan is not configured."
+          : "Invalid plan selection",
+      });
+    }
+
+
+    const planId = getPlanId(
+      tierKey,
+      billingCycle,
+      isAffiliate
+    );
+
+    if (!planId) {
+      console.error(
+        `[${requestId}] Razorpay plan ID missing`,
+        {
+          tierKey,
+          billingCycle,
+          isAffiliate,
+          planKey,
+          isProduction,
+        }
+      );
+
+      return res.status(400).json({
+        message: isAffiliate
+          ? "Affiliate yearly plan is not configured for this environment."
+          : "Invalid plan selection",
+      });
+    }
+
+
+    /* ==========================================
+       ACTUAL PLAN PRICE
+    ========================================== */
+
+    const amount = selectedPlan.price;
+
+    const currency =
+      tier.currency || "USD";
+
+    if (
+      amount === undefined ||
+      amount === null
+    ) {
+      return res.status(400).json({
+        message:
+          "Plan price is not configured",
+      });
+    }
+
+
+    console.log(
+      `[${requestId}] Resolved checkout plan`,
+      {
+        tierKey,
+        billingCycle,
+        isAffiliate,
+        planKey,
+        planId,
+        amount,
+        currency,
+      }
+    );
+
+
+    /* ==========================================
+       FIND CURRENT SUBSCRIPTION
+    ========================================== */
+
+    const subscription =
+      await Subscription.findOne({
+        organizationId: orgId,
+      });
 
     if (!subscription) {
-      console.error(`[${requestId}] Database subscription not found`, {
-        orgId: String(orgId),
-      });
+      console.error(
+        `[${requestId}] Database subscription not found`,
+        {
+          orgId: String(orgId),
+        }
+      );
 
       return res.status(404).json({
         message: "Subscription not found",
       });
     }
 
-    console.log(`[${requestId}] Existing subscription state`, {
-      dbSubscriptionId: String(subscription._id),
-      currentTier: subscription.tier,
-      currentBillingCycle: subscription.billingCycle,
-      currentStatus: subscription.status,
-      currentRazorpaySubscriptionId:
-        subscription.razorpaySubscriptionId || null,
-      hasPendingUpgrade: Boolean(
-        subscription.pendingUpgrade
-      ),
-      pendingUpgradeId:
-        subscription.pendingUpgrade
-          ?.razorpaySubscriptionId || null,
-      pendingUpgradeTier:
-        subscription.pendingUpgrade?.tier || null,
-      pendingUpgradeBillingCycle:
-        subscription.pendingUpgrade?.billingCycle || null,
-    });
+
+    /* ==========================================
+       EXISTING SUBSCRIPTION STATE
+    ========================================== */
+
+    console.log(
+      `[${requestId}] Existing subscription state`,
+      {
+        dbSubscriptionId:
+          String(subscription._id),
+
+        currentTier:
+          subscription.tier,
+
+        currentBillingCycle:
+          subscription.billingCycle,
+
+        currentStatus:
+          subscription.status,
+
+        currentRazorpaySubscriptionId:
+          subscription.razorpaySubscriptionId ||
+          null,
+
+        hasPendingUpgrade:
+          Boolean(
+            subscription.pendingUpgrade
+          ),
+
+        pendingUpgradeId:
+          subscription.pendingUpgrade
+            ?.razorpaySubscriptionId ||
+          null,
+
+        pendingUpgradeTier:
+          subscription.pendingUpgrade
+            ?.tier ||
+          null,
+
+        pendingUpgradeBillingCycle:
+          subscription.pendingUpgrade
+            ?.billingCycle ||
+          null,
+      }
+    );
+
+
+    /* ==========================================
+       PREVENT DUPLICATE CHECKOUT
+    ========================================== */
 
     if (
-      subscription.pendingUpgrade?.razorpaySubscriptionId
+      subscription.pendingUpgrade
+        ?.razorpaySubscriptionId
     ) {
       console.warn(
         `[${requestId}] Duplicate pending upgrade blocked`,
@@ -235,108 +522,281 @@ const createCheckout = async (req, res) => {
       );
 
       return res.status(400).json({
-        message: "Upgrade already in progress",
+        message:
+          "Upgrade already in progress",
       });
     }
 
-    console.log(`[${requestId}] Creating Razorpay subscription`, {
-      planId,
-      tierKey,
-      billingCycle,
-      totalCount:
-        billingCycle === "monthly" ? 60 : 5,
-    });
 
-    console.log(`[${requestId}] Final Razorpay configuration`, {
-  nodeEnv: process.env.NODE_ENV,
-  isProduction,
-  selectedPlanId: planId,
-  tierKey,
-  billingCycle,
-  keyId: process.env.RAZORPAY_KEY_ID
-    ? `${process.env.RAZORPAY_KEY_ID.slice(0, 10)}...`
-    : null,
-  keySecretLoaded: Boolean(process.env.RAZORPAY_SECRET),
-});
+    /* ==========================================
+       CREATE RAZORPAY SUBSCRIPTION
+    ========================================== */
+
+    const totalCount =
+      billingCycle === "monthly"
+        ? 60
+        : 5;
+
+    console.log(
+      `[${requestId}] Creating Razorpay subscription`,
+      {
+        planId,
+        tierKey,
+        billingCycle,
+        isAffiliate,
+        totalCount,
+      }
+    );
+
+
+    console.log(
+      `[${requestId}] Final Razorpay configuration`,
+      {
+        nodeEnv:
+          process.env.NODE_ENV,
+
+        isProduction,
+
+        selectedPlanId:
+          planId,
+
+        tierKey,
+
+        billingCycle,
+
+        isAffiliate,
+
+        planKey,
+
+        keyId:
+          process.env.RAZORPAY_KEY_ID
+            ? `${process.env.RAZORPAY_KEY_ID.slice(
+                0,
+                10
+              )}...`
+            : null,
+
+        keySecretLoaded:
+          Boolean(
+            process.env.RAZORPAY_SECRET
+          ),
+      }
+    );
+
 
     const razorpaySubscription =
       await razorpay.subscriptions.create({
         plan_id: planId,
+
         customer_notify: 1,
-        total_count:
-          billingCycle === "monthly" ? 60 : 5,
+
+        total_count: totalCount,
       });
 
-    console.log(`[${requestId}] Razorpay subscription created`, {
-      razorpaySubscriptionId:
-        razorpaySubscription.id,
-      razorpayStatus:
-        razorpaySubscription.status,
-      razorpayPlanId:
-        razorpaySubscription.plan_id,
-      razorpayCurrentStart:
-        razorpaySubscription.current_start || null,
-      razorpayCurrentEnd:
-        razorpaySubscription.current_end || null,
-    });
+
+    console.log(
+      `[${requestId}] Razorpay subscription created`,
+      {
+        razorpaySubscriptionId:
+          razorpaySubscription.id,
+
+        razorpayStatus:
+          razorpaySubscription.status,
+
+        razorpayPlanId:
+          razorpaySubscription.plan_id,
+
+        razorpayCurrentStart:
+          razorpaySubscription.current_start ||
+          null,
+
+        razorpayCurrentEnd:
+          razorpaySubscription.current_end ||
+          null,
+      }
+    );
+
+
+    /* ==========================================
+       SAVE PENDING UPGRADE
+    ========================================== */
 
     subscription.pendingUpgrade = {
       tier: tierKey,
+
       billingCycle,
-      razorpayPlanId: planId,
+
+      razorpayPlanId:
+        planId,
+
       razorpaySubscriptionId:
         razorpaySubscription.id,
-      planPrice: amount,
+
+      planPrice:
+        amount,
+
       currency,
     };
 
     await subscription.save();
 
-    console.log(`[${requestId}] Pending upgrade saved`, {
-      dbSubscriptionId: String(subscription._id),
-      pendingUpgrade:
-        subscription.pendingUpgrade
-          ?.razorpaySubscriptionId,
-      pendingTier:
-        subscription.pendingUpgrade?.tier,
-      pendingBillingCycle:
-        subscription.pendingUpgrade?.billingCycle,
-    });
+
+    console.log(
+      `[${requestId}] Pending upgrade saved`,
+      {
+        dbSubscriptionId:
+          String(subscription._id),
+
+        pendingUpgrade:
+          subscription.pendingUpgrade
+            ?.razorpaySubscriptionId,
+
+        pendingTier:
+          subscription.pendingUpgrade
+            ?.tier,
+
+        pendingBillingCycle:
+          subscription.pendingUpgrade
+            ?.billingCycle,
+
+        pendingPlanPrice:
+          subscription.pendingUpgrade
+            ?.planPrice,
+
+        isAffiliate,
+      }
+    );
+
+
+    /* ==========================================
+       UPDATE AFFILIATE REFERRAL
+    ========================================== */
+
+    if (affiliateReferral) {
+      affiliateReferral.planName =
+        tier.name;
+
+      affiliateReferral.billingCycle =
+        billingCycle;
+
+      affiliateReferral.paymentAmount =
+        amount;
+
+      affiliateReferral.paymentCurrency =
+        currency;
+
+      await affiliateReferral.save();
+
+      console.log(
+        `[${requestId}] Affiliate referral updated`,
+        {
+          referralId:
+            String(
+              affiliateReferral._id
+            ),
+
+          affiliateCode:
+            affiliateReferral.affiliateCode,
+
+          planName:
+            affiliateReferral.planName,
+
+          billingCycle:
+            affiliateReferral.billingCycle,
+
+          paymentAmount:
+            affiliateReferral.paymentAmount,
+        }
+      );
+    }
+
+
+    /* ==========================================
+       RESPONSE
+    ========================================== */
 
     return res.json({
       success: true,
-      subscriptionId: razorpaySubscription.id,
-      razorpayKey: process.env.RAZORPAY_KEY_ID,
+
+      subscriptionId:
+        razorpaySubscription.id,
+
+      razorpayKey:
+        process.env.RAZORPAY_KEY_ID,
+
+      isAffiliate,
+
+      billingCycle,
+
+      tierKey,
     });
+
   } catch (err) {
-  console.error(`[${requestId}] Checkout failed - FULL ERROR:`);
-  console.dir(err, { depth: null });
 
-  console.error(`[${requestId}] Checkout error details:`, {
-    typeofError: typeof err,
-    stringifiedError: JSON.stringify(err, null, 2),
-    name: err?.name,
-    message: err?.message,
-    error: err?.error,
-    description: err?.description,
-    code: err?.code,
-    statusCode: err?.statusCode,
-    response: err?.response,
-    responseData: err?.response?.data,
-    stack: err?.stack,
-  });
+    console.error(
+      `[${requestId}] Checkout failed - FULL ERROR:`
+    );
 
-  return res.status(500).json({
-    message: "Subscription creation failed",
-    error:
-      process.env.NODE_ENV === "development"
-        ? err?.error?.description ||
-          err?.description ||
-          err?.message ||
-          "Unknown Razorpay error"
-        : undefined,
-  });
-}
+    console.dir(err, {
+      depth: null,
+    });
+
+    console.error(
+      `[${requestId}] Checkout error details:`,
+      {
+        typeofError:
+          typeof err,
+
+        stringifiedError:
+          JSON.stringify(
+            err,
+            null,
+            2
+          ),
+
+        name:
+          err?.name,
+
+        message:
+          err?.message,
+
+        error:
+          err?.error,
+
+        description:
+          err?.description,
+
+        code:
+          err?.code,
+
+        statusCode:
+          err?.statusCode,
+
+        response:
+          err?.response,
+
+        responseData:
+          err?.response?.data,
+
+        stack:
+          err?.stack,
+      }
+    );
+
+    return res.status(500).json({
+      message:
+        "Subscription creation failed",
+
+      error:
+        process.env.NODE_ENV ===
+        "development"
+          ? err?.error?.description ||
+            err?.description ||
+            err?.message ||
+            "Unknown Razorpay error"
+          : undefined,
+    });
+  }
 };
 /* ------------------------------------------------
    Verify Payment (ONLY verifies signature)
