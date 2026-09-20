@@ -784,48 +784,54 @@ const createCheckout = async (req, res) => {
     );
 
 
-    /* ==========================================
-       UPDATE AFFILIATE REFERRAL
-    ========================================== */
+/* ==========================================
+   UPDATE AFFILIATE REFERRAL
+========================================== */
 
-    if (affiliateReferral) {
-      affiliateReferral.planName =
-        tier.name;
+if (affiliateReferral) {
+  affiliateReferral.planName =
+    tier.name;
 
-      affiliateReferral.billingCycle =
-        billingCycle;
+  affiliateReferral.billingCycle =
+    billingCycle;
 
-      affiliateReferral.paymentAmount =
-        amount;
+  affiliateReferral.paymentAmount =
+    amount;
 
-      affiliateReferral.paymentCurrency =
-        currency;
+  affiliateReferral.paymentCurrency =
+    currency;
 
-      await affiliateReferral.save();
+  // IMPORTANT:
+  // Link this affiliate referral to the
+  // Razorpay subscription created for checkout.
+  affiliateReferral.subscriptionId =
+    razorpaySubscription.id;
 
-      console.log(
-        `[${requestId}] Affiliate referral updated`,
-        {
-          referralId:
-            String(
-              affiliateReferral._id
-            ),
+  await affiliateReferral.save();
 
-          affiliateCode:
-            affiliateReferral.affiliateCode,
+  console.log(
+    `[${requestId}] Affiliate referral updated`,
+    {
+      referralId:
+        String(affiliateReferral._id),
 
-          planName:
-            affiliateReferral.planName,
+      affiliateCode:
+        affiliateReferral.affiliateCode,
 
-          billingCycle:
-            affiliateReferral.billingCycle,
+      planName:
+        affiliateReferral.planName,
 
-          paymentAmount:
-            affiliateReferral.paymentAmount,
-        }
-      );
+      billingCycle:
+        affiliateReferral.billingCycle,
+
+      paymentAmount:
+        affiliateReferral.paymentAmount,
+
+      subscriptionId:
+        affiliateReferral.subscriptionId,
     }
-
+  );
+}
 
     /* ==========================================
        RESPONSE
