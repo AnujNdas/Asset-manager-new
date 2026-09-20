@@ -1,38 +1,123 @@
-const processAffiliateConversion = async (subscription) => {
+const processAffiliateConversion = async (
+  subscription,
+  paymentEntity = null
+) => {
   try {
-    const referral = await AffiliateReferral.findOne({
-      organizationId: subscription.organizationId,
-      status: "signed_up"
+    console.log(
+      "========== AFFILIATE CONVERSION START =========="
+    );
+
+    console.log("Subscription:", {
+      id: String(subscription._id),
+      organizationId: String(subscription.organizationId),
+      tier: subscription.tier,
+      billingCycle: subscription.billingCycle,
+      razorpaySubscriptionId:
+        subscription.razorpaySubscriptionId,
+      lastPaymentAmount:
+        subscription.lastPaymentAmount,
+      planPrice:
+        subscription.planPrice,
     });
 
+    /* ==========================================
+       FIND REFERRAL
+    ========================================== */
+
+    const referral =
+      await AffiliateReferral.findOne({
+        organizationId:
+          subscription.organizationId,
+
+        status: "signed_up",
+
+        isFraud: false,
+      });
+
     if (!referral) {
-      console.log("No eligible affiliate referral found");
+      console.log(
+        "No eligible affiliate referral found"
+      );
+
       return;
     }
 
-    /* =============================
+    console.log(
+      "Affiliate referral found:",
+      {
+        referralId: String(referral._id),
+        affiliateCode:
+          referral.affiliateCode,
+        referredUserId:
+          String(referral.referredUserId),
+      }
+    );
+
+    /* ==========================================
        PAYMENT INFO
-    ============================== */
+    ========================================== */
 
-    const amountPaid =
-      subscription.lastPaymentAmount ||
-      subscription.planPrice ||
-      0;
+    let amountPaid = 0;
 
-    const currency =
+    let currency =
       subscription.currency || "USD";
 
+    /*
+     * Razorpay amount is stored in the
+     * smallest currency unit.
+     *
+     * Example:
+     * 27000 -> 270 USD
+     */
+
+    if (
+      paymentEntity &&
+      paymentEntity.amount != null
+    ) {
+      amountPaid =
+        Number(paymentEntity.amount) / 100;
+
+      currency =
+        paymentEntity.currency ||
+        currency;
+    }
+
+    /*
+     * Fallback to DB values
+     */
+
     if (amountPaid <= 0) {
-      console.log("No payment amount found");
+      amountPaid =
+        Number(
+          subscription.lastPaymentAmount ||
+          subscription.planPrice ||
+          0
+        );
+    }
+
+    if (amountPaid <= 0) {
+      console.log(
+        "No payment amount found for affiliate conversion"
+      );
+
       return;
     }
 
-    /* =============================
+    console.log(
+      "Affiliate payment:",
+      {
+        amountPaid,
+        currency,
+      }
+    );
+
+    /* ==========================================
        COMMISSION RATE
-    ============================== */
+    ========================================== */
 
     const tier =
-      (subscription.tier || "").toLowerCase();
+      String(subscription.tier || "")
+        .toLowerCase();
 
     let commissionRate = 0;
 
@@ -53,20 +138,43 @@ const processAffiliateConversion = async (subscription) => {
         commissionRate = 0;
     }
 
-    const commissionAmount = Number(
-      (amountPaid * commissionRate).toFixed(2)
+    const commissionAmount =
+      Number(
+        (
+          amountPaid *
+          commissionRate
+        ).toFixed(2)
+      );
+
+    console.log(
+      "Affiliate commission calculated:",
+      {
+        tier,
+        commissionRate:
+          commissionRate * 100,
+        amountPaid,
+        commissionAmount,
+      }
     );
 
-    /* =============================
+    /* ==========================================
        UPDATE REFERRAL
-    ============================== */
+    ========================================== */
 
-    referral.status = "converted";
+    referral.status =
+      "converted";
 
-    referral.convertedAt = new Date();
+    referral.convertedAt =
+      new Date();
+
+    /*
+     * IMPORTANT:
+     * Store Razorpay subscription ID,
+     * NOT MongoDB Subscription _id.
+     */
 
     referral.subscriptionId =
-      subscription._id;
+      subscription.razorpaySubscriptionId;
 
     referral.planName =
       subscription.tier;
@@ -81,7 +189,7 @@ const processAffiliateConversion = async (subscription) => {
       currency;
 
     referral.commissionRate =
-      commissionRate * 100; // 5 or 10
+      commissionRate * 100;
 
     referral.commissionAmount =
       commissionAmount;
@@ -95,7 +203,35 @@ const processAffiliateConversion = async (subscription) => {
     await referral.save();
 
     console.log(
-      `Affiliate conversion completed | Tier: ${subscription.tier} | Commission: ${commissionAmount} ${currency}`
+      "========== AFFILIATE CONVERSION COMPLETED ==========",
+      {
+        referralId:
+          String(referral._id),
+
+        affiliateCode:
+          referral.affiliateCode,
+
+        subscriptionId:
+          referral.subscriptionId,
+
+        tier:
+          referral.planName,
+
+        billingCycle:
+          referral.billingCycle,
+
+        paymentAmount:
+          referral.paymentAmount,
+
+        commissionRate:
+          referral.commissionRate,
+
+        commissionAmount:
+          referral.commissionAmount,
+
+        currency:
+          referral.paymentCurrency,
+      }
     );
 
   } catch (error) {
@@ -104,4 +240,8 @@ const processAffiliateConversion = async (subscription) => {
       error
     );
   }
+};
+
+module.exports = {
+  processAffiliateConversion,
 };

@@ -1532,9 +1532,10 @@ if (!razorpaySubscriptionId) {
         subscription.tier !== "trial" &&
         subscription.status === "active"
       ) {
-        await processAffiliateConversion(
-          subscription
-        );
+      await processAffiliateConversion(
+        subscription,
+        paymentEntity
+      );
       }
     }
 
