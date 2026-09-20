@@ -125,8 +125,7 @@ lastPaymentDate: {
 
     // 🔹 Subscription Tracking
     subscriptionId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Subscription",
+      type: String,
       default: null,
     },
 
