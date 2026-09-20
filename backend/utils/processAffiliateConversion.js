@@ -1,3 +1,4 @@
+const AffiliateReferral = require("../models/AffiliateReferral")
 const processAffiliateConversion = async (
   subscription,
   paymentEntity = null
