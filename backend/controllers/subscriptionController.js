@@ -69,23 +69,91 @@ const getTiers = async (req, res) => {
        AFFILIATE DETECTION
     ========================================== */
 
-    const referralToken =
-      req.signedCookies?.affiliate_ref;
+    const userId = req.user?.id;
+    const orgId = req.user?.organizationId;
 
-    if (referralToken) {
-      const affiliateReferral =
+    let affiliateReferral = null;
+
+    /*
+     * PRIMARY:
+     * Identify the affiliate relationship using
+     * the authenticated user + organization.
+     *
+     * This continues to work even after the
+     * referral changes from signed_up -> converted.
+     */
+
+    if (userId && orgId) {
+      affiliateReferral =
         await AffiliateReferral.findOne({
-          referralToken,
+          referredUserId: userId,
+          organizationId: orgId,
           status: {
-            $in: ["clicked", "signed_up"],
+            $in: ["signed_up", "converted"],
           },
           isFraud: false,
+        }).sort({
+          createdAt: -1,
         });
+    }
 
-      if (affiliateReferral) {
-        isAffiliate = true;
+    /*
+     * FALLBACK:
+     * If authenticated lookup does not find one,
+     * check the affiliate cookie.
+     */
+
+    if (!affiliateReferral) {
+      const referralToken =
+        req.signedCookies?.affiliate_ref;
+
+      if (referralToken) {
+        affiliateReferral =
+          await AffiliateReferral.findOne({
+            referralToken,
+            status: {
+              $in: [
+                "clicked",
+                "signed_up",
+                "converted",
+              ],
+            },
+            isFraud: false,
+          });
       }
     }
+
+    if (affiliateReferral) {
+      isAffiliate = true;
+    }
+
+    console.log(
+      "Pricing affiliate detection:",
+      {
+        userId: userId
+          ? String(userId)
+          : null,
+
+        organizationId: orgId
+          ? String(orgId)
+          : null,
+
+        isAffiliate,
+
+        referralId:
+          affiliateReferral
+            ? String(affiliateReferral._id)
+            : null,
+
+        affiliateCode:
+          affiliateReferral?.affiliateCode ||
+          null,
+
+        referralStatus:
+          affiliateReferral?.status ||
+          null,
+      }
+    );
 
     /* ==========================================
        RETURN PLANS
@@ -98,7 +166,8 @@ const getTiers = async (req, res) => {
         if (isAffiliate) {
 
           const affiliatePlan =
-            razorpayPlans[tier.key]?.affiliateYearly;
+            razorpayPlans[tier.key]
+              ?.affiliateYearly;
 
           return {
             id: tier.id,
@@ -112,13 +181,17 @@ const getTiers = async (req, res) => {
             popular: tier.popular,
 
             prices: {
-              yearly: affiliatePlan?.price ?? null,
+              yearly:
+                affiliatePlan?.price ?? null,
             },
 
             currency: tier.currency,
 
             isAffiliate: true,
-            billingCycles: ["yearly"],
+
+            billingCycles: [
+              "yearly",
+            ],
           };
         }
 
@@ -134,14 +207,21 @@ const getTiers = async (req, res) => {
           popular: tier.popular,
 
           prices: {
-            monthly: tier.priceMonthly,
-            yearly: tier.priceYearly,
+            monthly:
+              tier.priceMonthly,
+
+            yearly:
+              tier.priceYearly,
           },
 
           currency: tier.currency,
 
           isAffiliate: false,
-          billingCycles: ["monthly", "yearly"],
+
+          billingCycles: [
+            "monthly",
+            "yearly",
+          ],
         };
       });
 
@@ -160,7 +240,8 @@ const getTiers = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Failed to load pricing plans",
+      message:
+        "Failed to load pricing plans",
     });
   }
 };
