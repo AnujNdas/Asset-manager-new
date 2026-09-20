@@ -165,37 +165,153 @@ const getTiers = async (req, res) => {
 /* ------------------------------------------------
    Preview Price
 ------------------------------------------------ */
-const previewPrice = (req, res) => {
-  const { tierId, billingCycle } = req.body;
 
-  if (!tierId || !billingCycle) {
-    return res.status(400).json({
-      error: "tierId and billingCycle are required",
+const previewPrice = async (req, res) => {
+  try {
+
+    const { tierId, billingCycle } = req.body;
+
+    if (!tierId || !billingCycle) {
+      return res.status(400).json({
+        error: "tierId and billingCycle are required",
+      });
+    }
+
+    /* ==========================================
+       FIND TIER
+    ========================================== */
+
+    const tier = pricingTiers.find(
+      (t) => t.key === tierId
+    );
+
+    if (!tier || tier.internal) {
+      return res.status(400).json({
+        error: "Invalid tier selected",
+      });
+    }
+
+    /* ==========================================
+       AFFILIATE DETECTION
+    ========================================== */
+
+    const orgId = req.user?.organizationId;
+    const userId = req.user?.id;
+
+    let affiliateReferral = null;
+    let isAffiliate = false;
+
+    const referralToken =
+      req.signedCookies?.affiliate_ref;
+
+    /* ------------------------------------------
+       COOKIE + USER + ORGANIZATION
+    ------------------------------------------ */
+
+    if (referralToken && userId && orgId) {
+
+      affiliateReferral =
+        await AffiliateReferral.findOne({
+          referralToken,
+          referredUserId: userId,
+          organizationId: orgId,
+          status: "signed_up",
+          isFraud: false,
+        });
+
+      if (affiliateReferral) {
+        isAffiliate = true;
+      }
+    }
+
+    /* ------------------------------------------
+       FALLBACK
+    ------------------------------------------ */
+
+    if (!affiliateReferral && userId && orgId) {
+
+      affiliateReferral =
+        await AffiliateReferral.findOne({
+          referredUserId: userId,
+          organizationId: orgId,
+          status: "signed_up",
+          isFraud: false,
+        }).sort({
+          createdAt: -1,
+        });
+
+      if (affiliateReferral) {
+        isAffiliate = true;
+      }
+    }
+
+    /* ==========================================
+       AFFILIATE BILLING RESTRICTION
+    ========================================== */
+
+    if (
+      isAffiliate &&
+      billingCycle !== "yearly"
+    ) {
+      return res.status(400).json({
+        error:
+          "Affiliate pricing is available only for yearly plans.",
+      });
+    }
+
+    /* ==========================================
+       SELECT ACTUAL PRICE
+    ========================================== */
+
+    const planKey = isAffiliate
+      ? "affiliateYearly"
+      : billingCycle;
+
+    const selectedPlan =
+      razorpayPlans[tierId]?.[planKey];
+
+    if (!selectedPlan) {
+      return res.status(400).json({
+        error: isAffiliate
+          ? "Affiliate yearly plan is not configured."
+          : "Plan is not configured.",
+      });
+    }
+
+    const amount = selectedPlan.price;
+
+    const currency =
+      tier.currency || "USD";
+
+    /* ==========================================
+       RESPONSE
+    ========================================== */
+
+    return res.json({
+      success: true,
+
+      isAffiliate,
+
+      pricing: {
+        tierId: tier.id,
+        tierKey: tier.key,
+        billingCycle,
+        amount,
+        currency,
+      },
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Preview price error:",
+      error
+    );
+
+    return res.status(500).json({
+      error: "Failed to calculate pricing preview",
     });
   }
-
-  const tier = pricingTiers.find((t) => t.key === tierId);
-
-  if (!tier || tier.internal) {
-    return res.status(400).json({
-      error: "Invalid tier selected",
-    });
-  }
-
-  const amount =
-    billingCycle === "yearly"
-      ? tier.priceYearly
-      : tier.priceMonthly;
-
-  return res.json({
-    success: true,
-    pricing: {
-      tierId: tier.id,
-      billingCycle,
-      amount,
-      currency: tier.currency,
-    },
-  });
 };
 /* ------------------------------------------------
    Create Razorpay Subscription
