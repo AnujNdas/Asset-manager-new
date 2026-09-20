@@ -7,7 +7,9 @@ const Subscription = require("../models/Subscription");
 const RazorpayWebhookEvent = require(
   "../models/RazorpayWebhookEvent"
 );
-const processAffiliateConversion = require("../utils/processAffiliateConversion");
+const {
+  processAffiliateConversion,
+} = require("../utils/processAffiliateConversion");
 const isProduction = process.env.NODE_ENV === "production";
 const {
   createSubscriptionHistory,
