@@ -113,6 +113,12 @@
   color: #fff;
 }
 
+.organization-container { 
+  background: #F7F8FF;
+  padding: 20px;
+  border-radius: 10px;
+  height: 100%;
+}
 /* Responsive */
 @media (max-width: 480px) {
   .tenant-body {

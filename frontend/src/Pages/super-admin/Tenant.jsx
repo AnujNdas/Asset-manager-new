@@ -50,6 +50,7 @@ const handleToggleStatus = async (org) => {
 
   return (
     <>
+    <div className="organization-container">
       <h1 className="page-title">Organizations</h1>
 
       <div className="tenant-grid">
@@ -120,6 +121,7 @@ const handleToggleStatus = async (org) => {
   />
 )}
 
+      </div>
       </div>
     </>
   );

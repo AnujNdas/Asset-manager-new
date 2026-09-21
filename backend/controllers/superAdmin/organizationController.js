@@ -1,10 +1,14 @@
 const Organization = require("../../models/Organization");
 const User = require("../../models/User");
-
+const AssetInstance = require("../models/AssetInstance");
 /* ================= GET ALL (WITH USER COUNT) ================= */
 const getAllOrganizations = async (req, res) => {
   try {
     const organizations = await Organization.aggregate([
+      /* =====================================================
+         USERS
+      ===================================================== */
+
       {
         $lookup: {
           from: "users",
@@ -13,29 +17,172 @@ const getAllOrganizations = async (req, res) => {
           as: "users"
         }
       },
+
+      /* =====================================================
+         ASSET INSTANCES
+         
+         Count:
+         - Total instances
+         - Hardware instances
+         - Software instances
+      ===================================================== */
+
+      {
+        $lookup: {
+          from: "assetinstances",
+
+          let: {
+            orgId: "$_id"
+          },
+
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: [
+                    "$organizationId",
+                    "$$orgId"
+                  ]
+                }
+              }
+            },
+
+            {
+              $group: {
+                _id: null,
+
+                total: {
+                  $sum: 1
+                },
+
+                hardware: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $eq: [
+                          "$assetType",
+                          "hardware"
+                        ]
+                      },
+                      1,
+                      0
+                    ]
+                  }
+                },
+
+                software: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $eq: [
+                          "$assetType",
+                          "software"
+                        ]
+                      },
+                      1,
+                      0
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+
+          as: "assetStats"
+        }
+      },
+
+      /* =====================================================
+         COUNTS
+      ===================================================== */
+
       {
         $addFields: {
-          userCount: { $size: "$users" },
+          userCount: {
+            $size: "$users"
+          },
 
-          // 👇 force inactive if no users
+          assetCount: {
+            $ifNull: [
+              {
+                $arrayElemAt: [
+                  "$assetStats.total",
+                  0
+                ]
+              },
+              0
+            ]
+          },
+
+          hardwareAssetCount: {
+            $ifNull: [
+              {
+                $arrayElemAt: [
+                  "$assetStats.hardware",
+                  0
+                ]
+              },
+              0
+            ]
+          },
+
+          softwareAssetCount: {
+            $ifNull: [
+              {
+                $arrayElemAt: [
+                  "$assetStats.software",
+                  0
+                ]
+              },
+              0
+            ]
+          },
+
+          /* =================================================
+             EFFECTIVE ORGANIZATION STATUS
+
+             If organization has no users,
+             force status to inactive.
+          ================================================= */
+
           effectiveStatus: {
             $cond: [
-              { $eq: [{ $size: "$users" }, 0] },
+              {
+                $eq: [
+                  {
+                    $size: "$users"
+                  },
+                  0
+                ]
+              },
               "inactive",
               "$status"
             ]
           }
         }
       },
+
+      /* =====================================================
+         CLEAN RESPONSE
+      ===================================================== */
+
       {
         $project: {
           users: 0,
+          assetStats: 0,
           __v: 0,
-          status: 0 // hide raw status
+          status: 0
         }
       },
+
+      /* =====================================================
+         NEWEST ORGANIZATIONS FIRST
+      ===================================================== */
+
       {
-        $sort: { createdAt: -1 }
+        $sort: {
+          createdAt: -1
+        }
       }
     ]);
 
@@ -43,8 +190,13 @@ const getAllOrganizations = async (req, res) => {
       success: true,
       data: organizations
     });
+
   } catch (error) {
-    console.error("Get Organizations Error:", error);
+    console.error(
+      "Get Organizations Error:",
+      error
+    );
+
     res.status(500).json({
       success: false,
       message: "Error fetching organizations"
