@@ -1,6 +1,6 @@
 const Organization = require("../../models/Organization");
 const User = require("../../models/User");
-const AssetInstance = require("../models/AssetInstance");
+const AssetInstance = require("../../models/AssetInstance");
 /* ================= GET ALL (WITH USER COUNT) ================= */
 const getAllOrganizations = async (req, res) => {
   try {
