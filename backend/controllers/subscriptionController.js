@@ -273,61 +273,110 @@ const previewPrice = async (req, res) => {
         error: "Invalid tier selected",
       });
     }
+/* ==========================================
+   AFFILIATE DETECTION
+========================================== */
 
-    /* ==========================================
-       AFFILIATE DETECTION
-    ========================================== */
+const orgId = req.user?.organizationId;
+const userId = req.user?.id;
 
-    const orgId = req.user?.organizationId;
-    const userId = req.user?.id;
+let affiliateReferral = null;
+let isAffiliate = false;
 
-    let affiliateReferral = null;
-    let isAffiliate = false;
+const referralToken =
+  req.signedCookies?.affiliate_ref;
 
-    const referralToken =
-      req.signedCookies?.affiliate_ref;
 
-    /* ------------------------------------------
-       COOKIE + USER + ORGANIZATION
-    ------------------------------------------ */
+/* ------------------------------------------
+   COOKIE + USER + ORGANIZATION
+------------------------------------------ */
 
-    if (referralToken && userId && orgId) {
+if (referralToken && userId && orgId) {
 
-      affiliateReferral =
-        await AffiliateReferral.findOne({
-          referralToken,
-          referredUserId: userId,
-          organizationId: orgId,
-          status: "signed_up",
-          isFraud: false,
-        });
+  affiliateReferral =
+    await AffiliateReferral.findOne({
+      referralToken,
 
-      if (affiliateReferral) {
-        isAffiliate = true;
-      }
-    }
+      referredUserId:
+        userId,
 
-    /* ------------------------------------------
-       FALLBACK
-    ------------------------------------------ */
+      organizationId:
+        orgId,
 
-    if (!affiliateReferral && userId && orgId) {
+      status: {
+        $in: [
+          "signed_up",
+          "converted",
+        ],
+      },
 
-      affiliateReferral =
-        await AffiliateReferral.findOne({
-          referredUserId: userId,
-          organizationId: orgId,
-          status: "signed_up",
-          isFraud: false,
-        }).sort({
-          createdAt: -1,
-        });
+      isFraud: false,
+    });
+}
 
-      if (affiliateReferral) {
-        isAffiliate = true;
-      }
-    }
+/* ------------------------------------------
+   FALLBACK
+------------------------------------------ */
 
+if (
+  !affiliateReferral &&
+  userId &&
+  orgId
+) {
+
+  affiliateReferral =
+    await AffiliateReferral.findOne({
+      referredUserId:
+        userId,
+
+      organizationId:
+        orgId,
+
+      status: {
+        $in: [
+          "signed_up",
+          "converted",
+        ],
+      },
+
+      isFraud: false,
+    }).sort({
+      createdAt: -1,
+    });
+}
+
+if (affiliateReferral) {
+  isAffiliate = true;
+}
+
+console.log(
+  "Preview affiliate detection:",
+  {
+    userId:
+      String(userId || ""),
+
+    orgId:
+      String(orgId || ""),
+
+    referralTokenPresent:
+      Boolean(referralToken),
+
+    isAffiliate,
+
+    referralId:
+      affiliateReferral
+        ? String(affiliateReferral._id)
+        : null,
+
+    referralStatus:
+      affiliateReferral?.status ||
+      null,
+
+    affiliateCode:
+      affiliateReferral?.affiliateCode ||
+      null,
+  }
+);
     /* ==========================================
        AFFILIATE BILLING RESTRICTION
     ========================================== */
@@ -458,7 +507,12 @@ const createCheckout = async (req, res) => {
           referralToken,
           referredUserId: userId,
           organizationId: orgId,
-          status: "signed_up",
+              status: {
+      $in: [
+        "signed_up",
+        "converted",
+      ],
+    },
           isFraud: false,
         });
 
@@ -477,7 +531,12 @@ const createCheckout = async (req, res) => {
         await AffiliateReferral.findOne({
           referredUserId: userId,
           organizationId: orgId,
-          status: "signed_up",
+              status: {
+      $in: [
+        "signed_up",
+        "converted",
+      ],
+    },
           isFraud: false,
         }).sort({
           createdAt: -1,
