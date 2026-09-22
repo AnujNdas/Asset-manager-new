@@ -2,6 +2,7 @@
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 24px;
+  color: #695890;
 }
 
 /* Grid */
@@ -36,9 +37,10 @@
 }
 
 .tenant-header h3 {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   margin: 0;
+  color: #695890;
 }
 
 /* Status badge */
@@ -58,25 +60,35 @@
   background: #fee2e2;
   color: #991b1b;
 }
-
-/* Body */
 .tenant-body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 18px;
+  padding: 16px 0;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tenant-body .meta {
   display: flex;
-  justify-content: space-between;
-  margin: 16px 0;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  margin: 0 ;
 }
 
-.meta span {
-  display: block;
-  font-size: 12px;
+.tenant-body .meta span {
+  font-size: 11px;
   color: #6b7280;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
-.meta strong {
-  font-size: 16px;
+.tenant-body .meta strong {
+  font-size: 15px;
+  color: #1f2937;
   font-weight: 600;
 }
-
 /* Actions */
 .tenant-actions {
   display: flex;
@@ -89,12 +101,14 @@
   border-radius: 8px;
   cursor: pointer;
   border: none;
+  background: #695890;
+  color: #ffffff;
 }
 
 .btn-outline {
-  background: transparent;
+  background: #695890;
   border: 1px solid #d1d5db;
-  color: #111827;
+  color: #ffffff;
   text-decoration: none;
   text-align: center;
 }
@@ -118,6 +132,7 @@
   padding: 20px;
   border-radius: 10px;
   height: 100%;
+  overflow: auto;
 }
 /* Responsive */
 @media (max-width: 480px) {

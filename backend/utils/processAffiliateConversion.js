@@ -22,35 +22,58 @@ const processAffiliateConversion = async (
     });
 
     /* ==========================================
-       FIND REFERRAL
+       FIND + CLAIM REFERRAL
+       
+       IMPORTANT:
+       Only a "signed_up" referral can be
+       converted.
+
+       Once converted, it will never be
+       eligible for another commission.
     ========================================== */
 
     const referral =
-      await AffiliateReferral.findOne({
-        organizationId:
-          subscription.organizationId,
+      await AffiliateReferral.findOneAndUpdate(
+        {
+          organizationId:
+            subscription.organizationId,
 
-        status: "signed_up",
+          status: "signed_up",
 
-        isFraud: false,
-      });
+          isFraud: false,
+        },
+        {
+          $set: {
+            status: "processing",
+          },
+        },
+        {
+          new: true,
+        }
+      );
 
     if (!referral) {
       console.log(
-        "No eligible affiliate referral found"
+        "No eligible affiliate referral found."
       );
 
       return;
     }
 
     console.log(
-      "Affiliate referral found:",
+      "Affiliate referral claimed:",
       {
-        referralId: String(referral._id),
+        referralId:
+          String(referral._id),
+
         affiliateCode:
           referral.affiliateCode,
+
         referredUserId:
           String(referral.referredUserId),
+
+        status:
+          referral.status,
       }
     );
 
@@ -68,6 +91,7 @@ const processAffiliateConversion = async (
      * smallest currency unit.
      *
      * Example:
+     *
      * 27000 -> 270 USD
      */
 
@@ -97,6 +121,26 @@ const processAffiliateConversion = async (
     }
 
     if (amountPaid <= 0) {
+
+      /*
+       * No valid payment was found.
+       *
+       * Return referral to signed_up so that
+       * a later valid payment can process it.
+       */
+
+      await AffiliateReferral.updateOne(
+        {
+          _id: referral._id,
+          status: "processing",
+        },
+        {
+          $set: {
+            status: "signed_up",
+          },
+        }
+      );
+
       console.log(
         "No payment amount found for affiliate conversion"
       );
@@ -123,16 +167,17 @@ const processAffiliateConversion = async (
     let commissionRate = 0;
 
     switch (tier) {
+
       case "base":
-        commissionRate = 0.05;
+        commissionRate = 0.05; // 5%
         break;
 
       case "grow":
-        commissionRate = 0.05;
+        commissionRate = 0.10; // 10%
         break;
 
       case "omni":
-        commissionRate = 0.10;
+        commissionRate = 0.15; // 15%
         break;
 
       default:
@@ -159,49 +204,75 @@ const processAffiliateConversion = async (
     );
 
     /* ==========================================
-       UPDATE REFERRAL
+       FINALIZE REFERRAL
     ========================================== */
 
-    referral.status =
-      "converted";
+    const result =
+      await AffiliateReferral.updateOne(
+        {
+          _id: referral._id,
 
-    referral.convertedAt =
-      new Date();
+          /*
+           * Only the process that successfully
+           * claimed this referral may finalize it.
+           */
 
-    /*
-     * IMPORTANT:
-     * Store Razorpay subscription ID,
-     * NOT MongoDB Subscription _id.
-     */
+          status: "processing",
+        },
+        {
+          $set: {
 
-    referral.subscriptionId =
-      subscription.razorpaySubscriptionId;
+            status: "converted",
 
-    referral.planName =
-      subscription.tier;
+            convertedAt:
+              new Date(),
 
-    referral.billingCycle =
-      subscription.billingCycle;
+            /*
+             * Store Razorpay subscription ID,
+             * NOT MongoDB Subscription _id.
+             */
 
-    referral.paymentAmount =
-      amountPaid;
+            subscriptionId:
+              subscription.razorpaySubscriptionId,
 
-    referral.paymentCurrency =
-      currency;
+            planName:
+              subscription.tier,
 
-    referral.commissionRate =
-      commissionRate * 100;
+            billingCycle:
+              subscription.billingCycle,
 
-    referral.commissionAmount =
-      commissionAmount;
+            paymentAmount:
+              amountPaid,
 
-    referral.commissionStatus =
-      "pending";
+            paymentCurrency:
+              currency,
 
-    referral.lastPaymentDate =
-      new Date();
+            commissionRate:
+              commissionRate * 100,
 
-    await referral.save();
+            commissionAmount:
+              commissionAmount,
+
+            commissionStatus:
+              "pending",
+
+            lastPaymentDate:
+              new Date(),
+          },
+        }
+      );
+
+    /* ==========================================
+       FINALIZATION CHECK
+    ========================================== */
+
+    if (result.modifiedCount !== 1) {
+      console.warn(
+        "Affiliate referral could not be finalized."
+      );
+
+      return;
+    }
 
     console.log(
       "========== AFFILIATE CONVERSION COMPLETED ==========",
@@ -213,25 +284,25 @@ const processAffiliateConversion = async (
           referral.affiliateCode,
 
         subscriptionId:
-          referral.subscriptionId,
+          subscription.razorpaySubscriptionId,
 
         tier:
-          referral.planName,
+          subscription.tier,
 
         billingCycle:
-          referral.billingCycle,
+          subscription.billingCycle,
 
         paymentAmount:
-          referral.paymentAmount,
+          amountPaid,
 
         commissionRate:
-          referral.commissionRate,
+          commissionRate * 100,
 
         commissionAmount:
-          referral.commissionAmount,
+          commissionAmount,
 
         currency:
-          referral.paymentCurrency,
+          currency,
       }
     );
 
@@ -242,6 +313,7 @@ const processAffiliateConversion = async (
     );
   }
 };
+
 
 module.exports = {
   processAffiliateConversion,

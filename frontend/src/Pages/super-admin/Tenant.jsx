@@ -22,6 +22,7 @@ const Tenants = () => {
     try {
       setLoading(true);
       const orgs = await getOrganizations();
+      console.log(orgs)
       setTenants(orgs.data || orgs); // safe for both formats
     } catch (err) {
       console.error(err);
@@ -76,19 +77,38 @@ const handleToggleStatus = async (org) => {
 
               </div>
 
-              <div className="tenant-body">
-                <div className="meta">
-                  <span>Users</span>
-                  <strong>{org.userCount ?? 0}</strong>
-                </div>
+   <div className="tenant-body">
 
-                <div className="meta">
-                  <span>Created</span>
-                  <strong>
-                    {new Date(org.createdAt).toLocaleDateString()}
-                  </strong>
-                </div>
-              </div>
+  <div className="meta">
+    <span>Users</span>
+    <strong>{org.userCount ?? 0}</strong>
+  </div>
+
+  <div className="meta">
+    <span>Total Assets</span>
+    <strong>{org.assetCount ?? 0}</strong>
+  </div>
+
+  <div className="meta">
+    <span>Hardware</span>
+    <strong>{org.hardwareAssetCount ?? 0}</strong>
+  </div>
+
+  <div className="meta">
+    <span>Software</span>
+    <strong>{org.softwareAssetCount ?? 0}</strong>
+  </div>
+
+  <div className="meta">
+    <span>Created</span>
+    <strong>
+      {org.createdAt
+        ? new Date(org.createdAt).toLocaleDateString()
+        : "-"}
+    </strong>
+  </div>
+
+</div>
 
               <div className="tenant-actions">
                 <button className="btn" onClick={() => handleView(org)}>
