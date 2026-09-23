@@ -1,5 +1,5 @@
 const AffiliateCommissionPayment = require(
-  "../models/AffiliateCommissionPayment"
+  "../../models/AffiliateCommissionPayment"
 );
 
 const getAffiliateCommissionPayments = async (req, res) => {
