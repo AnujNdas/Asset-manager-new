@@ -138,23 +138,63 @@ const updateAffiliatePayoutSettings = async (req, res) => {
       });
     }
 
+    /* ==========================================
+       VALIDATE PAYOUT METHOD
+    ========================================== */
+
+    const allowedMethods = [
+      "upi",
+      "bank",
+      "paypal",
+    ];
+
+    if (
+      payoutMethod &&
+      !allowedMethods.includes(payoutMethod)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payout method",
+      });
+    }
+
+    /* ==========================================
+       UPDATE PAYOUT METHOD
+    ========================================== */
+
     if (payoutMethod) {
       profile.payoutMethod = payoutMethod;
     }
 
+    /* ==========================================
+       UPDATE PAYOUT DETAILS
+    ========================================== */
+
     if (payoutDetails) {
-      profile.payoutDetails = payoutDetails;
+      profile.payoutDetails = {
+        ...profile.payoutDetails?.toObject?.(),
+        ...payoutDetails,
+      };
     }
 
     await profile.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Payout settings updated successfully",
-      data: profile,
+      data: {
+        payoutMethod: profile.payoutMethod,
+        payoutDetails: profile.payoutDetails,
+      },
     });
+
   } catch (error) {
-    res.status(500).json({
+    console.error(
+      "Update affiliate payout settings error:",
+      error
+    );
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

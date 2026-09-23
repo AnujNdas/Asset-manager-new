@@ -12,7 +12,7 @@ const { getAffiliateTickets} = require("../controllers/affiliate/affiliateTicket
 const {
   getRouteHealth,
 } = require("../controllers/superAdmin/healthController");
-
+const { getAffiliateCommissionPayments} = require("../controllers/affiliate/affiliateCommision")
 
 /* ================= DASHBOARD ================= */
 router.get("/dashboard/overview", authenticateToken(["super-admin"]), getOverview);
@@ -47,6 +47,11 @@ router.patch(
   "/affiliate-tickets/:id/resolve",
   authenticateToken(["super-admin"]),
   resolveAffiliateTicket
+);
+router.get(
+  "/commission-payments",
+  authenticateToken(["super-admin"]),
+  getAffiliateCommissionPayments
 );
 
 

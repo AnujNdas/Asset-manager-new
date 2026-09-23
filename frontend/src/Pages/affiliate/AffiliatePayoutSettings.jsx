@@ -17,7 +17,14 @@ const AffiliatePayoutSettings = () => {
   const [formData, setFormData] =
     useState({
       payoutMethod: "upi",
-      payoutDetails: {},
+
+      payoutDetails: {
+        upiId: "",
+        accountName: "",
+        accountNumber: "",
+        ifscCode: "",
+        paypalEmail: "",
+      },
     });
 
   useEffect(() => {
@@ -26,17 +33,73 @@ const AffiliatePayoutSettings = () => {
 
   const loadData = async () => {
     try {
+
       const res =
         await getAffiliatePayoutSettings();
 
-      setFormData(res.data);
+      setFormData({
+        payoutMethod:
+          res.data?.payoutMethod || "upi",
+
+        payoutDetails: {
+          upiId:
+            res.data?.payoutDetails?.upiId || "",
+
+          accountName:
+            res.data?.payoutDetails?.accountName || "",
+
+          accountNumber:
+            res.data?.payoutDetails?.accountNumber || "",
+
+          ifscCode:
+            res.data?.payoutDetails?.ifscCode || "",
+
+          paypalEmail:
+            res.data?.payoutDetails?.paypalEmail || "",
+        },
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load payout settings:",
+        error
+      );
+
     } finally {
       setLoading(false);
     }
   };
 
+  const handleDetailChange = (
+    field,
+    value
+  ) => {
+
+    setFormData((prev) => ({
+      ...prev,
+
+      payoutDetails: {
+        ...prev.payoutDetails,
+        [field]: value,
+      },
+    }));
+
+  };
+
+  const handleMethodChange = (method) => {
+
+    setFormData((prev) => ({
+      ...prev,
+      payoutMethod: method,
+    }));
+
+  };
+
   const saveSettings = async () => {
+
     try {
+
       setSaving(true);
 
       await updateAffiliatePayoutSettings(
@@ -46,98 +109,225 @@ const AffiliatePayoutSettings = () => {
       ThemeSwal.fire({
         icon: "success",
         title: "Payout Updated",
+        text: "Your payout details have been saved.",
       });
+
+    } catch (error) {
+
+      console.error(
+        "Failed to save payout settings:",
+        error
+      );
+
+      ThemeSwal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text:
+          error?.response?.data?.message ||
+          "Failed to update payout settings.",
+      });
+
     } finally {
+
       setSaving(false);
+
     }
   };
 
-  if (loading) return null;
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className="affiliate-settings-card">
 
       <h2>Payout Settings</h2>
 
+      {/* ==========================================
+          PAYOUT METHOD
+      ========================================== */}
+
       <div className="form-group">
 
-        <label>Payout Method</label>
+        <label>
+          Payout Method
+        </label>
 
         <select
           value={formData.payoutMethod}
           onChange={(e) =>
-            setFormData({
-              ...formData,
-              payoutMethod:
-                e.target.value,
-            })
+            handleMethodChange(
+              e.target.value
+            )
           }
         >
+
           <option value="upi">
             UPI
           </option>
 
           <option value="bank">
-            Bank
+            Bank Transfer
           </option>
 
           <option value="paypal">
-            Paypal
+            PayPal
           </option>
+
         </select>
 
       </div>
 
-      {formData.payoutMethod ===
-        "upi" && (
+      {/* ==========================================
+          UPI
+      ========================================== */}
+
+      {formData.payoutMethod === "upi" && (
+
         <div className="form-group">
-          <label>UPI ID</label>
+
+          <label>
+            UPI ID
+          </label>
 
           <input
+            type="text"
+            placeholder="example@upi"
             value={
-              formData.payoutDetails
-                ?.upiId || ""
+              formData.payoutDetails?.upiId || ""
             }
             onChange={(e) =>
-              setFormData({
-                ...formData,
-                payoutDetails: {
-                  upiId:
-                    e.target.value,
-                },
-              })
+              handleDetailChange(
+                "upiId",
+                e.target.value
+              )
             }
           />
+
         </div>
+
       )}
 
-      {formData.payoutMethod ===
-        "bank" && (
+      {/* ==========================================
+          BANK
+      ========================================== */}
+
+      {formData.payoutMethod === "bank" && (
+
         <>
-          <input
-            placeholder="Account Name"
-          />
 
-          <input
-            placeholder="Account Number"
-          />
+          <div className="form-group">
 
-          <input
-            placeholder="IFSC Code"
-          />
+            <label>
+              Account Name
+            </label>
+
+            <input
+              type="text"
+              placeholder="Account holder name"
+              value={
+                formData.payoutDetails
+                  ?.accountName || ""
+              }
+              onChange={(e) =>
+                handleDetailChange(
+                  "accountName",
+                  e.target.value
+                )
+              }
+            />
+
+          </div>
+
+          <div className="form-group">
+
+            <label>
+              Account Number
+            </label>
+
+            <input
+              type="text"
+              placeholder="Bank account number"
+              value={
+                formData.payoutDetails
+                  ?.accountNumber || ""
+              }
+              onChange={(e) =>
+                handleDetailChange(
+                  "accountNumber",
+                  e.target.value
+                )
+              }
+            />
+
+          </div>
+
+          <div className="form-group">
+
+            <label>
+              IFSC Code
+            </label>
+
+            <input
+              type="text"
+              placeholder="Example: SBIN0001234"
+              value={
+                formData.payoutDetails
+                  ?.ifscCode || ""
+              }
+              onChange={(e) =>
+                handleDetailChange(
+                  "ifscCode",
+                  e.target.value.toUpperCase()
+                )
+              }
+            />
+
+          </div>
+
         </>
+
       )}
 
-      {formData.payoutMethod ===
-        "paypal" && (
-        <input
-          placeholder="Paypal Email"
-        />
+      {/* ==========================================
+          PAYPAL
+      ========================================== */}
+
+      {formData.payoutMethod === "paypal" && (
+
+        <div className="form-group">
+
+          <label>
+            PayPal Email
+          </label>
+
+          <input
+            type="email"
+            placeholder="example@email.com"
+            value={
+              formData.payoutDetails
+                ?.paypalEmail || ""
+            }
+            onChange={(e) =>
+              handleDetailChange(
+                "paypalEmail",
+                e.target.value
+              )
+            }
+          />
+
+        </div>
+
       )}
+
+      {/* ==========================================
+          SAVE
+      ========================================== */}
 
       <button
         className="save-settings-btn"
         onClick={saveSettings}
+        disabled={saving}
       >
         {saving
           ? "Saving..."

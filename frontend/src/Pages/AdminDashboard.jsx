@@ -708,7 +708,7 @@ const chartData = data.map((item) => ({
       margin={{
         top: 20,
         right: isMobile ? 10 : 20,
-        left: isMobile ? 10 : 0,
+        left: isMobile ? 10 : 20,
         bottom: isMobile ? 10 : 40,
       }}
   >

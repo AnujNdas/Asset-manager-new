@@ -121,3 +121,9 @@ export const getSubscription = async () => {
   );
   return res.data;
 };
+export const getAffiliateCommissionPayments = async () => {
+  const res = await axiosInstance.get(
+    "/super-admin/commission-payments",
+  );
+  return res.data;
+};

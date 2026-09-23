@@ -7,6 +7,8 @@ import Financial from "../Pages/super-admin/Financial";
 import RevenuePage from "../Pages/super-admin/Revenue";
 import ReferralsPage from "../Pages/super-admin/Referral";
 import SubscriptionsPage from "../Pages/super-admin/Subscription";
+import AffiliateCommissionPayments from "../Pages/super-admin/AffiliateCommisionPayment";
+
 const Dashboard = lazy(() => import("../Pages/super-admin/SuperAdminDashboard"));
 const Tenants = lazy(() => import("../Pages/super-admin/Tenant"));
 const Settings = lazy(() => import("../Pages/super-admin/SuperAdminSetting"));
@@ -107,7 +109,7 @@ const SuperAdminRoutes = () => (
 
   <Route
     path="referrals"
-    element={<ReferralsPage />}
+    element={<AffiliateCommissionPayments />}
   />
 
   <Route
