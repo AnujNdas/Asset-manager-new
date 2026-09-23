@@ -1,109 +1,806 @@
+/* =========================================================
+   TICKET TABS
+========================================================= */
 
-/* ================= CSS ================= */
-
-/* SuperAdminTickets.css */
-.sa-ticket-container {
-  padding: 24px;
-}
-
-.sa-ticket-header {
-  margin-bottom: 20px;
-}
-
-.sa-ticket-header h2 {
-  font-size: 24px;
-  font-weight: 600;
-}
-
-/* Filters */
-.sa-ticket-filters {
+.sa-ticket-tabs {
   display: flex;
-  gap: 16px;
+  gap: 10px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.sa-ticket-filters input,
-.sa-ticket-filters select {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  min-width: 220px;
-}
-
-/* Table */
-.sa-ticket-table-wrapper {
-  overflow-x: auto;
-}
-
-.sa-ticket-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.sa-ticket-table th,
-.sa-ticket-table td {
-  padding: 14px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.sa-ticket-table th {
+  padding: 6px;
   background: #f5f6fa;
+  border: 1px solid #e3e5ed;
+  border-radius: 12px;
+}
+
+.sa-ticket-tabs button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #596579;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sa-ticket-tabs button:hover {
+  background: #eceeff;
+}
+
+.sa-ticket-tabs button.active {
+  background: #000;
+  color: #fff;
+}
+
+.sa-ticket-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 20px;
+  height: 20px;
+
+  margin-left: 8px;
+  padding: 0 6px;
+
+  border-radius: 20px;
+
+  background: #f59e0b;
+  color: #fff;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   PAYMENT SUMMARY
+========================================================= */
+
+.sa-payment-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.sa-payment-summary > div {
+  background: #fff;
+  border: 1px solid #e1e4ec;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.sa-payment-summary span {
+  display: block;
+  color: #6b7280;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.sa-payment-summary strong {
+  display: block;
+  color: #111827;
+  font-size: 22px;
+}
+
+
+/* =========================================================
+   PAYMENT TICKET LIST
+========================================================= */
+
+.sa-payment-ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sa-payment-ticket-card {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) auto auto;
+
+  align-items: center;
+  gap: 25px;
+
+  background: #fff;
+  border: 1px solid #dfe3eb;
+  border-radius: 12px;
+
+  padding: 18px;
+
+  transition: 0.2s ease;
+}
+
+.sa-payment-ticket-card:hover {
+  border-color: #c9c4ff;
+  box-shadow: 0 3px 12px rgba(55, 65, 81, 0.06);
+}
+
+
+/* =========================================================
+   TICKET MAIN
+========================================================= */
+
+.sa-payment-ticket-main {
+  min-width: 0;
+}
+
+.sa-payment-ticket-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sa-payment-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background: #f0eeff;
+  color: #6557d8;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sa-payment-ticket-title h3 {
+  margin: 0 0 3px;
+  font-size: 15px;
+  color: #111827;
+}
+
+.sa-payment-ticket-title span {
+  font-size: 11px;
+  color: #7468d9;
+  background: #f0eeff;
+  padding: 3px 7px;
+  border-radius: 5px;
+}
+
+.sa-payment-ticket-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.sa-payment-ticket-info span {
+  font-size: 12px;
+  color: #697386;
+}
+
+.sa-payment-ticket-info span:not(:last-child)::after {
+  content: "•";
+  margin-left: 8px;
+  color: #b4bac5;
+}
+
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+.sa-payment-ticket-amount {
+  min-width: 130px;
+}
+
+.sa-payment-ticket-amount small {
+  display: block;
+  margin-bottom: 6px;
+
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+
+  color: #7b8495;
+}
+
+.sa-payment-ticket-amount strong {
+  font-size: 16px;
+  color: #111827;
+}
+
+
+/* =========================================================
+   STATUS + ACTION
+========================================================= */
+
+.sa-payment-ticket-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sa-payment-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 5px 10px;
+  border-radius: 20px;
+
+  font-size: 11px;
   font-weight: 600;
 }
 
-/* Status */
-.status {
-  padding: 6px 12px;
-  border-radius: 999px;
+.sa-payment-status.pending {
+  background: #fff2cc;
+  color: #a16207;
+}
+
+.sa-payment-status.processing {
+  background: #e8edff;
+  color: #4f46b5;
+}
+
+.sa-payment-status.paid {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.sa-payment-status.resolved {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.sa-payment-status.rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.sa-payment-view-btn {
+  border: 1px solid #d9dce5;
+  background: #fff;
+
+  padding: 8px 12px;
+
+  border-radius: 7px;
+
+  color: #25304a;
+
   font-size: 12px;
   font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
 }
 
-.status.open {
-  background: #ffecec;
+.sa-payment-view-btn:hover {
+  border-color: #7165df;
+  color: #5b50c7;
+  background: #f8f7ff;
 }
 
-.status.in-progress {
-  background: #fff6e5;
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.sa-empty-payment {
+  padding: 50px 20px;
+  text-align: center;
+
+  background: #fff;
+  border: 1px solid #e1e4ec;
+  border-radius: 12px;
 }
 
-.status.resolved {
-  background: #e8fff0;
+.sa-empty-payment h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #1f2937;
 }
 
-/* Priority */
-.priority {
-  padding: 6px 12px;
-  border-radius: 999px;
+.sa-empty-payment p {
+  margin: 0;
+  color: #7b8495;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   PAYMENT MODAL
+========================================================= */
+
+.sa-payment-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.sa-payment-modal {
+  width: min(900px, 100%);
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: #fff;
+
+  border-radius: 16px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.sa-payment-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sa-payment-ticket-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  color: #7468d9;
+}
+
+.sa-payment-modal-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+  color: #111827;
+}
+
+.sa-payment-close-btn {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #f3f4f6;
+
+  font-size: 22px;
+  color: #4b5563;
+
+  cursor: pointer;
+}
+
+.sa-payment-close-btn:hover {
+  background: #e5e7eb;
+}
+
+
+/* =========================================================
+   MODAL STATUS
+========================================================= */
+
+.sa-payment-ticket-status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 15px 24px;
+
+  background: #fafbfc;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sa-payment-created {
+  font-size: 12px;
+  color: #7b8495;
+}
+
+
+/* =========================================================
+   DETAIL SECTIONS
+========================================================= */
+
+.sa-payment-detail-section {
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sa-payment-detail-section h3,
+.sa-payment-message h3,
+.sa-payment-action-section h3 {
+  margin: 0 0 12px;
+
+  font-size: 14px;
+  color: #111827;
+}
+
+.sa-payment-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.sa-payment-info-grid small,
+.sa-payment-payout-box small {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 10px;
+  text-transform: uppercase;
+
+  color: #8a93a3;
+}
+
+.sa-payment-info-grid strong,
+.sa-payment-payout-box strong {
+  font-size: 13px;
+  color: #1f2937;
+}
+
+
+/* =========================================================
+   PAYOUT DETAILS
+========================================================= */
+
+.sa-payment-payout-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+
+  padding: 15px;
+
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+}
+
+.sa-payment-payout-box > span {
+  font-size: 11px;
+  color: #7b8495;
+}
+
+
+/* =========================================================
+   COMMISSION DETAILS
+========================================================= */
+
+.sa-payment-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.sa-payment-section-heading p {
+  margin: 0;
+
+  font-size: 12px;
+  color: #7b8495;
+}
+
+.sa-payment-total {
+  font-size: 18px;
+  color: #4f46c8;
+}
+
+.sa-payment-commission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sa-payment-commission-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 0.7fr 1fr;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 13px 14px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.sa-payment-commission-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sa-payment-commission-row strong {
+  font-size: 12px;
+  color: #111827;
+}
+
+.sa-payment-commission-row span {
+  font-size: 11px;
+  color: #7b8495;
+}
+
+.sa-payment-commission-row small {
+  font-size: 9px;
+  text-transform: uppercase;
+  color: #8a93a3;
+}
+
+
+/* =========================================================
+   AFFILIATE MESSAGE
+========================================================= */
+
+.sa-payment-message {
+  margin: 20px 24px;
+  padding: 15px;
+
+  border-radius: 9px;
+
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.sa-payment-message p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: #4b5563;
+}
+
+
+/* =========================================================
+   ADMIN PAYMENT ACTION
+========================================================= */
+
+.sa-payment-action-section {
+  padding: 20px 24px;
+  background: #fafbfc;
+}
+
+.sa-payment-action-section > p {
+  margin: -5px 0 18px;
+
+  font-size: 12px;
+  color: #7b8495;
+}
+
+.sa-payment-action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.sa-payment-action-section .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sa-payment-action-section label {
   font-size: 12px;
   font-weight: 600;
+  color: #374151;
 }
 
-.priority.high {
-  background: #ffe5e5;
+.sa-payment-action-section input,
+.sa-payment-action-section textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  border: 1px solid #d9dde6;
+  border-radius: 8px;
+
+  background: #fff;
+
+  font-size: 13px;
+
+  outline: none;
 }
 
-.priority.medium {
-  background: #fff5e0;
+.sa-payment-action-section input:focus,
+.sa-payment-action-section textarea:focus {
+  border-color: #7165df;
+  box-shadow: 0 0 0 3px rgba(113, 101, 223, 0.08);
 }
 
-.priority.low {
-  background: #e6f7ff;
+.sa-payment-action-section textarea {
+  resize: vertical;
+  margin-top: 15px;
 }
 
-/* States */
-.sa-loading {
-  text-align: center;
-  padding: 40px;
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.sa-payment-action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin-top: 18px;
 }
 
-.sa-empty {
-  text-align: center;
-  padding: 30px;
-  color: #888;
+.sa-payment-reject-btn,
+.sa-payment-process-btn {
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.sa-payment-reject-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.sa-payment-reject-btn:hover {
+  background: #fecaca;
+}
+
+.sa-payment-process-btn {
+  background: #5d50c9;
+  color: #fff;
+}
+
+.sa-payment-process-btn:hover {
+  background: #4f43b5;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .sa-payment-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sa-payment-ticket-card {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .sa-payment-ticket-amount {
+    min-width: 0;
+  }
+
+  .sa-payment-ticket-status {
+    justify-content: space-between;
+  }
+
+  .sa-payment-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sa-payment-commission-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .sa-ticket-tabs {
+    flex-direction: column;
+  }
+
+  .sa-ticket-tabs button {
+    width: 100%;
+  }
+
+  .sa-payment-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .sa-payment-ticket-card {
+    padding: 14px;
+  }
+
+  .sa-payment-ticket-info {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sa-payment-ticket-info span:not(:last-child)::after {
+    display: none;
+  }
+
+  .sa-payment-ticket-status {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sa-payment-view-btn {
+    width: 100%;
+  }
+
+  .sa-payment-modal-overlay {
+    padding: 10px;
+  }
+
+  .sa-payment-modal {
+    max-height: 95vh;
+    border-radius: 12px;
+  }
+
+  .sa-payment-modal-header {
+    padding: 16px;
+  }
+
+  .sa-payment-detail-section {
+    padding: 16px;
+  }
+
+  .sa-payment-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sa-payment-payout-box {
+    grid-template-columns: 1fr;
+  }
+
+  .sa-payment-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sa-payment-commission-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sa-payment-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sa-payment-action-section {
+    padding: 16px;
+  }
+
+  .sa-payment-action-buttons {
+    flex-direction: column;
+  }
+
+  .sa-payment-reject-btn,
+  .sa-payment-process-btn {
+    width: 100%;
+  }
+
 }

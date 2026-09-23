@@ -73,31 +73,31 @@ router.get(
 router.get("/", getRouteHealth);
 
 router.get(
-  "/",
+  "/payment-ticket",
   authenticateToken(["super-admin"]),
   getAffiliatePaymentTicketsForAdmin
 );
 
 router.get(
-  "/:id",
+  "/payment-ticket/:id",
   authenticateToken(["super-admin"]),
   getAffiliatePaymentTicketById
 );
 
 router.patch(
-  "/:id/process",
+  "/payment-ticket/:id/process",
   authenticateToken(["super-admin"]),
   processAffiliatePaymentTicket
 );
 
 router.patch(
-  "/:id/resolve",
+  "/payment-ticket/:id/resolve",
   authenticateToken(["super-admin"]),
   resolveAffiliatePaymentTicket
 );
 
 router.patch(
-  "/:id/reject",
+  "/payment-ticket/:id/reject",
   authenticateToken(["super-admin"]),
   rejectAffiliatePaymentTicket
 );

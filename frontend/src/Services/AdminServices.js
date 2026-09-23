@@ -127,3 +127,79 @@ export const getAffiliateCommissionPayments = async () => {
   );
   return res.data;
 };
+
+
+
+export const getAffiliatePaymentTicketsForAdmin = async () => {
+  const response = await axiosInstance.get(
+    "/super-admin/payment-ticket",
+  );
+
+  return response;
+};
+
+
+// ==========================================
+// GET SINGLE PAYMENT TICKET
+// ==========================================
+
+export const getAffiliatePaymentTicketById = async (
+  ticketId
+) => {
+  const response = await axiosInstance.get(
+    `/super-admin/payment-ticket/${ticketId}`,
+  );
+
+  return response;
+};
+
+
+// ==========================================
+// PROCESS PAYMENT TICKET
+// ==========================================
+
+export const processAffiliatePaymentTicket = async (
+  ticketId,
+  data = {}
+) => {
+  const response = await axiosInstance.patch(
+    `/super-admin/payment-ticket/${ticketId}/process`,
+    data,
+  );
+
+  return response;
+};
+
+
+// ==========================================
+// RESOLVE PAYMENT TICKET
+// ==========================================
+
+export const resolveAffiliatePaymentTicket = async (
+  ticketId,
+  data = {}
+) => {
+  const response = await axiosInstance.patch(
+    `/super-admin/payment-ticket/${ticketId}/resolve`,
+    data,
+  );
+
+  return response;
+};
+
+
+// ==========================================
+// REJECT PAYMENT TICKET
+// ==========================================
+
+export const rejectAffiliatePaymentTicket = async (
+  ticketId,
+  data = {}
+) => {
+  const response = await axiosInstance.patch(
+    `/super-admin/payment-ticket/${ticketId}/reject`,
+    data,
+  );
+
+  return response;
+};
