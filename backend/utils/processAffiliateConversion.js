@@ -150,17 +150,23 @@ const processAffiliateConversion = async (
       }
     );
 
+if (!paymentId) {
+  console.warn(
+    "No Razorpay payment ID found. Affiliate commission will not be created."
+  );
 
+  return;
+}
     /* ==========================================
        DUPLICATE PAYMENT PROTECTION
     ========================================== */
 
     if (paymentId) {
 
-      const existingCommission =
-        await AffiliateCommissionPayment.findOne({
-          paymentId,
-        });
+const existingCommission =
+  await AffiliateCommissionPayment.findOne({
+    razorpayPaymentId: paymentId,
+  });
 
       if (existingCommission) {
 
@@ -259,73 +265,114 @@ const processAffiliateConversion = async (
       return;
     }
 
+    /* ==========================================
+   COMMISSION TYPE
+========================================== */
 
+let commissionType = "initial";
+
+if (referral.status === "converted") {
+
+  const previousTier =
+    String(referral.planName || "")
+      .toLowerCase();
+
+  const currentTier =
+    String(subscription.tier || "")
+      .toLowerCase();
+
+  const tierRank = {
+    base: 1,
+    grow: 2,
+    omni: 3,
+  };
+
+  if (
+    previousTier === currentTier
+  ) {
+    commissionType = "renewal";
+
+  } else if (
+    tierRank[currentTier] >
+    tierRank[previousTier]
+  ) {
+    commissionType = "upgrade";
+
+  } else if (
+    tierRank[currentTier] <
+    tierRank[previousTier]
+  ) {
+    commissionType = "downgrade";
+
+  } else {
+    commissionType = "plan_change";
+  }
+}
     /* ==========================================
        CREATE COMMISSION PAYMENT
     ========================================== */
 
-    const commissionPayment =
-      await AffiliateCommissionPayment.create({
+const commissionPayment =
+  await AffiliateCommissionPayment.create({
 
-        affiliateId:
-          affiliateProfile._id,
+    affiliateId:
+      affiliateProfile._id,
 
-        affiliateCode:
-          referral.affiliateCode,
+    affiliateCode:
+      referral.affiliateCode,
 
-        referralId:
-          referral._id,
+    referralId:
+      referral._id,
 
-        organizationId:
-          subscription.organizationId,
+    commissionType,
 
-        referredUserId:
-          referral.referredUserId,
+    organizationId:
+      subscription.organizationId,
 
+    referredUserId:
+      referral.referredUserId,
 
-        /* Subscription */
+    /* Subscription */
 
-        subscriptionId:
-          subscription.razorpaySubscriptionId,
+    subscriptionId:
+      subscription.razorpaySubscriptionId,
 
-        planName:
-          subscription.tier,
+    planName:
+      subscription.tier,
 
-        billingCycle:
-          subscription.billingCycle,
+    billingCycle:
+      subscription.billingCycle,
 
+    /* Razorpay payment */
 
-        /* Payment */
+    razorpayPaymentId:
+      paymentId,
 
-        paymentId,
+    paymentAmount:
+      amountPaid,
 
-        paymentAmount:
-          amountPaid,
+    paymentCurrency:
+      currency,
 
-        paymentCurrency:
-          currency,
+    /* Commission */
 
+    commissionRate:
+      commissionRate * 100,
 
-        /* Commission */
+    commissionAmount:
+      commissionAmount,
 
-        commissionRate:
-          commissionRate * 100,
+    /* Payout */
 
-        commissionAmount:
-          commissionAmount,
+    status:
+      "pending",
 
+    payoutMethod:
+      affiliateProfile.payoutMethod || null,
 
-        /* Payout */
-
-        status:
-          "pending",
-
-        payoutMethod:
-          affiliateProfile.payoutMethod || null,
-
-        generatedAt:
-          new Date(),
-      });
+    generatedAt:
+      new Date(),
+  });
 
 
     console.log(
