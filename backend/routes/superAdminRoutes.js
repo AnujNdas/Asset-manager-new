@@ -13,7 +13,15 @@ const {
   getRouteHealth,
 } = require("../controllers/superAdmin/healthController");
 const { getAffiliateCommissionPayments} = require("../controllers/affiliate/affiliateCommision")
-
+const {
+  getAffiliatePaymentTicketsForAdmin,
+  getAffiliatePaymentTicketById,
+  processAffiliatePaymentTicket,
+  resolveAffiliatePaymentTicket,
+  rejectAffiliatePaymentTicket,
+} = require(
+  "../controllers/superAdmin/AffiliatePaymentTicketController"
+);
 /* ================= DASHBOARD ================= */
 router.get("/dashboard/overview", authenticateToken(["super-admin"]), getOverview);
 
@@ -60,6 +68,39 @@ router.get(
   "/subscriptions",
   getSuperAdminSubscriptions
 );
+
+
 router.get("/", getRouteHealth);
+
+router.get(
+  "/",
+  authenticateToken(["super-admin"]),
+  getAffiliatePaymentTicketsForAdmin
+);
+
+router.get(
+  "/:id",
+  authenticateToken(["super-admin"]),
+  getAffiliatePaymentTicketById
+);
+
+router.patch(
+  "/:id/process",
+  authenticateToken(["super-admin"]),
+  processAffiliatePaymentTicket
+);
+
+router.patch(
+  "/:id/resolve",
+  authenticateToken(["super-admin"]),
+  resolveAffiliatePaymentTicket
+);
+
+router.patch(
+  "/:id/reject",
+  authenticateToken(["super-admin"]),
+  rejectAffiliatePaymentTicket
+);
+
 
 module.exports = router;
