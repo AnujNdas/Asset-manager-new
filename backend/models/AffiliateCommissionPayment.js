@@ -120,6 +120,7 @@ const AffiliateCommissionPaymentSchema =
         type: String,
         enum: [
           "pending",
+          "requested",
           "approved",
           "paid",
           "rejected",

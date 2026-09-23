@@ -283,62 +283,97 @@ const createAffiliatePaymentTicket =
          CREATE TICKET
       ========================================== */
 
-      const ticket =
-        await AffiliatePaymentTicket.create({
+/* ==========================================
+   CREATE TICKET
+========================================== */
 
-          ticketNumber:
-            generateAffiliateTicketNumber(),
+const ticket =
+  await AffiliatePaymentTicket.create({
 
-          affiliateId:
-            profile._id,
+    ticketNumber:
+      generateAffiliateTicketNumber(),
 
-          affiliateCode:
-            profile.affiliateCode,
+    affiliateId:
+      profile._id,
 
-          commissionIds:
-            commissions.map(
-              (commission) =>
-                commission._id
-            ),
+    affiliateCode:
+      profile.affiliateCode,
 
-          totalAmount:
-            Number(
-              totalAmount.toFixed(2)
-            ),
+    commissionIds:
+      commissions.map(
+        (commission) =>
+          commission._id
+      ),
 
-          currency:
-            commissions[0]
-              .paymentCurrency ||
-            "USD",
+    totalAmount:
+      Number(
+        totalAmount.toFixed(2)
+      ),
 
-          payoutMethod,
+    currency:
+      commissions[0]
+        .paymentCurrency ||
+      "USD",
 
-          payoutDetails: {
-            upiId:
-              payoutDetails.upiId || "",
+    payoutMethod,
 
-            accountName:
-              payoutDetails.accountName ||
-              "",
+    payoutDetails: {
+      upiId:
+        payoutDetails.upiId || "",
 
-            accountNumber:
-              payoutDetails.accountNumber ||
-              "",
+      accountName:
+        payoutDetails.accountName ||
+        "",
 
-            ifscCode:
-              payoutDetails.ifscCode ||
-              "",
+      accountNumber:
+        payoutDetails.accountNumber ||
+        "",
 
-            paypalEmail:
-              payoutDetails.paypalEmail ||
-              "",
-          },
+      ifscCode:
+        payoutDetails.ifscCode ||
+        "",
 
-          message,
+      paypalEmail:
+        payoutDetails.paypalEmail ||
+        "",
+    },
 
-          status:
-            "pending",
-        });
+    affiliateMessage: message,
+
+    status:
+      "pending",
+  });
+
+
+/* ==========================================
+   MARK COMMISSIONS AS REQUESTED
+========================================== */
+
+await AffiliateCommissionPayment.updateMany(
+  {
+    _id: {
+      $in: commissions.map(
+        (commission) =>
+          commission._id
+      ),
+    },
+
+    affiliateId:
+      profile._id,
+
+    status: {
+      $in: [
+        "pending",
+        "approved",
+      ],
+    },
+  },
+  {
+    $set: {
+      status: "requested",
+    },
+  }
+);
 
       return res.status(201).json({
         success: true,
@@ -379,24 +414,27 @@ const createAffiliatePaymentTicket =
         });
       }
 
-      const tickets =
-        await AffiliatePaymentTicket.find({
-          affiliateId:
-            profile._id,
-        })
-          .populate(
-            "commissionIds",
-            "planName billingCycle paymentAmount paymentCurrency commissionRate commissionAmount commissionType status createdAt"
-          )
-          .sort({
-            createdAt: -1,
-          });
-
-      return res.status(200).json({
-        success: true,
-        count: tickets.length,
-        data: tickets,
-      });
+const tickets =
+  await AffiliatePaymentTicket.find({
+    affiliateId:
+      profile._id,
+  })
+    .populate(
+      "commissionIds",
+      "planName billingCycle paymentAmount paymentCurrency commissionRate commissionAmount commissionType status createdAt"
+    )
+    .populate(
+      "processedBy",
+      "fullName username email"
+    )
+    .sort({
+      createdAt: -1,
+    });
+return res.status(200).json({
+  success: true,
+  count: tickets.length,
+  data: tickets,
+});
 
     } catch (error) {
 

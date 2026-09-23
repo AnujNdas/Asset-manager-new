@@ -8,14 +8,39 @@ import ThemeSwal from "../../utils/swalTheme";
 import {
   getAffiliatePaymentCommissions,
   createAffiliatePaymentTicket,
+  getAffiliatePaymentTickets,
 } from "../../Services/AffiliateServices";
-
 import "../../Page_styles/AffiliatePayout.css";
+const formatTicketStatus = (status) => {
 
+  switch (status) {
+
+    case "pending":
+      return "Requested";
+
+    case "processing":
+      return "Processing";
+
+    case "paid":
+      return "Paid";
+
+    case "resolved":
+      return "Resolved";
+
+    case "rejected":
+      return "Rejected";
+
+    default:
+      return status;
+  }
+};
 const AffiliatePaymentTickets = () => {
 
   const [commissions, setCommissions] =
     useState([]);
+
+    const [expandedTicket, setExpandedTicket] =
+  useState(null);
 
   const [selectedIds, setSelectedIds] =
     useState([]);
@@ -28,40 +53,50 @@ const AffiliatePaymentTickets = () => {
 
   const [submitting, setSubmitting] =
     useState(false);
-
+  const [tickets, setTickets] =
+  useState([]); 
 
   useEffect(() => {
-    loadCommissions();
+    loadData();
   }, []);
 
 
-  const loadCommissions = async () => {
-    try {
+const loadData = async () => {
+  try {
 
-      setLoading(true);
+    setLoading(true);
 
-      const res =
-        await getAffiliatePaymentCommissions();
+    const [
+      commissionsRes,
+      ticketsRes,
+    ] = await Promise.all([
+      getAffiliatePaymentCommissions(),
+      getAffiliatePaymentTickets(),
+    ]);
 
-      setCommissions(
-        res.data?.data || []
-      );
+    setCommissions(
+      commissionsRes.data?.data || []
+    );
 
-    } catch (error) {
+    setTickets(
+      ticketsRes.data?.data || []
+    );
 
-      console.error(error);
+  } catch (error) {
 
-      ThemeSwal.fire({
-        icon: "error",
-        title: "Failed to load commissions",
-      });
+    console.error(error);
 
-    } finally {
+    ThemeSwal.fire({
+      icon: "error",
+      title: "Failed to load payment data",
+    });
 
-      setLoading(false);
+  } finally {
 
-    }
-  };
+    setLoading(false);
+
+  }
+};
 
 
   const toggleCommission = (
@@ -132,6 +167,7 @@ const AffiliatePaymentTickets = () => {
 
         message,
       });
+      
 
 
       ThemeSwal.fire({
@@ -147,7 +183,7 @@ const AffiliatePaymentTickets = () => {
 
       setMessage("");
 
-      await loadCommissions();
+      await loadData();
 
     } catch (error) {
 
@@ -524,6 +560,342 @@ const AffiliatePaymentTickets = () => {
         </div>
 
       )}
+
+      {/* =====================================
+    PAYMENT HISTORY
+===================================== */}
+
+<div className="affiliate-payment-section">
+
+  <div className="section-heading">
+    <div>
+      <h2>Payment Request History</h2>
+
+      <p>
+        Track your previous affiliate
+        payment requests.
+      </p>
+    </div>
+  </div>
+
+  {tickets.length === 0 ? (
+
+    <div className="empty-payment-state">
+
+      <h3>
+        No payment requests yet
+      </h3>
+
+      <p>
+        Your payment requests will
+        appear here after you raise
+        your first ticket.
+      </p>
+
+    </div>
+
+  ) : (
+
+    <div className="payment-ticket-list">
+
+      {tickets.map((ticket) => (
+
+        <React.Fragment key={ticket._id}>
+
+          {/* ===============================
+              TICKET CARD
+          =============================== */}
+
+          <div className="payment-ticket-card">
+
+            <div className="ticket-main">
+
+              <div className="ticket-title">
+
+                <h3>
+                  {ticket.ticketNumber}
+                </h3>
+
+                <span
+                  className={`ticket-status ${ticket.status}`}
+                >
+                  {formatTicketStatus(ticket.status)}
+                </span>
+
+              </div>
+
+
+              <div className="ticket-meta">
+
+                <span>
+                  {ticket.commissionIds?.length || 0}
+                  {" "}
+                  Commission
+                  {ticket.commissionIds?.length === 1
+                    ? ""
+                    : "s"}
+                </span>
+
+                <span>
+                  {new Date(
+                    ticket.createdAt
+                  ).toLocaleDateString()}
+                </span>
+
+                <span>
+                  {ticket.payoutMethod
+                    ? ticket.payoutMethod.toUpperCase()
+                    : "N/A"}
+                </span>
+
+              </div>
+
+
+              <button
+                type="button"
+                className="ticket-view-btn"
+                onClick={() =>
+                  setExpandedTicket(
+                    expandedTicket === ticket._id
+                      ? null
+                      : ticket._id
+                  )
+                }
+              >
+                {expandedTicket === ticket._id
+                  ? "Hide Details"
+                  : "View Details"}
+              </button>
+
+            </div>
+
+
+            <div className="ticket-amount">
+
+              <small>
+                Requested Amount
+              </small>
+
+              <strong>
+                {ticket.currency || "USD"}{" "}
+                {Number(
+                  ticket.totalAmount || 0
+                ).toFixed(2)}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          {/* ===============================
+              EXPANDED COMMISSION DETAILS
+          =============================== */}
+
+          {expandedTicket === ticket._id && (
+
+            <div className="ticket-commission-details">
+
+              <div className="ticket-details-header">
+                <h4>
+                  Commission Details
+                </h4>
+
+                <span>
+                  {ticket.commissionIds?.length || 0}{" "}
+                  commission
+                  {ticket.commissionIds?.length === 1
+                    ? ""
+                    : "s"}
+                </span>
+              </div>
+
+
+              {ticket.commissionIds?.map(
+                (commission) => (
+
+                  <div
+                    key={commission._id}
+                    className="ticket-commission-row"
+                  >
+
+                    <div className="ticket-commission-plan">
+
+                      <strong>
+                        {commission.planName || "N/A"}
+                      </strong>
+
+                      <span>
+                        {commission.billingCycle
+                          ? commission.billingCycle
+                              .charAt(0)
+                              .toUpperCase() +
+                            commission.billingCycle.slice(1)
+                          : "N/A"}
+
+                        {" • "}
+
+                        {commission.commissionType
+                          ? commission.commissionType
+                              .replace("_", " ")
+                              .replace(
+                                /\b\w/g,
+                                (char) =>
+                                  char.toUpperCase()
+                              )
+                          : "Initial"}
+                      </span>
+
+                    </div>
+
+
+                    <div className="ticket-detail-item">
+
+                      <small>
+                        Payment
+                      </small>
+
+                      <strong>
+                        {commission.paymentCurrency || "USD"}{" "}
+                        {Number(
+                          commission.paymentAmount || 0
+                        ).toFixed(2)}
+                      </strong>
+
+                    </div>
+
+
+                    <div className="ticket-detail-item">
+
+                      <small>
+                        Rate
+                      </small>
+
+                      <strong>
+                        {Number(
+                          commission.commissionRate || 0
+                        ).toFixed(2)}
+                        %
+                      </strong>
+
+                    </div>
+
+
+                    <div className="ticket-detail-item commission-value">
+
+                      <small>
+                        Commission
+                      </small>
+
+                      <strong>
+                        {commission.paymentCurrency || "USD"}{" "}
+                        {Number(
+                          commission.commissionAmount || 0
+                        ).toFixed(2)}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                )
+              )}
+
+
+              {/* ===============================
+                  TICKET MESSAGE
+              =============================== */}
+
+              {ticket.affiliateMessage && (
+
+                <div className="ticket-message">
+
+                  <small>
+                    Your Message
+                  </small>
+
+                  <p>
+                    {ticket.affiliateMessage}
+                  </p>
+
+                </div>
+
+              )}
+
+
+              {/* ===============================
+                  ADMIN RESPONSE
+              =============================== */}
+
+              {ticket.adminNotes && (
+
+                <div className="ticket-admin-notes">
+
+                  <small>
+                    Admin Notes
+                  </small>
+
+                  <p>
+                    {ticket.adminNotes}
+                  </p>
+
+                </div>
+
+              )}
+
+
+              {/* ===============================
+                  PAYMENT INFORMATION
+              =============================== */}
+
+              {ticket.status === "paid" ||
+              ticket.status === "resolved" ? (
+
+                <div className="ticket-payment-info">
+
+                  {ticket.transactionId && (
+                    <div>
+                      <small>
+                        Transaction ID
+                      </small>
+
+                      <strong>
+                        {ticket.transactionId}
+                      </strong>
+                    </div>
+                  )}
+
+                  {ticket.paidAt && (
+                    <div>
+                      <small>
+                        Paid On
+                      </small>
+
+                      <strong>
+                        {new Date(
+                          ticket.paidAt
+                        ).toLocaleDateString()}
+                      </strong>
+                    </div>
+                  )}
+
+                </div>
+
+              ) : null}
+
+            </div>
+
+          )}
+
+        </React.Fragment>
+
+      ))}
+
+    </div>
+
+  )}
+
+</div>
 
     </div>
   );

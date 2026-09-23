@@ -467,7 +467,560 @@
   color: #64748b;
 }
 
+/* =========================================================
+   PAYMENT TICKET HISTORY
+========================================================= */
 
+.payment-ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+/* =========================================================
+   TICKET CARD
+========================================================= */
+
+.payment-ticket-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  width: 100%;
+  padding: 20px 22px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.payment-ticket-card:hover {
+  border-color: #cbd5e1;
+
+  box-shadow:
+    0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.ticket-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.ticket-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ticket-title h3 {
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  color: #111827;
+
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.ticket-status {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 4px 9px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.ticket-status.pending {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.ticket-status.processing {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.ticket-status.paid {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.ticket-status.resolved {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.ticket-status.rejected {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+
+/* =========================================================
+   META
+========================================================= */
+
+.ticket-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 8px 18px;
+
+  margin-top: 9px;
+}
+
+.ticket-meta span {
+  position: relative;
+
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ticket-meta span:not(:last-child)::after {
+  content: "•";
+
+  position: absolute;
+  right: -11px;
+
+  color: #cbd5e1;
+}
+
+
+/* =========================================================
+   VIEW BUTTON
+========================================================= */
+
+.ticket-view-btn {
+  margin-top: 12px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #2563eb;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.ticket-view-btn:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+.ticket-amount {
+  min-width: 150px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 5px;
+}
+
+.ticket-amount small {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.ticket-amount strong {
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #111827;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   EXPANDED DETAILS
+========================================================= */
+
+.ticket-commission-details {
+  margin-top: -4px;
+
+  padding: 18px 20px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+  border-top: none;
+
+  border-radius: 0 0 12px 12px;
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.ticket-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ticket-details-header h4 {
+  margin: 0;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.ticket-details-header span {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   COMMISSION ROW
+========================================================= */
+
+.ticket-commission-row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(180px, 1.5fr)
+    minmax(120px, 1fr)
+    minmax(80px, 0.6fr)
+    minmax(140px, 1fr);
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ticket-commission-row:last-child {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   PLAN
+========================================================= */
+
+.ticket-commission-plan {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.ticket-commission-plan strong {
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.ticket-commission-plan span {
+  font-size: 11px;
+  color: #6b7280;
+
+  text-transform: capitalize;
+}
+
+
+/* =========================================================
+   DETAIL ITEM
+========================================================= */
+
+.ticket-detail-item {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.ticket-detail-item small {
+  font-size: 10px;
+
+  color: #6b7280;
+
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ticket-detail-item strong {
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #111827;
+}
+
+.commission-value strong {
+  color: #2563eb;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.ticket-message,
+.ticket-admin-notes {
+  margin-top: 16px;
+
+  padding: 13px 15px;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+}
+
+.ticket-message small,
+.ticket-admin-notes small {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  color: #6b7280;
+
+  text-transform: uppercase;
+}
+
+.ticket-message p,
+.ticket-admin-notes p {
+  margin: 0;
+
+  font-size: 12px;
+  line-height: 1.6;
+
+  color: #374151;
+
+  white-space: pre-wrap;
+}
+
+
+/* =========================================================
+   ADMIN NOTES
+========================================================= */
+
+.ticket-admin-notes {
+  background: #eff6ff;
+  border-color: #dbeafe;
+}
+
+
+/* =========================================================
+   PAYMENT INFORMATION
+========================================================= */
+
+.ticket-payment-info {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 24px;
+
+  margin-top: 16px;
+  padding-top: 15px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.ticket-payment-info div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-width: 160px;
+}
+
+.ticket-payment-info small {
+  font-size: 10px;
+
+  color: #6b7280;
+
+  text-transform: uppercase;
+}
+
+.ticket-payment-info strong {
+  font-size: 12px;
+
+  color: #111827;
+
+  word-break: break-all;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .payment-ticket-card {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+    padding: 17px;
+  }
+
+  .ticket-main {
+    width: 100%;
+  }
+
+  .ticket-amount {
+    width: 100%;
+
+    align-items: flex-start;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .ticket-amount strong {
+    font-size: 16px;
+  }
+
+  .ticket-commission-details {
+    padding: 15px;
+  }
+
+  .ticket-commission-row {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+
+    padding: 15px 0;
+  }
+
+  .ticket-commission-plan {
+    grid-column: 1 / -1;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .payment-ticket-card {
+    padding: 15px;
+  }
+
+  .ticket-title {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 7px;
+  }
+
+  .ticket-meta {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 6px;
+  }
+
+  .ticket-meta span::after {
+    display: none;
+  }
+
+  .ticket-commission-details {
+    padding: 13px;
+  }
+
+  .ticket-commission-row {
+    grid-template-columns: 1fr;
+
+    gap: 11px;
+  }
+
+  .ticket-commission-plan {
+    grid-column: auto;
+  }
+
+  .ticket-detail-item {
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 8px;
+
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .ticket-detail-item:last-child {
+    border-bottom: none;
+  }
+
+  .ticket-payment-info {
+    flex-direction: column;
+
+    gap: 13px;
+  }
+
+  .ticket-payment-info div {
+    min-width: 0;
+  }
+
+}
 /* =========================================================
    RESPONSIVE
 ========================================================= */
