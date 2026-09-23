@@ -33,6 +33,11 @@ const {
   getAffiliateTicketById,
 } = require("../controllers/affiliate/affiliateTicket");
 
+const { 
+      getAffiliatePaymentCommissions,
+    createAffiliatePaymentTicket,
+    getAffiliatePaymentTickets,
+} = require("../controllers/affiliate/affiliateCommision")
 router.post(
   "/apply",
   applyAffiliate
@@ -76,5 +81,24 @@ router.get(
   "/tickets/:id",
   affiliateAuth,
   getAffiliateTicketById
+);
+
+
+router.get(
+  "/payment-tickets/commissions",
+  affiliateAuth,
+  getAffiliatePaymentCommissions
+);
+
+router.post(
+  "/payment-tickets",
+  affiliateAuth,
+  createAffiliatePaymentTicket
+);
+
+router.get(
+  "/payment-tickets",
+  affiliateAuth,
+  getAffiliatePaymentTickets
 );
 module.exports = router;

@@ -164,3 +164,24 @@ export const createAffiliateTicket =
 
     return res.data;
   };
+
+  export const getAffiliatePaymentCommissions =
+  async () => {
+    return axiosInstance.get(
+      "/affiliate/payment-tickets/commissions"
+    );
+  };
+
+  export const createAffiliatePaymentTicket =
+  async (data) => {
+    return axiosInstance.post(
+      "/affiliate/payment-tickets",
+      data,
+    );
+  };
+  export const getAffiliatePaymentTickets =
+  async () => {
+    return axiosInstance.get(
+      "/affiliate/payment-tickets",
+    );
+  };

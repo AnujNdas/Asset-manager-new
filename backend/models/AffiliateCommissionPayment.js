@@ -195,7 +195,12 @@ const AffiliateCommissionPaymentSchema =
   unique: true,
   index: true,
 },
-
+ticketId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "AffiliatePaymentTicket",
+  default: null,
+  index: true,
+},
       /* ==========================================
          PAYMENT TIMELINE
       ========================================== */

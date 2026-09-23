@@ -5,7 +5,7 @@ import AffiliateLayout from "../layout/AffiliateLayout";
 import AffiliateDashboard from "../Pages/affiliate/AffiliateDashboard";
 import AffiliateReferrals from "../Pages/affiliate/AffiliateReferrals";
 import AffiliateEarnings from "../Pages/affiliate/AffiliateEarnings";
-import AffiliatePayouts from "../Pages/affiliate/AffiliatePayout";
+import AffiliatePaymentTickets from "../Pages/affiliate/AffiliatePayout";
 import AffiliateSettingsLayout from "../Pages/affiliate/AffiliateSettingsLayout";
 import AffiliateProfileSettings from "../Pages/affiliate/AffiliateProfileSettings";
 import AffiliatePayoutSettings from "../Pages/affiliate/AffiliatePayoutSettings";
@@ -35,7 +35,7 @@ const AffiliateRoutes = () => {
 
         <Route
           path="payouts"
-          element={<AffiliatePayouts />}
+          element={<AffiliatePaymentTickets />}
         />
           <Route
   path="/affiliate/settings"

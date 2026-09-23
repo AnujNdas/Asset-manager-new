@@ -1,0 +1,577 @@
+/* =========================================================
+   AFFILIATE PAYMENT PAGE
+========================================================= */
+
+.affiliate-payment-page {
+  width: 100%;
+  padding: 28px;
+  box-sizing: border-box;
+  background: #f7f8fc;
+  min-height: 100%;
+  color: #111827;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.affiliate-payment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.affiliate-payment-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.affiliate-payment-header p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.affiliate-payment-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.payment-summary-card {
+  background: #ffffff;
+  border: 1px solid #e2e5ec;
+  border-radius: 12px;
+  padding: 20px 22px;
+  min-height: 90px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.payment-summary-card span {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 7px;
+}
+
+.payment-summary-card strong {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
+.affiliate-payment-section {
+  background: #ffffff;
+  border: 1px solid #e2e5ec;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 24px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+  color: #111827;
+}
+
+.section-heading p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+
+/* =========================================================
+   COMMISSION LIST
+========================================================= */
+
+.commission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.commission-card {
+  display: grid;
+  grid-template-columns: 38px minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+
+  padding: 16px;
+
+  background: #ffffff;
+  border: 1px solid #e2e5ec;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.commission-card:hover {
+  border-color: #c9c2ff;
+  box-shadow: 0 3px 12px rgba(76, 63, 153, 0.08);
+}
+
+.commission-card.selected {
+  border-color: #6d5bd0;
+  background: #faf9ff;
+  box-shadow: 0 0 0 1px rgba(109, 91, 208, 0.08);
+}
+
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.commission-check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.commission-check input {
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  accent-color: #6d5bd0;
+}
+
+
+/* =========================================================
+   COMMISSION MAIN
+========================================================= */
+
+.commission-main {
+  min-width: 0;
+}
+
+.commission-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.commission-title h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  color: #111827;
+}
+
+.commission-title span {
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: #f0edff;
+  color: #6454c7;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.commission-meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.commission-meta span {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.commission-meta span:not(:last-child)::after {
+  content: "•";
+  margin-left: 9px;
+  color: #cbd5e1;
+}
+
+
+/* =========================================================
+   COMMISSION PAYMENT INFORMATION
+========================================================= */
+
+.commission-payment {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+}
+
+.commission-payment > div {
+  min-width: 80px;
+}
+
+.commission-payment small {
+  display: block;
+  font-size: 10px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 5px;
+}
+
+.commission-payment strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 650;
+  color: #111827;
+}
+
+.commission-earned strong {
+  color: #5b4bc4;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-payment-state {
+  padding: 50px 20px;
+  text-align: center;
+  border: 1px dashed #d7dbe5;
+  border-radius: 10px;
+  background: #fafbfc;
+}
+
+.empty-payment-state h3 {
+  margin: 0 0 7px;
+  font-size: 16px;
+  color: #334155;
+}
+
+.empty-payment-state p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+
+/* =========================================================
+   PAYMENT REQUEST SECTION
+========================================================= */
+
+.payment-request-section {
+  background: #ffffff;
+  border: 1px solid #e2e5ec;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #edf0f4;
+  margin-bottom: 20px;
+}
+
+.request-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+  color: #111827;
+}
+
+.request-header p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.request-total {
+  text-align: right;
+}
+
+.request-total span {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.request-total strong {
+  font-size: 25px;
+  color: #5b4bc4;
+}
+
+
+/* =========================================================
+   PAYOUT METHOD
+========================================================= */
+
+.payout-method-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 16px;
+
+  border: 1px solid #e2e5ec;
+  border-radius: 8px;
+
+  background: #fafbff;
+
+  margin-bottom: 18px;
+}
+
+.payout-method-display span {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.payout-method-display strong {
+  font-size: 13px;
+  color: #111827;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 7px;
+}
+
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px 13px;
+
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  color: #111827;
+
+  resize: vertical;
+
+  outline: none;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.form-group textarea:focus {
+  border-color: #6d5bd0;
+  box-shadow: 0 0 0 3px rgba(109, 91, 208, 0.10);
+}
+
+.form-group textarea::placeholder {
+  color: #a0a8b5;
+}
+
+
+/* =========================================================
+   RAISE TICKET BUTTON
+========================================================= */
+
+.raise-ticket-btn {
+  border: none;
+  border-radius: 8px;
+
+  padding: 11px 18px;
+
+  background: #6d5bd0;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    transform 0.1s ease,
+    box-shadow 0.18s ease;
+}
+
+.raise-ticket-btn:hover {
+  background: #5d4cc1;
+  box-shadow: 0 4px 12px rgba(109, 91, 208, 0.22);
+}
+
+.raise-ticket-btn:active {
+  transform: translateY(1px);
+}
+
+.raise-ticket-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.affiliate-payment-loading {
+  min-height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  color: #64748b;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .affiliate-payment-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .commission-card {
+    grid-template-columns: 32px 1fr;
+  }
+
+  .commission-payment {
+    grid-column: 2;
+    gap: 30px;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .affiliate-payment-page {
+    padding: 18px;
+  }
+
+  .affiliate-payment-header h1 {
+    font-size: 23px;
+  }
+
+  .affiliate-payment-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .affiliate-payment-section,
+  .payment-request-section {
+    padding: 16px;
+  }
+
+  .commission-card {
+    grid-template-columns: 30px 1fr;
+    gap: 12px;
+  }
+
+  .commission-payment {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+
+  .request-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .request-total {
+    text-align: left;
+  }
+
+  .payout-method-display {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .affiliate-payment-page {
+    padding: 12px;
+  }
+
+  .affiliate-payment-header {
+    margin-bottom: 18px;
+  }
+
+  .affiliate-payment-header h1 {
+    font-size: 21px;
+  }
+
+  .affiliate-payment-header p {
+    font-size: 12px;
+  }
+
+  .commission-payment {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .commission-meta {
+    gap: 5px;
+  }
+
+  .commission-meta span:not(:last-child)::after {
+    margin-left: 5px;
+  }
+
+  .raise-ticket-btn {
+    width: 100%;
+  }
+
+}
