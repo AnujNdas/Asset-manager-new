@@ -1,5 +1,6 @@
 const AffiliateProfile = require("../../models/AffiliateProfile");
 const AffiliateReferral = require("../../models/AffiliateReferral");
+const AffiliateCommissionPayment = require("../../models/AffiliateCommissionPayment")
 const getAffiliateEarnings = async (req, res) => {
   try {
     const affiliate = await AffiliateProfile.findOne({
