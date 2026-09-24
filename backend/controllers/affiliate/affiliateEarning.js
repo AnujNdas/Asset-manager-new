@@ -1,113 +1,198 @@
 const AffiliateProfile = require("../../models/AffiliateProfile");
 const AffiliateReferral = require("../../models/AffiliateReferral");
-
 const getAffiliateEarnings = async (req, res) => {
   try {
-
     const affiliate = await AffiliateProfile.findOne({
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     if (!affiliate) {
       return res.status(404).json({
         success: false,
-        message: "Affiliate profile not found"
+        message: "Affiliate profile not found",
       });
     }
 
-    const referrals = await AffiliateReferral.find({
-      affiliateId: affiliate._id
-    })
-    .sort({ createdAt: -1 });
+    /* =====================================================
+       REFERRAL DATA
+    ===================================================== */
 
-    /* =============================
-       CALCULATIONS
-    ============================== */
+    const referrals = await AffiliateReferral.find({
+      affiliateId: affiliate._id,
+      isFraud: false,
+    }).sort({ createdAt: -1 });
 
     const totalReferrals = referrals.length;
 
-    const convertedReferrals =
-      referrals.filter(r => r.status === "converted");
-
-    const totalEarnings =
-      convertedReferrals.reduce(
-        (sum, r) => sum + (r.commissionAmount || 0),
-        0
-      );
-
-    const pendingEarnings =
-      convertedReferrals
-        .filter(r => r.commissionStatus === "pending")
-        .reduce(
-          (sum, r) => sum + (r.commissionAmount || 0),
-          0
-        );
-
-    const paidEarnings =
-      convertedReferrals
-        .filter(r => r.commissionStatus === "paid")
-        .reduce(
-          (sum, r) => sum + (r.commissionAmount || 0),
-          0
-        );
+    const convertedReferrals = referrals.filter(
+      (referral) => referral.status === "converted"
+    );
 
     const conversionRate =
       totalReferrals > 0
-        ? (
-            (convertedReferrals.length / totalReferrals) * 100
-          ).toFixed(1)
+        ? Number(
+            (
+              (convertedReferrals.length / totalReferrals) *
+              100
+            ).toFixed(1)
+          )
         : 0;
 
-    /* =============================
+
+    /* =====================================================
+       COMMISSION PAYMENT DATA
+       SOURCE OF TRUTH FOR EARNINGS
+    ===================================================== */
+
+    const commissionPayments =
+      await AffiliateCommissionPayment.find({
+        affiliateId: affiliate._id,
+      })
+        .populate("organizationId", "name orgCode")
+        .sort({ createdAt: -1 });
+
+
+    /* =====================================================
+       EARNINGS CALCULATIONS
+    ===================================================== */
+
+    const totalEarnings = commissionPayments.reduce(
+      (sum, commission) =>
+        sum + Number(commission.commissionAmount || 0),
+      0
+    );
+
+    const pendingEarnings = commissionPayments
+      .filter(
+        (commission) =>
+          commission.status === "pending" ||
+          commission.status === "approved"
+      )
+      .reduce(
+        (sum, commission) =>
+          sum + Number(commission.commissionAmount || 0),
+        0
+      );
+
+    const paidEarnings = commissionPayments
+      .filter(
+        (commission) =>
+          commission.status === "paid" ||
+          commission.status === "resolved"
+      )
+      .reduce(
+        (sum, commission) =>
+          sum + Number(commission.commissionAmount || 0),
+        0
+      );
+
+    const rejectedEarnings = commissionPayments
+      .filter(
+        (commission) => commission.status === "rejected"
+      )
+      .reduce(
+        (sum, commission) =>
+          sum + Number(commission.commissionAmount || 0),
+        0
+      );
+
+
+    /* =====================================================
        RESPONSE
-    ============================== */
+    ===================================================== */
 
     return res.status(200).json({
       success: true,
 
       summary: {
-        totalEarnings,
-        pendingEarnings,
-        paidEarnings,
+        totalEarnings: Number(totalEarnings.toFixed(2)),
+
+        pendingEarnings: Number(
+          pendingEarnings.toFixed(2)
+        ),
+
+        paidEarnings: Number(
+          paidEarnings.toFixed(2)
+        ),
+
+        rejectedEarnings: Number(
+          rejectedEarnings.toFixed(2)
+        ),
+
         totalReferrals,
+
         convertedReferrals:
           convertedReferrals.length,
-        conversionRate
+
+        conversionRate,
       },
 
-      earnings: convertedReferrals.map(r => ({
-        id: r._id,
+      earnings: commissionPayments.map(
+        (commission) => ({
+          id: commission._id,
 
-        organizationId: r.organizationId,
+          organizationId:
+            commission.organizationId?._id ||
+            commission.organizationId,
 
-        planName: r.planName,
+          organizationName:
+            commission.organizationId?.name ||
+            "N/A",
 
-        billingCycle: r.billingCycle,
+          organizationCode:
+            commission.organizationId?.orgCode ||
+            "N/A",
 
-        paymentAmount: r.paymentAmount,
+          planName: commission.planName,
 
-        paymentCurrency: r.paymentCurrency,
+          billingCycle:
+            commission.billingCycle,
 
-        commissionAmount: r.commissionAmount,
+          commissionType:
+            commission.commissionType,
 
-        commissionStatus: r.commissionStatus,
+          paymentAmount:
+            commission.paymentAmount,
 
-        convertedAt: r.convertedAt,
+          paymentCurrency:
+            commission.paymentCurrency,
 
-        createdAt: r.createdAt
-      }))
+          commissionRate:
+            commission.commissionRate,
+
+          commissionAmount:
+            commission.commissionAmount,
+
+          status:
+            commission.status,
+
+          payoutMethod:
+            commission.payoutMethod,
+
+          transactionId:
+            commission.transactionId,
+
+          paidAt:
+            commission.paidAt,
+
+          generatedAt:
+            commission.generatedAt,
+
+          createdAt:
+            commission.createdAt,
+        })
+      ),
     });
-
   } catch (error) {
-
-    console.error(error);
+    console.error(
+      "Affiliate earnings error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch earnings"
+      message: "Failed to fetch earnings",
     });
-
   }
 };
-
 module.exports =  {getAffiliateEarnings};
