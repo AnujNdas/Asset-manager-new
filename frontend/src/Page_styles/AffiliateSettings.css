@@ -1,415 +1,756 @@
-/* ==========================
-   PAGE
-========================== */
+/* =========================================================
+   AFFILIATE SETTINGS
+   ========================================================= */
 
 .affiliate-settings-page {
+  --affiliate-bg: #f4f7fb;
+  --affiliate-card: #ffffff;
+
+  --affiliate-primary: #303938;
+  --affiliate-primary-dark: #2448c8;
+  --affiliate-primary-soft: #eef3ff;
+
+  --affiliate-text: #1e293b;
+  --affiliate-text-secondary: #303938;
+
+  --affiliate-border: #e2e8f0;
+  --affiliate-input-bg: #f8fafc;
+
+  --affiliate-success: #16a34a;
+  --affiliate-success-bg: #ecfdf3;
+
+  --affiliate-warning: #d97706;
+  --affiliate-warning-bg: #fff7ed;
+
+  --affiliate-danger: #dc2626;
+  --affiliate-danger-bg: #fef2f2;
+
+  width: 100%;
+  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  padding: 28px 30px 40px;
+
+  background: var(--affiliate-bg);
+  color: var(--affiliate-text);
+
+  box-sizing: border-box;
 }
 
-/* ==========================
+.affiliate-settings-page *,
+.affiliate-settings-page *::before,
+.affiliate-settings-page *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
    HEADER
-========================== */
+   ========================================================= */
 
 .affiliate-settings-header {
-  padding: 10px 24px;
+  padding: 2px 2px 4px;
 }
 
 .affiliate-settings-header h1 {
-  margin: 0;
-  color: #DFD0B8;
-  font-size: 1.6rem;
+  margin: 0 0 6px;
+
+  color: var(--affiliate-text);
+
+  font-size: 24px;
+  line-height: 1.3;
+
   font-weight: 700;
 }
 
 .affiliate-settings-header p {
   margin: 0;
-  color: rgba(223, 208, 184, 0.8);
-  font-size: 0.95rem;
+  text-align: left;
+  color: var(--affiliate-text-secondary);
+
+  font-size: 13px;
+  line-height: 1.6;
 }
 
-/* ==========================
+
+/* =========================================================
    TABS
-========================== */
+   ========================================================= */
 
 .affiliate-settings-tabs {
+  width: 100%;
+
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #222831;
-  border: 1px solid #393E46;
-  border-radius: 14px;
-  padding: 8px;
+
+  gap: 6px;
+
+  padding: 6px;
+
+  background: var(--affiliate-card);
+
+  border: 1px solid var(--affiliate-border);
+  border-radius: 10px;
+
   overflow-x: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.affiliate-settings-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.affiliate-settings-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.affiliate-settings-tabs::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
 }
 
 .affiliate-settings-tab {
+  flex-shrink: 0;
+  width: 25%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 17px;
+
+  border-radius: 7px;
+
+  color: var(--affiliate-text-secondary);
+
   text-decoration: none;
-  color: #DFD0B8;
-  padding: 12px 20px;
-  border-radius: 10px;
+
+  font-size: 12px;
   font-weight: 600;
-  transition: 0.25s ease;
+
   white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .affiliate-settings-tab:hover {
-  background: #393E46;
+  background: #f8fafc;
+  color: var(--affiliate-text);
 }
 
 .affiliate-settings-tab.active {
-  background: #393E46;
+  background: var(--affiliate-primary);
   color: #DFD0B8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  box-shadow:
+    0 3px 8px rgba(49, 94, 251, 0.16);
 }
 
-/* ==========================
+
+/* =========================================================
    CONTENT
-========================== */
+   ========================================================= */
 
 .affiliate-settings-content {
+  width: 100%;
   min-height: 400px;
+
   display: flex;
   justify-content: center;
 }
 
-/* ==========================
+
+/* =========================================================
    SETTINGS CARD
-========================== */
+   ========================================================= */
 
 .affiliate-settings-card {
-  background: #222831;
-  border: 1px solid #393E46;
+  width: 100%;
+
   padding: 24px;
-  color: #DFD0B8;
-  width: 95%;
+
+  background: var(--affiliate-card);
+
+  border: 1px solid var(--affiliate-border);
+  border-radius: 10px;
+
+  color: var(--affiliate-text);
+
+  box-shadow:
+    0 4px 16px rgba(15, 23, 42, 0.035);
 }
 
 .affiliate-settings-card h2 {
-  color: #DFD0B8;
+  margin: 0;
+
+  color: var(--affiliate-text);
+
+  font-size: 18px;
+  line-height: 1.3;
+
+  font-weight: 700;
+}
+
+.affiliate-settings-card h3 {
+  color: var(--affiliate-text);
+}
+
+.affiliate-settings-card p {
+  color: var(--affiliate-text-secondary);
 }
 
 .affiliate-settings-card label {
-  color: #DFD0B8;
+  color: var(--affiliate-text);
 }
 
-/* ==========================
-   FORM FIELDS
-========================== */
 
-.affiliate-settings-card input,
-.affiliate-settings-card textarea,
-.affiliate-settings-card select {
-  width: 100%;
-  background: #393E46;
-  border: 1px solid #4b525d;
-  color: #DFD0B8;
-  border-radius: 10px;
-  padding: 12px 14px;
-}
-
-.affiliate-settings-card input:focus,
-.affiliate-settings-card textarea:focus,
-.affiliate-settings-card select:focus {
-  outline: none;
-  border-color: #DFD0B8;
-}
-
-.affiliate-settings-card input::placeholder,
-.affiliate-settings-card textarea::placeholder {
-  color: rgba(223, 208, 184, 0.6);
-}
-
-/* ==========================
-   BUTTON
-========================== */
-
-.save-settings-btn {
-  background: #DFD0B8;
-  color: #222831;
-  border: none;
-  padding: 12px 22px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.save-settings-btn:hover {
-  transform: translateY(-2px);
-}
-
-/* ==========================
-   MOBILE
-========================== */
-
-@media (max-width: 768px) {
-  .affiliate-settings-tabs {
-    width: 100%;
-  }
-
-  .affiliate-settings-tab {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-  }
-
-  .affiliate-settings-header {
-    padding: 18px;
-  }
-
-  .affiliate-settings-card {
-    padding: 18px;
-  }
-}
-/* ===========================
-   SETTINGS WRAPPER
-=========================== */
-
-.affiliate-settings-card {
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 24px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
-}
+/* =========================================================
+   SETTINGS HEADER
+   ========================================================= */
 
 .settings-header {
   margin-bottom: 24px;
 }
 
 .settings-header h2 {
-  font-size: 1.5rem;
+  margin: 0 0 6px;
+
+  color: var(--affiliate-text);
+
+  font-size: 19px;
+  line-height: 1.3;
+
   font-weight: 700;
-  margin-bottom: 6px;
 }
 
 .settings-header p {
-  color: #777;
-  font-size: 0.95rem;
+  margin: 0;
+
+  color: var(--affiliate-text-secondary);
+
+  font-size: 12px;
+  line-height: 1.6;
 }
 
-/* ===========================
-   GRID
-=========================== */
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
 
 .settings-grid {
+  width: 100%;
+
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
   gap: 18px;
+
   margin-bottom: 20px;
 }
 
-/* ===========================
+
+/* =========================================================
    FORM GROUP
-=========================== */
+   ========================================================= */
 
 .form-group {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
-  margin-bottom: 5px;
+
+  gap: 7px;
+
+  margin-bottom: 4px;
+}
+
+.form-group label {
+  color: var(--affiliate-text);
+
+  font-size: 11px;
+  font-weight: 600;
+
+  line-height: 1.4;
 }
 
 .form-group input,
 .form-group select,
-.form-group textarea {
+.form-group textarea,
+.affiliate-settings-card input,
+.affiliate-settings-card select,
+.affiliate-settings-card textarea {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  /* border: 1px solid #dcdcdc; */
-  font-size: 0.95rem;
-  /* background: #fff; */
-  transition: all 0.2s ease;
+  max-width: 100%;
+
+  padding: 11px 13px;
+
+  border: 1px solid var(--affiliate-border);
+  border-radius: 7px;
+
+  background: var(--affiliate-input-bg);
+
+  color: var(--affiliate-text);
+
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  box-sizing: border-box;
 }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 110px;
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.affiliate-settings-card input::placeholder,
+.affiliate-settings-card textarea::placeholder {
+  color: #94a3b8;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #cbd5e1;
 }
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.affiliate-settings-card input:focus,
+.affiliate-settings-card select:focus,
+.affiliate-settings-card textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 2px #DFD0B8;
+
+  border-color: var(--affiliate-primary);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(49, 94, 251, 0.09);
 }
 
-/* ===========================
-   READONLY SECTION
-=========================== */
+.form-group textarea {
+  min-height: 110px;
 
-.settings-readonly {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-  margin-top: 24px;
-  margin-bottom: 24px;
+  resize: vertical;
 }
 
-.settings-readonly label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #666;
-}
 
-.settings-readonly input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-}
-
-/* ===========================
-   TOGGLE ROW
-=========================== */
-
-.toggle-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 24px 0;
-  padding: 16px;
-  background: #393E46;
-  border-radius: 14px;
-}
-
-.toggle-row span {
-  font-weight: 600;
-}
-
-.toggle-row input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-}
-
-/* ===========================
-   SAVE BUTTON
-=========================== */
-
-.save-settings-btn {
-  border: none;
-  background: #DFD0B8;
-  color: #222831;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.save-settings-btn:hover {
-  transform: translateY(-1px);
-  background: #4338ca;
-}
-
-.save-settings-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ===========================
-   PAYOUT METHOD SELECT
-=========================== */
+/* =========================================================
+   SELECT
+   ========================================================= */
 
 .affiliate-settings-card select {
   cursor: pointer;
 }
 
-/* ===========================
-   RESPONSIVE
-=========================== */
+.affiliate-settings-card select option {
+  color: var(--affiliate-text);
+  background: #ffffff;
+}
 
-/* ==========================
+
+/* =========================================================
+   READONLY SECTION
+   ========================================================= */
+
+.settings-readonly {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-top: 24px;
+  margin-bottom: 24px;
+
+  overflow: hidden;
+}
+
+.settings-readonly > div {
+  min-width: 0;
+}
+
+.settings-readonly label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: var(--affiliate-text);
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.settings-readonly input {
+  width: 100%;
+  max-width: 100%;
+
+  padding: 11px 13px;
+
+  border: 1px solid var(--affiliate-border);
+  border-radius: 7px;
+
+  background: #f1f5f9;
+
+  color: var(--affiliate-text-secondary);
+
+  font-family: inherit;
+  font-size: 12px;
+
+  cursor: not-allowed;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TOGGLE ROW
+   ========================================================= */
+
+.toggle-row {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin: 24px 0;
+
+  padding: 15px 16px;
+
+  background: #f8fafc;
+
+  border: 1px solid var(--affiliate-border);
+  border-radius: 9px;
+
+  box-sizing: border-box;
+}
+
+.toggle-row span {
+  color: var(--affiliate-text);
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.toggle-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  accent-color: var(--affiliate-primary);
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+.save-settings-btn {
+  min-height: 40px;
+
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 7px;
+
+  background: var(--affiliate-primary);
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.save-settings-btn:hover {
+  background: var(--affiliate-primary-dark);
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 14px rgba(49, 94, 251, 0.18);
+}
+
+.save-settings-btn:active {
+  transform: translateY(0);
+}
+
+.save-settings-btn:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   STATUS / INFORMATION HELPERS
+   ========================================================= */
+
+.settings-success {
+  color: var(--affiliate-success);
+}
+
+.settings-warning {
+  color: var(--affiliate-warning);
+}
+
+.settings-danger {
+  color: var(--affiliate-danger);
+}
+
+.settings-info-box {
+  padding: 13px 15px;
+
+  background: var(--affiliate-primary-soft);
+
+  border: 1px solid #dbe5ff;
+  border-radius: 8px;
+
+  color: var(--affiliate-primary);
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   PAYOUT METHOD SECTION
+   ========================================================= */
+
+.payout-method-section {
+  margin-top: 24px;
+  padding-top: 22px;
+
+  border-top: 1px solid var(--affiliate-border);
+}
+
+.payout-method-section h3 {
+  margin: 0 0 5px;
+
+  color: var(--affiliate-text);
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.payout-method-section p {
+  margin: 0 0 17px;
+
+  color: var(--affiliate-text-secondary);
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   PAYOUT DETAILS
+   ========================================================= */
+
+.payout-details {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+
+  margin-top: 17px;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.settings-divider {
+  width: 100%;
+
+  height: 1px;
+
+  margin: 24px 0;
+
+  background: var(--affiliate-border);
+}
+
+
+/* =========================================================
    LARGE TABLETS
-========================== */
+   ========================================================= */
 
 @media (max-width: 1024px) {
-
-  .affiliate-settings-content {
-    width: 100%;
+  .affiliate-settings-page {
+    padding: 24px 22px 35px;
   }
 
   .affiliate-settings-card {
-    width: 100%;
-    padding: 20px;
+    padding: 21px;
   }
 
   .settings-grid,
-  .settings-readonly {
+  .settings-readonly,
+  .payout-details {
     grid-template-columns: 1fr;
   }
 }
 
-/* ==========================
+
+/* =========================================================
    TABLETS
-========================== */
+   ========================================================= */
 
 @media (max-width: 768px) {
-
   .affiliate-settings-page {
     gap: 16px;
+
+    padding: 20px 16px 30px;
   }
 
   .affiliate-settings-header {
-    padding: 12px 16px;
+    padding: 0;
   }
 
   .affiliate-settings-header h1 {
-    font-size: 1.35rem;
+    font-size: 21px;
   }
 
   .affiliate-settings-header p {
-    font-size: 0.9rem;
+    font-size: 12px;
   }
 
   .affiliate-settings-tabs {
-    padding: 6px;
-    gap: 6px;
+    padding: 5px;
+
+    gap: 4px;
+
+    border-radius: 9px;
   }
 
   .affiliate-settings-tab {
-    padding: 10px 14px;
-    font-size: 0.9rem;
+    padding: 9px 14px;
+
+    font-size: 11px;
   }
 
   .affiliate-settings-card {
-    padding: 16px;
+    padding: 18px;
+
+    border-radius: 9px;
+  }
+
+  .settings-header {
+    margin-bottom: 20px;
+  }
+
+  .settings-header h2 {
+    font-size: 17px;
+  }
+
+  .settings-header p {
+    font-size: 11px;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .settings-readonly {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea,
+  .affiliate-settings-card input,
+  .affiliate-settings-card select,
+  .affiliate-settings-card textarea {
+    padding: 10px 12px;
+
+    font-size: 12px;
   }
 
   .toggle-row {
-    flex-direction: column;
     align-items: flex-start;
+
+    padding: 13px;
+
     gap: 12px;
+  }
+
+  .toggle-row input[type="checkbox"] {
+    width: 19px;
+    height: 19px;
   }
 
   .save-settings-btn {
     width: 100%;
   }
-
-  .settings-readonly input {
-    font-size: 0.9rem;
-  }
 }
 
-/* ==========================
+
+/* =========================================================
    MOBILE
-========================== */
+   ========================================================= */
 
 @media (max-width: 576px) {
+  .affiliate-settings-page {
+    padding: 16px 12px 25px;
+  }
 
   .affiliate-settings-header h1 {
-    font-size: 1.2rem;
+    font-size: 19px;
   }
 
   .affiliate-settings-header p {
-    font-size: 0.85rem;
+    font-size: 11px;
   }
 
   .affiliate-settings-tabs {
     overflow-x: auto;
+
     scrollbar-width: none;
   }
 
@@ -419,86 +760,171 @@
 
   .affiliate-settings-tab {
     flex-shrink: 0;
-    min-width: 120px;
+
+    min-width: 105px;
+
+    padding: 9px 12px;
+
+    font-size: 11px;
+
     text-align: center;
   }
 
   .affiliate-settings-card {
-    padding: 14px;
-    border-radius: 14px;
+    padding: 15px;
+
+    border-radius: 9px;
   }
 
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 10px 12px;
-    font-size: 14px;
+  .settings-header {
+    margin-bottom: 18px;
   }
 
   .settings-header h2 {
-    font-size: 1.1rem;
+    font-size: 16px;
   }
 
   .settings-header p {
-    font-size: 0.85rem;
+    font-size: 10px;
   }
 
-  .save-settings-btn {
-    padding: 12px;
-    font-size: 14px;
-  }
-}
-
-/* ==========================
-   EXTRA SMALL DEVICES
-========================== */
-
-@media (max-width: 400px) {
-
-  .affiliate-settings-header h1 {
-    font-size: 1rem;
+  .form-group {
+    gap: 6px;
   }
 
-  .affiliate-settings-tab {
-    min-width: 100px;
-    padding: 8px 10px;
-    font-size: 13px;
-  }
-
-  .affiliate-settings-card {
-    padding: 12px;
-  }
-
-  .form-group label {
-    font-size: 13px;
+  .form-group label,
+  .settings-readonly label {
+    font-size: 10px;
   }
 
   .form-group input,
   .form-group select,
+  .form-group textarea,
+  .affiliate-settings-card input,
+  .affiliate-settings-card select,
+  .affiliate-settings-card textarea {
+    padding: 10px 11px;
+
+    font-size: 11px;
+
+    border-radius: 7px;
+  }
+
   .form-group textarea {
-    font-size: 13px;
+    min-height: 100px;
+  }
+
+  .settings-readonly input {
+    padding: 10px 11px;
+
+    font-size: 11px;
+  }
+
+  .toggle-row {
+    margin: 20px 0;
+
+    padding: 12px;
+
+    border-radius: 8px;
+  }
+
+  .toggle-row span {
+    font-size: 11px;
   }
 
   .save-settings-btn {
-    font-size: 13px;
+    min-height: 39px;
+
+    padding: 0 14px;
+
+    font-size: 11px;
+  }
+
+  .payout-method-section {
+    margin-top: 20px;
+    padding-top: 18px;
+  }
+
+  .payout-method-section h3 {
+    font-size: 14px;
+  }
+
+  .payout-method-section p {
+    font-size: 10px;
   }
 }
 
-/* ==========================
-   LONG TEXT FIXES
-========================== */
 
-.settings-readonly input,
-.form-group input,
-.form-group textarea {
+/* =========================================================
+   EXTRA SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 400px) {
+  .affiliate-settings-page {
+    padding: 13px 9px 22px;
+  }
+
+  .affiliate-settings-header h1 {
+    font-size: 17px;
+  }
+
+  .affiliate-settings-header p {
+    font-size: 10px;
+  }
+
+  .affiliate-settings-tab {
+    min-width: 92px;
+
+    padding: 8px 9px;
+
+    font-size: 10px;
+  }
+
+  .affiliate-settings-card {
+    padding: 13px;
+  }
+
+  .settings-header h2 {
+    font-size: 15px;
+  }
+
+  .form-group label,
+  .settings-readonly label {
+    font-size: 10px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea,
+  .affiliate-settings-card input,
+  .affiliate-settings-card select,
+  .affiliate-settings-card textarea {
+    font-size: 10px;
+  }
+
+  .save-settings-btn {
+    min-height: 38px;
+
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================================
+   LONG TEXT / OVERFLOW PROTECTION
+   ========================================================= */
+
+.affiliate-settings-card input,
+.affiliate-settings-card textarea,
+.settings-readonly input {
+  overflow-wrap: anywhere;
   word-break: break-word;
-  overflow-wrap: break-word;
 }
 
-.settings-readonly {
+.affiliate-settings-card textarea {
+  overflow-x: hidden;
+}
+
+.affiliate-settings-card {
   overflow: hidden;
-}
-
-.affiliate-settings-card * {
-  box-sizing: border-box;
 }

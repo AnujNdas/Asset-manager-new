@@ -6,7 +6,7 @@
   --affiliate-bg: #f4f7fb;
   --affiliate-card: #ffffff;
 
-  --affiliate-primary: #315efb;
+  --affiliate-primary: #303938;
   --affiliate-primary-dark: #2448c8;
   --affiliate-primary-soft: #eef3ff;
 
@@ -325,7 +325,7 @@
   border-radius: 7px;
 
   background: var(--affiliate-primary);
-  color: #ffffff;
+  color: #DFD0B8;
 
   font-family: inherit;
 
@@ -341,7 +341,7 @@
 }
 
 .copy-btn:hover {
-  background: var(--affiliate-primary-dark);
+  background: var(--affiliate-primary);
 
   transform: translateY(-1px);
 
@@ -368,18 +368,18 @@
   margin-bottom: 32px;
 }
 
-.stat-card {
+.stat-card-affiliate {
   min-height: 135px;
 
   padding: 19px;
-
+  background: #f4f7fb;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
 }
 
-.stat-card > svg {
+.stat-card-affiliate > svg {
   width: 17px;
   height: 17px;
 

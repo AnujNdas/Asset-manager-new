@@ -251,7 +251,7 @@ const AffiliateDashboard = () => {
 
       <div className="kpi-grid">
 
-        <div className="dashboard-card stat-card">
+        <div className="dashboard-card stat-card-affiliate">
           <FaMousePointer />
 
           <h2>
@@ -264,7 +264,7 @@ const AffiliateDashboard = () => {
         </div>
 
 
-        <div className="dashboard-card stat-card">
+        <div className="dashboard-card stat-card-affiliate">
           <FaUsers />
 
           <h2>
@@ -277,7 +277,7 @@ const AffiliateDashboard = () => {
         </div>
 
 
-        <div className="dashboard-card stat-card">
+        <div className="dashboard-card stat-card-affiliate">
           <FaChartLine />
 
           <h2>
@@ -290,7 +290,7 @@ const AffiliateDashboard = () => {
         </div>
 
 
-        <div className="dashboard-card stat-card">
+        <div className="dashboard-card stat-card-affiliate">
 
           <FaChartLine />
 

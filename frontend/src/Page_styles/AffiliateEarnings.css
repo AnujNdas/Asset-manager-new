@@ -5,7 +5,7 @@
 .affiliate-earnings-page {
   --affiliate-bg: #f4f7fb;
   --affiliate-card: #ffffff;
-  --affiliate-primary: #315efb;
+  --affiliate-primary: #303938;
   --affiliate-primary-dark: #2448c8;
   --affiliate-primary-soft: #eef3ff;
 
@@ -98,7 +98,7 @@
   border-radius: 8px;
 
   background: var(--affiliate-primary);
-  color: #ffffff;
+  color: #DFD0B8;
 
   font-size: 13px;
   font-weight: 600;
