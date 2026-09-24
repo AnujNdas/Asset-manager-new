@@ -1,7 +1,7 @@
-const AffiliateProfile = require("../models/AffiliateProfile");
-const AffiliateReferral = require("../models/AffiliateReferral");
-const AffiliateCommissionPayment = require("../models/AffiliateCommissionPayment");
-const AffiliatePaymentTicket = require("../models/AffiliatePaymentTicket");
+const AffiliateProfile = require("../../models/AffiliateProfile");
+const AffiliateReferral = require("../../models/AffiliateReferral");
+const AffiliateCommissionPayment = require("../../models/AffiliateCommissionPayment");
+const AffiliatePaymentTicket = require("../../models/AffiliatePaymentTicket");
 const asyncHandler = require("../../utils/asyncHandler");
 const AppError = require("../../utils/AppError");
 
