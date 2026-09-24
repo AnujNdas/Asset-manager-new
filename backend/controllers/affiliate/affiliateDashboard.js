@@ -1,6 +1,6 @@
 const AffiliateProfile = require("../../models/AffiliateProfile");
 const AffiliateReferral = require("../../models/AffiliateReferral");
-
+const AffiliateCommissionPayment = require("../../models/AffiliateCommissionPayment")
 const asyncHandler = require("../../utils/asyncHandler");
 const AppError = require("../../utils/AppError");
 

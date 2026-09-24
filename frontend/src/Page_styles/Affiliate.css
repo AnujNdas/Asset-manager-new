@@ -1,15 +1,30 @@
 .affiliate-layout {
   display: flex;
   height: 100vh;
-  background: #393E46;
+  background: #f4f7fb;
   color: #DFD0B8;
 }
 
+
 .affiliate-sidebar {
-  width: 260px;
-  background: #222831;
+  width: 220px;
+  background: #303938;
   padding: 24px;
   height: 100vh;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+}
+.affiliate-logo { 
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f4f7fb;
+}
+.affiliate-logo h2 {
+  font-size: 20px;
+  margin: 0;
 }
 
 .affiliate-nav {
@@ -24,15 +39,22 @@
   padding: 12px 14px;
   border-radius: 10px;
   transition: 0.2s;
+  font-weight: 600;
+  display: flex;
+  gap: 10px;
+  transition: 0.6s;
 }
 
 .affiliate-nav a:hover {
-  background: #1e293b;
+  background: #DFD0B8;
+  color: #303938;
+  transform: scale(1.05);
 }
 
 .affiliate-nav .active {
   background: #DFD0B8;
-  color: #222831;
+  color: #303938;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 }
 
 .affiliate-content {
