@@ -10,132 +10,422 @@ const PLAN_PRICING = {
 
 const getOverview = async (req, res) => {
   try {
-    /* ===============================
+    /* =====================================================
+       ACTIVE USER WINDOW
+    ===================================================== */
+
+    const activeSince = new Date();
+    activeSince.setDate(activeSince.getDate() - 30);
+
+
+    /* =====================================================
        PLATFORM SNAPSHOT
-    =============================== */
+    ===================================================== */
+
     const [
       totalOrganizations,
       activeOrganizations,
       totalUsers,
       activeUsers,
+      totalAffiliates,
+      pendingAffiliates,
     ] = await Promise.all([
+
       Organization.countDocuments(),
-      Organization.countDocuments({ status: "active" }),
+
+      Organization.countDocuments({
+        status: "active",
+      }),
+
       User.countDocuments(),
-      User.countDocuments({ isActive: true }),
+
+      User.countDocuments({
+        role: { $ne: "affiliate" },
+        lastActive: {
+          $gte: activeSince,
+        },
+      }),
+
+      User.countDocuments({
+        role: "affiliate",
+      }),
+
+      AffiliateProfile.countDocuments({
+        status: "pending",
+      }),
     ]);
 
-    /* ===============================
+
+    /* =====================================================
        SUBSCRIPTION COUNTS
-    =============================== */
-    const subscriptionCounts = await Subscription.aggregate([
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 },
+    ===================================================== */
+
+    const subscriptionCounts =
+      await Subscription.aggregate([
+        {
+          $group: {
+            _id: "$status",
+            count: {
+              $sum: 1,
+            },
+          },
         },
-      },
-    ]);
+      ]);
+
 
     const subscriptions = {
-      trial: 0,
+      trialing: 0,
       active: 0,
+      paused: 0,
+      pastDue: 0,
+      cancelled: 0,
       expired: 0,
     };
 
+
     subscriptionCounts.forEach((item) => {
-      if (item._id === "trialing") subscriptions.trial = item.count;
-      if (item._id === "active") subscriptions.active = item.count;
-      if (item._id === "expired") subscriptions.expired = item.count;
+
+      switch (item._id) {
+
+        case "trialing":
+          subscriptions.trialing = item.count;
+          break;
+
+        case "active":
+          subscriptions.active = item.count;
+          break;
+
+        case "paused":
+          subscriptions.paused = item.count;
+          break;
+
+        case "past_due":
+          subscriptions.pastDue = item.count;
+          break;
+
+        case "cancelled":
+          subscriptions.cancelled = item.count;
+          break;
+
+        case "expired":
+          subscriptions.expired = item.count;
+          break;
+
+      }
+
     });
 
-    /* ===============================
-       REVENUE (MONTH-WISE)
-    =============================== */
-    const revenueByMonth = await Subscription.aggregate([
-      {
-        $match: {
-          status: "active",
-          plan: { $in: ["basic", "pro"] },
-        },
-      },
-      {
-        $addFields: {
-          revenue: {
-            $cond: [
-              { $eq: ["$plan", "basic"] },
-              PLAN_PRICING.basic,
-              PLAN_PRICING.pro,
-            ],
+
+    /* =====================================================
+       REVENUE
+    ===================================================== */
+
+    const revenueByMonth =
+      await Subscription.aggregate([
+
+        {
+          $match: {
+            status: "active",
+            lastPaymentAmount: {
+              $gt: 0,
+            },
           },
         },
-      },
-      {
-        $group: {
-          _id: {
-            year: { $year: "$createdAt" },
-            month: { $month: "$createdAt" },
+
+        {
+          $group: {
+
+            _id: {
+              year: {
+                $year: "$lastPaymentDate",
+              },
+
+              month: {
+                $month: "$lastPaymentDate",
+              },
+            },
+
+            total: {
+              $sum: "$lastPaymentAmount",
+            },
+
           },
-          total: { $sum: "$revenue" },
         },
-      },
-      {
-        $sort: { "_id.year": 1, "_id.month": 1 },
-      },
-      {
-        $project: {
-          _id: 0,
-          month: {
-            $concat: [
-              {
-                $arrayElemAt: [
-                  [
-                    "",
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
+
+        {
+          $sort: {
+            "_id.year": 1,
+            "_id.month": 1,
+          },
+        },
+
+        {
+          $project: {
+
+            _id: 0,
+
+            month: {
+              $concat: [
+
+                {
+                  $arrayElemAt: [
+                    [
+                      "",
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ],
+                    "$_id.month",
                   ],
-                  "$_id.month",
+                },
+
+                " ",
+
+                {
+                  $toString: "$_id.year",
+                },
+
+              ],
+            },
+
+            total: 1,
+          },
+        },
+
+      ]);
+
+
+    /* =====================================================
+       TOTAL REVENUE
+    ===================================================== */
+
+    const revenueSummary =
+      await Subscription.aggregate([
+
+        {
+          $match: {
+            status: {
+              $in: [
+                "active",
+                "cancelled",
+                "expired",
+              ],
+            },
+
+            lastPaymentAmount: {
+              $gt: 0,
+            },
+          },
+        },
+
+        {
+          $group: {
+
+            _id: null,
+
+            totalRevenue: {
+              $sum: "$lastPaymentAmount",
+            },
+
+            monthlyRecurringRevenue: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: [
+                      "$billingCycle",
+                      "monthly",
+                    ],
+                  },
+                  "$planPrice",
+                  0,
                 ],
               },
-              " ",
-              { $toString: "$_id.year" },
-            ],
-          },
-          total: 1,
-        },
-      },
-    ]);
+            },
 
-    /* ===============================
+          },
+        },
+
+      ]);
+
+
+    const revenue = {
+
+      totalRevenue:
+        revenueSummary[0]?.totalRevenue || 0,
+
+      monthlyRecurringRevenue:
+        revenueSummary[0]?.monthlyRecurringRevenue || 0,
+
+      revenueByMonth,
+
+    };
+
+
+    /* =====================================================
+       ORGANIZATION TYPES
+    ===================================================== */
+
+    const organizationTypes =
+      await Organization.aggregate([
+
+        {
+          $group: {
+
+            _id: "$organizationType",
+
+            count: {
+              $sum: 1,
+            },
+
+          },
+        },
+
+        {
+          $sort: {
+            count: -1,
+          },
+        },
+
+      ]);
+
+
+    /* =====================================================
+       BILLING CYCLES
+    ===================================================== */
+
+    const billingCycles =
+      await Subscription.aggregate([
+
+        {
+          $match: {
+            status: "active",
+          },
+        },
+
+        {
+          $group: {
+
+            _id: "$billingCycle",
+
+            count: {
+              $sum: 1,
+            },
+
+          },
+        },
+
+      ]);
+
+
+    /* =====================================================
+       EXPIRING SUBSCRIPTIONS
+       NEXT 7 DAYS
+    ===================================================== */
+
+    const now = new Date();
+
+    const sevenDaysLater = new Date();
+    sevenDaysLater.setDate(
+      sevenDaysLater.getDate() + 7
+    );
+
+
+    const expiringSubscriptions =
+      await Subscription.countDocuments({
+
+        status: "active",
+
+        currentEnd: {
+          $gte: now,
+          $lte: sevenDaysLater,
+        },
+
+      });
+
+
+    /* =====================================================
+       RECENT ORGANIZATIONS
+    ===================================================== */
+
+    const recentOrganizations =
+      await Organization.find()
+
+        .sort({
+          createdAt: -1,
+        })
+
+        .limit(5)
+
+        .select(
+          "name orgCode organizationType status createdAt"
+        )
+
+        .lean();
+
+
+    /* =====================================================
        RESPONSE
-    =============================== */
+    ===================================================== */
+
     res.status(200).json({
+
       success: true,
+
       data: {
+
         totalOrganizations,
+
         activeOrganizations,
+
         totalUsers,
+
         activeUsers,
+
+        totalAffiliates,
+
+        pendingAffiliates,
+
         subscriptions,
-        revenueByMonth,
+
+        revenue,
+
+        organizationTypes,
+
+        billingCycles,
+
+        expiringSubscriptions,
+
+        recentOrganizations,
+
       },
+
     });
+
   } catch (error) {
-    console.error("Super Admin Dashboard Error:", error);
+
+    console.error(
+      "Super Admin Dashboard Error:",
+      error
+    );
+
     res.status(500).json({
+
       success: false,
-      message: "Failed to load dashboard data",
+
+      message:
+        "Failed to load dashboard data",
+
     });
+
   }
 };
 
