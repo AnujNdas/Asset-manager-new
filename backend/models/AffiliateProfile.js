@@ -35,6 +35,34 @@ const AffiliateProfileSchema = new mongoose.Schema(
       default: "pending",
       index: true,
     },
+    // 🔹 Approval Audit
+approvedAt: {
+  type: Date,
+  default: null,
+},
+
+approvedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  default: null,
+},
+
+rejectedAt: {
+  type: Date,
+  default: null,
+},
+
+rejectedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  default: null,
+},
+
+rejectionReason: {
+  type: String,
+  default: "",
+  trim: true,
+},
 
     // 🔹 Basic Profile
     fullName: {

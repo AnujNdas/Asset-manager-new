@@ -1,92 +1,183 @@
-/* ===== Page Title ===== */
-h1 {
-  font-size: 22px;
+/* ================= PAGE CONTAINER & TYPOGRAPHY ================= */
+.settings-container {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: inherit;
+  color: #1f2937;
+}
+
+.settings-header h1 {
+  font-size: 24px;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 24px;
+  margin: 0 0 4px 0;
 }
 
-/* ===== Section Card ===== */
-.sa-section {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 520px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-  margin-bottom: 24px;
+.settings-header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
 }
 
-/* ===== Field Wrapper ===== */
-.field {
+/* ================= TAB NAVIGATION ================= */
+.settings-tabs {
   display: flex;
-  align-items: center;
   gap: 12px;
-  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
-.field:last-child {
-  border-bottom: none;
-}
-
-/* ===== Checkbox Styling ===== */
-.field.checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.field.checkbox label {
+.tab-btn {
+  padding: 10px 24px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: #111827;
-  cursor: pointer;
-}
-
-/* ===== Primary Button ===== */
-.btn-primary {
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 8px;
   border: none;
-  background-color: #2563eb;
-  color: #ffffff;
   cursor: pointer;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
+  background-color: #6c5ce7; /* Matching dashboard purple */
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
 }
 
-.btn-primary:hover {
-  background-color: #1d4ed8;
+.tab-btn:hover {
+  background-color: #5b4cdb;
 }
 
-.btn-primary:disabled {
+.tab-btn.active {
+  background-color: #000000; /* Active state matching image black pill */
+  color: #ffffff;
+}
+
+/* ================= CONTENT CARD PANEL ================= */
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  margin-bottom: 24px;
+}
+
+.settings-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* ================= FORM FIELDS & INPUTS ================= */
+.field-group {
+  margin-bottom: 20px;
+}
+
+.field-group.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.field-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6c5ce7;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.field-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+}
+
+.field-hint {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.field-group.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 400px;
+}
+
+.field-group.input-field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.field-group input[type="text"],
+.field-group input[type="number"],
+.field-group select {
+  padding: 10px 14px;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field-group input:focus,
+.field-group select:focus {
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+  background-color: #ffffff;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* ================= SAVE ACTION BUTTON ================= */
+.btn-save {
+  padding: 10px 24px;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #1f2937;
+}
+
+.btn-save:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* ===== Loading & Error Text ===== */
-h2 {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 20px;
+/* ================= RESPONSIVE DESIGN ================= */
+@media (max-width: 640px) {
+  .settings-container {
+    padding: 16px;
+  }
+  
+  .settings-tabs {
+    gap: 8px;
   }
 
-  .sa-section {
-    padding: 20px;
-  }
-
-  .btn-primary {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .field.checkbox label {
-    font-size: 13px;
+  .tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
   }
 }

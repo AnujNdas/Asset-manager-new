@@ -203,3 +203,10 @@ export const rejectAffiliatePaymentTicket = async (
 
   return response;
 };
+export const approveAffiliateStatus = async ( ) => {
+  const response = await axiosInstance.patch(
+    "/super-admin/settings/update",
+  );
+
+  return response;
+};
