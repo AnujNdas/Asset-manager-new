@@ -151,9 +151,34 @@ const resolveAffiliateTicket =
         "Ticket resolved successfully",
     });
   });
+
+  const getAllAffiliates = async (req, res) => {
+  try {
+    const { status } = req.query; // e.g., ?status=pending
+    const filter = status ? { status } : {};
+
+    const affiliates = await AffiliateProfile.find(filter)
+      .populate("userId", "username email role lastActive")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: affiliates.length,
+      data: affiliates,
+    });
+  } catch (error) {
+    console.error("Error fetching affiliates:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching affiliates.",
+      error: error.message,
+    });
+  }
+};
 module.exports = {
   getSettings,
   updateSettings,
   resolveAffiliateTicket,
-  updateAffiliateStatus
+  updateAffiliateStatus,
+  getAllAffiliates
 };

@@ -203,10 +203,15 @@ export const rejectAffiliatePaymentTicket = async (
 
   return response;
 };
-export const approveAffiliateStatus = async ( ) => {
-  const response = await axiosInstance.patch(
-    "/super-admin/settings/update",
-  );
+export const approveAffiliateStatus = async (id, statusData) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/super-admin/settings/update/${id}/status`,
+      statusData // Pass the body data (e.g., { status: 'approved' } or { status: 'rejected', rejectionReason: '...' })
+    );
 
-  return response;
+    return response // Usually you want to return just the data payload from Axios
+  } catch (error) {
+    throw error.response?.data || error;
+  }
 };
