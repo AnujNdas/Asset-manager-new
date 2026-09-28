@@ -1,7 +1,7 @@
 const Organization = require("../../models/Organization");
 const User = require("../../models/User");
 const Subscription = require("../../models/Subscription");
-
+const AffiliateProfile = require("../../models/AffiliateProfile")
 // TEMP pricing config (move to DB/config later)
 const PLAN_PRICING = {
   basic: 999,
