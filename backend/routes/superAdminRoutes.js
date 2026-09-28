@@ -34,7 +34,7 @@ router.patch("/organizations/:id/status", authenticateToken(["super-admin"]), to
 
 /* ================= SETTINGS ================= */
 router.get("/settings", authenticateToken(["super-admin"]), getSettings);
-router.get("/settings/update", authenticateToken(["super-admin"]), updateAffiliateStatus);
+router.patch("/settings/update/:id/status", authenticateToken(["super-admin"]), updateAffiliateStatus);
 router.put("/settings", authenticateToken(["super-admin"]), updateSettings);
 // router.get(
 //   "/analytics/ga",
