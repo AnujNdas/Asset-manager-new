@@ -232,7 +232,7 @@ export const getAffiliates = async (statusFilter = "") => {
 
 export const superAdminLogin = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/superadminlogin`, { email, password });
+    const response = await axios.post(`${API_URL}/super-admin-login`, { email, password });
     return response.data;
   }
     catch (error) {
