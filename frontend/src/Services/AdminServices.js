@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 import axios from 'axios';
-const API_URL = `${process.env.REACT_APP_API_URL}/api/auth`;
+const API_URL = `${process.env.REACT_APP_API_URL}/api`;
 /* =====================================================
    SUPER ADMIN – DASHBOARD
 ===================================================== */
@@ -232,7 +232,7 @@ export const getAffiliates = async (statusFilter = "") => {
 
 export const superAdminLogin = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/super-admin-login`, { email, password });
+    const response = await axios.post(`${API_URL}/super-admin/login`, { email, password });
     return response.data;
   }
     catch (error) {
