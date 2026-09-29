@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const { getClientIp } = require("../../utils/ipUtils"); // Adjust path to your IP utility
 const LoginActivity = require("../../models/LoginActivity"); // Adjust path
-const sendNotification = require("../../utils/notificationUtils"); // Adjust path
+const sendNotification = require("../../utils/notify"); // Adjust path
 
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
