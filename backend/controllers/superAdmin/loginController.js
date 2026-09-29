@@ -1,10 +1,10 @@
-const User = require("../models/User"); // Adjust path to your User model
+const User = require("../../models/User"); // Adjust path to your User model
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const { getClientIp } = require("../utils/ipUtils"); // Adjust path to your IP utility
-const LoginActivity = require("../models/LoginActivity"); // Adjust path
-const sendNotification = require("../utils/notificationUtils"); // Adjust path
+const { getClientIp } = require("../../utils/ipUtils"); // Adjust path to your IP utility
+const LoginActivity = require("../../models/LoginActivity"); // Adjust path
+const sendNotification = require("../../utils/notificationUtils"); // Adjust path
 
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
