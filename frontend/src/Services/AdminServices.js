@@ -1,5 +1,6 @@
 import axiosInstance from "./axiosInstance";
-
+import axios from 'axios';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/auth`;
 /* =====================================================
    SUPER ADMIN – DASHBOARD
 ===================================================== */
@@ -212,6 +213,29 @@ export const approveAffiliateStatus = async (id, statusData) => {
 
     return response // Usually you want to return just the data payload from Axios
   } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+// Services/AdminServices.js
+
+export const getAffiliates = async (statusFilter = "") => {
+  try {
+    // If statusFilter is provided (e.g., 'pending'), it appends ?status=pending
+    const query = statusFilter ? `?status=${statusFilter}` : "";
+    const response = await axiosInstance.get(`/super-admin/settings/affiliates${query}`);
+    return response.data; // Returns { success, count, data }
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const superAdminLogin = async (email, password) => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+    return response.data;
+  }
+    catch (error) {
     throw error.response?.data || error;
   }
 };

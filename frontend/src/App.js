@@ -37,6 +37,9 @@ import BlogPage from "./Pages/LandingPage/BlogPage";
 
 const Login = lazy(() => import("./Inner_sections/Login"));
 const Signup = lazy(() => import("./Inner_sections/Signup"));
+const SuperAdminLogin = lazy(() =>
+  import("./Components/Super-admin/SuperAdminLogin")
+);
 const ForgotPassword = lazy(() =>
   import("./Inner_sections/ForgetPass")
 );
@@ -238,7 +241,19 @@ const App = () => {
               </SuspenseWrapper>
             }
           />
-
+          {/* =========================
+              PRIVATE SUPER ADMIN LOGIN
+          ========================== */}
+          <Route
+            path="/secure-system-access/super-admin/auth"
+            element={
+              <SuspenseWrapper>
+                <SuperAdminLogin
+                  setProfileUser={setProfileUser}
+                />
+              </SuspenseWrapper>
+            }
+          />
           {/* =========================
               TENANT ROUTES
           ========================== */}

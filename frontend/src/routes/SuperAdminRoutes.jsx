@@ -8,6 +8,7 @@ import RevenuePage from "../Pages/super-admin/Revenue";
 import ReferralsPage from "../Pages/super-admin/Referral";
 import SubscriptionsPage from "../Pages/super-admin/Subscription";
 import AffiliateCommissionPayments from "../Pages/super-admin/AffiliateCommisionPayment";
+import Loader from "../Components/Super-admin/Loader";
 
 const Dashboard = lazy(() => import("../Pages/super-admin/SuperAdminDashboard"));
 const Tenants = lazy(() => import("../Pages/super-admin/Tenant"));
@@ -33,7 +34,7 @@ const SuperAdminRoutes = () => (
       <Route
         path="organizations"
         element={
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loader />}>
             <Tenants />
           </Suspense>
         }
@@ -71,7 +72,7 @@ const SuperAdminRoutes = () => (
       <Route
         path="activity"
         element={
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loader />}>
             <LoginActivity />
           </Suspense>
         }

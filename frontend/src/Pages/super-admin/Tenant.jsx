@@ -5,6 +5,7 @@ import {
   toggleOrganizationStatus
 } from "../../Services/AdminServices";
 import "../../Page_styles/Tenant.css";
+import Loader from "../../Components/Super-admin/Loader";
 import OrganizationModal from "../../Components/OrganizationModal";
 const Tenants = () => {
   const [tenants, setTenants] = useState([]);
@@ -46,7 +47,7 @@ const handleToggleStatus = async (org) => {
     fetchTenants();
   }, []);
 
-  if (loading) return <h2>Loading organizations...</h2>;
+  if (loading) return <Loader text="Loading Organizations .. " />;
   if (error) return <h2>{error}</h2>;
 
   return (

@@ -3,6 +3,7 @@ import "../../Page_styles/Super-Admin/Subscription.css";
 import SubscriptionOrganizationCard from "../../Components/Super-admin/SubscriptionOrganizationCard";
 import { getSubscription } from "../../Services/AdminServices";
 import SubscriptionSummary from "../../Components/Super-admin/SubscriptionSummary";
+import Loader from "../../Components/Super-admin/Loader";
 
 const SubscriptionsPage = () => {
 const [statusFilter, setStatusFilter] = useState("all");
@@ -241,9 +242,7 @@ const filteredSubscriptions = subscriptions.filter((record) => {
 <div className="subscriptions-list">
 
   {loading && (
-    <div className="subscriptions-state">
-      Loading subscriptions...
-    </div>
+    <Loader text="Loading Subscription"/>
   )}
 
   {!loading && error && (

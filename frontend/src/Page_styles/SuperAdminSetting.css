@@ -8,15 +8,16 @@
 }
 
 .settings-header h1 {
-  font-size: 24px;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #111827;
+  color: #6958C0;
   margin: 0 0 4px 0;
 }
 
 .settings-header p {
   font-size: 14px;
   color: #6b7280;
+  text-align: left;
   margin: 0 0 24px 0;
 }
 
@@ -179,5 +180,131 @@
     flex: 1;
     text-align: center;
     padding: 10px 12px;
+  }
+}
+
+/* ================= AFFILIATE CARD LIST STYLES ================= */
+.affiliates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.affiliate-item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  gap: 16px;
+  transition: box-shadow 0.2s ease;
+}
+
+.affiliate-item-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.affiliate-info-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.affiliate-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.affiliate-name-row h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.affiliate-code-badge {
+  background-color: #ede9fe;
+  color: #6c5ce7;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.affiliate-subtext {
+  font-size: 13px;
+  color: #4b5563;
+  margin: 0;
+}
+
+.affiliate-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 16px;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.affiliate-details-grid span strong {
+  color: #374151;
+  text-transform: capitalize;
+}
+
+.affiliate-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-approve {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-approve:hover {
+  background-color: #1f2937;
+}
+
+.btn-reject {
+  background-color: #ffffff;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-reject:hover {
+  background-color: #fef2f2;
+}
+
+@media (max-width: 768px) {
+  .affiliate-item-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .affiliate-actions {
+    justify-content: flex-end;
+    margin-top: 8px;
   }
 }

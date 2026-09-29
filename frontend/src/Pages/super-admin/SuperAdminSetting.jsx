@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import {
   getSystemSettings,
   updateSystemSettings,
-  approveAffiliateStatus
+  approveAffiliateStatus,
+  getAffiliates
 } from "../../Services/AdminServices";
 import "../../Page_styles/SuperAdminSetting.css"; 
 
@@ -10,53 +11,42 @@ const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState("general"); // 'general' | 'user' | 'affiliate'
+  const [activeTab, setActiveTab] = useState("general");
 
   const [settings, setSettings] = useState({
-    // General Settings
     allowRegistrations: false,
     maintenanceMode: false,
-    
-    // User Settings
     defaultUserRole: "user",
     requireEmailVerification: true,
-
-    // Affiliate Settings
     autoApproveAffiliates: false,
     defaultCommissionRate: 10,
     minimumPayout: 50
   });
 
-  /* ================= FETCH SETTINGS ================= */
+  const [affiliates, setAffiliates] = useState([]);
 
-  const fetchSettings = async () => {
+  /* ================= FETCH INITIAL DATA ================= */
+
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await getSystemSettings();
-      setSettings((prev) => ({ ...prev, ...data }));
+      const [settingsData, affiliatesData] = await Promise.all([
+        getSystemSettings(),
+        getAffiliates("pending") // Fetching pending applications
+      ]);
+
+      setSettings((prev) => ({ ...prev, ...settingsData }));
+      setAffiliates(affiliatesData.data || affiliatesData);
     } catch (err) {
       console.error(err);
-      setError(err.userMessage || "Failed to load system settings");
-    } finally {
-      setLoading(false);
-    }
-  };
-  const approveStatus = async () => {
-    try {
-      setLoading(true);
-      const data = await approveAffiliateStatus();
-      setSettings((prev) => ({ ...prev, ...data }));
-    } catch (err) {
-      console.error(err);
-      setError(err.userMessage || "Failed to load system settings");
+      setError(err.userMessage || "Failed to load dashboard data");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSettings();
-    approveStatus();
+    fetchData();
   }, []);
 
   /* ================= HANDLERS ================= */
@@ -69,7 +59,7 @@ const Settings = () => {
     }));
   };
 
-  const handleSave = async () => {
+  const handleSaveSettings = async () => {
     try {
       setSaving(true);
       await updateSystemSettings(settings);
@@ -81,21 +71,33 @@ const Settings = () => {
     }
   };
 
+  // Handler for Appending/Rejecting Affiliate Status
+  const handleStatusUpdate = async (id, status, rejectionReason = "") => {
+    try {
+      await approveAffiliateStatus(id, { status, rejectionReason });
+      
+      // Remove handled affiliate from the pending list view
+      setAffiliates((prev) => prev.filter((aff) => aff._id !== id));
+      alert(`Affiliate application successfully ${status}!`);
+    } catch (err) {
+      alert(err.message || "Failed to update affiliate status");
+    }
+  };
+
   /* ================= UI STATES ================= */
 
-  if (loading) return <div className="settings-container"><h2>Loading settings...</h2></div>;
+  if (loading) return <div className="settings-container"><h2>Loading...</h2></div>;
   if (error) return <div className="settings-container"><h2>{error}</h2></div>;
 
   return (
     <div className="settings-container">
       
-      {/* Header section matching style */}
       <div className="settings-header">
-        <h1>Platform Settings</h1>
-        <p>Manage global configurations, user policies, and affiliate program rules.</p>
+        <h1>Platform Settings & Management</h1>
+        <p>Manage global configurations, user policies, and review affiliate applications.</p>
       </div>
 
-      {/* 🔹 Tab Navigation Bar (Matching layout design pattern) */}
+      {/* Tab Navigation Bar */}
       <div className="settings-tabs">
         <button
           onClick={() => setActiveTab("general")}
@@ -117,14 +119,13 @@ const Settings = () => {
         </button>
       </div>
 
-      {/* 🔹 Tab Content Panels Container */}
+      {/* Tab Content Panels */}
       <div className="settings-card">
         
-        {/* TAB 1: GENERAL SETTINGS */}
+        {/* GENERAL TAB */}
         {activeTab === "general" && (
           <div>
             <h3>General System Configurations</h3>
-            
             <div className="field-group checkbox-field">
               <input
                 type="checkbox"
@@ -133,33 +134,15 @@ const Settings = () => {
                 onChange={handleChange}
                 id="allowRegistrations"
               />
-              <div>
-                <label htmlFor="allowRegistrations">Allow new user registrations</label>
-                <span className="field-hint">Permit new visitors to sign up for accounts on the platform.</span>
-              </div>
-            </div>
-
-            <div className="field-group checkbox-field" style={{ marginTop: "16px" }}>
-              <input
-                type="checkbox"
-                name="maintenanceMode"
-                checked={settings.maintenanceMode}
-                onChange={handleChange}
-                id="maintenanceMode"
-              />
-              <div>
-                <label htmlFor="maintenanceMode">Enable maintenance mode</label>
-                <span className="field-hint">Temporarily shut down public access for maintenance updates.</span>
-              </div>
+              <label htmlFor="allowRegistrations">Allow new user registrations</label>
             </div>
           </div>
         )}
 
-        {/* TAB 2: USER SETTINGS */}
+        {/* USER TAB */}
         {activeTab === "user" && (
           <div>
             <h3>User & Account Settings</h3>
-            
             <div className="field-group input-field">
               <label>Default User Role</label>
               <select
@@ -171,76 +154,77 @@ const Settings = () => {
                 <option value="affiliate">Affiliate</option>
               </select>
             </div>
-
-            <div className="field-group checkbox-field" style={{ marginTop: "20px" }}>
-              <input
-                type="checkbox"
-                name="requireEmailVerification"
-                checked={settings.requireEmailVerification}
-                onChange={handleChange}
-                id="requireEmailVerification"
-              />
-              <div>
-                <label htmlFor="requireEmailVerification">Require email verification on signup</label>
-                <span className="field-hint">Users must verify their email address before accessing core features.</span>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* TAB 3: AFFILIATE SETTINGS */}
+        {/* AFFILIATE TAB (Detailed View) */}
         {activeTab === "affiliate" && (
           <div>
-            <h3>Affiliate Program Settings</h3>
-            
-            <div className="field-group checkbox-field">
-              <input
-                type="checkbox"
-                name="autoApproveAffiliates"
-                checked={settings.autoApproveAffiliates}
-                onChange={handleChange}
-                id="autoApproveAffiliates"
-              />
-              <div>
-                <label htmlFor="autoApproveAffiliates">Auto-approve affiliate applications</label>
-                <span className="field-hint">If unchecked, affiliates require manual Super Admin approval before referencing users.</span>
-              </div>
-            </div>
+            <h3>Pending Affiliate Applications</h3>
+            {affiliates.length === 0 ? (
+              <p className="field-hint" style={{ marginTop: "12px" }}>No pending affiliate applications found.</p>
+            ) : (
+              <div className="affiliates-list">
+                {affiliates.map((aff) => (
+                  <div key={aff._id} className="affiliate-item-card">
+                    
+                    <div className="affiliate-info-main">
+                      <div className="affiliate-name-row">
+                        <h4>{aff.fullName}</h4>
+                        <span className="affiliate-code-badge">{aff.affiliateCode}</span>
+                      </div>
+                      
+                      <p className="affiliate-subtext">
+                        {aff.email} {aff.phone ? `| ${aff.phone}` : ""}
+                      </p>
 
-            <div className="form-grid" style={{ marginTop: "20px" }}>
-              <div className="field-group input-field" style={{ maxWidth: "none" }}>
-                <label>Default Commission Rate (%)</label>
-                <input
-                  type="number"
-                  name="defaultCommissionRate"
-                  value={settings.defaultCommissionRate}
-                  onChange={handleChange}
-                />
-              </div>
+                      <div className="affiliate-details-grid">
+                        <span>Audience: <strong>{aff.audienceType || "N/A"}</strong></span>
+                        <span>Website: <strong>{aff.website || "None"}</strong></span>
+                        <span>Method: <strong>{aff.promotionMethod || "N/A"}</strong></span>
+                        <span>Applied: <strong>{new Date(aff.createdAt).toLocaleDateString()}</strong></span>
+                      </div>
+                    </div>
 
-              <div className="field-group input-field" style={{ maxWidth: "none" }}>
-                <label>Minimum Payout Threshold ($)</label>
-                <input
-                  type="number"
-                  name="minimumPayout"
-                  value={settings.minimumPayout}
-                  onChange={handleChange}
-                />
+                    <div className="affiliate-actions">
+                      <button 
+                        className="btn-reject"
+                        onClick={() => {
+                          const reason = prompt("Enter rejection reason:");
+                          if (reason !== null) {
+                            handleStatusUpdate(aff._id, "rejected", reason);
+                          }
+                        }}
+                      >
+                        Reject
+                      </button>
+                      <button 
+                        className="btn-approve" 
+                        onClick={() => handleStatusUpdate(aff._id, "approved")}
+                      >
+                        Approve
+                      </button>
+                    </div>
+
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         )}
 
       </div>
 
-      {/* 🔹 Save Changes Button */}
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="btn-save"
-      >
-        {saving ? "Saving..." : "Save Changes"}
-      </button>
+      {/* Save Button for Settings */}
+      {activeTab !== "affiliate" && (
+        <button
+          onClick={handleSaveSettings}
+          disabled={saving}
+          className="btn-save"
+        >
+          {saving ? "Saving..." : "Save Changes"}
+        </button>
+      )}
 
     </div>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSuperAdminOverview } from "../../Services/AdminServices";
+import Loader from "../../Components/Super-admin/Loader";
 import "../../Page_styles/SuperAdminDashboard.css";
 
 import MetricCard from "../../Components/MetricCard";
@@ -33,9 +34,9 @@ const Dashboard = () => {
     return <h2>{error}</h2>;
   }
 
-  if (!stats) {
-    return <h2>Loading platform overview...</h2>;
-  }
+if (!stats) {
+  return <Loader text="Loading Platform Overview..." />;
+}
 
   const {
     totalOrganizations,
@@ -183,119 +184,7 @@ const Dashboard = () => {
 
       </div>
 
-
-      {/* =====================================================
-          REVENUE + BILLING
-      ===================================================== */}
-
-      <div className="sa-two-column">
-
-        {/* REVENUE */}
-
-        <div className="sa-panel">
-
-          <div className="sa-panel-header">
-            <div>
-              <h2>Revenue Overview</h2>
-              <p>Subscription revenue by month</p>
-            </div>
-
-            <div className="sa-revenue-total">
-              <span>Total Revenue</span>
-
-              <strong>
-                ${Number(
-                  revenue.totalRevenue || 0
-                ).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </strong>
-            </div>
-          </div>
-
-          <div className="sa-chart-wrapper">
-            {revenue.revenueByMonth?.length > 0 ? (
-              <RevenueChart
-                data={revenue.revenueByMonth}
-              />
-            ) : (
-              <div className="sa-empty-state">
-                No revenue data available
-              </div>
-            )}
-          </div>
-
-        </div>
-
-
-        {/* BILLING */}
-
-        <div className="sa-panel">
-
-          <div className="sa-panel-header">
-            <div>
-              <h2>Billing Overview</h2>
-              <p>Current subscription billing cycles</p>
-            </div>
-          </div>
-
-
-          <div className="sa-billing-list">
-
-            {billingCycles?.map((cycle) => (
-              <div
-                className="sa-billing-row"
-                key={cycle._id}
-              >
-                <span>
-                  {cycle._id === "monthly"
-                    ? "Monthly"
-                    : cycle._id === "yearly"
-                    ? "Yearly"
-                    : cycle._id}
-                </span>
-
-                <strong>
-                  {cycle.count}
-                </strong>
-              </div>
-            ))}
-
-          </div>
-
-
-          <div className="sa-billing-summary">
-
-            <div>
-              <span>Monthly Recurring Revenue</span>
-
-              <strong>
-                ${Number(
-                  revenue.monthlyRecurringRevenue || 0
-                ).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </strong>
-            </div>
-
-            <div>
-              <span>Expiring in 7 Days</span>
-
-              <strong>
-                {expiringSubscriptions}
-              </strong>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      {/* =====================================================
+            {/* =====================================================
           ORGANIZATION TYPE + RECENT ORGANIZATIONS
       ===================================================== */}
 
@@ -303,7 +192,7 @@ const Dashboard = () => {
 
         {/* ORGANIZATION TYPES */}
 
-        <div className="sa-panel">
+        <div className="sa-panel-odd">
 
           <div className="sa-panel-header">
             <div>
@@ -369,7 +258,7 @@ const Dashboard = () => {
 
         {/* RECENT ORGANIZATIONS */}
 
-        <div className="sa-panel">
+        <div className="sa-panel-odd">
 
           <div className="sa-panel-header">
 
@@ -425,6 +314,120 @@ const Dashboard = () => {
         </div>
 
       </div>
+
+
+      {/* =====================================================
+          REVENUE + BILLING
+      ===================================================== */}
+
+      <div className="sa-two-column">
+
+        {/* REVENUE */}
+
+        <div className="sa-panel-odd">
+
+          <div className="sa-panel-header">
+            <div>
+              <h2>Revenue Overview</h2>
+              <p>Subscription revenue by month</p>
+            </div>
+
+            <div className="sa-revenue-total">
+              <span>Total Revenue</span>
+
+              <strong>
+                ${Number(
+                  revenue.totalRevenue || 0
+                ).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </strong>
+            </div>
+          </div>
+
+          <div className="sa-chart-wrapper">
+            {revenue.revenueByMonth?.length > 0 ? (
+              <RevenueChart
+                data={revenue.revenueByMonth}
+              />
+            ) : (
+              <div className="sa-empty-state">
+                No revenue data available
+              </div>
+            )}
+          </div>
+
+        </div>
+
+
+        {/* BILLING */}
+
+        <div className="sa-panel-odd">
+
+          <div className="sa-panel-header">
+            <div>
+              <h2>Billing Overview</h2>
+              <p>Current subscription billing cycles</p>
+            </div>
+          </div>
+
+
+          <div className="sa-billing-list">
+
+            {billingCycles?.map((cycle) => (
+              <div
+                className="sa-billing-row"
+                key={cycle._id}
+              >
+                <span>
+                  {cycle._id === "monthly"
+                    ? "Monthly"
+                    : cycle._id === "yearly"
+                    ? "Yearly"
+                    : cycle._id}
+                </span>
+
+                <strong>
+                  {cycle.count}
+                </strong>
+              </div>
+            ))}
+
+          </div>
+
+
+          <div className="sa-billing-summary">
+
+            <div>
+              <span>Monthly Recurring Revenue</span>
+
+              <strong>
+                ${Number(
+                  revenue.monthlyRecurringRevenue || 0
+                ).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </strong>
+            </div>
+
+            <div>
+              <span>Expiring in 7 Days</span>
+
+              <strong>
+                {expiringSubscriptions}
+              </strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
 
 
       {/* =====================================================

@@ -629,6 +629,15 @@ const login = async (req, res) => {
       });
     }
 
+    // 🛑 BLOCK SUPER ADMINS FROM PUBLIC LOGIN DOOR
+    if (user.role === "super-admin") {
+      return res.status(403).json({
+        success: false,
+        error: "Super Admin accounts must log in through the secure private portal.",
+      });
+    }
+// ... rest of your standard login logic ...
+
     // 🛑 Organization check (except super-admin)
 // 🛑 Organization check
 // Affiliates and super-admins do not require organization

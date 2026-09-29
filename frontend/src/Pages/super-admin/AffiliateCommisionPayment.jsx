@@ -6,6 +6,7 @@ import {
 } from "../../Services/AdminServices";
 
 import "../../Page_styles/AffiliateCommission.css";
+import Loader from "../../Components/Super-admin/Loader";
 
 const AffiliateCommissionPayments = () => {
   const [payments, setPayments] = useState([]);
@@ -488,9 +489,7 @@ const AffiliateCommissionPayments = () => {
 
         {loading ? (
 
-          <div className="affiliate-payment-empty">
-            Loading commission payments...
-          </div>
+          <Loader text="Loading Pending Commissions"/>
 
         ) : filteredPayments.length === 0 ? (
 

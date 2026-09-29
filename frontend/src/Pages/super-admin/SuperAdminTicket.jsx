@@ -14,6 +14,7 @@ import {
 } from "../../Services/AdminServices";
 
 import "../../Page_styles/SuperAdminTicket.css";
+import Loader from "../../Components/Super-admin/Loader";
 
 
 const SuperAdminTickets = () => {
@@ -696,7 +697,7 @@ const SuperAdminTickets = () => {
           {loading ? (
 
             <p className="sa-loading">
-              Loading tickets...
+              <Loader text="Loading Tickets .." />
             </p>
 
           ) : (
@@ -868,7 +869,7 @@ const SuperAdminTickets = () => {
           {paymentLoading ? (
 
             <p className="sa-loading">
-              Loading affiliate payment tickets...
+              <Loader text="Loading affiliate payment tickets..." />
             </p>
 
           ) : (

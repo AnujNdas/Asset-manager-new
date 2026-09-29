@@ -3,12 +3,12 @@ import "../Component_styles/SuperAdminSidebar.css";
 const links = [
   { to: "/super-admin/dashboard", label: "Dashboard" },
   { to: "/super-admin/organizations", label: "Organizations" },
-  { to: "/super-admin/settings", label: "Settings" },
   // { to: "/super-admin/analytics", label: "Analytics" },
   { to: "/super-admin/tickets", label: "Tickets" },
   { to: "/super-admin/activity", label: "Activity" },
   { to: "/super-admin/health", label: "Health" },
   { to: "/super-admin/financials", label: "Financial" },
+  { to: "/super-admin/settings", label: "Settings" },
 ];
 const handleClick = () => {
   localStorage.removeItem("superAdminToken");

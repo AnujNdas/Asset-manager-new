@@ -21,7 +21,7 @@
 .sa-dashboard-header h1 {
   margin: 0;
   color: #6958c0;
-  text-align: center;
+  /* text-align: center; */
   font-size: 1.8rem;
   font-weight: 700;
 }
@@ -30,6 +30,7 @@
   margin: 6px 0 0;
   color: #64748b;
   font-size: 0.9rem;
+  text-align: left;
 }
 
 
@@ -40,6 +41,14 @@
 .sa-cards {
   display: grid;
   gap: 18px;
+}
+.card {
+  text-align: center;
+}
+.card p {
+  color: #6958c0;
+  font-weight: 600;
+  margin-top: 10px;
 }
 
 .sa-main-metrics {
@@ -77,7 +86,7 @@
 }
 
 .sa-detail-item strong {
-  color: #2563eb;
+  color: #6958c0;
   font-size: 1.05rem;
 }
 
@@ -88,8 +97,8 @@
 
 .section-title {
   margin: 30px 0 14px;
-
-  color: #111827;
+  text-align: left;
+  color: #6958c0;
 
   font-size: 1.15rem;
   font-weight: 700;
@@ -121,7 +130,7 @@
    PANEL
 ========================================================= */
 
-.sa-panel {
+.sa-panel-odd {
   /* background: #ffffff; */
 
   border-radius: 14px;
@@ -147,7 +156,7 @@
 .sa-panel-header h2 {
   margin: 0;
 
-  color: #111827;
+  color: #6958c0;
 
   font-size: 1rem;
   font-weight: 700;
@@ -180,7 +189,7 @@
 .sa-revenue-total strong {
   margin-top: 2px;
 
-  color: #2563eb;
+  color: #6958c0;
 
   font-size: 1.25rem;
 }
@@ -230,7 +239,7 @@
 }
 
 .sa-billing-row strong {
-  color: #2563eb;
+  color: #6958c0;
   font-size: 1rem;
 }
 
@@ -301,7 +310,7 @@
 }
 
 .sa-org-type-top strong {
-  color: #2563eb;
+  color: #6958c0  ;
   font-size: 0.82rem;
 }
 
@@ -318,7 +327,7 @@
 .sa-progress-fill {
   height: 100%;
 
-  background: #2563eb;
+  background: #6958c0;
 
   border-radius: 20px;
 
@@ -332,6 +341,7 @@
 
 .sa-recent-orgs {
   padding: 5px 20px 10px;
+  overflow: auto;
 }
 
 .sa-org-row {

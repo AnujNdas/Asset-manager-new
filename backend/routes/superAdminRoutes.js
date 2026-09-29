@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authenticateToken = require("../Middleware/Authentication-token");
 const { getSuperAdminSubscriptions } = require("../controllers/superAdmin/subscriptionControlller")
+const { adminLogin } = require("../controllers/superAdmin/loginController")
 const { getOverview } = require("../controllers/superAdmin/dashboardController");
 const { getAllOrganizations, createOrganization , getOrganizationById ,toggleOrganizationStatus , getOrganizationUsers  } = require("../controllers/superAdmin/organizationController");
 const {getSettings, updateSettings , resolveAffiliateTicket, updateAffiliateStatus, getAllAffiliates} = require("../controllers/superAdmin/settingController");
@@ -29,6 +30,7 @@ router.get("/dashboard/overview", authenticateToken(["super-admin"]), getOvervie
 router.get("/organizations", authenticateToken(["super-admin"]), getAllOrganizations);
 router.get("/organizations/:id/users", authenticateToken(["super-admin"]), getOrganizationUsers);
 router.post("/organizations", authenticateToken(["super-admin"]), createOrganization);
+router.post("/auth/login", authenticateToken(["super-admin"]), adminLogin);
 router.get("/organizations/:id", authenticateToken(["super-admin"]), getOrganizationById);
 router.patch("/organizations/:id/status", authenticateToken(["super-admin"]), toggleOrganizationStatus);
 
