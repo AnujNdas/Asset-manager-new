@@ -1,128 +1,589 @@
-.sa-login-container {
+/* =========================================================
+   SUPER ADMIN LOGIN PAGE
+========================================================= */
+
+.sa-login-page {
   min-height: 100vh;
-  width: 100vw;
-  background-color: #f4f7fb; /* Matches your container background */
+  width: 100%;
+
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
+
+  padding: 40px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6958C0 0%,
+      #7a6acc 30%,
+      #eef0ff 30%,
+      #eef0ff 100%
+    );
+
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
 }
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
 
 .sa-login-card {
+  width: min(1120px, 100%);
+  min-height: 600px;
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+
   background: #ffffff;
-  width: 100%;
-  max-width: 420px;
-  padding: 40px 32px;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+  border-radius: 30px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 30px 70px rgba(33, 35, 94, 0.22),
+    0 10px 25px rgba(33, 35, 94, 0.08);
 }
 
+
+/* =========================================================
+   LEFT LOGIN PANEL
+========================================================= */
+
+.sa-login-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+
+  padding: 60px 70px;
+
+  box-sizing: border-box;
+}
+
+
+.sa-login-content {
+  width: 100%;
+  max-width: 430px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .sa-login-header {
+  margin-bottom: 42px;
+}
+
+
+.sa-login-header h1 {
+  margin: 0 0 10px;
   text-align: center;
+  color: #6958C0;
+
+  font-size: 2rem;
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+
+.sa-login-header p {
+  margin: 0;
+
+  color: #8b8b8b;
+
+  font-size: 0.92rem;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.sa-login-form {
+  width: 100%;
+}
+
+
+.sa-form-group {
+  width: 100%;
+  margin-bottom: 23px;
+}
+
+
+.sa-form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #8a8a8a;
+
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   PASSWORD HEADER
+========================================================= */
+
+.sa-password-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+}
+
+
+.sa-password-label label {
+  margin-bottom: 0;
+}
+
+
+.sa-forgot-password {
+  border: none;
+  background: transparent;
+
+  padding: 0;
+
+  color: #3935c9;
+
+  font-size: 0.72rem;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+
+.sa-forgot-password:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.sa-form-group input[type="email"],
+.sa-form-group input[type="password"] {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 16px;
+
+  border: 1px solid #edf0f5;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #f1f3f7;
+
+  color: #333;
+
+  font-family: inherit;
+  font-size: 0.85rem;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.sa-form-group input[type="email"]::placeholder,
+.sa-form-group input[type="password"]::placeholder {
+  color: #b5b8c0;
+}
+
+
+.sa-form-group input[type="email"]:focus,
+.sa-form-group input[type="password"]:focus {
+  background: #ffffff;
+
+  border-color: #3935c9;
+
+  box-shadow: 0 0 0 3px rgba(57, 53, 201, 0.08);
+}
+
+
+/* =========================================================
+   REMEMBER ME
+========================================================= */
+
+.sa-remember-row {
+  margin-top: -5px;
   margin-bottom: 28px;
 }
 
-.sa-lock-badge {
-  font-size: 28px;
-  background: #f3f4f6;
-  width: 56px;
-  height: 56px;
+
+.sa-remember-label {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  margin: 0 auto 16px auto;
-  border: 1px solid #e5e7eb;
+
+  gap: 8px;
+
+  cursor: pointer;
+
+  color: #8c8c8c;
+
+  font-size: 0.72rem;
 }
 
-.sa-login-header h2 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #111827;
-  margin: 0 0 6px 0;
-}
 
-.sa-login-header p {
-  font-size: 13px;
-  color: #6b7280;
+.sa-remember-label input {
+  width: 13px;
+  height: 13px;
+
   margin: 0;
+
+  accent-color: #3935c9;
+
+  cursor: pointer;
 }
 
-.sa-login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 
-.sa-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sa-form-group label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #374151;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.sa-form-group input {
-  padding: 12px 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  background: #ffffff;
-  color: #111827;
-  transition: all 0.2s ease;
-}
-
-.sa-form-group input:focus {
-  border-color: #695860; /* Uses your requested brand theme color */
-  box-shadow: 0 0 0 3px rgba(105, 88, 96, 0.12);
-}
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
 
 .sa-login-btn {
-  background-color: #695860; /* Brand theme button color */
-  color: #ffffff;
+  width: 100%;
+  height: 50px;
+
   border: none;
   border-radius: 8px;
-  padding: 12px;
-  font-size: 14px;
+
+  background: #6958C0;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 0.9rem;
   font-weight: 600;
+
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  margin-top: 6px;
+
+  box-shadow:
+    0 8px 18px rgba(57, 53, 201, 0.20);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.sa-login-btn:hover {
-  background-color: #55464e;
+
+.sa-login-btn:hover:not(:disabled) {
+  background: #302db3;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 11px 22px rgba(57, 53, 201, 0.25);
 }
 
-.sa-login-btn:active {
-  transform: scale(0.99);
+
+.sa-login-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
+
 
 .sa-login-btn:disabled {
-  background-color: #9ca3af;
+  opacity: 0.65;
   cursor: not-allowed;
 }
 
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
 .sa-login-footer {
+  margin-top: 48px;
+
   text-align: center;
-  margin-top: 24px;
-  border-top: 1px solid #f3f4f6;
-  padding-top: 16px;
 }
 
+
 .sa-login-footer p {
-  font-size: 11px;
-  color: #9ca3af;
-  letter-spacing: 0.03em;
   margin: 0;
+
+  color: #a3a3a3;
+
+  font-size: 0.65rem;
+}
+
+
+/* =========================================================
+   RIGHT INFORMATION PANEL
+========================================================= */
+
+.sa-login-right {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 600px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef0ff 0%,
+      #e7eaff 100%
+    );
+
+  overflow: hidden;
+}
+
+
+/*
+   Subtle decorative circles
+*/
+
+.sa-login-right::before {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.38);
+
+  top: -150px;
+  right: -120px;
+}
+
+
+.sa-login-right::after {
+  content: "";
+
+  position: absolute;
+
+  width: 220px;
+  height: 220px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.25);
+
+  bottom: -110px;
+  left: -90px;
+}
+
+
+/* =========================================================
+   RIGHT CONTENT
+========================================================= */
+
+.sa-right-content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+
+  max-width: 430px;
+
+  padding: 50px;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ILLUSTRATION
+========================================================= */
+
+.sa-illustration-wrapper {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 25px;
+}
+
+
+.sa-login-illustration {
+  width: 100%;
+  max-width: 360px;
+
+  height: 250px;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+
+/* =========================================================
+   RIGHT TEXT
+========================================================= */
+
+.sa-right-content h2 {
+  margin: 5px 0 12px;
+
+  color: #202020;
+
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+
+.sa-right-content p {
+  max-width: 360px;
+
+  margin: 0 auto;
+
+  color: #858585;
+
+  font-size: 0.78rem;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   SLIDER INDICATORS
+========================================================= */
+
+.sa-slider-indicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 5px;
+
+  margin-top: 30px;
+}
+
+
+.sa-slider-indicators span {
+  width: 35px;
+  height: 3px;
+
+  border-radius: 10px;
+
+  background: #c7c9dc;
+}
+
+
+.sa-slider-indicators span.active {
+  background: #3935c9;
+}
+
+
+/* =========================================================
+   REMOVE OLD BACKGROUND / OVERLAY ELEMENTS
+========================================================= */
+
+.sa-centered-page-wrapper,
+.sa-bg-overlay,
+.sa-login-shadow-wrapper {
+  all: unset;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .sa-login-page {
+    padding: 25px;
+  }
+
+  .sa-login-card {
+    grid-template-columns: 1fr;
+
+    max-width: 550px;
+
+    min-height: auto;
+  }
+
+  .sa-login-left {
+    padding: 55px 50px;
+  }
+
+  .sa-login-right {
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .sa-login-page {
+    min-height: 100vh;
+
+    padding: 20px;
+
+    background: #eef0ff;
+  }
+
+  .sa-login-card {
+    width: 100%;
+
+    border-radius: 22px;
+  }
+
+  .sa-login-left {
+    padding: 42px 28px;
+  }
+
+  .sa-login-header {
+    margin-bottom: 35px;
+  }
+
+  .sa-login-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .sa-login-footer {
+    margin-top: 38px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .sa-login-page {
+    padding: 12px;
+  }
+
+  .sa-login-left {
+    padding: 35px 20px;
+  }
+
+  .sa-login-card {
+    border-radius: 18px;
+  }
+
 }
