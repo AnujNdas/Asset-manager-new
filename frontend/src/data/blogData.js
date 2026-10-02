@@ -8058,7 +8058,7 @@ quickAnswer: [
     "construction-tool-loss-equipment-shrinkage",
 
   image:
-    "/images/BlogImages/contractorBlog2.webp", // Replace if different
+    "/images/BlogImages/contractorsBlog2.webp", // Replace if different
 
   title:
     "How General Contractors Eliminate Tool Loss & Equipment Shrinkage Across Active Job Sites",

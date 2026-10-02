@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../Page_styles/AffiliateApply.css";
 import AuthService from "../Services/AuthService";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 export default function AffiliateApply() {
   const navigate = useNavigate();
 
@@ -126,7 +127,7 @@ export default function AffiliateApply() {
 
         <div className="affiliate-logo">
           <img
-            src="/images/Logo.png"
+            src="/images/Logo2.png"
             alt="Logo"
           />
         </div>
@@ -271,13 +272,12 @@ export default function AffiliateApply() {
               : "Submit Application"}
           </button>
 
-          <button
-            type="button"
+          <Link
             className="back-btn"
-            onClick={() => navigate("/user/login")}
+            to="/user/login"
           >
             Back to Login
-          </button>
+          </Link>
 
         </form>
 

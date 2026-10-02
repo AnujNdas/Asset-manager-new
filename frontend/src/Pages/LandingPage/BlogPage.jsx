@@ -152,16 +152,13 @@ const BlogPage = () => {
                   </h2>
 
 
-      <button
+<Link
+  to={`/blog/${blog.slug}`}
   className="blog-page-read-more"
-  onClick={() => navigate(`/blog/${blog.slug}`)}
 >
   {blog.cta}
-
-  <span>
-    →
-  </span>
-</button>
+  <span>→</span>
+</Link>
 
                 </div>
 
