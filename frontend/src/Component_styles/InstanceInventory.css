@@ -80,10 +80,10 @@
 }
 .card-box p {
   color: #DFD0B8;
+  text-align: left;
 }
 .card-box span {
-  opacity: 0.7;
-  color: #948979;
+  margin-left: 10px;
 }
 
 .card-box.center {

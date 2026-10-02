@@ -280,16 +280,16 @@ const handleDelete = () => {
             <>
               <div className="card-box">
                 <h5>Technical</h5>
-                <p><span>Model:</span> {hw.modelNo || "N/A"}</p>
-                <p><span>Specs:</span> {hw.specifications || "N/A"}</p>
+                <p><span>Model :</span> {hw.modelNo || "N/A"}</p>
+                <p><span>Specs :</span> {hw.specifications || "N/A"}</p>
               </div>
 
               <div className="card-box">
                 <h5>Lifecycle</h5>
-                <p><span>Purchase Date:</span> {formatDate(hw.purchaseDate)}</p>
-                <p><span>Next Maintenance Date:</span> {formatDate(hw.nextMaintenanceDate)}</p>
-                <p><span>Warranty Expiry:</span> {formatDate(hw.warrantyExpiry)}</p>
-                <p><span>Insurance Expiry:</span> {formatDate(hw.insuranceExpiry || "N/A")}</p>
+                <p><span>Purchase Date :</span> {formatDate(hw.purchaseDate)}</p>
+                <p><span>Next Maintenance Date :</span> {formatDate(hw.nextMaintenanceDate)}</p>
+                <p><span>Warranty Expiry :</span> {formatDate(hw.warrantyExpiry)}</p>
+                <p><span>Insurance Expiry :</span> {formatDate(hw.insuranceExpiry || "N/A")}</p>
               </div>
             </>
           )}
@@ -299,13 +299,13 @@ const handleDelete = () => {
             <>
               <div className="card-box">
                 <h5>License</h5>
-                <p><span>Key:</span> {sw.licenseKey || "N/A"}</p>
-                <p><span>Number:</span> {sw.licenseNumber || "N/A"}</p>
+                <p><span>Key :</span> {sw.licenseKey || "N/A"}</p>
+                <p><span>Number :</span> {sw.licenseNumber || "N/A"}</p>
               </div>
 
               <div className="card-box">
                 <h5>Validity</h5>
-                <p><span>Expiry Date:</span> {formatDate(sw.renewalDate)}</p>
+                <p><span>Expiry Date :</span> {formatDate(sw.renewalDate)}</p>
                 {/* <p><span>Last Used Date:</span> {formatDate(sw.lastUsedDate)}</p> */}
               </div>
             </>
@@ -338,35 +338,56 @@ const handleDelete = () => {
   {isHardware ? (
     <>
       <p>
-        Maintenance:
+        Maintenance :
         <span>
-          {hw.costs?.maintenanceCost?.amount}
+          {formatMoney
+            ? formatMoney(
+                hw.costs?.maintenanceCost?.amount || 0,
+                currency
+              )
+            : `${currency} ${(
+                hw.costs?.maintenanceCost?.amount || 0
+              ).toFixed(2)}`}
         </span>
       </p>
 
       <p>
-        Warranty:
+        Warranty :
         <span>
-          {hw.costs?.warrantyRenewalCost?.amount}
+          {formatMoney
+            ? formatMoney(
+                hw.costs?.warrantyRenewalCost?.amount || 0,
+                currency
+              )
+            : `${currency} ${(
+                hw.costs?.warrantyRenewalCost?.amount || 0
+              ).toFixed(2)}`}
         </span>
       </p>
 
       <p>
-        Insurance:
+        Insurance :
         <span>
           {hw.costs?.insuranceCost
-            ? hw.costs.insuranceCost?.amount
+            ? formatMoney
+              ? formatMoney(
+                  hw.costs.insuranceCost.amount || 0,
+                  currency
+                )
+              : `${currency} ${(
+                  hw.costs.insuranceCost.amount || 0
+                ).toFixed(2)}`
             : "N/A"}
         </span>
       </p>
     </>
   ) : (
     <p>
-      Renewal:
+      Renewal :
       <span>
-              {formatMoney
-        ? formatMoney(yearly, currency)
-        : `${currency} ${yearly.toFixed(2)}`}
+        {formatMoney
+          ? formatMoney(yearly, currency)
+          : `${currency} ${yearly.toFixed(2)}`}
       </span>
     </p>
   )}

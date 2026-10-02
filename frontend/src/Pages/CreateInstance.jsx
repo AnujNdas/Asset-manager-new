@@ -948,7 +948,7 @@ console.log("BEFORE API");
         <h4>Bulk Apply</h4>
 
         <div className="bulk-grid">
-          <div className="form-group">
+          <div className="form-group-instance">
             <label>Location</label>
             <input
               value={bulkValues.location}
@@ -960,7 +960,7 @@ console.log("BEFORE API");
               }
             />
           </div>
-          <div className="form-group">
+          <div className="form-group-instance">
             <label>Condition</label>
             <select
               value={bulkValues.condition}
@@ -981,7 +981,7 @@ console.log("BEFORE API");
               <option value="repaired(out)">Repair(OUT)</option>
             </select>
           </div>
-          <div className="form-group">
+          <div className="form-group-instance">
             <label>Asset Name</label>
             <input
               value={bulkValues.deviceName}
@@ -994,7 +994,7 @@ console.log("BEFORE API");
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group-instance">
             <label>Purchase Cost</label>
             <input
               type="number"
@@ -1009,7 +1009,7 @@ console.log("BEFORE API");
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group-instance">
             <label>Specification</label>
             <input
               placeholder={fieldLabels.specifications}
@@ -1022,7 +1022,7 @@ console.log("BEFORE API");
               }
             />
           </div>
-          <div className="form-group">
+          <div className="form-group-instance">
             <label>Currency</label>
 
             <input
@@ -1035,7 +1035,7 @@ console.log("BEFORE API");
 
           {isHardware && (
             <>
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Purchase Date</label>
                 <input
                   type="date"
@@ -1048,7 +1048,7 @@ console.log("BEFORE API");
                   }
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Next Maintenance Date</label>
                 <input
                   type="date"
@@ -1061,7 +1061,7 @@ console.log("BEFORE API");
                   }
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Warranty Purchase Date</label>
                 <input
                   type="date"
@@ -1075,7 +1075,7 @@ console.log("BEFORE API");
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Warranty Expiry Date</label>
                 <input
                   type="date"
@@ -1088,7 +1088,7 @@ console.log("BEFORE API");
                   }
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Installation Date</label>
                 <input
                   type="date"
@@ -1101,7 +1101,7 @@ console.log("BEFORE API");
                   }
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Has Insurance</label>
                 <select
                   value={bulkValues.hasInsurance}
@@ -1118,7 +1118,7 @@ console.log("BEFORE API");
               </div>
               {bulkValues.hasInsurance && (
                 <>
-                  <div className="form-group">
+                  <div className="form-group-instance">
                     <label>Insurance Policy ID</label>
                     <input
                       placeholder="Insurance Policy"
@@ -1131,7 +1131,7 @@ console.log("BEFORE API");
                       }
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="form-group-instance">
                     <label>Coverage Type</label>
                     <Select
                       isMulti
@@ -1163,7 +1163,7 @@ console.log("BEFORE API");
                       }}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="form-group-instance">
                     <label>Insurance Purchase Date</label>
                     <input
                       type="date"
@@ -1176,7 +1176,7 @@ console.log("BEFORE API");
                       }
                     />
                   </div>
-<div className="form-group">
+<div className="form-group-instance">
   <label>Insurance Term</label>
   <select
     value={bulkValues.insuranceTerm}
@@ -1200,7 +1200,7 @@ console.log("BEFORE API");
     <option value="10_years">10 Years</option>
   </select>
 </div>
-                  <div className="form-group">
+                  <div className="form-group-instance">
                     <label>Insurance Cost</label>
                     <input
                       type="number"
@@ -1216,7 +1216,7 @@ console.log("BEFORE API");
                   </div>
                 </>
               )}
-              {/* <div className="form-group">
+              {/* <div className="form-group-instance">
                   <label>Insurance Expiry</label>
                   <input
                     type="date"
@@ -1230,7 +1230,7 @@ console.log("BEFORE API");
                     }
                   />
                   </div> */}
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Maintenance Cost</label>
                 <input
                   type="number"
@@ -1244,7 +1244,7 @@ console.log("BEFORE API");
                   }
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Warranty Renewal Cost</label>
                 <input
                   type="number"
@@ -1263,7 +1263,7 @@ console.log("BEFORE API");
           )}
           {isSoftware && (
             <>
-              {/* <div className="form-group">
+              {/* <div className="form-group-instance">
           <label>License Key</label>
           <input
             value={bulkValues.licenseKey}
@@ -1273,7 +1273,7 @@ console.log("BEFORE API");
           />
         </div> */}
 
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>License Number</label>
                 <input
                   value={bulkValues.licenseNumber}
@@ -1286,7 +1286,7 @@ console.log("BEFORE API");
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Purchase Date</label>
                 <input
                   type="date"
@@ -1300,7 +1300,7 @@ console.log("BEFORE API");
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Installation Date</label>
                 <input
                   type="date"
@@ -1314,7 +1314,7 @@ console.log("BEFORE API");
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Renewal Date</label>
                 <input
                   type="date"
@@ -1328,7 +1328,7 @@ console.log("BEFORE API");
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Last Used Date</label>
                 <input
                   type="date"
@@ -1342,7 +1342,7 @@ console.log("BEFORE API");
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group-instance">
                 <label>Renewal Cost</label>
                 <input
                   type="number"
@@ -1537,7 +1537,7 @@ console.log("BEFORE API");
                           </span>
                         )}
                       </div>
-                                <div className="form-group">
+                                <div className="form-group-instance">
             <label>Currency</label>
 
             <input
