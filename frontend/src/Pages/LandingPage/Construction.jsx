@@ -1036,7 +1036,7 @@ const handleSignIn = () => {
       delivery and construction operation modernization.
     </p>
 
-    <Link to="/user/singup"
+    <Link to="/user/signup"
       target="_blank"
   rel="noopener noreferrer"
     className="section11-btn">
