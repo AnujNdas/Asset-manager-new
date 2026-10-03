@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // Assuming you use react-router-dom
 import "../Page_styles/ForgetPass.css";
 
 const ForgotPassword = () => {
@@ -43,6 +44,13 @@ const ForgotPassword = () => {
         </form>
 
         {message && <p className="message">{message}</p>}
+
+        {/* --- ADDED OUTGOING LINKS HERE --- */}
+        <div className="forgot-links" style={{ marginTop: "1rem", textAlign: "center" }}>
+          <Link to="/user/login">
+            Remembered your password? 
+          </Link>
+        </div>
       </div>
     </div>
   );

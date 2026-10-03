@@ -414,8 +414,7 @@ useEffect(() => {
       Healthcare Asset Tracking <br/> Management
     </h1>
         <div className="healthcare-breadcrumb">
-      <Link to="/"   target="_blank"
-  rel="noopener noreferrer">Home</Link>
+      <Link to="/">Home</Link>
       <span> - Healthcare Asset Tracking</span>
     </div>
 
