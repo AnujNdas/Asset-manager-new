@@ -17,15 +17,12 @@
 ========================================================= */
 
 .sa-ticket-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 22px;
 }
 
 .sa-ticket-header h2 {
   margin: 0;
-  color: #695890;
+  color: #6958C0;
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 1.3;
@@ -35,6 +32,7 @@
   margin: 6px 0 0;
   color: #000000;
   font-size: 14px;
+  text-align: left;
   line-height: 1.5;
 }
 
@@ -66,11 +64,11 @@
 }
 
 .sa-ticket-tabs button:hover {
-  color: #695890;
+  color: #6958C0;
 }
 
 .sa-ticket-tabs button.active {
-  color: #695890;
+  color: #6958C0;
 }
 
 .sa-ticket-tabs button.active::after {
@@ -80,7 +78,7 @@
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: #695890;
+  background: #6958C0;
   border-radius: 2px 2px 0 0;
 }
 
@@ -100,7 +98,7 @@
 
   border-radius: 999px;
 
-  background: #695890;
+  background: #6958C0;
   color: #ffffff;
 
   font-size: 11px;
@@ -645,7 +643,7 @@
 .sa-payment-modal-header h2 {
   margin: 0;
 
-  color: #695890;
+  color: #6958C0;
 
   font-size: 19px;
   font-weight: 700;
@@ -725,7 +723,7 @@
 .sa-payment-detail-section h3 {
   margin: 0 0 14px;
 
-  color: #695890;
+  color: #6958C0;
 
   font-size: 15px;
   font-weight: 700;
@@ -891,7 +889,7 @@
 }
 
 .sa-payment-total strong {
-  color: #695890;
+  color: #6958C0;
 
   font-size: 17px;
 }
@@ -1078,12 +1076,12 @@
 }
 
 .sa-resolve-btn {
-  background: #695890;
+  background: #6958C0;
   color: #ffffff;
 }
 
 .sa-resolve-btn:hover {
-  background: #695890;
+  background: #6958C0;
 }
 
 .sa-reject-btn:disabled,
@@ -1194,8 +1192,9 @@
 
   .sa-ticket-tabs {
     overflow-x: auto;
-
+    justify-content: center;
     scrollbar-width: none;
+    margin-bottom: 10px;
   }
 
   .sa-ticket-tabs::-webkit-scrollbar {
@@ -1316,16 +1315,16 @@
   }
 
   .sa-ticket-header {
-    margin-bottom: 17px;
+    margin-bottom: 10 px;
   }
 
   .sa-ticket-header h2 {
     font-size: 19px;
+    text-align: center;
   }
 
   .sa-ticket-header p {
-    max-width: 300px;
-
+    text-align: center;
     font-size: 12px;
   }
 
@@ -1337,7 +1336,7 @@
     flex-direction: column;
 
     align-items: stretch;
-
+    margin-bottom: 10px;
     gap: 9px;
   }
 
@@ -1346,8 +1345,8 @@
   .sa-payment-filters input,
   .sa-payment-filters select {
     width: 100%;
-
-    height: 40px;
+    height: 100px;
+    padding: 10px 5px;
   }
 
 
@@ -1365,7 +1364,7 @@
   /* Payment card */
 
   .sa-payment-ticket-card {
-    padding: 16px;
+    padding: 10px;
 
     border-radius: 10px;
   }
@@ -1390,6 +1389,7 @@
 
   .sa-view-payment-btn {
     width: 100%;
+    margin-top: 10px;
   }
 
 

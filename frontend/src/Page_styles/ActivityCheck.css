@@ -12,7 +12,7 @@
 .api-header h2 {
   font-size: 24px;
   font-weight: 700;
-  color: #111827;
+  color: #6958C0;
   margin: 0 0 4px 0;
 }
 
@@ -20,6 +20,7 @@
   font-size: 14px;
   color: #6b7280;
   margin: 0;
+  text-align: left;
 }
 
 /* Summary Grid */
@@ -45,12 +46,13 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0 0 8px 0;
+  text-align: center;
 }
 
 .summary-card p {
   font-size: 28px;
   font-weight: 700;
-  color: #111827;
+  color: #6958C0;
   margin: 0;
 }
 
@@ -67,7 +69,7 @@
 .map-header-title h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: #6958C0;
   margin: 0 0 12px 0;
 }
 
@@ -211,8 +213,8 @@
 }
 
 .view-btn {
-  background: #f3f4f6;
-  color: #374151;
+  background: #6958C0;
+  color: #f4f7fb;
   border: none;
   border-radius: 8px;
   padding: 10px;
@@ -221,11 +223,13 @@
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   width: 100%;
+  transition: 0.5s;
 }
 
 .view-btn:hover {
-  background: #4f46e5;
+  background: #6958C0;
   color: #ffffff;
+  transform: scale(1.05);
 }
 
 /* Modal Styling */

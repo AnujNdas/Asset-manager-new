@@ -547,5 +547,8 @@
     border-left: none;
     border-top: 1px solid #e2e8f0;
   }
+  .sa-dashboard-header h1 , .sa-dashboard-header p , .section-title {
+    text-align: center;
+  }
 
 }

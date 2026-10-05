@@ -2,7 +2,7 @@
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 24px;
-  color: #695890;
+  color: #6958C0;
 }
 
 /* Grid */
@@ -40,7 +40,7 @@
   font-size: 14px;
   font-weight: 600;
   margin: 0;
-  color: #695890;
+  color: #6958C0;
 }
 
 /* Status badge */
@@ -101,12 +101,12 @@
   border-radius: 8px;
   cursor: pointer;
   border: none;
-  background: #695890;
+  background: #6958C0;
   color: #ffffff;
 }
 
 .btn-outline {
-  background: #695890;
+  background: #6958C0;
   border: 1px solid #d1d5db;
   color: #ffffff;
   text-decoration: none;
@@ -143,5 +143,12 @@
 
   .tenant-actions {
     flex-direction: column;
+  }
+  .organization-container {
+    padding: 10px;
+  }
+  .page-title {
+    font-size: 24px;
+    text-align: center;
   }
 }

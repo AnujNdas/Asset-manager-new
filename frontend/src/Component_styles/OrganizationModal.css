@@ -1,51 +1,454 @@
+/* =========================================================
+   MODAL BACKDROP
+========================================================= */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.55);
+
+  backdrop-filter: blur(2px);
+
   z-index: 1000;
-}
 
-.modal-card {
-  background: #fff;
-  width: 700px;
-  max-height: 80vh;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header {
-  padding: 16px;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-body {
-  padding: 16px;
   overflow-y: auto;
 }
 
-.close-btn {
-  font-size: 22px;
-  background: none;
-  border: none;
-  cursor: pointer;
+
+/* =========================================================
+   MODAL CARD
+========================================================= */
+
+.modal-card {
+  width: min(700px, 100%);
+
+  max-height: min(80vh, 800px);
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.18),
+    0 4px 12px rgba(15, 23, 42, 0.08);
+
+  animation: modalFadeIn 0.2s ease;
 }
+
+
+/* =========================================================
+   MODAL ANIMATION
+========================================================= */
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.modal-header {
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 16px 20px;
+
+  background: #f4f7fb;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* =========================================================
+   HEADER TITLE
+========================================================= */
+
+.modal-header h2,
+.modal-header h3 {
+  margin: 0;
+
+  color: #374151;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 36px;
+  height: 36px;
+
+  padding: 0;
+
+  background: transparent;
+
+  border: none;
+  border-radius: 8px;
+
+  color: #6b7280;
+
+  font-size: 22px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(105, 88, 192, 0.1);
+
+  color: #6958C0;
+
+  transform: rotate(3deg);
+}
+
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.modal-body {
+  flex: 1;
+
+  min-height: 0;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.modal-body {
+  scrollbar-width: thin;
+  scrollbar-color: #c4bddf transparent;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #c4bddf;
+
+  border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #6958C0;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
 
 .modal-table {
   width: 100%;
-  border-collapse: collapse;
+
+  min-width: 520px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  color: #374151;
+
+  font-size: 14px;
 }
 
-.modal-table th,
-.modal-table td {
-  padding: 10px;
-  border-bottom: 1px solid #e5e7eb;
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.modal-table th {
+  padding: 12px 10px;
+
+  background: #f4f7fb;
+
+  color: #6958C0;
+
+  border-bottom: 2px solid #ddd9ef;
+
+  font-size: 13px;
+  font-weight: 700;
+
   text-align: left;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE CELLS
+========================================================= */
+
+.modal-table td {
+  padding: 11px 10px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  color: #374151;
+
+  text-align: left;
+
+  vertical-align: middle;
+}
+
+
+/* =========================================================
+   TABLE ROW HOVER
+========================================================= */
+
+.modal-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.modal-table tbody tr:hover td {
+  background: #f8f7fd;
+}
+
+
+/* =========================================================
+   LAST ROW
+========================================================= */
+
+.modal-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   Recommended if you can add one around the table
+========================================================= */
+
+.modal-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+
+/* =========================================================
+   MEDIUM SCREENS
+   <= 768px
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .modal-backdrop {
+    align-items: center;
+
+    padding: 16px;
+  }
+
+
+  .modal-card {
+    width: 100%;
+
+    max-height: 85vh;
+
+    border-radius: 10px;
+  }
+
+
+  .modal-header {
+    padding: 14px 16px;
+  }
+
+
+  .modal-header h2,
+  .modal-header h3 {
+    font-size: 17px;
+  }
+
+
+  .modal-body {
+    padding: 16px;
+  }
+
+
+  .modal-table {
+    min-width: 500px;
+
+    font-size: 13px;
+  }
+
+
+  .modal-table th,
+  .modal-table td {
+    padding: 9px 8px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 576px
+========================================================= */
+
+@media (max-width: 576px) {
+
+  .modal-backdrop {
+    align-items: flex-start;
+
+    padding: 12px;
+  }
+
+
+  .modal-card {
+    width: 100%;
+
+    max-height: calc(100vh - 24px);
+
+    border-radius: 10px;
+  }
+
+
+  .modal-header {
+    padding: 13px 14px;
+  }
+
+
+  .modal-header h2,
+  .modal-header h3 {
+    font-size: 16px;
+  }
+
+
+  .close-btn {
+    width: 34px;
+    height: 34px;
+
+    font-size: 20px;
+  }
+
+
+  .modal-body {
+    padding: 12px;
+  }
+
+
+  .modal-table {
+    min-width: 480px;
+
+    font-size: 12.5px;
+  }
+
+
+  .modal-table th,
+  .modal-table td {
+    padding: 9px 8px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   <= 380px
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .modal-backdrop {
+    padding: 8px;
+  }
+
+
+  .modal-card {
+    max-height: calc(100vh - 16px);
+
+    border-radius: 8px;
+  }
+
+
+  .modal-header {
+    padding: 11px 12px;
+  }
+
+
+  .modal-header h2,
+  .modal-header h3 {
+    font-size: 15px;
+  }
+
+
+  .modal-body {
+    padding: 10px;
+  }
+
+
+  .modal-table {
+    min-width: 450px;
+
+    font-size: 12px;
+  }
+
+
+  .modal-table th,
+  .modal-table td {
+    padding: 8px 7px;
+  }
+
 }

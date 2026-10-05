@@ -1,15 +1,243 @@
+/* =========================================================
+   MAIN WRAPPER
+========================================================= */
+
 .superadmin-wrapper {
   display: flex;
-  height: 100vh;
-  padding: 7px 10px;
+
   width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+
   background: #E4DFFD;
+
+  overflow: hidden;
 }
 
 
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
 .superadmin-content {
-  flex: 1;
-  /* background: #f5f5f5; */
+  flex: 1 1 auto;
+
+  width: 0;
+  min-width: 0;
+
+  height: 98%;
+
+  padding: 0px 10px;
+
+  overflow-x: hidden;
   overflow-y: auto;
-  padding: 5px 10px;
+}
+
+
+/* =========================================================
+   MOBILE HEADER
+========================================================= */
+
+.sa-mobile-header {
+  display: none;
+}
+
+
+/* =========================================================
+   HAMBURGER
+========================================================= */
+
+.sa-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #6958C0;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.sa-menu-btn:hover {
+  background: #5949ac;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   MOBILE TITLE
+========================================================= */
+
+.sa-mobile-title {
+  font-size: 17px;
+
+  font-weight: 700;
+
+  color: #6958C0;
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.sa-sidebar-overlay {
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.3s ease;
+
+  z-index: 900;
+}
+
+
+/* =========================================================
+   TABLET + MOBILE
+   <= 900px
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .superadmin-wrapper {
+    display: block;
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+
+  /* -------------------------
+     MOBILE HEADER
+  ------------------------- */
+
+  .sa-mobile-header {
+    position: sticky;
+
+    top: 0;
+
+    display: flex;
+    align-items: center;
+    
+
+    gap: 64px;
+
+    width: 100%;
+    height: 64px;
+
+    padding: 10px 16px;
+
+    background: #f4f7fb;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    z-index: 800;
+  }
+
+
+  /* -------------------------
+     OVERLAY
+  ------------------------- */
+
+  .sa-sidebar-overlay {
+    display: block;
+  }
+
+
+  .sa-sidebar-overlay.show {
+    opacity: 1;
+
+    pointer-events: auto;
+  }
+
+
+  /* -------------------------
+     CONTENT
+  ------------------------- */
+
+  .superadmin-content {
+    width: 100%;
+
+    min-height: calc(100vh - 64px);
+
+    padding: 20px;
+
+    overflow: visible;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 576px
+========================================================= */
+
+@media (max-width: 576px) {
+
+  .sa-mobile-header {
+    height: 58px;
+
+    padding: 8px 12px;
+  }
+
+
+  .sa-menu-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  .sa-mobile-title {
+    font-size: 16px;
+  }
+
+
+  .superadmin-content {
+    min-height: calc(100vh - 58px);
+
+    padding: 16px 12px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   <= 380px
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .superadmin-content {
+    padding: 14px 10px;
+  }
+
 }
