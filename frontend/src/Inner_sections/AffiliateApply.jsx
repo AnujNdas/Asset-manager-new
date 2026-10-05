@@ -130,6 +130,7 @@ export default function AffiliateApply() {
             src="/images/Logo2.png"
             alt="Logo"
           />
+          <h2> Asset Pegasus</h2>
         </div>
 
         <h1>Become an Affiliate Partner</h1>
