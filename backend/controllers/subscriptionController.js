@@ -103,26 +103,6 @@ const getTiers = async (req, res) => {
      * check the affiliate cookie.
      */
 
-    if (!affiliateReferral) {
-      const referralToken =
-        req.signedCookies?.affiliate_ref;
-
-      if (referralToken) {
-        affiliateReferral =
-          await AffiliateReferral.findOne({
-            referralToken,
-            status: {
-              $in: [
-                "clicked",
-                "signed_up",
-                "converted",
-              ],
-            },
-            isFraud: false,
-          });
-      }
-    }
-
     if (affiliateReferral) {
       isAffiliate = true;
     }
