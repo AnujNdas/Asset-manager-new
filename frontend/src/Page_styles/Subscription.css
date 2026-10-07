@@ -259,7 +259,7 @@
 .upgrade-btn {
   color: #222831;
   background: #DFD0B8;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 8px 20px rgba(227, 230, 235, 0.25);
 }
 
 .primary:hover,
@@ -406,8 +406,8 @@
   margin: 0;
   color: #f4e9d8;
   font-size: 20px;
+  font-weight: 600;
 }
-
 .close-btn {
   border: 0;
   background: transparent;
@@ -420,13 +420,14 @@
   margin: 22px;
   padding: 24px;
   border-radius: 17px;
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  color: #ffffff;
+  background: linear-gradient(135deg, #DFD0B8, #948979);
+  color: #000000;
 }
 
 .checkout-plan-card h2 {
   margin: 0 0 8px;
-  font-size: 25px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .billing-cycle {
