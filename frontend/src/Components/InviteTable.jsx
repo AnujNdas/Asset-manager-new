@@ -2,7 +2,7 @@ import ThemeSwal from "../utils/swalTheme";
 import {
   revokeInvite,
 } from "../Services/ApiServices";
-import "../Component_styles/InviteTable.css"
+// import "../Component_styles/InviteTable.css"
 import {
   FiCopy,
   FiTrash2,
@@ -10,6 +10,7 @@ import {
   FiShield,
   FiUser,
   FiClock,
+  FiInbox
 } from "react-icons/fi";
 
 const InviteTable = ({ invites = [], onRevoke }) => {
@@ -59,137 +60,160 @@ const InviteTable = ({ invites = [], onRevoke }) => {
   };
 
   return (
-    <div className="invite-table-card">
-      <div className="invite-table-header">
-        <div>
-          <h3>Team Invites</h3>
-          <p>Manage pending invitations sent to users</p>
-        </div>
 
-        <div className="invite-count">
-          {invites.length} Invite{invites.length !== 1 ? "s" : ""}
-        </div>
+<div className="invite-table-card">
+
+  {/* TABLE HEADER */}
+  <div className="invite-table-header">
+    <div className="invite-table-heading">
+      <span className="invite-table-heading-icon">
+        <FiMail />
+      </span>
+
+      <div>
+        <h3>Team Invites</h3>
+        <p>
+          Manage invitations sent to team members.
+        </p>
       </div>
-
-      {invites.length === 0 ? (
-        <div className="empty-invites">
-          <h4>No invites created yet</h4>
-          <p>
-            Newly created invitations will appear here.
-          </p>
-        </div>
-      ) : (
-        <div className="invite-grid">
-          {invites.map((invite) => (
-            <div
-              key={invite._id}
-              className={`invite-card ${invite.status}`}
-            >
-              {/* TOP */}
-              <div className="invite-top">
-                <div className="invite-role">
-                  {invite.role === "admin" ? (
-                    <FiShield />
-                  ) : (
-                    <FiUser />
-                  )}
-
-                  <span>
-                    {invite.role === "admin"
-                      ? "Administrator"
-                      : "User"}
-                  </span>
-                </div>
-
-                <div
-                  className={`invite-status ${invite.status}`}
-                >
-                  {invite.status}
-                </div>
-              </div>
-
-              {/* EMAIL */}
-              <div className="invite-email">
-                <FiMail />
-                <span>{invite.email}</span>
-              </div>
-
-              {/* META */}
-              <div className="invite-meta-grid">
-
-                <div className="meta-box">
-                  <span className="meta-label">
-                    Uses
-                  </span>
-
-                  <strong>
-                    {invite.usedCount || 0}
-                    {invite.maxUses
-                      ? ` / ${invite.maxUses}`
-                      : " / ∞"}
-                  </strong>
-                </div>
-
-                <div className="meta-box">
-                  <span className="meta-label">
-                    Remaining
-                  </span>
-
-                  <strong>
-                    {invite.remainingDays ?? 0} days
-                  </strong>
-                </div>
-
-              </div>
-
-              {/* TIME */}
-              <div className="invite-time">
-                <FiClock />
-
-                <div>
-                  <p>
-                    Created:
-                    {" "}
-                    {formatDate(invite.createdAt)}
-                  </p>
-
-                  <p>
-                    Expires:
-                    {" "}
-                    {formatDate(invite.expiresAt)}
-                  </p>
-                </div>
-              </div>
-
-              {/* ACTIONS */}
-              <div className="invite-actions">
-
-                <button
-                  className="copy-btn"
-                  onClick={() =>
-                    handleCopy(invite.inviteUrl)
-                  }
-                >
-                  <FiCopy />
-                  Copy Link
-                </button>
-
-                <button
-                  className="revoke-btn"
-                  onClick={() =>
-                    handleRevoke(invite._id)
-                  }
-                >
-                  <FiTrash2 />
-                  Revoke
-                </button>
-
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
+
+    <span className="invite-count">
+      {invites.length} Invite{invites.length !== 1 ? "s" : ""}
+    </span>
+  </div>
+
+  {/* EMPTY STATE */}
+  {invites.length === 0 ? (
+    <div className="empty-invites">
+      <span className="empty-invites-icon">
+        <FiInbox />
+      </span>
+
+      <h4>No invitations yet</h4>
+      <p>
+        Invitations you create will appear here.
+      </p>
+    </div>
+  ) : (
+    <div className="invite-grid">
+
+      {invites.map((invite) => (
+        <div
+          key={invite._id}
+          className={`invite-card ${invite.status}`}
+        >
+
+          {/* CARD TOP */}
+          <div className="invite-top">
+            <div className="invite-role">
+              {invite.role === "admin" ? (
+                <FiShield />
+              ) : (
+                <FiUser />
+              )}
+
+              <span>
+                {invite.role === "admin"
+                  ? "Administrator"
+                  : "User"}
+              </span>
+            </div>
+
+            <span className={`invite-status ${invite.status}`}>
+              {invite.status}
+            </span>
+          </div>
+
+          {/* EMAIL */}
+          <div className="invite-email">
+            <span className="invite-email-icon">
+              <FiMail />
+            </span>
+
+            <div className="invite-email-details">
+              <span className="invite-email-label">
+                INVITED EMAIL
+              </span>
+
+              <span className="invite-email-value">
+                {invite.email}
+              </span>
+            </div>
+          </div>
+
+          {/* META */}
+          <div className="invite-meta-grid">
+            <div className="meta-box">
+              <span className="meta-label">
+                Invitation Uses
+              </span>
+
+              <strong>
+                {invite.usedCount || 0}
+                {invite.maxUses
+                  ? ` / ${invite.maxUses}`
+                  : " / ∞"}
+              </strong>
+            </div>
+
+            <div className="meta-box">
+              <span className="meta-label">
+                Remaining
+              </span>
+
+              <strong>
+                {invite.remainingDays ?? 0} days
+              </strong>
+            </div>
+          </div>
+
+          {/* DATE DETAILS */}
+          <div className="invite-time">
+            <FiClock />
+
+            <div className="invite-time-details">
+              <p>
+                <span>Created</span>
+                <strong>{formatDate(invite.createdAt)}</strong>
+              </p>
+
+              <p>
+                <span>Expires</span>
+                <strong>{formatDate(invite.expiresAt)}</strong>
+              </p>
+            </div>
+          </div>
+
+          {/* ACTION BUTTONS */}
+          <div className="invite-actions">
+            <button
+              type="button"
+              className="copy-btn"
+              onClick={() => handleCopy(invite.inviteUrl)}
+            >
+              <FiCopy />
+              Copy Link
+            </button>
+
+            <button
+              type="button"
+              className="revoke-btn"
+              onClick={() => handleRevoke(invite._id)}
+            >
+              <FiTrash2 />
+              Revoke
+            </button>
+          </div>
+
+        </div>
+      ))}
+
+    </div>
+  )}
+
+</div>
+
   );
 };
 

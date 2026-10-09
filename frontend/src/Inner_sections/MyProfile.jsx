@@ -4,6 +4,16 @@ import ThemeSwal from "../utils/swalTheme";
 import axiosInstance from "../Services/axiosInstance";
 import Loader from "../Components/Loader";
 import "../Page_styles/MyProfile.css";
+import {
+  FiCamera,
+  FiUserCheck,
+  FiInfo,
+  FiUser,
+  FiBriefcase,
+  FiMapPin,
+  FiSave,
+  FiLoader,
+} from "react-icons/fi";
 import profile from "../Images/default_profile.png";
 import { useOrganization } from "../Context/OrganizationContext";
 
@@ -170,174 +180,460 @@ ThemeSwal.fire(
   // UI
   // -----------------------------
   return (
-    <div className="profile-container">
-      {/* <h2 className="profile-title">My Profile</h2> */}
 
-      {/* Avatar Section */}
-      {/* Avatar Section */}
-<div className="profile-avatar-section">
-<div className="avatar-wrapper">
-  <img
-    src={avatarPreview || user?.avatar?.url || profile}
-    alt="Profile"
-    className="profile-avatar"
-    onError={(e) => {
-      e.currentTarget.src = "/default-avatar.png";
-    }}
-  />
+<div className="profile-container">
 
-  {/* Hidden file input */}
-  <input
-    type="file"
-    accept="image/*"
-    id="avatarUpload"
-    hidden
-    onChange={(e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+  {/* ==========================================
+      PROFILE HEADER / AVATAR
+  ========================================== */}
 
-  setAvatarFile(file);
-  setAvatarPreview(URL.createObjectURL(file));
-}}
-  />
+  <div className="profile-avatar-section">
 
-  {/* Edit button */}
-  <label htmlFor="avatarUpload" className="avatar-edit-btn">
-    ✏️
-  </label>
-</div>
+    <div className="profile-avatar-content">
 
+      <div className="avatar-wrapper">
 
-  <small>Upload a square image for best results</small>
-</div>
-
-
-      {/* Personal Info */}
-      <section className="profile-section">
-        <h3>Personal Information</h3>
+        <img
+          src={avatarPreview || user?.avatar?.url || profile}
+          alt="Profile"
+          className="profile-avatar"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "/default-avatar.png";
+          }}
+        />
 
         <input
+          type="file"
+          accept="image/*"
+          id="avatarUpload"
+          hidden
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            setAvatarFile(file);
+            setAvatarPreview(URL.createObjectURL(file));
+          }}
+        />
+
+        <label
+          htmlFor="avatarUpload"
+          className="avatar-edit-btn"
+          title="Change profile photo"
+          aria-label="Change profile photo"
+        >
+          <FiCamera />
+        </label>
+
+      </div>
+
+
+      <div className="profile-avatar-info">
+
+        <div className="profile-avatar-title-row">
+
+          <h3>
+            {formData.fullName || "My Profile"}
+          </h3>
+
+          <span className="profile-account-badge">
+            <FiUserCheck />
+            Account
+          </span>
+
+        </div>
+
+        <p className="profile-avatar-subtitle">
+          {formData.profileTitle ||
+            "Manage your personal and professional information"}
+        </p>
+
+        <span className="profile-avatar-hint">
+          <FiInfo />
+          Upload a square image for best results
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  {/* ==========================================
+      PERSONAL INFORMATION
+  ========================================== */}
+
+  <section className="profile-section">
+
+    <div className="profile-section-header">
+
+      <div className="profile-section-heading">
+
+        <span className="profile-section-icon">
+          <FiUser />
+        </span>
+
+        <div>
+          <h3>Personal Information</h3>
+          <p>Update your personal and contact details.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div className="profile-fields-grid">
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-fullName">
+          Full Name
+        </label>
+
+        <input
+          id="profile-fullName"
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
-          placeholder="Full Name"
+          placeholder="Enter your full name"
+          autoComplete="name"
         />
 
+      </div>
+
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-profileTitle">
+          Profile Title
+        </label>
+
         <input
+          id="profile-profileTitle"
           name="profileTitle"
           value={formData.profileTitle}
           onChange={handleChange}
-          placeholder="Profile Title (e.g. Frontend Developer)"
+          placeholder="e.g. Frontend Developer"
         />
 
+      </div>
+
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-phone">
+          Phone Number
+        </label>
+
         <input
+          id="profile-phone"
           name="phone"
+          type="tel"
           value={formData.phone}
           onChange={handleChange}
-          placeholder="Phone"
+          placeholder="Enter phone number"
+          autoComplete="tel"
         />
-      </section>
 
-      {/* Organization */}
-      <section className="profile-section">
-        <h3>Organization</h3>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  {/* ==========================================
+      ORGANIZATION INFORMATION
+  ========================================== */}
+
+  <section className="profile-section">
+
+    <div className="profile-section-header">
+
+      <div className="profile-section-heading">
+
+        <span className="profile-section-icon">
+          <FiBriefcase />
+        </span>
+
+        <div>
+          <h3>Organization Information</h3>
+          <p>Manage organization and professional details.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div className="profile-fields-grid">
+
+      {/* ORGANIZATION NAME */}
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-organizationName">
+          Organization Name
+        </label>
 
         <input
+          id="profile-organizationName"
           name="organizationName"
           value={formData.organizationName}
           onChange={handleChange}
-          placeholder="Organization Name"
+          placeholder="Enter organization name"
         />
 
+      </div>
+
+
+      {/* ORGANIZATION TYPE */}
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-organizationType">
+          Organization Type
+        </label>
+
         <select
+          id="profile-organizationType"
           name="organizationType"
-          disabled={!canManageOrganization} 
+          disabled={!canManageOrganization}
           value={formData.organizationType}
           onChange={handleChange}
         >
-          <option value="">Organization Type</option>
+          <option value="">Select organization type</option>
           <option value="Startup">Startup</option>
           <option value="Enterprise">Enterprise</option>
           <option value="Agency">Agency</option>
           <option value="NGO">NGO</option>
           <option value="Other">Other</option>
         </select>
-<select
-  name="currency"
-  value={formData.currency}
-  onChange={handleCurrencyChange}
->
-  <option value="USD">USD - US Dollar</option>
-  <option value="EUR">EUR - Euro</option>
-  <option value="GBP">GBP - British Pound</option>
-  <option value="INR">INR - Indian Rupee</option>
-  <option value="JPY">JPY - Japanese Yen</option>
-  <option value="AUD">AUD - Australian Dollar</option>
-  <option value="CAD">CAD - Canadian Dollar</option>
-  <option value="CHF">CHF - Swiss Franc</option>
-  <option value="CNY">CNY - Chinese Yuan</option>
-  <option value="SGD">SGD - Singapore Dollar</option>
-  <option value="AED">AED - UAE Dirham</option>
-</select>
+
+      </div>
+
+
+      {/* CURRENCY */}
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-currency">
+          Organization Currency
+        </label>
+
+        <select
+          id="profile-currency"
+          name="currency"
+          value={formData.currency}
+          onChange={handleCurrencyChange}
+        >
+          <option value="USD">USD - US Dollar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - British Pound</option>
+          <option value="INR">INR - Indian Rupee</option>
+          <option value="JPY">JPY - Japanese Yen</option>
+          <option value="AUD">AUD - Australian Dollar</option>
+          <option value="CAD">CAD - Canadian Dollar</option>
+          <option value="CHF">CHF - Swiss Franc</option>
+          <option value="CNY">CNY - Chinese Yuan</option>
+          <option value="SGD">SGD - Singapore Dollar</option>
+          <option value="AED">AED - UAE Dirham</option>
+        </select>
+
+      </div>
+
+
+      {/* DEPARTMENT */}
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-department">
+          Department
+        </label>
+
         <input
+          id="profile-department"
           name="department"
           value={formData.department}
           onChange={handleChange}
-          placeholder="Department"
+          placeholder="Enter department"
         />
 
+      </div>
+
+
+      {/* DESIGNATION */}
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-designation">
+          Designation
+        </label>
+
         <input
+          id="profile-designation"
           name="designation"
           value={formData.designation}
           onChange={handleChange}
-          placeholder="Designation"
+          placeholder="Enter designation"
         />
 
+      </div>
+
+
+      {/* WORK EMAIL */}
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-workEmail">
+          Work Email
+        </label>
+
         <input
+          id="profile-workEmail"
           name="workEmail"
+          type="email"
           value={formData.workEmail}
           onChange={handleChange}
-          placeholder="Work Email"
+          placeholder="Enter work email"
+          autoComplete="email"
         />
-      </section>
 
-      {/* Location */}
-      <section className="profile-section">
-        <h3>Location</h3>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  {/* ==========================================
+      LOCATION INFORMATION
+  ========================================== */}
+
+  <section className="profile-section">
+
+    <div className="profile-section-header">
+
+      <div className="profile-section-heading">
+
+        <span className="profile-section-icon">
+          <FiMapPin />
+        </span>
+
+        <div>
+          <h3>Location Information</h3>
+          <p>Update your organization's location details.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div className="profile-fields-grid">
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-country">
+          Country
+        </label>
 
         <input
+          id="profile-country"
           name="country"
           value={formData.country}
           onChange={handleChange}
-          placeholder="Country"
+          placeholder="Enter country"
+          autoComplete="country-name"
         />
 
+      </div>
+
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-city">
+          City
+        </label>
+
         <input
+          id="profile-city"
           name="city"
           value={formData.city}
           onChange={handleChange}
-          placeholder="City"
+          placeholder="Enter city"
+          autoComplete="address-level2"
         />
 
+      </div>
+
+
+      <div className="profile-field">
+
+        <label htmlFor="profile-officeLocation">
+          Office Location
+        </label>
+
         <input
+          id="profile-officeLocation"
           name="officeLocation"
           value={formData.officeLocation}
           onChange={handleChange}
-          placeholder="Office Location"
+          placeholder="Enter office location"
         />
-      </section>
 
-      {/* Save */}
-      <div className="profile-actions">
-        <button
-          className="btn primary"
-          onClick={handleSave}
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
       </div>
+
     </div>
+
+  </section>
+
+
+  {/* ==========================================
+      SAVE ACTIONS
+  ========================================== */}
+
+  <div className="profile-actions">
+
+    <div className="profile-actions-info">
+
+      <FiInfo />
+
+      <span>
+        Save your changes to update your profile information.
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      className="btn primary profile-save-btn"
+      onClick={handleSave}
+      disabled={saving}
+    >
+
+      {saving ? (
+        <>
+          <FiLoader className="profile-loading-icon" />
+          Saving...
+        </>
+      ) : (
+        <>
+          <FiSave />
+          Save Changes
+        </>
+      )}
+
+    </button>
+
+  </div>
+
+</div>
+
   );
 };
 

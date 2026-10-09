@@ -14,7 +14,7 @@ import {
   unassignAssetInstance,
   deleteAssetInstance
 } from "../Services/ApiServices";
-import "../Page_styles/Inventory.css";
+import "../Page_styles/InventoryTestFile.css";
 
 import InstanceCard from "../Components/InstanceInventory";
 import { getErrorMessage } from "../utils/getErrorMessage";
@@ -437,639 +437,1671 @@ const paginatedAssets = filteredAssets.slice(
   if (loading)
     return <Loader type="inventory" apiDone={apiDone} />;
   return (
-    <div className="inventory-container">
+//     <div className="inventory-container">
 
-      {/* HEADER */}
-      <div className="dashboard-header">
-        <h2>Hardware Inventory</h2>
-    <div style={{display : "flex" , gap : "5px"}}>
-          <input
-            type="text"
-            placeholder="Search Hardware..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="inventory-search-input tour-search"
-          />
-{/* <button
-  onClick={() => driverObj.drive()}
-  className="tour-help-btn"
->
-  ❓ Guide
-</button> */}
-</div>
+//       {/* HEADER */}
+//       <div className="dashboard-header">
+//         <h2>Hardware Inventory</h2>
+//     <div style={{display : "flex" , gap : "5px"}}>
+//           <input
+//             type="text"
+//             placeholder="Search Hardware..."
+//             value={searchTerm}
+//             onChange={(e) => setSearchTerm(e.target.value)}
+//             className="inventory-search-input tour-search"
+//           />
+// {/* <button
+//   onClick={() => driverObj.drive()}
+//   className="tour-help-btn"
+// >
+//   ❓ Guide
+// </button> */}
+// </div>
+//       </div>
+
+//       {/* GRID */}
+// {/* EMPTY STATE */}
+// {filteredAssets.length === 0 ? (
+//   <div className="empty-state">
+//     <div className="empty-icon">🖥️</div>
+
+//     <h3>
+//       {searchTerm
+//         ? "No Matching Hardware Found"
+//         : "No Hardware Assets Found"}
+//     </h3>
+
+//     <p>
+//       {searchTerm
+//         ? "No hardware assets matched your search."
+//         : "No hardware assets have been added yet. Start by capturing your first hardware asset."}
+//     </p>
+
+//     {!searchTerm && (
+//       <button
+//         className="btn-save"
+//         onClick={() => navigate("/assetCapture")}
+//       >
+//         Go to Capture Page
+//       </button>
+//     )}
+//   </div>
+// ) : (
+//   <>
+//     {/* GRID */}
+//     <div className="inventory-grid" ref={gridRef}>
+//         <AnimatePresence>
+//       {paginatedAssets.map((asset , index) => {
+//         const totals = getAssetTotals(asset);
+//         const allAssigned =
+//   asset.assetQuantity > 0 &&
+//   asset.inUse >= asset.assetQuantity;
+//   const statusConfig = STATUS_CONFIG[asset.status] || {
+//     label: asset.status || "Unknown",
+//     className: "default",
+//     icon: "❓"
+//   };
+
+//   return (
+//     <motion.div
+//       key={asset._id}
+//       className="inventory-card tour-card"
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//     >
+//       {/* 🔷 HEADER */}
+//       <div className="card-header">
+// <div>
+//   <h3 title={asset.assetName}>
+//     {truncateText(asset.assetName, 18)}
+//   </h3>
+//   <p className="asset-code">{asset.assetCode}</p>
+// </div>  
+
+// {(() => {
+//   const categoryName = asset.assetCategory?.name;
+//   const category = getCategoryUI(categoryName);
+
+//   return (
+//     <div className="category-badge">
+//       <span className="category-icon">
+//         {category.icon}
+//       </span>
+
+//       <span className="category-text">
+//         {truncateText(categoryName, 14)}
+//       </span>
+//     </div>
+//   );
+// })()}
+//       </div>
+//   {/* 🔷 VENDOR INFO */}
+// <div className="vendor-card">
+//   <p className="vendor-name">
+//     🏢 {asset.purchaseDetails?.vendor?.name || "No Vendor"}
+//   </p>
+
+//   <p className="vendor-contact">
+//     📞 {asset.purchaseDetails?.vendor?.contact || "No Contact"}
+//   </p>
+
+//   <p className="vendor-email">
+//     ✉️ {asset.purchaseDetails?.vendor?.supportEmail || "No Email"}
+//   </p>
+// </div>
+//       {/* 🔷 BADGE GRID */}
+//       <div className="badge-grid">
+//         <span className="badge">{asset.locationName?.name}</span>
+//         <span className="badge">{asset.associateUnit?.name}</span>
+
+//         {/* ✅ FIXED STATUS BADGE */}
+//         <span className={`badge status ${statusConfig.className}`}>
+//           {statusConfig.icon} {statusConfig.label}
+//         </span>
+//       </div>
+
+//       {/* 🔷 DATES */}
+//       <div className="dates">
+//         <div>
+//           <p className="label"> Purchase Date</p>
+//           <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
+//         </div>
+//     <div>
+//       <p className="label">Usage</p>
+//     <p>
+//       💻 {asset.inUse}/{asset.assetQuantity} used
+//     </p>
+//     </div>
+//       </div>
+
+//      {/* 🔷 FINANCIAL INSIGHTS (COMPACT) */}
+// <div className="financial-grid-compact">
+
+//   {/* TOP ROW (IMPORTANT) */}
+//   <div className="financial-card primary">
+//     <p className="label">Total Purchase Cost</p>
+//                <p>
+//                   💰 {CURRENCY_SYMBOLS[currency]}{" "}
+//                   {totals.totalPurchase.toLocaleString()}
+//                 </p>
+//   </div>
+
+//   <div className="financial-card primary-alt">
+//     <p className="label">Maintenance</p>
+//                 <p>
+//                   🛠 {CURRENCY_SYMBOLS[currency]}{" "}
+//                   {totals.totalMaintenance.toLocaleString()}
+//                 </p>
+
+//   </div>
+
+//   {/* BOTTOM ROW (LESS IMPORTANT) */}
+//   {/* <div className="financial-card small">
+//     <p className="label">Yearly</p>
+//     <p>
+//       📅 {asset.financialTracking?.currency}{" "}
+//      {CURRENCY_SYMBOLS[currency]}{" "}
+// {convertFromBase(
+//   Number(asset.financialTracking?.yearlyMaintenanceCost?.baseAmount || 0)
+// ).toLocaleString()}
+//     </p>
+//   </div> */}
+
+//   {/* <div className="financial-card small">
+//     <p className="label">Monthly</p>
+//     <p>
+//       📊 {asset.financialTracking?.currency}{" "}
+//       {asset.financialTracking?.monthlyMaintenanceCost?.toFixed(2) || 0}
+//     </p>
+//   </div> */}
+
+// </div>
+//       {/* 🔷 ACTIONS */}
+//       <div className="card-actions">
+//         <button
+//           onClick={() => setSelectedAsset(asset)}
+//           className="btn-save tour-view"
+//         >
+//           View
+//         </button>
+//         <button
+//           onClick={() => setEditAsset(asset)}
+//           className="btn-edit tour-edit"
+//         >
+//           Edit
+//         </button>
+//         <button
+//           onClick={() => handleDelete(asset._id)}
+//           className="btn-delete"
+//         >
+//           Delete
+//         </button>
+// <button
+//   onClick={() => handleAssign(asset)}
+//   className={`btn-assign tour-assign ${
+//     allAssigned ? "disabled-btn" : ""
+//   }`}
+//   disabled={allAssigned}
+// >
+//   {allAssigned ? "Assigned" : "Assign"}
+// </button>
+//       </div>
+//     </motion.div>
+//   );
+// })}
+//         </AnimatePresence>
+//       </div>
+// <Pagination
+//   currentPage={currentPage}
+//   totalPages={totalPages}
+//   onPageChange={(page) => setCurrentPage(page)}
+// />
+//   </>
+// )}
+//       {/* MODAL */}
+//       <AnimatePresence>
+//         {selectedAsset && (
+//           <motion.div
+//             className="asset-view-overlay"
+//             initial={{ opacity: 0 }}
+//             animate={{ opacity: 1 }}
+//             exit={{ opacity: 0 }}
+//             onClick={() => setSelectedAsset(null)}
+//           >
+//             <motion.div
+//               className="asset-view-modal"
+//               onClick={(e) => e.stopPropagation()}
+//             >
+//               <h3>Instances — {selectedAsset.assetName}</h3>
+
+//               {/* 🔥 DATA PREP */}
+//               {(() => {
+//                 const instances = selectedAsset.instances || [];
+
+//                 const assignmentMap = {};
+//                 selectedAsset.assignmentRecords?.forEach((a) => {
+//                   assignmentMap[String(a.assetInstanceId)] = a;
+//                 });
+//                 return (
+//                   <>
+// <h4>All Instances</h4>
+
+// {instances.length === 0 ? (
+//   <p style={{ color : "#948979"}}>No instances found</p>
+// ) : (
+//  <div className="instance-group">
+//   {instances.map((inst) => {
+//     const assignment = assignmentMap[String(inst._id)];
+
+//     return (
+//       <InstanceCard
+//         key={inst._id}
+//         inst={inst}
+//          assignment={assignmentMap[String(inst._id)]}
+//         onEdit={() => {
+//           setEditInstance(inst);
+//           setInstanceForm({
+//             location: inst.location || "",
+//             condition: inst.condition || "new",
+//             serialNumber:
+//               inst.hardware?.serialNumber ||
+//               inst.software?.licenseNumber ||
+//               "",
+//             assetType: inst.assetType,
+//           });
+//         }}
+//         onUnassign={handleUnassign}
+//         onDelete={handleDeleteInstance}
+//       />
+//     );
+//   })}
+// </div>
+// )}
+//                   </>
+//                 );
+//               })()}
+//               <AnimatePresence>
+// {editInstance && (
+//   <motion.div
+//     className="asset-view-overlay"
+//     initial={{ opacity: 0 }}
+//     animate={{ opacity: 1 }}
+//     exit={{ opacity: 0 }}
+//     onClick={() => setEditInstance(null)}
+//   >
+//     <motion.div
+//       className="asset-view-modal"
+//       onClick={(e) => e.stopPropagation()}
+//     >
+//       <h3>Edit Instance</h3>
+
+//       <div className="grid-2">
+//         {/* LOCATION */}
+//         <div className="input-group">
+//           <label>Location</label>
+//           <input
+//             value={instanceForm.location}
+//             onChange={(e) =>
+//               setInstanceForm({
+//                 ...instanceForm,
+//                 location: e.target.value,
+//               })
+//             }
+//           />
+//         </div>
+
+//         {/* CONDITION */}
+//         <div className="input-group">
+//           <label>Condition</label>
+//           <select
+//             value={instanceForm.condition}
+//             onChange={(e) =>
+//               setInstanceForm({
+//                 ...instanceForm,
+//                 condition: e.target.value,
+//               })
+//             }
+//           >
+//             <option value="new">New</option>
+//             <option value="used">Used</option>
+//             <option value="damaged">Damaged</option>
+//           </select>
+//         </div>
+//       </div>
+
+//       {/* SERIAL NUMBER */}
+//       <div className="grid-2">
+//         <div className="input-group">
+//           <label>
+//             {instanceForm.assetType === "hardware"
+//               ? "Serial Number"
+//               : "License Number"}
+//           </label>
+//           <input
+//             value={instanceForm.serialNumber || ""}
+//             onChange={(e) =>
+//               setInstanceForm({
+//                 ...instanceForm,
+//                 serialNumber: e.target.value,
+//               })
+//             }
+//           />
+//         </div>
+//       </div>
+
+//       {/* INFO MESSAGE */}
+//       <p className="info-text">
+//         💡 Financial, warranty, and technical details are managed via upgrade or lifecycle actions.
+//       </p>
+
+//       {/* ACTIONS */}
+//       <div className="modal-actions">
+//         <button
+//           className="btn-save"
+//           onClick={handleInstanceUpdate}
+//         >
+//           Save
+//         </button>
+
+//         <button
+//           className="btn-cancel"
+//           onClick={() => setEditInstance(null)}
+//         >
+//           Cancel
+//         </button>
+//       </div>
+//     </motion.div>
+//   </motion.div>
+// )}
+// </AnimatePresence>
+
+//               <button
+//                 className="asset-view-close-btn"
+//                 onClick={() => setSelectedAsset(null)}
+//               >
+//                 Close
+//               </button>
+//             </motion.div>
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
+//       <AnimatePresence>
+//  {editAsset && (
+//   <motion.div
+//     className="asset-view-overlay"
+//     initial={{ opacity: 0 }}
+//     animate={{ opacity: 1 }}
+//     exit={{ opacity: 0 }}
+//     onClick={() => setEditAsset(null)}
+//   >
+//     <motion.div
+//       className="asset-view-modal"
+//       onClick={(e) => e.stopPropagation()}
+//     >
+//       <h3>Edit Asset</h3>
+
+//       {/* BASIC INFO */}
+//       <div className="grid-2">
+//         <div className="input-group">
+//           <label>Asset Name</label>
+//           <input
+//             value={editForm.assetName}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 assetName: e.target.value,
+//               })
+//             }
+//           />
+//         </div>
+
+//         <div className="input-group">
+//           <label>Category</label>
+//           <select
+//             value={editForm.assetCategory}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 assetCategory: e.target.value,
+//               })
+//             }
+//           >
+//             {categories.map(c => (
+//               <option key={c._id} value={c._id}>
+//                 {c.name}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+//       </div>
+
+//       {/* QUANTITY */}
+//       <div className="grid-2">
+//         <div className="input-group">
+//           <label>Quantity</label>
+//           <input
+//             type="number"
+//             value={editForm.assetQuantity}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 assetQuantity: e.target.value,
+//               })
+//             }
+//           />
+//           <p className="warning-text">
+//             ⚠ Changing quantity will add/remove instances automatically.
+//           </p>
+//         </div>
+//       </div>
+
+//       {/* UNIT + LOCATION */}
+//       <div className="grid-2">
+//         <div className="input-group">
+//           <label>Unit</label>
+//           <select
+//             value={editForm.associateUnit}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 associateUnit: e.target.value,
+//               })
+//             }
+//           >
+//             {units.map(u => (
+//               <option key={u._id} value={u._id}>
+//                 {u.name}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+
+//         <div className="input-group">
+//           <label>Location</label>
+//           <select
+//             value={editForm.locationName}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 locationName: e.target.value,
+//               })
+//             }
+//           >
+//             {locations.map(l => (
+//               <option key={l._id} value={l._id}>
+//                 {l.name}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+//       </div>
+
+//       {/* STATUS + TYPE */}
+//       <div className="grid-2">
+//         {/* <div className="input-group">
+//           <label>Status</label>
+//           <select
+//             value={editForm.assetStatus}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 assetStatus: e.target.value,
+//               })
+//             }
+//           >
+//             {statuses.map(s => (
+//               <option key={s._id} value={s._id}>
+//                 {s.name}
+//               </option>
+//             ))}
+//           </select>
+//         </div> */}
+
+//         <div className="input-group">
+//           <label>Type</label>
+//           <select
+//             value={editForm.type}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 type: e.target.value,
+//               })
+//             }
+//           >
+//             <option value="one_time">One-Time</option>
+//             <option value="maintenance">Maintenance</option>
+//           </select>
+//         </div>
+//       </div>
+
+//       {/* PURCHASE DATE */}
+//       <div className="grid-2">
+//         <div className="input-group">
+//           <label>Purchase Date</label>
+//           <input
+//             type="date"
+//             value={editForm.purchaseDate || ""}
+//             onChange={(e) =>
+//               setEditForm({
+//                 ...editForm,
+//                 purchaseDate: e.target.value,
+//               })
+//             }
+//           />
+//         </div>
+//       </div>
+//       {/* 🔷 VENDOR DETAILS */}
+// <div className="grid-2">
+//   <div className="input-group">
+//     <label>Vendor Name</label>
+//     <input
+//       value={editForm.purchaseDetails?.vendor?.name || ""}
+//       onChange={(e) =>
+//         setEditForm({
+//           ...editForm,
+//           purchaseDetails: {
+//             ...editForm.purchaseDetails,
+//             vendor: {
+//               ...editForm.purchaseDetails.vendor,
+//               name: e.target.value,
+//             },
+//           },
+//         })
+//       }
+//     />
+//   </div>
+
+//   <div className="input-group">
+//     <label>Vendor Contact</label>
+//     <input
+//       value={editForm.purchaseDetails?.vendor?.contact || ""}
+//       onChange={(e) =>
+//         setEditForm({
+//           ...editForm,
+//           purchaseDetails: {
+//             ...editForm.purchaseDetails,
+//             vendor: {
+//               ...editForm.purchaseDetails.vendor,
+//               contact: e.target.value,
+//             },
+//           },
+//         })
+//       }
+//     />
+//   </div>
+// </div>
+
+// <div className="grid-2">
+//   <div className="input-group">
+//     <label>Support Email</label>
+//     <input
+//       type="email"
+//       value={editForm.purchaseDetails?.vendor?.supportEmail || ""}
+//       onChange={(e) =>
+//         setEditForm({
+//           ...editForm,
+//           purchaseDetails: {
+//             ...editForm.purchaseDetails,
+//             vendor: {
+//               ...editForm.purchaseDetails.vendor,
+//               supportEmail: e.target.value,
+//             },
+//           },
+//         })
+//       }
+//     />
+//   </div>
+// </div>
+
+//       {/* ACTIONS */}
+//       <div className="modal-actions">
+//         <button onClick={handleUpdate} className="btn-save">
+//           Save
+//         </button>
+//         <button
+//           onClick={() => setEditAsset(null)}
+//           className="btn-cancel"
+//         >
+//           Cancel
+//         </button>
+//       </div>
+//     </motion.div>
+//   </motion.div>
+// )}
+// </AnimatePresence>
+//     </div>
+
+<div className="inventory-page">
+  {/* =========================================================
+      PAGE HEADER
+  ========================================================= */}
+  <div className="inventory-page-header">
+    <div className="inventory-title-block">
+      <span className="inventory-eyebrow">INVENTORY</span>
+
+      <h1>Hardware Inventory</h1>
+
+      <p>
+        Monitor hardware assets, utilization, costs, assignments,
+        and lifecycle information.
+      </p>
+    </div>
+
+    <div className="inventory-header-actions">
+      <div className="inventory-search">
+        <span className="search-icon">⌕</span>
+
+        <input
+          type="text"
+          placeholder="Search hardware..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="inventory-search-input tour-search"
+        />
+
+        {searchTerm && (
+          <button
+            type="button"
+            className="search-clear"
+            onClick={() => setSearchTerm("")}
+            aria-label="Clear search"
+          >
+            ×
+          </button>
+        )}
       </div>
 
-      {/* GRID */}
-{/* EMPTY STATE */}
-{filteredAssets.length === 0 ? (
-  <div className="empty-state">
-    <div className="empty-icon">🖥️</div>
-
-    <h3>
-      {searchTerm
-        ? "No Matching Hardware Found"
-        : "No Hardware Assets Found"}
-    </h3>
-
-    <p>
-      {searchTerm
-        ? "No hardware assets matched your search."
-        : "No hardware assets have been added yet. Start by capturing your first hardware asset."}
-    </p>
-
-    {!searchTerm && (
       <button
-        className="btn-save"
+        type="button"
+        className="inventory-capture-btn"
         onClick={() => navigate("/assetCapture")}
       >
-        Go to Capture Page
+        <span>+</span>
+        Add Hardware
       </button>
-    )}
-  </div>
-) : (
-  <>
-    {/* GRID */}
-    <div className="inventory-grid" ref={gridRef}>
-        <AnimatePresence>
-      {paginatedAssets.map((asset , index) => {
-        const totals = getAssetTotals(asset);
-        const allAssigned =
-  asset.assetQuantity > 0 &&
-  asset.inUse >= asset.assetQuantity;
-  const statusConfig = STATUS_CONFIG[asset.status] || {
-    label: asset.status || "Unknown",
-    className: "default",
-    icon: "❓"
-  };
-
-  return (
-    <motion.div
-      key={asset._id}
-      className="inventory-card tour-card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      {/* 🔷 HEADER */}
-      <div className="card-header">
-<div>
-  <h3 title={asset.assetName}>
-    {truncateText(asset.assetName, 18)}
-  </h3>
-  <p className="asset-code">{asset.assetCode}</p>
-</div>  
-
-{(() => {
-  const categoryName = asset.assetCategory?.name;
-  const category = getCategoryUI(categoryName);
-
-  return (
-    <div className="category-badge">
-      <span className="category-icon">
-        {category.icon}
-      </span>
-
-      <span className="category-text">
-        {truncateText(categoryName, 14)}
-      </span>
     </div>
-  );
-})()}
-      </div>
-  {/* 🔷 VENDOR INFO */}
-<div className="vendor-card">
-  <p className="vendor-name">
-    🏢 {asset.purchaseDetails?.vendor?.name || "No Vendor"}
-  </p>
+  </div>
 
-  <p className="vendor-contact">
-    📞 {asset.purchaseDetails?.vendor?.contact || "No Contact"}
-  </p>
+  {/* =========================================================
+      INVENTORY TOOLBAR
+  ========================================================= */}
+  {filteredAssets.length > 0 && (
+    <div className="inventory-toolbar">
+      <div className="inventory-result-count">
+        <span className="result-dot"></span>
 
-  <p className="vendor-email">
-    ✉️ {asset.purchaseDetails?.vendor?.supportEmail || "No Email"}
-  </p>
-</div>
-      {/* 🔷 BADGE GRID */}
-      <div className="badge-grid">
-        <span className="badge">{asset.locationName?.name}</span>
-        <span className="badge">{asset.associateUnit?.name}</span>
-
-        {/* ✅ FIXED STATUS BADGE */}
-        <span className={`badge status ${statusConfig.className}`}>
-          {statusConfig.icon} {statusConfig.label}
+        <span>
+          <strong>{filteredAssets.length}</strong>{" "}
+          {filteredAssets.length === 1 ? "asset" : "assets"}
         </span>
       </div>
 
-      {/* 🔷 DATES */}
-      <div className="dates">
-        <div>
-          <p className="label"> Purchase Date</p>
-          <p>📅 {formatDate(asset.purchaseDetails?.purchaseDate)}</p>
-        </div>
-    <div>
-      <p className="label">Usage</p>
-    <p>
-      💻 {asset.inUse}/{asset.assetQuantity} used
-    </p>
+      <div className="inventory-toolbar-info">
+        Page {currentPage} of {totalPages}
+      </div>
     </div>
+  )}
+
+  {/* =========================================================
+      EMPTY STATE
+  ========================================================= */}
+  {filteredAssets.length === 0 ? (
+    <div className="inventory-empty-state">
+      <div className="empty-state-icon">
+        <span>□</span>
       </div>
 
-     {/* 🔷 FINANCIAL INSIGHTS (COMPACT) */}
-<div className="financial-grid-compact">
+      <span className="empty-eyebrow">
+        {searchTerm ? "NO RESULTS" : "INVENTORY EMPTY"}
+      </span>
 
-  {/* TOP ROW (IMPORTANT) */}
-  <div className="financial-card primary">
-    <p className="label">Total Purchase Cost</p>
-               <p>
-                  💰 {CURRENCY_SYMBOLS[currency]}{" "}
-                  {totals.totalPurchase.toLocaleString()}
-                </p>
-  </div>
+      <h3>
+        {searchTerm
+          ? "No matching hardware found"
+          : "No hardware assets yet"}
+      </h3>
 
-  <div className="financial-card primary-alt">
-    <p className="label">Maintenance</p>
-                <p>
-                  🛠 {CURRENCY_SYMBOLS[currency]}{" "}
-                  {totals.totalMaintenance.toLocaleString()}
-                </p>
-
-  </div>
-
-  {/* BOTTOM ROW (LESS IMPORTANT) */}
-  {/* <div className="financial-card small">
-    <p className="label">Yearly</p>
-    <p>
-      📅 {asset.financialTracking?.currency}{" "}
-     {CURRENCY_SYMBOLS[currency]}{" "}
-{convertFromBase(
-  Number(asset.financialTracking?.yearlyMaintenanceCost?.baseAmount || 0)
-).toLocaleString()}
-    </p>
-  </div> */}
-
-  {/* <div className="financial-card small">
-    <p className="label">Monthly</p>
-    <p>
-      📊 {asset.financialTracking?.currency}{" "}
-      {asset.financialTracking?.monthlyMaintenanceCost?.toFixed(2) || 0}
-    </p>
-  </div> */}
-
-</div>
-      {/* 🔷 ACTIONS */}
-      <div className="card-actions">
-        <button
-          onClick={() => setSelectedAsset(asset)}
-          className="btn-save tour-view"
-        >
-          View
-        </button>
-        <button
-          onClick={() => setEditAsset(asset)}
-          className="btn-edit tour-edit"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => handleDelete(asset._id)}
-          className="btn-delete"
-        >
-          Delete
-        </button>
-<button
-  onClick={() => handleAssign(asset)}
-  className={`btn-assign tour-assign ${
-    allAssigned ? "disabled-btn" : ""
-  }`}
-  disabled={allAssigned}
->
-  {allAssigned ? "Assigned" : "Assign"}
-</button>
-      </div>
-    </motion.div>
-  );
-})}
-        </AnimatePresence>
-      </div>
-<Pagination
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={(page) => setCurrentPage(page)}
-/>
-  </>
-)}
-      {/* MODAL */}
-      <AnimatePresence>
-        {selectedAsset && (
-          <motion.div
-            className="asset-view-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedAsset(null)}
-          >
-            <motion.div
-              className="asset-view-modal"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3>Instances — {selectedAsset.assetName}</h3>
-
-              {/* 🔥 DATA PREP */}
-              {(() => {
-                const instances = selectedAsset.instances || [];
-
-                const assignmentMap = {};
-                selectedAsset.assignmentRecords?.forEach((a) => {
-                  assignmentMap[String(a.assetInstanceId)] = a;
-                });
-                return (
-                  <>
-<h4>All Instances</h4>
-
-{instances.length === 0 ? (
-  <p style={{ color : "#948979"}}>No instances found</p>
-) : (
- <div className="instance-group">
-  {instances.map((inst) => {
-    const assignment = assignmentMap[String(inst._id)];
-
-    return (
-      <InstanceCard
-        key={inst._id}
-        inst={inst}
-         assignment={assignmentMap[String(inst._id)]}
-        onEdit={() => {
-          setEditInstance(inst);
-          setInstanceForm({
-            location: inst.location || "",
-            condition: inst.condition || "new",
-            serialNumber:
-              inst.hardware?.serialNumber ||
-              inst.software?.licenseNumber ||
-              "",
-            assetType: inst.assetType,
-          });
-        }}
-        onUnassign={handleUnassign}
-        onDelete={handleDeleteInstance}
-      />
-    );
-  })}
-</div>
-)}
-                  </>
-                );
-              })()}
-              <AnimatePresence>
-{editInstance && (
-  <motion.div
-    className="asset-view-overlay"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    onClick={() => setEditInstance(null)}
-  >
-    <motion.div
-      className="asset-view-modal"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h3>Edit Instance</h3>
-
-      <div className="grid-2">
-        {/* LOCATION */}
-        <div className="input-group">
-          <label>Location</label>
-          <input
-            value={instanceForm.location}
-            onChange={(e) =>
-              setInstanceForm({
-                ...instanceForm,
-                location: e.target.value,
-              })
-            }
-          />
-        </div>
-
-        {/* CONDITION */}
-        <div className="input-group">
-          <label>Condition</label>
-          <select
-            value={instanceForm.condition}
-            onChange={(e) =>
-              setInstanceForm({
-                ...instanceForm,
-                condition: e.target.value,
-              })
-            }
-          >
-            <option value="new">New</option>
-            <option value="used">Used</option>
-            <option value="damaged">Damaged</option>
-          </select>
-        </div>
-      </div>
-
-      {/* SERIAL NUMBER */}
-      <div className="grid-2">
-        <div className="input-group">
-          <label>
-            {instanceForm.assetType === "hardware"
-              ? "Serial Number"
-              : "License Number"}
-          </label>
-          <input
-            value={instanceForm.serialNumber || ""}
-            onChange={(e) =>
-              setInstanceForm({
-                ...instanceForm,
-                serialNumber: e.target.value,
-              })
-            }
-          />
-        </div>
-      </div>
-
-      {/* INFO MESSAGE */}
-      <p className="info-text">
-        💡 Financial, warranty, and technical details are managed via upgrade or lifecycle actions.
+      <p>
+        {searchTerm
+          ? `We couldn't find any hardware matching "${searchTerm}".`
+          : "Start building your inventory by capturing your first hardware asset."}
       </p>
 
-      {/* ACTIONS */}
-      <div className="modal-actions">
+      {searchTerm ? (
         <button
-          className="btn-save"
-          onClick={handleInstanceUpdate}
+          type="button"
+          className="empty-secondary-btn"
+          onClick={() => setSearchTerm("")}
         >
-          Save
+          Clear Search
         </button>
-
+      ) : (
         <button
-          className="btn-cancel"
-          onClick={() => setEditInstance(null)}
+          type="button"
+          className="empty-primary-btn"
+          onClick={() => navigate("/assetCapture")}
         >
-          Cancel
+          <span>+</span>
+          Capture Hardware
         </button>
-      </div>
-    </motion.div>
-  </motion.div>
-)}
-</AnimatePresence>
-
-              <button
-                className="asset-view-close-btn"
-                onClick={() => setSelectedAsset(null)}
-              >
-                Close
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
- {editAsset && (
-  <motion.div
-    className="asset-view-overlay"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    onClick={() => setEditAsset(null)}
-  >
-    <motion.div
-      className="asset-view-modal"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h3>Edit Asset</h3>
-
-      {/* BASIC INFO */}
-      <div className="grid-2">
-        <div className="input-group">
-          <label>Asset Name</label>
-          <input
-            value={editForm.assetName}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                assetName: e.target.value,
-              })
-            }
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Category</label>
-          <select
-            value={editForm.assetCategory}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                assetCategory: e.target.value,
-              })
-            }
-          >
-            {categories.map(c => (
-              <option key={c._id} value={c._id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* QUANTITY */}
-      <div className="grid-2">
-        <div className="input-group">
-          <label>Quantity</label>
-          <input
-            type="number"
-            value={editForm.assetQuantity}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                assetQuantity: e.target.value,
-              })
-            }
-          />
-          <p className="warning-text">
-            ⚠ Changing quantity will add/remove instances automatically.
-          </p>
-        </div>
-      </div>
-
-      {/* UNIT + LOCATION */}
-      <div className="grid-2">
-        <div className="input-group">
-          <label>Unit</label>
-          <select
-            value={editForm.associateUnit}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                associateUnit: e.target.value,
-              })
-            }
-          >
-            {units.map(u => (
-              <option key={u._id} value={u._id}>
-                {u.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="input-group">
-          <label>Location</label>
-          <select
-            value={editForm.locationName}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                locationName: e.target.value,
-              })
-            }
-          >
-            {locations.map(l => (
-              <option key={l._id} value={l._id}>
-                {l.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* STATUS + TYPE */}
-      <div className="grid-2">
-        {/* <div className="input-group">
-          <label>Status</label>
-          <select
-            value={editForm.assetStatus}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                assetStatus: e.target.value,
-              })
-            }
-          >
-            {statuses.map(s => (
-              <option key={s._id} value={s._id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </div> */}
-
-        <div className="input-group">
-          <label>Type</label>
-          <select
-            value={editForm.type}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                type: e.target.value,
-              })
-            }
-          >
-            <option value="one_time">One-Time</option>
-            <option value="maintenance">Maintenance</option>
-          </select>
-        </div>
-      </div>
-
-      {/* PURCHASE DATE */}
-      <div className="grid-2">
-        <div className="input-group">
-          <label>Purchase Date</label>
-          <input
-            type="date"
-            value={editForm.purchaseDate || ""}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                purchaseDate: e.target.value,
-              })
-            }
-          />
-        </div>
-      </div>
-      {/* 🔷 VENDOR DETAILS */}
-<div className="grid-2">
-  <div className="input-group">
-    <label>Vendor Name</label>
-    <input
-      value={editForm.purchaseDetails?.vendor?.name || ""}
-      onChange={(e) =>
-        setEditForm({
-          ...editForm,
-          purchaseDetails: {
-            ...editForm.purchaseDetails,
-            vendor: {
-              ...editForm.purchaseDetails.vendor,
-              name: e.target.value,
-            },
-          },
-        })
-      }
-    />
-  </div>
-
-  <div className="input-group">
-    <label>Vendor Contact</label>
-    <input
-      value={editForm.purchaseDetails?.vendor?.contact || ""}
-      onChange={(e) =>
-        setEditForm({
-          ...editForm,
-          purchaseDetails: {
-            ...editForm.purchaseDetails,
-            vendor: {
-              ...editForm.purchaseDetails.vendor,
-              contact: e.target.value,
-            },
-          },
-        })
-      }
-    />
-  </div>
-</div>
-
-<div className="grid-2">
-  <div className="input-group">
-    <label>Support Email</label>
-    <input
-      type="email"
-      value={editForm.purchaseDetails?.vendor?.supportEmail || ""}
-      onChange={(e) =>
-        setEditForm({
-          ...editForm,
-          purchaseDetails: {
-            ...editForm.purchaseDetails,
-            vendor: {
-              ...editForm.purchaseDetails.vendor,
-              supportEmail: e.target.value,
-            },
-          },
-        })
-      }
-    />
-  </div>
-</div>
-
-      {/* ACTIONS */}
-      <div className="modal-actions">
-        <button onClick={handleUpdate} className="btn-save">
-          Save
-        </button>
-        <button
-          onClick={() => setEditAsset(null)}
-          className="btn-cancel"
-        >
-          Cancel
-        </button>
-      </div>
-    </motion.div>
-  </motion.div>
-)}
-</AnimatePresence>
+      )}
     </div>
+  ) : (
+    <>
+      {/* =====================================================
+          INVENTORY GRID
+      ===================================================== */}
+      <div className="inventory-grid" ref={gridRef}>
+        <AnimatePresence>
+          {paginatedAssets.map((asset, index) => {
+            const totals = getAssetTotals(asset);
+
+            const allAssigned =
+              asset.assetQuantity > 0 &&
+              asset.inUse >= asset.assetQuantity;
+
+            const statusConfig = STATUS_CONFIG[asset.status] || {
+              label: asset.status || "Unknown",
+              className: "default",
+              icon: "•",
+            };
+
+            const categoryName =
+              asset.assetCategory?.name || "Uncategorized";
+
+            const category = getCategoryUI(categoryName);
+
+            const usagePercentage =
+              asset.assetQuantity > 0
+                ? Math.min(
+                    (asset.inUse / asset.assetQuantity) * 100,
+                    100
+                  )
+                : 0;
+
+            return (
+              <motion.article
+                key={asset._id}
+                className="inventory-card tour-card"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{
+                  duration: 0.25,
+                  delay: index * 0.03,
+                }}
+              >
+                {/* =========================================
+                    CARD HEADER
+                ========================================= */}
+                <div className="inventory-card-header">
+                  <div className="asset-identity">
+                    <div className="asset-category-icon">
+                      {category.icon}
+                    </div>
+
+                    <div className="asset-title">
+                      <h3 title={asset.assetName}>
+                        {truncateText(asset.assetName, 24)}
+                      </h3>
+
+                      <span>{asset.assetCode}</span>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`inventory-status ${statusConfig.className}`}
+                  >
+                    <span className="status-dot"></span>
+                    {statusConfig.label}
+                  </span>
+                </div>
+
+                {/* =========================================
+                    CATEGORY / LOCATION / UNIT
+                ========================================= */}
+                <div className="asset-meta-row">
+                  <span className="asset-meta-item">
+                    <span className="meta-label">Category</span>
+
+                    <strong title={categoryName}>
+                      {truncateText(categoryName, 16)}
+                    </strong>
+                  </span>
+
+                  <span className="asset-meta-divider"></span>
+
+                  <span className="asset-meta-item">
+                    <span className="meta-label">Location</span>
+
+                    <strong>
+                      {asset.locationName?.name || "Not set"}
+                    </strong>
+                  </span>
+
+                  <span className="asset-meta-divider"></span>
+
+                  <span className="asset-meta-item">
+                    <span className="meta-label">Unit</span>
+
+                    <strong>
+                      {asset.associateUnit?.name || "Not set"}
+                    </strong>
+                  </span>
+                </div>
+
+                {/* =========================================
+                    UTILIZATION
+                ========================================= */}
+                <div className="asset-usage-section">
+                  <div className="usage-heading">
+                    <div>
+                      <span>Asset Utilization</span>
+
+                      <strong>
+                        {asset.inUse || 0} / {asset.assetQuantity || 0}
+                      </strong>
+                    </div>
+
+                    <span className="usage-percent">
+                      {Math.round(usagePercentage)}%
+                    </span>
+                  </div>
+
+                  <div className="usage-track">
+                    <div
+                      className="usage-fill"
+                      style={{
+                        width: `${usagePercentage}%`,
+                      }}
+                    ></div>
+                  </div>
+
+                  <div className="usage-footer">
+                    <span>{asset.inUse || 0} assigned</span>
+
+                    <span>
+                      {Math.max(
+                        (asset.assetQuantity || 0) -
+                          (asset.inUse || 0),
+                        0
+                      )}{" "}
+                      available
+                    </span>
+                  </div>
+                </div>
+
+                {/* =========================================
+                    FINANCIAL SNAPSHOT
+                ========================================= */}
+                <div className="inventory-financials">
+                  <div className="financial-metric">
+                    <span className="financial-label">
+                      Purchase Cost
+                    </span>
+
+                    <strong>
+                      {CURRENCY_SYMBOLS[currency]}{" "}
+                      {totals.totalPurchase.toLocaleString()}
+                    </strong>
+                  </div>
+
+                  <div className="financial-metric">
+                    <span className="financial-label">
+                      Maintenance
+                    </span>
+
+                    <strong>
+                      {CURRENCY_SYMBOLS[currency]}{" "}
+                      {totals.totalMaintenance.toLocaleString()}
+                    </strong>
+                  </div>
+                </div>
+
+                {/* =========================================
+                    DETAILS
+                ========================================= */}
+                <div className="inventory-detail-list">
+                  <div className="inventory-detail">
+                    <span>Purchase date</span>
+
+                    <strong>
+                      {formatDate(
+                        asset.purchaseDetails?.purchaseDate
+                      )}
+                    </strong>
+                  </div>
+
+                  <div className="inventory-detail">
+                    <span>Vendor</span>
+
+                    <strong
+                      title={
+                        asset.purchaseDetails?.vendor?.name ||
+                        "No vendor"
+                      }
+                    >
+                      {truncateText(
+                        asset.purchaseDetails?.vendor?.name ||
+                          "No vendor",
+                        22
+                      )}
+                    </strong>
+                  </div>
+                </div>
+
+                {/* =========================================
+                    VENDOR EXPANDABLE INFO
+                ========================================= */}
+                {(asset.purchaseDetails?.vendor?.contact ||
+                  asset.purchaseDetails?.vendor?.supportEmail) && (
+                  <div className="inventory-vendor-info">
+                    {asset.purchaseDetails?.vendor?.contact && (
+                      <div>
+                        <span>Contact</span>
+                        <strong>
+                          {asset.purchaseDetails.vendor.contact}
+                        </strong>
+                      </div>
+                    )}
+
+                    {asset.purchaseDetails?.vendor
+                      ?.supportEmail && (
+                      <div>
+                        <span>Support</span>
+                        <strong
+                          title={
+                            asset.purchaseDetails.vendor
+                              .supportEmail
+                          }
+                        >
+                          {truncateText(
+                            asset.purchaseDetails.vendor
+                              .supportEmail,
+                            26
+                          )}
+                        </strong>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* =========================================
+                    ACTIONS
+                ========================================= */}
+                <div className="inventory-card-actions">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedAsset(asset)}
+                    className="card-action primary tour-view"
+                  >
+                    View Instances
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditAsset(asset)}
+                    className="card-action tour-edit"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleAssign(asset)}
+                    className={`card-action assign tour-assign ${
+                      allAssigned ? "disabled" : ""
+                    }`}
+                    disabled={allAssigned}
+                  >
+                    {allAssigned ? "Assigned" : "Assign"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(asset._id)}
+                    className="card-action delete"
+                    aria-label={`Delete ${asset.assetName}`}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </motion.article>
+            );
+          })}
+        </AnimatePresence>
+      </div>
+
+      {/* PAGINATION */}
+      <div className="inventory-pagination-wrapper">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
+    </>
+  )}
+
+  {/* =========================================================
+      INSTANCE VIEW MODAL
+  ========================================================= */}
+  <AnimatePresence>
+    {selectedAsset && (
+      <motion.div
+        className="inventory-modal-overlay"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setSelectedAsset(null)}
+      >
+        <motion.div
+          className="inventory-modal inventory-instance-modal"
+          initial={{ opacity: 0, y: 18, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.985 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="inventory-modal-header">
+            <div>
+              <span className="modal-eyebrow">
+                ASSET INSTANCES
+              </span>
+
+              <h2>{selectedAsset.assetName}</h2>
+
+              <p>
+                {selectedAsset.assetCode} ·{" "}
+                {selectedAsset.instances?.length || 0} instances
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="inventory-modal-close"
+              onClick={() => setSelectedAsset(null)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+          </div>
+
+          <div className="inventory-modal-body">
+            <div className="instance-section-heading">
+              <div>
+                <h3>All Instances</h3>
+                <p>
+                  View and manage individual physical assets.
+                </p>
+              </div>
+
+              <span className="instance-count">
+                {selectedAsset.instances?.length || 0}
+              </span>
+            </div>
+
+            {(() => {
+              const instances =
+                selectedAsset.instances || [];
+
+              const assignmentMap = {};
+
+              selectedAsset.assignmentRecords?.forEach(
+                (a) => {
+                  assignmentMap[
+                    String(a.assetInstanceId)
+                  ] = a;
+                }
+              );
+
+              return instances.length === 0 ? (
+                <div className="modal-empty-state">
+                  <div>□</div>
+                  <h4>No instances found</h4>
+                  <p>
+                    There are currently no instances associated
+                    with this asset.
+                  </p>
+                </div>
+              ) : (
+                <div className="instance-group">
+                  {instances.map((inst) => (
+                    <InstanceCard
+                      key={inst._id}
+                      inst={inst}
+                      assignment={
+                        assignmentMap[String(inst._id)]
+                      }
+                      onEdit={() => {
+                        setEditInstance(inst);
+
+                        setInstanceForm({
+                          location: inst.location || "",
+                          condition:
+                            inst.condition || "new",
+                          serialNumber:
+                            inst.hardware?.serialNumber ||
+                            inst.software?.licenseNumber ||
+                            "",
+                          assetType: inst.assetType,
+                        });
+                      }}
+                      onUnassign={handleUnassign}
+                      onDelete={handleDeleteInstance}
+                    />
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+
+  {/* =========================================================
+      EDIT INSTANCE MODAL
+  ========================================================= */}
+  <AnimatePresence>
+    {editInstance && (
+      <motion.div
+        className="inventory-modal-overlay inventory-modal-layer-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setEditInstance(null)}
+      >
+        <motion.div
+          className="inventory-modal inventory-edit-modal"
+          initial={{ opacity: 0, y: 18, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.985 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="inventory-modal-header">
+            <div>
+              <span className="modal-eyebrow">
+                INSTANCE
+              </span>
+
+              <h2>Edit Instance</h2>
+
+              <p>
+                Update the operational information for this
+                instance.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="inventory-modal-close"
+              onClick={() => setEditInstance(null)}
+            >
+              ×
+            </button>
+          </div>
+
+          <div className="inventory-modal-body">
+            <div className="modal-form-section">
+              <div className="modal-section-title">
+                <span>01</span>
+
+                <div>
+                  <h3>Instance Information</h3>
+                  <p>
+                    Update location, condition and identification.
+                  </p>
+                </div>
+              </div>
+
+              <div className="inventory-form-grid">
+                <div className="inventory-input-group">
+                  <label>Location</label>
+
+                  <input
+                    value={instanceForm.location}
+                    onChange={(e) =>
+                      setInstanceForm({
+                        ...instanceForm,
+                        location: e.target.value,
+                      })
+                    }
+                    placeholder="Enter instance location"
+                  />
+                </div>
+
+                <div className="inventory-input-group">
+                  <label>Condition</label>
+
+                  <select
+                    value={instanceForm.condition}
+                    onChange={(e) =>
+                      setInstanceForm({
+                        ...instanceForm,
+                        condition: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="new">New</option>
+                    <option value="used">Used</option>
+                    <option value="damaged">
+                      Damaged
+                    </option>
+                  </select>
+                </div>
+
+                <div className="inventory-input-group full">
+                  <label>
+                    {instanceForm.assetType === "hardware"
+                      ? "Serial Number"
+                      : "License Number"}
+                  </label>
+
+                  <input
+                    value={
+                      instanceForm.serialNumber || ""
+                    }
+                    onChange={(e) =>
+                      setInstanceForm({
+                        ...instanceForm,
+                        serialNumber: e.target.value,
+                      })
+                    }
+                    placeholder={
+                      instanceForm.assetType ===
+                      "hardware"
+                        ? "Enter serial number"
+                        : "Enter license number"
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="inventory-info-message">
+              <span>i</span>
+
+              <p>
+                Financial, warranty and technical details are
+                managed through upgrade or lifecycle actions.
+              </p>
+            </div>
+          </div>
+
+          <div className="inventory-modal-footer">
+            <button
+              type="button"
+              className="modal-secondary-action"
+              onClick={() => setEditInstance(null)}
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              className="modal-primary-action"
+              onClick={handleInstanceUpdate}
+            >
+              Save Changes
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+
+  {/* =========================================================
+      EDIT ASSET MODAL
+  ========================================================= */}
+  <AnimatePresence>
+    {editAsset && (
+      <motion.div
+        className="inventory-modal-overlay"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setEditAsset(null)}
+      >
+        <motion.div
+          className="inventory-modal inventory-edit-asset-modal"
+          initial={{ opacity: 0, y: 18, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.985 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* HEADER */}
+          <div className="inventory-modal-header">
+            <div>
+              <span className="modal-eyebrow">
+                HARDWARE ASSET
+              </span>
+
+              <h2>Edit Asset</h2>
+
+              <p>
+                Update the core information associated with this
+                hardware asset.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="inventory-modal-close"
+              onClick={() => setEditAsset(null)}
+            >
+              ×
+            </button>
+          </div>
+
+          <div className="inventory-modal-body">
+            {/* =============================================
+                BASIC INFORMATION
+            ============================================= */}
+            <div className="modal-form-section">
+              <div className="modal-section-title">
+                <span>01</span>
+
+                <div>
+                  <h3>Asset Information</h3>
+                  <p>
+                    Basic identity and classification details.
+                  </p>
+                </div>
+              </div>
+
+              <div className="inventory-form-grid">
+                <div className="inventory-input-group">
+                  <label>Asset Name</label>
+
+                  <input
+                    value={editForm.assetName}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        assetName: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="inventory-input-group">
+                  <label>Category</label>
+
+                  <select
+                    value={editForm.assetCategory}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        assetCategory: e.target.value,
+                      })
+                    }
+                  >
+                    {categories.map((c) => (
+                      <option
+                        key={c._id}
+                        value={c._id}
+                      >
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="inventory-input-group">
+                  <label>Quantity</label>
+
+                  <input
+                    type="number"
+                    value={editForm.assetQuantity}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        assetQuantity: e.target.value,
+                      })
+                    }
+                  />
+
+                  <span className="inventory-field-warning">
+                    Changing quantity will add or remove
+                    instances automatically.
+                  </span>
+                </div>
+
+                <div className="inventory-input-group">
+                  <label>Type</label>
+
+                  <select
+                    value={editForm.type}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        type: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="one_time">
+                      One-Time
+                    </option>
+
+                    <option value="maintenance">
+                      Maintenance
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* =============================================
+                LOCATION & PURCHASE
+            ============================================= */}
+            <div className="modal-form-section">
+              <div className="modal-section-title">
+                <span>02</span>
+
+                <div>
+                  <h3>Location & Purchase</h3>
+
+                  <p>
+                    Update asset ownership and purchase
+                    information.
+                  </p>
+                </div>
+              </div>
+
+              <div className="inventory-form-grid">
+                <div className="inventory-input-group">
+                  <label>Unit</label>
+
+                  <select
+                    value={editForm.associateUnit}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        associateUnit: e.target.value,
+                      })
+                    }
+                  >
+                    {units.map((u) => (
+                      <option
+                        key={u._id}
+                        value={u._id}
+                      >
+                        {u.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="inventory-input-group">
+                  <label>Location</label>
+
+                  <select
+                    value={editForm.locationName}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        locationName: e.target.value,
+                      })
+                    }
+                  >
+                    {locations.map((l) => (
+                      <option
+                        key={l._id}
+                        value={l._id}
+                      >
+                        {l.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="inventory-input-group">
+                  <label>Purchase Date</label>
+
+                  <input
+                    type="date"
+                    value={
+                      editForm.purchaseDate || ""
+                    }
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        purchaseDate: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* =============================================
+                VENDOR INFORMATION
+            ============================================= */}
+            <div className="modal-form-section">
+              <div className="modal-section-title">
+                <span>03</span>
+
+                <div>
+                  <h3>Vendor Information</h3>
+
+                  <p>
+                    Supplier contact and support details.
+                  </p>
+                </div>
+              </div>
+
+              <div className="inventory-form-grid">
+                <div className="inventory-input-group">
+                  <label>Vendor Name</label>
+
+                  <input
+                    value={
+                      editForm.purchaseDetails?.vendor
+                        ?.name || ""
+                    }
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+
+                        purchaseDetails: {
+                          ...editForm.purchaseDetails,
+
+                          vendor: {
+                            ...editForm.purchaseDetails
+                              ?.vendor,
+
+                            name: e.target.value,
+                          },
+                        },
+                      })
+                    }
+                    placeholder="Enter vendor name"
+                  />
+                </div>
+
+                <div className="inventory-input-group">
+                  <label>Vendor Contact</label>
+
+                  <input
+                    value={
+                      editForm.purchaseDetails?.vendor
+                        ?.contact || ""
+                    }
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+
+                        purchaseDetails: {
+                          ...editForm.purchaseDetails,
+
+                          vendor: {
+                            ...editForm.purchaseDetails
+                              ?.vendor,
+
+                            contact: e.target.value,
+                          },
+                        },
+                      })
+                    }
+                    placeholder="Phone or contact number"
+                  />
+                </div>
+
+                <div className="inventory-input-group full">
+                  <label>Support Email</label>
+
+                  <input
+                    type="email"
+                    value={
+                      editForm.purchaseDetails?.vendor
+                        ?.supportEmail || ""
+                    }
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+
+                        purchaseDetails: {
+                          ...editForm.purchaseDetails,
+
+                          vendor: {
+                            ...editForm.purchaseDetails
+                              ?.vendor,
+
+                            supportEmail: e.target.value,
+                          },
+                        },
+                      })
+                    }
+                    placeholder="support@vendor.com"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FOOTER */}
+          <div className="inventory-modal-footer">
+            <button
+              type="button"
+              className="modal-secondary-action"
+              onClick={() => setEditAsset(null)}
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              onClick={handleUpdate}
+              className="modal-primary-action"
+            >
+              Save Changes
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
   );
 };
 

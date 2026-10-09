@@ -1,172 +1,851 @@
-/* =====================================================
-   MODERN SAAS CSS — UserManagement.css
-   ===================================================== */
+
+/* =========================================================
+   USER MANAGEMENT — ASSETPEGASUS THEME
+========================================================= */
 
 .saas-user-page {
-  padding: 10px;
-  /* background: #f6f8fb; */
-  /* min-height: 100vh; */
-  font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
-}
-
-/* Header */
-.saas-user-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  gap: 20px;
-}
+  flex-direction: column;
+  gap: 16px;
 
-.saas-user-header h1 {
+  width: 100%;
+  min-width: 0;
   margin: 0;
+  padding: 0;
+
+  background: transparent;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.saas-user-page *,
+.saas-user-page *::before,
+.saas-user-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.saas-user-page .saas-user-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 18px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background: linear-gradient(
+    145deg,
+    #252b34,
+    #1c2128
+  );
+}
+
+.saas-user-page .saas-user-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.saas-user-page .saas-user-heading-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 39px;
+  height: 39px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 9px;
+
+  background: rgba(223, 208, 184, 0.07);
+  color: #DFD0B8;
+
   font-size: 18px;
-  font-weight: 500;
-  color: #DFD0B8;
 }
 
-.saas-user-header p {
-  margin: 4px 0 0;
-  font-size: 14px;
+.saas-user-page .saas-user-heading h1 {
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.saas-user-page .saas-user-heading p {
+  margin: 5px 0 0;
+
   color: #948979;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
-/* Search */
-.saas-user-search input {
-  width: 280px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  background: #222831;
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
+
+.saas-user-page .saas-user-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.saas-user-page .saas-user-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-shrink: 0;
+
+  padding: 9px 11px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.06);
   color: #DFD0B8;
-  transition: all 0.2s ease;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.saas-user-page .saas-user-count svg {
+  font-size: 13px;
+}
+
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
+
+.saas-user-page .saas-user-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  width: 250px;
+  min-width: 0;
+  margin: 0;
+}
+
+.saas-user-page .saas-search-icon {
+  position: absolute;
+  left: 12px;
+
+  color: #948979;
   font-size: 14px;
+  pointer-events: none;
 }
 
-/* Card */
-.saas-user-card {
-  background: #222831;
-  border-radius: 18px;
-  border: none;
-  overflow: hidden;
+.saas-user-page .saas-user-search input {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+  height: 39px;
+
+  margin: 0;
+  padding: 10px 12px 10px 36px;
+
+  border: 1px solid rgba(223, 208, 184, 0.14);
+  border-radius: 8px;
+
+  background: #1c2128;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
-/* Table */
-.saas-user-table {
+.saas-user-page .saas-user-search input::placeholder {
+  color: rgba(148, 137, 121, 0.7);
+}
+
+.saas-user-page .saas-user-search input:focus {
+  border-color: #948979;
+  background: #20262e;
+}
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.saas-user-page .saas-user-card {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 18px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 10px;
+
+  background: linear-gradient(
+    145deg,
+    #252b34,
+    #1c2128
+  );
+}
+
+/* =========================================================
+   TABLE CARD HEADER
+========================================================= */
+
+.saas-user-page .saas-user-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 16px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.saas-user-page .saas-user-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.saas-user-page .saas-user-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 8px;
+
+  background: rgba(223, 208, 184, 0.07);
+  color: #DFD0B8;
+
+  font-size: 15px;
+}
+
+.saas-user-page .saas-user-card-heading h3 {
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.saas-user-page .saas-user-card-heading p {
+  margin: 5px 0 0;
+
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.saas-user-page .saas-user-card-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  padding: 7px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.06);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.saas-user-page .saas-user-table-wrapper {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.saas-user-page .saas-user-table {
   width: 100%;
   border-collapse: collapse;
-}
+  border-spacing: 0;
 
-.saas-user-table th {
+  background: transparent;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
   text-align: left;
-  padding: 16px 20px;
-  font-size: 13px;
-  font-weight: 600;
+}
+
+.saas-user-page .saas-user-table thead {
+  background: rgba(223, 208, 184, 0.045);
+}
+
+.saas-user-page .saas-user-table th {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.12);
+
   color: #948979;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-align: left;
+  white-space: nowrap;
 }
 
-.saas-user-table td {
-  padding: 16px 20px;
-  border-top: none;
-  font-size: 14px;
+.saas-user-page .saas-user-table td {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+
   color: #DFD0B8;
+  font-size: 11px;
+  line-height: 1.5;
+  vertical-align: middle;
 }
 
-.user-name {
-  font-weight: 600;
-  color: #111827;
+.saas-user-page .saas-user-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
-/* Role Pills */
-.role-pill {
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+.saas-user-page .saas-user-table tbody tr {
+  transition: background 0.2s ease;
 }
 
-.role-user {
-  background: #948979;
-  color: #222831;
+.saas-user-page .saas-user-table tbody tr:hover {
+  background: rgba(223, 208, 184, 0.035);
 }
 
-.role-admin {
-  background: #DFD0B8;
-  color: #222831;
+/* =========================================================
+   USER IDENTITY
+========================================================= */
+
+.saas-user-page .saas-user-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
-.role-super-admin {
-  background: #dcfce7;
-  color: #166534;
-}
+.saas-user-page .saas-user-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
-/* Select */
-.saas-user-table select {
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: #393E46;
+  width: 33px;
+  height: 33px;
+
+  border: 1px solid rgba(223, 208, 184, 0.15);
+  border-radius: 9px;
+
+  background: rgba(223, 208, 184, 0.09);
   color: #DFD0B8;
-  font-size: 14px;
-}
 
-.saas-user-table select:focus {
-  
-  outline: none;
-  border-color: #DFD0B8;
-}
-
-.protected-label {
   font-size: 13px;
-  color: #9ca3af;
+  font-weight: 700;
 }
 
-.table-center {
+.saas-user-page .user-name {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   USER EMAIL
+========================================================= */
+
+.saas-user-page .saas-user-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #DFD0B8;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.saas-user-page .saas-user-email svg {
+  flex-shrink: 0;
+  color: #948979;
+  font-size: 13px;
+}
+
+/* =========================================================
+   ROLE PILLS
+========================================================= */
+
+.saas-user-page .role-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.15);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.07);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.saas-user-page .role-pill svg {
+  font-size: 12px;
+}
+
+.saas-user-page .role-admin {
+  border-color: rgba(204, 176, 122, 0.25);
+  background: rgba(204, 176, 122, 0.09);
+  color: #ccb07a;
+}
+
+.saas-user-page .role-user {
+  border-color: rgba(145, 182, 156, 0.23);
+  background: rgba(145, 182, 156, 0.09);
+  color: #91b69c;
+}
+
+.saas-user-page .role-super-admin {
+  border-color: rgba(170, 150, 210, 0.27);
+  background: rgba(170, 150, 210, 0.1);
+  color: #c3afe4;
+}
+
+/* =========================================================
+   ROLE SELECT
+========================================================= */
+
+.saas-user-page .saas-role-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  width: 150px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.saas-user-page .saas-role-select-wrapper select {
+  width: 100%;
+  min-width: 0;
+  height: 37px;
+
+  padding: 8px 32px 8px 11px;
+
+  border: 1px solid rgba(223, 208, 184, 0.16);
+  border-radius: 7px;
+
+  background: #1c2128;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  appearance: none;
+  outline: none;
+  color-scheme: dark;
+  cursor: pointer;
+
+  transition: border-color 0.2s ease;
+}
+
+.saas-user-page .saas-role-select-wrapper select:focus {
+  border-color: #948979;
+}
+
+.saas-user-page .saas-role-select-wrapper select option {
+  background: #222831;
+  color: #DFD0B8;
+}
+
+.saas-user-page .saas-select-arrow {
+  position: absolute;
+  right: 11px;
+
+  color: #948979;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* =========================================================
+   PROTECTED ROLE
+========================================================= */
+
+.saas-user-page .protected-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   LOADING / EMPTY STATES
+========================================================= */
+
+.saas-user-page .saas-user-table .table-center {
+  padding: 35px 15px;
   text-align: center;
-  padding: 30px;
-  color: #9ca3af;
 }
 
-/* =====================================================
-   RESPONSIVE
-   ===================================================== */
+.saas-user-page .saas-table-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
 
-@media (max-width: 900px) {
-  .saas-user-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  color: #948979;
+  font-size: 11px;
+}
 
-  .saas-user-search input {
-    width: 100%;
+.saas-user-page .saas-user-spinner {
+  font-size: 16px;
+  animation: saas-user-spin 1s linear infinite;
+}
+
+@keyframes saas-user-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-@media (max-width: 768px) {
-  .saas-user-page {
+.saas-user-page .saas-table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 130px;
+}
+
+.saas-user-page .saas-table-empty > svg {
+  color: #948979;
+  font-size: 24px;
+}
+
+.saas-user-page .saas-table-empty h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.saas-user-page .saas-table-empty p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.saas-user-page input:focus-visible,
+.saas-user-page select:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   LAPTOP — 1200px
+========================================================= */
+
+@media (max-width: 1200px) {
+  .saas-user-page .saas-user-header {
+    padding: 15px;
+  }
+
+  .saas-user-page .saas-user-card {
     padding: 16px;
   }
 
-  .saas-user-table thead {
-    display: none;
+  .saas-user-page .saas-user-search {
+    width: 220px;
+  }
+}
+
+/* =========================================================
+   TABLET — 900px
+========================================================= */
+
+@media (max-width: 900px) {
+  .saas-user-page .saas-user-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
   }
 
-  .saas-user-table,
-  .saas-user-table tbody,
-  .saas-user-table tr,
-  .saas-user-table td {
+  .saas-user-page .saas-user-header-actions {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .saas-user-page .saas-user-search {
+    width: min(100%, 320px);
+  }
+
+  .saas-user-page .saas-user-table th,
+  .saas-user-page .saas-user-table td {
+    padding: 12px;
+  }
+}
+
+/* =========================================================
+   MOBILE — 600px
+   TABLE ROWS BECOME USER CARDS
+========================================================= */
+
+@media (max-width: 600px) {
+  .saas-user-page {
+    gap: 12px;
+  }
+
+  .saas-user-page .saas-user-header,
+  .saas-user-page .saas-user-card {
+    padding: 13px;
+    border-radius: 9px;
+  }
+
+  .saas-user-page .saas-user-heading-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .saas-user-page .saas-user-heading h1 {
+    font-size: 16px;
+  }
+
+  .saas-user-page .saas-user-heading p {
+    font-size: 10px;
+  }
+
+  .saas-user-page .saas-user-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .saas-user-page .saas-user-count {
+    align-self: flex-start;
+  }
+
+  .saas-user-page .saas-user-search {
+    width: 100%;
+  }
+
+  .saas-user-page .saas-user-card-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .saas-user-page .saas-user-table-wrapper {
+    overflow: visible;
+  }
+
+  .saas-user-page .saas-user-table,
+  .saas-user-page .saas-user-table tbody {
     display: block;
     width: 100%;
   }
 
-  .saas-user-table tr {
-    padding: 16px;
-    border-bottom: 1px solid #f1f3f7;
+  .saas-user-page .saas-user-table thead {
+    display: none;
   }
 
-  .saas-user-table td {
-    padding: 8px 0;
-    border: none;
+  .saas-user-page .saas-user-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    width: 100%;
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.11);
+    border-radius: 9px;
+
+    background: #1c2128;
+    overflow: hidden;
+  }
+
+  .saas-user-page .saas-user-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .saas-user-page .saas-user-table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    width: 100%;
+    padding: 12px 13px;
+
+    border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+    text-align: right;
+  }
+
+  .saas-user-page .saas-user-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .saas-user-page .saas-user-table tbody td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+
+    color: #948979;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .saas-user-page .saas-user-table .saas-user-identity {
+    justify-content: flex-end;
+  }
+
+  .saas-user-page .saas-user-email {
+    min-width: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .saas-user-page .saas-role-select-wrapper {
+    width: 145px;
+  }
+
+  /* Loading and empty states remain centered */
+  .saas-user-page .saas-user-table tbody td.table-center {
+    display: block;
+    text-align: center;
+  }
+
+  .saas-user-page .saas-user-table tbody td.table-center::before {
+    content: none;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE — 420px
+========================================================= */
+
+@media (max-width: 420px) {
+  .saas-user-page .saas-user-header,
+  .saas-user-page .saas-user-card {
+    padding: 12px;
+  }
+
+  .saas-user-page .saas-user-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .saas-user-page .saas-user-table tbody td {
+    padding: 11px;
+  }
+
+  .saas-user-page .saas-user-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .saas-user-page .saas-user-email {
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE — 340px
+========================================================= */
+
+@media (max-width: 340px) {
+  .saas-user-page .saas-user-header,
+  .saas-user-page .saas-user-card {
+    padding: 10px;
+  }
+
+  .saas-user-page .saas-user-table tbody td {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .saas-user-page .saas-user-table tbody td::before {
+    width: 100%;
+  }
+
+  .saas-user-page .saas-user-identity {
+    justify-content: flex-start;
+  }
+
+  .saas-user-page .saas-role-select-wrapper {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saas-user-page .saas-user-table tbody tr,
+  .saas-user-page .saas-user-search input,
+  .saas-user-page .saas-role-select-wrapper select {
+    transition: none;
+  }
+
+  .saas-user-page .saas-user-spinner {
+    animation: none;
   }
 }

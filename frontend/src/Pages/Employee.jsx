@@ -3,6 +3,21 @@ import React, {
   useState,
   useMemo
 } from "react";
+import {
+  FiSearch,
+  FiX,
+  FiFilter,
+  FiChevronDown,
+  FiPlus,
+  FiUsers,
+  FiLayers,
+  FiUser,
+  FiBriefcase,
+  FiHardDrive,
+  FiMonitor,
+  FiDollarSign,
+  FiPackage,
+} from "react-icons/fi";
 import EmployeeTable from "../Components/employee/EmployeeTable";
 import EmployeeModal from "../Components/employee/EmployeeModal";
 import { 
@@ -13,7 +28,7 @@ import {
   getEmployeeSummary
 } from "../Services/ApiServices";
 // import {} from "../services/departmentService";
-import "../Page_styles/Employee.css";
+import "../Page_styles/TestEmployeeFile.css";
 import Pagination from "../Components/Pagination";
 import ThemeSwal from "../utils/swalTheme";
 import Loader from "../Components/Loader";
@@ -231,122 +246,480 @@ const totalEmpPages = Math.ceil(
 );
 if (loading) return <Loader />
   return (
-    <div className="employee-page">
-      <div className="employee-header">
+
+<div className="employee-page">
+
+  {/* =====================================================
+      PAGE HEADER
+  ===================================================== */}
+
+  <div className="employee-header">
+
+    <div className="employee-header-top">
+
+      <div className="employee-header-info">
+
+        <span className="employee-eyebrow">
+          WORKFORCE MANAGEMENT
+        </span>
+
         <h2>Teams</h2>
 
-        <div className="employee-actions">
-          <input
-          className="tour-search"
-            type="text"
-            placeholder="Search team member..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
+        <p>
+          Manage team members, departments, and
+          assigned asset values.
+        </p>
 
-          <select
-          className="tour-department"
-            value={departmentFilter}
-            onChange={e => setDepartmentFilter(e.target.value)}
-          >
-            <option value="">All Departments</option>
-            {departments.map(dep => (
-              <option key={dep._id} value={dep._id}>
-                {dep.name}
-              </option>
-            ))}
-          </select>
-
-          <button onClick={() => setShowModal(true)} className="submit-btn tour-add">
-            + Add Team Member
-          </button>
-        </div>
       </div>
-<EmployeeTable
-  employees={paginatedEmployees}
-  onEdit={handleEdit}
-  onDelete={handleDelete}
-/>
-<Pagination
-  currentPage={empPage}
-  totalPages={totalEmpPages}
-  onPageChange={setEmpPage}
-/>
-<div className="team-assets-section">
-  <h3>Team Asset Overview</h3>
 
-  <div className="team-asset-grid">
-{paginatedSummary.map((emp) => {
+      <div className="employee-header-counter">
 
-    const hardware = emp.hardware || {};
-    const software = emp.software || {};
+        <span>Team Members</span>
 
-    const totalCost = emp.totalCost || 0;
+        <strong>
+          {employees.length}
+        </strong>
 
-      return (
-<div key={emp._id} className="team-asset-card  tour-member-info">
+      </div>
 
-  <div className="team-card-header">
-    <h4>{emp.employeeName}</h4>
-    <span>{emp.employeeCode}</span>
-    <p>{emp.department}</p>
-  </div>
-
-  <div className="asset-section">
-
-    <div>
-      <h5>Hardware</h5>
-      <p>Assets: {hardware.assetCount || 0}</p>
-      <p>Instances: {hardware.instanceCount || 0}</p>
-      <p>
-  Value: {CurrencySymbol}{" "}
-  {hardware.totalCost || 0}
-</p>
     </div>
 
-    <div>
-      <h5>Software</h5>
-      <p>Assets: {software.assetCount || 0}</p>
-      <p>Instances: {software.instanceCount || 0}</p>
-      <p>
-  Value: {CurrencySymbol}{" "}
-  {software.totalCost || 0}
-</p>
+
+    {/* =====================================================
+        SEARCH / FILTER / ADD
+    ===================================================== */}
+
+    <div className="employee-actions">
+
+      <div className="employee-search-wrapper">
+
+        <FiSearch className="employee-search-icon" />
+
+        <input
+          className="tour-search employee-search-input"
+          type="text"
+          placeholder="Search team member..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        {search && (
+
+          <button
+            type="button"
+            className="employee-search-clear"
+            onClick={() => setSearch("")}
+            aria-label="Clear search"
+          >
+            <FiX />
+          </button>
+
+        )}
+
+      </div>
+
+
+      <div className="employee-department-wrapper">
+
+        <FiFilter className="employee-department-icon" />
+
+        <select
+          className="tour-department employee-department-select"
+          value={departmentFilter}
+          onChange={(e) =>
+            setDepartmentFilter(e.target.value)
+          }
+        >
+
+          <option value="">
+            All Departments
+          </option>
+
+          {departments.map((dep) => (
+
+            <option
+              key={dep._id}
+              value={dep._id}
+            >
+              {dep.name}
+            </option>
+
+          ))}
+
+        </select>
+
+        <FiChevronDown className="employee-select-chevron" />
+
+      </div>
+
+
+      <button
+        type="button"
+        onClick={() => setShowModal(true)}
+        className="submit-btn tour-add employee-add-btn"
+      >
+
+        <FiPlus />
+
+        <span>Add Team Member</span>
+
+      </button>
+
     </div>
 
   </div>
 
-  {/* ✅ FIXED POSITION */}
-<div className="total-cost">
-  Total Asset Value: 
-  {CurrencySymbol} {" "}{totalCost}
-</div>
-</div>
-      );
-    })}
-  </div>
-  <Pagination
-  currentPage={summaryPage}
-  totalPages={totalSummaryPages}
-  onPageChange={setSummaryPage}
-/>
+
+  {/* =====================================================
+      EMPLOYEE DIRECTORY
+  ===================================================== */}
+
+  <section className="employee-directory-section">
+
+    <div className="employee-section-header">
+
+      <div className="employee-section-heading">
+
+        <span className="employee-section-eyebrow">
+          TEAM DIRECTORY
+        </span>
+
+        <h3>Team Members</h3>
+
+        <p>
+          View and manage your organization's employees.
+        </p>
+
+      </div>
+
+      <span className="employee-section-count">
+        <FiUsers />
+        {paginatedEmployees.length} Displayed
+      </span>
+
+    </div>
+
+
+    <div className="employee-table-container">
+
+      <EmployeeTable
+        employees={paginatedEmployees}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+    </div>
+
+
+    <div className="employee-pagination-wrapper">
+
+      <Pagination
+        currentPage={empPage}
+        totalPages={totalEmpPages}
+        onPageChange={setEmpPage}
+      />
+
+    </div>
+
+  </section>
+
+
+  {/* =====================================================
+      TEAM ASSET OVERVIEW
+  ===================================================== */}
+
+  <section className="team-assets-section">
+
+    <div className="team-assets-header">
+
+      <div className="team-assets-heading">
+
+        <span className="employee-section-eyebrow">
+          ASSET ALLOCATION
+        </span>
+
+        <h3>Team Asset Overview</h3>
+
+        <p>
+          Review hardware, software, and total asset
+          values allocated to team members.
+        </p>
+
+      </div>
+
+      <span className="employee-section-count">
+        <FiLayers />
+        {paginatedSummary.length} Members
+      </span>
+
+    </div>
+
+
+    {/* =====================================================
+        ASSET SUMMARY GRID
+    ===================================================== */}
+
+    {paginatedSummary.length > 0 ? (
+
+      <div className="team-asset-grid">
+
+        {paginatedSummary.map((emp) => {
+
+          const hardware = emp.hardware || {};
+          const software = emp.software || {};
+
+          const totalCost = Number(emp.totalCost) || 0;
+
+          const hardwareCost =
+            Number(hardware.totalCost) || 0;
+
+          const softwareCost =
+            Number(software.totalCost) || 0;
+
+          return (
+
+            <div
+              key={emp._id}
+              className="team-asset-card tour-member-info"
+            >
+
+              {/* ================= MEMBER HEADER ================= */}
+
+              <div className="team-card-header">
+
+                <div className="team-member-heading">
+
+                  <div className="team-member-avatar">
+                    <FiUser />
+                  </div>
+
+                  <div className="team-member-details">
+
+                    <h4>
+                      {emp.employeeName || "Unnamed Member"}
+                    </h4>
+
+                    <span className="team-member-code">
+                      {emp.employeeCode || "-"}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div className="team-department-badge">
+
+                  <FiBriefcase />
+
+                  <span>
+                    {emp.department || "No Department"}
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              {/* ================= ASSET SECTIONS ================= */}
+
+              <div className="asset-section">
+
+                {/* HARDWARE */}
+
+                <div className="team-asset-type-card hardware">
+
+                  <div className="team-asset-type-header">
+
+                    <span className="team-asset-type-icon">
+                      <FiHardDrive />
+                    </span>
+
+                    <h5>Hardware</h5>
+
+                  </div>
+
+
+                  <div className="team-asset-stats">
+
+                    <div className="team-asset-stat-row">
+
+                      <span>Assets</span>
+
+                      <strong>
+                        {hardware.assetCount || 0}
+                      </strong>
+
+                    </div>
+
+
+                    <div className="team-asset-stat-row">
+
+                      <span>Instances</span>
+
+                      <strong>
+                        {hardware.instanceCount || 0}
+                      </strong>
+
+                    </div>
+
+
+                    <div className="team-asset-stat-value">
+
+                      <span>Asset Value</span>
+
+                      <strong>
+                        {CurrencySymbol}{" "}
+                        {hardwareCost.toLocaleString()}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                {/* SOFTWARE */}
+
+                <div className="team-asset-type-card software">
+
+                  <div className="team-asset-type-header">
+
+                    <span className="team-asset-type-icon">
+                      <FiMonitor />
+                    </span>
+
+                    <h5>Software</h5>
+
+                  </div>
+
+
+                  <div className="team-asset-stats">
+
+                    <div className="team-asset-stat-row">
+
+                      <span>Assets</span>
+
+                      <strong>
+                        {software.assetCount || 0}
+                      </strong>
+
+                    </div>
+
+
+                    <div className="team-asset-stat-row">
+
+                      <span>Instances</span>
+
+                      <strong>
+                        {software.instanceCount || 0}
+                      </strong>
+
+                    </div>
+
+
+                    <div className="team-asset-stat-value">
+
+                      <span>Asset Value</span>
+
+                      <strong>
+                        {CurrencySymbol}{" "}
+                        {softwareCost.toLocaleString()}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* ================= TOTAL ASSET VALUE ================= */}
+
+              <div className="total-cost">
+
+                <div className="team-total-label">
+
+                  <FiDollarSign />
+
+                  <span>Total Asset Value</span>
+
+                </div>
+
+                <strong>
+                  {CurrencySymbol}{" "}
+                  {totalCost.toLocaleString()}
+                </strong>
+
+              </div>
+
+            </div>
+
+          );
+
+        })}
+
+      </div>
+
+    ) : (
+
+      <div className="employee-empty-state">
+
+        <FiPackage />
+
+        <h4>No Asset Records Found</h4>
+
+        <p>
+          Team asset allocation information
+          is not available for the current selection.
+        </p>
+
+      </div>
+
+    )}
+
+
+    {/* ================= SUMMARY PAGINATION ================= */}
+
+    <div className="employee-pagination-wrapper">
+
+      <Pagination
+        currentPage={summaryPage}
+        totalPages={totalSummaryPages}
+        onPageChange={setSummaryPage}
+      />
+
+    </div>
+
+  </section>
+
+
+  {/* =====================================================
+      EMPLOYEE MODAL
+  ===================================================== */}
+
+  {showModal && (
+
+    <EmployeeModal
+      departments={departments}
+      employee={editingEmployee}
+      onClose={() => {
+        setShowModal(false);
+        setEditingEmployee(null);
+      }}
+      onSuccess={() => {
+        fetchEmployees();
+        setEditingEmployee(null);
+      }}
+    />
+
+  )}
+
 </div>
 
-      {showModal && (
-<EmployeeModal
-  departments={departments}
-  employee={editingEmployee}   // pass employee for edit
-  onClose={() => {
-    setShowModal(false);
-    setEditingEmployee(null);
-  }}
-  onSuccess={() => {
-    fetchEmployees();
-    setEditingEmployee(null);
-  }}
-/>
-      )}
-    </div>
   );
 };
 

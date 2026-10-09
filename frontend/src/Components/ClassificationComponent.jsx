@@ -2,10 +2,17 @@ import React, { useEffect, useState } from "react";
 import ThemeSwal from "../utils/swalTheme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlus,
-  faSave,
-  faTimes
-} from "@fortawesome/free-solid-svg-icons";
+  FiLayers,
+  FiSearch,
+  FiX,
+  FiPlus,
+  FiInbox,
+  FiTag,
+  FiEdit2,
+  FiTrash2,
+  FiRotateCcw,
+  FiSave,
+} from "react-icons/fi";
 import Pagination from "./Pagination";
 import Loader from "./Loader";
 import "../Component_styles/ClassificationComponent.css";
@@ -224,176 +231,476 @@ useEffect(() => {
   if (loading) return <Loader type="classification" apiDone={apiDone} />;
 
   return (
-    <div className="classification_card">
-      <div className="card_header">
-<div className="dual-input-container">
-        <h3 className="category_title">{title}</h3>
 
+<div className="classification_card">
 
-  {/* SEARCH SECTION */}
-  <div className="input-group">
-    {/* <label className="input-label">
-      <FontAwesomeIcon icon={faSearch} /> Search {title}
-    </label> */}
+  {/* ================= HEADER ================= */}
 
-      <input
-        className="category_search_input tour-search"
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        placeholder={`Search ${title.toLowerCase()}...`}
-      />
+  <div className="card_header">
 
-      {/* <button
-        type="button"
-        className="search-btn"
-        onClick={() => setCurrentPage(1)}
-      >
-        <FontAwesomeIcon icon={faSearch} />
-      </button> */}
-  </div>
+    <div className="classification_inner_heading">
+      <span className="classification_inner_eyebrow">
+        CLASSIFICATION MANAGEMENT
+      </span>
 
-  {/* ADD SECTION */}
+      <h3 className="category_title">{title}</h3>
 
-</div>
-  <div className="input-grouped">
-    {/* <label className="input-label">
-      <FontAwesomeIcon icon={faPlus} /> Add New {title}
-    </label> */}
-
-    <div className="input-with-button tour-add">
-      <input
-        className="category_search_input"
-        value={addValue}
-        onChange={(e) => setAddValue(e.target.value)}
-        placeholder={`Enter new ${title.toLowerCase()}...`}
-      />
-
-      <button
-        type="button"
-        className="add-btn"
-        onClick={handleAdd}
-      >
-        <FontAwesomeIcon icon={faPlus} /> Add
-      </button>
+      <p>
+        Manage {title.toLowerCase()} records and their availability.
+      </p>
     </div>
+
+    <span className="classification_inner_count">
+      <FiLayers />
+      {currentItems.length} Displayed
+    </span>
+
   </div>
+
+
+  {/* ================= SEARCH AND ADD ================= */}
+
+  <div className="classification_inner_toolbar">
+
+    <div className="dual-input-container">
+
+      <div className="input-group classification_inner_search">
+
+        <FiSearch className="classification_inner_input_icon" />
+
+        <input
+          className="category_search_input tour-search"
+          type="text"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder={`Search ${title.toLowerCase()}...`}
+          aria-label={`Search ${title}`}
+        />
+
+        {searchValue && (
+          <button
+            type="button"
+            className="classification_inner_clear"
+            onClick={() => setSearchValue("")}
+            aria-label="Clear search"
+          >
+            <FiX />
+          </button>
+        )}
+
       </div>
 
-<div className="classification-table-wrapper">
+    </div>
 
-  {currentItems.length === 0 ? (
-    <p className="no-data">No {title.toLowerCase()} found</p>
-  ) : (
-    <table className="classification-table tour-info">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>{title} Name</th>
-          <th>Status</th>
-          <th className="actions-column">Actions</th>
-        </tr>
-      </thead>
 
-      <tbody>
-        {currentItems.map((item, idx) => (
-          <tr
-            key={item._id}
-            className={!item.isActive ? "row-inactive" : ""}
-          >
-            <td>{startIndex + idx + 1}</td>
+    <div className="input-grouped">
 
-            <td className="name-cell">
-              {item.name
-                ?.toLowerCase()
-                .replace(/\b\w/g, (char) => char.toUpperCase())}
-            </td>
+      <div className="input-with-button tour-add">
 
-            <td>
-              <span
-                className={`status-badge ${
-                  item.isActive
-                    ? "badge-active"
-                    : "badge-inactive"
-                }`}
-              >
-                {item.isActive ? "Active" : "Inactive"}
-              </span>
-            </td>
+        <div className="classification_inner_add_input">
 
-            <td className="table-actions">
-              {item.isActive ? (
-                <>
+          <FiPlus className="classification_inner_input_icon" />
+
+          <input
+            className="category_search_input"
+            type="text"
+            value={addValue}
+            onChange={(e) => setAddValue(e.target.value)}
+            placeholder={`Enter new ${title.toLowerCase()}...`}
+            aria-label={`New ${title} name`}
+          />
+
+        </div>
+
+        <button
+          type="button"
+          className="add-btn classification_inner_add_btn"
+          onClick={handleAdd}
+        >
+          <FiPlus />
+          <span>Add {title}</span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  {/* ================= TABLE ================= */}
+
+  <div className="classification-table-wrapper">
+
+    {currentItems.length === 0 ? (
+
+      <div className="no-data classification_inner_empty">
+        <FiInbox />
+        <h4>No {title.toLowerCase()} found</h4>
+        <p>
+          No records match your current selection.
+        </p>
+      </div>
+
+    ) : (
+
+      <>
+
+        {/* DESKTOP TABLE */}
+
+        <div className="classification_inner_desktop">
+
+          <table className="classification-table tour-info">
+
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{title} Name</th>
+                <th>Status</th>
+                <th className="actions-column">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              {currentItems.map((item, idx) => (
+
+                <tr
+                  key={item._id}
+                  className={!item.isActive ? "row-inactive" : ""}
+                >
+
+                  <td>
+                    <span className="classification_inner_row_number">
+                      {startIndex + idx + 1}
+                    </span>
+                  </td>
+
+
+                  <td className="name-cell">
+
+                    <div className="classification_inner_name">
+
+                      <span className="classification_inner_name_icon">
+                        <FiTag />
+                      </span>
+
+                      <strong>
+                        {item.name
+                          ?.toLowerCase()
+                          .replace(/\b\w/g, (char) =>
+                            char.toUpperCase()
+                          )}
+                      </strong>
+
+                    </div>
+
+                  </td>
+
+
+                  <td>
+
+                    <span
+                      className={`status-badge ${
+                        item.isActive
+                          ? "badge-active"
+                          : "badge-inactive"
+                      }`}
+                    >
+                      <span className="classification_inner_status_dot" />
+                      {item.isActive ? "Active" : "Inactive"}
+                    </span>
+
+                  </td>
+
+
+                  <td className="table-actions">
+
+                    <div className="classification_inner_actions">
+
+                      {item.isActive ? (
+
+                        <>
+
+                          <button
+                            type="button"
+                            className="edit-btn classification_inner_edit_btn"
+                            onClick={() => {
+                              setEditingItem(item);
+                              setUpdatedName(item.name);
+                            }}
+                          >
+                            <FiEdit2 />
+                            Edit
+                          </button>
+
+
+                          {allowDelete && (
+
+                            <button
+                              type="button"
+                              className="delete-btn classification_inner_delete_btn"
+                              onClick={() =>
+                                handleDelete(item._id, item.name)
+                              }
+                            >
+                              <FiTrash2 />
+                              Delete
+                            </button>
+
+                          )}
+
+                        </>
+
+                      ) : (
+
+                        <button
+                          type="button"
+                          className="btn-restore classification_inner_restore_btn"
+                          onClick={() => handleRestore(item._id)}
+                        >
+                          <FiRotateCcw />
+                          Restore
+                        </button>
+
+                      )}
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        {/* MOBILE CARDS */}
+
+        <div className="classification_inner_mobile">
+
+          {currentItems.map((item, idx) => (
+
+            <div
+              key={item._id}
+              className={`classification_inner_mobile_card ${
+                !item.isActive ? "row-inactive" : ""
+              } tour-info`}
+            >
+
+              <div className="classification_inner_mobile_header">
+
+                <div className="classification_inner_mobile_title">
+
+                  <span className="classification_inner_name_icon">
+                    <FiTag />
+                  </span>
+
+                  <div>
+                    <span className="classification_inner_mobile_index">
+                      #{startIndex + idx + 1}
+                    </span>
+
+                    <h4>
+                      {item.name
+                        ?.toLowerCase()
+                        .replace(/\b\w/g, (char) =>
+                          char.toUpperCase()
+                        )}
+                    </h4>
+                  </div>
+
+                </div>
+
+                <span
+                  className={`status-badge ${
+                    item.isActive
+                      ? "badge-active"
+                      : "badge-inactive"
+                  }`}
+                >
+                  <span className="classification_inner_status_dot" />
+                  {item.isActive ? "Active" : "Inactive"}
+                </span>
+
+              </div>
+
+
+              <div className="classification_inner_mobile_actions">
+
+                {item.isActive ? (
+
+                  <>
+
+                    <button
+                      type="button"
+                      className="edit-btn classification_inner_edit_btn"
+                      onClick={() => {
+                        setEditingItem(item);
+                        setUpdatedName(item.name);
+                      }}
+                    >
+                      <FiEdit2 />
+                      Edit
+                    </button>
+
+                    {allowDelete && (
+
+                      <button
+                        type="button"
+                        className="delete-btn classification_inner_delete_btn"
+                        onClick={() =>
+                          handleDelete(item._id, item.name)
+                        }
+                      >
+                        <FiTrash2 />
+                        Delete
+                      </button>
+
+                    )}
+
+                  </>
+
+                ) : (
+
                   <button
-                    className="edit-btn"
-                    onClick={() => {
-                      setEditingItem(item);
-                      setUpdatedName(item.name);
-                    }}
+                    type="button"
+                    className="btn-restore classification_inner_restore_btn"
+                    onClick={() => handleRestore(item._id)}
                   >
-                    Edit
+                    <FiRotateCcw />
+                    Restore
                   </button>
 
-                  {allowDelete && (
-                    <button
-                      className="delete-btn"
-                      onClick={() =>
-                        handleDelete(item._id, item.name)
-                      }
-                    >
-                      Delete
-                    </button>
-                  )}
-                </>
-              ) : (
-                <button
-                  className="btn-restore"
-                  onClick={() => handleRestore(item._id)}
-                >
-                  Restore
-                </button>
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                )}
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </>
+
+    )}
+
+  </div>
+
+
+  {/* ================= PAGINATION ================= */}
+
+  <div className="classification_inner_pagination">
+
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={setCurrentPage}
+    />
+
+  </div>
+
+
+  {/* ================= EDIT MODAL ================= */}
+
+  {editingItem && (
+
+    <div className="edit-modal classification_inner_modal_overlay">
+
+      <div
+        className="edit-modal-content classification_inner_modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="classification-edit-title"
+      >
+
+        <div className="classification_inner_modal_header">
+
+          <div className="classification_inner_modal_heading">
+
+            <span className="classification_inner_modal_icon">
+              <FiEdit2 />
+            </span>
+
+            <div>
+              <span className="classification_inner_eyebrow">
+                UPDATE CLASSIFICATION
+              </span>
+
+              <h3 id="classification-edit-title">
+                Edit {title}
+              </h3>
+
+              <p>Update the selected record name.</p>
+            </div>
+
+          </div>
+
+          <button
+            type="button"
+            className="classification_inner_modal_close"
+            onClick={() => setEditingItem(null)}
+            aria-label="Close edit dialog"
+          >
+            <FiX />
+          </button>
+
+        </div>
+
+
+        <div className="classification_inner_modal_body">
+
+          <label htmlFor="classification-edit-name">
+            {title} Name
+          </label>
+
+          <input
+            id="classification-edit-name"
+            value={updatedName}
+            onChange={(e) => setUpdatedName(e.target.value)}
+            className="edit-input"
+            placeholder={`Enter ${title.toLowerCase()} name`}
+          />
+
+        </div>
+
+
+        <div className="modal-buttons classification_inner_modal_footer">
+
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={() => setEditingItem(null)}
+          >
+            <FiX />
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            className="save-btn"
+            onClick={handleUpdate}
+          >
+            <FiSave />
+            Save Changes
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
   )}
 
 </div>
 
-<Pagination
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={setCurrentPage}
-/>
-
-      {editingItem && (
-        <div className="edit-modal">
-          <div className="edit-modal-content">
-            <h3>Edit {title}</h3>
-
-            <input
-              value={updatedName}
-              onChange={(e) => setUpdatedName(e.target.value)}
-              className="edit-input"
-            />
-
-            <div className="modal-buttons">
-              <button className="save-btn" onClick={handleUpdate}>
-                <FontAwesomeIcon icon={faSave} /> Save
-              </button>
-
-              <button
-                className="cancel-btn"
-                onClick={() => setEditingItem(null)}
-              >
-                <FontAwesomeIcon icon={faTimes} /> Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
   );
 };
 

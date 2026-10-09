@@ -1,72 +1,148 @@
-.plan-timer {
-  display: inline-flex;
-  flex-direction: column;
+
+/* ======================================================
+   ASSETPEGASUS — PLAN TIMER
+====================================================== */
+
+.menubar-container .plan-timer {
+  display: flex;
   align-items: center;
   justify-content: center;
+  gap: 9px;
 
-  padding: 8px 16px;
-  border-radius: 10px;
-  min-width: 180px;
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 5px 10px;
 
-  font-family: "Inter", sans-serif;
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 8px;
+  background: #252b34;
 
-  transition: all 0.25s ease;
-}
-
-
-
-/* Urgent state (< 2 days) */
-.plan-timer.urgent {
-  background: #393E46;
-  border-color: 1px solid #DFD0B8;
-}
-
-/* Expired */
-.plan-timer.expired {
-  background: #393E46;
-  border-color: 1px solid #ff0000;
-}
-
-.label {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
   color: #DFD0B8;
-  margin-bottom: 3px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.menubar-container .plan-timer-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 25px;
+  height: 25px;
+
+  border-radius: 7px;
+  background: rgba(223, 208, 184, 0.08);
+  color: #948979;
+  font-size: 13px;
+}
+
+.menubar-container .plan-timer-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.menubar-container .plan-timer .label {
+  color: #948979;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.35px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.time {
-  font-size: 14px;
-  font-weight: 600;
+.menubar-container .plan-timer .time {
   color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.plan-timer.urgent .time {
-  color: #dc2626;
+.menubar-container .plan-timer-indicator {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+
+  margin-left: auto;
+  border-radius: 50%;
+  background: #7fb69a;
+  box-shadow: 0 0 0 3px rgba(127, 182, 154, 0.1);
 }
 
-.plan-timer.expired .time {
-  color: #b91c1c;
+/* ======================================================
+   EXPIRED STATE
+====================================================== */
+
+.menubar-container .plan-timer .expired-text {
+  color: #e18b8b;
 }
 
-.expired-text {
-  font-weight: 600;
+.menubar-container .plan-timer-indicator.expired {
+  background: #e18b8b;
+  box-shadow: 0 0 0 3px rgba(225, 139, 139, 0.1);
 }
-@media (max-width: 480px) {
-  .plan-timer {
-    min-width: auto;
-    padding: 6px 10px;
-    flex-direction: row;
+
+/* ======================================================
+   COMPACT SCREENS
+====================================================== */
+
+@media (max-width: 1200px) {
+  .menubar-container .plan-timer {
+    gap: 6px;
+    padding: 5px 7px;
   }
-  .label{
+
+  .menubar-container .plan-timer-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+
+  .menubar-container .plan-timer .label {
+    font-size: 8px;
+  }
+
+  .menubar-container .plan-timer .time {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .menubar-container .plan-timer-icon,
+  .menubar-container .plan-timer-indicator {
     display: none;
   }
-  .time {
-    font-size: 13px;
+
+  .menubar-container .plan-timer {
+    min-height: 32px;
+    padding: 4px 7px;
   }
 
-  .label {
-    font-size: 10px;
+  .menubar-container .plan-timer-details {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .menubar-container .plan-timer {
+    min-height: 29px;
+    padding: 4px 6px;
+  }
+
+  .menubar-container .plan-timer .label {
+    font-size: 8px;
+  }
+
+  .menubar-container .plan-timer .time {
+    font-size: 9px;
   }
 }

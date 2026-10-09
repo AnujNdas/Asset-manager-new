@@ -47,7 +47,7 @@ const Navbar = () => {
         </div>
 
         {/* DESKTOP NAVIGATION */}
-        <ul className="nav-menu">
+        <ul className="nav-main-menu">
 
           <li>
             <Link to="/" onClick={closeMenu}>

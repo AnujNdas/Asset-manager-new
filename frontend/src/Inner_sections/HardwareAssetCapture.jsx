@@ -10,7 +10,7 @@ import {
 } from "../Services/ApiServices";
 import ThemeSwal from "../utils/swalTheme";
 import Papa from "papaparse";
-import "../Page_styles/SoftwareCapture.css";
+import "../Page_styles/TestFile.css";
 import * as XLSX from "xlsx";
 import getErrorMessage from "../utils/getErrorMessage";
 import { driver } from "driver.js";
@@ -398,70 +398,346 @@ jsonData = XLSX.utils
   };
 
   return (
-    <div className="split-container">
-      {/* LEFT INFO PANEL */}
-      <div className="left-panel">
+  //   <div className="split-container">
+  //     {/* LEFT INFO PANEL */}
+  //     <div className="left-panel">
+  //       <h2>Create Hardware Asset</h2>
+  //       <p className="description">
+  //         Add physical assets with proper tracking, cost visibility, and
+  //         lifecycle management.
+  //       </p>
+
+  //       <div className="info-box">
+  //         <h4>What we need</h4>
+  //         <ul>
+  //           <li>Basic asset details</li>
+  //           <li>Location & unit mapping</li>
+  //           <li>Lifecycle tracking & Quantity</li>
+  //         </ul>
+  //       </div>
+
+  //       <div className="info-box">
+  //         <h4>Tips</h4>
+  //         <ul>
+  //           <li>Use correct quantity</li>
+  //           <li>Status is managed automatically based on usage</li>
+  //           <li>Enter accurate cost for reports</li>
+  //         </ul>
+  //       </div>
+  //         {/* <button
+  //   onClick={() => driverObj.drive()}
+  //   className="tour-help-btn"
+  // >
+  //   ❓ Guide
+  // </button> */}
+  //     </div>
+
+  //     {/* RIGHT FORM PANEL */}
+  //     <div className="right-panel">
+  //       <div className="form-card">
+  //         <div className="capture-header">
+  //           <h3>Hardware Details</h3>
+  //           <div className="group-buttons">
+  //           <button className="import-btn tour-import" onClick={() => setShowImport(true)}>
+  //             ⬆ Import Excel
+  //           </button>
+  //           <button onClick={downloadTemplate} className="btn-cancel tour-template">⬇ Download Template</button>
+  //           </div>
+  //         </div>
+  //         <div className="grid-2">
+  //           <div className="input-group">
+  //             <label>Asset Name *</label>
+  //             <input
+  //               name="assetName"
+  //               value={formData.assetName}
+  //               onChange={handleChange}
+  //             />
+  //           </div>
+
+  //           <div className="input-group tour-category">
+  //             <label>Category *</label>
+  //             <select
+  //               name="assetCategory"
+  //               value={formData.assetCategory}
+  //               onChange={handleChange}
+  //             >
+  //               <option value="">Select</option>
+  //               {categories.map((c) => (
+  //                 <option key={c._id} value={c._id}>
+  //                   {c.name}
+  //                 </option>
+  //               ))}
+  //             </select>
+  //           </div>
+  //         </div>
+
+  //         <h3>Location & Dates</h3>
+
+  //         <div className="grid-2">
+  //           <div className="input-group tour-unit">
+  //             <label>Unit *</label>
+  //             <select
+  //               name="associateUnit"
+  //               value={formData.associateUnit}
+  //               onChange={handleChange}
+  //             >
+  //               <option value="">Select</option>
+  //               {units.map((u) => (
+  //                 <option key={u._id} value={u._id}>
+  //                   {u.name}
+  //                 </option>
+  //               ))}
+  //             </select>
+  //           </div>
+
+  //           <div className="input-group tour-location">
+  //             <label>Billing Location *</label>
+  //             <select
+  //               name="locationName"
+  //               value={formData.locationName}
+  //               onChange={handleChange}
+  //             >
+  //               <option value="">Select</option>
+  //               {locations.map((l) => (
+  //                 <option key={l._id} value={l._id}>
+  //                   {l.name}
+  //                 </option>
+  //               ))}
+  //             </select>
+  //           </div>
+  //                       <div className="input-group">
+  //             <label>Purchase Date</label>
+  //             <input
+  //               type="date"
+  //               name="DOP"
+  //               value={formData.DOP}
+  //               onChange={handleChange}
+  //             />
+  //           </div>
+  //           <div className="input-group tour-quantity">
+  //             <label>Quantity *</label>
+  //             <input
+  //               type="number"
+  //               name="assetQuantity"
+  //               value={formData.assetQuantity}
+  //               onChange={handleChange}
+  //             />
+  //           </div>
+  //         </div>
+
+  //         <h3>Financial & Quantity</h3>
+
+  //         <div className="grid-2">
+  //           <div className="input-group">
+  //             <label>Vendor Name</label>
+  //             <input
+  //               name="vendor.name"
+  //               value={formData.vendor.name}
+  //               onChange={handleChange}
+  //             />
+  //           </div>
+
+  //           <div className="input-group">
+  //             <label>Vendor Contact</label>
+  //             <input
+  //               name="vendor.contact"
+  //               value={formData.vendor.contact}
+  //               onChange={handleChange}
+  //             />
+  //           </div>
+
+  //           <div className="input-group">
+  //             <label>Support Email</label>
+  //             <input
+  //               name="vendor.supportEmail"
+  //               value={formData.vendor.supportEmail}
+  //               onChange={handleChange}
+  //             />
+  //           </div>
+  //           <div className="input-group">
+  //             <label>Type *</label>
+  //             <select name="type" value={formData.type} onChange={handleChange}>
+  //               <option value="">Select</option>
+  //               <option value="one_time">One-Time</option>
+  //               <option value="maintenance">Maintenance</option>
+  //             </select>
+  //           </div>
+  //         </div>
+
+  //         <button
+  //           className="submit-btn tour-save"
+  //           disabled={isSubmitting}
+  //           onClick={handleAddAsset}
+  //         >
+  //           {isSubmitting ? "Saving..." : "Save Asset"}
+  //         </button>
+  //       </div>
+  //     </div>
+  //     {showImport && (
+  //       <div className="import-modal">
+  //         <div className="import-box">
+  //           <h3>Import Hardware Assets</h3>
+
+  //           <input
+  //             type="file"
+  //             accept=".xlsx, .xls, .csv"
+  //             onChange={(e) => setImportFile(e.target.files[0])}
+  //           />
+
+  //           <div className="import-actions">
+  //             <button onClick={() => setShowImport(false)} >Cancel</button>
+
+  //             <button onClick={handleImport} disabled={importLoading}>
+  //               {importLoading ? "Uploading..." : "Upload"}
+  //             </button>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )}
+  //   </div>
+
+
+  <div className="capture-page">
+  <div className="split-container">
+
+    {/* ================= LEFT PANEL ================= */}
+    <aside className="left-panel">
+      <div className="capture-intro">
+        <span className="capture-eyebrow">ASSET CAPTURE</span>
+
         <h2>Create Hardware Asset</h2>
+
         <p className="description">
-          Add physical assets with proper tracking, cost visibility, and
-          lifecycle management.
+          Add physical assets with proper tracking, cost visibility,
+          and lifecycle management.
         </p>
-
-        <div className="info-box">
-          <h4>What we need</h4>
-          <ul>
-            <li>Basic asset details</li>
-            <li>Location & unit mapping</li>
-            <li>Lifecycle tracking & Quantity</li>
-          </ul>
-        </div>
-
-        <div className="info-box">
-          <h4>Tips</h4>
-          <ul>
-            <li>Use correct quantity</li>
-            <li>Status is managed automatically based on usage</li>
-            <li>Enter accurate cost for reports</li>
-          </ul>
-        </div>
-          {/* <button
-    onClick={() => driverObj.drive()}
-    className="tour-help-btn"
-  >
-    ❓ Guide
-  </button> */}
       </div>
 
-      {/* RIGHT FORM PANEL */}
-      <div className="right-panel">
-        <div className="form-card">
-          <div className="capture-header">
-            <h3>Hardware Details</h3>
-            <div className="group-buttons">
-            <button className="import-btn tour-import" onClick={() => setShowImport(true)}>
-              ⬆ Import Excel
+      <div className="capture-info-content">
+        <div className="info-box">
+          <div className="info-box-header">
+            <span className="info-icon">01</span>
+            <h4>What you'll need</h4>
+          </div>
+
+          <ul>
+            <li>
+              <span></span>
+              Basic asset details
+            </li>
+            <li>
+              <span></span>
+              Location & unit mapping
+            </li>
+            <li>
+              <span></span>
+              Lifecycle tracking & quantity
+            </li>
+          </ul>
+        </div>
+
+        <div className="info-box">
+          <div className="info-box-header">
+            <span className="info-icon">02</span>
+            <h4>Before you save</h4>
+          </div>
+
+          <ul>
+            <li>
+              <span></span>
+              Verify the asset quantity
+            </li>
+            <li>
+              <span></span>
+              Status is automatically managed
+            </li>
+            <li>
+              <span></span>
+              Accurate costs improve reporting
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="capture-side-note">
+        <span className="side-note-icon">i</span>
+        <p>
+          Individual asset instances can be configured after the asset
+          is created.
+        </p>
+      </div>
+    </aside>
+
+    {/* ================= RIGHT PANEL ================= */}
+    <main className="right-panel">
+      <div className="form-card">
+
+        {/* HEADER */}
+        <div className="capture-header">
+          <div className="capture-header-copy">
+            <span className="form-eyebrow">HARDWARE</span>
+            <h1>Asset Details</h1>
+            <p>Enter the information required to create your asset.</p>
+          </div>
+
+          <div className="group-buttons">
+            <button
+              type="button"
+              className="secondary-action tour-template"
+              onClick={downloadTemplate}
+            >
+              <span className="button-icon">↓</span>
+              Template
             </button>
-            <button onClick={downloadTemplate} className="btn-cancel tour-template">⬇ Download Template</button>
+
+            <button
+              type="button"
+              className="import-btn tour-import"
+              onClick={() => setShowImport(true)}
+            >
+              <span className="button-icon">↑</span>
+              Import Excel
+            </button>
+          </div>
+        </div>
+
+        {/* ================= SECTION 1 ================= */}
+        <section className="form-section">
+          <div className="section-heading">
+            <div className="section-number">01</div>
+
+            <div>
+              <h3>Asset Information</h3>
+              <p>Basic information used to identify this asset.</p>
             </div>
           </div>
+
           <div className="grid-2">
             <div className="input-group">
-              <label>Asset Name *</label>
+              <label>
+                Asset Name <span className="required">*</span>
+              </label>
+
               <input
                 name="assetName"
                 value={formData.assetName}
                 onChange={handleChange}
+                placeholder="e.g. Dell Latitude 5540"
               />
             </div>
 
             <div className="input-group tour-category">
-              <label>Category *</label>
+              <label>
+                Category <span className="required">*</span>
+              </label>
+
               <select
                 name="assetCategory"
                 value={formData.assetCategory}
                 onChange={handleChange}
               >
-                <option value="">Select</option>
+                <option value="">Select category</option>
+
                 {categories.map((c) => (
                   <option key={c._id} value={c._id}>
                     {c.name}
@@ -469,19 +745,64 @@ jsonData = XLSX.utils
                 ))}
               </select>
             </div>
-          </div>
 
-          <h3>Location & Dates</h3>
+            <div className="input-group">
+              <label>
+                Asset Type <span className="required">*</span>
+              </label>
+
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+              >
+                <option value="">Select type</option>
+                <option value="one_time">One-Time</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+            </div>
+
+            <div className="input-group tour-quantity">
+              <label>
+                Quantity <span className="required">*</span>
+              </label>
+
+              <input
+                type="number"
+                name="assetQuantity"
+                value={formData.assetQuantity}
+                onChange={handleChange}
+                placeholder="Enter quantity"
+                min="1"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ================= SECTION 2 ================= */}
+        <section className="form-section">
+          <div className="section-heading">
+            <div className="section-number">02</div>
+
+            <div>
+              <h3>Location & Purchase</h3>
+              <p>Define ownership, billing location and purchase date.</p>
+            </div>
+          </div>
 
           <div className="grid-2">
             <div className="input-group tour-unit">
-              <label>Unit *</label>
+              <label>
+                Unit <span className="required">*</span>
+              </label>
+
               <select
                 name="associateUnit"
                 value={formData.associateUnit}
                 onChange={handleChange}
               >
-                <option value="">Select</option>
+                <option value="">Select unit</option>
+
                 {units.map((u) => (
                   <option key={u._id} value={u._id}>
                     {u.name}
@@ -491,13 +812,17 @@ jsonData = XLSX.utils
             </div>
 
             <div className="input-group tour-location">
-              <label>Billing Location *</label>
+              <label>
+                Billing Location <span className="required">*</span>
+              </label>
+
               <select
                 name="locationName"
                 value={formData.locationName}
                 onChange={handleChange}
               >
-                <option value="">Select</option>
+                <option value="">Select location</option>
+
                 {locations.map((l) => (
                   <option key={l._id} value={l._id}>
                     {l.name}
@@ -505,8 +830,10 @@ jsonData = XLSX.utils
                 ))}
               </select>
             </div>
-                        <div className="input-group">
+
+            <div className="input-group">
               <label>Purchase Date</label>
+
               <input
                 type="date"
                 name="DOP"
@@ -514,54 +841,67 @@ jsonData = XLSX.utils
                 onChange={handleChange}
               />
             </div>
-            <div className="input-group tour-quantity">
-              <label>Quantity *</label>
-              <input
-                type="number"
-                name="assetQuantity"
-                value={formData.assetQuantity}
-                onChange={handleChange}
-              />
+          </div>
+        </section>
+
+        {/* ================= SECTION 3 ================= */}
+        <section className="form-section">
+          <div className="section-heading">
+            <div className="section-number">03</div>
+
+            <div>
+              <h3>Vendor Information</h3>
+              <p>
+                Optional supplier information for procurement and support.
+              </p>
             </div>
           </div>
-
-          <h3>Financial & Quantity</h3>
 
           <div className="grid-2">
             <div className="input-group">
               <label>Vendor Name</label>
+
               <input
                 name="vendor.name"
                 value={formData.vendor.name}
                 onChange={handleChange}
+                placeholder="Enter vendor name"
               />
             </div>
 
             <div className="input-group">
               <label>Vendor Contact</label>
+
               <input
                 name="vendor.contact"
                 value={formData.vendor.contact}
                 onChange={handleChange}
+                placeholder="Phone or contact number"
               />
             </div>
 
-            <div className="input-group">
+            <div className="input-group full-width">
               <label>Support Email</label>
+
               <input
+                type="email"
                 name="vendor.supportEmail"
                 value={formData.vendor.supportEmail}
                 onChange={handleChange}
+                placeholder="support@vendor.com"
               />
             </div>
-            <div className="input-group">
-              <label>Type *</label>
-              <select name="type" value={formData.type} onChange={handleChange}>
-                <option value="">Select</option>
-                <option value="one_time">One-Time</option>
-                <option value="maintenance">Maintenance</option>
-              </select>
-            </div>
+          </div>
+        </section>
+
+        {/* ================= FOOTER ================= */}
+        <div className="form-footer">
+          <div className="form-footer-message">
+            <span>✓</span>
+            <p>
+              Required fields are marked with
+              <strong> *</strong>
+            </p>
           </div>
 
           <button
@@ -569,32 +909,102 @@ jsonData = XLSX.utils
             disabled={isSubmitting}
             onClick={handleAddAsset}
           >
-            {isSubmitting ? "Saving..." : "Save Asset"}
+            {isSubmitting ? (
+              <>
+                <span className="button-spinner"></span>
+                Saving Asset...
+              </>
+            ) : (
+              <>
+                Save Hardware Asset
+                <span className="submit-arrow">→</span>
+              </>
+            )}
           </button>
         </div>
       </div>
-      {showImport && (
-        <div className="import-modal">
-          <div className="import-box">
+    </main>
+  </div>
+
+  {/* ================= IMPORT MODAL ================= */}
+  {showImport && (
+    <div
+      className="import-modal"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget && !importLoading) {
+          setShowImport(false);
+        }
+      }}
+    >
+      <div className="import-box">
+        <div className="import-modal-header">
+          <div>
+            <span className="form-eyebrow">BULK IMPORT</span>
             <h3>Import Hardware Assets</h3>
+            <p>Upload your completed asset template.</p>
+          </div>
 
-            <input
-              type="file"
-              accept=".xlsx, .xls, .csv"
-              onChange={(e) => setImportFile(e.target.files[0])}
-            />
+          <button
+            type="button"
+            className="modal-close"
+            onClick={() => setShowImport(false)}
+            disabled={importLoading}
+            aria-label="Close import modal"
+          >
+            ×
+          </button>
+        </div>
 
-            <div className="import-actions">
-              <button onClick={() => setShowImport(false)} >Cancel</button>
+        <label className="file-upload-area">
+          <div className="upload-icon">↑</div>
 
-              <button onClick={handleImport} disabled={importLoading}>
-                {importLoading ? "Uploading..." : "Upload"}
-              </button>
+          <strong>Select asset file</strong>
+
+          <span>Excel or CSV · .xlsx, .xls, .csv</span>
+
+          <input
+            type="file"
+            accept=".xlsx,.xls,.csv"
+            onChange={(e) => setImportFile(e.target.files[0])}
+          />
+        </label>
+
+        {importFile && (
+          <div className="selected-file">
+            <div className="selected-file-icon">✓</div>
+
+            <div>
+              <strong>{importFile.name}</strong>
+              <span>
+                {(importFile.size / 1024).toFixed(1)} KB
+              </span>
             </div>
           </div>
+        )}
+
+        <div className="import-actions">
+          <button
+            type="button"
+            className="modal-cancel"
+            onClick={() => setShowImport(false)}
+            disabled={importLoading}
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            className="modal-upload"
+            onClick={handleImport}
+            disabled={importLoading || !importFile}
+          >
+            {importLoading ? "Uploading..." : "Upload Assets"}
+          </button>
         </div>
-      )}
+      </div>
     </div>
+  )}
+</div>
   );
 };
 

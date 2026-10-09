@@ -1,258 +1,770 @@
+
 /* =========================================================
-   Security Page Styles
-   Purpose: Password, 2FA, and Login Activity UI
-   ========================================================= */
+   SECURITY PAGE — ASSETPEGASUS THEME
+========================================================= */
 
-/* =======================
-   Main Container
-   ======================= */
 .Security-container {
-  font-family: Arial, sans-serif;
-  color: #333;
-}
-
-/* =======================
-   Page Heading
-   ======================= */
-.Profile-heading {
-  font-size: 28px;
-  font-weight: bold;
-  color: #222;
-}
-
-/* =======================
-   Section Cards
-   (Password, 2FA, Activity)
-   ======================= */
-.change-password,
-.two-factor-auth,
-.login-activity {
-  background: #222831;
-  border: none;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-
-  /* Subtle card elevation */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* =======================
-   Section Titles
-   ======================= */
-.box-head .title-p,
-.title-login {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #DFD0B8;
-}
-
-/* =======================
-   Input Containers
-   ======================= */
-.input-container,
-.input-container2 {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
+  flex-direction: column;
+  gap: 16px;
 
-/* Label / Description text */
-.input-container p,
-.input-container2 p {
-  flex: 1;
-  font-size: 14px;
-  margin: 0%;
-  color: #948979;
-}
-
-/* Input fields */
-.input-container input,
-.input-container2 input {
-  flex: 2;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  background: #393E46;
-  color: #DFD0B8;
-}
-
-/* Input focus state */
-.input-container input:focus,
-.input-container2 input:focus {
-  border-color: #948979;
-}
-
-/* =======================
-   Action Buttons
-   ======================= */
-.change-button {
-  text-align: right;
-  margin-top: 10px;
-}
-
-.change-button button {
-  background-color: #DFD0B8;
-  color: #222831;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 6px;
-
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s ease;
-}
-
-/* =======================
-   Two-Factor Authentication
-   ======================= */
-.switch-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-/* Informational text */
-.info-switch p {
-  font-size: 14px;
-  color: #555;
+  width: 100%;
+  min-width: 0;
   margin: 0;
+  padding: 0;
+
+  background: transparent;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
 }
 
-/* Toggle switch scaling */
-.switch .form-switch {
-  transform: scale(1.2);
+.Security-container *,
+.Security-container *::before,
+.Security-container *::after {
+  box-sizing: border-box;
 }
 
-/* =======================
-   Login Activity Section
-   ======================= */
-.login-activity .login-device {
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.Security-container .security-page-header {
   display: flex;
   align-items: center;
-  padding: 10px;
 
-  background: #f9f9f9;
-  border-radius: 6px;
-}
+  width: 100%;
+  padding: 16px 18px;
 
-/* Device icon placeholder */
-.device-logo {
-  width: 40px;
-  height: 40px;
-  background-color: #ccc;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
-/* Device details */
-.device-data h4 {
-  font-size: 16px;
-  margin: 0;
-}
-
-.device-data p {
-  font-size: 13px;
-  color: #666;
-  margin: 4px 0 0;
-}
-/* ================= DANGER ZONE ================= */
-
-.danger-zone {
-  margin-top: 40px;
-  padding: 20px;
-  border: 1px solid #ff4d4f;
+  border: 1px solid rgba(223, 208, 184, 0.09);
   border-radius: 10px;
-  background: #222831;
+
+  background: linear-gradient(
+    145deg,
+    #252b34,
+    #1c2128
+  );
 }
 
-.danger-header {
+.Security-container .security-page-heading {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
 }
 
-.danger-header h3 {
-  color: #ff1d1d;
+.Security-container .security-page-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 39px;
+  height: 39px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 9px;
+
+  background: rgba(223, 208, 184, 0.07);
+  color: #DFD0B8;
+
   font-size: 18px;
-  font-weight: 600;
 }
 
-.danger-badge {
-  background: #ff4d4f;
+.Security-container .security-page-heading h2 {
+  margin: 0;
+
   color: #DFD0B8;
-  padding: 4px 10px;
-  font-size: 12px;
-  border-radius: 20px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
-.danger-description {
-  margin-top: 12px;
-  font-size: 14px;
+.Security-container .security-page-heading p {
+  margin: 5px 0 0;
+
+  color: #948979;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   CHANGE PASSWORD CARD
+========================================================= */
+
+.Security-container .change-password {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 20px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 10px;
+
+  background: linear-gradient(
+    145deg,
+    #252b34,
+    #1c2128
+  );
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.Security-container .box-head {
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.Security-container .security-section-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.Security-container .security-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 8px;
+
+  background: rgba(223, 208, 184, 0.07);
   color: #DFD0B8;
-  line-height: 1.6;
+
+  font-size: 15px;
 }
 
-.danger-description strong {
-  color: #b71c1c;
+.Security-container .title-p {
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
-.danger-actions {
-  margin-top: 20px;
+.Security-container .security-section-title p {
+  margin: 5px 0 0;
+
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
 }
 
-.reset-system-btn {
-  background: #d32f2f;
-  color: #DFD0B8  ;
+
+/* =========================================================
+   PASSWORD INPUT GRID
+========================================================= */
+
+.Security-container .security-password-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  width: 100%;
+  min-width: 0;
+}
+
+.Security-container .input-container,
+.Security-container .input-container2 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+
+  background: transparent;
   border: none;
-  padding: 10px 18px;
+}
+
+.Security-container .input-container label,
+.Security-container .input-container2 label {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   PASSWORD INPUTS
+========================================================= */
+
+.Security-container .input-container input,
+.Security-container .input-container2 input {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+  height: 41px;
+
+  margin: 0;
+  padding: 10px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.14);
+  border-radius: 8px;
+
+  background: #1c2128;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.Security-container .input-container input::placeholder,
+.Security-container .input-container2 input::placeholder {
+  color: rgba(148, 137, 121, 0.7);
+}
+
+.Security-container .input-container input:hover,
+.Security-container .input-container2 input:hover {
+  border-color: rgba(223, 208, 184, 0.3);
+}
+
+.Security-container .input-container input:focus,
+.Security-container .input-container2 input:focus {
+  border-color: #948979;
+  background: #20262e;
+}
+
+
+/* =========================================================
+   PASSWORD FOOTER
+========================================================= */
+
+.Security-container .security-password-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding-top: 15px;
+  border-top: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.Security-container .security-password-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.Security-container .security-password-hint svg {
+  flex-shrink: 0;
   font-size: 14px;
-  border-radius: 6px;
+}
+
+
+/* =========================================================
+   CHANGE PASSWORD BUTTON
+========================================================= */
+
+.Security-container .change-button {
+  display: flex;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.Security-container .change-button button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-width: 145px;
+  min-height: 40px;
+  padding: 10px 15px;
+
+  border: 1px solid #DFD0B8;
+  border-radius: 8px;
+
+  background: #DFD0B8;
+  color: #222831;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
   cursor: pointer;
-  transition: background 0.2s ease;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.reset-system-btn:hover {
-  background: #b71c1c;
+.Security-container .change-button button:hover {
+  background: #c9b99f;
+  border-color: #c9b99f;
 }
 
-.reset-system-btn:active {
-  transform: scale(0.98);
+
+/* =========================================================
+   DANGER ZONE
+========================================================= */
+
+.Security-container .danger-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+
+  border: 1px solid rgba(220, 100, 100, 0.24);
+  border-radius: 10px;
+
+  background: linear-gradient(
+    145deg,
+    #29262b,
+    #211f25
+  );
+
+  overflow: hidden;
 }
-.custom-confirm-btn {
-  color: #DFD0B8 !important;
-  font-weight: 600;
+
+
+/* =========================================================
+   DANGER HEADER
+========================================================= */
+
+.Security-container .danger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  padding: 17px 20px;
+
+  border-bottom: 1px solid rgba(220, 100, 100, 0.14);
 }
-.custom-cancel-btn {
-  color: #DFD0B8 !important;
-  font-weight: 600;
+
+.Security-container .danger-title-group {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
 }
-/* =======================
-   Responsive Adjustments
-   ======================= */
-@media (max-width: 768px) {
-  /* Stack inputs vertically */
-  .input-container,
-  .input-container2 {
-    flex-direction: column;
-    align-items: flex-start;
+
+.Security-container .danger-section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 35px;
+  height: 35px;
+
+  border: 1px solid rgba(220, 100, 100, 0.2);
+  border-radius: 8px;
+
+  background: rgba(220, 100, 100, 0.08);
+  color: #e09a9a;
+
+  font-size: 16px;
+}
+
+.Security-container .danger-title-group h3 {
+  margin: 0;
+
+  color: #e6b0b0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.Security-container .danger-title-group p {
+  margin: 5px 0 0;
+
+  color: #aa8989;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.Security-container .danger-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(220, 100, 100, 0.22);
+  border-radius: 6px;
+
+  background: rgba(220, 100, 100, 0.09);
+  color: #e09a9a;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   DANGER CONTENT
+========================================================= */
+
+.Security-container .danger-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
+}
+
+.Security-container .danger-description {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  flex: 1;
+  min-width: 0;
+
+  margin: 0;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+}
+
+.Security-container .danger-description p {
+  margin: 0;
+
+  color: #c3aaaa;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.Security-container .danger-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  width: fit-content;
+  max-width: 100%;
+  padding: 8px 10px;
+
+  border: 1px solid rgba(220, 100, 100, 0.17);
+  border-radius: 7px;
+
+  background: rgba(220, 100, 100, 0.07);
+  color: #e09a9a;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.Security-container .danger-warning svg {
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   RESET BUTTON
+========================================================= */
+
+.Security-container .danger-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  margin: 0;
+  padding: 0;
+}
+
+.Security-container .reset-system-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 40px;
+  padding: 10px 15px;
+
+  border: 1px solid rgba(220, 100, 100, 0.4);
+  border-radius: 8px;
+
+  background: rgba(220, 100, 100, 0.11);
+  color: #e9aaaa;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.Security-container .reset-system-btn:hover {
+  background: rgba(220, 100, 100, 0.2);
+  border-color: rgba(220, 100, 100, 0.65);
+}
+
+
+/* =========================================================
+   FOCUS STATES
+========================================================= */
+
+.Security-container button:focus-visible,
+.Security-container input:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   LAPTOP — 1200px
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .Security-container .change-password {
+    padding: 18px;
   }
 
-  .input-container p,
-  .input-container2 p {
-    margin-bottom: 6px;
+  .Security-container .danger-content {
+    gap: 16px;
   }
 
-  /* Stack switch elements */
-  .switch-container {
+}
+
+
+/* =========================================================
+   TABLET — 900px
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .Security-container .security-page-header {
+    padding: 14px 15px;
+  }
+
+  .Security-container .change-password {
+    padding: 16px;
+  }
+
+  .Security-container .danger-header,
+  .Security-container .danger-content {
+    padding: 16px;
+  }
+
+  .Security-container .danger-content {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .Security-container .danger-actions {
+    justify-content: flex-start;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE — 600px
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .Security-container {
+    gap: 12px;
+  }
+
+  .Security-container .security-page-header {
+    padding: 13px;
+    border-radius: 9px;
+  }
+
+  .Security-container .security-page-heading {
     align-items: flex-start;
     gap: 10px;
   }
+
+  .Security-container .security-page-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .Security-container .security-page-heading h2 {
+    font-size: 16px;
+  }
+
+  .Security-container .security-page-heading p {
+    font-size: 10px;
+  }
+
+  .Security-container .change-password {
+    gap: 15px;
+    padding: 13px;
+    border-radius: 9px;
+  }
+
+  .Security-container .security-password-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .Security-container .box-head {
+    padding-bottom: 12px;
+  }
+
+  .Security-container .security-section-icon {
+    width: 31px;
+    height: 31px;
+    font-size: 14px;
+  }
+
+  .Security-container .input-container input,
+  .Security-container .input-container2 input {
+    height: 39px;
+  }
+
+  .Security-container .security-password-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 13px;
+  }
+
+  .Security-container .change-button,
+  .Security-container .change-button button {
+    width: 100%;
+  }
+
+  .Security-container .danger-zone {
+    border-radius: 9px;
+  }
+
+  .Security-container .danger-header {
+    padding: 13px;
+  }
+
+  .Security-container .danger-content {
+    padding: 13px;
+    gap: 15px;
+  }
+
+  .Security-container .danger-actions,
+  .Security-container .reset-system-btn {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE — 420px
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .Security-container .security-page-header,
+  .Security-container .change-password {
+    padding: 12px;
+  }
+
+  .Security-container .security-page-heading h2 {
+    font-size: 15px;
+  }
+
+  .Security-container .danger-header {
+    padding: 12px;
+  }
+
+  .Security-container .danger-content {
+    padding: 12px;
+  }
+
+  .Security-container .danger-title-group {
+    gap: 8px;
+  }
+
+  .Security-container .danger-section-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .Security-container .danger-badge {
+    padding: 5px 7px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE — 340px
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .Security-container .security-page-header,
+  .Security-container .change-password,
+  .Security-container .danger-header,
+  .Security-container .danger-content {
+    padding: 10px;
+  }
+
+  .Security-container .danger-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .Security-container .danger-badge {
+    margin-left: 0;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .Security-container button,
+  .Security-container input {
+    transition: none;
+  }
+
 }

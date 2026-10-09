@@ -7,6 +7,15 @@ import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-b
 import { faEnvelope, faLock, faPerson } from '@fortawesome/free-solid-svg-icons';
 import ThemeSwal from '../utils/swalTheme';
 import { Helmet } from 'react-helmet-async';
+import {
+  FiUserPlus,
+  FiUser,
+  FiMail,
+  FiLock,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiArrowRight,
+} from "react-icons/fi";
 import AuthService from '../Services/AuthService';
 import {
   trackAffiliateVisit,
@@ -343,77 +352,195 @@ if (!verifyRes.user.organizationOnboarded) {
     content="https://assetpegasus.com/images/Signup.webp"
   />
 </Helmet>
-    <div className="auth-page">
-      <div className="seo-links">
-  <Link to="/">Home</Link>
-  <Link to="/user/login/">Login</Link>
-  <Link to="/affiliate/apply/">Affiliate Program</Link>
-</div>
-      <div className="auth-card">
-        {/* Brand panel */}
-        {/* <aside className="brand-panel">
-          <img src={image} alt="Logo" className="brand-logo" />
-          <h1>Join Us</h1>
-          <p className="brand-sub">
-            Create your account and start exploring our dashboard.
-          </p>
-        </aside> */}
+ 
+  <div className="auth-page signup-page">
 
-        {/* Form panel */}
-        <form className="form-panel" onSubmit={handleSignup}>
-          <div className="form-header">
-            <h1>Create Account</h1>
-            <p className="form-sub">Fill in your details to get started</p>
+    {/* SEO / INTERNAL NAVIGATION */}
+    <nav className="seo-links" aria-label="Related pages">
+      <Link to="/">Home</Link>
+      <Link to="/user/login/">Login</Link>
+      <Link to="/affiliate/apply/">
+        Affiliate Program
+      </Link>
+    </nav>
+
+    <div className="auth-card">
+
+      <form
+        className="form-panel"
+        onSubmit={handleSignup}
+      >
+
+        {/* FORM HEADER */}
+        <div className="form-header">
+          <div className="form-heading-icon">
+            <FiUserPlus />
           </div>
 
-{/*           <div className="social-row">
-            <button type="button" className="social-btn"><FontAwesomeIcon icon={faFacebook} /></button>
-            <button type="button" className="social-btn"><FontAwesomeIcon icon={faTwitter} /></button>
-            <button type="button" className="social-btn"><FontAwesomeIcon icon={faLinkedin} /></button>
-            <button type="button" className="social-btn"><FontAwesomeIcon icon={faGithub} /></button>
+          <div className="form-heading-text">
+            <h1>Create Your Account</h1>
+            <p className="form-sub">
+              Start managing your assets with AssetPegasus.
+            </p>
+          </div>
+        </div>
+
+        {/* USERNAME */}
+        <label className="field">
+          <span className="field-label">
+            Username
+          </span>
+
+          <div className="input-wrapper">
+            <FiUser className="input-icon" />
+
+            <input
+              type="text"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Choose your username"
+              autoComplete="username"
+              required
+            />
+          </div>
+        </label>
+
+        {/* EMAIL */}
+        <label className="field">
+          <span className="field-label">
+            Email Address
+          </span>
+
+          <div className="input-wrapper">
+            <FiMail className="input-icon" />
+
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              autoComplete="email"
+              required
+            />
+          </div>
+        </label>
+
+        {/* PASSWORD */}
+        <div className="field">
+          <label
+            className="field-label"
+            htmlFor="signup-password"
+          >
+            Password
+          </label>
+
+          <div className="input-wrapper">
+            <FiLock className="input-icon" />
+
+            <input
+              id="signup-password"
+              type="password"
+              name="password"
+              value={password}
+              onChange={(e) => {
+                const value = e.target.value;
+
+                setPassword(value);
+                setPasswordValid(
+                  strongPasswordRegex.test(value)
+                );
+              }}
+              placeholder="Create a strong password"
+              autoComplete="new-password"
+              aria-invalid={
+                password.length > 0 && !passwordValid
+              }
+              aria-describedby="signup-password-hint"
+              required
+            />
           </div>
 
-          <div className="divider"><span>or</span></div> */}
+          {/* PASSWORD VALIDATION */}
+          {password.length > 0 && (
+            <div
+              className={`password-status ${
+                passwordValid ? "valid" : "invalid"
+              }`}
+            >
+              {passwordValid ? (
+                <>
+                  <FiCheckCircle />
+                  <span>Strong password</span>
+                </>
+              ) : (
+                <>
+                  <FiAlertCircle />
+                  <span>
+                    Password requirements not met
+                  </span>
+                </>
+              )}
+            </div>
+          )}
 
-          <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faPerson} /> Username</span>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Your username" required />
-          </label>
+          <small
+            className="password-hint"
+            id="signup-password-hint"
+          >
+            Use at least 8 characters, including uppercase,
+            lowercase, a number, and a special character.
+          </small>
+        </div>
 
-          <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> Email</span>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-          </label>
+        {/* SUBMIT */}
+        <div className="form-actions">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="auth-spinner" />
+                Processing...
+              </>
+            ) : (
+              <>
+                Create Account
+                <FiArrowRight />
+              </>
+            )}
+          </button>
+        </div>
 
-          <label className="field">
-            <span className="field-label"><FontAwesomeIcon icon={faLock} /> Password</span>
-            <input type="password" value={password} onChange={(e) => {
-  const value = e.target.value;
-  setPassword(value);
-  setPasswordValid(strongPasswordRegex.test(value));
-}} placeholder="Create a password" required />
-{!passwordValid && password.length > 0 && (
-  <small className="password-error">
-    Weak password
-  </small>
-)}
-<small className="password-hint">
-Must contain 8+ characters, uppercase, lowercase, number and special character.
-</small>
-          </label>
+        {/* LOGIN LINK */}
+        <div className="form-switch">
+          <span>Already have an account?</span>
 
-          <div className="form-actions">
-            <Link to="/user/login" className="link">Already have an account?</Link>
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? "Processing..." : "Sign Up"}
-            </button>
-          </div>
-                    <p className="tiny-note">
-            By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "#DFD0B8", cursor : "pointer", textAlign : "center" , justifyContent : "center", padding : "0px"}} target="_blank">Terms & Privacy Policy.</a> 
-          </p>
-        </form>
-      </div>
+          <Link to="/user/login">
+            Sign In
+          </Link>
+        </div>
+
+        {/* TERMS */}
+        <p className="tiny-note">
+          By creating an account, you agree to our{" "}
+          <a
+            href="https://socialflylive.com/terms-and-conditions/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Terms &amp; Privacy Policy
+          </a>
+          .
+        </p>
+
+      </form>
     </div>
+  </div>                                               
+
     </>
   );
 };

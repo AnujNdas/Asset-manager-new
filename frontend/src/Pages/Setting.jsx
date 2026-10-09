@@ -19,6 +19,7 @@ import {
   FaEnvelope,
   FaMousePointer,
 } from "react-icons/fa";
+import { FiSettings } from "react-icons/fi";
 import "../Page_styles/Classification.css"
 import axiosInstance from "../Services/axiosInstance";
 import Loader from "../Components/Loader"
@@ -118,42 +119,141 @@ const Setting = () => {
   ];
 
   return (
-    <div className="setting-container">
-      <h2 className="classify_heading">Settings</h2>
 
-      {/* Tabs Navigation */}
-      <nav className="settings-tabs">
-        {tabs.map(({ path, label, icon: Icon }) => (
-          <Link
-            key={path}
-            to={`/setting/${path}`}
-            className={location.pathname.includes(path) ? "active" : ""}
-          >
-            <Icon className="tab-icon" />
-            <span className="redirect-tab">{label}</span>
-          </Link>
-        ))}
-      </nav>
+<div className="setting-container">
 
-      {/* Content */}
-      <main className="settings">
-        <Suspense fallback={<Loader/>}>
-          <Routes>
-            <Route path="/" element={<Navigate to="profile" replace />} />
-            <Route path="profile" element={<MyProfile />} />
-            <Route path="security" element={<Security />} />
-            <Route path="notification" element={<Notification />} />
-            {/* <Route path="subscription" element={<Subscription />} /> */}
-            <Route path="teamInvites" element={<TeamInvites />} />
-            <Route path="help&support" element={<HelpSupport />} />
-            {/* <Route path="setuser" element={<SetUser />} /> */}
-            {userData?.role === "admin" && (
-              <Route path="users" element={<UserManagement />} />
-            )}
-          </Routes>
-        </Suspense>
-      </main>
+  {/* =====================================================
+      SETTINGS PAGE HEADER
+  ===================================================== */}
+
+  <div className="settings-page-header">
+
+    <div className="settings-page-heading">
+
+      <span className="settings-page-header-icon">
+        <FiSettings />
+      </span>
+
+      <div className="settings-page-title-group">
+
+        <h2 className="classify_heading">
+          Settings
+        </h2>
+
+        <p>
+          Manage your account, security, team,
+          and application preferences.
+        </p>
+
+      </div>
+
     </div>
+
+  </div>
+
+
+  {/* =====================================================
+      SETTINGS TAB NAVIGATION
+  ===================================================== */}
+
+  <div className="settings-navigation-wrapper">
+
+    <nav
+      className="settings-tabs"
+      aria-label="Settings navigation"
+    >
+
+      {tabs.map(({ path, label, icon: Icon }) => (
+
+        <Link
+          key={path}
+          to={`/setting/${path}`}
+          className={
+            location.pathname.includes(path)
+              ? "active"
+              : ""
+          }
+          aria-current={
+            location.pathname.includes(path)
+              ? "page"
+              : undefined
+          }
+        >
+
+          <Icon className="tab-icon" />
+
+          <span className="redirect-tab">
+            {label}
+          </span>
+
+        </Link>
+
+      ))}
+
+    </nav>
+
+  </div>
+
+
+  {/* =====================================================
+      SETTINGS CONTENT
+  ===================================================== */}
+
+  <main className="settings">
+
+    <Suspense fallback={<Loader />}>
+
+      <Routes>
+
+        <Route
+          path="/"
+          element={
+            <Navigate to="profile" replace />
+          }
+        />
+
+        <Route
+          path="profile"
+          element={<MyProfile />}
+        />
+
+        <Route
+          path="security"
+          element={<Security />}
+        />
+
+        <Route
+          path="notification"
+          element={<Notification />}
+        />
+
+        <Route
+          path="teamInvites"
+          element={<TeamInvites />}
+        />
+
+        <Route
+          path="help&support"
+          element={<HelpSupport />}
+        />
+
+        {userData?.role === "admin" && (
+
+          <Route
+            path="users"
+            element={<UserManagement />}
+          />
+
+        )}
+
+      </Routes>
+
+    </Suspense>
+
+  </main>
+
+</div>
+
   );
 };
 

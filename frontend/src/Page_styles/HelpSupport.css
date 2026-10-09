@@ -1,455 +1,1123 @@
-  /* ============================
-    HELP & SUPPORT PAGE
-  ============================ */
 
-  .help-container {
-    padding: 14px;
-    max-width: 1100px;
-    color: #1f2937;
-  }
+/* =========================================================
+   HELP & SUPPORT — ASSETPEGASUS DARK THEME
+========================================================= */
 
-  /* HEADER */
-  .help-header {
-    margin-bottom: 24px;
-  }
-
-  .help-header h1 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #DFD0B8;
-  }
-
-  .help-header p {
-    color: #948979;
-    font-size: 14px;
-  }
-
-  /* ============================
-    NAV TABS
-  ============================ */
-
-  .help-nav {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-
-  .help-nav button {
-    background: #948979;
-    border: none;
-    padding: 12px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    color: #222831;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s ease;
-    border-radius: 10px;
-  }
-
-  .help-nav button:hover {
-    color: #111827;
-  }
-
-  .help-nav button.active {
-    color: #222831;
-    background: #DFD0B8;
-    border-radius: 10px;
-    font-weight: 500;
-  }
-
-  /* ============================
-    ACCORDION
-  ============================ */
-
-  .accordion-section {
-    margin-top: 12px;
-  }
-
-  .accordion-item {
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    background: #222831;
-  }
-
-  .accordion-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 16px;
-    color: #DFD0B8;
-    /* background: #f9fafb; */
-    cursor: pointer;
-  }
-
-  .accordion-title h4 {
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .accordion-title span {
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .accordion-content {
-    padding: 14px 16px;
-    font-size: 14px;
-    color: #948979;
-    /* background: #ffffff; */
-    line-height: 1.6;
-  }
-
-  /* Ordered list inside docs */
-  .accordion-content li {
-    margin-left: 16px;
-    padding: 4px 0;
-  }
-
-  /* ============================
-    FORMS (Ticket & Contact)
-  ============================ */
-
-  .help-form-section {
-    /* max-width: 520px; */
-    margin-top: 12px;
-  }
-
-  .help-form-section h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #DFD0B8;
-  }
-
-  .help-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .help-form input,
-  .help-form select,
-  .help-form textarea {
-    width: 100%;
-    padding: 10px 12px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    background: #222831;
-    color: #DFD0B8;
-  }
-
-  .help-form textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-
-
-  /* Buttons */
-  .help-form button {
-    background: #DFD0B8;
-    color: #222831;
-    padding: 10px;
-    font-size: 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-  .help-form button:disabled {
-    background: #9ca3af;
-    cursor: not-allowed;
-  }
-
-  /* Form messages */
-  .form-error {
-    color: #dc2626;
-    font-size: 13px;
-  }
-
-  .form-success {
-    color: #16a34a;
-    font-size: 13px;
-  }
-
-  /* ============================
-    MY TICKETS
-  ============================ */
-
-  .my-tickets {
-    margin-top: 40px;
-  }
-
-  .my-tickets h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  .empty-state {
-    color: #6b7280;
-    font-size: 14px;
-  }
-
-  .ticket-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .ticket {
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 14px;
-    margin-bottom: 10px;
-  }
-
-  .ticket strong {
-    font-size: 14px;
-  }
-
-  .ticket span {
-    font-size: 12px;
-    color: #6b7280;
-    margin-left: 8px;
-  }
-
-  .ticket p {
-    font-size: 13px;
-    margin: 6px 0;
-    color: #374151;
-  }
-
-  .ticket-status {
-    font-size: 12px;
-    font-weight: 500;
-  }
-
-  /* Status colors */
-  .ticket.open .ticket-status {
-    color: #2563eb;
-  }
-
-  .ticket.in-progress .ticket-status {
-    color: #d97706;
-  }
-
-  .ticket.closed .ticket-status {
-    color: #16a34a;
-  }
-  /* Workflow container */
-  .workflow {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-  }
-
-  /* Each step + arrow */
-  .workflow-step {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* Step text pill */
-  .step-text {
-    background: #948979;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #222831;
-    white-space: nowrap;
-  }
-
-  /* Arrow */
-  .step-arrow {
-    font-size: 18px;
-    font-weight: bold;
-    color: #6b7280;
-  }
-/* ===== My Support Tickets ===== */
-
-/* ===== My Tickets Section ===== */
-
-.my-tickets {
-  margin-top: 3rem;
-}
-
-.my-tickets h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #DFD0B8;
-}
-
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 2rem;
-  font-size: 0.95rem;
-  color: #948979;
-}
-
-/* List */
-.ticket-list {
+.help-container {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  list-style: none;
+  gap: 16px;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  margin: 0;
   padding: 0;
-  margin: 0;
+
+  background: transparent;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
 }
 
-/* Ticket row */
-.ticket {
-  display: grid;
-  grid-template-columns: 5px 1.5fr 1fr 3fr auto;
+.help-container *,
+.help-container *::before,
+.help-container *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.help-container .help-header {
+  display: flex;
   align-items: center;
-  background: #222831;
-  border-radius: 12px;
-  padding: 0.9rem 1rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-  transition: background 0.2s ease, transform 0.15s ease;
+
+  width: 100%;
+  padding: 16px 18px;
+
+  border: 1px solid rgba(223,208,184,.09);
+  border-radius: 10px;
+
+  background: linear-gradient(145deg,#252b34,#1c2128);
 }
 
-/* Left status indicator */
-.ticket::before {
-  content: "";
-  width: 5px;
-  height: 100%;
-  border-radius: 12px 0 0 12px;
-  background: #DFD0B8;
+.help-container .help-header-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
+.help-container .help-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
+  width: 39px;
+  height: 39px;
 
-/* Subject */
-.ticket strong {
-  font-size: 0.95rem;
-  font-weight: 600;
+  border: 1px solid rgba(223,208,184,.12);
+  border-radius: 9px;
+
+  background: rgba(223,208,184,.07);
   color: #DFD0B8;
+
+  font-size: 18px;
 }
 
-/* Issue type */
-.ticket span {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #948979;
-}
-
-/* Description */
-.ticket p {
-  font-size: 0.85rem;
-  color: #DFD0B8;
+.help-container .help-header h1 {
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
-/* Status badge */
-.ticket-status {
-  font-size: 0.7rem;
+.help-container .help-header p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   NAVIGATION TABS
+========================================================= */
+
+.help-container .help-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 7px;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 7px;
+
+  border: 1px solid rgba(223,208,184,.1);
+  border-radius: 10px;
+
+  background: linear-gradient(145deg,#252b34,#1c2128);
+}
+
+.help-container .help-nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 40px;
+  padding: 10px 12px;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #948979;
+
+  font-family: inherit;
+  font-size: 11px;
   font-weight: 600;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #222831;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease;
+}
+
+.help-container .help-nav button svg {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.help-container .help-nav button:hover {
+  background: rgba(223,208,184,.06);
+  color: #DFD0B8;
+}
+
+.help-container .help-nav button.active {
+  border-color: rgba(223,208,184,.14);
+  background: rgba(223,208,184,.12);
+  color: #DFD0B8;
+  font-weight: 700;
+}
+
+/* =========================================================
+   MAIN CONTENT CARDS
+========================================================= */
+
+.help-container .accordion-section,
+.help-container .help-form-section,
+.help-container .my-tickets {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 20px;
+
+  border: 1px solid rgba(223,208,184,.1);
+  border-radius: 10px;
+
+  background: linear-gradient(145deg,#252b34,#1c2128);
+}
+
+/* =========================================================
+   SECTION HEADERS
+========================================================= */
+
+.help-container .help-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223,208,184,.08);
+}
+
+.help-container .help-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.help-container .help-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(223,208,184,.12);
+  border-radius: 8px;
+
+  background: rgba(223,208,184,.07);
+  color: #DFD0B8;
+
+  font-size: 15px;
+}
+
+.help-container .help-section-heading h2 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.help-container .help-section-heading p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.help-container .help-section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  padding: 7px 10px;
+
+  border: 1px solid rgba(223,208,184,.12);
+  border-radius: 7px;
+
+  background: rgba(223,208,184,.06);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   ACCORDION LIST
+========================================================= */
+
+.help-container .help-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.help-container .accordion-item {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+
+  border: 1px solid rgba(223,208,184,.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+  overflow: hidden;
+
+  transition: border-color .2s ease;
+}
+
+.help-container .accordion-item:hover,
+.help-container .accordion-item.is-open {
+  border-color: rgba(223,208,184,.24);
+}
+
+/* =========================================================
+   ACCORDION TITLE
+========================================================= */
+
+.help-container .accordion-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 13px 15px;
+
+  border: none;
+  border-radius: 0;
+
+  background: transparent;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.help-container .accordion-question {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.help-container .accordion-question > svg {
+  flex-shrink: 0;
+  color: #948979;
+  font-size: 14px;
+}
+
+.help-container .accordion-question > span {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.help-container .accordion-chevron {
+  flex-shrink: 0;
+  color: #948979;
+  font-size: 15px;
+  transition: transform .2s ease;
+}
+
+.help-container .accordion-item.is-open .accordion-chevron {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   ACCORDION CONTENT
+========================================================= */
+
+.help-container .accordion-content {
+  margin: 0;
+  padding: 14px 16px;
+
+  border-top: 1px solid rgba(223,208,184,.08);
+
+  background: rgba(223,208,184,.025);
+}
+
+.help-container .accordion-content p {
+  margin: 0;
+  color: #b4a794;
+  font-size: 11px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   DOCUMENTATION WORKFLOW
+========================================================= */
+
+.help-container .workflow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  width: 100%;
+  min-width: 0;
+  padding: 15px;
+
+  border-top: 1px solid rgba(223,208,184,.08);
+  background: rgba(223,208,184,.025);
+}
+
+.help-container .workflow-step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  width: 100%;
+  min-width: 0;
+  padding: 9px 0;
+}
+
+.help-container .workflow-step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 25px;
+  height: 25px;
+
+  border: 1px solid rgba(223,208,184,.18);
+  border-radius: 7px;
+
+  background: rgba(223,208,184,.09);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.help-container .step-text {
+  flex: 1;
+  min-width: 0;
+  padding-top: 4px;
+
+  color: #DFD0B8;
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.help-container .step-arrow {
+  position: absolute;
+  left: 6px;
+  bottom: -9px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 13px;
+  height: 17px;
+
+  color: #948979;
+  font-size: 12px;
+}
+
+/* =========================================================
+   SUPPORT FORMS
+========================================================= */
+
+.help-container .help-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.help-container .help-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 15px;
+  width: 100%;
+  min-width: 0;
+}
+
+.help-container .help-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.help-container .help-field-full {
+  grid-column: 1 / -1;
+}
+
+.help-container .help-form-field label {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   INPUTS, SELECTS, TEXTAREAS
+========================================================= */
+
+.help-container .help-form input,
+.help-container .help-form select,
+.help-container .help-form textarea {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 10px 12px;
+
+  border: 1px solid rgba(223,208,184,.14);
+  border-radius: 8px;
+
+  background: #1c2128;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+
+  outline: none;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.help-container .help-form input,
+.help-container .help-form select {
+  height: 40px;
+}
+
+.help-container .help-form textarea {
+  min-height: 115px;
+  resize: vertical;
+}
+
+.help-container .help-form input::placeholder,
+.help-container .help-form textarea::placeholder {
+  color: rgba(148,137,121,.7);
+}
+
+.help-container .help-form select {
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.help-container .help-form select option {
+  background: #222831;
+  color: #DFD0B8;
+}
+
+.help-container .help-form input:hover,
+.help-container .help-form select:hover,
+.help-container .help-form textarea:hover {
+  border-color: rgba(223,208,184,.3);
+}
+
+.help-container .help-form input:focus,
+.help-container .help-form select:focus,
+.help-container .help-form textarea:focus {
+  border-color: #948979;
+  background: #20262e;
+}
+
+/* =========================================================
+   FORM FEEDBACK
+========================================================= */
+
+.help-container .form-error,
+.help-container .form-success {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  margin: 0;
+  padding: 10px 12px;
+
+  border-radius: 7px;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.help-container .form-error {
+  border: 1px solid rgba(220,100,100,.22);
+  background: rgba(220,100,100,.07);
+  color: #e09a9a;
+}
+
+.help-container .form-success {
+  border: 1px solid rgba(145,182,156,.22);
+  background: rgba(145,182,156,.07);
+  color: #91b69c;
+}
+
+.help-container .form-error svg,
+.help-container .form-success svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+/* =========================================================
+   FORM FOOTER
+========================================================= */
+
+.help-container .help-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding-top: 15px;
+  border-top: 1px solid rgba(223,208,184,.08);
+}
+
+.help-container .help-form-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.help-container .help-form-hint svg {
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+.help-container .help-form-footer button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  min-width: 130px;
+  min-height: 40px;
+  padding: 10px 15px;
+
+  border: 1px solid #DFD0B8;
+  border-radius: 8px;
+
   background: #DFD0B8;
+  color: #222831;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: background .2s,border-color .2s;
 }
 
-/* ===== Status Colors ===== */
-
-
-.ticket.in-progress {
-  color: #d97706;
+.help-container .help-form-footer button:hover:not(:disabled) {
+  background: #c9b99f;
+  border-color: #c9b99f;
 }
 
-.ticket.in-progress .ticket-status {
-  background: #fff4db;
-  color: #b45309;
+.help-container .help-form-footer button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
-.ticket.resolved {
-  color: #059669;
+.help-container .help-loading-icon {
+  animation: help-spin 1s linear infinite;
 }
 
-.ticket.resolved .ticket-status {
-  background: #dcfce7;
-  color: #047857;
+@keyframes help-spin {
+  to { transform: rotate(360deg); }
 }
 
-.ticket.closed {
-  color: #6b7280;
+/* =========================================================
+   ADMIN TICKETS WRAPPER
+========================================================= */
+
+.help-container .help-admin-tickets {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
-.ticket.closed .ticket-status {
-  background: #f3f4f6;
-  color: #4b5563;
+/* =========================================================
+   MY TICKETS LIST
+========================================================= */
+
+.help-container .ticket-list {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 13px;
+
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* ===== Mobile Layout ===== */
+.help-container .ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 
-@media (max-width: 768px) {
-  .ticket {
-    grid-template-columns: 5px 1fr;
-    grid-template-rows: auto auto auto auto;
-    row-gap: 0.35rem;
+  min-width: 0;
+  padding: 15px;
+
+  border: 1px solid rgba(223,208,184,.11);
+  border-radius: 9px;
+
+  background: #1c2128;
+  transition: border-color .2s ease;
+}
+
+.help-container .ticket:hover {
+  border-color: rgba(223,208,184,.25);
+}
+
+/* =========================================================
+   TICKET TOP
+========================================================= */
+
+.help-container .ticket-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.help-container .ticket-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.help-container .ticket-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 29px;
+  height: 29px;
+
+  border: 1px solid rgba(223,208,184,.12);
+  border-radius: 7px;
+
+  background: rgba(223,208,184,.07);
+  color: #DFD0B8;
+  font-size: 13px;
+}
+
+.help-container .ticket-heading strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   TICKET STATUS
+========================================================= */
+
+.help-container .ticket-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  padding: 5px 9px;
+
+  border: 1px solid rgba(223,208,184,.14);
+  border-radius: 6px;
+
+  background: rgba(223,208,184,.07);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.help-container .ticket.open .ticket-status,
+.help-container .ticket.pending .ticket-status {
+  border-color: rgba(204,176,122,.25);
+  background: rgba(204,176,122,.09);
+  color: #ccb07a;
+}
+
+.help-container .ticket.in-progress .ticket-status,
+.help-container .ticket.in_progress .ticket-status {
+  border-color: rgba(143,177,209,.25);
+  background: rgba(143,177,209,.09);
+  color: #9bbfdf;
+}
+
+.help-container .ticket.resolved .ticket-status,
+.help-container .ticket.closed .ticket-status {
+  border-color: rgba(145,182,156,.23);
+  background: rgba(145,182,156,.09);
+  color: #91b69c;
+}
+
+/* =========================================================
+   ISSUE TYPE
+========================================================= */
+
+.help-container .ticket-issue-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 9px;
+
+  border: 1px solid rgba(223,208,184,.1);
+  border-radius: 6px;
+
+  background: rgba(223,208,184,.05);
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.help-container .ticket-issue-type svg {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+/* =========================================================
+   TICKET DESCRIPTION
+========================================================= */
+
+.help-container .ticket-description {
+  margin: 0;
+
+  color: #b4a794;
+  font-size: 11px;
+  line-height: 1.7;
+
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* =========================================================
+   EMPTY TICKETS
+========================================================= */
+
+.help-container .help-empty-tickets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  min-height: 190px;
+  padding: 25px 15px;
+
+  border: 1px dashed rgba(223,208,184,.16);
+  border-radius: 9px;
+
+  background: rgba(223,208,184,.025);
+  text-align: center;
+}
+
+.help-container .help-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 45px;
+  height: 45px;
+
+  border-radius: 10px;
+  background: rgba(223,208,184,.07);
+  color: #948979;
+
+  font-size: 20px;
+}
+
+.help-container .help-empty-tickets h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.help-container .help-empty-tickets p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.help-container button:focus-visible,
+.help-container input:focus-visible,
+.help-container select:focus-visible,
+.help-container textarea:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   LAPTOP — 1200px
+========================================================= */
+
+@media (max-width: 1200px) {
+  .help-container .accordion-section,
+  .help-container .help-form-section,
+  .help-container .my-tickets {
+    padding: 18px;
   }
 
-  .ticket strong {
-    grid-column: 2;
-  }
-
-  .ticket span {
-    grid-column: 2;
-  }
-
-  .ticket p {
-    grid-column: 2;
-    white-space: normal;
-  }
-
-  .ticket-status {
-    grid-column: 2;
-    justify-self: flex-start;
+  .help-container .ticket-list {
+    gap: 12px;
   }
 }
 
-  /* ============================
-    RESPONSIVE
-  ============================ */
+/* =========================================================
+   TABLET — 900px
+========================================================= */
 
-  @media (max-width: 768px) {
-    .help-nav {
-      flex-wrap: wrap;
-    }
-
-    .help-container {
-      padding: 16px;
-    }
-    .workflow {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .workflow-step {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .step-arrow {
-      transform: rotate(90deg);
-      margin: 6px 0;
-    }
+@media (max-width: 900px) {
+  .help-container .help-header {
+    padding: 14px 15px;
   }
 
+  .help-container .help-nav {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #948979 transparent;
+  }
 
+  .help-container .help-nav button {
+    flex: 0 0 auto;
+    min-width: max-content;
+    padding: 10px 14px;
+  }
 
+  .help-container .accordion-section,
+  .help-container .help-form-section,
+  .help-container .my-tickets {
+    padding: 16px;
+  }
+
+  .help-container .ticket-list {
+    grid-template-columns: minmax(0,1fr);
+  }
+}
+
+/* =========================================================
+   MOBILE — 600px
+========================================================= */
+
+@media (max-width: 600px) {
+  .help-container {
+    gap: 12px;
+  }
+
+  .help-container .help-header {
+    padding: 13px;
+    border-radius: 9px;
+  }
+
+  .help-container .help-header-heading {
+    gap: 10px;
+  }
+
+  .help-container .help-header-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .help-container .help-header h1 {
+    font-size: 16px;
+  }
+
+  .help-container .help-header p {
+    font-size: 10px;
+  }
+
+  .help-container .help-nav {
+    padding: 6px;
+    gap: 5px;
+    border-radius: 9px;
+  }
+
+  .help-container .help-nav button {
+    min-height: 37px;
+    padding: 9px 11px;
+    font-size: 10px;
+  }
+
+  .help-container .help-nav button svg {
+    font-size: 13px;
+  }
+
+  .help-container .accordion-section,
+  .help-container .help-form-section,
+  .help-container .my-tickets {
+    padding: 13px;
+    border-radius: 9px;
+  }
+
+  .help-container .help-section-header {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+
+  .help-container .help-section-icon {
+    width: 31px;
+    height: 31px;
+    font-size: 14px;
+  }
+
+  .help-container .help-form-grid {
+    grid-template-columns: minmax(0,1fr);
+    gap: 13px;
+  }
+
+  .help-container .help-field-full {
+    grid-column: auto;
+  }
+
+  .help-container .help-form-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .help-container .help-form-footer button {
+    width: 100%;
+  }
+
+  .help-container .accordion-title {
+    padding: 12px;
+  }
+
+  .help-container .accordion-content {
+    padding: 12px;
+  }
+
+  .help-container .workflow {
+    padding: 12px;
+  }
+
+  .help-container .ticket {
+    padding: 13px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE — 420px
+========================================================= */
+
+@media (max-width: 420px) {
+  .help-container .help-header,
+  .help-container .accordion-section,
+  .help-container .help-form-section,
+  .help-container .my-tickets {
+    padding: 12px;
+  }
+
+  .help-container .help-section-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .help-container .help-section-count {
+    margin-left: 0;
+  }
+
+  .help-container .ticket-top {
+    flex-wrap: wrap;
+  }
+
+  .help-container .ticket-status {
+    margin-left: 0;
+  }
+
+  .help-container .ticket-heading strong {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE — 340px
+========================================================= */
+
+@media (max-width: 340px) {
+  .help-container .help-header,
+  .help-container .accordion-section,
+  .help-container .help-form-section,
+  .help-container .my-tickets {
+    padding: 10px;
+  }
+
+  .help-container .help-section-heading {
+    gap: 8px;
+  }
+
+  .help-container .accordion-title {
+    padding: 10px;
+  }
+
+  .help-container .ticket {
+    padding: 10px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .help-container button,
+  .help-container input,
+  .help-container select,
+  .help-container textarea,
+  .help-container .accordion-item,
+  .help-container .ticket {
+    transition: none;
+  }
+
+  .help-container .help-loading-icon {
+    animation: none;
+  }
+}

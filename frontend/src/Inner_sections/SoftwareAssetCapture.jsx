@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeSwal from "../utils/swalTheme";
-import "../Page_styles/SoftwareCapture.css";
+import "../Page_styles/TestFile.css";
 import {
   getStatuses,
   getCategories,
@@ -456,193 +456,541 @@ if (res.success) {
 
   const progress = (step / 4) * 100;
   return (
-    <div className="split-container">
-      {/* LEFT INFO PANEL */}
-      <div className="left-panel">
+<div className="capture-page">
+  <div className="split-container">
+
+    {/* ================= LEFT PANEL ================= */}
+    <aside className="left-panel">
+      <div className="capture-intro">
+        <span className="capture-eyebrow">ASSET CAPTURE</span>
+
         <h2>Create Software Asset</h2>
+
         <p className="description">
-          Add software licenses with proper tracking, cost visibility, and
-          lifecycle management.
+          Add software licenses with proper tracking, cost visibility,
+          and lifecycle management.
         </p>
-
-        <div className="info-box">
-          <h4>What we need</h4>
-          <ul>
-            <li>Basic software details</li>
-            <li>License information</li>
-            <li>Cost & quantity</li>
-            <li>Validity period</li>
-          </ul>
-        </div>
-
-        <div className="info-box">
-          <h4>Tips</h4>
-          <ul>
-            <li>Use correct license count</li>
-            <li>Match cost with billing cycle</li>
-            <li>Ensure expiry date is accurate</li>
-          </ul>
-        </div>
-        {/* <button
-  onClick={() => driverObj.drive()}
-  className="tour-help-btn"
->
-  ❓ Guide
-</button> */}
       </div>
 
-      {/* RIGHT FORM PANEL */}
-      <div className="right-panel">
-        <div className="form-card">
-          <div className="capture-header">
-            <h3>Software Details</h3>
-            <div className="group-buttons">
+      <div className="capture-info-content">
 
-            <button className="import-btn tour-import" onClick={() => setShowImport(true)}>
-              ⬆ Import Excel
+        {/* WHAT YOU'LL NEED */}
+        <div className="info-box">
+          <div className="info-box-header">
+            <span className="info-icon">01</span>
+            <h4>What you'll need</h4>
+          </div>
+
+          <ul>
+            <li>
+              <span></span>
+              Basic software details
+            </li>
+
+            <li>
+              <span></span>
+              License information
+            </li>
+
+            <li>
+              <span></span>
+              Cost & quantity
+            </li>
+
+            <li>
+              <span></span>
+              Billing information
+            </li>
+          </ul>
+        </div>
+
+        {/* BEFORE YOU SAVE */}
+        <div className="info-box">
+          <div className="info-box-header">
+            <span className="info-icon">02</span>
+            <h4>Before you save</h4>
+          </div>
+
+          <ul>
+            <li>
+              <span></span>
+              Verify the license quantity
+            </li>
+
+            <li>
+              <span></span>
+              Match the type with the billing cycle
+            </li>
+
+            <li>
+              <span></span>
+              Confirm the purchase or start date
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* SIDE NOTE */}
+      <div className="capture-side-note">
+        <span className="side-note-icon">i</span>
+
+        <p>
+          Individual software licenses and device assignments can be
+          configured after the asset is created.
+        </p>
+      </div>
+    </aside>
+
+
+    {/* ================= RIGHT PANEL ================= */}
+    <main className="right-panel">
+      <div className="form-card">
+
+        {/* ================= HEADER ================= */}
+        <div className="capture-header">
+          <div className="capture-header-copy">
+            <span className="form-eyebrow">SOFTWARE</span>
+
+            <h1>Software Details</h1>
+
+            <p>
+              Enter the information required to create your software asset.
+            </p>
+          </div>
+
+          <div className="group-buttons">
+
+            <button
+              type="button"
+              className="secondary-action tour-template"
+              onClick={downloadTemplate}
+            >
+              <span className="button-icon">↓</span>
+              Template
             </button>
-            <button onClick={downloadTemplate} className="btn-cancel tour-template">⬇ Download Template</button>
+
+            <button
+              type="button"
+              className="import-btn tour-import"
+              onClick={() => setShowImport(true)}
+            >
+              <span className="button-icon">↑</span>
+              Import Excel
+            </button>
+
+          </div>
+        </div>
+
+
+        {/* =====================================================
+            SECTION 01 - SOFTWARE INFORMATION
+        ===================================================== */}
+        <section className="form-section">
+
+          <div className="section-heading">
+            <div className="section-number">01</div>
+
+            <div>
+              <h3>Software Information</h3>
+              <p>
+                Basic information used to identify and organize this software.
+              </p>
             </div>
           </div>
 
+
           <div className="grid-2">
+
+            {/* SOFTWARE NAME */}
             <div className="input-group">
-              <label>Software Name *</label>
-              <input name="assetName" onChange={handleChange} />
+              <label>
+                Software Name <span className="required">*</span>
+              </label>
+
+              <input
+                name="assetName"
+                onChange={handleChange}
+                placeholder="e.g. Microsoft 365 Business"
+              />
             </div>
 
+
+            {/* CATEGORY */}
             <div className="input-group tour-category">
-              <label>Category *</label>
-              <select name="assetCategory" onChange={handleChange}>
-                <option value="">Select</option>
+              <label>
+                Category <span className="required">*</span>
+              </label>
+
+              <select
+                name="assetCategory"
+                onChange={handleChange}
+              >
+                <option value="">Select category</option>
+
                 {categories.map((c) => (
-                  <option key={c._id} value={c._id}>
+                  <option
+                    key={c._id}
+                    value={c._id}
+                  >
                     {c.name}
                   </option>
                 ))}
+
               </select>
             </div>
-          </div>
 
-          <div className="grid-2">
+
+            {/* UNIT */}
             <div className="input-group tour-unit">
-              <label>Unit *</label>
-              <select name="associateUnit" onChange={handleChange}>
-                <option value="">Select</option>
+              <label>
+                Unit <span className="required">*</span>
+              </label>
+
+              <select
+                name="associateUnit"
+                onChange={handleChange}
+              >
+                <option value="">Select unit</option>
+
                 {units.map((u) => (
-                  <option key={u._id} value={u._id}>
+                  <option
+                    key={u._id}
+                    value={u._id}
+                  >
                     {u.name}
                   </option>
                 ))}
+
               </select>
             </div>
 
+
+            {/* LOCATION */}
             <div className="input-group tour-location">
               <label>Billing Location</label>
-              <select name="locationName" onChange={handleChange}>
-                <option value="">Select</option>
+
+              <select
+                name="locationName"
+                onChange={handleChange}
+              >
+                <option value="">Select location</option>
+
                 {locations.map((l) => (
-                  <option key={l._id} value={l._id}>
+                  <option
+                    key={l._id}
+                    value={l._id}
+                  >
                     {l.name}
                   </option>
                 ))}
+
               </select>
+            </div>
+
+          </div>
+        </section>
+
+
+        {/* =====================================================
+            SECTION 02 - LICENSE & BILLING
+        ===================================================== */}
+        <section className="form-section">
+
+          <div className="section-heading">
+            <div className="section-number">02</div>
+
+            <div>
+              <h3>License & Billing</h3>
+
+              <p>
+                Define the billing model, start date, and license quantity.
+              </p>
             </div>
           </div>
 
-          <h3>License Info</h3>
 
           <div className="grid-2">
+
+            {/* TYPE */}
             <div className="input-group">
-              <label>Type *</label>
-              <select name="type" onChange={handleChange}>
-                <option value="">Select</option>
+              <label>
+                Billing Type <span className="required">*</span>
+              </label>
+
+              <select
+                name="type"
+                onChange={handleChange}
+              >
+                <option value="">Select billing type</option>
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
                 <option value="one_time">One-Time</option>
               </select>
             </div>
+
+
+            {/* START DATE */}
             <div className="input-group">
               <label>Start Date</label>
-              <input type="date" name="DOP" onChange={handleChange} />
+
+              <input
+                type="date"
+                name="DOP"
+                onChange={handleChange}
+              />
             </div>
-          </div>
 
-          <h3>Financial</h3>
 
-          <div className="grid-2">
+            {/* QUANTITY */}
             <div className="input-group tour-quantity">
-              <label>Quantity *</label>
+              <label>
+                License Quantity <span className="required">*</span>
+              </label>
+
               <input
                 type="number"
                 name="assetQuantity"
                 onChange={handleChange}
+                placeholder="Enter number of licenses"
+                min="1"
               />
             </div>
+
+          </div>
+        </section>
+
+
+        {/* =====================================================
+            SECTION 03 - VENDOR INFORMATION
+        ===================================================== */}
+        <section className="form-section">
+
+          <div className="section-heading">
+            <div className="section-number">03</div>
+
+            <div>
+              <h3>Vendor Information</h3>
+
+              <p>
+                Optional supplier and support information for this software.
+              </p>
+            </div>
+          </div>
+
+
+          <div className="grid-2">
+
+            {/* VENDOR NAME */}
             <div className="input-group">
               <label>Vendor Name</label>
+
               <input
                 name="vendor.name"
                 value={formData.vendor.name}
                 onChange={handleChange}
+                placeholder="e.g. Microsoft"
               />
             </div>
 
+
+            {/* VENDOR CONTACT */}
             <div className="input-group">
               <label>Vendor Contact</label>
+
               <input
                 name="vendor.contact"
                 value={formData.vendor.contact}
                 onChange={handleChange}
+                placeholder="Phone or contact number"
               />
             </div>
 
-            <div className="input-group">
+
+            {/* SUPPORT EMAIL */}
+            <div className="input-group full-width">
               <label>Support Email</label>
+
               <input
+                type="email"
                 name="vendor.supportEmail"
                 value={formData.vendor.supportEmail}
                 onChange={handleChange}
+                placeholder="support@vendor.com"
               />
             </div>
+
+          </div>
+        </section>
+
+
+        {/* =====================================================
+            FORM FOOTER
+        ===================================================== */}
+        <div className="form-footer">
+
+          <div className="form-footer-message">
+            <span>✓</span>
+
+            <p>
+              Required fields are marked with
+              <strong> *</strong>
+            </p>
           </div>
 
-          {/* 
-          <div className="input-group">
-            <label>Expiry Date</label>
-            <input type="date" name="DOE" onChange={handleChange} />
-          </div> */}
 
           <button
             className="submit-btn tour-save"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Saving..." : "Save Asset"}
+
+            {isSubmitting ? (
+              <>
+                <span className="button-spinner"></span>
+                Saving Asset...
+              </>
+            ) : (
+              <>
+                Save Software Asset
+                <span className="submit-arrow">→</span>
+              </>
+            )}
+
           </button>
+
         </div>
+
       </div>
-      {showImport && (
-        <div className="import-modal">
-          <div className="import-box">
-            <h3>Import Software Assets</h3>
+    </main>
 
-            <input
-              type="file"
-              accept=".xlsx, .xls"
-              onChange={(e) => setImportFile(e.target.files[0])}
-            />
+  </div>
 
-            <div className="import-actions">
-              <button onClick={() => setShowImport(false)}>Cancel</button>
 
-              <button onClick={handleImport} disabled={importLoading}>
-                {importLoading ? "Uploading..." : "Upload"}
-              </button>
-            </div>
+  {/* =========================================================
+      IMPORT MODAL
+  ========================================================= */}
+  {showImport && (
+    <div
+      className="import-modal"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget && !importLoading) {
+          setShowImport(false);
+        }
+      }}
+    >
+
+      <div className="import-box">
+
+        {/* MODAL HEADER */}
+        <div className="import-modal-header">
+
+          <div>
+            <span className="form-eyebrow">
+              BULK IMPORT
+            </span>
+
+            <h3>
+              Import Software Assets
+            </h3>
+
+            <p>
+              Upload your completed software asset template.
+            </p>
           </div>
+
+
+          <button
+            type="button"
+            className="modal-close"
+            onClick={() => setShowImport(false)}
+            disabled={importLoading}
+            aria-label="Close import modal"
+          >
+            ×
+          </button>
+
         </div>
-      )}
+
+
+        {/* FILE UPLOAD */}
+        <label className="file-upload-area">
+
+          <div className="upload-icon">
+            ↑
+          </div>
+
+          <strong>
+            Select software asset file
+          </strong>
+
+          <span>
+            Excel file · .xlsx, .xls
+          </span>
+
+
+          <input
+            type="file"
+            accept=".xlsx,.xls"
+            onChange={(e) =>
+              setImportFile(e.target.files[0])
+            }
+          />
+
+        </label>
+
+
+        {/* SELECTED FILE */}
+        {importFile && (
+          <div className="selected-file">
+
+            <div className="selected-file-icon">
+              ✓
+            </div>
+
+            <div>
+              <strong>
+                {importFile.name}
+              </strong>
+
+              <span>
+                {(importFile.size / 1024).toFixed(1)} KB
+              </span>
+            </div>
+
+          </div>
+        )}
+
+
+        {/* MODAL ACTIONS */}
+        <div className="import-actions">
+
+          <button
+            type="button"
+            className="modal-cancel"
+            onClick={() => setShowImport(false)}
+            disabled={importLoading}
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            className="modal-upload"
+            onClick={handleImport}
+            disabled={importLoading || !importFile}
+          >
+            {importLoading
+              ? "Uploading..."
+              : "Upload Assets"}
+          </button>
+
+        </div>
+
+      </div>
     </div>
+  )}
+
+</div>
   );
 }

@@ -3,6 +3,18 @@ import { getDashboardData } from "../Services/ApiServices";
 import "../Page_styles/AdminDashboard.css";
 import LocationInsights from "../Components/LocationInsights";
 import {
+  FiGrid,
+  FiDollarSign,
+  FiMonitor,
+  FiHardDrive,
+  FiUsers,
+  FiBarChart2,
+  FiArrowUpRight,
+  FiCalendar,
+  FiClock,
+  FiInbox,
+} from "react-icons/fi";
+import {
   ComposableMap,
   Geographies,
   Geography,
@@ -107,150 +119,198 @@ if (!data) {
 const { totals, upcoming, analytics, costBreakdown } = data;
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-  <h2 className="dashboard-title">Admin Dashboard</h2>
-</div>
+  
+<div className="dashboard-container">
 
-      {/* ================= TOP METRICS ================= */}
-      <div className="metrics-grid">
-<MetricCard
-  title="Total Valuation"
-  value={`${currencySymbol} ${totals.overallValuation.toLocaleString()}`}
-/>
+  {/* ================= HEADER ================= */}
 
-<MetricCard
-  title="Software Assets"
-  value={totals.softwareCount}
-  sub={`${totals.softwareInstances} Instances • ${currencySymbol} ${totals.softwarePurchaseValue.toLocaleString()}`}
-  redirectTo="/inventory?software"
-/>
+  <div className="dashboard-header">
+    <div className="dashboard-heading">
+      <span className="dashboard-heading-icon">
+        <FiGrid />
+      </span>
 
-<MetricCard
-  title="Hardware Assets"
-  value={totals.hardwareCount}
-  sub={`${totals.hardwareInstances} Instances • ${currencySymbol} ${totals.hardwarePurchaseValue.toLocaleString()}`}
-  redirectTo="/inventory?hardware"
-/>
-
-        <MetricCard
-          title="Users / Team-members"
-          value={`${totals.usersCount} / ${totals.employeesCount}`}
-          redirectTo="/setting/users"
-        />
+      <div>
+        <h2 className="dashboard-title">
+          Admin Dashboard
+        </h2>
+        <p>
+          Monitor assets, financial insights, and upcoming activities.
+        </p>
       </div>
-
-      {/* ================= UPCOMING SECTION ================= */}
-
-
-      {/* ================= ANALYTICS SECTION ================= */}
-      <div className="section-grid">
-        <div className="analytics-card">
-  <h3 className="analytics-title">
-    Spend by Category (Top 5)
-  </h3>
-
-  <SpendByCategoryBarChart
-    data={analytics.spendByCategory}
-  />
-</div>
-
-<AnalyticsCard
-  title="Top IT Assets"
-  items={analytics.topAssets}
-  labelKey="assetName"
-  valueKey="totalCost"
-          redirectTo="/inventory?software"
-        />
-
-          <DepartmentAnalyticsCard
-    title="Top Departments by Asset Allocation"
-    items={analytics.departmentAssignments}
-  />
-      </div>
-<div className="section-grid2">
-
-  {/* SOFTWARE */}
-
-
-<ListCard
-  title="Upcoming Software Renewals"
-  items={upcoming.software?.upcoming || []}
-  dateField="renewal"
-/>
-
-  {/* MAINTENANCE */}
-
-<ListCard
-  title="Upcoming Hardware Maintenance"
-  items={upcoming.maintenance?.upcoming || []}
-  dateField="maintenance"
-/>
-  {/* WARRANTY */}
-
-
-<ListCard
-  title="Upcoming Hardware Warranty"
-  items={upcoming.warranty?.upcoming || []}
-  dateField="warranty"
-/>
-
-
-  {/* INSURANCE */}
-
-
-<ListCard
-  title="Upcoming Hardware Insurance"
-  items={upcoming.insurance?.upcoming || []}
-  dateField="insurance"
-/>
-
-  {/* <ListCard
-    title="Expired Hardware Insurance"
-    items={upcoming.insurance?.expired || []}
-    dateField="insurance.expiryDate"
-  />
-    <ListCard
-    title="Expired Hardware Maintenance"
-    items={upcoming.maintenance?.expired || []}
-    dateField="DOE"
-  />
-    <ListCard
-    title="Expired Hardware Warranty"
-    items={upcoming.warranty?.expired || []}
-    dateField="warranty.expiryDate"
-  />
-    <ListCard
-    title="Expired Software Renewals"
-    items={upcoming.software?.expired || []}
-    dateField="DOE"
-  /> */}
-</div>
-<div className="section-grid2">
-  <CostBreakdownCard
-    title="Top Maintenance Costs"
-    items={costBreakdown.maintenance}
-  />
-
-  <CostBreakdownCard
-    title="Top Warranty Costs"
-    items={costBreakdown.warranty}
-  />
-
-  <CostBreakdownCard
-    title="Top Insurance Costs"
-    items={costBreakdown.insurance}
-  />
-
-  <CostBreakdownCard
-    title="Top Software Renewal Costs"
-    items={costBreakdown.renewal}
-  />
-</div>
-      <div className="section-grid">
-      <LocationInsights items={analytics.topLocations} />
-</div>
     </div>
+  </div>
+
+
+  {/* ================= TOP METRICS ================= */}
+
+  <div className="metrics-grid">
+
+    <MetricCard
+      title="Total Valuation"
+      value={`${currencySymbol} ${totals.overallValuation.toLocaleString()}`}
+      icon={<FiDollarSign />}
+    />
+
+    <MetricCard
+      title="Software Assets"
+      value={totals.softwareCount}
+      sub={`${totals.softwareInstances} Instances • ${currencySymbol} ${totals.softwarePurchaseValue.toLocaleString()}`}
+      redirectTo="/inventory?software"
+      icon={<FiMonitor />}
+    />
+
+    <MetricCard
+      title="Hardware Assets"
+      value={totals.hardwareCount}
+      sub={`${totals.hardwareInstances} Instances • ${currencySymbol} ${totals.hardwarePurchaseValue.toLocaleString()}`}
+      redirectTo="/inventory?hardware"
+      icon={<FiHardDrive />}
+    />
+
+    <MetricCard
+      title="Users / Team-members"
+      value={`${totals.usersCount} / ${totals.employeesCount}`}
+      redirectTo="/setting/users"
+      icon={<FiUsers />}
+    />
+
+  </div>
+
+
+  {/* ================= ANALYTICS ================= */}
+
+  <div className="dashboard-section-heading">
+    <div>
+      <h3>Asset Analytics</h3>
+      <p>Spending, asset valuation, and department allocation.</p>
+    </div>
+  </div>
+
+  <div className="section-grid">
+
+    <div className="analytics-card">
+      <div className="analytics-card-header">
+        <span className="analytics-card-icon">
+          <FiBarChart2 />
+        </span>
+
+        <div>
+          <h3 className="analytics-title">
+            Spend by Category (Top 5)
+          </h3>
+          <p>Category-wise asset expenditure</p>
+        </div>
+      </div>
+
+      <SpendByCategoryBarChart
+        data={analytics.spendByCategory}
+      />
+    </div>
+
+    <AnalyticsCard
+      title="Top IT Assets"
+      items={analytics.topAssets}
+      labelKey="assetName"
+      valueKey="totalCost"
+      redirectTo="/inventory?software"
+    />
+
+    <DepartmentAnalyticsCard
+      title="Top Departments by Asset Allocation"
+      items={analytics.departmentAssignments}
+    />
+
+  </div>
+
+
+  {/* ================= UPCOMING ACTIVITIES ================= */}
+
+  <div className="dashboard-section-heading">
+    <div>
+      <h3>Upcoming Activities</h3>
+      <p>Track renewals, maintenance, warranties, and insurance.</p>
+    </div>
+  </div>
+
+  <div className="section-grid2">
+
+    <ListCard
+      title="Upcoming Software Renewals"
+      items={upcoming.software?.upcoming || []}
+      dateField="renewal"
+    />
+
+    <ListCard
+      title="Upcoming Hardware Maintenance"
+      items={upcoming.maintenance?.upcoming || []}
+      dateField="maintenance"
+    />
+
+    <ListCard
+      title="Upcoming Hardware Warranty"
+      items={upcoming.warranty?.upcoming || []}
+      dateField="warranty"
+    />
+
+    <ListCard
+      title="Upcoming Hardware Insurance"
+      items={upcoming.insurance?.upcoming || []}
+      dateField="insurance"
+    />
+
+  </div>
+
+
+  {/* ================= COST BREAKDOWN ================= */}
+
+  <div className="dashboard-section-heading">
+    <div>
+      <h3>Cost Breakdown</h3>
+      <p>Review major expenses across asset lifecycle categories.</p>
+    </div>
+  </div>
+
+  <div className="section-grid2">
+
+    <CostBreakdownCard
+      title="Top Maintenance Costs"
+      items={costBreakdown.maintenance}
+    />
+
+    <CostBreakdownCard
+      title="Top Warranty Costs"
+      items={costBreakdown.warranty}
+    />
+
+    <CostBreakdownCard
+      title="Top Insurance Costs"
+      items={costBreakdown.insurance}
+    />
+
+    <CostBreakdownCard
+      title="Top Software Renewal Costs"
+      items={costBreakdown.renewal}
+    />
+
+  </div>
+
+
+  {/* ================= LOCATION INSIGHTS ================= */}
+
+  <div className="dashboard-section-heading">
+    <div>
+      <h3>Location Insights</h3>
+      <p>Asset distribution across your organization's locations.</p>
+    </div>
+  </div>
+
+  <div className="section-grid dashboard-location-grid">
+    <LocationInsights items={analytics.topLocations} />
+  </div>
+
+</div>
+
   );
 };
 
@@ -259,88 +319,315 @@ export default AdminDashboard;
 
 /* ================= SUB COMPONENTS ================= */
 
-const MetricCard = ({ title, value, sub, redirectTo }) => {
+
+const MetricCard = ({
+  title,
+  value,
+  sub,
+  redirectTo,
+  icon,
+}) => {
   const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    if (redirectTo) {
+      navigate(redirectTo);
+    }
+  };
+
+  const isClickable = Boolean(redirectTo);
 
   return (
     <div
-      className="card metric-card clickable-card"
-      onClick={() => redirectTo && navigate(redirectTo)}
-      role="button"
+      className={`card metric-card ${
+        isClickable ? "clickable-card" : ""
+      }`}
+      onClick={isClickable ? handleNavigate : undefined}
+      onKeyDown={
+        isClickable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleNavigate();
+              }
+            }
+          : undefined
+      }
+      role={isClickable ? "link" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
     >
+
+      <div className="metric-card-top">
+
+        <span className="metric-icon">
+          {icon || <FiGrid />}
+        </span>
+
+        {isClickable && (
+          <FiArrowUpRight className="metric-arrow" />
+        )}
+
+      </div>
+
       <p className="card-title">{title}</p>
+
       <h2 className="metric-value">{value}</h2>
-      {sub && <p className="metric-sub">{sub}</p>}
+
+      {sub && (
+        <p className="metric-sub">{sub}</p>
+      )}
+
     </div>
   );
 };
 
-const ListCard = ({ title, items, dateField , redirectTo }) => {
+
+
+const ListCard = ({
+  title,
+  items = [],
+  dateField,
+  redirectTo,
+}) => {
   const navigate = useNavigate();
 
   const getDateValue = (item) => {
-    if (dateField.includes(".")) {
-      const keys = dateField.split(".");
-      return item?.[keys[0]]?.[keys[1]];
-    }
-    return item?.[dateField];
+    return dateField
+      .split(".")
+      .reduce((value, key) => value?.[key], item);
   };
 
   const getFormattedDate = (item) => {
     const value = getDateValue(item);
-    return value ? new Date(value).toLocaleDateString() : "-";
+
+    if (!value) return "-";
+
+    const date = new Date(value);
+
+    return Number.isNaN(date.getTime())
+      ? "-"
+      : date.toLocaleDateString();
   };
 
   const getDaysLeft = (item) => {
     const value = getDateValue(item);
+
     if (!value) return null;
 
-    const today = new Date();
     const target = new Date(value);
 
-    const diffTime = target - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (Number.isNaN(target.getTime())) {
+      return null;
+    }
 
-    return diffDays;
+    const today = new Date();
+
+    const todayUTC = Date.UTC(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+
+    const targetUTC = Date.UTC(
+      target.getFullYear(),
+      target.getMonth(),
+      target.getDate()
+    );
+
+    return Math.round(
+      (targetUTC - todayUTC) / 86400000
+    );
   };
 
   return (
-    <div className="card"
-    onClick={() => redirectTo && navigate(redirectTo)}>
-      <h3 className="card-heading">{title}</h3>
+    <div
+      className={`card dashboard-list-card ${
+        redirectTo ? "clickable-card" : ""
+      }`}
+      onClick={
+        redirectTo
+          ? () => navigate(redirectTo)
+          : undefined
+      }
+      onKeyDown={
+        redirectTo
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate(redirectTo);
+              }
+            }
+          : undefined
+      }
+      role={redirectTo ? "link" : undefined}
+      tabIndex={redirectTo ? 0 : undefined}
+    >
+
+      <div className="dashboard-card-header">
+
+        <div className="dashboard-card-heading">
+          <span className="dashboard-card-icon">
+            <FiCalendar />
+          </span>
+
+          <h3 className="card-heading">{title}</h3>
+        </div>
+
+        <span className="dashboard-item-count">
+          {items.length}
+        </span>
+
+      </div>
+
 
       {items.length === 0 ? (
-        <p className="empty-text">No upcoming items</p>
+
+        <div className="dashboard-empty">
+          <FiInbox />
+          <p>No upcoming items</p>
+        </div>
+
+      ) : (
+
+        <div className="list">
+
+          {items.map((item, index) => {
+            const daysLeft = getDaysLeft(item);
+
+            const badgeType =
+              daysLeft === null
+                ? "normal"
+                : daysLeft < 0
+                ? "urgent"
+                : daysLeft <= 10
+                ? "urgent"
+                : "normal";
+
+            const badgeText =
+              daysLeft === null
+                ? null
+                : daysLeft < 0
+                ? "Expired"
+                : daysLeft === 0
+                ? "Due today"
+                : `${daysLeft} days left`;
+
+            return (
+              <div
+                key={item._id || index}
+                className="list-row"
+              >
+
+                <div className="left-section">
+
+                  <span className="asset-name">
+                    {item.deviceName ||
+                      `Asset #${String(item.assetId || "")
+                        .slice(-4)}`}
+                  </span>
+
+                  <span className="date-text">
+                    <FiClock />
+                    {getFormattedDate(item)}
+                  </span>
+
+                </div>
+
+                {badgeText && (
+                  <span
+                    className={`days-badge ${badgeType}`}
+                  >
+                    {badgeText}
+                  </span>
+                )}
+
+              </div>
+            );
+          })}
+
+        </div>
+
+      )}
+
+    </div>
+  );
+};
+
+const AnalyticsCard = ({
+  title,
+  items = [],
+  labelKey,
+  valueKey,
+  redirectTo,
+}) => {
+  const { organization } = useOrganization();
+  const navigate = useNavigate();
+
+  const currencySymbol =
+    CURRENCY_SYMBOLS[organization?.currency] || "$";
+
+  const getValue = (obj, path) =>
+    path.split(".").reduce((o, key) => o?.[key], obj);
+
+  const isClickable = Boolean(redirectTo);
+
+  return (
+    <div
+      className={`card dashboard-analytics-list ${
+        isClickable ? "clickable-card" : ""
+      }`}
+      onClick={
+        isClickable
+          ? () => navigate(redirectTo)
+          : undefined
+      }
+      onKeyDown={
+        isClickable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate(redirectTo);
+              }
+            }
+          : undefined
+      }
+      role={isClickable ? "link" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+    >
+      <div className="dashboard-card-header">
+        <div className="dashboard-card-heading">
+          <span className="dashboard-card-icon">
+            <FiBarChart2 />
+          </span>
+          <h3 className="card-heading">{title}</h3>
+        </div>
+
+        {isClickable && (
+          <FiArrowUpRight className="dashboard-card-arrow" />
+        )}
+      </div>
+
+      {items.length === 0 ? (
+        <div className="dashboard-empty">
+          <FiInbox />
+          <p>No asset data available</p>
+        </div>
       ) : (
         <div className="list">
           {items.map((item, index) => {
-            const daysLeft = getDaysLeft(item);
-            const isUrgent = daysLeft !== null && daysLeft < 10;
+            const value = Number(
+              getValue(item, valueKey) || 0
+            );
 
             return (
               <div key={index} className="list-row">
-                <div className="left-section">
-                  <span className="asset-name">
-                    {item.deviceName || `Asset #${item.assetId?.slice(-4)}`}
-                  </span>
-                  <span className="date-text">
-                    {getFormattedDate(item)}
-                  </span>
-                </div>
+                <span className="asset-name">
+                  {getValue(item, labelKey) || "Unnamed asset"}
+                </span>
 
-                {daysLeft !== null && (
-                  <div
-                    className={
-                      isUrgent
-                        ? "days-badge urgent"
-                        : "days-badge normal"
-                    }
-                  >
-                    {daysLeft > 0
-                      ? `${daysLeft} days left`
-                      : "Expired"}
-                  </div>
-                )}
+                <span className="value-text">
+                  {currencySymbol} {value.toLocaleString()}
+                </span>
               </div>
             );
           })}
@@ -350,59 +637,35 @@ const ListCard = ({ title, items, dateField , redirectTo }) => {
   );
 };
 
-const AnalyticsCard = ({
+
+const DepartmentAnalyticsCard = ({
   title,
-  items,
-  labelKey,
-  valueKey,
-  redirectTo
+  items = [],
 }) => {
-  const { organization } = useOrganization();
-  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
-  const navigate = useNavigate();
-
-  const getValue = (obj, path) =>
-    path.split(".").reduce((o, key) => o?.[key], obj);
-
   return (
-    <div
-      className="card clickable-card"
-      onClick={() => redirectTo && navigate(redirectTo)}
-    >
-      <h3 className="card-heading">{title}</h3>
+    <div className="card dashboard-department-card">
 
-      <div className="list">
-        {items.map((item, index) => {
-          const rawValue = getValue(item, valueKey) || 0;
-
-          return (
-            <div key={index} className="list-row">
-              <span>{getValue(item, labelKey)}</span>
-
-              <span className="value-text">
-                {currencySymbol} {rawValue.toLocaleString()}
-              </span>
-            </div>
-          );
-        })}
+      <div className="dashboard-card-header">
+        <div className="dashboard-card-heading">
+          <span className="dashboard-card-icon">
+            <FiUsers />
+          </span>
+          <h3 className="card-heading">{title}</h3>
+        </div>
       </div>
-    </div>
-  );
-};
-const DepartmentAnalyticsCard = ({ title, items }) => {
-  return (
-    <div className="card">
-      <h3 className="card-heading">{title}</h3>
 
       {items.length === 0 ? (
-        <p className="empty-text">No department data</p>
+        <div className="dashboard-empty">
+          <FiInbox />
+          <p>No department data available</p>
+        </div>
       ) : (
         <div className="table-wrapper">
           <table className="analytics-table">
             <thead>
               <tr>
                 <th>Department</th>
-                <th>Assets <br/> (H | S)</th>
+                <th>Assets (H | S)</th>
                 <th className="text-right">Total</th>
               </tr>
             </thead>
@@ -410,15 +673,22 @@ const DepartmentAnalyticsCard = ({ title, items }) => {
             <tbody>
               {items.map((dept, index) => (
                 <tr key={index}>
-                  <td>{dept.departmentName || "N/A"}</td>
-
-                  <td>
-                    {dept.hardware || 0} | {dept.software || 0}
+                  <td data-label="Department">
+                    {dept.departmentName || "N/A"}
                   </td>
 
-                  <td className="text-right">
+                  <td data-label="Hardware | Software">
+                    {dept.hardware || 0} |{" "}
+                    {dept.software || 0}
+                  </td>
+
+                  <td
+                    data-label="Total"
+                    className="text-right"
+                  >
                     <strong>
-                      {(dept.hardware || 0) + (dept.software || 0)}
+                      {(dept.hardware || 0) +
+                        (dept.software || 0)}
                     </strong>
                   </td>
                 </tr>
@@ -427,9 +697,11 @@ const DepartmentAnalyticsCard = ({ title, items }) => {
           </table>
         </div>
       )}
+
     </div>
   );
 };
+
 const resolveCountryName = (raw) => {
   if (!raw) return null;
 
@@ -645,179 +917,201 @@ const formatCurrency = (value) => {
     return value.toFixed(0);
   }
 };
-const SpendByCategoryBarChart = ({ data }) => {
+
+const SpendByCategoryBarChart = ({ data = [] }) => {
   const { organization } = useOrganization();
-  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
-  // const [selected, setSelected] = useState(data[0]);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
+  const currencySymbol =
+    CURRENCY_SYMBOLS[organization?.currency] || "$";
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 480);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  if (!data || data.length === 0) {
-    return <div className="chart-empty">No spend data available</div>;
-  }
-
-const chartData = data.map((item) => ({
-  ...item,
-}));
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div
-          style={{
-            padding: "10px 14px",
-            borderRadius: "10px",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-          }}
-        >
-          <div style={{ fontWeight: 600, marginBottom: 4 , color : "#DFD0B8"}}>
-            {payload[0].payload.category}
-          </div>
-
-          <div style={{ color: "#DFD0B8", fontWeight: 500 }}>
-{currencySymbol} {formatCurrency(payload[0].payload.totalSpend)}
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  return (
-    <div
-      style={{
-        width: "100%",
-        borderRadius: "16px",
-        padding: isMobile ? "6px" : "24px",
-        boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
-      }}
-    >
-      <ResponsiveContainer width="100%" height={isMobile ? chartData.length * 45 : 380}>
-  <BarChart
-    data={chartData}
-    layout={isMobile ? "vertical" : "horizontal"}
-      margin={{
-        top: 20,
-        right: isMobile ? 10 : 20,
-        left: isMobile ? 10 : 20,
-        bottom: isMobile ? 10 : 40,
-      }}
-  >
-    <defs>
-      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#DFD0B8" stopOpacity={0.9} />
-        <stop offset="100%" stopColor="#DFD0B8" stopOpacity={0.7} />
-      </linearGradient>
-    </defs>
-
-    <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-
-    {isMobile ? (
-      <>
-        {/* Horizontal chart axes */}
-        <XAxis
-          type="number"
-          tick={{ fontSize: 10 }}
-          tickFormatter={(value) => `${currencySymbol} ${formatCurrency(value)}`}
-        />
-
-<YAxis
-  type="category"
-  dataKey="category"
-  width={90}
-  tick={{ fontSize: 11 }}
-/>
-      </>
-    ) : (
-      <>
-        {/* Desktop chart axes */}
-        <XAxis
-          dataKey="category"
-          tick={{ fontSize: 12 }}
-          interval={0}
-          angle={-15}
-          textAnchor="end"
-        />
-
-<YAxis
-  tickFormatter={(value) => `${currencySymbol} ${formatCurrency(value)}`}
-/>
-      </>
-    )}
-
-    <Tooltip content={<CustomTooltip />} />
-
-    {!isMobile && (
-<Legend
-  verticalAlign="bottom"
-  align="center"
-  layout="horizontal"
-  wrapperStyle={{
-    paddingTop: 20,
-    fontSize: 13,
-    color: "#DFD0B8"
-  }}
-/>
-    )}
-
-    <Bar
-      dataKey="totalSpend"
-      name="Total Spend"
-      fill="url(#barGradient)"
-      radius={isMobile ? [0, 8, 8, 0] : [8, 8, 0, 0]}
-    >
-      {!isMobile && (
-<LabelList
-  dataKey="totalSpend"
-  position="top"
-  formatter={(value) => `${currencySymbol} ${formatCurrency(value)}`}
-/>
-      )}
-    </Bar>
-  </BarChart>
-</ResponsiveContainer>
-    </div>
-  );
-};
-
-const CostBreakdownCard = ({ title, items }) => {
-  const { organization } = useOrganization();
-  const currencySymbol = CURRENCY_SYMBOLS[organization?.currency] || "$";
-  if (!items || items.length === 0) {
+  if (!data.length) {
     return (
-      <div className="card">
-        <h3 className="card-heading">{title}</h3>
-        <p className="empty-text">No data available</p>
+      <div className="chart-empty">
+        <FiInbox />
+        <p>No spend data available</p>
       </div>
     );
   }
 
-  return (
-    <div className="card">
-      <h3 className="card-heading">{title}</h3>
+  const chartData = data.map((item) => ({
+    ...item,
+    totalSpend: Number(item.totalSpend || 0),
+  }));
 
-      <div className="list">
-        {items.map((item, index) => {
-          return (
-            <div key={item._id || index} className="list-row">
-              <span>{item.instanceName}</span>
+  const formatAxisValue = (value) => {
+    const amount = Number(value || 0);
 
-              <span className="value-text">
-                {currencySymbol} {(item.cost || 0).toLocaleString()}
-              </span>
-            </div>
-          );
-        })}
+    if (Math.abs(amount) >= 10000000) {
+      return `${(amount / 10000000).toFixed(1)}Cr`;
+    }
+
+    if (Math.abs(amount) >= 100000) {
+      return `${(amount / 100000).toFixed(1)}L`;
+    }
+
+    if (Math.abs(amount) >= 1000) {
+      return `${(amount / 1000).toFixed(1)}K`;
+    }
+
+    return amount.toLocaleString();
+  };
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (!active || !payload?.length) return null;
+
+    const item = payload[0].payload;
+
+    return (
+      <div className="dashboard-chart-tooltip">
+        <strong>{item.category}</strong>
+        <span>
+          {currencySymbol}{" "}
+          {item.totalSpend.toLocaleString()}
+        </span>
       </div>
+    );
+  };
+
+  return (
+    <div className="dashboard-chart-wrapper">
+      <ResponsiveContainer
+        width="100%"
+        height={Math.max(260, chartData.length * 55)}
+        minWidth={0}
+      >
+        <BarChart
+          data={chartData}
+          layout="vertical"
+          margin={{
+            top: 10,
+            right: 24,
+            left: 4,
+            bottom: 10,
+          }}
+        >
+          <defs>
+            <linearGradient
+              id="dashboardSpendGradient"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
+              <stop
+                offset="0%"
+                stopColor="#948979"
+              />
+              <stop
+                offset="100%"
+                stopColor="#DFD0B8"
+              />
+            </linearGradient>
+          </defs>
+
+          <CartesianGrid
+            stroke="rgba(223,208,184,0.1)"
+            strokeDasharray="3 3"
+            horizontal={false}
+          />
+
+          <XAxis
+            type="number"
+            tick={{
+              fill: "#948979",
+              fontSize: 10,
+            }}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) =>
+              `${currencySymbol}${formatAxisValue(value)}`
+            }
+          />
+
+          <YAxis
+            type="category"
+            dataKey="category"
+            width={105}
+            tick={{
+              fill: "#DFD0B8",
+              fontSize: 10,
+            }}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => {
+              const text = String(value || "");
+              return text.length > 16
+                ? `${text.slice(0, 14)}…`
+                : text;
+            }}
+          />
+
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{
+              fill: "rgba(223,208,184,0.04)",
+            }}
+          />
+
+          <Bar
+            dataKey="totalSpend"
+            name="Total Spend"
+            fill="url(#dashboardSpendGradient)"
+            radius={[0, 6, 6, 0]}
+            maxBarSize={25}
+          />
+
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 };
+
+
+const CostBreakdownCard = ({ title, items = [] }) => {
+  const { organization } = useOrganization();
+  const currencySymbol =
+    CURRENCY_SYMBOLS[organization?.currency] || "$";
+
+  return (
+    <div className="card dashboard-cost-card">
+      <div className="dashboard-card-header">
+        <div className="dashboard-card-heading">
+          <span className="dashboard-card-icon">
+            <FiDollarSign />
+          </span>
+          <h3 className="card-heading">{title}</h3>
+        </div>
+
+        <span className="dashboard-item-count">
+          {items.length}
+        </span>
+      </div>
+
+      {items.length === 0 ? (
+        <div className="dashboard-empty">
+          <FiInbox />
+          <p>No data available</p>
+        </div>
+      ) : (
+        <div className="list">
+          {items.map((item, index) => (
+            <div
+              key={item._id || index}
+              className="list-row"
+            >
+              <span className="asset-name">
+                {item.instanceName || "Unnamed asset"}
+              </span>
+
+              <span className="value-text">
+                {currencySymbol}{" "}
+                {Number(item.cost || 0).toLocaleString()}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+

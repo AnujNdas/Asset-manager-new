@@ -11,80 +11,7 @@ import {
   FaSyncAlt,
   FaLaptop,
 } from "react-icons/fa";
-const customSelectStyles = {
-  control: (base, state) => ({
-    ...base,
-    backgroundColor: "#222831",
-    borderColor: state.isFocused ? "#DFD0B8" : "#393E46",
-    boxShadow: "none",
-    minHeight: "42px",
-    color: "#DFD0B8",
 
-    "&:hover": {
-      borderColor: "#DFD0B8",
-    },
-  }),
-  menu: (provided) => ({
-...provided,
-zIndex: 9999,
-}),
-
-menuList: (provided) => ({
-...provided,
-maxHeight: "100px", // Reduce dropdown height
-paddingTop: 0,
-paddingBottom: 0,
-}),
-
-  menu: (base) => ({
-    ...base,
-    backgroundColor: "#222831",
-    color: "#DFD0B8",
-    zIndex: 9999,
-  }),
-
-  option: (base, state) => ({
-    ...base,
-    backgroundColor: state.isFocused ? "#393E46" : "#222831",
-    color: "#DFD0B8",
-    cursor: "pointer",
-  }),
-
-  multiValue: (base) => ({
-    ...base,
-    backgroundColor: "#393E46",
-  }),
-
-  multiValueLabel: (base) => ({
-    ...base,
-    color: "#DFD0B8",
-  }),
-
-  multiValueRemove: (base) => ({
-    ...base,
-    color: "#DFD0B8",
-
-    "&:hover": {
-      backgroundColor: "#ff4d4f",
-      color: "#fff",
-    },
-  }),
-
-  input: (base) => ({
-    ...base,
-    color: "#DFD0B8",
-  }),
-
-  placeholder: (base) => ({
-    ...base,
-    color: "#A0A0A0",
-  }),
-
-  singleValue: (base) => ({
-    ...base,
-    color: "#DFD0B8",
-  }),
-};
 const coverageOptions = [
   { label: "Comprehensive", value: "comprehensive" },
   { label: "Accidental Damage", value: "accidental_damage" },
@@ -500,547 +427,1590 @@ const softwareRenewalDue = isDue(
   ============================== */
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
+//     <div className="modal-overlay">
+//       <div className="modal">
 
-        <h2>Upgrade Asset</h2>
-        <div className="modal-tabs">
-  <button
-    type="button"
-    className={activeTab === "renewal" ? "active" : ""}
-    onClick={() => setActiveTab("renewal")}
-  >
-    Renewals
-  </button>
+//         <h2>Upgrade Asset</h2>
+//         <div className="modal-tabs">
+//   <button
+//     type="button"
+//     className={activeTab === "renewal" ? "active" : ""}
+//     onClick={() => setActiveTab("renewal")}
+//   >
+//     Renewals
+//   </button>
 
-  <button
-    type="button"
-    className={activeTab === "upgrade" ? "active" : ""}
-    onClick={() => setActiveTab("upgrade")}
-  >
-    Upgrades
-  </button>
-</div>
-{activeTab === "upgrade" && (
-  <>
-    <div className="input-group">
-      <label>Condition</label>
+//   <button
+//     type="button"
+//     className={activeTab === "upgrade" ? "active" : ""}
+//     onClick={() => setActiveTab("upgrade")}
+//   >
+//     Upgrades
+//   </button>
+// </div>
+// {activeTab === "upgrade" && (
+//   <>
+//     <div className="input-group">
+//       <label>Condition</label>
 
-      <select
-        name="condition"
-        value={form.condition}
-        onChange={handleChange}
-      >
-        <option value="new">New</option>
-        <option value="used">Used</option>
-        <option value="damaged">Damaged</option>
-        <option value="stolen">Stolen</option>
-        <option value="broken">Broken</option>
-        <option value="repaired(in)">Repair(IN)</option>
-        <option value="repaired(out)">Repair(OUT)</option>
-      </select>
-    </div>
+//       <select
+//         name="condition"
+//         value={form.condition}
+//         onChange={handleChange}
+//       >
+//         <option value="new">New</option>
+//         <option value="used">Used</option>
+//         <option value="damaged">Damaged</option>
+//         <option value="stolen">Stolen</option>
+//         <option value="broken">Broken</option>
+//         <option value="repaired(in)">Repair(IN)</option>
+//         <option value="repaired(out)">Repair(OUT)</option>
+//       </select>
+//     </div>
 
-    <div className="input-group">
-      <label>Upgrade Cost</label>
+//     <div className="input-group">
+//       <label>Upgrade Cost</label>
 
-      <input
-        type="number"
-        name="upgradeCost"
-        value={form.upgradeCost}
-        onChange={handleChange}
-      />
-    </div>
+//       <input
+//         type="number"
+//         name="upgradeCost"
+//         value={form.upgradeCost}
+//         onChange={handleChange}
+//       />
+//     </div>
 
-    <div className="input-group">
-      <label>Upgrade Details</label>
+//     <div className="input-group">
+//       <label>Upgrade Details</label>
 
-      <textarea
-        name="upgradeDescription"
-        value={form.upgradeDescription}
-        onChange={handleChange}
-        rows={3}
-      />
-    </div>
+//       <textarea
+//         name="upgradeDescription"
+//         value={form.upgradeDescription}
+//         onChange={handleChange}
+//         rows={3}
+//       />
+//     </div>
 
-    <div className="input-group">
-      <label>Upgrade Date</label>
+//     <div className="input-group">
+//       <label>Upgrade Date</label>
 
-      <input
-        type="date"
-        name="upgradeDate"
-        value={form.upgradeDate}
-        onChange={handleChange}
-      />
-    </div>
-  </>
-)}
-{( activeTab == "renewal" && (
-  <>
-  {isHardware && (
-  <>
-    {/* ================= GENERAL ================= */}
+//       <input
+//         type="date"
+//         name="upgradeDate"
+//         value={form.upgradeDate}
+//         onChange={handleChange}
+//       />
+//     </div>
+//   </>
+// )}
+// {( activeTab == "renewal" && (
+//   <>
+//   {isHardware && (
+//   <>
+//     {/* ================= GENERAL ================= */}
 
-    <div className="upgrade-section">
-      <div className="section-header">
-        <FaLaptop />
-        <h3>General</h3>
-      </div>
+//     <div className="upgrade-section">
+//       <div className="section-header">
+//         <FaLaptop />
+//         <h3>General</h3>
+//       </div>
 
-      <div className="grid-2">
+//       <div className="grid-2">
 
-        <div className="input-group">
-          <label>Currency</label>
+//         <div className="input-group">
+//           <label>Currency</label>
 
-          <input
-            value={currency}
-            readOnly
-            className="readonly-input"
-          />
-        </div>
+//           <input
+//             value={currency}
+//             readOnly
+//             className="readonly-input"
+//           />
+//         </div>
 
-        <div className="checkbox-group">
-          <input
-            type="checkbox"
-            className="checkbox-ins"
-            name="hasInsurance"
-            checked={form.hasInsurance}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                hasInsurance: e.target.checked,
-              })
-            }
-          />
-          <label>Has Insurance</label>
-        </div>
+//         <div className="checkbox-group">
+//           <input
+//             type="checkbox"
+//             className="checkbox-ins"
+//             name="hasInsurance"
+//             checked={form.hasInsurance}
+//             onChange={(e) =>
+//               setForm({
+//                 ...form,
+//                 hasInsurance: e.target.checked,
+//               })
+//             }
+//           />
+//           <label>Has Insurance</label>
+//         </div>
 
-      </div>
-    </div>
+//       </div>
+//     </div>
 
-    {/* ================= MAINTENANCE ================= */}
+//     {/* ================= MAINTENANCE ================= */}
 
-    <div className="upgrade-section">
+//     <div className="upgrade-section">
 
-      <div className="section-header">
-        <FaTools />
-        <h3>Maintenance</h3>
-      </div>
+//       <div className="section-header">
+//         <FaTools />
+//         <h3>Maintenance</h3>
+//       </div>
 
-      <div className="grid-2">
+//       <div className="grid-2">
 
-        <div className="input-group">
-          <label>Current Maintenance Cost</label>
+//         <div className="input-group">
+//           <label>Current Maintenance Cost</label>
 
-          <small>
-            {currency} {currentMaintenanceCost}
-          </small>
+//           <small>
+//             {currency} {currentMaintenanceCost}
+//           </small>
 
-        <input
-    type="number"
-    name="maintenanceCost"
-    value={form.maintenanceCost}
-    onChange={handleChange}
-    disabled={!maintenanceDue}
-/>
-        </div>
+//         <input
+//     type="number"
+//     name="maintenanceCost"
+//     value={form.maintenanceCost}
+//     onChange={handleChange}
+//     disabled={!maintenanceDue}
+// />
+//         </div>
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Next Maintenance Date</label>
+//           <label>Next Maintenance Date</label>
 
-          <small>
-            {instance?.hardware?.nextMaintenanceDate?.split("T")[0] || "-"}
-          </small>
+//           <small>
+//             {instance?.hardware?.nextMaintenanceDate?.split("T")[0] || "-"}
+//           </small>
 
-<input
-    type="date"
-    name="newMaintenanceDate"
-    value={form.newMaintenanceDate}
-    onChange={handleChange}
-    disabled={!maintenanceDue}
-/>
+// <input
+//     type="date"
+//     name="newMaintenanceDate"
+//     value={form.newMaintenanceDate}
+//     onChange={handleChange}
+//     disabled={!maintenanceDue}
+// />
 
-        </div>
-            <div className="input-group">
+//         </div>
+//             <div className="input-group">
               
-  <label>Maintenance Performed On</label>
-                  <small style={{opacity: "0"}}>
-                    adjustment
-          </small>
-  <input
-    type="date"
-    name="maintenancePerformedOn"
-    value={form.maintenancePerformedOn}
-    onChange={handleChange}
-  />
-</div>
-      </div>
+//   <label>Maintenance Performed On</label>
+//                   <small style={{opacity: "0"}}>
+//                     adjustment
+//           </small>
+//   <input
+//     type="date"
+//     name="maintenancePerformedOn"
+//     value={form.maintenancePerformedOn}
+//     onChange={handleChange}
+//   />
+// </div>
+//       </div>
 
-    </div>
+//     </div>
 
-    {/* ================= WARRANTY ================= */}
+//     {/* ================= WARRANTY ================= */}
 
-    <div className="upgrade-section">
+//     <div className="upgrade-section">
 
-      <div className="section-header">
+//       <div className="section-header">
 
-        <FaShieldAlt />
+//         <FaShieldAlt />
 
-        <h3>Warranty</h3>
+//         <h3>Warranty</h3>
 
-      </div>
+//       </div>
 
-      <div className="grid-2">
+//       <div className="grid-2">
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Renewal Cost</label>
+//           <label>Renewal Cost</label>
 
-          <small>
-            {currency} {currentWarrantyCost}
-          </small>
+//           <small>
+//             {currency} {currentWarrantyCost}
+//           </small>
 
-          <input
-    type="number"
-    name="warrantyRenewalCost"
-    value={form.warrantyRenewalCost}
-    onChange={handleChange}
-    disabled={!warrantyDue}
-/>
+//           <input
+//     type="number"
+//     name="warrantyRenewalCost"
+//     value={form.warrantyRenewalCost}
+//     onChange={handleChange}
+//     disabled={!warrantyDue}
+// />
 
-        </div>
+//         </div>
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Purchase Date</label>
-                      <small>
-            {instance?.hardware?.warrantyPurchaseDate?.split("T")[0] || "-"}
-          </small>
-  <input
-    type="date"
-    name="newWarrantyPurchaseDate"
-    value={form.newWarrantyPurchaseDate}
-    onChange={handleChange}
-    disabled={!warrantyDue}
-/>
+//           <label>Purchase Date</label>
+//                       <small>
+//             {instance?.hardware?.warrantyPurchaseDate?.split("T")[0] || "-"}
+//           </small>
+//   <input
+//     type="date"
+//     name="newWarrantyPurchaseDate"
+//     value={form.newWarrantyPurchaseDate}
+//     onChange={handleChange}
+//     disabled={!warrantyDue}
+// />
 
-        </div>
+//         </div>
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Expiry Date</label>
+//           <label>Expiry Date</label>
 
-          <small>
-            {instance?.hardware?.warrantyExpiry?.split("T")[0] || "-"}
-          </small>
+//           <small>
+//             {instance?.hardware?.warrantyExpiry?.split("T")[0] || "-"}
+//           </small>
 
-<input
-    type="date"
-    name="newWarrantyExpiry"
-    value={form.newWarrantyExpiry}
-    onChange={handleChange}
-    disabled={!warrantyDue}
-/>
+// <input
+//     type="date"
+//     name="newWarrantyExpiry"
+//     value={form.newWarrantyExpiry}
+//     onChange={handleChange}
+//     disabled={!warrantyDue}
+// />
 
-        </div>
-            <div className="input-group">
-  <label>Warranty Renewed On</label>
+//         </div>
+//             <div className="input-group">
+//   <label>Warranty Renewed On</label>
 
-  <input
-    type="date"
-    name="warrantyRenewedOn"
-    value={form.warrantyRenewedOn}
-    onChange={handleChange}
-  />
-</div>
-      </div>
+//   <input
+//     type="date"
+//     name="warrantyRenewedOn"
+//     value={form.warrantyRenewedOn}
+//     onChange={handleChange}
+//   />
+// </div>
+//       </div>
 
-    </div>
+//     </div>
 
-    {/* ================= INSURANCE ================= */}
+//     {/* ================= INSURANCE ================= */}
 
-    {form.hasInsurance && (
+//     {form.hasInsurance && (
 
-      <div className="upgrade-section">
+//       <div className="upgrade-section">
 
-        <div className="section-header">
+//         <div className="section-header">
 
-          <FaSyncAlt />
+//           <FaSyncAlt />
 
-          <h3>Insurance</h3>
+//           <h3>Insurance</h3>
 
-        </div>
+//         </div>
 
-        <div className="grid-2">
+//         <div className="grid-2">
 
-          <div className="input-group">
+//           <div className="input-group">
 
-            <label>Insurance Term</label>
-                <small style={{opacity: "0"}}>
-                    adjustment
-          </small>
-          <select
-    name="insuranceTerm"
-    value={form.insuranceTerm}
-    onChange={handleChange}
-    disabled={!canEditInsurance}
->
-          <option value="6_months">6 Months</option>
-    <option value="1_year">1 Year</option>
-    <option value="2_years">2 Years</option>
-    <option value="3_years">3 Years</option>
-    <option value="4_years">4 Years</option>
-    <option value="5_years">5 Years</option>
-    <option value="6_years">6 Years</option>
-    <option value="7_years">7 Years</option>
-    <option value="8_years">8 Years</option>
-    <option value="9_years">9 Years</option>
-    <option value="10_years">10 Years</option>
-            </select>
+//             <label>Insurance Term</label>
+//                 <small style={{opacity: "0"}}>
+//                     adjustment
+//           </small>
+//           <select
+//     name="insuranceTerm"
+//     value={form.insuranceTerm}
+//     onChange={handleChange}
+//     disabled={!canEditInsurance}
+// >
+//           <option value="6_months">6 Months</option>
+//     <option value="1_year">1 Year</option>
+//     <option value="2_years">2 Years</option>
+//     <option value="3_years">3 Years</option>
+//     <option value="4_years">4 Years</option>
+//     <option value="5_years">5 Years</option>
+//     <option value="6_years">6 Years</option>
+//     <option value="7_years">7 Years</option>
+//     <option value="8_years">8 Years</option>
+//     <option value="9_years">9 Years</option>
+//     <option value="10_years">10 Years</option>
+//             </select>
 
-          </div>
-          <div className="input-group">
+//           </div>
+//           <div className="input-group">
 
-  <label>Coverage Type</label>
-   <small style={{opacity: "0"}}>
-                    adjustment
-          </small>
+//   <label>Coverage Type</label>
+//    <small style={{opacity: "0"}}>
+//                     adjustment
+//           </small>
 
-  <Select
-    isMulti
-    styles={customSelectStyles}
-    className="react-select-container"
-    classNamePrefix="react-select"
-    options={coverageOptions}
-    isDisabled={!canEditInsurance}
-    value={coverageOptions.filter((opt) =>
-      (form.coverageType || []).includes(opt.value)
-    )}
-    onChange={(selected, actionMeta) => {
-      let values = selected
-        ? selected.map((s) => s.value)
-        : [];
+//   <Select
+//     isMulti
+//     styles={customSelectStyles}
+//     className="react-select-container"
+//     classNamePrefix="react-select"
+//     options={coverageOptions}
+//     isDisabled={!canEditInsurance}
+//     value={coverageOptions.filter((opt) =>
+//       (form.coverageType || []).includes(opt.value)
+//     )}
+//     onChange={(selected, actionMeta) => {
+//       let values = selected
+//         ? selected.map((s) => s.value)
+//         : [];
 
-      const lastSelected = actionMeta?.option?.value;
+//       const lastSelected = actionMeta?.option?.value;
 
-      if (lastSelected === "none") {
-        values = ["none"];
-      } else {
-        values = values.filter((v) => v !== "none");
-      }
+//       if (lastSelected === "none") {
+//         values = ["none"];
+//       } else {
+//         values = values.filter((v) => v !== "none");
+//       }
 
-      setForm({
-        ...form,
-        coverageType: values,
-      });
-    }}
-  />
+//       setForm({
+//         ...form,
+//         coverageType: values,
+//       });
+//     }}
+//   />
 
-</div>
+// </div>
 
-          <div className="input-group">
+//           <div className="input-group">
 
-            <label>Insurance Cost</label>
+//             <label>Insurance Cost</label>
 
-            <small>
-              {currency} {currentInsuranceCost}
-            </small>
+//             <small>
+//               {currency} {currentInsuranceCost}
+//             </small>
 
-            <input
-              type="number"
-              name="insuranceCost"
-              value={form.insuranceCost}
-              onChange={handleChange}
-              disabled={!canEditInsurance}
-            />
+//             <input
+//               type="number"
+//               name="insuranceCost"
+//               value={form.insuranceCost}
+//               onChange={handleChange}
+//               disabled={!canEditInsurance}
+//             />
 
-          </div>
+//           </div>
 
-          <div className="input-group">
+//           <div className="input-group">
 
-            <label>Purchase Date</label>
-                      <small>
-            {instance?.hardware?.insurancePurchaseDate?.split("T")[0] || "-"}
-          </small>
-            <input
-              type="date"
-              name="newInsurancePurchaseDate"
-              value={form.newInsurancePurchaseDate}
-              onChange={handleChange}
-              disabled={!canEditInsurance}
-            />
+//             <label>Purchase Date</label>
+//                       <small>
+//             {instance?.hardware?.insurancePurchaseDate?.split("T")[0] || "-"}
+//           </small>
+//             <input
+//               type="date"
+//               name="newInsurancePurchaseDate"
+//               value={form.newInsurancePurchaseDate}
+//               onChange={handleChange}
+//               disabled={!canEditInsurance}
+//             />
 
-          </div>
-       <div className="input-group">
+//           </div>
+//        <div className="input-group">
 
-            <label>Expiry Date</label>
+//             <label>Expiry Date</label>
 
-            <small>
-              {instance?.hardware?.insuranceExpiry?.split("T")[0] || "-"}
-            </small>
+//             <small>
+//               {instance?.hardware?.insuranceExpiry?.split("T")[0] || "-"}
+//             </small>
 
-            <input
-              type="date"
-              name="newInsuranceExpiry"
-              value={form.newInsuranceExpiry}
-              onChange={handleChange}
-              disabled
-            />
+//             <input
+//               type="date"
+//               name="newInsuranceExpiry"
+//               value={form.newInsuranceExpiry}
+//               onChange={handleChange}
+//               disabled
+//             />
 
-          </div>
+//           </div>
    
-          <div className="input-group">
-  <label>Insurance Renewed On</label>
-          <small style={{opacity: "0"}}>
-                    adjustment
-          </small>
-  <input
-    type="date"
-    name="insuranceRenewedOn"
-    value={form.insuranceRenewedOn}
-    onChange={handleChange}
-  />
-</div>
+//           <div className="input-group">
+//   <label>Insurance Renewed On</label>
+//           <small style={{opacity: "0"}}>
+//                     adjustment
+//           </small>
+//   <input
+//     type="date"
+//     name="insuranceRenewedOn"
+//     value={form.insuranceRenewedOn}
+//     onChange={handleChange}
+//   />
+// </div>
 
-        </div>
+//         </div>
 
-      </div>
+//       </div>
 
-    )}
-  </>
-)}
-{isSoftware && (
+//     )}
+//   </>
+// )}
+// {isSoftware && (
 
-  <>
-    {/* ================= GENERAL ================= */}
+//   <>
+//     {/* ================= GENERAL ================= */}
 
-    <div className="upgrade-section">
+//     <div className="upgrade-section">
 
-      <div className="section-header">
+//       <div className="section-header">
 
-        <FaLaptop />
+//         <FaLaptop />
 
-        <h3>Software License</h3>
+//         <h3>Software License</h3>
 
-      </div>
+//       </div>
 
-      <div className="grid-2">
+//       <div className="grid-2">
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Currency</label>
+//           <label>Currency</label>
 
-          <input
-            readOnly
-            value={currency}
-            className="readonly-input"
-          />
+//           <input
+//             readOnly
+//             value={currency}
+//             className="readonly-input"
+//           />
 
-        </div>
+//         </div>
 
-      </div>
+//       </div>
 
-    </div>
+//     </div>
 
-    {/* ================= LICENSE ================= */}
+//     {/* ================= LICENSE ================= */}
 
-    <div className="upgrade-section">
+//     <div className="upgrade-section">
 
-      <div className="section-header">
+//       <div className="section-header">
 
-        <FaSyncAlt />
+//         <FaSyncAlt />
 
-        <h3>License Renewal</h3>
+//         <h3>License Renewal</h3>
 
-      </div>
+//       </div>
 
-      <div className="grid-2">
+//       <div className="grid-2">
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Renewal Cost</label>
+//           <label>Renewal Cost</label>
 
-          <small>
-            {currency} {currentRenewalCost}
-          </small>
+//           <small>
+//             {currency} {currentRenewalCost}
+//           </small>
 
-          <input
-            type="number"
-            name="renewalCost"
-            value={form.renewalCost}
-            onChange={handleChange}
-          />
+//           <input
+//             type="number"
+//             name="renewalCost"
+//             value={form.renewalCost}
+//             onChange={handleChange}
+//           />
 
-        </div>
+//         </div>
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Renewal Date</label>
+//           <label>Renewal Date</label>
 
-          <small>
-            {currentRenewalDate || "-"}
-          </small>
+//           <small>
+//             {currentRenewalDate || "-"}
+//           </small>
 
-          <input
-            type="date"
-            name="newRenewalDate"
-            value={form.newRenewalDate}
-            onChange={handleChange}
-          />
+//           <input
+//             type="date"
+//             name="newRenewalDate"
+//             value={form.newRenewalDate}
+//             onChange={handleChange}
+//           />
 
-        </div>
+//         </div>
 
-        <div className="input-group">
+//         <div className="input-group">
 
-          <label>Installation Date</label>
+//           <label>Installation Date</label>
 
-          <small>
-            {instance?.software?.installationDate?.split("T")[0] || "-"}
-          </small>
+//           <small>
+//             {instance?.software?.installationDate?.split("T")[0] || "-"}
+//           </small>
 
-          <input
-            type="date"
-            name="newInstallationDate"
-            value={form.newInstallationDate}
-            onChange={handleChange}
-          />
+//           <input
+//             type="date"
+//             name="newInstallationDate"
+//             value={form.newInstallationDate}
+//             onChange={handleChange}
+//           />
 
-        </div>
-        <div className="input-group">
-  <label>License Renewed On</label>
+//         </div>
+//         <div className="input-group">
+//   <label>License Renewed On</label>
 
-  <input
-    type="date"
-    name="licenseRenewedOn"
-    value={form.licenseRenewedOn}
-    onChange={handleChange}
-  />
-</div>
+//   <input
+//     type="date"
+//     name="licenseRenewedOn"
+//     value={form.licenseRenewedOn}
+//     onChange={handleChange}
+//   />
+// </div>
 
-      </div>
+//       </div>
 
-    </div>
+//     </div>
 
-  </>
+//   </>
 
-)}
-        </>
-))}
+// )}
+//         </>
+// ))}
 
-        {/* ACTIONS */}
-        <div className="modal-actions">
-          <button onClick={onClose} className="btn-cancel">Cancel</button>
+//         {/* ACTIONS */}
+//         <div className="modal-actions">
+//           <button onClick={onClose} className="btn-cancel">Cancel</button>
 
-          <button onClick={handleSubmit} className="btn-save">
+//           <button onClick={handleSubmit} className="btn-save">
+//           {activeTab === "renewal"
+//   ? "Apply Renewal"
+//   : "Apply Upgrade"}
+//           </button>
+//         </div>
+
+//       </div>
+//     </div>
+
+<div
+  className="asset-upgrade-overlay"
+  onClick={onClose}
+>
+  <div
+    className="asset-upgrade-dialog"
+    onClick={(e) => e.stopPropagation()}
+  >
+
+    {/* =====================================================
+        HEADER
+    ===================================================== */}
+    <div className="asset-upgrade-header">
+
+      <div className="asset-upgrade-header-content">
+        <span className="asset-upgrade-eyebrow">
+          ASSET MANAGEMENT
+        </span>
+
+        <h2>
           {activeTab === "renewal"
-  ? "Apply Renewal"
-  : "Apply Upgrade"}
-          </button>
+            ? "Renew Asset"
+            : "Upgrade Asset"}
+        </h2>
+
+        <p>
+          {instance?.deviceName || "Asset Instance"}
+          {instance?.instanceCode
+            ? ` • ${instance.instanceCode}`
+            : ""}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        className="asset-upgrade-close"
+        onClick={onClose}
+        aria-label="Close modal"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    {/* =====================================================
+        TABS
+    ===================================================== */}
+    <div className="asset-upgrade-tabs">
+
+      <button
+        type="button"
+        className={
+          activeTab === "renewal" ? "active" : ""
+        }
+        onClick={() => setActiveTab("renewal")}
+      >
+        <span className="asset-upgrade-tab-icon">
+          ↻
+        </span>
+
+        <span>
+          <strong>Renewals</strong>
+          <small>
+            Maintenance, warranty & licenses
+          </small>
+        </span>
+      </button>
+
+
+      <button
+        type="button"
+        className={
+          activeTab === "upgrade" ? "active" : ""
+        }
+        onClick={() => setActiveTab("upgrade")}
+      >
+        <span className="asset-upgrade-tab-icon">
+          ↑
+        </span>
+
+        <span>
+          <strong>Upgrades</strong>
+          <small>
+            Condition, cost & upgrade details
+          </small>
+        </span>
+      </button>
+
+    </div>
+
+
+    {/* =====================================================
+        SCROLLABLE BODY
+    ===================================================== */}
+    <div className="asset-upgrade-body">
+
+      {/* ===================================================
+          UPGRADE TAB
+      =================================================== */}
+      {activeTab === "upgrade" && (
+        <div className="asset-upgrade-tab-content">
+
+          <div className="asset-upgrade-section">
+
+            <div className="asset-upgrade-section-header">
+              <div className="asset-upgrade-section-icon">
+                ↑
+              </div>
+
+              <div>
+                <h3>Upgrade Information</h3>
+                <p>
+                  Record changes made to this asset
+                  instance.
+                </p>
+              </div>
+            </div>
+
+
+            <div className="asset-upgrade-form-grid">
+
+              {/* CONDITION */}
+              <div className="asset-upgrade-field">
+                <label htmlFor="upgrade-condition">
+                  Condition
+                </label>
+
+                <span className="asset-upgrade-field-hint">
+                  Current asset condition
+                </span>
+
+                <select
+                  id="upgrade-condition"
+                  name="condition"
+                  value={form.condition}
+                  onChange={handleChange}
+                >
+                  <option value="new">New</option>
+                  <option value="used">Used</option>
+                  <option value="damaged">
+                    Damaged
+                  </option>
+                  <option value="stolen">
+                    Stolen
+                  </option>
+                  <option value="broken">
+                    Broken
+                  </option>
+                  <option value="repaired(in)">
+                    Repair (IN)
+                  </option>
+                  <option value="repaired(out)">
+                    Repair (OUT)
+                  </option>
+                </select>
+              </div>
+
+
+              {/* UPGRADE COST */}
+              <div className="asset-upgrade-field">
+                <label htmlFor="upgrade-cost">
+                  Upgrade Cost
+                </label>
+
+                <span className="asset-upgrade-field-hint">
+                  Currency: {currency}
+                </span>
+
+                <div className="asset-upgrade-money-input">
+                  <span>{currency}</span>
+
+                  <input
+                    id="upgrade-cost"
+                    type="number"
+                    name="upgradeCost"
+                    value={form.upgradeCost}
+                    onChange={handleChange}
+                    min="0"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+
+
+              {/* DATE */}
+              <div className="asset-upgrade-field">
+                <label htmlFor="upgrade-date">
+                  Upgrade Date
+                </label>
+
+                <span className="asset-upgrade-field-hint">
+                  Date upgrade was performed
+                </span>
+
+                <input
+                  id="upgrade-date"
+                  type="date"
+                  name="upgradeDate"
+                  value={form.upgradeDate}
+                  onChange={handleChange}
+                />
+              </div>
+
+
+              {/* DESCRIPTION */}
+              <div className="asset-upgrade-field asset-upgrade-field-wide">
+                <label htmlFor="upgrade-description">
+                  Upgrade Details
+                </label>
+
+                <span className="asset-upgrade-field-hint">
+                  Describe the work or changes performed
+                </span>
+
+                <textarea
+                  id="upgrade-description"
+                  name="upgradeDescription"
+                  value={form.upgradeDescription}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="Enter upgrade details..."
+                />
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
+      )}
+
+
+      {/* ===================================================
+          RENEWAL TAB
+      =================================================== */}
+      {activeTab === "renewal" && (
+        <div className="asset-upgrade-tab-content">
+
+          {/* =================================================
+              HARDWARE
+          ================================================= */}
+          {isHardware && (
+            <>
+
+              {/* GENERAL */}
+              <div className="asset-upgrade-section">
+
+                <div className="asset-upgrade-section-header">
+
+                  <div className="asset-upgrade-section-icon">
+                    <FaLaptop />
+                  </div>
+
+                  <div>
+                    <h3>General</h3>
+                    <p>
+                      Asset renewal configuration
+                    </p>
+                  </div>
+
+                </div>
+
+
+                <div className="asset-upgrade-form-grid">
+
+                  <div className="asset-upgrade-field">
+                    <label>Currency</label>
+
+                    <span className="asset-upgrade-field-hint">
+                      Organization currency
+                    </span>
+
+                    <input
+                      value={currency}
+                      readOnly
+                      className="asset-upgrade-readonly"
+                    />
+                  </div>
+
+
+                  <div className="asset-upgrade-insurance-toggle">
+
+                    <div>
+                      <strong>
+                        Asset Insurance
+                      </strong>
+
+                      <span>
+                        Enable insurance management
+                      </span>
+                    </div>
+
+                    <label className="asset-upgrade-switch">
+
+                      <input
+                        type="checkbox"
+                        name="hasInsurance"
+                        checked={form.hasInsurance}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            hasInsurance:
+                              e.target.checked,
+                          })
+                        }
+                      />
+
+                      <span className="asset-upgrade-switch-slider" />
+
+                    </label>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* =============================================
+                  MAINTENANCE
+              ============================================= */}
+              <div
+                className={`asset-upgrade-section ${
+                  !maintenanceDue
+                    ? "asset-upgrade-section-disabled"
+                    : ""
+                }`}
+              >
+
+                <div className="asset-upgrade-section-header">
+
+                  <div className="asset-upgrade-section-icon">
+                    <FaTools />
+                  </div>
+
+                  <div>
+                    <h3>Maintenance</h3>
+
+                    <p>
+                      Update maintenance cost and
+                      service schedule
+                    </p>
+                  </div>
+
+
+                  <span
+                    className={`asset-upgrade-due-badge ${
+                      maintenanceDue
+                        ? "due"
+                        : "current"
+                    }`}
+                  >
+                    <span />
+
+                    {maintenanceDue
+                      ? "Renewal Due"
+                      : "Up to Date"}
+                  </span>
+
+                </div>
+
+
+                <div className="asset-upgrade-form-grid">
+
+                  {/* COST */}
+                  <div className="asset-upgrade-field">
+                    <label>
+                      Maintenance Cost
+                    </label>
+
+                    <span className="asset-upgrade-current">
+                      Current: {currency}{" "}
+                      {currentMaintenanceCost}
+                    </span>
+
+                    <div className="asset-upgrade-money-input">
+                      <span>{currency}</span>
+
+                      <input
+                        type="number"
+                        name="maintenanceCost"
+                        value={form.maintenanceCost}
+                        onChange={handleChange}
+                        disabled={!maintenanceDue}
+                        min="0"
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </div>
+
+
+                  {/* NEXT DATE */}
+                  <div className="asset-upgrade-field">
+                    <label>
+                      Next Maintenance Date
+                    </label>
+
+                    <span className="asset-upgrade-current">
+                      Current:{" "}
+                      {instance?.hardware
+                        ?.nextMaintenanceDate
+                        ?.split("T")[0] || "-"}
+                    </span>
+
+                    <input
+                      type="date"
+                      name="newMaintenanceDate"
+                      value={form.newMaintenanceDate}
+                      onChange={handleChange}
+                      disabled={!maintenanceDue}
+                    />
+                  </div>
+
+
+                  {/* PERFORMED */}
+                  <div className="asset-upgrade-field">
+                    <label>
+                      Maintenance Performed On
+                    </label>
+
+                    <span className="asset-upgrade-field-hint">
+                      Actual service date
+                    </span>
+
+                    <input
+                      type="date"
+                      name="maintenancePerformedOn"
+                      value={
+                        form.maintenancePerformedOn
+                      }
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* =============================================
+                  WARRANTY
+              ============================================= */}
+              <div
+                className={`asset-upgrade-section ${
+                  !warrantyDue
+                    ? "asset-upgrade-section-disabled"
+                    : ""
+                }`}
+              >
+
+                <div className="asset-upgrade-section-header">
+
+                  <div className="asset-upgrade-section-icon">
+                    <FaShieldAlt />
+                  </div>
+
+                  <div>
+                    <h3>Warranty</h3>
+
+                    <p>
+                      Manage warranty renewal and
+                      coverage dates
+                    </p>
+                  </div>
+
+
+                  <span
+                    className={`asset-upgrade-due-badge ${
+                      warrantyDue
+                        ? "due"
+                        : "current"
+                    }`}
+                  >
+                    <span />
+
+                    {warrantyDue
+                      ? "Renewal Due"
+                      : "Up to Date"}
+                  </span>
+
+                </div>
+
+
+                <div className="asset-upgrade-form-grid">
+
+                  {/* COST */}
+                  <div className="asset-upgrade-field">
+                    <label>Renewal Cost</label>
+
+                    <span className="asset-upgrade-current">
+                      Current: {currency}{" "}
+                      {currentWarrantyCost}
+                    </span>
+
+                    <div className="asset-upgrade-money-input">
+                      <span>{currency}</span>
+
+                      <input
+                        type="number"
+                        name="warrantyRenewalCost"
+                        value={
+                          form.warrantyRenewalCost
+                        }
+                        onChange={handleChange}
+                        disabled={!warrantyDue}
+                        min="0"
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </div>
+
+
+                  {/* PURCHASE */}
+                  <div className="asset-upgrade-field">
+                    <label>Purchase Date</label>
+
+                    <span className="asset-upgrade-current">
+                      Current:{" "}
+                      {instance?.hardware
+                        ?.warrantyPurchaseDate
+                        ?.split("T")[0] || "-"}
+                    </span>
+
+                    <input
+                      type="date"
+                      name="newWarrantyPurchaseDate"
+                      value={
+                        form.newWarrantyPurchaseDate
+                      }
+                      onChange={handleChange}
+                      disabled={!warrantyDue}
+                    />
+                  </div>
+
+
+                  {/* EXPIRY */}
+                  <div className="asset-upgrade-field">
+                    <label>Expiry Date</label>
+
+                    <span className="asset-upgrade-current">
+                      Current:{" "}
+                      {instance?.hardware
+                        ?.warrantyExpiry
+                        ?.split("T")[0] || "-"}
+                    </span>
+
+                    <input
+                      type="date"
+                      name="newWarrantyExpiry"
+                      value={form.newWarrantyExpiry}
+                      onChange={handleChange}
+                      disabled={!warrantyDue}
+                    />
+                  </div>
+
+
+                  {/* RENEWED */}
+                  <div className="asset-upgrade-field">
+                    <label>
+                      Warranty Renewed On
+                    </label>
+
+                    <span className="asset-upgrade-field-hint">
+                      Actual renewal date
+                    </span>
+
+                    <input
+                      type="date"
+                      name="warrantyRenewedOn"
+                      value={form.warrantyRenewedOn}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* =============================================
+                  INSURANCE
+              ============================================= */}
+              {form.hasInsurance && (
+                <div
+                  className={`asset-upgrade-section ${
+                    !canEditInsurance
+                      ? "asset-upgrade-section-disabled"
+                      : ""
+                  }`}
+                >
+
+                  <div className="asset-upgrade-section-header">
+
+                    <div className="asset-upgrade-section-icon">
+                      <FaSyncAlt />
+                    </div>
+
+                    <div>
+                      <h3>Insurance</h3>
+
+                      <p>
+                        Manage insurance coverage,
+                        cost and renewal
+                      </p>
+                    </div>
+
+
+                    <span
+                      className={`asset-upgrade-due-badge ${
+                        canEditInsurance
+                          ? "due"
+                          : "current"
+                      }`}
+                    >
+                      <span />
+
+                      {canEditInsurance
+                        ? "Renewal Due"
+                        : "Up to Date"}
+                    </span>
+
+                  </div>
+
+
+                  <div className="asset-upgrade-form-grid">
+
+                    {/* TERM */}
+                    <div className="asset-upgrade-field">
+                      <label>Insurance Term</label>
+
+                      <span className="asset-upgrade-field-hint">
+                        Select coverage duration
+                      </span>
+
+                      <select
+                        name="insuranceTerm"
+                        value={form.insuranceTerm}
+                        onChange={handleChange}
+                        disabled={!canEditInsurance}
+                      >
+                        <option value="6_months">
+                          6 Months
+                        </option>
+
+                        <option value="1_year">
+                          1 Year
+                        </option>
+
+                        <option value="2_years">
+                          2 Years
+                        </option>
+
+                        <option value="3_years">
+                          3 Years
+                        </option>
+
+                        <option value="4_years">
+                          4 Years
+                        </option>
+
+                        <option value="5_years">
+                          5 Years
+                        </option>
+
+                        <option value="6_years">
+                          6 Years
+                        </option>
+
+                        <option value="7_years">
+                          7 Years
+                        </option>
+
+                        <option value="8_years">
+                          8 Years
+                        </option>
+
+                        <option value="9_years">
+                          9 Years
+                        </option>
+
+                        <option value="10_years">
+                          10 Years
+                        </option>
+                      </select>
+                    </div>
+
+
+                    {/* COVERAGE */}
+                    <div className="asset-upgrade-field">
+                      <label>Coverage Type</label>
+
+                      <span className="asset-upgrade-field-hint">
+                        Select one or more coverage types
+                      </span>
+
+                      <Select
+                        isMulti
+                        className="asset-upgrade-react-select"
+                        classNamePrefix="asset-upgrade-select"
+                        options={coverageOptions}
+                        isDisabled={!canEditInsurance}
+                        value={coverageOptions.filter(
+                          (opt) =>
+                            (
+                              form.coverageType || []
+                            ).includes(opt.value)
+                        )}
+                        onChange={(
+                          selected,
+                          actionMeta
+                        ) => {
+                          let values = selected
+                            ? selected.map(
+                                (s) => s.value
+                              )
+                            : [];
+
+                          const lastSelected =
+                            actionMeta?.option?.value;
+
+                          if (
+                            lastSelected === "none"
+                          ) {
+                            values = ["none"];
+                          } else {
+                            values = values.filter(
+                              (v) => v !== "none"
+                            );
+                          }
+
+                          setForm({
+                            ...form,
+                            coverageType: values,
+                          });
+                        }}
+                      />
+                    </div>
+
+
+                    {/* COST */}
+                    <div className="asset-upgrade-field">
+                      <label>Insurance Cost</label>
+
+                      <span className="asset-upgrade-current">
+                        Current: {currency}{" "}
+                        {currentInsuranceCost}
+                      </span>
+
+                      <div className="asset-upgrade-money-input">
+                        <span>{currency}</span>
+
+                        <input
+                          type="number"
+                          name="insuranceCost"
+                          value={form.insuranceCost}
+                          onChange={handleChange}
+                          disabled={
+                            !canEditInsurance
+                          }
+                          min="0"
+                          placeholder="0.00"
+                        />
+                      </div>
+                    </div>
+
+
+                    {/* PURCHASE DATE */}
+                    <div className="asset-upgrade-field">
+                      <label>Purchase Date</label>
+
+                      <span className="asset-upgrade-current">
+                        Current:{" "}
+                        {instance?.hardware
+                          ?.insurancePurchaseDate
+                          ?.split("T")[0] || "-"}
+                      </span>
+
+                      <input
+                        type="date"
+                        name="newInsurancePurchaseDate"
+                        value={
+                          form.newInsurancePurchaseDate
+                        }
+                        onChange={handleChange}
+                        disabled={!canEditInsurance}
+                      />
+                    </div>
+
+
+                    {/* EXPIRY */}
+                    <div className="asset-upgrade-field">
+                      <label>Expiry Date</label>
+
+                      <span className="asset-upgrade-current">
+                        Current:{" "}
+                        {instance?.hardware
+                          ?.insuranceExpiry
+                          ?.split("T")[0] || "-"}
+                      </span>
+
+                      <input
+                        type="date"
+                        name="newInsuranceExpiry"
+                        value={
+                          form.newInsuranceExpiry
+                        }
+                        onChange={handleChange}
+                        disabled
+                      />
+                    </div>
+
+
+                    {/* RENEWED */}
+                    <div className="asset-upgrade-field">
+                      <label>
+                        Insurance Renewed On
+                      </label>
+
+                      <span className="asset-upgrade-field-hint">
+                        Actual renewal date
+                      </span>
+
+                      <input
+                        type="date"
+                        name="insuranceRenewedOn"
+                        value={
+                          form.insuranceRenewedOn
+                        }
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                  </div>
+
+                </div>
+              )}
+
+            </>
+          )}
+
+
+          {/* =================================================
+              SOFTWARE
+          ================================================= */}
+          {isSoftware && (
+            <>
+
+              {/* GENERAL */}
+              <div className="asset-upgrade-section">
+
+                <div className="asset-upgrade-section-header">
+
+                  <div className="asset-upgrade-section-icon">
+                    <FaLaptop />
+                  </div>
+
+                  <div>
+                    <h3>Software License</h3>
+
+                    <p>
+                      License and billing configuration
+                    </p>
+                  </div>
+
+                </div>
+
+
+                <div className="asset-upgrade-form-grid">
+
+                  <div className="asset-upgrade-field">
+                    <label>Currency</label>
+
+                    <span className="asset-upgrade-field-hint">
+                      Organization currency
+                    </span>
+
+                    <input
+                      readOnly
+                      value={currency}
+                      className="asset-upgrade-readonly"
+                    />
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* LICENSE RENEWAL */}
+              <div className="asset-upgrade-section">
+
+                <div className="asset-upgrade-section-header">
+
+                  <div className="asset-upgrade-section-icon">
+                    <FaSyncAlt />
+                  </div>
+
+                  <div>
+                    <h3>License Renewal</h3>
+
+                    <p>
+                      Update license renewal cost and
+                      dates
+                    </p>
+                  </div>
+
+                </div>
+
+
+                <div className="asset-upgrade-form-grid">
+
+                  {/* COST */}
+                  <div className="asset-upgrade-field">
+                    <label>Renewal Cost</label>
+
+                    <span className="asset-upgrade-current">
+                      Current: {currency}{" "}
+                      {currentRenewalCost}
+                    </span>
+
+                    <div className="asset-upgrade-money-input">
+                      <span>{currency}</span>
+
+                      <input
+                        type="number"
+                        name="renewalCost"
+                        value={form.renewalCost}
+                        onChange={handleChange}
+                        min="0"
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </div>
+
+
+                  {/* RENEWAL DATE */}
+                  <div className="asset-upgrade-field">
+                    <label>Renewal Date</label>
+
+                    <span className="asset-upgrade-current">
+                      Current:{" "}
+                      {currentRenewalDate || "-"}
+                    </span>
+
+                    <input
+                      type="date"
+                      name="newRenewalDate"
+                      value={form.newRenewalDate}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+
+                  {/* INSTALLATION */}
+                  <div className="asset-upgrade-field">
+                    <label>Installation Date</label>
+
+                    <span className="asset-upgrade-current">
+                      Current:{" "}
+                      {instance?.software
+                        ?.installationDate
+                        ?.split("T")[0] || "-"}
+                    </span>
+
+                    <input
+                      type="date"
+                      name="newInstallationDate"
+                      value={
+                        form.newInstallationDate
+                      }
+                      onChange={handleChange}
+                    />
+                  </div>
+
+
+                  {/* RENEWED ON */}
+                  <div className="asset-upgrade-field">
+                    <label>
+                      License Renewed On
+                    </label>
+
+                    <span className="asset-upgrade-field-hint">
+                      Actual renewal date
+                    </span>
+
+                    <input
+                      type="date"
+                      name="licenseRenewedOn"
+                      value={form.licenseRenewedOn}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                </div>
+
+              </div>
+
+            </>
+          )}
+
+        </div>
+      )}
+
+    </div>
+
+
+    {/* =====================================================
+        FOOTER
+    ===================================================== */}
+    <div className="asset-upgrade-footer">
+
+      <span className="asset-upgrade-footer-note">
+        Changes will be recorded in the asset lifecycle.
+      </span>
+
+      <div className="asset-upgrade-footer-actions">
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="asset-upgrade-cancel"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="asset-upgrade-save"
+        >
+          {activeTab === "renewal"
+            ? "Apply Renewal"
+            : "Apply Upgrade"}
+        </button>
 
       </div>
+
     </div>
+
+  </div>
+</div>
   );
 };
 

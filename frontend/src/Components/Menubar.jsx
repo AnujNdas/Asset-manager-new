@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import "../Component_styles/Menubar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBell,
-  faCircleQuestion,
-  faMagnifyingGlass,
-  faUser,
-  faAngleDown,
-  faDownload,
-} from "@fortawesome/free-solid-svg-icons";
+  FiLayers,
+  FiHelpCircle,
+  FiDownload,
+  FiUser,
+  FiChevronDown,
+} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./Profiledropdown";
 import NotificationButton from "./NotificationBtn";
@@ -103,78 +102,121 @@ useEffect(() => {
 
 const { startTour } = useTour();
   return (
-    <div className="menubar-container">
-      <div className="menubar">
-        <div className="title-text">
-          {isMobile ? (
-            "AMS"
-          ) : (
-            <>
-              Asset
-              <span>Management</span>
-              <span>System</span>
-            </>
-          )}
-        </div>
-<div className="plan-timer-wrapper">
-  <PlanTimer />
-</div>
-        <div className="control-panel">
-<button
-  onClick={() => setShowOnboarding(true)}
-  style={{
-    border: "none",
-    background: "transparent",
-    cursor: "pointer",
-  }}
->
-  <FontAwesomeIcon
-    icon={faCircleQuestion}
-    style={{ color: "#DFD0B8" }}
-  />
-</button>
-          <NotificationButton />
 
-          {/* HELP ICON */}
-          {/* <button className="controls">
-            <FontAwesomeIcon icon={faCircleQuestion} style={{ color: "#2346ed" }} />
-          </button> */}
+<div className="menubar-container">
+  <div className="menubar">
 
-          {/* ⭐ Add to Home Screen Button */}
-          {showInstallButton && (
-            <button className="controls install-hint" onClick={handleInstallClick} title="Install App">
-              <FontAwesomeIcon icon={faDownload} style={{ color: "#28a745" }} />
-              <span className="hint-text">Tap here to install</span>
-            </button>
-          )}
-
-          {/* PROFILE DROPDOWN */}
-          <button className="profile-button" onClick={toggleDropdown} ref={toggleButtonRef}>
-            <FontAwesomeIcon icon={faUser} style={{ fontSize: "0.9rem" }} />
-            <FontAwesomeIcon
-              icon={faAngleDown}
-              style={{
-                fontSize: "16px",
-                transform: isDropdownVisible ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.3s ease-in-out",
-              }}
-            />
-          </button>
-        </div>
+    {/* ================= BRAND / PAGE TITLE ================= */}
+    <div className="menubar-brand">
+      <div className="menubar-brand-icon">
+        <FiLayers />
       </div>
-              {showOnboarding && (
-  <div className="onboarding-overlay">
-    <OnboardingSliderPage
-      onClose={() => setShowOnboarding(false)}
-    />
+
+      <div className="menubar-brand-content">
+        <div className="title-text">
+          <span className="brand-asset">Asset</span>
+          <span className="brand-management">Management</span>
+          <span className="brand-system">System</span>
+        </div>
+
+        <p className="menubar-subtitle">
+          Management Console
+        </p>
+      </div>
+    </div>
+
+    {/* ================= PLAN TIMER ================= */}
+    <div className="plan-timer-wrapper">
+      <div className="plan-timer-content">
+        <PlanTimer />
+      </div>
+    </div>
+
+    {/* ================= RIGHT CONTROLS ================= */}
+    <div className="control-panel">
+
+      {/* ONBOARDING / HELP */}
+      <button
+        type="button"
+        className="menubar-icon-btn"
+        onClick={() => setShowOnboarding(true)}
+        title="View onboarding guide"
+        aria-label="View onboarding guide"
+      >
+        <FiHelpCircle />
+      </button>
+
+      {/* NOTIFICATIONS */}
+      <div className="menubar-notification">
+        <NotificationButton />
+      </div>
+
+      {/* INSTALL APP */}
+      {showInstallButton && (
+        <button
+          type="button"
+          className="menubar-icon-btn menubar-install-btn"
+          onClick={handleInstallClick}
+          title="Install AssetPegasus"
+          aria-label="Install AssetPegasus"
+        >
+          <FiDownload />
+          <span className="install-label">
+            Install App
+          </span>
+        </button>
+      )}
+
+      {/* SEPARATOR */}
+      <div className="menubar-control-divider" />
+
+      {/* PROFILE DROPDOWN BUTTON */}
+      <button
+        type="button"
+        className={`profile-button ${
+          isDropdownVisible ? "active" : ""
+        }`}
+        onClick={toggleDropdown}
+        ref={toggleButtonRef}
+        aria-label="Open profile menu"
+        aria-expanded={isDropdownVisible}
+        aria-haspopup="menu"
+      >
+        <div className="menubar-profile-avatar">
+          <FiUser />
+        </div>
+
+        <span className="menubar-profile-label">
+          Account
+        </span>
+
+        <FiChevronDown
+          className={`profile-chevron ${
+            isDropdownVisible ? "rotated" : ""
+          }`}
+        />
+      </button>
+
+    </div>
   </div>
-)}
-      <ProfileDropdown
-        isVisible={isDropdownVisible}
-        onClose={() => setDropdownVisible(false)}
-        toggleButtonRef={toggleButtonRef}
+
+  {/* ================= ONBOARDING OVERLAY ================= */}
+  {showOnboarding && (
+    <div className="onboarding-overlay">
+      <OnboardingSliderPage
+        onClose={() => setShowOnboarding(false)}
       />
     </div>
+  )}
+
+  {/* ================= PROFILE DROPDOWN ================= */}
+  <ProfileDropdown
+    isVisible={isDropdownVisible}
+    onClose={() => setDropdownVisible(false)}
+    toggleButtonRef={toggleButtonRef}
+  />
+</div>
+
   );
 };
 

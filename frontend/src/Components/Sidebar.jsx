@@ -1,252 +1,561 @@
+
 import React, { useState, useEffect } from "react";
+
 import "../Component_styles/Sidebar.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { NavLink, useLocation } from "react-router-dom";
-import image from "../Images/logo.webp";
 
 import {
-  faGauge,
-  faCartShopping,
-  faGear,
-  faReceipt,
-  faUserPlus,
-  faCreditCard,
-  faBoxOpen,
-  faStore,
-  faCheck,
-  faRecycle,
-  faMultiply,
-  faPerson,
-} from "@fortawesome/free-solid-svg-icons";
-import { fa42Group, faOpencart, faStripe, faTeamspeak } from "@fortawesome/free-brands-svg-icons";
+  FiGrid,
+  FiBox,
+  FiShoppingCart,
+  FiArchive,
+  FiLayers,
+  FiActivity,
+  FiFileText,
+  FiUsers,
+  FiClipboard,
+  FiTag,
+  FiCreditCard,
+  FiSettings,
+  FiChevronDown,
+  FiChevronLeft,
+  FiChevronRight,
+  FiX,
+} from "react-icons/fi";
 
-const Sidebar = ({ isOpen, closeSidebar }) => {
-  const [openMenu, setOpenMenu] = useState(null);
+const MOBILE_BREAKPOINT = 900;
+
+const operationsRoutes = [
+  "/assetCapture",
+  "/inventory",
+  "/instance-assets",
+  "/tracking",
+];
+
+const workforceRoutes = [
+  "/assignment",
+  "/employee",
+  "/classification",
+];
+
+const matchesRoute = (pathname, route) =>
+  pathname === route || pathname.startsWith(`${route}/`);
+
+const Sidebar = ({
+  isOpen,
+  closeSidebar,
+  isCollapsed,
+  setIsCollapsed,
+}) => {
   const location = useLocation();
 
-  // ✅ Stable toggle (no stale state issue)
-const toggleMenu = (menu) => {
-  console.log("clicked", menu);
-  setOpenMenu((prev) => (prev === menu ? null : menu));
-};
+  // Responsive detection
+  const [isMobile, setIsMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.innerWidth <= MOBILE_BREAKPOINT
+  );
 
-  // ✅ Auto-open correct dropdown based on route
-useEffect(() => {
-  if (
-    ["/assetCapture", "/inventory", "/track-records"].includes(location.pathname)
-  ) {
-    setOpenMenu("assets");
-  } else if (
-    ["/assignment", "/employee", "/classification"].includes(location.pathname)
-  ) {
-    setOpenMenu("workforce");
-  }
-}, []); // ✅ runs once only
+  // Detect current active navigation group
+  const isOperationsActive = operationsRoutes.some((route) =>
+    matchesRoute(location.pathname, route)
+  );
 
-  // ✅ Mobile detection
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const isWorkforceActive = workforceRoutes.some((route) =>
+    matchesRoute(location.pathname, route)
+  );
 
+  // Initialize group from current route
+  const [openMenu, setOpenMenu] = useState(() => {
+    if (
+      operationsRoutes.some((route) =>
+        matchesRoute(location.pathname, route)
+      )
+    ) {
+      return "assets";
+    }
+
+    if (
+      workforceRoutes.some((route) =>
+        matchesRoute(location.pathname, route)
+      )
+    ) {
+      return "workforce";
+    }
+
+    return null;
+  });
+
+  // Update mobile state when viewport changes
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(
+        window.innerWidth <= MOBILE_BREAKPOINT
+      );
+    };
+
+    handleResize();
+
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
-  // ✅ Prevent body scroll on mobile sidebar open
+  // Auto-open the group for the current route
   useEffect(() => {
-    document.body.style.overflow = isOpen && isMobile ? "hidden" : "auto";
+    if (isOperationsActive) {
+      setOpenMenu("assets");
+    } else if (isWorkforceActive) {
+      setOpenMenu("workforce");
+    }
+  }, [
+    location.pathname,
+    isOperationsActive,
+    isWorkforceActive,
+  ]);
+
+  // Prevent background scrolling while mobile drawer is open
+  useEffect(() => {
+    if (!isOpen || !isMobile) return;
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen, isMobile]);
 
+  // Close mobile sidebar when changing to desktop
+  useEffect(() => {
+    if (!isMobile && isOpen) {
+      closeSidebar();
+    }
+  }, [isMobile, isOpen, closeSidebar]);
+
+  // Toggle accordion group
+  const toggleMenu = (group) => {
+    setOpenMenu((prev) =>
+      prev === group ? null : group
+    );
+  };
+
+  // Handle group click when sidebar is collapsed
+  const handleGroupClick = (group) => {
+    if (isCollapsed && !isMobile) {
+      setIsCollapsed(false);
+      setOpenMenu(group);
+      return;
+    }
+
+    toggleMenu(group);
+  };
+
+  // Collapse desktop sidebar
+  const handleCollapse = () => {
+    setIsCollapsed((prev) => !prev);
+  };
+
+  const sidebarClassName = [
+    "sidebar-container",
+    isOpen && isMobile ? "open" : "",
+    isCollapsed && !isMobile ? "collapsed" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <>
-      {/* Backdrop */}
+      {/* MOBILE BACKDROP */}
       {isOpen && isMobile && (
-        <div className="sidebar-backdrop" onClick={closeSidebar} />
+        <div
+          className="sidebar-backdrop"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
       )}
 
-      <div className={`sidebar-container ${isOpen ? "open" : ""}`}>
+      {/* SIDEBAR */}
+      <aside
+        className={sidebarClassName}
+        aria-label="Main navigation"
+      >
         <div className="sidebar">
-          {/* Logo */}
+
+          {/* ================= BRAND ================= */}
+
           <div className="sidebar-heading">
-            <div className="title-head">
+
+            <NavLink
+              to="/dashboard"
+              className="sidebar-brand"
+              onClick={closeSidebar}
+              title="AssetPegasus"
+            >
               <div className="logo-wrapper">
-                <img src="/images/Logo2.png" alt="Logo" className="app-logo" />
+                <img
+                  src="/images/Logo2.png"
+                  alt="AssetPegasus"
+                  className="app-logo"
+                />
               </div>
-            </div>
+
+              <div className="sidebar-brand-text">
+                <strong>AssetPegasus</strong>
+                <span>Asset Management</span>
+              </div>
+            </NavLink>
+
+            {/* DESKTOP COLLAPSE BUTTON */}
+            <button
+              type="button"
+              className="sidebar-collapse-btn"
+              onClick={handleCollapse}
+              aria-label={
+                isCollapsed
+                  ? "Expand sidebar"
+                  : "Collapse sidebar"
+              }
+              title={
+                isCollapsed
+                  ? "Expand sidebar"
+                  : "Collapse sidebar"
+              }
+              aria-expanded={!isCollapsed}
+            >
+              {isCollapsed ? (
+                <FiChevronRight />
+              ) : (
+                <FiChevronLeft />
+              )}
+            </button>
+
+            {/* MOBILE CLOSE BUTTON */}
+            <button
+              type="button"
+              className="sidebar-mobile-close"
+              onClick={closeSidebar}
+              aria-label="Close navigation"
+            >
+              <FiX />
+            </button>
+
           </div>
 
-          {/* Menu */}
-          <div className="sidebar-menu">
-            <ul>
-              {/* Dashboard */}
+          {/* ================= NAVIGATION ================= */}
+
+          <nav className="sidebar-menu">
+
+            <div className="sidebar-nav-label">
+              MAIN MENU
+            </div>
+
+            <ul className="sidebar-nav-list">
+
+              {/* DASHBOARD */}
               <li>
                 <NavLink
                   to="/dashboard"
+                  end
                   onClick={closeSidebar}
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  title="Dashboard"
+                  className={({ isActive }) =>
+                    `sidebar-nav-link ${
+                      isActive ? "active" : ""
+                    }`
+                  }
                 >
-                  <FontAwesomeIcon icon={faGauge} style={{ width: "25%" }} />
-                  <span className="tab-text">Dashboard</span>
+                  <FiGrid className="sidebar-nav-icon" />
+                  <span className="tab-text">
+                    Dashboard
+                  </span>
                 </NavLink>
               </li>
 
-              {/* Asset Operations */}
- <li className="sb-group">
-  <div
-    onClick={() => toggleMenu("assets")}
-    className={`sb-group-header ${
-      openMenu === "assets" ? "active" : ""
-    }`}
-  >
-    <FontAwesomeIcon icon={faBoxOpen} style={{ width: "25%" }} />
-    <span className="tab-text">Operations</span>
+              {/* ================= OPERATIONS ================= */}
 
-    <span className={`sb-arrow ${openMenu === "assets" ? "open" : ""}`}>
-      ▼
-    </span>
-  </div>
+              <li className="sb-group">
 
-  {openMenu === "assets" && (
-    <ul className="sb-group-content">
-      <li>
-        <NavLink to="/assetCapture" onClick={closeSidebar} className={({ isActive }) => (isActive ? "active" : "")}>
-        <FontAwesomeIcon icon={faCartShopping} style={{ width: "25%" }} />
-          Asset Capture
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to="/inventory" onClick={closeSidebar} className={({ isActive }) => (isActive ? "active" : "")}>
-        <FontAwesomeIcon icon={faStore} style={{ width: "25%" }} />
-          Inventory
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to="/instance-assets" onClick={closeSidebar} className={({ isActive }) => (isActive ? "active" : "")}>
-        <FontAwesomeIcon icon={fa42Group} style={{ width: "25%" }} />
-          Instance Dashboard
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to="/tracking" onClick={closeSidebar} className={({ isActive }) => (isActive ? "active" : "")}>
-        <FontAwesomeIcon icon={faCheck} style={{ width: "25%" }} />
-          Track Records
-        </NavLink>
-      </li>
-    </ul>
-  )}
-</li>
+                <button
+                  type="button"
+                  onClick={() => handleGroupClick("assets")}
+                  className={`sb-group-header ${
+                    openMenu === "assets" ||
+                    isOperationsActive
+                      ? "active"
+                      : ""
+                  }`}
+                  aria-expanded={
+                    !isCollapsed &&
+                    openMenu === "assets"
+                  }
+                  title="Operations"
+                >
+                  <FiBox className="sidebar-nav-icon" />
 
-              {/* MIS Report */}
+                  <span className="tab-text">
+                    Operations
+                  </span>
+
+                  <FiChevronDown
+                    className={`sb-arrow ${
+                      openMenu === "assets"
+                        ? "open"
+                        : ""
+                    }`}
+                  />
+                </button>
+
+                {openMenu === "assets" &&
+                  (!isCollapsed || isMobile) && (
+                    <ul className="sb-group-content">
+
+                      <li>
+                        <NavLink
+                          to="/assetCapture"
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `sidebar-sub-link ${
+                              isActive ? "active" : ""
+                            }`
+                          }
+                        >
+                          <FiShoppingCart />
+                          <span>Asset Capture</span>
+                        </NavLink>
+                      </li>
+
+                      <li>
+                        <NavLink
+                          to="/inventory"
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `sidebar-sub-link ${
+                              isActive ? "active" : ""
+                            }`
+                          }
+                        >
+                          <FiArchive />
+                          <span>Inventory</span>
+                        </NavLink>
+                      </li>
+
+                      <li>
+                        <NavLink
+                          to="/instance-assets"
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `sidebar-sub-link ${
+                              isActive ? "active" : ""
+                            }`
+                          }
+                        >
+                          <FiLayers />
+                          <span>Instance Dashboard</span>
+                        </NavLink>
+                      </li>
+
+                      <li>
+                        <NavLink
+                          to="/tracking"
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `sidebar-sub-link ${
+                              isActive ? "active" : ""
+                            }`
+                          }
+                        >
+                          <FiActivity />
+                          <span>Track Records</span>
+                        </NavLink>
+                      </li>
+
+                    </ul>
+                  )}
+              </li>
+
+              {/* ================= AUDIT ================= */}
+
               <li>
                 <NavLink
                   to="/misReport"
                   onClick={closeSidebar}
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  title="Audit Report"
+                  className={({ isActive }) =>
+                    `sidebar-nav-link ${
+                      isActive ? "active" : ""
+                    }`
+                  }
                 >
-                  <FontAwesomeIcon icon={faReceipt} style={{ width: "25%" }} />
-                  <span className="tab-text">Audit Report</span>
+                  <FiFileText className="sidebar-nav-icon" />
+                  <span className="tab-text">
+                    Audit Report
+                  </span>
                 </NavLink>
               </li>
 
-              {/* Workforce */}
+              {/* ================= WORKFORCE ================= */}
+
               <li className="sb-group">
-                <div
-                  onClick={() => toggleMenu("workforce")}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleGroupClick("workforce")
+                  }
                   className={`sb-group-header ${
-                    openMenu === "workforce" ? "active" : ""
+                    openMenu === "workforce" ||
+                    isWorkforceActive
+                      ? "active"
+                      : ""
                   }`}
+                  aria-expanded={
+                    !isCollapsed &&
+                    openMenu === "workforce"
+                  }
+                  title="Workforce"
                 >
-                  <FontAwesomeIcon
-                    icon={faUserPlus}
-                    style={{ width: "25%" }}
-                  />
-                  <span className="tab-text">Workforce</span>
+                  <FiUsers className="sidebar-nav-icon" />
 
-                  {/* Arrow */}
-                  <span
-                    className={`sb-arrow ${
-                      openMenu === "workforce" ? "open" : ""
-                    }`}
-                  >
-                    ▼
+                  <span className="tab-text">
+                    Workforce
                   </span>
-                </div>
 
-                {openMenu === "workforce" && (
-                  <ul className="sb-group-content">
-                    <li>
-                      <NavLink
-                        to="/assignment"
-                        onClick={closeSidebar}
-                        className={({ isActive }) =>
-                          isActive ? "active" : ""
-                        }
-                      >
-                    <FontAwesomeIcon icon={faReceipt} style={{ width: "25%" }} />      
-                        Assignment
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/employee"
-                        onClick={closeSidebar}
-                        className={({ isActive }) =>
-                          isActive ? "active" : ""
-                        }
-                      >
-                          <FontAwesomeIcon icon={faPerson} style={{ width: "25%" }} />
-                        Teams
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/classification"
-                        onClick={closeSidebar}
-                        className={({ isActive }) =>
-                          isActive ? "active" : ""
-                        }
-                      >
-                          <FontAwesomeIcon icon={faRecycle} style={{ width: "25%" }} />
-                        Classifications
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
+                  <FiChevronDown
+                    className={`sb-arrow ${
+                      openMenu === "workforce"
+                        ? "open"
+                        : ""
+                    }`}
+                  />
+                </button>
+
+                {openMenu === "workforce" &&
+                  (!isCollapsed || isMobile) && (
+                    <ul className="sb-group-content">
+
+                      <li>
+                        <NavLink
+                          to="/assignment"
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `sidebar-sub-link ${
+                              isActive ? "active" : ""
+                            }`
+                          }
+                        >
+                          <FiClipboard />
+                          <span>Assignment</span>
+                        </NavLink>
+                      </li>
+
+                      <li>
+                        <NavLink
+                          to="/employee"
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `sidebar-sub-link ${
+                              isActive ? "active" : ""
+                            }`
+                          }
+                        >
+                          <FiUsers />
+                          <span>Teams</span>
+                        </NavLink>
+                      </li>
+
+                      <li>
+                        <NavLink
+                          to="/classification"
+                          onClick={closeSidebar}
+                          className={({ isActive }) =>
+                            `sidebar-sub-link ${
+                              isActive ? "active" : ""
+                            }`
+                          }
+                        >
+                          <FiTag />
+                          <span>Classifications</span>
+                        </NavLink>
+                      </li>
+
+                    </ul>
+                  )}
               </li>
 
-              {/* Subscription */}
+            </ul>
+
+            {/* ================= ACCOUNT ================= */}
+
+            <div className="sidebar-nav-divider" />
+
+            <div className="sidebar-nav-label">
+              ACCOUNT
+            </div>
+
+            <ul className="sidebar-nav-list">
+
               <li>
                 <NavLink
                   to="/subscription"
                   onClick={closeSidebar}
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  title="Subscription"
+                  className={({ isActive }) =>
+                    `sidebar-nav-link ${
+                      isActive ? "active" : ""
+                    }`
+                  }
                 >
-                  <FontAwesomeIcon
-                    icon={faCreditCard}
-                    style={{ width: "25%" }}
-                  />
-                  <span className="tab-text">Subscription</span>
+                  <FiCreditCard className="sidebar-nav-icon" />
+                  <span className="tab-text">
+                    Subscription
+                  </span>
                 </NavLink>
               </li>
 
-              {/* Settings */}
               <li>
                 <NavLink
                   to="/setting"
                   onClick={closeSidebar}
-                  className={({ isActive }) => (isActive ? "active" : "")}
+                  title="Settings"
+                  className={({ isActive }) =>
+                    `sidebar-nav-link ${
+                      isActive ? "active" : ""
+                    }`
+                  }
                 >
-                  <FontAwesomeIcon icon={faGear} style={{ width: "25%" }} />
-                  <span className="tab-text">Settings</span>
+                  <FiSettings className="sidebar-nav-icon" />
+                  <span className="tab-text">
+                    Settings
+                  </span>
                 </NavLink>
               </li>
+
             </ul>
+
+          </nav>
+
+          {/* ================= FOOTER ================= */}
+
+          <div className="sidebar-footer">
+
+            <div className="sidebar-footer-icon">
+              <FiBox />
+            </div>
+
+            <div className="sidebar-footer-text">
+              <strong>AssetPegasus</strong>
+              <span>Management Console</span>
+            </div>
+
           </div>
+
         </div>
-      </div>
+      </aside>
     </>
   );
 };

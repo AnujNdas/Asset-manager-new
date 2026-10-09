@@ -1,7 +1,7 @@
 // src/pages/CreateInstances.jsx
 
 import React, { useEffect, useState } from "react";
-import "../Page_styles/CreateInstance.css";
+import "../Page_styles/TestCreateInstanceFile.css";
 import { useParams, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import {
@@ -883,69 +883,190 @@ console.log("BEFORE API");
 
   return (
     <div className="instance-form-page">
-      <h2>Create Instances</h2>
+     <div className="instance-form-header">
 
-      {/* PROGRESS */}
-      <div className="progress-container">
-        <div className="progress-top">
-          <span>
-            {created} / {total}
+    <div className="instance-form-heading">
+      <span className="instance-page-eyebrow">
+        INSTANCE MANAGEMENT
+      </span>
+
+      <h1>Create Instances</h1>
+
+      <p>
+        Configure individual asset instances, lifecycle details,
+        costs and technical information.
+      </p>
+    </div>
+
+    <div className="instance-header-actions">
+
+      <button
+        type="button"
+        className="instance-import-btn tour-import"
+        onClick={() => setShowImport(true)}
+      >
+        <span>↑</span>
+        Import Excel
+      </button>
+
+      {isHardware && (
+        <button
+          type="button"
+          onClick={() => downloadTemplate("hardware")}
+          className="instance-template-btn tour-template"
+        >
+          <span>↓</span>
+          Hardware Template
+        </button>
+      )}
+
+      {isSoftware && (
+        <button
+          type="button"
+          onClick={() => downloadTemplate("software")}
+          className="instance-template-btn tour-template"
+        >
+          <span>↓</span>
+          Software Template
+        </button>
+      )}
+
+    </div>
+  </div>
+
+
+  {/* =====================================================
+      ASSET OVERVIEW
+  ===================================================== */}
+  {asset && (
+    <div className="instance-asset-overview tour-info">
+
+      <div className="instance-asset-main">
+
+        <div className="instance-asset-icon">
+          {isHardware ? "H" : "S"}
+        </div>
+
+        <div className="instance-asset-identity">
+          <span className="instance-asset-label">
+            CURRENT ASSET
+          </span>
+
+          <h2>{asset.assetName}</h2>
+
+          <span className="instance-asset-code">
+            {asset.assetCode}
           </span>
         </div>
-        <div className="progress-bar  tour-progress">
-          <div className="progress-fill" style={{ width: `${progress}%` }} />
-        </div>
+
       </div>
 
-      {/* ASSET INFO */}
-      {asset && (
-        <div className="asset-info tour-info">
-          <div className="details-box">
-            <h3>{asset.assetName} </h3>
-            <span className="type-badge">
-              {asset.locationName.name.toUpperCase()}
-            </span>
-            <span className="type-badge">{asset.assetType.toUpperCase()}</span>
-          </div>
-          <div className="details-box">
-            <p>{asset.assetCode}</p>
-            <span className="type-badge">
-              {formatDate(asset.purchaseDetails.purchaseDate)}
-            </span>
-          </div>
-        </div>
-      )}
-      <div className="capture-header">
-        <div className="group-buttons">
-          <button
-            className="import-btn tour-import"
-            onClick={() => setShowImport(true)}
-          >
-            ⬆ Import Excel
-          </button>
 
-          {isHardware && (
-            <button
-              onClick={() => downloadTemplate("hardware")}
-              className="btn-template tour-template"
-            >
-              ⬇ Download Hardware Template
-            </button>
-          )}
+      <div className="instance-asset-details">
 
-          {isSoftware && (
-            <button
-              onClick={() => downloadTemplate("software")}
-              className="btn-cancel tour-template"
-            >
-              ⬇ Download Software Template
-            </button>
-          )}
+        <div className="instance-asset-detail">
+          <span>Type</span>
+          <strong>
+            {asset.assetType?.toUpperCase() || "N/A"}
+          </strong>
         </div>
+
+        <div className="instance-asset-detail">
+          <span>Location</span>
+          <strong>
+            {asset.locationName?.name || "N/A"}
+          </strong>
+        </div>
+
+        <div className="instance-asset-detail">
+          <span>Purchase Date</span>
+          <strong>
+            {formatDate(asset.purchaseDetails?.purchaseDate)}
+          </strong>
+        </div>
+
+        <div className="instance-asset-detail">
+          <span>Instances</span>
+          <strong>
+            {created} / {total}
+          </strong>
+        </div>
+
       </div>
+
+    </div>
+  )}
+
+
+  {/* =====================================================
+      PROGRESS
+  ===================================================== */}
+  <div className="instance-form-progress">
+
+    <div className="instance-progress-header">
+
+      <div>
+        <span>Instance Creation Progress</span>
+
+        <p>
+          {created === total
+            ? "All required instances have been configured."
+            : `${total - created} ${
+                total - created === 1 ? "instance" : "instances"
+              } remaining.`}
+        </p>
+      </div>
+
+      <strong>
+        {Math.round(progress)}%
+      </strong>
+
+    </div>
+
+
+    <div className="instance-progress-track tour-progress">
+      <div
+        className="instance-progress-value"
+        style={{
+          width: `${Math.min(Math.max(progress, 0), 100)}%`,
+        }}
+      />
+    </div>
+
+
+    <div className="instance-progress-bottom">
+      <span>
+        <strong>{created}</strong> created
+      </span>
+
+      <span>
+        {created} / {total}
+      </span>
+    </div>
+
+  </div>
       {/* BULK APPLY */}
       <div className="bulk-panel tour-bulk">
-        <h4>Bulk Apply</h4>
+        <div className="bulk-panel-header">
+
+    <div>
+      <span className="section-eyebrow">
+        QUICK CONFIGURATION
+      </span>
+
+      <h3>Bulk Apply</h3>
+
+      <p>
+        Apply common values to every instance below.
+        You can still edit individual instances afterward.
+      </p>
+    </div>
+
+    <div className="bulk-panel-badge">
+      {total} {total === 1 ? "Instance" : "Instances"}
+    </div>
+
+  </div>
 
         <div className="bulk-grid">
           <div className="form-group-instance">
@@ -1357,11 +1478,39 @@ console.log("BEFORE API");
               </div>
             </>
           )}
-          <button onClick={applyBulkValues}>Apply to All</button>
+         <div className="bulk-actions">
+  <button
+    type="button"
+    className="apply-bulk-btn"
+    onClick={applyBulkValues}
+  >
+    <span>✓</span>
+    Apply Values to All Instances
+  </button>
+</div>
         </div>
       </div>
 
       {/* TABLE */}
+      <div className="instance-editor-heading">
+
+  <div>
+    <span className="section-eyebrow">
+      INDIVIDUAL CONFIGURATION
+    </span>
+
+    <h3>Instance Details</h3>
+
+    <p>
+      Review and customize each instance before creating them.
+    </p>
+  </div>
+
+  <span className="instance-editor-count">
+    {instances.length} {instances.length === 1 ? "Instance" : "Instances"}
+  </span>
+
+</div>
       <div className="instance-table">
         <div className="table-header">
           <span>Device Name</span>
@@ -1373,17 +1522,15 @@ console.log("BEFORE API");
 
         {instances.map((inst, index) => (
           <div key={index}>
-            <h2
-              style={{
-                color: "#DFD0B8",
-                fontSize: "12px",
-                padding: "5px",
-                padding: "0px 14px",
-              }}
-            >
-              {" "}
-              Instance {index + 1}{" "}
-            </h2>
+<div className="instance-row-heading">
+  <div className="instance-number">
+    {index + 1}
+  </div>
+
+  <div>
+    <h4>Instance {index + 1}</h4>
+  </div>
+</div>
             <div className="table-row">
               <div className="input-group">
                 <input
@@ -1437,9 +1584,20 @@ console.log("BEFORE API");
                 }
               />
 
-              <button onClick={() => toggleExpand(index)}>
-                {expandedRow === index ? "−" : "+"}
-              </button>
+<button
+  type="button"
+  className={`instance-expand-btn ${
+    expandedRow === index ? "active" : ""
+  }`}
+  onClick={() => toggleExpand(index)}
+  aria-label={
+    expandedRow === index
+      ? `Collapse instance ${index + 1}`
+      : `Expand instance ${index + 1}`
+  }
+>
+  {expandedRow === index ? "−" : "+"}
+</button>
             </div>
 
             {expandedRow === index && (
@@ -1919,6 +2077,8 @@ console.log("BEFORE API");
         </div>
       )}
     </div>
+
+
   );
 };
 

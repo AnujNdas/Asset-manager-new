@@ -1,433 +1,812 @@
-/* =========================
-   PAGE CONTAINER
-========================= */
 
-.settings-container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 24px;
-  overflow-x: hidden;
-}
+/* =========================================================
+   TEAM INVITES — ASSETPEGASUS THEME
+========================================================= */
 
-/* =========================
-   PAGE TITLE
-========================= */
-
-.settings-container h2 {
-  font-size: clamp(1.3rem, 2vw, 1.8rem);
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: #1f2937;
-}
-
-/* =========================
-   SECTION WRAPPER
-========================= */
-
-.settings-container > *:not(h2) {
-  background: #222831;
-  border-radius: 18px;
-  padding: 22px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
-}
-
-/* =========================
-   INVITE LAYOUT
-========================= */
-
-.invite-box {
-  display: grid;
-  grid-template-columns: 380px minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
-}
-
-/* =========================
-   INVITE FORM CARD
-========================= */
-
-.invite-form-card {
-  width: 100%;
-  border-radius: 16px;
-  padding: 22px;
-  background: #2d333d;
-  overflow: hidden;
-}
-
-.invite-form-card h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 18px;
-  color: #DFD0B8;
-}
-
-/* =========================
-   FORM ROW
-========================= */
-
-.invite-form-card .form-row {
+.team-invites-page {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-
-.invite-form-card label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #948979;
-}
-
-/* =========================
-   INPUTS
-========================= */
-
-.invite-form-card input,
-.invite-form-card select {
-  width: 100%;
-  min-height: 46px;
-
-  padding: 12px 14px;
-
-  border-radius: 10px;
-  border: none;
-
-  font-size: 14px;
-  outline: none;
-
-  background: #393E46;
-  color: #DFD0B8;
-
-  transition: 0.2s ease;
-}
-
-.invite-form-card input:focus,
-.invite-form-card select:focus {
-  box-shadow: 0 0 0 2px rgba(223, 208, 184, 0.25);
-}
-
-/* =========================
-   BUTTON
-========================= */
-
-.invite-form-card button {
-  width: 100%;
-  min-height: 46px;
-
-  margin-top: 8px;
-  padding: 12px 16px;
-
-  border-radius: 10px;
-  border: none;
-
-  background: #DFD0B8;
-  color: #222831;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    opacity 0.2s ease;
-}
-
-.invite-form-card button:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.invite-form-card button:disabled {
-  background: #948979;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* =========================
-   TABLE CARD
-========================= */
-
-.invite-table-card {
+  gap: 16px;
   width: 100%;
   min-width: 0;
-  overflow: hidden;
-}
-
-.invite-table-card h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 8px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
   color: #DFD0B8;
+  font-family: inherit;
+  font-size: 11px;
 }
 
-.invite-table-card p {
-  font-size: 13px;
-  margin-bottom: 18px;
-  color: #b9b0a1;
+.team-invites-page *,
+.team-invites-page *::before,
+.team-invites-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.team-invites-page .team-invites-page-header {
+  padding: 16px 18px;
+  border: 1px solid rgba(223,208,184,.09);
+  border-radius: 10px;
+  background: linear-gradient(145deg,#252b34,#1c2128);
+}
+
+.team-invites-page .team-invites-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.team-invites-page .team-invites-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 39px;
+  height: 39px;
+  border: 1px solid rgba(223,208,184,.12);
+  border-radius: 9px;
+  background: rgba(223,208,184,.07);
+  color: #DFD0B8;
+  font-size: 18px;
+}
+
+.team-invites-page .team-invites-heading h2 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.team-invites-page .team-invites-heading p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 11px;
   line-height: 1.5;
 }
 
-/* =========================
-   TABLE WRAPPER
-========================= */
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
 
-.table-wrapper {
+.team-invites-page .invite-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
-  overflow-x: auto;
-  border-radius: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
-/* =========================
-   INVITE TABLE
-========================= */
+/* =========================================================
+   SHARED CARDS
+========================================================= */
 
-.invite-table {
+.team-invites-page .invite-form-card,
+.team-invites-page .invite-table-card {
   width: 100%;
-  min-width: 700px;
-  border-collapse: collapse;
+  min-width: 0;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid rgba(223,208,184,.1);
+  border-radius: 10px;
+  background: linear-gradient(145deg,#252b34,#1c2128);
 }
 
-.invite-table thead {
-  background: #f9fafb;
+/* =========================================================
+   FORM HEADER
+========================================================= */
+
+.team-invites-page .invite-form-header {
+  padding-bottom: 15px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(223,208,184,.08);
 }
 
-.invite-table th,
-.invite-table td {
-  padding: 14px 14px;
-  text-align: left;
-  font-size: 0.92rem;
-  border-bottom: 1px solid rgba(229, 231, 235, 0.08);
-  white-space: nowrap;
+.team-invites-page .invite-form-heading,
+.team-invites-page .invite-table-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
 }
 
-.invite-table th {
+.team-invites-page .invite-form-icon,
+.team-invites-page .invite-table-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(223,208,184,.12);
+  border-radius: 8px;
+  background: rgba(223,208,184,.07);
+  color: #DFD0B8;
+  font-size: 15px;
+}
+
+.team-invites-page .invite-form-heading h3,
+.team-invites-page .invite-table-heading h3 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 13px;
   font-weight: 700;
-  color: #374151;
+  line-height: 1.4;
 }
 
-.invite-table td {
+.team-invites-page .invite-form-heading p,
+.team-invites-page .invite-table-heading p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.team-invites-page .invite-form-fields {
+  display: grid;
+  grid-template-columns: minmax(0,2fr) repeat(2,minmax(0,1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+.team-invites-page .invite-form-card .form-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.team-invites-page .invite-form-card .form-row label {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.team-invites-page .invite-form-card input,
+.team-invites-page .invite-form-card select {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(223,208,184,.14);
+  border-radius: 8px;
+  background: #1c2128;
+  color: #DFD0B8;
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+  transition: border-color .2s,background .2s;
+}
+
+.team-invites-page .invite-form-card input::placeholder {
+  color: rgba(148,137,121,.7);
+}
+
+.team-invites-page .invite-form-card select {
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.team-invites-page .invite-form-card select option {
+  background: #222831;
   color: #DFD0B8;
 }
 
-/* =========================
-   STATUS BADGES
-========================= */
+.team-invites-page .invite-form-card input:focus,
+.team-invites-page .invite-form-card select:focus {
+  border-color: #948979;
+  background: #20262e;
+}
 
-.invite-status {
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 0.74rem;
-  font-weight: 600;
+/* =========================================================
+   FORM FOOTER
+========================================================= */
+
+.team-invites-page .invite-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(223,208,184,.08);
+}
+
+.team-invites-page .invite-form-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.team-invites-page .invite-form-hint svg {
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+.team-invites-page .invite-submit-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.invite-status.pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.invite-status.accepted {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.invite-status.expired {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-/* =========================
-   REVOKE BUTTON
-========================= */
-
-.invite-revoke-btn {
-  background: transparent;
-  border: none;
-  color: #ef4444;
-
-  font-size: 0.85rem;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  padding: 8px 12px;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 125px;
+  min-height: 40px;
+  padding: 10px 15px;
+  border: 1px solid #DFD0B8;
   border-radius: 8px;
-
-  transition: 0.2s ease;
+  background: #DFD0B8;
+  color: #222831;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s,border-color .2s;
 }
 
-.invite-revoke-btn:hover {
-  background: rgba(239, 68, 68, 0.12);
+.team-invites-page .invite-submit-btn:hover:not(:disabled) {
+  background: #c9b99f;
+  border-color: #c9b99f;
 }
 
-/* =========================
+.team-invites-page .invite-submit-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.team-invites-page .invite-spinner {
+  animation: invite-spin 1s linear infinite;
+}
+
+@keyframes invite-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   INVITE TABLE HEADER
+========================================================= */
+
+.team-invites-page .invite-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(223,208,184,.08);
+}
+
+.team-invites-page .invite-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 7px 11px;
+  border: 1px solid rgba(223,208,184,.12);
+  border-radius: 7px;
+  background: rgba(223,208,184,.06);
+  color: #DFD0B8;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   INVITE GRID
+========================================================= */
+
+.team-invites-page .invite-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================================================
+   INVITE CARD
+========================================================= */
+
+.team-invites-page .invite-card {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 0;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid rgba(223,208,184,.11);
+  border-radius: 9px;
+  background: #1c2128;
+  transition: border-color .2s;
+}
+
+.team-invites-page .invite-card:hover {
+  border-color: rgba(223,208,184,.25);
+}
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.team-invites-page .invite-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.team-invites-page .invite-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.team-invites-page .invite-role svg {
+  font-size: 14px;
+  color: #948979;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.team-invites-page .invite-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  border: 1px solid rgba(223,208,184,.13);
+  border-radius: 6px;
+  background: rgba(223,208,184,.07);
+  color: #DFD0B8;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.team-invites-page .invite-status.pending {
+  border-color: rgba(204,176,122,.25);
+  background: rgba(204,176,122,.09);
+  color: #ccb07a;
+}
+
+.team-invites-page .invite-status.accepted,
+.team-invites-page .invite-status.used {
+  border-color: rgba(145,182,156,.23);
+  background: rgba(145,182,156,.09);
+  color: #91b69c;
+}
+
+.team-invites-page .invite-status.expired,
+.team-invites-page .invite-status.revoked {
+  border-color: rgba(220,100,100,.23);
+  background: rgba(220,100,100,.09);
+  color: #e09a9a;
+}
+
+/* =========================================================
+   EMAIL
+========================================================= */
+
+.team-invites-page .invite-email {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(223,208,184,.08);
+  border-radius: 8px;
+  background: rgba(223,208,184,.035);
+}
+
+.team-invites-page .invite-email-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: rgba(223,208,184,.08);
+  color: #DFD0B8;
+  font-size: 14px;
+}
+
+.team-invites-page .invite-email-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.team-invites-page .invite-email-label {
+  color: #948979;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .4px;
+}
+
+.team-invites-page .invite-email-value {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   META GRID
+========================================================= */
+
+.team-invites-page .invite-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 10px;
+}
+
+.team-invites-page .meta-box {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid rgba(223,208,184,.08);
+  border-radius: 8px;
+  background: rgba(223,208,184,.035);
+}
+
+.team-invites-page .meta-label {
+  color: #948979;
+  font-size: 10px;
+}
+
+.team-invites-page .meta-box strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   INVITE DATES
+========================================================= */
+
+.team-invites-page .invite-time {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(223,208,184,.08);
+  border-radius: 8px;
+  background: rgba(223,208,184,.035);
+}
+
+.team-invites-page .invite-time > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #948979;
+  font-size: 14px;
+}
+
+.team-invites-page .invite-time-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.team-invites-page .invite-time-details p {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.team-invites-page .invite-time-details p span {
+  color: #948979;
+  flex-shrink: 0;
+}
+
+.team-invites-page .invite-time-details p strong {
+  color: #DFD0B8;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.team-invites-page .invite-actions {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(223,208,184,.08);
+}
+
+.team-invites-page .invite-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  min-height: 37px;
+  padding: 9px 10px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s,border-color .2s;
+}
+
+.team-invites-page .copy-btn {
+  border: 1px solid rgba(223,208,184,.17);
+  background: rgba(223,208,184,.08);
+  color: #DFD0B8;
+}
+
+.team-invites-page .copy-btn:hover {
+  background: rgba(223,208,184,.15);
+}
+
+.team-invites-page .revoke-btn {
+  border: 1px solid rgba(220,100,100,.24);
+  background: rgba(220,100,100,.08);
+  color: #e09a9a;
+}
+
+.team-invites-page .revoke-btn:hover {
+  background: rgba(220,100,100,.17);
+}
+
+/* =========================================================
    EMPTY STATE
-========================= */
+========================================================= */
 
-.invite-empty {
+.team-invites-page .empty-invites {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 190px;
+  padding: 28px 15px;
+  border: 1px dashed rgba(223,208,184,.16);
+  border-radius: 9px;
+  background: rgba(223,208,184,.025);
   text-align: center;
-  padding: 40px 20px;
-  color: #9ca3af;
-  font-size: 0.92rem;
 }
 
-/* =========================
-   LARGE TABLETS
-========================= */
+.team-invites-page .empty-invites-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(223,208,184,.07);
+  color: #948979;
+  font-size: 20px;
+}
 
-@media (max-width: 1100px) {
-  .invite-box {
-    grid-template-columns: 1fr;
+.team-invites-page .empty-invites h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.team-invites-page .empty-invites p {
+  margin: 0;
+  color: #948979;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.team-invites-page button:focus-visible,
+.team-invites-page input:focus-visible,
+.team-invites-page select:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   LAPTOP — 1200px
+========================================================= */
+
+@media (max-width: 1200px) {
+  .team-invites-page .invite-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
   }
 
-  .invite-form-card {
-    max-width: 100%;
+  .team-invites-page .invite-form-card,
+  .team-invites-page .invite-table-card {
+    padding: 17px;
   }
 }
 
-/* =========================
-   TABLETS
-========================= */
+/* =========================================================
+   TABLET — 900px
+========================================================= */
 
-@media (max-width: 768px) {
-  .settings-container {
-    padding: 16px;
+@media (max-width: 900px) {
+  .team-invites-page .invite-form-fields {
+    grid-template-columns: repeat(2,minmax(0,1fr));
   }
 
-  .settings-container > *:not(h2) {
-    padding: 16px;
+  .team-invites-page .invite-form-fields .form-row:first-child {
+    grid-column: 1 / -1;
   }
 
-  .invite-form-card {
-    padding: 18px;
+  .team-invites-page .invite-grid {
+    grid-template-columns: minmax(0,1fr);
   }
 
-  .invite-table {
-    min-width: 620px;
+  .team-invites-page .team-invites-page-header {
+    padding: 14px 15px;
   }
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* =========================================================
+   MOBILE — 600px
+========================================================= */
 
-@media (max-width: 640px) {
-  .settings-container {
-    padding: 12px;
+@media (max-width: 600px) {
+  .team-invites-page,
+  .team-invites-page .invite-box {
+    gap: 12px;
   }
 
-  .settings-container > *:not(h2) {
-    padding: 14px;
-    border-radius: 14px;
+  .team-invites-page .team-invites-page-header,
+  .team-invites-page .invite-form-card,
+  .team-invites-page .invite-table-card {
+    padding: 13px;
+    border-radius: 9px;
   }
 
-  .invite-form-card {
-    padding: 16px;
-    border-radius: 14px;
+  .team-invites-page .team-invites-heading-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
   }
 
-  .invite-form-card h3,
-  .invite-table-card h3 {
-    font-size: 1rem;
+  .team-invites-page .team-invites-heading h2 {
+    font-size: 16px;
   }
 
-  .invite-table-card p {
-    font-size: 12px;
+  .team-invites-page .team-invites-heading p {
+    font-size: 10px;
   }
 
-  /* MOBILE TABLE CARD VIEW */
-
-  .table-wrapper {
-    overflow: visible;
+  .team-invites-page .invite-form-fields {
+    grid-template-columns: minmax(0,1fr);
+    gap: 13px;
   }
 
-  .invite-table,
-  .invite-table tbody,
-  .invite-table tr,
-  .invite-table td {
-    display: block;
+  .team-invites-page .invite-form-fields .form-row:first-child {
+    grid-column: auto;
+  }
+
+  .team-invites-page .invite-form-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .team-invites-page .invite-submit-btn {
     width: 100%;
-    min-width: 100%;
   }
 
-  .invite-table {
-    min-width: 100%;
+  .team-invites-page .invite-table-header {
+    gap: 10px;
   }
 
-  .invite-table thead {
-    display: none;
-  }
-
-  .invite-table tr {
-    background: #393E46;
-    border-radius: 14px;
-    margin-bottom: 16px;
-    padding: 14px;
-  }
-
-  .invite-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    gap: 14px;
-
-    padding: 10px 0;
-
-    border: none;
-    white-space: normal;
-    word-break: break-word;
-
-    font-size: 0.85rem;
-  }
-
-  .invite-table td::before {
-    content: attr(data-label);
-
-    flex-shrink: 0;
-
-    font-weight: 600;
-    color: #DFD0B8;
-  }
-
-  .invite-revoke-btn {
-    width: 100%;
-    margin-top: 6px;
+  .team-invites-page .invite-card {
+    padding: 13px;
   }
 }
 
-/* =========================
-   SMALL MOBILE
-========================= */
+/* =========================================================
+   SMALL MOBILE — 420px
+========================================================= */
 
 @media (max-width: 420px) {
-  .settings-container h2 {
-    font-size: 1.2rem;
-  }
-
-  .invite-form-card,
-  .settings-container > *:not(h2) {
+  .team-invites-page .team-invites-page-header,
+  .team-invites-page .invite-form-card,
+  .team-invites-page .invite-table-card {
     padding: 12px;
   }
 
-  .invite-form-card input,
-  .invite-form-card select,
-  .invite-form-card button {
-    min-height: 44px;
-    font-size: 13px;
-  }
-
-  .invite-table td {
-    flex-direction: column;
+  .team-invites-page .invite-table-header {
     align-items: flex-start;
-    gap: 6px;
+    flex-direction: column;
   }
 
-  .invite-table td::before {
-    margin-bottom: 2px;
+  .team-invites-page .invite-count {
+    align-self: flex-start;
+  }
+
+  .team-invites-page .invite-card {
+    padding: 12px;
+  }
+
+  .team-invites-page .invite-time-details p {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .team-invites-page .invite-time-details p strong {
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE — 340px
+========================================================= */
+
+@media (max-width: 340px) {
+  .team-invites-page .team-invites-page-header,
+  .team-invites-page .invite-form-card,
+  .team-invites-page .invite-table-card {
+    padding: 10px;
+  }
+
+  .team-invites-page .invite-actions {
+    grid-template-columns: minmax(0,1fr);
+  }
+
+  .team-invites-page .invite-meta-grid {
+    gap: 7px;
+  }
+
+  .team-invites-page .meta-box {
+    padding: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-invites-page button,
+  .team-invites-page input,
+  .team-invites-page select,
+  .team-invites-page .invite-card {
+    transition: none;
+  }
+
+  .team-invites-page .invite-spinner {
+    animation: none;
   }
 }

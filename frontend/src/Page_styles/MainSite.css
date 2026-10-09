@@ -484,9 +484,6 @@
   font-size: 1.8rem;
 }
 
-.table-row:hover {
-  background: rgba(255,255,255,0.03);
-}
 
 /* =========================
    MOBILE VERSION
@@ -1837,8 +1834,8 @@ font-size:17px;
 
 }
 
-.nav-menu {
-    /* display: flex; */
+.nav-main-menu {
+    display: flex;
     flex-direction: row;
     align-items: center;
     gap: 25px;
@@ -1848,12 +1845,12 @@ font-size:17px;
     width: 600px;
 }
 
-.nav-menu > li {
+.nav-main-menu > li {
     position: relative;
     width: auto;
 }
 
-.nav-menu > li > a {
+.nav-main-menu > li > a {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -1864,12 +1861,12 @@ font-size:17px;
     transition: .3s;
 }
 
-.nav-menu > li > a:hover {
+.nav-main-menu > li > a:hover {
   text-decoration: underline;
   background: #222831;
 }
 
-.nav-menu span {
+.nav-main-menu span {
     font-size: 10px;
 }
 

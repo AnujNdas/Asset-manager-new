@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import TenantLayout from "../layout/TenantLayout";
 import ProtectedRoute from "../Components/ProtectedRoute";
 import SubscriptionGate from "../Components/SubscriptionGate";
+import Loader from "../Components/Loader";
 const Dashboard = lazy(() => import("../Pages/AdminDashboard"));
 const AssetCapture = lazy(() => import("../Pages/AssetCapture"));
 const Inventory = lazy(() => import("../Pages/Inventory"));
@@ -28,7 +29,7 @@ const TenantRoutes = ({ profileUser }) => (
 
       <Route
         element={
-          <Suspense fallback={<div className="page-loader">Loading...</div>}>
+          <Suspense fallback={<div className="page-loader"><Loader /></div>}>
             <Outlet />
           </Suspense>
         }

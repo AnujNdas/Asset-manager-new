@@ -1,174 +1,235 @@
-/* ======================================================
-   PROFILE DROPDOWN CONTAINER
-   ====================================================== */
-
-.profile-dropdown-container {
-  position: fixed !important;      /* Fixed position relative to viewport */
-  right: 170px;                    /* Align dropdown near profile icon */
-  top: 10px;
-  z-index: 99999 !important;       /* Ensure dropdown stays above all UI */
-}
 
 /* ======================================================
-   DROPDOWN MENU
-   ====================================================== */
+   ASSETPEGASUS — PROFILE DROPDOWN
+====================================================== */
 
-.profile-dropdown-container .dropdown-menu {
+.menubar-container .profile-dropdown-container {
   position: absolute;
+  top: calc(100% + 6px);
+  right: 8px;
+  z-index: 1200;
 
-  width: 160px;
-  padding: 8px 0;
-  background: #222831;
-  border-radius: 12px;
+  width: 245px;
+  max-width: calc(100vw - 20px);
 
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-
-  opacity: 0;                      /* Hidden by default */
+  opacity: 0;
   visibility: hidden;
+  pointer-events: none;
 
-  transition: all 0.3s ease;
+  transform: translateY(-6px);
 
-  z-index: 99999 !important;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 180ms ease;
 }
 
-/* Visible state */
-.dropdown-menu.show {
+.menubar-container .profile-dropdown-container.show {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 /* ======================================================
-   DROPDOWN LIST
-   ====================================================== */
+   DROPDOWN SURFACE
+====================================================== */
 
-.drop-box {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 1px;
-}
-
-/* ======================================================
-   DROPDOWN LINKS
-   ====================================================== */
-
-.dropdown-menu li a {
-  display: flex;
-
-  padding: 4px 20px;
-  border-radius: 5px;
-
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 15px;
-  color: #ffffff;
-
-  background-color: #7870f7;
-
-  transition: background 0.3s ease;
-}
-
-/* Hover animation for links */
-.dropdown-menu li a:hover {
-  background: #7870f7;
-  color: #ffffff;
-
-  border-radius: 4px;
-  transform: scale(1.1);
-
-  transition: 0.4s ease-in-out;
-}
-
-/* ======================================================
-   LOGOUT BUTTON
-   ====================================================== */
-
-.dropdown-menu ul li button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
+.menubar-container .dropdown-menu {
   width: 100%;
-  padding: 6px 6px;
+  padding: 7px;
 
-  background: #393E46;
+  border: 1px solid rgba(223, 208, 184, 0.14);
+  border-radius: 11px;
+
+  background: #252b34;
   color: #DFD0B8;
 
-  border: none;
-  border-radius: 5px;
-
-  cursor: pointer;
-
-  font-size: 13px;
-  font-weight: 500;
-
-  text-align: center;
-  text-decoration: none;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.28);
+  font-family: inherit;
+  box-sizing: border-box;
 }
 
-/* Logout hover effect */
-.dropdown-menu ul li button:hover {
-  border-radius: 4px;
-  transform: scale(1.1);
-  transition: 0.2s ease-in-out;
-}
-.logout-confirm-btn {
-  color: #DFD0B8 !important; /* change to any color you want */
-}
-.logout-cancel-btn {
-  color: #DFD0B8 !important; /* change to any color you want */
-}
 /* ======================================================
-   USER INFO SECTION
-   ====================================================== */
+   USER HEADER
+====================================================== */
 
-.user-info {
+.menubar-container .dropdown-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  border: none;
-  width: 100%;
-  justify-content: space-around;
-  background: #222831;
+
+  padding: 10px 9px 12px;
 }
-/* User Avatar */
-.avatar {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
+
+.menubar-container .dropdown-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 39px;
+  height: 39px;
+
+  border: 1px solid rgba(223, 208, 184, 0.18);
+  border-radius: 10px;
+  background: #1c2128;
+
   overflow: hidden;
-  border: 2px solid #e5e7eb; /* subtle border */
-  background-color: #f3f4f6;
 }
 
-/* Username text */
-.username {
-  font-weight: 500;
-  font-size: 13px;
-  color: #DFD0B8;
-}
-
-/* Divider line */
-.divide {
-  margin: 0;
+.menubar-container .dropdown-avatar .avatar {
+  display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  border: none;
-  border-top: 1px solid #ddd;
+.menubar-container .dropdown-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.menubar-container .dropdown-user-label {
+  color: #948979;
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.menubar-container .dropdown-user-details .username {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* ======================================================
-   RESPONSIVE STYLES
-   ====================================================== */
+   ACTIONS
+====================================================== */
 
-@media screen and (max-width: 480px) {
-  .dropdown-menu ul li button {
-    font-size: 14px;
-    padding: 10px 12px;
-    gap: 6px;
+.menubar-container .dropdown-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.menubar-container .dropdown-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  min-height: 37px;
+  padding: 9px 10px;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.menubar-container .dropdown-action:hover {
+  background: rgba(223, 208, 184, 0.08);
+  border-color: rgba(223, 208, 184, 0.08);
+}
+
+.menubar-container .dropdown-action-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: #948979;
+}
+
+.menubar-container .dropdown-action-arrow {
+  width: 13px;
+  height: 13px;
+  margin-left: auto;
+  color: #948979;
+}
+
+.menubar-container .dropdown-divider {
+  height: 1px;
+  margin: 5px 4px;
+  background: rgba(223, 208, 184, 0.1);
+}
+
+/* ======================================================
+   LOGOUT
+====================================================== */
+
+.menubar-container .dropdown-action.logout-btn {
+  color: #e4a0a0;
+}
+
+.menubar-container .dropdown-action.logout-btn .dropdown-action-icon {
+  color: #e4a0a0;
+}
+
+.menubar-container .dropdown-action.logout-btn:hover {
+  background: rgba(225, 139, 139, 0.08);
+  border-color: rgba(225, 139, 139, 0.12);
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 900px) {
+  .menubar-container .profile-dropdown-container {
+    right: 4px;
+    width: 230px;
+  }
+}
+
+@media (max-width: 600px) {
+  .menubar-container .profile-dropdown-container {
+    right: 0;
+    top: calc(100% + 5px);
+    width: min(235px, calc(100vw - 20px));
+  }
+
+  .menubar-container .dropdown-header {
+    padding: 9px 8px 10px;
+  }
+
+  .menubar-container .dropdown-action {
+    min-height: 40px;
+  }
+}
+
+/* ======================================================
+   ACCESSIBILITY
+====================================================== */
+
+.menubar-container .dropdown-action:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menubar-container .profile-dropdown-container,
+  .menubar-container .dropdown-action {
+    transition: none;
   }
 }

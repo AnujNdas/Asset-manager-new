@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSubscription } from "../Context/SubscriptionContext";
 import "../Component_styles/PlanTimer.css";
-
+import { FiClock } from "react-icons/fi";
 const PlanTimer = () => {
   const { subscription } = useSubscription();
   const [timeLeft, setTimeLeft] = useState(null);
@@ -59,26 +59,57 @@ useEffect(() => {
 //   lifecycle: subscription?.lifecycle,
 // });
   return (
-    <div className={`plan-timer ${statusClass}`}>
-      {isExpired ? (
-        <span className="label">Subscription Expired</span>
-      ) : (
-        <>
-          <span className="label">
-            {subscription.isTrial ? "Trial Ends In" : "Renews In"}
-          </span>
 
-          {timeLeft ? (
-            <div className="time">
-              {isMobile ? `${timeLeft.days} days left`
-                : `${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
-            </div>
-          ) : (
-            <div className="time expired-text">Expired</div>
-          )}
-        </>
-      )}
-    </div>
+<div
+  className={`plan-timer ${statusClass}`}
+  role="timer"
+  aria-label="Subscription countdown"
+>
+  <div className="plan-timer-icon">
+    <FiClock />
+  </div>
+
+  <div className="plan-timer-details">
+    {isExpired ? (
+      <>
+        <span className="label">
+          Subscription Status
+        </span>
+
+        <span className="time expired-text">
+          Subscription Expired
+        </span>
+      </>
+    ) : (
+      <>
+        <span className="label">
+          {subscription.isTrial
+            ? "Trial Ends In"
+            : "Renews In"}
+        </span>
+
+        {timeLeft ? (
+          <span className="time">
+            {isMobile
+              ? `${timeLeft.days}d ${timeLeft.hours}h left`
+              : `${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
+          </span>
+        ) : (
+          <span className="time expired-text">
+            Expired
+          </span>
+        )}
+      </>
+    )}
+  </div>
+
+  <div
+    className={`plan-timer-indicator ${
+      isExpired ? "expired" : ""
+    }`}
+  />
+</div>
+
   );
 };
 

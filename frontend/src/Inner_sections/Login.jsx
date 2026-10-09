@@ -1,6 +1,13 @@
   import React, { useState } from 'react';
   import '../Page_styles/Login.css';
   import { Link, useNavigate } from 'react-router-dom';
+  import {
+  FiLogIn,
+  FiMail,
+  FiLock,
+  FiArrowRight,
+  FiArrowUpRight,
+} from "react-icons/fi";
   // import image from '../Images/logo.png';
   import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
   import { faFacebook, faTwitter, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -140,78 +147,144 @@ if (role === "super-admin") {
 />
       </Helmet>
 
-    {loading && (
+    {/* {loading && (
     <div className="loader-overlay">
       <Loader type="login" apiDone={apiDone}/>
     </div>
-  )}
-      <div className="auth-page">
-        <div className="seo-links">
-  <Link to="/">Home</Link>
-  <Link to="/user/signup/">Create Account</Link>
-  <Link to="/affiliate/apply/">Affiliate Program</Link>
-</div>
-        <div className="auth-card">
-          {/* Brand / Welcome panel (left on desktop, stacked on mobile) */}
-          {/* <aside className="brand-panel">
-            <img src={image} alt="Logo" className="brand-logo" />
-            <h1>Welcome back</h1>
-            <p className="brand-sub">
-              Sign in to access your dashboard and continue where you left off.
+  )} */}
+
+  <div className="auth-page login-page">
+
+    {/* SEO / INTERNAL NAVIGATION */}
+    <nav className="seo-links" aria-label="Related pages">
+      <Link to="/">Home</Link>
+      <Link to="/user/signup/">Create Account</Link>
+      <Link to="/affiliate/apply/">
+        Affiliate Program
+      </Link>
+    </nav>
+
+    <div className="auth-card">
+
+      <form
+        className="form-panel"
+        onSubmit={handlelogin}
+      >
+
+        {/* FORM HEADER */}
+        <div className="form-header">
+          <div className="form-heading-icon">
+            <FiLogIn />
+          </div>
+
+          <div className="form-heading-text">
+            <h1>Welcome Back</h1>
+            <p className="form-sub">
+              Sign in to access your AssetPegasus dashboard.
             </p>
-          </aside> */}
-
-          {/* Form panel */}
-          <form className="form-panel" onSubmit={handlelogin}>
-            <div className="form-header">
-              {/* <img src={image} alt="Logo" className="form-logo" /> */}
-              <h1>Sign in</h1>
-            </div>
-
-  {/*           <div className="social-row" aria-label="Social options">
-              <button type="button" className="social-btn" title="Facebook"><FontAwesomeIcon icon={faFacebook} /></button>
-              <button type="button" className="social-btn" title="Twitter"><FontAwesomeIcon icon={faTwitter} /></button>
-              <button type="button" className="social-btn" title="LinkedIn"><FontAwesomeIcon icon={faLinkedin} /></button>
-              <button type="button" className="social-btn" title="GitHub"><FontAwesomeIcon icon={faGithub} /></button>
-            </div>
-
-            <div className="divider"><span>or</span></div> */}
-
-            <label className="field">
-              <span className="field-label"><FontAwesomeIcon icon={faEnvelope} /> E mail</span>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your Email"
-                required
-              />
-            </label>
-
-            <label className="field">
-              <span className="field-label"><FontAwesomeIcon icon={faLock} /> Password</span>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-              />
-            </label>
-
-            <div className="form-actions">
-              <Link to="/user/forgot" className="link">Forgot password?</Link>
-              <button type="submit" className="btn-primary" disabled={loading}>
-                {loading ? 'Logging in…' : 'Login'}
-              </button>
-            </div>
-
-            <p className="tiny-note">
-              By continuing, you agree to our <a href="https://socialflylive.com/terms-and-conditions/" style={{color : "#DFD0B8", cursor : "pointer", textAlign : "center" , justifyContent : "center"}} target="_blank">Terms & Privacy Policy.</a> 
-            </p>
-          </form>
+          </div>
         </div>
-      </div>
+
+        {/* EMAIL */}
+        <label className="field">
+          <span className="field-label">
+            Email Address
+          </span>
+
+          <div className="input-wrapper">
+            <FiMail className="input-icon" />
+
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              autoComplete="email"
+              required
+            />
+          </div>
+        </label>
+
+        {/* PASSWORD */}
+        <label className="field">
+          <span className="field-label">
+            Password
+          </span>
+
+          <div className="input-wrapper">
+            <FiLock className="input-icon" />
+
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              required
+            />
+          </div>
+        </label>
+
+        {/* FORGOT PASSWORD */}
+        <div className="form-extra">
+          <Link
+            to="/user/forgot"
+            className="link forgot-link"
+          >
+            Forgot Password?
+            <FiArrowUpRight />
+          </Link>
+        </div>
+
+        {/* SUBMIT */}
+        <div className="form-actions">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="auth-spinner" />
+                Signing In...
+              </>
+            ) : (
+              <>
+                Sign In
+                <FiArrowRight />
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* SIGNUP LINK */}
+        <div className="form-switch">
+          <span>Don't have an account?</span>
+
+          <Link to="/user/signup">
+            Create Account
+          </Link>
+        </div>
+
+        {/* TERMS */}
+        <p className="tiny-note">
+          By continuing, you agree to our{" "}
+          <a
+            href="https://socialflylive.com/terms-and-conditions/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Terms &amp; Privacy Policy
+          </a>
+          .
+        </p>
+
+      </form>
+    </div>
+  </div>
+
         </>
     );
   };

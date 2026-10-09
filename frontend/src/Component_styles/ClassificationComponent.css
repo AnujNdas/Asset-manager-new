@@ -1,327 +1,970 @@
-.dual-input-container {
-  display: flex;
-  gap: 14px;
-  margin-top: 18px;
-  flex-wrap: wrap;
-}
 
-.input-grouped {
-  flex: 1;
-  min-width: 280px;
-  display: flex;
-  flex-direction: column;
-}
-.classification-table-wrapper {
+/* =========================================================
+   CLASSIFICATION INNER COMPONENT
+   ASSETPEGASUS DARK THEME
+========================================================= */
+
+.classification_container .classification_card {
   width: 100%;
-  overflow-x: auto;
-}
-.category_search_input {
-  /* width: 260px; */
   max-width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  background: #222831 !important;
+  min-width: 0;
+
   color: #DFD0B8;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.classification-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #222831;
-  border-radius: 10px;
-  overflow: hidden;
+  font-size: 11px;
 }
 
-.classification-table th {
-  text-align: left;
-  padding: 14px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #948979;
-}
-
-.classification-table td {
-  padding: 14px 16px;
-  font-size: 14px;
-  color: #DFD0B8;
+.classification_card *,
+.classification_card *::before,
+.classification_card *::after {
+  box-sizing: border-box;
 }
 
 
-.name-cell {
-  font-weight: 500;
-}
+/* =========================================================
+   HEADER
+========================================================= */
 
-.row-inactive {
-  opacity: 0.6;
-}
-
-.table-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.actions-column {
-  width: 120px;
-}
-
-.no-data {
-  padding: 20px;
-  text-align: center;
-  color: #777;
-}
-.input-label {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #444;
+.classification_card .card_header {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.input-with-button {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-
-}
-/* 
-.category_search_input {
-  flex: 1;
-  height: 42px;
-  padding: 0 14px;
-  border-radius: 8px;
-  border: 1px solid #dcdcdc;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.category_search_input:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-} */
-
-/* SEARCH BUTTON */
-.search-btn {
-  width: 42px;
-  height: 45px;
-  border-radius: 8px;
-  border: none;
-  background: #2563eb;
-  cursor: pointer;
-  transition: 0.2s;
-  color: #ffffff;
-}
-
-.search-btn:hover {
-  background: #d1d5db;
-}
-
-/* ADD BUTTON */
-.add-btn {
-  min-width: 90px;
-  height: 42px;
-  padding: 0 14px;
-  border-radius: 8px;
-  border: none;
-  background-color: #DFD0B8;
-  color: #222831;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.add-btn:hover {
-  background-color: #948979;
-}
-
-.add-btn:active {
-  transform: scale(0.98);
-}
-.card-header{
-  display: flex;
   justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
 }
-.edit-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 9999;
-  padding: 16px; /* prevents edge cut on small screens */
+.classification_card .classification_inner_heading {
+  min-width: 0;
 }
-.edit-modal-content {
-  width: 100%;
-  max-width: 420px;
 
-  background: #222831;
+.classification_card .classification_inner_eyebrow {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+}
+
+.classification_card .category_title {
+  margin: 0;
+
   color: #DFD0B8;
-
-  padding: 24px;
-  border-radius: 16px;
-
-  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-
-  animation: modalFade 0.25s ease;
-}
-.edit-modal-content h3 {
-  margin-bottom: 16px;
-  font-size: 18px;
-  font-weight: 600;
-}
-.edit-input {
-  width: 100%;
-  padding: 10px 14px;
-
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-
-  background: #393E46;
-  color: #DFD0B8;
-
-  outline: none;
-  margin-bottom: 20px;
-
-  transition: all 0.2s ease;
-}
-
-.edit-input:focus {
-  border-color: #948979;
-  box-shadow: 0 0 0 2px rgba(148, 137, 121, 0.2);
-}
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-.save-btn {
-  background: #DFD0B8;
-  color: #222831;
-
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.save-btn:hover {
-  background: #948979;
-}
-
-.cancel-btn {
-  background: transparent;
-  color: #DFD0B8;
-
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.15);
-
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cancel-btn:hover {
-  background: rgba(255,255,255,0.08);
-}
-/* Tour-guide-styles
- */
- .custom-driver-popover {
-  background: #222831 !important;
-  color: #DFD0B8 !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 10px 35px rgba(0,0,0,0.45);
-}
-
-.custom-driver-popover .driver-popover-title {
-  color: #DFD0B8 !important;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.custom-driver-popover .driver-popover-description {
-  color: #948979 !important;
   font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.classification_card .classification_inner_heading p {
+  margin: 6px 0 0;
+
+  color: rgba(223, 208, 184, 0.55);
+  font-size: 10px;
   line-height: 1.6;
 }
 
-.custom-driver-popover .driver-popover-progress-text {
-  color: #948979 !important;
-}
+.classification_card .classification_inner_count {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
 
-.custom-driver-popover button {
-  background: #DFD0B8 !important;
-  text-shadow: none !important;
-  color: #222831 !important;
-  border: none !important;
-  border-radius: 8px !important;
-  padding: 8px 14px !important;
+  padding: 7px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.045);
+  color: #DFD0B8;
+
+  font-size: 10px;
   font-weight: 600;
 }
 
-.driver-popover-arrow {
-  border-color: #222831 !important;
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.classification_card .classification_inner_toolbar {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+
+  width: 100%;
+  margin-bottom: 18px;
 }
-.my-confirm-btn { 
-  background: #DFD0B8 !important;
-  color: #222831 !important;
+
+.classification_card .dual-input-container {
+  flex: 1 1 40%;
+  min-width: 0;
 }
-.status-badge.badge-active {
-   background: #4caf50;
+
+.classification_card .input-grouped {
+  flex: 1 1 60%;
+  min-width: 0;
+}
+
+.classification_card .input-group,
+.classification_card .input-with-button {
+  width: 100%;
+  min-width: 0;
+}
+
+
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
+
+.classification_card .classification_inner_search {
+  position: relative;
+  height: 100%;
+}
+
+.classification_card .classification_inner_input_icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+
+  transform: translateY(-50%);
+
+  color: #948979;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.classification_card .category_search_input {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+
+  padding: 0 36px;
+
+  border: 1px solid rgba(223, 208, 184, 0.13);
+  border-radius: 8px;
+
+  background: #1b2027;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.classification_card .category_search_input::placeholder {
+  color: rgba(223, 208, 184, 0.35);
+}
+
+.classification_card .category_search_input:focus {
+  border-color: rgba(223, 208, 184, 0.42);
+  box-shadow: 0 0 0 3px rgba(223, 208, 184, 0.05);
+}
+
+.classification_card .classification_inner_clear {
+  position: absolute;
+  top: 50%;
+  right: 9px;
+
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+  padding: 0;
+
+  border: none;
+  border-radius: 5px;
+
+  background: rgba(223, 208, 184, 0.07);
+  color: #948979;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ADD INPUT + BUTTON
+========================================================= */
+
+.classification_card .input-with-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.classification_card .classification_inner_add_input {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.classification_card .classification_inner_add_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-shrink: 0;
+
+  min-height: 40px;
+  padding: 0 15px;
+
+  border: 1px solid #DFD0B8;
+  border-radius: 8px;
+
+  background: #DFD0B8;
+  color: #222831;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.classification_card .classification_inner_add_btn:hover {
+  background: #eee0cb;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.classification_card .classification-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1c2128;
+  overflow: hidden;
+}
+
+.classification_card .classification_inner_desktop {
+  width: 100%;
+  overflow-x: auto;
+
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #393E46 transparent;
+}
+
+
+/* =========================================================
+   DESKTOP TABLE
+========================================================= */
+
+.classification_card .classification-table {
+  width: 100%;
+  min-width: 560px;
+
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.classification_card .classification-table thead {
+  background: #252b34;
+}
+
+.classification_card .classification-table th {
+  padding: 13px 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.11);
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.classification_card .classification-table td {
+  padding: 13px 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+
+  color: #DFD0B8;
+  font-size: 11px;
+  vertical-align: middle;
+}
+
+.classification_card .classification-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.classification_card .classification-table tbody tr:hover {
+  background: rgba(223, 208, 184, 0.035);
+}
+
+.classification_card .classification-table .row-inactive {
+  opacity: 0.7;
+}
+
+
+/* =========================================================
+   ROW NUMBER
+========================================================= */
+
+.classification_card .classification_inner_row_number {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   CLASSIFICATION NAME
+========================================================= */
+
+.classification_card .classification_inner_name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.classification_card .classification_inner_name_icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 30px;
+  height: 30px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.06);
+  color: #DFD0B8;
+
+  font-size: 13px;
+}
+
+.classification_card .classification_inner_name strong {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.classification_card .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 6px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.classification_card .classification_inner_status_dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.classification_card .status-badge.badge-active {
+  border-color: rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.08);
+  color: #91b69c;
+}
+
+.classification_card .status-badge.badge-inactive {
+  border-color: rgba(201, 149, 142, 0.2);
+  background: rgba(201, 149, 142, 0.08);
+  color: #c9958e;
+}
+
+
+/* =========================================================
+   TABLE ACTIONS
+========================================================= */
+
+.classification_card .classification_inner_actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.classification_card .classification_inner_edit_btn,
+.classification_card .classification_inner_delete_btn,
+.classification_card .classification_inner_restore_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-height: 31px;
+  padding: 7px 11px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+/* EDIT */
+
+.classification_card .classification_inner_edit_btn {
+  border: 1px solid rgba(223, 208, 184, 0.15);
+  background: rgba(223, 208, 184, 0.07);
+  color: #DFD0B8;
+}
+
+.classification_card .classification_inner_edit_btn:hover {
+  background: rgba(223, 208, 184, 0.15);
+}
+
+
+/* DELETE */
+
+.classification_card .classification_inner_delete_btn {
+  border: 1px solid rgba(201, 149, 142, 0.2);
+  background: rgba(201, 149, 142, 0.07);
+  color: #c9958e;
+}
+
+.classification_card .classification_inner_delete_btn:hover {
+  background: rgba(201, 149, 142, 0.15);
+}
+
+
+/* RESTORE */
+
+.classification_card .classification_inner_restore_btn {
+  border: 1px solid rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.07);
+  color: #91b69c;
+}
+
+.classification_card .classification_inner_restore_btn:hover {
+  background: rgba(145, 182, 156, 0.15);
+}
+
+
+/* =========================================================
+   MOBILE CARDS — HIDDEN ON DESKTOP
+========================================================= */
+
+.classification_card .classification_inner_mobile {
+  display: none;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.classification_card .classification_inner_empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 190px;
+  padding: 25px 15px;
+
+  text-align: center;
+}
+
+.classification_card .classification_inner_empty > svg {
+  margin-bottom: 12px;
+  color: #948979;
+  font-size: 23px;
+}
+
+.classification_card .classification_inner_empty h4 {
+  margin: 0 0 7px;
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.classification_card .classification_inner_empty p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.classification_card .classification_inner_pagination {
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+  margin-top: 18px;
+}
+
+
+/* =========================================================
+   EDIT MODAL OVERLAY
+========================================================= */
+
+.classification_inner_modal_overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  background: rgba(8, 11, 16, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  overflow-y: auto;
+}
+
+
+/* =========================================================
+   EDIT MODAL
+========================================================= */
+
+.classification_inner_modal_overlay .classification_inner_modal {
+  width: 100%;
+  max-width: 450px;
+  max-height: calc(100dvh - 36px);
+  min-width: 0;
+  margin: auto;
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.13);
+  border-radius: 12px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+
+  color: #DFD0B8;
+
+  box-shadow: 0 20px 65px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.classification_inner_modal .classification_inner_modal_header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 19px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.classification_inner_modal .classification_inner_modal_heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.classification_inner_modal .classification_inner_modal_icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 35px;
+  height: 35px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 9px;
+
+  background: rgba(223, 208, 184, 0.07);
+  color: #DFD0B8;
+
+  font-size: 15px;
+}
+
+.classification_inner_modal .classification_inner_modal_heading h3 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.classification_inner_modal .classification_inner_modal_heading p {
+  margin: 6px 0 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.classification_inner_modal .classification_inner_modal_close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 28px;
+  height: 28px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #948979;
+
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.classification_inner_modal .classification_inner_modal_body {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+
+  padding: 19px;
+}
+
+.classification_inner_modal .classification_inner_modal_body label {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.classification_inner_modal .edit-input {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.14);
+  border-radius: 8px;
+
+  background: #1b2027;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+}
+
+.classification_inner_modal .edit-input:focus {
+  border-color: rgba(223, 208, 184, 0.45);
+  box-shadow: 0 0 0 3px rgba(223, 208, 184, 0.05);
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+========================================================= */
+
+.classification_inner_modal .classification_inner_modal_footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+
+  margin: 0;
+  padding: 15px 19px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.classification_inner_modal .save-btn,
+.classification_inner_modal .cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 37px;
+  padding: 9px 14px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.classification_inner_modal .cancel-btn {
+  border: 1px solid rgba(223, 208, 184, 0.15);
+  background: #252b34;
+  color: #DFD0B8;
+}
+
+.classification_inner_modal .save-btn {
+  border: 1px solid #DFD0B8;
+  background: #DFD0B8;
   color: #222831;
 }
 
-@keyframes modalFade {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.classification_inner_modal .cancel-btn:hover {
+  background: #303741;
 }
-@media (max-width: 480px) {
-  .edit-modal-content {
-    padding: 18px;
-    border-radius: 12px;
-  }
 
-  .modal-buttons {
+.classification_inner_modal .save-btn:hover {
+  background: #eee0cb;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .classification_card .classification_inner_toolbar {
     flex-direction: column;
   }
 
-  .save-btn,
-  .cancel-btn {
+  .classification_card .dual-input-container,
+  .classification_card .input-grouped {
+    flex: none;
     width: 100%;
+    height: 40px;
   }
-}
-@media (max-width: 768px) {
-  /* .dual-input-container {
-    flex-direction: column;
-  } */
-}
-@media (max-width: 768px) {
 
-  .classification-table th:nth-child(3),
-  .classification-table td:nth-child(3) {
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .classification_card .card_header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .classification_card .classification_inner_toolbar {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .classification_card .classification_inner_desktop {
     display: none;
   }
 
-  .classification-table th,
-  .classification-table td {
+  .classification_card .classification_inner_mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     padding: 10px;
+  }
+
+  .classification_card .classification_inner_mobile_card {
+    padding: 13px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 9px;
+
+    background:
+      linear-gradient(145deg, #252b34, #1c2128);
+  }
+
+  .classification_card .classification_inner_mobile_card.row-inactive {
+    opacity: 0.75;
+  }
+
+  .classification_card .classification_inner_mobile_header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+
+    margin-bottom: 13px;
+  }
+
+  .classification_card .classification_inner_mobile_title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .classification_card .classification_inner_mobile_index {
+    display: block;
+    margin-bottom: 5px;
+
+    color: #948979;
+    font-size: 10px;
+  }
+
+  .classification_card .classification_inner_mobile_title h4 {
+    margin: 0;
+    color: #DFD0B8;
+    font-size: 12px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .classification_card .classification_inner_mobile_actions {
+    display: flex;
+    gap: 8px;
+
+    padding-top: 12px;
+    border-top: 1px solid rgba(223, 208, 184, 0.08);
+  }
+
+  .classification_card .classification_inner_mobile_actions button {
+    flex: 1;
+    min-width: 0;
+    min-height: 35px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .classification_card .input-with-button {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .classification_card .classification_inner_add_input {
+    width: 100%;
+  }
+
+  .classification_card .classification_inner_add_btn {
+    width: 100%;
+  }
+
+  .classification_card .classification_inner_mobile_header {
+    flex-wrap: wrap;
+  }
+
+  .classification_inner_modal_overlay {
+    padding: 10px;
+  }
+
+  .classification_inner_modal_overlay .classification_inner_modal {
+    max-height: calc(100dvh - 20px);
+  }
+
+  .classification_inner_modal .classification_inner_modal_header,
+  .classification_inner_modal .classification_inner_modal_body {
+    padding: 14px;
+  }
+
+  .classification_inner_modal .classification_inner_modal_footer {
+    padding: 13px 14px;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .classification_card .classification_inner_mobile {
+    padding: 7px;
+  }
+
+  .classification_card .classification_inner_mobile_card {
+    padding: 10px;
+  }
+
+  .classification_card .classification_inner_mobile_actions {
+    flex-direction: column;
+  }
+
+  .classification_inner_modal .classification_inner_modal_footer {
+    flex-direction: column-reverse;
+  }
+
+  .classification_inner_modal .save-btn,
+  .classification_inner_modal .cancel-btn {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.classification_card button:focus-visible,
+.classification_card input:focus-visible,
+.classification_inner_modal button:focus-visible,
+.classification_inner_modal input:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .classification_card button,
+  .classification_card input,
+  .classification_inner_modal button {
+    transition: none;
   }
 
 }

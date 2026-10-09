@@ -1,5 +1,16 @@
 import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
-import "../Page_styles/Classification.css";
+import "../Page_styles/TestClassificationFile.css";
+import {
+  FiDownload,
+  FiChevronDown,
+  FiFileText,
+  FiGrid,
+  FiLayers,
+  FiMapPin,
+  FiBox,
+  FiActivity,
+  FiUsers,
+} from "react-icons/fi";
 import React, { useState, lazy, Suspense } from "react";
 import Loader from "../Components/Loader";
 import * as XLSX from "xlsx";
@@ -148,101 +159,262 @@ const exportCSV = (rows, fileName) => {
 };
 
   return (
-    <div className="classification_container">
-      {/* HEADER WITH EXPORT BUTTON */}
-      <div className="classification_header">
-        <h2 className="classify_heading2">Classification</h2>
+ 
+<div className="classification_container">
 
-        <div className="export-wrapper">
+  {/* =====================================================
+      PAGE HEADER
+  ===================================================== */}
+
+  <div className="classification_header">
+
+    <div className="classification_header_info">
+
+      <span className="classification_eyebrow">
+        ASSET CONFIGURATION
+      </span>
+
+      <h2 className="classify_heading2">
+        Classification
+      </h2>
+
+      <p className="classification_subtitle">
+        Manage asset categories, locations, units,
+        statuses, and departments.
+      </p>
+
+    </div>
+
+
+    {/* =====================================================
+        EXPORT DROPDOWN
+    ===================================================== */}
+
+    <div className="export-wrapper">
+
+      <button
+        type="button"
+        className="export-btn classification_export_btn"
+        onClick={() => setExportOpen((prev) => !prev)}
+        aria-haspopup="true"
+        aria-expanded={exportOpen}
+      >
+
+        <FiDownload />
+
+        <span>Export Data</span>
+
+        <FiChevronDown
+          className={`classification_export_caret ${
+            exportOpen ? "open" : ""
+          }`}
+        />
+
+      </button>
+
+
+      {exportOpen && (
+
+        <div className="export-dropdown classification_export_dropdown">
+
+          <div className="classification_export_label">
+            EXPORT FORMAT
+          </div>
+
+
           <button
-            className="export-btn"
-            onClick={() => setExportOpen((prev) => !prev)}
-            aria-haspopup="true"
-            aria-expanded={exportOpen}
+            type="button"
+            className="classification_export_option"
+            onClick={() => {
+              handleExport("csv");
+              setExportOpen(false);
+            }}
           >
-            Export
-            <span className={`export-caret ${exportOpen ? "open" : ""}`}>
-              ▾
+
+            <span className="classification_export_option_icon">
+              <FiFileText />
             </span>
+
+            <span className="classification_export_option_text">
+              <strong>Export as CSV</strong>
+              <small>Comma-separated file</small>
+            </span>
+
           </button>
 
-          {exportOpen && (
-            <div className="export-dropdown">
-              <button onClick={() => handleExport("csv")} className="edit-btn">Export as CSV</button>
-              <button onClick={() => handleExport("excel")} className="edit-btn">
-                Export as Excel
-              </button>
-            </div>
-          )}
+
+          <button
+            type="button"
+            className="classification_export_option"
+            onClick={() => {
+              handleExport("excel");
+              setExportOpen(false);
+            }}
+          >
+
+            <span className="classification_export_option_icon">
+              <FiGrid />
+            </span>
+
+            <span className="classification_export_option_text">
+              <strong>Export as Excel</strong>
+              <small>Excel spreadsheet</small>
+            </span>
+
+          </button>
+
         </div>
+
+      )}
+
+    </div>
+
+  </div>
+
+
+  {/* =====================================================
+      CLASSIFICATION NAVIGATION
+  ===================================================== */}
+
+  <div className="classification_navigation">
+
+    <div className="classification_navigation_header">
+
+      <div className="classification_navigation_title">
+
+        <FiLayers />
+
+        <span>Classification Modules</span>
+
       </div>
 
-      {/* TABS */}
-      <div className="tabs_container">
-        {tabs.map((tab) => (
+      <span className="classification_module_count">
+        {tabs.length} Modules
+      </span>
+
+    </div>
+
+
+    <div className="tabs_container">
+
+      {tabs.map((tab) => {
+
+        const isActive =
+          location.pathname === tab.path;
+
+        const tabIcons = {
+          location: FiMapPin,
+          unit: FiBox,
+          category: FiGrid,
+          status: FiActivity,
+          department: FiUsers,
+        };
+
+        const TabIcon =
+          tabIcons[tab.key] || FiLayers;
+
+        return (
+
           <Link
             key={tab.name}
             to={tab.path}
             onMouseEnter={preloadMap[tab.key]}
-            className={`tab ${location.pathname === tab.path ? "active" : ""}`}
+            className={`tab classification_tab ${
+              isActive ? "active" : ""
+            }`}
+            aria-current={isActive ? "page" : undefined}
           >
-            <span className="tab-text2">{tab.name}</span>
+
+            <TabIcon className="classification_tab_icon" />
+
+            <span className="tab-text2">
+              {tab.name}
+            </span>
+
+            {isActive && (
+              <span className="classification_tab_indicator" />
+            )}
+
           </Link>
-        ))}
-      </div>
 
-      {/* CONTENT SECTION */}
-      <div className="classify_items">
-        <Routes>
-          <Route path="/" element={<Navigate to="location" />} />
+        );
 
-          <Route
-            path="/location"
-            element={
-              <Suspense fallback={<Loader />}>
-                <Location />
-              </Suspense>
-            }
-          />
+      })}
 
-          <Route
-            path="/unit"
-            element={
-              <Suspense fallback={<Loader />}>
-                <Unit />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path="/category"
-            element={
-              <Suspense fallback={<Loader />}>
-                <Category />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path="/status"
-            element={
-              <Suspense fallback={<Loader />}>
-                <Status />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path="/department"
-            element={
-              <Suspense fallback={<Loader />}>
-                <Department />
-              </Suspense>
-            }
-          />
-        </Routes>
-      </div>
     </div>
+
+  </div>
+
+
+  {/* =====================================================
+      CLASSIFICATION CONTENT
+  ===================================================== */}
+
+  <div className="classify_items">
+
+    <Routes>
+
+      <Route
+        path="/"
+        element={<Navigate to="location" replace />}
+      />
+
+
+      <Route
+        path="/location"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Location />
+          </Suspense>
+        }
+      />
+
+
+      <Route
+        path="/unit"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Unit />
+          </Suspense>
+        }
+      />
+
+
+      <Route
+        path="/category"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Category />
+          </Suspense>
+        }
+      />
+
+
+      <Route
+        path="/status"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Status />
+          </Suspense>
+        }
+      />
+
+
+      <Route
+        path="/department"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Department />
+          </Suspense>
+        }
+      />
+
+    </Routes>
+
+  </div>
+
+</div>
+
   );
 };
 

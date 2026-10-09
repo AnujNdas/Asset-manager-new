@@ -1,46 +1,246 @@
-.footer-card {
+
+/* ======================================================
+   ASSETPEGASUS — FOOTER
+====================================================== */
+
+.app-wrapper .footer-card {
+  --footer-bg: #222831;
+  --footer-text: #DFD0B8;
+  --footer-muted: #948979;
+  --footer-border: rgba(223, 208, 184, 0.10);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   width: 100%;
-  background: #222831;
-  color: #555;
-  border-top: 1px solid #ddd;
-  overflow: hidden;
-  position: relative;
-  z-index: 9;
-  height : 100%;
-  display : flex;
-  justify-content : center;
+  min-height: 40px;
+
+  margin: 0;
+  padding: 7px 18px;
+
+  background: var(--footer-bg);
+  color: var(--footer-text);
+
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+
+  font-family: inherit;
+  box-sizing: border-box;
 }
-.copyright-box{
-  display : flex;
-  justify-content : center;
-  align-items : center;
-  gap : 10px;
+
+.app-wrapper .footer-card *,
+.app-wrapper .footer-card *::before,
+.app-wrapper .footer-card *::after {
+  box-sizing: border-box;
 }
-.copy-text {
-  font-size : 12px;
-  color: #979879;
+
+/* ======================================================
+   CONTENT LAYOUT
+====================================================== */
+
+.app-wrapper .footer-card .copyright-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  min-width: 0;
+
+  margin: 0;
+  padding: 0;
 }
-  .copy-link{
-    font-size : 12px;
-    color: #DFD0B8;
+
+/* ======================================================
+   LEFT SIDE
+====================================================== */
+
+.app-wrapper .footer-card .footer-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+
+  min-width: 0;
+}
+
+.app-wrapper .footer-card .footer-copyright {
+  color: var(--footer-text);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.app-wrapper .footer-card .footer-separator {
+  width: 1px;
+  height: 12px;
+  flex-shrink: 0;
+
+  background: rgba(223, 208, 184, 0.18);
+}
+
+.app-wrapper .footer-card .footer-description {
+  color: var(--footer-muted);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* ======================================================
+   RIGHT SIDE
+====================================================== */
+
+.app-wrapper .footer-card .footer-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  min-width: 0;
+}
+
+.app-wrapper .footer-card .footer-powered,
+.app-wrapper .footer-card .footer-rights {
+  color: var(--footer-muted);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* ======================================================
+   COMPANY LINK
+====================================================== */
+
+.app-wrapper .footer-card .footer-company-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  color: var(--footer-text);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: color 160ms ease;
+}
+
+.app-wrapper .footer-card .footer-company-link:hover {
+  color: #ffffff;
+}
+
+.app-wrapper .footer-card .footer-external-icon {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  color: var(--footer-muted);
+}
+
+/* ======================================================
+   SMALL DESKTOP / TABLET
+====================================================== */
+
+@media (max-width: 1100px) {
+  .app-wrapper .footer-card {
+    padding: 8px 12px;
   }
-/* Responsive height adjustments */
+
+  .app-wrapper .footer-card .copyright-box {
+    gap: 8px;
+  }
+
+  .app-wrapper .footer-card .footer-left,
+  .app-wrapper .footer-card .footer-right {
+    gap: 6px;
+  }
+}
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
 @media (max-width: 600px) {
-  .footer {
-    padding: 4px 0;
+  .app-wrapper .footer-card {
+    min-height: 52px;
+    padding: 9px 12px;
   }
-  .copyright-box{
-    width : 90%;
-    gap : 5px;
+
+  .app-wrapper .footer-card .copyright-box {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
   }
-  .copy-text {
-    font-size : 8px;
+
+  .app-wrapper .footer-card .footer-left,
+  .app-wrapper .footer-card .footer-right {
+    justify-content: center;
+    text-align: center;
   }
-  .copy-link a{
-    font-size : 8px;
-    padding : 0;
+
+  .app-wrapper .footer-card .footer-copyright,
+  .app-wrapper .footer-card .footer-description,
+  .app-wrapper .footer-card .footer-powered,
+  .app-wrapper .footer-card .footer-rights,
+  .app-wrapper .footer-card .footer-company-link {
+    font-size: 9px;
   }
 }
-@media (max-width: 768px) {
-  .footer-card { display: none;}
+
+/* ======================================================
+   VERY SMALL MOBILE
+====================================================== */
+
+@media (max-width: 380px) {
+  .app-wrapper .footer-card {
+    padding: 9px 8px;
+  }
+
+  .app-wrapper .footer-card .footer-left {
+    gap: 5px;
+  }
+
+  .app-wrapper .footer-card .footer-description {
+    display: none;
+  }
+
+  .app-wrapper .footer-card .footer-separator {
+    display: none;
+  }
+
+  .app-wrapper .footer-card .footer-right {
+    gap: 4px;
+  }
+}
+
+/* ======================================================
+   ACCESSIBILITY
+====================================================== */
+
+.app-wrapper .footer-card a:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-wrapper .footer-card .footer-company-link {
+    transition: none;
+  }
+}
+/* ==========================================
+   HIDE FOOTER ON MOBILE AND TABLET
+========================================== */
+
+@media (max-width: 900px) {
+  .app-wrapper .fourth-container {
+    display: none;
+  }
 }

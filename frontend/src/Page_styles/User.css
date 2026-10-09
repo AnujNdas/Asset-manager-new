@@ -1,253 +1,653 @@
-  /* Full page background */
-  .auth-wrapper {
-    height: 100vh;
-    width: 100%;
-    /* background: #f3f4f6; */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* padding: 40px; */
-  }
 
-  /* Main card */
-  .auth-container {
-    width: 100%;
-    /* max-width: 100%; */
-    height: 100%;
-    /* background: #ffffff; */
-    /* border-radius: 20px; */
-    display: flex;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-  }
+/* ======================================================
+   ASSETPEGASUS — AUTH LAYOUT
+====================================================== */
 
-  /* LEFT PANEL */
-  .auth-left {
-    flex: 1;
-    padding: 20px 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    gap: 10px;
-    background: #393E46;
-  }
+.auth-wrapper {
+  --auth-bg: #222831;
+  --auth-surface: #252b34;
+  --auth-inner: #1c2128;
+  --auth-text: #DFD0B8;
+  --auth-muted: #948979;
+  --auth-border: rgba(223, 208, 184, 0.12);
 
-  .auth-header h2 {
-    font-weight: 600;
-    color: #DFD0B8;
-    font-size: 20px;
-    margin: 0;
-  }
-
-  .auth-content {
-    max-width: 380px;
-    width: 100%;
-    min-height: 260px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  /* RIGHT PANEL */
-  .auth-right {
-    flex: 1;
-    background: linear-gradient(135deg, #222831, #393E46);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px;
-  }
-
-  .right-content {
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-.dash-image {
-  margin-top: 20px;
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
-  height: 220px;
-  border-radius: 10px;
-  overflow: hidden;
-  aspect-ratio: 16/9;
-}
-.dash-image img {
-  height: 220px;
+
+  background: var(--auth-bg);
+  color: var(--auth-text);
+  font-family: inherit;
 }
 
-.dash-logo img{
-  width:100px;
-  height:100px;
-  object-fit:contain;
+.auth-wrapper *,
+.auth-wrapper *::before,
+.auth-wrapper *::after {
+  box-sizing: border-box;
 }
-  .right-content h1 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 0px;
-    text-align: center;
-    color: #DFD0B8;
-  }
 
-  .right-content p {
-    opacity: 0.9;
-    text-align: center;
-    margin: 0;
-    color: #DFD0B8;
-  }
+.auth-container {
+  display: grid;
+  grid-template-columns:
+    minmax(430px, 45%)
+    minmax(0, 55%);
 
-  /* Tabs */
-  .tab-buttons {
-    display: flex;
-    margin-bottom: 0px;
-    gap: 5px;
-  }
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+}
 
-  .tab-btn {
-    flex: 1;
-    padding: 5px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    border-radius: 10px;
-    background: #948979;
-    color: #222931;
-  }
+/* ======================================================
+   LEFT PANEL
+====================================================== */
 
-  .tab-btn.active {
-    color: #222931;
-    background: #DFD0B8;
-  }
-/* =========================
-   AFFILIATE CARD
-========================= */
-
-.affiliate-card {
-
-  padding: 5px 1.2rem;
-
-  border-radius: 18px;
-
-  background: rgba(255,255,255,0.04);
-
-  border: 1px solid rgba(255,255,255,0.08);
-
-  backdrop-filter: blur(12px);
-
+.auth-left {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  /* gap: 1rem; */
 
-  transition: 0.3s ease;
+  min-width: 0;
+  padding: 24px 36px 16px;
+
+  background: var(--auth-bg);
 }
 
-.affiliate-card:hover {
-  transform: translateY(-2px);
-
-  border-color: rgba(255,255,255,0.15);
-}
-
-.affiliate-info h4 {
-  font-size: 1rem;
-  font-weight: 600;
-
-  margin-bottom: 0.3rem;
-
-  color: #948979;
-}
-
-.affiliate-btn {
-  border: none;
-
-  padding: 0.8rem 1.1rem;
-
-  border-radius: 12px;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-  background: #DFD0B8;
-
-  color: #222831;
-
-  white-space: nowrap;
-
-  transition: 0.25s ease;
-}
-
-.affiliate-btn:hover {
-  transform: scale(1.03);
-}
-.back-home {
+.auth-left > * {
   width: 100%;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-start;
+  max-width: 450px;
+}
+
+/* BACK BUTTON */
+
+.back-home {
+  margin-bottom: 10px;
 }
 
 .return-btn {
-  background: #DFD0B8;
-  border: none;
-  color: #222831;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 7px 0;
+
+  border: none;
+  background: transparent;
+  color: var(--auth-muted);
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
 
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 160ms ease;
+}
 
+.return-btn svg {
   font-size: 14px;
+}
+
+.return-btn:hover {
+  color: var(--auth-text);
+}
+
+/* ======================================================
+   BRAND
+====================================================== */
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 14px;
+}
+
+.dash-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+
+  border: 1px solid var(--auth-border);
+  border-radius: 11px;
+  background: var(--auth-surface);
+
+  overflow: hidden;
+}
+
+.dash-logo img {
+  display: block;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.auth-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-brand-name {
+  color: var(--auth-text);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.auth-brand-name span {
+  color: var(--auth-muted);
+}
+
+.auth-brand-caption {
+  color: var(--auth-muted);
+  font-size: 10px;
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.auth-header {
+  margin-bottom: 12px;
+}
+
+.auth-header h2 {
+  margin: 0 0 8px;
+
+  color: var(--auth-text);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.35px;
+}
+
+.auth-header p {
+  margin: 0;
+  color: var(--auth-muted);
+  font-size: 11px;
+  line-height: 1.7;
+  text-align: left;
+}
+
+/* ======================================================
+   AUTH CONTENT
+====================================================== */
+
+.auth-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  min-width: 0;
+}
+
+/* TABS */
+
+.tab-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+
+  width: 100%;
+  padding: 5px;
+
+  border: 1px solid var(--auth-border);
+  border-radius: 9px;
+  background: var(--auth-inner);
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 36px;
+  padding: 9px 12px;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  background: transparent;
+  color: var(--auth-muted);
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.tab-btn svg {
+  font-size: 15px;
+}
+
+.tab-btn:hover {
+  color: var(--auth-text);
+}
+
+.tab-btn.active {
+  background: var(--auth-text);
+  border-color: var(--auth-border);
+  color: var(--auth-surface);
+}
+
+/* AUTH SECTION */
+
+.auth-section {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ======================================================
+   AFFILIATE CTA
+====================================================== */
+
+.affiliate-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px;
+
+  border: 1px solid var(--auth-border);
+  border-radius: 9px;
+
+  background: var(--auth-surface);
+}
+
+.affiliate-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 8px;
+  background: rgba(223, 208, 184, 0.08);
+  color: var(--auth-text);
+
+  font-size: 15px;
+}
+
+.affiliate-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.affiliate-info h4 {
+  margin: 0 0 4px;
+  color: var(--auth-text);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.affiliate-info p {
+  margin: 0;
+  color: var(--auth-muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.affiliate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-shrink: 0;
+
+  padding: 8px 10px;
+
+  border: 1px solid var(--auth-border);
+  border-radius: 7px;
+
+  background: var(--auth-inner);
+  color: var(--auth-text);
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.affiliate-btn:hover {
+  background: #313842;
+  border-color: rgba(223, 208, 184, 0.24);
+}
+
+.affiliate-btn svg {
+  font-size: 12px;
+}
+
+/* ======================================================
+   LEFT PANEL BOTTOM
+====================================================== */
+
+.auth-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 28px;
+
+  color: var(--auth-muted);
+  font-size: 9px;
+}
+
+/* ======================================================
+   RIGHT PANEL
+====================================================== */
+
+.auth-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  padding: 50px 44px;
+
+  border-left: 1px solid var(--auth-border);
+
+  background:
+    radial-gradient(
+      ellipse at 50% 35%,
+      rgba(148, 137, 121, 0.10),
+      transparent 60%
+    ),
+    var(--auth-inner);
+}
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 100%;
+  max-width: 700px;
+}
+
+.auth-right-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 11px;
+  margin-bottom: 24px;
+
+  border: 1px solid var(--auth-border);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: var(--auth-text);
+
+  font-size: 10px;
   font-weight: 500;
 }
 
-.back-btn:hover {
-  background: #DFD0B8;
-  color: #222831;
+.auth-right-badge svg {
+  font-size: 13px;
+  color: var(--auth-muted);
 }
-/* =========================
+
+.right-content h1 {
+  margin: 0 0 12px;
+
+  color: var(--auth-text);
+  font-size: clamp(25px, 2.8vw, 39px);
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+}
+
+.right-content h1 span {
+  color: var(--auth-muted);
+}
+
+.auth-right-description {
+  max-width: 470px;
+  margin: 0 0 28px;
+
+  color: var(--auth-muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* DASHBOARD IMAGE */
+
+.dash-image {
+  width: 100%;
+  min-width: 0;
+
+  padding: 8px;
+
+  border: 1px solid rgba(223, 208, 184, 0.16);
+  border-radius: 13px;
+
+  background: #252b34;
+
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.24);
+  overflow: hidden;
+}
+
+.dash-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+
+  object-fit: contain;
+  border-radius: 7px;
+}
+
+/* FEATURES */
+
+.auth-feature-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  margin-top: 24px;
+}
+
+.auth-feature {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: var(--auth-muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.auth-feature svg {
+  color: #a3b9a7;
+  font-size: 13px;
+}
+
+/* ======================================================
+   SMALL DESKTOP
+====================================================== */
+
+@media (max-width: 1200px) {
+  .auth-container {
+    grid-template-columns:
+      minmax(380px, 46%)
+      minmax(0, 54%);
+  }
+
+  .auth-left {
+    padding: 22px 25px 16px;
+  }
+
+  .auth-right {
+    padding: 35px 28px;
+  }
+
+  .right-content h1 {
+    font-size: 28px;
+  }
+}
+
+/* ======================================================
+   TABLET
+====================================================== */
+
+@media (max-width: 900px) {
+  .auth-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .auth-left {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 22px 24px 16px;
+  }
+
+  .auth-left > * {
+    max-width: 470px;
+  }
+
+  .auth-right {
+    display: none;
+  }
+
+  .back-home {
+    margin-bottom: 24px;
+  }
+}
+
+/* ======================================================
    MOBILE
-========================= */
+====================================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
+  .auth-left {
+    padding: 16px 16px 14px;
+  }
 
+  .back-home {
+    margin-bottom: 10px;
+  }
+
+  .auth-brand {
+    margin-bottom: 5px;
+    justify-content: center;
+  }
+
+  .dash-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .dash-logo img {
+    width: 37px;
+    height: 37px;
+  }
+
+  .auth-brand-name {
+    font-size: 15px;
+  }
+
+  .auth-header {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .auth-header h2 {
+    font-size: 13px;
+  }
+
+  .auth-header p {
+    font-size: 9px;
+    text-align: center;
+  }
+
+  .auth-content {
+    gap: 15px;
+  }
+  .tab-btn { 
+    padding : 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
   .affiliate-card {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 9px;
+    padding: 10px;
+  }
+
+  .affiliate-info {
+    flex: 1;
   }
 
   .affiliate-btn {
-    width: 100%;
+    margin-left: auto;
+  }
+
+  .auth-bottom {
+    padding-top: 24px;
   }
 }
-  @media (max-width: 900px) {
-    .auth-container {
-      flex-direction: column;
-      height: 100%;
-    }
 
-    .auth-right {
-      display: none;
-    }
-    .back-home {
-      justify-content: center;
-    }
+/* ======================================================
+   VERY SMALL MOBILE
+====================================================== */
+
+@media (max-width: 380px) {
+  .auth-left {
+    padding: 14px 12px;
   }
-  @media (max-width: 500px) {
-    .auth-left {
-      padding: 10px 20px;
-    }
-    .tab-buttons {
-      margin-bottom: 0px;
-    }
-    .tab-btn {
-      padding: 5px;
-      font-size: 14px;
-    }
+  .affiliate-icon {
+    display: none;
   }
+
+  .affiliate-info h4 {
+    font-size: 10px;
+  }
+
+  .affiliate-btn {
+    font-size: 9px;
+  }
+
+  .auth-bottom {
+    font-size: 8px;
+  }
+}
+
+/* ======================================================
+   ACCESSIBILITY
+====================================================== */
+
+.auth-wrapper button:focus-visible,
+.auth-wrapper a:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-wrapper button,
+  .auth-wrapper a {
+    transition: none;
+  }
+}

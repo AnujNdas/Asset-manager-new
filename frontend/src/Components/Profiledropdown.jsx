@@ -5,6 +5,11 @@ import { faSignOut } from "@fortawesome/free-solid-svg-icons";
 import "../Page_styles/Profiledropdown.css";
 import { useNavigate } from "react-router-dom";
 import profile from "../Images/profile.png";
+import {
+  FiUser,
+  FiChevronRight,
+  FiLogOut,
+} from "react-icons/fi";
 import axiosInstance from "../Services/axiosInstance";
 const ProfileDropdown = ({ isVisible, onClose, toggleButtonRef }) => {
   const dropdownRef = useRef(null);
@@ -78,7 +83,7 @@ ThemeSwal.fire({
         !toggleButtonRef.current.contains(event.target);
 
       if (clickedOutsideDropdown && clickedOutsideToggleButton) {
-        onClose();
+        onClose();  
       }
     };
 
@@ -94,34 +99,70 @@ ThemeSwal.fire({
   const username = user?.username || "User";
 
   return (
-    <div
-      ref={dropdownRef}
-      className={`profile-dropdown-container ${isVisible ? "show" : ""}`}
-    >
-      <div className={`dropdown-menu ${isVisible ? "show" : ""}`}>
-        <ul className="drop-box">
-          <button className="user-info" onClick={handleProfileClick}>
-<img
-  src={
-    user?.avatar?.url || profile
-  }
-  alt="avatar"
-  className="avatar"
-/>
 
-            <span className="username">{username}</span>
-          </button>
+<div
+  ref={dropdownRef}
+  className={`profile-dropdown-container ${
+    isVisible ? "show" : ""
+  }`}
+>
+  <div
+    className={`dropdown-menu ${
+      isVisible ? "show" : ""
+    }`}
+  >
+    {/* ACCOUNT HEADER */}
+    <div className="dropdown-header">
+      <div className="dropdown-avatar">
+        <img
+          src={user?.avatar?.url || profile}
+          alt="Profile avatar"
+          className="avatar"
+        />
+      </div>
 
-          <hr className="divide" />
+      <div className="dropdown-user-details">
+        <span className="dropdown-user-label">
+          Signed in as
+        </span>
 
-          <li>
-            <button onClick={handleLogout} className="logout-btn">
-              <FontAwesomeIcon icon={faSignOut} /> Logout
-            </button>
-          </li>
-        </ul>
+        <strong className="username">
+          {username || "User"}
+        </strong>
       </div>
     </div>
+
+    {/* ACTIONS */}
+    <div className="dropdown-actions">
+
+      <button
+        type="button"
+        className="dropdown-action profile-action"
+        onClick={handleProfileClick}
+      >
+        <FiUser className="dropdown-action-icon" />
+
+        <span>My Profile</span>
+
+        <FiChevronRight className="dropdown-action-arrow" />
+      </button>
+
+      <div className="dropdown-divider" />
+
+      <button
+        type="button"
+        className="dropdown-action logout-btn"
+        onClick={handleLogout}
+      >
+        <FiLogOut className="dropdown-action-icon" />
+
+        <span>Logout</span>
+      </button>
+
+    </div>
+  </div>
+</div>
+
   );
 };
 

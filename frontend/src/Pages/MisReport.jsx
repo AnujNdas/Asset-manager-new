@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
-
+import {
+  FiChevronUp,
+  FiChevronDown,
+  FiShoppingCart,
+  FiTool,
+  FiShield,
+  FiUmbrella,
+  FiRefreshCw,
+  FiTrendingUp,
+  FiLayers,
+  FiDollarSign,
+  FiArrowRight
+} from "react-icons/fi";
 import {
   getAuditDashboard,
 } from "../Services/ApiServices";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import "../Page_styles/AuditPage.css";
+import "../Page_styles/TestAuditPageFile.css";
 import { exportAuditPDF } from "../utils/exportPdfFile";
 import { exportAuditExcel } from "../utils/exportExcelFile";
 import { useOrganization } from "../Context/OrganizationContext";
@@ -563,641 +574,1518 @@ const stats = [
 
 const renderSummary = () => (
   <>
-    <div className="audit-section-header">
+
+<>
+  {/* ================= SECTION HEADER ================= */}
+
+  <div className="audit-summary-header">
+
+    <div className="audit-summary-heading">
+      <span className="audit-summary-eyebrow">
+        INVENTORY REPORT
+      </span>
+
       <h3>Asset Inventory Overview</h3>
+
+      <p>
+        Review hardware and software assets,
+        their status, locations, costs and lifecycle details.
+      </p>
     </div>
 
-    <div className="audit-table-wrapper">
+    <div className="audit-summary-count">
+      <span>Assets</span>
+      <strong>{filteredAssets.length}</strong>
+    </div>
 
-      <table className="audit-table">
+  </div>
 
-        <thead>
-          <tr>
-            <th>Details</th>
-            <th>Asset</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Location</th>
-            <th>Purchase Date</th>
-          </tr>
-        </thead>
 
-        <tbody>
+  {/* ================= INVENTORY TABLE ================= */}
 
-          {filteredAssets.map(asset => (
+  <div className="audit-summary-table-wrapper">
 
-            <React.Fragment key={asset.instanceId}>
+    <table className="audit-summary-table">
 
-              <tr>
+      <thead>
+        <tr>
+          <th className="audit-summary-expand-col">
+            Details
+          </th>
+          <th>Asset</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Location</th>
+          <th>Purchase Date</th>
+        </tr>
+      </thead>
 
-                <td>
+      <tbody>
 
-                  <button
-                    type="button"
-                    className="expand-btn"
-                    onClick={() =>
-                      setExpandedSummary(
-                        expandedSummary === asset.instanceId
-                          ? null
-                          : asset.instanceId
-                      )
-                    }
+        {filteredAssets.length > 0 ? (
+
+          filteredAssets.map((asset) => {
+
+            const isExpanded =
+              expandedSummary === asset.instanceId;
+
+            const isHardware =
+              asset.assetType === "hardware";
+
+            const formatAssetDate = (date) => {
+              if (!date) return "-";
+
+              const parsed = new Date(date);
+
+              return Number.isNaN(parsed.getTime())
+                ? "-"
+                : parsed.toLocaleDateString();
+            };
+
+            const formatAssetCost = (value) => {
+              const amount = Number(value);
+
+              return Number.isFinite(amount)
+                ? `$${amount.toLocaleString()}`
+                : "-";
+            };
+
+            return (
+
+              <React.Fragment key={asset.instanceId}>
+
+                {/* ================= MAIN ROW ================= */}
+
+                <tr
+                  className={
+                    isExpanded
+                      ? "audit-summary-row expanded"
+                      : "audit-summary-row"
+                  }
+                >
+
+                  {/* EXPAND */}
+
+                  <td
+                    className="audit-summary-expand-cell"
+                    data-label="Details"
                   >
-                    {expandedSummary === asset.instanceId
-                      ? <FiChevronUp />
-                      : <FiChevronDown />}
-                  </button>
 
-                </td>
+                    <button
+                      type="button"
+                      className={
+                        isExpanded
+                          ? "audit-summary-expand-btn active"
+                          : "audit-summary-expand-btn"
+                      }
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        `${isExpanded ? "Collapse" : "Expand"} details for ${asset.assetName}`
+                      }
+                      onClick={() =>
+                        setExpandedSummary(
+                          isExpanded
+                            ? null
+                            : asset.instanceId
+                        )
+                      }
+                    >
+                      {isExpanded
+                        ? <FiChevronUp />
+                        : <FiChevronDown />}
+                    </button>
 
-                <td>
-                  <strong>{asset.assetName}</strong>
-                  <br />
-                  <small>{asset.assetCode}</small>
-                </td>
+                  </td>
 
-                <td>{asset.assetType}</td>
 
-                <td>{asset.status}</td>
+                  {/* ASSET */}
 
-                <td>{asset.location}</td>
+                  <td
+                    data-label="Asset"
+                    className="audit-summary-asset-cell"
+                  >
+                    <div className="audit-summary-asset-info">
 
-                <td>
-                  <strong>
-                    {asset.purchaseDate
-                      ? new Date(asset.purchaseDate).toLocaleDateString()
-                      : "-"}
-                  </strong>
-                </td>
+                      <strong>
+                        {asset.assetName || "-"}
+                      </strong>
 
-              </tr>
+                      <span>
+                        {asset.assetCode || "-"}
+                      </span>
 
-{expandedSummary === asset.instanceId && (
+                    </div>
+                  </td>
 
-<tr>
 
-<td colSpan={6}>
+                  {/* TYPE */}
 
-<div className="asset-details-card">
+                  <td data-label="Type">
 
-<div className="asset-details-header">
+                    <span
+                      className={
+                        `audit-summary-type ${
+                          isHardware
+                            ? "hardware"
+                            : "software"
+                        }`
+                      }
+                    >
+                      {isHardware
+                        ? "Hardware"
+                        : "Software"}
+                    </span>
 
-<h4>
-{asset.assetType === "hardware"
-? "Hardware Details"
-: "Software Details"}
-</h4>
+                  </td>
 
-<span className="asset-status">
-{asset.status}
-</span>
 
-</div>
+                  {/* STATUS */}
 
-<div className="asset-details-grid">
+                  <td data-label="Status">
 
-{/* Common */}
+                    <span
+                      className={
+                        `audit-summary-status ${
+                          String(asset.status || "")
+                            .toLowerCase()
+                            .replace(/[^a-z0-9_-]/g, "-")
+                        }`
+                      }
+                    >
+                      <span className="audit-summary-status-dot" />
 
-<div>
-<label>Instance Code</label>
-<p>{asset.instanceCode}</p>
-</div>
+                      {String(asset.status || "-")
+                        .replace(/_/g, " ")}
+                    </span>
 
-<div>
-<label>Device Name</label>
-<p>{asset.deviceName || "-"}</p>
-</div>
+                  </td>
 
-<div>
-<label>Purchase Date</label>
-<p>
-{asset.purchaseDate
-? new Date(asset.purchaseDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
 
-<div>
-<label>Installation Date</label>
-<p>
-{asset.installationDate
-? new Date(asset.installationDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
+                  {/* LOCATION */}
 
-<div>
-<label>Purchase Cost</label>
-<p>${asset.purchaseCost.toLocaleString()}</p>
-</div>
+                  <td data-label="Location">
 
-<div>
-<label>Total Cost</label>
-<p>
-<strong>
-${asset.totalCost.toLocaleString()}
-</strong>
-</p>
-</div>
+                    <span className="audit-summary-location">
+                      {asset.location || "-"}
+                    </span>
 
-{/* Hardware */}
+                  </td>
 
-{asset.assetType === "hardware" && (
-<>
 
-<div>
-<label>Serial Number</label>
-<p>{asset.serialNumber || "-"}</p>
-</div>
+                  {/* PURCHASE DATE */}
 
-<div>
-<label>Model No.</label>
-<p>{asset.modelNo || "-"}</p>
-</div>
+                  <td data-label="Purchase Date">
 
-<div>
-<label>Specification</label>
-<p>{asset.specifications || "-"}</p>
-</div>
+                    <span className="audit-summary-date">
+                      {formatAssetDate(asset.purchaseDate)}
+                    </span>
 
-<div>
-<label>Next Maintenance</label>
-<p>
-{asset.nextMaintenanceDate
-? new Date(asset.nextMaintenanceDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
+                  </td>
 
-<div>
-<label>Warranty Expiry</label>
-<p>
-{asset.warrantyExpiry
-? new Date(asset.warrantyExpiry).toLocaleDateString()
-: "-"}
-</p>
-</div>
+                </tr>
 
-<div>
-<label>Insurance Expiry</label>
-<p>
-{asset.insuranceExpiry
-? new Date(asset.insuranceExpiry).toLocaleDateString()
-: "-"}
-</p>
-</div>
 
-<div>
-<label>Maintenance Cost</label>
-<p>${asset.maintenanceCost.toLocaleString()}</p>
-</div>
+                {/* ================= EXPANDED DETAILS ================= */}
 
-<div>
-<label>Insurance Cost</label>
-<p>${asset.insuranceCost.toLocaleString()}</p>
-</div>
+                {isExpanded && (
 
-<div>
-<label>Upgrade Cost</label>
-<p>${asset.upgradeCost.toLocaleString()}</p>
-</div>
+                  <tr className="audit-summary-detail-row">
 
+                    <td colSpan={6}>
+
+                      <div className="audit-summary-details">
+
+                        {/* DETAILS HEADER */}
+
+                        <div className="audit-summary-details-header">
+
+                          <div>
+                            <span className="audit-summary-details-eyebrow">
+                              INSTANCE INFORMATION
+                            </span>
+
+                            <h4>
+                              {isHardware
+                                ? "Hardware Details"
+                                : "Software Details"}
+                            </h4>
+
+                            <p>
+                              {asset.instanceCode || "-"}
+                            </p>
+                          </div>
+
+                          <span className="audit-summary-details-status">
+                            {String(asset.status || "-")
+                              .replace(/_/g, " ")}
+                          </span>
+
+                        </div>
+
+
+                        {/* COMMON DETAILS */}
+
+                        <div className="audit-summary-detail-section">
+
+                          <div className="audit-summary-detail-title">
+                            <h5>General Information</h5>
+                          </div>
+
+                          <div className="audit-summary-details-grid">
+
+                            <div className="audit-summary-detail-item">
+                              <label>Instance Code</label>
+                              <p>{asset.instanceCode || "-"}</p>
+                            </div>
+
+                            <div className="audit-summary-detail-item">
+                              <label>Device Name</label>
+                              <p>{asset.deviceName || "-"}</p>
+                            </div>
+
+                            <div className="audit-summary-detail-item">
+                              <label>Purchase Date</label>
+                              <p>
+                                {formatAssetDate(asset.purchaseDate)}
+                              </p>
+                            </div>
+
+                            <div className="audit-summary-detail-item">
+                              <label>Installation Date</label>
+                              <p>
+                                {formatAssetDate(asset.installationDate)}
+                              </p>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* FINANCIAL DETAILS */}
+
+                        <div className="audit-summary-detail-section">
+
+                          <div className="audit-summary-detail-title">
+                            <h5>Financial Information</h5>
+                          </div>
+
+                          <div className="audit-summary-details-grid">
+
+                            <div className="audit-summary-detail-item">
+                              <label>Purchase Cost</label>
+                              <p>
+                                {formatAssetCost(asset.purchaseCost)}
+                              </p>
+                            </div>
+
+                            <div className="audit-summary-detail-item highlight">
+                              <label>Total Cost</label>
+                              <p>
+                                {formatAssetCost(asset.totalCost)}
+                              </p>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* HARDWARE DETAILS */}
+
+                        {isHardware && (
+
+                          <div className="audit-summary-detail-section">
+
+                            <div className="audit-summary-detail-title">
+                              <h5>Hardware Specifications & Lifecycle</h5>
+                            </div>
+
+                            <div className="audit-summary-details-grid">
+
+                              <div className="audit-summary-detail-item">
+                                <label>Serial Number</label>
+                                <p>{asset.serialNumber || "-"}</p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Model No.</label>
+                                <p>{asset.modelNo || "-"}</p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Specification</label>
+                                <p>{asset.specifications || "-"}</p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Next Maintenance</label>
+                                <p>
+                                  {formatAssetDate(
+                                    asset.nextMaintenanceDate
+                                  )}
+                                </p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Warranty Expiry</label>
+                                <p>
+                                  {formatAssetDate(
+                                    asset.warrantyExpiry
+                                  )}
+                                </p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Insurance Expiry</label>
+                                <p>
+                                  {formatAssetDate(
+                                    asset.insuranceExpiry
+                                  )}
+                                </p>
+                              </div>
+
+                            </div>
+
+
+                            <div className="audit-summary-detail-title audit-summary-cost-heading">
+                              <h5>Additional Costs</h5>
+                            </div>
+
+                            <div className="audit-summary-details-grid">
+
+                              <div className="audit-summary-detail-item">
+                                <label>Maintenance Cost</label>
+                                <p>
+                                  {formatAssetCost(
+                                    asset.maintenanceCost
+                                  )}
+                                </p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Insurance Cost</label>
+                                <p>
+                                  {formatAssetCost(
+                                    asset.insuranceCost
+                                  )}
+                                </p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Upgrade Cost</label>
+                                <p>
+                                  {formatAssetCost(
+                                    asset.upgradeCost
+                                  )}
+                                </p>
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                        )}
+
+
+                        {/* SOFTWARE DETAILS */}
+
+                        {!isHardware && asset.assetType === "software" && (
+
+                          <div className="audit-summary-detail-section">
+
+                            <div className="audit-summary-detail-title">
+                              <h5>Software License & Renewal</h5>
+                            </div>
+
+                            <div className="audit-summary-details-grid">
+
+                              <div className="audit-summary-detail-item">
+                                <label>License Key</label>
+                                <p>{asset.licenseKey || "-"}</p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>License Number</label>
+                                <p>{asset.licenseNumber || "-"}</p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Renewal Date</label>
+                                <p>
+                                  {formatAssetDate(asset.renewalDate)}
+                                </p>
+                              </div>
+
+                              <div className="audit-summary-detail-item">
+                                <label>Renewal Cost</label>
+                                <p>
+                                  {formatAssetCost(asset.renewalCost)}
+                                </p>
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                        )}
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )}
+
+              </React.Fragment>
+
+            );
+
+          })
+
+        ) : (
+
+          <tr>
+            <td
+              colSpan={6}
+              className="audit-summary-empty"
+            >
+              <div>
+                <h4>No Assets Found</h4>
+
+                <p>
+                  No assets match the selected filters.
+                </p>
+              </div>
+            </td>
+          </tr>
+
+        )}
+
+      </tbody>
+
+    </table>
+
+  </div>
 </>
-)}
 
-{/* Software */}
-
-{asset.assetType === "software" && (
-<>
-
-<div>
-<label>License Key</label>
-<p>{asset.licenseKey || "-"}</p>
-</div>
-
-<div>
-<label>License Number</label>
-<p>{asset.licenseNumber || "-"}</p>
-</div>
-
-<div>
-<label>Renewal Date</label>
-<p>
-{asset.renewalDate
-? new Date(asset.renewalDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Renewal Cost</label>
-<p>${asset.renewalCost.toLocaleString()}</p>
-</div>
-
-</>
-)}
-
-</div>
-
-</div>
-
-</td>
-
-</tr>
-
-)}
-
-            </React.Fragment>
-
-          ))}
-
-        </tbody>
-
-      </table>
-
-    </div>
   </>
 );
 const renderDepartment = () => (
-  <div className="department-container">
 
-<div className="audit-table-wrapper">
-  <table className="audit-table">
+<div className="audit-department-container">
 
-    <thead>
-      <tr>
-        <th>Details</th>
-        <th>Department</th>
-        <th>Employees</th>
-        <th>Assets</th>
-        <th>Total Value</th>
-      </tr>
-    </thead>
+  {/* ================= HEADER ================= */}
 
-    <tbody>
+  <div className="audit-department-header">
 
-      {departments.map((dept) => (
+    <div className="audit-department-heading">
 
-        <React.Fragment key={dept.departmentId}>
+      <span className="audit-department-eyebrow">
+        DEPARTMENT REPORT
+      </span>
 
-          {/* Main Row */}
+      <h3>Department Asset Overview</h3>
 
-          <tr
-  className="expandable-row"
-  onClick={() =>
-    setExpandedDepartment(
-      expandedDepartment === dept.departmentId
-        ? null
-        : dept.departmentId
-    )
-  }
->
-    <td><button
-    className="expand-btn"
-    onClick={(e)=>{
-        e.stopPropagation();
-        setExpandedDepartment(
-            expandedDepartment===dept.departmentId
-            ? null
-            : dept.departmentId
-        );
-    }}
->
-    {expandedDepartment===dept.departmentId
-        ? <FiChevronUp/>
-        : <FiChevronDown/>
-    }
-</button></td>
+      <p>
+        Monitor department-wise asset allocation,
+        employee assignments and asset values.
+      </p>
 
-            <td>{dept.departmentName}</td>
+    </div>
 
-            <td>{dept.totalEmployees}</td>
+    <div className="audit-department-count">
+      <span>Departments</span>
+      <strong>{departments.length}</strong>
+    </div>
 
-            <td>{dept.totalAssets}</td>
-
-            <td>${dept.totalValue.toLocaleString()}</td>
+  </div>
 
 
+  {/* ================= DEPARTMENT TABLE ================= */}
 
+  <div className="audit-department-table-wrapper">
+
+    <table className="audit-department-table">
+
+      <thead>
+        <tr>
+          <th className="audit-department-expand-col">
+            Details
+          </th>
+          <th>Department</th>
+          <th>Employees</th>
+          <th>Assets</th>
+          <th>Total Value</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {departments.length > 0 ? (
+
+          departments.map((dept) => {
+
+            const isExpanded =
+              expandedDepartment === dept.departmentId;
+
+            const formatDate = (value) => {
+              if (!value) return "-";
+
+              const date = new Date(value);
+
+              return Number.isNaN(date.getTime())
+                ? "-"
+                : date.toLocaleDateString();
+            };
+
+            const formatCost = (value) => {
+              const amount = Number(value);
+
+              return Number.isFinite(amount)
+                ? `$${amount.toLocaleString()}`
+                : "-";
+            };
+
+            return (
+
+              <React.Fragment key={dept.departmentId}>
+
+                {/* ================= MAIN ROW ================= */}
+
+                <tr
+                  className={
+                    isExpanded
+                      ? "audit-department-row expanded"
+                      : "audit-department-row"
+                  }
+                  onClick={() =>
+                    setExpandedDepartment(
+                      isExpanded
+                        ? null
+                        : dept.departmentId
+                    )
+                  }
+                >
+
+                  {/* EXPAND BUTTON */}
+
+                  <td
+                    className="audit-department-expand-cell"
+                    data-label="Details"
+                  >
+
+                    <button
+                      type="button"
+                      className={
+                        isExpanded
+                          ? "audit-department-expand-btn active"
+                          : "audit-department-expand-btn"
+                      }
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        `${isExpanded ? "Collapse" : "Expand"} ${dept.departmentName}`
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        setExpandedDepartment(
+                          isExpanded
+                            ? null
+                            : dept.departmentId
+                        );
+                      }}
+                    >
+                      {isExpanded
+                        ? <FiChevronUp />
+                        : <FiChevronDown />}
+                    </button>
+
+                  </td>
+
+
+                  {/* DEPARTMENT */}
+
+                  <td
+                    data-label="Department"
+                    className="audit-department-name-cell"
+                  >
+                    <div className="audit-department-name">
+
+                      <strong>
+                        {dept.departmentName || "-"}
+                      </strong>
+
+                      <span>
+                        Department Assets
+                      </span>
+
+                    </div>
+                  </td>
+
+
+                  {/* EMPLOYEES */}
+
+                  <td data-label="Employees">
+
+                    <span className="audit-department-metric">
+                      {dept.totalEmployees ?? 0}
+                    </span>
+
+                  </td>
+
+
+                  {/* ASSETS */}
+
+                  <td data-label="Assets">
+
+                    <span className="audit-department-metric">
+                      {dept.totalAssets ?? 0}
+                    </span>
+
+                  </td>
+
+
+                  {/* TOTAL VALUE */}
+
+                  <td data-label="Total Value">
+
+                    <strong className="audit-department-value">
+                      {formatCost(dept.totalValue)}
+                    </strong>
+
+                  </td>
+
+                </tr>
+
+
+                {/* ================= EXPANDED ROW ================= */}
+
+                {isExpanded && (
+
+                  <tr className="audit-department-detail-row">
+
+                    <td colSpan={5}>
+
+                      <div className="audit-department-details">
+
+                        {/* DETAILS HEADER */}
+
+                        <div className="audit-department-details-header">
+
+                          <div>
+                            <span className="audit-department-details-eyebrow">
+                              ASSIGNMENT HISTORY
+                            </span>
+
+                            <h4>
+                              {dept.departmentName}
+                            </h4>
+
+                            <p>
+                              Employee asset allocation
+                              and assignment records
+                            </p>
+                          </div>
+
+                          <div className="audit-department-details-badges">
+
+                            <span className="audit-department-info-badge">
+                              {dept.totalEmployees ?? 0} Employees
+                            </span>
+
+                            <span className="audit-department-info-badge active">
+                              {dept.activeAssignments ?? 0} Active Assignments
+                            </span>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ASSIGNMENT HISTORY */}
+
+                        {dept.assignmentHistory?.length > 0 ? (
+
+                          <div className="audit-department-history-list">
+
+                            {dept.assignmentHistory.map(
+                              (record, index) => {
+
+                                const asset =
+                                  dept.assets?.find(
+                                    (a) =>
+                                      a.instanceCode ===
+                                      record.instanceCode
+                                  );
+
+                                return (
+
+                                  <div
+                                    key={
+                                      record.assignmentId ??
+                                      `${record.instanceCode}-${index}`
+                                    }
+                                    className="audit-department-history-card"
+                                  >
+
+                                    {/* RECORD HEADER */}
+
+                                    <div className="audit-department-history-header">
+
+                                      <div className="audit-department-history-identity">
+
+                                        <span className="audit-department-history-index">
+                                          {String(index + 1).padStart(2, "0")}
+                                        </span>
+
+                                        <div>
+                                          <h5>
+                                            {record.assetName || "Unnamed Asset"}
+                                          </h5>
+
+                                          <p>
+                                            {record.instanceCode || "-"}
+                                          </p>
+                                        </div>
+
+                                      </div>
+
+                                      <span
+                                        className={
+                                          `audit-department-history-status ${
+                                            String(record.status || "")
+                                              .toLowerCase()
+                                              .replace(/[^a-z0-9_-]/g, "-")
+                                          }`
+                                        }
+                                      >
+                                        <span className="audit-department-status-dot" />
+
+                                        {String(record.status || "-")
+                                          .replace(/_/g, " ")}
+                                      </span>
+
+                                    </div>
+
+
+                                    {/* RECORD DETAILS */}
+
+                                    <div className="audit-department-history-grid">
+
+                                      <div className="audit-department-history-item">
+                                        <label>Employee</label>
+                                        <p>{record.employeeName || "-"}</p>
+                                      </div>
+
+                                      <div className="audit-department-history-item">
+                                        <label>Employee Code</label>
+                                        <p>{record.employeeCode || "-"}</p>
+                                      </div>
+
+                                      <div className="audit-department-history-item">
+                                        <label>Asset</label>
+                                        <p>{record.assetName || "-"}</p>
+                                      </div>
+
+                                      <div className="audit-department-history-item">
+                                        <label>Instance</label>
+                                        <p>{record.instanceCode || "-"}</p>
+                                      </div>
+
+                                      <div className="audit-department-history-item">
+                                        <label>Status</label>
+                                        <p>
+                                          {String(record.status || "-")
+                                            .replace(/_/g, " ")}
+                                        </p>
+                                      </div>
+
+                                      <div className="audit-department-history-item">
+                                        <label>Assigned Date</label>
+                                        <p>
+                                          {formatDate(record.assignedAt)}
+                                        </p>
+                                      </div>
+
+                                      <div className="audit-department-history-item">
+                                        <label>Returned Date</label>
+                                        <p>
+                                          {formatDate(record.returnedAt)}
+                                        </p>
+                                      </div>
+
+                                      <div className="audit-department-history-item">
+                                        <label>Location</label>
+                                        <p>{record.location || "-"}</p>
+                                      </div>
+
+                                      <div className="audit-department-history-item highlight">
+                                        <label>Asset Value</label>
+                                        <p>
+                                          {formatCost(asset?.totalCost ?? 0)}
+                                        </p>
+                                      </div>
+
+                                    </div>
+
+                                  </div>
+
+                                );
+
+                              }
+                            )}
+
+                          </div>
+
+                        ) : (
+
+                          <div className="audit-department-empty-history">
+
+                            <h5>No Assignment History</h5>
+
+                            <p>
+                              No assignment records are
+                              available for this department.
+                            </p>
+
+                          </div>
+
+                        )}
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )}
+
+              </React.Fragment>
+
+            );
+
+          })
+
+        ) : (
+
+          <tr>
+            <td
+              colSpan={5}
+              className="audit-department-empty"
+            >
+              <h4>No Departments Found</h4>
+
+              <p>
+                There are no department records
+                available for the selected filters.
+              </p>
+            </td>
           </tr>
 
-          {/* Expanded Row */}
+        )}
 
-{expandedDepartment === dept.departmentId && (
+      </tbody>
 
-<tr>
+    </table>
 
-<td colSpan={5}>
-
-<div className="asset-details-card">
-
-<div className="asset-details-header">
-
-<h4>{dept.departmentName}</h4>
-
-<span className="asset-status">
-{dept.totalEmployees} Employees • {dept.activeAssignments} Active Assignments
-</span>
+  </div>
 
 </div>
 
-{dept.assignmentHistory.map(record => {
-
-const asset = dept.assets.find(
-a => a.instanceCode === record.instanceCode
-);
-
-return (
-  <div className="asset-details-section">
-<div
-key={record.assignmentId}
-className="asset-details-grid"
-style={{ marginBottom: "20px" }}
->
-
-<div>
-<label>Employee</label>
-<p>{record.employeeName}</p>
-</div>
-
-<div>
-<label>Employee Code</label>
-<p>{record.employeeCode}</p>
-</div>
-
-<div>
-<label>Asset</label>
-<p>{record.assetName}</p>
-</div>
-
-<div>
-<label>Instance</label>
-<p>{record.instanceCode}</p>
-</div>
-
-<div>
-<label>Status</label>
-<p>{record.status}</p>
-</div>
-
-<div>
-<label>Assigned Date</label>
-<p>
-{record.assignedAt
-? new Date(record.assignedAt).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Returned Date</label>
-<p>
-{record.returnedAt
-? new Date(record.returnedAt).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Location</label>
-<p>{record.location || "-"}</p>
-</div>
-
-<div>
-<label>Asset Value</label>
-<p>
-<strong>
-${(asset?.totalCost ?? 0).toLocaleString()}
-</strong>
-</p>
-</div>
-
-</div>
-</div>
-
-);
-
-})}
-
-</div>
-
-</td>
-
-</tr>
-
-)}
-        </React.Fragment>
-
-      ))}
-
-    </tbody>
-
-  </table>
-</div>
-
-      </div>
 );
 const renderWarranty = () => {
   const today = new Date();
 
   return (
-    <div className="audit-table-wrapper">
-      <table className="audit-table">
 
-<thead>
-  <tr>
-    <th>Details</th>
-    <th>Asset</th>
-    <th>Type</th>
-    <th>Warranty Purchase</th>
-    <th>Warranty Expiry</th>
-    <th>Total Cost</th>
-  </tr>
-</thead>
+<div className="audit-warranty-container">
 
-<tbody>
+  {/* ================= HEADER ================= */}
 
-{filteredWarranty.map(item => {
+  <div className="audit-warranty-header">
 
-  const expiry = new Date(item.expiryDate);
+    <div className="audit-warranty-heading">
 
-  const daysLeft = Math.ceil(
-    (expiry - new Date()) / (1000 * 60 * 60 * 24)
-  );
-  
-  return (
+      <span className="audit-warranty-eyebrow">
+        WARRANTY REPORT
+      </span>
 
-    <React.Fragment key={item.instanceId}>
+      <h3>Asset Warranty Overview</h3>
 
-      {/* Summary Row */}
-
-      <tr>
-
-        <td>
-
-          <button
-            type="button"
-            className="expand-btn"
-            onClick={() =>
-              setExpandedWarranty(
-                expandedWarranty === item.instanceId
-                  ? null
-                  : item.instanceId
-              )
-            }
-          >
-            {expandedWarranty === item.instanceId
-              ? <FiChevronUp />
-              : <FiChevronDown />}
-          </button>
-
-        </td>
-
-        <td>
-
-          <strong>{item.assetName}</strong>
-        </td>
-
-        <td>{item.assetType}</td>
-
-        <td>{item.warrantyPurchaseDate ? new Date(item.warrantyPurchaseDate).toLocaleDateString() : "-"}</td>
-
-        <td>{expiry.toLocaleDateString()}</td>
-
-        <td>
-          <strong>
-            ${(item.totalCost ?? 0).toLocaleString()}
-          </strong>
-        </td>
-
-      </tr>
-
-      {/* Expanded Row */}
-
-{expandedWarranty === item.instanceId && (
-
-<tr>
-
-<td colSpan={6}>
-
-<div className="asset-details-card">
-
-<div className="asset-details-header">
-
-<h4>{item.assetName}</h4>
-<p>{item.assetCode}</p>
-
-<span className="asset-status">
-
-{item.assetType === "hardware"
-? "Hardware"
-: "Software"}
-
-</span>
-
-</div>
-
-{/* General Information */}
-
-{/* Year-wise Warranty Cost */}
-
-{item.yearlyWarranty?.length > 0 && (
-
-  <>
-
-    <h4 style={{ marginTop: 30 }}>
-      Warranty Cost History
-    </h4>
-
-    <div className="yearly-cost-grid">
-{item.yearlyWarranty.map((year) => {
-
-    const currentYear = new Date().getFullYear();
-
-    let badge;
-
-    if (year.year > currentYear) {
-      badge = {
-        text: "Upcoming",
-        className: "upcoming",
-      };
-    } else if (year.year === currentYear) {
-      badge = {
-        text: "Current",
-        className: "current",
-      };
-    } else {
-      badge = {
-        text: "Completed",
-        className: "completed",
-      };
-    }
-
-    return (
-
-      <div
-        className="year-card"
-        key={year.year}
-      >
-
-        <span className={`year-badge ${badge.className}`}>
-          {badge.text}
-        </span>
-
-        <div className="year-card-header">
-          <h4>Year :- {year.year}</h4>
-
-          <p>
-            {item.warrantyPurchaseDate
-              ? formatDate(item.warrantyPurchaseDate)
-              : "-"}
-          </p>
-        </div>
-
-        <div className="year-row">
-          <span>Purchase Cost</span>
-          <span>{formatCurrency(year.purchaseCost || 0)}</span>
-        </div>
-
-        <div className="year-row">
-          <span>Warranty Cost</span>
-          <span>{formatCurrency(year.warrantyCost || 0)}</span>
-        </div>
-
-        <div className="year-total">
-          Total : {formatCurrency(year.totalCost || 0)}
-        </div>
-
-      </div>
-
-    );
-
-  })}
+      <p>
+        Monitor warranty expiration dates,
+        coverage status and historical warranty costs.
+      </p>
 
     </div>
 
-  </>
+    <div className="audit-warranty-count">
+      <span>Assets</span>
+      <strong>{filteredWarranty.length}</strong>
+    </div>
 
-)}
-{/* Warranty Summary */}
+  </div>
+
+
+  {/* ================= WARRANTY TABLE ================= */}
+
+  <div className="audit-warranty-table-wrapper">
+
+    <table className="audit-warranty-table">
+
+      <thead>
+        <tr>
+          <th className="audit-warranty-expand-col">
+            Details
+          </th>
+          <th>Asset</th>
+          <th>Type</th>
+          <th>Warranty Purchase</th>
+          <th>Warranty Expiry</th>
+          <th>Total Cost</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {filteredWarranty.length > 0 ? (
+
+          filteredWarranty.map((item) => {
+
+            const isExpanded =
+              expandedWarranty === item.instanceId;
+
+            const expiry =
+              item.expiryDate
+                ? new Date(item.expiryDate)
+                : null;
+
+            const validExpiry =
+              expiry &&
+              !Number.isNaN(expiry.getTime());
+
+            const daysLeft = validExpiry
+              ? Math.ceil(
+                  (expiry.getTime() - Date.now()) /
+                  (1000 * 60 * 60 * 24)
+                )
+              : null;
+
+            const warrantyStatus =
+              daysLeft === null
+                ? {
+                    label: "Not Available",
+                    className: "unknown",
+                  }
+                : daysLeft < 0
+                ? {
+                    label: "Expired",
+                    className: "expired",
+                  }
+                : daysLeft <= 30
+                ? {
+                    label: "Expiring Soon",
+                    className: "expiring",
+                  }
+                : {
+                    label: "Active",
+                    className: "active",
+                  };
+
+            const formatWarrantyDate = (value) => {
+              if (!value) return "-";
+
+              const date = new Date(value);
+
+              return Number.isNaN(date.getTime())
+                ? "-"
+                : date.toLocaleDateString();
+            };
+
+            return (
+
+              <React.Fragment key={item.instanceId}>
+
+                {/* ================= MAIN ROW ================= */}
+
+                <tr
+                  className={
+                    isExpanded
+                      ? "audit-warranty-row expanded"
+                      : "audit-warranty-row"
+                  }
+                >
+
+                  {/* EXPAND BUTTON */}
+
+                  <td
+                    className="audit-warranty-expand-cell"
+                    data-label="Details"
+                  >
+
+                    <button
+                      type="button"
+                      className={
+                        isExpanded
+                          ? "audit-warranty-expand-btn active"
+                          : "audit-warranty-expand-btn"
+                      }
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        `${isExpanded ? "Collapse" : "Expand"} warranty details for ${item.assetName}`
+                      }
+                      onClick={() =>
+                        setExpandedWarranty(
+                          isExpanded
+                            ? null
+                            : item.instanceId
+                        )
+                      }
+                    >
+                      {isExpanded
+                        ? <FiChevronUp />
+                        : <FiChevronDown />}
+                    </button>
+
+                  </td>
+
+
+                  {/* ASSET */}
+
+                  <td
+                    data-label="Asset"
+                    className="audit-warranty-asset-cell"
+                  >
+
+                    <div className="audit-warranty-asset-info">
+
+                      <strong>
+                        {item.assetName || "-"}
+                      </strong>
+
+                      <span>
+                        {item.assetCode || "-"}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+
+                  {/* TYPE */}
+
+                  <td data-label="Type">
+
+                    <span
+                      className={
+                        `audit-warranty-type ${
+                          item.assetType === "hardware"
+                            ? "hardware"
+                            : "software"
+                        }`
+                      }
+                    >
+                      {item.assetType === "hardware"
+                        ? "Hardware"
+                        : "Software"}
+                    </span>
+
+                  </td>
+
+
+                  {/* PURCHASE DATE */}
+
+                  <td data-label="Warranty Purchase">
+
+                    <span className="audit-warranty-date">
+                      {formatWarrantyDate(
+                        item.warrantyPurchaseDate
+                      )}
+                    </span>
+
+                  </td>
+
+
+                  {/* EXPIRY */}
+
+                  <td
+                    data-label="Warranty Expiry"
+                    className="audit-warranty-expiry-cell"
+                  >
+
+                    <div className="audit-warranty-expiry-info">
+
+                      <span className="audit-warranty-date">
+                        {formatWarrantyDate(item.expiryDate)}
+                      </span>
+
+                      <span
+                        className={
+                          `audit-warranty-status ${warrantyStatus.className}`
+                        }
+                      >
+                        <span className="audit-warranty-status-dot" />
+
+                        {warrantyStatus.label}
+                      </span>
+
+                      {daysLeft !== null && (
+                        <small className="audit-warranty-days">
+                          {daysLeft < 0
+                            ? `${Math.abs(daysLeft)} days overdue`
+                            : daysLeft === 0
+                            ? "Expires today"
+                            : `${daysLeft} days remaining`}
+                        </small>
+                      )}
+
+                    </div>
+
+                  </td>
+
+
+                  {/* TOTAL COST */}
+
+                  <td data-label="Total Cost">
+
+                    <strong className="audit-warranty-total-value">
+                      {formatCurrency(item.totalCost ?? 0)}
+                    </strong>
+
+                  </td>
+
+                </tr>
+
+
+                {/* ================= EXPANDED DETAILS ================= */}
+
+                {isExpanded && (
+
+                  <tr className="audit-warranty-detail-row">
+
+                    <td colSpan={6}>
+
+                      <div className="audit-warranty-details">
+
+                        {/* DETAILS HEADER */}
+
+                        <div className="audit-warranty-details-header">
+
+                          <div>
+
+                            <span className="audit-warranty-details-eyebrow">
+                              WARRANTY COST ANALYSIS
+                            </span>
+
+                            <h4>
+                              {item.assetName || "-"}
+                            </h4>
+
+                            <p>
+                              {item.assetCode || "-"}
+                            </p>
+
+                          </div>
+
+
+                          <div className="audit-warranty-details-badges">
+
+                            <span
+                              className={
+                                `audit-warranty-type ${
+                                  item.assetType === "hardware"
+                                    ? "hardware"
+                                    : "software"
+                                }`
+                              }
+                            >
+                              {item.assetType === "hardware"
+                                ? "Hardware"
+                                : "Software"}
+                            </span>
+
+                            <span
+                              className={
+                                `audit-warranty-status ${warrantyStatus.className}`
+                              }
+                            >
+                              <span className="audit-warranty-status-dot" />
+
+                              {warrantyStatus.label}
+                            </span>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= WARRANTY SUMMARY ================= */}
+
+                        <div className="audit-warranty-summary-grid">
+
+                          <div className="audit-warranty-summary-item">
+
+                            <label>Warranty Purchase</label>
+
+                            <strong>
+                              {formatWarrantyDate(
+                                item.warrantyPurchaseDate
+                              )}
+                            </strong>
+
+                          </div>
+
+
+                          <div className="audit-warranty-summary-item">
+
+                            <label>Warranty Expiry</label>
+
+                            <strong>
+                              {formatWarrantyDate(
+                                item.expiryDate
+                              )}
+                            </strong>
+
+                          </div>
+
+
+                          <div className="audit-warranty-summary-item highlight">
+
+                            <label>Total Cost</label>
+
+                            <strong>
+                              {formatCurrency(
+                                item.totalCost ?? 0
+                              )}
+                            </strong>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= YEARLY WARRANTY HISTORY ================= */}
+
+                        <div className="audit-warranty-history-section">
+
+                          <div className="audit-warranty-history-heading">
+
+                            <div>
+                              <h5>Warranty Cost History</h5>
+
+                              <p>
+                                Year-wise purchase,
+                                warranty and total costs
+                              </p>
+                            </div>
+
+                            <span className="audit-warranty-history-count">
+                              {item.yearlyWarranty?.length ?? 0} Years
+                            </span>
+
+                          </div>
+
+
+                          {item.yearlyWarranty?.length > 0 ? (
+
+                            <div className="audit-warranty-year-grid">
+
+                              {item.yearlyWarranty.map((year) => {
+
+                                const currentYear =
+                                  new Date().getFullYear();
+
+                                let badge;
+
+                                if (year.year > currentYear) {
+                                  badge = {
+                                    text: "Upcoming",
+                                    className: "upcoming",
+                                  };
+                                } else if (
+                                  year.year === currentYear
+                                ) {
+                                  badge = {
+                                    text: "Current",
+                                    className: "current",
+                                  };
+                                } else {
+                                  badge = {
+                                    text: "Completed",
+                                    className: "completed",
+                                  };
+                                }
+
+                                return (
+
+                                  <div
+                                    className="audit-warranty-year-card"
+                                    key={year.year}
+                                  >
+
+                                    {/* YEAR HEADER */}
+
+                                    <div className="audit-warranty-year-header">
+
+                                      <div>
+                                        <span className="audit-warranty-year-eyebrow">
+                                          WARRANTY PERIOD
+                                        </span>
+
+                                        <h6>{year.year}</h6>
+                                      </div>
+
+                                      <span
+                                        className={
+                                          `audit-warranty-year-badge ${badge.className}`
+                                        }
+                                      >
+                                        {badge.text}
+                                      </span>
+
+                                    </div>
+
+
+                                    {/* PURCHASE DATE */}
+
+                                    <div className="audit-warranty-year-purchase">
+
+                                      <span>
+                                        Warranty Purchase
+                                      </span>
+
+                                      <strong>
+                                        {item.warrantyPurchaseDate
+                                          ? formatDate(
+                                              item.warrantyPurchaseDate
+                                            )
+                                          : "-"}
+                                      </strong>
+
+                                    </div>
+
+
+                                    {/* YEARLY COSTS */}
+
+                                    <div className="audit-warranty-year-costs">
+
+                                      <div className="audit-warranty-year-row">
+
+                                        <span>
+                                          Purchase Cost
+                                        </span>
+
+                                        <strong>
+                                          {formatCurrency(
+                                            year.purchaseCost ?? 0
+                                          )}
+                                        </strong>
+
+                                      </div>
+
+
+                                      <div className="audit-warranty-year-row">
+
+                                        <span>
+                                          Warranty Cost
+                                        </span>
+
+                                        <strong>
+                                          {formatCurrency(
+                                            year.warrantyCost ?? 0
+                                          )}
+                                        </strong>
+
+                                      </div>
+
+                                    </div>
+
+
+                                    {/* YEAR TOTAL */}
+
+                                    <div className="audit-warranty-year-total">
+
+                                      <span>Total Cost</span>
+
+                                      <strong>
+                                        {formatCurrency(
+                                          year.totalCost ?? 0
+                                        )}
+                                      </strong>
+
+                                    </div>
+
+                                  </div>
+
+                                );
+
+                              })}
+
+                            </div>
+
+                          ) : (
+
+                            <div className="audit-warranty-empty-history">
+
+                              <h6>No Warranty History</h6>
+
+                              <p>
+                                No year-wise warranty cost
+                                records are available.
+                              </p>
+
+                            </div>
+
+                          )}
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )}
+
+              </React.Fragment>
+
+            );
+
+          })
+
+        ) : (
+
+          <tr>
+
+            <td
+              colSpan={6}
+              className="audit-warranty-empty"
+            >
+
+              <h4>No Warranty Records Found</h4>
+
+              <p>
+                No warranty records match the
+                selected filters.
+              </p>
+
+            </td>
+
+          </tr>
+
+        )}
+
+      </tbody>
+
+    </table>
+
+  </div>
 
 </div>
 
-</td>
-
-</tr>
-
-)}
-
-    </React.Fragment>
-
-  );
-
-})}
-
-</tbody>
-      </table>
-    </div>
   );
 };
 const formatDate = (date) => {
@@ -1214,299 +2102,697 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 const renderInsurance = () => (
-  <div className="audit-table-wrapper">
-<table className="audit-table">
-<thead>
-<tr>
-  <th>Details</th>
-  <th>Asset</th>
-  <th>Type</th>
-  <th>Insurance Expiry</th>
-  <th>Status</th>
-  <th>Total Cost</th>
-</tr>
-</thead>
 
-<tbody>
+<div className="audit-insurance-container">
 
-{filteredInsurance.map(item => {
+  {/* ================= HEADER ================= */}
 
-const expiry = new Date(item.insuranceExpiry);
+  <div className="audit-insurance-header">
 
-const daysLeft = Math.ceil(
-  (expiry - new Date()) /
-  (1000 * 60 * 60 * 24)
-);
+    <div className="audit-insurance-heading">
 
-return (
-
-<React.Fragment key={item.instanceId}>
-
-<tr>
-
-<td>
-
-<button
-className="expand-btn"
-onClick={()=>
-setExpandedInsurance(
-expandedInsurance===item.instanceId
-? null
-: item.instanceId
-)
-}
->
-
-{
-expandedInsurance===item.instanceId
-? <FiChevronUp/>
-: <FiChevronDown/>
-}
-
-</button>
-
-</td>
-
-<td>
-
-<strong>{item.assetName}</strong>
-
-<br/>
-
-<small>{item.assetCode}</small>
-
-</td>
-
-<td>{item.assetType}</td>
-
-<td>
-
-{expiry.toLocaleDateString()}
-
-</td>
-
-<td>
-
-<span
-className={
-daysLeft < 0
-? "status-expired"
-: daysLeft <= 30
-? "status-warning"
-: "status-active"
-}
->
-
-{
-daysLeft < 0
-? `${Math.abs(daysLeft)} Days Expired`
-: `${daysLeft} Days Left`
-}
-
-</span>
-
-</td>
-
-<td>
-
-<strong>
-
-{formatCurrency(item.totalCost)}
-
-</strong>
-
-</td>
-
-</tr>
-{expandedInsurance === item.instanceId && (
-
-<tr>
-
-<td colSpan={6}>
-
-<div className="asset-details-card">
-
-<div className="asset-details-header">
-
-<h4>{item.assetName}</h4>
-
-<span className="asset-status">
-  {item.assetType === "hardware" ? "Hardware" : "Software"}
-</span>
-
-</div>
-
-<div className="asset-details-grid">
-
-<div>
-<label>Instance Code</label>
-<p>{item.instanceCode}</p>
-</div>
-
-<div>
-<label>Device</label>
-<p>{item.deviceName || "-"}</p>
-</div>
-
-<div>
-<label>Location</label>
-<p>{item.location}</p>
-</div>
-
-<div>
-<label>Status</label>
-<p>{item.status}</p>
-</div>
-
-<div>
-<label>Purchase Date</label>
-<p>
-{item.purchaseDate
-? new Date(item.purchaseDate).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Insurance Expiry</label>
-<p>
-{item.insuranceExpiry
-? new Date(item.insuranceExpiry).toLocaleDateString()
-: "-"}
-</p>
-</div>
-
-<div>
-<label>Condition</label>
-<p>{item.condition}</p>
-</div>
-
-<div>
-<label>Total Cost</label>
-<p>{formatCurrency(item.totalCost)}</p>
-</div>
-
-<div>
-<label>Purchase Cost</label>
-<p>{formatCurrency(item.purchaseCost)}</p>
-</div>
-
-<div>
-<label>Insurance Cost</label>
-<p>{formatCurrency(item.insuranceCost)}</p>
-</div>
-
-<div>
-<label>Model Number</label>
-<p>{item.modelNo || "-"}</p>
-</div>
-
-<div>
-<label>Serial Number</label>
-<p>{item.serialNumber || "-"}</p>
-</div>
-<div>
-<label>Coverage Types</label>
-<p>{item.coverageType || "-"}</p>
-</div>
-
-
-</div>
-
-{item.yearlyInsurance?.length > 0 && (
-
-<>
-
-<h4 style={{ marginTop: 30 }}>
-Insurance Cost History
-</h4>
-
-<div className="yearly-cost-grid">
-
-{item.yearlyInsurance?.map((year) => {
-
-  const currentYear = new Date().getFullYear();
-
-  let badge;
-
-  if (year.year > currentYear) {
-    badge = {
-      text: "Upcoming",
-      className: "upcoming",
-    };
-  } else if (year.year === currentYear) {
-    badge = {
-      text: "Current",
-      className: "current",
-    };
-  } else {
-    badge = {
-      text: "Completed",
-      className: "completed",
-    };
-  }
-
-  return (
-    <div key={year.year} className="year-card">
-
-      <span className={`year-badge ${badge.className}`}>
-        {badge.text}
+      <span className="audit-insurance-eyebrow">
+        INSURANCE REPORT
       </span>
 
-      <div className="year-card-header">
-        <h4>Year :- {year.year}</h4>
+      <h3>Asset Insurance Overview</h3>
 
-        <p>
-          {item.insurancePurchaseDate
-            ? formatDate(item.insurancePurchaseDate)
-            : "-"}
-        </p>
-      </div>
-
-      <div className="year-row">
-        <span>Purchase</span>
-        <span>{formatCurrency(year.purchaseCost || 0)}</span>
-      </div>
-
-      <div className="year-row">
-        <span>Insurance</span>
-        <span>{formatCurrency(year.insuranceCost || 0)}</span>
-      </div>
-
-      <div className="year-total">
-        Total : {formatCurrency(year.totalCost || 0)}
-      </div>
+      <p>
+        Monitor asset insurance coverage, expiration dates,
+        policy information and historical insurance costs.
+      </p>
 
     </div>
-  );
 
-})}
+    <div className="audit-insurance-count">
+      <span>Assets</span>
+      <strong>{filteredInsurance.length}</strong>
+    </div>
+
+  </div>
+
+
+  {/* ================= INSURANCE TABLE ================= */}
+
+  <div className="audit-insurance-table-wrapper">
+
+    <table className="audit-insurance-table">
+
+      <thead>
+        <tr>
+          <th className="audit-insurance-expand-col">
+            Details
+          </th>
+          <th>Asset</th>
+          <th>Type</th>
+          <th>Insurance Expiry</th>
+          <th>Status</th>
+          <th>Total Cost</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {filteredInsurance.length > 0 ? (
+
+          filteredInsurance.map((item) => {
+
+            const isExpanded =
+              expandedInsurance === item.instanceId;
+
+            const expiry = item.insuranceExpiry
+              ? new Date(item.insuranceExpiry)
+              : null;
+
+            const validExpiry =
+              expiry && !Number.isNaN(expiry.getTime());
+
+            const daysLeft = validExpiry
+              ? Math.ceil(
+                  (expiry.getTime() - Date.now()) /
+                  (1000 * 60 * 60 * 24)
+                )
+              : null;
+
+            const insuranceStatus =
+              daysLeft === null
+                ? {
+                    text: "Not Available",
+                    className: "unknown",
+                  }
+                : daysLeft < 0
+                ? {
+                    text: `${Math.abs(daysLeft)} Days Expired`,
+                    className: "expired",
+                  }
+                : daysLeft === 0
+                ? {
+                    text: "Expires Today",
+                    className: "warning",
+                  }
+                : daysLeft <= 30
+                ? {
+                    text: `${daysLeft} Days Left`,
+                    className: "warning",
+                  }
+                : {
+                    text: `${daysLeft} Days Left`,
+                    className: "active",
+                  };
+
+            const formatInsuranceDate = (value) => {
+              if (!value) return "-";
+
+              const date = new Date(value);
+
+              return Number.isNaN(date.getTime())
+                ? "-"
+                : date.toLocaleDateString();
+            };
+
+            const coverageTypes = Array.isArray(item.coverageType)
+              ? item.coverageType
+                  .map((coverage) =>
+                    typeof coverage === "string"
+                      ? coverage
+                      : coverage?.label || coverage?.value || ""
+                  )
+                  .filter(Boolean)
+              : item.coverageType
+              ? [String(item.coverageType)]
+              : [];
+
+            return (
+
+              <React.Fragment key={item.instanceId}>
+
+                {/* ================= MAIN ROW ================= */}
+
+                <tr
+                  className={
+                    isExpanded
+                      ? "audit-insurance-row expanded"
+                      : "audit-insurance-row"
+                  }
+                >
+
+                  {/* EXPAND */}
+
+                  <td
+                    className="audit-insurance-expand-cell"
+                    data-label="Details"
+                  >
+
+                    <button
+                      type="button"
+                      className={
+                        isExpanded
+                          ? "audit-insurance-expand-btn active"
+                          : "audit-insurance-expand-btn"
+                      }
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        `${isExpanded ? "Collapse" : "Expand"} insurance details for ${item.assetName}`
+                      }
+                      onClick={() =>
+                        setExpandedInsurance(
+                          isExpanded
+                            ? null
+                            : item.instanceId
+                        )
+                      }
+                    >
+                      {isExpanded
+                        ? <FiChevronUp />
+                        : <FiChevronDown />}
+                    </button>
+
+                  </td>
+
+
+                  {/* ASSET */}
+
+                  <td
+                    data-label="Asset"
+                    className="audit-insurance-asset-cell"
+                  >
+
+                    <div className="audit-insurance-asset-info">
+
+                      <strong>
+                        {item.assetName || "-"}
+                      </strong>
+
+                      <span>
+                        {item.assetCode || "-"}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+
+                  {/* TYPE */}
+
+                  <td data-label="Type">
+
+                    <span
+                      className={
+                        `audit-insurance-type ${
+                          item.assetType === "hardware"
+                            ? "hardware"
+                            : "software"
+                        }`
+                      }
+                    >
+                      {item.assetType === "hardware"
+                        ? "Hardware"
+                        : "Software"}
+                    </span>
+
+                  </td>
+
+
+                  {/* INSURANCE EXPIRY */}
+
+                  <td data-label="Insurance Expiry">
+
+                    <span className="audit-insurance-date">
+                      {formatInsuranceDate(
+                        item.insuranceExpiry
+                      )}
+                    </span>
+
+                  </td>
+
+
+                  {/* STATUS */}
+
+                  <td data-label="Status">
+
+                    <span
+                      className={
+                        `audit-insurance-status ${insuranceStatus.className}`
+                      }
+                    >
+                      <span className="audit-insurance-status-dot" />
+
+                      {insuranceStatus.text}
+                    </span>
+
+                  </td>
+
+
+                  {/* TOTAL COST */}
+
+                  <td data-label="Total Cost">
+
+                    <strong className="audit-insurance-total-value">
+                      {formatCurrency(item.totalCost ?? 0)}
+                    </strong>
+
+                  </td>
+
+                </tr>
+
+
+                {/* ================= EXPANDED ROW ================= */}
+
+                {isExpanded && (
+
+                  <tr className="audit-insurance-detail-row">
+
+                    <td colSpan={6}>
+
+                      <div className="audit-insurance-details">
+
+                        {/* DETAILS HEADER */}
+
+                        <div className="audit-insurance-details-header">
+
+                          <div>
+
+                            <span className="audit-insurance-details-eyebrow">
+                              INSURANCE INFORMATION
+                            </span>
+
+                            <h4>
+                              {item.assetName || "-"}
+                            </h4>
+
+                            <p>
+                              {item.assetCode || "-"}
+                            </p>
+
+                          </div>
+
+
+                          <div className="audit-insurance-details-badges">
+
+                            <span
+                              className={
+                                `audit-insurance-type ${
+                                  item.assetType === "hardware"
+                                    ? "hardware"
+                                    : "software"
+                                }`
+                              }
+                            >
+                              {item.assetType === "hardware"
+                                ? "Hardware"
+                                : "Software"}
+                            </span>
+
+                            <span
+                              className={
+                                `audit-insurance-status ${insuranceStatus.className}`
+                              }
+                            >
+                              <span className="audit-insurance-status-dot" />
+
+                              {insuranceStatus.text}
+                            </span>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= ASSET INFORMATION ================= */}
+
+                        <div className="audit-insurance-detail-section">
+
+                          <div className="audit-insurance-section-title">
+                            <h5>Asset Information</h5>
+                          </div>
+
+                          <div className="audit-insurance-details-grid">
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Instance Code</label>
+                              <p>{item.instanceCode || "-"}</p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Device</label>
+                              <p>{item.deviceName || "-"}</p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Location</label>
+                              <p>{item.location || "-"}</p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Status</label>
+                              <p>
+                                {String(item.status || "-")
+                                  .replace(/_/g, " ")}
+                              </p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Purchase Date</label>
+                              <p>
+                                {formatInsuranceDate(
+                                  item.purchaseDate
+                                )}
+                              </p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Insurance Expiry</label>
+                              <p>
+                                {formatInsuranceDate(
+                                  item.insuranceExpiry
+                                )}
+                              </p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Condition</label>
+                              <p>{item.condition || "-"}</p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Model Number</label>
+                              <p>{item.modelNo || "-"}</p>
+                            </div>
+
+                            <div className="audit-insurance-detail-item">
+                              <label>Serial Number</label>
+                              <p>{item.serialNumber || "-"}</p>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= INSURANCE COVERAGE ================= */}
+
+                        <div className="audit-insurance-detail-section">
+
+                          <div className="audit-insurance-section-title">
+                            <h5>Insurance Coverage</h5>
+                          </div>
+
+                          <div className="audit-insurance-coverage-box">
+
+                            <label>Coverage Types</label>
+
+                            {coverageTypes.length > 0 ? (
+
+                              <div className="audit-insurance-coverage-list">
+
+                                {coverageTypes.map((coverage, index) => (
+
+                                  <span
+                                    key={`${coverage}-${index}`}
+                                    className="audit-insurance-coverage-badge"
+                                  >
+                                    {coverage}
+                                  </span>
+
+                                ))}
+
+                              </div>
+
+                            ) : (
+
+                              <p className="audit-insurance-no-coverage">
+                                No coverage information available
+                              </p>
+
+                            )}
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= FINANCIAL SUMMARY ================= */}
+
+                        <div className="audit-insurance-detail-section">
+
+                          <div className="audit-insurance-section-title">
+                            <h5>Financial Summary</h5>
+                          </div>
+
+                          <div className="audit-insurance-financial-grid">
+
+                            <div className="audit-insurance-financial-item">
+
+                              <label>Purchase Cost</label>
+
+                              <strong>
+                                {formatCurrency(
+                                  item.purchaseCost ?? 0
+                                )}
+                              </strong>
+
+                            </div>
+
+                            <div className="audit-insurance-financial-item">
+
+                              <label>Insurance Cost</label>
+
+                              <strong>
+                                {formatCurrency(
+                                  item.insuranceCost ?? 0
+                                )}
+                              </strong>
+
+                            </div>
+
+                            <div className="audit-insurance-financial-item highlight">
+
+                              <label>Total Cost</label>
+
+                              <strong>
+                                {formatCurrency(
+                                  item.totalCost ?? 0
+                                )}
+                              </strong>
+
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= YEARLY INSURANCE HISTORY ================= */}
+
+                        <div className="audit-insurance-history-section">
+
+                          <div className="audit-insurance-history-heading">
+
+                            <div>
+                              <h5>Insurance Cost History</h5>
+
+                              <p>
+                                Year-wise purchase,
+                                insurance and total costs
+                              </p>
+                            </div>
+
+                            <span className="audit-insurance-history-count">
+                              {item.yearlyInsurance?.length ?? 0} Years
+                            </span>
+
+                          </div>
+
+
+                          {item.yearlyInsurance?.length > 0 ? (
+
+                            <div className="audit-insurance-year-grid">
+
+                              {item.yearlyInsurance.map((year) => {
+
+                                const currentYear =
+                                  new Date().getFullYear();
+
+                                let badge;
+
+                                if (year.year > currentYear) {
+                                  badge = {
+                                    text: "Upcoming",
+                                    className: "upcoming",
+                                  };
+                                } else if (
+                                  year.year === currentYear
+                                ) {
+                                  badge = {
+                                    text: "Current",
+                                    className: "current",
+                                  };
+                                } else {
+                                  badge = {
+                                    text: "Completed",
+                                    className: "completed",
+                                  };
+                                }
+
+                                return (
+
+                                  <div
+                                    key={year.year}
+                                    className="audit-insurance-year-card"
+                                  >
+
+                                    {/* YEAR HEADER */}
+
+                                    <div className="audit-insurance-year-header">
+
+                                      <div>
+                                        <span className="audit-insurance-year-eyebrow">
+                                          INSURANCE PERIOD
+                                        </span>
+
+                                        <h6>{year.year}</h6>
+                                      </div>
+
+                                      <span
+                                        className={
+                                          `audit-insurance-year-badge ${badge.className}`
+                                        }
+                                      >
+                                        {badge.text}
+                                      </span>
+
+                                    </div>
+
+
+                                    {/* PURCHASE DATE */}
+
+                                    <div className="audit-insurance-year-purchase">
+
+                                      <span>
+                                        Insurance Purchase
+                                      </span>
+
+                                      <strong>
+                                        {item.insurancePurchaseDate
+                                          ? formatDate(
+                                              item.insurancePurchaseDate
+                                            )
+                                          : "-"}
+                                      </strong>
+
+                                    </div>
+
+
+                                    {/* COST DETAILS */}
+
+                                    <div className="audit-insurance-year-costs">
+
+                                      <div className="audit-insurance-year-row">
+
+                                        <span>Purchase Cost</span>
+
+                                        <strong>
+                                          {formatCurrency(
+                                            year.purchaseCost ?? 0
+                                          )}
+                                        </strong>
+
+                                      </div>
+
+                                      <div className="audit-insurance-year-row">
+
+                                        <span>Insurance Cost</span>
+
+                                        <strong>
+                                          {formatCurrency(
+                                            year.insuranceCost ?? 0
+                                          )}
+                                        </strong>
+
+                                      </div>
+
+                                    </div>
+
+
+                                    {/* TOTAL */}
+
+                                    <div className="audit-insurance-year-total">
+
+                                      <span>Total Cost</span>
+
+                                      <strong>
+                                        {formatCurrency(
+                                          year.totalCost ?? 0
+                                        )}
+                                      </strong>
+
+                                    </div>
+
+                                  </div>
+
+                                );
+
+                              })}
+
+                            </div>
+
+                          ) : (
+
+                            <div className="audit-insurance-empty-history">
+
+                              <h6>No Insurance History</h6>
+
+                              <p>
+                                No year-wise insurance cost
+                                records are available.
+                              </p>
+
+                            </div>
+
+                          )}
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )}
+
+              </React.Fragment>
+
+            );
+
+          })
+
+        ) : (
+
+          <tr>
+            <td
+              colSpan={6}
+              className="audit-insurance-empty"
+            >
+              <h4>No Insurance Records Found</h4>
+
+              <p>
+                No insurance records match the
+                selected filters.
+              </p>
+            </td>
+          </tr>
+
+        )}
+
+      </tbody>
+
+    </table>
+
+  </div>
 
 </div>
 
-</>
-
-)}
-
-</div>
-
-</td>
-
-</tr>
-
-)}
-
-      </React.Fragment>
-
-    );
-
-  })}
-
-</tbody>
-
-</table>
-
-</div>
 );
 // Helper Functions 
 const getDaysRemaining = (date) => {
@@ -1556,265 +2842,691 @@ const formatCurrency = (amount) =>
 
 
 const renderMaintenance = () => (
-  <div className="audit-table-wrapper">
 
-    <h3>Maintenance Audit</h3>
+<div className="audit-maintenance-container">
 
-    <table className="audit-table">
+  {/* ================= HEADER ================= */}
+
+  <div className="audit-maintenance-header">
+
+    <div className="audit-maintenance-heading">
+
+      <span className="audit-maintenance-eyebrow">
+        LIFECYCLE REPORT
+      </span>
+
+      <h3>Maintenance & Renewal Audit</h3>
+
+      <p>
+        Track upcoming maintenance schedules,
+        software renewals and historical asset costs.
+      </p>
+
+    </div>
+
+    <div className="audit-maintenance-count">
+      <span>Assets</span>
+      <strong>{filteredMaintenance.length}</strong>
+    </div>
+
+  </div>
+
+
+  {/* ================= TABLE ================= */}
+
+  <div className="audit-maintenance-table-wrapper">
+
+    <table className="audit-maintenance-table">
 
       <thead>
         <tr>
-          <th>Details</th>
+          <th className="audit-maintenance-expand-col">
+            Details
+          </th>
+
           <th>Asset</th>
+
           <th>Purchase Date</th>
-          <th>{assetType === "hardware" ? "Maintenance Date" : "Renewal Date"}</th>
+
+          <th>
+            {assetType === "hardware"
+              ? "Maintenance Date"
+              : assetType === "software"
+              ? "Renewal Date"
+              : "Maintenance / Renewal"}
+          </th>
+
           <th>Purchase Cost</th>
+
           <th>Days Left</th>
         </tr>
       </thead>
 
-<tbody>
 
-  {filteredMaintenance.map(item => {
+      <tbody>
 
-    const days = getDaysRemaining(item.nextMaintenanceDate);
-    const status = getMaintenanceStatus(item.nextMaintenanceDate);
-    const yearlyHistory =
-  item.assetType === "hardware"
-    ? item.yearlyMaintenance
-    : item.yearlyRenewal;
-    return (
+        {filteredMaintenance.length > 0 ? (
 
-      <React.Fragment key={item.instanceId}>
+          filteredMaintenance.map((item) => {
 
-        {/* Summary Row */}
+            const isHardware =
+              item.assetType === "hardware";
 
-        <tr>
+            const isExpanded =
+              expandedMaintenance === item.instanceId;
 
-          <td>
+            const scheduleDate = isHardware
+              ? item.nextMaintenanceDate
+              : item.renewalDate;
 
-            <button
-              type="button"
-              className="expand-btn"
-              onClick={() =>
-                setExpandedMaintenance(
-                  expandedMaintenance === item.instanceId
-                    ? null
-                    : item.instanceId
-                )
-              }
+            const days = scheduleDate
+              ? getDaysRemaining(scheduleDate)
+              : null;
+
+            const status = scheduleDate
+              ? getMaintenanceStatus(scheduleDate)
+              : null;
+
+            const yearlyHistory = isHardware
+              ? item.yearlyMaintenance
+              : item.yearlyRenewal;
+
+            const historyLabel = isHardware
+              ? "Maintenance"
+              : "Renewal";
+
+            const formatMaintenanceDate = (value) => {
+              if (!value) return "-";
+
+              const date = new Date(value);
+
+              return Number.isNaN(date.getTime())
+                ? "-"
+                : date.toLocaleDateString();
+            };
+
+            const scheduleStatus =
+              days === null || !Number.isFinite(days)
+                ? {
+                    text: "Not Scheduled",
+                    className: "unknown",
+                  }
+                : days < 0
+                ? {
+                    text: `${Math.abs(days)} Days Overdue`,
+                    className: "overdue",
+                  }
+                : days === 0
+                ? {
+                    text: "Due Today",
+                    className: "warning",
+                  }
+                : days <= 30
+                ? {
+                    text: `${days} Days Left`,
+                    className: "warning",
+                  }
+                : {
+                    text: `${days} Days Left`,
+                    className: "active",
+                  };
+
+            return (
+
+              <React.Fragment key={item.instanceId}>
+
+                {/* ================= MAIN ROW ================= */}
+
+                <tr
+                  className={
+                    isExpanded
+                      ? "audit-maintenance-row expanded"
+                      : "audit-maintenance-row"
+                  }
+                >
+
+                  {/* EXPAND BUTTON */}
+
+                  <td
+                    className="audit-maintenance-expand-cell"
+                    data-label="Details"
+                  >
+
+                    <button
+                      type="button"
+                      className={
+                        isExpanded
+                          ? "audit-maintenance-expand-btn active"
+                          : "audit-maintenance-expand-btn"
+                      }
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        `${isExpanded ? "Collapse" : "Expand"} details for ${item.assetName}`
+                      }
+                      onClick={() =>
+                        setExpandedMaintenance(
+                          isExpanded
+                            ? null
+                            : item.instanceId
+                        )
+                      }
+                    >
+                      {isExpanded
+                        ? <FiChevronUp />
+                        : <FiChevronDown />}
+                    </button>
+
+                  </td>
+
+
+                  {/* ASSET */}
+
+                  <td
+                    data-label="Asset"
+                    className="audit-maintenance-asset-cell"
+                  >
+
+                    <div className="audit-maintenance-asset-info">
+
+                      <strong>
+                        {item.assetName || "-"}
+                      </strong>
+
+                      <span>
+                        {item.assetCode || "-"}
+                      </span>
+
+                      <span
+                        className={
+                          `audit-maintenance-type ${
+                            isHardware
+                              ? "hardware"
+                              : "software"
+                          }`
+                        }
+                      >
+                        {isHardware
+                          ? "Hardware"
+                          : "Software"}
+                      </span>
+
+                    </div>
+
+                  </td>
+
+
+                  {/* PURCHASE DATE */}
+
+                  <td data-label="Purchase Date">
+
+                    <span className="audit-maintenance-date">
+                      {formatMaintenanceDate(
+                        item.purchaseDate
+                      )}
+                    </span>
+
+                  </td>
+
+
+                  {/* MAINTENANCE / RENEWAL DATE */}
+
+                  <td
+                    data-label={
+                      isHardware
+                        ? "Maintenance Date"
+                        : "Renewal Date"
+                    }
+                  >
+
+                    <div className="audit-maintenance-schedule-info">
+
+                      <span className="audit-maintenance-date">
+                        {formatMaintenanceDate(scheduleDate)}
+                      </span>
+
+                      <small>
+                        {isHardware
+                          ? "Next Maintenance"
+                          : "Next Renewal"}
+                      </small>
+
+                    </div>
+
+                  </td>
+
+
+                  {/* PURCHASE COST */}
+
+                  <td data-label="Purchase Cost">
+
+                    <strong className="audit-maintenance-purchase-value">
+                      {formatCurrency(
+                        item.purchaseCost ?? 0
+                      )}
+                    </strong>
+
+                  </td>
+
+
+                  {/* DAYS LEFT */}
+
+                  <td data-label="Days Left">
+
+                    <span
+                      className={
+                        `audit-maintenance-status ${scheduleStatus.className}`
+                      }
+                      title={
+                        status == null
+                          ? undefined
+                          : String(
+                              typeof status === "object"
+                                ? status.label ?? status.text ?? ""
+                                : status
+                            )
+                      }
+                    >
+                      <span className="audit-maintenance-status-dot" />
+
+                      {scheduleStatus.text}
+                    </span>
+
+                  </td>
+
+                </tr>
+
+
+                {/* ================= EXPANDED ROW ================= */}
+
+                {isExpanded && (
+
+                  <tr className="audit-maintenance-detail-row">
+
+                    <td colSpan={6}>
+
+                      <div className="audit-maintenance-details">
+
+                        {/* DETAILS HEADER */}
+
+                        <div className="audit-maintenance-details-header">
+
+                          <div>
+
+                            <span className="audit-maintenance-details-eyebrow">
+                              {isHardware
+                                ? "HARDWARE MAINTENANCE"
+                                : "SOFTWARE RENEWAL"}
+                            </span>
+
+                            <h4>
+                              {item.assetName || "-"}
+                            </h4>
+
+                            <p>
+                              {item.assetCode || "-"}
+                            </p>
+
+                          </div>
+
+
+                          <div className="audit-maintenance-details-badges">
+
+                            <span
+                              className={
+                                `audit-maintenance-type ${
+                                  isHardware
+                                    ? "hardware"
+                                    : "software"
+                                }`
+                              }
+                            >
+                              {isHardware
+                                ? "Hardware"
+                                : "Software"}
+                            </span>
+
+                            <span
+                              className={
+                                `audit-maintenance-status ${scheduleStatus.className}`
+                              }
+                            >
+                              <span className="audit-maintenance-status-dot" />
+
+                              {scheduleStatus.text}
+                            </span>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= SCHEDULE SUMMARY ================= */}
+
+                        <div className="audit-maintenance-summary-grid">
+
+                          <div className="audit-maintenance-summary-item">
+
+                            <label>Purchase Date</label>
+
+                            <strong>
+                              {formatMaintenanceDate(
+                                item.purchaseDate
+                              )}
+                            </strong>
+
+                          </div>
+
+
+                          <div className="audit-maintenance-summary-item">
+
+                            <label>
+                              {isHardware
+                                ? "Next Maintenance"
+                                : "Next Renewal"}
+                            </label>
+
+                            <strong>
+                              {formatMaintenanceDate(
+                                scheduleDate
+                              )}
+                            </strong>
+
+                          </div>
+
+
+                          <div className="audit-maintenance-summary-item highlight">
+
+                            <label>Purchase Cost</label>
+
+                            <strong>
+                              {formatCurrency(
+                                item.purchaseCost ?? 0
+                              )}
+                            </strong>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= HISTORY ================= */}
+
+                        <div className="audit-maintenance-history-section">
+
+                          <div className="audit-maintenance-history-heading">
+
+                            <div>
+
+                              <h5>
+                                {isHardware
+                                  ? "Maintenance Cost History"
+                                  : "Renewal Cost History"}
+                              </h5>
+
+                              <p>
+                                Year-wise purchase,
+                                {isHardware
+                                  ? " maintenance"
+                                  : " renewal"}{" "}
+                                and total costs
+                              </p>
+
+                            </div>
+
+                            <span className="audit-maintenance-history-count">
+                              {yearlyHistory?.length ?? 0} Years
+                            </span>
+
+                          </div>
+
+
+                          {yearlyHistory?.length > 0 ? (
+
+                            <div className="audit-maintenance-year-grid">
+
+                              {[...yearlyHistory]
+                                .sort((a, b) => a.year - b.year)
+                                .map((year) => {
+
+                                  const currentYear =
+                                    new Date().getFullYear();
+
+                                  let badge;
+
+                                  if (year.year > currentYear) {
+                                    badge = {
+                                      text: "Upcoming",
+                                      className: "upcoming",
+                                    };
+                                  } else if (
+                                    year.year === currentYear
+                                  ) {
+                                    badge = {
+                                      text: "Current",
+                                      className: "current",
+                                    };
+                                  } else {
+                                    badge = {
+                                      text: "Completed",
+                                      className: "completed",
+                                    };
+                                  }
+
+                                  return (
+
+                                    <div
+                                      key={year.year}
+                                      className="audit-maintenance-year-card"
+                                    >
+
+                                      {/* YEAR HEADER */}
+
+                                      <div className="audit-maintenance-year-header">
+
+                                        <div>
+
+                                          <span className="audit-maintenance-year-eyebrow">
+                                            {isHardware
+                                              ? "MAINTENANCE PERIOD"
+                                              : "RENEWAL PERIOD"}
+                                          </span>
+
+                                          <h6>{year.year}</h6>
+
+                                        </div>
+
+
+                                        <span
+                                          className={
+                                            `audit-maintenance-year-badge ${badge.className}`
+                                          }
+                                        >
+                                          {badge.text}
+                                        </span>
+
+                                      </div>
+
+
+                                      {/* PURCHASE DATE */}
+
+                                      <div className="audit-maintenance-year-purchase">
+
+                                        <span>Asset Purchase</span>
+
+                                        <strong>
+                                          {formatMaintenanceDate(
+                                            item.purchaseDate
+                                          )}
+                                        </strong>
+
+                                      </div>
+
+
+                                      {/* YEARLY COSTS */}
+
+                                      <div className="audit-maintenance-year-costs">
+
+                                        <div className="audit-maintenance-year-row">
+
+                                          <span>Purchase Cost</span>
+
+                                          <strong>
+                                            {formatCurrency(
+                                              year.purchaseCost ?? 0
+                                            )}
+                                          </strong>
+
+                                        </div>
+
+
+                                        <div className="audit-maintenance-year-row">
+
+                                          <span>
+                                            {historyLabel} Cost
+                                          </span>
+
+                                          <strong>
+                                            {formatCurrency(
+                                              isHardware
+                                                ? year.maintenanceCost ?? 0
+                                                : year.renewalCost ?? 0
+                                            )}
+                                          </strong>
+
+                                        </div>
+
+                                      </div>
+
+
+                                      {/* YEAR TOTAL */}
+
+                                      <div className="audit-maintenance-year-total">
+
+                                        <span>Total Cost</span>
+
+                                        <strong>
+                                          {formatCurrency(
+                                            year.totalCost ?? 0
+                                          )}
+                                        </strong>
+
+                                      </div>
+
+                                    </div>
+
+                                  );
+
+                                })}
+
+                            </div>
+
+                          ) : (
+
+                            <div className="audit-maintenance-empty-history">
+
+                              <h6>
+                                No {historyLabel} History
+                              </h6>
+
+                              <p>
+                                No year-wise{" "}
+                                {historyLabel.toLowerCase()}{" "}
+                                cost records are available.
+                              </p>
+
+                            </div>
+
+                          )}
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )}
+
+              </React.Fragment>
+
+            );
+
+          })
+
+        ) : (
+
+          <tr>
+
+            <td
+              colSpan={6}
+              className="audit-maintenance-empty"
             >
-              {expandedMaintenance === item.instanceId
-                ? <FiChevronUp />
-                : <FiChevronDown />}
-            </button>
 
+              <h4>No Maintenance Records Found</h4>
 
-          </td>
-          <td>
-            <strong>{item.assetName}</strong>
+              <p>
+                No maintenance or renewal records
+                match the selected filters.
+              </p>
+
             </td>
 
-          <td>
-            {item.purchaseDate
-              ? new Date(item.purchaseDate).toLocaleDateString()
-              : "-"}
-          </td>
+          </tr>
 
-          <td>
-            {item.assetType === "hardware"
-              ? item.nextMaintenanceDate
-                ? new Date(item.nextMaintenanceDate).toLocaleDateString()
-                : "-"
-              : item.renewalDate
-                ? new Date(item.renewalDate).toLocaleDateString()
-                : "-"}
+        )}
 
-          </td>
-
-
-          <td>
-            <strong>
-              {formatCurrency(item.purchaseCost)}
-            </strong>
-          </td>
-          <td>
-           {days === null
-                ? "-"
-                : days < 0
-                ? `${Math.abs(days)} Days Overdue`
-                : `${days} Days Left`}
-          </td>
-
-        </tr>
-
-        {/* Expanded Row */}
-
-{expandedMaintenance === item.instanceId && (
-
-<tr>
-
-<td colSpan={6}>
-
-<div className="asset-details-card">
-
-<div className="asset-details-header">
-
-<h4>
-{item.assetName}
-</h4>
-<p>{item.assetCode}</p>
-
-<span className="asset-status">
-
-{item.assetType === "hardware"
-? "Hardware"
-: "Software"}
-
-</span>
-
-</div>
-
-{/* General Information */}
-
-{/* Maintenance Cost History */}
-
-{yearlyHistory?.length > 0 && (
-
-  <>
-
-    <h4 style={{ marginTop: 30 }}>
-  {item.assetType === "hardware"
-    ? "Maintenance Cost History"
-    : "Renewal Cost History"}
-</h4>
-
-    <div className="yearly-cost-grid">
-
-{[...yearlyHistory]
-  .sort((a, b) => a.year - b.year) // oldest → newest
-  .map((year) => {
-
-  const currentYear = new Date().getFullYear();
-
-  let badge = null;
-
-  if (year.year > currentYear) {
-    badge = {
-      text: "Upcoming",
-      className: "upcoming",
-    };
-  } else if (year.year === currentYear) {
-    badge = {
-      text: "Current",
-      className: "current",
-    };
-  } else {
-    badge = {
-      text: "Completed",
-      className: "completed",
-    };
-  }
-
-  return (
-
-    <div
-      key={year.year}
-      className="year-card"
-    >
-
-      <span className={`year-badge ${badge.className}`}>
-        {badge.text}
-      </span>
-
-      <div className="year-card-header">
-        <h4>Year :- {year.year}</h4>
-           <p>{item.purchaseDate
-              ? new Date(item.purchaseDate).toLocaleDateString()
-              : "-"}</p>
-      </div>
-
-      <div className="year-row">
-        <span>Purchase</span>
-        <span>{formatCurrency(year.purchaseCost || 0)}</span>
-      </div>
-
-      {item.assetType === "hardware" ? (
-        <>
-          <div className="year-row">
-            <span>Maintenance</span>
-            <span>{formatCurrency(year.maintenanceCost || 0)}</span>
-          </div>
-{/* 
-          <div className="year-row">
-            <span>Warranty</span>
-            <span>{formatCurrency(year.warrantyCost || 0)}</span>
-          </div>
-
-          <div className="year-row">
-            <span>Insurance</span>
-            <span>{formatCurrency(year.insuranceCost || 0)}</span>
-          </div>
-
-          <div className="year-row">
-            <span>Upgrade</span>
-            <span>{formatCurrency(year.upgradeCost || 0)}</span>
-          </div> */}
-        </>
-      ) : (
-        <div className="year-row">
-          <span>Renewal</span>
-          <span>{formatCurrency(year.renewalCost || 0)}</span>
-        </div>
-      )}
-
-      <div className="year-total">
-        Total : {formatCurrency(year.totalCost || 0)}
-      </div>
-
-    </div>
-
-  );
-
-})}
-
-    </div>
-
-  </>
-
-)}
-
-
-</div>
-
-</td>
-
-</tr>
-
-)}
-
-      </React.Fragment>
-
-    );
-
-  })}
-
-</tbody>
+      </tbody>
 
     </table>
 
   </div>
+
+</div>
+
 );
 const renderAssignment = () => (
-  <div className="audit-table-wrapper">
 
-    <h3>Assignment Audit</h3>
+<div className="audit-assignment-container">
 
-    <table className="audit-table">
+  {/* ================= HEADER ================= */}
+
+  <div className="audit-assignment-header">
+
+    <div className="audit-assignment-heading">
+
+      <span className="audit-assignment-eyebrow">
+        ASSET MOVEMENT REPORT
+      </span>
+
+      <h3>Assignment Audit</h3>
+
+      <p>
+        Track asset assignments, employee transfers,
+        returns and complete assignment history.
+      </p>
+
+    </div>
+
+    <div className="audit-assignment-count">
+      <span>Assets</span>
+      <strong>{assignments.length}</strong>
+    </div>
+
+  </div>
+
+
+  {/* ================= TABLE ================= */}
+
+  <div className="audit-assignment-table-wrapper">
+
+    <table className="audit-assignment-table">
 
       <thead>
         <tr>
-          <th>Details</th>
+          <th className="audit-assignment-expand-col">
+            Details
+          </th>
           <th>Asset</th>
           <th>Type</th>
           <th>Current Status</th>
@@ -1825,232 +3537,644 @@ const renderAssignment = () => (
 
       <tbody>
 
-        {assignments.map((item) => (
+        {assignments.length > 0 ? (
 
-          <React.Fragment key={item.instanceId}>
+          assignments.map((item) => {
 
-            <tr>
+            const isExpanded =
+              expandedAssignment === item.instanceId;
 
-              <td>
-                <button
-                  className="expand-btn"
-                  onClick={() =>
-                    setExpandedAssignment(
-                      expandedAssignment === item.instanceId
-                        ? null
-                        : item.instanceId
-                    )
+            const isHardware =
+              item.assetType === "hardware";
+
+            const assetStatus = String(
+              item.status || "unknown"
+            ).toLowerCase();
+
+            const statusClass =
+              assetStatus === "assigned" ||
+              assetStatus === "active"
+                ? "assigned"
+                : assetStatus === "returned" ||
+                  assetStatus === "in_stock"
+                ? "returned"
+                : assetStatus === "transferred"
+                ? "transferred"
+                : "neutral";
+
+            const formatAssignmentDate = (value) => {
+              if (!value) return "-";
+
+              const date = new Date(value);
+
+              return Number.isNaN(date.getTime())
+                ? "-"
+                : date.toLocaleDateString();
+            };
+
+            const assignmentHistory =
+              item.assignmentHistory || [];
+
+            return (
+
+              <React.Fragment key={item.instanceId}>
+
+                {/* ================= SUMMARY ROW ================= */}
+
+                <tr
+                  className={
+                    isExpanded
+                      ? "audit-assignment-row expanded"
+                      : "audit-assignment-row"
                   }
                 >
-                  {expandedAssignment === item.instanceId
-                    ? <FiChevronUp />
-                    : <FiChevronDown />}
-                </button>
-              </td>
 
-              {/* <td>
-                <strong>{item.assetName}</strong>
-                <br />
-                <small>{item.instanceCode}</small>
-              </td> */}
-                <td>
-                  {item.deviceName}
-                </td>
-              <td>
-                {item.assetType}
-              </td>
+                  {/* EXPAND */}
 
-              <td>
-                {item.status}
-              </td>
+                  <td
+                    className="audit-assignment-expand-cell"
+                    data-label="Details"
+                  >
 
-              <td>
-                {item.purchaseDate
-                  ? new Date(item.purchaseDate).toLocaleDateString()
-                  : "-"}
-              </td>
+                    <button
+                      type="button"
+                      className={
+                        isExpanded
+                          ? "audit-assignment-expand-btn active"
+                          : "audit-assignment-expand-btn"
+                      }
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        `${isExpanded ? "Collapse" : "Expand"} assignment history for ${item.deviceName || item.assetName || "asset"}`
+                      }
+                      onClick={() =>
+                        setExpandedAssignment(
+                          isExpanded
+                            ? null
+                            : item.instanceId
+                        )
+                      }
+                    >
+                      {isExpanded
+                        ? <FiChevronUp />
+                        : <FiChevronDown />}
+                    </button>
 
-              <td>
-                <strong>
-                  {formatCurrency(item.totalCost || 0)}
-                </strong>
-              </td>
+                  </td>
 
-            </tr>
 
-            {expandedAssignment === item.instanceId && (
+                  {/* ASSET */}
 
-              <tr>
+                  <td
+                    data-label="Asset"
+                    className="audit-assignment-asset-cell"
+                  >
 
-                <td colSpan={5}>
+                    <div className="audit-assignment-asset-info">
 
-   <div className="assignment-history">
-              
-  <h4>Assignment History</h4>
+                      <strong>
+                        {item.deviceName ||
+                          item.assetName ||
+                          "-"}
+                      </strong>
 
-  {item.assignmentHistory.map((history, index) => (
+                      <span>
+                        {item.instanceCode ||
+                          item.assetCode ||
+                          "-"}
+                      </span>
 
-    <div className="history-card" key={index}>
+                    </div>
 
-      <div className="history-top">
+                  </td>
 
-        <span className={`history-badge ${history.eventType}`}>
-          {history.eventType.replace("_"," ")}
-        </span>
 
-        <span>
-          {new Date(history.date).toLocaleDateString()}
-        </span>
+                  {/* TYPE */}
 
-      </div>
+                  <td data-label="Type">
 
-      {history.eventType === "assigned" && (
+                    <span
+                      className={
+                        `audit-assignment-type ${
+                          isHardware
+                            ? "hardware"
+                            : "software"
+                        }`
+                      }
+                    >
+                      {isHardware
+                        ? "Hardware"
+                        : "Software"}
+                    </span>
 
-        <>
+                  </td>
 
-          <div className="history-row">
 
-            <div>
+                  {/* CURRENT STATUS */}
 
-              <label>Assigned From</label>
+                  <td data-label="Current Status">
 
-              <strong>
+                    <span
+                      className={
+                        `audit-assignment-status ${statusClass}`
+                      }
+                    >
+                      <span className="audit-assignment-status-dot" />
 
-                {history.from.location || "Inventory"}
+                      {String(item.status || "Unknown")
+                        .replace(/_/g, " ")}
+                    </span>
 
-              </strong>
+                  </td>
 
-            </div>
 
-            <div>
+                  {/* PURCHASE DATE */}
 
-              <label>Assigned To</label>
+                  <td data-label="Purchase Date">
 
-              <strong>
+                    <span className="audit-assignment-date">
+                      {formatAssignmentDate(
+                        item.purchaseDate
+                      )}
+                    </span>
 
-                {history.to.employeeName}
+                  </td>
 
-              </strong>
 
-            </div>
+                  {/* TOTAL COST */}
 
-          </div>
+                  <td data-label="Total Cost">
 
-          <div className="history-row">
+                    <strong className="audit-assignment-total-value">
+                      {formatCurrency(
+                        item.totalCost ?? 0
+                      )}
+                    </strong>
 
-            <div>
+                  </td>
 
-              <label>Department</label>
+                </tr>
 
-              <span>{history.to.department}</span>
 
-            </div>
+                {/* ================= EXPANDED HISTORY ================= */}
 
-            <div>
+                {isExpanded && (
 
-              <label>Location</label>
+                  <tr className="audit-assignment-detail-row">
 
-              <span>{history.to.location}</span>
+                    <td colSpan={6}>
 
-            </div>
+                      <div className="audit-assignment-details">
 
-          </div>
+                        {/* DETAILS HEADER */}
 
-        </>
+                        <div className="audit-assignment-details-header">
 
-      )}
+                          <div>
 
-      {history.eventType === "reassigned" && (
+                            <span className="audit-assignment-details-eyebrow">
+                              ASSIGNMENT ACTIVITY
+                            </span>
 
-        <>
+                            <h4>
+                              {item.deviceName ||
+                                item.assetName ||
+                                "-"}
+                            </h4>
 
-          <div className="history-transfer">
+                            <p>
+                              {item.instanceCode ||
+                                item.assetCode ||
+                                "-"}
+                            </p>
 
-            <div>
+                          </div>
 
-              <label>From</label>
 
-              <strong>{history.from.employeeName}</strong>
+                          <div className="audit-assignment-details-badges">
 
-              <span>{history.from.department}</span>
+                            <span
+                              className={
+                                `audit-assignment-type ${
+                                  isHardware
+                                    ? "hardware"
+                                    : "software"
+                                }`
+                              }
+                            >
+                              {isHardware
+                                ? "Hardware"
+                                : "Software"}
+                            </span>
 
-              <small>{history.from.location}</small>
+                            <span
+                              className={
+                                `audit-assignment-status ${statusClass}`
+                              }
+                            >
+                              <span className="audit-assignment-status-dot" />
 
-            </div>
+                              {String(
+                                item.status || "Unknown"
+                              ).replace(/_/g, " ")}
+                            </span>
 
-            <div className="history-arrow">
+                          </div>
 
-              →
+                        </div>
 
-            </div>
 
-            <div>
+                        {/* ================= ASSET SUMMARY ================= */}
 
-              <label>To</label>
+                        <div className="audit-assignment-summary-grid">
 
-              <strong>{history.to.employeeName}</strong>
+                          <div className="audit-assignment-summary-item">
 
-              <span>{history.to.department}</span>
+                            <label>Asset Type</label>
 
-              <small>{history.to.location}</small>
+                            <strong>
+                              {isHardware
+                                ? "Hardware"
+                                : "Software"}
+                            </strong>
 
-            </div>
+                          </div>
 
-          </div>
 
-        </>
+                          <div className="audit-assignment-summary-item">
 
-      )}
+                            <label>Purchase Date</label>
 
-      {history.eventType === "returned" && (
+                            <strong>
+                              {formatAssignmentDate(
+                                item.purchaseDate
+                              )}
+                            </strong>
 
-        <>
+                          </div>
 
-          <div className="history-row">
 
-            <div>
+                          <div className="audit-assignment-summary-item highlight">
 
-              <label>Returned From</label>
+                            <label>Total Asset Cost</label>
 
-              <strong>{history.from.employeeName}</strong>
+                            <strong>
+                              {formatCurrency(
+                                item.totalCost ?? 0
+                              )}
+                            </strong>
 
-            </div>
+                          </div>
 
-            <div>
+                        </div>
 
-              <label>Returned To</label>
 
-              <strong>Inventory</strong>
+                        {/* ================= HISTORY HEADER ================= */}
 
-            </div>
+                        <div className="audit-assignment-history-heading">
 
-          </div>
+                          <div>
 
-        </>
+                            <h5>Assignment History</h5>
 
-      )}
+                            <p>
+                              Complete movement and
+                              assignment activity for this asset.
+                            </p>
 
-    </div>
+                          </div>
 
-  ))}
+                          <span className="audit-assignment-history-count">
+                            {assignmentHistory.length} Events
+                          </span>
 
-</div>
+                        </div>
 
-                </td>
 
-              </tr>
+                        {/* ================= HISTORY TIMELINE ================= */}
 
-            )}
+                        {assignmentHistory.length > 0 ? (
 
-          </React.Fragment>
+                          <div className="audit-assignment-timeline">
 
-        ))}
+                            {assignmentHistory.map(
+                              (history, index) => {
+
+                                const eventType = String(
+                                  history.eventType || ""
+                                ).toLowerCase();
+
+                                const eventClass =
+                                  eventType === "assigned" ||
+                                  eventType === "reassigned" ||
+                                  eventType === "returned"
+                                    ? eventType
+                                    : "default";
+
+                                const from = history.from || {};
+                                const to = history.to || {};
+
+                                return (
+
+                                  <div
+                                    className="audit-assignment-timeline-item"
+                                    key={
+                                      history.assignmentId ||
+                                      history._id ||
+                                      index
+                                    }
+                                  >
+
+                                    {/* TIMELINE MARKER */}
+
+                                    <div className="audit-assignment-timeline-marker">
+
+                                      <span
+                                        className={
+                                          `audit-assignment-timeline-dot ${eventClass}`
+                                        }
+                                      />
+
+                                    </div>
+
+
+                                    {/* HISTORY CARD */}
+
+                                    <div className="audit-assignment-history-card">
+
+                                      {/* EVENT HEADER */}
+
+                                      <div className="audit-assignment-history-top">
+
+                                        <div className="audit-assignment-history-event">
+
+                                          <span
+                                            className={
+                                              `audit-assignment-event-badge ${eventClass}`
+                                            }
+                                          >
+                                            {eventType
+                                              ? eventType
+                                                  .replace(/_/g, " ")
+                                              : "Unknown"}
+                                          </span>
+
+                                          <span className="audit-assignment-event-number">
+                                            Event {index + 1}
+                                          </span>
+
+                                        </div>
+
+
+                                        <span className="audit-assignment-history-date">
+                                          {formatAssignmentDate(
+                                            history.date
+                                          )}
+                                        </span>
+
+                                      </div>
+
+
+                                      {/* ================= ASSIGNED ================= */}
+
+                                      {eventType === "assigned" && (
+
+                                        <div className="audit-assignment-history-body">
+
+                                          <div className="audit-assignment-history-info-grid">
+
+                                            <div className="audit-assignment-history-info">
+
+                                              <label>
+                                                Assigned From
+                                              </label>
+
+                                              <strong>
+                                                {from.location ||
+                                                  "Inventory"}
+                                              </strong>
+
+                                            </div>
+
+
+                                            <div className="audit-assignment-history-info">
+
+                                              <label>
+                                                Assigned To
+                                              </label>
+
+                                              <strong>
+                                                {to.employeeName || "-"}
+                                              </strong>
+
+                                            </div>
+
+
+                                            <div className="audit-assignment-history-info">
+
+                                              <label>Department</label>
+
+                                              <p>
+                                                {to.department || "-"}
+                                              </p>
+
+                                            </div>
+
+
+                                            <div className="audit-assignment-history-info">
+
+                                              <label>Location</label>
+
+                                              <p>
+                                                {to.location || "-"}
+                                              </p>
+
+                                            </div>
+
+                                          </div>
+
+                                        </div>
+
+                                      )}
+
+
+                                      {/* ================= REASSIGNED ================= */}
+
+                                      {eventType === "reassigned" && (
+
+                                        <div className="audit-assignment-history-body">
+
+                                          <div className="audit-assignment-transfer">
+
+                                            {/* FROM */}
+
+                                            <div className="audit-assignment-transfer-person">
+
+                                              <span className="audit-assignment-transfer-label">
+                                                FROM
+                                              </span>
+
+                                              <strong>
+                                                {from.employeeName || "-"}
+                                              </strong>
+
+                                              <span>
+                                                {from.department || "-"}
+                                              </span>
+
+                                              <small>
+                                                {from.location || "-"}
+                                              </small>
+
+                                            </div>
+
+
+                                            {/* ARROW */}
+
+                                            <div className="audit-assignment-transfer-arrow">
+                                              <FiArrowRight />
+                                            </div>
+
+
+                                            {/* TO */}
+
+                                            <div className="audit-assignment-transfer-person destination">
+
+                                              <span className="audit-assignment-transfer-label">
+                                                TO
+                                              </span>
+
+                                              <strong>
+                                                {to.employeeName || "-"}
+                                              </strong>
+
+                                              <span>
+                                                {to.department || "-"}
+                                              </span>
+
+                                              <small>
+                                                {to.location || "-"}
+                                              </small>
+
+                                            </div>
+
+                                          </div>
+
+                                        </div>
+
+                                      )}
+
+
+                                      {/* ================= RETURNED ================= */}
+
+                                      {eventType === "returned" && (
+
+                                        <div className="audit-assignment-history-body">
+
+                                          <div className="audit-assignment-history-info-grid">
+
+                                            <div className="audit-assignment-history-info">
+
+                                              <label>
+                                                Returned From
+                                              </label>
+
+                                              <strong>
+                                                {from.employeeName || "-"}
+                                              </strong>
+
+                                            </div>
+
+
+                                            <div className="audit-assignment-history-info">
+
+                                              <label>
+                                                Returned To
+                                              </label>
+
+                                              <strong>
+                                                Inventory
+                                              </strong>
+
+                                            </div>
+
+                                          </div>
+
+                                        </div>
+
+                                      )}
+
+                                    </div>
+
+                                  </div>
+
+                                );
+
+                              }
+                            )}
+
+                          </div>
+
+                        ) : (
+
+                          <div className="audit-assignment-empty-history">
+
+                            <h6>No Assignment History</h6>
+
+                            <p>
+                              No assignment, reassignment or
+                              return records are available
+                              for this asset.
+                            </p>
+
+                          </div>
+
+                        )}
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )}
+
+              </React.Fragment>
+
+            );
+
+          })
+
+        ) : (
+
+          <tr>
+
+            <td
+              colSpan={6}
+              className="audit-assignment-empty"
+            >
+
+              <h4>No Assignment Records Found</h4>
+
+              <p>
+                No assignment records match
+                the selected filters.
+              </p>
+
+            </td>
+
+          </tr>
+
+        )}
 
       </tbody>
 
     </table>
 
   </div>
+
+</div>
+
 );
 
 // Grouping the instances 
@@ -2105,15 +4229,47 @@ const lifecycleAssets = Object.values(
 );
 
 const renderLifecycle = () => (
-  <div className="audit-table-wrapper">
 
-    <h3>Asset Lifecycle History</h3>
+<div className="audit-lifecycle-container">
 
-    <table className="audit-table">
+  {/* ================= HEADER ================= */}
+
+  <div className="audit-lifecycle-header">
+
+    <div className="audit-lifecycle-heading">
+
+      <span className="audit-lifecycle-eyebrow">
+        ASSET ACTIVITY REPORT
+      </span>
+
+      <h3>Asset Lifecycle History</h3>
+
+      <p>
+        Review asset information, lifecycle events,
+        purchase records and historical activity.
+      </p>
+
+    </div>
+
+    <div className="audit-lifecycle-count">
+      <span>Assets</span>
+      <strong>{lifecycleAssets.length}</strong>
+    </div>
+
+  </div>
+
+
+  {/* ================= TABLE ================= */}
+
+  <div className="audit-lifecycle-table-wrapper">
+
+    <table className="audit-lifecycle-table">
 
       <thead>
         <tr>
-          <th>Details</th>
+          <th className="audit-lifecycle-expand-col">
+            Details
+          </th>
           <th>Asset</th>
           <th>Type</th>
           <th>Status</th>
@@ -2125,515 +4281,1447 @@ const renderLifecycle = () => (
 
       <tbody>
 
-        {lifecycleAssets.map((asset) => (
-          <React.Fragment key={asset.instanceId}>
+        {lifecycleAssets.length > 0 ? (
 
-            {/* Main Row */}
+          lifecycleAssets.map((asset) => {
 
-            <tr>
+            const isExpanded =
+              expandedLifecycle === asset.instanceId;
 
-              <td>
-                <button
-                  type="button"
-                  className="expand-btn"
-                  onClick={() =>
-                    setExpandedLifecycle(
-                      expandedLifecycle === asset.instanceId
-                        ? null
-                        : asset.instanceId
-                    )
+            const isHardware =
+              asset.assetType === "hardware";
+
+            const events = asset.events || [];
+
+            const statusValue = String(
+              asset.status || "unknown"
+            ).toLowerCase();
+
+            const statusClass =
+              statusValue === "assigned" ||
+              statusValue === "active"
+                ? "assigned"
+                : statusValue === "in_stock" ||
+                  statusValue === "returned"
+                ? "in-stock"
+                : statusValue === "maintenance"
+                ? "maintenance"
+                : statusValue === "retired"
+                ? "retired"
+                : "neutral";
+
+            const formatLifecycleDate = (
+              value,
+              includeTime = false
+            ) => {
+              if (!value) return "-";
+
+              const date = new Date(value);
+
+              if (Number.isNaN(date.getTime())) {
+                return "-";
+              }
+
+              return includeTime
+                ? date.toLocaleString()
+                : date.toLocaleDateString();
+            };
+
+            const sortedEvents = [...events].sort(
+              (a, b) =>
+                new Date(a.date).getTime() -
+                new Date(b.date).getTime()
+            );
+
+            return (
+
+              <React.Fragment key={asset.instanceId}>
+
+                {/* ================= SUMMARY ROW ================= */}
+
+                <tr
+                  className={
+                    isExpanded
+                      ? "audit-lifecycle-row expanded"
+                      : "audit-lifecycle-row"
                   }
                 >
-                  {expandedLifecycle === asset.instanceId
-                    ? <FiChevronUp />
-                    : <FiChevronDown />}
-                </button>
-              </td>
 
-              <td>
-                <strong>{asset.assetName}</strong>
-                <br />
-                <small>{asset.assetCode}</small>
-                <br />
-                <small>{asset.instanceCode}</small>
-              </td>
+                  {/* EXPAND BUTTON */}
 
-              <td>{asset.assetType}</td>
+                  <td
+                    className="audit-lifecycle-expand-cell"
+                    data-label="Details"
+                  >
 
-              <td>{asset.status}</td>
+                    <button
+                      type="button"
+                      className={
+                        isExpanded
+                          ? "audit-lifecycle-expand-btn active"
+                          : "audit-lifecycle-expand-btn"
+                      }
+                      aria-expanded={isExpanded}
+                      aria-label={
+                        `${isExpanded ? "Collapse" : "Expand"} lifecycle for ${asset.assetName || "asset"}`
+                      }
+                      onClick={() =>
+                        setExpandedLifecycle(
+                          isExpanded
+                            ? null
+                            : asset.instanceId
+                        )
+                      }
+                    >
+                      {isExpanded
+                        ? <FiChevronUp />
+                        : <FiChevronDown />}
+                    </button>
 
-              <td>{asset.events?.length || 0}</td>
+                  </td>
 
-              <td>
-                {asset.purchase.toLocaleDateString}
-              </td>
 
-              <td>
-                {asset.lastActivity
-                  ? new Date(asset.lastActivity).toLocaleDateString()
-                  : "-"}
-              </td>
+                  {/* ASSET */}
 
-            </tr>
+                  <td
+                    data-label="Asset"
+                    className="audit-lifecycle-asset-cell"
+                  >
 
-            {/* Expanded Row */}
+                    <div className="audit-lifecycle-asset-info">
 
-{expandedLifecycle === asset.instanceId && (
+                      <strong>
+                        {asset.assetName || "-"}
+                      </strong>
 
-<tr>
+                      <span>
+                        {asset.assetCode || "-"}
+                      </span>
 
-<td colSpan={7}>
+                      <small>
+                        {asset.instanceCode || "-"}
+                      </small>
 
-<div className="asset-details-card">
+                    </div>
 
-<div className="asset-details-header">
+                  </td>
 
-<h4>{asset.assetName}</h4>
 
-<span className="asset-status">
+                  {/* TYPE */}
 
-{asset.assetType === "hardware"
-  ? "Hardware"
-  : "Software"}
+                  <td data-label="Type">
 
-</span>
+                    <span
+                      className={
+                        `audit-lifecycle-type ${
+                          isHardware
+                            ? "hardware"
+                            : "software"
+                        }`
+                      }
+                    >
+                      {isHardware
+                        ? "Hardware"
+                        : "Software"}
+                    </span>
 
-</div>
+                  </td>
 
-{/* General Information */}
 
-<div className="asset-details-grid">
+                  {/* STATUS */}
 
-<div>
-<label>Asset Name</label>
-<p>{asset.assetName}</p>
-</div>
+                  <td data-label="Status">
 
-<div>
-<label>Asset Code</label>
-<p>{asset.assetCode}</p>
-</div>
+                    <span
+                      className={
+                        `audit-lifecycle-status ${statusClass}`
+                      }
+                    >
+                      <span className="audit-lifecycle-status-dot" />
 
-<div>
-<label>Instance Code</label>
-<p>{asset.instanceCode}</p>
-</div>
+                      {String(
+                        asset.status || "Unknown"
+                      ).replace(/_/g, " ")}
+                    </span>
 
-<div>
-<label>Asset Type</label>
-<p>{asset.assetType}</p>
-</div>
+                  </td>
 
-<div>
-<label>Status</label>
-<p>{asset.status}</p>
-</div>
 
-<div>
-<label>Purchase Date</label>
-<p>
-{asset.purchase
-  ? new Date(asset.purchase).toLocaleDateString()
-  : "-"}
-</p>
-</div>
+                  {/* EVENTS */}
 
-<div>
-<label>Total Events</label>
-<p>{asset.events?.length || 0}</p>
-</div>
-<div>
-<label>Device</label>
-<p>{asset.deviceName || "-"}</p>
-</div>
-</div>
+                  <td data-label="Events">
 
-{/* Hardware Details */}
+                    <span className="audit-lifecycle-event-count">
+                      {events.length}
+                      <span>Events</span>
+                    </span>
 
-{/* {asset.assetType === "hardware" && (
+                  </td>
 
-<div className="asset-details-grid">
 
+                  {/* PURCHASE DATE */}
 
-<div>
-<label>Model Number</label>
-<p>{asset.modelNo || "-"}</p>
-</div>
+                  <td data-label="Purchased">
 
-<div>
-<label>Specifications</label>
-<p>{asset.specifications || "-"}</p>
-</div>
-
-<div>
-<label>Location</label>
-<p>{asset.location || "-"}</p>
-</div>
-
-<div>
-<label>Condition</label>
-<p>{asset.condition || "-"}</p>
-</div>
+                    <span className="audit-lifecycle-date">
+                      {formatLifecycleDate(asset.purchase)}
+                    </span>
 
-</div>
+                  </td>
 
-)} */}
 
-{/* Software Details */}
+                  {/* LAST ACTIVITY */}
 
-{asset.assetType === "software" && (
+                  <td data-label="Last Activity">
 
-<div className="asset-details-grid">
+                    <span className="audit-lifecycle-date">
+                      {formatLifecycleDate(
+                        asset.lastActivity
+                      )}
+                    </span>
 
-<div>
-<label>Device</label>
-<p>{asset.deviceName || "-"}</p>
-</div>
+                  </td>
 
-<div>
-<label>License Key</label>
-<p>{asset.licenseKey || "-"}</p>
-</div>
+                </tr>
 
-<div>
-<label>License Number</label>
-<p>{asset.licenseNumber || "-"}</p>
-</div>
 
-<div>
-<label>Renewal Date</label>
-<p>
-{asset.renewalDate
-  ? new Date(asset.renewalDate).toLocaleDateString()
-  : "-"}
-</p>
-</div>
+                {/* ================= EXPANDED DETAILS ================= */}
 
-<div>
-<label>Location</label>
-<p>{asset.location || "-"}</p>
-</div>
+                {isExpanded && (
 
-</div>
+                  <tr className="audit-lifecycle-detail-row">
 
-)}
+                    <td colSpan={7}>
 
-{/* Lifecycle Timeline */}
+                      <div className="audit-lifecycle-details">
 
-<h4 style={{ marginTop: 25 }}>Lifecycle Timeline</h4>
+                        {/* DETAILS HEADER */}
 
-{(asset.events || [])
-  .slice()
-  .sort(
-    (a, b) =>
-      new Date(a.date).getTime() -
-      new Date(b.date).getTime()
-  )
-  .map((event, index) => (
+                        <div className="audit-lifecycle-details-header">
 
-<div
-key={index}
-className="asset-details-grid"
-style={{ marginBottom: "18px" }}
->
+                          <div>
 
-<div>
-<label>Event</label>
-<p>{event.title}</p>
-</div>
+                            <span className="audit-lifecycle-details-eyebrow">
+                              ASSET LIFECYCLE
+                            </span>
 
-<div>
-<label>Type</label>
-<p>{event.eventType}</p>
-</div>
+                            <h4>
+                              {asset.assetName || "-"}
+                            </h4>
 
-<div>
-<label>Description</label>
-<p>{event.description || "-"}</p>
-</div>
+                            <p>
+                              {asset.assetCode || "-"}
+                              {" • "}
+                              {asset.instanceCode || "-"}
+                            </p>
 
-{/* <div>
-<label>Performed By</label>
-<p>{event.performedBy || "System"}</p>
-</div> */}
+                          </div>
 
-<div>
-<label>Date</label>
-<p>
-{event.date
-  ? new Date(event.date).toLocaleString()
-  : "-"}
-</p>
-</div>
 
-</div>
+                          <div className="audit-lifecycle-details-badges">
 
-))}
+                            <span
+                              className={
+                                `audit-lifecycle-type ${
+                                  isHardware
+                                    ? "hardware"
+                                    : "software"
+                                }`
+                              }
+                            >
+                              {isHardware
+                                ? "Hardware"
+                                : "Software"}
+                            </span>
 
-</div>
+                            <span
+                              className={
+                                `audit-lifecycle-status ${statusClass}`
+                              }
+                            >
+                              <span className="audit-lifecycle-status-dot" />
 
-</td>
+                              {String(
+                                asset.status || "Unknown"
+                              ).replace(/_/g, " ")}
+                            </span>
 
-</tr>
+                          </div>
 
-)}
+                        </div>
 
-          </React.Fragment>
 
-        ))}
+                        {/* ================= OVERVIEW ================= */}
+
+                        <div className="audit-lifecycle-section-heading">
+
+                          <h5>General Information</h5>
+
+                          <span>Asset Overview</span>
+
+                        </div>
+
+
+                        <div className="audit-lifecycle-info-grid">
+
+                          <div className="audit-lifecycle-info-item">
+                            <label>Asset Name</label>
+                            <strong>
+                              {asset.assetName || "-"}
+                            </strong>
+                          </div>
+
+                          <div className="audit-lifecycle-info-item">
+                            <label>Asset Code</label>
+                            <strong>
+                              {asset.assetCode || "-"}
+                            </strong>
+                          </div>
+
+                          <div className="audit-lifecycle-info-item">
+                            <label>Instance Code</label>
+                            <strong>
+                              {asset.instanceCode || "-"}
+                            </strong>
+                          </div>
+
+                          <div className="audit-lifecycle-info-item">
+                            <label>Asset Type</label>
+                            <strong>
+                              {isHardware
+                                ? "Hardware"
+                                : "Software"}
+                            </strong>
+                          </div>
+
+                          <div className="audit-lifecycle-info-item">
+                            <label>Status</label>
+                            <strong>
+                              {String(
+                                asset.status || "-"
+                              ).replace(/_/g, " ")}
+                            </strong>
+                          </div>
+
+                          <div className="audit-lifecycle-info-item">
+                            <label>Purchase Date</label>
+                            <strong>
+                              {formatLifecycleDate(
+                                asset.purchase
+                              )}
+                            </strong>
+                          </div>
+
+                          <div className="audit-lifecycle-info-item highlight">
+                            <label>Total Events</label>
+                            <strong>
+                              {events.length}
+                            </strong>
+                          </div>
+
+                          <div className="audit-lifecycle-info-item">
+                            <label>Device</label>
+                            <strong>
+                              {asset.deviceName || "-"}
+                            </strong>
+                          </div>
+
+                        </div>
+
+
+                        {/* ================= SOFTWARE DETAILS ================= */}
+
+                        {!isHardware && (
+
+                          <>
+
+                            <div className="audit-lifecycle-section-heading">
+
+                              <h5>Software Information</h5>
+
+                              <span>License & Renewal</span>
+
+                            </div>
+
+
+                            <div className="audit-lifecycle-info-grid">
+
+                              <div className="audit-lifecycle-info-item">
+                                <label>Device</label>
+                                <strong>
+                                  {asset.deviceName || "-"}
+                                </strong>
+                              </div>
+
+                              <div className="audit-lifecycle-info-item">
+                                <label>License Key</label>
+                                <strong>
+                                  {asset.licenseKey || "-"}
+                                </strong>
+                              </div>
+
+                              <div className="audit-lifecycle-info-item">
+                                <label>License Number</label>
+                                <strong>
+                                  {asset.licenseNumber || "-"}
+                                </strong>
+                              </div>
+
+                              <div className="audit-lifecycle-info-item">
+                                <label>Renewal Date</label>
+                                <strong>
+                                  {formatLifecycleDate(
+                                    asset.renewalDate
+                                  )}
+                                </strong>
+                              </div>
+
+                              <div className="audit-lifecycle-info-item">
+                                <label>Location</label>
+                                <strong>
+                                  {asset.location || "-"}
+                                </strong>
+                              </div>
+
+                            </div>
+
+                          </>
+
+                        )}
+
+
+                        {/* ================= LIFECYCLE TIMELINE ================= */}
+
+                        <div className="audit-lifecycle-timeline-section">
+
+                          <div className="audit-lifecycle-timeline-heading">
+
+                            <div>
+
+                              <h5>Lifecycle Timeline</h5>
+
+                              <p>
+                                Chronological history of
+                                recorded asset events.
+                              </p>
+
+                            </div>
+
+                            <span className="audit-lifecycle-timeline-count">
+                              {events.length} Events
+                            </span>
+
+                          </div>
+
+
+                          {sortedEvents.length > 0 ? (
+
+                            <div className="audit-lifecycle-timeline">
+
+                              {sortedEvents.map((event, index) => {
+
+                                const eventType = String(
+                                  event.eventType || "event"
+                                );
+
+                                const normalizedType =
+                                  eventType.toLowerCase();
+
+                                const eventClass =
+                                  normalizedType.includes("assign")
+                                    ? "assignment"
+                                    : normalizedType.includes("return")
+                                    ? "return"
+                                    : normalizedType.includes("maintenance")
+                                    ? "maintenance"
+                                    : normalizedType.includes("renew")
+                                    ? "renewal"
+                                    : normalizedType.includes("upgrad")
+                                    ? "upgrade"
+                                    : normalizedType.includes("creat")
+                                    ? "created"
+                                    : "default";
+
+                                return (
+
+                                  <div
+                                    className="audit-lifecycle-timeline-item"
+                                    key={index}
+                                  >
+
+                                    {/* TIMELINE MARKER */}
+
+                                    <div className="audit-lifecycle-timeline-marker">
+
+                                      <span
+                                        className={
+                                          `audit-lifecycle-timeline-dot ${eventClass}`
+                                        }
+                                      />
+
+                                    </div>
+
+
+                                    {/* EVENT CARD */}
+
+                                    <div className="audit-lifecycle-event-card">
+
+                                      <div className="audit-lifecycle-event-header">
+
+                                        <div className="audit-lifecycle-event-heading">
+
+                                          <span
+                                            className={
+                                              `audit-lifecycle-event-badge ${eventClass}`
+                                            }
+                                          >
+                                            {eventType.replace(
+                                              /_/g,
+                                              " "
+                                            )}
+                                          </span>
+
+                                          <h6>
+                                            {event.title ||
+                                              "Lifecycle Event"}
+                                          </h6>
+
+                                        </div>
+
+
+                                        <span className="audit-lifecycle-event-date">
+                                          {formatLifecycleDate(
+                                            event.date,
+                                            true
+                                          )}
+                                        </span>
+
+                                      </div>
+
+
+                                      <div className="audit-lifecycle-event-body">
+
+                                        <div className="audit-lifecycle-event-info">
+
+                                          <label>Event</label>
+
+                                          <strong>
+                                            {event.title || "-"}
+                                          </strong>
+
+                                        </div>
+
+
+                                        <div className="audit-lifecycle-event-info">
+
+                                          <label>Type</label>
+
+                                          <span>
+                                            {eventType.replace(
+                                              /_/g,
+                                              " "
+                                            )}
+                                          </span>
+
+                                        </div>
+
+
+                                        <div className="audit-lifecycle-event-info description">
+
+                                          <label>Description</label>
+
+                                          <p>
+                                            {event.description || "-"}
+                                          </p>
+
+                                        </div>
+
+
+                                        <div className="audit-lifecycle-event-info">
+
+                                          <label>Date & Time</label>
+
+                                          <span>
+                                            {formatLifecycleDate(
+                                              event.date,
+                                              true
+                                            )}
+                                          </span>
+
+                                        </div>
+
+                                      </div>
+
+                                    </div>
+
+                                  </div>
+
+                                );
+
+                              })}
+
+                            </div>
+
+                          ) : (
+
+                            <div className="audit-lifecycle-empty-history">
+
+                              <h6>No Lifecycle Events</h6>
+
+                              <p>
+                                No lifecycle events have been
+                                recorded for this asset.
+                              </p>
+
+                            </div>
+
+                          )}
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )}
+
+              </React.Fragment>
+
+            );
+
+          })
+
+        ) : (
+
+          <tr>
+
+            <td
+              colSpan={7}
+              className="audit-lifecycle-empty"
+            >
+
+              <h4>No Lifecycle Records Found</h4>
+
+              <p>
+                No asset lifecycle records
+                match the selected filters.
+              </p>
+
+            </td>
+
+          </tr>
+
+        )}
 
       </tbody>
 
     </table>
 
   </div>
+
+</div>
+
 );
 const renderFinancial = () => (
   <>
-<div className="financial-grid">
 
-  <div className="financial-card">
-    <h5>Purchase Cost</h5>
-    <h2>${filteredFinancialSummary.purchaseCost.toLocaleString()}</h2>
-    <span>Initial Asset Investment</span>
+<div className="audit-financial-container">
+
+  {/* ================= FINANCIAL OVERVIEW HEADER ================= */}
+
+  <div className="audit-financial-header">
+
+    <div className="audit-financial-heading">
+
+      <span className="audit-financial-eyebrow">
+        FINANCIAL ANALYSIS
+      </span>
+
+      <h3>Financial Overview</h3>
+
+      <p>
+        Monitor asset investments, operating expenses,
+        renewals and total ownership costs.
+      </p>
+
+    </div>
+
+    <div className="audit-financial-header-count">
+      <span>Tracked Assets</span>
+      <strong>
+        {filteredFinancialSummary.totalAssets ?? 0}
+      </strong>
+    </div>
+
   </div>
 
-  <div className="financial-card">
-    <h5>Maintenance</h5>
-    <h2>${filteredFinancialSummary.maintenanceCost.toLocaleString()}</h2>
-    <span>Repairs & Servicing</span>
+
+  {/* ================= FINANCIAL CARDS ================= */}
+
+  <div className="audit-financial-grid">
+
+    {/* PURCHASE COST */}
+
+    <div className="audit-financial-card">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiShoppingCart />
+        </span>
+        <span className="audit-financial-card-category">
+          Investment
+        </span>
+      </div>
+
+      <h5>Purchase Cost</h5>
+
+      <h2>
+        ${Number(
+          filteredFinancialSummary.purchaseCost ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Initial Asset Investment</p>
+
+    </div>
+
+
+    {/* MAINTENANCE */}
+
+    <div className="audit-financial-card">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiTool />
+        </span>
+        <span className="audit-financial-card-category">
+          Operational
+        </span>
+      </div>
+
+      <h5>Maintenance</h5>
+
+      <h2>
+        ${Number(
+          filteredFinancialSummary.maintenanceCost ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Repairs &amp; Servicing</p>
+
+    </div>
+
+
+    {/* WARRANTY */}
+
+    <div className="audit-financial-card">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiShield />
+        </span>
+        <span className="audit-financial-card-category">
+          Protection
+        </span>
+      </div>
+
+      <h5>Warranty</h5>
+
+      <h2>
+        ${Number(
+          filteredFinancialSummary.warrantyCost ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Warranty Renewals</p>
+
+    </div>
+
+
+    {/* INSURANCE */}
+
+    <div className="audit-financial-card">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiUmbrella />
+        </span>
+        <span className="audit-financial-card-category">
+          Protection
+        </span>
+      </div>
+
+      <h5>Insurance</h5>
+
+      <h2>
+        ${Number(
+          filteredFinancialSummary.insuranceCost ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Insurance Premiums</p>
+
+    </div>
+
+
+    {/* RENEWALS */}
+
+    <div className="audit-financial-card">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiRefreshCw />
+        </span>
+        <span className="audit-financial-card-category">
+          Recurring
+        </span>
+      </div>
+
+      <h5>Renewals</h5>
+
+      <h2>
+        ${Number(
+          filteredFinancialSummary.renewalCost ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Software Licenses</p>
+
+    </div>
+
+
+    {/* UPGRADES */}
+
+    <div className="audit-financial-card">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiTrendingUp />
+        </span>
+        <span className="audit-financial-card-category">
+          Improvement
+        </span>
+      </div>
+
+      <h5>Upgrades</h5>
+
+      <h2>
+        ${Number(
+          filteredFinancialSummary.upgradeCost ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Hardware &amp; Software Upgrades</p>
+
+    </div>
+
+
+    {/* TOTAL ASSETS */}
+
+    <div className="audit-financial-card">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiLayers />
+        </span>
+        <span className="audit-financial-card-category">
+          Inventory
+        </span>
+      </div>
+
+      <h5>Total Assets</h5>
+
+      <h2>
+        {Number(
+          filteredFinancialSummary.totalAssets ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Tracked Assets</p>
+
+    </div>
+
+
+    {/* TOTAL OWNERSHIP COST */}
+
+    <div className="audit-financial-card highlight">
+
+      <div className="audit-financial-card-top">
+        <span className="audit-financial-card-icon">
+          <FiDollarSign />
+        </span>
+        <span className="audit-financial-card-category">
+          Total Investment
+        </span>
+      </div>
+
+      <h5>Total Ownership Cost</h5>
+
+      <h2>
+        ${Number(
+          filteredFinancialSummary.totalOwnershipCost ?? 0
+        ).toLocaleString()}
+      </h2>
+
+      <p>Overall Asset Investment</p>
+
+    </div>
+
   </div>
 
-  <div className="financial-card">
-    <h5>Warranty</h5>
-    <h2>${filteredFinancialSummary.warrantyCost.toLocaleString()}</h2>
-    <span>Warranty Renewals</span>
-  </div>
 
-  <div className="financial-card">
-    <h5>Insurance</h5>
-    <h2>${filteredFinancialSummary.insuranceCost.toLocaleString()}</h2>
-    <span>Insurance Premiums</span>
-  </div>
+  {/* =====================================================
+      TOP EXPENSIVE ASSETS
+  ===================================================== */}
 
-  <div className="financial-card">
-    <h5>Renewals</h5>
-    <h2>${filteredFinancialSummary.renewalCost.toLocaleString()}</h2>
-    <span>Software Licenses</span>
-  </div>
+  <div className="audit-financial-assets-section">
 
-  <div className="financial-card">
-    <h5>Upgrades</h5>
-    <h2>${filteredFinancialSummary.upgradeCost.toLocaleString()}</h2>
-    <span>Hardware & Software Upgrades</span>
-  </div>
+    {/* SECTION HEADER */}
 
-  <div className="financial-card">
-    <h5>Total Assets</h5>
-    <h2>{filteredFinancialSummary.totalAssets}</h2>
-    <span>Tracked Assets</span>
-  </div>
+    <div className="audit-financial-section-header">
 
-  <div className="financial-card highlight">
-    <h5>Total Ownership Cost</h5>
-    <h2>${filteredFinancialSummary.totalOwnershipCost.toLocaleString()}</h2>
-    <span>Overall Asset Investment</span>
-  </div>
+      <div>
 
-</div>
-
-    <div className="audit-table-wrapper">
-
-      <h3>
-        Top Expensive Assets
-      </h3>
-
-      <table className="audit-table">
-
-<thead>
-
-<tr>
-<th> Details </th>
-<th>Asset</th>
-
-<th>Type</th>
-
-<th>Purchase</th>
-
-<th>Total</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{filteredFinancial
-  .sort((a, b) => b.totalCost - a.totalCost)
-  .map(asset => (
-
-    <React.Fragment key={asset.instanceId}>
-
-      {/* Summary Row */}
-
-      <tr>
-
-        <td>
-
-          <button
-            type="button"
-            className="expand-btn"
-            onClick={() =>
-              setExpandedFinancial(
-                expandedFinancial === asset.instanceId
-                  ? null
-                  : asset.instanceId
-              )
-            }
-          >
-            {expandedFinancial === asset.instanceId
-              ? <FiChevronUp />
-              : <FiChevronDown />}
-          </button>
-
-        </td>
-
-        <td>
-
-          <strong>{asset.assetName}</strong>
-
-          <br />
-
-          <small>{asset.assetCode}</small>
-
-          <br />
-
-          <small>{asset.instanceCode}</small>
-
-        </td>
-
-        <td>{asset.assetType}</td>
-
-        <td>
-          ${asset.purchaseCost.toLocaleString()}
-        </td>
-
-        <td>
-
-          <strong>
-            ${asset.totalCost.toLocaleString()}
-          </strong>
-
-        </td>
-
-      </tr>
-
-      {/* Expanded Panel */}
-
-      {expandedFinancial === asset.instanceId && (
-
-        <tr>
-
-          <td colSpan={5}>
-
-<div className="yearly-cost-grid">
-
-{asset.yearlyCosts.map((year) => {
-
-    const currentYear = new Date().getFullYear();
-
-    let badge;
-
-    if (year.year > currentYear) {
-      badge = {
-        text: "Upcoming",
-        className: "upcoming",
-      };
-    } else if (year.year === currentYear) {
-      badge = {
-        text: "Current",
-        className: "current",
-      };
-    } else {
-      badge = {
-        text: "Completed",
-        className: "completed",
-      };
-    }
-
-    return (
-
-      <div
-        className="year-card"
-        key={year.year}
-      >
-
-        <span className={`year-badge ${badge.className}`}>
-          {badge.text}
+        <span className="audit-financial-eyebrow">
+          ASSET COST ANALYSIS
         </span>
 
-        <h4>Year :- {year.year}</h4>
+        <h3>Top Expensive Assets</h3>
 
-        <div className="year-row">
-          <span>Purchase</span>
-          <span>{formatCurrency(year.purchaseCost)}</span>
-        </div>
-        
-
-        <div className="year-row">
-          <span>Maintenance</span>
-          <span>{formatCurrency(year.maintenanceCost)}</span>
-        </div>
-
-        <div className="year-row">
-          <span>Warranty</span>
-          <span>{formatCurrency(year.warrantyCost)}</span>
-        </div>
-
-        <div className="year-row">
-          <span>Insurance</span>
-          <span>{formatCurrency(year.insuranceCost)}</span>
-        </div>
-
-      {asset.assetType === "software" && (
-  <div className="year-row">
-    <span>Renewal</span>
-    <span>{formatCurrency(year.renewalCost)}</span>
-  </div>
-)}
-
-        <div className="year-row">
-          <span>Upgrade</span>
-          <span>{formatCurrency(year.upgradeCost)}</span>
-        </div>
-
-        <div className="year-total">
-          Total : {formatCurrency(year.totalCost)}
-        </div>
+        <p>
+          Review the most expensive assets and
+          their yearly cost breakdown.
+        </p>
 
       </div>
 
-    );
+      <div className="audit-financial-assets-count">
+        <span>Assets</span>
+        <strong>{filteredFinancial.length}</strong>
+      </div>
 
-  })}
+    </div>
 
-</div>
 
-          </td>
+    {/* ================= ASSET TABLE ================= */}
 
-        </tr>
+    <div className="audit-financial-table-wrapper">
 
-      )}
+      <table className="audit-financial-table">
 
-    </React.Fragment>
+        <thead>
+          <tr>
+            <th className="audit-financial-expand-col">
+              Details
+            </th>
+            <th>Asset</th>
+            <th>Type</th>
+            <th>Purchase</th>
+            <th>Total</th>
+          </tr>
+        </thead>
 
-))}
+        <tbody>
 
-</tbody>
+          {filteredFinancial.length > 0 ? (
+
+            [...filteredFinancial]
+              .sort(
+                (a, b) =>
+                  (Number(b.totalCost) || 0) -
+                  (Number(a.totalCost) || 0)
+              )
+              .map((asset) => {
+
+                const isExpanded =
+                  expandedFinancial === asset.instanceId;
+
+                const isHardware =
+                  asset.assetType === "hardware";
+
+                const yearlyCosts = asset.yearlyCosts || [];
+
+                const formatAmount = (value) =>
+                  formatCurrency(Number(value) || 0);
+
+                return (
+
+                  <React.Fragment key={asset.instanceId}>
+
+                    {/* ================= SUMMARY ROW ================= */}
+
+                    <tr
+                      className={
+                        isExpanded
+                          ? "audit-financial-row expanded"
+                          : "audit-financial-row"
+                      }
+                    >
+
+                      {/* EXPAND BUTTON */}
+
+                      <td
+                        className="audit-financial-expand-cell"
+                        data-label="Details"
+                      >
+
+                        <button
+                          type="button"
+                          className={
+                            isExpanded
+                              ? "audit-financial-expand-btn active"
+                              : "audit-financial-expand-btn"
+                          }
+                          aria-expanded={isExpanded}
+                          aria-label={
+                            `${isExpanded ? "Collapse" : "Expand"} financial history for ${asset.assetName || "asset"}`
+                          }
+                          onClick={() =>
+                            setExpandedFinancial(
+                              isExpanded
+                                ? null
+                                : asset.instanceId
+                            )
+                          }
+                        >
+                          {isExpanded
+                            ? <FiChevronUp />
+                            : <FiChevronDown />}
+                        </button>
+
+                      </td>
+
+
+                      {/* ASSET */}
+
+                      <td
+                        data-label="Asset"
+                        className="audit-financial-asset-cell"
+                      >
+
+                        <div className="audit-financial-asset-info">
+
+                          <strong>
+                            {asset.assetName || "-"}
+                          </strong>
+
+                          <span>
+                            {asset.assetCode || "-"}
+                          </span>
+
+                          <small>
+                            {asset.instanceCode || "-"}
+                          </small>
+
+                        </div>
+
+                      </td>
+
+
+                      {/* TYPE */}
+
+                      <td data-label="Type">
+
+                        <span
+                          className={
+                            `audit-financial-type ${
+                              isHardware
+                                ? "hardware"
+                                : "software"
+                            }`
+                          }
+                        >
+                          {isHardware
+                            ? "Hardware"
+                            : "Software"}
+                        </span>
+
+                      </td>
+
+
+                      {/* PURCHASE COST */}
+
+                      <td data-label="Purchase">
+
+                        <span className="audit-financial-purchase-value">
+                          {formatAmount(asset.purchaseCost)}
+                        </span>
+
+                      </td>
+
+
+                      {/* TOTAL COST */}
+
+                      <td data-label="Total">
+
+                        <strong className="audit-financial-total-value">
+                          {formatAmount(asset.totalCost)}
+                        </strong>
+
+                      </td>
+
+                    </tr>
+
+
+                    {/* ================= EXPANDED PANEL ================= */}
+
+                    {isExpanded && (
+
+                      <tr className="audit-financial-detail-row">
+
+                        <td colSpan={5}>
+
+                          <div className="audit-financial-details">
+
+                            {/* DETAILS HEADER */}
+
+                            <div className="audit-financial-details-header">
+
+                              <div>
+
+                                <span className="audit-financial-details-eyebrow">
+                                  FINANCIAL HISTORY
+                                </span>
+
+                                <h4>
+                                  {asset.assetName || "-"}
+                                </h4>
+
+                                <p>
+                                  {asset.assetCode || "-"}
+                                  {" • "}
+                                  {asset.instanceCode || "-"}
+                                </p>
+
+                              </div>
+
+                              <span
+                                className={
+                                  `audit-financial-type ${
+                                    isHardware
+                                      ? "hardware"
+                                      : "software"
+                                  }`
+                                }
+                              >
+                                {isHardware
+                                  ? "Hardware"
+                                  : "Software"}
+                              </span>
+
+                            </div>
+
+
+                            {/* COST SUMMARY */}
+
+                            <div className="audit-financial-details-summary">
+
+                              <div className="audit-financial-summary-item">
+
+                                <label>Purchase Cost</label>
+
+                                <strong>
+                                  {formatAmount(
+                                    asset.purchaseCost
+                                  )}
+                                </strong>
+
+                              </div>
+
+
+                              <div className="audit-financial-summary-item highlight">
+
+                                <label>Total Ownership Cost</label>
+
+                                <strong>
+                                  {formatAmount(
+                                    asset.totalCost
+                                  )}
+                                </strong>
+
+                              </div>
+
+
+                              <div className="audit-financial-summary-item">
+
+                                <label>Financial Years</label>
+
+                                <strong>
+                                  {yearlyCosts.length}
+                                </strong>
+
+                              </div>
+
+                            </div>
+
+
+                            {/* YEARLY HISTORY HEADING */}
+
+                            <div className="audit-financial-history-heading">
+
+                              <div>
+
+                                <h5>Yearly Cost History</h5>
+
+                                <p>
+                                  Detailed financial expenses
+                                  recorded for each year.
+                                </p>
+
+                              </div>
+
+                              <span className="audit-financial-history-count">
+                                {yearlyCosts.length} Years
+                              </span>
+
+                            </div>
+
+
+                            {/* ================= YEARLY CARDS ================= */}
+
+                            {yearlyCosts.length > 0 ? (
+
+                              <div className="audit-financial-year-grid">
+
+                                {yearlyCosts.map((year) => {
+
+                                  const currentYear =
+                                    new Date().getFullYear();
+
+                                  let badge;
+
+                                  if (year.year > currentYear) {
+
+                                    badge = {
+                                      text: "Upcoming",
+                                      className: "upcoming",
+                                    };
+
+                                  } else if (year.year === currentYear) {
+
+                                    badge = {
+                                      text: "Current",
+                                      className: "current",
+                                    };
+
+                                  } else {
+
+                                    badge = {
+                                      text: "Completed",
+                                      className: "completed",
+                                    };
+
+                                  }
+
+                                  return (
+
+                                    <div
+                                      className="audit-financial-year-card"
+                                      key={year.year}
+                                    >
+
+                                      {/* YEAR HEADER */}
+
+                                      <div className="audit-financial-year-header">
+
+                                        <div>
+
+                                          <span className="audit-financial-year-label">
+                                            FINANCIAL YEAR
+                                          </span>
+
+                                          <h4>
+                                            {year.year}
+                                          </h4>
+
+                                        </div>
+
+                                        <span
+                                          className={
+                                            `audit-financial-year-badge ${badge.className}`
+                                          }
+                                        >
+                                          {badge.text}
+                                        </span>
+
+                                      </div>
+
+
+                                      {/* YEAR COST ROWS */}
+
+                                      <div className="audit-financial-year-body">
+
+                                        <div className="audit-financial-year-row">
+
+                                          <span>Purchase</span>
+
+                                          <strong>
+                                            {formatAmount(
+                                              year.purchaseCost
+                                            )}
+                                          </strong>
+
+                                        </div>
+
+
+                                        <div className="audit-financial-year-row">
+
+                                          <span>Maintenance</span>
+
+                                          <strong>
+                                            {formatAmount(
+                                              year.maintenanceCost
+                                            )}
+                                          </strong>
+
+                                        </div>
+
+
+                                        <div className="audit-financial-year-row">
+
+                                          <span>Warranty</span>
+
+                                          <strong>
+                                            {formatAmount(
+                                              year.warrantyCost
+                                            )}
+                                          </strong>
+
+                                        </div>
+
+
+                                        <div className="audit-financial-year-row">
+
+                                          <span>Insurance</span>
+
+                                          <strong>
+                                            {formatAmount(
+                                              year.insuranceCost
+                                            )}
+                                          </strong>
+
+                                        </div>
+
+
+                                        {/* SOFTWARE RENEWAL */}
+
+                                        {!isHardware && (
+
+                                          <div className="audit-financial-year-row">
+
+                                            <span>Renewal</span>
+
+                                            <strong>
+                                              {formatAmount(
+                                                year.renewalCost
+                                              )}
+                                            </strong>
+
+                                          </div>
+
+                                        )}
+
+
+                                        <div className="audit-financial-year-row">
+
+                                          <span>Upgrade</span>
+
+                                          <strong>
+                                            {formatAmount(
+                                              year.upgradeCost
+                                            )}
+                                          </strong>
+
+                                        </div>
+
+                                      </div>
+
+
+                                      {/* YEAR TOTAL */}
+
+                                      <div className="audit-financial-year-total">
+
+                                        <span>Year Total</span>
+
+                                        <strong>
+                                          {formatAmount(
+                                            year.totalCost
+                                          )}
+                                        </strong>
+
+                                      </div>
+
+                                    </div>
+
+                                  );
+
+                                })}
+
+                              </div>
+
+                            ) : (
+
+                              <div className="audit-financial-empty-history">
+
+                                <h5>No Financial History</h5>
+
+                                <p>
+                                  No year-wise cost records
+                                  are available for this asset.
+                                </p>
+
+                              </div>
+
+                            )}
+
+                          </div>
+
+                        </td>
+
+                      </tr>
+
+                    )}
+
+                  </React.Fragment>
+
+                );
+
+              })
+
+          ) : (
+
+            <tr>
+
+              <td
+                colSpan={5}
+                className="audit-financial-empty"
+              >
+
+                <h4>No Financial Records Found</h4>
+
+                <p>
+                  No financial records match
+                  the selected filters.
+                </p>
+
+              </td>
+
+            </tr>
+
+          )}
+
+        </tbody>
 
       </table>
 
     </div>
+
+  </div>
+
+</div>
+
   </>
 );
   const renderContent = () => {
@@ -2670,55 +5758,252 @@ const renderFinancial = () => (
 
 if (loading) return <Loader/>
   return (
-    <div className="audit-page">
+//     <div className="audit-page">
 
-      {/* HEADER */}
+//       {/* HEADER */}
 
-      <div className="audit-header">
+//       <div className="audit-header">
 
-        <div>
-          <h1>Audit & Compliance Center</h1>
+//         <div>
+//           <h1>Audit & Compliance Center</h1>
 
-          <p>
-            Asset auditing, compliance tracking,
-            lifecycle management and financial
-            analysis.
-          </p>
-        </div>
+//           <p>
+//             Asset auditing, compliance tracking,
+//             lifecycle management and financial
+//             analysis.
+//           </p>
+//         </div>
 
-        <button
-          className="audit-refresh-btn"
-          onClick={loadAuditData}
-        >
-          Refresh
-        </button>
+//         <button
+//           className="audit-refresh-btn"
+//           onClick={loadAuditData}
+//         >
+//           Refresh
+//         </button>
 
+//       </div>
+
+//       {/* KPI GRID */}
+
+//       <div className="audit-stats-grid">
+
+//         {stats.map((item) => (
+//           <div
+//             key={item.title}
+//             className="audit-stat-card"
+//           >
+//             <span>{item.title}</span>
+
+//             <h2>{item.value}</h2>
+//           </div>
+//         ))}
+
+//       </div>
+
+//       {/* REPORT TABS */}
+
+//       <div className="audit-tabs">
+
+//         {tabs.map((tab) => (
+//           <button
+//             key={tab}
+//             className={
+//               activeTab === tab
+//                 ? "audit-tab active"
+//                 : "audit-tab"
+//             }
+//             onClick={() => setActiveTab(tab)}
+//           >
+//             {tab}
+//           </button>
+//         ))}
+
+//       </div>
+
+//       {/* FILTER BAR */}
+
+// <div className="audit-filters">
+
+//   {showYearFilter && (
+//     <select
+//       value={selectedYear}
+//       onChange={(e) =>
+//         setSelectedYear(e.target.value)
+//       }
+//     >
+//       {yearOptions.map(year => (
+//         <option key={year} value={year}>
+//           {year === "All"
+//             ? "All Years"
+//             : year}
+//         </option>
+//       ))}
+//     </select>
+//   )} 
+
+//     <select
+//     value={selectedAssetType}
+//     onChange={(e) => setSelectedAssetType(e.target.value)}
+//   >
+//     <option value="All">All Assets</option>
+//     <option value="hardware">Hardware</option>
+//     <option value="software">Software</option>
+//   </select>
+//     <div className="audit-actions">
+
+//         <button onClick={handleDownloadPDF} className="pdf-btn">
+//             Export PDF
+//         </button>
+
+//         <button onClick={handleDownloadExcel} className="excel-btn">
+//             Export Excel
+//         </button> 
+
+//     </div>
+
+// </div>
+
+//       {/* CONTENT */}
+
+// <div className="audit-content">
+//   {renderContent()}
+// </div>
+
+//     </div>
+
+
+<div className="audit-page">
+
+  {/* ================= PAGE HEADER ================= */}
+
+  <div className="audit-header">
+
+    <div className="audit-header-content">
+
+      <span className="audit-page-eyebrow">
+        ASSET MANAGEMENT / REPORTING
+      </span>
+
+      <h1>Audit & Compliance Center</h1>
+
+      <p>
+        Monitor asset compliance, lifecycle activities,
+        inventory performance and financial insights.
+      </p>
+
+    </div>
+
+    <div className="audit-header-actions">
+
+      <button
+        type="button"
+        className="audit-refresh-btn"
+        onClick={loadAuditData}
+      >
+        <span className="audit-refresh-icon">↻</span>
+        Refresh Data
+      </button>
+
+    </div>
+
+  </div>
+
+
+  {/* ================= KPI SECTION ================= */}
+
+  <section className="audit-overview-section">
+
+    <div className="audit-section-heading">
+
+      <div>
+        <h2>Asset Overview</h2>
+        <p>
+          Key inventory and compliance metrics
+        </p>
       </div>
 
-      {/* KPI GRID */}
+      <span className="audit-section-indicator">
+        LIVE OVERVIEW
+      </span>
 
-      <div className="audit-stats-grid">
+    </div>
 
-        {stats.map((item) => (
-          <div
-            key={item.title}
-            className="audit-stat-card"
-          >
-            <span>{item.title}</span>
+
+    <div className="audit-stats-grid">
+
+      {stats.map((item, index) => (
+
+        <div
+          key={item.title}
+          className="audit-stat-card"
+        >
+
+          <div className="audit-stat-top">
+
+            <span className="audit-stat-label">
+              {item.title}
+            </span>
+
+            <span className="audit-stat-index">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+
+          </div>
+
+          <div className="audit-stat-bottom">
 
             <h2>{item.value}</h2>
-          </div>
-        ))}
 
+            <span className="audit-stat-decoration">
+              ↗
+            </span>
+
+          </div>
+
+        </div>
+
+      ))}
+
+    </div>
+
+  </section>
+
+
+  {/* ================= REPORT SECTION ================= */}
+
+  <section className="audit-report-section">
+
+    <div className="audit-section-heading">
+
+      <div>
+        <h2>Audit Reports</h2>
+
+        <p>
+          Explore asset records, compliance reports
+          and financial analysis.
+        </p>
       </div>
 
-      {/* REPORT TABS */}
+    </div>
 
-      <div className="audit-tabs">
+
+    {/* ================= REPORT TABS ================= */}
+
+    <div className="audit-tabs-wrapper">
+
+      <div
+        className="audit-tabs"
+        role="tablist"
+        aria-label="Audit reports"
+      >
 
         {tabs.map((tab) => (
+
           <button
             key={tab}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab}
             className={
               activeTab === tab
                 ? "audit-tab active"
@@ -2728,60 +6013,127 @@ if (loading) return <Loader/>
           >
             {tab}
           </button>
+
         ))}
 
       </div>
 
-      {/* FILTER BAR */}
+    </div>
 
-<div className="audit-filters">
 
-  {showYearFilter && (
-    <select
-      value={selectedYear}
-      onChange={(e) =>
-        setSelectedYear(e.target.value)
-      }
-    >
-      {yearOptions.map(year => (
-        <option key={year} value={year}>
-          {year === "All"
-            ? "All Years"
-            : year}
-        </option>
-      ))}
-    </select>
-  )} 
+    {/* ================= FILTER TOOLBAR ================= */}
 
-    <select
-    value={selectedAssetType}
-    onChange={(e) => setSelectedAssetType(e.target.value)}
-  >
-    <option value="All">All Assets</option>
-    <option value="hardware">Hardware</option>
-    <option value="software">Software</option>
-  </select>
-    <div className="audit-actions">
+    <div className="audit-filters">
 
-        <button onClick={handleDownloadPDF} className="pdf-btn">
-            Export PDF
+      <div className="audit-filter-group">
+
+        {showYearFilter && (
+
+          <div className="audit-filter-field">
+
+            <label htmlFor="audit-year-filter">
+              Report Year
+            </label>
+
+            <select
+              id="audit-year-filter"
+              value={selectedYear}
+              onChange={(e) =>
+                setSelectedYear(e.target.value)
+              }
+            >
+              {yearOptions.map((year) => (
+                <option key={year} value={year}>
+                  {year === "All"
+                    ? "All Years"
+                    : year}
+                </option>
+              ))}
+            </select>
+
+          </div>
+
+        )}
+
+
+        <div className="audit-filter-field">
+
+          <label htmlFor="audit-asset-filter">
+            Asset Type
+          </label>
+
+          <select
+            id="audit-asset-filter"
+            value={selectedAssetType}
+            onChange={(e) =>
+              setSelectedAssetType(e.target.value)
+            }
+          >
+            <option value="All">
+              All Assets
+            </option>
+
+            <option value="hardware">
+              Hardware
+            </option>
+
+            <option value="software">
+              Software
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      {/* ================= EXPORT ACTIONS ================= */}
+
+      <div className="audit-actions">
+
+        <button
+          type="button"
+          onClick={handleDownloadPDF}
+          className="pdf-btn"
+        >
+          <span className="audit-export-icon">
+            ↓
+          </span>
+
+          Export PDF
         </button>
 
-        <button onClick={handleDownloadExcel} className="excel-btn">
-            Export Excel
-        </button> 
+
+        <button
+          type="button"
+          onClick={handleDownloadExcel}
+          className="excel-btn"
+        >
+          <span className="audit-export-icon">
+            ↓
+          </span>
+
+          Export Excel
+        </button>
+
+      </div>
 
     </div>
 
-</div>
 
-      {/* CONTENT */}
+    {/* ================= REPORT CONTENT ================= */}
 
-<div className="audit-content">
-  {renderContent()}
-</div>
+    <div className="audit-content">
+
+      {renderContent()}
 
     </div>
+
+  </section>
+
+</div>
+
   );
 };
 

@@ -1,0 +1,1153 @@
+/* =========================================================
+   INSTANCES DASHBOARD — PAGE SHELL
+========================================================= */
+.instance-page { 
+    padding: 10px 15px;
+}
+.instances-dashboard {
+  width: 100%;
+  max-width: 1600px;
+
+  margin: 0 auto;
+  padding: 22px 24px 30px;
+
+  box-sizing: border-box;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   DASHBOARD HEADER
+========================================================= */
+
+.instances-dashboard-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 20px;
+  padding: 18px 20px;
+
+  box-sizing: border-box;
+  border-radius: 13px;
+}
+
+
+/* LEFT SIDE */
+
+.instances-header-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.instances-page-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #948979;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.instances-dashboard-header h1 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 600;
+
+  line-height: 1.25;
+}
+
+.instances-dashboard-header p {
+  max-width: 600px;
+
+  margin: 6px 0 0;
+    text-align: left;
+  color: rgba(223, 208, 184, 0.42);
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   HEADER RIGHT SIDE / FILTER
+========================================================= */
+
+.instances-header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+.instances-filter {
+  width: 160px;
+  min-width: 0;
+
+  height: 38px;
+
+  padding: 0 34px 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #222831;
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.instances-filter:hover {
+  border-color: rgba(223, 208, 184, 0.22);
+}
+
+.instances-filter:focus {
+  border-color: rgba(223, 208, 184, 0.35);
+  background: #252b34;
+}
+
+
+/* =========================================================
+   OPTIONAL SUMMARY / COUNT ROW
+========================================================= */
+
+.instances-grid-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.instances-grid-header h2 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.instances-grid-count {
+  color: rgba(223, 208, 184, 0.38);
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   ASSET GRID
+========================================================= */
+
+.instance-assets-grid {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  align-items: stretch;
+
+  gap: 16px;
+
+  box-sizing: border-box;
+}
+
+
+/*
+  Every AssetCard wrapper/card must be allowed to shrink.
+*/
+.instance-assets-grid > * {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+}
+
+
+/*
+  Make cards in the same row equal height.
+*/
+.instance-assets-grid .instance-setup-card {
+  height: 100%;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1500px) {
+
+  .instances-dashboard {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .instance-assets-grid {
+    gap: 18px;
+  }
+}
+
+
+/* =========================================================
+   SMALL DESKTOP / LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .instances-dashboard {
+    padding: 20px;
+  }
+
+  .instance-assets-grid {
+    gap: 14px;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .instances-dashboard {
+    padding: 16px;
+  }
+
+
+  /* HEADER */
+
+  .instances-dashboard-header {
+    gap: 16px;
+
+    padding: 16px;
+
+    margin-bottom: 16px;
+  }
+
+
+  /*
+    IMPORTANT:
+    cards switch to one column here.
+  */
+  .instance-assets-grid {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 14px;
+  }
+
+
+  .instance-assets-grid .instance-setup-card {
+    height: auto;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .instances-dashboard {
+    width: 100%;
+
+    padding: 10px;
+
+    overflow-x: hidden;
+  }
+
+
+  /* HEADER */
+
+  .instances-dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 14px;
+
+    padding: 14px;
+
+    margin-bottom: 12px;
+    text-align: center;
+    border-radius: 11px;
+  }
+
+  .instances-header-content {
+    width: 100%;
+  }
+
+  .instances-dashboard-header h1 {
+    font-size: 18px;
+  }
+
+  .instances-dashboard-header p {
+    max-width: 100%;
+
+    font-size: 9px;
+  }
+
+
+  /* HEADER ACTIONS */
+
+  .instances-header-actions {
+    width: 100%;
+  }
+
+  .instances-filter {
+    width: 100%;
+
+    height: 40px;
+
+    font-size: 10px;
+  }
+
+
+  /* GRID */
+
+  .instance-assets-grid {
+    width: 100%;
+
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 10px;
+  }
+
+
+  /* GRID HEADER */
+
+  .instances-grid-header {
+    margin-bottom: 9px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .instances-dashboard {
+    padding: 8px;
+  }
+
+  .instances-dashboard-header {
+    padding: 12px;
+
+    border-radius: 10px;
+  }
+
+  .instances-dashboard-header h1 {
+    font-size: 16px;
+  }
+
+  .instances-page-eyebrow {
+    font-size: 7px;
+  }
+
+  .instance-assets-grid {
+    gap: 8px;
+  }
+}
+.instance-setup-card {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background: linear-gradient(
+    145deg,
+    #252b34,
+    #1c2128
+  );
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.15);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.instance-setup-card:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(223, 208, 184, 0.16);
+
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.2);
+}
+
+
+/* SELECTED CARD */
+
+.instance-setup-card.highlight {
+  border-color: rgba(223, 208, 184, 0.38);
+
+  box-shadow:
+    0 0 0 2px rgba(223, 208, 184, 0.05),
+    0 14px 34px rgba(0, 0, 0, 0.2);
+}
+
+
+/* COMPLETED */
+
+.instance-setup-card.completed {
+  border-color: rgba(145, 182, 156, 0.14);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.instance-setup-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 16px;
+}
+
+.instance-setup-identity {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  min-width: 0;
+}
+
+.instance-setup-icon {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 9px;
+
+  background: rgba(223, 208, 184, 0.055);
+
+  color: #DFD0B8;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.instance-setup-card.completed .instance-setup-icon {
+  color: #91b69c;
+
+  border-color: rgba(145, 182, 156, 0.15);
+
+  background: rgba(145, 182, 156, 0.06);
+}
+
+.instance-setup-title {
+  min-width: 0;
+}
+
+.instance-setup-eyebrow {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #948979;
+
+  font-size: 10 px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+.instance-setup-title h3 {
+  margin: 0;
+
+  max-width: 100%;
+
+  color: #DFD0B8;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.instance-setup-code {
+  display: block;
+
+  margin-top: 3px;
+
+  color: rgba(223, 208, 184, 0.36);
+
+  font-size: 8.5px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.instance-setup-status {
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.instance-setup-status-dot {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+
+/* PENDING */
+
+.instance-setup-status.pending {
+  color: #d7b97c;
+
+  border: 1px solid rgba(215, 185, 124, 0.15);
+
+  background: rgba(215, 185, 124, 0.06);
+}
+
+
+/* COMPLETE */
+
+.instance-setup-status.complete {
+  color: #91b69c;
+
+  border: 1px solid rgba(145, 182, 156, 0.15);
+
+  background: rgba(145, 182, 156, 0.06);
+}
+
+
+/* =========================================================
+   META INFORMATION
+========================================================= */
+
+.instance-setup-meta {
+  display: flex;
+  align-items: stretch;
+
+  margin: 0 16px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.06);
+  border-bottom: 1px solid rgba(223, 208, 184, 0.06);
+}
+
+.instance-setup-meta-item {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  padding: 10px 0;
+}
+
+.instance-setup-meta-item:last-child {
+  padding-left: 14px;
+}
+
+.instance-setup-meta-item span {
+  color: rgba(223, 208, 184, 0.32);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.instance-setup-meta-item strong {
+  color: rgba(223, 208, 184, 0.78);
+
+  font-size: 10px;
+  font-weight: 500;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.instance-setup-meta-divider {
+  width: 1px;
+
+  margin: 8px 0;
+
+  background: rgba(223, 208, 184, 0.07);
+}
+
+
+/* =========================================================
+   PROGRESS SECTION
+========================================================= */
+
+.instance-setup-progress-section {
+  padding: 14px 16px;
+}
+
+.instance-setup-progress-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 10px;
+}
+
+.instance-setup-progress-label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.instance-setup-progress-header p {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.instance-setup-percentage {
+  flex-shrink: 0;
+
+  color: #DFD0B8;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   PROGRESS BAR
+========================================================= */
+
+.instance-setup-progress-bar {
+  position: relative;
+
+  width: 100%;
+  height: 5px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: rgba(223, 208, 184, 0.07);
+}
+
+.instance-setup-progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: linear-gradient(
+    90deg,
+    #948979,
+    #DFD0B8
+  );
+
+  transition: width 0.4s ease;
+}
+
+.instance-setup-card.completed
+.instance-setup-progress-fill {
+  background: #91b69c;
+}
+
+.instance-setup-progress-footer {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-top: 7px;
+
+  color: rgba(223, 208, 184, 0.3);
+
+  font-size: 7.5px;
+}
+
+.instance-setup-progress-footer strong {
+  color: #948979;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.instance-setup-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  margin: 0 16px 14px;
+
+  border: 1px solid rgba(223, 208, 184, 0.06);
+  border-radius: 8px;
+
+  background: rgba(34, 40, 49, 0.38);
+
+  overflow: hidden;
+}
+
+.instance-summary-item {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  padding: 9px 10px;
+
+  border-right: 1px solid rgba(223, 208, 184, 0.06);
+}
+
+.instance-summary-item:last-child {
+  border-right: none;
+}
+
+.summary-label {
+  color: rgba(223, 208, 184, 0.3);
+
+  font-size: 7px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instance-summary-item strong {
+  color: #DFD0B8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.instance-summary-item strong.pending-value {
+  color: #d7b97c;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.instance-setup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: auto;
+
+  padding: 11px 16px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.06);
+
+  background: rgba(20, 24, 29, 0.3);
+}
+
+.instance-setup-footer-info {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #948979;
+
+  font-size: 10px;
+}
+
+.footer-state-dot {
+  width: 5px;
+  height: 5px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #d7b97c;
+}
+
+.footer-state-dot.complete {
+  background: #91b69c;
+}
+
+
+/* =========================================================
+   CREATE BUTTON
+========================================================= */
+
+.instance-create-btn {
+  min-width: 120px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 7px 11px;
+
+  border: 1px solid #DFD0B8;
+  border-radius: 7px;
+
+  background: #DFD0B8;
+
+  color: #222831;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.instance-create-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  background: #e7dbc7;
+}
+
+.instance-btn-arrow {
+  font-size: 12px;
+
+  transition: transform 0.2s ease;
+}
+
+.instance-create-btn:hover
+.instance-btn-arrow {
+  transform: translateX(2px);
+}
+
+.instance-btn-icon {
+  font-size: 9px;
+}
+
+
+/* DISABLED */
+
+.instance-create-btn.disabled,
+.instance-create-btn:disabled {
+  border-color: rgba(145, 182, 156, 0.13);
+
+  background: rgba(145, 182, 156, 0.07);
+
+  color: #91b69c;
+
+  cursor: default;
+
+  opacity: 1;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .instance-setup-header {
+    padding: 15px;
+  }
+
+  .instance-setup-meta {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .instance-setup-progress-section {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .instance-setup-summary {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .instance-setup-footer {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .instance-setup-card {
+    border-radius: 11px;
+  }
+
+
+  /* HEADER */
+
+  .instance-setup-header {
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 13px;
+  }
+
+  .instance-setup-identity {
+    width: 100%;
+  }
+
+  .instance-setup-title {
+    flex: 1;
+  }
+
+  .instance-setup-title h3 {
+    font-size: 12px;
+  }
+
+  .instance-setup-status {
+    align-self: flex-start;
+  }
+
+
+  /* META */
+
+  .instance-setup-meta {
+    margin-left: 13px;
+    margin-right: 13px;
+  }
+
+
+  /* PROGRESS */
+
+  .instance-setup-progress-section {
+    padding: 13px;
+  }
+
+
+  /* SUMMARY */
+
+  .instance-setup-summary {
+    margin:
+      0 13px 12px;
+  }
+
+
+  /* FOOTER */
+
+  .instance-setup-footer {
+    flex-direction: column;
+    align-items: stretch;
+
+    padding: 10px 13px;
+  }
+
+  .instance-setup-footer-info {
+    justify-content: center;
+
+    text-align: center;
+  }
+
+  .instance-create-btn {
+    width: 100%;
+
+    min-height: 36px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .instance-setup-header {
+    padding: 11px;
+  }
+
+  .instance-setup-icon {
+    width: 33px;
+    height: 33px;
+  }
+
+
+  /* META */
+
+  .instance-setup-meta {
+    margin-left: 11px;
+    margin-right: 11px;
+  }
+
+  .instance-setup-meta-item:last-child {
+    padding-left: 10px;
+  }
+
+
+  /* PROGRESS */
+
+  .instance-setup-progress-section {
+    padding: 12px 11px;
+  }
+
+  .instance-setup-progress-header {
+    gap: 8px;
+  }
+
+
+  /* SUMMARY */
+
+  .instance-setup-summary {
+    margin:
+      0 11px 11px;
+  }
+
+  .instance-summary-item {
+    padding: 8px 7px;
+  }
+
+
+  /* FOOTER */
+
+  .instance-setup-footer {
+    padding: 10px 11px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .instance-setup-meta {
+    flex-direction: column;
+  }
+
+  .instance-setup-meta-divider {
+    width: 100%;
+    height: 1px;
+
+    margin: 0;
+  }
+
+  .instance-setup-meta-item:last-child {
+    padding-left: 0;
+  }
+
+  .instance-setup-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .instance-summary-item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    border-right: none;
+
+    border-bottom:
+      1px solid rgba(223, 208, 184, 0.06);
+  }
+
+  .instance-summary-item:last-child {
+    border-bottom: none;
+  }
+}

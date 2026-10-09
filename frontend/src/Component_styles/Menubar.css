@@ -1,276 +1,518 @@
-* {
-  margin: 0;
-  padding: 0;
+
+/* ======================================================
+   ASSETPEGASUS — MENUBAR
+====================================================== */
+
+.menubar-container {
+  --mb-bg: #222831;
+  --mb-surface: #252b34;
+  --mb-inner: #1c2128;
+  --mb-text: #DFD0B8;
+  --mb-muted: #948979;
+  --mb-border: rgba(223, 208, 184, 0.12);
+
+  position: relative;
+
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+
+  background: var(--mb-bg);
+  color: var(--mb-text);
+  font-family: inherit;
+}
+
+.menubar-container *,
+.menubar-container *::before,
+.menubar-container *::after {
   box-sizing: border-box;
 }
 
-.menubar-container {
+/* ======================================================
+   MAIN ROW
+====================================================== */
+
+.menubar-container .menubar {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(140px, 240px)
+    minmax(0, 1fr);
+
+  align-items: center;
+  gap: 12px;
+
   width: 100%;
   height: 100%;
+  min-height: 60px;
+
+  padding: 0 8px;
 }
 
-.menubar {
-  width: 100%;
-  height: 100%;
-  /* background: #ffffff; */
+/* ======================================================
+   BRAND
+====================================================== */
+
+.menubar-container .menubar-brand {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 8px 15px;
-  flex-wrap: nowrap; /* allows wrapping for smaller screens */
+  align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
-/* Search Box */
-.search-box {
-  flex: 1;
+.menubar-container .menubar-brand-icon {
   display: flex;
   align-items: center;
-  max-width: 500px;
-}
-
-.search-input {
-  flex: 1;
-  min-width: 120px;
-  border-radius: 15px;
-  padding: 6px 10px;
-  border: 2px solid rgba(0, 0, 0, 0.18);
-  font-weight: 500;
-}
-
-.search-btn {
-  margin-left: -40px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 15px;
-  color: rgba(0, 0, 0, 0.4);
-}
-
-/* Control Panel */
-.control-panel{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-@media (max-width:480px){
-
-  .control-panel{
-    gap:12px;
-  }
-
-  .profile-button{
-    gap:4px;
-  }
-
-  .profile-button svg:last-child{
-    display:none; /* hide dropdown arrow */
-  }
-}
-
-.controls {
-  display: flex;
   justify-content: center;
-  align-items: center;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border: none;
-  background-color: transparent;
-  /* background: #ffffff; */
-}
-
-/* Additional Buttons */
-.additional-button {
-  display: flex;
-  align-items: center;
-  gap: 15px;
   flex-shrink: 0;
-}
 
-.buttons {
-  font-size: 20px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 50%;
-  color: #948979;
-}
+  width: 34px;
+  height: 34px;
 
-.buttons-1 {
-  font-size: 18px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 50%;
-  /* background-color: rgb(246, 246, 246); */
-  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
-  padding: 5px;
-}
-
-/* Profile dropdown */
-.profile-dropdown-container {
-  position: relative;
-}
-
-.profile-button {
-  border: none;
-  background: transparent;
-  color: #DFD0B8;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-/* Dropdown */
-.dropdown-menu {
-  position: absolute;
-  top: 40px;
-  /* right: 0; */
-  background: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 200px;
-  border-radius: 5px;
-  z-index: 1000;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.dropdown-menu.show {
-  visibility: visible;
-  opacity: 1;
-}
-
-.dropdown-menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.dropdown-menu li {
-  padding: 10px 15px;
-}
-
-.dropdown-menu li a {
-  text-decoration: none;
-  color: #333;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-menu li a:hover {
-  background-color: #f1f1f1;
-  color: #007bff;
-}
-
-/* Sidebar toggle */
-.sidebar-toggle-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 24px;
-  margin-left: 10px;
-}
-.install-hint {
-  position: relative;
-}
-
-.hint-text {
-  position: absolute;
-  bottom: 45px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #222;
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 5px 10px;
+  border: 1px solid var(--mb-border);
   border-radius: 8px;
-  opacity: 0;
-  animation: hintShow 1.4s ease-out forwards;
-}
-.title-text{
-  font-weight: 600;
-  font-size: 1rem;
-  color: #DFD0B8;
-  display: flex;
-  gap: 4px;
+
+  background: var(--mb-surface);
+  color: var(--mb-text);
+  font-size: 16px;
 }
 
-.title-text span{
-  color: #2563eb;
+.menubar-container .menubar-brand-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 }
-.plan-timer-wrapper{
+
+.menubar-container .title-text {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  column-gap: 3px;
+  row-gap: 0;
+
+  margin: 0;
+
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.15px;
 }
 
-@media (max-width: 480px){
-  .plan-timer-wrapper{
+.menubar-container .brand-asset {
+  color: var(--mb-text);
+}
+
+.menubar-container .brand-management {
+  color: var(--mb-muted);
+}
+
+.menubar-container .brand-system {
+  color: var(--mb-text);
+}
+
+.menubar-container .menubar-subtitle {
+  margin: 0;
+  color: var(--mb-muted);
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+/* ======================================================
+   PLAN TIMER
+====================================================== */
+
+.menubar-container .plan-timer-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+  max-width: 240px;
+  margin: 0 auto;
+}
+
+.menubar-container .plan-timer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: 5px 10px;
+  border: 1px solid var(--mb-border);
+  border-radius: 8px;
+  background: var(--mb-surface);
+}
+
+/* Prevent timer content from overflowing */
+.menubar-container .plan-timer-content > * {
+  max-width: 100%;
+}
+
+/* ======================================================
+   RIGHT CONTROL PANEL
+====================================================== */
+
+.menubar-container .control-panel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+
+  min-width: 0;
+}
+
+/* ======================================================
+   ICON BUTTONS
+====================================================== */
+
+.menubar-container .menubar-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 7px;
+
+  width: 34px;
+  height: 34px;
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  background: transparent;
+  color: var(--mb-text);
+
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.menubar-container .menubar-icon-btn:hover {
+  background: rgba(223, 208, 184, 0.08);
+  border-color: var(--mb-border);
+}
+
+.menubar-container .menubar-icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ======================================================
+   NOTIFICATION WRAPPER
+====================================================== */
+
+.menubar-container .menubar-notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 34px;
+}
+
+/*
+  NotificationButton retains its existing
+  internal behavior and badge.
+*/
+
+/* ======================================================
+   INSTALL BUTTON
+====================================================== */
+
+.menubar-container .menubar-install-btn {
+  width: auto;
+  min-width: 34px;
+  padding: 0 10px;
+
+  border-color: rgba(223, 208, 184, 0.13);
+  background: rgba(223, 208, 184, 0.06);
+}
+
+.menubar-container .install-label {
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ======================================================
+   CONTROL DIVIDER
+====================================================== */
+
+.menubar-container .menubar-control-divider {
+  width: 1px;
+  height: 22px;
+  margin: 0 2px;
+  flex-shrink: 0;
+
+  background: var(--mb-border);
+}
+
+/* ======================================================
+   PROFILE BUTTON
+====================================================== */
+
+.menubar-container .profile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 8px;
+
+  min-width: 90px;
+  height: 36px;
+  padding: 4px 9px 4px 5px;
+
+  border: 1px solid var(--mb-border);
+  border-radius: 9px;
+
+  background: var(--mb-surface);
+  color: var(--mb-text);
+
+  font-family: inherit;
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.menubar-container .profile-button:hover,
+.menubar-container .profile-button.active {
+  background: #2c333d;
+  border-color: rgba(223, 208, 184, 0.24);
+}
+
+.menubar-container .menubar-profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 25px;
+  height: 25px;
+
+  border-radius: 7px;
+  background: rgba(223, 208, 184, 0.11);
+
+  color: var(--mb-text);
+  font-size: 13px;
+}
+
+.menubar-container .menubar-profile-label {
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.menubar-container .profile-chevron {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  color: var(--mb-muted);
+
+  transition: transform 180ms ease;
+}
+
+.menubar-container .profile-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+/* ======================================================
+   RESPONSIVE — SMALL DESKTOP
+====================================================== */
+
+@media (max-width: 1200px) {
+  .menubar-container .menubar {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(120px, 190px)
+      auto;
+
+    gap: 10px;
+  }
+
+  .menubar-container .menubar-subtitle {
     display: none;
   }
-}
-@keyframes hintShow {
-  0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
-  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
 
-/* 📱 Small screens */
-@media screen and (max-width: 768px) {
-
-
-  .control-panel,
-  .additional-button {
-    justify-content: center;
-    /* width: 100%; */
-  }
-
-  .profile-button {
-    font-size: 16px;
-  }
-
-  .sidebar-toggle-btn {
-    display: block;
-  }
-  .menubar{
+  .menubar-container .control-panel {
     gap: 5px;
-    justify-content: space-evenly;
   }
 }
 
-/* 📱 Extra small (max-width: 480px) → show only search icon */
-@media screen and (max-width: 480px) {
-  .search-input {
-    display: none;
-  }
-  .menubar {
-    /* width: 100%; */
-    justify-content: space-evenly;
-    padding : 4px 10px;
-    gap: 10px;
-  }
-  .search-btn {
-    margin-left: 0;
-    font-size: 18px;
-    color: #7870f7;
+/* ======================================================
+   RESPONSIVE — TABLET
+====================================================== */
+
+@media (max-width: 900px) {
+  .menubar-container .menubar {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(95px, 170px)
+      auto;
+
+    min-height: 58px;
+    gap: 8px;
+    padding: 0;
   }
 
-  .search-box {
-    justify-content: flex-end;
+  .menubar-container .menubar-brand-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
   }
-  .control-panel{
-    gap: 10px;
+
+  .menubar-container .title-text {
+    font-size: 12px;
   }
-  .plan-timer-wrapper {
+
+  .menubar-container .plan-timer-content {
+    padding: 5px 7px;
+  }
+
+  .menubar-container .profile-button {
+    min-width: 34px;
+    width: 34px;
+    padding: 4px;
+    gap: 0;
+  }
+
+  .menubar-container .menubar-profile-label,
+  .menubar-container .profile-chevron {
     display: none;
+  }
+
+  .menubar-container .menubar-control-divider {
+    margin: 0;
+  }
+  .menubar-container .menubar-brand {
+    justify-content: center;
+  }
+
+}
+
+/* ======================================================
+   RESPONSIVE — MOBILE
+====================================================== */
+
+@media (max-width: 600px) {
+  .menubar-container .menubar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+    min-height: 55px;
+  }
+
+  .menubar-container .menubar-brand {
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .menubar-container .menubar-brand-icon {
+    width: 27px;
+    height: 27px;
+    font-size: 13px;
+  }
+
+  .menubar-container .title-text {
+    font-size: 11px;
+  }
+
+  .menubar-container .brand-management,
+  .menubar-container .brand-system {
+    display: none;
+  }
+
+  .menubar-container .plan-timer-wrapper {
+    display: none;
+  }
+
+  .menubar-container .control-panel {
+    gap: 3px;
+  }
+
+  .menubar-container .menubar-icon-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .menubar-container .menubar-notification {
+    min-width: 30px;
+  }
+
+  .menubar-container .menubar-control-divider {
+    display: none;
+  }
+
+  .menubar-container .menubar-install-btn {
+    min-width: 30px;
+    padding: 0 6px;
+  }
+
+  .menubar-container .install-label {
+    display: none;
+  }
+
+  .menubar-container .profile-button {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+  }
+
+  .menubar-container .menubar-profile-avatar {
+    width: 23px;
+    height: 23px;
+    font-size: 12px;
   }
 }
-@media (max-width:480px){
 
-  .hint-text{
-    font-size:8px;
-    padding:3px 6px;
-    bottom:20px;
-    width: 100px;
+/* ======================================================
+   RESPONSIVE — VERY SMALL MOBILE
+====================================================== */
+
+@media (max-width: 380px) {
+  /* .menubar-container .menubar-brand-icon {
+    display: none;
+  } */
+
+  .menubar-container .title-text {
+    font-size: 11px;
   }
 
+  .menubar-container .control-panel {
+    gap: 2px;
+  }
+
+  .menubar-container .menubar-icon-btn,
+  .menubar-container .profile-button {
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
+  }
+}
+
+/* ======================================================
+   ACCESSIBILITY
+====================================================== */
+
+.menubar-container button:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menubar-container .menubar-icon-btn,
+  .menubar-container .profile-button,
+  .menubar-container .profile-chevron {
+    transition: none;
+  }
 }

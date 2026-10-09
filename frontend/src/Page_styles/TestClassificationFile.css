@@ -1,0 +1,618 @@
+
+/* =========================================================
+   CLASSIFICATION PAGE
+   ASSETPEGASUS DARK THEME
+========================================================= */
+
+.classification_container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  padding: 22px;
+
+  /* background: #222831; */
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.classification_container *,
+.classification_container *::before,
+.classification_container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.classification_container .classification_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.classification_container .classification_header_info {
+  min-width: 0;
+}
+
+.classification_container .classification_eyebrow {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.classification_container .classify_heading2 {
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.classification_container .classification_subtitle {
+  margin: 7px 0 0;
+
+  color: rgba(223, 208, 184, 0.55);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   EXPORT WRAPPER
+========================================================= */
+
+.classification_container .export-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   EXPORT BUTTON
+========================================================= */
+
+.classification_container .classification_export_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 39px;
+  padding: 0 14px;
+
+  border: 1px solid rgba(223, 208, 184, 0.17);
+  border-radius: 8px;
+
+  background: #252b34;
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.classification_container .classification_export_btn:hover {
+  background: #303741;
+  border-color: rgba(223, 208, 184, 0.32);
+}
+
+.classification_container .classification_export_btn > svg:first-child {
+  font-size: 14px;
+}
+
+.classification_container .classification_export_caret {
+  margin-left: 3px;
+
+  color: #948979;
+  font-size: 13px;
+
+  transition: transform 0.2s ease;
+}
+
+.classification_container .classification_export_caret.open {
+  transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   EXPORT DROPDOWN
+========================================================= */
+
+.classification_container .classification_export_dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+
+  width: 230px;
+  padding: 7px;
+
+  border: 1px solid rgba(223, 208, 184, 0.13);
+  border-radius: 10px;
+
+  background: #252b34;
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.32);
+}
+
+.classification_container .classification_export_label {
+  padding: 9px 10px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+}
+
+.classification_container .classification_export_option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  padding: 10px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #DFD0B8;
+
+  text-align: left;
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.classification_container .classification_export_option:hover {
+  background: rgba(223, 208, 184, 0.075);
+}
+
+.classification_container .classification_export_option_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 30px;
+  height: 30px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.06);
+  color: #DFD0B8;
+
+  font-size: 14px;
+}
+
+.classification_container .classification_export_option_text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.classification_container .classification_export_option_text strong {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.classification_container .classification_export_option_text small {
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   NAVIGATION CONTAINER
+========================================================= */
+
+.classification_container .classification_navigation {
+  width: 100%;
+  min-width: 0;
+
+  margin-bottom: 20px;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 11px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+}
+
+.classification_container .classification_navigation_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.classification_container .classification_navigation_title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.classification_container .classification_navigation_title svg {
+  color: #948979;
+  font-size: 14px;
+}
+
+.classification_container .classification_module_count {
+  padding: 6px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.classification_container .tabs_container {
+  display: flex;
+  align-items: stretch;
+  gap: 7px;
+
+  width: 100%;
+  min-width: 0;
+  padding: 11px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: thin;
+  scrollbar-color: #393E46 transparent;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.classification_container .classification_tab {
+  position: relative;
+    width: 20%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1 0 auto;
+
+  min-height: 39px;
+  padding: 10px 15px;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #948979;
+
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.classification_container .classification_tab:hover {
+  background: rgba(223, 208, 184, 0.055);
+  color: #DFD0B8;
+}
+
+.classification_container .classification_tab.active {
+  border-color: rgba(223, 208, 184, 0.18);
+
+  background: rgba(223, 208, 184, 0.1);
+  color: #DFD0B8;
+}
+
+.classification_container .classification_tab_icon {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.classification_container .tab-text2 {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.classification_container .classification_tab_indicator {
+  position: absolute;
+  right: 12px;
+  bottom: 4px;
+  left: 12px;
+
+  height: 2px;
+  border-radius: 2px;
+
+  background: #DFD0B8;
+}
+
+
+/* =========================================================
+   CONTENT CONTAINER
+========================================================= */
+
+.classification_container .classify_items {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  padding: 18px;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 11px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1400px) {
+
+  .classification_container .classification_tab {
+    padding: 11px 20px;
+  }
+
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .classification_container .classification_tab {
+    padding: 10px 13px;
+  }
+
+  .classification_container .tabs_container {
+    justify-content: flex-start;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .classification_container {
+    padding: 16px;
+  }
+
+  .classification_container .classification_header {
+    margin-bottom: 18px;
+  }
+
+  .classification_container .classification_tab {
+    flex: 0 0 auto;
+    min-width: 125px;
+  }
+
+  .classification_container .classify_items {
+    padding: 15px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .classification_container {
+    padding: 12px;
+  }
+
+  /* HEADER */
+
+  .classification_container .classification_header {
+    align-items: flex-start;
+    gap: 12px;
+
+    margin-bottom: 17px;
+    padding-bottom: 16px;
+  }
+
+  .classification_container .classify_heading2 {
+    font-size: 17px;
+  }
+
+  .classification_container .classification_subtitle {
+    max-width: 270px;
+  }
+
+  .classification_container .classification_export_btn {
+    min-height: 36px;
+    padding: 0 10px;
+    gap: 6px;
+
+    font-size: 10px;
+  }
+
+  .classification_container .classification_export_dropdown {
+    width: 210px;
+  }
+
+
+  /* NAVIGATION */
+
+  .classification_container .classification_navigation {
+    margin-bottom: 15px;
+  }
+
+  .classification_container .classification_navigation_header {
+    padding: 12px;
+  }
+
+  .classification_container .tabs_container {
+    gap: 7px;
+    padding: 9px;
+  }
+
+  .classification_container .classification_tab {
+    width: 115px;
+    min-height: 37px;
+    padding: 9px 12px;
+
+    font-size: 10px;
+  }
+
+
+  /* CONTENT */
+
+  .classification_container .classify_items {
+    padding: 12px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .classification_container {
+    padding: 10px;
+  }
+
+  .classification_container .classification_header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .classification_container .export-wrapper {
+    align-self: flex-start;
+  }
+
+  .classification_container .classification_export_btn {
+    min-height: 36px;
+  }
+
+  .classification_container .classification_export_dropdown {
+    right: auto;
+    left: 0;
+  }
+
+  .classification_container .classification_navigation_header {
+    padding: 11px;
+  }
+
+  .classification_container .classification_navigation_title {
+    font-size: 11px;
+  }
+
+  .classification_container .classification_module_count {
+    font-size: 9px;
+  }
+
+  .classification_container .classify_items {
+    padding: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .classification_container {
+    padding: 8px;
+  }
+
+  .classification_container .classification_navigation_header {
+    flex-wrap: wrap;
+  }
+
+  .classification_container .classification_tab {
+    width: 105px;
+    padding: 8px 10px;
+  }
+
+  .classification_container .classify_items {
+    padding: 8px;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.classification_container button:focus-visible,
+.classification_container a:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .classification_container .classification_export_btn,
+  .classification_container .classification_export_option,
+  .classification_container .classification_tab,
+  .classification_container .classification_export_caret {
+    transition: none;
+  }
+
+}

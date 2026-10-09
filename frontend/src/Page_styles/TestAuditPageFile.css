@@ -1,0 +1,9608 @@
+
+/* =========================================================
+   AUDIT & COMPLIANCE CENTER
+   ASSETPEGASUS DARK THEME
+========================================================= */
+
+.audit-page {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  padding: 22px;
+
+  box-sizing: border-box;
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+}
+
+
+/* GLOBAL BOX SIZING */
+
+.audit-page *,
+.audit-page *::before,
+.audit-page *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.audit-page .audit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+
+  border-bottom:
+    1px solid rgba(223, 208, 184, 0.09);
+}
+
+
+.audit-page .audit-header-content {
+  min-width: 0;
+  flex: 1;
+}
+
+
+.audit-page .audit-page-eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+
+.audit-page .audit-header h1 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+
+.audit-page .audit-header p {
+  margin: 7px 0 0;
+
+  max-width: 620px;
+
+  color: rgba(223, 208, 184, 0.55);
+  text-align: left;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
+
+.audit-page .audit-header-actions {
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 0;
+
+  gap: 10px;
+}
+
+
+.audit-page .audit-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-height: 36px;
+
+  padding: 9px 15px;
+
+  border:
+    1px solid rgba(223, 208, 184, 0.16);
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #2b3139,
+      #222831
+    );
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.audit-page .audit-refresh-btn:hover {
+  transform: translateY(-1px);
+
+  border-color:
+    rgba(223, 208, 184, 0.32);
+
+  background: #303740;
+}
+
+
+.audit-page .audit-refresh-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.audit-page .audit-overview-section {
+  margin-bottom: 26px;
+}
+
+
+.audit-page .audit-report-section {
+  min-width: 0;
+}
+
+
+.audit-page .audit-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 14px;
+}
+
+
+.audit-page .audit-section-heading h2 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+.audit-page .audit-section-heading p {
+  margin: 5px 0 0;
+
+  color: rgba(223, 208, 184, 0.45);
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+.audit-page .audit-section-indicator {
+  flex-shrink: 0;
+
+  padding: 6px 9px;
+
+  border:
+    1px solid rgba(145, 182, 156, 0.15);
+
+  border-radius: 6px;
+
+  background:
+    rgba(145, 182, 156, 0.06);
+
+  color: #91b69c;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.4px;
+}
+
+
+/* =========================================================
+   KPI GRID
+========================================================= */
+
+.audit-page .audit-stats-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 12px;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   KPI CARD
+========================================================= */
+
+.audit-page .audit-stat-card {
+  position: relative;
+
+  min-width: 0;
+  min-height: 105px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  padding: 15px;
+
+  overflow: hidden;
+
+  border:
+    1px solid rgba(223, 208, 184, 0.09);
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #252b34,
+      #1b2027
+    );
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.audit-page .audit-stat-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(223, 208, 184, 0.2);
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+
+/* =========================================================
+   KPI TOP
+========================================================= */
+
+.audit-page .audit-stat-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+
+.audit-page .audit-stat-label {
+  min-width: 0;
+
+  color: rgba(223, 208, 184, 0.62);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+
+.audit-page .audit-stat-index {
+  flex-shrink: 0;
+
+  color: rgba(223, 208, 184, 0.25);
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   KPI BOTTOM
+========================================================= */
+
+.audit-page .audit-stat-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+
+.audit-page .audit-stat-bottom h2 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  overflow-wrap: anywhere;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+.audit-page .audit-stat-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid rgba(223, 208, 184, 0.08);
+
+  border-radius: 7px;
+
+  background:
+    rgba(223, 208, 184, 0.045);
+
+  color: #948979;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   REPORT TABS WRAPPER
+========================================================= */
+
+.audit-page .audit-tabs-wrapper {
+  width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  margin-bottom: 15px;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    rgba(148, 137, 121, 0.35)
+    transparent;
+}
+
+
+/* =========================================================
+   REPORT TABS
+========================================================= */
+
+.audit-page .audit-tabs {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  width: max-content;
+  min-width: 100%;
+
+  padding: 5px;
+
+  border:
+    1px solid rgba(223, 208, 184, 0.08);
+
+  border-radius: 9px;
+
+  background: #1b2027;
+}
+
+
+.audit-page .audit-tab {
+  position: relative;
+
+  flex-shrink: 0;
+
+  padding: 10px 15px;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: rgba(223, 208, 184, 0.48);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.audit-page .audit-tab:hover {
+  color: #DFD0B8;
+
+  background:
+    rgba(223, 208, 184, 0.045);
+}
+
+
+.audit-page .audit-tab.active {
+  border-color:
+    rgba(223, 208, 184, 0.12);
+
+  background:
+    linear-gradient(
+      145deg,
+      #343b44,
+      #292f37
+    );
+
+  color: #DFD0B8;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   FILTER TOOLBAR
+========================================================= */
+
+.audit-page .audit-filters {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  flex-wrap: wrap;
+
+  gap: 15px;
+
+  margin-bottom: 16px;
+
+  padding: 14px;
+
+  border:
+    1px solid rgba(223, 208, 184, 0.08);
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #252b34,
+      #1c2128
+    );
+}
+
+
+/* =========================================================
+   FILTER GROUP
+========================================================= */
+
+.audit-page .audit-filter-group {
+  display: flex;
+  align-items: flex-end;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+
+.audit-page .audit-filter-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  min-width: 135px;
+}
+
+
+.audit-page .audit-filter-field label {
+  color: rgba(223, 208, 184, 0.55);
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+.audit-page .audit-filter-field select {
+  width: 100%;
+  min-width: 0;
+  height: 35px;
+
+  padding: 0 30px 0 11px;
+
+  border:
+    1px solid rgba(223, 208, 184, 0.1);
+
+  border-radius: 7px;
+
+  outline: none;
+
+  background: #1b2027;
+
+  color: #DFD0B8;
+
+  font-family: inherit;
+  font-size: 10px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.audit-page .audit-filter-field select:hover {
+  border-color:
+    rgba(223, 208, 184, 0.2);
+}
+
+
+.audit-page .audit-filter-field select:focus {
+  border-color:
+    rgba(223, 208, 184, 0.4);
+
+  background: #222831;
+}
+
+
+.audit-page .audit-filter-field select option {
+  background: #222831;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   EXPORT ACTIONS
+========================================================= */
+
+.audit-page .audit-actions {
+  display: flex;
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+
+.audit-page .pdf-btn,
+.audit-page .excel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 35px;
+
+  padding: 9px 13px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+/* PDF BUTTON */
+
+.audit-page .pdf-btn {
+  border:
+    1px solid rgba(199, 143, 143, 0.24);
+
+  background:
+    rgba(199, 143, 143, 0.08);
+
+  color: #d8a0a0;
+}
+
+
+.audit-page .pdf-btn:hover {
+  transform: translateY(-1px);
+
+  border-color:
+    rgba(199, 143, 143, 0.4);
+
+  background:
+    rgba(199, 143, 143, 0.14);
+}
+
+
+/* EXCEL BUTTON */
+
+.audit-page .excel-btn {
+  border:
+    1px solid rgba(145, 182, 156, 0.24);
+
+  background:
+    rgba(145, 182, 156, 0.08);
+
+  color: #91b69c;
+}
+
+
+.audit-page .excel-btn:hover {
+  transform: translateY(-1px);
+
+  border-color:
+    rgba(145, 182, 156, 0.4);
+
+  background:
+    rgba(145, 182, 156, 0.14);
+}
+
+
+.audit-page .audit-export-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   REPORT CONTENT
+========================================================= */
+
+.audit-page .audit-content {
+  width: 100%;
+  min-width: 0;
+
+  padding: 18px;
+
+  border:
+    1px solid rgba(223, 208, 184, 0.08);
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #252b34,
+      #1a1f25
+    );
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Prevent wide report tables from breaking layout */
+
+.audit-page .audit-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+.audit-page .audit-content th,
+.audit-page .audit-content td {
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1500px) {
+
+  .audit-page .audit-stats-grid {
+    grid-template-columns:
+      repeat(5, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .audit-page .audit-stats-grid {
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page {
+    padding: 18px;
+  }
+
+
+  .audit-page .audit-stats-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+
+  .audit-page .audit-stat-card {
+    min-height: 100px;
+  }
+
+
+  .audit-page .audit-content {
+    padding: 15px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .audit-page .audit-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 14px;
+  }
+
+
+  .audit-page .audit-header-actions {
+    width: 100%;
+  }
+
+
+  .audit-page .audit-refresh-btn {
+    width: 100%;
+  }
+
+
+  .audit-page .audit-stats-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+
+  .audit-page .audit-filters {
+    align-items: stretch;
+    flex-direction: column;
+
+    gap: 14px;
+  }
+
+
+  .audit-page .audit-filter-group {
+    width: 100%;
+  }
+
+
+  .audit-page .audit-filter-field {
+    flex: 1;
+
+    min-width: 0;
+  }
+
+
+  .audit-page .audit-actions {
+    width: 100%;
+  }
+
+
+  .audit-page .pdf-btn,
+  .audit-page .excel-btn {
+    flex: 1;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .audit-page {
+    padding: 12px;
+  }
+
+
+  /* HEADER */
+
+  .audit-page .audit-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+  }
+
+
+  .audit-page .audit-header h1 {
+    font-size: 18px;
+  }
+
+
+  .audit-page .audit-header p {
+    line-height: 1.6;
+  }
+
+
+  /* SECTION */
+
+  .audit-page .audit-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+
+  /* KPI GRID */
+
+  .audit-page .audit-stats-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+  }
+
+
+  .audit-page .audit-stat-card {
+    min-height: 100px;
+
+    padding: 12px;
+  }
+
+
+  .audit-page .audit-stat-bottom h2 {
+    font-size: 20px;
+  }
+
+
+  .audit-page .audit-stat-decoration {
+    width: 21px;
+    height: 21px;
+  }
+
+
+  /* TABS */
+
+  .audit-page .audit-tab {
+    padding: 10px 12px;
+  }
+
+
+  /* FILTERS */
+
+  .audit-page .audit-filters {
+    padding: 11px;
+  }
+
+
+  .audit-page .audit-filter-group {
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+
+  .audit-page .audit-filter-field {
+    width: 100%;
+  }
+
+
+  .audit-page .audit-filter-field select {
+    min-height: 40px;
+  }
+
+
+  /* EXPORT */
+
+  .audit-page .audit-actions {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+
+  .audit-page .pdf-btn,
+  .audit-page .excel-btn {
+    width: 100%;
+
+    min-height: 40px;
+
+    padding: 8px;
+  }
+
+
+  /* REPORT */
+
+  .audit-page .audit-content {
+    padding: 11px;
+
+    border-radius: 9px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 350px) {
+
+  .audit-page {
+    padding: 9px;
+  }
+
+
+  .audit-page .audit-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .audit-page .audit-stat-card {
+    min-height: 90px;
+  }
+
+
+  .audit-page .audit-actions {
+    grid-template-columns: 1fr;
+  }
+
+
+  .audit-page .audit-section-indicator {
+    align-self: flex-start;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-stat-card,
+  .audit-page .audit-tab,
+  .audit-page .audit-refresh-btn,
+  .audit-page .pdf-btn,
+  .audit-page .excel-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   AUDIT SUMMARY - INVENTORY OVERVIEW
+========================================================= */
+
+.audit-page .audit-summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-summary-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-summary-eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-summary-heading h3 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+.audit-page .audit-summary-heading p {
+  margin: 6px 0 0;
+
+  color: rgba(223, 208, 184, 0.5);
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ASSET COUNT
+========================================================= */
+
+.audit-page .audit-summary-count {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+}
+
+.audit-page .audit-summary-count span {
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-summary-count strong {
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-summary-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-summary-table {
+  width: 100%;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  table-layout: auto;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   TABLE HEAD
+========================================================= */
+
+.audit-page .audit-summary-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-summary-table thead th {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-align: left;
+  white-space: nowrap;
+
+  letter-spacing: 0.2px;
+}
+
+.audit-page .audit-summary-expand-col {
+  width: 70px;
+
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.audit-page .audit-summary-row {
+  background: #1c2128;
+
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-summary-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-summary-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-summary-row td {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+
+  font-size: 10px;
+  line-height: 1.6;
+
+  vertical-align: middle;
+}
+
+.audit-page .audit-summary-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-summary-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 29px;
+  height: 29px;
+
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+
+  color: #948979;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.audit-page .audit-summary-expand-btn:hover,
+.audit-page .audit-summary-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+
+  border-color: rgba(223, 208, 184, 0.22);
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   ASSET NAME / CODE
+========================================================= */
+
+.audit-page .audit-summary-asset-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.audit-page .audit-summary-asset-info strong {
+  color: #DFD0B8;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-summary-asset-info span {
+  color: #948979;
+
+  font-size: 10px;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   TYPE BADGES
+========================================================= */
+
+.audit-page .audit-summary-type {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.audit-page .audit-summary-type.hardware {
+  color: #a8b8d0;
+
+  background: rgba(128, 155, 191, 0.1);
+
+  border: 1px solid rgba(128, 155, 191, 0.18);
+}
+
+.audit-page .audit-summary-type.software {
+  color: #b9a5d1;
+
+  background: rgba(167, 139, 198, 0.1);
+
+  border: 1px solid rgba(167, 139, 198, 0.18);
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.audit-page .audit-summary-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  max-width: 100%;
+
+  padding: 5px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.045);
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: capitalize;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-summary-status-dot {
+  width: 6px;
+  height: 6px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #948979;
+}
+
+
+/* ASSIGNED */
+
+.audit-page .audit-summary-status.assigned {
+  color: #91b69c;
+
+  border-color: rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-summary-status.assigned
+.audit-summary-status-dot {
+  background: #91b69c;
+}
+
+
+/* IN STOCK */
+
+.audit-page .audit-summary-status.in_stock {
+  color: #a8b8d0;
+
+  border-color: rgba(168, 184, 208, 0.2);
+  background: rgba(168, 184, 208, 0.07);
+}
+
+.audit-page .audit-summary-status.in_stock
+.audit-summary-status-dot {
+  background: #a8b8d0;
+}
+
+
+/* MAINTENANCE */
+
+.audit-page .audit-summary-status.maintenance {
+  color: #d1b17d;
+
+  border-color: rgba(209, 177, 125, 0.2);
+  background: rgba(209, 177, 125, 0.08);
+}
+
+.audit-page .audit-summary-status.maintenance
+.audit-summary-status-dot {
+  background: #d1b17d;
+}
+
+
+/* RETIRED */
+
+.audit-page .audit-summary-status.retired {
+  color: #c98f8f;
+
+  border-color: rgba(201, 143, 143, 0.2);
+  background: rgba(201, 143, 143, 0.08);
+}
+
+.audit-page .audit-summary-status.retired
+.audit-summary-status-dot {
+  background: #c98f8f;
+}
+
+
+/* =========================================================
+   LOCATION / DATE
+========================================================= */
+
+.audit-page .audit-summary-location,
+.audit-page .audit-summary-date {
+  color: rgba(223, 208, 184, 0.7);
+
+  font-size: 10px;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   EXPANDED TABLE ROW
+========================================================= */
+
+.audit-page .audit-summary-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-summary-detail-row > td {
+  padding: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   EXPANDED DETAILS CARD
+========================================================= */
+
+.audit-page .audit-summary-details {
+  width: 100%;
+  min-width: 0;
+
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #252b34,
+      #1c2128
+    );
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-summary-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-summary-details-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-summary-details-header h4 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-summary-details-header p {
+  margin: 5px 0 0;
+
+  color: rgba(223, 208, 184, 0.48);
+
+  font-size: 10px;
+}
+
+.audit-page .audit-summary-details-status {
+  flex-shrink: 0;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.055);
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: capitalize;
+}
+
+
+/* =========================================================
+   DETAIL SECTIONS
+========================================================= */
+
+.audit-page .audit-summary-detail-section {
+  margin-bottom: 18px;
+}
+
+.audit-page .audit-summary-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.audit-page .audit-summary-detail-title {
+  margin-bottom: 10px;
+}
+
+.audit-page .audit-summary-detail-title h5 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.audit-page .audit-summary-cost-heading {
+  margin-top: 16px;
+}
+
+
+/* =========================================================
+   DETAILS GRID
+========================================================= */
+
+.audit-page .audit-summary-details-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+
+/* =========================================================
+   DETAIL ITEM
+========================================================= */
+
+.audit-page .audit-summary-detail-item {
+  min-width: 0;
+
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-summary-detail-item label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  line-height: 1.4;
+}
+
+.audit-page .audit-summary-detail-item p {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* HIGHLIGHTED FINANCIAL ITEM */
+
+.audit-page .audit-summary-detail-item.highlight {
+  border-color: rgba(223, 208, 184, 0.18);
+
+  background: rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-summary-detail-item.highlight p {
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.audit-page .audit-summary-empty {
+  padding: 50px 20px !important;
+
+  text-align: center;
+}
+
+.audit-page .audit-summary-empty h4 {
+  margin: 0 0 8px;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+}
+
+.audit-page .audit-summary-empty p {
+  margin: 0;
+
+  color: #948979;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .audit-page .audit-summary-details-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page .audit-summary-table {
+    min-width: 720px;
+  }
+
+  .audit-page .audit-summary-table thead th,
+  .audit-page .audit-summary-row td {
+    padding: 12px;
+  }
+
+  .audit-page .audit-summary-details-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE CARD TABLE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* HEADER */
+
+  .audit-page .audit-summary-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .audit-page .audit-summary-heading h3 {
+    font-size: 18px;
+  }
+
+  .audit-page .audit-summary-count {
+    padding: 7px 9px;
+  }
+
+
+  /* WRAPPER */
+
+  .audit-page .audit-summary-table-wrapper {
+    overflow: visible;
+
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+  }
+
+
+  /* TABLE RESET */
+
+  .audit-page .audit-summary-table {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-summary-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-summary-table tbody {
+    display: block;
+  }
+
+
+  /* EACH ASSET AS A CARD */
+
+  .audit-page .audit-summary-row {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(
+        145deg,
+        #252b34,
+        #1c2128
+      );
+  }
+
+  .audit-page .audit-summary-row.expanded {
+    margin-bottom: 0;
+
+    border-radius: 10px 10px 0 0;
+
+    border-bottom-color: transparent;
+  }
+
+
+  /* CELLS */
+
+  .audit-page .audit-summary-row td {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    padding: 0;
+
+    border: none;
+
+    font-size: 10px;
+  }
+
+
+  /* MOBILE LABELS */
+
+  .audit-page .audit-summary-row td::before {
+    content: attr(data-label);
+
+    color: #948979;
+
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* ASSET NAME */
+
+  .audit-page .audit-summary-asset-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+
+    padding-right: 45px !important;
+  }
+
+  .audit-page .audit-summary-asset-info strong {
+    font-size: 12px;
+  }
+
+
+  /* EXPAND BUTTON */
+
+  .audit-page .audit-summary-expand-cell {
+    position: absolute;
+
+    top: 13px;
+    right: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .audit-page .audit-summary-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-summary-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED DETAILS */
+
+  .audit-page .audit-summary-detail-row {
+    display: block;
+
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-summary-detail-row > td {
+    display: block;
+
+    padding: 10px;
+
+    border: none;
+  }
+
+  .audit-page .audit-summary-details {
+    padding: 13px;
+  }
+
+  .audit-page .audit-summary-details-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .audit-page .audit-summary-detail-item {
+    padding: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-summary-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-summary-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-summary-details-header {
+    flex-wrap: wrap;
+  }
+
+  .audit-page .audit-summary-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-summary-detail-item {
+    padding: 11px;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-summary-row {
+    grid-template-columns: 1fr;
+
+    padding: 12px;
+  }
+
+  .audit-page .audit-summary-asset-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-summary-details {
+    padding: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-summary-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-summary-row,
+  .audit-page .audit-summary-expand-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   DEPARTMENT AUDIT TAB
+========================================================= */
+
+.audit-page .audit-department-container {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+}
+
+.audit-page .audit-department-container *,
+.audit-page .audit-department-container *::before,
+.audit-page .audit-department-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.audit-page .audit-department-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-department-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-department-eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-department-heading h3 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+.audit-page .audit-department-heading p {
+  margin: 6px 0 0;
+
+  color: rgba(223, 208, 184, 0.5);
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   DEPARTMENT COUNT
+========================================================= */
+
+.audit-page .audit-department-count {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+}
+
+.audit-page .audit-department-count span {
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-department-count strong {
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-department-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-department-table {
+  width: 100%;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  color: #DFD0B8;
+}
+
+.audit-page .audit-department-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-department-table thead th {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-align: left;
+  white-space: nowrap;
+}
+
+.audit-page .audit-department-expand-col {
+  width: 75px;
+
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   MAIN ROW
+========================================================= */
+
+.audit-page .audit-department-row {
+  background: #1c2128;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-department-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-department-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-department-row td {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+
+  font-size: 10px;
+  line-height: 1.6;
+
+  vertical-align: middle;
+}
+
+.audit-page .audit-department-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-department-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+
+  color: #948979;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.audit-page .audit-department-expand-btn:hover,
+.audit-page .audit-department-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+
+  border-color: rgba(223, 208, 184, 0.22);
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   DEPARTMENT NAME
+========================================================= */
+
+.audit-page .audit-department-name {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.audit-page .audit-department-name strong {
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-department-name span {
+  color: #948979;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   METRICS
+========================================================= */
+
+.audit-page .audit-department-metric {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.045);
+
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.audit-page .audit-department-value {
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   EXPANDED ROW
+========================================================= */
+
+.audit-page .audit-department-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-department-detail-row > td {
+  padding: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   EXPANDED DETAILS
+========================================================= */
+
+.audit-page .audit-department-details {
+  width: 100%;
+  min-width: 0;
+
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #252b34,
+      #1c2128
+    );
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-department-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  margin-bottom: 17px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-department-details-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-department-details-header h4 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-department-details-header p {
+  margin: 5px 0 0;
+
+  color: rgba(223, 208, 184, 0.48);
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   DETAILS BADGES
+========================================================= */
+
+.audit-page .audit-department-details-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+}
+
+.audit-page .audit-department-info-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 7px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.045);
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.audit-page .audit-department-info-badge.active {
+  border-color: rgba(145, 182, 156, 0.2);
+
+  background: rgba(145, 182, 156, 0.08);
+
+  color: #91b69c;
+}
+
+
+/* =========================================================
+   ASSIGNMENT HISTORY LIST
+========================================================= */
+
+.audit-page .audit-department-history-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   HISTORY CARD
+========================================================= */
+
+.audit-page .audit-department-history-card {
+  min-width: 0;
+
+  padding: 15px;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 9px;
+
+  background: rgba(13, 17, 22, 0.32);
+}
+
+
+/* =========================================================
+   HISTORY HEADER
+========================================================= */
+
+.audit-page .audit-department-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 13px;
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+}
+
+.audit-page .audit-department-history-identity {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+.audit-page .audit-department-history-index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 31px;
+  height: 31px;
+
+  flex-shrink: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.05);
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.audit-page .audit-department-history-identity h5 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-department-history-identity p {
+  margin: 4px 0 0;
+
+  color: #948979;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   HISTORY STATUS
+========================================================= */
+
+.audit-page .audit-department-history-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 6px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: capitalize;
+}
+
+.audit-page .audit-department-status-dot {
+  width: 6px;
+  height: 6px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #948979;
+}
+
+
+/* ACTIVE */
+
+.audit-page .audit-department-history-status.active {
+  color: #91b69c;
+
+  border-color: rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-department-history-status.active
+.audit-department-status-dot {
+  background: #91b69c;
+}
+
+
+/* RETURNED */
+
+.audit-page .audit-department-history-status.returned {
+  color: #d1b17d;
+
+  border-color: rgba(209, 177, 125, 0.2);
+  background: rgba(209, 177, 125, 0.08);
+}
+
+.audit-page .audit-department-history-status.returned
+.audit-department-status-dot {
+  background: #d1b17d;
+}
+
+
+/* TRANSFERRED */
+
+.audit-page .audit-department-history-status.transferred {
+  color: #a8b8d0;
+
+  border-color: rgba(168, 184, 208, 0.2);
+  background: rgba(168, 184, 208, 0.08);
+}
+
+.audit-page .audit-department-history-status.transferred
+.audit-department-status-dot {
+  background: #a8b8d0;
+}
+
+
+/* =========================================================
+   HISTORY DETAILS GRID
+========================================================= */
+
+.audit-page .audit-department-history-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+
+/* =========================================================
+   HISTORY ITEM
+========================================================= */
+
+.audit-page .audit-department-history-item {
+  min-width: 0;
+
+  padding: 11px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.065);
+  border-radius: 7px;
+
+  background: rgba(20, 25, 31, 0.48);
+}
+
+.audit-page .audit-department-history-item label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-department-history-item p {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* HIGHLIGHTED VALUE */
+
+.audit-page .audit-department-history-item.highlight {
+  border-color: rgba(223, 208, 184, 0.17);
+
+  background: rgba(223, 208, 184, 0.05);
+}
+
+.audit-page .audit-department-history-item.highlight p {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.audit-page .audit-department-empty,
+.audit-page .audit-department-empty-history {
+  padding: 40px 18px;
+
+  text-align: center;
+}
+
+.audit-page .audit-department-empty h4,
+.audit-page .audit-department-empty-history h5 {
+  margin: 0 0 8px;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-department-empty p,
+.audit-page .audit-department-empty-history p {
+  margin: 0;
+
+  color: #948979;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .audit-page .audit-department-history-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .audit-page .audit-department-table {
+    min-width: 650px;
+  }
+
+  .audit-page .audit-department-details-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-department-details-badges {
+    justify-content: flex-start;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE CARD LAYOUT
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* HEADER */
+
+  .audit-page .audit-department-header {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+
+  /* TABLE RESET */
+
+  .audit-page .audit-department-table-wrapper {
+    overflow: visible;
+
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+  }
+
+  .audit-page .audit-department-table {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-department-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-department-table tbody {
+    display: block;
+  }
+
+
+  /* DEPARTMENT CARD */
+
+  .audit-page .audit-department-row {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(
+        145deg,
+        #252b34,
+        #1c2128
+      );
+  }
+
+  .audit-page .audit-department-row.expanded {
+    margin-bottom: 0;
+
+    border-radius: 10px 10px 0 0;
+
+    border-bottom-color: transparent;
+  }
+
+
+  /* CELLS */
+
+  .audit-page .audit-department-row td {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    padding: 0;
+
+    border: none;
+
+    font-size: 10px;
+  }
+
+  .audit-page .audit-department-row td::before {
+    content: attr(data-label);
+
+    color: #948979;
+
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* NAME */
+
+  .audit-page .audit-department-name-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+
+    padding-right: 45px !important;
+  }
+
+  .audit-page .audit-department-name strong {
+    font-size: 12px;
+  }
+
+
+  /* EXPAND */
+
+  .audit-page .audit-department-expand-cell {
+    position: absolute;
+
+    top: 13px;
+    right: 13px;
+  }
+
+  .audit-page .audit-department-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-department-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED DETAILS */
+
+  .audit-page .audit-department-detail-row {
+    display: block;
+
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-department-detail-row > td {
+    display: block;
+
+    padding: 10px;
+
+    border: none;
+  }
+
+  .audit-page .audit-department-details {
+    padding: 12px;
+  }
+
+
+  /* HISTORY CARD */
+
+  .audit-page .audit-department-history-card {
+    padding: 12px;
+  }
+
+  .audit-page .audit-department-history-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .audit-page .audit-department-history-item {
+    padding: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-department-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-department-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-department-history-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .audit-page .audit-department-history-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-department-history-item {
+    padding: 11px;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-department-row {
+    grid-template-columns: 1fr;
+
+    padding: 12px;
+  }
+
+  .audit-page .audit-department-name-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-department-details {
+    padding: 10px;
+  }
+
+  .audit-page .audit-department-info-badge {
+    white-space: normal;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-department-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-department-row,
+  .audit-page .audit-department-expand-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   WARRANTY AUDIT TAB
+========================================================= */
+
+.audit-page .audit-warranty-container {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+}
+
+.audit-page .audit-warranty-container *,
+.audit-page .audit-warranty-container *::before,
+.audit-page .audit-warranty-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.audit-page .audit-warranty-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-warranty-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-warranty-eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-warranty-heading h3 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+.audit-page .audit-warranty-heading p {
+  margin: 6px 0 0;
+
+  color: rgba(223, 208, 184, 0.5);
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ASSET COUNT
+========================================================= */
+
+.audit-page .audit-warranty-count {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+}
+
+.audit-page .audit-warranty-count span {
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-warranty-count strong {
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-warranty-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-warranty-table {
+  width: 100%;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.audit-page .audit-warranty-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-warranty-table thead th {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-align: left;
+  white-space: nowrap;
+}
+
+.audit-page .audit-warranty-expand-col {
+  width: 75px;
+
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   MAIN ROW
+========================================================= */
+
+.audit-page .audit-warranty-row {
+  background: #1c2128;
+
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-warranty-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-warranty-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-warranty-row td {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+
+  font-size: 10px;
+  line-height: 1.6;
+
+  vertical-align: middle;
+}
+
+.audit-page .audit-warranty-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-warranty-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+
+  color: #948979;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.audit-page .audit-warranty-expand-btn:hover,
+.audit-page .audit-warranty-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+
+  border-color: rgba(223, 208, 184, 0.22);
+
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   ASSET NAME
+========================================================= */
+
+.audit-page .audit-warranty-asset-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.audit-page .audit-warranty-asset-info strong {
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-warranty-asset-info span {
+  color: #948979;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   TYPE BADGES
+========================================================= */
+
+.audit-page .audit-warranty-type {
+  display: inline-flex;
+  align-items: center;
+
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-warranty-type.hardware {
+  color: #a8b8d0;
+
+  background: rgba(128, 155, 191, 0.1);
+
+  border: 1px solid rgba(128, 155, 191, 0.18);
+}
+
+.audit-page .audit-warranty-type.software {
+  color: #b9a5d1;
+
+  background: rgba(167, 139, 198, 0.1);
+
+  border: 1px solid rgba(167, 139, 198, 0.18);
+}
+
+
+/* =========================================================
+   EXPIRY INFORMATION
+========================================================= */
+
+.audit-page .audit-warranty-expiry-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 5px;
+}
+
+.audit-page .audit-warranty-date {
+  color: rgba(223, 208, 184, 0.75);
+
+  font-size: 10px;
+}
+
+.audit-page .audit-warranty-days {
+  color: #948979;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   WARRANTY STATUS
+========================================================= */
+
+.audit-page .audit-warranty-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.audit-page .audit-warranty-status-dot {
+  width: 6px;
+  height: 6px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+
+/* ACTIVE */
+
+.audit-page .audit-warranty-status.active {
+  color: #91b69c;
+
+  border-color: rgba(145, 182, 156, 0.2);
+
+  background: rgba(145, 182, 156, 0.08);
+}
+
+
+/* EXPIRING */
+
+.audit-page .audit-warranty-status.expiring {
+  color: #d1b17d;
+
+  border-color: rgba(209, 177, 125, 0.2);
+
+  background: rgba(209, 177, 125, 0.08);
+}
+
+
+/* EXPIRED */
+
+.audit-page .audit-warranty-status.expired {
+  color: #c98f8f;
+
+  border-color: rgba(201, 143, 143, 0.2);
+
+  background: rgba(201, 143, 143, 0.08);
+}
+
+
+/* UNKNOWN */
+
+.audit-page .audit-warranty-status.unknown {
+  color: #948979;
+}
+
+
+/* =========================================================
+   TOTAL VALUE
+========================================================= */
+
+.audit-page .audit-warranty-total-value {
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   EXPANDED ROW
+========================================================= */
+
+.audit-page .audit-warranty-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-warranty-detail-row > td {
+  padding: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   DETAILS CARD
+========================================================= */
+
+.audit-page .audit-warranty-details {
+  width: 100%;
+  min-width: 0;
+
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #252b34,
+      #1c2128
+    );
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-warranty-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-warranty-details-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-warranty-details-header h4 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-warranty-details-header p {
+  margin: 5px 0 0;
+
+  color: #948979;
+
+  font-size: 10px;
+}
+
+.audit-page .audit-warranty-details-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+}
+
+
+/* =========================================================
+   WARRANTY SUMMARY
+========================================================= */
+
+.audit-page .audit-warranty-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+.audit-page .audit-warranty-summary-item {
+  min-width: 0;
+
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-warranty-summary-item label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-warranty-summary-item strong {
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-warranty-summary-item.highlight {
+  border-color: rgba(223, 208, 184, 0.17);
+
+  background: rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-warranty-summary-item.highlight strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   WARRANTY HISTORY HEADER
+========================================================= */
+
+.audit-page .audit-warranty-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 13px;
+}
+
+.audit-page .audit-warranty-history-heading h5 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-warranty-history-heading p {
+  margin: 5px 0 0;
+
+  color: rgba(223, 208, 184, 0.45);
+
+  font-size: 10px;
+}
+
+.audit-page .audit-warranty-history-count {
+  flex-shrink: 0;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   YEARLY WARRANTY GRID
+========================================================= */
+
+.audit-page .audit-warranty-year-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   YEAR CARD
+========================================================= */
+
+.audit-page .audit-warranty-year-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 9px;
+
+  background: rgba(13, 17, 22, 0.35);
+}
+
+
+/* =========================================================
+   YEAR HEADER
+========================================================= */
+
+.audit-page .audit-warranty-year-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 13px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+}
+
+.audit-page .audit-warranty-year-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-warranty-year-header h6 {
+  margin: 0;
+
+  color: #DFD0B8;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   YEAR BADGES
+========================================================= */
+
+.audit-page .audit-warranty-year-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.audit-page .audit-warranty-year-badge.upcoming {
+  color: #a8b8d0;
+
+  border: 1px solid rgba(168, 184, 208, 0.18);
+
+  background: rgba(168, 184, 208, 0.08);
+}
+
+.audit-page .audit-warranty-year-badge.current {
+  color: #91b69c;
+
+  border: 1px solid rgba(145, 182, 156, 0.18);
+
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-warranty-year-badge.completed {
+  color: #948979;
+
+  border: 1px solid rgba(148, 137, 121, 0.18);
+
+  background: rgba(148, 137, 121, 0.08);
+}
+
+
+/* =========================================================
+   PURCHASE DATE
+========================================================= */
+
+.audit-page .audit-warranty-year-purchase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 10px 13px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.05);
+}
+
+.audit-page .audit-warranty-year-purchase span {
+  color: #948979;
+
+  font-size: 10px;
+}
+
+.audit-page .audit-warranty-year-purchase strong {
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   YEARLY COST ROWS
+========================================================= */
+
+.audit-page .audit-warranty-year-costs {
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+
+  padding: 14px 13px;
+}
+
+.audit-page .audit-warranty-year-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.audit-page .audit-warranty-year-row span {
+  color: rgba(223, 208, 184, 0.55);
+
+  font-size: 10px;
+}
+
+.audit-page .audit-warranty-year-row strong {
+  color: #DFD0B8;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+
+/* =========================================================
+   YEAR TOTAL
+========================================================= */
+
+.audit-page .audit-warranty-year-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 12px 13px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.1);
+
+  background: rgba(223, 208, 184, 0.045);
+}
+
+.audit-page .audit-warranty-year-total span {
+  color: #948979;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.audit-page .audit-warranty-year-total strong {
+  color: #DFD0B8;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.audit-page .audit-warranty-empty,
+.audit-page .audit-warranty-empty-history {
+  padding: 40px 18px;
+
+  text-align: center;
+}
+
+.audit-page .audit-warranty-empty h4,
+.audit-page .audit-warranty-empty-history h6 {
+  margin: 0 0 8px;
+
+  color: #DFD0B8;
+
+  font-size: 14px;
+}
+
+.audit-page .audit-warranty-empty p,
+.audit-page .audit-warranty-empty-history p {
+  margin: 0;
+
+  color: #948979;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .audit-page .audit-warranty-year-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page .audit-warranty-table {
+    min-width: 760px;
+  }
+
+  .audit-page .audit-warranty-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* HEADER */
+
+  .audit-page .audit-warranty-header {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+
+  /* TABLE RESET */
+
+  .audit-page .audit-warranty-table-wrapper {
+    overflow: visible;
+
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+  }
+
+  .audit-page .audit-warranty-table {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-warranty-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-warranty-table tbody {
+    display: block;
+  }
+
+
+  /* ASSET CARD */
+
+  .audit-page .audit-warranty-row {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(
+        145deg,
+        #252b34,
+        #1c2128
+      );
+  }
+
+  .audit-page .audit-warranty-row.expanded {
+    margin-bottom: 0;
+
+    border-radius: 10px 10px 0 0;
+
+    border-bottom-color: transparent;
+  }
+
+
+  /* CELLS */
+
+  .audit-page .audit-warranty-row td {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    padding: 0;
+
+    border: none;
+
+    font-size: 10px;
+  }
+
+  .audit-page .audit-warranty-row td::before {
+    content: attr(data-label);
+
+    color: #948979;
+
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* ASSET NAME */
+
+  .audit-page .audit-warranty-asset-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+
+    padding-right: 45px !important;
+  }
+
+
+  /* EXPAND */
+
+  .audit-page .audit-warranty-expand-cell {
+    position: absolute;
+
+    top: 13px;
+    right: 13px;
+  }
+
+  .audit-page .audit-warranty-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-warranty-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED ROW */
+
+  .audit-page .audit-warranty-detail-row {
+    display: block;
+
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-warranty-detail-row > td {
+    display: block;
+
+    padding: 10px;
+
+    border: none;
+  }
+
+  .audit-page .audit-warranty-details {
+    padding: 12px;
+  }
+
+
+  /* SUMMARY */
+
+  .audit-page .audit-warranty-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+
+  /* YEAR CARDS */
+
+  .audit-page .audit-warranty-year-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-warranty-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-warranty-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-warranty-details-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-warranty-details-badges {
+    justify-content: flex-start;
+  }
+
+  .audit-page .audit-warranty-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-warranty-history-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-warranty-row {
+    grid-template-columns: 1fr;
+
+    padding: 12px;
+  }
+
+  .audit-page .audit-warranty-asset-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-warranty-details {
+    padding: 10px;
+  }
+
+  .audit-page .audit-warranty-year-purchase,
+  .audit-page .audit-warranty-year-row,
+  .audit-page .audit-warranty-year-total {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-warranty-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-warranty-row,
+  .audit-page .audit-warranty-expand-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   INSURANCE AUDIT TAB
+========================================================= */
+
+.audit-page .audit-insurance-container {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  color: #DFD0B8;
+  font-size: 10px;
+}
+
+.audit-page .audit-insurance-container *,
+.audit-page .audit-insurance-container *::before,
+.audit-page .audit-insurance-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.audit-page .audit-insurance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-insurance-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-insurance-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-insurance-heading h3 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.audit-page .audit-insurance-heading p {
+  margin: 6px 0 0;
+  color: rgba(223, 208, 184, 0.5);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ASSET COUNT
+========================================================= */
+
+.audit-page .audit-insurance-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+  background: #1c2128;
+}
+
+.audit-page .audit-insurance-count span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-insurance-count strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-insurance-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-insurance-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #DFD0B8;
+}
+
+.audit-page .audit-insurance-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-insurance-table thead th {
+  padding: 14px 15px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.audit-page .audit-insurance-expand-col {
+  width: 75px;
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   MAIN ROW
+========================================================= */
+
+.audit-page .audit-insurance-row {
+  background: #1c2128;
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-insurance-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-insurance-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-insurance-row td {
+  padding: 13px 15px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+  font-size: 10px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+.audit-page .audit-insurance-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-insurance-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+  color: #948979;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.audit-page .audit-insurance-expand-btn:hover,
+.audit-page .audit-insurance-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+  border-color: rgba(223, 208, 184, 0.22);
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   ASSET NAME
+========================================================= */
+
+.audit-page .audit-insurance-asset-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.audit-page .audit-insurance-asset-info strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-insurance-asset-info span {
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   TYPE BADGES
+========================================================= */
+
+.audit-page .audit-insurance-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+
+  padding: 5px 9px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-insurance-type.hardware {
+  color: #a8b8d0;
+  background: rgba(128, 155, 191, 0.1);
+  border: 1px solid rgba(128, 155, 191, 0.18);
+}
+
+.audit-page .audit-insurance-type.software {
+  color: #b9a5d1;
+  background: rgba(167, 139, 198, 0.1);
+  border: 1px solid rgba(167, 139, 198, 0.18);
+}
+
+
+/* =========================================================
+   INSURANCE DATE
+========================================================= */
+
+.audit-page .audit-insurance-date {
+  color: rgba(223, 208, 184, 0.75);
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   INSURANCE STATUS
+========================================================= */
+
+.audit-page .audit-insurance-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.audit-page .audit-insurance-status-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.audit-page .audit-insurance-status.active {
+  color: #91b69c;
+  border-color: rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-insurance-status.warning {
+  color: #d1b17d;
+  border-color: rgba(209, 177, 125, 0.2);
+  background: rgba(209, 177, 125, 0.08);
+}
+
+.audit-page .audit-insurance-status.expired {
+  color: #c98f8f;
+  border-color: rgba(201, 143, 143, 0.2);
+  background: rgba(201, 143, 143, 0.08);
+}
+
+.audit-page .audit-insurance-status.unknown {
+  color: #948979;
+}
+
+
+/* =========================================================
+   TOTAL VALUE
+========================================================= */
+
+.audit-page .audit-insurance-total-value {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   EXPANDED ROW
+========================================================= */
+
+.audit-page .audit-insurance-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-insurance-detail-row > td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   DETAILS CARD
+========================================================= */
+
+.audit-page .audit-insurance-details {
+  width: 100%;
+  min-width: 0;
+
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-insurance-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-insurance-details-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-insurance-details-header h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-insurance-details-header p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 10px;
+}
+
+.audit-page .audit-insurance-details-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+
+/* =========================================================
+   DETAIL SECTIONS
+========================================================= */
+
+.audit-page .audit-insurance-detail-section {
+  margin-bottom: 20px;
+}
+
+.audit-page .audit-insurance-section-title {
+  margin-bottom: 10px;
+}
+
+.audit-page .audit-insurance-section-title h5 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ASSET DETAILS GRID
+========================================================= */
+
+.audit-page .audit-insurance-details-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.audit-page .audit-insurance-detail-item {
+  min-width: 0;
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-insurance-detail-item label {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-insurance-detail-item p {
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   COVERAGE SECTION
+========================================================= */
+
+.audit-page .audit-insurance-coverage-box {
+  padding: 13px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-insurance-coverage-box > label {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-insurance-coverage-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.audit-page .audit-insurance-coverage-badge {
+  display: inline-flex;
+  align-items: center;
+
+  max-width: 100%;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.14);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.06);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-insurance-no-coverage {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   FINANCIAL SUMMARY
+========================================================= */
+
+.audit-page .audit-insurance-financial-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.audit-page .audit-insurance-financial-item {
+  min-width: 0;
+  padding: 13px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-insurance-financial-item label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-insurance-financial-item strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-insurance-financial-item.highlight {
+  border-color: rgba(223, 208, 184, 0.18);
+  background: rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-insurance-financial-item.highlight strong {
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   HISTORY HEADING
+========================================================= */
+
+.audit-page .audit-insurance-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 13px;
+}
+
+.audit-page .audit-insurance-history-heading h5 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-insurance-history-heading p {
+  margin: 5px 0 0;
+  color: rgba(223, 208, 184, 0.45);
+  font-size: 10px;
+}
+
+.audit-page .audit-insurance-history-count {
+  flex-shrink: 0;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   YEARLY COST GRID
+========================================================= */
+
+.audit-page .audit-insurance-year-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+
+/* =========================================================
+   YEAR CARD
+========================================================= */
+
+.audit-page .audit-insurance-year-card {
+  min-width: 0;
+  overflow: hidden;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 9px;
+
+  background: rgba(13, 17, 22, 0.35);
+}
+
+
+/* =========================================================
+   YEAR HEADER
+========================================================= */
+
+.audit-page .audit-insurance-year-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 13px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+}
+
+.audit-page .audit-insurance-year-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-insurance-year-header h6 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   YEAR STATUS BADGES
+========================================================= */
+
+.audit-page .audit-insurance-year-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.audit-page .audit-insurance-year-badge.upcoming {
+  color: #a8b8d0;
+  border: 1px solid rgba(168, 184, 208, 0.18);
+  background: rgba(168, 184, 208, 0.08);
+}
+
+.audit-page .audit-insurance-year-badge.current {
+  color: #91b69c;
+  border: 1px solid rgba(145, 182, 156, 0.18);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-insurance-year-badge.completed {
+  color: #948979;
+  border: 1px solid rgba(148, 137, 121, 0.18);
+  background: rgba(148, 137, 121, 0.08);
+}
+
+
+/* =========================================================
+   YEAR PURCHASE DATE
+========================================================= */
+
+.audit-page .audit-insurance-year-purchase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 10px 13px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.05);
+}
+
+.audit-page .audit-insurance-year-purchase span {
+  color: #948979;
+  font-size: 10px;
+}
+
+.audit-page .audit-insurance-year-purchase strong {
+  color: #DFD0B8;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   YEAR COST ROWS
+========================================================= */
+
+.audit-page .audit-insurance-year-costs {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 14px 13px;
+}
+
+.audit-page .audit-insurance-year-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.audit-page .audit-insurance-year-row span {
+  color: rgba(223, 208, 184, 0.55);
+  font-size: 10px;
+}
+
+.audit-page .audit-insurance-year-row strong {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+
+/* =========================================================
+   YEAR TOTAL
+========================================================= */
+
+.audit-page .audit-insurance-year-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 12px 13px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.1);
+  background: rgba(223, 208, 184, 0.045);
+}
+
+.audit-page .audit-insurance-year-total span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.audit-page .audit-insurance-year-total strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.audit-page .audit-insurance-empty,
+.audit-page .audit-insurance-empty-history {
+  padding: 40px 18px;
+  text-align: center;
+}
+
+.audit-page .audit-insurance-empty h4,
+.audit-page .audit-insurance-empty-history h6 {
+  margin: 0 0 8px;
+  color: #DFD0B8;
+  font-size: 14px;
+}
+
+.audit-page .audit-insurance-empty p,
+.audit-page .audit-insurance-empty-history p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .audit-page .audit-insurance-details-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .audit-page .audit-insurance-year-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page .audit-insurance-table {
+    min-width: 740px;
+  }
+
+  .audit-page .audit-insurance-details-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .audit-page .audit-insurance-financial-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE CARD LAYOUT
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .audit-page .audit-insurance-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+
+  /* TABLE RESET */
+
+  .audit-page .audit-insurance-table-wrapper {
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .audit-page .audit-insurance-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-insurance-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-insurance-table tbody {
+    display: block;
+  }
+
+
+  /* ASSET CARD */
+
+  .audit-page .audit-insurance-row {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(145deg, #252b34, #1c2128);
+  }
+
+  .audit-page .audit-insurance-row.expanded {
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    border-bottom-color: transparent;
+  }
+
+
+  /* CELLS */
+
+  .audit-page .audit-insurance-row td {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+    padding: 0;
+    border: none;
+
+    font-size: 10px;
+  }
+
+  .audit-page .audit-insurance-row td::before {
+    content: attr(data-label);
+
+    color: #948979;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* ASSET NAME */
+
+  .audit-page .audit-insurance-asset-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding-right: 45px !important;
+  }
+
+
+  /* EXPAND BUTTON */
+
+  .audit-page .audit-insurance-expand-cell {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+  }
+
+  .audit-page .audit-insurance-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-insurance-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED DETAILS */
+
+  .audit-page .audit-insurance-detail-row {
+    display: block;
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-insurance-detail-row > td {
+    display: block;
+    padding: 10px;
+    border: none;
+  }
+
+  .audit-page .audit-insurance-details {
+    padding: 12px;
+  }
+
+
+  /* DETAILS GRID */
+
+  .audit-page .audit-insurance-details-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+
+  /* FINANCIAL GRID */
+
+  .audit-page .audit-insurance-financial-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+
+  /* YEAR CARDS */
+
+  .audit-page .audit-insurance-year-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-insurance-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-insurance-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-insurance-details-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-insurance-details-badges {
+    justify-content: flex-start;
+  }
+
+  .audit-page .audit-insurance-details-grid,
+  .audit-page .audit-insurance-financial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-insurance-history-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-insurance-row {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .audit-page .audit-insurance-asset-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-insurance-details {
+    padding: 10px;
+  }
+
+  .audit-page .audit-insurance-year-purchase,
+  .audit-page .audit-insurance-year-row,
+  .audit-page .audit-insurance-year-total {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-insurance-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-insurance-row,
+  .audit-page .audit-insurance-expand-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   MAINTENANCE AUDIT TAB
+========================================================= */
+
+.audit-page .audit-maintenance-container {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  color: #DFD0B8;
+  font-size: 10px;
+}
+
+.audit-page .audit-maintenance-container *,
+.audit-page .audit-maintenance-container *::before,
+.audit-page .audit-maintenance-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.audit-page .audit-maintenance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-maintenance-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-maintenance-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-maintenance-heading h3 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.audit-page .audit-maintenance-heading p {
+  margin: 6px 0 0;
+  color: rgba(223, 208, 184, 0.5);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ASSET COUNT
+========================================================= */
+
+.audit-page .audit-maintenance-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+}
+
+.audit-page .audit-maintenance-count span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-maintenance-count strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-maintenance-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-maintenance-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #DFD0B8;
+}
+
+.audit-page .audit-maintenance-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-maintenance-table thead th {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.audit-page .audit-maintenance-expand-col {
+  width: 75px;
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   MAIN ROW
+========================================================= */
+
+.audit-page .audit-maintenance-row {
+  background: #1c2128;
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-maintenance-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-maintenance-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-maintenance-row td {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+  font-size: 10px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+.audit-page .audit-maintenance-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-maintenance-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+  color: #948979;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.audit-page .audit-maintenance-expand-btn:hover,
+.audit-page .audit-maintenance-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+  border-color: rgba(223, 208, 184, 0.22);
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   ASSET INFORMATION
+========================================================= */
+
+.audit-page .audit-maintenance-asset-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+
+.audit-page .audit-maintenance-asset-info strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-maintenance-asset-info > span:not(.audit-maintenance-type) {
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   ASSET TYPE BADGES
+========================================================= */
+
+.audit-page .audit-maintenance-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+
+  padding: 5px 9px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-maintenance-type.hardware {
+  color: #a8b8d0;
+  background: rgba(128, 155, 191, 0.1);
+  border: 1px solid rgba(128, 155, 191, 0.18);
+}
+
+.audit-page .audit-maintenance-type.software {
+  color: #b9a5d1;
+  background: rgba(167, 139, 198, 0.1);
+  border: 1px solid rgba(167, 139, 198, 0.18);
+}
+
+
+/* =========================================================
+   DATES
+========================================================= */
+
+.audit-page .audit-maintenance-date {
+  color: rgba(223, 208, 184, 0.75);
+  font-size: 10px;
+}
+
+.audit-page .audit-maintenance-schedule-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.audit-page .audit-maintenance-schedule-info small {
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   PURCHASE VALUE
+========================================================= */
+
+.audit-page .audit-maintenance-purchase-value {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   MAINTENANCE STATUS
+========================================================= */
+
+.audit-page .audit-maintenance-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.audit-page .audit-maintenance-status-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.audit-page .audit-maintenance-status.active {
+  color: #91b69c;
+  border-color: rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-maintenance-status.warning {
+  color: #d1b17d;
+  border-color: rgba(209, 177, 125, 0.2);
+  background: rgba(209, 177, 125, 0.08);
+}
+
+.audit-page .audit-maintenance-status.overdue {
+  color: #c98f8f;
+  border-color: rgba(201, 143, 143, 0.2);
+  background: rgba(201, 143, 143, 0.08);
+}
+
+.audit-page .audit-maintenance-status.unknown {
+  color: #948979;
+}
+
+
+/* =========================================================
+   EXPANDED ROW
+========================================================= */
+
+.audit-page .audit-maintenance-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-maintenance-detail-row > td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   DETAILS CARD
+========================================================= */
+
+.audit-page .audit-maintenance-details {
+  width: 100%;
+  min-width: 0;
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-maintenance-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-maintenance-details-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-maintenance-details-header h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-maintenance-details-header p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 10px;
+}
+
+.audit-page .audit-maintenance-details-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+
+/* =========================================================
+   SCHEDULE SUMMARY
+========================================================= */
+
+.audit-page .audit-maintenance-summary-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.audit-page .audit-maintenance-summary-item {
+  min-width: 0;
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-maintenance-summary-item label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-maintenance-summary-item strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-maintenance-summary-item.highlight {
+  border-color: rgba(223, 208, 184, 0.17);
+  background: rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-maintenance-summary-item.highlight strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   HISTORY HEADING
+========================================================= */
+
+.audit-page .audit-maintenance-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+
+.audit-page .audit-maintenance-history-heading h5 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-maintenance-history-heading p {
+  margin: 5px 0 0;
+  color: rgba(223, 208, 184, 0.45);
+  font-size: 10px;
+}
+
+.audit-page .audit-maintenance-history-count {
+  flex-shrink: 0;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   YEARLY HISTORY GRID
+========================================================= */
+
+.audit-page .audit-maintenance-year-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+
+/* =========================================================
+   YEAR CARD
+========================================================= */
+
+.audit-page .audit-maintenance-year-card {
+  min-width: 0;
+  overflow: hidden;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 9px;
+
+  background: rgba(13, 17, 22, 0.35);
+}
+
+
+/* =========================================================
+   YEAR HEADER
+========================================================= */
+
+.audit-page .audit-maintenance-year-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 13px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+}
+
+.audit-page .audit-maintenance-year-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-maintenance-year-header h6 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   YEAR STATUS BADGES
+========================================================= */
+
+.audit-page .audit-maintenance-year-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.audit-page .audit-maintenance-year-badge.upcoming {
+  color: #a8b8d0;
+  border: 1px solid rgba(168, 184, 208, 0.18);
+  background: rgba(168, 184, 208, 0.08);
+}
+
+.audit-page .audit-maintenance-year-badge.current {
+  color: #91b69c;
+  border: 1px solid rgba(145, 182, 156, 0.18);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-maintenance-year-badge.completed {
+  color: #948979;
+  border: 1px solid rgba(148, 137, 121, 0.18);
+  background: rgba(148, 137, 121, 0.08);
+}
+
+
+/* =========================================================
+   YEAR PURCHASE DATE
+========================================================= */
+
+.audit-page .audit-maintenance-year-purchase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 10px 13px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.05);
+}
+
+.audit-page .audit-maintenance-year-purchase span {
+  color: #948979;
+  font-size: 10px;
+}
+
+.audit-page .audit-maintenance-year-purchase strong {
+  color: #DFD0B8;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   YEAR COST ROWS
+========================================================= */
+
+.audit-page .audit-maintenance-year-costs {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 14px 13px;
+}
+
+.audit-page .audit-maintenance-year-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.audit-page .audit-maintenance-year-row span {
+  color: rgba(223, 208, 184, 0.55);
+  font-size: 10px;
+}
+
+.audit-page .audit-maintenance-year-row strong {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+
+/* =========================================================
+   YEAR TOTAL
+========================================================= */
+
+.audit-page .audit-maintenance-year-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 12px 13px;
+  border-top: 1px solid rgba(223, 208, 184, 0.1);
+
+  background: rgba(223, 208, 184, 0.045);
+}
+
+.audit-page .audit-maintenance-year-total span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.audit-page .audit-maintenance-year-total strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.audit-page .audit-maintenance-empty,
+.audit-page .audit-maintenance-empty-history {
+  padding: 40px 18px;
+  text-align: center;
+}
+
+.audit-page .audit-maintenance-empty h4,
+.audit-page .audit-maintenance-empty-history h6 {
+  margin: 0 0 8px;
+  color: #DFD0B8;
+  font-size: 14px;
+}
+
+.audit-page .audit-maintenance-empty p,
+.audit-page .audit-maintenance-empty-history p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .audit-page .audit-maintenance-year-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page .audit-maintenance-table {
+    min-width: 740px;
+  }
+
+  .audit-page .audit-maintenance-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* TABLE RESET */
+
+  .audit-page .audit-maintenance-table-wrapper {
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .audit-page .audit-maintenance-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-maintenance-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-maintenance-table tbody {
+    display: block;
+  }
+
+
+  /* MAIN CARD */
+
+  .audit-page .audit-maintenance-row {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(145deg, #252b34, #1c2128);
+  }
+
+  .audit-page .audit-maintenance-row.expanded {
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    border-bottom-color: transparent;
+  }
+
+
+  /* CELLS */
+
+  .audit-page .audit-maintenance-row td {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+    padding: 0;
+    border: none;
+    font-size: 10px;
+  }
+
+  .audit-page .audit-maintenance-row td::before {
+    content: attr(data-label);
+    color: #948979;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* ASSET CELL */
+
+  .audit-page .audit-maintenance-asset-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding-right: 45px !important;
+  }
+
+
+  /* EXPAND */
+
+  .audit-page .audit-maintenance-expand-cell {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+  }
+
+  .audit-page .audit-maintenance-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-maintenance-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED ROW */
+
+  .audit-page .audit-maintenance-detail-row {
+    display: block;
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-maintenance-detail-row > td {
+    display: block;
+    padding: 10px;
+    border: none;
+  }
+
+  .audit-page .audit-maintenance-details {
+    padding: 12px;
+  }
+
+
+  /* SUMMARY */
+
+  .audit-page .audit-maintenance-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+
+  /* YEAR GRID */
+
+  .audit-page .audit-maintenance-year-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-maintenance-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-maintenance-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-maintenance-details-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-maintenance-details-badges {
+    justify-content: flex-start;
+  }
+
+  .audit-page .audit-maintenance-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-maintenance-history-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-maintenance-row {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .audit-page .audit-maintenance-asset-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-maintenance-details {
+    padding: 10px;
+  }
+
+  .audit-page .audit-maintenance-year-purchase,
+  .audit-page .audit-maintenance-year-row,
+  .audit-page .audit-maintenance-year-total {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-maintenance-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-maintenance-row,
+  .audit-page .audit-maintenance-expand-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   ASSIGNMENT AUDIT TAB
+========================================================= */
+
+.audit-page .audit-assignment-container {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  color: #DFD0B8;
+  font-size: 10px;
+}
+
+.audit-page .audit-assignment-container *,
+.audit-page .audit-assignment-container *::before,
+.audit-page .audit-assignment-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.audit-page .audit-assignment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-assignment-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-assignment-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-assignment-heading h3 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.audit-page .audit-assignment-heading p {
+  margin: 6px 0 0;
+  color: rgba(223, 208, 184, 0.5);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ASSET COUNT
+========================================================= */
+
+.audit-page .audit-assignment-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+}
+
+.audit-page .audit-assignment-count span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-assignment-count strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-assignment-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-assignment-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #DFD0B8;
+}
+
+.audit-page .audit-assignment-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-assignment-table thead th {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.audit-page .audit-assignment-expand-col {
+  width: 75px;
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   MAIN ROW
+========================================================= */
+
+.audit-page .audit-assignment-row {
+  background: #1c2128;
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-assignment-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-assignment-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-assignment-row td {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+  font-size: 10px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+.audit-page .audit-assignment-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-assignment-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+  color: #948979;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.audit-page .audit-assignment-expand-btn:hover,
+.audit-page .audit-assignment-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+  border-color: rgba(223, 208, 184, 0.22);
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   ASSET INFO
+========================================================= */
+
+.audit-page .audit-assignment-asset-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.audit-page .audit-assignment-asset-info strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-assignment-asset-info span {
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   TYPE BADGES
+========================================================= */
+
+.audit-page .audit-assignment-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+
+  padding: 5px 9px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-assignment-type.hardware {
+  color: #a8b8d0;
+  background: rgba(128, 155, 191, 0.1);
+  border: 1px solid rgba(128, 155, 191, 0.18);
+}
+
+.audit-page .audit-assignment-type.software {
+  color: #b9a5d1;
+  background: rgba(167, 139, 198, 0.1);
+  border: 1px solid rgba(167, 139, 198, 0.18);
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.audit-page .audit-assignment-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.audit-page .audit-assignment-status-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.audit-page .audit-assignment-status.assigned {
+  color: #91b69c;
+  border-color: rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-assignment-status.returned {
+  color: #a8b8d0;
+  border-color: rgba(168, 184, 208, 0.2);
+  background: rgba(168, 184, 208, 0.08);
+}
+
+.audit-page .audit-assignment-status.transferred {
+  color: #d1b17d;
+  border-color: rgba(209, 177, 125, 0.2);
+  background: rgba(209, 177, 125, 0.08);
+}
+
+.audit-page .audit-assignment-status.neutral {
+  color: #948979;
+}
+
+
+/* =========================================================
+   DATE & COST
+========================================================= */
+
+.audit-page .audit-assignment-date {
+  color: rgba(223, 208, 184, 0.75);
+  font-size: 10px;
+}
+
+.audit-page .audit-assignment-total-value {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   EXPANDED ROW
+========================================================= */
+
+.audit-page .audit-assignment-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-assignment-detail-row > td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   DETAILS CARD
+========================================================= */
+
+.audit-page .audit-assignment-details {
+  width: 100%;
+  min-width: 0;
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-assignment-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-assignment-details-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-assignment-details-header h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-assignment-details-header p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 10px;
+}
+
+.audit-page .audit-assignment-details-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+
+/* =========================================================
+   ASSET SUMMARY
+========================================================= */
+
+.audit-page .audit-assignment-summary-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.audit-page .audit-assignment-summary-item {
+  min-width: 0;
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-assignment-summary-item label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-assignment-summary-item strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-assignment-summary-item.highlight {
+  border-color: rgba(223, 208, 184, 0.17);
+  background: rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-assignment-summary-item.highlight strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   HISTORY HEADING
+========================================================= */
+
+.audit-page .audit-assignment-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.audit-page .audit-assignment-history-heading h5 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-assignment-history-heading p {
+  margin: 5px 0 0;
+  color: rgba(223, 208, 184, 0.45);
+  font-size: 10px;
+}
+
+.audit-page .audit-assignment-history-count {
+  flex-shrink: 0;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+.audit-page .audit-assignment-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.audit-page .audit-assignment-timeline-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+.audit-page .audit-assignment-timeline-marker {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding-top: 17px;
+}
+
+.audit-page .audit-assignment-timeline-item:not(:last-child)
+.audit-assignment-timeline-marker::after {
+  content: "";
+  position: absolute;
+  top: 29px;
+  bottom: -4px;
+  left: 50%;
+
+  width: 1px;
+  transform: translateX(-50%);
+
+  background: rgba(223, 208, 184, 0.14);
+}
+
+.audit-page .audit-assignment-timeline-dot {
+  position: relative;
+  z-index: 1;
+
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+
+  background: #948979;
+  border: 2px solid #252b34;
+  box-shadow: 0 0 0 1px rgba(223, 208, 184, 0.2);
+}
+
+.audit-page .audit-assignment-timeline-dot.assigned {
+  background: #91b69c;
+}
+
+.audit-page .audit-assignment-timeline-dot.reassigned {
+  background: #d1b17d;
+}
+
+.audit-page .audit-assignment-timeline-dot.returned {
+  background: #a8b8d0;
+}
+
+
+/* =========================================================
+   HISTORY CARD
+========================================================= */
+
+.audit-page .audit-assignment-history-card {
+  min-width: 0;
+  margin-bottom: 13px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 9px;
+
+  background: rgba(13, 17, 22, 0.35);
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   HISTORY TOP
+========================================================= */
+
+.audit-page .audit-assignment-history-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+}
+
+.audit-page .audit-assignment-history-event {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.audit-page .audit-assignment-event-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 9px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.audit-page .audit-assignment-event-badge.assigned {
+  color: #91b69c;
+  background: rgba(145, 182, 156, 0.09);
+  border: 1px solid rgba(145, 182, 156, 0.18);
+}
+
+.audit-page .audit-assignment-event-badge.reassigned {
+  color: #d1b17d;
+  background: rgba(209, 177, 125, 0.09);
+  border: 1px solid rgba(209, 177, 125, 0.18);
+}
+
+.audit-page .audit-assignment-event-badge.returned {
+  color: #a8b8d0;
+  background: rgba(168, 184, 208, 0.09);
+  border: 1px solid rgba(168, 184, 208, 0.18);
+}
+
+.audit-page .audit-assignment-event-badge.default {
+  color: #948979;
+  background: rgba(148, 137, 121, 0.08);
+  border: 1px solid rgba(148, 137, 121, 0.18);
+}
+
+.audit-page .audit-assignment-event-number {
+  color: #948979;
+  font-size: 10px;
+}
+
+.audit-page .audit-assignment-history-date {
+  color: #948979;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   HISTORY BODY
+========================================================= */
+
+.audit-page .audit-assignment-history-body {
+  padding: 13px 14px;
+}
+
+.audit-page .audit-assignment-history-info-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.audit-page .audit-assignment-history-info {
+  min-width: 0;
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.06);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.025);
+}
+
+.audit-page .audit-assignment-history-info label {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-assignment-history-info strong,
+.audit-page .audit-assignment-history-info p {
+  display: block;
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   REASSIGNMENT TRANSFER
+========================================================= */
+
+.audit-page .audit-assignment-transfer {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.audit-page .audit-assignment-transfer-person {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+
+  min-width: 0;
+  padding: 14px;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 8px;
+
+  background: rgba(223, 208, 184, 0.025);
+}
+
+.audit-page .audit-assignment-transfer-person.destination {
+  border-color: rgba(145, 182, 156, 0.17);
+  background: rgba(145, 182, 156, 0.04);
+}
+
+.audit-page .audit-assignment-transfer-label {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.audit-page .audit-assignment-transfer-person strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-assignment-transfer-person > span:not(
+  .audit-assignment-transfer-label
+) {
+  color: rgba(223, 208, 184, 0.75);
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-assignment-transfer-person small {
+  color: #948979;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-assignment-transfer-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(223, 208, 184, 0.12);
+  border-radius: 50%;
+
+  background: rgba(223, 208, 184, 0.06);
+  color: #DFD0B8;
+
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.audit-page .audit-assignment-empty,
+.audit-page .audit-assignment-empty-history {
+  padding: 40px 18px;
+  text-align: center;
+}
+
+.audit-page .audit-assignment-empty h4,
+.audit-page .audit-assignment-empty-history h6 {
+  margin: 0 0 8px;
+  color: #DFD0B8;
+  font-size: 14px;
+}
+
+.audit-page .audit-assignment-empty p,
+.audit-page .audit-assignment-empty-history p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page .audit-assignment-table {
+    min-width: 740px;
+  }
+
+  .audit-page .audit-assignment-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE CARD LAYOUT
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* TABLE RESET */
+
+  .audit-page .audit-assignment-table-wrapper {
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .audit-page .audit-assignment-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-assignment-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-assignment-table tbody {
+    display: block;
+  }
+
+
+  /* MAIN ASSET CARD */
+
+  .audit-page .audit-assignment-row {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(145deg, #252b34, #1c2128);
+  }
+
+  .audit-page .audit-assignment-row.expanded {
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    border-bottom-color: transparent;
+  }
+
+
+  /* CELLS */
+
+  .audit-page .audit-assignment-row td {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+    padding: 0;
+    border: none;
+
+    font-size: 10px;
+  }
+
+  .audit-page .audit-assignment-row td::before {
+    content: attr(data-label);
+    color: #948979;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* ASSET */
+
+  .audit-page .audit-assignment-asset-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding-right: 45px !important;
+  }
+
+
+  /* EXPAND */
+
+  .audit-page .audit-assignment-expand-cell {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+  }
+
+  .audit-page .audit-assignment-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-assignment-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED DETAILS */
+
+  .audit-page .audit-assignment-detail-row {
+    display: block;
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-assignment-detail-row > td {
+    display: block;
+    padding: 10px;
+    border: none;
+  }
+
+  .audit-page .audit-assignment-details {
+    padding: 12px;
+  }
+
+
+  /* SUMMARY */
+
+  .audit-page .audit-assignment-summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+
+  /* TRANSFER */
+
+  .audit-page .audit-assignment-transfer {
+    grid-template-columns:
+      minmax(0, 1fr) 28px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .audit-page .audit-assignment-transfer-person {
+    padding: 10px;
+  }
+
+  .audit-page .audit-assignment-transfer-arrow {
+    width: 27px;
+    height: 27px;
+    font-size: 13px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-assignment-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-assignment-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-assignment-details-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-assignment-details-badges {
+    justify-content: flex-start;
+  }
+
+  .audit-page .audit-assignment-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-assignment-history-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-assignment-history-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-assignment-transfer {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-assignment-transfer-arrow {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-assignment-row {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .audit-page .audit-assignment-asset-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-assignment-details {
+    padding: 10px;
+  }
+
+  .audit-page .audit-assignment-history-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-assignment-timeline-item {
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-assignment-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-assignment-row,
+  .audit-page .audit-assignment-expand-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   ASSET LIFECYCLE AUDIT
+========================================================= */
+
+.audit-page .audit-lifecycle-container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  color: #DFD0B8;
+  font-size: 10px;
+}
+
+.audit-page .audit-lifecycle-container *,
+.audit-page .audit-lifecycle-container *::before,
+.audit-page .audit-lifecycle-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.audit-page .audit-lifecycle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-lifecycle-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-lifecycle-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-lifecycle-heading h3 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.audit-page .audit-lifecycle-heading p {
+  margin: 6px 0 0;
+  color: rgba(223, 208, 184, 0.5);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   COUNT
+========================================================= */
+
+.audit-page .audit-lifecycle-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+}
+
+.audit-page .audit-lifecycle-count span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-lifecycle-count strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-lifecycle-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-lifecycle-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #DFD0B8;
+}
+
+.audit-page .audit-lifecycle-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-lifecycle-table thead th {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.audit-page .audit-lifecycle-expand-col {
+  width: 75px;
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   MAIN ROW
+========================================================= */
+
+.audit-page .audit-lifecycle-row {
+  background: #1c2128;
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-lifecycle-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-lifecycle-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-lifecycle-row td {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+  font-size: 10px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+.audit-page .audit-lifecycle-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-lifecycle-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+  color: #948979;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.audit-page .audit-lifecycle-expand-btn:hover,
+.audit-page .audit-lifecycle-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+  border-color: rgba(223, 208, 184, 0.22);
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   ASSET INFO
+========================================================= */
+
+.audit-page .audit-lifecycle-asset-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.audit-page .audit-lifecycle-asset-info strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-lifecycle-asset-info span,
+.audit-page .audit-lifecycle-asset-info small {
+  color: #948979;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   TYPE BADGES
+========================================================= */
+
+.audit-page .audit-lifecycle-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+
+  padding: 5px 9px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-lifecycle-type.hardware {
+  color: #a8b8d0;
+  background: rgba(128, 155, 191, 0.1);
+  border: 1px solid rgba(128, 155, 191, 0.18);
+}
+
+.audit-page .audit-lifecycle-type.software {
+  color: #b9a5d1;
+  background: rgba(167, 139, 198, 0.1);
+  border: 1px solid rgba(167, 139, 198, 0.18);
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.audit-page .audit-lifecycle-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.audit-page .audit-lifecycle-status-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.audit-page .audit-lifecycle-status.assigned {
+  color: #91b69c;
+  border-color: rgba(145, 182, 156, 0.2);
+  background: rgba(145, 182, 156, 0.08);
+}
+
+.audit-page .audit-lifecycle-status.in-stock {
+  color: #a8b8d0;
+  border-color: rgba(168, 184, 208, 0.2);
+  background: rgba(168, 184, 208, 0.08);
+}
+
+.audit-page .audit-lifecycle-status.maintenance {
+  color: #d1b17d;
+  border-color: rgba(209, 177, 125, 0.2);
+  background: rgba(209, 177, 125, 0.08);
+}
+
+.audit-page .audit-lifecycle-status.retired {
+  color: #c98f8f;
+  border-color: rgba(201, 143, 143, 0.2);
+  background: rgba(201, 143, 143, 0.08);
+}
+
+.audit-page .audit-lifecycle-status.neutral {
+  color: #948979;
+}
+
+
+/* =========================================================
+   EVENT COUNT
+========================================================= */
+
+.audit-page .audit-lifecycle-event-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 5px 9px;
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.audit-page .audit-lifecycle-event-count span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   DATES
+========================================================= */
+
+.audit-page .audit-lifecycle-date {
+  color: rgba(223, 208, 184, 0.75);
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   EXPANDED ROW
+========================================================= */
+
+.audit-page .audit-lifecycle-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-lifecycle-detail-row > td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   DETAILS CARD
+========================================================= */
+
+.audit-page .audit-lifecycle-details {
+  width: 100%;
+  min-width: 0;
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-lifecycle-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-lifecycle-details-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-lifecycle-details-header h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-lifecycle-details-header p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 10px;
+}
+
+.audit-page .audit-lifecycle-details-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+.audit-page .audit-lifecycle-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin: 0 0 12px;
+}
+
+.audit-page .audit-lifecycle-section-heading:not(:first-child) {
+  margin-top: 22px;
+}
+
+.audit-page .audit-lifecycle-section-heading h5 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-lifecycle-section-heading > span {
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   GENERAL INFORMATION GRID
+========================================================= */
+
+.audit-page .audit-lifecycle-info-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.audit-page .audit-lifecycle-info-item {
+  min-width: 0;
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-lifecycle-info-item label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-lifecycle-info-item strong {
+  display: block;
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-lifecycle-info-item.highlight {
+  border-color: rgba(223, 208, 184, 0.17);
+  background: rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-lifecycle-info-item.highlight strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TIMELINE SECTION
+========================================================= */
+
+.audit-page .audit-lifecycle-timeline-section {
+  margin-top: 24px;
+  padding-top: 18px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-lifecycle-timeline-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.audit-page .audit-lifecycle-timeline-heading h5 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-lifecycle-timeline-heading p {
+  margin: 5px 0 0;
+  color: rgba(223, 208, 184, 0.45);
+  font-size: 10px;
+}
+
+.audit-page .audit-lifecycle-timeline-count {
+  flex-shrink: 0;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+.audit-page .audit-lifecycle-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.audit-page .audit-lifecycle-timeline-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+.audit-page .audit-lifecycle-timeline-marker {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding-top: 17px;
+}
+
+.audit-page .audit-lifecycle-timeline-item:not(:last-child)
+.audit-lifecycle-timeline-marker::after {
+  content: "";
+  position: absolute;
+  top: 29px;
+  bottom: -4px;
+  left: 50%;
+
+  width: 1px;
+  transform: translateX(-50%);
+
+  background: rgba(223, 208, 184, 0.14);
+}
+
+.audit-page .audit-lifecycle-timeline-dot {
+  position: relative;
+  z-index: 1;
+
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+
+  background: #948979;
+  border: 2px solid #252b34;
+  box-shadow: 0 0 0 1px rgba(223, 208, 184, 0.2);
+}
+
+.audit-page .audit-lifecycle-timeline-dot.assignment {
+  background: #91b69c;
+}
+
+.audit-page .audit-lifecycle-timeline-dot.return {
+  background: #a8b8d0;
+}
+
+.audit-page .audit-lifecycle-timeline-dot.maintenance {
+  background: #d1b17d;
+}
+
+.audit-page .audit-lifecycle-timeline-dot.renewal {
+  background: #b9a5d1;
+}
+
+.audit-page .audit-lifecycle-timeline-dot.upgrade {
+  background: #c7a5a0;
+}
+
+.audit-page .audit-lifecycle-timeline-dot.created {
+  background: #948979;
+}
+
+
+/* =========================================================
+   EVENT CARD
+========================================================= */
+
+.audit-page .audit-lifecycle-event-card {
+  min-width: 0;
+  margin-bottom: 13px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 9px;
+
+  background: rgba(13, 17, 22, 0.35);
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   EVENT HEADER
+========================================================= */
+
+.audit-page .audit-lifecycle-event-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.07);
+}
+
+.audit-page .audit-lifecycle-event-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  min-width: 0;
+}
+
+.audit-page .audit-lifecycle-event-heading h6 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-lifecycle-event-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 9px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.audit-page .audit-lifecycle-event-badge.assignment {
+  color: #91b69c;
+  background: rgba(145, 182, 156, 0.09);
+  border: 1px solid rgba(145, 182, 156, 0.18);
+}
+
+.audit-page .audit-lifecycle-event-badge.return {
+  color: #a8b8d0;
+  background: rgba(168, 184, 208, 0.09);
+  border: 1px solid rgba(168, 184, 208, 0.18);
+}
+
+.audit-page .audit-lifecycle-event-badge.maintenance {
+  color: #d1b17d;
+  background: rgba(209, 177, 125, 0.09);
+  border: 1px solid rgba(209, 177, 125, 0.18);
+}
+
+.audit-page .audit-lifecycle-event-badge.renewal {
+  color: #b9a5d1;
+  background: rgba(185, 165, 209, 0.09);
+  border: 1px solid rgba(185, 165, 209, 0.18);
+}
+
+.audit-page .audit-lifecycle-event-badge.upgrade {
+  color: #c7a5a0;
+  background: rgba(199, 165, 160, 0.09);
+  border: 1px solid rgba(199, 165, 160, 0.18);
+}
+
+.audit-page .audit-lifecycle-event-badge.created,
+.audit-page .audit-lifecycle-event-badge.default {
+  color: #948979;
+  background: rgba(148, 137, 121, 0.08);
+  border: 1px solid rgba(148, 137, 121, 0.18);
+}
+
+.audit-page .audit-lifecycle-event-date {
+  color: #948979;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   EVENT BODY
+========================================================= */
+
+.audit-page .audit-lifecycle-event-body {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 13px 14px;
+}
+
+.audit-page .audit-lifecycle-event-info {
+  min-width: 0;
+  padding: 11px;
+
+  border: 1px solid rgba(223, 208, 184, 0.06);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.025);
+}
+
+.audit-page .audit-lifecycle-event-info label {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-lifecycle-event-info strong,
+.audit-page .audit-lifecycle-event-info span,
+.audit-page .audit-lifecycle-event-info p {
+  display: block;
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-lifecycle-event-info.description {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.audit-page .audit-lifecycle-empty,
+.audit-page .audit-lifecycle-empty-history {
+  padding: 40px 18px;
+  text-align: center;
+}
+
+.audit-page .audit-lifecycle-empty h4,
+.audit-page .audit-lifecycle-empty-history h6 {
+  margin: 0 0 8px;
+  color: #DFD0B8;
+  font-size: 14px;
+}
+
+.audit-page .audit-lifecycle-empty p,
+.audit-page .audit-lifecycle-empty-history p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .audit-page .audit-lifecycle-info-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page .audit-lifecycle-table {
+    min-width: 850px;
+  }
+
+  .audit-page .audit-lifecycle-info-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE CARD LAYOUT
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* TABLE RESET */
+
+  .audit-page .audit-lifecycle-table-wrapper {
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .audit-page .audit-lifecycle-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-lifecycle-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-lifecycle-table tbody {
+    display: block;
+  }
+
+
+  /* ASSET CARD */
+
+  .audit-page .audit-lifecycle-row {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(145deg, #252b34, #1c2128);
+  }
+
+  .audit-page .audit-lifecycle-row.expanded {
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    border-bottom-color: transparent;
+  }
+
+
+  /* CELLS */
+
+  .audit-page .audit-lifecycle-row td {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+    padding: 0;
+    border: none;
+
+    font-size: 10px;
+  }
+
+  .audit-page .audit-lifecycle-row td::before {
+    content: attr(data-label);
+    color: #948979;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* ASSET CELL */
+
+  .audit-page .audit-lifecycle-asset-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding-right: 45px !important;
+  }
+
+
+  /* EXPAND BUTTON */
+
+  .audit-page .audit-lifecycle-expand-cell {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+  }
+
+  .audit-page .audit-lifecycle-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-lifecycle-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED ROW */
+
+  .audit-page .audit-lifecycle-detail-row {
+    display: block;
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-lifecycle-detail-row > td {
+    display: block;
+    padding: 10px;
+    border: none;
+  }
+
+  .audit-page .audit-lifecycle-details {
+    padding: 12px;
+  }
+
+
+  /* INFO GRID */
+
+  .audit-page .audit-lifecycle-info-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-lifecycle-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-lifecycle-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-lifecycle-details-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-lifecycle-details-badges {
+    justify-content: flex-start;
+  }
+
+  .audit-page .audit-lifecycle-section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-lifecycle-timeline-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-lifecycle-event-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-lifecycle-event-body {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-lifecycle-event-info.description {
+    grid-column: 1;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-lifecycle-row {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .audit-page .audit-lifecycle-asset-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-lifecycle-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-lifecycle-details {
+    padding: 10px;
+  }
+
+  .audit-page .audit-lifecycle-timeline-item {
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-lifecycle-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-lifecycle-row,
+  .audit-page .audit-lifecycle-expand-btn {
+    transition: none;
+  }
+
+}
+
+/* =========================================================
+   FINANCIAL AUDIT TAB
+========================================================= */
+
+.audit-page .audit-financial-container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  color: #DFD0B8;
+  font-size: 10px;
+}
+
+.audit-page .audit-financial-container *,
+.audit-page .audit-financial-container *::before,
+.audit-page .audit-financial-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FINANCIAL HEADER
+========================================================= */
+
+.audit-page .audit-financial-header,
+.audit-page .audit-financial-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-financial-heading {
+  min-width: 0;
+}
+
+.audit-page .audit-financial-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.audit-page .audit-financial-heading h3,
+.audit-page .audit-financial-section-header h3 {
+  margin: 0;
+
+  color: #DFD0B8;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.audit-page .audit-financial-heading p,
+.audit-page .audit-financial-section-header p {
+  margin: 6px 0 0;
+
+  color: rgba(223, 208, 184, 0.5);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   HEADER COUNTERS
+========================================================= */
+
+.audit-page .audit-financial-header-count,
+.audit-page .audit-financial-assets-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  padding: 9px 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: #1c2128;
+}
+
+.audit-page .audit-financial-header-count span,
+.audit-page .audit-financial-assets-count span {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-financial-header-count strong,
+.audit-page .audit-financial-assets-count strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FINANCIAL GRID
+========================================================= */
+
+.audit-page .audit-financial-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 13px;
+  margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   FINANCIAL CARD
+========================================================= */
+
+.audit-page .audit-financial-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 158px;
+
+  padding: 16px;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 11px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.audit-page .audit-financial-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(223, 208, 184, 0.18);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.audit-page .audit-financial-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  margin-bottom: 15px;
+}
+
+.audit-page .audit-financial-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 8px;
+
+  background: rgba(223, 208, 184, 0.06);
+  color: #DFD0B8;
+
+  font-size: 15px;
+}
+
+.audit-page .audit-financial-card-category {
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: right;
+}
+
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
+.audit-page .audit-financial-card h5 {
+  margin: 0 0 7px;
+
+  color: #948979;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.audit-page .audit-financial-card h2 {
+  margin: 0 0 10px;
+
+  color: #DFD0B8;
+  font-size: clamp(16px, 1.65vw, 22px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-financial-card p {
+  margin: auto 0 0;
+
+  color: rgba(223, 208, 184, 0.48);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   HIGHLIGHT CARD
+========================================================= */
+
+.audit-page .audit-financial-card.highlight {
+  border-color: rgba(223, 208, 184, 0.3);
+
+  background:
+    linear-gradient(
+      135deg,
+      #383b3b 0%,
+      #2b3033 45%,
+      #222831 100%
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(223, 208, 184, 0.07);
+}
+
+.audit-page .audit-financial-card.highlight::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+
+  background: #DFD0B8;
+}
+
+.audit-page .audit-financial-card.highlight .audit-financial-card-icon {
+  background: rgba(223, 208, 184, 0.12);
+  border-color: rgba(223, 208, 184, 0.22);
+}
+
+.audit-page .audit-financial-card.highlight h5 {
+  color: #DFD0B8;
+}
+
+.audit-page .audit-financial-card.highlight h2 {
+  color: #f0e4d1;
+}
+
+
+/* =========================================================
+   EXPENSIVE ASSETS SECTION
+========================================================= */
+
+.audit-page .audit-financial-assets-section {
+  width: 100%;
+  min-width: 0;
+}
+
+.audit-page .audit-financial-section-header {
+  margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.audit-page .audit-financial-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+
+  border: 1px solid rgba(223, 208, 184, 0.08);
+  border-radius: 10px;
+
+  background: #1b2027;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.audit-page .audit-financial-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #DFD0B8;
+}
+
+.audit-page .audit-financial-table thead {
+  background: #20262e;
+}
+
+.audit-page .audit-financial-table thead th {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.audit-page .audit-financial-expand-col {
+  width: 75px;
+  text-align: center !important;
+}
+
+
+/* =========================================================
+   SUMMARY ROW
+========================================================= */
+
+.audit-page .audit-financial-row {
+  background: #1c2128;
+  transition: background 0.2s ease;
+}
+
+.audit-page .audit-financial-row:hover {
+  background: #252c35;
+}
+
+.audit-page .audit-financial-row.expanded {
+  background: #252b34;
+}
+
+.audit-page .audit-financial-row td {
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+
+  color: rgba(223, 208, 184, 0.72);
+  font-size: 10px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+.audit-page .audit-financial-expand-cell {
+  text-align: center;
+}
+
+
+/* =========================================================
+   EXPAND BUTTON
+========================================================= */
+
+.audit-page .audit-financial-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 7px;
+
+  background: rgba(223, 208, 184, 0.035);
+  color: #948979;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.audit-page .audit-financial-expand-btn:hover,
+.audit-page .audit-financial-expand-btn.active {
+  background: rgba(223, 208, 184, 0.1);
+  border-color: rgba(223, 208, 184, 0.22);
+  color: #DFD0B8;
+}
+
+
+/* =========================================================
+   ASSET INFORMATION
+========================================================= */
+
+.audit-page .audit-financial-asset-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.audit-page .audit-financial-asset-info strong {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-financial-asset-info span,
+.audit-page .audit-financial-asset-info small {
+  color: #948979;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   ASSET TYPE
+========================================================= */
+
+.audit-page .audit-financial-type {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+
+  padding: 5px 9px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-financial-type.hardware {
+  color: #a8b8d0;
+  background: rgba(128, 155, 191, 0.1);
+  border: 1px solid rgba(128, 155, 191, 0.18);
+}
+
+.audit-page .audit-financial-type.software {
+  color: #b9a5d1;
+  background: rgba(167, 139, 198, 0.1);
+  border: 1px solid rgba(167, 139, 198, 0.18);
+}
+
+
+/* =========================================================
+   TABLE COST VALUES
+========================================================= */
+
+.audit-page .audit-financial-purchase-value {
+  color: rgba(223, 208, 184, 0.75);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.audit-page .audit-financial-total-value {
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   EXPANDED ROW
+========================================================= */
+
+.audit-page .audit-financial-detail-row {
+  background: #171c22;
+}
+
+.audit-page .audit-financial-detail-row > td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(223, 208, 184, 0.1);
+}
+
+
+/* =========================================================
+   EXPANDED DETAILS CARD
+========================================================= */
+
+.audit-page .audit-financial-details {
+  width: 100%;
+  min-width: 0;
+  padding: 17px;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(145deg, #252b34, #1c2128);
+}
+
+
+/* =========================================================
+   DETAILS HEADER
+========================================================= */
+
+.audit-page .audit-financial-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-financial-details-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.audit-page .audit-financial-details-header h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-financial-details-header p {
+  margin: 5px 0 0;
+  color: #948979;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   DETAILS SUMMARY
+========================================================= */
+
+.audit-page .audit-financial-details-summary {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.audit-page .audit-financial-summary-item {
+  min-width: 0;
+  padding: 12px;
+
+  border: 1px solid rgba(223, 208, 184, 0.07);
+  border-radius: 8px;
+
+  background: rgba(15, 19, 24, 0.35);
+}
+
+.audit-page .audit-financial-summary-item label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-financial-summary-item strong {
+  display: block;
+  color: #DFD0B8;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.audit-page .audit-financial-summary-item.highlight {
+  border-color: rgba(223, 208, 184, 0.17);
+  background: rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-financial-summary-item.highlight strong {
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   YEARLY HISTORY HEADING
+========================================================= */
+
+.audit-page .audit-financial-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 16px;
+}
+
+.audit-page .audit-financial-history-heading h5 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.audit-page .audit-financial-history-heading p {
+  margin: 5px 0 0;
+  color: rgba(223, 208, 184, 0.45);
+  font-size: 10px;
+}
+
+.audit-page .audit-financial-history-count {
+  flex-shrink: 0;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(223, 208, 184, 0.1);
+  border-radius: 6px;
+
+  background: rgba(223, 208, 184, 0.05);
+  color: #DFD0B8;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   YEARLY COST GRID
+========================================================= */
+
+.audit-page .audit-financial-year-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   YEARLY COST CARD
+========================================================= */
+
+.audit-page .audit-financial-year-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  border: 1px solid rgba(223, 208, 184, 0.09);
+  border-radius: 9px;
+
+  background: rgba(13, 17, 22, 0.35);
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   YEAR HEADER
+========================================================= */
+
+.audit-page .audit-financial-year-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 14px;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.08);
+}
+
+.audit-page .audit-financial-year-label {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #948979;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.audit-page .audit-financial-year-header h4 {
+  margin: 0;
+  color: #DFD0B8;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   YEAR STATUS BADGES
+========================================================= */
+
+.audit-page .audit-financial-year-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  padding: 5px 8px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.audit-page .audit-financial-year-badge.upcoming {
+  color: #a8b8d0;
+  background: rgba(168, 184, 208, 0.09);
+  border: 1px solid rgba(168, 184, 208, 0.18);
+}
+
+.audit-page .audit-financial-year-badge.current {
+  color: #91b69c;
+  background: rgba(145, 182, 156, 0.09);
+  border: 1px solid rgba(145, 182, 156, 0.18);
+}
+
+.audit-page .audit-financial-year-badge.completed {
+  color: #948979;
+  background: rgba(148, 137, 121, 0.08);
+  border: 1px solid rgba(148, 137, 121, 0.18);
+}
+
+
+/* =========================================================
+   YEAR COST ROWS
+========================================================= */
+
+.audit-page .audit-financial-year-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  flex: 1;
+  padding: 5px 14px;
+}
+
+.audit-page .audit-financial-year-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid rgba(223, 208, 184, 0.055);
+}
+
+.audit-page .audit-financial-year-row:last-child {
+  border-bottom: none;
+}
+
+.audit-page .audit-financial-year-row span {
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.audit-page .audit-financial-year-row strong {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   YEAR TOTAL
+========================================================= */
+
+.audit-page .audit-financial-year-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 13px 14px;
+
+  border-top: 1px solid rgba(223, 208, 184, 0.12);
+
+  background: rgba(223, 208, 184, 0.045);
+}
+
+.audit-page .audit-financial-year-total span {
+  color: #DFD0B8;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.audit-page .audit-financial-year-total strong {
+  color: #DFD0B8;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.audit-page .audit-financial-empty,
+.audit-page .audit-financial-empty-history {
+  padding: 40px 18px;
+  text-align: center;
+}
+
+.audit-page .audit-financial-empty h4,
+.audit-page .audit-financial-empty-history h5 {
+  margin: 0 0 8px;
+  color: #DFD0B8;
+  font-size: 14px;
+}
+
+.audit-page .audit-financial-empty p,
+.audit-page .audit-financial-empty-history p {
+  margin: 0;
+  color: #948979;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .audit-page .audit-financial-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .audit-page .audit-financial-year-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .audit-page .audit-financial-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .audit-page .audit-financial-table {
+    min-width: 650px;
+  }
+
+  .audit-page .audit-financial-details-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* FINANCIAL CARDS */
+
+  .audit-page .audit-financial-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-bottom: 24px;
+  }
+
+  .audit-page .audit-financial-card {
+    min-height: 145px;
+    padding: 12px;
+  }
+
+  .audit-page .audit-financial-card-top {
+    margin-bottom: 12px;
+  }
+
+  .audit-page .audit-financial-card-icon {
+    width: 29px;
+    height: 29px;
+    font-size: 13px;
+  }
+
+  .audit-page .audit-financial-card h2 {
+    font-size: 17px;
+  }
+
+
+  /* TABLE RESET */
+
+  .audit-page .audit-financial-table-wrapper {
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .audit-page .audit-financial-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audit-page .audit-financial-table thead {
+    display: none;
+  }
+
+  .audit-page .audit-financial-table tbody {
+    display: block;
+  }
+
+
+  /* ASSET CARD */
+
+  .audit-page .audit-financial-row {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+    position: relative;
+
+    margin-bottom: 10px;
+    padding: 14px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-radius: 10px;
+
+    background:
+      linear-gradient(145deg, #252b34, #1c2128);
+  }
+
+  .audit-page .audit-financial-row.expanded {
+    margin-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    border-bottom-color: transparent;
+  }
+
+
+  /* TABLE CELLS */
+
+  .audit-page .audit-financial-row td {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+    padding: 0;
+    border: none;
+
+    font-size: 10px;
+  }
+
+  .audit-page .audit-financial-row td::before {
+    content: attr(data-label);
+    color: #948979;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+
+  /* ASSET */
+
+  .audit-page .audit-financial-asset-cell {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding-right: 45px !important;
+  }
+
+
+  /* EXPAND BUTTON */
+
+  .audit-page .audit-financial-expand-cell {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+  }
+
+  .audit-page .audit-financial-expand-cell::before {
+    display: none;
+  }
+
+  .audit-page .audit-financial-expand-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* EXPANDED ROW */
+
+  .audit-page .audit-financial-detail-row {
+    display: block;
+    margin-bottom: 12px;
+
+    border: 1px solid rgba(223, 208, 184, 0.09);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .audit-page .audit-financial-detail-row > td {
+    display: block;
+    padding: 10px;
+    border: none;
+  }
+
+  .audit-page .audit-financial-details {
+    padding: 12px;
+  }
+
+
+  /* YEARLY CARDS */
+
+  .audit-page .audit-financial-year-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .audit-page .audit-financial-header,
+  .audit-page .audit-financial-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-financial-header-count,
+  .audit-page .audit-financial-assets-count {
+    align-self: flex-start;
+  }
+
+  .audit-page .audit-financial-card-category {
+    display: none;
+  }
+
+  .audit-page .audit-financial-card h2 {
+    font-size: 16px;
+  }
+
+  .audit-page .audit-financial-details-header {
+    flex-direction: column;
+  }
+
+  .audit-page .audit-financial-details-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-financial-history-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .audit-page .audit-financial-year-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   TINY MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  .audit-page .audit-financial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-page .audit-financial-card {
+    min-height: 125px;
+  }
+
+  .audit-page .audit-financial-row {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .audit-page .audit-financial-asset-cell {
+    grid-column: 1;
+  }
+
+  .audit-page .audit-financial-details {
+    padding: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.audit-page .audit-financial-expand-btn:focus-visible {
+  outline: 2px solid #DFD0B8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .audit-page .audit-financial-card,
+  .audit-page .audit-financial-row,
+  .audit-page .audit-financial-expand-btn {
+    transition: none;
+  }
+
+}
