@@ -2237,6 +2237,9 @@ font-size:17px;
     .asset-info-title , .impact-left h2 , .impact-right h2 , .cloud-machinery-title , .hardware-title , .features h2 , .comparison-section h2 , .about-main-title , .faq-title , .heading {
       font-size: 24px;
     }
+    .nav-main-menu {
+      display: none;
+    }
 
   }
 
@@ -2269,7 +2272,7 @@ html {
   scrollbar-color: #DFD0B8 #222831;
 }
 @media (max-width : 1024px) {
-  .nav-menu {
+  .nav-main-menu {
     gap: 15px;
     width: 500px;
   }
