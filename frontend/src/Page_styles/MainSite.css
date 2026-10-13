@@ -844,6 +844,12 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
   font-size: 17px;
 }
 .contact-buttons a {
+  text-decoration: none;
+  color: #DFD0B8;
+  font-size : 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 15px 30px;
   background: #393E46;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
@@ -1713,6 +1719,7 @@ width: 2rem;
 .blog-card {
   transition: .35s;
  flex-direction: column;
+ text-decoration: none;
 }
 
 .blog-card:hover {
@@ -1800,9 +1807,11 @@ grid-template-columns:repeat(2,1fr);
 .contact-and-links {
   flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
 .footer-column {
   width: 100%;
+  gap: 10px;
 }
 .icons-and-mails {
   flex-direction: column;

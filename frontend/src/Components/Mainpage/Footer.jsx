@@ -133,7 +133,7 @@ const Footer = () => {
             Email:
             {" "}
             <Link to="mailto:info@assetpegasus.com"   target="_blank"
-  rel="noopener noreferrer">
+  rel="noopener noreferrer" style={{ textDecoration: "none", color: "inherit" }}>
               info@assetpegasus.com
             </Link>
           </p>
