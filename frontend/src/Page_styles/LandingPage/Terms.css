@@ -1,339 +1,733 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+/* ======================================================
+   TERMS & CONDITIONS PAGE
+====================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-body{
-    font-family:Poppins,sans-serif;
-    background:#404752;
+html {
+  scroll-behavior: smooth;
 }
 
-/* ===================== */
-
-.terms-section{
-    width:100%;
-    background:#404752;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:2rem 0;
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #404752;
 }
 
-.terms-container{
-    width:100%;
-    max-width:1400px;
-    margin:auto;
-    text-align:center;
+/* ======================================================
+   TERMS SECTION
+====================================================== */
+
+.terms-section {
+  width: 100%;
+  background: #404752;
+  display: flex;
+  justify-content: center;
+  padding: 30px 24px;
 }
 
-.terms-title{
-    color:#ead8b9;
-    line-height:1.2;
-}
-.terms-section h1{
-    font-size:2rem;
-    font-weight:700;
+.terms-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-width: 0;
 }
 
-/* ===================== */
-/* Tablet */
+/* ======================================================
+   PAGE TITLE
+====================================================== */
 
-@media (max-width:992px){
-
-.terms-section{
-    padding:1.5rem 0;
+.terms-title {
+  width: 100%;
+  text-align: center;
+  color: #ead8b9;
 }
 
-.terms-title h1{
-    font-size:1.5rem;
+.terms-title h1,
+.terms-section .terms-title h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.4px;
 }
 
+/* ======================================================
+   TERMS CONTENT
+====================================================== */
+
+.terms-card {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  color: #ead8bb;
+  text-align: left;
+  overflow-wrap: anywhere;
 }
 
-/* ===================== */
-/* Mobile */
+/* Headings */
 
-@media (max-width:768px){
-
-.terms-section{
-    padding:1.5rem 1.125rem;
+.terms-card h2 {
+  margin: 36px 0 16px;
+  font-size: 23px;
+  font-weight: 650;
+  line-height: 1.45;
+  color: #f0dfc2;
 }
 
-.terms-title h1{
-    font-size:1.2rem;
+.terms-card h2:first-child {
+  margin-top: 0;
 }
 
+/* Paragraphs */
+
+.terms-card p {
+  margin: 0 0 18px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.85;
+  color: #ead8bb;
 }
 
-/* ===================== */
-/* Small Mobile */
+/* Lists */
 
-@media (max-width:480px){
-
-.terms-title h1{
-    font-size:1rem;
+.terms-card ul {
+  display: block;
+  width: 100%;
+  margin: 16px 0 28px;
+  padding-left: 25px;
+  list-style-type: disc;
 }
 
+.terms-card li {
+  display: list-item;
+  margin-bottom: 14px;
+  padding-left: 4px;
+  font-size: 16px;
+  line-height: 1.85;
+  color: #ead8bb;
+  text-align: left;
 }
 
-
-.terms-card{
-max-width:980px;
-margin:auto;
-text-align:center;
-color:#ead8bb;
+.terms-card li::marker {
+  color: #ead8b9;
 }
 
-.terms-card h2{
-font-size:24px;
-margin:3rem 0;
+.terms-card strong {
+  font-weight: 700;
+  color: #fff2dc;
 }
 
+/* Highlight text */
 
-.terms-card p{
-font-size:17px;
-line-height:1;
-margin-bottom:18px;
+.terms-card .highlight,
+.highlight {
+  margin-top: 25px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.8;
 }
 
-.terms-card ul{
-text-align:left;
-margin:20px auto 40px;
-padding-left:20px;
+/* Links */
+
+.terms-card a {
+  color: #fff2dc;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.terms-card li{
-font-size:17px;
-line-height:1.5;
-margin-bottom:12px;
-justify-content: center;
+.terms-card a:hover {
+  color: #ffffff;
 }
 
-.terms-card strong{
-font-weight:700;
-color:#fff2dc;
+/* ======================================================
+   CONTACT INFORMATION SECTION
+====================================================== */
+
+.contactInfo {
+  width: 100%;
+  background: #414852;
+  padding: 45px 24px 65px;
 }
 
-.highlight{
-margin-top:25px;
-font-size:20px;
-font-weight:500;
+.contactInfo-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+  min-width: 0;
 }
 
-@media(max-width:992px){
+/* Contact Heading */
 
-
-.terms-card h2{
-font-size:20px;
+.contactInfo h2 {
+  margin: 0 0 22px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #ead9bc;
 }
 
+/* Description */
 
-.terms-card p{
-font-size:16px;
+.contact-desc {
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto 30px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.85;
+  color: #ead9bc;
 }
 
-.terms-card li{
-font-size:16px;
+/* ======================================================
+   BUTTONS
+====================================================== */
+
+.privacy-btn,
+.contact-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  max-width: 100%;
+  min-height: 45px;
+  padding: 12px 28px;
+
+  background: #e9d8b8;
+  color: #1f2630;
+
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
+.privacy-btn {
+  margin-bottom: 35px;
 }
 
-@media(max-width:768px){
-
-
-.terms-card h2{
-font-size:16px;
+.contact-btn {
+  margin-bottom: 40px;
 }
 
-.terms-card p{
-font-size:16px;
-line-height:1.8;
-
+.privacy-btn:hover,
+.contact-btn:hover {
+  background: #f3e5c9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
 }
 
-.terms-card ul{
-padding:0;
-align-items: center;
+.privacy-btn:focus-visible,
+.contact-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
 }
 
-.terms-card li{
-flex-direction: column;
-font-size:16px;
-line-height:1.8;
-gap: 10px;
-width: 90%;
-align-items: center;
+/* ======================================================
+   CONTACT DETAILS
+====================================================== */
+
+.contact-details {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
+.contact-details ul {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding-left: 24px;
+  text-align: left;
 }
 
-@media(max-width:480px){
-
-
-.terms-card h2{
-font-size:16px;
+.contact-details li {
+  margin-bottom: 16px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #ead9bc;
+  overflow-wrap: anywhere;
 }
 
-.terms-card p{
-font-size:16px;
+.contact-details strong {
+  font-weight: 700;
+  color: #fff2dc;
 }
 
-.terms-card li{
-font-size:16px;
+.contact-details span {
+  font-weight: 400;
 }
 
-} 
+/* ======================================================
+   TABLET - 1024px
+====================================================== */
 
+@media (max-width: 1024px) {
 
-.contactInfo{
-width:100%;
-background:#414852;
-padding:1rem 0;
+  .terms-section {
+    padding: 26px 28px;
+  }
+
+  .terms-container {
+    max-width: 900px;
+  }
+
+  .terms-card {
+    max-width: 100%;
+  }
+
+  .terms-card h2 {
+    font-size: 21px;
+    margin: 30px 0 14px;
+  }
+
+  .terms-card p,
+  .terms-card li {
+    font-size: 15.5px;
+    line-height: 1.8;
+  }
+
+  .contactInfo {
+    padding: 40px 28px 55px;
+  }
+
+  .contactInfo h2 {
+    font-size: 22px;
+  }
+
+  .contact-desc,
+  .contact-details li {
+    font-size: 15px;
+  }
 }
 
-.contactInfo-container{
-max-width:1000px;
-margin:auto;
-text-align:center;
+/* ======================================================
+   MOBILE - 768px
+====================================================== */
+
+@media (max-width: 768px) {
+
+  .terms-section {
+    padding: 22px 20px;
+  }
+
+  .terms-title h1,
+  .terms-section .terms-title h1 {
+    font-size: 1.6rem;
+    line-height: 1.4;
+  }
+
+  .terms-card {
+    width: 100%;
+    text-align: left;
+  }
+
+  .terms-card h2 {
+    margin: 26px 0 12px;
+    font-size: 19px;
+    line-height: 1.5;
+  }
+
+  .terms-card p {
+    margin-bottom: 16px;
+    font-size: 14.5px;
+    line-height: 1.85;
+  }
+
+  .terms-card ul {
+    padding-left: 22px;
+    margin: 14px 0 24px;
+  }
+
+  .terms-card li {
+    display: list-item;
+    padding-left: 2px;
+    margin-bottom: 12px;
+    font-size: 14.5px;
+    line-height: 1.85;
+    text-align: left;
+  }
+
+  .terms-card .highlight,
+  .highlight {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  /* Contact Section */
+
+  .contactInfo {
+    padding: 35px 20px 45px;
+  }
+
+  .contactInfo h2 {
+    font-size: 20px;
+    margin-bottom: 18px;
+  }
+
+  .contact-desc {
+    font-size: 14px;
+    line-height: 1.85;
+    margin-bottom: 25px;
+  }
+
+  .privacy-btn,
+  .contact-btn {
+    padding: 11px 24px;
+    min-height: 43px;
+    font-size: 13px;
+  }
+
+  .privacy-btn {
+    margin-bottom: 28px;
+  }
+
+  .contact-btn {
+    margin-bottom: 30px;
+  }
+
+  .contact-details ul {
+    width: 100%;
+    max-width: 500px;
+    padding-left: 22px;
+    text-align: left;
+  }
+
+  .contact-details li {
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
 }
 
-.privacy-btn{
-background:#e9d8b8;
-color:#1f2630;
-border:none;
-padding:14px 30px;
-font-size:14px;
-font-weight:600;
-border-radius:4px;
-cursor:pointer;
-margin-bottom:50px;
-transition:.3s;
+/* ======================================================
+   SMALL MOBILE - 480px
+====================================================== */
+
+@media (max-width: 480px) {
+
+  .terms-section {
+    padding: 18px 16px;
+  }
+
+  .terms-title h1,
+  .terms-section .terms-title h1 {
+    font-size: 1.4rem;
+  }
+
+  .terms-card h2 {
+    margin: 24px 0 10px;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .terms-card p {
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+  }
+
+  .terms-card ul {
+    padding-left: 20px;
+    margin: 12px 0 20px;
+  }
+
+  .terms-card li {
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  .terms-card .highlight,
+  .highlight {
+    font-size: 15px;
+  }
+
+  /* Contact Section */
+
+  .contactInfo {
+    padding: 30px 16px 40px;
+  }
+
+  .contactInfo h2 {
+    font-size: 18px;
+  }
+
+  .contact-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 22px;
+  }
+
+  .privacy-btn,
+  .contact-btn {
+    font-size: 12.5px;
+    padding: 11px 20px;
+  }
+
+  .contact-details ul {
+    padding-left: 20px;
+  }
+
+  .contact-details li {
+    font-size: 13.5px;
+    line-height: 1.8;
+  }
 }
 
-.privacy-btn:hover{
-background:#f3e5c9;
+/* ======================================================
+   EXTRA SMALL DEVICES - 360px
+====================================================== */
+
+@media (max-width: 360px) {
+
+  .terms-section {
+    padding: 16px 12px;
+  }
+
+  .terms-title h1,
+  .terms-section .terms-title h1 {
+    font-size: 1.25rem;
+  }
+
+  .terms-card h2 {
+    font-size: 16px;
+  }
+
+  .terms-card p,
+  .terms-card li {
+    font-size: 13.5px;
+  }
+
+  .contactInfo {
+    padding: 28px 12px 35px;
+  }
+
+  .contact-desc,
+  .contact-details li {
+    font-size: 13px;
+  }
 }
 
-.contactInfo h2{
-font-size:24px;
-color:#ead9bc;
-margin-bottom:28px;
-font-weight:700;
+/* ======================================================
+   REDUCED MOTION
+====================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .privacy-btn,
+  .contact-btn {
+    transition: none;
+  }
+
+  .privacy-btn:hover,
+  .contact-btn:hover {
+    transform: none;
+  }
 }
 
-.contact-desc{
-max-width:900px;
-margin:auto;
-font-size:17px;
-line-height:1.8;
-color:#ead9bc;
-margin-bottom:45px;
+/* ==========================================
+   TERMS PAGE - CENTERED ALIGNMENT
+========================================== */
+
+.terms-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.contact-btn{
-background:#e9d8b8;
-/* color:#1f2630; */
-border:none;
-padding:14px 30px;
-font-size:14px;
-font-weight:600;
-border-radius:4px;
-cursor:pointer;
-transition:.3s;
-margin-bottom:70px;
+.terms-card {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
 }
 
-.contact-btn:hover{
-background:#f2e3c7;
+/* Headings */
+
+.terms-card h2 {
+  width: 100%;
+  margin: 40px auto 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #ead8b9;
 }
 
-.contact-details{
-display:flex;
-justify-content:center;
+.terms-card h2:first-child {
+  margin-top: 0;
 }
 
-.contact-details ul{
-text-align:left;
+/* Paragraphs */
+
+.terms-card p {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto 20px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.9;
+  color: #ead8bb;
 }
 
-.contact-details li{
-font-size:17px;
-justify-content: center;
-gap: 10px;
-color:#ead9bc;
-margin-bottom:20px;
-line-height:1.7;
+/* Lists */
+
+.terms-card ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 20px auto 35px;
+  padding: 0;
+  list-style: none;
 }
 
-.contact-details strong{
-font-weight:700;
+.terms-card li {
+  display: block;
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto 16px;
+  padding: 0;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.9;
+  color: #ead8bb;
 }
 
-.contact-details span{
-font-weight:400;
+/* Custom centered bullet */
+
+.terms-card li::before {
+  content: "•";
+  display: inline;
+  margin-right: 10px;
+  color: #ead8b9;
 }
 
-/* Tablet */
+/* Bold text */
 
-@media(max-width:1024px){
-
-.contactInfo h2{
-font-size:20px;
+.terms-card strong {
+  color: #fff2dc;
+  font-weight: 700;
 }
 
+/* Highlight */
 
-.contact-desc{
-font-size:16px;
+.terms-card .highlight {
+  margin: 28px auto;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.8;
 }
 
-.contact-details li{
-font-size:16px;
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 992px) {
+
+  .terms-card {
+    max-width: 850px;
+    padding: 0 18px;
+  }
+
+  .terms-card h2 {
+    font-size: 21px;
+    margin: 32px auto 18px;
+  }
+
+  .terms-card p,
+  .terms-card li {
+    font-size: 15px;
+    line-height: 1.85;
+  }
 }
 
-.contact-btn,
-.privacy-btn{
-font-size:13px;
-padding:14px 28px;
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+  .terms-section {
+    padding: 22px 14px;
+  }
+
+  .terms-card {
+    padding: 0 8px;
+  }
+
+  .terms-card h2 {
+    font-size: 19px;
+    margin: 30px auto 16px;
+  }
+
+  .terms-card p {
+    font-size: 14px;
+    line-height: 1.85;
+    margin-bottom: 18px;
+  }
+
+  .terms-card ul {
+    margin: 18px auto 28px;
+  }
+
+  .terms-card li {
+    font-size: 14px;
+    line-height: 1.85;
+    margin-bottom: 14px;
+  }
+
+  .terms-card .highlight {
+    font-size: 16px;
+  }
 }
 
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+
+  .terms-card h2 {
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .terms-card p,
+  .terms-card li {
+    font-size: 13.5px;
+    line-height: 1.85;
+  }
+
+  .terms-card li::before {
+    margin-right: 6px;
+  }
+
+  .terms-card .highlight {
+    font-size: 15px;
+  }
 }
-
-/* Mobile */
-
-@media(max-width:768px){
-
-
-.contactInfo h2{
-font-size:1rem;
-}
-
-.contact-desc{
-font-size:13px;
-line-height:1.8;
-margin-bottom:35px;
-}
-
-.contact-btn,
-.privacy-btn{
-font-size:12px;
-padding:12px 24px;
-}
-
-.contact-btn{
-margin-bottom:2rem;
-}
-
-.contact-details ul{
-text-align:center;
-}
-
-.contact-details li{
-font-size:13px;
-word-break:break-word;
-justify-content: center;
-gap: 10px;
-}
-
-}
-

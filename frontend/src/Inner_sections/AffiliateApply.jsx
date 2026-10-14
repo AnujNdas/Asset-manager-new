@@ -143,7 +143,7 @@ export default function AffiliateApply() {
         <div className="affiliate-benefits">
 
           <div className="benefit-card">
-            <h3>💰 Earn Commissions</h3>
+            <h3>💰 20% Recurring Commissions</h3>
             <p>
               Get rewarded for every successful subscription referral.
             </p>
@@ -262,6 +262,32 @@ export default function AffiliateApply() {
               onChange={handleChange}
             />
           </div>
+          <div className="input-group">
+            
+<div className="affiliate-terms">
+  <label className="affiliate-terms-label">
+    <input
+      type="checkbox"
+      name="agreeToTerms"
+      required
+    />
+
+    <span>
+      I have read and agree to the{" "}
+      <Link
+        to="/terms"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="affiliate-terms-link"
+      >
+        Terms & Conditions
+      </Link>
+      .
+    </span>
+  </label>
+</div>
+
+            </div>
 
           <button
             type="submit"

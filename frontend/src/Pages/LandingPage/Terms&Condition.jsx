@@ -111,7 +111,174 @@ const Terms = () => {
             <li>Exceptions may apply for verified technical issues.</li>
             <li>Subscriptions may be cancelled anytime.</li>
           </ul>
+          <h2>Affiliate Program Terms</h2>
 
+<p>
+  The AssetPegasus Affiliate Program allows approved affiliates to earn
+  commissions by referring new paying customers through their assigned
+  referral link or code. Participation is subject to approval and
+  compliance with these Terms.
+</p>
+
+<h3>Commission Rates</h3>
+
+<p>
+  Eligible referrals earn commission based on the subscription plan
+  purchased by the referred customer:
+</p>
+
+<ul>
+  <li>
+    <strong>Base Plan:</strong> 10% commission.
+  </li>
+
+  <li>
+    <strong>Grow Plan:</strong> 15% commission.
+  </li>
+
+  <li>
+    <strong>Omni Plan:</strong> 20% commission.
+  </li>
+</ul>
+
+<p>
+  Commission is calculated on the subscription amount actually received
+  after discounts, excluding taxes, refunds, and chargebacks. Free trials,
+  unpaid subscriptions, and unsuccessful transactions do not qualify
+  for commission.
+</p>
+
+<h3>Referral Eligibility and Verification</h3>
+
+<ul>
+  <li>
+    Referrals must be tracked through the affiliate’s assigned referral
+    link or code and verified by AssetPegasus.
+  </li>
+
+  <li>
+    Commission becomes eligible for approval only after the referred
+    customer’s payment has been successfully received and verified.
+  </li>
+
+  <li>
+    Self-referrals, duplicate accounts, fraudulent transactions, and
+    referrals created to misuse the program are not eligible.
+  </li>
+
+  <li>
+    Eligibility for commissions on renewals, upgrades, and subsequent
+    purchases will be specified in the affiliate’s program offer.
+    Recurring commissions should not be assumed unless expressly
+    included.
+  </li>
+</ul>
+
+<h3>Manual Payments and Processing Time</h3>
+
+<p>
+  Affiliate payouts are processed manually outside the platform’s
+  automated subscription checkout. Payments are made through an agreed
+  payment method, such as bank transfer or UPI, using the details
+  provided by the affiliate.
+</p>
+
+<ul>
+  <li>
+    <strong>Processing Time:</strong> Approved payouts are normally
+    processed within 3–4 working days after payout approval and
+    verification of complete payment details.
+  </li>
+
+  <li>
+    <strong>Working Days:</strong> Working days exclude Saturdays,
+    Sundays, and public holidays observed by the processing bank
+    in India.
+  </li>
+
+  <li>
+    <strong>Payment Details:</strong> Affiliates must provide accurate
+    and current payment information. Incorrect or incomplete details
+    may delay payment.
+  </li>
+
+  <li>
+    <strong>Bank Delays:</strong> The time taken for funds to reach
+    the affiliate’s account may vary due to bank or payment-provider
+    processing.
+  </li>
+
+  <li>
+    <strong>Payment Confirmation:</strong> A transaction reference or
+    payment confirmation will be provided once the transfer is
+    completed.
+  </li>
+</ul>
+
+<h3>Refunds, Cancellations and Adjustments</h3>
+
+<p>
+  Commissions associated with refunded, reversed, disputed, or fraudulent
+  payments may be withheld or reversed. If the corresponding commission
+  has already been paid, the adjustment may be deducted from future
+  affiliate earnings, with the reason communicated to the affiliate.
+  Subscription cancellation alone does not reverse a commission on a
+  valid payment that has not been refunded.
+</p>
+
+<h3>Affiliate Responsibilities</h3>
+
+<ul>
+  <li>
+    Promote AssetPegasus honestly using accurate information about
+    its features, pricing, and subscription plans.
+  </li>
+
+  <li>
+    Clearly disclose the affiliate relationship when sharing
+    promotional content or referral links.
+  </li>
+
+  <li>
+    Do not use spam, misleading claims, impersonation, unauthorized
+    discounts, or deceptive advertising to obtain referrals.
+  </li>
+
+  <li>
+    Do not collect customer payments on behalf of AssetPegasus or
+    make commitments on its behalf without written authorization.
+  </li>
+
+  <li>
+    Affiliates are responsible for their applicable tax obligations.
+    Payouts may be subject to deductions or withholding where
+    required by applicable law.
+  </li>
+</ul>
+
+<h3>Suspension, Termination and Program Changes</h3>
+
+<p>
+  AssetPegasus may suspend or terminate participation for fraud,
+  misuse, or violations of these Terms. Valid commissions earned
+  before termination remain payable, subject to verification and
+  any applicable adjustments.
+</p>
+
+<p>
+  Changes to commission rates or payout terms will be communicated
+  before taking effect. Updated terms apply prospectively and do
+  not reduce commissions already earned under the previously
+  applicable terms.
+</p>
+
+<p>
+  For questions about referrals, commission calculations, or payout
+  status, contact{" "}
+  <a href="mailto:support@assetpegasus.com">
+    support@assetpegasus.com
+  </a>.
+</p>
           <h2>Limitation of Liability</h2>
 
           <p>
