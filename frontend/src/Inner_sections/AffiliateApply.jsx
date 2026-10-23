@@ -91,7 +91,7 @@ export default function AffiliateApply() {
 
   <meta
     property="og:image"
-    content="https://assetpegasus.com/images/Logo2.png"
+    content="https://assetpegasus.com/images/Home.webp"
   />
 
   <meta
@@ -117,7 +117,7 @@ export default function AffiliateApply() {
 
   <meta
     name="twitter:image"
-    content="https://assetpegasus.com/images/Logo2.png"
+    content="https://assetpegasus.com/images/Home.webp"
   />
 </Helmet>
     <div className="affiliate-page">
